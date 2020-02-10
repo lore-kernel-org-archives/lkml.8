@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E056AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84473C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BBC2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1B72051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338981;
-	bh=9vvqBPxbltiYH7PyWIzMbj8xY2dYN+f/9a4CZVWzPik=;
+	s=default; t=1581338982;
+	bh=gZjRPmNca0NHA9D6FXoRdzdcoMOP0o5FB1DbHMFVvHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G8UKBjHd2qav9buNtc0aUNa0gFbAoLVOFE+x89Px4XMRBfUgdryWAQ0SqMRozde8h
-	 HzvnqSb8Zf9e1dJq4GiZ0uW8vK9dhhxSukRhxYdVVUa9BW/xsSx6AUTbdtRQo2NJhX
-	 LhQS8r2/gbuiWkNUpVwzfYpu8Tx+se0/vQ7vh6Ag=
+	b=pNu6X552V8rYXO4FTU1D+ksepYkHe1IZ8HDM9EtUF0tOCJy40y8Hla29tJhSw3MMO
+	 YtJhHXQLek8laUBMiLJkYKPxLqQOLDH1AB3pGlqlVWrV6Unc4Olwm+UmD8skPaLICs
+	 cve9ww1JHCMKXSzy7EQ86BDaOFFLTJnRYhSVhWgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbgBJMpE (ORCPT
+        id S1730488AbgBJMpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:45:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:45:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729817AbgBJMkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:51 -0500
+        id S1729148AbgBJMks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:48 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE2622085B;
-        Mon, 10 Feb 2020 12:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABEE120842;
+        Mon, 10 Feb 2020 12:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338450;
-        bh=9vvqBPxbltiYH7PyWIzMbj8xY2dYN+f/9a4CZVWzPik=;
+        s=default; t=1581338447;
+        bh=gZjRPmNca0NHA9D6FXoRdzdcoMOP0o5FB1DbHMFVvHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wt+xtydkFx3OvYCYIRP/ajXi2w3RxU5LbzculH2NOE7TqP0MVqFBCwPiMnLq0H8WG
-         Z+l5Gy9EP+6wqxw8irNG2Hj4ilks6RABUOu2Mb6jpqmwSq4yswYonqYyLhL516xMhR
-         3kQxjbOmYG4atAatlQJ4qroxRb9hswCbDAs2IoH0=
+        b=trpqj4iGvxexztGIVGUiYjp5nGdXw29aTFBO4tKp4SiKP0VrlccN9fta9dj3nVn/O
+         Z0xY1pI5+U5QJgu+sbpYPqEo2l6fCGtMv3zrDXE3mBNua3H5ELguHCVe7fnYS6Bw1q
+         i5/Uutcbk65ptpsSgajNQEmsvsTUz+Eu/8bLPvXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 196/367] Btrfs: make deduplication with range including the last block work
-Date:   Mon, 10 Feb 2020 04:31:49 -0800
-Message-Id: <20200210122442.678567317@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.5 190/367] NFS: Directory page cache pages need to be locked when read
+Date:   Mon, 10 Feb 2020 04:31:43 -0800
+Message-Id: <20200210122442.153060068@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,67 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 831d2fa25ab8e27592b1b0268dae6f2dfaf7cc43 upstream.
+commit 114de38225d9b300f027e2aec9afbb6e0def154b upstream.
 
-Since btrfs was migrated to use the generic VFS helpers for clone and
-deduplication, it stopped allowing for the last block of a file to be
-deduplicated when the source file size is not sector size aligned (when
-eof is somewhere in the middle of the last block). There are two reasons
-for that:
+When a NFS directory page cache page is removed from the page cache,
+its contents are freed through a call to nfs_readdir_clear_array().
+To prevent the removal of the page cache entry until after we've
+finished reading it, we must take the page lock.
 
-1) The generic code always rounds down, to a multiple of the block size,
-   the range's length for deduplications. This means we end up never
-   deduplicating the last block when the eof is not block size aligned,
-   even for the safe case where the destination range's end offset matches
-   the destination file's size. That rounding down operation is done at
-   generic_remap_check_len();
-
-2) Because of that, the btrfs specific code does not expect anymore any
-   non-aligned range length's for deduplication and therefore does not
-   work if such nona-aligned length is given.
-
-This patch addresses that second part, and it depends on a patch that
-fixes generic_remap_check_len(), in the VFS, which was submitted ealier
-and has the following subject:
-
-  "fs: allow deduplication of eof block into the end of the destination file"
-
-These two patches address reports from users that started seeing lower
-deduplication rates due to the last block never being deduplicated when
-the file size is not aligned to the filesystem's block size.
-
-Link: https://lore.kernel.org/linux-btrfs/2019-1576167349.500456@svIo.N5dq.dFFD/
-CC: stable@vger.kernel.org # 5.1+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
+Cc: stable@vger.kernel.org # v2.6.37+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ioctl.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/dir.c |   30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -3243,6 +3243,7 @@ static void btrfs_double_extent_lock(str
- static int btrfs_extent_same_range(struct inode *src, u64 loff, u64 len,
- 				   struct inode *dst, u64 dst_loff)
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -702,8 +702,6 @@ int nfs_readdir_filler(void *data, struc
+ static
+ void cache_page_release(nfs_readdir_descriptor_t *desc)
  {
-+	const u64 bs = BTRFS_I(src)->root->fs_info->sb->s_blocksize;
- 	int ret;
+-	if (!desc->page->mapping)
+-		nfs_readdir_clear_array(desc->page);
+ 	put_page(desc->page);
+ 	desc->page = NULL;
+ }
+@@ -717,19 +715,28 @@ struct page *get_cache_page(nfs_readdir_
  
- 	/*
-@@ -3250,7 +3251,7 @@ static int btrfs_extent_same_range(struc
- 	 * source range to serialize with relocation.
- 	 */
- 	btrfs_double_extent_lock(src, loff, dst, dst_loff, len);
--	ret = btrfs_clone(src, dst, loff, len, len, dst_loff, 1);
-+	ret = btrfs_clone(src, dst, loff, len, ALIGN(len, bs), dst_loff, 1);
- 	btrfs_double_extent_unlock(src, loff, dst, dst_loff, len);
+ /*
+  * Returns 0 if desc->dir_cookie was found on page desc->page_index
++ * and locks the page to prevent removal from the page cache.
+  */
+ static
+-int find_cache_page(nfs_readdir_descriptor_t *desc)
++int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
+ {
+ 	int res;
  
- 	return ret;
+ 	desc->page = get_cache_page(desc);
+ 	if (IS_ERR(desc->page))
+ 		return PTR_ERR(desc->page);
+-
+-	res = nfs_readdir_search_array(desc);
++	res = lock_page_killable(desc->page);
+ 	if (res != 0)
+-		cache_page_release(desc);
++		goto error;
++	res = -EAGAIN;
++	if (desc->page->mapping != NULL) {
++		res = nfs_readdir_search_array(desc);
++		if (res == 0)
++			return 0;
++	}
++	unlock_page(desc->page);
++error:
++	cache_page_release(desc);
+ 	return res;
+ }
+ 
+@@ -744,7 +751,7 @@ int readdir_search_pagecache(nfs_readdir
+ 		desc->last_cookie = 0;
+ 	}
+ 	do {
+-		res = find_cache_page(desc);
++		res = find_and_lock_cache_page(desc);
+ 	} while (res == -EAGAIN);
+ 	return res;
+ }
+@@ -783,7 +790,6 @@ int nfs_do_filldir(nfs_readdir_descripto
+ 		desc->eof = true;
+ 
+ 	kunmap(desc->page);
+-	cache_page_release(desc);
+ 	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
+ 			(unsigned long long)*desc->dir_cookie, res);
+ 	return res;
+@@ -829,13 +835,13 @@ int uncached_readdir(nfs_readdir_descrip
+ 
+ 	status = nfs_do_filldir(desc);
+ 
++ out_release:
++	nfs_readdir_clear_array(desc->page);
++	cache_page_release(desc);
+  out:
+ 	dfprintk(DIRCACHE, "NFS: %s: returns %d\n",
+ 			__func__, status);
+ 	return status;
+- out_release:
+-	cache_page_release(desc);
+-	goto out;
+ }
+ 
+ /* The file offset position represents the dirent entry number.  A
+@@ -900,6 +906,8 @@ static int nfs_readdir(struct file *file
+ 			break;
+ 
+ 		res = nfs_do_filldir(desc);
++		unlock_page(desc->page);
++		cache_page_release(desc);
+ 		if (res < 0)
+ 			break;
+ 	} while (!desc->eof);
 
 
