@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15C6C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7B5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0F02085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B626C20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338254;
-	bh=AR/fg8OsPdQEoC/PGAylqkzxCh161kQ0JG+c06vPw1o=;
+	s=default; t=1581338256;
+	bh=QU5hlEcn8A5qyauh+f5DdOPlzw74Il9ZLeMFavcEx8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdaAFvP48WrIOzrLiKfVxpV2OEcq/cxBq+CvUPuulEmoy39RRx5pFE8pIUzgwAK4M
-	 RRRX3E+8TK/FGyTLXXrTAgtYCzEm7DoTRb0MhmXuL3uFrKb1LAR888g+LIMLrDlu/4
-	 47AFE4VmIs8Ej1vGWbBxKVmufdSbdu7CD/IGOlkg=
+	b=go4D2sOjIdNnOZQkLYywybB+XPUB8W9DePqSOCVt+3kp84StZRmrmpHwtnkrcSHTR
+	 nP6azBPfWf6YGgacFDaFz5JLsPDKsCW+1VIOFXxwjRu4s15m+zZKWxgqGDFGt+Xfz/
+	 QIDa+wfBhR/0rQYM3B9yFVx0OHQREYr1w2Gz1ZMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgBJMhd (ORCPT
+        id S1728812AbgBJMhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgBJMgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:14 -0500
+        id S1728311AbgBJMgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:16 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A7D208C4;
-        Mon, 10 Feb 2020 12:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 938712467C;
+        Mon, 10 Feb 2020 12:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338174;
-        bh=AR/fg8OsPdQEoC/PGAylqkzxCh161kQ0JG+c06vPw1o=;
+        s=default; t=1581338175;
+        bh=QU5hlEcn8A5qyauh+f5DdOPlzw74Il9ZLeMFavcEx8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HlyePtOGOblL2VzDlb4sZZB0tXtidiJAJNDn4xhJnhRVGvqic1EmWo+XNC8Ncs1fl
-         P+hkGkvmdleNv/Dsnkkkc+mfDzkhfbt6Zi4WCrnr1y7k/C5TUuC3FSmenY2kZQS75V
-         kkwve7Dk13gqs4DQBFfqAwqOVceKaZHIGRDOYVZU=
+        b=ByUJrZP9RI/3t6ZyNa79DEvwexV1+K2dGZYMxfXgSuGYmLBktZ+zosbFgaSKf6btv
+         9HNnB3uyclxsWz/Qq/I9vY4yfWL5qnXmNBnqtTPbjz1qi5ZvKtyXKxg5HFTWnNKaYl
+         Lc1t2rmyQ/uo/bCwbAK78ZDwrnTYopDKNlfqmnzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.19 160/195] nfsd: fix jiffies/time_t mixup in LRU list
-Date:   Mon, 10 Feb 2020 04:33:38 -0800
-Message-Id: <20200210122320.924493068@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 4.19 162/195] ubi: fastmap: Fix inverted logic in seen selfcheck
+Date:   Mon, 10 Feb 2020 04:33:40 -0800
+Message-Id: <20200210122321.103434498@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,53 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-commit 9594497f2c78993cb66b696122f7c65528ace985 upstream.
+commit ef5aafb6e4e9942a28cd300bdcda21ce6cbaf045 upstream.
 
-The nfsd4_blocked_lock->nbl_time timestamp is recorded in jiffies,
-but then compared to a CLOCK_REALTIME timestamp later on, which makes
-no sense.
+set_seen() sets the bit corresponding to the PEB number in the bitmap,
+so when self_check_seen() wants to find PEBs that haven't been seen we
+have to print the PEBs that have their bit cleared, not the ones which
+have it set.
 
-For consistency with the other timestamps, change this to use a time_t.
-
-This is a change in behavior, which may cause regressions, but the
-current code is not sensible. On a system with CONFIG_HZ=1000,
-the 'time_after((unsigned long)nbl->nbl_time, (unsigned long)cutoff))'
-check is false for roughly the first 18 days of uptime and then true
-for the next 49 days.
-
-Fixes: 7919d0a27f1e ("nfsd: add a LRU list for blocked locks")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 5d71afb00840 ("ubi: Use bitmaps in Fastmap self-check code")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |    2 +-
- fs/nfsd/state.h     |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/ubi/fastmap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6075,7 +6075,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struc
- 	}
+--- a/drivers/mtd/ubi/fastmap.c
++++ b/drivers/mtd/ubi/fastmap.c
+@@ -73,7 +73,7 @@ static int self_check_seen(struct ubi_de
+ 		return 0;
  
- 	if (fl_flags & FL_SLEEP) {
--		nbl->nbl_time = jiffies;
-+		nbl->nbl_time = get_seconds();
- 		spin_lock(&nn->blocked_locks_lock);
- 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
- 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -592,7 +592,7 @@ static inline bool nfsd4_stateid_generat
- struct nfsd4_blocked_lock {
- 	struct list_head	nbl_list;
- 	struct list_head	nbl_lru;
--	unsigned long		nbl_time;
-+	time_t			nbl_time;
- 	struct file_lock	nbl_lock;
- 	struct knfsd_fh		nbl_fh;
- 	struct nfsd4_callback	nbl_cb;
+ 	for (pnum = 0; pnum < ubi->peb_count; pnum++) {
+-		if (test_bit(pnum, seen) && ubi->lookuptbl[pnum]) {
++		if (!test_bit(pnum, seen) && ubi->lookuptbl[pnum]) {
+ 			ubi_err(ubi, "self-check failed for PEB %d, fastmap didn't see it", pnum);
+ 			ret = -EINVAL;
+ 		}
 
 
