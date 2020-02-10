@@ -2,52 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EECC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A6C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F399820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911302070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340433;
-	bh=pwgh38ltuMnOL+4RvfiyDg7TiATd0kVlvmn7UumDg1k=;
+	s=default; t=1581340438;
+	bh=mpQr1aTIBLMCAZBmrzdcHGTPJq0LbkIE15rTxYRWisI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w0Zb9M24O2BiNM7CRpPykByaqbFq4aM9SGLdZd2F6CTCl5ISn1+l+s0ggCmKrPHSN
-	 zfBuj42FfMuZapKvuBKKb1wdMpl1No08Bw36d43j6ax1xDNrbsWNQs+tMS05q03yGI
-	 R4zyjCtxEhAGqNbm7nl/7Z4ChPu1W9RdvMMQZeJM=
+	b=ZmDjTyi+YZJ5B0+qIucwZxb0EKett8CwC8NTT1rjzvWEKUMak4cRvV/YNvPuNfxPz
+	 DXmABlLY/80yhhOz31phcD0QKKHoSIQR7leEKPcx1SYo6nduH9ztLH3ncnBLD6jK6h
+	 vQ3rJD3NX52/bIsOIwI5CdxceCnWvcZOS5Huvzr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbgBJNNv (ORCPT
+        id S1729531AbgBJNN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:13:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34208 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:13:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729182AbgBJMij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729176AbgBJMij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2895F20661;
-        Mon, 10 Feb 2020 12:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BAC22051A;
+        Mon, 10 Feb 2020 12:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338319;
-        bh=pwgh38ltuMnOL+4RvfiyDg7TiATd0kVlvmn7UumDg1k=;
+        s=default; t=1581338318;
+        bh=mpQr1aTIBLMCAZBmrzdcHGTPJq0LbkIE15rTxYRWisI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4uuziuUTL+4ZltmffFeVKaPwKMDZZ6G13NvYIA2+3Rr/0xOduBOFtWUxgm6WinbA
-         uApOhMgrdwqHJi/a5U8ZxfXPY29RaFcGj9tUUzSbGYC2XOODHpykp0YxMm6GrIPpCQ
-         qZ72M34EGaRYvFBvHXuQWnDhl649vW5P+97OPnts=
+        b=U0sfTrBm/Fzr/UtFD/5sq00FTCqo1rWdewa71G+VhykB7JwszJNT+m9PmTeyzjzFb
+         s3Y2a1CfTQbr8EzB/xAjbHfO610/O33sKRYSyhBiQmov/mrQkLHT3PDc1OmxkjjgZQ
+         lNQGj/cY4kgyqcubHcBNdfZ9KsPNVGKaYOk3UlzI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 222/309] KVM: x86: Handle TIF_NEED_FPU_LOAD in kvm_{load,put}_guest_fpu()
-Date:   Mon, 10 Feb 2020 04:32:58 -0800
-Message-Id: <20200210122427.883826991@linuxfoundation.org>
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 248/309] ppp: Adjust indentation into ppp_async_input
+Date:   Mon, 10 Feb 2020 04:33:24 -0800
+Message-Id: <20200210122430.336063007@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,67 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit c9aef3b85f425d1f6635382ec210ee5a7ef55d7d upstream.
+commit 08cbc75f96029d3092664213a844a5e25523aa35 upstream.
 
-Handle TIF_NEED_FPU_LOAD similar to how fpu__copy() handles the flag
-when duplicating FPU state to a new task struct.  TIF_NEED_FPU_LOAD can
-be set any time control is transferred out of KVM, be it voluntarily,
-e.g. if I/O is triggered during a KVM call to get_user_pages, or
-involuntarily, e.g. if softirq runs after an IRQ occurs.  Therefore,
-KVM must account for TIF_NEED_FPU_LOAD whenever it is (potentially)
-accessing CPU FPU state.
+Clang warns:
 
-Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+../drivers/net/ppp/ppp_async.c:877:6: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                                ap->rpkt = skb;
+                                ^
+../drivers/net/ppp/ppp_async.c:875:5: note: previous statement is here
+                                if (!skb)
+                                ^
+1 warning generated.
+
+This warning occurs because there is a space before the tab on this
+line. Clean up this entire block's indentation so that it is consistent
+with the Linux kernel coding style and clang no longer warns.
+
+Fixes: 6722e78c9005 ("[PPP]: handle misaligned accesses")
+Link: https://github.com/ClangBuiltLinux/linux/issues/800
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/net/ppp/ppp_async.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8493,12 +8493,26 @@ static int complete_emulated_mmio(struct
- 	return 0;
- }
- 
-+static void kvm_save_current_fpu(struct fpu *fpu)
-+{
-+	/*
-+	 * If the target FPU state is not resident in the CPU registers, just
-+	 * memcpy() from current, else save CPU state directly to the target.
-+	 */
-+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+		memcpy(&fpu->state, &current->thread.fpu.state,
-+		       fpu_kernel_xstate_size);
-+	else
-+		copy_fpregs_to_fpstate(fpu);
-+}
-+
- /* Swap (qemu) user FPU context for the guest FPU context. */
- static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
- {
- 	fpregs_lock();
- 
--	copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
-+	kvm_save_current_fpu(vcpu->arch.user_fpu);
-+
- 	/* PKRU is separately restored in kvm_x86_ops->run.  */
- 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
- 				~XFEATURE_MASK_PKRU);
-@@ -8514,7 +8528,8 @@ static void kvm_put_guest_fpu(struct kvm
- {
- 	fpregs_lock();
- 
--	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
-+	kvm_save_current_fpu(vcpu->arch.guest_fpu);
-+
- 	copy_kernel_to_fpregs(&vcpu->arch.user_fpu->state);
- 
- 	fpregs_mark_activate();
+--- a/drivers/net/ppp/ppp_async.c
++++ b/drivers/net/ppp/ppp_async.c
+@@ -874,15 +874,15 @@ ppp_async_input(struct asyncppp *ap, con
+ 				skb = dev_alloc_skb(ap->mru + PPP_HDRLEN + 2);
+ 				if (!skb)
+ 					goto nomem;
+- 				ap->rpkt = skb;
+- 			}
+- 			if (skb->len == 0) {
+- 				/* Try to get the payload 4-byte aligned.
+- 				 * This should match the
+- 				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
+- 				 * process_input_packet, but we do not have
+- 				 * enough chars here to test buf[1] and buf[2].
+- 				 */
++				ap->rpkt = skb;
++			}
++			if (skb->len == 0) {
++				/* Try to get the payload 4-byte aligned.
++				 * This should match the
++				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
++				 * process_input_packet, but we do not have
++				 * enough chars here to test buf[1] and buf[2].
++				 */
+ 				if (buf[0] != PPP_ALLSTATIONS)
+ 					skb_reserve(skb, 2 + (buf[0] & 1));
+ 			}
 
 
