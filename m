@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9E9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C638EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB6620733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959552465D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338378;
-	bh=WfPj+P3uqS25JQPoo9xldmKwD2K+rYot1kojTkWwG5M=;
+	s=default; t=1581338380;
+	bh=u5gjxbGuLQJXByiCbFPs4mdb0PD/2AnCQv8x4gXAxPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gh425e0j3ihFglrmQEeJjuWd5vMsMXljnTxl2fQUlW6v5j658sPEnY7/D/rxJHFaL
-	 0+KDl3xRATkrXxzV5NR29GxWqc5TWuPw+VaS3mPMl1NJp8IHKzjhElgw1lAjhLZHHR
-	 NdKg5/oAFqwvH5nW8wkTCDa6XFLAHDboQZa2A2eo=
+	b=jHhqAv/FBzyz6XRXCs7jdwyCeDJQSLqzcvurIRtKd0/++2oRadLkKvEYSuCaBL3IY
+	 EOKOeMub4BJ1dryyIaPoLVHU9Xi3yIjJ4WJu0Kh3lMQDOAil4/BX7awT8U/is+WjrS
+	 1QUJKWEbi5Tr6Wi2Grxp5X1jrycD3nNYafcztUyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbgBJMjh (ORCPT
+        id S1728317AbgBJMjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59920 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbgBJMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728865AbgBJMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:42 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C869920842;
-        Mon, 10 Feb 2020 12:37:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5399F20838;
+        Mon, 10 Feb 2020 12:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338260;
-        bh=WfPj+P3uqS25JQPoo9xldmKwD2K+rYot1kojTkWwG5M=;
+        s=default; t=1581338262;
+        bh=u5gjxbGuLQJXByiCbFPs4mdb0PD/2AnCQv8x4gXAxPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mau9styLLlVjaVQxg1x2+QPvKnGjp7o+wPMrT1Ep8+aW2r2ZhaXlMCVbHm6YOVfNL
-         eB82A7U8m83J8k0aOSmx7wmeD9XTbwXdeNc8P3L4A74DiyOMRZN3XygAj4fzFivtFE
-         e9ZQUrYTj5ZO/FH7uwDbRumzg+4BKPCEzzJYE+6M=
+        b=G97qjJKq9SuagjmwttD14MFPhmey7+B86kOxawIFX4WgY/qmeKH6NV4zXG+rtyEbt
+         EgwBoHu7xBO0eYP05G6R5YiWSA5Uc6td/y0T9GBguebrLGs4mRcFK5e6QvgJhf5BFr
+         fjbQIlNrRx2FK90LvtVDMKg/ejT4U9lYqeTo6BuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 5.4 091/309] fscrypt: dont print name of busy file when removing key
-Date:   Mon, 10 Feb 2020 04:30:47 -0800
-Message-Id: <20200210122414.764048758@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 5.4 084/309] PCI: keystone: Fix error handling when "num-viewport" DT property is not populated
+Date:   Mon, 10 Feb 2020 04:30:40 -0800
+Message-Id: <20200210122413.927268328@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -58,77 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 13a10da94615d81087e718517794f2868a8b3fab upstream.
+commit b0de922af53eede340986a2d05b6cd4b6d6efa43 upstream.
 
-When an encryption key can't be fully removed due to file(s) protected
-by it still being in-use, we shouldn't really print the path to one of
-these files to the kernel log, since parts of this path are likely to be
-encrypted on-disk, and (depending on how the system is set up) the
-confidentiality of this path might be lost by printing it to the log.
+Fix error handling when "num-viewport" DT property is not populated.
 
-This is a trade-off: a single file path often doesn't matter at all,
-especially if it's a directory; the kernel log might still be protected
-in some way; and I had originally hoped that any "inode(s) still busy"
-bugs (which are security weaknesses in their own right) would be quickly
-fixed and that to do so it would be super helpful to always know the
-file path and not have to run 'find dir -inum $inum' after the fact.
-
-But in practice, these bugs can be hard to fix (e.g. due to asynchronous
-process killing that is difficult to eliminate, for performance
-reasons), and also not tied to specific files, so knowing a file path
-doesn't necessarily help.
-
-So to be safe, for now let's just show the inode number, not the path.
-If someone really wants to know a path they can use 'find -inum'.
-
-Fixes: b1c0ec3599f4 ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl")
-Cc: <stable@vger.kernel.org> # v5.4+
-Link: https://lore.kernel.org/r/20200120060732.390362-1-ebiggers@kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Fixes: 23284ad677a9 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v5.2+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/crypto/keyring.c |   15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/crypto/keyring.c
-+++ b/fs/crypto/keyring.c
-@@ -664,9 +664,6 @@ static int check_for_busy_inodes(struct
- 	struct list_head *pos;
- 	size_t busy_count = 0;
- 	unsigned long ino;
--	struct dentry *dentry;
--	char _path[256];
--	char *path = NULL;
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -1354,7 +1354,7 @@ static int __init ks_pcie_probe(struct p
+ 		ret = of_property_read_u32(np, "num-viewport", &num_viewport);
+ 		if (ret < 0) {
+ 			dev_err(dev, "unable to read *num-viewport* property\n");
+-			return ret;
++			goto err_get_sync;
+ 		}
  
- 	spin_lock(&mk->mk_decrypted_inodes_lock);
- 
-@@ -685,22 +682,14 @@ static int check_for_busy_inodes(struct
- 					 struct fscrypt_info,
- 					 ci_master_key_link)->ci_inode;
- 		ino = inode->i_ino;
--		dentry = d_find_alias(inode);
- 	}
- 	spin_unlock(&mk->mk_decrypted_inodes_lock);
- 
--	if (dentry) {
--		path = dentry_path(dentry, _path, sizeof(_path));
--		dput(dentry);
--	}
--	if (IS_ERR_OR_NULL(path))
--		path = "(unknown)";
--
- 	fscrypt_warn(NULL,
--		     "%s: %zu inode(s) still busy after removing key with %s %*phN, including ino %lu (%s)",
-+		     "%s: %zu inode(s) still busy after removing key with %s %*phN, including ino %lu",
- 		     sb->s_id, busy_count, master_key_spec_type(&mk->mk_spec),
- 		     master_key_spec_len(&mk->mk_spec), (u8 *)&mk->mk_spec.u,
--		     ino, path);
-+		     ino);
- 	return -EBUSY;
- }
- 
+ 		/*
 
 
