@@ -2,144 +2,91 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBD0C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376CDC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B0020661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED08420838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PFLoOMSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgBJTTB (ORCPT
+        id S1727516AbgBJTUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:19:01 -0500
-Received: from mga18.intel.com ([134.134.136.126]:50779 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727056AbgBJTTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 14:19:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 11:19:00 -0800
-X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
-   d="scan'208";a="405682140"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 11:18:59 -0800
-Message-ID: <d943ada56babfbebf408ad0f94988a5b09d2b472.camel@linux.intel.com>
-Subject: Should I repost? (was: Re: [PATCH v16.1 0/9] mm / virtio: Provide
- support for free page reporting)
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        david@redhat.com
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de,
-        vbabka@suse.cz, AlexanderDuyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org
-Date:   Mon, 10 Feb 2020 11:18:59 -0800
-In-Reply-To: <6758b1e3373fc06b37af1c87901237974d52322f.camel@linux.intel.com>
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
-         <6758b1e3373fc06b37af1c87901237974d52322f.camel@linux.intel.com>
+        Mon, 10 Feb 2020 14:20:52 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40098 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJTUv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 14:20:51 -0500
+Received: by mail-qk1-f193.google.com with SMTP id b7so7671862qkl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 11:20:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=51cTgMiOzN6t4plcVzbyVxA/Hfa9K5s86D9XKz8foUc=;
+        b=PFLoOMSZfjTakPZVVHiqEzms+nZhWicg0v1zcsw8tTRzCJMxWDJuQmA5jwSoqKlU4s
+         JICVBeW0DysNGyBGonFTojE65BcE/jOVXNjeXDgaswSP6ZNIGTfsSvZwmkwVTW6w6IUS
+         ygpfrmETR+yc0G4Xvye/XEUrAX7m18ZDcTlxSDPA8FQhebaeiQfdX6bxvzNMBmKYwT6g
+         zd92I1ne0J1nArS0hsBnidJtl9YcKa4D+oRXMnE2Z5Cue6LyEvVkv0f6xcHqtvPZwvMg
+         eiv5m6+Gmxp7qv0gnj21PnW80beAnVVJawRgiZBcYZcHbCGxGDKowx7ZfpH2s/SXZD2u
+         RMKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=51cTgMiOzN6t4plcVzbyVxA/Hfa9K5s86D9XKz8foUc=;
+        b=S6h7YuPmQ3qFc88Tc+kQ5mzhmsnDO80UBCXi0HB1cRqVwYc74lAGBSmTELsXQGBsaa
+         CDLD7+3th/oz841itvAFL4NcmKbgu3szLF2KUO7zb0jefiHxO2GorI+t+H3qCwcN3llh
+         EDs7hjQJElBJ/+0x5EidrHLck6NGF9G4sQeolkTJBP1o1fO8JlbwsPcIimXDH4/pv7St
+         +0IqnYNZ9opnV0cCftJ73o0eX/a2H2GNL3qn58oiKjz10QVmnUnhOTTQoi9XZqDUbdRx
+         m1oP+MZwE0sKjSl6PZr5v8AzIFTWw5MWXFgyQPIMeUp6pI+PRJ9i0wfsqEOfWNNQvcv5
+         zjgQ==
+X-Gm-Message-State: APjAAAX+oFyDRCWDx/BZx6cCzXaH2B+4hSfsA9gmP4BUSGeiwV2lZQw8
+        q3kyoP0xlrCY87gzS+QP7HWmEQ==
+X-Google-Smtp-Source: APXvYqyhQWGDq29aObGBXAbdpZaBnQ19QBKCnGJjv7qDahD+7HvQ+r+O5f2OoOpwicdmPlWezdUQuA==
+X-Received: by 2002:a05:620a:a09:: with SMTP id i9mr2788276qka.132.1581362450559;
+        Mon, 10 Feb 2020 11:20:50 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id h6sm665297qtr.33.2020.02.10.11.20.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 11:20:50 -0800 (PST)
+Message-ID: <1581362448.7365.38.camel@lca.pw>
+Subject: Re: [PATCH -next] mm/filemap: fix a data race in filemap_fault()
+From:   Qian Cai <cai@lca.pw>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     akpm@linux-foundation.org, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 10 Feb 2020 14:20:48 -0500
+In-Reply-To: <20200210172511.GL8731@bombadil.infradead.org>
+References: <1581354029-20154-1-git-send-email-cai@lca.pw>
+         <20200210172511.GL8731@bombadil.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-MIME-Version: 1.0
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 14:05 -0800, Alexander Duyck wrote:
-> On Wed, 2020-01-22 at 09:43 -0800, Alexander Duyck wrote:
-> > This series provides an asynchronous means of reporting free guest pages
-> > to a hypervisor so that the memory associated with those pages can be
-> > dropped and reused by other processes and/or guests on the host. Using
-> > this it is possible to avoid unnecessary I/O to disk and greatly improve
-> > performance in the case of memory overcommit on the host.
+On Mon, 2020-02-10 at 09:25 -0800, Matthew Wilcox wrote:
+> On Mon, Feb 10, 2020 at 12:00:29PM -0500, Qian Cai wrote:
+> > @@ -2622,7 +2622,7 @@ void filemap_map_pages(struct vm_fault *vmf,
+> >  		if (page->index >= max_idx)
+> >  			goto unlock;
+> >  
+> > -		if (file->f_ra.mmap_miss > 0)
+> > +		if (data_race(file->f_ra.mmap_miss > 0))
+> >  			file->f_ra.mmap_miss--;
 > 
-> <snip>
-> 
-> > A brief history on the background of free page reporting can be found at:
-> > https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com/
-> > 
-> > Changes from v14:
-> > https://lore.kernel.org/lkml/20191119214454.24996.66289.stgit@localhost.localdomain/
-> > Renamed "unused page reporting" to "free page reporting"
-> >   Updated code, kconfig, and patch descriptions
-> > Split out patch for __free_isolated_page
-> >   Renamed function to __putback_isolated_page
-> > Rewrote core reporting functionality
-> >   Added logic to reschedule worker in 2 seconds instead of run to completion
-> >   Removed reported_pages statistics
-> >   Removed REPORTING_REQUESTED bit used in zone flags
-> >   Replaced page_reporting_dev_info refcount with state variable
-> >   Removed scatterlist from page_reporting_dev_info
-> >   Removed capacity from page reporting device
-> >   Added dynamic scatterlist allocation/free at start/end of reporting process
-> >   Updated __free_one_page so that reported pages are not always added to tail
-> >   Added logic to handle error from report function
-> > Updated virtio-balloon patch that adds support for page reporting
-> >   Updated patch description to try and highlight differences in approaches
-> >   Updated logic to reflect that we cannot limit the scatterlist from device
-> >   Added logic to return error from report function
-> > Moved documentation patch to end of patch set
-> > 
-> > Changes from v15:
-> > https://lore.kernel.org/lkml/20191205161928.19548.41654.stgit@localhost.localdomain/
-> > Rebased on linux-next-20191219
-> > Split out patches for budget and moving head to last page processed
-> > Updated budget code to reduce how much memory is reported per pass
-> > Added logic to also rotate the list if we exit due a page isolation failure
-> > Added migratetype as argument in __putback_isolated_page
-> > 
-> > Changes from v16:
-> > https://lore.kernel.org/lkml/20200103210509.29237.18426.stgit@localhost.localdomain/
-> > Rebased on linux-next-20200122
-> >   Updated patch 2 to to account for removal of pr_info in __isolate_free_page
-> > Updated patch title for patches 7, 8, and 9 to use prefix mm/page_reporting
-> > No code changes other than conflict resolution for patch 2
-> 
-> So I thought I would put out a gentle nudge since it has been about 4
-> weeks since v16 was submitted, a little over a week and a half for v16.1,
-> and I have yet to get any feedback on the code contained in the patchset.
-> Codewise nothing has changed from the v16 patchset other than rebasing it
-> off of the linux-next tree to resolve some merge conflicts that I saw
-> recently, and discussion around v16.1 was mostly about next steps and how
-> to deal with the page cache instead of discussing the code itself.
-> 
-> The full patchset can be found at:
-> https://lore.kernel.org/lkml/20200122173040.6142.39116.stgit@localhost.localdomain/
-> 
-> I believe I still need review feedback for patches 3, 4, 7, 8, and 9.
-> 
-> Thanks.
-> 
-> - Alex
+> How is this safe?  Two threads can each see 1, and then both decrement the
+> in-memory copy, causing it to end up at -1.
 
-So I had posted this patch set a few days before Linus's merge window
-opened. When I posted it the discussion was about what the follow-up on
-this patch set will be in terms of putting pressure on the page cache to
-force it to shrink. However I didn't get any review comments on the code
-itself.
-
-My last understanding on this patch set is that I am waiting on patch
-feedback from Mel Gorman as he had the remaining requests that led to most
-of the changes in v15 and v16. I believe I have addressed them, but I
-don't believe he has had a chance to review them.
-
-I am wondering now if it is still possible to either get it reviewed
-and/or applied without reposting, or do I need to repost it since it has
-been several weeks since I submitted it? The patch set still applies to
-the linux-next tree without any issues.
-
-Thanks.
-
-- Alex
-
-
-
-
+Well, I meant to say it is safe from *data* races rather than all other races,
+but it is a good catch for the underflow cases and makes some sense to fix them
+together (so we don't need to touch the same lines over and over again).
