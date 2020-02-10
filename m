@@ -2,169 +2,116 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A16DC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1ACC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144662080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8AF120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AvIh0EOE"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="u4PFrkck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgBJROF (ORCPT
+        id S1727872AbgBJRRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:14:05 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57554 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728151AbgBJROD (ORCPT
+        Mon, 10 Feb 2020 12:17:08 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45652 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgBJRRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:14:03 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHCL24032561;
-        Mon, 10 Feb 2020 18:13:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=feuW2yPS5ei8I742RMv4MDftOjP43l3feZEKO8JKWpw=;
- b=AvIh0EOE3aDFxOUiQ/ry4/xC4AH9ji+wZcsfwGPa7zbcfu/jiAJyHJJ5xRh4zQzCnoby
- CEL20YRclt0dYBHjtI53yigBJJR1ho0DhNQ6mvHrZIgJjzaCSzAs9MdhmkdHFVJOyRxL
- xsFcIBA9KAXgOLsnUPTfejo48YYU9x2TiIOcPEA9zbYRuhotj4Lzpz2hvuuu9xlgfKO9
- s1e92oTKCU13F4MZZI+UCS3QfAH8kjYeaxoXs6Dj1V+hDH3w6Yjzx+zrZNMrVHc7osY7
- v7bq2hzs6lf3vzo19iK06Qsj9ykMTEZtIndWi+gYvvgMYZOkD3x1Nb6NbJiUpDEtUSwi vA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9cc5c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 18:13:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6E52210002A;
-        Mon, 10 Feb 2020 18:13:51 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C2E12BA258;
-        Mon, 10 Feb 2020 18:13:51 +0100 (CET)
-Received: from [10.48.0.71] (10.75.127.45) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 18:13:50 +0100
-Subject: Re: [PATCH] counter: stm32-timer-cnt: add power management support
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     <vilhelm.gray@gmail.com>, <alexandre.torgue@st.com>,
-        <mcoquelin.stm32@gmail.com>, <benjamin.gaignard@st.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1580899678-26393-1-git-send-email-fabrice.gasnier@st.com>
- <20200208153541.448a0df3@archlinux>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <dac6eb51-f13c-5369-d43e-77f21ed81172@st.com>
-Date:   Mon, 10 Feb 2020 18:13:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 10 Feb 2020 12:17:08 -0500
+Received: by mail-qk1-f194.google.com with SMTP id a2so6755893qko.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:17:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cZqj50IftZxjPRTyAG3UBz7+gJFCeN+WZs9KU/8IF9Y=;
+        b=u4PFrkckW2UcATA5IxC3SY0oAfo6+BnzD/bSibOXEwogG9bxZnwBxLacMjrotEjjZE
+         VbzTq8fnMGYcSxngibL6ctR/gsgzN4uoEdIviyvRrSngTl1V5M4X8jjqcAL4mIiNtVmW
+         lDTXSbGm8nDDong7zxEPmDzMIlQfdxFMpsi9Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cZqj50IftZxjPRTyAG3UBz7+gJFCeN+WZs9KU/8IF9Y=;
+        b=h2XShoMpk3xO+mnCpdwe48nSssqN/U4tDC9x+b5Nr3zL+AqUefXMOfrUVzwgHU/rHW
+         muoaJet28hnFCFDR57acYRiWwuMuPfC2UTxnxWAfGW8+WQ6bqO0jppl7UsSTzbxyp+jg
+         vzIAMyuMnLwN8rSILSTW2KifH7Jm+ZlULFiuiQUrtCTO3QLDS7c8AKUgogGzEXE4Yw3Z
+         F9TlogijwFI05r10FJw5vuz+6K9Ao8Md3n+kIIhBVc6pDs6cscg3rPFP97MaT10ERPFh
+         hJ4lvhpJQSwFVwRSDkHhXgjZAvwbu97kLrqt8ojU91179FOFilikNMdmGYOxJFrldFtB
+         sXpw==
+X-Gm-Message-State: APjAAAVpGan+FP6X21uOgFOTMaqyaaiQKMVR0Gz/ijMHnVCNrHagoYbg
+        MK7QmYgvkYTLgSI3Ux8hKTY1tA==
+X-Google-Smtp-Source: APXvYqwf91q8QGoKS6La6EIHSo6XwbCspFPiHcgVGfon1sj4IcHS33S3QsX1lPtgdxKmq3/rjoHG9A==
+X-Received: by 2002:a37:6752:: with SMTP id b79mr2404234qkc.224.1581355027309;
+        Mon, 10 Feb 2020 09:17:07 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 11sm419271qko.76.2020.02.10.09.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 09:17:06 -0800 (PST)
+Date:   Mon, 10 Feb 2020 12:17:06 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
+Message-ID: <20200210171706.GC246160@google.com>
+References: <20200207205656.61938-1-joel@joelfernandes.org>
+ <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
+ <20200210094616.GC14879@hirez.programming.kicks-ass.net>
+ <20200210133652.GV2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20200208153541.448a0df3@archlinux>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210133652.GV2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/8/20 4:35 PM, Jonathan Cameron wrote:
-> On Wed, 5 Feb 2020 11:47:58 +0100
-> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Mon, Feb 10, 2020 at 05:36:52AM -0800, Paul E. McKenney wrote:
+[snip]
+> > The best we can do is move that rcu_irq_enter/exit_*() crud into the
+> > perf tracepoint glue I suppose.
 > 
->> Add suspend/resume PM sleep ops. When going to low power, enforce the
->> counter isn't active.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  drivers/counter/stm32-timer-cnt.c | 25 +++++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
->> index 3eafcce..3b84503 100644
->> --- a/drivers/counter/stm32-timer-cnt.c
->> +++ b/drivers/counter/stm32-timer-cnt.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/iio/types.h>
->>  #include <linux/mfd/stm32-timers.h>
->>  #include <linux/module.h>
->> +#include <linux/pinctrl/consumer.h>
->>  #include <linux/platform_device.h>
->>  
->>  #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
->> @@ -358,10 +359,33 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
->>  	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
->>  	priv->counter.priv = priv;
->>  
->> +	platform_set_drvdata(pdev, priv);
->> +
->>  	/* Register Counter device */
->>  	return devm_counter_register(dev, &priv->counter);
->>  }
->>  
->> +static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
->> +{
->> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
->> +	u32 cr1;
->> +
->> +	/* Check for active counter */
->> +	regmap_read(priv->regmap, TIM_CR1, &cr1);
->> +	if (cr1 & TIM_CR1_CEN)
->> +		return -EBUSY;
+> One approach would be to define a synchronize_preempt_disable() that
+> waits only for pre-existing disabled-preemption regions (including
+> of course diabled-irq and NMI-handler regions.  Something like Steve
+> Rostedt's workqueue-baed schedule_on_each_cpu(ftrace_sync) implementation
+> might work.
 > 
-> Runtime suspend is allowed to refuse to happen (and that is
-> explicitly documented)
-> Is that allowed for normal suspend?  I didn't think it was.
-> This will stop a suspend, but it's doing it by signalling a failure.
+> There are of course some plusses and minuses:
 
-Hi Jonathan,
+Thanks for enlisting them.
 
-I'll rework this patch, to avoid stopping the suspend. Another approach
-is to properly save/backup the registers here, and to disable the
-counter in low power mode.
-I'll update this in V2.
+> +	Works on preempt-disable regions in idle-loop code without
+> 	the need to invoke rcu_idle_exit() and rcu_idle_enter()..
+> 
+> +	Straightforward implementation.
+> 
+> -	Does not work on preempt-disable regions on offline CPUs.
+> 	(I have no idea if this really matters.)
 
-Thanks for reviewing,
-Fabrice
+One more area where it would not work is, if in the future we made it
+possible to sleep within tracepoint callbacks (something like what Mathieu
+said about handling page faults properly in callback code), then such an
+implementation would not work there.
 
-> I'm not sure for example that the system will resume everything that
-> was suspended before this call.
-> 
-> Normally you are in the tough luck category if a system decides
-> to suspend underneath you.   There are ways to prevent it
-> from userspace (wakelocks etc).
-> 
->> +
->> +	return pinctrl_pm_select_sleep_state(dev);
->> +}
->> +
->> +static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
->> +{
->> +	return pinctrl_pm_select_default_state(dev);
->> +}
->> +
->> +static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
->> +			 stm32_timer_cnt_resume);
->> +
->>  static const struct of_device_id stm32_timer_cnt_of_match[] = {
->>  	{ .compatible = "st,stm32-timer-counter", },
->>  	{},
->> @@ -373,6 +397,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
->>  	.driver = {
->>  		.name = "stm32-timer-counter",
->>  		.of_match_table = stm32_timer_cnt_of_match,
->> +		.pm = &stm32_timer_cnt_pm_ops,
->>  	},
->>  };
->>  module_platform_driver(stm32_timer_cnt_driver);
-> 
+thanks,
+
+ - Joel
+
