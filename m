@@ -2,88 +2,126 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3742FC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270E9C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C311208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F16214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MlgjgnoI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TtfwFmaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBJIbE (ORCPT
+        id S1727557AbgBJIe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:31:04 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:26053 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726968AbgBJIbE (ORCPT
+        Mon, 10 Feb 2020 03:34:59 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:38654 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbgBJIe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 03:31:04 -0500
-X-UUID: 5b9bbc56cfdc4bba9c29251cc2c3084e-20200210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Jme6XnUcV22sv+Lb0GfidwDPAVP5wJkTpFliBwJ3cpI=;
-        b=MlgjgnoIA4AD4sGad07cNjNs9aeX4kPOkUBvg6aJe/XqqKbp6z7t+WdI8EyBQG7wwk4xzFLVfTa+JAxwf9PZ2n7AHIwcbS7t1WZ32/TY3Vt36qp+4oPBYAJm/RO/vCS/hK5rMBvIQNeNet3kupcf44gHZJvloGaQBGVgtKNZf/Y=;
-X-UUID: 5b9bbc56cfdc4bba9c29251cc2c3084e-20200210
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 878928057; Mon, 10 Feb 2020 16:30:57 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Feb 2020 16:31:39 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by mtkcas08.mediatek.inc
- (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 10 Feb
- 2020 16:31:12 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Feb 2020 16:31:12 +0800
-Message-ID: <1581323455.2213.6.camel@mtksdaap41>
-Subject: Re: [PATCH v2] mtd: mtk-quadspi: add support for DMA reading
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Chuanhong Guo <gch981213@gmail.com>
-CC:     <linux-mtd@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Richard Weinberger <richard@nod.at>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 10 Feb 2020 16:30:55 +0800
-In-Reply-To: <20200208084022.193231-1-gch981213@gmail.com>
-References: <20200208084022.193231-1-gch981213@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 10 Feb 2020 03:34:58 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01A8Wx33161934;
+        Mon, 10 Feb 2020 08:34:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=jUUFk4pjb4VR5au3cMOhGdF3aMvNDZPsdfMNEMcE88Y=;
+ b=TtfwFmaCYZ7mxxJyy/NgvB5hNwBeHzKKrJHA82hz4I5KiQk+l6BBp7Qjuc8d/zS+kffz
+ 1I5KRbVp8u/mPsKh1eIQfPxD3v+mN2nuiAEmHt/QtE2J4qQHY2QjYdD5eof45FAZuqQv
+ ze5eygr9Pld5+VMbG0chzaJtOM7XteryWECz+U67qJSbNb3lhZXzSkqJrK6jSgTkGv1l
+ 3os1ruWNTWfsjLghuW461Fc3SH5/KuViEPuupuDutjjWWmU0e5/YTXJXR281kAUaxGJz
+ zFYTMFhGjklMG9vBu8OTPpSm/LWGdHof7oJVFzojkPzY1EClwiOQ7DKt+oan/RWyjOji cA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2y2p3s24gk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 08:34:53 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01A8WXsp168413;
+        Mon, 10 Feb 2020 08:32:52 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2y26pxshhy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 08:32:52 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01A8Wp4w001439;
+        Mon, 10 Feb 2020 08:32:51 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 10 Feb 2020 00:32:51 -0800
+Date:   Mon, 10 Feb 2020 11:32:43 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: dwc3: debug: remove redundant call to strlen
+Message-ID: <20200210083243.GW1778@kadam>
+References: <20200208162508.29336-1-colin.king@canonical.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208162508.29336-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ mlxscore=0 adultscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002100071
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002100071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTAyLTA4IGF0IDE2OjQwICswODAwLCBDaHVhbmhvbmcgR3VvIHdyb3RlOg0K
-PiBQSU8gcmVhZGluZyBtb2RlIG9uIHRoaXMgY29udHJvbGxlciBpcyBwcmV0dHkgaW5lZmZpY2ll
-bnQNCj4gKG9uZSBjbWQrYWRkcitkdW1teSBzZXF1ZW5jZSByZWFkcyBvbmx5IG9uZSBieXRlKQ0K
-PiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgcmVhZGluZyB1c2luZyBETUEgbW9kZSB3aGlj
-aCBpbmNyZWFzZXMNCj4gcmVhZGluZyBzcGVlZCBmcm9tIDFNQi9zIHRvIDRNQi9zDQo+IA0KPiBE
-TUEgYnVzeSBjaGVja2luZyBpcyBpbXBsZW1lbnRlZCB3aXRoIHJlYWRsX3BvbGxfdGltZW91dCBi
-ZWNhdXNlDQo+IEkgZG9uJ3QgaGF2ZSBhY2Nlc3MgdG8gSVJRLXJlbGF0ZWQgZG9jcy4gVGhlIHNw
-ZWVkIGluY3JlbWVudCBjb21lcw0KPiBmcm9tIHRob3NlIHNhdmVkIGNtZCthZGRyK2R1bW15IGNs
-b2Nrcy4NCg0KSGkgQ2h1YW5ob25nLA0KDQpUaGFua3MgZm9yIHlvdXIgcGF0Y2gsIEknbSBjaGVj
-a2luZyB3aXRoIEd1b2NodW4gdG8gc2VlIGlmIHdlIGNvdWxkDQpyZWxlYXNlIElSUSByZWxhdGVk
-IGluZm9ybWF0aW9uIHRvIHlvdS4NCg0KDQo+IFRoaXMgY29udHJvbGxlciByZXF1aXJlcyB0aGF0
-IERNQSBzb3VyY2UvZGVzdGluYXRpb24gYWRkcmVzcyBhbmQNCj4gcmVhZGluZyBsZW5ndGggc2hv
-dWxkIGJlIDE2LWJ5dGUgYWxpZ25lZC4gV2UgdXNlIGEgYm91bmNlIGJ1ZmZlciBpZg0KPiBvbmUg
-b2YgdGhlbSBpcyBub3QgYWxpZ25lZCwgcmVhZCBtb3JlIHRoYW4gd2hhdCB3ZSBuZWVkLCBhbmQg
-Y29weQ0KPiBkYXRhIGZyb20gY29ycmVzcG9uZGluZyBidWZmZXIgb2Zmc2V0Lg0KDQpJJ3ZlIGNo
-ZWNrZWQgd2l0aCBvdXIgSFcgZ3V5cy4gVGhlIGxpbWl0YXRpb24gaXMgb24gRFJBTSBvbmx5Lg0K
-U28gZm9yIHJlYWQgd2Ugc2hvdWxkIGNoZWNrIGJ1ZmZlciBhbmQgbGVuZ3RoIHRvIG1ha2Ugc3Vy
-ZSBpdCBpcw0KYWxpZ25lZCwgYnV0IGRvbid0IG5lZWQgdG8gY2hlY2sgZnJvbS4NCg0KSm9lLkMN
-Cg0K
+On Sat, Feb 08, 2020 at 04:25:08PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The call to strlen is redundant since the return value is assigned
+> to variable len but not subsequently used. Remove the redundant
+> call.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/usb/dwc3/debug.h | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
+> index e56beb9d1e36..ee964352c8e2 100644
+> --- a/drivers/usb/dwc3/debug.h
+> +++ b/drivers/usb/dwc3/debug.h
+> @@ -296,8 +296,6 @@ static inline const char *dwc3_ep_event_string(char *str, size_t size,
+>  				status & DEPEVT_STATUS_TRANSFER_ACTIVE ?
+>  				" (Active)" : " (Not Active)");
+>  
+> -		len = strlen(str);
+
+This code is buggy.  It's a mixup between ret and len.  Get rid of "ret"
+and use "len" throughout.
+
+Unlike userspace snprintf() the kernel version always returns a positive
+value.  It returns the number of bytes that would have been copied if
+there were enough space.  This code should probably be changed to use
+scnprintf() which returns the number of bytes which were copied
+successfully.
+
+The remove all the strlen() calls.  It should just be += the return.
+
+	len += scnprintf(str + len, size - len, "Transfer Not Ready [%d] %s",
+			 event->parameters,
+			 status & DEPEVT_STATUS_TRANSFER_ACTIVE ?
+				"(Active)" : "(Not Active)");
+
+regards,
+dan carpenter
 
