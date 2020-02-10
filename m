@@ -2,124 +2,111 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B3C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377EAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CE82082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3D12082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oBauWKjw"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="e6+c4MRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgBJOng (ORCPT
+        id S1728157AbgBJOp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:43:36 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:38570 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbgBJOnf (ORCPT
+        Mon, 10 Feb 2020 09:45:29 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37362 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbgBJOp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:43:35 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01AEYJpr022392;
-        Mon, 10 Feb 2020 14:43:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=d0pIvsq2NeMMD/xcPD4wQXjfRR2ZTQ6xKLPL706LNNg=;
- b=oBauWKjwEiRTM9Fev31Hx0WKOJcntbxzlkOprFDzoXlCn/YzE3fr58NKbJVrFLkkB9DS
- NJNiUIoVF/ANlikNgQrsRU0v8mTt3t7dG2IxCZ27rmeO0l7T/stJoypyw/poFKZUVvkQ
- 5C0qi/u+V9MagYiFb5zgy5Dh1UQGnvLqf/4E3LenvlarRikpywxoWXDG8UZVi6apIn3y
- kgkm9dB61wuOAAV4tPvvv53yxCUkRpM7krE4yH1YzOWTS3whocTgiBqFWH8kR1di4Bu4
- sLw0rC89mB5/bBCcEeN1rCQrPrjZLBJOpgjEwMrgd1E7FyWH3jiz4B91Pnte1glygvMn wg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2y2k87vvg9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 14:43:26 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01AEb4xY100593;
-        Mon, 10 Feb 2020 14:41:26 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2y26ff8rys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 14:41:26 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01AEfMRa011474;
-        Mon, 10 Feb 2020 14:41:22 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Feb 2020 06:41:21 -0800
-Date:   Mon, 10 Feb 2020 17:41:11 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: tda10071: fix unsigned sign extension overflow
-Message-ID: <20200210144110.GA1778@kadam>
-References: <20200210142646.431957-1-colin.king@canonical.com>
+        Mon, 10 Feb 2020 09:45:29 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z12so4033585pgl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:45:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AoC6oLn1iN9nAEM4B11m4EnisMnCyq2bdXkwzvNp36c=;
+        b=e6+c4MRotQlIlu/VHkezDMBYJX1/ZntF5pE9VwiOcSLxcpPcryDxRTgwjK/ptX2sZv
+         LBDhDetYzW+4Z4d8dGkJzlA2TwdJotNQCxS2fQCHayLykVo8l3wAY0o2ATl9Y9g+3AOk
+         kQ1/uD4zYT0qz6DR3jwmGqIvwE3t+i9kjfhe6aEXTAWzGd3RWJI9OjNNGU3O2clJ596g
+         ArbvoO0mrJfcZc39E+qoUSnlcy08ENMtwhGnSWT+RZuAmUHnwYD1ldGQIdOVhHzaf2rb
+         lBtrI7M1fKmSme3mrpABjmQwDIHrcYBovYaCkck2Ai7dcoaE0YeLFxZdo9f3ybZ4biRV
+         IfMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AoC6oLn1iN9nAEM4B11m4EnisMnCyq2bdXkwzvNp36c=;
+        b=JrzJhiBWImtQmilwvXY8jYAQk0Y7/5/Mm2JDNGQ2RW6mcYLPyLUG1JNqSzE3pmAzya
+         9D/U35VcBPKctJV4Xigw0HiSQB7LNyG5ij6A1wZU5hYE8HVuUP+ZDm6zR4Y3p1lI0X1w
+         LiU++wAqmTDg0/XQLNt+HE3Z+or5P1SMksM48iRvFjX7sOcP+IIYNQ6wsde1aCOwYUfM
+         uh+exc6ZPOQf/TC3IPAe2j7p6TZHovWM1T7muCAokTdISwrojUNF/D711KZdEztKSl6j
+         gFjRHqEd17YGkdt7cGqQKyP1WiQJ5gYTotbCi9SM/DAVJlzIBhnyopDxEHYnTJoPBDCm
+         x7Jg==
+X-Gm-Message-State: APjAAAXIIWWWrzfqF/5OA8a6ArlLvfYrI587FBtz0b3U05EOTpaBBvR3
+        6bISON6XdU1a81+G2TshgVjU/RgJx5g=
+X-Google-Smtp-Source: APXvYqy56C+LYN/F5dUKKelbs886mNzI9yqb6YM3uacrsLXpoxwP4uDXYx/soWzP+PzK+jDRnMeuJA==
+X-Received: by 2002:a65:420b:: with SMTP id c11mr2013833pgq.306.1581345926732;
+        Mon, 10 Feb 2020 06:45:26 -0800 (PST)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.gmail.com with ESMTPSA id dw10sm552079pjb.11.2020.02.10.06.45.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 06:45:26 -0800 (PST)
+From:   Mark Salyzyn <salyzyn@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>
+Subject: [PATCH 0/4 v2] random add rng-seed to command line option
+Date:   Mon, 10 Feb 2020 06:45:01 -0800
+Message-Id: <20200210144512.180348-1-salyzyn@android.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210142646.431957-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- adultscore=0 bulkscore=0 mlxscore=0 spamscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 impostorscore=0 clxscore=1011 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100113
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 02:26:46PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The shifting of buf[3] by 24 bits to the left will be promoted to
-> a 32 bit signed int and then sign-extended to an unsigned long. In
-> the unlikely event that the the top bit of buf[3] is set then all
-> then all the upper bits end up as also being set because of
-> the sign-extension and this affect the ev->post_bit_error sum.
-> Fix this by using the temporary u32 variable bit_error to avoid
-> the sign-extension promotion. This also removes the need to do the
-> computation twice.
-> 
-> Addresses-Coverity: ("Unintended sign extension")
-> Fixes: 267897a4708f ("[media] tda10071: implement DVBv5 statistics")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/media/dvb-frontends/tda10071.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/dvb-frontends/tda10071.c b/drivers/media/dvb-frontends/tda10071.c
-> index 1953b00b3e48..685c0ac71819 100644
-> --- a/drivers/media/dvb-frontends/tda10071.c
-> +++ b/drivers/media/dvb-frontends/tda10071.c
-> @@ -470,10 +470,11 @@ static int tda10071_read_status(struct dvb_frontend *fe, enum fe_status *status)
->  			goto error;
->  
->  		if (dev->delivery_system == SYS_DVBS) {
-> -			dev->dvbv3_ber = buf[0] << 24 | buf[1] << 16 |
-> -					 buf[2] << 8 | buf[3] << 0;
-> -			dev->post_bit_error += buf[0] << 24 | buf[1] << 16 |
-> -					       buf[2] << 8 | buf[3] << 0;
-> +			u32 bit_error = buf[0] << 24 | buf[1] << 16 |
-> +					buf[2] << 8 | buf[3] << 0;
+A followup to commit 428826f5358c922dc378830a1717b682c0823160
+("fdt: add support for rng-seed") to extend what was started
+with Open Firmware (OF or Device Tree) parsing, but also add
+it to the command line.
 
-This driver has a bunch of endian conversions (probably from big endian
-to little endian) and so it's probably buggy on big endian CPUs.
+If CONFIG_RANDOM_TRUST_BOOTLOADER is set, then feed the rng-seed
+command line option length as added trusted entropy.
 
-regards,
-dan carpenter
+Always erase all views of the rng-seed option, except early command
+line parsing, to prevent leakage to applications or modules, to
+eliminate any attack vector.
+
+It is preferred to add rng-seed to the Device Tree, but some
+platforms do not have this option, so this adds the ability to
+provide some command-line-limited data to the entropy through this
+alternate mechanism.  Expect on average 6 bits of useful entropy
+per character.
+
+Mark Salyzyn (4):
+  init: move string constants to __initconst section
+  init: boot_command_line can be truncated
+  random: rng-seed source is utf-8
+  random: add rng-seed= command line option
+
+---
+v2
+- Split into four bite sized patches.
+- Correct spelling in commit message.
+- rng-seed is assumed to be utf-8, so correct both to 6 bits/character
+  of collected entropy.
+- Move entropy collection to a static __always_inline helper function.
+
+ drivers/char/random.c  |  10 +++-
+ include/linux/random.h |   5 ++
+ init/main.c            | 115 ++++++++++++++++++++++++++++++-----------
+ 3 files changed, 100 insertions(+), 30 deletions(-)
+
+-- 
+2.25.0.341.g760bfbb309-goog
 
