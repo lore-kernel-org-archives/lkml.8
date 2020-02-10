@@ -2,100 +2,200 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91739C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D9AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A0C20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE76F2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qsYguvM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgBJRTE (ORCPT
+        id S1728165AbgBJRTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:19:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:36680 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbgBJRTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:19:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95E281FB;
-        Mon, 10 Feb 2020 09:19:03 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58DEF3F68F;
-        Mon, 10 Feb 2020 09:19:00 -0800 (PST)
-From:   James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v7 09/11] arm64: disable SCS for hypervisor code
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mon, 10 Feb 2020 12:19:22 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39990 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbgBJRTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:19:21 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t14so60127wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:19:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oIl67nxXPIGrGYEprbTExGSvnC9F9nc7bLg95r69g+g=;
+        b=qsYguvM9Y7IZ0vTYqRn6gqe315EVNSNAoXvnU7Il/jEgH6OA5Ex79LfWkPnVQ1Tig6
+         DZkfDWJBkhH8/OU8nsbgj7EJqhFcfE3b9b6ipz/LgM9JJj0yef4v7RAHWEP2iQQ3gcqR
+         9bzcCD5sVgzg+4xYDkJI827X3pNvqolyAEH4cPspelg1J25cUMwhAN8/+2AvU/skRtZ3
+         dBZMbs/BE3whHqrgNZ5gqWsTjBcDbhRy6dnr5p2HunPzxpL4XNNICps0BLJQf8iid0pO
+         eOZInK/0Wx/uPfqdcgiUcKrxjG+V0jaHO4nPzkYx/qsBiaYaDBwdJVTkIzRYzPBID8Zo
+         /fDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oIl67nxXPIGrGYEprbTExGSvnC9F9nc7bLg95r69g+g=;
+        b=fGs/M2JfVuN9pHEFPW39rg0VKWsqSpSJA76VrXaA0Mc5xwu2H6yZG2LRNnJJ7Bhops
+         wc4nh6tqFQNsSZehGz1JQsFXLl2+XsRyJo+8sl/e7+8aJ73i0GIBj28irgIIy1BAU8Qg
+         vuN3EVjfUDkIuLGtilpsMp3MioCj/u4bbzl19wvzjqc4OpPqVRhMog/qq4vbUb0o4D6K
+         Oeg1sfEbXOYXz8jxJ4LVOOyQPfg2mlKICeI/Qd3k1UHGtFTPZlO5ARVQBW0K/yIv/hmt
+         wcm1mpqk55lQPfHsVp/hkApdgJw6oSnA6wxasiQrnv3Iz4GdnttZqDwS8W/r1ceZ/nos
+         tYtA==
+X-Gm-Message-State: APjAAAVqgK6kdNXIl+be224/XL32g+4dAFbvPhjh4i8hvjMvuJsjn8oi
+        CJB/Y4SOAAMB7i0VFhPhEVbjH+UZi/c=
+X-Google-Smtp-Source: APXvYqzV9sO34XJZFw6xpwiuFWll4zkKifzTrTiAxP59oZnDpnnijGr7YApsIerKdCCMbKpzqWygRg==
+X-Received: by 2002:a1c:6a16:: with SMTP id f22mr25288wmc.53.1581355157157;
+        Mon, 10 Feb 2020 09:19:17 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id o4sm1409882wrx.25.2020.02.10.09.19.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 09:19:16 -0800 (PST)
+Subject: Re: [PATCH v2 4/8] ASoC: qdsp6: q6routing: add pcm port routing
+To:     Adam Serbinski <adam@serbinski.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200128184934.77625-1-samitolvanen@google.com>
- <20200128184934.77625-10-samitolvanen@google.com>
-Message-ID: <6f62b3c0-e796-e91c-f53b-23bd80fcb065@arm.com>
-Date:   Mon, 10 Feb 2020 17:18:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-5-adam@serbinski.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <a161cfd8-f1ca-4e1c-65b3-a465053c7d20@linaro.org>
+Date:   Mon, 10 Feb 2020 17:19:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200128184934.77625-10-samitolvanen@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20200209154748.3015-5-adam@serbinski.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sami,
-
-On 28/01/2020 18:49, Sami Tolvanen wrote:
-> Filter out CC_FLAGS_SCS and -ffixed-x18 for code that runs at a
-> different exception level.
-
-Hmmm, there are two things being disabled here.
-
-Stashing the lr in memory pointed to by VA won't work transparently at EL2 ... but
-shouldn't KVM's C code still treat x18 as a fixed register?
 
 
-As you have an __attribute__((no_sanitize("shadow-call-stack"))), could we add that to
-__hyp_text instead? (its a smaller hammer!) All of KVM's EL2 code is marked __hyp_text,
-but that isn't everything in these files. Doing it like this would leave KVM's VHE-only
-paths covered.
+On 09/02/2020 15:47, Adam Serbinski wrote:
+> This patch adds support to PCM_PORT mixers required to
+> select path between ASM stream and AFE ports.
+> 
+> Signed-off-by: Adam Serbinski <adam@serbinski.com>
+> CC: Andy Gross <agross@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Liam Girdwood <lgirdwood@gmail.com>
+> CC: Patrick Lai <plai@codeaurora.org>
+> CC: Banajit Goswami <bgoswami@codeaurora.org>
+> CC: Jaroslav Kysela <perex@perex.cz>
+> CC: Takashi Iwai <tiwai@suse.com>
+> CC: alsa-devel@alsa-project.org
+> CC: linux-arm-msm@vger.kernel.org
+> CC: devicetree@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>   sound/soc/qcom/qdsp6/q6routing.c | 44 ++++++++++++++++++++++++++++++++
 
-As an example, with VHE the kernel and KVM both run at EL2, and KVM behaves differently:
-kvm_vcpu_put_sysregs() in kvm/hyp/sysreg-sr.c is called from a preempt notifier as
-the EL2 registers are always accessible.
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
 
-Thanks,
-
-James
-
-> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-> index ea710f674cb6..5843adef9ef6 100644
-> --- a/arch/arm64/kvm/hyp/Makefile
-> +++ b/arch/arm64/kvm/hyp/Makefile
-> @@ -28,3 +28,6 @@ GCOV_PROFILE	:= n
->  KASAN_SANITIZE	:= n
->  UBSAN_SANITIZE	:= n
->  KCOV_INSTRUMENT	:= n
+>   1 file changed, 44 insertions(+)
+> 
+> diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
+> index 20724102e85a..3a81d2161707 100644
+> --- a/sound/soc/qcom/qdsp6/q6routing.c
+> +++ b/sound/soc/qcom/qdsp6/q6routing.c
+> @@ -67,6 +67,10 @@
+>   	{ mix_name, "SEC_MI2S_TX", "SEC_MI2S_TX" },	\
+>   	{ mix_name, "QUAT_MI2S_TX", "QUAT_MI2S_TX" },	\
+>   	{ mix_name, "TERT_MI2S_TX", "TERT_MI2S_TX" },		\
+> +	{ mix_name, "PRI_PCM_TX", "PRI_PCM_TX" },		\
+> +	{ mix_name, "SEC_PCM_TX", "SEC_PCM_TX" },		\
+> +	{ mix_name, "TERT_PCM_TX", "TERT_PCM_TX" },		\
+> +	{ mix_name, "QUAT_PCM_TX", "QUAT_PCM_TX" },		\
+>   	{ mix_name, "SLIMBUS_0_TX", "SLIMBUS_0_TX" },		\
+>   	{ mix_name, "SLIMBUS_1_TX", "SLIMBUS_1_TX" },		\
+>   	{ mix_name, "SLIMBUS_2_TX", "SLIMBUS_2_TX" },		\
+> @@ -128,6 +132,18 @@
+>   	SOC_SINGLE_EXT("QUAT_MI2S_TX", QUATERNARY_MI2S_TX,		\
+>   		id, 1, 0, msm_routing_get_audio_mixer,			\
+>   		msm_routing_put_audio_mixer),				\
+> +	SOC_SINGLE_EXT("PRI_PCM_TX", PRIMARY_PCM_TX,			\
+> +		id, 1, 0, msm_routing_get_audio_mixer,			\
+> +		msm_routing_put_audio_mixer),				\
+> +	SOC_SINGLE_EXT("SEC_PCM_TX", SECONDARY_PCM_TX,			\
+> +		id, 1, 0, msm_routing_get_audio_mixer,			\
+> +		msm_routing_put_audio_mixer),				\
+> +	SOC_SINGLE_EXT("TERT_PCM_TX", TERTIARY_PCM_TX,			\
+> +		id, 1, 0, msm_routing_get_audio_mixer,			\
+> +		msm_routing_put_audio_mixer),				\
+> +	SOC_SINGLE_EXT("QUAT_PCM_TX", QUATERNARY_PCM_TX,		\
+> +		id, 1, 0, msm_routing_get_audio_mixer,			\
+> +		msm_routing_put_audio_mixer),				\
+>   	SOC_SINGLE_EXT("SLIMBUS_0_TX", SLIMBUS_0_TX,			\
+>   		id, 1, 0, msm_routing_get_audio_mixer,			\
+>   		msm_routing_put_audio_mixer),				\
+> @@ -468,6 +484,18 @@ static const struct snd_kcontrol_new quaternary_mi2s_rx_mixer_controls[] = {
+>   static const struct snd_kcontrol_new tertiary_mi2s_rx_mixer_controls[] = {
+>   	Q6ROUTING_RX_MIXERS(TERTIARY_MI2S_RX) };
+>   
+> +static const struct snd_kcontrol_new primary_pcm_rx_mixer_controls[] = {
+> +	Q6ROUTING_RX_MIXERS(PRIMARY_PCM_RX) };
 > +
-> +# remove the SCS flags from all objects in this directory
-> +KBUILD_CFLAGS := $(filter-out -ffixed-x18 $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
+> +static const struct snd_kcontrol_new secondary_pcm_rx_mixer_controls[] = {
+> +	Q6ROUTING_RX_MIXERS(SECONDARY_PCM_RX) };
+> +
+> +static const struct snd_kcontrol_new tertiary_pcm_rx_mixer_controls[] = {
+> +	Q6ROUTING_RX_MIXERS(TERTIARY_PCM_RX) };
+> +
+> +static const struct snd_kcontrol_new quaternary_pcm_rx_mixer_controls[] = {
+> +	Q6ROUTING_RX_MIXERS(QUATERNARY_PCM_RX) };
+> +
+>   static const struct snd_kcontrol_new slimbus_rx_mixer_controls[] = {
+>   	Q6ROUTING_RX_MIXERS(SLIMBUS_0_RX) };
+>   
+> @@ -695,6 +723,18 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
+>   	SND_SOC_DAPM_MIXER("TERT_MI2S_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
+>   			   tertiary_mi2s_rx_mixer_controls,
+>   			   ARRAY_SIZE(tertiary_mi2s_rx_mixer_controls)),
+> +	SND_SOC_DAPM_MIXER("PRI_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
+> +			   primary_pcm_rx_mixer_controls,
+> +			   ARRAY_SIZE(primary_pcm_rx_mixer_controls)),
+> +	SND_SOC_DAPM_MIXER("SEC_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
+> +			   secondary_pcm_rx_mixer_controls,
+> +			   ARRAY_SIZE(secondary_pcm_rx_mixer_controls)),
+> +	SND_SOC_DAPM_MIXER("TERT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
+> +			   tertiary_pcm_rx_mixer_controls,
+> +			   ARRAY_SIZE(tertiary_pcm_rx_mixer_controls)),
+> +	SND_SOC_DAPM_MIXER("QUAT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
+> +			   quaternary_pcm_rx_mixer_controls,
+> +			   ARRAY_SIZE(quaternary_pcm_rx_mixer_controls)),
+>   	SND_SOC_DAPM_MIXER("PRIMARY_TDM_RX_0 Audio Mixer", SND_SOC_NOPM, 0, 0,
+>   				pri_tdm_rx_0_mixer_controls,
+>   				ARRAY_SIZE(pri_tdm_rx_0_mixer_controls)),
+> @@ -853,6 +893,10 @@ static const struct snd_soc_dapm_route intercon[] = {
+>   	Q6ROUTING_RX_DAPM_ROUTE("TERT_MI2S_RX Audio Mixer", "TERT_MI2S_RX"),
+>   	Q6ROUTING_RX_DAPM_ROUTE("SEC_MI2S_RX Audio Mixer", "SEC_MI2S_RX"),
+>   	Q6ROUTING_RX_DAPM_ROUTE("PRI_MI2S_RX Audio Mixer", "PRI_MI2S_RX"),
+> +	Q6ROUTING_RX_DAPM_ROUTE("PRI_PCM_RX Audio Mixer", "PRI_PCM_RX"),
+> +	Q6ROUTING_RX_DAPM_ROUTE("SEC_PCM_RX Audio Mixer", "SEC_PCM_RX"),
+> +	Q6ROUTING_RX_DAPM_ROUTE("TERT_PCM_RX Audio Mixer", "TERT_PCM_RX"),
+> +	Q6ROUTING_RX_DAPM_ROUTE("QUAT_PCM_RX Audio Mixer", "QUAT_PCM_RX"),
+>   	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_0 Audio Mixer",
+>   				"PRIMARY_TDM_RX_0"),
+>   	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_1 Audio Mixer",
+> 
