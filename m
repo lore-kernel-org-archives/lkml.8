@@ -2,55 +2,56 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C372C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1315EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9332051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42352051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338860;
-	bh=dPGGYG730kGvUiiEz56yXK7yM3zLDXSsz94INHQxq6k=;
+	s=default; t=1581338865;
+	bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=saEjQHPcyX7V5nB6k/SU53Pft0puoQTr6MpEQ0ObNZcdh1Y6DRhe16DWxkNqTDggc
-	 D0oQUb7sZPBqfdteY8RiGPUqTc4NC4esHM9lTj5wci7Z8X559BzXTHs4CkYxZbDhij
-	 PXCzNNXyUkuJ/ZEWHiwcC2Z9AH9i+3BFbYNKHokQ=
+	b=EwkNXyzLC2wdGj1nafeMmmUAEDLjUz5vJz/eKR0rZ6Dmp2QeWX8NpSZHL5XxaB8MV
+	 KAB+wuF4+oMVd/k0hZCWNdFZ43L1/2T3b0hWjHTuTfpNf1ani1ZmU4liV00/p2TdZo
+	 v2Lcw/6t3W99Ildl6rNPHFIvqhhnyBjqVC05zOOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbgBJMrj (ORCPT
+        id S1730758AbgBJMro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46392 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbgBJMmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:19 -0500
+        id S1728871AbgBJMoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:44:04 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E5020873;
-        Mon, 10 Feb 2020 12:42:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA87320661;
+        Mon, 10 Feb 2020 12:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338537;
-        bh=dPGGYG730kGvUiiEz56yXK7yM3zLDXSsz94INHQxq6k=;
+        s=default; t=1581338644;
+        bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjqnL9q228B5PinGzbPihFIa+QnDvaJ5L+cEP4YhlKZL9uJkpkdPRC7FAB3aW/a/E
-         RUC2CnWUNAe47f9ELf9tQL4D/LSkl9dYZwbDjoHIxPw0lShm7OhLVjAr0k1XsUHklz
-         epLhAnGl+qT9Ephw5y0h5iThxA9PxGYtFKIB8eAQ=
+        b=Sne7dLRAaBsoZI3WULlqepa5qhEZj1g2Z32QGRvj9Tscc0UZVygGz8j1K7cjBkERV
+         HcGxuuWNKWkEsNlAmrA832U4zTGCncKBxsLpQHjLPgQ0zTtLvZjZZaHH6MWDiE7IKb
+         rMvvK88Ovs1S7ahSnfnavvamIntZbjbo14Bi/emY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 367/367] powerpc/kuap: Fix set direction in allow/prevent_user_access()
-Date:   Mon, 10 Feb 2020 04:34:40 -0800
-Message-Id: <20200210122456.173888537@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Daniel Verkamp <dverkamp@chromium.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>
+Subject: [PATCH 5.4 233/309] virtio-pci: check name when counting MSI-X vectors
+Date:   Mon, 10 Feb 2020 04:33:09 -0800
+Message-Id: <20200210122428.904368123@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,249 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Daniel Verkamp <dverkamp@chromium.org>
 
-[ Upstream commit 1d8f739b07bd538f272f60bf53f10e7e6248d295 ]
+commit 303090b513fd1ee45aa1536b71a3838dc054bc05 upstream.
 
-__builtin_constant_p() always return 0 for pointers, so on RADIX
-we always end up opening both direction (by writing 0 in SPR29):
+VQs without a name specified are not valid; they are skipped in the
+later loop that assigns MSI-X vectors to queues, but the per_vq_vectors
+loop above that counts the required number of vectors previously still
+counted any queue with a non-NULL callback as needing a vector.
 
-  0000000000000170 <._copy_to_user>:
-  ...
-   1b0:	4c 00 01 2c 	isync
-   1b4:	39 20 00 00 	li      r9,0
-   1b8:	7d 3d 03 a6 	mtspr   29,r9
-   1bc:	4c 00 01 2c 	isync
-   1c0:	48 00 00 01 	bl      1c0 <._copy_to_user+0x50>
-  			1c0: R_PPC64_REL24	.__copy_tofrom_user
-  ...
-  0000000000000220 <._copy_from_user>:
-  ...
-   2ac:	4c 00 01 2c 	isync
-   2b0:	39 20 00 00 	li      r9,0
-   2b4:	7d 3d 03 a6 	mtspr   29,r9
-   2b8:	4c 00 01 2c 	isync
-   2bc:	7f c5 f3 78 	mr      r5,r30
-   2c0:	7f 83 e3 78 	mr      r3,r28
-   2c4:	48 00 00 01 	bl      2c4 <._copy_from_user+0xa4>
-  			2c4: R_PPC64_REL24	.__copy_tofrom_user
-  ...
+Add a check to the per_vq_vectors loop so that vectors with no name are
+not counted to make the two loops consistent.  This prevents
+over-counting unnecessary vectors (e.g. for features which were not
+negotiated with the device).
 
-Use an explicit parameter for direction selection, so that GCC
-is able to see it is a constant:
+Cc: stable@vger.kernel.org
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Daniel Verkamp <dverkamp@chromium.org>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Wang, Wei W <wei.w.wang@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  00000000000001b0 <._copy_to_user>:
-  ...
-   1f0:	4c 00 01 2c 	isync
-   1f4:	3d 20 40 00 	lis     r9,16384
-   1f8:	79 29 07 c6 	rldicr  r9,r9,32,31
-   1fc:	7d 3d 03 a6 	mtspr   29,r9
-   200:	4c 00 01 2c 	isync
-   204:	48 00 00 01 	bl      204 <._copy_to_user+0x54>
-  			204: R_PPC64_REL24	.__copy_tofrom_user
-  ...
-  0000000000000260 <._copy_from_user>:
-  ...
-   2ec:	4c 00 01 2c 	isync
-   2f0:	39 20 ff ff 	li      r9,-1
-   2f4:	79 29 00 04 	rldicr  r9,r9,0,0
-   2f8:	7d 3d 03 a6 	mtspr   29,r9
-   2fc:	4c 00 01 2c 	isync
-   300:	7f c5 f3 78 	mr      r5,r30
-   304:	7f 83 e3 78 	mr      r3,r28
-   308:	48 00 00 01 	bl      308 <._copy_from_user+0xa8>
-  			308: R_PPC64_REL24	.__copy_tofrom_user
-  ...
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: Spell out the directions, s/KUAP_R/KUAP_READ/ etc.]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/f4e88ec4941d5facb35ce75026b0112f980086c3.1579866752.git.christophe.leroy@c-s.fr
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/32/kup.h      | 13 ++++++--
- .../powerpc/include/asm/book3s/64/kup-radix.h | 11 +++----
- arch/powerpc/include/asm/kup.h                | 30 ++++++++++++++-----
- arch/powerpc/include/asm/nohash/32/kup-8xx.h  |  4 +--
- arch/powerpc/include/asm/uaccess.h            |  4 +--
- 5 files changed, 43 insertions(+), 19 deletions(-)
+ drivers/virtio/virtio_pci_common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
-index d88008c8eb852..91c8f1d9bceef 100644
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -102,11 +102,13 @@ static inline void kuap_update_sr(u32 sr, u32 addr, u32 end)
- 	isync();	/* Context sync required after mtsrin() */
- }
- 
--static inline void allow_user_access(void __user *to, const void __user *from, u32 size)
-+static __always_inline void allow_user_access(void __user *to, const void __user *from,
-+					      u32 size, unsigned long dir)
- {
- 	u32 addr, end;
- 
--	if (__builtin_constant_p(to) && to == NULL)
-+	BUILD_BUG_ON(!__builtin_constant_p(dir));
-+	if (!(dir & KUAP_WRITE))
- 		return;
- 
- 	addr = (__force u32)to;
-@@ -119,11 +121,16 @@ static inline void allow_user_access(void __user *to, const void __user *from, u
- 	kuap_update_sr(mfsrin(addr) & ~SR_KS, addr, end);	/* Clear Ks */
- }
- 
--static inline void prevent_user_access(void __user *to, const void __user *from, u32 size)
-+static __always_inline void prevent_user_access(void __user *to, const void __user *from,
-+						u32 size, unsigned long dir)
- {
- 	u32 addr = (__force u32)to;
- 	u32 end = min(addr + size, TASK_SIZE);
- 
-+	BUILD_BUG_ON(!__builtin_constant_p(dir));
-+	if (!(dir & KUAP_WRITE))
-+		return;
-+
- 	if (!addr || addr >= TASK_SIZE || !size)
- 		return;
- 
-diff --git a/arch/powerpc/include/asm/book3s/64/kup-radix.h b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-index dbbd22cb80f5a..c8d1076e0ebbf 100644
---- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-@@ -77,20 +77,21 @@ static inline void set_kuap(unsigned long value)
- 	isync();
- }
- 
--static inline void allow_user_access(void __user *to, const void __user *from,
--				     unsigned long size)
-+static __always_inline void allow_user_access(void __user *to, const void __user *from,
-+					      unsigned long size, unsigned long dir)
- {
- 	// This is written so we can resolve to a single case at build time
--	if (__builtin_constant_p(to) && to == NULL)
-+	BUILD_BUG_ON(!__builtin_constant_p(dir));
-+	if (dir == KUAP_READ)
- 		set_kuap(AMR_KUAP_BLOCK_WRITE);
--	else if (__builtin_constant_p(from) && from == NULL)
-+	else if (dir == KUAP_WRITE)
- 		set_kuap(AMR_KUAP_BLOCK_READ);
- 	else
- 		set_kuap(0);
- }
- 
- static inline void prevent_user_access(void __user *to, const void __user *from,
--				       unsigned long size)
-+				       unsigned long size, unsigned long dir)
- {
- 	set_kuap(AMR_KUAP_BLOCKED);
- }
-diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
-index 812e66f31934f..94f24928916a8 100644
---- a/arch/powerpc/include/asm/kup.h
-+++ b/arch/powerpc/include/asm/kup.h
-@@ -2,6 +2,10 @@
- #ifndef _ASM_POWERPC_KUP_H_
- #define _ASM_POWERPC_KUP_H_
- 
-+#define KUAP_READ	1
-+#define KUAP_WRITE	2
-+#define KUAP_READ_WRITE	(KUAP_READ | KUAP_WRITE)
-+
- #ifdef CONFIG_PPC64
- #include <asm/book3s/64/kup-radix.h>
- #endif
-@@ -42,9 +46,9 @@ void setup_kuap(bool disabled);
- #else
- static inline void setup_kuap(bool disabled) { }
- static inline void allow_user_access(void __user *to, const void __user *from,
--				     unsigned long size) { }
-+				     unsigned long size, unsigned long dir) { }
- static inline void prevent_user_access(void __user *to, const void __user *from,
--				       unsigned long size) { }
-+				       unsigned long size, unsigned long dir) { }
- static inline bool
- bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
-@@ -54,24 +58,36 @@ bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- 
- static inline void allow_read_from_user(const void __user *from, unsigned long size)
- {
--	allow_user_access(NULL, from, size);
-+	allow_user_access(NULL, from, size, KUAP_READ);
- }
- 
- static inline void allow_write_to_user(void __user *to, unsigned long size)
- {
--	allow_user_access(to, NULL, size);
-+	allow_user_access(to, NULL, size, KUAP_WRITE);
-+}
-+
-+static inline void allow_read_write_user(void __user *to, const void __user *from,
-+					 unsigned long size)
-+{
-+	allow_user_access(to, from, size, KUAP_READ_WRITE);
- }
- 
- static inline void prevent_read_from_user(const void __user *from, unsigned long size)
- {
--	prevent_user_access(NULL, from, size);
-+	prevent_user_access(NULL, from, size, KUAP_READ);
- }
- 
- static inline void prevent_write_to_user(void __user *to, unsigned long size)
- {
--	prevent_user_access(to, NULL, size);
-+	prevent_user_access(to, NULL, size, KUAP_WRITE);
-+}
-+
-+static inline void prevent_read_write_user(void __user *to, const void __user *from,
-+					   unsigned long size)
-+{
-+	prevent_user_access(to, from, size, KUAP_READ_WRITE);
- }
- 
- #endif /* !__ASSEMBLY__ */
- 
--#endif /* _ASM_POWERPC_KUP_H_ */
-+#endif /* _ASM_POWERPC_KUAP_H_ */
-diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-index f2fea603b929a..1d70c80366fd3 100644
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -35,13 +35,13 @@
- #include <asm/reg.h>
- 
- static inline void allow_user_access(void __user *to, const void __user *from,
--				     unsigned long size)
-+				     unsigned long size, unsigned long dir)
- {
- 	mtspr(SPRN_MD_AP, MD_APG_INIT);
- }
- 
- static inline void prevent_user_access(void __user *to, const void __user *from,
--				       unsigned long size)
-+				       unsigned long size, unsigned long dir)
- {
- 	mtspr(SPRN_MD_AP, MD_APG_KUAP);
- }
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index c92fe7fe9692c..cafad1960e766 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -313,9 +313,9 @@ raw_copy_in_user(void __user *to, const void __user *from, unsigned long n)
- 	unsigned long ret;
- 
- 	barrier_nospec();
--	allow_user_access(to, from, n);
-+	allow_read_write_user(to, from, n);
- 	ret = __copy_tofrom_user(to, from, n);
--	prevent_user_access(to, from, n);
-+	prevent_read_write_user(to, from, n);
- 	return ret;
- }
- #endif /* __powerpc64__ */
--- 
-2.20.1
-
+--- a/drivers/virtio/virtio_pci_common.c
++++ b/drivers/virtio/virtio_pci_common.c
+@@ -294,7 +294,7 @@ static int vp_find_vqs_msix(struct virti
+ 		/* Best option: one for change interrupt, one per vq. */
+ 		nvectors = 1;
+ 		for (i = 0; i < nvqs; ++i)
+-			if (callbacks[i])
++			if (names[i] && callbacks[i])
+ 				++nvectors;
+ 	} else {
+ 		/* Second best: one for change, shared for all vqs. */
 
 
