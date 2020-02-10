@@ -2,217 +2,132 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17199C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4152C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCBAB20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="T3AIPwpH"
+	by mail.kernel.org (Postfix) with ESMTP id C71B020658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgBJOzl (ORCPT
+        id S1728528AbgBJO4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:55:41 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52630 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727705AbgBJOzl (ORCPT
+        Mon, 10 Feb 2020 09:56:21 -0500
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:41548 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbgBJO4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:55:41 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so647219wmc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:55:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=e6DHkRv/RjVLMoJccwFow7vvIDkBmRxpatiW9uqHzAA=;
-        b=T3AIPwpHb40S1bpKetV7hO985S/I88xVqo8fkgncaFoZN33BL4HETEu++2ciOa8uFG
-         4+msmny/lboaWn7mnopixrx1reZqDzIkhoAEflSmF/Rk01KUe7jk8RKOIWrN8RM8u+7m
-         XKvVhnzIo54T6UE9cYaSQnZGDIP/Ql6gl7VIc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=e6DHkRv/RjVLMoJccwFow7vvIDkBmRxpatiW9uqHzAA=;
-        b=tVZJQxp5N/HOBAGUHg+QzYC7fELjPcXTS7T+JyW3RcBo3OWdM0ORl+5/XnnDouBM/0
-         V2jhbJAEYducnWUtWKpP5jFyZ5eaAPsHPO8uMnJ4kZqLyj0Ukd//xvTkM+0xpAlMZDRb
-         9/42z56QwYDiz2O3AOlMZjEbTR2EULi3yvnDInOtlQy9wbF5+wiUS1Ptx4sF7gJwjuna
-         NRfh7Tu9DDHd38edA/398Eb3c3+N2x0FSJoe/sGsECoV9OBX/snIgVh39REtOaMHkHa8
-         T4BInYp5xsUvj8vTD68bf3wPLhCkxV2oQo5vUoSbJoPD4w5jvM0Uq0yWAqEAQOF5A1fd
-         Dwbw==
-X-Gm-Message-State: APjAAAUUlVbRfKZfemkqbCxrG4Fq/S4t5fWEQNhiV5rD/uv9OfTyE6RZ
-        xj9V6vBCJ7abVfROsckiTEIp+NcPUc5gkw==
-X-Google-Smtp-Source: APXvYqwyb3cBhEKTprq13qfJXLglASZPW0m/htnQi0Lz1UZwEiKsNxIUIoHqj1hTCGDthl5O4Ffi8A==
-X-Received: by 2002:a1c:1b4d:: with SMTP id b74mr16308048wmb.33.1581346539278;
-        Mon, 10 Feb 2020 06:55:39 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id n13sm887530wmd.21.2020.02.10.06.55.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 06:55:38 -0800 (PST)
-Date:   Mon, 10 Feb 2020 15:55:36 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, daniel@ffwll.ch,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] drm/bochs: add drm_driver.release callback.
-Message-ID: <20200210145536.GR43062@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200210093801.4773-1-kraxel@redhat.com>
+        Mon, 10 Feb 2020 09:56:20 -0500
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1j1ATy-0004Zl-7d; Mon, 10 Feb 2020 14:56:18 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1j1ATv-0001SC-Sx; Mon, 10 Feb 2020 14:56:17 +0000
+Subject: Re: [PATCH v3] uml: make CONFIG_STATIC_LINK actually static
+To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at, geert@linux-m68k.org, james_mcmechan@hotmail.com
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidgow@google.com
+References: <20200124221401.210449-1-brendanhiggins@google.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Message-ID: <3a533475-1009-b6b0-2e1e-4fa9a1ddf175@cambridgegreys.com>
+Date:   Mon, 10 Feb 2020 14:56:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210093801.4773-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200124221401.210449-1-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:38:01AM +0100, Gerd Hoffmann wrote:
-> Call drm_dev_unregister() first in bochs_pci_remove().  Hook
-> bochs_unload() into the new .release callback, to make sure cleanup
-> is done when all users are gone.
+
+
+On 24/01/2020 22:14, Brendan Higgins wrote:
+> Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
+> be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
+> UML_NET_PCAP; this is because glibc tries to load NSS which does not
+> support being statically linked. So make CONFIG_STATIC_LINK depend on
+> !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
 > 
-> Add ready bool to state struct and move bochs_hw_fini() call from
-> bochs_unload() to bochs_pci_remove() to make sure hardware is not
-> touched after bochs_pci_remove returns.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 > ---
->  drivers/gpu/drm/bochs/bochs.h     |  1 +
->  drivers/gpu/drm/bochs/bochs_drv.c |  6 +++---
->  drivers/gpu/drm/bochs/bochs_hw.c  | 14 ++++++++++++++
->  3 files changed, 18 insertions(+), 3 deletions(-)
+>   arch/um/Kconfig         | 8 +++++++-
+>   arch/um/drivers/Kconfig | 3 +++
+>   2 files changed, 10 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/bochs/bochs.h b/drivers/gpu/drm/bochs/bochs.h
-> index 917767173ee6..f6bce8669274 100644
-> --- a/drivers/gpu/drm/bochs/bochs.h
-> +++ b/drivers/gpu/drm/bochs/bochs.h
-> @@ -57,6 +57,7 @@ struct bochs_device {
->  	unsigned long  fb_base;
->  	unsigned long  fb_size;
->  	unsigned long  qext_size;
-> +	bool           ready;
->  
->  	/* mode */
->  	u16 xres;
-> diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
-> index 10460878414e..60b5492739ef 100644
-> --- a/drivers/gpu/drm/bochs/bochs_drv.c
-> +++ b/drivers/gpu/drm/bochs/bochs_drv.c
-> @@ -23,7 +23,6 @@ static void bochs_unload(struct drm_device *dev)
->  
->  	bochs_kms_fini(bochs);
->  	bochs_mm_fini(bochs);
-> -	bochs_hw_fini(dev);
->  	kfree(bochs);
->  	dev->dev_private = NULL;
->  }
-> @@ -69,6 +68,7 @@ static struct drm_driver bochs_driver = {
->  	.major			= 1,
->  	.minor			= 0,
->  	DRM_GEM_VRAM_DRIVER,
-> +	.release                = bochs_unload,
->  };
->  
->  /* ---------------------------------------------------------------------- */
-> @@ -148,9 +148,9 @@ static void bochs_pci_remove(struct pci_dev *pdev)
->  {
->  	struct drm_device *dev = pci_get_drvdata(pdev);
->  
-> -	drm_atomic_helper_shutdown(dev);
->  	drm_dev_unregister(dev);
-> -	bochs_unload(dev);
-> +	drm_atomic_helper_shutdown(dev);
-> +	bochs_hw_fini(dev);
->  	drm_dev_put(dev);
->  }
->  
-> diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-> index b615b7dfdd9d..48c1a6a8b026 100644
-> --- a/drivers/gpu/drm/bochs/bochs_hw.c
-> +++ b/drivers/gpu/drm/bochs/bochs_hw.c
-> @@ -168,6 +168,7 @@ int bochs_hw_init(struct drm_device *dev)
->  	}
->  	bochs->fb_base = addr;
->  	bochs->fb_size = size;
-> +	bochs->ready = true;
->  
->  	DRM_INFO("Found bochs VGA, ID 0x%x.\n", id);
->  	DRM_INFO("Framebuffer size %ld kB @ 0x%lx, %s @ 0x%lx.\n",
-> @@ -194,6 +195,10 @@ void bochs_hw_fini(struct drm_device *dev)
->  {
->  	struct bochs_device *bochs = dev->dev_private;
->  
-> +	bochs->ready = false;
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index 0917f8443c285..28d62151fb2ed 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -62,9 +62,12 @@ config NR_CPUS
+>   
+>   source "arch/$(HEADER_ARCH)/um/Kconfig"
+>   
+> +config FORBID_STATIC_LINK
+> +	bool
 > +
-> +	/* TODO: shot down existing vram mappings */
-
-Aside: I'm mildly hopefull that we could do this with a generic helper,
-both punching out all current ptes and replacing them with something
-dummy. Since replacing them with nothing and refusing to fault stuff is
-probably not going to work out well - userspace will crash&burn too much.
-
+>   config STATIC_LINK
+>   	bool "Force a static link"
+> -	default n
+> +	depends on !FORBID_STATIC_LINK
+>   	help
+>   	  This option gives you the ability to force a static link of UML.
+>   	  Normally, UML is linked as a shared binary.  This is inconvenient for
+> @@ -73,6 +76,9 @@ config STATIC_LINK
+>   	  Additionally, this option enables using higher memory spaces (up to
+>   	  2.75G) for UML.
+>   
+> +	  NOTE: This option is incompatible with some networking features which
+> +	  depend on features that require being dynamically loaded (like NSS).
 > +
->  	if (bochs->mmio)
->  		iounmap(bochs->mmio);
->  	if (bochs->ioports)
-> @@ -207,6 +212,9 @@ void bochs_hw_fini(struct drm_device *dev)
->  void bochs_hw_setmode(struct bochs_device *bochs,
->  		      struct drm_display_mode *mode)
->  {
-> +	if (!bochs->ready)
-> +		return;
-
-drm_dev_enter/exit is the primitive you're looking for I think. Don't hand
-roll your own racy version of this. btw changelog in the patch missing.
-Personally I'd split out the drm_dev_enter/exit in a 2nd patch, but up to
-you.
-
-The remove/release split looks correct to me now.
--Daniel
-
-
-> +
->  	bochs->xres = mode->hdisplay;
->  	bochs->yres = mode->vdisplay;
->  	bochs->bpp = 32;
-> @@ -237,6 +245,9 @@ void bochs_hw_setmode(struct bochs_device *bochs,
->  void bochs_hw_setformat(struct bochs_device *bochs,
->  			const struct drm_format_info *format)
->  {
-> +	if (!bochs->ready)
-> +		return;
-> +
->  	DRM_DEBUG_DRIVER("format %c%c%c%c\n",
->  			 (format->format >>  0) & 0xff,
->  			 (format->format >>  8) & 0xff,
-> @@ -264,6 +275,9 @@ void bochs_hw_setbase(struct bochs_device *bochs,
->  	unsigned long offset;
->  	unsigned int vx, vy, vwidth;
->  
-> +	if (!bochs->ready)
-> +		return;
-> +
->  	bochs->stride = stride;
->  	offset = (unsigned long)addr +
->  		y * bochs->stride +
-> -- 
-> 2.18.1
+>   config LD_SCRIPT_STATIC
+>   	bool
+>   	default y
+> diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
+> index 72d4170557820..9160ead56e33c 100644
+> --- a/arch/um/drivers/Kconfig
+> +++ b/arch/um/drivers/Kconfig
+> @@ -234,6 +234,7 @@ config UML_NET_DAEMON
+>   config UML_NET_VECTOR
+>   	bool "Vector I/O high performance network devices"
+>   	depends on UML_NET
+> +	select FORBID_STATIC_LINK
+>   	help
+>   	This User-Mode Linux network driver uses multi-message send
+>   	and receive functions. The host running the UML guest must have
+> @@ -245,6 +246,7 @@ config UML_NET_VECTOR
+>   config UML_NET_VDE
+>   	bool "VDE transport (obsolete)"
+>   	depends on UML_NET
+> +	select FORBID_STATIC_LINK
+>   	help
+>   	This User-Mode Linux network transport allows one or more running
+>   	UMLs on a single host to communicate with each other and also
+> @@ -292,6 +294,7 @@ config UML_NET_MCAST
+>   config UML_NET_PCAP
+>   	bool "pcap transport (obsolete)"
+>   	depends on UML_NET
+> +	select FORBID_STATIC_LINK
+>   	help
+>   	The pcap transport makes a pcap packet stream on the host look
+>   	like an ethernet device inside UML.  This is useful for making
 > 
+
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
