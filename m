@@ -2,55 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2EBC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE255C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58E32080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE90F20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341747;
-	bh=zSg6T09HqcBiqYeTqt4FTCQO6B5h/IbyxlbEvz0yLW8=;
+	s=default; t=1581341750;
+	bh=st9TsZdPw82Mz8T1WRM9QxrU3J2URaUe4ARNlAB+lv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X2juVO3PGNAUzltmU2+YCavB1pNeotYH06F4Hxmv3VvNgtvXeLloytYtqR0bciY9q
-	 TCZ4xSz1OLZZkB9KoY7tHIY0ZGBm8lg4umb+FjOhbkh1xi2aEDI+xvPvWtFht/BpWX
-	 2F2ZrDykQYKFiSxoHAfM5DIg0Es0XLMwjDZgACN0=
+	b=EYk7/HbiIiHLmiDwX/GoHVUkOd3gVGDOYcQ/DUj1qoQ9nPTT7LpFmjKWXsaVfK6QM
+	 uvXq3jasXjpJw3ZGXw6sgMsdZB2KhBOsRZvPV5iue7tmJwqrkg9jaEcRqIhXgiFtFN
+	 upm5k6cDU1PiW6sgYJqB6LQ9wWikk+GAqQR8jUmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgBJNfq (ORCPT
+        id S1727817AbgBJMfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:35:46 -0500
+        Mon, 10 Feb 2020 07:35:17 -0500
 Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbgBJMfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:18 -0500
+        id S1727561AbgBJMfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D42C22467D;
-        Mon, 10 Feb 2020 12:35:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06D020661;
+        Mon, 10 Feb 2020 12:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338117;
-        bh=zSg6T09HqcBiqYeTqt4FTCQO6B5h/IbyxlbEvz0yLW8=;
+        s=default; t=1581338107;
+        bh=st9TsZdPw82Mz8T1WRM9QxrU3J2URaUe4ARNlAB+lv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZ3BevvA4ZkHJlQv9JKDrDRcxHKwcZ9jMLmQv13iNzUkF9NXvzME620vVmNM1Avos
-         vFw6nwM1ii6vd2uEbDWb7wHWkWXqGpwnTxrxnqUA9m65rlA/HFAZ6mUKt1GdNzG39M
-         w9aL3pAn5Q17z2OyzdDHgOcFLMkemyIUvKXYqkOU=
+        b=CA4VVFGf7ASSA7onjqClYocRKI6vNmMaabqqvK2Y8/zwzOYqY9ebA0/v8EM9J8u1i
+         tuRourfgtbL9LiqO7bnZPjxMDd3oMk7XKPlpFVVDsy1VoABamk88cpDe6qIyM7+0A6
+         s7+HYemgWOC/ewYkOjJo/W75sACMRs/Wq2ooCpfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.19 051/195] MIPS: fix indentation of the RELOCS message
-Date:   Mon, 10 Feb 2020 04:31:49 -0800
-Message-Id: <20200210122311.030291166@linuxfoundation.org>
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        YueHaibing <yuehaibing@huawei.com>, Jessica Yu <jeyu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 003/195] kernel/module: Fix memleak in module_add_modinfo_attrs()
+Date:   Mon, 10 Feb 2020 04:31:01 -0800
+Message-Id: <20200210122306.091895826@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -63,61 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit a53998802e178451701d59d38e36f551422977ba upstream.
+[ Upstream commit f6d061d617124abbd55396a3bc37b9bf7d33233c ]
 
-quiet_cmd_relocs lacks a whitespace which results in:
+In module_add_modinfo_attrs() if sysfs_create_file() fails
+on the first iteration of the loop (so i = 0), we forget to
+free the modinfo_attrs.
 
-  LD      vmlinux
-  SORTEX  vmlinux
-  SYSMAP  System.map
-  RELOCS vmlinux
-  Building modules, stage 2.
-  MODPOST 64 modules
-
-After this patch:
-
-  LD      vmlinux
-  SORTEX  vmlinux
-  SYSMAP  System.map
-  RELOCS  vmlinux
-  Building modules, stage 2.
-  MODPOST 64 modules
-
-Typo is present in kernel tree since the introduction of relocatable
-kernel support in commit e818fac595ab ("MIPS: Generate relocation table
-when CONFIG_RELOCATABLE"), but the relocation scripts were moved to
-Makefile.postlink later with commit 44079d3509ae ("MIPS: Use
-Makefile.postlink to insert relocations into vmlinux").
-
-Fixes: 44079d3509ae ("MIPS: Use Makefile.postlink to insert relocations into vmlinux")
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-[paulburton@kernel.org: Fixup commit references in commit message.]
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: bc6f2a757d52 ("kernel/module: Fix mem leak in module_add_modinfo_attrs")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/Makefile.postlink |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/module.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/mips/Makefile.postlink
-+++ b/arch/mips/Makefile.postlink
-@@ -12,7 +12,7 @@ __archpost:
- include scripts/Kbuild.include
+diff --git a/kernel/module.c b/kernel/module.c
+index d3aaec62c1423..70a75a7216abb 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1729,6 +1729,8 @@ static int module_add_modinfo_attrs(struct module *mod)
+ error_out:
+ 	if (i > 0)
+ 		module_remove_modinfo_attrs(mod, --i);
++	else
++		kfree(mod->modinfo_attrs);
+ 	return error;
+ }
  
- CMD_RELOCS = arch/mips/boot/tools/relocs
--quiet_cmd_relocs = RELOCS $@
-+quiet_cmd_relocs = RELOCS  $@
-       cmd_relocs = $(CMD_RELOCS) $@
- 
- # `@true` prevents complaint when there is nothing to be done
+-- 
+2.20.1
+
 
 
