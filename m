@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8BCC3B187
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07668C3B18A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C769C20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B0220714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339696;
-	bh=VykU2Wi7Q/56cS+dxsozDpC+cSghgfioQCzeX7/+T4M=;
+	s=default; t=1581339700;
+	bh=GdQsl52W+pf1MM4uLWeCG97tOYAlxd97t1cJcFhk9LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uemj/O0zVz5gPAq4rqnMRGr252o7nPbnZfDfYPL0XD/1UXFa+e1nEwAlZtYiwJYam
-	 R3U5fSIev+d0NFhdqVtAvGmeBFjFQmr7QHfVeq385c2QyZ6ta/P6hMoLQbo2JIqFqS
-	 psNt5MGvqSThsLBR3vyiHPhoHAHJNEyAkQ5Yws4o=
+	b=2B4q6pi5K7YSFkQM+lNEcerRpf6mlaN+NK/4Fk7ddj7YCPSNNSk+dm/VndyzHueNO
+	 97jrbeGX/s2qm9xB9im2go5+PrPxifnKbyRmNpKayQo5Yhm8vqjlfKxQUI4+0QFedG
+	 CCyIDxshKNEplhEdoMWI/6EoFcQ+x5amSPCIltXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbgBJNBg (ORCPT
+        id S1729420AbgBJMks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:01:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41714 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:40:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729812AbgBJMku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:50 -0500
+        id S1728445AbgBJMiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:25 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B12502173E;
-        Mon, 10 Feb 2020 12:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A172080C;
+        Mon, 10 Feb 2020 12:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338449;
-        bh=VykU2Wi7Q/56cS+dxsozDpC+cSghgfioQCzeX7/+T4M=;
+        s=default; t=1581338304;
+        bh=GdQsl52W+pf1MM4uLWeCG97tOYAlxd97t1cJcFhk9LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WdTYxfFzruet6uuoAWkyTif9ByqIqWZtT6+++4FvqW99KOF1dEihWk9rT6hlENSc+
-         7b5rpPFPda9Wrp6WibPRYa5o99f0uMBmxGMf0CYMfsNdwhubp9N9t+ApDRQjNq9mK0
-         S4ujKBx9lyH4uZpMdlesEzD1AODEsAxvZM/H6tvo=
+        b=g47R5V0PnCLZ4po/2mAAKikoz5urTckoHj/SbWliHF009kRxreiBxQBo7Lxb/p9gB
+         cliIaVo4ec0s3cTKv6kbCdwVHwNYkzL3Pmr8kid4I1Vuxh8F00EyCEtqRuBHdP+QWd
+         pa3Zw6CeZUiH6LAsfQDIuxUw4/oG8//8EFaQYfBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.5 194/367] ext4: fix race conditions in ->d_compare() and ->d_hash()
-Date:   Mon, 10 Feb 2020 04:31:47 -0800
-Message-Id: <20200210122442.492886906@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 218/309] x86/KVM: Clean up hosts steal time structure
+Date:   Mon, 10 Feb 2020 04:32:54 -0800
+Message-Id: <20200210122427.498936332@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,79 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-commit ec772f01307a2c06ebf6cdd221e6b518a71ddae7 upstream.
+commit a6bd811f1209fe1c64c9f6fd578101d6436c6b6e upstream.
 
-Since ->d_compare() and ->d_hash() can be called in RCU-walk mode,
-->d_parent and ->d_inode can be concurrently modified, and in
-particular, ->d_inode may be changed to NULL.  For ext4_d_hash() this
-resulted in a reproducible NULL dereference if a lookup is done in a
-directory being deleted, e.g. with:
+Now that we are mapping kvm_steal_time from the guest directly we
+don't need keep a copy of it in kvm_vcpu_arch.st. The same is true
+for the stime field.
 
-	int main()
-	{
-		if (fork()) {
-			for (;;) {
-				mkdir("subdir", 0700);
-				rmdir("subdir");
-			}
-		} else {
-			for (;;)
-				access("subdir/file", 0);
-		}
-	}
+This is part of CVE-2019-3016.
 
-... or by running the 't_encrypted_d_revalidate' program from xfstests.
-Both repros work in any directory on a filesystem with the encoding
-feature, even if the directory doesn't actually have the casefold flag.
-
-I couldn't reproduce a crash in ext4_d_compare(), but it appears that a
-similar crash is possible there.
-
-Fix these bugs by reading ->d_parent and ->d_inode using READ_ONCE() and
-falling back to the case sensitive behavior if the inode is NULL.
-
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: b886ee3e778e ("ext4: Support case-insensitive file name lookups")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20200124041234.159740-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/dir.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    3 +--
+ arch/x86/kvm/x86.c              |   11 +++--------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -672,9 +672,11 @@ static int ext4_d_compare(const struct d
- 			  const char *str, const struct qstr *name)
- {
- 	struct qstr qstr = {.name = str, .len = len };
--	struct inode *inode = dentry->d_parent->d_inode;
-+	const struct dentry *parent = READ_ONCE(dentry->d_parent);
-+	const struct inode *inode = READ_ONCE(parent->d_inode);
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -667,10 +667,9 @@ struct kvm_vcpu_arch {
+ 	bool pvclock_set_guest_stopped_request;
  
--	if (!IS_CASEFOLDED(inode) || !EXT4_SB(inode->i_sb)->s_encoding) {
-+	if (!inode || !IS_CASEFOLDED(inode) ||
-+	    !EXT4_SB(inode->i_sb)->s_encoding) {
- 		if (len != name->len)
- 			return -1;
- 		return memcmp(str, name->name, len);
-@@ -687,10 +689,11 @@ static int ext4_d_hash(const struct dent
- {
- 	const struct ext4_sb_info *sbi = EXT4_SB(dentry->d_sb);
- 	const struct unicode_map *um = sbi->s_encoding;
-+	const struct inode *inode = READ_ONCE(dentry->d_inode);
- 	unsigned char *norm;
- 	int len, ret = 0;
+ 	struct {
++		u8 preempted;
+ 		u64 msr_val;
+ 		u64 last_steal;
+-		struct gfn_to_hva_cache stime;
+-		struct kvm_steal_time steal;
+ 		struct gfn_to_pfn_cache cache;
+ 	} st;
  
--	if (!IS_CASEFOLDED(dentry->d_inode) || !um)
-+	if (!inode || !IS_CASEFOLDED(inode) || !um)
- 		return 0;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2616,7 +2616,7 @@ static void record_steal_time(struct kvm
+ 	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
+ 		kvm_vcpu_flush_tlb(vcpu, false);
  
- 	norm = kmalloc(PATH_MAX, GFP_ATOMIC);
+-	vcpu->arch.st.steal.preempted = 0;
++	vcpu->arch.st.preempted = 0;
+ 
+ 	if (st->version & 1)
+ 		st->version += 1;  /* first time write, random junk */
+@@ -2786,11 +2786,6 @@ int kvm_set_msr_common(struct kvm_vcpu *
+ 		if (data & KVM_STEAL_RESERVED_MASK)
+ 			return 1;
+ 
+-		if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.st.stime,
+-						data & KVM_STEAL_VALID_BITS,
+-						sizeof(struct kvm_steal_time)))
+-			return 1;
+-
+ 		vcpu->arch.st.msr_val = data;
+ 
+ 		if (!(data & KVM_MSR_ENABLED))
+@@ -3504,7 +3499,7 @@ static void kvm_steal_time_set_preempted
+ 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
+ 		return;
+ 
+-	if (vcpu->arch.st.steal.preempted)
++	if (vcpu->arch.st.preempted)
+ 		return;
+ 
+ 	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT, &map,
+@@ -3514,7 +3509,7 @@ static void kvm_steal_time_set_preempted
+ 	st = map.hva +
+ 		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
+ 
+-	st->preempted = vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
++	st->preempted = vcpu->arch.st.preempted = KVM_VCPU_PREEMPTED;
+ 
+ 	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, true);
+ }
 
 
