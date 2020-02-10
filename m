@@ -2,53 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86450C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC956C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6007F20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95EC22070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340642;
-	bh=/1tLgSXLr2zGncF4c5Qo6ckyM58TYsaf1w+b+Ouk6c4=;
+	s=default; t=1581340645;
+	bh=nk8WF9kF/TLXJ9v+w1IA96vKx0l9XQ9MDBnegJSo7SY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HDKkis56mES1Q/82lEmIm8IQH+cm733jgJlPIDfegDVNms85rIltV6V+EOrN1BCX2
-	 px109cH96canywzPSkDfSjCuL27+jYy70hSaVMyXTerEnjrGpQEjaKZyRS8ylRF31D
-	 VoBPsw8CrvWHpCdFMZVDGQsewR8jOsggD1hVe6yA=
+	b=rn32MSPuvBTtTV/C9YyYM2lQkwD+RkzGW4j0t9E96XZFzvJnUHz+ArZ4u7OE5iWM4
+	 s/cjpcqxhp4L66I0hnpc6Btl0DuZWa+MjtFUtWRUmHvoX6XNj3QAOlK0+cIFSE9Nbi
+	 R4BrSbPKLPiE4zKrIaTYUCd6+koeSaNVWWl7wgaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731020AbgBJNRV (ORCPT
+        id S1729044AbgBJNRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:17:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60954 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:17:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728996AbgBJMiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728995AbgBJMiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1C002168B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE89208C4;
         Mon, 10 Feb 2020 12:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338282;
-        bh=/1tLgSXLr2zGncF4c5Qo6ckyM58TYsaf1w+b+Ouk6c4=;
+        bh=nk8WF9kF/TLXJ9v+w1IA96vKx0l9XQ9MDBnegJSo7SY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R1kGb1w8kglsJFHuetlnB4iv/aqbs9HpVuc2RogjNlhUNPFojQpOf8BM8Qp6JztBH
-         DyfE95lD7BGONkSQkfutWLK/wZiapwG3FzY7I1xh8qqal4ztkeJGgPfGga6myhJJRj
-         l9SZYfq6m0CdKQLes0TbueNc2MkUMKfud0txXqjg=
+        b=twi9r2bFGcvMcGKZCU7UXYNlD9zuRHQ3wApe6bCBvoyoBHVC/fRtMJ02Xzmxo4pCX
+         L4ewk4i5EEitIlxzN6BgPI25abDcdauX2IOt2RepKH6IUS9ZZmNpokcDRno94NAk9X
+         9e0GraJubFQ8/C4SoiGCvvFK5AXX7cXZIuT7E7qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/309] scsi: qla2xxx: Fix stuck login session using prli_pend_timer
-Date:   Mon, 10 Feb 2020 04:31:30 -0800
-Message-Id: <20200210122419.227863408@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 173/309] Btrfs: fix infinite loop during fsync after rename operations
+Date:   Mon, 10 Feb 2020 04:32:09 -0800
+Message-Id: <20200210122423.022977315@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,141 +60,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 8aaac2d7da873aebeba92c666f82c00bbd74aaf9 ]
+commit b5e4ff9d465da1233a2d9a47ebce487c70d8f4ab upstream.
 
-Session is stuck if driver sees FW has received a PRLI. Driver allows FW to
-finish with processing of PRLI by checking back with FW at a later time to
-see if the PRLI has finished. Instead, driver failed to push forward after
-re-checking PRLI completion.
+Recently fsstress (from fstests) sporadically started to trigger an
+infinite loop during fsync operations. This turned out to be because
+support for the rename exchange and whiteout operations was added to
+fsstress in fstests. These operations, unlike any others in fsstress,
+cause file names to be reused, whence triggering this issue. However
+it's not necessary to use rename exchange and rename whiteout operations
+trigger this issue, simple rename operations and file creations are
+enough to trigger the issue.
 
-Fixes: ce0ba496dccf ("scsi: qla2xxx: Fix stuck login session")
-Cc: stable@vger.kernel.org # 5.3
-Link: https://lore.kernel.org/r/20191217220617.28084-9-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The issue boils down to when we are logging inodes that conflict (that
+had the name of any inode we need to log during the fsync operation), we
+keep logging them even if they were already logged before, and after
+that we check if there's any other inode that conflicts with them and
+then add it again to the list of inodes to log. Skipping already logged
+inodes fixes the issue.
+
+Consider the following example:
+
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  $ mkdir /mnt/testdir                           # inode 257
+
+  $ touch /mnt/testdir/zz                        # inode 258
+  $ ln /mnt/testdir/zz /mnt/testdir/zz_link
+
+  $ touch /mnt/testdir/a                         # inode 259
+
+  $ sync
+
+  # The following 3 renames achieve the same result as a rename exchange
+  # operation (<rename_exchange> /mnt/testdir/zz_link to /mnt/testdir/a).
+
+  $ mv /mnt/testdir/a /mnt/testdir/a/tmp
+  $ mv /mnt/testdir/zz_link /mnt/testdir/a
+  $ mv /mnt/testdir/a/tmp /mnt/testdir/zz_link
+
+  # The following rename and file creation give the same result as a
+  # rename whiteout operation (<rename_whiteout> zz to a2).
+
+  $ mv /mnt/testdir/zz /mnt/testdir/a2
+  $ touch /mnt/testdir/zz                        # inode 260
+
+  $ xfs_io -c fsync /mnt/testdir/zz
+    --> results in the infinite loop
+
+The following steps happen:
+
+1) When logging inode 260, we find that its reference named "zz" was
+   used by inode 258 in the previous transaction (through the commit
+   root), so inode 258 is added to the list of conflicting indoes that
+   need to be logged;
+
+2) After logging inode 258, we find that its reference named "a" was
+   used by inode 259 in the previous transaction, and therefore we add
+   inode 259 to the list of conflicting inodes to be logged;
+
+3) After logging inode 259, we find that its reference named "zz_link"
+   was used by inode 258 in the previous transaction - we add inode 258
+   to the list of conflicting inodes to log, again - we had already
+   logged it before at step 3. After logging it again, we find again
+   that inode 259 conflicts with him, and we add again 259 to the list,
+   etc - we end up repeating all the previous steps.
+
+So fix this by skipping logging of conflicting inodes that were already
+logged.
+
+Fixes: 6b5fc433a7ad67 ("Btrfs: fix fsync after succession of renames of different files")
+CC: stable@vger.kernel.org # 5.1+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/qla_def.h    |  5 +++++
- drivers/scsi/qla2xxx/qla_init.c   | 34 +++++++++++++++++++++++--------
- drivers/scsi/qla2xxx/qla_target.c |  1 +
- 3 files changed, 32 insertions(+), 8 deletions(-)
+ fs/btrfs/tree-log.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index 1eb3fe281cc3c..c57b95a206888 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -2402,6 +2402,7 @@ typedef struct fc_port {
- 	unsigned int scan_needed:1;
- 	unsigned int n2n_flag:1;
- 	unsigned int explicit_logout:1;
-+	unsigned int prli_pend_timer:1;
- 
- 	struct completion nvme_del_done;
- 	uint32_t nvme_prli_service_param;
-@@ -2428,6 +2429,7 @@ typedef struct fc_port {
- 	struct work_struct free_work;
- 	struct work_struct reg_work;
- 	uint64_t jiffies_at_registration;
-+	unsigned long prli_expired;
- 	struct qlt_plogi_ack_t *plogi_link[QLT_PLOGI_LINK_MAX];
- 
- 	uint16_t tgt_id;
-@@ -4821,6 +4823,9 @@ struct sff_8247_a0 {
- 	 ha->current_topology == ISP_CFG_N || \
- 	 !ha->current_topology)
- 
-+#define PRLI_PHASE(_cls) \
-+	((_cls == DSC_LS_PRLI_PEND) || (_cls == DSC_LS_PRLI_COMP))
-+
- #include "qla_target.h"
- #include "qla_gbl.h"
- #include "qla_dbg.h"
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 9ffaa920fc8f8..ac4c47fc5f4c1 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -686,7 +686,7 @@ static void qla24xx_handle_gnl_done_event(scsi_qla_host_t *vha,
- 	port_id_t id;
- 	u64 wwn;
- 	u16 data[2];
--	u8 current_login_state;
-+	u8 current_login_state, nvme_cls;
- 
- 	fcport = ea->fcport;
- 	ql_dbg(ql_dbg_disc, vha, 0xffff,
-@@ -745,10 +745,17 @@ static void qla24xx_handle_gnl_done_event(scsi_qla_host_t *vha,
- 
- 		loop_id = le16_to_cpu(e->nport_handle);
- 		loop_id = (loop_id & 0x7fff);
--		if  (fcport->fc4f_nvme)
--			current_login_state = e->current_login_state >> 4;
--		else
--			current_login_state = e->current_login_state & 0xf;
-+		nvme_cls = e->current_login_state >> 4;
-+		current_login_state = e->current_login_state & 0xf;
-+
-+		if (PRLI_PHASE(nvme_cls)) {
-+			current_login_state = nvme_cls;
-+			fcport->fc4_type &= ~FS_FC4TYPE_FCP;
-+			fcport->fc4_type |= FS_FC4TYPE_NVME;
-+		} else if (PRLI_PHASE(current_login_state)) {
-+			fcport->fc4_type |= FS_FC4TYPE_FCP;
-+			fcport->fc4_type &= ~FS_FC4TYPE_NVME;
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4855,6 +4855,50 @@ static int log_conflicting_inodes(struct
+ 			continue;
+ 		}
+ 		/*
++		 * If the inode was already logged skip it - otherwise we can
++		 * hit an infinite loop. Example:
++		 *
++		 * From the commit root (previous transaction) we have the
++		 * following inodes:
++		 *
++		 * inode 257 a directory
++		 * inode 258 with references "zz" and "zz_link" on inode 257
++		 * inode 259 with reference "a" on inode 257
++		 *
++		 * And in the current (uncommitted) transaction we have:
++		 *
++		 * inode 257 a directory, unchanged
++		 * inode 258 with references "a" and "a2" on inode 257
++		 * inode 259 with reference "zz_link" on inode 257
++		 * inode 261 with reference "zz" on inode 257
++		 *
++		 * When logging inode 261 the following infinite loop could
++		 * happen if we don't skip already logged inodes:
++		 *
++		 * - we detect inode 258 as a conflicting inode, with inode 261
++		 *   on reference "zz", and log it;
++		 *
++		 * - we detect inode 259 as a conflicting inode, with inode 258
++		 *   on reference "a", and log it;
++		 *
++		 * - we detect inode 258 as a conflicting inode, with inode 259
++		 *   on reference "zz_link", and log it - again! After this we
++		 *   repeat the above steps forever.
++		 */
++		spin_lock(&BTRFS_I(inode)->lock);
++		/*
++		 * Check the inode's logged_trans only instead of
++		 * btrfs_inode_in_log(). This is because the last_log_commit of
++		 * the inode is not updated when we only log that it exists and
++		 * and it has the full sync bit set (see btrfs_log_inode()).
++		 */
++		if (BTRFS_I(inode)->logged_trans == trans->transid) {
++			spin_unlock(&BTRFS_I(inode)->lock);
++			btrfs_add_delayed_iput(inode);
++			continue;
 +		}
- 
- 
- 		ql_dbg(ql_dbg_disc, vha, 0x20e2,
-@@ -1219,12 +1226,19 @@ qla24xx_async_prli(struct scsi_qla_host *vha, fc_port_t *fcport)
- 	struct srb_iocb *lio;
- 	int rval = QLA_FUNCTION_FAILED;
- 
--	if (!vha->flags.online)
-+	if (!vha->flags.online) {
-+		ql_dbg(ql_dbg_disc, vha, 0xffff, "%s %d %8phC exit\n",
-+		    __func__, __LINE__, fcport->port_name);
- 		return rval;
-+	}
- 
--	if (fcport->fw_login_state == DSC_LS_PLOGI_PEND ||
--	    fcport->fw_login_state == DSC_LS_PRLI_PEND)
-+	if ((fcport->fw_login_state == DSC_LS_PLOGI_PEND ||
-+	    fcport->fw_login_state == DSC_LS_PRLI_PEND) &&
-+	    qla_dual_mode_enabled(vha)) {
-+		ql_dbg(ql_dbg_disc, vha, 0xffff, "%s %d %8phC exit\n",
-+		    __func__, __LINE__, fcport->port_name);
- 		return rval;
-+	}
- 
- 	sp = qla2x00_get_sp(vha, fcport, GFP_KERNEL);
- 	if (!sp)
-@@ -1602,6 +1616,10 @@ int qla24xx_fcport_handle_login(struct scsi_qla_host *vha, fc_port_t *fcport)
- 			break;
- 		default:
- 			if (fcport->login_pause) {
-+				ql_dbg(ql_dbg_disc, vha, 0x20d8,
-+				    "%s %d %8phC exit\n",
-+				    __func__, __LINE__,
-+				    fcport->port_name);
- 				fcport->last_rscn_gen = fcport->rscn_gen;
- 				fcport->last_login_gen = fcport->login_gen;
- 				set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 74a378a91b71e..cb8a892e2d393 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1257,6 +1257,7 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
- 	sess->deleted = QLA_SESS_DELETION_IN_PROGRESS;
- 	spin_unlock_irqrestore(&sess->vha->work_lock, flags);
- 
-+	sess->prli_pend_timer = 0;
- 	sess->disc_state = DSC_DELETE_PEND;
- 
- 	qla24xx_chk_fcp_state(sess);
--- 
-2.20.1
-
++		spin_unlock(&BTRFS_I(inode)->lock);
++		/*
+ 		 * We are safe logging the other inode without acquiring its
+ 		 * lock as long as we log with the LOG_INODE_EXISTS mode. We
+ 		 * are safe against concurrent renames of the other inode as
 
 
