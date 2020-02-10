@@ -2,55 +2,56 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E72C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CD7C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413F920838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC6D20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PoL0XhCM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kD5EGiWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgBJTbM (ORCPT
+        id S1727835AbgBJTbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:31:12 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:47031 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbgBJTbF (ORCPT
+        Mon, 10 Feb 2020 14:31:20 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40376 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727747AbgBJTbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 14:31:05 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a22so10291165oid.13
+Received: by mail-ot1-f67.google.com with SMTP id i6so7554043otr.7
         for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 11:31:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vV+4L9n935hAwwy1rny/bKPJmpM6IQkGJafPemnuM6M=;
-        b=PoL0XhCMF5RYylDc0l4IgFMeB8xwO+uVffzPYfytDnFxlYeMxyX/mZuQokiRqvLpeB
-         3BSmLKsw8Mn0fTOGDf5FiPjNmXvq0HmdnXXBN/WXOAJCOAtbktliwg0Ij4BFjNLNEwz1
-         LFDL39Nbv292S1gxIrW8F3TJd9vj+dby5RYxI=
+        bh=Dy7V9n1SJWAfsimqdnx79gIWJx+OE4CfcWEJjNElzkw=;
+        b=kD5EGiWmI843sCuCafTUWkInv63C7SrnPb5eYa/PNLKeGUkbgs8l0tKEsrbARmFeO3
+         WnDV5WSszUbzwfAhGPPrFN3uYkvvUZgZNfPv/RmgJGj1O3LaHMDNKg2LDgAb2xaw9T6a
+         jtQyquGSSoFjFpvv8I0f9WMF2jMQbyTYs6jqo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vV+4L9n935hAwwy1rny/bKPJmpM6IQkGJafPemnuM6M=;
-        b=YGCvyxBG0TaDQJyVO0Xm38DHTqMZqZ5PqGIpiu2sUYuJhrW+7xV5NNG7OC8ZvuPCry
-         77GV7g/uVXJxp2LsXiKkGp1d628qNxczDpwa9scz/2N0NVA52oPUISTaSgdWL1D5r7Pk
-         0F7K7wL39f1Q6HVrC2VG9j490bVVz+ub53edAGp/Qve3RtrffgvZSvo3tsrk50FJVDc8
-         HuhJheP0cpiHNW37hRA/oMuorTnbkaiikeziDUZm2xM2SLQHdFMwoFJ0ofzEP4wVKSN6
-         wNpHKkdo69zDnuV5fpkQISPzLiunVuaytcHuugugP0bLqZ8JAxkI7UFUAwr/hR4BIRtw
-         /nGg==
-X-Gm-Message-State: APjAAAW8K0Eh2vV8iRI/dWTHeE4rEjDIrGGUjzvPl/ikghS8ZtAFAkjl
-        Jwpg4rlteDVxL1J5BKCczLNPmw==
-X-Google-Smtp-Source: APXvYqxxYA/0/Zbqi4Hv0JHtPdrzzbONYFkwCVp0/iu2hk9k8CQImN2sdfiTosdmQZKPTHVPQ7l30Q==
-X-Received: by 2002:aca:5083:: with SMTP id e125mr424241oib.96.1581363063722;
-        Mon, 10 Feb 2020 11:31:03 -0800 (PST)
+        bh=Dy7V9n1SJWAfsimqdnx79gIWJx+OE4CfcWEJjNElzkw=;
+        b=ENclR4FENUGgjpxl6NJ5/eONK7YQs2+BQw/0q4nfzlqMLNwt5AthLLLTmj4+uIAO+X
+         Mlk+mKfJuDtA3WDyJjz4aYa6kAYf1Yp07s4b+YrZBdAs5yRdbLzRGSQlIyhJFb9F2gpO
+         3r6e2kMDuOLDPQgryRUpk2w2CZtv/C5hCl7Zb9HzVZUM1QkxrqXt25XBa1DWE3lKbkSv
+         7QveDR6AOlpcb5N2WgcwBrJbH2pghtDrxo/TDS9dl2gjWWhHLnjTjZZ/hJtQjRSkqdlG
+         P0glr6cpx/XKR4VwEoPIm45Ni/y9R+uhpH3hIpZ4nJEpLqBWAr1AySNruZjVB8OZgWRv
+         HUWA==
+X-Gm-Message-State: APjAAAWDH8BqANZf7Xn846PJ+EGCNb2NAjoR+EfMdIQvVJcdC3146fpy
+        OQdgslrUaQ8NVAzufhSrFTGJ5Q==
+X-Google-Smtp-Source: APXvYqytQ6Tq8ED/M4IZzD6H8znkZODeLSYS85Lxv1Mg2ykDKGTymMbliK1RJrYqSv3Cgm5yBLjtiw==
+X-Received: by 2002:a9d:5a09:: with SMTP id v9mr2153543oth.214.1581363064328;
+        Mon, 10 Feb 2020 11:31:04 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f1sm370846otq.4.2020.02.10.11.31.00
+        by smtp.gmail.com with ESMTPSA id p24sm358258otq.64.2020.02.10.11.31.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 10 Feb 2020 11:31:02 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
@@ -65,109 +66,333 @@ Cc:     Kees Cook <keescook@chromium.org>,
         kernel-hardening@lists.openwall.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 5/7] arm32/64, elf: Split READ_IMPLIES_EXEC from executable GNU_STACK
-Date:   Mon, 10 Feb 2020 11:30:47 -0800
-Message-Id: <20200210193049.64362-6-keescook@chromium.org>
+Subject: [PATCH v3 7/7] selftests/exec: Add READ_IMPLIES_EXEC tests
+Date:   Mon, 10 Feb 2020 11:30:49 -0800
+Message-Id: <20200210193049.64362-8-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200210193049.64362-1-keescook@chromium.org>
 References: <20200210193049.64362-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The READ_IMPLIES_EXEC work-around was designed for old toolchains that
-lacked the ELF PT_GNU_STACK marking under the assumption that toolchains
-that couldn't specify executable permission flags for the stack may not
-know how to do it correctly for any memory region.
+In order to check the matrix of possible states for handling
+READ_IMPLIES_EXEC across native, compat, and the state of PT_GNU_STACK,
+add tests for these execution conditions.
 
-This logic is sensible for having ancient binaries coexist in a system
-with possibly NX memory, but was implemented in a way that equated having
-a PT_GNU_STACK marked executable as being as "broken" as lacking the
-PT_GNU_STACK marking entirely. Things like unmarked assembly and stack
-trampolines may cause PT_GNU_STACK to need an executable bit, but they
-do not imply all mappings must be executable.
-
-This confusion has led to situations where modern programs with explicitly
-marked executable stack are forced into the READ_IMPLIES_EXEC state when
-no such thing is needed. (And leads to unexpected failures when mmap()ing
-regions of device driver memory that wish to disallow VM_EXEC[1].)
-
-In looking for other reasons for the READ_IMPLIES_EXEC behavior, Jann
-Horn noted that glibc thread stacks have always been marked RWX (until
-2003 when they started tracking the PT_GNU_STACK flag instead[2]). And
-musl doesn't support executable stacks at all[3]. As such, no breakage
-for multithreaded applications is expected from this change.
-
-This changes arm32 and arm64 compat together, to keep behavior the same.
-
-[1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
-[2] https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=54ee14b3882
-[3] https://lkml.kernel.org/r/20190423192534.GN23599@brightrain.aerifal.cx
-
-Suggested-by: Hector Marco-Gisbert <hecmargi@upv.es>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm/kernel/elf.c        | 5 +++--
- arch/arm64/include/asm/elf.h | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ tools/testing/selftests/exec/Makefile         |  42 +++++-
+ .../selftests/exec/read_implies_exec.c        | 121 ++++++++++++++++++
+ .../selftests/exec/strip-gnu-stack-bits.c     |  34 +++++
+ .../testing/selftests/exec/strip-gnu-stack.c  |  69 ++++++++++
+ 4 files changed, 265 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/exec/read_implies_exec.c
+ create mode 100644 tools/testing/selftests/exec/strip-gnu-stack-bits.c
+ create mode 100644 tools/testing/selftests/exec/strip-gnu-stack.c
 
-diff --git a/arch/arm/kernel/elf.c b/arch/arm/kernel/elf.c
-index 2f69cf978fe3..6965a673a141 100644
---- a/arch/arm/kernel/elf.c
-+++ b/arch/arm/kernel/elf.c
-@@ -87,12 +87,13 @@ EXPORT_SYMBOL(elf_set_personality);
-  * ELF:              |            |            |
-  * -------------------------------|------------|
-  * missing GNU_STACK | exec-all   | exec-all   |
-- * GNU_STACK == RWX  | exec-all   | exec-all   |
-+ * GNU_STACK == RWX  | exec-all   | exec-stack |
-  * GNU_STACK == RW   | exec-all   | exec-none  |
-  *
-  *  exec-all  : all PROT_READ user mappings are executable, except when
-  *              backed by files on a noexec-filesystem.
-  *  exec-none : only PROT_EXEC user mappings are executable.
-+ *  exec-stack: only the stack and PROT_EXEC user mappings are executable.
-  *
-  *  *this column has no architectural effect: NX markings are ignored by
-  *   hardware, but may have behavioral effects when "wants X" collides with
-@@ -102,7 +103,7 @@ EXPORT_SYMBOL(elf_set_personality);
-  */
- int arm_elf_read_implies_exec(int executable_stack)
- {
--	if (executable_stack != EXSTACK_DISABLE_X)
-+	if (executable_stack == EXSTACK_DEFAULT)
- 		return 1;
- 	if (cpu_architecture() < CPU_ARCH_ARMv6)
- 		return 1;
-diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index 7fc779e3f1ec..03ada29984a7 100644
---- a/arch/arm64/include/asm/elf.h
-+++ b/arch/arm64/include/asm/elf.h
-@@ -106,17 +106,18 @@
-  * ELF:              |            |            |
-  * -------------------------------|------------|
-  * missing GNU_STACK | exec-all   | exec-all   |
-- * GNU_STACK == RWX  | exec-all   | exec-all   |
-+ * GNU_STACK == RWX  | exec-stack | exec-stack |
-  * GNU_STACK == RW   | exec-none  | exec-none  |
-  *
-  *  exec-all  : all PROT_READ user mappings are executable, except when
-  *              backed by files on a noexec-filesystem.
-  *  exec-none : only PROT_EXEC user mappings are executable.
-+ *  exec-stack: only the stack and PROT_EXEC user mappings are executable.
-  *
-  *  *all arm64 CPUs support NX, so there is no "lacks NX" column.
-  *
-  */
--#define elf_read_implies_exec(ex,stk)	(stk != EXSTACK_DISABLE_X)
-+#define elf_read_implies_exec(ex,stk)	(stk == EXSTACK_DEFAULT)
+diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
+index 33339e31e365..085d0e4422ea 100644
+--- a/tools/testing/selftests/exec/Makefile
++++ b/tools/testing/selftests/exec/Makefile
+@@ -10,7 +10,19 @@ TEST_FILES := Makefile
  
- #define CORE_DUMP_USE_REGSET
- #define ELF_EXEC_PAGESIZE	PAGE_SIZE
+ TEST_GEN_PROGS += recursion-depth
+ 
+-EXTRA_CLEAN := $(OUTPUT)/subdir.moved $(OUTPUT)/execveat.moved $(OUTPUT)/xxxxx*
++TEST_GEN_FILES += strip-gnu-stack
++TEST_GEN_PROGS += rie-nx-gnu-stack rie-x-gnu-stack rie-missing-gnu-stack
++
++# While it would be nice to not build "compat" binaries on 32-bit builders,
++# there's no harm: they're just redundant to the native binaries, so skip
++# performing any detection for now, as it gets complex quickly.
++TEST_GEN_PROGS += rie-compat-nx-gnu-stack \
++		  rie-compat-x-gnu-stack \
++		  rie-compat-missing-gnu-stack
++
++EXTRA_CLEAN := $(OUTPUT)/subdir.moved $(OUTPUT)/execveat.moved \
++		$(OUTPUT)/rie-*.new \
++		$(OUTPUT)/xxxxx*
+ 
+ include ../lib.mk
+ 
+@@ -26,3 +38,31 @@ $(OUTPUT)/execveat.denatured: $(OUTPUT)/execveat
+ 	cp $< $@
+ 	chmod -x $@
+ 
++$(OUTPUT)/strip-gnu-stack: strip-gnu-stack.c strip-gnu-stack-bits.c
++	$(CC) $(CFLAGS) -o $@ $<
++
++$(OUTPUT)/rie-nx-gnu-stack: read_implies_exec.c
++	$(CC) $(CFLAGS) -Wl,-z,noexecstack -o $@.new $<
++	readelf -Wl $@.new | grep GNU_STACK | grep -q 'RW ' && \
++	mv $@.new $@
++$(OUTPUT)/rie-x-gnu-stack: read_implies_exec.c
++	$(CC) $(CFLAGS) -Wl,-z,execstack -o $@.new $<
++	readelf -Wl $@.new | grep GNU_STACK | grep -q 'RWE' && \
++	mv $@.new $@
++$(OUTPUT)/rie-missing-gnu-stack: read_implies_exec.c $(OUTPUT)/strip-gnu-stack
++	$(CC) $(CFLAGS) -o $@.new $<
++	$(OUTPUT)/strip-gnu-stack $@.new && \
++	mv $@.new $@
++
++$(OUTPUT)/rie-compat-nx-gnu-stack: read_implies_exec.c
++	$(CC) -m32 $(CFLAGS) -Wl,-z,noexecstack -o $@.new $<
++	readelf -Wl $@.new | grep GNU_STACK | grep -q 'RW ' && \
++	mv $@.new $@
++$(OUTPUT)/rie-compat-x-gnu-stack: read_implies_exec.c
++	$(CC) -m32 $(CFLAGS) -Wl,-z,execstack -o $@.new $<
++	readelf -Wl $@.new | grep GNU_STACK | grep -q 'RWE' && \
++	mv $@.new $@
++$(OUTPUT)/rie-compat-missing-gnu-stack: read_implies_exec.c $(OUTPUT)/strip-gnu-stack
++	$(CC) -m32 $(CFLAGS) -o $@.new $<
++	$(OUTPUT)/strip-gnu-stack $@.new && \
++	mv $@.new $@
+diff --git a/tools/testing/selftests/exec/read_implies_exec.c b/tools/testing/selftests/exec/read_implies_exec.c
+new file mode 100644
+index 000000000000..4b253a84dd27
+--- /dev/null
++++ b/tools/testing/selftests/exec/read_implies_exec.c
+@@ -0,0 +1,121 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * This just examines a PROT_READ mapping to report if it see it gain
++ * PROT_EXEC too (which means that READ_IMPLIES_EXEC has been enabled).
++ */
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/mman.h>
++#include <sys/types.h>
++
++const char maps_path[] = "/proc/self/maps";
++
++int main(int argc, char *argv[])
++{
++	char maps_line[1024];
++	FILE *maps;
++	void *region;
++	int flags = MAP_PRIVATE | MAP_ANONYMOUS;
++	int ret = -1;
++	int perms = -1;
++	int vma_64bit;
++
++	region = mmap(NULL, getpagesize(), PROT_READ, flags, -1, 0);
++	if (region == MAP_FAILED) {
++		perror("mmap");
++		return 128;
++	}
++	maps = fopen(maps_path, "r");
++	if (!maps) {
++		perror(maps_path);
++		ret = 127;
++		goto out_munmap;
++	}
++
++	memset(maps_line, 0, sizeof(maps_line));
++	while (fgets(maps_line, sizeof(maps_line), maps)) {
++		unsigned long long low, high;
++		char *end;
++
++		low = strtoull(maps_line, &end, 16);
++		if (*end != '-') {
++			fprintf(stderr, "Missing '-' separator, line: %s",
++				maps_line);
++			ret = 126;
++			goto out_close;
++		}
++		end++;
++
++		high = strtoull(end, &end, 16);
++		if (*end != ' ') {
++			fprintf(stderr, "Missing ' ' separator, line: %s",
++				maps_line);
++			ret = 125;
++			goto out_close;
++		}
++		end++;
++
++		if ((uintptr_t)region >= low && (uintptr_t)region < high) {
++			perms = 0;
++			perms |= end[0] == 'r' ? PROT_READ : 0;
++			perms |= end[1] == 'w' ? PROT_WRITE : 0;
++			perms |= end[2] == 'x' ? PROT_EXEC : 0;
++
++			break;
++		}
++	}
++	if (perms == -1) {
++		fprintf(stderr, "Could not find mmap region\n");
++		ret = 124;
++		goto out_close;
++	}
++
++	vma_64bit = sizeof(void *) == 8;
++	fprintf(stderr, "%s-bit, ", vma_64bit ? "64" : "32");
++
++	ret = 1;
++	if (strstr(argv[0], "missing-gnu-stack")) {
++		fprintf(stderr, "missing-gnu-stack, ");
++
++		/* Missing PT_GNU_STACK on 64-bit: not READ_IMPLIES_EXEC */
++		if (vma_64bit && (perms & PROT_EXEC) == 0)
++			ret = 0;
++		/* Missing PT_GNU_STACK on 32-bit enables READ_IMPLIES_EXEC */
++		if (!vma_64bit && (perms & PROT_EXEC) == PROT_EXEC)
++			ret = 0;
++	} else if (strstr(argv[0], "x-gnu-stack")) {
++		fprintf(stderr, "executable gnu-stack, ");
++
++		/* X PT_GNU_STACK should always leave READ_IMPLIES_EXEC off */
++		if ((perms & PROT_EXEC) == 0)
++			ret = 0;
++	} else if (strstr(argv[0], "nx-gnu-stack")) {
++		fprintf(stderr, "non-executable PT_GNU_STACK, ");
++
++		/* NX PT_GNU_STACK should always leave READ_IMPLIES_EXEC off */
++		if ((perms & PROT_EXEC) == 0)
++			ret = 0;
++	} else {
++		fprintf(stderr, "Unknown invocation\n");
++		ret = 123;
++		goto out_close;
++	}
++
++	fprintf(stderr, "READ_IMPLIES_EXEC is %s: ",
++		(perms & PROT_EXEC) ? "on" : "off");
++
++	if (ret)
++		fprintf(stderr, "FAIL: %s", maps_line);
++	else
++		fprintf(stderr, "ok\n");
++
++out_close:
++	fclose(maps);
++out_munmap:
++	munmap(region, getpagesize());
++
++	return ret;
++}
+diff --git a/tools/testing/selftests/exec/strip-gnu-stack-bits.c b/tools/testing/selftests/exec/strip-gnu-stack-bits.c
+new file mode 100644
+index 000000000000..907e959c3477
+--- /dev/null
++++ b/tools/testing/selftests/exec/strip-gnu-stack-bits.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * word-size agnostic routines to scan ELF program headers for PT_GNU_STACK
++ * and rewrite it as PT_NULL to emulate old toolchains that did not include
++ * the PT_GNU_STACK program header.
++ */
++
++int strip_bits(char *elf, size_t size)
++{
++	unsigned int i;
++	Elf_Ehdr *eh;
++
++	eh = (Elf_Ehdr *)elf;
++	if (sizeof(*eh) > size) {
++		fprintf(stderr, "Elf Header too small\n");
++		return 124;
++	}
++
++	for (i = 0; i < eh->e_phnum; i++) {
++		Elf_Phdr *ph = (Elf_Phdr *)(elf + (eh->e_phoff + eh->e_phentsize * i));
++
++		if (ph->p_type == PT_GNU_STACK) {
++			ph->p_type = PT_NULL;
++			return 0;
++		}
++	}
++
++	fprintf(stderr, "PT_GNU_STACK missing\n");
++	return 123;
++}
++
++#undef strip_bits
++#undef Elf_Ehdr
++#undef Elf_Phdr
+diff --git a/tools/testing/selftests/exec/strip-gnu-stack.c b/tools/testing/selftests/exec/strip-gnu-stack.c
+new file mode 100644
+index 000000000000..529e60cf0e6e
+--- /dev/null
++++ b/tools/testing/selftests/exec/strip-gnu-stack.c
+@@ -0,0 +1,69 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/* Converts an ELF's PT_GNU_STACK program header to PT_NULL. */
++#include <elf.h>
++#include <fcntl.h>
++#include <stddef.h>
++#include <stdio.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/mman.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++
++#define strip_bits	strip64
++#define Elf_Ehdr	Elf64_Ehdr
++#define Elf_Phdr	Elf64_Phdr
++#include "strip-gnu-stack-bits.c"
++
++#define strip_bits	strip32
++#define Elf_Ehdr	Elf32_Ehdr
++#define Elf_Phdr	Elf32_Phdr
++#include "strip-gnu-stack-bits.c"
++
++int strip(char *elf, size_t size)
++{
++	if (size < 4 || elf[0] != '\x7f' || strncmp(elf + 1, "ELF", 3) != 0) {
++		fprintf(stderr, "Not an ELF file\n");
++		return 128;
++	}
++	switch (elf[EI_CLASS]) {
++	case ELFCLASS64:
++		return strip64(elf, size);
++	case ELFCLASS32:
++		return strip32(elf, size);
++	default:
++		fprintf(stderr, "Unknown EI_CLASS: 0x%02x\n", elf[EI_CLASS]);
++		return 127;
++	}
++}
++
++int main(int argc, char *argv[])
++{
++	int fd, ret;
++	struct stat info;
++	char *elf;
++
++	fd = open(argv[1], O_RDWR);
++	if (fd < 0) {
++		perror(argv[1]);
++		return 1;
++	}
++
++	if (fstat(fd, &info)) {
++		perror(argv[1]);
++		return 2;
++	}
++
++	elf = mmap(NULL, info.st_size, PROT_READ | PROT_WRITE, MAP_SHARED,
++		   fd, 0);
++	if (elf == MAP_FAILED) {
++		perror(argv[1]);
++		return 3;
++	}
++
++	ret = strip(elf, info.st_size);
++
++	munmap(elf, info.st_size);
++	close(fd);
++	return ret;
++}
 -- 
 2.20.1
 
