@@ -2,113 +2,132 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF14C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49D1C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754F5215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC772085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341817;
-	bh=bEiQuJ2jmwLDahsqdaJWgb+onksqGEPeEOo0PIHXB1g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hsp1vhHJhVXYMbh1YQSmsxYPWXUgcGnv/05A/IdQmOzV41Q8rxrZKWJi15WTnThA0
-	 f2Y6Bp9rttNj2KH3m67KiTHYN9Sf7KIDCmOyXdi0ipJ9xwHRwKT/uXaKiyfU6y80U8
-	 +A7GtN+gmxq+r4K1Gi8EDt2q0KC+fIBhoqgp4jBM=
+	s=default; t=1581341822;
+	bh=nB7K6kpxye76S3Jb8ETTHL7QodfEBqCDjkWsssZduzE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=PcN/cytndSnx3f6vUFu7971feNKxelaYhf0AxS7Xv4YKBYzVP8DM1ItDvdTfiy48z
+	 UPw3dbrm0f7XtEK8sNLHgdtaNccwTS1J8zJTYxbNi3Rp8gPubAu3gfgWu9Teq14/EK
+	 CK15oXyK6YZl0KrrorITj0vQsJ75r9trCqpjV1qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731637AbgBJNg4 (ORCPT
+        id S1731706AbgBJNhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:37:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbgBJMfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:06 -0500
-Received: from localhost (unknown [209.37.97.194])
+        id S1727695AbgBJNg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:36:58 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [193.85.242.128])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23F5C215A4;
-        Mon, 10 Feb 2020 12:35:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB6120714;
+        Mon, 10 Feb 2020 13:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338106;
-        bh=bEiQuJ2jmwLDahsqdaJWgb+onksqGEPeEOo0PIHXB1g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYgbgiX45bx+ozbDi5XcDA477gZBPHYWnqGcebKBY8AJvQ989AYTxYTXo0uRPn5o6
-         GwlFsZT6fQaOcik4T9HMZFJ07oU70QP/URpUW1hmK9qWP5loKgVJNn6YIbmQLdgpF5
-         OKKXuTlzeUKUYUgqkNc/X9s710Nb69BJw768ZQqY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 027/195] mfd: dln2: More sanity checking for endpoints
-Date:   Mon, 10 Feb 2020 04:31:25 -0800
-Message-Id: <20200210122308.978518216@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1581341817;
+        bh=nB7K6kpxye76S3Jb8ETTHL7QodfEBqCDjkWsssZduzE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=qL0E8isKyNkFKrWHVRu6fEZ8YKQGgpCkWyrklytg5HLFiuRVbWyMcACAdGDyWyvKL
+         tXWa6K4S1TnaIaRebnAETuYUEj8+xmvoxHFOJ5wFKfj8iGowNk3Di/J1v98QyddiKJ
+         k5TPJaaxpzQm/HzKDSK8Ary0+sya0jZdvGiHG7/E=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 02E833522700; Mon, 10 Feb 2020 05:36:53 -0800 (PST)
+Date:   Mon, 10 Feb 2020 05:36:52 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
+Message-ID: <20200210133652.GV2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200207205656.61938-1-joel@joelfernandes.org>
+ <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
+ <20200210094616.GC14879@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210094616.GC14879@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+On Mon, Feb 10, 2020 at 10:46:16AM +0100, Peter Zijlstra wrote:
+> On Sat, Feb 08, 2020 at 11:31:25AM -0500, Mathieu Desnoyers wrote:
+> > ----- On Feb 7, 2020, at 3:56 PM, Joel Fernandes, Google joel@joelfernandes.org wrote:
+> > 
+> > > Hi,
+> > > These patches remove SRCU usage from tracepoints. The reason for proposing the
+> > > reverts is because the whole point of SRCU was to avoid having to call
+> > > rcu_irq_enter_irqson(). However this was added back in 865e63b04e9b2 ("tracing:
+> > > Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints") because perf
+> > > was breaking..
+> > 
+> > I think the original patch re-enabling the rcu_irq_enter/exit_irqson() is a
+> > tracepoint band-aid over what should actually been fixed within perf instead.
+> > 
+> > Perf should not do rcu_read_lock/unlock()/synchronize_rcu(), but rather use
+> > tracepoint_synchronize_unregister() to match the read-side provided by
+> > tracepoints.
+> > 
+> > If perf can then just rely on the underlying synchronization provided by each
+> > instrumentation providers (tracepoint, kprobe, ...) and not explicitly add its own
+> > unneeded synchronization on top (e.g. rcu_read_lock/unlock), then it should simplify
+> > all this.
+> 
+> It can't. At this point it doesn't know where the event came from. Also,
+> the whole perf stuff is per definition non-preemptible, as it needs to
+> run from NMI context.
+> 
+> Furthermore, using srcu would be detrimental, because of how it has
+> smp_mb() in the read side primitives.
 
-commit 2b8bd606b1e60ca28c765f69c1eedd7d2a2e9dca upstream.
+Note that rcu_irq_enter() and rcu_irq_exit() also contain value-returning
+atomics, which imply full memory barriers.
 
-It is not enough to check for the number of endpoints.
-The types must also be correct.
+> The best we can do is move that rcu_irq_enter/exit_*() crud into the
+> perf tracepoint glue I suppose.
 
-Reported-and-tested-by: syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+One approach would be to define a synchronize_preempt_disable() that
+waits only for pre-existing disabled-preemption regions (including
+of course diabled-irq and NMI-handler regions.  Something like Steve
+Rostedt's workqueue-baed schedule_on_each_cpu(ftrace_sync) implementation
+might work.
 
----
- drivers/mfd/dln2.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+There are of course some plusses and minuses:
 
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -725,6 +725,8 @@ static int dln2_probe(struct usb_interfa
- 		      const struct usb_device_id *usb_id)
- {
- 	struct usb_host_interface *hostif = interface->cur_altsetting;
-+	struct usb_endpoint_descriptor *epin;
-+	struct usb_endpoint_descriptor *epout;
- 	struct device *dev = &interface->dev;
- 	struct dln2_dev *dln2;
- 	int ret;
-@@ -734,12 +736,19 @@ static int dln2_probe(struct usb_interfa
- 	    hostif->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
-+	epin = &hostif->endpoint[0].desc;
-+	epout = &hostif->endpoint[1].desc;
-+	if (!usb_endpoint_is_bulk_out(epout))
-+		return -ENODEV;
-+	if (!usb_endpoint_is_bulk_in(epin))
-+		return -ENODEV;
-+
- 	dln2 = kzalloc(sizeof(*dln2), GFP_KERNEL);
- 	if (!dln2)
- 		return -ENOMEM;
- 
--	dln2->ep_out = hostif->endpoint[0].desc.bEndpointAddress;
--	dln2->ep_in = hostif->endpoint[1].desc.bEndpointAddress;
-+	dln2->ep_out = epout->bEndpointAddress;
-+	dln2->ep_in = epin->bEndpointAddress;
- 	dln2->usb_dev = usb_get_dev(interface_to_usbdev(interface));
- 	dln2->interface = interface;
- 	usb_set_intfdata(interface, dln2);
++	Works on preempt-disable regions in idle-loop code without
+	the need to invoke rcu_idle_exit() and rcu_idle_enter()..
 
++	Straightforward implementation.
 
+-	Does not work on preempt-disable regions on offline CPUs.
+	(I have no idea if this really matters.)
+
+-	Schedules on idle CPUs, so usage needs to be restricted to
+	avoid messing up energy-efficient systems.  (It should be
+	just fine to use this for tracing.)
+
+Thoughts?
+
+							Thanx, Paul
