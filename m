@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AAFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C61C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18EA420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610D92070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340591;
-	bh=mybJf9H4zwQSbbA4ifMmeLxgNPhjekDf/AYhWwnpOQM=;
+	s=default; t=1581340594;
+	bh=fQAz3IvNxpOZZlPxtQGQqgPRu0k0bCDbi1STD+6Z5M8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhfaTwm17DRQuO3eaV6tWAQxWrPPqoDbJxaFWfOEfw42wW854RfbQewi5SMmjfcbu
-	 9Hw7M7I5sZGdKhAMHgo0EjemDMkQKOhl2tl5R5k8UfyXnP0fAVP8JwTaK1AS/38lhU
-	 rljitoQ6+fWQxfuzwk+nvMC7SxlKI1xx+qSyoKmU=
+	b=wl79yLEpseBoTleSK+3lIAdNCxlphQQRRrgbR54+n8XaTLNMed7Th6ZguVpw415o9
+	 vHmlVXVL/DX9CilGuREXJ10ONQMPlPKDrz8nJ3sfoQJi+Ajy4KNX0fG6Zy6asGMyMo
+	 1lL2QjzVwhxN+di3+6Qgo6QarUW0MPnHx2yn0h3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgBJMiK (ORCPT
+        id S1729516AbgBJNQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:16:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgBJMgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:45 -0500
+        id S1729033AbgBJMiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 275F620838;
-        Mon, 10 Feb 2020 12:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1675D20733;
+        Mon, 10 Feb 2020 12:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338204;
-        bh=mybJf9H4zwQSbbA4ifMmeLxgNPhjekDf/AYhWwnpOQM=;
+        s=default; t=1581338289;
+        bh=fQAz3IvNxpOZZlPxtQGQqgPRu0k0bCDbi1STD+6Z5M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCIcdixByHhumBVwNTV3EUKgcA6RJmpNRW/XTsGZM6TyWfwYrgSZrewCyFqTJ497E
-         JYtsNpwV1Fg2ObDl5GRd6CILIQ4+BRPbNZ8VYzuOgdyJlwHt5wNapSIgObqYlu0x0Q
-         zQZVG9GPfu638f50cT9O2KuKBu2LknZs0xqoFzgg=
+        b=ColV959AZjdM15tpzwdlEG11g0c8FPvq0Xut7guR0aFq1juOJztLsC1kLS3b0AS4u
+         jUZV/jE3xV6S5XCqYUGV4GBYpdv9jJ3gP5fRkdon9Ow3FkNnnCZuP3xaGV446KFcOl
+         hAhrcHKxHp4K+L4O26EZ+qACMYDDnnTbuohGise8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>, Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 022/309] media: uvcvideo: Avoid cyclic entity chains due to malformed USB descriptors
-Date:   Mon, 10 Feb 2020 04:29:38 -0800
-Message-Id: <20200210122408.118957083@linuxfoundation.org>
+Subject: [PATCH 5.4 190/309] media: iguanair: fix endpoint sanity check
+Date:   Mon, 10 Feb 2020 04:32:26 -0800
+Message-Id: <20200210122424.808494428@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,114 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 68035c80e129c4cfec659aac4180354530b26527 upstream.
+commit 1b257870a78b0a9ce98fdfb052c58542022ffb5b upstream.
 
-Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
-up the following WARNING from the UVC chain scanning code:
+Make sure to use the current alternate setting, which need not be the
+first one by index, when verifying the endpoint descriptors and
+initialising the URBs.
 
-  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
-  | next=ffff880067d22298.
-  | ------------[ cut here ]------------
-  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
-  | Modules linked in:
-  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
-  | 4.14.0-rc2-42613-g1488251d1a98 #238
-  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-  | Workqueue: usb_hub_wq hub_event
-  | task: ffff88006b01ca40 task.stack: ffff880064358000
-  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
-  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
-  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
-  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
-  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
-  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
-  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
-  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
-  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
-  | Call Trace:
-  |  __list_add ./include/linux/list.h:59
-  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
-  |  uvc_scan_chain_forward.isra.8+0x373/0x416
-  | drivers/media/usb/uvc/uvc_driver.c:1471
-  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
-  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
-  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Looking into the output from usbmon, the interesting part is the
-following data packet:
-
-  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
-  00090403 00000e01 00000924 03000103 7c003328 010204db
-
-If we drop the lead configuration and interface descriptors, we're left
-with an output terminal descriptor describing a generic display:
-
-  /* Output terminal descriptor */
-  buf[0]	09
-  buf[1]	24
-  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
-  buf[3]	00	/* ID */
-  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
-  buf[5]	03
-  buf[6]	7c
-  buf[7]	00	/* source ID refers to self! */
-  buf[8]	33
-
-The problem with this descriptor is that it is self-referential: the
-source ID of 0 matches itself! This causes the 'struct uvc_entity'
-representing the display to be added to its chain list twice during
-'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
-processed directly from the 'dev->entities' list and then again
-immediately afterwards when trying to follow the source ID in
-'uvc_scan_chain_forward()'
-
-Add a check before adding an entity to a chain list to ensure that the
-entity is not already part of a chain.
-
-Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
-
-Cc: <stable@vger.kernel.org>
-Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: 26ff63137c45 ("[media] Add support for the IguanaWorks USB IR Transceiver")
+Fixes: ab1cbdf159be ("media: iguanair: add sanity checks")
+Cc: stable <stable@vger.kernel.org>     # 3.6
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_driver.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/media/rc/iguanair.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct
- 			break;
- 		if (forward == prev)
- 			continue;
-+		if (forward->chain.next || forward->chain.prev) {
-+			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+				"entity %d already in chain.\n", forward->id);
-+			return -EINVAL;
-+		}
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -413,7 +413,7 @@ static int iguanair_probe(struct usb_int
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
  
- 		switch (UVC_ENTITY_TYPE(forward)) {
- 		case UVC_VC_EXTENSION_UNIT:
-@@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struc
- 				return -1;
- 			}
- 
-+			if (term->chain.next || term->chain.prev) {
-+				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+					"entity %d already in chain.\n",
-+					term->id);
-+				return -EINVAL;
-+			}
-+
- 			if (uvc_trace_param & UVC_TRACE_PROBE)
- 				printk(KERN_CONT " %d", term->id);
+-	idesc = intf->altsetting;
++	idesc = intf->cur_altsetting;
+ 	if (idesc->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
  
 
 
