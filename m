@@ -2,147 +2,226 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E459CC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABBDC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD58120708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShIXuYRh"
+	by mail.kernel.org (Postfix) with ESMTP id 4BE9E2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581339607;
+	bh=q7Vpjh0iO/MdLLf6Hk8DnykEgmlI0R6FAP2WC0Y7uow=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pOSS6ArE1He4I9nrnW6gRKZ3I5kiPViksdz+c+2LsJyUI/zAX/t5Md8A+tvgz8t2r
+	 1NlIxtu3T6trZpN+1I9GO7s6LVwcuzu6kgKpEwjoBiNycrWaogTEoZNyD1NPruQBwp
+	 6X/58Ct2MOpDLnXHG7hTH+rCykK+gubJG6DFyDt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbgBJNAC (ORCPT
+        id S1728490AbgBJMlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:00:02 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35455 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729563AbgBJM75 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:59:57 -0500
-Received: by mail-pg1-f195.google.com with SMTP id l24so3895563pgk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 04:59:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y0lLKcIRcrKBMjOb2t3dxuaz/hreV2rj4w3yWI5N9yg=;
-        b=ShIXuYRhJDp0KzLzF6UZgMsniFpEjmFjc61ljrmLMLTsjcl0HWTyMdFVPpbE+DPf/3
-         Zi/mg0ie+/dS9yy/39sLKz52WRV9E1CFI6L7ldSw4Vmst5iRVq/Ydqf3NYw2TF2cxjHL
-         /j2DZNJBe2+MQRlC9yBlwF2/HEUz/BXB+rVuJKItBpjjV31vkqa4QgJGA/HzEryusoJz
-         +uzigk7tPzocPlnwtJifPJJ8RZeaALg3Eh/WGiQ+U4LCx2lRjXp6ruH5YKAYH7LAM9TR
-         3S94DwDVd6T+IPzBoA31PGOOBqcy2UQ04iZ9Jv6Q2kEzdzqOtKB5x4XC76XWbS4HCtq4
-         YuZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y0lLKcIRcrKBMjOb2t3dxuaz/hreV2rj4w3yWI5N9yg=;
-        b=ruzCiW2Ire6/sHecN33QScmnLzkO61uD2GGIXFnXlofqlb6Bvy4zQzrDkKGAwMYrTG
-         31aykdBIBlnzlyxs8AmTd+Lc/LFe+LDeWvvQcCxZeY+oQVMJAqrVkvek+KpkfCnTtIdq
-         KXrwI4mvi5z8Mi0c8lnJSTdv2kZ5anJtoKEzAoAup86vY1EFCOXowuuy1jk8+1vOnrsM
-         45otTLKebia3QD4oyb5Av+zTkD6aIG/VxsgeExYryHhCFZqDZZWNI9g4UqedXtsKRyvK
-         yOScHdjteqoPk41v5HjwYUZvBHiT+jJEezV9q93tgsSiLpto6SBRtz5DWcuALWhKaqr2
-         Xmpw==
-X-Gm-Message-State: APjAAAXqqnkm+Q8F5cvGETZacmaSktFLYY0bqEyoRw7zYEwv52pM3uem
-        IcrGKqH+ioB9oie9VWf2YIE=
-X-Google-Smtp-Source: APXvYqz4vzr5UgDqPluKWTZ8VLa/KFqXFz0dLU85nHG63YroIBTbumvq+jFBGBxdER0F04KDELp1mg==
-X-Received: by 2002:a63:3688:: with SMTP id d130mr1568945pga.422.1581339595955;
-        Mon, 10 Feb 2020 04:59:55 -0800 (PST)
-Received: from workstation-portable ([146.196.37.217])
-        by smtp.gmail.com with ESMTPSA id w8sm455068pfj.20.2020.02.10.04.59.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 04:59:55 -0800 (PST)
-Date:   Mon, 10 Feb 2020 18:29:48 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] events: Annotate parent_ctx with __rcu
-Message-ID: <20200210125948.GA16485@workstation-portable>
-References: <20200208144648.18833-1-frextrite@gmail.com>
- <20200210093624.GB14879@hirez.programming.kicks-ass.net>
+        Mon, 10 Feb 2020 07:41:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728237AbgBJMia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:30 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B6DC2173E;
+        Mon, 10 Feb 2020 12:38:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338309;
+        bh=q7Vpjh0iO/MdLLf6Hk8DnykEgmlI0R6FAP2WC0Y7uow=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fqRSkhOkCv9aNNGtkOzmIY2fOw6Ic+PS2P+2VlAP4HY6XVq+UPitH5dSUlcjv2o5t
+         Tuc2/dn7u42kSz6IkzxwtblzxDVkSQL7X+b4UkSlOy9mVaVyi2neIU4iy+rMsCzOcK
+         5B2QtXDCI5DzeFGIAzrcSrMtpuzSEafvz49vsIVg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mikita Lipski <Mikita.Lipski@amd.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 231/309] drm/amd/dm/mst: Ignore payload update failures
+Date:   Mon, 10 Feb 2020 04:33:07 -0800
+Message-Id: <20200210122428.716074173@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210093624.GB14879@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:36:24AM +0100, Peter Zijlstra wrote:
-> On Sat, Feb 08, 2020 at 08:16:49PM +0530, Amol Grover wrote:
-> > parent_ctx is used under RCU context in kernel/events/core.c,
-> > tell sparse about it aswell.
-> > 
-> > Fixes the following instances of sparse error:
-> > kernel/events/core.c:3221:18: error: incompatible types in comparison
-> > kernel/events/core.c:3222:23: error: incompatible types in comparison
-> > 
-> > This introduces the following two sparse errors:
-> > kernel/events/core.c:3117:18: error: incompatible types in comparison
-> > kernel/events/core.c:3121:30: error: incompatible types in comparison
-> > 
-> > Hence, use rcu_dereference() to access parent_ctx and silence
-> > the newly introduced errors.
-> > 
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > ---
-> >  include/linux/perf_event.h |  2 +-
-> >  kernel/events/core.c       | 11 ++++++++---
-> >  2 files changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > index 6d4c22aee384..e18a7bdc6f98 100644
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -810,7 +810,7 @@ struct perf_event_context {
-> >  	 * These fields let us detect when two contexts have both
-> >  	 * been cloned (inherited) from a common ancestor.
-> >  	 */
-> > -	struct perf_event_context	*parent_ctx;
-> > +	struct perf_event_context __rcu	*parent_ctx;
-> >  	u64				parent_gen;
-> >  	u64				generation;
-> >  	int				pin_count;
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 2173c23c25b4..2a8c5670b254 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -3106,26 +3106,31 @@ static void ctx_sched_out(struct perf_event_context *ctx,
-> >  static int context_equiv(struct perf_event_context *ctx1,
-> >  			 struct perf_event_context *ctx2)
-> >  {
-> > +	struct perf_event_context *parent_ctx1, *parent_ctx2;
-> > +
-> >  	lockdep_assert_held(&ctx1->lock);
-> >  	lockdep_assert_held(&ctx2->lock);
-> >  
-> > +	parent_ctx1 = rcu_dereference(ctx1->parent_ctx);
-> > +	parent_ctx2 = rcu_dereference(ctx2->parent_ctx);
-> 
-> Bah.
-> 
-> Why are you  fixing all this sparse crap and making the code worse?
+From: Lyude Paul <lyude@redhat.com>
 
-Hi Peter,
+commit 58fe03d6dec908a1bec07eea7e94907af5c07eec upstream.
 
-Sparse is quite noisy and we need to eliminate false-positives, right?
-__rcu will tell the developer, this pointer could change and he needs to
-take the required steps to make sure the code doesn't break.
+Disabling a display on MST can potentially happen after the entire MST
+topology has been removed, which means that we can't communicate with
+the topology at all in this scenario. Likewise, this also means that we
+can't properly update payloads on the topology and as such, it's a good
+idea to ignore payload update failures when disabling displays.
+Currently, amdgpu makes the mistake of halting the payload update
+process when any payload update failures occur, resulting in leaving
+DC's local copies of the payload tables out of date.
 
-Thanks
-Amol
+This ends up causing problems with hotplugging MST topologies, and
+causes modesets on the second hotplug to fail like so:
+
+[drm] Failed to updateMST allocation table forpipe idx:1
+------------[ cut here ]------------
+WARNING: CPU: 5 PID: 1511 at
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+rtsx_pci pinctrl_amd
+CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-rc7Lyude-Test+ #4
+Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 ) 01/31/2019
+RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+Call Trace:
+ ? mutex_lock+0xe/0x30
+ dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+ ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+ ? core_link_enable_stream+0x656/0x730 [amdgpu]
+ core_link_enable_stream+0x656/0x730 [amdgpu]
+ dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+ ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+ ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+ dc_commit_state+0x292/0x770 [amdgpu]
+ ? add_timer+0x101/0x1f0
+ ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+ amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+ ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+ ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+ ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+ ? ttm_bo_validate+0x134/0x150 [ttm]
+ ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_timeout+0x38/0x160
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_interruptible+0x33/0x190
+ commit_tail+0x94/0x130 [drm_kms_helper]
+ drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+ drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+ drm_mode_setcrtc+0x194/0x6a0 [drm]
+ ? _cond_resched+0x15/0x30
+ ? mutex_lock+0xe/0x30
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ drm_ioctl_kernel+0xaa/0xf0 [drm]
+ drm_ioctl+0x208/0x390 [drm]
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+ do_vfs_ioctl+0x458/0x6d0
+ ksys_ioctl+0x5e/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fab2121f87b
+Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+---[ end trace 6ea888c24d2059cd ]---
+
+Note as well, I have only been able to reproduce this on setups with 2
+MST displays.
+
+Changes since v1:
+* Don't return false when part 1 or part 2 of updating the payloads
+  fails, we don't want to abort at any step of the process even if
+  things fail
+
+Reviewed-by: Mikita Lipski <Mikita.Lipski@amd.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -247,7 +247,8 @@ bool dm_helpers_dp_mst_write_payload_all
+ 		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
+ 	}
+ 
+-	ret = drm_dp_update_payload_part1(mst_mgr);
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part1(mst_mgr);
+ 
+ 	/* mst_mgr->->payloads are VC payload notify MST branch using DPCD or
+ 	 * AUX message. The sequence is slot 1-63 allocated sequence for each
+@@ -256,9 +257,6 @@ bool dm_helpers_dp_mst_write_payload_all
+ 
+ 	get_payload_table(aconnector, proposed_table);
+ 
+-	if (ret)
+-		return false;
+-
+ 	return true;
+ }
+ 
+@@ -316,7 +314,6 @@ bool dm_helpers_dp_mst_send_payload_allo
+ 	struct amdgpu_dm_connector *aconnector;
+ 	struct drm_dp_mst_topology_mgr *mst_mgr;
+ 	struct drm_dp_mst_port *mst_port;
+-	int ret;
+ 
+ 	aconnector = (struct amdgpu_dm_connector *)stream->dm_stream_context;
+ 
+@@ -330,10 +327,8 @@ bool dm_helpers_dp_mst_send_payload_allo
+ 	if (!mst_mgr->mst_state)
+ 		return false;
+ 
+-	ret = drm_dp_update_payload_part2(mst_mgr);
+-
+-	if (ret)
+-		return false;
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part2(mst_mgr);
+ 
+ 	if (!enable)
+ 		drm_dp_mst_deallocate_vcpi(mst_mgr, mst_port);
+
+
