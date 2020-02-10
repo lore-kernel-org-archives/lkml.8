@@ -2,87 +2,429 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C05C3B185
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F92CC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A1B2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581327506;
-	bh=BEo6HMR0MvjQcCE5poL3VBvJafs4lUvL3MubgQHoZn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lHa2uCtcu9lIs8laeaf2pPB9X//DMSJOfJZQ0seG5egiGJY5QEz3Th/5OCrxcbGip
-	 1MqX9DipjEm/MKMKg4sy0GfUuG910S4F8HidFW4peKE27LggjfsMcHkgAVMeAxDa3F
-	 kQwtZcsQsBBYSHmOvFSEHFRIJ/uX9lidlWdiqlUM=
+	by mail.kernel.org (Postfix) with ESMTP id DCE612080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbgBJJi0 (ORCPT
+        id S1727541AbgBJJjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:38:26 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35189 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbgBJJiY (ORCPT
+        Mon, 10 Feb 2020 04:39:25 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:47254 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJJjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:38:24 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z18so3696580lfe.2;
-        Mon, 10 Feb 2020 01:38:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qoaw8NzLMiikXus1s4fJbbBbRP2yQE8AW6SjyqH90ps=;
-        b=f4D3UV2JuGrueMMJggPYX5BfJWDCO01IB7Aq01MfbvEBQcp/mrsVrspLD/5IB21KLD
-         dg6Q9j0Qd4/CCBDzfmm4FW+p2QOsA+EY8kmGPlAd6f02JpFlCcaHtQN+9M8M8caUByeb
-         lraPGYaZApH/AorkbFX8er8NgCcteaiTrR3hY5CyRv/TnZygvxK0MUfuKUcecyt29iy7
-         SNhvQjVSPrbUL2nWyPGKP4WI7wFCrPBEGnjmag87fyahm/nRHwrEE/twwBdhjqV/imhD
-         oaqDD4FNXC9bYsKl/lYeRZo30DkGCG/ffWDa6IxnLpTIHg9BfQ5YlRU3YgBSmrNpEnFN
-         Mx4w==
-X-Gm-Message-State: APjAAAX01xhJApEdQu+AA8PLtxWn45N4kWBHOYGWVw3hnZYE3MKo24un
-        bgh6FN+gCO7FleHKwb4YGsr66tYh
-X-Google-Smtp-Source: APXvYqybbaY6pGnafRU9pOH4x7Ja+2as0yf619wbxsIXdtLVt2aUCLBeA2xXu26dvQ6EhJ4WcQKfzQ==
-X-Received: by 2002:a19:9d5:: with SMTP id 204mr309144lfj.120.1581327502045;
-        Mon, 10 Feb 2020 01:38:22 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id u7sm4992771lfn.31.2020.02.10.01.38.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 01:38:21 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j15WF-0005ws-6W; Mon, 10 Feb 2020 10:38:19 +0100
-Date:   Mon, 10 Feb 2020 10:38:19 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: relax unthrottle memory barrier
-Message-ID: <20200210093819.GB3539@localhost>
-References: <20200130100658.683-1-johan@kernel.org>
- <20200130153328.jt5stb4svajrbkf6@linux-p48b>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130153328.jt5stb4svajrbkf6@linux-p48b>
+        Mon, 10 Feb 2020 04:39:24 -0500
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id 0xfL2200G5USYZQ06xfLcQ; Mon, 10 Feb 2020 10:39:20 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j15XE-00028x-Lw; Mon, 10 Feb 2020 10:39:20 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j15XE-0001vO-Jq; Mon, 10 Feb 2020 10:39:20 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-m68k@lists.linux-m68k.org
+Cc:     linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] m68k: defconfig: Update defconfigs for v5.6-rc1
+Date:   Mon, 10 Feb 2020 10:39:19 +0100
+Message-Id: <20200210093919.7357-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 07:33:28AM -0800, Davidlohr Bueso wrote:
-> On Thu, 30 Jan 2020, Johan Hovold wrote:
-> 
-> >Commit a8d78d9f3856 ("USB: serial: clean up throttle handling")
-> >converted the throttle handling to use atomic bitops. This means that we
-> >can relax the smp_mb() in unthrottle() to smp_mb__after_atomic(), which
-> >for example is a no-op on architectures like x86 that provide fully
-> >ordered atomics.
-> >
-> >Signed-off-by: Johan Hovold <johan@kernel.org>
-> 
-> Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+  - Disable CONFIG_BOOT_CONFIG (should default to n),
+  - Enable modular build of the WireGuard secure network tunnel,
+  - Drop CONFIG_CRYPTO_LIB_{BLAKE2S,CHACHA20POLY1305,CURVE25519}=m
+    (auto-enabled by CONFIG_WIREGUARD).
 
-Thanks for the review. Now applied.
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ arch/m68k/configs/amiga_defconfig    | 5 ++---
+ arch/m68k/configs/apollo_defconfig   | 5 ++---
+ arch/m68k/configs/atari_defconfig    | 5 ++---
+ arch/m68k/configs/bvme6000_defconfig | 5 ++---
+ arch/m68k/configs/hp300_defconfig    | 5 ++---
+ arch/m68k/configs/mac_defconfig      | 5 ++---
+ arch/m68k/configs/multi_defconfig    | 5 ++---
+ arch/m68k/configs/mvme147_defconfig  | 5 ++---
+ arch/m68k/configs/mvme16x_defconfig  | 5 ++---
+ arch/m68k/configs/q40_defconfig      | 5 ++---
+ arch/m68k/configs/sun3_defconfig     | 5 ++---
+ arch/m68k/configs/sun3x_defconfig    | 5 ++---
+ 12 files changed, 24 insertions(+), 36 deletions(-)
 
-Johan
+diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
+index e1134c3e0b69d5d3..e470027050cfafa5 100644
+--- a/arch/m68k/configs/amiga_defconfig
++++ b/arch/m68k/configs/amiga_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -369,6 +370,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -613,9 +615,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
+index 484cb1643df1719d..afdd8fd472ede19b 100644
+--- a/arch/m68k/configs/apollo_defconfig
++++ b/arch/m68k/configs/apollo_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -348,6 +349,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -569,9 +571,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
+index c372f00c4a1f0797..a354a540046a9b9b 100644
+--- a/arch/m68k/configs/atari_defconfig
++++ b/arch/m68k/configs/atari_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -364,6 +365,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -602,9 +604,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
+index bee9263a409c4e18..520260d921b6a1e1 100644
+--- a/arch/m68k/configs/bvme6000_defconfig
++++ b/arch/m68k/configs/bvme6000_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -346,6 +347,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -562,9 +564,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
+index c8847a8bcbd6d23f..1956a36a0b0b8d5c 100644
+--- a/arch/m68k/configs/hp300_defconfig
++++ b/arch/m68k/configs/hp300_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -347,6 +348,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -571,9 +573,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
+index 303ffafd9cad0d60..681f66f1c66d393a 100644
+--- a/arch/m68k/configs/mac_defconfig
++++ b/arch/m68k/configs/mac_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -363,6 +364,7 @@ CONFIG_INPUT_ADBHID=y
+ CONFIG_MAC_EMUMOUSEBTN=y
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -593,9 +595,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
+index 89a704226cd9e4e5..114ef55692427e0c 100644
+--- a/arch/m68k/configs/multi_defconfig
++++ b/arch/m68k/configs/multi_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -407,6 +408,7 @@ CONFIG_INPUT_ADBHID=y
+ CONFIG_MAC_EMUMOUSEBTN=y
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -679,9 +681,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
+index f62c1f4d03a0330e..505a0ac80b3b041f 100644
+--- a/arch/m68k/configs/mvme147_defconfig
++++ b/arch/m68k/configs/mvme147_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -345,6 +346,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -561,9 +563,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
+index 58dcad26a7513222..0376deba137f6bd7 100644
+--- a/arch/m68k/configs/mvme16x_defconfig
++++ b/arch/m68k/configs/mvme16x_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -346,6 +347,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -562,9 +564,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
+index 5d3c28d1d545b4a0..b205f86b1d11a3ea 100644
+--- a/arch/m68k/configs/q40_defconfig
++++ b/arch/m68k/configs/q40_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -353,6 +354,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -580,9 +582,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
+index 5ef9e17dcd51788a..82f2da175b5412a4 100644
+--- a/arch/m68k/configs/sun3_defconfig
++++ b/arch/m68k/configs/sun3_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -343,6 +344,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -564,9 +566,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
+index 22e1accc60a3e110..2cdc17b9ee8eb184 100644
+--- a/arch/m68k/configs/sun3x_defconfig
++++ b/arch/m68k/configs/sun3x_defconfig
+@@ -9,6 +9,7 @@ CONFIG_LOG_BUF_SHIFT=16
+ # CONFIG_PID_NS is not set
+ # CONFIG_NET_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++# CONFIG_BOOT_CONFIG is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_USERFAULTFD=y
+ CONFIG_SLAB=y
+@@ -343,6 +344,7 @@ CONFIG_TCM_FILEIO=m
+ CONFIG_TCM_PSCSI=m
+ CONFIG_NETDEVICES=y
+ CONFIG_DUMMY=m
++CONFIG_WIREGUARD=m
+ CONFIG_EQUALIZER=m
+ CONFIG_NET_TEAM=m
+ CONFIG_NET_TEAM_MODE_BROADCAST=m
+@@ -563,9 +565,6 @@ CONFIG_CRYPTO_USER_API_HASH=m
+ CONFIG_CRYPTO_USER_API_SKCIPHER=m
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_USER_API_AEAD=m
+-CONFIG_CRYPTO_LIB_BLAKE2S=m
+-CONFIG_CRYPTO_LIB_CURVE25519=m
+-CONFIG_CRYPTO_LIB_CHACHA20POLY1305=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC32_SELFTEST=m
+ CONFIG_CRC64=m
+-- 
+2.17.1
+
