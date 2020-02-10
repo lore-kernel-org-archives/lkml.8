@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0648C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1644C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAACF20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A2020708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339085;
-	bh=gp3uSyvEdJvMJ43iWW0SHxrSkKLlqtLGRBb2o/xi1cY=;
+	s=default; t=1581339090;
+	bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=teLHjEAQNvoMU3afCITLIpD/hdd2L19VDKEXtJdJdZtodBzBTxvsRJImaNCex/+T2
-	 JiIabQivcaGjAK1g73JelqB46igHsi6JQMxjcGlBvFn629LZP0Nskegh+rHRGyIoXz
-	 ik+A//wuV0xiWrKXyH/mKu4C4+cc/Md++54MCOiE=
+	b=CTxx509qGzSjYGckhQ7ngNBwAQXviVzI75kYZHmh6qHGgrUBKdwUfe8JTrkRNGVki
+	 9NAm90Ho7vAtV+FaGcw41BA/k7k99O6DmQpVVF3cc4GBxMWni5VBeU0RrGLflJY9fp
+	 zd3Ou1+69XfOvxj7UP9YWD1tvPAioEWsxehXyr28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgBJMno (ORCPT
+        id S1729308AbgBJMnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbgBJMkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:06 -0500
+        id S1729604AbgBJMkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:04 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8887720838;
-        Mon, 10 Feb 2020 12:40:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE4220838;
+        Mon, 10 Feb 2020 12:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338405;
-        bh=gp3uSyvEdJvMJ43iWW0SHxrSkKLlqtLGRBb2o/xi1cY=;
+        s=default; t=1581338402;
+        bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N8IkUe8ehdkNmRtgvsxxnKXio1tU+oKAL1HBhh8xIlf8GKiX50YpC2oQmA/ENcykt
-         TkrSzvsW5lquBqmWcHI0zCowHEYAJENadHAPmhK05TSO0wiW1cZR/O0W4yqVybPMZ+
-         a0HDyi9n28O71+k7km5rLeXoDEoVDZ+5q9tBnwFA=
+        b=fo18i+Oti5NhJ3uUjzPK66u2YI8nOgm+X/BC34tVDOt4OCufdM3EyUpWoRmMNlWpx
+         xVos6rjFJNmlfKMKuUXkaDSJn+enAdCryjdUXdvCPsc1wxOGYed/yr40ffMNvTMSAs
+         JfCvIRT4BmIAzMs9wTTnUW7u9OoIyodiB8L/r/Ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Tarcatu <dragos_tarcatu@mentor.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>
-Subject: [PATCH 5.5 108/367] ASoC: topology: fix soc_tplg_fe_link_create() - link->dobj initialization order
-Date:   Mon, 10 Feb 2020 04:30:21 -0800
-Message-Id: <20200210122434.382312689@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 5.5 102/367] ubifs: dont trigger assertion on invalid no-key filename
+Date:   Mon, 10 Feb 2020 04:30:15 -0800
+Message-Id: <20200210122433.782243999@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,62 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaroslav Kysela <perex@perex.cz>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 8ce1cbd6ce0b1bda0c980c64fee4c1e1378355f1 upstream.
+commit f0d07a98a070bb5e443df19c3aa55693cbca9341 upstream.
 
-The code which checks the return value for snd_soc_add_dai_link() call
-in soc_tplg_fe_link_create() moved the snd_soc_add_dai_link() call before
-link->dobj members initialization.
+If userspace provides an invalid fscrypt no-key filename which encodes a
+hash value with any of the UBIFS node type bits set (i.e. the high 3
+bits), gracefully report ENOENT rather than triggering ubifs_assert().
 
-While it does not affect the latest kernels, the old soc-core.c code
-in the stable kernels is affected. The snd_soc_add_dai_link() function uses
-the link->dobj.type member to check, if the link structure is valid.
+Test case with kvm-xfstests shell:
 
-Reorder the link->dobj initialization to make things work again.
-It's harmless for the recent code (and the structure should be properly
-initialized before other calls anyway).
+    . fs/ubifs/config
+    . ~/xfstests/common/encrypt
+    dev=$(__blkdev_to_ubi_volume /dev/vdc)
+    ubiupdatevol $dev -t
+    mount $dev /mnt -t ubifs
+    mkdir /mnt/edir
+    xfs_io -c set_encpolicy /mnt/edir
+    rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
 
-The problem is in stable linux-5.4.y since version 5.4.11 when the
-upstream commit 76d270364932 was applied.
+With the bug, the following assertion fails on the 'rm' command:
 
-Fixes: 76d270364932 ("ASoC: topology: Check return value for snd_soc_add_dai_link()")
-Cc: Dragos Tarcatu <dragos_tarcatu@mentor.com>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jaroslav Kysela <perex@perex.cz>
-Link: https://lore.kernel.org/r/20200122190752.3081016-1-perex@perex.cz
-Signed-off-by: Mark Brown <broonie@kernel.org>
+    [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
+
+Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
+Cc: <stable@vger.kernel.org> # v4.10+
+Link: https://lore.kernel.org/r/20200120223201.241390-5-ebiggers@kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-topology.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/ubifs/dir.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1906,6 +1906,10 @@ static int soc_tplg_fe_link_create(struc
- 	link->num_codecs = 1;
- 	link->num_platforms = 1;
- 
-+	link->dobj.index = tplg->index;
-+	link->dobj.ops = tplg->ops;
-+	link->dobj.type = SND_SOC_DOBJ_DAI_LINK;
-+
- 	if (strlen(pcm->pcm_name)) {
- 		link->name = kstrdup(pcm->pcm_name, GFP_KERNEL);
- 		link->stream_name = kstrdup(pcm->pcm_name, GFP_KERNEL);
-@@ -1942,9 +1946,6 @@ static int soc_tplg_fe_link_create(struc
- 		goto err;
- 	}
- 
--	link->dobj.index = tplg->index;
--	link->dobj.ops = tplg->ops;
--	link->dobj.type = SND_SOC_DOBJ_DAI_LINK;
- 	list_add(&link->dobj.list, &tplg->comp->dobj_list);
- 
- 	return 0;
+--- a/fs/ubifs/dir.c
++++ b/fs/ubifs/dir.c
+@@ -228,6 +228,8 @@ static struct dentry *ubifs_lookup(struc
+ 	if (nm.hash) {
+ 		ubifs_assert(c, fname_len(&nm) == 0);
+ 		ubifs_assert(c, fname_name(&nm) == NULL);
++		if (nm.hash & ~UBIFS_S_KEY_HASH_MASK)
++			goto done; /* ENOENT */
+ 		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
+ 		err = ubifs_tnc_lookup_dh(c, &key, dent, nm.minor_hash);
+ 	} else {
 
 
