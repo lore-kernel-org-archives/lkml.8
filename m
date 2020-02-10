@@ -2,113 +2,177 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BADCC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5962020658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5931820658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="szVARKFC"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="OWUTvfLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgBJOzA (ORCPT
+        id S1728993AbgBJOz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:55:00 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:33184 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbgBJOzA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:55:00 -0500
+        Mon, 10 Feb 2020 09:55:26 -0500
+Received: from mail-bn7nam10on2081.outbound.protection.outlook.com ([40.107.92.81]:6569
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727705AbgBJOz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 09:55:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=He7m0n3fJs3Ua7+AfxSinZXYutpVWdeezeRiPOFGCBKmquKMHxfXriv5BBF3G36ixECrA9cgz5m6GZe5eC3EssoOa4IRw64LK4PjztZJs0kPVBkM/ayPa4CjIHSg5ypkRdBhMzHN7wTGewqpSltYRIafyYbBrbjdOZfn/1Fpa/P58lGRZXOg1IhmUtK9h2qeEpV6uYMWwCnLw+SQdFsQj6GzQL8UvLAytuRH+TpDehNBsKw3jt8pdhJyxDwndYjMsFb94cqObYF96aFoWgPjUJlTXKKuyaTgzXBLcXnCURZa27a9TKXRh3WQ/+4VLLtXdGlH5y09THRvaP7rLLatyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=riD4gZBUVv7fMJ53Lom5OskEWlCxj/MBYYjfm8MZgtU=;
+ b=E1x9KM4YOODCyYgGK2w5zk+JzY89n22F2g4qKTvuvZxF3NPo5ui0XBwsAtEMDRVAFvhTmWvkWt/rCdFDtdez4yppwVP44feTWyKZCrwk8YGY/1gcmnf6/xYg/w0eRt/mnuG2WKf8Knw9UMecTndHHNe5tfJwpdCPdtJktzU1FxuoQFJ5MFSvhjvCORZgDw2u14XqU5M1DHO4LYA6kp/puPzk/LP+iw9HtfuWaZ/58EPbNSpod3weXZBErDaceNQg+kqZQJYWy5ymeXR0ZusrdbZYGyxcaZVAM/Ul76LgrUILHR5p3Dudtm+QLmlDpcVRDirf0Cxnu1PMy9SSxGB5lQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1581346500; x=1612882500;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Yg+U4g0VQ9JjHK7VoXj7frcUzqQJWVT25c0GFFafzNE=;
-  b=szVARKFC7yXe+3AOUQEiLxd6K46oqoMfXEYdv5Bynr2E246yX3UpB9+o
-   hHE7kOC4DxqNCJwpsSMIW2n+h8xoINPFIygGGArnRENHzHF3jAIC/4yDc
-   8ZfhaoAxHL0V3BRQlzHegN6162BHTecUJP5U+q16cg4GlbPvv/ydvAK0N
-   8=;
-IronPort-SDR: +n15Y0sxCcIDVVS0seb2hZZeQaAJSFe6N/tyOBx1SXXH+XA7bQvJaCHeTC5vYvwgubvm8Cps5e
- XWfNrPlIy9eQ==
-X-IronPort-AV: E=Sophos;i="5.70,425,1574121600"; 
-   d="scan'208";a="24098290"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Feb 2020 14:54:58 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 91F58C0875;
-        Mon, 10 Feb 2020 14:54:49 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 10 Feb 2020 14:54:48 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.109) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 10 Feb 2020 14:54:37 +0000
-From:   <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rostedt@goodmis.org>,
-        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 11/11] MAINTAINERS: Update for DAMON
-Date:   Mon, 10 Feb 2020 15:54:23 +0100
-Message-ID: <20200210145423.28400-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210144812.26845-1-sjpark@amazon.com>
-References: <20200210144812.26845-1-sjpark@amazon.com>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=riD4gZBUVv7fMJ53Lom5OskEWlCxj/MBYYjfm8MZgtU=;
+ b=OWUTvfLwljTsBi653nA0289TwXDW+uoB6VKlEmBHezbC9EP6pQLJiCbo6+k0n3uiSVGTQeRD2ISGzYw+6nb5t4lfnel5R7RlA+UvvNTW2Tfvrz5/a4bOzLpt3VXt7OGSi0PvI7bmwESb3nPk7JHYX6o2odsjzz3RjDaezCmNDxo=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6456.namprd02.prod.outlook.com (52.132.231.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Mon, 10 Feb 2020 14:55:20 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2707.030; Mon, 10 Feb 2020
+ 14:55:20 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anirudha Sarangi <anirudh@xilinx.com>,
+        Michal Simek <michals@xilinx.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        John Linn <linnj@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v3 -next 4/4] net: emaclite: Fix restricted cast warning
+ of sparse
+Thread-Topic: [PATCH v3 -next 4/4] net: emaclite: Fix restricted cast warning
+ of sparse
+Thread-Index: AQHV2CxS+JD6AxkE/EyzRBxtS7+UeKgEyfuAgA/Il2A=
+Date:   Mon, 10 Feb 2020 14:55:20 +0000
+Message-ID: <CH2PR02MB70008E426323BBF4EF3BCCA2C7190@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <1580471270-16262-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1580471270-16262-5-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20200131134849.GE9639@lunn.ch>
+In-Reply-To: <20200131134849.GE9639@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 580922c6-ae18-48f3-f8b5-08d7ae394016
+x-ms-traffictypediagnostic: CH2PR02MB6456:|CH2PR02MB6456:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB64569C9530F3B3F221B2839EC7190@CH2PR02MB6456.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 03094A4065
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(136003)(366004)(189003)(199004)(53546011)(26005)(54906003)(186003)(6916009)(86362001)(71200400001)(316002)(66476007)(66446008)(64756008)(66556008)(4326008)(66946007)(5660300002)(52536014)(7696005)(76116006)(81166006)(2906002)(8936002)(6506007)(478600001)(55016002)(81156014)(8676002)(9686003)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6456;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FaNkBnHsuvA24Synz6SJnC3s1V8v0DHQ22jpT4WWtDJWW7BAMbjhiK72jKP+jl3vRelTRagxcUnvRcBiGQB98icpBbTLeFf2Pl+18NBu1zXe17aLU8jQKfOgcuyYGaD364Vc+PSPQ6dlHD/6V7LAZI3jB+WtEtaJbqxPK8jPAhuAyY8VfBhd8YzKMAkWsYhMsnylReGuX9uAEi7iCv9JLL5BOC79+iSsQxDJ4/K3o+zUqx+xTjC10yQyzw8biLkRTrY1nJtAiwpvathfhHouY4B9NkRFQQVN4GpHk5aUQdwowknK5u0VQ5pOL/MLw1+xvQJu7G6BhoimYU7kgRSj0vVV1Cb/xhEQ9uvmPQzlIF47/EpJgu6TtyoxGG+KlYkJJACLGuZg0qSXxcLGb7ST4Q0WBPJ+YA1m3T1GkfxMaglw1VnvrLenHayldaAaElsN
+x-ms-exchange-antispam-messagedata: A7lBoCBujzI/mzvKq6mKjcg9XbMJeHvbrsDtGkQDFKipUxhMS1EsESSilSNF/AG4mf2zqvg5dpX69vc6vpR6bkONXBhAMC4YIjlExBWFNAmio3epUmCDnvcp9NvNjwGsT0ZAwCTiJW5cIrbRCmwlxw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.109]
-X-ClientProxiedBy: EX13D21UWA004.ant.amazon.com (10.43.160.252) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 580922c6-ae18-48f3-f8b5-08d7ae394016
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2020 14:55:20.6566
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lH5LTOEs0OYcQDVq+NyUx9sB6ICTWNA+XaBRlfuOXKbPJlvpbio+BXWfYHwdr9I+xXsykVYaMZdNTwL3dEIK9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6456
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+> -----Original Message-----
+> From: Andrew Lunn <andrew@lunn.ch>
+> Sent: Friday, January 31, 2020 7:19 PM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>
+> Cc: davem@davemloft.net; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Anirudha Sarangi <anirudh@xilinx.com>; Michal Sim=
+ek
+> <michals@xilinx.com>; gregkh@linuxfoundation.org;
+> mchehab+samsung@kernel.org; John Linn <linnj@xilinx.com>; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH v3 -next 4/4] net: emaclite: Fix restricted cast warn=
+ing of
+> sparse
+>=20
+> On Fri, Jan 31, 2020 at 05:17:50PM +0530, Radhey Shyam Pandey wrote:
+> > Explicitly cast xemaclite_readl return value when it's passed to ntohl.
+> > Fixes below reported sparse warnings:
+> >
+> > xilinx_emaclite.c:411:24: sparse: sparse: cast to restricted __be32
+> > xilinx_emaclite.c:420:36: sparse: sparse: cast to restricted __be32
+> >
+> > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > ---
+> >  drivers/net/ethernet/xilinx/xilinx_emaclite.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+> b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+> > index 96e9d21..3273d4f 100644
+> > --- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+> > +++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+> > @@ -408,7 +408,8 @@ static u16 xemaclite_recv_data(struct net_local
+> *drvdata, u8 *data, int maxlen)
+> >
+> >  	/* Get the protocol type of the ethernet frame that arrived
+> >  	 */
+> > -	proto_type =3D ((ntohl(xemaclite_readl(addr + XEL_HEADER_OFFSET +
+> > +	proto_type =3D ((ntohl((__force __be32)xemaclite_readl(addr +
+> > +			XEL_HEADER_OFFSET +
+> >  			XEL_RXBUFF_OFFSET)) >> XEL_HEADER_SHIFT) &
+> >  			XEL_RPLR_LENGTH_MASK);
+> >
+> > @@ -417,7 +418,7 @@ static u16 xemaclite_recv_data(struct net_local
+> *drvdata, u8 *data, int maxlen)
+> >  	 */
+> >  	if (proto_type > ETH_DATA_LEN) {
+> >  		if (proto_type =3D=3D ETH_P_IP) {
+> > -			length =3D ((ntohl(xemaclite_readl(addr +
+> > +			length =3D ((ntohl((__force __be32)xemaclite_readl(addr
+> +
+> >  					XEL_HEADER_IP_LENGTH_OFFSET +
+> >  					XEL_RXBUFF_OFFSET)) >>
+> >  					XEL_HEADER_SHIFT) &
+>=20
+> If i understand this code correctly, you need the ntohl because you
+> are poking around inside the packet. All the other uses of
+> xemaclite_readl() are for descriptors etc.
+>=20
+> It would be cleaner if you defined a xemaclite_readlbe32. If you use
+> ioread32be() it will do the endinness swap for you, so you don't need
+> the ntohl() and the horrible cast.
+Thanks for the review. Yes, defining xemaclite_readlbe32 would eliminate th=
+e
+cast need.  I will address it in the next version.=20
 
-This commit updates MAINTAINERS file for DAMON related files.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 56765f542244..bad6ebfe56e5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4611,6 +4611,17 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DATA ACCESS MONITOR
-+M:	SeongJae Park <sjpark@amazon.de>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	Documentation/admin-guide/mm/data_access_monitor.rst
-+F:	include/linux/damon.h
-+F:	include/trace/events/damon.h
-+F:	mm/damon-test.h
-+F:	mm/damon.c
-+F:	tools/damon/*
-+
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
--- 
-2.17.1
-
+>=20
+>     Andrew
