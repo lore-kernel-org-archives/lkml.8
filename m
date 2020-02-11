@@ -2,114 +2,139 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FB6C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441EDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B462D20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:23:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qaogSs3m"
+	by mail.kernel.org (Postfix) with ESMTP id 27A0120842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581445488;
+	bh=15RkB8/lsxkdGVyrfUT3PmibNwKSs3pakIPq9O2QKGA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mmUgJsFbXdOfHs6axD5tIiQhcpwtsPpNSX+Co3DCcFABW3MtFi1mWTlxmi14UHBCl
+	 Donai2FwDDi93akmZP/uGSEJ+imdrWN81EbUxmrthFbuj/6hSNNRxs4r/pq+Dafwdr
+	 EaBdicbBmt9rr/Xhn3j7qSktwSl4J5Ie+hwypzmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgBKSXd (ORCPT
+        id S1731202AbgBKSYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:23:33 -0500
-Received: from mail-eopbgr20051.outbound.protection.outlook.com ([40.107.2.51]:5443
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729169AbgBKSXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:23:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cS76Go5dIgSaOXXvrINr9EhlRYZuPXR/jgHwNMh8GwtBvMuz4ruXMgDgMRQSyvEgfjYqRArPyeCTuh6w8TCH+4hBzOT2HSSCz4jD9VCa3XTVQL1ysw0hApPs0jUmtuPzaSeqn2YSAVh5jzqm0w6tAznhDBy2YDBgqFyLUk8LNMBfSvCJ4FVGGQrATCtBGlxOIB842dFjV0r9JvRsO37p9RV6uu43qrMT+QpbkhgHHBNX6fqEL6NHLRCFWHWjJg6V4+2hToDM4kS+s+7+MxH6Nfj5pftCA4gdBwLQDPaxo0g9o0exen8ThKsq9S7DVf2y90UkDd3l5t6b96TqaNXLNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xs20VpbpUL9XF2WJlkF6Mvu7881/xB2hjEaPx0vvgk=;
- b=edsYjrM+MNv9OCrpOSIuh6a0AtK8VHC4r1tRPFGHytCoHH7Wr6Lewt75lMJJLKcNt7eIHpgtDEc1ZI+sbj5Z6Eahz1Ef7ek95b3vm7PwILd/DTB4qsCR0BlCGSbRC91n5LzikWhtzOuMbVWggX850en6DmxWCmAeplhr2X1qh/UjBmGLc2D2xA0+xFuxFIaYxHNUF55xL717m5c9KjV2H3gYGwZC0UjUhKqZ6ogfl+cykloDgIbnPllHVsRkbNWfHjy2NLFJhW46KpAQTIT+smk0NKkthRaUH0wcWa/pvpaG03l6SrarWJ5zGEAOJedv8aYZxB/uE7+LJvXG7lxdbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xs20VpbpUL9XF2WJlkF6Mvu7881/xB2hjEaPx0vvgk=;
- b=qaogSs3m6U3sFq5rRUlvprleAfDPCxFc0SfISWu68FnnucfpbWcDx/aKQp1PNatspxOkKOt40U2NQ0lzgxFoNz6ZFl7T0Oiis3mcuu0t5GDKTNbZIehxODigKyCnsODID3ZbJ3kDYC274IM9jTYqstOYmuw8AG4Jm02rqLTkeY8=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3901.eurprd04.prod.outlook.com (52.134.12.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Tue, 11 Feb 2020 18:23:28 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 18:23:28 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v7 3/9] crypto: caam - use devm_kzalloc to allocate JR
- data
-Thread-Topic: [PATCH v7 3/9] crypto: caam - use devm_kzalloc to allocate JR
- data
-Thread-Index: AQHV1TLRWesVqHI1ZkCUMB3X/8VqBg==
-Date:   Tue, 11 Feb 2020 18:23:28 +0000
-Message-ID: <VI1PR0402MB348585D73873E2DFE6B8751698180@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20200127165646.19806-1-andrew.smirnov@gmail.com>
- <20200127165646.19806-4-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [84.117.251.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bb5e2784-d242-49a6-ffa5-08d7af1f7dd4
-x-ms-traffictypediagnostic: VI1PR0402MB3901:|VI1PR0402MB3901:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB39019ABD5D16F0EE32A3C2B098180@VI1PR0402MB3901.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:612;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(189003)(199004)(54906003)(4744005)(26005)(110136005)(186003)(91956017)(8676002)(44832011)(8936002)(81166006)(81156014)(66476007)(66446008)(66946007)(66556008)(64756008)(478600001)(76116006)(71200400001)(2906002)(6506007)(53546011)(33656002)(316002)(86362001)(7696005)(52536014)(9686003)(5660300002)(55016002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3901;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: u0Dw3+qX+03Ct2DGvoiNqVhc28RI7+51BySRc3YR8rKe8YUzigI4HEPG/4boC1PuOuwcsn1dUzZNSQBzteUZE1eaugMvB+PDerbf3C9sQvxJNkAmzqEfqt34aeSC3Xr56yIWuCNtuJ9Vxcwbyr+x4eBRowxk5E1Suwe0w9wXHDtAkMCk01zoqT9z+tnyNTKgvGsC7C3QZJk8jqaoUPKhviPu7wYtTC8K4inVYGCHA+a0Ai6E49PMkK+gMXooT+gGWkz+0Mo1Xlj6illEG2pNUXwktHrqn9OXxD59ns6qXxQlzYQabGfxMlfqG7KBML4pGBVlJJC1tfzsjCf1pkdhtXpRK2MQsxlRrY+EyordR7G8yVJjWox8FKezrBt4zuI7FWRl5cgbLEtvicxdAlfz0K0jfnjdu6SSwOMOzQaPd93SZTXapgocMzCBG0Vra2DC
-x-ms-exchange-antispam-messagedata: SYhgYwUlHsdf744tksmOJzF7Gri2tspLbZLVc4S1dmAPcCJNXsQGWcgYD1dcd8YMXRrCVOQ2uJXDM3uPqyXCbqr0bZ5WNlMSIMai6uJmmkzvw3KSboO86PD5P55XdYbAckjvynFk/o4X18W+gy5zcQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Feb 2020 13:24:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729169AbgBKSYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:24:47 -0500
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D8F21569;
+        Tue, 11 Feb 2020 18:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581445486;
+        bh=15RkB8/lsxkdGVyrfUT3PmibNwKSs3pakIPq9O2QKGA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=A8Zqm6fJP2FLzduLIBDokEhN/2d/UrH1tTPxjD5ihd4BFsmr4U+TmlhZKIyLl5OeE
+         y8tyZK1Z+LwxdaT3JO7a63fwdEV45iurNjgynCzt3Az2dG8qrc/SS5bt9W9L6m3vm8
+         E4RlmQ+12GEi7n7znDshSniOcw1AMCbrmborQU5w=
+Received: by mail-qv1-f52.google.com with SMTP id m5so5451862qvv.4;
+        Tue, 11 Feb 2020 10:24:46 -0800 (PST)
+X-Gm-Message-State: APjAAAVWVPt0aQfAjtZ+25pKee02DYuBkCsSHZvoTSb/5yltM791ECxQ
+        DVFgRweIAJZ8wRqtiX/KlHfI0kJzeI87u4hfPw==
+X-Google-Smtp-Source: APXvYqxfEK6hEL7IX2KvoJP4sjzXqu7vc6OB5e1z94Q1gXnPXU2WIumcI1fS/UN5s1vfda4olh8aSlNY95DTbeSQkqo=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr4114530qvv.85.1581445485691;
+ Tue, 11 Feb 2020 10:24:45 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb5e2784-d242-49a6-ffa5-08d7af1f7dd4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 18:23:28.4473
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4d5bVzWf6XJFS8hIyI/S104yeHKmBHq8OX0Kadp0mlpqHJBzM2HuWtjYRQU3no6EG/jkAtcYlQlAMSzfR2RlqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3901
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <20200206183808.GA5019@bogus> <f26464226f74dffe2db0583b9482a489@codeaurora.org>
+In-Reply-To: <f26464226f74dffe2db0583b9482a489@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 11 Feb 2020 12:24:34 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+Message-ID: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
+ SC7180, SDM845, SM8150
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/2020 6:57 PM, Andrey Smirnov wrote:=0A=
-> Use devm_kzalloc() to allocate JR data in order to make sure that it=0A=
-> is initialized consistently every time.=0A=
-> =0A=
-The commit message is a bit vague.=0A=
-=0A=
-I assume this is needed in patch 4/9, which adds a new member (hwrng)=0A=
-in caam_drv_private_jr structure.=0A=
-=0A=
-If so, it's probably better to have the change merged into patch 4/9.=0A=
-=0A=
-Horia=0A=
+On Fri, Feb 7, 2020 at 12:10 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Rob,
+>
+> On 2020-02-07 00:08, Rob Herring wrote:
+> > On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
+> >> Add missing compatible for watchdog timer on QCS404,
+> >> SC7180, SDM845 and SM8150 SoCs.
+> >
+> > That's not what the commit does. You are changing what's valid.
+> >
+> > One string was valid, now 2 are required.
+> >
+>
+> Does this look good?
+
+No. First of all, what's the base for the diff? It's not what you
+originally had nor incremental on top of this patch.
+
+Second, a value of 'qcom,kpss-timer' or 'qcom,kpss-wdt' or
+'qcom,scss-timer' will fail validation because 2 clauses of 'oneOf'
+will be true.
+
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> index 46d6aad5786a..3378244b67cd 100644
+> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> @@ -14,19 +14,22 @@ allOf:
+>
+>   properties:
+>     compatible:
+> -    items:
+> +    oneOf:
+>         - enum:
+>             - qcom,apss-wdt-qcs404
+>             - qcom,apss-wdt-sc7180
+>             - qcom,apss-wdt-sdm845
+>             - qcom,apss-wdt-sm8150
+> -          - qcom,kpss-timer
+> -          - qcom,kpss-wdt
+>             - qcom,kpss-wdt-apq8064
+>             - qcom,kpss-wdt-ipq4019
+>             - qcom,kpss-wdt-ipq8064
+>             - qcom,kpss-wdt-msm8960
+> +          - qcom,kpss-timer
+> +          - qcom,kpss-wdt
+>             - qcom,scss-timer
+> +      - const: qcom,kpss-timer
+> +      - const: qcom,kpss-wdt
+> +      - const: qcom,scss-timer
+>
+>     reg:
+>       maxItems: 1
+>
+> Thanks,
+> Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
