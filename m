@@ -2,246 +2,121 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F228FC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913CDC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA97620848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="134J7zmw"
+	by mail.kernel.org (Postfix) with ESMTP id 6E64D20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgBKJUE (ORCPT
+        id S1728078AbgBKJUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:20:04 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33663 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbgBKJT4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:19:56 -0500
-Received: by mail-wr1-f67.google.com with SMTP id u6so11340828wrt.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:19:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=itZ9vq9Kavh7TbjC3J2+LPwEacduPpT/ATL938nZSlc=;
-        b=134J7zmwo31Y2Akg+jq3S8wpoKAX9Qks/0t40CZ2G4hfZb+7ccalUwjTfvm2/Em7h8
-         6+UPqpKWYDqIo6kGH501nr1/FbIRkqvigVrbJ4jy1jnqK/bnoTapvlKXenE8aiPWChOH
-         tcL/creOevTPvQa4B7qXpuc/0jCpRk7gn9LtXllRqNAN2+gFCXsyyyAq8GESB6t/wMIU
-         pFFZVzGMmGTi+k03FsdFvNe3wZLh7tdUfh6TA5leOl9N86l5kPOB0bAsT2t+JU3xR6lX
-         agotCNkxSrQYttzOCBiWPFhoZ3+Kgx1Yx4iMEDLZgt5KD9bT8akrU5g+PVwRs/8miuRg
-         jdow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=itZ9vq9Kavh7TbjC3J2+LPwEacduPpT/ATL938nZSlc=;
-        b=lmo3N78hqScupCtINcpIJl7xDhgkcdw6elmnw+sPu2MzJDHpwpXBDKL5zK7NR6KVnb
-         +a7RyZL2ByGdFi+X1+QORgbp4DE9XeixfV51k6q2aToKQfd0Y8lnCJebg48nQqRw/coO
-         lFaB3aJq2BW/Bf0XdhylLryIZ3h0L/w0xD8Z/mJI8ORjmwFA/hjdkYGLgywi/9Zz8L+s
-         WqlX6kWZkHLKgvy3yzPmy7dbTNFkoZMvL/9m9Km//hTgjuL6ALp3RLPAt+GhZR6UuZkJ
-         xdZKam7af575xjPmxN2AuH9h1LlJXWS8a/oLUYQYNbU8DynPZH6qYdmB10d+MNBOTXC6
-         tkTA==
-X-Gm-Message-State: APjAAAVH2MZPIpK4wrP5ddtWMy1wpcWrjhonLzvghGcONqIIHmcS1CK8
-        u+jAGj1bsaWu08DchIA3ip68poGxZdU=
-X-Google-Smtp-Source: APXvYqyB46wpYsMdHcIQnfZjEORQ43OzJqftOw1pmfEG+fkqS2KY4GLX/7HPOrxKJM/gvJhRyTaPiw==
-X-Received: by 2002:adf:e943:: with SMTP id m3mr7366526wrn.397.1581412792609;
-        Tue, 11 Feb 2020 01:19:52 -0800 (PST)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id y131sm2958622wmc.13.2020.02.11.01.19.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 01:19:52 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH v6 7/7] tools: gpio: implement gpio-watch
-Date:   Tue, 11 Feb 2020 10:19:37 +0100
-Message-Id: <20200211091937.29558-8-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200211091937.29558-1-brgl@bgdev.pl>
-References: <20200211091937.29558-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 11 Feb 2020 04:20:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33034 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728064AbgBKJUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 04:20:03 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BB304ACCE;
+        Tue, 11 Feb 2020 09:20:02 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 10:20:02 +0100
+Message-ID: <s5ho8u54h19.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kailang <kailang@realtek.com>
+Cc:     Benjamin Poirier <benjamin.poirier@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk value
+In-Reply-To: <ab7a0abd24df485d8f8cc3723403a44f@realtek.com>
+References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
+        <20200211055651.4405-2-benjamin.poirier@gmail.com>
+        <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz>
+        <20200211081604.GA8286@f3>
+        <ab7a0abd24df485d8f8cc3723403a44f@realtek.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, 11 Feb 2020 10:10:50 +0100,
+Kailang wrote:
+> 
+> Hi,
+> 
+> Speaker 2 connect to DAC 0x2 was Lenovo requested.
+> This was tune for EQ setting.
+> I didn't know more for this.
 
-Add a simple program that allows to test the new LINECHANGED_FD ioctl().
+Thanks, that was my expectation, too.  Applying EQ to built-in
+speakers is an oft-seen workaround for laptops to avoid the possible
+hardware damage.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- tools/gpio/.gitignore   |  1 +
- tools/gpio/Build        |  1 +
- tools/gpio/Makefile     | 11 ++++-
- tools/gpio/gpio-watch.c | 99 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 1 deletion(-)
- create mode 100644 tools/gpio/gpio-watch.c
+Now the question is whether this obvious level of lowering is the
+expected result.
 
-diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
-index a94c0e83b209..eab36c6d7751 100644
---- a/tools/gpio/.gitignore
-+++ b/tools/gpio/.gitignore
-@@ -1,4 +1,5 @@
- gpio-event-mon
- gpio-hammer
-+gpio-watch
- lsgpio
- include/linux/gpio.h
-diff --git a/tools/gpio/Build b/tools/gpio/Build
-index 4141f35837db..67c7b7f6a717 100644
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -2,3 +2,4 @@ gpio-utils-y += gpio-utils.o
- lsgpio-y += lsgpio.o gpio-utils.o
- gpio-hammer-y += gpio-hammer.o gpio-utils.o
- gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
-+gpio-watch-y += gpio-watch.o
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 6080de58861f..842287e42c83 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -18,7 +18,7 @@ MAKEFLAGS += -r
- 
- override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
- 
--ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon
-+ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- all: $(ALL_PROGRAMS)
-@@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
- 
-+#
-+# gpio-watch
-+#
-+GPIO_WATCH_IN := $(OUTPUT)gpio-watch-in.o
-+$(GPIO_WATCH_IN): prepare FORCE
-+	$(Q)$(MAKE) $(build)=gpio-watch
-+$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
- clean:
- 	rm -f $(ALL_PROGRAMS)
- 	rm -f $(OUTPUT)include/linux/gpio.h
-diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-new file mode 100644
-index 000000000000..5cea24fddfa7
---- /dev/null
-+++ b/tools/gpio/gpio-watch.c
-@@ -0,0 +1,99 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * gpio-watch - monitor unrequested lines for property changes using the
-+ *              character device
-+ *
-+ * Copyright (C) 2019 BayLibre SAS
-+ * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+ */
-+
-+#include <ctype.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/gpio.h>
-+#include <poll.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
-+
-+int main(int argc, char **argv)
-+{
-+	struct gpioline_info_changed chg;
-+	struct gpioline_info req;
-+	struct pollfd pfd;
-+	int fd, i, j, ret;
-+	char *event, *end;
-+	ssize_t rd;
-+
-+	if (argc < 3)
-+		goto err_usage;
-+
-+	fd = open(argv[1], O_RDWR | O_CLOEXEC);
-+	if (fd < 0) {
-+		perror("unable to open gpiochip");
-+		return EXIT_FAILURE;
-+	}
-+
-+	for (i = 0, j = 2; i < argc - 2; i++, j++) {
-+		memset(&req, 0, sizeof(req));
-+
-+		req.line_offset = strtoul(argv[j], &end, 0);
-+		if (*end != '\0')
-+			goto err_usage;
-+
-+		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
-+		if (ret) {
-+			perror("unable to set up line watch");
-+			return EXIT_FAILURE;
-+		}
-+	}
-+
-+	pfd.fd = fd;
-+	pfd.events = POLLIN | POLLPRI;
-+
-+	for (;;) {
-+		ret = poll(&pfd, 1, 5000);
-+		if (ret < 0) {
-+			perror("error polling the linechanged fd");
-+			return EXIT_FAILURE;
-+		} else if (ret > 0) {
-+			memset(&chg, 0, sizeof(chg));
-+			rd = read(pfd.fd, &chg, sizeof(chg));
-+			if (rd < 0 || rd != sizeof(chg)) {
-+				if (rd != sizeof(chg))
-+					errno = EIO;
-+
-+				perror("error reading line change event");
-+				return EXIT_FAILURE;
-+			}
-+
-+			switch (chg.event_type) {
-+			case GPIOLINE_CHANGED_REQUESTED:
-+				event = "requested";
-+				break;
-+			case GPIOLINE_CHANGED_RELEASED:
-+				event = "released";
-+				break;
-+			case GPIOLINE_CHANGED_CONFIG:
-+				event = "config changed";
-+				break;
-+			default:
-+				fprintf(stderr,
-+					"invalid event type received from the kernel\n");
-+				return EXIT_FAILURE;
-+			}
-+
-+			printf("line %u: %s at %llu\n",
-+			       chg.info.line_offset, event, chg.timestamp);
-+		}
-+	}
-+
-+	return 0;
-+
-+err_usage:
-+	printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
-+	return EXIT_FAILURE;
-+}
--- 
-2.25.0
+Kailang, could you try to ask Lenovo about it?
 
+
+Takashi
+
+> 
+> BR,
+> Kailang
+> 
+> > -----Original Message-----
+> > From: Benjamin Poirier <benjamin.poirier@gmail.com>
+> > Sent: Tuesday, February 11, 2020 4:16 PM
+> > To: Jaroslav Kysela <perex@perex.cz>
+> > Cc: Takashi Iwai <tiwai@suse.de>; Kailang <kailang@realtek.com>;
+> > alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
+> > 7th quirk value
+> > 
+> > On 2020/02/11 08:40 +0100, Jaroslav Kysela wrote:
+> > [...]
+> > > >
+> > > > In summary, Node 0x17 DAC connection 0x3 offers the loudest max
+> > > > volume and the most detailed mixer controls. That connection is
+> > > > obtained with quirk ALC295_FIXUP_DISABLE_DAC3. Therefore, change the
+> > > > ThinkPad X1 Carbon 7th to use ALC295_FIXUP_DISABLE_DAC3.
+> > >
+> > > The volume split (individual volume control) will cause trouble for
+> > > the UCM volume control at the moment which is the target for this
+> > > device to get the digital microphone working. If there is no
+> > > possibility to share DAC, it would be probably more nice to join the volume
+> > control in the driver.
+> > >
+> > > Have you tried to use 0x03 as source for all four speakers?
+> > 
+> > Front speakers are fixed to 0x02. Node 0x14
+> >   Connection: 1
+> >      0x02
+> > 
+> > >
+> > > Why PA handles the rear volume control with the current driver code in
+> > > the legacy ALSA driver? It should be handled like standard stereo
+> > > device. I'll check.
+> > 
+> > The device comes up with "Analog Stereo Output" profile by default. I changed
+> > it to "Analog Surround 4.0 Output" to test controlling each channel individually:
+> > 
+> > > > pavucontrol controls are reported with the device configured with
+> > > > the "Analog Surround 4.0 Output" profile.
+> > 
+> > >
+> > > You should also test PA with UCM.
+> > 
+> > Please let me know what do I need to test exactly? I'm not familiar with UCM.
+> > 
+> > ------Please consider the environment before printing this e-mail.
+> 
