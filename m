@@ -2,198 +2,221 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB9AC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C75C352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93AA2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA0520708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="erOgFemT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/i9AzIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgBKBQj (ORCPT
+        id S1727754AbgBKBQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 20:16:39 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:53699 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgBKBQi (ORCPT
+        Mon, 10 Feb 2020 20:16:51 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34715 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgBKBQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 20:16:38 -0500
-Received: by mail-pl1-f202.google.com with SMTP id 2so3851511plb.20
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 17:16:38 -0800 (PST)
+        Mon, 10 Feb 2020 20:16:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i6so4607119pfc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 17:16:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=0vQIviaVyQGTxEoHjDe+4QBGkh+tsuhUUhnSBjm5sYY=;
-        b=erOgFemT8fsx8nk4+vFHvnE8sJJcjaGKlLp0GM3B5eARKjIEprS2uDyZuBXjwbAv14
-         X7TA8zww4S3YC24W4Oau+rHeDgvx88+sSBB9qZ2bnN4AHT70f1g2bDMosIrw5XWPK810
-         EIXCdQzbiIIvSHvtiZuG1guIx8Acq8JjT4kxEWaWaoxIx9Tvm5drx35G9yzxhaFny9/n
-         Ec2q0WEPnPfoG+vGyvmr+aOCLkop1/4wnpwrXaNcO6KpP8NCF60f5NvVOPzihMRFtzmw
-         PJm7RHfRUdXHz5btPaQavb8oGtbs7U5s4GrLTvHidP07oRVkHrv13GoryV4/eBlyvhFy
-         I3GQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L94wnmuPGmPtklUH/qWzd8d0kQjfVjGh7Zgzyio4HMc=;
+        b=a/i9AzIFMsTZnIJp2DeLdmKOPd92z3kTLAKJiRmIsEeGS+/W49KEIPoYpMULLAtm+m
+         oCzvmHNTXf1B5Pj4FZylZ1OCH0xyENwVgrCY2Fajg7kBijc7TdlELC+gVzTXxbUlw3Tu
+         QytWBhTWb5ij7bRZuZY6bCTq2GD125uwgfFapFRVM1BZTVE9wj29rh4JZEAcmm4oF0Ad
+         eSs6UnIoXgeY6Ne1JJ6JZ8pnnFuVtFOnkTZYTjPJaKlaI3NOhL/xv2RhzoCzGuuODdiK
+         6AO8dqtMnhrecg5sUt6R6quaK8o7Sh0xXZh2ghXeBpmZN9JM3Y7+URUDtFJklSsyiKC1
+         HlhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=0vQIviaVyQGTxEoHjDe+4QBGkh+tsuhUUhnSBjm5sYY=;
-        b=M0SZ6glqYlfMBL/yzCjt708fZcZFf2z6fO9gAq45i6b+SZHdJpcbZ9fzXRb6+rnBLM
-         0dF8zSYip/IpAJtlzBd/LpZqp1s4E//qnXWP9voaDGyE8YyoMoXOtrPqtjkL6072OhNJ
-         JuCBSOu+Wl4jhto9Z7s1ItGLd+1zuiy1s7yaQSMxstSjT2pJYdKrR9LZfWWvzqBbUWwQ
-         wCx55LtO5/Vfw2FSw1uPJPENo7U7fr4Mesl+A8RA4kvhHVx9A1XD3w3XTqUMBvEh4guL
-         d4CmM/lFj2f/Q4tD6jvd3yAtGVBgcoTw5hDhn98sOvG6QJlWeMchHUNl1hzILwkq18ZJ
-         Lung==
-X-Gm-Message-State: APjAAAXbl278eIa3f0pxPgGBWmBJPWSOGrukk12lwcC+nTRakLrQtQHg
-        FNw36npajNFFPjmPce6wt4FqFq3IJ+w=
-X-Google-Smtp-Source: APXvYqxddiCGQC5df7gmnBU1zGqYYXATmYqCt6KPj1uqqZEwW21RNNnRYIibEqSvMTsx+Sn/0z94hDZPJe4O
-X-Received: by 2002:a63:f648:: with SMTP id u8mr4435924pgj.148.1581383797601;
- Mon, 10 Feb 2020 17:16:37 -0800 (PST)
-Date:   Mon, 10 Feb 2020 17:16:31 -0800
-Message-Id: <20200211011631.7619-1-zzyiwei@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] Add gpu memory tracepoints
-From:   zzyiwei@google.com
-To:     rostedt@goodmis.org, mingo@redhat.com, linux-kernel@vger.kernel.org
-Cc:     Yiwei Zhang <zzyiwei@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L94wnmuPGmPtklUH/qWzd8d0kQjfVjGh7Zgzyio4HMc=;
+        b=X79PnPqvyFzETDHbse6RlvWEqTzL1myS4AchXUV+4xV5hMXg2tvXPUcyS8aX7ooeJV
+         y0rrMazUths2Tqk4LuEJVAx40hanRrF9Ms0TV3G1RfmsxtNNUHqubbg0E+w8C32z7ryA
+         6Uu4fQAlx0GssifkxN/tAy7u+rSRM8xS0Noc1o4Jiy/0mrfsj+FT2oir0C9muGV3ES4v
+         OtU/46/rNouMhW5YyQ3LzmGNrYblzkHOvos+ea5D7b0d0nzlwA54d+TrKpqJ12TStqB/
+         un0lI73+y/WQJxwZ1VtDS3nlI3fW1nZDCqdaNgXRWG/6cF+dDv0IEwpC7KWuCx5Vbn6w
+         nJAQ==
+X-Gm-Message-State: APjAAAWMca0HGalpWBZdjn6WbkK4ZojKPFtE4m9+0jbjRhOHKc77tdYA
+        /2WnjZJlAvqsmMw5OCqUksvOWQ==
+X-Google-Smtp-Source: APXvYqwNHPPj+04G7TT3812Rn18q0s53KRLsMjhjKXZtlA6OKi0UVTvUtXIPosZYeLnPthh3D0BOcw==
+X-Received: by 2002:aa7:820d:: with SMTP id k13mr4038374pfi.10.1581383809472;
+        Mon, 10 Feb 2020 17:16:49 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k29sm1618869pfh.77.2020.02.10.17.16.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 17:16:48 -0800 (PST)
+Date:   Mon, 10 Feb 2020 17:16:01 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss
+ region on shutdown
+Message-ID: <20200211011601.GD3261042@ripper>
+References: <20200204062641.393949-1-bjorn.andersson@linaro.org>
+ <20200204062641.393949-2-bjorn.andersson@linaro.org>
+ <20200210230548.GA20652@xps15>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210230548.GA20652@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yiwei Zhang <zzyiwei@google.com>
+On Mon 10 Feb 15:05 PST 2020, Mathieu Poirier wrote:
 
-This change adds the below gpu memory tracepoint:
-gpu_mem/gpu_mem_total: track global or process gpu memory total counters
+> Hi Bjorn,
+> 
+> On Mon, Feb 03, 2020 at 10:26:40PM -0800, Bjorn Andersson wrote:
+> > Trying to reclaim mpss memory while the mba is not running causes the
+> > system to crash on devices with security fuses blown, so leave it
+> > assigned to the remote on shutdown and recover it on a subsequent boot.
+> > 
+> > Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > Changes since v2:
+> > - The assignment of mpss memory back to Linux is rejected in the coredump case
+> >   on production devices, so check the return value of q6v5_xfer_mem_ownership()
+> >   before attempting to memcpy() the data.
+> > 
+> >  drivers/remoteproc/qcom_q6v5_mss.c | 23 +++++++++++++----------
+> >  1 file changed, 13 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> > index 471128a2e723..25c03a26bf88 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> > @@ -887,11 +887,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
+> >  		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+> >  	}
+> >  
+> > -	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> > -				      false, qproc->mpss_phys,
+> > -				      qproc->mpss_size);
+> > -	WARN_ON(ret);
+> > -
+> >  	q6v5_reset_assert(qproc);
+> >  
+> >  	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
+> > @@ -981,6 +976,10 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+> >  			max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
+> >  	}
+> >  
+> > +	/* Try to reset ownership back to Linux */
+> > +	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
+> > +				qproc->mpss_phys, qproc->mpss_size);
+> 
+> Would you mind adding more chatter here, something like what is mentioned in the
+> changelog?  That way I anyone trying to review this code doesn't have to suffer
+> through the same mental gymnastic. 
+> 
 
-Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
----
- include/trace/events/gpu_mem.h | 64 ++++++++++++++++++++++++++++++++++
- kernel/trace/Kconfig           |  3 ++
- kernel/trace/Makefile          |  1 +
- kernel/trace/trace_gpu_mem.c   | 13 +++++++
- 4 files changed, 81 insertions(+)
- create mode 100644 include/trace/events/gpu_mem.h
- create mode 100644 kernel/trace/trace_gpu_mem.c
+Sure thing, as this patch shows this dynamic wasn't clear - and this
+patch is based on my observations. With it we no longer crash the entire
+system by hitting a security violation during a crash, but there's still
+some details that I'm uncertain about.
 
-diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
-new file mode 100644
-index 000000000000..3b632a2b5100
---- /dev/null
-+++ b/include/trace/events/gpu_mem.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * GPU memory trace points
-+ *
-+ * Copyright (C) 2020 Google, Inc.
-+ */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM gpu_mem
-+
-+#if !defined(_TRACE_GPU_MEM_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_GPU_MEM_H
-+
-+#include <linux/tracepoint.h>
-+
-+/*
-+ * The gpu_memory_total event indicates that there's an update to either the
-+ * global or process total gpu memory counters.
-+ *
-+ * This event should be emitted whenever the kernel device driver allocates,
-+ * frees, imports, unimports memory in the GPU addressable space.
-+ *
-+ * @gpu_id: This is the gpu id.
-+ *
-+ * @pid: Put 0 for global total, while positive pid for process total.
-+ *
-+ * @size: Virtual size of the allocation in bytes.
-+ *
-+ */
-+TRACE_EVENT(gpu_mem_total,
-+	TP_PROTO(
-+		uint32_t gpu_id,
-+		uint32_t pid,
-+		uint64_t size
-+	),
-+	TP_ARGS(
-+		gpu_id,
-+		pid,
-+		size
-+	),
-+	TP_STRUCT__entry(
-+		__field(uint32_t, gpu_id)
-+		__field(uint32_t, pid)
-+		__field(uint64_t, size)
-+	),
-+	TP_fast_assign(
-+		__entry->gpu_id = gpu_id;
-+		__entry->pid = pid;
-+		__entry->size = size;
-+	),
-+	TP_printk(
-+		"gpu_id=%u "
-+		"pid=%u "
-+		"size=%llu",
-+		__entry->gpu_id,
-+		__entry->pid,
-+		__entry->size
-+	)
-+);
-+
-+#endif /* _TRACE_GPU_MEM_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 91e885194dbc..cb404755b0a6 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -85,6 +85,9 @@ config EVENT_TRACING
- config CONTEXT_SWITCH_TRACER
- 	bool
- 
-+config TRACE_GPU_MEM
-+	bool
-+
- config RING_BUFFER_ALLOW_SWAP
- 	bool
- 	help
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index f9dcd19165fa..267985313dca 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -47,6 +47,7 @@ obj-$(CONFIG_PREEMPTIRQ_DELAY_TEST) += preemptirq_delay_test.o
- obj-$(CONFIG_SYNTH_EVENT_GEN_TEST) += synth_event_gen_test.o
- obj-$(CONFIG_KPROBE_EVENT_GEN_TEST) += kprobe_event_gen_test.o
- obj-$(CONFIG_CONTEXT_SWITCH_TRACER) += trace_sched_switch.o
-+obj-$(CONFIG_TRACE_GPU_MEM) += trace_gpu_mem.o
- obj-$(CONFIG_FUNCTION_TRACER) += trace_functions.o
- obj-$(CONFIG_PREEMPTIRQ_TRACEPOINTS) += trace_preemptirq.o
- obj-$(CONFIG_IRQSOFF_TRACER) += trace_irqsoff.o
-diff --git a/kernel/trace/trace_gpu_mem.c b/kernel/trace/trace_gpu_mem.c
-new file mode 100644
-index 000000000000..01e855897b6d
---- /dev/null
-+++ b/kernel/trace/trace_gpu_mem.c
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * GPU memory trace points
-+ *
-+ * Copyright (C) 2020 Google, Inc.
-+ */
-+
-+#include <linux/module.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/gpu_mem.h>
-+
-+EXPORT_TRACEPOINT_SYMBOL(gpu_mem_total);
--- 
-2.25.0.341.g760bfbb309-goog
+> > +
+> >  	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
+> >  	qproc->mpss_reloc = mpss_reloc;
+> >  	/* Load firmware segments */
+> > @@ -1070,8 +1069,16 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+> >  	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+> >  
+> >  	/* Unlock mba before copying segments */
+> > -	if (!qproc->dump_mba_loaded)
+> > +	if (!qproc->dump_mba_loaded) {
+> >  		ret = q6v5_mba_load(qproc);
+> > +		if (!ret) {
+> > +			/* Try to reset ownership back to Linux */
+> > +			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> > +						      false,
+> > +						      qproc->mpss_phys,
+> > +						      qproc->mpss_size);
+> > +		}
+> 
+> I'm a bit puzzled here as to why a different reclaim strategy is needed.  It is
+> clear to me that if q6v5_mba_load() returns 0 then the MBA is running and we can
+> safely reclaim ownership of the memory.  But is it absolutely needed when we
+> know that 1) the MCU has crashed and 2) said memory will be reclaimed in
+> q6v5_mpss_load()?
+> 
 
+The ownership transfer here is a jump into secure world, which somehow
+together with the firmware running on the modem processor will update
+the access permissions for the mpss memory region.
+
+As we enter this function the recovery handling in the core has just
+stopped the remote processor, so we know it's off. As such we must first
+boot the remote processor again, in order to reclaim the access to the
+mpss memory region.
+
+New in this revision is the fact that this operation might actually be
+rejected (e.g. on end-user hardware).
+
+So we need to guard the memcpy below on either of these cases, as unless
+we've successfully booted the modem processor and gotten permission to
+read the mpss memory this operation will trigger a security violation
+and the device will reboot.
+
+> If so I think an explanation in the code is needed.
+> 
+
+Makes sense, I will formulate above explanation into a comment. As well
+as review the other callers of q6v5_xfer_mem_ownership().
+
+> I also assume there is no way to know if the mba is running, hence not taking
+> any chance.  If that's the case it would be nice to add that to the comment in
+> q6v5_mpss_load().
+> 
+
+We know that we enter q6v5_mpss_load() with the modem processor just
+booted, but the memory assignment is there to handle the case where the
+mpss memory region for some reason was left in the hands on the modem.
+I will have to do some more digging to figure out if this is a valid
+scenario or not.
+
+Thanks for your review Mathieu!
+
+Regards,
+Bjorn
+
+> Thanks,
+> Mathieu
+> 
+> > +	}
+> >  
+> >  	if (!ptr || ret)
+> >  		memset(dest, 0xff, segment->size);
+> > @@ -1123,10 +1130,6 @@ static int q6v5_start(struct rproc *rproc)
+> >  	return 0;
+> >  
+> >  reclaim_mpss:
+> > -	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> > -						false, qproc->mpss_phys,
+> > -						qproc->mpss_size);
+> > -	WARN_ON(xfermemop_ret);
+> >  	q6v5_mba_reclaim(qproc);
+> >  
+> >  	return ret;
+> > -- 
+> > 2.23.0
+> > 
