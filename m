@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F8FC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4A0C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3F320848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E42020848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731280AbgBKSU1 (ORCPT
+        id S1731272AbgBKSU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:20:27 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:34356 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730161AbgBKSTd (ORCPT
+        Tue, 11 Feb 2020 13:20:26 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:45390 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731118AbgBKSTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:19:33 -0500
+        Tue, 11 Feb 2020 13:19:34 -0500
 Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id 1WKW220015USYZQ01WKWTi; Tue, 11 Feb 2020 19:19:30 +0100
+        by xavier.telenet-ops.be with bizsmtp
+        id 1WKW220035USYZQ01WKWvy; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0002oV-Vs; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a8A-0002oi-4H; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0003yw-Uf; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a8A-0003z8-2u; Tue, 11 Feb 2020 19:19:30 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -40,9 +40,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 18/34] crypto: ccree - remove struct cc_sram_ctx
-Date:   Tue, 11 Feb 2020 19:19:12 +0100
-Message-Id: <20200211181928.15178-19-geert+renesas@glider.be>
+Subject: [PATCH v2 22/34] crypto: ccree - extract cc_init_copy_sram()
+Date:   Tue, 11 Feb 2020 19:19:16 +0100
+Message-Id: <20200211181928.15178-23-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
 References: <20200211181928.15178-1-geert+renesas@glider.be>
@@ -51,102 +51,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cc_sram_ctx structure contains only a single member, and only one
-instance exists.  Simplify the code and reduce memory consumption by
-moving this member to struct cc_drvdata.
+Extract the copy to SRAM of the initial values for a hash algorithm into
+its own function, to improve readability and ease maintenance.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
   - New.
 
- drivers/crypto/ccree/cc_driver.h   |  2 +-
- drivers/crypto/ccree/cc_sram_mgr.c | 27 +++++----------------------
- 2 files changed, 6 insertions(+), 23 deletions(-)
+ drivers/crypto/ccree/cc_hash.c | 91 ++++++++++++++--------------------
+ 1 file changed, 36 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_driver.h b/drivers/crypto/ccree/cc_driver.h
-index 9e94a29d84ae61f1..7e483c22858245f9 100644
---- a/drivers/crypto/ccree/cc_driver.h
-+++ b/drivers/crypto/ccree/cc_driver.h
-@@ -146,7 +146,7 @@ struct cc_drvdata {
- 	void *aead_handle;
- 	void *request_mgr_handle;
- 	void *fips_handle;
--	void *sram_mgr_handle;
-+	u32 sram_free_offset;	/* offset to non-allocated area in SRAM */
- 	void *debugfs;
- 	struct clk *clk;
- 	bool coherent;
-diff --git a/drivers/crypto/ccree/cc_sram_mgr.c b/drivers/crypto/ccree/cc_sram_mgr.c
-index d46aad7c8140acaa..38f36cbc05b3cf6f 100644
---- a/drivers/crypto/ccree/cc_sram_mgr.c
-+++ b/drivers/crypto/ccree/cc_sram_mgr.c
-@@ -4,14 +4,6 @@
- #include "cc_driver.h"
- #include "cc_sram_mgr.h"
- 
--/**
-- * struct cc_sram_ctx -Internal RAM context manager
-- * @sram_free_offset:   the offset to the non-allocated area
-- */
--struct cc_sram_ctx {
--	u32 sram_free_offset;
--};
--
- /**
-  * cc_sram_mgr_init() - Initializes SRAM pool.
-  *      The pool starts right at the beginning of SRAM.
-@@ -21,7 +13,6 @@ struct cc_sram_ctx {
-  */
- int cc_sram_mgr_init(struct cc_drvdata *drvdata)
- {
--	struct cc_sram_ctx *ctx;
- 	u32 start = 0;
- 	struct device *dev = drvdata_to_dev(drvdata);
- 
-@@ -34,14 +25,7 @@ int cc_sram_mgr_init(struct cc_drvdata *drvdata)
- 		}
- 	}
- 
--	/* Allocate "this" context */
--	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
--	if (!ctx)
--		return -ENOMEM;
--
--	ctx->sram_free_offset = start;
--	drvdata->sram_mgr_handle = ctx;
--
-+	drvdata->sram_free_offset = start;
- 	return 0;
+diff --git a/drivers/crypto/ccree/cc_hash.c b/drivers/crypto/ccree/cc_hash.c
+index 0b179aafd484738b..f3adc1ab0e01abec 100644
+--- a/drivers/crypto/ccree/cc_hash.c
++++ b/drivers/crypto/ccree/cc_hash.c
+@@ -1865,104 +1865,85 @@ static struct cc_hash_alg *cc_alloc_hash_alg(struct cc_hash_template *template,
+ 	return t_crypto_alg;
  }
  
-@@ -53,7 +37,6 @@ int cc_sram_mgr_init(struct cc_drvdata *drvdata)
-  */
- u32 cc_sram_alloc(struct cc_drvdata *drvdata, u32 size)
++static int cc_init_copy_sram(struct cc_drvdata *drvdata, const u32 *data,
++			     unsigned int size, u32 *sram_buff_ofs)
++{
++	struct cc_hw_desc larval_seq[CC_DIGEST_SIZE_MAX / sizeof(u32)];
++	unsigned int larval_seq_len = 0;
++	int rc;
++
++	cc_set_sram_desc(data, *sram_buff_ofs, size / sizeof(*data),
++			 larval_seq, &larval_seq_len);
++	rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++	if (rc)
++		return rc;
++
++	*sram_buff_ofs += size;
++	return 0;
++}
++
+ int cc_init_hash_sram(struct cc_drvdata *drvdata)
  {
--	struct cc_sram_ctx *smgr_ctx = drvdata->sram_mgr_handle;
- 	struct device *dev = drvdata_to_dev(drvdata);
- 	u32 p;
+ 	struct cc_hash_handle *hash_handle = drvdata->hash_handle;
+ 	u32 sram_buff_ofs = hash_handle->digest_len_sram_addr;
+-	unsigned int larval_seq_len = 0;
+-	struct cc_hw_desc larval_seq[CC_DIGEST_SIZE_MAX / sizeof(u32)];
+ 	bool large_sha_supported = (drvdata->hw_rev >= CC_HW_REV_712);
+ 	bool sm3_supported = (drvdata->hw_rev >= CC_HW_REV_713);
+ 	int rc = 0;
  
-@@ -62,14 +45,14 @@ u32 cc_sram_alloc(struct cc_drvdata *drvdata, u32 size)
- 			size);
- 		return NULL_SRAM_ADDR;
- 	}
--	if (size > (CC_CC_SRAM_SIZE - smgr_ctx->sram_free_offset)) {
-+	if (size > (CC_CC_SRAM_SIZE - drvdata->sram_free_offset)) {
- 		dev_err(dev, "Not enough space to allocate %u B (at offset %u)\n",
--			size, smgr_ctx->sram_free_offset);
-+			size, drvdata->sram_free_offset);
- 		return NULL_SRAM_ADDR;
+ 	/* Copy-to-sram digest-len */
+-	cc_set_sram_desc(cc_digest_len_init, sram_buff_ofs,
+-			 ARRAY_SIZE(cc_digest_len_init), larval_seq,
+-			 &larval_seq_len);
+-	rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++	rc = cc_init_copy_sram(drvdata, cc_digest_len_init,
++			       sizeof(cc_digest_len_init), &sram_buff_ofs);
+ 	if (rc)
+ 		goto init_digest_const_err;
+ 
+-	sram_buff_ofs += sizeof(cc_digest_len_init);
+-	larval_seq_len = 0;
+-
+ 	if (large_sha_supported) {
+ 		/* Copy-to-sram digest-len for sha384/512 */
+-		cc_set_sram_desc(cc_digest_len_sha512_init, sram_buff_ofs,
+-				 ARRAY_SIZE(cc_digest_len_sha512_init),
+-				 larval_seq, &larval_seq_len);
+-		rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++		rc = cc_init_copy_sram(drvdata, cc_digest_len_sha512_init,
++				       sizeof(cc_digest_len_sha512_init),
++				       &sram_buff_ofs);
+ 		if (rc)
+ 			goto init_digest_const_err;
+-
+-		sram_buff_ofs += sizeof(cc_digest_len_sha512_init);
+-		larval_seq_len = 0;
  	}
  
--	p = smgr_ctx->sram_free_offset;
--	smgr_ctx->sram_free_offset += size;
-+	p = drvdata->sram_free_offset;
-+	drvdata->sram_free_offset += size;
- 	dev_dbg(dev, "Allocated %u B @ %u\n", size, p);
- 	return p;
- }
+ 	/* The initial digests offset */
+ 	hash_handle->larval_digest_sram_addr = sram_buff_ofs;
+ 
+ 	/* Copy-to-sram initial SHA* digests */
+-	cc_set_sram_desc(cc_md5_init, sram_buff_ofs, ARRAY_SIZE(cc_md5_init),
+-			 larval_seq, &larval_seq_len);
+-	rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++	rc = cc_init_copy_sram(drvdata, cc_md5_init, sizeof(cc_md5_init),
++			       &sram_buff_ofs);
+ 	if (rc)
+ 		goto init_digest_const_err;
+-	sram_buff_ofs += sizeof(cc_md5_init);
+-	larval_seq_len = 0;
+ 
+-	cc_set_sram_desc(cc_sha1_init, sram_buff_ofs,
+-			 ARRAY_SIZE(cc_sha1_init), larval_seq,
+-			 &larval_seq_len);
+-	rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++	rc = cc_init_copy_sram(drvdata, cc_sha1_init, sizeof(cc_sha1_init),
++			       &sram_buff_ofs);
+ 	if (rc)
+ 		goto init_digest_const_err;
+-	sram_buff_ofs += sizeof(cc_sha1_init);
+-	larval_seq_len = 0;
+ 
+-	cc_set_sram_desc(cc_sha224_init, sram_buff_ofs,
+-			 ARRAY_SIZE(cc_sha224_init), larval_seq,
+-			 &larval_seq_len);
+-	rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++	rc = cc_init_copy_sram(drvdata, cc_sha224_init, sizeof(cc_sha224_init),
++			       &sram_buff_ofs);
+ 	if (rc)
+ 		goto init_digest_const_err;
+-	sram_buff_ofs += sizeof(cc_sha224_init);
+-	larval_seq_len = 0;
+ 
+-	cc_set_sram_desc(cc_sha256_init, sram_buff_ofs,
+-			 ARRAY_SIZE(cc_sha256_init), larval_seq,
+-			 &larval_seq_len);
+-	rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++	rc = cc_init_copy_sram(drvdata, cc_sha256_init, sizeof(cc_sha256_init),
++			       &sram_buff_ofs);
+ 	if (rc)
+ 		goto init_digest_const_err;
+-	sram_buff_ofs += sizeof(cc_sha256_init);
+-	larval_seq_len = 0;
+ 
+ 	if (sm3_supported) {
+-		cc_set_sram_desc(cc_sm3_init, sram_buff_ofs,
+-				 ARRAY_SIZE(cc_sm3_init), larval_seq,
+-				 &larval_seq_len);
+-		rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++		rc = cc_init_copy_sram(drvdata, cc_sm3_init,
++				       sizeof(cc_sm3_init), &sram_buff_ofs);
+ 		if (rc)
+ 			goto init_digest_const_err;
+-		sram_buff_ofs += sizeof(cc_sm3_init);
+-		larval_seq_len = 0;
+ 	}
+ 
+ 	if (large_sha_supported) {
+-		cc_set_sram_desc(cc_sha384_init, sram_buff_ofs,
+-				 ARRAY_SIZE(cc_sha384_init), larval_seq,
+-				 &larval_seq_len);
+-		rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++		rc = cc_init_copy_sram(drvdata, cc_sha384_init,
++				       sizeof(cc_sha384_init), &sram_buff_ofs);
+ 		if (rc)
+ 			goto init_digest_const_err;
+-		sram_buff_ofs += sizeof(cc_sha384_init);
+-		larval_seq_len = 0;
+ 
+-		cc_set_sram_desc(cc_sha512_init, sram_buff_ofs,
+-				 ARRAY_SIZE(cc_sha512_init), larval_seq,
+-				 &larval_seq_len);
+-		rc = send_request_init(drvdata, larval_seq, larval_seq_len);
++		rc = cc_init_copy_sram(drvdata, cc_sha512_init,
++				       sizeof(cc_sha512_init), &sram_buff_ofs);
+ 		if (rc)
+ 			goto init_digest_const_err;
+ 	}
 -- 
 2.17.1
 
