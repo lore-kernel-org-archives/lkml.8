@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E9C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C636C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 023692086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECDA2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgBKN6o (ORCPT
+        id S1729475AbgBKNxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:58:44 -0500
-Received: from 8bytes.org ([81.169.241.247]:51838 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:53:16 -0500
+Received: from 8bytes.org ([81.169.241.247]:51850 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729473AbgBKNxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:18 -0500
+        id S1729436AbgBKNxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:13 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4DDE77D9; Tue, 11 Feb 2020 14:53:09 +0100 (CET)
+        id 6380C646; Tue, 11 Feb 2020 14:53:08 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -36,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 12/62] x86/boot/compressed/64: Don't pre-map memory in KASLR code
-Date:   Tue, 11 Feb 2020 14:52:06 +0100
-Message-Id: <20200211135256.24617-13-joro@8bytes.org>
+Subject: [PATCH 07/62] x86/boot/compressed/64: Disable red-zone usage
+Date:   Tue, 11 Feb 2020 14:52:01 +0100
+Message-Id: <20200211135256.24617-8-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -49,135 +48,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-With the page-fault handler in place the identity mapping can be built
-on-demand. So remove the code which manually creates the mappings and
-unexport/remove the functions used for it.
+The x86-64 ABI defines a red-zone on the stack:
+
+  The 128-byte area beyond the location pointed to by %rsp is
+  considered to be reserved and shall not be modified by signal or
+  interrupt handlers. 10 Therefore, functions may use this area for
+  temporary data that is not needed across function calls. In
+  particular, leaf functions may use this area for their entire stack
+  frame, rather than adjusting the stack pointer in the prologue and
+  epilogue. This area is known as the red zone.
+
+This is not compatible with exception handling, so disable it for the
+pre-decompression boot code.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 16 ++--------------
- arch/x86/boot/compressed/kaslr.c        | 24 +-----------------------
- arch/x86/boot/compressed/misc.h         | 10 ----------
- 3 files changed, 3 insertions(+), 47 deletions(-)
+ arch/x86/boot/Makefile            | 2 +-
+ arch/x86/boot/compressed/Makefile | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 6a3890caaa19..ab7a3d9705c0 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -89,11 +89,9 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
- static struct x86_mapping_info mapping_info;
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 012b82fc8617..8f55e4ce1ccc 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -65,7 +65,7 @@ clean-files += cpustr.h
  
- /*
-- * Adds the specified range to what will become the new identity mappings.
-- * Once all ranges have been added, the new mapping is activated by calling
-- * finalize_identity_maps() below.
-+ * Adds the specified range to the identity mappings.
-  */
--void add_identity_map(unsigned long start, unsigned long size)
-+static void add_identity_map(unsigned long start, unsigned long size)
- {
- 	unsigned long end = start + size;
+ # ---------------------------------------------------------------------------
  
-@@ -165,16 +163,6 @@ void initialize_identity_maps(void)
- 	write_cr3(top_level_pgt);
- }
+-KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
++KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -mno-red-zone
+ KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ GCOV_PROFILE := n
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 26050ae0b27e..e186cc0b628d 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -30,7 +30,7 @@ KBUILD_CFLAGS := -m$(BITS) -O2
+ KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ cflags-$(CONFIG_X86_32) := -march=i386
+-cflags-$(CONFIG_X86_64) := -mcmodel=small
++cflags-$(CONFIG_X86_64) := -mcmodel=small -mno-red-zone
+ KBUILD_CFLAGS += $(cflags-y)
+ KBUILD_CFLAGS += -mno-mmx -mno-sse
+ KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
+@@ -87,7 +87,7 @@ endif
  
--/*
-- * This switches the page tables to the new level4 that has been built
-- * via calls to add_identity_map() above. If booted via startup_32(),
-- * this is effectively a no-op.
-- */
--void finalize_identity_maps(void)
--{
--	write_cr3(top_level_pgt);
--}
--
- static void pf_error(unsigned long error_code, unsigned long address,
- 		     struct pt_regs *regs)
- {
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 856dc1c9bb0d..c466fb738de0 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -399,8 +399,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 	 */
- 	mem_avoid[MEM_AVOID_ZO_RANGE].start = input;
- 	mem_avoid[MEM_AVOID_ZO_RANGE].size = (output + init_size) - input;
--	add_identity_map(mem_avoid[MEM_AVOID_ZO_RANGE].start,
--			 mem_avoid[MEM_AVOID_ZO_RANGE].size);
+ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
  
- 	/* Avoid initrd. */
- 	initrd_start  = (u64)boot_params->ext_ramdisk_image << 32;
-@@ -420,14 +418,10 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 		;
- 	mem_avoid[MEM_AVOID_CMDLINE].start = cmd_line;
- 	mem_avoid[MEM_AVOID_CMDLINE].size = cmd_line_size;
--	add_identity_map(mem_avoid[MEM_AVOID_CMDLINE].start,
--			 mem_avoid[MEM_AVOID_CMDLINE].size);
+-$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar -mno-red-zone
++$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar
  
- 	/* Avoid boot parameters. */
- 	mem_avoid[MEM_AVOID_BOOTPARAMS].start = (unsigned long)boot_params;
- 	mem_avoid[MEM_AVOID_BOOTPARAMS].size = sizeof(*boot_params);
--	add_identity_map(mem_avoid[MEM_AVOID_BOOTPARAMS].start,
--			 mem_avoid[MEM_AVOID_BOOTPARAMS].size);
- 
- 	/* We don't need to set a mapping for setup_data. */
- 
-@@ -436,11 +430,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 
- 	/* Enumerate the immovable memory regions */
- 	num_immovable_mem = count_immovable_mem_regions();
--
--#ifdef CONFIG_X86_VERBOSE_BOOTUP
--	/* Make sure video RAM can be used. */
--	add_identity_map(0, PMD_SIZE);
--#endif
- }
- 
- /*
-@@ -919,19 +908,8 @@ void choose_random_location(unsigned long input,
- 		warn("Physical KASLR disabled: no suitable memory region!");
- 	} else {
- 		/* Update the new physical address location. */
--		if (*output != random_addr) {
--			add_identity_map(random_addr, output_size);
-+		if (*output != random_addr)
- 			*output = random_addr;
--		}
--
--		/*
--		 * This loads the identity mapping page table.
--		 * This should only be done if a new physical address
--		 * is found for the kernel, otherwise we should keep
--		 * the old page table to make it be like the "nokaslr"
--		 * case.
--		 */
--		finalize_identity_maps();
- 	}
- 
- 
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index eff4ed0b1cea..4e5bc688f467 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,17 +98,7 @@ static inline void choose_random_location(unsigned long input,
- #endif
- 
- #ifdef CONFIG_X86_64
--void initialize_identity_maps(void);
--void add_identity_map(unsigned long start, unsigned long size);
--void finalize_identity_maps(void);
- extern unsigned char _pgtable[];
--#else
--static inline void initialize_identity_maps(void)
--{ }
--static inline void add_identity_map(unsigned long start, unsigned long size)
--{ }
--static inline void finalize_identity_maps(void)
--{ }
- #endif
- 
- #ifdef CONFIG_EARLY_PRINTK
+ vmlinux-objs-$(CONFIG_EFI_STUB) += $(obj)/eboot.o \
+ 	$(objtree)/drivers/firmware/efi/libstub/lib.a
 -- 
 2.17.1
 
