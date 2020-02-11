@@ -6,32 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A4BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A497C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0854B2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142B82073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgBKXix (ORCPT
+        id S1728198AbgBKXjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:38:53 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60663 "EHLO
+        Tue, 11 Feb 2020 18:39:00 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62451 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgBKXis (ORCPT
+        with ESMTP id S1728126AbgBKXiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:38:48 -0500
+        Tue, 11 Feb 2020 18:38:51 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id c23d69b279245a74; Wed, 12 Feb 2020 00:38:46 +0100
+ id 5bf8a385c2cf4050; Wed, 12 Feb 2020 00:38:49 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: [PATCH 18/28] drivers: media: Call cpu_latency_qos_*() instead of pm_qos_*()
-Date:   Wed, 12 Feb 2020 00:17:51 +0100
-Message-ID: <4139443.DiSibVL1GN@kreacher>
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH 13/28] PM: QoS: Add CPU latency QoS API wrappers
+Date:   Wed, 12 Feb 2020 00:07:42 +0100
+Message-ID: <3944283.XRuKlcf6xm@kreacher>
 In-Reply-To: <1654227.8mz0SueHsU@kreacher>
 References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
@@ -44,63 +42,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Call cpu_latency_qos_add/remove_request() instead of
-pm_qos_add/remove_request(), respectively, because the
-latter are going to be dropped.
+Introduce (temporary) wrappers around pm_qos_request(),
+pm_qos_request_active() and pm_qos_add/update/remove_request() to
+provide replacements for them with function signatures that will be
+used in the final CPU latency QoS API, so that the users of it can be
+switched over to the new arrangement one by one before the API is
+finally set.
 
 No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/media/pci/saa7134/saa7134-video.c | 5 ++---
- drivers/media/platform/via-camera.c       | 4 ++--
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ include/linux/pm_qos.h | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/media/pci/saa7134/saa7134-video.c b/drivers/media/pci/saa7134/saa7134-video.c
-index 342cabf48064..a8ac94fadc14 100644
---- a/drivers/media/pci/saa7134/saa7134-video.c
-+++ b/drivers/media/pci/saa7134/saa7134-video.c
-@@ -1008,8 +1008,7 @@ int saa7134_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	 */
- 	if ((dmaq == &dev->video_q && !vb2_is_streaming(&dev->vbi_vbq)) ||
- 	    (dmaq == &dev->vbi_q && !vb2_is_streaming(&dev->video_vbq)))
--		pm_qos_add_request(&dev->qos_request,
--			PM_QOS_CPU_DMA_LATENCY, 20);
-+		cpu_latency_qos_add_request(&dev->qos_request, 20);
- 	dmaq->seq_nr = 0;
+diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
+index 3c4bee29ecda..63d39e66f95d 100644
+--- a/include/linux/pm_qos.h
++++ b/include/linux/pm_qos.h
+@@ -152,6 +152,33 @@ void pm_qos_remove_request(struct pm_qos_request *req);
+ s32 pm_qos_request(int pm_qos_class);
+ int pm_qos_request_active(struct pm_qos_request *req);
  
- 	return 0;
-@@ -1024,7 +1023,7 @@ void saa7134_vb2_stop_streaming(struct vb2_queue *vq)
- 
- 	if ((dmaq == &dev->video_q && !vb2_is_streaming(&dev->vbi_vbq)) ||
- 	    (dmaq == &dev->vbi_q && !vb2_is_streaming(&dev->video_vbq)))
--		pm_qos_remove_request(&dev->qos_request);
-+		cpu_latency_qos_remove_request(&dev->qos_request);
- }
- 
- static const struct vb2_ops vb2_qops = {
-diff --git a/drivers/media/platform/via-camera.c b/drivers/media/platform/via-camera.c
-index 78841b9015ce..1cd4f7be88dd 100644
---- a/drivers/media/platform/via-camera.c
-+++ b/drivers/media/platform/via-camera.c
-@@ -646,7 +646,7 @@ static int viacam_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	 * requirement which will keep the CPU out of the deeper sleep
- 	 * states.
- 	 */
--	pm_qos_add_request(&cam->qos_request, PM_QOS_CPU_DMA_LATENCY, 50);
-+	cpu_latency_qos_add_request(&cam->qos_request, 50);
- 	viacam_start_engine(cam);
- 	return 0;
- out:
-@@ -662,7 +662,7 @@ static void viacam_vb2_stop_streaming(struct vb2_queue *vq)
- 	struct via_camera *cam = vb2_get_drv_priv(vq);
- 	struct via_buffer *buf, *tmp;
- 
--	pm_qos_remove_request(&cam->qos_request);
-+	cpu_latency_qos_remove_request(&cam->qos_request);
- 	viacam_stop_engine(cam);
- 
- 	list_for_each_entry_safe(buf, tmp, &cam->buffer_queue, queue) {
++static inline void cpu_latency_qos_add_request(struct pm_qos_request *req,
++					       s32 value)
++{
++	pm_qos_add_request(req, PM_QOS_CPU_DMA_LATENCY, value);
++}
++
++static inline void cpu_latency_qos_update_request(struct pm_qos_request *req,
++						  s32 new_value)
++{
++	pm_qos_update_request(req, new_value);
++}
++
++static inline void cpu_latency_qos_remove_request(struct pm_qos_request *req)
++{
++	pm_qos_remove_request(req);
++}
++
++static inline bool cpu_latency_qos_request_active(struct pm_qos_request *req)
++{
++	return pm_qos_request_active(req);
++}
++
++static inline s32 cpu_latency_qos_limit(void)
++{
++	return pm_qos_request(PM_QOS_CPU_DMA_LATENCY);
++}
++
+ #ifdef CONFIG_PM
+ enum pm_qos_flags_status __dev_pm_qos_flags(struct device *dev, s32 mask);
+ enum pm_qos_flags_status dev_pm_qos_flags(struct device *dev, s32 mask);
 -- 
 2.16.4
 
