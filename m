@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A70C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BEEC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114822073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7777E2073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="R1Qu0FUr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QCNo7kZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgBKVmt (ORCPT
+        id S1728286AbgBKVm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:42:49 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:18655 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbgBKVlz (ORCPT
+        Tue, 11 Feb 2020 16:42:57 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.177]:23185 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728003AbgBKVly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:41:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
+        Tue, 11 Feb 2020 16:41:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457310;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=RzFvreAROfD8+Za4+h0pzFXVuRYDasxapojPV71TMVg=;
-        b=R1Qu0FUrl4GPnBWns53t2aiO9Hb0AtmGr1wMHoax5Oisic/xfziW+y1gV0DWYmFVg2
-        uSpPiys7jDrRT7gnPfrykJFHj7QfXfQmUNn91ON6l70Q/LbgBKfftTpq76P0XIXZXwWk
-        mwru2DglC+oD8GCGGY/AUUUTjbY56Ik5Ikqx8fPtm+WPrTAigTk7zCaSWiqieppzDFQL
-        LYuXbhE/1/zyGr+yaGIehLes1fqljKoUMNxqNTAAtOujOhN+yZ3sMVrfY212xhy1Od7B
-        z6Zh5fGF9axkoi5mZzTuOlNcN9zIZOuLthERgUFwnqyISQ49XJkOxQy/EcHD7NtUheRA
-        DNWw==
+        bh=3bosFD/maVT7s0PxPwS4PL1iP9bgaYLTqR2vJvqzmIk=;
+        b=QCNo7kZyeezapZKnNq2iHmq8qbL+LmjFODLMwnS3tshe4JqxsG/xBgE04yRBCbfO5N
+        XpeWcrroV9tUDab16JUbrzTRR8+i/qaudADWcIiqdB/Lec3QtxkxiS5WMRVfVNrS4D1U
+        QxTvHPISEI85iVxiTvprnD9svhaL5nIDQ6i6LhSQQpXKTIHJTE9pNLeGolZE9ZQ2RvAm
+        6chD/inDh77hqHN8L9wPliQhv8FrZNsbeE1P62F/8kdvTdx4VfkPwIXFdGWnYIMF9SE2
+        Bcq6a/WxKm4Rs+iaKREHkuzzlGxbTQW9QSDaXovMMxpf8Q6JnwEQ3xIE6w4gHocHlkc1
+        plCw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLfZ0EK
+        with ESMTPSA id U06217w1BLff0ES
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:35 +0100 (CET)
+        Tue, 11 Feb 2020 22:41:41 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -69,9 +69,9 @@ Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 04/14] MIPS: DTS: jz4780: fix #includes for irq.h and gpio.h
-Date:   Tue, 11 Feb 2020 22:41:21 +0100
-Message-Id: <5cc02bf80a341262362f8c73d9d5d3efde098482.1581457290.git.hns@goldelico.com>
+Subject: [PATCH 11/14] MIPS: CI20: defconfig: compile gpio-ir driver
+Date:   Tue, 11 Feb 2020 22:41:28 +0100
+Message-Id: <4cda1587b8e380db7b2b921dfcd21e73c001505b.1581457290.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
@@ -82,27 +82,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The constants from irq.h and gpio.h can be used in the
-jz4780.dtsi and derived DTS like ci20.dts.
+The CI20 board has a gpio based IR receiver.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/configs/ci20_defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..112a24deff71 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4780-cgu.h>
- #include <dt-bindings/dma/jz4780-dma.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	#address-cells = <1>;
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index 74e5775b8a05..0458ea4d54e8 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -181,3 +181,8 @@ CONFIG_LEDS_TRIGGER_CPU=y
+ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+ CONFIG_LEDS_TRIGGER_TRANSIENT=y
+ CONFIG_LEDS_TRIGGER_CAMERA=m
++CONFIG_LIRC=y
++CONFIG_MEDIA_SUPPORT=m
++CONFIG_RC_DEVICES=y
++CONFIG_IR_GPIO_CIR=m
++CONFIG_IR_GPIO_TX=m
 -- 
 2.23.0
 
