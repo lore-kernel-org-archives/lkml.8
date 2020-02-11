@@ -2,30 +2,30 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC3BC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C85C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FEE2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07BC2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731029AbgBKQ7r (ORCPT
+        id S1731037AbgBKQ7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:59:47 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53481 "EHLO
+        Tue, 11 Feb 2020 11:59:49 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53492 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731009AbgBKQ7n (ORCPT
+        with ESMTP id S1730986AbgBKQ7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:59:43 -0500
+        Tue, 11 Feb 2020 11:59:45 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j1Ysc-00014T-Pt; Tue, 11 Feb 2020 16:59:22 +0000
+        id 1j1Ysf-00014T-4B; Tue, 11 Feb 2020 16:59:25 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -40,9 +40,9 @@ Cc:     smbarber@chromium.org, Alexander Viro <viro@zeniv.linux.org.uk>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 17/24] sys: __sys_setfsgid(): handle fsid mappings
-Date:   Tue, 11 Feb 2020 17:57:46 +0100
-Message-Id: <20200211165753.356508-18-christian.brauner@ubuntu.com>
+Subject: [PATCH 19/24] sys:__sys_setgid(): handle fsid mappings
+Date:   Tue, 11 Feb 2020 17:57:48 +0100
+Message-Id: <20200211165753.356508-20-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200211165753.356508-1-christian.brauner@ubuntu.com>
 References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
@@ -53,29 +53,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch setfsgid() to lookup fsids in the fsid mappings. If no fsid mappings are
+Switch setgid() to lookup fsids in the fsid mappings. If no fsid mappings are
 setup the behavior is unchanged, i.e. fsids are looked up in the id mappings.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- kernel/sys.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sys.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/sys.c b/kernel/sys.c
-index ae376d32c1e3..b89334ad0908 100644
+index afaec8d46bc5..11f41e0a4974 100644
 --- a/kernel/sys.c
 +++ b/kernel/sys.c
-@@ -847,9 +847,9 @@ long __sys_setfsgid(gid_t gid)
- 	kgid_t kgid;
+@@ -416,24 +416,31 @@ long __sys_setgid(gid_t gid)
+ 	const struct cred *old;
+ 	struct cred *new;
+ 	int retval;
+-	kgid_t kgid;
++	kgid_t kgid, kfsgid;
  
- 	old = current_cred();
--	old_fsgid = from_kgid_munged(old->user_ns, old->fsgid);
-+	old_fsgid = from_kfsgid_munged(old->user_ns, old->fsgid);
- 
--	kgid = make_kgid(old->user_ns, gid);
-+	kgid = make_kfsgid(old->user_ns, gid);
+ 	kgid = make_kgid(ns, gid);
  	if (!gid_valid(kgid))
- 		return old_fsgid;
+ 		return -EINVAL;
+ 
++	kfsgid = make_kfsgid(ns, gid);
++	if (!gid_valid(kfsgid))
++		return -EINVAL;
++
+ 	new = prepare_creds();
+ 	if (!new)
+ 		return -ENOMEM;
+ 	old = current_cred();
+ 
+ 	retval = -EPERM;
+-	if (ns_capable(old->user_ns, CAP_SETGID))
+-		new->gid = new->egid = new->sgid = new->fsgid = kgid;
+-	else if (gid_eq(kgid, old->gid) || gid_eq(kgid, old->sgid))
+-		new->egid = new->fsgid = kgid;
+-	else
++	if (ns_capable(old->user_ns, CAP_SETGID)) {
++		new->gid = new->egid = new->sgid = kgid;
++		new->fsgid = kfsgid;
++	} else if (gid_eq(kgid, old->gid) || gid_eq(kgid, old->sgid)) {
++		new->egid = kgid;
++		new->fsgid = kfsgid;
++	} else {
+ 		goto error;
++	}
+ 
+ 	return commit_creds(new);
  
 -- 
 2.25.0
