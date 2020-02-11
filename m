@@ -2,174 +2,143 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8409AC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062BAC3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE3B20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="aGawjAQF"
+	by mail.kernel.org (Postfix) with ESMTP id DA00420848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbgBKO0e (ORCPT
+        id S1730188AbgBKO0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:26:34 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:44860 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgBKO0e (ORCPT
+        Tue, 11 Feb 2020 09:26:40 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55667 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730145AbgBKO0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:26:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581431187; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4YdQkIMasd5qHD3e2DpnGPJG7tU9RzS/ajQ/PzVrO34=;
-        b=aGawjAQFPbSWQ5nrC+hgU8C0FTz7NoRIk1mI02vM4Fv0py1nQKlLvTc06ZI3mt9+wIUs4i
-        UChYhG7h3l7qB8PeZ6rfZ0Bnu8FKWBoQpRXBePrgLfNFM/nOJUnLu7wmYXfwe5c/2YKPDF
-        D1U5+wCsWU+CffmYLlw7jTHlxqKsfps=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 2/5] remoteproc: Add device-managed variants of rproc_alloc/rproc_add
-Date:   Tue, 11 Feb 2020 11:26:10 -0300
-Message-Id: <20200211142614.13567-2-paul@crapouillou.net>
-In-Reply-To: <20200211142614.13567-1-paul@crapouillou.net>
-References: <20200211142614.13567-1-paul@crapouillou.net>
+        Tue, 11 Feb 2020 09:26:39 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1WUb-0000HK-BK; Tue, 11 Feb 2020 15:26:25 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1WUY-0004Dr-A2; Tue, 11 Feb 2020 15:26:22 +0100
+Date:   Tue, 11 Feb 2020 15:26:22 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Roy Im <roy.im.opensource@diasemi.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [RESEND PATCH V8 3/3] Input: new da7280 haptic driver
+Message-ID: <20200211142622.5vt34ftdt242agaq@pengutronix.de>
+References: <cover.1581383604.git.Roy.Im@diasemi.com>
+ <ba04fc95afbf3d77a49ad6d52ade20fe79a4b7eb.1581383604.git.Roy.Im@diasemi.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba04fc95afbf3d77a49ad6d52ade20fe79a4b7eb.1581383604.git.Roy.Im@diasemi.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add API functions devm_rproc_alloc() and devm_rproc_add(), which behave
-like rproc_alloc() and rproc_add() respectively, but register their
-respective cleanup function to be called on driver detach.
+On Tue, Feb 11, 2020 at 10:13:24AM +0900, Roy Im wrote:
+> diff --git a/drivers/input/misc/da7280.c b/drivers/input/misc/da7280.c
+> new file mode 100644
+> index 0000000..4d1d1fc
+> --- /dev/null
+> +++ b/drivers/input/misc/da7280.c
+> @@ -0,0 +1,1688 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * DA7280 Haptic device driver
+> + *
+> + * Copyright (c) 2019 Dialog Semiconductor.
+> + * Author: Roy Im <Roy.Im.Opensource@diasemi.com>
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/uaccess.h>
+> +#include "da7280.h"
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+Don't introduce a header file that is only used once. Better put the
+definitions into the c file then.
 
-Notes:
-    v3: New patch
-    v4: No change
-    v5: - Fix return value documentation
-        - Fix typo in documentation
+> [...]
+> +static int da7280_haptic_set_pwm(struct da7280_haptic *haptics)
+> +{
+> +	struct pwm_args pargs;
+> +	u64 period_mag_multi;
+> +	unsigned int pwm_duty;
+> +	int error;
+> +
+> +	pwm_get_args(haptics->pwm_dev, &pargs);
+> +	period_mag_multi =
+> +		(u64)(pargs.period * haptics->gain);
 
- drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++++++++
- include/linux/remoteproc.h           |  5 +++
- 2 files changed, 72 insertions(+)
+This cast does not do anything, does it?
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 097f33e4f1f3..fe5c7a2f9767 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1932,6 +1932,33 @@ int rproc_add(struct rproc *rproc)
- }
- EXPORT_SYMBOL(rproc_add);
- 
-+static void devm_rproc_remove(void *rproc)
-+{
-+	rproc_del(rproc);
-+}
-+
-+/**
-+ * devm_rproc_add() - resource managed rproc_add()
-+ * @dev: the underlying device
-+ * @rproc: the remote processor handle to register
-+ *
-+ * This function performs like rproc_add() but the registered rproc device will
-+ * automatically be removed on driver detach.
-+ *
-+ * Returns: 0 on success, negative errno on failure
-+ */
-+int devm_rproc_add(struct device *dev, struct rproc *rproc)
-+{
-+	int err;
-+
-+	err = rproc_add(rproc);
-+	if (err)
-+		return err;
-+
-+	return devm_add_action_or_reset(dev, devm_rproc_remove, rproc);
-+}
-+EXPORT_SYMBOL(devm_rproc_add);
-+
- /**
-  * rproc_type_release() - release a remote processor instance
-  * @dev: the rproc's device
-@@ -2149,6 +2176,46 @@ int rproc_del(struct rproc *rproc)
- }
- EXPORT_SYMBOL(rproc_del);
- 
-+static void devm_rproc_free(struct device *dev, void *res)
-+{
-+	rproc_free(*(struct rproc **)res);
-+}
-+
-+/**
-+ * devm_rproc_alloc() - resource managed rproc_alloc()
-+ * @dev: the underlying device
-+ * @name: name of this remote processor
-+ * @ops: platform-specific handlers (mainly start/stop)
-+ * @firmware: name of firmware file to load, can be NULL
-+ * @len: length of private data needed by the rproc driver (in bytes)
-+ *
-+ * This function performs like rproc_alloc() but the acquired rproc device will
-+ * automatically be released on driver detach.
-+ *
-+ * Returns: new rproc instance, or NULL on failure
-+ */
-+struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-+			       const struct rproc_ops *ops,
-+			       const char *firmware, int len)
-+{
-+	struct rproc **ptr, *rproc;
-+
-+	ptr = devres_alloc(devm_rproc_free, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rproc = rproc_alloc(dev, name, ops, firmware, len);
-+	if (rproc) {
-+		*ptr = rproc;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return rproc;
-+}
-+EXPORT_SYMBOL(devm_rproc_alloc);
-+
- /**
-  * rproc_add_subdev() - add a subdevice to a remoteproc
-  * @rproc: rproc handle to add the subdevice to
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 16ad66683ad0..5f201f0c86c3 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -595,6 +595,11 @@ int rproc_add(struct rproc *rproc);
- int rproc_del(struct rproc *rproc);
- void rproc_free(struct rproc *rproc);
- 
-+struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-+			       const struct rproc_ops *ops,
-+			       const char *firmware, int len);
-+int devm_rproc_add(struct device *dev, struct rproc *rproc);
-+
- void rproc_add_carveout(struct rproc *rproc, struct rproc_mem_entry *mem);
- 
- struct rproc_mem_entry *
+> +	if (haptics->acc_en)
+> +		pwm_duty =
+> +			(unsigned int)(period_mag_multi >> 16);
+> +	else
+> +		pwm_duty =
+> +			(unsigned int)((period_mag_multi >> 16)
+> +				+ pargs.period) / 2;
+> +
+> +	error = pwm_config(haptics->pwm_dev,
+> +			   pwm_duty, pargs.period);
+> +	if (error) {
+> +		dev_err(haptics->dev,
+> +			"failed to configure pwm : %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	error = pwm_enable(haptics->pwm_dev);
+> +	if (error) {
+> +		pwm_disable(haptics->pwm_dev);
+> +		dev_err(haptics->dev,
+> +			"failed to enable haptics pwm device : %d\n", error);
+> +	}
+
+You should not use the legacy pwm API. Please stick to
+pwm_apply_state().
+
+Also consider using %pE for more expressive error messages.
+
+Best regards
+Uwe
+
 -- 
-2.25.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
