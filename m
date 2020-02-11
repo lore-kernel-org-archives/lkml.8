@@ -2,226 +2,108 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4AEC3B188
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0C2C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E8320842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1791A20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lnQN5yke"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="k6I0EA00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgBKKyc (ORCPT
+        id S1728464AbgBKKz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:54:32 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:59962 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727805AbgBKKyc (ORCPT
+        Tue, 11 Feb 2020 05:55:58 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44206 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbgBKKz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:54:32 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BAsJ9H020617;
-        Tue, 11 Feb 2020 11:54:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=3tZrMwq3KMFaha6QMKj6OAVuMaZdKt4Qxfei8VIdqCw=;
- b=lnQN5ykes8V1oOQcykxeRxvSyDAMBqI2jw5meWEigZ1367afXhoyp6Rpdmttuw0KS7DA
- ZHu9sPGcyysN9k5TyygkHknSvIvz/LD4mVYjFgrU3D/7aKnzOkxxqmSn/DHV7+vQPVsY
- C5K+rI1ye4ffeIzir/lsc17Urrx9EaB58wqGJ8iLpI5A8DL1vsAkGyARNBAgUhQ+82fc
- c0bZ7sv9T1Cfc9L+mOg1DCFcPJl4BSYSs7ZRkNidaHC4Kmz0ZlOCvQppQ+N8OgbcBnu+
- kZSUpuM0IsVosV1xqkshqlU1r6+UpBnIU/mM08uuXK6i0q/zmsL63SAymGsyJjeBmWN5 eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ufh3epf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 11:54:20 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 81911100050;
-        Tue, 11 Feb 2020 11:54:18 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 72A2F2AEAAB;
-        Tue, 11 Feb 2020 11:54:18 +0100 (CET)
-Received: from [10.48.0.71] (10.75.127.44) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Feb
- 2020 11:54:17 +0100
-Subject: Re: [PATCH v2] counter: stm32-timer-cnt: add power management support
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-CC:     <jic23@kernel.org>, <alexandre.torgue@st.com>,
-        <mcoquelin.stm32@gmail.com>, <benjamin.gaignard@st.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1581355198-30428-1-git-send-email-fabrice.gasnier@st.com>
- <20200210174550.GA4626@icarus>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <b1e2930a-eeaf-dcfe-3e2c-b666908262bf@st.com>
-Date:   Tue, 11 Feb 2020 11:54:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 11 Feb 2020 05:55:57 -0500
+Received: by mail-il1-f193.google.com with SMTP id s85so3028112ill.11
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 02:55:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/ip/rGfkF7G/a6O30OvCDbXytusxYnQXnVEqCr+9FAQ=;
+        b=k6I0EA0094zzaaYZwbZeS99DaTzpQusIutEmeqRj1UtEdjv0Vh3LOf6XO1D0Bm/peU
+         5D5r3PKLynXB0MvhlV0ILEuPXhlx0Z/pp7Zu4XZGdcRfCKrwOliMh7ZPi4sedDdBcid/
+         zqQBSheUtB8mg8pvzIlBj7yOuJb19GWr7//Kk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/ip/rGfkF7G/a6O30OvCDbXytusxYnQXnVEqCr+9FAQ=;
+        b=WSTUef2nJ+YZu5t3cNLLdL8R+vjHtsibalI+ijj8hm/bE+V3NCCAi+iqcGpBuqZgR0
+         ivKY3KfWmG8rtxYCrBUlHs8t+5IM35lcB85xVrmrhZkVzOKZOdRvrda6VQchMfDHT1Q3
+         /Dad8RkIMh1d4T8nO4erOLn2zS+ksbXPfm29DVKobR0pDYRLy2EGX8B2tLOwOtao9zr8
+         y01BIiHjGxKpbF/ZOcdKv8HwDZioiw8U9wah5axNFY0DksKukQoRzwcFiEWGv/jLcw8w
+         Ab4Yhu+cZ7NkQZg8Av3R6Uv/kx5Jgu3A3jkElr9nO2ehh+2j03ORxW1fvQDiE3eIrb9O
+         EbEQ==
+X-Gm-Message-State: APjAAAVMvEoh7HUJxgDH4BxXcgXyDl/0D8StsxijKu+vUkb5hOuIDic3
+        7OSWff1wZQ4ug+hp86tbryvXGv1sqhYZ897jRRX+cA==
+X-Google-Smtp-Source: APXvYqyG1RSF3lCIDiXWjx7JsJ8UmF3VhDB5MzH7ll4xhEJWj8zjGQdeG4rb9OxDTACRSBDR6cbzpWfO3/2tQV7BEV8=
+X-Received: by 2002:a92:5d8d:: with SMTP id e13mr5633269ilg.285.1581418557300;
+ Tue, 11 Feb 2020 02:55:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200210174550.GA4626@icarus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_03:2020-02-10,2020-02-11 signatures=0
+References: <CAJfpegtUAHPL9tsFB85ZqjAfy0xwz7ATRcCtLbzFBo8=WnCvLw@mail.gmail.com>
+ <20200209080918.1562823-1-michael+lkml@stapelberg.ch>
+In-Reply-To: <20200209080918.1562823-1-michael+lkml@stapelberg.ch>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 11 Feb 2020 11:55:46 +0100
+Message-ID: <CAJfpegv4iL=bW3TXP3F9w1z6-LUox8KiBmw7UBcWE-0jiK0YsA@mail.gmail.com>
+Subject: Re: Still a pretty bad time on 5.4.6 with fuse_request_end.
+To:     michael+lkml@stapelberg.ch
+Cc:     fuse-devel <fuse-devel@lists.sourceforge.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kyle Sanderson <kyle.leet@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 6:45 PM, William Breathitt Gray wrote:
-> On Mon, Feb 10, 2020 at 06:19:58PM +0100, Fabrice Gasnier wrote:
->> Add suspend/resume PM sleep ops. When going to low power, enforce the
->> counter isn't active. Gracefully restore its state upon resume in case
->> it's been left enabled prior to suspend.
->>
->> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->> Changes in v2:
->> - Don't refuse to suspend in case the counter has been left enabled.
->>   Gracefully disable it and restore its state upon resume.
->> ---
->>  drivers/counter/stm32-timer-cnt.c | 63 +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 63 insertions(+)
->>
->> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
->> index 3eafcce..50496f4 100644
->> --- a/drivers/counter/stm32-timer-cnt.c
->> +++ b/drivers/counter/stm32-timer-cnt.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/iio/types.h>
-> 
-> Unrelated to your patch but it caught my eye: are iio headers necessary
-> for this file? I suspect they are not needed since this driver does not
-> make use of the IIO interface.
+On Sun, Feb 9, 2020 at 9:09 AM <michael+lkml@stapelberg.ch> wrote:
+>
+> From: Michael Stapelberg <michael+lkml@stapelberg.ch>
+>
+> Hey,
+>
+> I recently ran into this, too. The symptom for me is that processes using=
+ the
+> affected FUSE file system hang indefinitely, sync(2) system calls hang
+> indefinitely, and even triggering an abort via echo 1 >
+> /sys/fs/fuse/connections/*/abort does not get the file system unstuck (th=
+ere is
+> always 1 request still pending). Only removing power will get the machine
+> unstuck.
+>
+> I=E2=80=99m triggering this when building packages for https://distr1.org=
+/, which uses a
+> FUSE daemon (written in Go using the jacobsa/fuse package) to provide pac=
+kage
+> contents.
+>
+> I bisected the issue to commit
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3D2b319d1f6f92a4ced9897678113d176ee16ae85d
+>
+> With that commit, I run into a kernel oops within =E2=89=881 minute after=
+ starting my
+> batch build. With the commit before, I can batch build for many minutes w=
+ithout
+> issues.
 
-Hi William,
+Pretty weird.   I'm not seeing how this could change behavior, as the
+args->end value is not changed after being initialized, and so moving
+the test later should not make a difference.
 
-Yes, you're right. Thanks for pointing this!
-I'll push a patch on top of this one to fix it. BTW, I'm not sure if
-this needs to be a marked as a fix, as this seems a quite minor issue?
+Could you print out the complete contents of req->args?
 
-Best Regards,
-Fabrice
-
-> 
-> William Breathitt Gray
-> 
->>  #include <linux/mfd/stm32-timers.h>
->>  #include <linux/module.h>
->> +#include <linux/pinctrl/consumer.h>
->>  #include <linux/platform_device.h>
->>  
->>  #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
->> @@ -20,11 +21,20 @@
->>  #define TIM_CCER_MASK	(TIM_CCER_CC1P | TIM_CCER_CC1NP | \
->>  			 TIM_CCER_CC2P | TIM_CCER_CC2NP)
->>  
->> +struct stm32_timer_regs {
->> +	u32 cr1;
->> +	u32 cnt;
->> +	u32 smcr;
->> +	u32 arr;
->> +};
->> +
->>  struct stm32_timer_cnt {
->>  	struct counter_device counter;
->>  	struct regmap *regmap;
->>  	struct clk *clk;
->>  	u32 ceiling;
->> +	bool enabled;
->> +	struct stm32_timer_regs bak;
->>  };
->>  
->>  /**
->> @@ -224,6 +234,9 @@ static ssize_t stm32_count_enable_write(struct counter_device *counter,
->>  			clk_disable(priv->clk);
->>  	}
->>  
->> +	/* Keep enabled state to properly handle low power states */
->> +	priv->enabled = enable;
->> +
->>  	return len;
->>  }
->>  
->> @@ -358,10 +371,59 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
->>  	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
->>  	priv->counter.priv = priv;
->>  
->> +	platform_set_drvdata(pdev, priv);
->> +
->>  	/* Register Counter device */
->>  	return devm_counter_register(dev, &priv->counter);
->>  }
->>  
->> +static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
->> +{
->> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
->> +
->> +	/* Only take care of enabled counter: don't disturb other MFD child */
->> +	if (priv->enabled) {
->> +		/* Backup registers that may get lost in low power mode */
->> +		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
->> +		regmap_read(priv->regmap, TIM_ARR, &priv->bak.arr);
->> +		regmap_read(priv->regmap, TIM_CNT, &priv->bak.cnt);
->> +		regmap_read(priv->regmap, TIM_CR1, &priv->bak.cr1);
->> +
->> +		/* Disable the counter */
->> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
->> +		clk_disable(priv->clk);
->> +	}
->> +
->> +	return pinctrl_pm_select_sleep_state(dev);
->> +}
->> +
->> +static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
->> +{
->> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	ret = pinctrl_pm_select_default_state(dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (priv->enabled) {
->> +		clk_enable(priv->clk);
->> +
->> +		/* Restore registers that may have been lost */
->> +		regmap_write(priv->regmap, TIM_SMCR, priv->bak.smcr);
->> +		regmap_write(priv->regmap, TIM_ARR, priv->bak.arr);
->> +		regmap_write(priv->regmap, TIM_CNT, priv->bak.cnt);
->> +
->> +		/* Also re-enables the counter */
->> +		regmap_write(priv->regmap, TIM_CR1, priv->bak.cr1);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
->> +			 stm32_timer_cnt_resume);
->> +
->>  static const struct of_device_id stm32_timer_cnt_of_match[] = {
->>  	{ .compatible = "st,stm32-timer-counter", },
->>  	{},
->> @@ -373,6 +435,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
->>  	.driver = {
->>  		.name = "stm32-timer-counter",
->>  		.of_match_table = stm32_timer_cnt_of_match,
->> +		.pm = &stm32_timer_cnt_pm_ops,
->>  	},
->>  };
->>  module_platform_driver(stm32_timer_cnt_driver);
->> -- 
->> 2.7.4
->>
+Thanks,
+Miklos
