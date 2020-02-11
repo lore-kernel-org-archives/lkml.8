@@ -2,140 +2,210 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57C4C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB30C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B2A20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3FXu4Dc"
+	by mail.kernel.org (Postfix) with ESMTP id 9B1F2208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgBKNs4 (ORCPT
+        id S1729304AbgBKNuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:48:56 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40036 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgBKNsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:48:55 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v25so7933018qto.7;
-        Tue, 11 Feb 2020 05:48:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JIZHRdZLqtLorXZfrYCSPItmC1Dc+HGHwOIzP/XDImY=;
-        b=d3FXu4DcpsHeeo7NBsq1Ec3f7OKhc4SsvQnIJenSnOtjREel9IF+kdR8ma1SWkO5OR
-         Ou4s2dnBv7WOxC4OPWNV6d8KIVpBRVtM/ukAKzN6d3zx7MvBtQz1N27NoDx/a7ujHsmS
-         jvZYtEEc8DToM7semtrIS3CUfnR8Jxni2Z/6WUP8wvMdDT8C1m2PB78zzz+BFas4vec2
-         VRg0vXB9eGeEdlGGMFCs2IJ9nbGhw7o3VA3WFY8plHWMmjNInC6fLgpMiA40FBmv4BzV
-         G9slDIDonCBacDdi6tPT8KEVnytqC8eiltqCoEj+hq8mYECNDQpWUjWhJQ4KRRh1aoXi
-         oAuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JIZHRdZLqtLorXZfrYCSPItmC1Dc+HGHwOIzP/XDImY=;
-        b=NL05IKKlW0LRFfZSq9ut6eSJDrNbVU6q4I4cLgMv6I8VSNguF2YLNynIHoLWfHthje
-         ELxXSX7j/7L1/gT0WLrrJboYLPswI2nh/vsMtvXYaf4A6MSsBXV+q2VMxyfQHoDS9TJ/
-         Bldxb1Rp7V2VgsW2RpkSqVXBfk3sXJXwTnJAD4UEcz27E731ykiqzoghTKOvnOzhXCB2
-         dkeVLp9Eg44fU80qhdSTaM1nki0yrh/DIV3f1QKvl7sY35URfj3KjgK017vS3Kh9BzW5
-         BVlh3BPeGlBxJJwDF/FgC+/rYmU15Q/czs16lyqC3k06rd0hNq1W2SeI+mZxg44iFQjE
-         JJYA==
-X-Gm-Message-State: APjAAAV+zLtDn+UgHtw3f2XRNVyNruGv8v4oGnfEKaIrULyGNfWsQmjQ
-        bz7So9gjuT9jrNWdnxfMyO0=
-X-Google-Smtp-Source: APXvYqybhzOEAAvHZbhKNes/s71zGxqa2omF1pXH9nVpHWlE7KVvcXMkRtBbOlD4T9UG/KxmmcCT+w==
-X-Received: by 2002:ac8:7caf:: with SMTP id z15mr14892626qtv.68.1581428933199;
-        Tue, 11 Feb 2020 05:48:53 -0800 (PST)
-Received: from NXL86673.nxp.com ([177.221.114.206])
-        by smtp.googlemail.com with ESMTPSA id h6sm2158936qtr.33.2020.02.11.05.48.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 05:48:52 -0800 (PST)
-From:   Alifer Moraes <alifer.wsdm@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     festevam@gmail.com, marco.franchi@nxp.com, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Alifer Moraes <alifer.wsdm@gmail.com>
-Subject: [PATCH] arm64: dts: imx8mq-phanbell: Add support for ethernet
-Date:   Tue, 11 Feb 2020 10:48:28 -0300
-Message-Id: <20200211134828.138-1-alifer.wsdm@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Feb 2020 08:50:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728966AbgBKNt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:49:59 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4183121569;
+        Tue, 11 Feb 2020 13:49:59 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1j1VvK-001aph-4v; Tue, 11 Feb 2020 08:49:58 -0500
+Message-Id: <20200211134958.034618002@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Tue, 11 Feb 2020 08:49:43 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-linus][PATCH 2/5] tools/bootconfig: Suppress non-error messages
+References: <20200211134941.229027482@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for ethernet on Google's i.MX 8MQ Phanbell
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
+Suppress non-error messages when applying new bootconfig
+to initrd image. To enable it, replace printf for error
+message with pr_err() macro.
+This also adds a testcase for this fix.
+
+Link: http://lkml.kernel.org/r/158125351377.16911.13283712972275131160.stgit@devnote2
+
+Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- .../boot/dts/freescale/imx8mq-phanbell.dts    | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ tools/bootconfig/main.c             | 28 ++++++++++++++--------------
+ tools/bootconfig/test-bootconfig.sh |  9 +++++++++
+ 2 files changed, 23 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 3f2a489a4ad8..16ed13c44a47 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -201,6 +201,27 @@
- 	};
- };
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 47f488458328..e18eeb070562 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -140,7 +140,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 		return 0;
  
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-+	phy-reset-duration = <10>;
-+	phy-reset-post-delay = <30>;
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+	};
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -254,6 +275,26 @@
- };
+ 	if (lseek(fd, -8, SEEK_END) < 0) {
+-		printf("Failed to lseek: %d\n", -errno);
++		pr_err("Failed to lseek: %d\n", -errno);
+ 		return -errno;
+ 	}
  
- &iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
-+			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
-+			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
-+			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
-+			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
-+			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
-+			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
-+			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
-+			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
-+			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
-+			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
-+			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
-+			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-+			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-+			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
-+		>;
-+	};
+@@ -155,7 +155,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 		return 0;
+ 
+ 	if (lseek(fd, stat.st_size - 8 - size, SEEK_SET) < 0) {
+-		printf("Failed to lseek: %d\n", -errno);
++		pr_err("Failed to lseek: %d\n", -errno);
+ 		return -errno;
+ 	}
+ 
+@@ -166,7 +166,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 	/* Wrong Checksum, maybe no boot config here */
+ 	rcsum = checksum((unsigned char *)*buf, size);
+ 	if (csum != rcsum) {
+-		printf("checksum error: %d != %d\n", csum, rcsum);
++		pr_err("checksum error: %d != %d\n", csum, rcsum);
+ 		return 0;
+ 	}
+ 
+@@ -185,13 +185,13 @@ int show_xbc(const char *path)
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd < 0) {
+-		printf("Failed to open initrd %s: %d\n", path, fd);
++		pr_err("Failed to open initrd %s: %d\n", path, fd);
+ 		return -errno;
+ 	}
+ 
+ 	ret = load_xbc_from_initrd(fd, &buf);
+ 	if (ret < 0)
+-		printf("Failed to load a boot config from initrd: %d\n", ret);
++		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+ 	else
+ 		xbc_show_compact_tree();
+ 
+@@ -209,7 +209,7 @@ int delete_xbc(const char *path)
+ 
+ 	fd = open(path, O_RDWR);
+ 	if (fd < 0) {
+-		printf("Failed to open initrd %s: %d\n", path, fd);
++		pr_err("Failed to open initrd %s: %d\n", path, fd);
+ 		return -errno;
+ 	}
+ 
+@@ -222,7 +222,7 @@ int delete_xbc(const char *path)
+ 	pr_output = 1;
+ 	if (size < 0) {
+ 		ret = size;
+-		printf("Failed to load a boot config from initrd: %d\n", ret);
++		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+ 	} else if (size > 0) {
+ 		ret = fstat(fd, &stat);
+ 		if (!ret)
+@@ -245,7 +245,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 
+ 	ret = load_xbc_file(xbc_path, &buf);
+ 	if (ret < 0) {
+-		printf("Failed to load %s : %d\n", xbc_path, ret);
++		pr_err("Failed to load %s : %d\n", xbc_path, ret);
+ 		return ret;
+ 	}
+ 	size = strlen(buf) + 1;
+@@ -262,7 +262,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	/* Check the data format */
+ 	ret = xbc_init(buf);
+ 	if (ret < 0) {
+-		printf("Failed to parse %s: %d\n", xbc_path, ret);
++		pr_err("Failed to parse %s: %d\n", xbc_path, ret);
+ 		free(data);
+ 		free(buf);
+ 		return ret;
+@@ -279,20 +279,20 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	/* Remove old boot config if exists */
+ 	ret = delete_xbc(path);
+ 	if (ret < 0) {
+-		printf("Failed to delete previous boot config: %d\n", ret);
++		pr_err("Failed to delete previous boot config: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+ 	/* Apply new one */
+ 	fd = open(path, O_RDWR | O_APPEND);
+ 	if (fd < 0) {
+-		printf("Failed to open %s: %d\n", path, fd);
++		pr_err("Failed to open %s: %d\n", path, fd);
+ 		return fd;
+ 	}
+ 	/* TODO: Ensure the @path is initramfs/initrd image */
+ 	ret = write(fd, data, size + 8);
+ 	if (ret < 0) {
+-		printf("Failed to apply a boot config: %d\n", ret);
++		pr_err("Failed to apply a boot config: %d\n", ret);
+ 		return ret;
+ 	}
+ 	close(fd);
+@@ -334,12 +334,12 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	if (apply && delete) {
+-		printf("Error: You can not specify both -a and -d at once.\n");
++		pr_err("Error: You can not specify both -a and -d at once.\n");
+ 		return usage();
+ 	}
+ 
+ 	if (optind >= argc) {
+-		printf("Error: No initrd is specified.\n");
++		pr_err("Error: No initrd is specified.\n");
+ 		return usage();
+ 	}
+ 
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index 87725e8723f8..1de06de328e2 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -64,6 +64,15 @@ echo "File size check"
+ new_size=$(stat -c %s $INITRD)
+ xpass test $new_size -eq $initrd_size
+ 
++echo "No error messge while applying"
++OUTFILE=`mktemp tempout-XXXX`
++dd if=/dev/zero of=$INITRD bs=4096 count=1
++printf " \0\0\0 \0\0\0" >> $INITRD
++$BOOTCONF -a $TEMPCONF $INITRD > $OUTFILE 2>&1
++xfail grep -i "failed" $OUTFILE
++xfail grep -i "error" $OUTFILE
++rm $OUTFILE
 +
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
+ echo "Max node number check"
+ 
+ echo -n > $TEMPCONF
 -- 
-2.17.1
+2.24.1
+
 
