@@ -2,122 +2,137 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7837EC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D494C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5765E206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:04:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I87ccuce"
+	by mail.kernel.org (Postfix) with ESMTP id 61E07214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581444315;
+	bh=6PE1cQDVRluOgEBrX4BbGhN0yYnAPz0zqhe0TovaI5o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eo0MOPhCBjfyqV7AHBnxq8wlwqHNGu7ADVTVly3e3IPRMQkRqcdkCcFdvwFmvs3Ct
+	 OXUzMIvLjrU0aU1rAooBsB81IMm29Z2NGqzi0609T+WKU9YZsPQ8jTERf60qhP0EdK
+	 n9cROxFkDM6MKOwl83+5GwWoRwxovZM7dj3s2mY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731148AbgBKSEo (ORCPT
+        id S1731161AbgBKSFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:04:44 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39891 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgBKSEo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:04:44 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so13596092wrt.6;
-        Tue, 11 Feb 2020 10:04:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=q8IlFsAzW42BdHawcbUm+vPgezsGHOH9GeI0fUJDSVM=;
-        b=I87ccuceFBGwZWz6MWVVHLS9yZqJ4oxZ8rVMt3h/dieBPIXmTksaUGIK9emDsbPJ72
-         72KObeNgooFPdyUFIkNE9tfG9YCQT6DX97igWnoTk5XILeoDrV7XmBmNHZ6wxbM8Pmtd
-         ZWogo0fjRb3v4pOrlrDwa/TkzDxv79WtPnZGLikTvYVSmqKOdPgekvANTruoPe8hQVKg
-         Q8ke+MOLP8bEfh1RqNNqqj250UkVxF57F9Nw8ItyeGJqfXF0ht/pwYs3rJ8NaEpULXf7
-         4shrJgs+Hi1V6e1ec38bHvO7j+2I/5AcC3i48ib6FRo+YneO8Psd2BR1w1z+iHS0GGNP
-         T6Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=q8IlFsAzW42BdHawcbUm+vPgezsGHOH9GeI0fUJDSVM=;
-        b=ZTFCevzZLRLYONXoarrtdgaFG+qMN6VxIt7PBilJy3UOKW4tQCEpUL/7qA60CNe6pZ
-         mlTrYp5fDU4FyCUbjlXe4dx/yxsIIir7pasBqevJ2eKBVnnbAVBqNRGg39+js6lyKmaS
-         F0C2zVr0VIewR5aJhL9TkWtLVc/dbaDKHiMijGJApR2YExzJR35wbme5EcXz/U6DqVBr
-         jtvzrlF7+1OdwN0FoqTF/2SW87vAPbIsjdADPKnaqgBsUMBoN/AYxZRrc4juSGKicgV5
-         aWmCWd325/f21woo4fVZcNTy1IrWJQG78tRXhaWFbqHXUk4HJ9b921IJkOMk+DvlaTMZ
-         gRgA==
-X-Gm-Message-State: APjAAAUGacB7d3EcZO27bNCwchIJjs35NH0FEfcZP+BFXRWwziORzaiB
-        ScbXnaveeogU/BA+bbAusiXB+BlX
-X-Google-Smtp-Source: APXvYqyhLYqPjSzy0F1s0h9EYZQPJT9P7yUxxdFIy+Dr2hO87FpztILGHBFxMSyYce9J9y6V8rVzgQ==
-X-Received: by 2002:adf:e8c9:: with SMTP id k9mr9870271wrn.168.1581444281212;
-        Tue, 11 Feb 2020 10:04:41 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id h128sm168982wmh.33.2020.02.11.10.04.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 10:04:40 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] KVM: x86: do not reset microcode version on INIT or RESET
-Date:   Tue, 11 Feb 2020 19:04:39 +0100
-Message-Id: <1581444279-10033-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 11 Feb 2020 13:05:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731149AbgBKSFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:05:14 -0500
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91814208C3;
+        Tue, 11 Feb 2020 18:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581444313;
+        bh=6PE1cQDVRluOgEBrX4BbGhN0yYnAPz0zqhe0TovaI5o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=l1Sa6LV29Nk2K2rAs5pOGEdWBrK7blZ394zkXkcKtGeTSea4pto6xOb1UC68LvoCb
+         rQcQkopTRHIkdvHboYFj7gcwFDBRV0Ay8v9AXIo6AahAcEAMIjHAGoo+hvdXaboJ8K
+         /FUJ5aUHuqo8wnpZQT4pyg7N6GzSzhJ0h0lMCm4M=
+Received: by mail-qk1-f175.google.com with SMTP id z19so7940554qkj.5;
+        Tue, 11 Feb 2020 10:05:13 -0800 (PST)
+X-Gm-Message-State: APjAAAUerb4PgCnHvqiurxiUKNCN4ViBEFdeAoWL/EKVCNB4guzu5ron
+        cES1qOx3XUZE2lpGa2Jvg21D8B/6Vx5vCs37pw==
+X-Google-Smtp-Source: APXvYqzAAdsaAknJAJ5NQJ1yPYP+6XiEu2QBieclv1o0pXq2SzMkQhREIj0fKiHyiUC2B4XLKseSBuDPfByqgqJIuII=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr7476483qkd.223.1581444312635;
+ Tue, 11 Feb 2020 10:05:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-4-aford173@gmail.com>
+ <20200206184030.GA11381@bogus> <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
+In-Reply-To: <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 11 Feb 2020 12:05:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLJweVLgYhoU-3cmg1aFwRNtAehx2-Euy-cwUsRy2jsgw@mail.gmail.com>
+Message-ID: <CAL_JsqLJweVLgYhoU-3cmg1aFwRNtAehx2-Euy-cwUsRy2jsgw@mail.gmail.com>
+Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
+ imx8mm, imx8qxp
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The microcode version should be set just once, since it is essentially
-a CPU feature; so do it on vCPU creation rather than reset.
+On Tue, Feb 11, 2020 at 4:49 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> On Thu, Feb 6, 2020 at 2:46 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
+> > > Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
+> >
+> > s/do/to/
+>
+> Oops.  Thanks for catching that.
+>
+> >
+> > > document.
+> > >
+> > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > > ---
+> > > V2: No change
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > > index 2cd67eb727d4..7ac60d9fe357 100644
+> > > --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > > @@ -2,6 +2,9 @@
+> > >
+> > >  Required properties:
+> > >    - compatible : Should be "nxp,lx2160a-fspi"
+> > > +                         "nxp,imx8qxp-fspi"
+> > > +                         "nxp,imx8mm-fspi"
+> >
+> > All 3 are different and no compatibility?
+>
+> This was all based on a series from NXP's repo where they have some
+> data tables all associated to the various compatible entries, and they
+> created a place holder for quirks.  Based on an older NXP repo, it
+> seems like there might be some quirks associated to the different
+> families, but the newer repo where I got this patch series didn't
+> implement them, however, it's possible the quirks may enhance
+> functionality later. If that's true, I think this is the best solution
+> for future enhancements without having to change the compatibility
+> names down the road.  Maybe someone from NXP can comment?  I am just
+> trying to help push things upstream so we can support QSPI flash.  I
+> would prefer to keep them separate for now, because we might have
+> these improvements later. However, I'll do what you request.  Do you
+> want me to drop the additional compatible flags and just use the
+> original, or create a new one that's a bit more generic?
 
-Userspace can tie the fix to the availability of MSR_IA32_UCODE_REV in
-the list of emulated MSRs.
+Neither.
 
-Reported-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm.c     | 2 +-
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+If you already know that they have differences, then as-is is fine.
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index a7e63b613837..280f6d024e84 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -2185,7 +2185,6 @@ static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	u32 dummy;
- 	u32 eax = 1;
- 
--	vcpu->arch.microcode_version = 0x01000065;
- 	svm->spec_ctrl = 0;
- 	svm->virt_spec_ctrl = 0;
- 
-@@ -2276,6 +2275,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 	init_vmcb(svm);
- 
- 	svm_init_osvw(vcpu);
-+	vcpu->arch.microcode_version = 0x01000065;
- 
- 	return 0;
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9a6664886f2e..d625b4b0e7b4 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4238,7 +4238,6 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 
- 	vmx->msr_ia32_umwait_control = 0;
- 
--	vcpu->arch.microcode_version = 0x100000000ULL;
- 	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
- 	vmx->hv_deadline_tsc = -1;
- 	kvm_set_cr8(vcpu, 0);
-@@ -6763,6 +6762,7 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
- 	vmx->nested.posted_intr_nv = -1;
- 	vmx->nested.current_vmptr = -1ull;
- 
-+	vcpu->arch.microcode_version = 0x100000000ULL;
- 	vmx->msr_ia32_feature_control_valid_bits = FEAT_CTL_LOCKED;
- 
- 	/*
--- 
-1.8.3.1
+If they are believed to be 'the same', then you do:
 
+compatible = "nxp,imx8qxp-fspi", "nxp,imx8mm-fspi";
+
+assuming i.MX8MM was the first version.
+
+This allows a MX8QXP to work without OS changes if the driver already
+supports the previous chip. And if any quirks are found, then the OS
+can handle them without a DT change.
+
+Rob
