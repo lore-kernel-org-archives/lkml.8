@@ -2,155 +2,193 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1DBC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27559C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE2D20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E392B20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:58:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fA41pMH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgBKJ6R convert rfc822-to-8bit (ORCPT
+        id S1728160AbgBKJ63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:58:17 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:40909 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgBKJ6R (ORCPT
+        Tue, 11 Feb 2020 04:58:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43746 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbgBKJ62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:58:17 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01B9vNh6002288, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01B9vNh6002288
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 17:57:23 +0800
-Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 11 Feb 2020 17:57:23 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 11 Feb 2020 17:57:23 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f]) by
- RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f%6]) with mapi id
- 15.01.1779.005; Tue, 11 Feb 2020 17:57:23 +0800
-From:   Kailang <kailang@realtek.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     Benjamin Poirier <benjamin.poirier@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk value
-Thread-Topic: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
- 7th quirk value
-Thread-Index: AQHV4KAyVK0d0c4RkUCatRD1s4Jmc6gVFbAAgAAJ9ACAAJRvkP//fXAAgACQDTA=
-Date:   Tue, 11 Feb 2020 09:57:22 +0000
-Message-ID: <c28f48325bb34d55bf83acbf8085f676@realtek.com>
-References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
-        <20200211055651.4405-2-benjamin.poirier@gmail.com>
-        <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz> <20200211081604.GA8286@f3>
-        <ab7a0abd24df485d8f8cc3723403a44f@realtek.com> <s5ho8u54h19.wl-tiwai@suse.de>
-In-Reply-To: <s5ho8u54h19.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.105.169]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Tue, 11 Feb 2020 04:58:28 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p11so4061906plq.10;
+        Tue, 11 Feb 2020 01:58:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=oDYnBEZd/3hdA6X4VhVRHbAjKUJ0MDM6lOD9+y++Vi8=;
+        b=fA41pMH6FdB/1PGQtZQzCGkt96Ei5uG2O/lVjt//Fm5Ng2iifnWjjMi9jNE+eB375m
+         vX/uZSggKkD4XQvbcLhD+y+8ma+UdcEX9eQG+WyhaNUOW0e7kSTJZj2JQ8Hm8qWo6pYj
+         9wGePWgwZdRUQJj8HKgYA7exeXRjqk2B/Xt1fEW35icDbXJ0HMIOW/qibEPaYbwJLSoE
+         15dt+QAC+Nncv9WkV0AsVnmE9EvCXYCPqNwWN7q2VHkAbLYvqjXsx7Vk7Bz69Jso/6Tq
+         n4hiNacCoFXNWKslg2OyJFHsehYN3a5fmvocMHANDyvvMSS6UBk69xle4cFymxMDgh3t
+         e6qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=oDYnBEZd/3hdA6X4VhVRHbAjKUJ0MDM6lOD9+y++Vi8=;
+        b=ZIwwEyXNBkfk5jMdKCW+kkj9On83xE4SK9c7JZna4FVylsjWzBKzd8Z14mE31glg6M
+         gEhCdlUmn1ZFyythEpkiWYJ1y39audAhxo7AQ1YUxsbu24sX9bldhBpjxGgpdte1XiU4
+         Rl/eyLqFPXPZkxLOg193OMS4sfi8msFgZ9tQPYuL8Aa/5GtLIzRnbHKjlEHLBB1NcbLw
+         f3BGOxlCZL/RcCcFohUNu/3Lyrs9fr/H386+X4xvFatZuQoukyWTE5ba34hSNGCH/1P6
+         x2hc8tVWuvW1hEsPM4vaKQavo2btHyVmdPmZ/bfoBX8QBFc35V9aXEPBuOhlKVjcWB6B
+         zEpw==
+X-Gm-Message-State: APjAAAW4LN/JsUQ4agI8+4eWWDKkP/wIILxFegVYcIzekAs3Ro47SmhV
+        lKSBQsQM/s4QOK8U2Sbi+Ro=
+X-Google-Smtp-Source: APXvYqwU7yw+DMuQQI3h3Pr9SWIYNE3F+EBWzEQayilJdAFS2ekO7jN9BPSrTSW3DqZ560SJMtABjA==
+X-Received: by 2002:a17:902:8bc3:: with SMTP id r3mr17713048plo.220.1581415107634;
+        Tue, 11 Feb 2020 01:58:27 -0800 (PST)
+Received: from localhost.localdomain ([27.59.175.249])
+        by smtp.googlemail.com with ESMTPSA id i2sm2351854pjs.21.2020.02.11.01.58.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 01:58:27 -0800 (PST)
+From:   Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     ymdatta.work@gmail.com, Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: qlge: qlge_main.c: fix style issues
+Date:   Tue, 11 Feb 2020 15:28:13 +0530
+Message-Id: <20200211095813.11426-1-ymdatta.work@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <ymdatta.work@gmail.com>
+References: <ymdatta.work@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch fixes "WARNING: Missing a blank line after
+declarations" generated from checkpatch.pl by adding
+a blank line after declarations.
 
+Signed-off-by: Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+---
+ drivers/staging/qlge/qlge_main.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Tuesday, February 11, 2020 5:20 PM
-> To: Kailang <kailang@realtek.com>
-> Cc: Benjamin Poirier <benjamin.poirier@gmail.com>; Jaroslav Kysela
-> <perex@perex.cz>; alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
-> 7th quirk value
-> 
-> On Tue, 11 Feb 2020 10:10:50 +0100,
-> Kailang wrote:
-> >
-> > Hi,
-> >
-> > Speaker 2 connect to DAC 0x2 was Lenovo requested.
-> > This was tune for EQ setting.
-> > I didn't know more for this.
-> 
-> Thanks, that was my expectation, too.  Applying EQ to built-in speakers is an
-> oft-seen workaround for laptops to avoid the possible hardware damage.
-> 
-> Now the question is whether this obvious level of lowering is the expected
-> result.
-> 
-> Kailang, could you try to ask Lenovo about it?
-> 
-Yes, this is expected. I confirm this with our Lenovo AE.
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index 86b9b7314a40..c712e1af90de 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -143,6 +143,7 @@ static int ql_sem_trylock(struct ql_adapter *qdev, u32 sem_mask)
+ int ql_sem_spinlock(struct ql_adapter *qdev, u32 sem_mask)
+ {
+ 	unsigned int wait_count = 30;
++
+ 	do {
+ 		if (!ql_sem_trylock(qdev, sem_mask))
+ 			return 0;
+@@ -1210,6 +1211,7 @@ static void ql_unmap_send(struct ql_adapter *qdev,
+ 			  struct tx_ring_desc *tx_ring_desc, int mapped)
+ {
+ 	int i;
++
+ 	for (i = 0; i < mapped; i++) {
+ 		if (i == 0 || (i == 7 && mapped > 7)) {
+ 			/*
+@@ -1290,6 +1292,7 @@ static int ql_map_send(struct ql_adapter *qdev,
+ 	 */
+ 	for (frag_idx = 0; frag_idx < frag_cnt; frag_idx++, map_idx++) {
+ 		skb_frag_t *frag = &skb_shinfo(skb)->frags[frag_idx];
++
+ 		tbd++;
+ 		if (frag_idx == 6 && frag_cnt > 7) {
+ 			/* Let's tack on an sglist.
+@@ -1649,6 +1652,7 @@ static void ql_process_mac_rx_skb(struct ql_adapter *qdev,
+ 				(ib_mac_rsp->flags3 & IB_MAC_IOCB_RSP_V4)) {
+ 			/* Unfragmented ipv4 UDP frame. */
+ 			struct iphdr *iph = (struct iphdr *) skb->data;
++
+ 			if (!(iph->frag_off &
+ 				htons(IP_MF|IP_OFFSET))) {
+ 				skb->ip_summed = CHECKSUM_UNNECESSARY;
+@@ -1818,6 +1822,7 @@ static struct sk_buff *ql_build_rx_skb(struct ql_adapter *qdev,
+ 		 *          eventually be in trouble.
+ 		 */
+ 		int size, i = 0;
++
+ 		sbq_desc = qlge_get_curr_buf(&rx_ring->sbq);
+ 		pci_unmap_single(qdev->pdev, sbq_desc->dma_addr,
+ 				 SMALL_BUF_MAP_SIZE, PCI_DMA_FROMDEVICE);
+@@ -1936,6 +1941,7 @@ static void ql_process_mac_split_rx_intr(struct ql_adapter *qdev,
+ 				(ib_mac_rsp->flags3 & IB_MAC_IOCB_RSP_V4)) {
+ 		/* Unfragmented ipv4 UDP frame. */
+ 			struct iphdr *iph = (struct iphdr *) skb->data;
++
+ 			if (!(iph->frag_off &
+ 				htons(IP_MF|IP_OFFSET))) {
+ 				skb->ip_summed = CHECKSUM_UNNECESSARY;
+@@ -2391,6 +2397,7 @@ static void qlge_restore_vlan(struct ql_adapter *qdev)
+ static irqreturn_t qlge_msix_rx_isr(int irq, void *dev_id)
+ {
+ 	struct rx_ring *rx_ring = dev_id;
++
+ 	napi_schedule(&rx_ring->napi);
+ 	return IRQ_HANDLED;
+ }
+@@ -2497,6 +2504,7 @@ static int ql_tso(struct sk_buff *skb, struct ob_mac_tso_iocb_req *mac_iocb_ptr)
+ 		mac_iocb_ptr->flags2 |= OB_MAC_TSO_IOCB_LSO;
+ 		if (likely(l3_proto == htons(ETH_P_IP))) {
+ 			struct iphdr *iph = ip_hdr(skb);
++
+ 			iph->check = 0;
+ 			mac_iocb_ptr->flags1 |= OB_MAC_TSO_IOCB_IP4;
+ 			tcp_hdr(skb)->check = ~csum_tcpudp_magic(iph->saddr,
+@@ -2521,6 +2529,7 @@ static void ql_hw_csum_setup(struct sk_buff *skb,
+ 	int len;
+ 	struct iphdr *iph = ip_hdr(skb);
+ 	__sum16 *check;
++
+ 	mac_iocb_ptr->opcode = OPCODE_OB_MAC_TSO_IOCB;
+ 	mac_iocb_ptr->frame_len = cpu_to_le32((u32) skb->len);
+ 	mac_iocb_ptr->net_trans_offset =
+@@ -4265,6 +4274,7 @@ static int qlge_set_mac_address(struct net_device *ndev, void *p)
+ static void qlge_tx_timeout(struct net_device *ndev, unsigned int txqueue)
+ {
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	ql_queue_asic_error(qdev);
+ }
+ 
+@@ -4273,6 +4283,7 @@ static void ql_asic_reset_work(struct work_struct *work)
+ 	struct ql_adapter *qdev =
+ 	    container_of(work, struct ql_adapter, asic_reset_work.work);
+ 	int status;
++
+ 	rtnl_lock();
+ 	status = ql_adapter_down(qdev);
+ 	if (status)
+@@ -4344,6 +4355,7 @@ static int ql_get_alt_pcie_func(struct ql_adapter *qdev)
+ static int ql_get_board_info(struct ql_adapter *qdev)
+ {
+ 	int status;
++
+ 	qdev->func =
+ 	    (ql_read32(qdev, STS) & STS_FUNC_ID_MASK) >> STS_FUNC_ID_SHIFT;
+ 	if (qdev->func > 3)
+@@ -4652,6 +4664,7 @@ static void qlge_remove(struct pci_dev *pdev)
+ {
+ 	struct net_device *ndev = pci_get_drvdata(pdev);
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	del_timer_sync(&qdev->timer);
+ 	ql_cancel_all_work_sync(qdev);
+ 	unregister_netdev(ndev);
+-- 
+2.17.1
 
-> 
-> Takashi
-> 
-> >
-> > BR,
-> > Kailang
-> >
-> > > -----Original Message-----
-> > > From: Benjamin Poirier <benjamin.poirier@gmail.com>
-> > > Sent: Tuesday, February 11, 2020 4:16 PM
-> > > To: Jaroslav Kysela <perex@perex.cz>
-> > > Cc: Takashi Iwai <tiwai@suse.de>; Kailang <kailang@realtek.com>;
-> > > alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1
-> > > Carbon 7th quirk value
-> > >
-> > > On 2020/02/11 08:40 +0100, Jaroslav Kysela wrote:
-> > > [...]
-> > > > >
-> > > > > In summary, Node 0x17 DAC connection 0x3 offers the loudest max
-> > > > > volume and the most detailed mixer controls. That connection is
-> > > > > obtained with quirk ALC295_FIXUP_DISABLE_DAC3. Therefore, change
-> > > > > the ThinkPad X1 Carbon 7th to use ALC295_FIXUP_DISABLE_DAC3.
-> > > >
-> > > > The volume split (individual volume control) will cause trouble
-> > > > for the UCM volume control at the moment which is the target for
-> > > > this device to get the digital microphone working. If there is no
-> > > > possibility to share DAC, it would be probably more nice to join
-> > > > the volume
-> > > control in the driver.
-> > > >
-> > > > Have you tried to use 0x03 as source for all four speakers?
-> > >
-> > > Front speakers are fixed to 0x02. Node 0x14
-> > >   Connection: 1
-> > >      0x02
-> > >
-> > > >
-> > > > Why PA handles the rear volume control with the current driver
-> > > > code in the legacy ALSA driver? It should be handled like standard
-> > > > stereo device. I'll check.
-> > >
-> > > The device comes up with "Analog Stereo Output" profile by default.
-> > > I changed it to "Analog Surround 4.0 Output" to test controlling each
-> channel individually:
-> > >
-> > > > > pavucontrol controls are reported with the device configured
-> > > > > with the "Analog Surround 4.0 Output" profile.
-> > >
-> > > >
-> > > > You should also test PA with UCM.
-> > >
-> > > Please let me know what do I need to test exactly? I'm not familiar with
-> UCM.
-> > >
-> > > ------Please consider the environment before printing this e-mail.
-> >
