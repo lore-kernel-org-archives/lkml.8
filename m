@@ -2,100 +2,220 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E33FC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45BDC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CF320714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ieDwTSX3"
+	by mail.kernel.org (Postfix) with ESMTP id 79AAF20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgBKKYK (ORCPT
+        id S1728378AbgBKKYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:24:10 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56092 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgBKKYK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:24:10 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BAO3JI080604;
-        Tue, 11 Feb 2020 04:24:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581416643;
-        bh=IT0XtP14rOcxVvIjEkJLAVhnV8MbpGdBDYqA20Ogvvg=;
-        h=To:CC:From:Subject:Date;
-        b=ieDwTSX3jBi/zU1u4phaOZr/3Ii8HGFTXg5HGFMr7ljayvLceHG8Ur/umMkvypjRh
-         QAQk97bS+itM9Sg0T+qBvIFm/dBtzumU10HinzZarwXkKrmUxTzv/JcfNi8oIXIkIW
-         SvftF7u0/x73WxmsKAgW8ob+31xkdvsU5ZvYCsdk=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BAO2kT021354;
-        Tue, 11 Feb 2020 04:24:03 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
- Feb 2020 04:24:02 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 11 Feb 2020 04:24:03 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BAO08Y044972;
-        Tue, 11 Feb 2020 04:24:01 -0600
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>
-CC:     <linux-rt-users@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Question about kthread_mod_delayed_work() allowed context
-Message-ID: <cfa886ad-e3b7-c0d2-3ff8-58d94170eab5@ti.com>
-Date:   Tue, 11 Feb 2020 12:23:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 11 Feb 2020 05:24:32 -0500
+Received: from mga11.intel.com ([192.55.52.93]:32500 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728299AbgBKKYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:24:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 02:24:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="221889050"
+Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
+  by orsmga007.jf.intel.com with ESMTP; 11 Feb 2020 02:24:29 -0800
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     alex.williamson@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>
+Subject: [RFC PATCH v3 8/9] vfio: header for vfio live migration region.
+Date:   Tue, 11 Feb 2020 05:15:09 -0500
+Message-Id: <20200211101509.21189-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200211095727.20426-1-yan.y.zhao@intel.com>
+References: <20200211095727.20426-1-yan.y.zhao@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Header file copied from vfio live migration patch series v8. [1].
 
-I'd like to ask question about allowed calling context for kthread_mod_delayed_work().
+[1] https://lists.gnu.org/archive/html/qemu-devel/2019-08/msg05542.html
 
-The comment to kthread_mod_delayed_work() says:
+Signed-off-by: Kirti Wankhede <kwankhede@nvidia.com>
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ include/uapi/linux/vfio.h | 149 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 149 insertions(+)
 
-  * This function is safe to call from any context including IRQ handler.
-  * See __kthread_cancel_work() and kthread_delayed_work_timer_fn()
-  * for details.
-  */
-
-But it has del_timer_sync() inside which seems can't be called from hard_irq context:
-kthread_mod_delayed_work()
-   |-__kthread_cancel_work()
-      |- del_timer_sync()
-	|- WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
-
-My use case is related to PTP processing using PTP auxiliary worker:
-(commit d9535cb7b760 ("ptp: introduce ptp auxiliary worker")):
-  - periodic work A is started and res-schedules itself for every dtX
-  - on IRQ - the work A need to be scheduled immediately
-
-Any advice on how to proceed?
-Can kthread_queue_work() be used even if there is delayed work is
-scheduled already (in general, don't care if work A will be executed one
-more time after timer expiration)?
-
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 9e843a147ead..135a1d3fa111 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -306,6 +306,155 @@ struct vfio_region_info_cap_type {
+ #define VFIO_REGION_TYPE_GFX                    (1)
+ #define VFIO_REGION_TYPE_CCW			(2)
+ 
++/* Migration region type and sub-type */
++#define VFIO_REGION_TYPE_MIGRATION          (3)
++#define VFIO_REGION_SUBTYPE_MIGRATION           (1)
++
++/**
++ * Structure vfio_device_migration_info is placed at 0th offset of
++ * VFIO_REGION_SUBTYPE_MIGRATION region to get/set VFIO device related migration
++ * information. Field accesses from this structure are only supported at their
++ * native width and alignment, otherwise the result is undefined and vendor
++ * drivers should return an error.
++ *
++ * device_state: (read/write)
++ *      To indicate vendor driver the state VFIO device should be transitioned
++ *      to. If device state transition fails, write on this field return error.
++ *      It consists of 3 bits:
++ *      - If bit 0 set, indicates _RUNNING state. When its reset, that indicates
++ *        _STOPPED state. When device is changed to _STOPPED, driver should stop
++ *        device before write() returns.
++ *      - If bit 1 set, indicates _SAVING state.
++ *      - If bit 2 set, indicates _RESUMING state.
++ *      Bits 3 - 31 are reserved for future use. User should perform
++ *      read-modify-write operation on this field.
++ *      _SAVING and _RESUMING bits set at the same time is invalid state.
++ *
++ * pending bytes: (read only)
++ *      Number of pending bytes yet to be migrated from vendor driver
++ *
++ * data_offset: (read only)
++ *      User application should read data_offset in migration region from where
++ *      user application should read device data during _SAVING state or write
++ *      device data during _RESUMING state or read dirty pages bitmap. See below
++ *      for detail of sequence to be followed.
++ *
++ * data_size: (read/write)
++ *      User application should read data_size to get size of data copied in
++ *      migration region during _SAVING state and write size of data copied in
++ *      migration region during _RESUMING state.
++ *
++ * start_pfn: (write only)
++ *      Start address pfn to get bitmap of dirty pages from vendor driver duing
++ *      _SAVING state.
++ *
++ * page_size: (write only)
++ *      User application should write the page_size of pfn.
++ *
++ * total_pfns: (write only)
++ *      Total pfn count from start_pfn for which dirty bitmap is requested.
++ *
++ * copied_pfns: (read only)
++ *      pfn count for which dirty bitmap is copied to migration region.
++ *      Vendor driver should copy the bitmap with bits set only for pages to be
++ *      marked dirty in migration region.
++ *      - Vendor driver should return VFIO_DEVICE_DIRTY_PFNS_NONE if none of the
++ *        pages are dirty in requested range or rest of the range.
++ *      - Vendor driver should return VFIO_DEVICE_DIRTY_PFNS_ALL to mark all
++ *        pages dirty in the given range or rest of the range.
++ *      - Vendor driver should return pfn count for which bitmap is written in
++ *        the region.
++ *
++ * Migration region looks like:
++ *  ------------------------------------------------------------------
++ * |vfio_device_migration_info|    data section                      |
++ * |                          |     ///////////////////////////////  |
++ * ------------------------------------------------------------------
++ *   ^                              ^                             ^
++ *  offset 0-trapped part        data_offset                 data_size
++ *
++ * Data section is always followed by vfio_device_migration_info structure
++ * in the region, so data_offset will always be non-0. Offset from where data
++ * is copied is decided by kernel driver, data section can be trapped or
++ * mapped or partitioned, depending on how kernel driver defines data section.
++ * Data section partition can be defined as mapped by sparse mmap capability.
++ * If mmapped, then data_offset should be page aligned, where as initial section
++ * which contain vfio_device_migration_info structure might not end at offset
++ * which is page aligned.
++ * Data_offset can be same or different for device data and dirty pages bitmap.
++ * Vendor driver should decide whether to partition data section and how to
++ * partition the data section. Vendor driver should return data_offset
++ * accordingly.
++ *
++ * Sequence to be followed for _SAVING|_RUNNING device state or pre-copy phase
++ * and for _SAVING device state or stop-and-copy phase:
++ * a. read pending_bytes. If pending_bytes > 0, go through below steps.
++ * b. read data_offset, indicates kernel driver to write data to staging buffer.
++ * c. read data_size, amount of data in bytes written by vendor driver in
++ *    migration region.
++ * d. read data_size bytes of data from data_offset in the migration region.
++ * e. process data.
++ * f. Loop through a to e.
++ *
++ * To copy system memory content during migration, vendor driver should be able
++ * to report system memory pages which are dirtied by that driver. For such
++ * dirty page reporting, user application should query for a range of GFNs
++ * relative to device address space (IOVA), then vendor driver should provide
++ * the bitmap of pages from this range which are dirtied by him through
++ * migration region where each bit represents a page and bit set to 1 represents
++ * that the page is dirty.
++ * User space application should take care of copying content of system memory
++ * for those pages.
++ *
++ * Steps to get dirty page bitmap:
++ * a. write start_pfn, page_size and total_pfns.
++ * b. read copied_pfns. Vendor driver should take one of the below action:
++ *     - Vendor driver should return VFIO_DEVICE_DIRTY_PFNS_NONE if driver
++ *       doesn't have any page to report dirty in given range or rest of the
++ *       range. Exit the loop.
++ *     - Vendor driver should return VFIO_DEVICE_DIRTY_PFNS_ALL to mark all
++ *       pages dirty for given range or rest of the range. User space
++ *       application mark all pages in the range as dirty and exit the loop.
++ *     - Vendor driver should return copied_pfns and provide bitmap for
++ *       copied_pfn in migration region.
++ * c. read data_offset, where vendor driver has written bitmap.
++ * d. read bitmap from the migration region from data_offset.
++ * e. Iterate through steps a to d while (total copied_pfns < total_pfns)
++ *
++ * Sequence to be followed while _RESUMING device state:
++ * While data for this device is available, repeat below steps:
++ * a. read data_offset from where user application should write data.
++ * b. write data of data_size to migration region from data_offset.
++ * c. write data_size which indicates vendor driver that data is written in
++ *    staging buffer.
++ *
++ * For user application, data is opaque. User should write data in the same
++ * order as received.
++ */
++
++struct vfio_device_migration_info {
++	__u32 device_state;         /* VFIO device state */
++#define VFIO_DEVICE_STATE_RUNNING   (1 << 0)
++#define VFIO_DEVICE_STATE_SAVING    (1 << 1)
++#define VFIO_DEVICE_STATE_RESUMING  (1 << 2)
++#define VFIO_DEVICE_STATE_MASK      (VFIO_DEVICE_STATE_RUNNING | \
++				     VFIO_DEVICE_STATE_SAVING | \
++				     VFIO_DEVICE_STATE_RESUMING)
++#define VFIO_DEVICE_STATE_INVALID   (VFIO_DEVICE_STATE_SAVING | \
++				     VFIO_DEVICE_STATE_RESUMING)
++	__u32 reserved;
++	__u64 pending_bytes;
++	__u64 data_offset;
++	__u64 data_size;
++	__u64 start_pfn;
++	__u64 page_size;
++	__u64 total_pfns;
++	__u64 copied_pfns;
++#define VFIO_DEVICE_DIRTY_PFNS_NONE     (0)
++#define VFIO_DEVICE_DIRTY_PFNS_ALL      (~0ULL)
++} __attribute__((packed));
++
++
+ /* sub-types for VFIO_REGION_TYPE_PCI_* */
+ 
+ /* 8086 vendor PCI sub-types */
 -- 
-Best regards,
-grygorii
+2.17.1
+
