@@ -2,146 +2,218 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE245C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3143FC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC930206ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:39:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="s+FRY8H+"
+	by mail.kernel.org (Postfix) with ESMTP id 164302465D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581446400;
+	bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sBJAR615CNqNZ5OSXRxHFGn0llpaBDrBExgyfvYkc6qoTMwanjGFh6Rikze9SrgQJ
+	 zrTJmFxnLPQF76g0THWO8Tid7iinP+cFT8GbwRkvLTtfkiFrLu/sHukRqyWUlih0S5
+	 pirXPc3Ii2shjH9w6baQ9pkYSSpWEZmyensV7ybA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbgBKSjz (ORCPT
+        id S1731353AbgBKSj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:39:55 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42755 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbgBKSjy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:39:54 -0500
-Received: by mail-qt1-f195.google.com with SMTP id r5so7391416qtt.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:39:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=wUX84XimYmGL58y+DzX6h0BesHs7o3oJk7cCJ/rePag=;
-        b=s+FRY8H+L2o0LYjVYAMze9JUB1QpIvbbm9dd8JTtRTfz6pUYsbH+UoKl9adNfmjLZo
-         lk+4kTrNVUb9QtohaEMoEpRvhtn2LOA9CMScsc+gJuxHkSE8bPltZyuQcO3txz1nfIIL
-         n9ZcieAfupktiGsDlWJvNDAyaSfem//wVjMzC3IPOKj9PrdG2c305wVAzHA7Ly5pOpCN
-         CxAfnnkFwmc72vMMyyxLHZgFL9lPsKxZkMT6s0xiVA80vuTgyX0vATtUAEWduuZyg0ov
-         kHokO9WwQwVWtBz91FOgypXyL8Yq2mm6aJWLUlzgpRNLZyV7+NDo28fLBLOEFRMdRK3X
-         wa6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wUX84XimYmGL58y+DzX6h0BesHs7o3oJk7cCJ/rePag=;
-        b=T8xiImaweoxMzCXDDnApAPjBDi+E7XRHaVR7GIumebKQOBc9A+7tdTDmXN8flgIuov
-         iNiNyYINCa+P1ArpkQQ4AlVglVL+UbA9Gs6K92wbp0i5/mUniNyaGzfzQXrJjze7dE5U
-         XaEYys2pVLBMrwGEOUF5JUEKxLaSPk12U+sdut6N377AnZ7pw8eYPzNdzLQPze5VkGci
-         3ZRc1aGYXWBUDcEBA8lsLnu2fMunU6vgNg5WXgHU/dEQeFUJXsiQyCmSswOOTA3bO409
-         t3YoPHXlx1DU0tK+tkUEsofBSsJ/U5YiInLv/c1sGvmoyZLF3c7ksuuP3pe8XaMQXzOb
-         1ibA==
-X-Gm-Message-State: APjAAAXugSwv2vIuAtjeaEQkHZoJbUssWE4ODMjHzUlNPPagt6iWGG/+
-        ZvfckxdlCoPQjgwWnX0soHmAMA==
-X-Google-Smtp-Source: APXvYqzOwN8G547ApDB+/AxLeAtsW7EosMSlxcEgkj0nUCP29m2bN1xxdRjHlKpJGx2zZ8+GU2IkWg==
-X-Received: by 2002:ac8:2af4:: with SMTP id c49mr3754111qta.367.1581446393834;
-        Tue, 11 Feb 2020 10:39:53 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id o10sm2520877qtp.38.2020.02.11.10.39.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 10:39:53 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, tj@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/mempool: fix a data race in mempool_free()
-Date:   Tue, 11 Feb 2020 13:39:44 -0500
-Message-Id: <1581446384-2131-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 11 Feb 2020 13:39:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728375AbgBKSj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:39:59 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4921F21D7D;
+        Tue, 11 Feb 2020 18:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581446398;
+        bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Yfk9Aym71n7UY3UN+lE89eXVArMALR9RRSHjbU15nRwqPGHFXoA1ja8mq0zCDu7dz
+         cv2te3hN261YhwgJ10ebBHRilfffIdsTNqcNVRWvxX0TU9Hzil0PMwUjOlsYlxxhlr
+         rP+mcFu9cI0LU1orG7grfVpIZhfV8oQvpb2Jyi5w=
+Received: by mail-qt1-f179.google.com with SMTP id d18so8716950qtj.10;
+        Tue, 11 Feb 2020 10:39:58 -0800 (PST)
+X-Gm-Message-State: APjAAAURRG7PxfC6lUuzI/d3gzYvUNwOoSCQAoug+q5qn3mAWQ0Oyz7c
+        huGRVKqPOhxKhxQ6Nk4TpY9tPCSdMB5H0tJW2w==
+X-Google-Smtp-Source: APXvYqxq3NT0xWbTbROx8zhNE6oXAj1noFgXpEXEkK4QFM7vJR0BN9sVbCnbiqH/hOyqmUsIGCM+GWUAroGve6ESwsc=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr3808050qtj.300.1581446397230;
+ Tue, 11 Feb 2020 10:39:57 -0800 (PST)
+MIME-Version: 1.0
+References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
+ <1580650021-8578-2-git-send-email-hadar.gat@arm.com> <20200206185651.GA14044@bogus>
+ <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
+In-Reply-To: <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 11 Feb 2020 12:39:46 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
+Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add device tree binding for Arm
+ CryptoCell trng engine
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mempool_t pool.curr_nr could be accessed concurrently as noticed by
-KCSAN,
+On Sun, Feb 9, 2020 at 3:34 AM Hadar Gat <Hadar.Gat@arm.com> wrote:
+>
+> Hi Rob,
+> Thanks for remarks.
+> Please see my answers.
+> Hadar
+>
+> > On Sun, Feb 02, 2020 at 03:26:59PM +0200, Hadar Gat wrote:
+> > > The Arm CryptoCell is a hardware security engine. This patch adds DT
+> > > bindings for its TRNG (True Random Number Generator) engine.
+> > >
+> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> > > ---
+> > >  .../devicetree/bindings/rng/arm-cctrng.yaml        | 51
+> > ++++++++++++++++++++++
+> > >  1 file changed, 51 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > new file mode 100644
+> > > index 0000000..fe9422e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > @@ -0,0 +1,51 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> >
+> > Dual license new bindings:
+> >
+> > (GPL-2.0-only OR BSD-2-Clause)
+> >
+> Okay.
+>
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Arm ZrustZone CryptoCell TRNG engine
+> > > +
+> > > +maintainers:
+> > > +  - Hadar Gat <hadar.gat@arm.com>
+> > > +
+> > > +description: |+
+> > > +  Arm ZrustZone CryptoCell TRNG (True Random Number Generator)
+> > engine.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    description: Should be "arm,cryptocell-7x3-trng"
+> >
+> > Drop. That's what the schema says.
+> >
+> Okay.
+>
+> > > +    const: arm,cryptocell-7x3-trng
+> >
+> > Is 'x' a wildcard? We don't do wildcards unless you have other ways to get the
+> > specific version.
+> >
+> Kind of a wildcard. It stands for either 703 or 713.
+> Should I fix this to the specific versions?
+> OR,
+> Since the specific version doesn't matter to the driver, should it changed?
 
- BUG: KCSAN: data-race in mempool_free / remove_element
+Maybe not now, but both will always have the same errata and features?
+2 is not a large number, so just do 2.
 
- write to 0xffffffffa937638c of 4 bytes by task 6359 on cpu 113:
-  remove_element+0x4a/0x1c0
-  remove_element at mm/mempool.c:132
-  mempool_alloc+0x102/0x210
-  (inlined by) mempool_alloc at mm/mempool.c:399
-  bio_alloc_bioset+0x106/0x2c0
-  get_swap_bio+0x49/0x230
-  __swap_writepage+0x680/0xc30
-  swap_writepage+0x9c/0xf0
-  pageout+0x33e/0xae0
-  shrink_page_list+0x1f57/0x2870
-  shrink_inactive_list+0x316/0x880
-  shrink_lruvec+0x8dc/0x1380
-  shrink_node+0x317/0xd80
-  do_try_to_free_pages+0x1f7/0xa10
-  try_to_free_pages+0x26c/0x5e0
-  __alloc_pages_slowpath+0x458/0x1290
-  <snip>
+Of course, errata can vary by revision. Most Arm IP has version
+registers, so I assume that's true here. If not, we'd need per SoC
+implementation compatible strings here.
 
- read to 0xffffffffa937638c of 4 bytes by interrupt on cpu 64:
-  mempool_free+0x3e/0x150
-  mempool_free at mm/mempool.c:492
-  bio_free+0x192/0x280
-  bio_put+0x91/0xd0
-  end_swap_bio_write+0x1d8/0x280
-  bio_endio+0x2c2/0x5b0
-  dec_pending+0x22b/0x440 [dm_mod]
-  clone_endio+0xe4/0x2c0 [dm_mod]
-  bio_endio+0x2c2/0x5b0
-  blk_update_request+0x217/0x940
-  scsi_end_request+0x6b/0x4d0
-  scsi_io_completion+0xb7/0x7e0
-  scsi_finish_command+0x223/0x310
-  scsi_softirq_done+0x1d5/0x210
-  blk_mq_complete_request+0x224/0x250
-  scsi_mq_done+0xc2/0x250
-  pqi_raid_io_complete+0x5a/0x70 [smartpqi]
-  pqi_irq_handler+0x150/0x1410 [smartpqi]
-  __handle_irq_event_percpu+0x90/0x540
-  handle_irq_event_percpu+0x49/0xd0
-  handle_irq_event+0x85/0xca
-  handle_edge_irq+0x13f/0x3e0
-  do_IRQ+0x86/0x190
-  <snip>
+> (checking out other rng drivers, I see this example in Samsung,exynos4.yaml:
+>   - samsung,exynos4-rng # for Exynos4210 and Exynos4412 )
 
-Since the write is under pool->lock but the read is done as lockless.
-Even though the commit 5b990546e334 ("mempool: fix and document
-synchronization and memory barrier usage") introduced the smp_wmb() and
-smp_rmb() pair to improve the situation, it is adequate to protect it
-from data races which could lead to a logic bug, so fix it by adding
-READ_ONCE() for the read.
+Well, there's lots of bad examples, and also, some Samsung bindings
+are declared to not be stable.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/mempool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> > > +
+> > > +  interrupts:
+> > > +    description: Interrupt number for the device.
+> >
+> > Drop. That's all 'interrupts'.
+> >
+> Okay.
+>
+> > > +    maxItems: 1
+> > > +
+> > > +  reg:
+> > > +    description: Base physical address of the engine and length of memory
+> > > +                 mapped region.
+> >
+> > Drop.
+> >
+> Okay.
+>
+> > > +    maxItems: 1
+> > > +
+> > > +  rosc-ratio:
+> > > +    description: Sampling ratio values from calibration for 4 ring oscillators.
+> > > +    maxItems: 1
+> >
+> > Is this an array?
+> >
+> Yes, array of 4. (I'll mention in the description)
 
-diff --git a/mm/mempool.c b/mm/mempool.c
-index 85efab3da720..79bff63ecf27 100644
---- a/mm/mempool.c
-+++ b/mm/mempool.c
-@@ -489,7 +489,7 @@ void mempool_free(void *element, mempool_t *pool)
- 	 * ensures that there will be frees which return elements to the
- 	 * pool waking up the waiters.
- 	 */
--	if (unlikely(pool->curr_nr < pool->min_nr)) {
-+	if (unlikely(READ_ONCE(pool->curr_nr) < pool->min_nr)) {
- 		spin_lock_irqsave(&pool->lock, flags);
- 		if (likely(pool->curr_nr < pool->min_nr)) {
- 			add_element(pool, element);
--- 
-1.8.3.1
+Don't need a description as that's constraints the schema should express.
 
+> > Needs a vendor prefix, a type ref and any constraints you can come up with.
+> >
+> Do you mean in the name? instead of "rosc-ratio"?
+
+arm,rosc-ratio:
+  allOf:
+    - $ref: /schemas/types.yaml#/definitions/uint32-array
+  maxItems: 4
+
+> I didn't find anything about it in the documentation or examples in other rng drivers..
+>
+> > > +
+> > > +  clocks:
+> > > +    description: Reference to the crypto engine clock.
+> >
+> > How many clocks?
+> >
+> One clock. (I will change clocks --> clock)
+
+No, the property name is always 'clocks'. You need just 'maxItems: 1'
+if there's a single clock.
+
+Rob
