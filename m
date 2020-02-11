@@ -2,194 +2,142 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E18EC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E935DC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5064620842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C560F20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oSTwn0d9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qR9asT5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731903AbgBKU4P (ORCPT
+        id S1731914AbgBKU5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:56:15 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40204 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731844AbgBKU4P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:56:15 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a142so14196343oii.7
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:56:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8CmYe462WzzksuPoSriUQOLEMXkyrL5p8rPiP/wqsQE=;
-        b=oSTwn0d967GW3bvPpoBPc4xhMNU+afmUYTMc5sQAtO/Ma8lCfPJAv7HDesC+gIohzv
-         DkMgSufBV3LkIlRnO8ywR8ElxhA0xazO1a2X1EbTK9CPzmmDGuVdsOscmiYi9VuWm70X
-         X4QugCq1j+ND5muENF+hw/7uZsm0+pB5emMxJt5J03IBuPoLcY5imni1oxNwtN0QogdK
-         WAEagflmLFa9Wa5QWR/mFSJKRXQpW/pCGiRZEZdFevJ2+fsXxxJwszGEIlweNqHKaZQR
-         OT/n2MH+QFAJl9CN6AifWx4rVch6UDYBcDpoOITmpCYfCzaqslfwsQD44XYhI2I7wpvH
-         apqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8CmYe462WzzksuPoSriUQOLEMXkyrL5p8rPiP/wqsQE=;
-        b=SHFhL5Xzad0ewOD2Q0ye5p4dV586UFVuCJsN80sEVlQQr7sfl7pWfV4VfWD3mg4rJi
-         khhSkm23jp1zfQYL4clIs+BYKbFR7QHwPttqNkgUaxxSGeEcdVewC1OiIfrIKapETq0L
-         k+CDBOEMOgEKvDSUz3aj7rerzBB29RfNz6UeF0APOzEoOTpZcUrruOBqkm3NEDPTGpNn
-         7oqC7kjOpjQGq62gIFCh4S+XS1GnInpcc8MsWJglo2v2Xu1dx6nIY5cAt2fwLBGnWFwH
-         c2oUJ4fzKysIX9azpMpifgiX/6rYaMv1pCfXvn14MMYoA0Y8rBRCBCK9ZBdOjFPb6Ekl
-         5bNw==
-X-Gm-Message-State: APjAAAWT7eykU1GAal+839Jlu35PV57ENQRSB9OgvzqDqBTFfbLZAk75
-        X3bnNgvjKdkUJlsicRR5R3x870S7LUI2Y4N5mW9I/9ra0lfwDQ==
-X-Google-Smtp-Source: APXvYqwwlaPw3WuE7pvp2R5+l4ejpzIZmHKNHqXHYwDJ9Aqnqi8TIPcj6j2+bVdD0QcpNjFx5mAc4EwEtqlmtCOsHEY=
-X-Received: by 2002:aca:b187:: with SMTP id a129mr4153590oif.175.1581454572660;
- Tue, 11 Feb 2020 12:56:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20200211165753.356508-1-christian.brauner@ubuntu.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 11 Feb 2020 21:55:46 +0100
-Message-ID: <CAG48ez1GKOfXDZFD7-hGGjT8L9YEojn94DU5_=W8HL3pzdrCgg@mail.gmail.com>
-Subject: Re: [PATCH 00/24] user_namespace: introduce fsid mappings
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, smbarber@chromium.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 11 Feb 2020 15:57:08 -0500
+Received: from mail-eopbgr10057.outbound.protection.outlook.com ([40.107.1.57]:2103
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728078AbgBKU5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 15:57:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GioxEj8qRyQ7BhpyT7FSyQZUP6qA7YTxJUJJGpmNXBhYZIhsSf09rkRzqIBUW/zJwR9anPy66chVaWJtOLAtjHxxzHJE6HZsog44BVDUeaC+JpmDVELQahZGgTag6SWLPhppSpFRXn3uYmzWTcD8ezxybyIT1GwNL5aFiBgGpBWhUd/u0fEqhYn0Uh5KXAV9JhdGCa7+5OsT9+fqUhpJOcoslWfm8Fs/yl9eDsT28HHZjsLuBgoTzHv8Xmt39FmJYseTVCvBUXD9kS9Hh/GIOzAI9d+M8v1QVx9mqxODQ2qZmpX9b4waqO3PruWGlrRsXLGGCn+ce+NXtrzGP56gXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H5FaFwZKlOiZqVx01x2vo6NrpwmGwmkdmJeErTwK78o=;
+ b=jdtBElwrZerFuI0NinVMYPsP3e2Vcgujw4J+3O0llAmOftJLNWhUf/ht1PPvBidOdApUrbyLY22zJozq1xFaOQIC74kGaDHCf1ASxzgYNIjL0kO4Q711Q50cdb6T5VaymxQdMzqgLtXYeE/tVtT9oKOXo3dJ4LnUGK+xKDn3FoViB/Mg6xDPN5RlAGmam1ht9KI9cxRyLoyh+IvsQjUnFBvP8AN6VVBPe0JxvVeW/OEooAzgUXaZi6Cjmy8+1hQv509UgntxxozBXyLgWQmAFDc90rhhnWNcdtvtelhRrCGerfj3t1V2AjxjTzj7xpuVOWqwVQEx3ZmUK8M5yMFMbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H5FaFwZKlOiZqVx01x2vo6NrpwmGwmkdmJeErTwK78o=;
+ b=qR9asT5p1KmU6l7rjow66wWz7D5dggQ1CKAcRrhvH9BaVssQmEMBh1IvZWwP2A7njSJBZ+cBSNftGU0o6YyvBmdoUNIcctD1bePs9r7FovHtMWseF5tJQSG6vsJag+tyWXsVZ/JtNT9N+VNORFfnY0IFWpgYWdoqm6gkSFl/kSE=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3709.eurprd04.prod.outlook.com (52.134.15.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Tue, 11 Feb 2020 20:57:01 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
+ 20:57:01 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v7 4/9] crypto: caam - drop global context pointer and
+ init_done
+Thread-Topic: [PATCH v7 4/9] crypto: caam - drop global context pointer and
+ init_done
+Thread-Index: AQHV1TLT2rTrmTBv2U6pvLOb9zqi1Q==
+Date:   Tue, 11 Feb 2020 20:57:00 +0000
+Message-ID: <VI1PR0402MB3485A733C0A6B57E129A339198180@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20200127165646.19806-1-andrew.smirnov@gmail.com>
+ <20200127165646.19806-5-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [84.117.251.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 45b5f212-200a-4053-79f8-08d7af34f0e7
+x-ms-traffictypediagnostic: VI1PR0402MB3709:|VI1PR0402MB3709:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3709BBD1925D4126C820138198180@VI1PR0402MB3709.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0310C78181
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(346002)(376002)(396003)(189003)(199004)(5660300002)(4326008)(478600001)(55016002)(9686003)(2906002)(52536014)(316002)(110136005)(54906003)(33656002)(91956017)(76116006)(66476007)(66556008)(64756008)(66446008)(44832011)(186003)(81156014)(53546011)(7696005)(26005)(6506007)(81166006)(86362001)(66946007)(8936002)(71200400001)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3709;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q22zIBnWCK7T09YgwxA09M3rBBGKC9qoJ3PB5OqEMTPNoexbjPfO6FmMKkjOegFEzVMbiovmkoWvKuqsHPzV8Xo46sBVO4jGnL9Vp/shSSg5WnDa0U/x1xREu8q5QSyTygjC69m7sPsuSZkCj/5l3tQ04uETkXVPETrAXpNEonp8N94PO8QAnidXyj5gATECjBAElvBvvqfQZl6p/jZCOsJF6FKKMfdz7Hi/97Byca6S3r3+/GUL+GNr4vQu96CPIrzCVW01vNqkqmkaUSQtHia2zXtcKKzLdK3qvQo0uW48vKr2MCPfV5oatr4vbsNVypVW9YL1S3gpuF2b5IKav3yPJIHBQM364BSESiGaNjgZhhNRW4c+ueyvzz9sS1/7WEcfK+Yayms8rqBL9YbOd8BDv61FeM90sNJxz+SDTEAPE/fZKe9yH23jsAGXhilP
+x-ms-exchange-antispam-messagedata: UyvD1RAK7etgne3yhFZpKK263T4g9RquIhmDUrKRVp5r0NtwLsYDfydvsaxGFQPdOUGbbrW0UlNwewmotcMHUeR8IV7BaYzM+vRkyxAlNb8sDP59zpvt/6OkKnThJozZM1FY7yYsj7LuV9SUi4aMSg==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45b5f212-200a-4053-79f8-08d7af34f0e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 20:57:00.9947
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ENu5nzjHiIowfGCdQmFl7oEsZjC1cIGBxTHS5/VspUv3iE3l+0wilxBkmNsMaW234El3RRtINZb3oZEQz3N9Vg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3709
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:59 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> This is the implementation of shiftfs which was cooked up during lunch at
-> Linux Plumbers 2019 the day after the container's microconference. The
-> idea is a design-stew from St=C3=A9phane, Aleksa, Eric, and myself. Back =
-then
-> we all were quite busy with other work and couldn't really sit down and
-> implement it. But I took a few days last week to do this work, including
-> demos and performance testing.
-> This implementation does not require us to touch the vfs substantially
-> at all. Instead, we implement shiftfs via fsid mappings.
-> With this patch, it took me 20 mins to port both LXD and LXC to support
-> shiftfs via fsid mappings.
->
-> For anyone wanting to play with this the branch can be pulled from:
-> https://github.com/brauner/linux/tree/fsid_mappings
-> https://gitlab.com/brauner/linux/-/tree/fsid_mappings
-> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=
-=3Dfsid_mappings
->
-> The main use case for shiftfs for us is in allowing shared writable
-> storage to multiple containers using non-overlapping id mappings.
-> In such a scenario you want the fsids to be valid and identical in both
-> containers for the shared mount. A demo for this exists in [3].
-> If you don't want to read on, go straight to the other demos below in
-> [1] and [2].
-
-I guess essentially this means that you want to have UID separation
-between containers to prevent the containers - or their owners - from
-interfering between each other, but for filesystem access, you don't
-want to isolate them from each other using DAC controls on the files
-and folders inside the containers' directory hierarchies, instead
-relying on mode-0700 parent directories to restrict access to the
-container owner? Or would you still have separate UIDs for e.g. the
-container's UID range 0-65535, and then map the shared UID range at
-100000, or something like that?
-
-> People not as familiar with user namespaces might not be aware that fsid
-> mappings already exist. Right now, fsid mappings are always identical to
-> id mappings. Specifically, the kernel will lookup fsuids in the uid
-> mappings and fsgids in the gid mappings of the relevant user namespace.
-
-That's a bit like saying that a kernel without CONFIG_USER_NS still
-has user ID mappings, they just happen to be identity mappings. :P
-
-> With this patch series we simply introduce the ability to create fsid
-> mappings that are different from the id mappings of a user namespace.
->
-> In the usual case of running an unprivileged container we will have
-> setup an id mapping, e.g. 0 100000 100000. The on-disk mapping will
-> correspond to this id mapping, i.e. all files which we want to appear as
-> 0:0 inside the user namespace will be chowned to 100000:100000 on the
-> host. This works, because whenever the kernel needs to do a filesystem
-> access it will lookup the corresponding uid and gid in the idmapping
-> tables of the container.
-> Now think about the case where we want to have an id mapping of 0 100000
-> 100000 but an on-disk mapping of 0 300000 100000 which is needed to e.g.
-> share a single on-disk mapping with multiple containers that all have
-> different id mappings.
-> This will be problematic. Whenever a filesystem access is requested, the
-> kernel will now try to lookup a mapping for 300000 in the id mapping
-> tables of the user namespace but since there is none the files will
-> appear to be owned by the overflow id, i.e. usually 65534:65534 or
-> nobody:nogroup.
->
-> With fsid mappings we can solve this by writing an id mapping of 0
-> 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
-> access the kernel will now lookup the mapping for 300000 in the fsid
-> mapping tables of the user namespace. And since such a mapping exists,
-> the corresponding files will have correct ownership.
-
-Sorry to bring up something as disgusting as setuid execution, but:
-What happens when there's a setuid root file with ->i_uid=3D=3D300000? I
-guess the only way to make that work inside the containers would be
-something like make_kuid(current_user_ns(),
-from_kfsuid(current_user_ns(), inode->i_uid)) in the setuid execve
-path?
-
-> A note on proc (and sys), the proc filesystem is special in sofar as it
-> only has a single superblock that is (currently but might be about to
-> change) visible in all user namespaces (same goes for sys). This means
-> it has special semantics in many ways, including how file ownership and
-> access works. The fsid mapping implementation does not alter how proc
-> (and sys) ownership works. proc and sys will both continue to lookup
-> filesystem access in id mapping tables.
-
-In your example, a process with namespaced UID set (0, 0, 0, 0) will
-have kernel UIDs (100000, 100000, 100000, 300000), right? And then if
-I want to open /proc/$pid/personality of another process with the same
-UIDs, may_open() will call inode_permission() -> do_inode_permission()
--> generic_permission() -> acl_permission_check(), which will compare
-current_fsuid() (which is 300000) against inode->i_uid. But
-inode->i_uid was filled by proc_pid_make_inode()->task_dump_owner(),
-which set inode->i_uid to 100000, right?
-
-Also, e.g. __ptrace_may_access() uses cred->fsuid for a comparison
-with another task's real/effective/saved UID.
-
-[...]
-> # Demos
-> [1]: Create a container with different id and fsid mappings.
->      https://asciinema.org/a/300233
-> [2]: Create a container with id mappings but without fsid mappings.
->      https://asciinema.org/a/300234
-> [3]: Share storage between multiple containers with non-overlapping id
->      mappings.
->      https://asciinema.org/a/300235
-
-(I really dislike this asciinema thing; if you want to quickly glance
-through the output instead of reading at the same speed as it was
-typed, a simple pastebin works much better unless you absolutely have
-to show things that use stuff like ncurses UI.)
+On 1/27/2020 6:57 PM, Andrey Smirnov wrote:=0A=
+> @@ -70,6 +70,7 @@ struct buf_data {=0A=
+>  =0A=
+>  /* rng per-device context */=0A=
+>  struct caam_rng_ctx {=0A=
+> +	struct hwrng rng;=0A=
+>  	struct device *jrdev;=0A=
+>  	dma_addr_t sh_desc_dma;=0A=
+>  	u32 sh_desc[DESC_RNG_LEN];=0A=
+> @@ -78,13 +79,10 @@ struct caam_rng_ctx {=0A=
+>  	struct buf_data bufs[2];=0A=
+>  };=0A=
+>  =0A=
+> -static struct caam_rng_ctx *rng_ctx;=0A=
+> -=0A=
+> -/*=0A=
+> - * Variable used to avoid double free of resources in case=0A=
+> - * algorithm registration was unsuccessful=0A=
+> - */=0A=
+> -static bool init_done;=0A=
+> +static struct caam_rng_ctx *to_caam_rng_ctx(struct hwrng *r)=0A=
+> +{=0A=
+> +	return container_of(r, struct caam_rng_ctx, rng);=0A=
+> +}=0A=
+[...]=0A=
+> -static struct hwrng caam_rng =3D {=0A=
+> -	.name		=3D "rng-caam",=0A=
+> -	.init           =3D caam_init,=0A=
+> -	.cleanup	=3D caam_cleanup,=0A=
+> -	.read		=3D caam_read,=0A=
+> -};=0A=
+[...]> +	ctx->rng.name    =3D "rng-caam";=0A=
+> +	ctx->rng.init    =3D caam_init;=0A=
+> +	ctx->rng.cleanup =3D caam_cleanup;=0A=
+> +	ctx->rng.read    =3D caam_read;=0A=
+An alternative (probably better) for storing caamrng context=0A=
+is to use what is already available in struct hwrng:=0A=
+ * @priv:               Private data, for use by the RNG driver.=0A=
+=0A=
+Horia=0A=
