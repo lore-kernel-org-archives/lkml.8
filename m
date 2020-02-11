@@ -2,97 +2,124 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA03DC3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F0FC35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A008F2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C129A206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="aLqA2Qf2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="J8DOEd5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgBLAPL (ORCPT
+        id S1728086AbgBLAST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 19:15:11 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41454 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgBLAPK (ORCPT
+        Tue, 11 Feb 2020 19:18:19 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.202]:31627 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727985AbgBLASS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 19:15:10 -0500
-Received: by mail-pf1-f194.google.com with SMTP id j9so272309pfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 16:15:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=5W5I2/tliGJReRotTu8QzhtFOiqoykAjsJm5H9qMpkY=;
-        b=aLqA2Qf2b5R0VeGpxHSJiz0ggv1GoXh8FkTKNgcixlXD0g0v+K4kZAA5jZFyv0sCI/
-         k0dJCcEfwvaKmSPcMS6sYRNmiJipBsJiNcMrzUp11mrEiAinkTJ+ko4yfFP9yXEn4y3s
-         dyA96FXoI6LjOw0qu4i2uDrCTfErIfqttgHTCx6WrFtH//2lrSt6dZyYWS4U6K1kX9BV
-         xuRArF8oKa7WeB6uDD1J0XE+ev7h8H/ZUv5ik+syqG8rdvvCV3KqoPQegqqiprtWD2kf
-         PStGiVD5hcbq6hw+dhNe5Y4uO5at0WVISTk9JNb50USIQWVd+3kKZo+3vyNgEyTZ1xHc
-         bl5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=5W5I2/tliGJReRotTu8QzhtFOiqoykAjsJm5H9qMpkY=;
-        b=lAihnGL8ndc7u83/kTeRmqXa6VkTqVztapLlE861MnuU1tN/oM7aLekiuF7ol98Y5x
-         p4WLe9Q+EWO1WLzdHjwQdbXGby76OUA1CzWXGomceJNRmjn80mauQ4QktAs5WJlX9fTU
-         KN7Qqn4mBt3YSyqJgWbyVHYR5C/yV+WZR6JS97ZAsjTmxyNyTixrN8ist391ENvAjesG
-         Dyeomi0kXiNW42jKC7kMcmsLT3gCMKiSdFi4dzGY9X3gZ+SH8m9miRgwOVZ4q2qtFCR6
-         IPTcDOsa7NhN9lVWVZa5s4HGfWYb+EAEaDlgRXKbOua39hLcDBUrIKvnoLjgH33090vS
-         4YHQ==
-X-Gm-Message-State: APjAAAVYwmdQ2+30wLhQ1aebnRywDyNP1GpvXgGbwrJsstI+g+tlZZhF
-        jMWIiFp0udGFRV4vMJtU428NBDB8J8g=
-X-Google-Smtp-Source: APXvYqwKbe3ZKkA0o3k4bVYltcFG8rs9iaVtk+dJZWxF/gbWUmftd2FJbB2uXTGUG7Se4Mvk4yh6GA==
-X-Received: by 2002:a63:480f:: with SMTP id v15mr9328311pga.201.1581466509526;
-        Tue, 11 Feb 2020 16:15:09 -0800 (PST)
-Received: from ?IPv6:2600:1010:b06b:b0e7:939:1384:befb:d8c9? ([2600:1010:b06b:b0e7:939:1384:befb:d8c9])
-        by smtp.gmail.com with ESMTPSA id s6sm5044170pgq.29.2020.02.11.16.15.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 16:15:08 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 50/62] x86/sev-es: Handle VMMCALL Events
-Date:   Tue, 11 Feb 2020 16:14:53 -0800
-Message-Id: <DC865D59-CAD2-4D1C-919B-1C954B1EFFB1@amacapital.net>
-References: <20200211135256.24617-51-joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Juergen Gross <JGross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-In-Reply-To: <20200211135256.24617-51-joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-X-Mailer: iPhone Mail (17D50)
+        Tue, 11 Feb 2020 19:18:18 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id C09EE26C66A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:40:05 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1f8PjYyr08vkB1f8PjX85Q; Tue, 11 Feb 2020 17:40:05 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=826huAG5ON0O/lfMhDpKUhNKj75IXOzCCcEnxbYam4I=; b=J8DOEd5+Zj56yKjv9GxEr/9liR
+        UxDb0yEozNCQtzTvTsjQ/6Nzv7jY4PMpcocRI1RLtNWUcZdEfadqZcNsYKNTtGPlWbh64mO46Z5fc
+        HSmPuT+YqB+oY4cyV7ADajR1EKG1xmts+TOzRBPHNuirE+T2pnefl+SZTFNOL+SpV38VFZwrD4Cq3
+        VjGWpDTya1CN0iqllnWMJvE5g8YzTR4zl27fE40CPAQkpP23qk7tJJeHxOyNnENQVBp9r55FJHO+v
+        xzmsjHdTZIcGqgGm7cCr6eCyBBuFzxLr5fYeImmEC0zCP1VQv4S/dLs/x56PEYF1/HqKLtx7U3A+3
+        4nZJpRdA==;
+Received: from [200.68.140.36] (port=31131 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1f8O-003iJb-Fb; Tue, 11 Feb 2020 17:40:04 -0600
+Date:   Tue, 11 Feb 2020 17:42:37 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] hwmon: (ibmaem) Replace zero-length array with
+ flexible-array member
+Message-ID: <20200211234237.GA26971@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1f8O-003iJb-Fb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:31131
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 52
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> On Feb 11, 2020, at 5:53 AM, Joerg Roedel <joro@8bytes.org> wrote:
->=20
-> =EF=BB=BFFrom: Tom Lendacky <thomas.lendacky@amd.com>
->=20
-> Implement a handler for #VC exceptions caused by VMMCALL instructions.
-> This patch is only a starting point, VMMCALL emulation under SEV-ES
-> needs further hypervisor-specific changes to provide additional state.
->=20
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
 
-How about we just don=E2=80=99t do VMMCALL if we=E2=80=99re a SEV-ES guest? =
- Otherwise we add thousands of cycles of extra latency for no good reason.=
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/hwmon/ibmaem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/ibmaem.c b/drivers/hwmon/ibmaem.c
+index db63c1295cb2..fb052c2d9c34 100644
+--- a/drivers/hwmon/ibmaem.c
++++ b/drivers/hwmon/ibmaem.c
+@@ -232,7 +232,7 @@ struct aem_read_sensor_req {
+ 
+ struct aem_read_sensor_resp {
+ 	struct aem_iana_id	id;
+-	u8			bytes[0];
++	u8			bytes[];
+ } __packed;
+ 
+ /* Data structures to talk to the IPMI layer */
+-- 
+2.25.0
+
