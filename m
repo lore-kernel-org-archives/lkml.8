@@ -2,166 +2,188 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE171C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FE6C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98AC720661
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8B7206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZ8OTvm/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PlOqfV63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgBKRrF (ORCPT
+        id S1729612AbgBKRrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:47:05 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52798 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728434AbgBKRrE (ORCPT
+        Tue, 11 Feb 2020 12:47:06 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51175 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728434AbgBKRrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:47:04 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so4723448wmc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:47:03 -0800 (PST)
+        Tue, 11 Feb 2020 12:47:05 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a5so4722669wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:47:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=fjygYp7tABMf5L/EZRwinKbMPx8VTXvT25w8ysjzWTw=;
-        b=UZ8OTvm/dznGw0AsCrvMPn6PdSpg6y9vTEelAgqmbXFkK0M7W3ZwP+pVEdSxRFhZVC
-         XPWwFdXIUSyFGIsmawWz1/ZuBc3T9CXbyzuDXN+gGW0pfJ7smqUs2rvjVlOetDoTI6eJ
-         n8PqZuBV77w6/X7RnoI69BAE09cX4wI4OQLXt2AhqvuxFB/zm9bc7nPFXYyXYxhP7Xzo
-         euXZO7cJKBjCnNi4sTFknalgDw+zI7bLDib7+G4OEqOf22JInG/1BALd0GrBeCWNkSV3
-         lRiSl2FY+C4PISO4rA+i1PUvCueJU/g4jMDnb5ynA+lXCGh4rfO53TJnBxbVbyyuFk+6
-         Q63g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Iv4momfx4DeR2AHHXkQ3nXPbGtYSA+fYWPTobrkA6Ps=;
+        b=PlOqfV63jbhC2/rzf1lgDorna98TtVwN6FQjQIQWzDMFSgbRApXRjdQ0qDfhCONhj4
+         pdYUYY9A7pWuGxCYFpOSA/objnBKGXt9JCFpE8RFnOsFMFhMUhz9wF+oX+Lkp/mK00yv
+         u9N9ceaOtrWtRBmkg5xUhGV6A14JQpw9Qu8JkOpZyBC2DmuVK6IZ+RwKEgfSP4HWsiq+
+         WYc9InpZbVBspRUkYiOs9SQ5SV/0x7V4EnhEH0L7m4V7CZtDA3Pa5H4dznkOF18LJQKk
+         D3Ear8rF4169Lsi8L+5K0NDlaxTmOOxzcpymXn44igedRZ2veLlKz1Ks4JVk068d2mWl
+         lxQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fjygYp7tABMf5L/EZRwinKbMPx8VTXvT25w8ysjzWTw=;
-        b=c89jEw4l2P2nZUFLstDEzXwK2nYCUWan1q7F+Bgqg8G1fA3/hyeOTU7uqxiRRbumfX
-         KDVxLUjKSHaXWcdCoqrT0r1qtGxQ2foST54LsTFNdSs3KKvFNjgFB/c8XopHsySlktHJ
-         KRUXs2Iwls665KasI5IerxVvB1FDmd4orxlI1up2IznUhMsdscYdjNlUz5QMA8NIfNP0
-         Gjx69kO1ow8D/Y2VjbK+tzTou/C4AuIUpCiT5pcvE75Fm9rnnlFUjQUnqsnWZNcNKCMq
-         CQtNWhrotpUm5mpRlzlsNdILpRTJDKN+90u1gij2kzrt8Pb1vhEIUhpLDHTEcBAbfJtA
-         yG1w==
-X-Gm-Message-State: APjAAAVd8XVPrkzLKfCdi0Gb8SunzjjsbJ+Gl5lYbgR/NAuyKCg05iZc
-        gLCDUSqp0+izk2M/Znr6KTfOTg==
-X-Google-Smtp-Source: APXvYqwiim6pLgFut+znToSZ6lbbj/z21X4uWOx4DnYNoi6AXw/Hu2fZWg99PgcOqF4gjmTG2xJ0IA==
-X-Received: by 2002:a7b:ce18:: with SMTP id m24mr6749804wmc.123.1581443222384;
-        Tue, 11 Feb 2020 09:47:02 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Iv4momfx4DeR2AHHXkQ3nXPbGtYSA+fYWPTobrkA6Ps=;
+        b=WN1J3HWIoUprMUNiMMAfFE5pRZ9TfFmedu6aGu/6JBjwNsF7mxp6bCPUGo7lcMTBng
+         NzK35QTnNxQDR5qr7it6yffnE6cg8VauH6w4niTktSvDiQaMdefOUkTqrDqEwIeNjGQ2
+         bjfckpznGwd1NQXL5Fs31oKqVuBMzkQ6y99k0+De1E4si7WQrP1T3WGC2QDfd46HEY3O
+         TXWv+EcdjaiPGOLJN7G0in0SuE2tDR64yTWk2aNpOMW+CqZC/R8nzfaTEUFP6h/V7gYI
+         j0BFzS6gTOMkt0CP38ijTHXlvE50jB+4InJwDTTUllmiv5ou5Qy2Q2uWOmfQYeTOOmD0
+         dP+Q==
+X-Gm-Message-State: APjAAAW/vYllK/bgXk7PVYlcIZTD+4hvHPjD/PTFizSu8u/T8O5HLw/z
+        Yz6yBrPPk7+4YfZuAAqjPpJ5Pg==
+X-Google-Smtp-Source: APXvYqzrFK2lF3Rw8Lut3c2VpLH4mC1t1em62YfaElCTSj8Fi0M9fzRifB7jxvuTGJBCoe0t2Arh8Q==
+X-Received: by 2002:a1c:7317:: with SMTP id d23mr7005393wmb.165.1581443224038;
+        Tue, 11 Feb 2020 09:47:04 -0800 (PST)
 Received: from localhost.localdomain ([2a01:e0a:f:6020:39bd:f3e9:9eaa:e898])
-        by smtp.gmail.com with ESMTPSA id s12sm6104764wrw.20.2020.02.11.09.47.01
+        by smtp.gmail.com with ESMTPSA id s12sm6104764wrw.20.2020.02.11.09.47.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 09:47:01 -0800 (PST)
+        Tue, 11 Feb 2020 09:47:02 -0800 (PST)
 From:   Vincent Guittot <vincent.guittot@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
         dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
         mgorman@suse.de, linux-kernel@vger.kernel.org
 Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
         Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 0/4] remove runnable_load_avg and improve group_classify
-Date:   Tue, 11 Feb 2020 18:46:47 +0100
-Message-Id: <20200211174651.10330-1-vincent.guittot@linaro.org>
+Subject: [PATCH 1/4] sched/fair: reorder enqueue/dequeue_task_fair path
+Date:   Tue, 11 Feb 2020 18:46:48 +0100
+Message-Id: <20200211174651.10330-2-vincent.guittot@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200211174651.10330-1-vincent.guittot@linaro.org>
+References: <20200211174651.10330-1-vincent.guittot@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NUMA load balancing is the last remaining piece of code that uses the 
-runnable_load_avg of PELT to balance tasks between nodes. The normal
-load_balance has replaced it by a better description of the current state
-of the group of cpus.  The same policy can be applied to the numa
-balancing.
+The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+is split in 2 distinct parts for throttled cfs_rq without any added value
+but making code less readable.
 
-Once unused, runnable_load_avg can be replaced by a simpler runnable_avg
-signal that tracks the waiting time of tasks on rq. Currently, the state
-of a group of CPUs is defined thanks to the number of running task and the
-level of utilization of rq. But the utilization can be temporarly low
-after the migration of a task whereas the rq is still overloaded with
-tasks. In such case where tasks were competing for the rq, the
-runnable_avg will stay high after the migration.
+Change the code ordering such that everything related to a cfs_rq
+(throttled or not) will be done in the same loop.
 
-Some hackbench results:
+In addition, the same steps ordering is used when updating a cfs_rq:
+- update_load_avg
+- update_cfs_group
+- update *h_nr_running
 
-- small arm64 dual quad cores system
-hackbench -l (2560/#grp) -g #grp
+No functional and performance changes are expected and have been noticed
+during tests.
 
-grp    tip/sched/core         +patchset              improvement
-1       1,327(+/-10,06 %)     1,247(+/-5,45 %)       5,97 %
-4       1,250(+/- 2,55 %)     1,207(+/-2,12 %)       3,42 %
-8       1,189(+/- 1,47 %)     1,179(+/-1,93 %)       0,90 %
-16      1,221(+/- 3,25 %)     1,219(+/-2,44 %)       0,16 %						
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-- large arm64 2 nodes / 224 cores system
-hackbench -l (256000/#grp) -g #grp
-
-grp    tip/sched/core         +patchset              improvement
-1      14,197(+/- 2,73 %)     13,917(+/- 2,19 %)     1,98 %
-4       6,817(+/- 1,27 %)      6,523(+/-11,96 %)     4,31 %
-16      2,930(+/- 1,07 %)      2,911(+/- 1,08 %)     0,66 %
-32      2,735(+/- 1,71 %)      2,725(+/- 1,53 %)     0,37 %
-64      2,702(+/- 0,32 %)      2,717(+/- 1,07 %)    -0,53 %
-128     3,533(+/-14,66 %)     3,123(+/-12,47 %)     11,59 %
-256     3,918(+/-19,93 %)     3,390(+/- 5,93 %)     13,47 %
-
-The significant improvement for 128 and 256 should be taken with care
-because of some instabilities over iterations without the patchset.
-
-The table below shows figures of the classification of sched group during
-load balance (idle, newly or busy lb) with the disribution according to
-the number of running tasks for:
-    hackbench -l 640 -g 4 on octo cores
-
-                 tip/sched/core  +patchset
-state
-has spare            3973        1934	
-        nr_running					
-            0        1965        1858
-            1         518          56
-            2         369          18
-            3         270           2
-            4+        851           0
-						
-fully busy            546        1018	
-        nr_running					
-            0           0           0
-            1         546        1018
-            2           0           0
-            3           0           0
-            4+          0           0
-						
-overloaded           2109        3056	
-        nr_running					
-            0           0           0
-            1           0           0
-            2         241         483
-            3         170         348
-            4+       1698        2225
-
-total                6628        6008	
-
-Without the patchset, there is a significant number of time that a CPU has
-spare capacity with more than 1 running task. Although this is a valid
-case, this is not a state that should often happen when 160 tasks are
-competing on 8 cores like for this test. The patchset fixes the situation
-by taking into account the runnable_avg, which stays high after the
-migration of a task on another CPU.
-
-Vincent Guittot (4):
-  sched/fair: reorder enqueue/dequeue_task_fair path
-  sched/numa: replace runnable_load_avg by load_avg
-  sched/fair: replace runnable load average by runnable average
-  sched/fair: Take into runnable_avg to classify group
-
- include/linux/sched.h |  17 ++-
- kernel/sched/core.c   |   2 -
- kernel/sched/debug.c  |  17 +--
- kernel/sched/fair.c   | 335 ++++++++++++++++++++++--------------------
- kernel/sched/pelt.c   |  45 +++---
- kernel/sched/sched.h  |  29 +++-
- 6 files changed, 241 insertions(+), 204 deletions(-)
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1a0ce83e835a..a1ea02b5362e 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5259,32 +5259,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		enqueue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running increment below.
+-		 */
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running++;
+ 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto enqueue_throttle;
++
+ 		flags = ENQUEUE_WAKEUP;
+ 	}
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running++;
+-		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto enqueue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running++;
++		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 	}
+ 
++enqueue_throttle:
+ 	if (!se) {
+ 		add_nr_running(rq, 1);
+ 		/*
+@@ -5345,17 +5344,13 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		dequeue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running decrement below.
+-		*/
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running--;
+ 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto dequeue_throttle;
++
+ 		/* Don't dequeue parent if it has other entities besides us */
+ 		if (cfs_rq->load.weight) {
+ 			/* Avoid re-evaluating load for this entity: */
+@@ -5373,16 +5368,19 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running--;
+-		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto dequeue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running--;
++		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 	}
+ 
++dequeue_throttle:
+ 	if (!se)
+ 		sub_nr_running(rq, 1);
+ 
 -- 
 2.17.1
 
