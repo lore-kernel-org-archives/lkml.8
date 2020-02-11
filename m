@@ -2,82 +2,422 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D36C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1C7C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25262082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918452082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XVWLVjn3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SsL1yZHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgBKPbn (ORCPT
+        id S1729369AbgBKPdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:31:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40148 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgBKPbm (ORCPT
+        Tue, 11 Feb 2020 10:33:21 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43178 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729315AbgBKPdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:31:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VWBCOELY6rkhccDCqlZILUKA2AGhvyeFtdMCkPYvY6Q=; b=XVWLVjn3Xk2wUFZvXsV0Bhod4q
-        eCRC8Jl3We+M4z+VhaSGOYs5+vyaXFvVoqzeieN+007vOuR/HlarbmEZJbXAdEJfgZ8KsoGHWFR55
-        vx/pTW4fsq05srqrFTy2XKi8NlRj29xWp1aj/ZrJl4pW3tjPX8SKDU7miwyoXPHk1DmmQe1z+18s1
-        RAjbh+C58Hf1hhYmakUN/VMa/TO16k/Ky38tfmfqA/o+Ez+Iu2gx7/rqmfFUY42/3HkbneD6jVl5c
-        7ujvZ8VUPsQgoN8px3oh1i3S+JkD/pzbrUrzMZJhB2jzI14pXUvoBs3FscWVQrNVdSJxoWGtiSpwk
-        MDalKZCw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1XVW-0004uo-1e; Tue, 11 Feb 2020 15:31:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6E8AC300739;
-        Tue, 11 Feb 2020 16:29:35 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2362120148940; Tue, 11 Feb 2020 16:31:24 +0100 (CET)
-Date:   Tue, 11 Feb 2020 16:31:24 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH] tracing/perf: Move rcu_irq_enter/exit_irqson() to perf
- trace point hook
-Message-ID: <20200211153124.GV14914@hirez.programming.kicks-ass.net>
-References: <20200210170643.3544795d@gandalf.local.home>
- <20200211114954.GK14914@hirez.programming.kicks-ass.net>
- <20200211090503.68c0d70f@gandalf.local.home>
- <20200211150615.GK2935@paulmck-ThinkPad-P72>
+        Tue, 11 Feb 2020 10:33:20 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BFXI5H116814;
+        Tue, 11 Feb 2020 09:33:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581435198;
+        bh=xA7YftU/hGnE5FHfydSjpQVDgG+Stn5x/v1WoSHrRt0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=SsL1yZHZC1Jme5JC1K1ZlW5OY/SxijT4xtFLilZDJqZFetMTDIrHzwNOsC/CSH3TU
+         mCWlwJ7/iGoo94VJSiAHMW+csZbk7T19nEiAzpS43hnymwxt6ySde50imjwOd46AXr
+         XrfRALI4qEf4S76TLWUWxBn+JTbIz6gDD2vwHEUM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01BFXHQg129578
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Feb 2020 09:33:18 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
+ Feb 2020 09:33:17 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 11 Feb 2020 09:33:17 -0600
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BFXEpD056417;
+        Tue, 11 Feb 2020 09:33:14 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <afd@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv6 RESEND 01/14] dt-bindings: remoteproc: Add OMAP remoteproc bindings
+Date:   Tue, 11 Feb 2020 17:33:13 +0200
+Message-ID: <20200211153313.24072-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200211152125.23819-2-t-kristo@ti.com>
+References: <20200211152125.23819-2-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211150615.GK2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 07:06:15AM -0800, Paul E. McKenney wrote:
-> And I have to ask...  What happens if we are very early in from-idle
-> NMI entry (or very late in NMI exit), such that both in_nmi() and
-> rcu_is_watching() are returning false?  Or did I miss a turn somewhere?
+From: Suman Anna <s-anna@ti.com>
 
-We must, by very careful inspection, ensure that doesn't happen.
+Add the device tree bindings document for the IPU and DSP
+remote processor devices on OMAP4+ SoCs.
 
-No tracing must happen before preempt_count increment / after
-preempt_count decrement. Otherwise we can no longer recover.
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Suman Anna <s-anna@ti.com>
+[t-kristo@ti.com: converted to schema]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+Quick resend. Missed adding Rob+DT list in CC, git is too clever to get rid of
+CC fields automatically...
+
+v6: made memory-regions property optional
+
+ .../remoteproc/ti,omap-remoteproc.yaml        | 321 ++++++++++++++++++
+ 1 file changed, 321 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+new file mode 100644
+index 000000000000..6ad5de899911
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+@@ -0,0 +1,321 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: OMAP4+ Remoteproc Devices
++
++maintainers:
++  - Suman Anna <s-anna@ti.com>
++
++description:
++  The OMAP family of SoCs usually have one or more slave processor sub-systems
++  that are used to offload some of the processor-intensive tasks, or to manage
++  other hardware accelerators, for achieving various system level goals.
++
++  The processor cores in the sub-system are usually behind an IOMMU, and may
++  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
++  caches, an Interrupt Controller, a Cache Controller etc.
++
++  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
++  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
++  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
++  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
++  Cortex-M4 processors.
++
++  Each remote processor sub-system is represented as a single DT node. Each node
++  has a number of required or optional properties that enable the OS running on
++  the host processor (MPU) to perform the device management of the remote
++  processor and to communicate with the remote processor. The various properties
++  can be classified as constant or variable. The constant properties are
++  dictated by the SoC and does not change from one board to another having the
++  same SoC. Examples of constant properties include 'iommus', 'reg'. The
++  variable properties are dictated by the system integration aspects such as
++  memory on the board, or configuration used within the corresponding firmware
++  image. Examples of variable properties include 'mboxes', 'memory-region',
++  'timers', 'watchdog-timers' etc.
++
++properties:
++  compatible:
++    enum:
++      - ti,omap4-dsp
++      - ti,omap5-dsp
++      - ti,dra7-dsp
++      - ti,omap4-ipu
++      - ti,omap5-ipu
++      - ti,dra7-ipu
++
++  iommus:
++    minItems: 1
++    maxItems: 2
++    description: |
++      phandles to OMAP IOMMU nodes, that need to be programmed
++      for this remote processor to access any external RAM memory or
++      other peripheral device address spaces. This property usually
++      has only a single phandle. Multiple phandles are used only in
++      cases where the sub-system has different ports for different
++      sub-modules within the processor sub-system (eg: DRA7 DSPs),
++      and need the same programming in both the MMUs.
++
++  mboxes:
++    minItems: 1
++    maxItems: 2
++    description: |
++      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
++      communication with the remote processor. The specifier format is
++      as per the bindings,
++      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++      This property should match with the sub-mailbox node used in
++      the firmware image.
++
++  clocks:
++    description: |
++      Main functional clock for the remote processor
++
++  resets:
++    description: |
++      Reset handles for the remote processor
++
++  firmware-name:
++    description: |
++      Default name of the firmware to load to the remote processor.
++
++# Optional properties:
++# --------------------
++# Some of these properties are mandatory on some SoCs, and some are optional
++# depending on the configuration of the firmware image to be executed on the
++# remote processor. The conditions are mentioned for each property.
++#
++# The following are the optional properties:
++
++  memory-region:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      phandle to the reserved memory node to be associated
++      with the remoteproc device. The reserved memory node
++      can be a CMA memory node, and should be defined as
++      per the bindings,
++      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
++  reg:
++    description: |
++      Address space for any remoteproc memories present on
++      the SoC. Should contain an entry for each value in
++      'reg-names'. These are mandatory for all DSP and IPU
++      processors that have them (OMAP4/OMAP5 DSPs do not have
++      any RAMs)
++
++  reg-names:
++    description: |
++      Required names for each of the address spaces defined in
++      the 'reg' property. Expects the names from the following
++      list, in the specified order, each representing the corresponding
++      internal RAM memory region.
++    minItems: 1
++    maxItems: 3
++    items:
++      - const: l2ram
++      - const: l1pram
++      - const: l1dram
++
++  ti,bootreg:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      Should be a triple of the phandle to the System Control
++      Configuration region that contains the boot address
++      register, the register offset of the boot address
++      register within the System Control module, and the bit
++      shift within the register. This property is required for
++      all the DSP instances on OMAP4, OMAP5 and DRA7xx SoCs.
++
++  ti,autosuspend-delay-ms:
++    description: |
++      Custom autosuspend delay for the remoteproc in milliseconds.
++
++  ti,timers:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      One or more phandles to OMAP DMTimer nodes, that serve
++      as System/Tick timers for the OS running on the remote
++      processors. This will usually be a single timer if the
++      processor sub-system is running in SMP mode, or one per
++      core in the processor sub-system. This can also be used
++      to reserve specific timers to be dedicated to the
++      remote processors.
++
++      This property is mandatory on remote processors requiring
++      external tick wakeup, and to support Power Management
++      features. The timers to be used should match with the
++      timers used in the firmware image.
++
++  ti,watchdog-timers:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      One or more phandles to OMAP DMTimer nodes, used to
++      serve as Watchdog timers for the processor cores. This
++      will usually be one per executing processor core, even
++      if the processor sub-system is running a SMP OS.
++
++      The timers to be used should match with the watchdog
++      timers used in the firmware image.
++
++if:
++  properties:
++    compatible:
++      enum:
++        - ti,dra7-dsp
++then:
++  properties:
++    reg:
++      minItems: 3
++      maxItems: 3
++  required:
++    - reg
++    - reg-names
++    - ti,bootreg
++
++else:
++  if:
++    properties:
++      compatible:
++        enum:
++          - ti,omap4-ipu
++          - ti,omap5-ipu
++          - ti,dra7-ipu
++  then:
++    properties:
++      reg:
++        minItems: 1
++        maxItems: 1
++      ti,bootreg: false
++    required:
++      - reg
++      - reg-names
++
++  else:
++    properties:
++      reg: false
++    required:
++      - ti,bootreg
++
++required:
++  - compatible
++  - iommus
++  - mboxes
++  - clocks
++  - resets
++  - firmware-name
++
++additionalProperties: false
++
++examples:
++  - |
++
++    //Example 1: OMAP4 DSP
++
++    /* DSP Reserved Memory node */
++    #include <dt-bindings/clock/omap4.h>
++    reserved-memory {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        dsp_memory_region: dsp-memory@98000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x98000000 0x800000>;
++            reusable;
++        };
++    };
++
++    /* DSP node */
++    ocp {
++        dsp: dsp {
++            compatible = "ti,omap4-dsp";
++            ti,bootreg = <&scm_conf 0x304 0>;
++            iommus = <&mmu_dsp>;
++            mboxes = <&mailbox &mbox_dsp>;
++            memory-region = <&dsp_memory_region>;
++            ti,timers = <&timer5>;
++            ti,watchdog-timers = <&timer6>;
++            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
++            resets = <&prm_tesla 0>, <&prm_tesla 1>;
++            firmware-name = "omap4-dsp-fw.xe64T";
++        };
++    };
++
++  - |+
++
++    //Example 2: OMAP5 IPU
++
++    /* IPU Reserved Memory node */
++    #include <dt-bindings/clock/omap5.h>
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        ipu_memory_region: ipu-memory@95800000 {
++            compatible = "shared-dma-pool";
++            reg = <0 0x95800000 0 0x3800000>;
++            reusable;
++        };
++    };
++
++    /* IPU node */
++    ocp {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        ipu: ipu@55020000 {
++            compatible = "ti,omap5-ipu";
++            reg = <0x55020000 0x10000>;
++            reg-names = "l2ram";
++            iommus = <&mmu_ipu>;
++            mboxes = <&mailbox &mbox_ipu>;
++            memory-region = <&ipu_memory_region>;
++            ti,timers = <&timer3>, <&timer4>;
++            ti,watchdog-timers = <&timer9>, <&timer11>;
++            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
++            resets = <&prm_core 2>;
++            firmware-name = "omap5-ipu-fw.xem";
++        };
++    };
++
++  - |+
++
++    //Example 3: DRA7xx/AM57xx DSP
++
++    /* DSP1 Reserved Memory node */
++    #include <dt-bindings/clock/dra7.h>
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        dsp1_memory_region: dsp1-memory@99000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x0 0x99000000 0x0 0x4000000>;
++            reusable;
++        };
++    };
++
++    /* DSP1 node */
++    ocp {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        dsp1: dsp@40800000 {
++            compatible = "ti,dra7-dsp";
++            reg = <0x40800000 0x48000>,
++                  <0x40e00000 0x8000>,
++                  <0x40f00000 0x8000>;
++            reg-names = "l2ram", "l1pram", "l1dram";
++            ti,bootreg = <&scm_conf 0x55c 0>;
++            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
++            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
++            memory-region = <&dsp1_memory_region>;
++            ti,timers = <&timer5>;
++            ti,watchdog-timers = <&timer10>;
++            resets = <&prm_dsp1 0>;
++            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
++            firmware-name = "dra7-dsp1-fw.xe66";
++        };
++    };
+-- 
+2.17.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
