@@ -2,157 +2,211 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F3AC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDA1C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A02920838
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f9yPcb7c"
+	by mail.kernel.org (Postfix) with ESMTP id 4A90220848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581379700;
+	bh=+3hiyGuKOYyaqXG4pIEL/1L3LLikzfXOz15j+Jhb6pM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=h6f5u4cdMe9f9dBjol3axQ6IjWvd6HoqPrkdaYPI739hWKnxI+ECKACfqPuSSEUIS
+	 H9V0V09y7FvYqdNbNJ2cPAXD+2xboZ1gKpx0md9b7FsbxltHFrxnuzqTtZyy4BW1SR
+	 WYAtJQCLqpiQfehze5+HdbRgzzNE6cxU2/dCjwn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgBKAE7 (ORCPT
+        id S1727599AbgBKAIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:04:59 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41934 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbgBKAE6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:04:58 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01B02PPY102417;
-        Tue, 11 Feb 2020 00:04:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=6hRV+oc+Bf7KmfRTgGYMolEJVUABCzAUgVO168ZiNQc=;
- b=f9yPcb7ctgY4PSRrO2pbnhVrwr4VMW62v0VEJgJMAgPtTwX6W8YwLxabLhM4n3Fk4Shm
- FyJcABSmFIUiUUic1WuzBRzLvpTvldvtC4uGQ2kg7Dp5VHoeaBZXfGzYNgFQ3ipR0cRN
- 0wnQ1dDohWukUlop6koRamqGZEUJSlUdy3zymxCxsqarcQ+dRtxY5GQnrNEBXS9UIVxW
- FBBLFyMYAGb4KgktM7zBQfs4jsdKgAGMIWv0ACSDSIDsVQfkOh90Ua4p/7egfE74bAok
- m1fRbqm68M3a5Yi+i1IAZfSzLeSlGVLsnnOBCoWmSySWAOcA3Hv9jkoAweiwcb/MTT0E 2w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2y2k88042y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Feb 2020 00:04:44 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01B02hAQ056698;
-        Tue, 11 Feb 2020 00:02:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2y26q077wx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 00:02:43 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01B02Nv6023038;
-        Tue, 11 Feb 2020 00:02:24 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Feb 2020 16:02:23 -0800
-Subject: Re: [PATCH v2] mm: Don't overwrite user min_free_kbytes, consider THP
- when adjusting
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-References: <20200210190121.10670-1-mike.kravetz@oracle.com>
- <20200210141903.413880202fa3e858e27272fd@linux-foundation.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <834af4ca-5e3d-f034-fa48-f8672b75a9f2@oracle.com>
-Date:   Mon, 10 Feb 2020 16:02:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 19:08:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727490AbgBKAIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 19:08:18 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6FA220715;
+        Tue, 11 Feb 2020 00:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581379698;
+        bh=+3hiyGuKOYyaqXG4pIEL/1L3LLikzfXOz15j+Jhb6pM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ULwi5x7ggKtgzEzf7EHCkIEFJUx5je94d+AcEN7bFUkBdWJHASfoZODfJ8zuYDdw5
+         psQNybyCNK+qFSp5SBPofHsotsJXkWqCCgEWz+gmLpGvv7RrCbmJoTOJS/QfsQfALF
+         PAYTaaJIYdLeHEAffeYz+JvlLb+z09dTLHD9zM9g=
+Date:   Mon, 10 Feb 2020 18:08:16 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        Libor Pechacek <lpechacek@suse.cz>
+Subject: Re: [PATCH v4 0/3] PCI: pciehp: Do not turn off slot if presence
+ comes up after link
+Message-ID: <20200211000816.GA89075@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200210141903.413880202fa3e858e27272fd@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9527 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- mlxscore=0 adultscore=0 suspectscore=2 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002100171
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9527 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- suspectscore=2 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100171
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025190047.38130-1-stuart.w.hayes@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 2:19 PM, Andrew Morton wrote:
-> On Mon, 10 Feb 2020 11:01:21 -0800 Mike Kravetz <mike.kravetz@oracle.com> wrote:
+[+cc Libor (thanks for the ping!)]
+
+On Fri, Oct 25, 2019 at 03:00:44PM -0400, Stuart Hayes wrote:
+> In older PCIe specs, PDS (presence detect) would come up when the
+> "in-band" presence detect pin connected, and would be up before DLLLA
+> (link active).
 > 
->> The value of min_free_kbytes is calculated in two routines:
->> 1) init_per_zone_wmark_min based on available memory
->> 2) set_recommended_min_free_kbytes may reserve extra space for
->>    THP allocations
->>
->> In both of these routines, a user defined min_free_kbytes value will
->> be overwritten if the value calculated in the code is larger. No message
->> is logged if the user value is overwritten.
+> In PCIe 4.0 (as an ECN) and in PCIe 5.0, there is a new bit to show if
+> in-band presence detection can be disabled for the slot, and another bit
+> that disables it--and a recommendation that it should be disabled if it
+> can be. In addition, certain OEMs disable in-band presence detection
+> without implementing these bits.
 > 
-> Could we provide a detailed description of why this is considered to be
-> a problem?  This is fairly easily guessable, but is there a real
-> in-field bad user experience we can point at?
-
-I do not have an example of a bad user experience.  This observation came
-about when I was modifying min_free_kbytes while working on some other
-issue.  To me, it seems like the current behavior is not what one would
-expect.  Logging messages when we do not overwrite the user value and not
-logging anything when we do seems a bit backward.
-
-Changing this is not important to me.  It has been like this for quite some
-time and I am not aware of any user complaints/issues.
-
->> Change code to never overwrite user defined value.  However, do log a
->> message (once per value) showing the value calculated in code.
->>
->> At system initialization time, both init_per_zone_wmark_min and
->> set_recommended_min_free_kbytes are called to set the initial value
->> for min_free_kbytes.  When memory is offlined or onlined, min_free_kbytes
->> is recalculated and adjusted based on the amount of memory.  However,
->> the adjustment for THP is not considered.  Here is an example from a 2
->> node system with 8GB of memory.
->>
->>  # cat /proc/sys/vm/min_free_kbytes
->>  90112
->>  # echo 0 > /sys/devices/system/node/node1/memory56/online
->>  # cat /proc/sys/vm/min_free_kbytes
->>  11243
->>  # echo 1 > /sys/devices/system/node/node1/memory56/online
->>  # cat /proc/sys/vm/min_free_kbytes
->>  11412
->>
->> One would expect that min_free_kbytes would return to it's original
->> value after the offline/online operations.
->>
->> Create a simple interface for THP/khugepaged based adjustment and
->> call this whenever min_free_kbytes is adjusted.
->>
->> ...
->>
->>  include/linux/khugepaged.h |  5 ++++
->>  mm/internal.h              |  2 ++
->>  mm/khugepaged.c            | 56 ++++++++++++++++++++++++++++++++------
->>  mm/page_alloc.c            | 35 ++++++++++++++++--------
+> This means it is possible to get a "card present" interrupt after the
+> link is up and the driver is loaded.  This causes an erroneous removal
+> of the device driver, followed by an immediate re-probing.
 > 
-> min_free_kbytes gets a few mentions in Documentation/.  Should we make
-> the appropriate updates there to bring this behavior to people's
-> attention?
+> This patch set defines these new bits, uses them to disable in-band
+> presence detection if it can be, waits for PDS to go up if in-band
+> presence detection is disabled, and adds a DMI table that will let us
+> know if we should assume in-band presence is disabled on a system.
+> 
+> The first two patches in this set come from a patch set that was
+> submitted but not accepted many months ago by Alexandru Gagniuc [1].
+> The first is unmodified, the second has the commit message and timeout 
+> modified.
+> 
+> [1] https://patchwork.kernel.org/cover/10909167/
+>     [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
+> 
+> v2:
+> - modify loop in pcie_wait_for_presence to do..while
+> 
+> v3:
+> - remove unused variable declaration
+> - modify text of warning message
+> 
+> v4:
+> - remove "!!" boolean conversion in an "if" condition for readability
+> - add explanation comment in dmi table
+> 
+> Alexandru Gagniuc (2):
+>   PCI: pciehp: Add support for disabling in-band presence
+>   PCI: pciehp: Wait for PDS if in-band presence is disabled
+> 
+> Stuart Hayes (1):
+>   PCI: pciehp: Add dmi table for in-band presence disabled
+> 
+>  drivers/pci/hotplug/pciehp.h     |  1 +
+>  drivers/pci/hotplug/pciehp_hpc.c | 50 +++++++++++++++++++++++++++++++-
+>  include/uapi/linux/pci_regs.h    |  2 ++
+>  3 files changed, 52 insertions(+), 1 deletion(-)
 
-I'm happy to update the documentation to match current behavior.  Changing
-the documentation may prompt people to ask if we should change the code. :)
--- 
-Mike Kravetz
+I added the spec reference to the 1/3 commit log, tried to make the
+tweaks Lukas suggested (interdiff below), used ctrl_info() instead of
+pci_info() (I would actually like to change the whole driver to use
+pci_info(), but better to be consistent for now), and applied to
+pci/hotplug for v5.7.
+
+Somebody should also update lspci to:
+
+  - Do something with DevCap AttnBtn, AttnInd, PwrInd to indicate that
+    they were only defined for PCIe r1.0 and have been explicitly
+    undefined since then.  If there's a way to identify those 1.0
+    devices and only decode those fields for 1.0, that would be nice.
+
+  - Add SltCap2 and SltCtrl2 decoding.
+
+Speak up if you plan to do this so we don't duplicate effort.
+
+Bjorn
+
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index ae0108b92084..469873b44a8e 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -284,7 +284,7 @@ static void pcie_wait_for_presence(struct pci_dev *pdev)
+ 		timeout -= 10;
+ 	} while (timeout > 0);
+ 
+-	pci_info(pdev, "Timeout waiting for Presence Detect state to be set\n");
++	ctrl_info(ctrl, "Timeout waiting for Presence Detect\n");
+ }
+ 
+ int pciehp_check_link_status(struct controller *ctrl)
+@@ -921,6 +921,16 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 	ctrl->state = list_empty(&subordinate->devices) ? OFF_STATE : ON_STATE;
+ 	up_read(&pci_bus_sem);
+ 
++	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
++	if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
++		pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
++				      PCI_EXP_SLTCTL_IBPD_DISABLE);
++		ctrl->inband_presence_disabled = 1;
++	}
++
++	if (dmi_first_match(inband_presence_disabled_dmi_table))
++		ctrl->inband_presence_disabled = 1;
++
+ 	/* Check if Data Link Layer Link Active Reporting is implemented */
+ 	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &link_cap);
+ 
+@@ -930,7 +940,7 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 		PCI_EXP_SLTSTA_MRLSC | PCI_EXP_SLTSTA_CC |
+ 		PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC);
+ 
+-	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c LLActRep%c%s\n",
++	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c IbPresDis%c LLActRep%c%s\n",
+ 		(slot_cap & PCI_EXP_SLTCAP_PSN) >> 19,
+ 		FLAG(slot_cap, PCI_EXP_SLTCAP_ABP),
+ 		FLAG(slot_cap, PCI_EXP_SLTCAP_PCP),
+@@ -941,19 +951,10 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 		FLAG(slot_cap, PCI_EXP_SLTCAP_HPS),
+ 		FLAG(slot_cap, PCI_EXP_SLTCAP_EIP),
+ 		FLAG(slot_cap, PCI_EXP_SLTCAP_NCCS),
++		ctrl->inband_presence_disabled,
+ 		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
+ 		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+ 
+-	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
+-	if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
+-		pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
+-				      PCI_EXP_SLTCTL_IBPD_DISABLE);
+-		ctrl->inband_presence_disabled = 1;
+-	}
+-
+-	if (dmi_first_match(inband_presence_disabled_dmi_table))
+-		ctrl->inband_presence_disabled = 1;
+-
+ 	/*
+ 	 * If empty slot's power status is on, turn power off.  The IRQ isn't
+ 	 * requested yet, so avoid triggering a notification with this command.
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index b464d2f76513..f9701410d3b5 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -681,7 +681,7 @@
+ #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+ #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+ #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
+-#define  PCI_EXP_SLTCAP2_IBPD	0x0001	/* In-band PD Disable Supported */
++#define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
+ #define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
+ #define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
+ 
