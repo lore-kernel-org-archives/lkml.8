@@ -2,138 +2,130 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C058CC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DF0C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D1520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WqyC94s0"
+	by mail.kernel.org (Postfix) with ESMTP id 16D9720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbgBKQmR (ORCPT
+        id S1730072AbgBKQoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:42:17 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:45766 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgBKQmQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:42:16 -0500
-Received: by mail-vs1-f65.google.com with SMTP id v141so6689355vsv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:42:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KHkfZzNh1B4XmJZnXfgIQNWZsT5whG1kE8qQBYWXMgc=;
-        b=WqyC94s0CD5d0ZPRr4dlQ93j+b50OoCaoHuxaKOKZ9lGE/26eG7Zpz10axDbzf5cxb
-         agJY2MIEOmDQnmVeVxsWhCyJlffhvrtK79hVkzi4usTyPTyl3c9gdHucQAN6P9UAgoYx
-         nArWP2wSBEJ1rS5b1O2lHsPS6x/yo/iTXctxezgmJsdLoyJlqvpWzge5pVPLcoU06f8E
-         G6oLEE7mUeGdksmjfGbnMX+hoNNlbG4oxSYRlzwIb/R52rtvOPBSDc2MY48vpEV+dG97
-         55ylTus7812YtsujzGDOnd4LmnifnC4HV86nRK0NaOuphuOpMPKW+5WOtR80XRx0/onh
-         4xJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KHkfZzNh1B4XmJZnXfgIQNWZsT5whG1kE8qQBYWXMgc=;
-        b=cgEjrJnDYGTK6mjTd5gjzBBBSKcofpTCwy5i1VxVwMIhGyOJr3FrH41RLepnHK1z0x
-         PBaZ1D4BPE9akjgi1Yyo59473Dj64OSlbN5YxltI6Jj1wr0jEMmMrtNMfwXx/NmmwRXn
-         WGnu1hMrbiuvZNg8BmGG8a0XA/0GTZ1uUXYlltv42RWRNn4T3epSKlSPxmMFmp78Ps/d
-         JGGUgXX7BXAYg4DktuoddhHjNLgddp/8LpR2ZY8/3pBEb35SbuuOem5XzmxNzjdofZlV
-         s36Uf5B86YycnMtVEn/RxqZkmSEqF1Bjg8VKCd1+KAZ6Hlts4Aw3uc3J607ufPXZVnQr
-         BvXw==
-X-Gm-Message-State: APjAAAWNackGW6pyfNVanS18gdjL+eTRLaotkKPdKpoi/qLPqw5TRFan
-        yPfL3M1OFJeCypTdhE0SxJJ1kudfUSIWRAaaS6NjQg==
-X-Google-Smtp-Source: APXvYqxqMq+ejXxPsl9/xIf55OXMeWrD7wxRfObKKoy3oMAN0UARPc8I0EQfK/M1BGYcb9ZuENsUbz+LrH8gmb00USk=
-X-Received: by 2002:a67:fa1a:: with SMTP id i26mr9638813vsq.169.1581439335360;
- Tue, 11 Feb 2020 08:42:15 -0800 (PST)
+        Tue, 11 Feb 2020 11:44:18 -0500
+Received: from muru.com ([72.249.23.125]:54706 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728202AbgBKQoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:44:18 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5564E80D4;
+        Tue, 11 Feb 2020 16:45:00 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 08:44:13 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Rob Herring <robh@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] mfd: motmdm: Add Motorola TS 27.010 serdev modem
+ driver for droid4
+Message-ID: <20200211164413.GG64767@atomide.com>
+References: <20200210040107.10306-1-tony@atomide.com>
+ <20200210040107.10306-3-tony@atomide.com>
 MIME-Version: 1.0
-References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
-From:   Doug Anderson <dianders@google.com>
-Date:   Tue, 11 Feb 2020 08:42:01 -0800
-Message-ID: <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com>
-Subject: Re: [PATCH V1] dt-bindings: mmc: sdhci-msm: Add CQE reg map
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210040107.10306-3-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+* Tony Lindgren <tony@atomide.com> [200210 04:02]:
+> --- /dev/null
+> +++ b/drivers/mfd/motorola-mdm.c
+...
+> +struct motmdm_dlci {
+> +	struct gsm_serdev_dlci gsm_dlci;
+> +	struct list_head node;
+> +	wait_queue_head_t read_queue;
+> +	struct kfifo read_fifo;
+> +	int line;
+> +	u16 id;
+> +	int (*send_command)(struct device *dev, struct motmdm_dlci *mot_dlci,
+> +			    unsigned long timeout_ms, const unsigned char *cmd,
+> +			    size_t cmdlen,
+> +			    unsigned char *rsp, size_t rsplen);
 
-On Tue, Feb 11, 2020 at 7:29 AM Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
->
-> CQE feature has been enabled on sdhci-msm. Add CQE reg map
-> that needs to be supplied for supporting CQE feature.
->
-> Change-Id: I788c4bd5b7cbca16bc1030a410cc5550ed7204e1
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 7ee639b..eaa0998 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -27,6 +27,11 @@ Required properties:
->  - reg: Base address and length of the register in the following order:
->         - Host controller register map (required)
->         - SD Core register map (required for msm-v4 and below)
-> +       - CQE register map (Optional, needed only for eMMC and msm-v4.2 above)
+Looks like the send_command above is now useless and can be
+left out, incremental patch below for reference.
 
-I did a quick search and it appears that SD cards implementing 6.0 of
-the spec can also use CQE.  Is that correct?  If so, maybe remove the
-part about "eMMC"?
+I'll be sending out v3 series of patches after waiting few days
+for comments.
 
-Maybe also change "needed" to "useful" to make it clear that this
-entry isn't actually required for all msm-v4.2 controllers?
+Regards,
 
+Tony
 
-> +- reg-names: When CQE register map is supplied, below reg-names are required
-> +       - "hc_mem" for Host controller register map
-> +       - "core_mem" for SD cpre regoster map
-
-s/regoster/register
-
-
-> +       - "cqhci_mem" for CQE register map
-
-I'm at least slightly confused.  You say that reg-names are there only
-if CQE register map is supplied.  ...and that requires 4.2 and above.
-...but "core_mem" is only there on 4.0 and below.  So there should
-never be a "core_mem" entry?
-
-Trying to specify that sanely in free-form text seems like it's gonna
-be hard and not worth it.  You should probably transition to yaml
-first?
-
-
-I will also note that Rob isn't a huge fan of "reg-names".  In a
-different conversation I think you mentioned you had a reason for
-having it.  I guess just be prepared to defend yourself against Rob if
-you feel strongly about keeping reg-names.
-
-
--Doug
+8< ------------------
+diff --git a/drivers/mfd/motorola-mdm.c b/drivers/mfd/motorola-mdm.c
+--- a/drivers/mfd/motorola-mdm.c
++++ b/drivers/mfd/motorola-mdm.c
+@@ -92,10 +92,6 @@ struct motmdm_dlci {
+ 	struct kfifo read_fifo;
+ 	int line;
+ 	u16 id;
+-	int (*send_command)(struct device *dev, struct motmdm_dlci *mot_dlci,
+-			    unsigned long timeout_ms, const unsigned char *cmd,
+-			    size_t cmdlen,
+-			    unsigned char *rsp, size_t rsplen);
+ 	struct list_head list;
+ 	void *privdata;		/* Do not use, internal data */
+ 	void *drvdata;		/* Available for consumer drivers */
+@@ -419,11 +415,11 @@ static int motmdm_write(struct device *dev, struct motmdm_dlci *mot_dlci,
+  * Helper for child device drivers to send a command to a DLCI and wait
+  * for result with a matching packet ID.
+  */
+-static int motmdm_dlci_send_command(struct device *dev,
+-				    struct motmdm_dlci *mot_dlci,
+-				    unsigned long timeout_ms,
+-				    const unsigned char *cmd, size_t cmdlen,
+-				    unsigned char *rsp, size_t rsplen)
++static int motmdm_send_command(struct device *dev,
++			       struct motmdm_dlci *mot_dlci,
++			       unsigned long timeout_ms,
++			       const unsigned char *cmd, size_t cmdlen,
++			       unsigned char *rsp, size_t rsplen)
+ {
+ 	struct motmdm_response *resp, *tmp;
+ 	struct list_head *pos, *q;
+@@ -502,7 +498,6 @@ static int motmdm_register_dlci(struct device *dev,
+ 	ddata = gsm_serdev_get_drvdata(dev);
+ 	gsd = &ddata->gsd;
+ 	gsm_dlci = &mot_dlci->gsm_dlci;
+-	mot_dlci->send_command = motmdm_dlci_send_command;
+ 	INIT_LIST_HEAD(&mot_dlci->list);
+ 	init_waitqueue_head(&mot_dlci->read_queue);
+ 	gsm_dlci->line = mot_dlci->line;
+@@ -929,9 +924,8 @@ static int motmdm_check_revision(struct device *dev)
+ 		goto free_buf;
+ 
+ 	while (retries--) {
+-		err = motmdm_dlci_send_command(dev, mot_dlci, 1000,
+-					       cmd, strlen(cmd),
+-					       buf, PAGE_SIZE);
++		err = motmdm_send_command(dev, mot_dlci, 1000, cmd, strlen(cmd),
++					  buf, PAGE_SIZE);
+ 		if (err >= 0) {
+ 			msleep(100);
+ 			break;
+-- 
+2.25.0
