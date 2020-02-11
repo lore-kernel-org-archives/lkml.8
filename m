@@ -6,168 +6,192 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A35C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1846EC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7818A208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB78720848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgBKJEb (ORCPT
+        id S1727930AbgBKJEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:04:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45456 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgBKJEb (ORCPT
+        Tue, 11 Feb 2020 04:04:45 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43935 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgBKJEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:04:31 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j1RT1-0003dt-H4; Tue, 11 Feb 2020 10:04:27 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0F8DE101115; Tue, 11 Feb 2020 10:04:27 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mm-commits@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>
-Subject: Re: + linux-next-git-rejects.patch added to -mm tree
-In-Reply-To: <20200210215838.9lAjuyf-h%akpm@linux-foundation.org>
-References: <20200210215838.9lAjuyf-h%akpm@linux-foundation.org>
-Date:   Tue, 11 Feb 2020 10:04:27 +0100
-Message-ID: <87o8u54hr8.fsf@nanos.tec.linutronix.de>
+        Tue, 11 Feb 2020 04:04:44 -0500
+Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id adfc0e3b68c92435; Tue, 11 Feb 2020 10:04:40 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>,
+        David Box <david.e.box@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH v2] ACPI: EC: Fix flushing of pending work
+Date:   Tue, 11 Feb 2020 10:04:40 +0100
+Message-ID: <28760106.ljELEbzjY3@kreacher>
+In-Reply-To: <2209952.LFAxc7Zn43@kreacher>
+References: <2209952.LFAxc7Zn43@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-akpm@linux-foundation.org writes:
+Commit 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+introduced a subtle bug into the flushing of pending EC work while
+suspended to idle, which may cause the EC driver to fail to
+re-enable the EC GPE after handling a non-wakeup event (like a
+battery status change event, for example).
 
-> The patch titled
->      Subject: linux-next-git-rejects
-> has been added to the -mm tree.  Its filename is
->      linux-next-git-rejects.patch
->
-> This patch should soon appear at
->     http://ozlabs.org/~akpm/mmots/broken-out/linux-next-git-rejects.patch
-> and later at
->     http://ozlabs.org/~akpm/mmotm/broken-out/linux-next-git-rejects.patch
->
-> Before you just go and hit "reply", please:
->    a) Consider who else should be cc'ed
->    b) Prefer to cc a suitable mailing list as well
->    c) Ideally: find the original patch on the mailing list and do a
->       reply-to-all to that, adding suitable additional cc's
->
-> *** Remember to use Documentation/process/submit-checklist.rst when testing your code ***
->
-> The -mm tree is included into linux-next and is updated
-> there every 3-4 working days
->
-> ------------------------------------------------------
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: linux-next-git-rejects
+The problem is that the work item flushed by flush_scheduled_work()
+in __acpi_ec_flush_work() may disable the EC GPE and schedule another
+work item expected to re-enable it, but that new work item is not
+flushed, so __acpi_ec_flush_work() returns with the EC GPE disabled
+and the CPU running it goes into an idle state subsequently.  If all
+of the other CPUs are in idle states at that point, the EC GPE won't
+be re-enabled until at least one CPU is woken up by another interrupt
+source, so system wakeup events that would normally come from the EC
+then don't work.
 
-I have no idea what this is about and the empty changelog is not really
-helpful either.
+This is reproducible on a Dell XPS13 9360 in my office which
+sometimes stops reacting to power button and lid events (triggered
+by the EC on that machine) after switching from AC power to battery
+power or vice versa while suspended to idle (each of those switches
+causes the EC GPE to trigger for several times in a row, but they
+are not system wakeup events).
 
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
->
->  drivers/irqchip/irq-gic-v3-its.c |   69 -----------------------------
->  1 file changed, 69 deletions(-)
->
-> --- a/drivers/irqchip/irq-gic-v3-its.c~linux-next-git-rejects
-> +++ a/drivers/irqchip/irq-gic-v3-its.c
-> @@ -2443,75 +2443,6 @@ static u64 inherit_vpe_l1_table_from_rd(
->  	return 0;
->  }
->  
-> -<<<<<<< HEAD
-> -static bool allocate_vpe_l2_table(int cpu, u32 id)
-> -{
-> -	void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
-> -	unsigned int psz, esz, idx, npg, gpsz;
-> -	u64 val;
-> -	struct page *page;
-> -	__le64 *table;
-> -
-> -	if (!gic_rdists->has_rvpeid)
-> -		return true;
-> -
-> -	val  = gicr_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
-> -
-> -	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
-> -	gpsz = FIELD_GET(GICR_VPROPBASER_4_1_PAGE_SIZE, val);
-> -	npg  = FIELD_GET(GICR_VPROPBASER_4_1_SIZE, val) + 1;
-> -
-> -	switch (gpsz) {
-> -	default:
-> -		WARN_ON(1);
-> -		/* fall through */
-> -	case GIC_PAGE_SIZE_4K:
-> -		psz = SZ_4K;
-> -		break;
-> -	case GIC_PAGE_SIZE_16K:
-> -		psz = SZ_16K;
-> -		break;
-> -	case GIC_PAGE_SIZE_64K:
-> -		psz = SZ_64K;
-> -		break;
-> -	}
-> -
-> -	/* Don't allow vpe_id that exceeds single, flat table limit */
-> -	if (!(val & GICR_VPROPBASER_4_1_INDIRECT))
-> -		return (id < (npg * psz / (esz * SZ_8)));
-> -
-> -	/* Compute 1st level table index & check if that exceeds table limit */
-> -	idx = id >> ilog2(psz / (esz * SZ_8));
-> -	if (idx >= (npg * psz / GITS_LVL1_ENTRY_SIZE))
-> -		return false;
-> -
-> -	table = gic_data_rdist_cpu(cpu)->vpe_l1_base;
-> -
-> -	/* Allocate memory for 2nd level table */
-> -	if (!table[idx]) {
-> -		page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(psz));
-> -		if (!page)
-> -			return false;
-> -
-> -		/* Flush Lvl2 table to PoC if hw doesn't support coherency */
-> -		if (!(val & GICR_VPROPBASER_SHAREABILITY_MASK))
-> -			gic_flush_dcache_to_poc(page_address(page), psz);
-> -
-> -		table[idx] = cpu_to_le64(page_to_phys(page) | GITS_BASER_VALID);
-> -
-> -		/* Flush Lvl1 entry to PoC if hw doesn't support coherency */
-> -		if (!(val & GICR_VPROPBASER_SHAREABILITY_MASK))
-> -			gic_flush_dcache_to_poc(table + idx, GITS_LVL1_ENTRY_SIZE);
-> -
-> -		/* Ensure updated table contents are visible to RD hardware */
-> -		dsb(sy);
-> -	}
-> -
-> -	return true;
-> -}
-> -
-> -=======
-> ->>>>>>> linux-next/akpm-base
->  static int allocate_vpe_l1_table(void)
->  {
->  	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-> _
->
-> Patches currently in -mm which might be from akpm@linux-foundation.org are
->
-> mm.patch
-> linux-next-fix.patch
-> drivers-tty-serial-sh-scic-suppress-warning.patch
-> kernel-forkc-export-kernel_thread-to-modules.patch
-> linux-next-git-rejects.patch
+To avoid this problem, it is necessary to drain the workqueue
+entirely in __acpi_ec_flush_work(), but that cannot be done with
+respect to system_wq, because work items may be added to it from
+other places while __acpi_ec_flush_work() is running.  For this
+reason, make the EC driver use a dedicated workqueue for EC events
+processing (let that workqueue be ordered so that EC events are
+processed sequentially) and use drain_workqueue() on it in
+__acpi_ec_flush_work().
+
+Fixes: 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+-> v2:
+   * Use a dedicated wq for EC events.
+
+---
+ drivers/acpi/ec.c |   43 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 17 deletions(-)
+
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -179,6 +179,7 @@ EXPORT_SYMBOL(first_ec);
+ 
+ static struct acpi_ec *boot_ec;
+ static bool boot_ec_is_ecdt = false;
++static struct workqueue_struct *ec_wq;
+ static struct workqueue_struct *ec_query_wq;
+ 
+ static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
+@@ -469,7 +470,7 @@ static void acpi_ec_submit_query(struct
+ 		ec_dbg_evt("Command(%s) submitted/blocked",
+ 			   acpi_ec_cmd_string(ACPI_EC_COMMAND_QUERY));
+ 		ec->nr_pending_queries++;
+-		schedule_work(&ec->work);
++		queue_work(ec_wq, &ec->work);
+ 	}
+ }
+ 
+@@ -535,7 +536,7 @@ static void acpi_ec_enable_event(struct
+ #ifdef CONFIG_PM_SLEEP
+ static void __acpi_ec_flush_work(void)
+ {
+-	flush_scheduled_work(); /* flush ec->work */
++	drain_workqueue(ec_wq); /* flush ec->work */
+ 	flush_workqueue(ec_query_wq); /* flush queries */
+ }
+ 
+@@ -556,8 +557,8 @@ static void acpi_ec_disable_event(struct
+ 
+ void acpi_ec_flush_work(void)
+ {
+-	/* Without ec_query_wq there is nothing to flush. */
+-	if (!ec_query_wq)
++	/* Without ec_wq there is nothing to flush. */
++	if (!ec_wq)
+ 		return;
+ 
+ 	__acpi_ec_flush_work();
+@@ -2107,25 +2108,33 @@ static struct acpi_driver acpi_ec_driver
+ 	.drv.pm = &acpi_ec_pm,
+ };
+ 
+-static inline int acpi_ec_query_init(void)
++static void acpi_ec_destroy_workqueues(void)
+ {
+-	if (!ec_query_wq) {
+-		ec_query_wq = alloc_workqueue("kec_query", 0,
+-					      ec_max_queries);
+-		if (!ec_query_wq)
+-			return -ENODEV;
++	if (ec_wq) {
++		destroy_workqueue(ec_wq);
++		ec_wq = NULL;
+ 	}
+-	return 0;
+-}
+-
+-static inline void acpi_ec_query_exit(void)
+-{
+ 	if (ec_query_wq) {
+ 		destroy_workqueue(ec_query_wq);
+ 		ec_query_wq = NULL;
+ 	}
+ }
+ 
++static int acpi_ec_init_workqueues(void)
++{
++	if (!ec_wq)
++		ec_wq = alloc_ordered_workqueue("kec", 0);
++
++	if (!ec_query_wq)
++		ec_query_wq = alloc_workqueue("kec_query", 0, ec_max_queries);
++
++	if (!ec_wq || !ec_query_wq) {
++		acpi_ec_destroy_workqueues();
++		return -ENODEV;
++	}
++	return 0;
++}
++
+ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
+ 	{
+ 		.ident = "Thinkpad X1 Carbon 6th",
+@@ -2157,7 +2166,7 @@ int __init acpi_ec_init(void)
+ 	int ecdt_fail, dsdt_fail;
+ 
+ 	/* register workqueue for _Qxx evaluations */
+-	result = acpi_ec_query_init();
++	result = acpi_ec_init_workqueues();
+ 	if (result)
+ 		return result;
+ 
+@@ -2188,6 +2197,6 @@ static void __exit acpi_ec_exit(void)
+ {
+ 
+ 	acpi_bus_unregister_driver(&acpi_ec_driver);
+-	acpi_ec_query_exit();
++	acpi_ec_destroy_workqueues();
+ }
+ #endif	/* 0 */
+
+
+
