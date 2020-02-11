@@ -2,244 +2,287 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D7DC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C491BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC1D2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2562080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="e8ipBCFy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EqgHqsJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgBKA50 (ORCPT
+        id S1727720AbgBKBCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:57:26 -0500
-Received: from mail-co1nam11on2056.outbound.protection.outlook.com ([40.107.220.56]:6164
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727120AbgBKA50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:57:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CeKEe09MBLUNFQdfCgI1peuXYe9sL2oKUMj9v2JY2MsvJQPU2km21ErrmAFGzryxOvY7lQxP1ijNqn/XIxzLVQKbusDBPzvab6e2GN77CZVtrwtwPjumKzwbCwy8scWoqgQNdQyBBKPvcIzuFsIqjF9OBlIYfkE4+URESTvFI3pUBHYOhOedKWQDx8YyChutU19Zy0vRX/rVLClJ6i/tyjG/9R/Fu2QdZGi/LRtXKz/RAhqp5UM6/OPYGHjdG1qi4kOfvBG9RgyCFglPC5gHBBMVAejDVbtSEDDXjXEb8X1bSI+PAg89Krx/finsJrsooafzz/SKUOlSjTGC5wfGpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FaEm4nah8+Cct0kboRh+hxM4iyqnk5afGcvtdxBu7pk=;
- b=ZFAcmVOW40n77JytALXJYNJivV7uyVVfxVMk9Sijon8A4kbhZTglMKjYgt2TQDbAJFeoU36ZsdGWL/rCYzlLlaNEFRQiuN2ztc3nvLaxiXL2SLuI1IAuhudX+u7j6iQxkZ9CKGYsoH5e+Jm4+hyugfVhjrqoDjcrsQPMyb1ORpH3nTCdfKwfwb9Vz24N4L6dom3aSysuK78uEpc413tC9ibyrMg+y/ZKekDpmNd9H2DDIFKFghNtTEpULXAK7rBW6Dq+PA8UG58zgXT8FLg8QM/0fQyZRgpb2jaEKgyVdho0f3JziV7+fxxxlgsIvOvDMWuu1F5Wi44XAw+HbWUWdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
+        Mon, 10 Feb 2020 20:02:45 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:50790 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727577AbgBKBCo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 20:02:44 -0500
+Received: by mail-pg1-f202.google.com with SMTP id q4so6477663pgr.17
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 17:02:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FaEm4nah8+Cct0kboRh+hxM4iyqnk5afGcvtdxBu7pk=;
- b=e8ipBCFy4W7xQs5D4hMXrC9tumF2qVn6O0o22WQqixHu7Qw2rLZ9g4+bh68eXXh0qxG3F4FycfwztPicny0Ui+S1pwOYrL2AWzadh89wFDZYQsCVoCVQZ5QxEndr+P6yvalDt/Cyge2KX6QZsaWFYlAmXafBbnCv80HEMUE4Wdk=
-Received: from BN7PR02CA0007.namprd02.prod.outlook.com (2603:10b6:408:20::20)
- by SN6PR02MB5182.namprd02.prod.outlook.com (2603:10b6:805:69::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.25; Tue, 11 Feb
- 2020 00:57:18 +0000
-Received: from BL2NAM02FT050.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::206) by BN7PR02CA0007.outlook.office365.com
- (2603:10b6:408:20::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend
- Transport; Tue, 11 Feb 2020 00:57:18 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT050.mail.protection.outlook.com (10.152.77.101) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2707.21
- via Frontend Transport; Tue, 11 Feb 2020 00:57:18 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1j1Jra-0004pY-0g; Mon, 10 Feb 2020 16:57:18 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1j1JrU-00065o-Td; Mon, 10 Feb 2020 16:57:12 -0800
-Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01B0v1mi025411;
-        Mon, 10 Feb 2020 16:57:02 -0800
-Received: from [172.19.0.52]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <jollys@xilinx.com>)
-        id 1j1JrJ-00062m-Sr; Mon, 10 Feb 2020 16:57:01 -0800
-Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-To:     "'Greg KH'" <gregkh@linuxfoundation.org>,
-        Rajan Vaja <RAJANV@xilinx.com>
-Cc:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
- <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
- <20200114145257.GA1910108@kroah.com>
- <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
- <20200124060339.GB2906795@kroah.com>
- <2D4B924A-D10C-4A90-A8E6-507BF6C30654@xilinx.com>
- <20200128062814.GA2097606@kroah.com>
- <4EF659A1-2844-46B9-9ED6-5A6A20401D9D@xilinx.com>
- <20200131061038.GA2180358@kroah.com>
- <BYAPR02MB40559D6B62C4532C0EAD0281B7070@BYAPR02MB4055.namprd02.prod.outlook.com>
- <20200131093646.GA2271937@kroah.com>
-From:   Jolly Shah <jolly.shah@xilinx.com>
-Message-ID: <3ef20e9d-052f-665c-7fc8-69a1f8bc9bd2@xilinx.com>
-Date:   Mon, 10 Feb 2020 16:57:01 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200131093646.GA2271937@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(39860400002)(199004)(189003)(8936002)(478600001)(26005)(6636002)(36756003)(8676002)(5660300002)(186003)(356004)(81166006)(81156014)(336012)(31686004)(70206006)(4326008)(31696002)(53546011)(426003)(9786002)(70586007)(7416002)(44832011)(54906003)(110136005)(316002)(2906002)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5182;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40318959-db02-4202-a578-08d7ae8d581c
-X-MS-TrafficTypeDiagnostic: SN6PR02MB5182:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB5182998F0D67A6F48188E612B8180@SN6PR02MB5182.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0310C78181
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Yo7aBNBSxpuJBeViig67a8Z8qQ5z1+9kS+tGgPtGbfZ4Uy3kzyXow2zOOiKkKRwdgCZy27dQzxxjRJLHM3FBG9MFahf/1WdFgrzDNnIduEm080s9u47vdTzzsGDMf4fnYsuhWCgL3svZj+FD6aMCHQsAgiWH6zAj2zV4CoOs8+jT+QGtwSlx/rvRh5GTLFUo5mrIA1vJ09ceO5thlS5bLBC5AdKVdCMkMMfsQ4XzBP0A7ry3mZMjsaS+LtAboCOTtev1woyldhhCDC5+ZAZADk0IVSBZGsP5MH4hQg0RtCZTyDMYhOA1D5eI5htWhGtB7Vt4/4ojG3adBP+gCSilb/6lt6gUI9JLQyvzxczQ1C2JKlPSJxdeEvAfyDLN1gyfhakzXsPBru3V21CIi8yf8/+7mNeJO6cLwe92+lH3p1ne1eHxSW9yH9Kx2MocwTw62/ZJcocr7li00+/7rOcSPdZLg73EG7/DuwkX5jUPdjBAtfgy9/4iq/XSEixxmoVGuDNND3xPJ7Q5tCARelW1DQ==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 00:57:18.5716
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40318959-db02-4202-a578-08d7ae8d581c
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5182
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=FCGShYhhgcnM7PF8/ijIsVVXLdpFwigYVMP37PnwTck=;
+        b=EqgHqsJxa8C7fn+Wki1EguP3hB8hrPbXer3KQY4gcZM3fKrqEzRZ8NTHY5MnEIYZJB
+         Bbn4aEd1g5VOEpmII9h0Ec0zV7vxNz/n06/mOIo62Blq/+WyIy3NgZQbB+kfZPBSWulq
+         j3JJ6C94RC3QI4+oCb7MxiE43D7Pe7elDkjd2NuZlDHl4Q6FhO8EFkGygVB3suOVzlrS
+         b3kDULf5xE5achu9xERnQX1+iLNqcQNFfc0ZsTYcUF+rrQ00a5Pr4cUR8elzlaTHCCLC
+         z9u6SIQ+LoQTP8bYRb7fqNYQ3OqACuYnK55+lsNDJhfbO0ENbtUqIif94c+JqPwe9YlB
+         oSOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=FCGShYhhgcnM7PF8/ijIsVVXLdpFwigYVMP37PnwTck=;
+        b=JOHqBC7KO7lfj9Plnc+Tsqqb+xMsX2rrCzU3NN63CFefszHIcn1vjYCBHWlIN5WIhR
+         ivLCc5yQNruZu26Z8CBbEROnbRCBNWhjgkmcMy0no1div1cxzj9Igo3UKXBftFtRLm1m
+         IsrLRZPdyEpJl0KAy18J2GP3dXKuOJSYTBX8k8UgrGpXiN6H4Pc6dClDTdl6Hnb+Fc3o
+         5ehQEgpq0Hdot6G0jv57iHHwAvK10D7uV5rf+8BNn20uBxGjydxPV8qsTsxan6A1z8eX
+         uELATCq/RbDs7fkPPivo1uFWNFZt+LTKykVERDScnCE9Z9cpDNwRktqvftJilPWbP3eh
+         3q3w==
+X-Gm-Message-State: APjAAAVhcZiz8zi2AfPLthXzkl+O/zf5q3J/bU1oUNMjj2NYzfFyLbal
+        9A6RJlovp9K6clc6ufywymGF2ZndIrC6sw==
+X-Google-Smtp-Source: APXvYqxCByTRssGEeDlgq5LA62XXMvHAm0cbNRguxcdJFP14OSmy+8fUY9L+EKvGWgX12ZkT7VWIiqgFbLf5vQ==
+X-Received: by 2002:a63:d94d:: with SMTP id e13mr4236681pgj.240.1581382963408;
+ Mon, 10 Feb 2020 17:02:43 -0800 (PST)
+Date:   Mon, 10 Feb 2020 17:02:29 -0800
+Message-Id: <20200211010229.251757-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] Documentation: kunit: Make the KUnit documentation less UML-specific
+From:   David Gow <davidgow@google.com>
+To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
+        corbet@lwn.net
+Cc:     kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        frowand.list@gmail.com, David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Remove some of the outmoded "Why KUnit" rationale -- which focuses
+significantly on UML -- and update the Getting Started guide to mention
+running tests without the kunit_tool wrapper.
 
- > ------Original Message------
- > From: 'Greg Kh' <gregkh@linuxfoundation.org>
- > Sent:  Friday, January 31, 2020 1:36AM
- > To: Rajan Vaja <RAJANV@xilinx.com>
- > Cc: Jolly Shah <JOLLYS@xilinx.com>, Ard Biesheuvel 
-<ard.biesheuvel@linaro.org>, Mingo <mingo@kernel.org>, Matt 
-<matt@codeblueprint.co.uk>, Sudeep Holla <sudeep.holla@arm.com>, 
-Hkallweit1 <hkallweit1@gmail.com>, Keescook <keescook@chromium.org>, 
-Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michal Simek 
-<michals@xilinx.com>, Linux-arm-kernel 
-<linux-arm-kernel@lists.infradead.org>, Linux-kernel 
-<linux-kernel@vger.kernel.org>
- > Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
- >
-> On Fri, Jan 31, 2020 at 09:05:15AM +0000, Rajan Vaja wrote:
->> Hi Greg,
->>
->>> -----Original Message-----
->>> From: Greg KH <gregkh@linuxfoundation.org>
->>> Sent: 31 January 2020 11:41 AM
->>> To: Jolly Shah <JOLLYS@xilinx.com>
->>> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org; matt@codeblueprint.co.uk;
->>> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
->>> dmitry.torokhov@gmail.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
->>> <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
->>> kernel@vger.kernel.org
->>> Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
->>>
->>> EXTERNAL EMAIL
->>>
->>> On Thu, Jan 30, 2020 at 11:59:03PM +0000, Jolly Shah wrote:
->>>> Hi Greg,
->>>>
->>>> ﻿On 1/27/20, 10:28 PM, "linux-kernel-owner@vger.kernel.org on behalf of Greg
->>> KH" <linux-kernel-owner@vger.kernel.org on behalf of
->>> gregkh@linuxfoundation.org> wrote:
->>>>
->>>>      On Mon, Jan 27, 2020 at 11:01:27PM +0000, Jolly Shah wrote:
->>>>      >     > > > +     ret = kstrtol(tok, 16, &value);
->>>>      >     > > > +     if (ret) {
->>>>      >     > > > +             ret = -EFAULT;
->>>>      >     > > > +             goto err;
->>>>      >     > > > +     }
->>>>      >     > > > +
->>>>      >     > > > +     ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
->>>>      >     > >
->>>>      >     > > This feels "tricky", if you tie this to the device you have your driver
->>>>      >     > > bound to, will this make it easier instead of having to go through the
->>>>      >     > > ioctl callback?
->>>>      >     > >
->>>>      >     >
->>>>      >     > GGS(general global storage) registers are in PMU space and linux
->>> doesn't have access to it
->>>>      >     > Hence ioctl is used.
->>>>      >
->>>>      >     Why not just a "real" call to the driver to make this type of reading?
->>>>      >     You don't have ioctls within the kernel for other drivers to call,
->>>>      >     that's not needed at all.
->>>>      >
->>>>      > these registers are for users  and for special needs where users wants
->>>>      > to retain values over resets. but as they belong to PMU address space,
->>>>      > these interface APIs are provided. They don’t allow access to any
->>>>      > other registers.
->>>>
->>>>      That's not the issue here.  The issue is you are using an "internal"
->>>>      ioctl, instead just make a "real" call.
->>>>
->>>> Sorry I am not clear. Do you mean that we should use linux standard
->>>> ioctl interface instead of internal ioctl by mentioning "real" ?
->>>
->>> No, you should just make a "real" function call to the exact thing you
->>> want to do.  Not have an internal multi-plexor ioctl() call that others
->>> then call.  This isn't a microkernel :)
->> [Rajan] Sorry for multiple back and forth but as I understand, you are suggesting to create a new API for
->> Read/write of GGS register instead of using PM_IOCTL API (eemi_ops->ioctl) for multiple purpose. Is my understanding correct?
-> 
-> That is correct.
+Signed-off-by: David Gow <davidgow@google.com>
+---
+This is an attempt at resolving some of the issues with the KUnit
+documentation pointed out here:
+https://lore.kernel.org/linux-kselftest/CABVgOSkiLi0UNijH1xTSvmsJEE5+ocCZ7nkzmKzxDLzzfqBSzQ@mail.gmail.com/
+
+There's definitely room for further work on the KUnit documentation
+(e.g., adding more information around the environment tests run in), but
+this hopefully is better than nothing as a starting point.
 
 
+ Documentation/dev-tools/kunit/index.rst | 60 ++++---------------
+ Documentation/dev-tools/kunit/start.rst | 80 +++++++++++++++++++++----
+ 2 files changed, 78 insertions(+), 62 deletions(-)
 
-Would like to clarify purpose of having ioctl API to avoid any confusion.
-eemi interface apis are defined to be platform independent and allows 
-clock, reset, power etc management through firmware but apart from these 
-generic operations, there are some operations which needs secure access 
-through firmware. Examples are accessing some storage registers(ggs and 
-pggs) for inter agent communication, configuring another agent(RPU) 
-mode, boot device configuration etc. Those operations are covered as 
-ioctls as they are very platform specific. Also only whitelisted 
-operations are allowed through ioctl and is not exposed to user for any 
-random read/write operation.
+diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
+index d16a4d2c3a41..6064cd14dfad 100644
+--- a/Documentation/dev-tools/kunit/index.rst
++++ b/Documentation/dev-tools/kunit/index.rst
+@@ -17,63 +17,23 @@ What is KUnit?
+ ==============
+ 
+ KUnit is a lightweight unit testing and mocking framework for the Linux kernel.
+-These tests are able to be run locally on a developer's workstation without a VM
+-or special hardware.
+ 
+ KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+ Googletest/Googlemock for C++. KUnit provides facilities for defining unit test
+ cases, grouping related test cases into test suites, providing common
+ infrastructure for running tests, and much more.
+ 
+-Get started now: :doc:`start`
+-
+-Why KUnit?
+-==========
+-
+-A unit test is supposed to test a single unit of code in isolation, hence the
+-name. A unit test should be the finest granularity of testing and as such should
+-allow all possible code paths to be tested in the code under test; this is only
+-possible if the code under test is very small and does not have any external
+-dependencies outside of the test's control like hardware.
+-
+-Outside of KUnit, there are no testing frameworks currently
+-available for the kernel that do not require installing the kernel on a test
+-machine or in a VM and all require tests to be written in userspace running on
+-the kernel; this is true for Autotest, and kselftest, disqualifying
+-any of them from being considered unit testing frameworks.
++KUnit consists of a kernel component, which provides a set of macros for easily
++writing unit tests. Tests written against KUnit will run on kernel boot if
++built-in, or when loaded if built as a module. These tests write out results to
++the kernel log in `TAP <https://testanything.org/>`_ format.
+ 
+-KUnit addresses the problem of being able to run tests without needing a virtual
+-machine or actual hardware with User Mode Linux. User Mode Linux is a Linux
+-architecture, like ARM or x86; however, unlike other architectures it compiles
+-to a standalone program that can be run like any other program directly inside
+-of a host operating system; to be clear, it does not require any virtualization
+-support; it is just a regular program.
++To make running these tests (and reading the results) easier, KUnit offsers
++:doc:`kunit_tool <kunit-tool>`, which builds a `User Mode Linux
++<http://user-mode-linux.sourceforge.net>`_ kernel, runs it, and parses the test
++results. This provides a quick way of running KUnit tests during development.
+ 
+-Alternatively, kunit and kunit tests can be built as modules and tests will
+-run when the test module is loaded.
+-
+-KUnit is fast. Excluding build time, from invocation to completion KUnit can run
+-several dozen tests in only 10 to 20 seconds; this might not sound like a big
+-deal to some people, but having such fast and easy to run tests fundamentally
+-changes the way you go about testing and even writing code in the first place.
+-Linus himself said in his `git talk at Google
+-<https://gist.github.com/lorn/1272686/revisions#diff-53c65572127855f1b003db4064a94573R874>`_:
+-
+-	"... a lot of people seem to think that performance is about doing the
+-	same thing, just doing it faster, and that is not true. That is not what
+-	performance is all about. If you can do something really fast, really
+-	well, people will start using it differently."
+-
+-In this context Linus was talking about branching and merging,
+-but this point also applies to testing. If your tests are slow, unreliable, are
+-difficult to write, and require a special setup or special hardware to run,
+-then you wait a lot longer to write tests, and you wait a lot longer to run
+-tests; this means that tests are likely to break, unlikely to test a lot of
+-things, and are unlikely to be rerun once they pass. If your tests are really
+-fast, you run them all the time, every time you make a change, and every time
+-someone sends you some code. Why trust that someone ran all their tests
+-correctly on every change when you can just run them yourself in less time than
+-it takes to read their test log?
++Get started now: :doc:`start`
+ 
+ How do I use it?
+ ================
+@@ -81,3 +41,5 @@ How do I use it?
+ *   :doc:`start` - for new users of KUnit
+ *   :doc:`usage` - for a more detailed explanation of KUnit features
+ *   :doc:`api/index` - for the list of KUnit APIs used for testing
++*   :doc:`kunit-tool` - for more information on the kunit_tool helper script
++*   :doc:`faq` - for answers to some common questions about KUnit
+diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+index 4e1d24db6b13..e1c5ce80ce12 100644
+--- a/Documentation/dev-tools/kunit/start.rst
++++ b/Documentation/dev-tools/kunit/start.rst
+@@ -9,11 +9,10 @@ Installing dependencies
+ KUnit has the same dependencies as the Linux kernel. As long as you can build
+ the kernel, you can run KUnit.
+ 
+-KUnit Wrapper
+-=============
+-Included with KUnit is a simple Python wrapper that helps format the output to
+-easily use and read KUnit output. It handles building and running the kernel, as
+-well as formatting the output.
++Running tests with the KUnit Wrapper
++====================================
++Included with KUnit is a simple Python wrapper which runs tests under User Mode
++Linux, and formats the test results.
+ 
+ The wrapper can be run with:
+ 
+@@ -21,22 +20,42 @@ The wrapper can be run with:
+ 
+ 	./tools/testing/kunit/kunit.py run --defconfig
+ 
+-For more information on this wrapper (also called kunit_tool) checkout the
++For more information on this wrapper (also called kunit_tool) check out the
+ :doc:`kunit-tool` page.
+ 
+ Creating a .kunitconfig
+-=======================
+-The Python script is a thin wrapper around Kbuild. As such, it needs to be
+-configured with a ``.kunitconfig`` file. This file essentially contains the
+-regular Kernel config, with the specific test targets as well.
+-
++-----------------------
++If you want to run a specific set of tests (rather than those listed in the
++KUnit defconfig), you can provide Kconfig options in the ``.kunitconfig`` file.
++This file essentially contains the regular Kernel config, with the specific
++test targets as well. The ``.kunitconfig`` should also contain any other config
++options required by the tests.
++
++A good starting point for a ``.kunitconfig`` is the KUnit defconfig:
+ .. code-block:: bash
+ 
+ 	cd $PATH_TO_LINUX_REPO
+ 	cp arch/um/configs/kunit_defconfig .kunitconfig
+ 
+-Verifying KUnit Works
+----------------------
++You can then add any other Kconfig options you wish, e.g.:
++.. code-block:: none
++
++        CONFIG_LIST_KUNIT_TEST=y
++
++:doc:`kunit_tool <kunit-tool>` will ensure that all config options set in
++``.kunitconfig`` are set in the kernel ``.config`` before running the tests.
++It'll warn you if you haven't included the dependencies of the options you're
++using.
++
++.. note::
++   Note that removing something from the ``.kunitconfig`` will not trigger a
++   rebuild of the ``.config`` file: the configuration is only updated if the
++   ``.kunitconfig`` is not a subset of ``.config``. This means that you can use
++   other tools (such as make menuconfig) to adjust other config options.
++
++
++Running the tests
++-----------------
+ 
+ To make sure that everything is set up correctly, simply invoke the Python
+ wrapper from your kernel repo:
+@@ -62,6 +81,41 @@ followed by a list of tests that are run. All of them should be passing.
+ 	Because it is building a lot of sources for the first time, the
+ 	``Building KUnit kernel`` step may take a while.
+ 
++Running tests without the KUnit Wrapper
++=======================================
++
++If you'd rather not use the KUnit Wrapper (if, for example, you need to
++integrate with other systems, or use an architecture other than UML), KUnit can
++be included in any kernel, and the results read out and parsed manually.
++
++.. note::
++   KUnit is not designed for use in a production system, and it's possible that
++   tests may reduce the stability or security of the system.
++
++
++
++Configuring the kernel
++----------------------
++
++In order to enable KUnit itself, you simply need to enable the ``CONFIG_KUNIT``
++Kconfig option (it's under Kernel Hacking/Kernel Testing and Coverage in
++menuconfig). From there, you can enable any KUnit tests you want: they usually
++have config options ending in ``_KUNIT_TEST``.
++
++KUnit and KUnit tests can be compiled as modules: in this case the tests in a
++module will be run when the module is loaded.
++
++Running the tests
++-----------------
++
++Build and run your kernel as usual. Test output will be written to the kernel
++log in `TAP <https://testanything.org/>`_ format.
++
++.. note::
++   It's possible that there will be other lines and/or data interspersed in the
++   TAP output.
++
++
+ Writing your first test
+ =======================
+ 
+-- 
+2.25.0.341.g760bfbb309-goog
 
-Olof earlier had same concerns. We had clarified the purpose and with 
-his agreement, initial set of ioctls were accepted. 
-(https://www.lkml.org/lkml/2018/9/24/1570)
-
-Please suggest the best approach to handle this for current and future 
-patches.
-
-Thanks,
-Jolly Shah
-
-
-> 
