@@ -4,48 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122DCC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A026FC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB50320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7701920656
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436191;
-	bh=h5nC5RXMWDNcRxyud8twx5FHiTu877J8IHufZ7mfTfA=;
+	s=default; t=1581436195;
+	bh=8feJEq5AzOwh87WXaggDqQi0VcVbODfOWKpD3rX2DVQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=DarFwJsnkTvEBSV3jtNe1JifoBZNvHAN6ahRWWvt/LtE40IFtsCEPslpmdVSqguMu
-	 +lHv0TNIdyoFgIftQf5ZFh+maVW7QH7BYs37b5rtYjIjbyOhodx1vYgDJfvGdbDY1/
-	 5/Ab/9zKg6rrwbSPu3AZab09VrKZuVLLgTJ50WH8=
+	b=iRxpY3/tQ9Wv7Mictzl9PIievjyBD4/iiUvSHSAiLFkSNOIB0OCzzUey1BIt1a5RX
+	 9ghYG5id8eEQzRthLs71Y/O+QNxeHnHozB1pKZGCh/meuXRoDuzGVzFLL8kZfIxVdP
+	 XIVRToTTfMUKW72K7fAKOVg8hwEs2TtLhl+Oieck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgBKPtv (ORCPT
+        id S1730572AbgBKPtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:49:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:48632 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:49:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:48698 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730524AbgBKPtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:49:41 -0500
+        id S1728953AbgBKPtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:49:51 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 236ED113E;
-        Tue, 11 Feb 2020 07:49:41 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DA5C143D;
+        Tue, 11 Feb 2020 07:49:50 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BFE13F68E;
-        Tue, 11 Feb 2020 07:49:40 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:49:39 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01DC13F68E;
+        Tue, 11 Feb 2020 07:49:49 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:49:48 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        broonie@kernel.org, Etienne Carriere <etienne.carriere@st.com>,
-        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: stm32: spdifrx: manage error when getting reset controller" to the asoc tree
-In-Reply-To: <20200203100814.22944-3-olivier.moysan@st.com>
-Message-Id: <applied-20200203100814.22944-3-olivier.moysan@st.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Applied "ASoC: wcd934x: Remove some unnecessary NULL checks" to the asoc tree
+In-Reply-To: <20200204060143.23393-1-natechancellor@gmail.com>
+Message-Id: <applied-20200204060143.23393-1-natechancellor@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -54,7 +51,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: spdifrx: manage error when getting reset controller
+   ASoC: wcd934x: Remove some unnecessary NULL checks
 
 has been applied to the asoc tree at
 
@@ -79,49 +76,68 @@ to this mail.
 Thanks,
 Mark
 
-From 7889c0082e6400ae5d07345e5573548d0999b840 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 3 Feb 2020 11:08:10 +0100
-Subject: [PATCH] ASoC: stm32: spdifrx: manage error when getting reset
- controller
+From 918d0aba86ed8c1f4ff7f39e39e5c1b46fff2bc2 Mon Sep 17 00:00:00 2001
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Mon, 3 Feb 2020 23:01:44 -0700
+Subject: [PATCH] ASoC: wcd934x: Remove some unnecessary NULL checks
 
-Return an error when the SPDIFRX driver fails to get a reset controller.
-Also add an error trace, except on probe defer status.
+Clang warns:
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20200203100814.22944-3-olivier.moysan@st.com
+../sound/soc/codecs/wcd934x.c:1886:11: warning: address of array
+'wcd->rx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
+        if (wcd->rx_chs) {
+        ~~  ~~~~~^~~~~~
+../sound/soc/codecs/wcd934x.c:1894:11: warning: address of array
+'wcd->tx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
+        if (wcd->tx_chs) {
+        ~~  ~~~~~^~~~~~
+2 warnings generated.
+
+Arrays that are in the middle of a struct are never NULL so they don't
+need a check like this.
+
+Fixes: a61f3b4f476e ("ASoC: wcd934x: add support to wcd9340/wcd9341 codec")
+Link: https://github.com/ClangBuiltLinux/linux/issues/854
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20200204060143.23393-1-natechancellor@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_spdifrx.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ sound/soc/codecs/wcd934x.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
-index 3769d9ce5dbe..9f80ddf34443 100644
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -978,12 +978,16 @@ static int stm32_spdifrx_probe(struct platform_device *pdev)
- 		return ret;
+diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
+index 158e878abd6c..e780ecd554d2 100644
+--- a/sound/soc/codecs/wcd934x.c
++++ b/sound/soc/codecs/wcd934x.c
+@@ -1883,20 +1883,16 @@ static int wcd934x_set_channel_map(struct snd_soc_dai *dai,
+ 		return -EINVAL;
  	}
  
--	rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
--	if (!IS_ERR(rst)) {
--		reset_control_assert(rst);
--		udelay(2);
--		reset_control_deassert(rst);
-+	rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-+	if (IS_ERR(rst)) {
-+		if (PTR_ERR(rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Reset controller error %ld\n",
-+				PTR_ERR(rst));
-+		return PTR_ERR(rst);
+-	if (wcd->rx_chs) {
+-		wcd->num_rx_port = rx_num;
+-		for (i = 0; i < rx_num; i++) {
+-			wcd->rx_chs[i].ch_num = rx_slot[i];
+-			INIT_LIST_HEAD(&wcd->rx_chs[i].list);
+-		}
++	wcd->num_rx_port = rx_num;
++	for (i = 0; i < rx_num; i++) {
++		wcd->rx_chs[i].ch_num = rx_slot[i];
++		INIT_LIST_HEAD(&wcd->rx_chs[i].list);
  	}
-+	reset_control_assert(rst);
-+	udelay(2);
-+	reset_control_deassert(rst);
  
- 	ret = devm_snd_soc_register_component(&pdev->dev,
- 					      &stm32_spdifrx_component,
+-	if (wcd->tx_chs) {
+-		wcd->num_tx_port = tx_num;
+-		for (i = 0; i < tx_num; i++) {
+-			wcd->tx_chs[i].ch_num = tx_slot[i];
+-			INIT_LIST_HEAD(&wcd->tx_chs[i].list);
+-		}
++	wcd->num_tx_port = tx_num;
++	for (i = 0; i < tx_num; i++) {
++		wcd->tx_chs[i].ch_num = tx_slot[i];
++		INIT_LIST_HEAD(&wcd->tx_chs[i].list);
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
