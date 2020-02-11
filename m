@@ -2,94 +2,102 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6669C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2177FC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A535A20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581435558;
-	bh=vaUxnP22bcA3W8Oj/H35rQr+94g+pJKRkOs3Xybfxfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JGtYkC5jjg7NDa4lx/lGOq8B6QwaGng3re3XWCYywIuFtgciHSlYV/IJRGGcc197t
-	 L6qkPJFR7Xhh/10f3IY7Yezgo+kwhsU6FsyKi3N5GrSPjRHul7ekI+FiL03aladLMJ
-	 0nCkI+oSAQu65bpIPA6MOCGU1VEf019jZlrrT6So=
+	by mail.kernel.org (Postfix) with ESMTP id F1F2F20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgBKPjS (ORCPT
+        id S1729602AbgBKPj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:39:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:48008 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:39:28 -0500
+Received: from mga05.intel.com ([192.55.52.43]:54713 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgBKPjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:39:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 430A231B;
-        Tue, 11 Feb 2020 07:39:15 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98DA83F68E;
-        Tue, 11 Feb 2020 07:39:14 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:39:13 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        marcel.ziswiler@toradex.com, rjones@gateworks.com,
-        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
-        gary.bisson@boundarydevices.com, angus@akkea.ca,
-        pramod.kumar_1@nxp.com, rabeeh@solid-run.com,
-        cosmin.stoica@nxp.com, l.stach@pengutronix.de,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 1/4] dt-bindings: spi: imx: Add
- i.MX8MM/i.MX8MN/i.MX8MP compatible
-Message-ID: <20200211153913.GL4543@sirena.org.uk>
-References: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
+        id S1727962AbgBKPj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:39:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 07:39:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="221965920"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 11 Feb 2020 07:39:23 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j1XdE-000loA-5I; Tue, 11 Feb 2020 17:39:24 +0200
+Date:   Tue, 11 Feb 2020 17:39:24 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/18] platform/x86: intel_scu_ipc: Split out SCU IPC
+ functionality from the SCU driver
+Message-ID: <20200211153924.GD10400@smile.fi.intel.com>
+References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
+ <20200211132603.73509-2-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xjamM5M9kpPM/bcu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
-X-Cookie: Hire the morally handicapped.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211132603.73509-2-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 11, 2020 at 04:25:46PM +0300, Mika Westerberg wrote:
+> The SCU IPC functionality is usable outside of Intel MID devices. For
+> example modern Intel CPUs include the same thing but now it is called
+> PMC (Power Management Controller) instead of SCU. To make the IPC
+> available for those split the driver into core part (intel_scu_ipc.c)
+> and the SCU PCI driver part (intel_scu_pcidrv.c) which then calls the
+> former before it goes and creates rest of the SCU devices. The SCU IPC
+> will also register a new class that gets assigned to the device that is
+> created under the parent PCI device.
+> 
+> We also split the Kconfig symbols so that INTEL_SCU_IPC enables the SCU
+> IPC library and INTEL_SCU_PCI the SCU driver and convert the users
+> accordingly. While there remove default y from the INTEL_SCU_PCI symbol
+> as it is already selected by X86_INTEL_MID.
 
---xjamM5M9kpPM/bcu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Tue, Feb 11, 2020 at 08:48:24PM +0800, Anson Huang wrote:
-> Add compatible for imx8mm/imx8mn/imx8mp.
+>  config INTEL_SCU_IPC
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+> +config INTEL_SCU
 
---xjamM5M9kpPM/bcu
-Content-Type: application/pgp-signature; name="signature.asc"
+> +config INTEL_SCU_PCI
 
------BEGIN PGP SIGNATURE-----
+>  config INTEL_SCU_IPC_UTIL
+...
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5CyqAACgkQJNaLcl1U
-h9DOwwf9FtG/iaQJVuAEOHRrJ9sfIJHvcKeiEzx4CbvNw5x48fs24VzAWO2rg7+t
-iyze1NRFVPS9oH0RLhrQ7jTj+W2t/2Ab8aF6SdK7GhHrIHPRnISNg9Gw15CpTNhv
-G28a9MR8eOddt9JprJ9GE37oyZyaBrFKCojNYlCIRDUxWVQH9RLjh4WjEy2RXxFi
-/OY2G513MX3vivd/04F+9O3KtfOqYdMjgeZ5gi0wbmK4MauyjdMGdrkMbrFcWwKC
-HdoAfGE9ounM1hYtYgAJRoGl20p6Z1n5MQ8HUHeEQkViPA+x4hiFgnRfV3xxtMiu
-rMm3Cu+06Jk9hh/fqB6Qlc92m6Up0Q==
-=TZK0
------END PGP SIGNATURE-----
+>  obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
+> +obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
 
---xjamM5M9kpPM/bcu--
+Please, keep the symbol ordering (whatever you choose) the same
+in Makefile and Kconfig.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
