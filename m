@@ -2,115 +2,150 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4CFC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C29C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B60120848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B48020848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lDSRjevb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbgBKSUs (ORCPT
+        id S1731319AbgBKSUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:20:48 -0500
-Received: from albert.telenet-ops.be ([195.130.137.90]:60430 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730251AbgBKSTd (ORCPT
+        Tue, 11 Feb 2020 13:20:53 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33185 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731309AbgBKSUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:19:33 -0500
-Received: from ramsan ([84.195.182.253])
-        by albert.telenet-ops.be with bizsmtp
-        id 1WKV2200K5USYZQ06WKVNN; Tue, 11 Feb 2020 19:19:30 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0002o8-Mc; Tue, 11 Feb 2020 19:19:29 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0003yb-LQ; Tue, 11 Feb 2020 19:19:29 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 11/34] crypto: ccree - defer larval_digest_addr init until needed
-Date:   Tue, 11 Feb 2020 19:19:05 +0100
-Message-Id: <20200211181928.15178-12-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
-References: <20200211181928.15178-1-geert+renesas@glider.be>
+        Tue, 11 Feb 2020 13:20:50 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n7so5902556pfn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:20:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4OgG0hetIsP1V38kbC307zOjczZWs0KOp5Ez5Rl0KME=;
+        b=lDSRjevbxM40tz/93zZtEf0l5hvgAJaYkwnSWnpl1y1J058EWn71+v9gGdFqjyE+LM
+         1s4OIdw7yTpcWQTOq78Kzb/qRXieUEXKhZD1e2no6c6b8LIKHiCiOhHk5IQ7CvjD+4ZG
+         iamdeGk/eC+W3+8zZ3SoHfWNLug+eDxbO22PGJxFXTjmO3FyBy9bpuBT9fAD+SJoPWRy
+         swmj5LdJkecykIqqY9Xqa+ITTp8kIdfwQlM67qbKEfKq2cmKZSsVZ+Ghx1T9cJJCeA3s
+         sPO8DhjPO+7NsB6lmFx1DVTzfI3s0fn2XPRQlZb5shxgKYa3Qgijkc12NseHBQcRqo+R
+         LdDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4OgG0hetIsP1V38kbC307zOjczZWs0KOp5Ez5Rl0KME=;
+        b=D1Bb316KZ263NmUUWpKPfRAYG4KZHDcUSH++J6N1cHlTmqsYPf2OjX7BjIigSv1ir9
+         G7XwMpLnly4Y3YIpsd87H6EpWGFHfF6IHaolhAT+Z6ZtueI2lfi6vT1Wfo0R4L6ltMvA
+         C5EoxBYT4y/8jlkO/bzu0O6Xojz/4EbzuLtkSAnH1wXb38NwQ5IvRogcgiA73h+0FQFA
+         gzQFmH92JXVHFzUbeb1YbJZ/rErxZJxIcxoXJvPHrM6zIlAuGudysoixqtX46BxLnLH6
+         wIsw9WNuOX+sir8BcIhc7AKBN/hKlqSD4OhINuFa9SKMpxW93LVWfRAbCtbfBE+qGA0k
+         mFAw==
+X-Gm-Message-State: APjAAAWLmzwsKAWJOWETTOPzuVGFHpAJ5/GlnVPCcHNBraXq+NhU0PY9
+        9KNsyhjS7ILSjOTKMZpXy9eS06VCe79moImEQkv4Sw==
+X-Google-Smtp-Source: APXvYqxMvSkOVcfNtGbDzyRqqzjTst6GjcEty8BqJsis9ObxAC/QNdkqDYmzeMZhO0NEe3Lhmu8jwxwDkyO1K6X7SpM=
+X-Received: by 2002:a62:1615:: with SMTP id 21mr4402234pfw.84.1581445249952;
+ Tue, 11 Feb 2020 10:20:49 -0800 (PST)
+MIME-Version: 1.0
+References: <20200128021145.36774-1-palmerdabbelt@google.com> <20200128021145.36774-2-palmerdabbelt@google.com>
+In-Reply-To: <20200128021145.36774-2-palmerdabbelt@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 11 Feb 2020 18:20:39 +0000
+Message-ID: <CAKwvOdnPu8-0O5kLDY2t=wq1rqWNX7v0CSrRmomPYLA1=BX=GQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] selftests/bpf: Elide a check for LLVM versions that
+ can't compile it
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Bjorn Topel <bjorn.topel@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>, zlim.lnx@gmail.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        andriin@fb.com, Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        kernel-team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the larval digest addresses are not always used in
-cc_get_plain_hmac_key() and cc_hash_digest(), they are always
-calculated.
+On Mon, Jan 27, 2020 at 6:14 PM 'Palmer Dabbelt' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> The current stable LLVM BPF backend fails to compile the BPF selftests
+> due to a compiler bug.  The bug has been fixed in trunk, but that fix
+> hasn't landed in the binary packages I'm using yet (Fedora arm64).
+> Without this workaround the tests don't compile for me.
+>
+> This patch triggers a preprocessor warning on LLVM versions that
+> definitely have the bug.  The test may be conservative (ie, I'm not sure
+> if 9.1 will have the fix), but it should at least make the current set
+> of stable releases work together.
 
-Defer their calculations to the points where needed.
+Do older versions of clang still work? Should there be a lower bounds?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - New.
+>
+> See https://reviews.llvm.org/D69438 for more information on the fix.  I
+> obtained the workaround from
+> https://lore.kernel.org/linux-kselftest/aed8eda7-df20-069b-ea14-f06628984566@gmail.com/T/
+>
+> Fixes: 20a9ad2e7136 ("selftests/bpf: add CO-RE relocs array tests")
+> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> ---
+>  .../testing/selftests/bpf/progs/test_core_reloc_arrays.c  | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
+> index bf67f0fdf743..c9a3e0585a84 100644
+> --- a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
+> +++ b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
+> @@ -40,15 +40,23 @@ int test_core_arrays(void *ctx)
+>         /* in->a[2] */
+>         if (BPF_CORE_READ(&out->a2, &in->a[2]))
+>                 return 1;
+> +#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
+> +# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
+> +#else
+>         /* in->b[1][2][3] */
+>         if (BPF_CORE_READ(&out->b123, &in->b[1][2][3]))
+>                 return 1;
+> +#endif
+>         /* in->c[1].c */
+>         if (BPF_CORE_READ(&out->c1c, &in->c[1].c))
+>                 return 1;
+> +#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
+> +# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
+> +#else
+>         /* in->d[0][0].d */
+>         if (BPF_CORE_READ(&out->d00d, &in->d[0][0].d))
+>                 return 1;
+> +#endif
+>
+>         return 0;
+>  }
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200128021145.36774-2-palmerdabbelt%40google.com.
 
- drivers/crypto/ccree/cc_aead.c | 4 +++-
- drivers/crypto/ccree/cc_hash.c | 5 +++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_aead.c b/drivers/crypto/ccree/cc_aead.c
-index db89144ce6c5e974..d1e7e82b9a40f8ff 100644
---- a/drivers/crypto/ccree/cc_aead.c
-+++ b/drivers/crypto/ccree/cc_aead.c
-@@ -417,7 +417,7 @@ static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *authkey,
- 	dma_addr_t key_dma_addr = 0;
- 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
- 	struct device *dev = drvdata_to_dev(ctx->drvdata);
--	u32 larval_addr = cc_larval_digest_addr(ctx->drvdata, ctx->auth_mode);
-+	u32 larval_addr;
- 	struct cc_crypto_req cc_req = {};
- 	unsigned int blocksize;
- 	unsigned int digestsize;
-@@ -459,6 +459,8 @@ static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *authkey,
- 			/* Load hash initial state */
- 			hw_desc_init(&desc[idx]);
- 			set_cipher_mode(&desc[idx], hashmode);
-+			larval_addr = cc_larval_digest_addr(ctx->drvdata,
-+							    ctx->auth_mode);
- 			set_din_sram(&desc[idx], larval_addr, digestsize);
- 			set_flow_mode(&desc[idx], S_DIN_to_HASH);
- 			set_setup_mode(&desc[idx], SETUP_LOAD_STATE0);
-diff --git a/drivers/crypto/ccree/cc_hash.c b/drivers/crypto/ccree/cc_hash.c
-index defeb35a16a626ff..cebbe2f08f606bf3 100644
---- a/drivers/crypto/ccree/cc_hash.c
-+++ b/drivers/crypto/ccree/cc_hash.c
-@@ -429,8 +429,7 @@ static int cc_hash_digest(struct ahash_request *req)
- 	bool is_hmac = ctx->is_hmac;
- 	struct cc_crypto_req cc_req = {};
- 	struct cc_hw_desc desc[CC_MAX_HASH_SEQ_LEN];
--	cc_sram_addr_t larval_digest_addr =
--		cc_larval_digest_addr(ctx->drvdata, ctx->hash_mode);
-+	cc_sram_addr_t larval_digest_addr;
- 	int idx = 0;
- 	int rc = 0;
- 	gfp_t flags = cc_gfp_flags(&req->base);
-@@ -472,6 +471,8 @@ static int cc_hash_digest(struct ahash_request *req)
- 		set_din_type(&desc[idx], DMA_DLLI, state->digest_buff_dma_addr,
- 			     ctx->inter_digestsize, NS_BIT);
- 	} else {
-+		larval_digest_addr = cc_larval_digest_addr(ctx->drvdata,
-+							   ctx->hash_mode);
- 		set_din_sram(&desc[idx], larval_digest_addr,
- 			     ctx->inter_digestsize);
- 	}
+
 -- 
-2.17.1
-
+Thanks,
+~Nick Desaulniers
