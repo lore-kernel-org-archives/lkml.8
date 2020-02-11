@@ -2,137 +2,93 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D494C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF212C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E07214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581444315;
-	bh=6PE1cQDVRluOgEBrX4BbGhN0yYnAPz0zqhe0TovaI5o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eo0MOPhCBjfyqV7AHBnxq8wlwqHNGu7ADVTVly3e3IPRMQkRqcdkCcFdvwFmvs3Ct
-	 OXUzMIvLjrU0aU1rAooBsB81IMm29Z2NGqzi0609T+WKU9YZsPQ8jTERf60qhP0EdK
-	 n9cROxFkDM6MKOwl83+5GwWoRwxovZM7dj3s2mY4=
+	by mail.kernel.org (Postfix) with ESMTP id 93506206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbgBKSFP (ORCPT
+        id S1731085AbgBKSIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:05:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 13:08:37 -0500
+Received: from mga02.intel.com ([134.134.136.20]:56663 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731149AbgBKSFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:05:14 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91814208C3;
-        Tue, 11 Feb 2020 18:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581444313;
-        bh=6PE1cQDVRluOgEBrX4BbGhN0yYnAPz0zqhe0TovaI5o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l1Sa6LV29Nk2K2rAs5pOGEdWBrK7blZ394zkXkcKtGeTSea4pto6xOb1UC68LvoCb
-         rQcQkopTRHIkdvHboYFj7gcwFDBRV0Ay8v9AXIo6AahAcEAMIjHAGoo+hvdXaboJ8K
-         /FUJ5aUHuqo8wnpZQT4pyg7N6GzSzhJ0h0lMCm4M=
-Received: by mail-qk1-f175.google.com with SMTP id z19so7940554qkj.5;
-        Tue, 11 Feb 2020 10:05:13 -0800 (PST)
-X-Gm-Message-State: APjAAAUerb4PgCnHvqiurxiUKNCN4ViBEFdeAoWL/EKVCNB4guzu5ron
-        cES1qOx3XUZE2lpGa2Jvg21D8B/6Vx5vCs37pw==
-X-Google-Smtp-Source: APXvYqzAAdsaAknJAJ5NQJ1yPYP+6XiEu2QBieclv1o0pXq2SzMkQhREIj0fKiHyiUC2B4XLKseSBuDPfByqgqJIuII=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr7476483qkd.223.1581444312635;
- Tue, 11 Feb 2020 10:05:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-4-aford173@gmail.com>
- <20200206184030.GA11381@bogus> <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
-In-Reply-To: <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:05:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLJweVLgYhoU-3cmg1aFwRNtAehx2-Euy-cwUsRy2jsgw@mail.gmail.com>
-Message-ID: <CAL_JsqLJweVLgYhoU-3cmg1aFwRNtAehx2-Euy-cwUsRy2jsgw@mail.gmail.com>
-Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
- imx8mm, imx8qxp
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
+        id S1728832AbgBKSIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:08:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 10:08:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="222014389"
+Received: from mahaling-mobl.amr.corp.intel.com (HELO [10.254.185.201]) ([10.254.185.201])
+  by orsmga007.jf.intel.com with ESMTP; 11 Feb 2020 10:08:34 -0800
+Subject: Re: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
+ callback
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        "cychiang@google.com" <cychiang@google.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
+ <AM6PR10MB2263F302A86B17C95B16361280190@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <855c88fb-4438-aefb-ac9b-a9a5a2dc8caa@linux.intel.com>
+Date:   Tue, 11 Feb 2020 10:30:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 4:49 AM Adam Ford <aford173@gmail.com> wrote:
->
-> On Thu, Feb 6, 2020 at 2:46 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
-> > > Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
-> >
-> > s/do/to/
->
-> Oops.  Thanks for catching that.
->
-> >
-> > > document.
-> > >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > > ---
-> > > V2: No change
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > > index 2cd67eb727d4..7ac60d9fe357 100644
-> > > --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > > @@ -2,6 +2,9 @@
-> > >
-> > >  Required properties:
-> > >    - compatible : Should be "nxp,lx2160a-fspi"
-> > > +                         "nxp,imx8qxp-fspi"
-> > > +                         "nxp,imx8mm-fspi"
-> >
-> > All 3 are different and no compatibility?
->
-> This was all based on a series from NXP's repo where they have some
-> data tables all associated to the various compatible entries, and they
-> created a place holder for quirks.  Based on an older NXP repo, it
-> seems like there might be some quirks associated to the different
-> families, but the newer repo where I got this patch series didn't
-> implement them, however, it's possible the quirks may enhance
-> functionality later. If that's true, I think this is the best solution
-> for future enhancements without having to change the compatibility
-> names down the road.  Maybe someone from NXP can comment?  I am just
-> trying to help push things upstream so we can support QSPI flash.  I
-> would prefer to keep them separate for now, because we might have
-> these improvements later. However, I'll do what you request.  Do you
-> want me to drop the additional compatible flags and just use the
-> original, or create a new one that's a bit more generic?
 
-Neither.
+>> Could ensure? This change seems specific to Intel DSP based systems, at
+>> least from the description. Having looked through the core, the trigger code
+>> for a codec is seemingly always called before the trigger for the CPU. How will
+>> this work for other platforms, assuming their clocks are enabled in the CPU
+>> DAI trigger function by default?
+>>
+>> Can we always guarantee the CPU side isn't going to send anything other
+>> than 0s until after SRM has locked?
 
-If you already know that they have differences, then as-is is fine.
+Not with the default mode for the SSP, all clocks are enabled at trigger 
+time.
+We can enable the MCLK and BCLK ahead of time (which would require a 
+change in firmware). But if we want to enable the FSYNC (word-clock), 
+then we have to trigger DMA transfers with pretend-buffers, this is a 
+lot more invasive.
 
-If they are believed to be 'the same', then you do:
+So just to be clear, which of the MCLK, BCLK, FSYNC do you need enabled?
 
-compatible = "nxp,imx8qxp-fspi", "nxp,imx8mm-fspi";
+> I think the patch is for those systems which enable I2S clocks in pcm_start instead
+> of pcm_prepare. It has no effect on systems already be able to turn on clocks in
+> supply widgets or set_bias_level() function.
+> 
+> If the trigger type in the DAI link is TRIGGER_PRE, then the trigger function of FE port
+> (component or CPU DAI) will be called before codec driver's trigger function. In this
+> case we will be able to turn on the clock in time. However, if the trigger type is
+> TRIGGER_POST, then the patch does not help because just like what you said, codec
+> driver's trigger function is called first.
 
-assuming i.MX8MM was the first version.
-
-This allows a MX8QXP to work without OS changes if the driver already
-supports the previous chip. And if any quirks are found, then the OS
-can handle them without a DT change.
-
-Rob
+IIRC we recently did a change to deal with underflows. Ranjani, can you 
+remind us what the issue was?
+Thanks
+-Pierre
