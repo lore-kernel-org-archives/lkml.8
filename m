@@ -2,125 +2,124 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FACC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608A4C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E502073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:44:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qD3S4rvo"
+	by mail.kernel.org (Postfix) with ESMTP id 326E12082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581464683;
+	bh=W4c9i/00+OtJRA6RYvyTVANvmlPmRkbl7HuwUCwLBIw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MQnTbXWULZ7koe2YreC3fIGAhxv26yhE5kn6Sp5hGSqOT9Y2+IyX4ri/Cj3dh66jy
+	 xo9Othe8wOI4ezx9xlYLugl3Zwemwm77c36xMV36RvDXdiZL27UWJRpDQoLGX5J9q7
+	 kaVqF7wTQsTY490ve6oZARJPFEyUDHu9TuLY2Kwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgBKXoL (ORCPT
+        id S1728031AbgBKXom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:44:11 -0500
-Received: from gateway33.websitewelcome.com ([192.185.145.221]:34222 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727911AbgBKXoL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:44:11 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 4EE1C15CDB63
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:44:10 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1fCMjf244RP4z1fCMj6qsN; Tue, 11 Feb 2020 17:44:10 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HuWWbn9mG6qCqANbQu9GYRVgDmlnQe5rjU+iHf/AjzI=; b=qD3S4rvooZjnwz0ZXghoPw7ZpL
-        ngFyK6PbFW5DKFEiTRqdJF3WxsrLAJTFBKSod5A8MT6ahHCKWXh5AsWuJA1VqIcQdeuEqJ11BWW8K
-        M7pDnGAv80xQIg3wMeazsVGLx3qOaZeP1RVOBAiU7SVlg1b11u4YAC2romgUrX3lsKTNbgtcg02ua
-        OZ3ialpRyByBp2dNzfKBVMBmIubk3wzvJlQnXUN3UlJ5qi+YPeR5NSqsVrL+3Ws5mjZAhqiO03SUq
-        QVzq4cQS58Ec/U866KCYtJFwY1c7qkH4PmI7NWWDYWCyZcreqrnXCE3WCP30HJLDEY8xZbuHOIW8F
-        fq9ewb5w==;
-Received: from [200.68.140.36] (port=6741 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1fBp-003k23-1O; Tue, 11 Feb 2020 17:43:37 -0600
-Date:   Tue, 11 Feb 2020 17:46:12 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] regulator: da9062: Replace zero-length array with
- flexible-array member
-Message-ID: <20200211234612.GA28682@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1fBp-003k23-1O
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:6741
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 56
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Tue, 11 Feb 2020 18:44:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727911AbgBKXom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:44:42 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 099E62070A;
+        Tue, 11 Feb 2020 23:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581464679;
+        bh=W4c9i/00+OtJRA6RYvyTVANvmlPmRkbl7HuwUCwLBIw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Gy5vZsucUuM1PKBvB9kViGEU0b/gfONXogIow6rQWkeafiuuquAX8xhsXk6Dm2kjk
+         aDFAaHIulCLRA7ettmmWHza/yOXG1IXx2hpht0OCZF4FO/8r53o52twLJ5CRBlsFRU
+         WyANiUs409HVXmI0frzjTFYdptz4wVzOzCWB2Ig0=
+Date:   Tue, 11 Feb 2020 15:44:38 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Rik van Riel <riel@surriel.com>, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-Id: <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+In-Reply-To: <20200211193101.GA178975@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+        <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+        <20200211193101.GA178975@cmpxchg.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, 11 Feb 2020 14:31:01 -0500 Johannes Weiner <hannes@cmpxchg.org> wrote:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> On Tue, Feb 11, 2020 at 02:05:38PM -0500, Rik van Riel wrote:
+> > On Tue, 2020-02-11 at 12:55 -0500, Johannes Weiner wrote:
+> > > The VFS inode shrinker is currently allowed to reclaim inodes with
+> > > populated page cache. As a result it can drop gigabytes of hot and
+> > > active page cache on the floor without consulting the VM (recorded as
+> > > "inodesteal" events in /proc/vmstat).
+> > > 
+> > > This causes real problems in practice. Consider for example how the
+> > > VM
+> > > would cache a source tree, such as the Linux git tree. As large parts
+> > > of the checked out files and the object database are accessed
+> > > repeatedly, the page cache holding this data gets moved to the active
+> > > list, where it's fully (and indefinitely) insulated from one-off
+> > > cache
+> > > moving through the inactive list.
+> > 
+> > > This behavior of invalidating page cache from the inode shrinker goes
+> > > back to even before the git import of the kernel tree. It may have
+> > > been less noticeable when the VM itself didn't have real workingset
+> > > protection, and floods of one-off cache would push out any active
+> > > cache over time anyway. But the VM has come a long way since then and
+> > > the inode shrinker is now actively subverting its caching strategy.
+> > 
+> > Two things come to mind when looking at this:
+> > - highmem
+> > - NUMA
+> > 
+> > IIRC one of the reasons reclaim is done in this way is
+> > because a page cache page in one area of memory (highmem,
+> > or a NUMA node) can end up pinning inode slab memory in
+> > another memory area (normal zone, other NUMA node).
+> 
+> That's a good point, highmem does ring a bell now that you mention it.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+Yup, that's why this mechanism exists.  Here:
 
-This issue was found with the help of Coccinelle.
+https://marc.info/?l=git-commits-head&m=103646757213266&w=2
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> If we still care, I think this could be solved by doing something
+> similar to what we do with buffer_heads_over_limit: allow a lowmem
+> allocation to reclaim page cache inside the highmem zone if the bhs
+> (or inodes in this case) have accumulated excessively.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/regulator/da9062-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Well, reclaiming highmem pagecache at random would be a painful way to
+reclaim lowmem inodes.  Better to pick an inode then shoot down all its
+pagecache.  Perhaps we could take its pagecache's aging into account.
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index b064d8a19d4c..c3b6ba9bafdf 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -86,7 +86,7 @@ struct da9062_regulators {
- 	int					irq_ldo_lim;
- 	unsigned				n_regulators;
- 	/* Array size to be defined during init. Keep at end. */
--	struct da9062_regulator			regulator[0];
-+	struct da9062_regulator			regulator[];
- };
- 
- /* BUCK modes */
--- 
-2.25.0
+Testing this will be a challenge, but the issue was real - a 7GB
+highmem machine isn't crazy and I expect the inode has become larger
+since those days.
 
+> AFAICS, we haven't done anything similar for NUMA, so it might not be
+> much of a problem there. I could imagine this is in part because NUMA
+> nodes tend to be more balanced in size, and the ratio between cache
+> memory and inode/bh memory means that these objects won't turn into a
+> significant externality. Whereas with extreme highmem:lowmem ratios,
+> they can.
