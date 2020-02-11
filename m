@@ -2,126 +2,115 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AF8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2620C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9305920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754EE20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:57:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gTnVVwFT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fG+D8Dmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgBKVvo (ORCPT
+        id S1727439AbgBKV5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:51:44 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:45704 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbgBKVvn (ORCPT
+        Tue, 11 Feb 2020 16:57:42 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17693 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727041AbgBKV5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:51:43 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01BLh2m5065691;
-        Tue, 11 Feb 2020 21:51:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=q9CJH8blGd3JpsYmKV23Sgj8OEPJrRzAG9QrB6xaUUE=;
- b=gTnVVwFTBUdHJ9eyfYo5Hmcz5SmP6JFCX2FdoK9AAaKAy4pE/nPnVjvP2xA7yiAfSd51
- SV13Y+41lw/40Kz8+mkudhl4f25TKjG6pcLy27qm48RMTaC31bmONVIJdhxVoo6f3goM
- C+YrHyyim7kYOG4Zw1kkJb0PCJVT/QrAg1sN1TutWMj6YwjBqqkHVBWAJyf4LfxJN06C
- rH742UiXRU9FP7n9X6y6xBK/4QFovcvcwQZfpxznZUnsuJN0op3wgzcN8edxuaS1tjHD
- KQQdbyS8QaaV1L8dDKyhbmpWXBuTF6xK/4sVabr5eeelDDl4MbC9owbEyJZZZAUOOpXF vg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2y2p3se9s1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Feb 2020 21:51:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01BLgcbM108989;
-        Tue, 11 Feb 2020 21:51:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2y26q21sym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 21:51:35 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01BLpYhE024620;
-        Tue, 11 Feb 2020 21:51:34 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Feb 2020 13:51:34 -0800
-Subject: Re: [PATCH v11 6/9] hugetlb_cgroup: support noreserve mappings
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-References: <20200203232248.104733-1-almasrymina@google.com>
- <20200203232248.104733-6-almasrymina@google.com>
- <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
- <CAHS8izMGreJgOhG8ivE2OH9bq98BmvxAqtBc=M9waTqOKv3eeQ@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <6b097a9d-3b2c-94cb-21a8-7e7a55a8f635@oracle.com>
-Date:   Tue, 11 Feb 2020 13:51:33 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 16:57:42 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581458261; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=jWU1cgqaUBb34RjRYJOYQVzFk/Z6wfMiJoxum7QsqVU=;
+ b=fG+D8DmksWvSzfcFQlhVBpHAgkO9YUHGiXUCbMlFQ5L3G54FnrWAVat6k9EeAJMX/JTHj8MC
+ CUiUbwUZPomSDi5Zdb9RtM+b8MoQZe1Ydtg3HgDmqCrNC3p6rbJ95EgZrUxUJhiNQsf2+SKH
+ Fij4y71JCASyia3M+ftZOGtnTYg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e43234e.7fd09eb3ae30-smtp-out-n03;
+ Tue, 11 Feb 2020 21:57:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D0813C447A2; Tue, 11 Feb 2020 21:57:33 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28EA1C43383;
+        Tue, 11 Feb 2020 21:57:32 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <CAHS8izMGreJgOhG8ivE2OH9bq98BmvxAqtBc=M9waTqOKv3eeQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9528 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- mlxscore=0 adultscore=0 suspectscore=2 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002110141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9528 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=2 mlxlogscore=999 priorityscore=1501 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002110141
+Date:   Wed, 12 Feb 2020 03:27:32 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree-owner@vger.kernel.org
+Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
+ SC7180, SDM845, SM8150
+In-Reply-To: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <20200206183808.GA5019@bogus>
+ <f26464226f74dffe2db0583b9482a489@codeaurora.org>
+ <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+Message-ID: <a48fc9fd93826b63777bad71d9b2d7c4@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 1:35 PM, Mina Almasry wrote:
-> On Thu, Feb 6, 2020 at 2:31 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->> On 2/3/20 3:22 PM, Mina Almasry wrote:
->>> +++ b/mm/hugetlb.c
->>> @@ -1339,6 +1339,9 @@ static void __free_huge_page(struct page *page)
->>>       clear_page_huge_active(page);
->>>       hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
->>>                                    page, false);
->>> +     hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
->>> +                                  page, true);
->>> +
->>
->> When looking at the code without change markings, the two above lines
->> look so similar my first thought is there must be a mistake.
->>
->> A suggestion for better code readability:
->> - hugetlb_cgroup_uncharge_page could just take "struct hstate *h" and
->>   get both hstate_index(h) and pages_per_huge_page(h).
->> - Perhaps make hugetlb_cgroup_uncharge_page and
->>   hugetlb_cgroup_uncharge_page_rsvd be wrappers around a common routine.
->>   Then the above would look like:
->>
->>   hugetlb_cgroup_uncharge_page(h, page);
->>   hugetlb_cgroup_uncharge_page_rsvd(h, page);
->>
+On 2020-02-11 23:54, Rob Herring wrote:
+> On Fri, Feb 7, 2020 at 12:10 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi Rob,
+>> 
+>> On 2020-02-07 00:08, Rob Herring wrote:
+>> > On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
+>> >> Add missing compatible for watchdog timer on QCS404,
+>> >> SC7180, SDM845 and SM8150 SoCs.
+>> >
+>> > That's not what the commit does. You are changing what's valid.
+>> >
+>> > One string was valid, now 2 are required.
+>> >
+>> 
+>> Does this look good?
 > 
-> I did modify the interfaces to this, as it's much better for
-> readability indeed. Unfortunately the patch the adds interfaces
-> probably needs a re-review now as it's changed quite a bit, I did not
-> carry your or David's Reviewed-by.
+> No. First of all, what's the base for the diff? It's not what you
+> originally had nor incremental on top of this patch.
+> 
 
-No worries.  Happy to review again.
+It was an incremental on top of this patch.
+
+> Second, a value of 'qcom,kpss-timer' or 'qcom,kpss-wdt' or
+> 'qcom,scss-timer' will fail validation because 2 clauses of 'oneOf'
+> will be true.
+> 
+
+I will just remove oneOf and add the missing compatibles to the enum.
+
+Thanks,
+Sai
 
 -- 
-Mike Kravetz
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
