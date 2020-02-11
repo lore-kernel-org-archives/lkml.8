@@ -2,97 +2,100 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C58BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA101C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFB2220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:48:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uLZ5+G6m"
+	by mail.kernel.org (Postfix) with ESMTP id A1B4020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581461444;
+	bh=XV1MMCtQP/VUtU4M6HqgIW/VlmatPHwn+NBw1GlBfxE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ExTP4Y5Br9lKBK7+kCt3oteo/+d/JNpCb8oRhl0iGMlbfHpMPlwcW7cJ/REH9WFNb
+	 wmKJd0vMMJHxXF0uPe0hT+emPYwyu7Lok9JJO31qOzyAE++eE/r7PDoOvZCLK73dQa
+	 PSoE93tzbWbhRYTu7CNJeuTNr4Eix1H6qpL2gb4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgBKWsm (ORCPT
+        id S1727690AbgBKWuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:48:42 -0500
-Received: from ozlabs.org ([203.11.71.1]:58805 "EHLO ozlabs.org"
+        Tue, 11 Feb 2020 17:50:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727330AbgBKWsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:48:42 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727199AbgBKWun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:50:43 -0500
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HHxg0XwKz9sP7;
-        Wed, 12 Feb 2020 09:48:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581461319;
-        bh=R9xv6Pys0PNbzt3d2ihx44UNetT12TeT50cxg4Vktfo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uLZ5+G6mVv/p8CY4R49L7Bv1NqP1rkwYhiJpoRHHjV14yHpQYL6rPMg8cERH6IeXt
-         1Rp6syIh+ymBUxn8i0b5HwV52THRlTPwGk41N/53MMZB89r6g/dsIW9ocid01gZhFg
-         nY8Lvuo/Ir0TDK02p8S/gGlNdnNV35vGlAsl7282HbNj5MwW/BdXfokLX4JVdt5gYL
-         +GtgL7BwtGKZsx5gLPQsvvlM1cA+D93YomQ2vYXexSYaGusRfDAG87nwvAAtvaG0TT
-         BmIwrTJB+EKAnGkvhsR93u3B8R+ISMdtK8FC/OgWo1u/NUZpf/C4kLWpQmVaqK+CpR
-         tMWIgsmfMTgrA==
-Date:   Wed, 12 Feb 2020 09:48:38 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Eric Yang <eric.yang2@amd.com>,
-        Michael Strauss <Michael.Strauss@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Subject: linux-next: build failure after merge of the amdgpu tree
-Message-ID: <20200212094838.4465f954@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B862168B
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:50:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581461443;
+        bh=XV1MMCtQP/VUtU4M6HqgIW/VlmatPHwn+NBw1GlBfxE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ploUTxCjV3VZ6tRSQcERV/2TkHxK4a61WSt0RGq4gUTpKMu1W1hLhTbWDXl30txGR
+         vCmP4QO6itTbAGDg+EqexNRphI3QMVIY4Q3Wz7WZ0o5H7abZnHtqTVSRuxOqn5o2dF
+         7lbJQQGylkDDRs7ouXBoO8wkt7ZIl+bnEt2iQi0U=
+Received: by mail-wr1-f51.google.com with SMTP id g3so13517902wrs.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:50:42 -0800 (PST)
+X-Gm-Message-State: APjAAAWZd8tIWN/sk407e9CwJkZgwAxQR6QG3pBe11vVF/kxQrA+kt51
+        9y62LumA8hAHpzqK2Qwtd8ljfjVLrKg1zeX9n8pcww==
+X-Google-Smtp-Source: APXvYqzqJ1AlSDY2ZRDO05AMScFqgtaEyb1UuVzqt0WKNedpg8GD4u5J3WkIoYB+03YMjv6Q0h3O47HFfxgY+9Q1m0c=
+X-Received: by 2002:adf:a354:: with SMTP id d20mr10861134wrb.257.1581461441006;
+ Tue, 11 Feb 2020 14:50:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LR=5Kstqi9lQOU5R_HTr5Z/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-63-joro@8bytes.org>
+In-Reply-To: <20200211135256.24617-63-joro@8bytes.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 11 Feb 2020 14:50:29 -0800
+X-Gmail-Original-Message-ID: <CALCETrWV15+YTGsEwUHBSjT2MYappLANw4fQHjgZgei2UyV1JQ@mail.gmail.com>
+Message-ID: <CALCETrWV15+YTGsEwUHBSjT2MYappLANw4fQHjgZgei2UyV1JQ@mail.gmail.com>
+Subject: Re: [PATCH 62/62] x86/sev-es: Add NMI state tracking
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LR=5Kstqi9lQOU5R_HTr5Z/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> Keep NMI state in SEV-ES code so the kernel can re-enable NMIs for the
+> vCPU when it reaches IRET.
 
-Hi all,
+This patch is overcomplicated IMO.  Just do the magic incantation in C
+from do_nmi or from here:
 
-After merging the amdgpu tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+        /*
+         * For ease of testing, unmask NMIs right away.  Disabled by
+         * default because IRET is very expensive.
 
-ERROR: "get_num_odm_splits" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefine=
-d!
+If you do the latter, you'll need to handle the case where the NMI
+came from user mode.
 
-Presumably caused by commit
+The ideal solution is do_nmi, I think.
 
-  5bf24270d1cc ("drm/amd/display: add odm split logic to scaling calculatio=
-ns")
+if (static_cpu_has(X86_BUG_AMD_FORGOT_ABOUT_NMI))
+  sev_es_unmask_nmi();
 
-I used the amdgpu tree from next-20200211 for today.
+Feel free to use X86_FEATURE_SEV_ES instead :)
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LR=5Kstqi9lQOU5R_HTr5Z/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5DL0YACgkQAVBC80lX
-0Gypigf9G6wEimkUpzfY+L7Geys21RHs3cARo5QAWvCT+27B40w5tuNXzhcjDMNc
-9TgpIAeArv+9pMUmhUzKSSmBobHqqRJk3jlVZEhyE/vUePWSpIjDMafvnDp9yqhr
-oBys3NBmCtejDI/CDT9LlHky4dDx3TCf/nRcq9Yees94NbD6sD3mDizmSxbV3Bce
-tQePJznBarpYNTS9+T4oqDEGKNeJ71u0VLmDE/IqfvvV6X4PY9pqc7wvthL2O1uq
-jApFQv0jAndHyL47QIgokgtyFMvgWMfTnA3jGCzvwEE1MzlYtQIYqAufmrzfKP1W
-Ekc15jv6v/5dBbpKL7uBzwNnPglEmw==
-=4HZY
------END PGP SIGNATURE-----
-
---Sig_/LR=5Kstqi9lQOU5R_HTr5Z/--
+--Andu
