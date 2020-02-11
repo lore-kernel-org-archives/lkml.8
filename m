@@ -2,174 +2,163 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEED7C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E202C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8697E20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7420220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLWoPZc1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjsA5BIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgBKJp2 (ORCPT
+        id S1727992AbgBKJqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:45:28 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:39850 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgBKJp2 (ORCPT
+        Tue, 11 Feb 2020 04:46:52 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37566 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgBKJqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:45:28 -0500
-Received: by mail-ua1-f67.google.com with SMTP id 73so3699722uac.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:45:27 -0800 (PST)
+        Tue, 11 Feb 2020 04:46:52 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so11427441wru.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:46:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XBQbJL9w0L5FatKuuSiioztcIT23PXAGjfOfsR5LHQ0=;
-        b=GLWoPZc147lP/xTF0fGJFVcKYtRtXrc6DuzMpYKtI3EadsTAAiWVzxxgMaHKmHkK8j
-         7+AM/XrvL9i6J1EM/7OYgZuHjKkM9dHjzptJzvOgl7Is0pRr7OLt7ZPdzZxLXzwHs2HS
-         QfxQB12VUvh4O/K23mnlFwAYEtvLrZiW1ISCxGU8dwVEMKRjpkpSZFJyojKlcZCNy0zt
-         YBu5cuYF4SdATXcsgQH6LMteO6CpULe1XoMHXxFR1WvKPFcUQgEryilqPjarY3VxaXuA
-         rAALCdEfW16ssCkFa64jghPqHlhrxNZSZgLUtJqmdASGntKSOyu4W0WLnbbtsMukscWz
-         BLLw==
+        bh=w1TSPc+JlTHAhFmRkBjf4YDoyFF0cD7ftWasXNuoumE=;
+        b=FjsA5BIkZ+hT2wm9mmhX5eKcsNzWDFh8FGGRHbRT6gQ9+e4gbSCL8XUhCvFdE9YSxm
+         +O2IY3hVHB+BNd+87rqADV+sqQ5SGlwrKmZupaGnHcEPtO7b06ZqZ+mOUwqwfaJoIEHH
+         yX/nBYG2N75UIkPiSwTr9GasTdh4gW36/zcwWqSmkwvgIrkm+mg5TmeGUN7D7oaEpvNg
+         BhkvZ0GtgFAEkgw0vrXnFnAQyfvz8D1GkCYuCXzPWpTTSiVl4Qs4MOfXJJ4H2wPk1hvR
+         utZEamgdQNk0xMtA+Pxk/ranvt1ndcWGzL4Ph95+IcIyFFSYHKpysmncNo5yrWfTF7X9
+         jn/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XBQbJL9w0L5FatKuuSiioztcIT23PXAGjfOfsR5LHQ0=;
-        b=BEsyKJRTzeKCn7AmYIcqwrOfq1XUK6TcaChHFu/6205G5pcir6k6WWu+osio4xzQqv
-         mK4vXhS2lQ91K+gXFOZ/Xd5JqfRBcXUwIo3a9leOzT7YxRgDGlGAAs62XXTiVPZNWSUo
-         whxFciBMw/xoTxnaKmfc+VBp1YlQ3uk0JWIoo8J3Ajyemru6BDzJ40CQYo1bSuLOX2H9
-         1snZSor3fvsvEJiVkru6b1chc6ba2Yarm/G52nVzyvLt5JaoT74/mqI5Vze7TcrDD+7v
-         DlZ4KUtf0CaOGalJQRyjWLiEjrjFVDok7pNCWFrdJIRTcMIaJ3Qk6k/24ox/9QeoBwSN
-         7ptA==
-X-Gm-Message-State: APjAAAUS3cMjpI8d1zmOsJFXbYX3V1RbM/l3yLKLTnp42lFjcqIHO6P7
-        XqdYVDgkzVhe1xuY527q9QpUvesukCt5LaHkRLY1DQ==
-X-Google-Smtp-Source: APXvYqzmdkCShViJX/ZyLFGu/K7Xn2EJrE+6tTMoQXX3/NnRjF6msjPk1NRHlWi0GeGmIFBqRHj60c1+IbB+DnomAQE=
-X-Received: by 2002:a9f:3046:: with SMTP id i6mr1183158uab.15.1581414327096;
- Tue, 11 Feb 2020 01:45:27 -0800 (PST)
+        bh=w1TSPc+JlTHAhFmRkBjf4YDoyFF0cD7ftWasXNuoumE=;
+        b=p+g2Xk1a/POSuhexX+crB4TqNuKEzIVUPWgGMeFkeVGSHrYEMyjgAzmDzXqdqDgfyV
+         thor+Tsw+gy1sdDqaexOeLS7hcPr3MXipPUtPJvWN3dbCOHDIlRHudKIrNQtNroaJEWO
+         M+naJxckp42jMJpktxBgRZiXIa2H6JJKX756h1+0zBXnvFp4HSpmNx1vnY6VE/FHdqFA
+         OF04FYPvNLaVj0dD5Pa77JPw8RbPgduv/B2gBYnek3p402/6FoC/tRi6jzJJPNPZxopj
+         c+Q8AImyG0MPi/6gG85uzHJtY4RFyGQ9YOiPW6aNM0tIn5E9tS0WDegvTvuZtiZ+0lWx
+         FbGg==
+X-Gm-Message-State: APjAAAV2SXEilRVamSfG0295bfDV9KX5To+uJfq8GZnHNHgy+x7iXS9r
+        gtSFpv7l/JZVpI9yIQyukcptx4/HKMoh9klZeqU=
+X-Google-Smtp-Source: APXvYqwhSf8JavKelhdt3J0bOLew5DzoXQ+67dDmYAeO5cfMhbaTYXoo2bO/py7GSWzLHg3jBl4sXXUIKRdKaJbTXNo=
+X-Received: by 2002:adf:ed09:: with SMTP id a9mr7806457wro.350.1581414409744;
+ Tue, 11 Feb 2020 01:46:49 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1580894083.git.baolin.wang7@gmail.com> <3fd82478e82b19c72dddcc17c85313725aa13ff6.1580894083.git.baolin.wang7@gmail.com>
-In-Reply-To: <3fd82478e82b19c72dddcc17c85313725aa13ff6.1580894083.git.baolin.wang7@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 11 Feb 2020 10:44:51 +0100
-Message-ID: <CAPDyKFq_tj+2yYf3YLA2vQkHGWWrY_ULUP=6-anpSJ0q+YvkFw@mail.gmail.com>
-Subject: Re: [PATCH v8 1/5] mmc: Add MMC host software queue support
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200210061544.7600-1-yuehaibing@huawei.com> <9351a746-8823-ee26-70da-fd3127a02c91@linux.intel.com>
+ <be093793-3514-840a-ff2f-4dc21d8ee7f1@huawei.com>
+In-Reply-To: <be093793-3514-840a-ff2f-4dc21d8ee7f1@huawei.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 11 Feb 2020 11:46:38 +0200
+Message-ID: <CAEnQRZDWFgXocRJxtc2e7McRCAtod6-GwPJaVMdb4ymBZgSD1w@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Fix randbuild error
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>, krzk@kernel.org,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Feb 2020 at 13:51, Baolin Wang <baolin.wang7@gmail.com> wrote:
+On Tue, Feb 11, 2020 at 3:59 AM Yuehaibing <yuehaibing@huawei.com> wrote:
 >
-> From: Baolin Wang <baolin.wang@linaro.org>
+> On 2020/2/11 5:00, Pierre-Louis Bossart wrote:
+> >
+> >
+> > On 2/10/20 12:15 AM, YueHaibing wrote:
+> >> when do randconfig like this:
+> >> CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
+> >> CONFIG_SND_SOC_SOF_IMX8=y
+> >> CONFIG_SND_SOC_SOF_OF=y
+> >> CONFIG_IMX_DSP=m
+> >> CONFIG_IMX_SCU=y
+> >>
+> >> there is a link error:
+> >>
+> >> sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
+> >> imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
+> >>
+> >> Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
+> >>
+> >> Reported-by: Hulk Robot <hulkci@huawei.com>
+> >> Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
+> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> >
+> > Thanks for the report.
+> >
+> > Would you mind sharing the .config and instructions to reproduce this case? we have an unrelated issue with allyesconfig that was reviewed here:
+> >
+> > https://github.com/thesofproject/linux/pull/1778
+> >
+> > and I'd probably a good thing to fix everything in one shot.
 >
-> Now the MMC read/write stack will always wait for previous request is
-> completed by mmc_blk_rw_wait(), before sending a new request to hardware,
-> or queue a work to complete request, that will bring context switching
-> overhead, especially for high I/O per second rates, to affect the IO
-> performance.
+> config is attached, which is on x86_64
 
-Would you mind adding some more context about the mmc_blk_rw_wait()?
-Especially I want to make it clear that mmc_blk_rw_wait() is also used
-to poll the card for busy completion for I/O writes, via sending
-CMD13.
+Thanks, I think this is legit. It was introduced with:
 
->
-> Thus this patch introduces MMC software queue interface based on the
-> hardware command queue engine's interfaces, which is similar with the
-> hardware command queue engine's idea, that can remove the context
-> switching. Moreover we set the default queue depth as 64 for software
-> queue, which allows more requests to be prepared, merged and inserted
-> into IO scheduler to improve performance, but we only allow 2 requests
-> in flight, that is enough to let the irq handler always trigger the
-> next request without a context switch, as well as avoiding a long latency.
+commit f52cdcce9197fef9d4a68792dd3b840ad2b77117
+Author: Daniel Baluta <daniel.baluta@nxp.com>
+Date:   Sat Jan 4 15:39:53 2020 +0000
 
-I think it's important to clarify that to use this new interface, hsq,
-the host controller/driver needs to support HW busy detection for I/O
-operations.
+    firmware: imx: Allow IMX DSP to be selected as module
 
-In other words, the host driver must not complete a data transfer
-request, until after the card stops signals busy. This behaviour is
-also required for "closed-ended-transmissions" with CMD23, as in this
-path there is no CMD12 sent to complete the transfer, thus no R1B
-response flag to trigger the HW busy detection behaviour in the
-driver.
+    IMX DSP is only needed by SOF or any other module that
+    wants to communicate with the DSP. When SOF is build
+    as a module IMX DSP is forced to be built inside the
+    kernel image. This is not optimal, so allow IMX DSP
+    to be built as a module.
 
->
-> From the fio testing data in cover letter, we can see the software
-> queue can improve some performance with 4K block size, increasing
-> about 16% for random read, increasing about 90% for random write,
-> though no obvious improvement for sequential read and write.
->
-> Moreover we can expand the software queue interface to support MMC
-> packed request or packed command in future.
->
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
+    Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+    Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 
-[...]
+So, I think we should change the Fixes tag. Are there
+any clear rules on when to use select vs depends?
 
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index f6912de..7a9976f 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -1851,15 +1851,22 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
->          */
->         card->reenable_cmdq = card->ext_csd.cmdq_en;
->
-> -       if (card->ext_csd.cmdq_en && !host->cqe_enabled) {
-> +       if (host->cqe_ops && !host->cqe_enabled) {
->                 err = host->cqe_ops->cqe_enable(host, card);
->                 if (err) {
->                         pr_err("%s: Failed to enable CQE, error %d\n",
->                                 mmc_hostname(host), err);
+On my side, I know what both are doing but it is not clear
+when to use them.
 
-This means we are going to start printing an error message for those
-eMMCs that doesn't support command queuing, but the host supports
-MMC_CAP2_CQE.
-
-Not sure how big of a problem this is, but another option is simply to
-leave the logging of the *failures* to the host driver, rather than
-doing it here.
-
-Oh well, feel free to change or leave this as is for now. We can
-always change it on top, if needed.
-
->                 } else {
->                         host->cqe_enabled = true;
-> -                       pr_info("%s: Command Queue Engine enabled\n",
-> -                               mmc_hostname(host));
-> +
-> +                       if (card->ext_csd.cmdq_en) {
-> +                               pr_info("%s: Command Queue Engine enabled\n",
-> +                                       mmc_hostname(host));
-> +                       } else {
-> +                               host->hsq_enabled = true;
-> +                               pr_info("%s: Host Software Queue enabled\n",
-> +                                       mmc_hostname(host));
-> +                       }
->                 }
->         }
-
-[...]
-
-Kind regards
-Uffe
+> >
+> > Thanks!
+> >
+> >> ---
+> >>   sound/soc/sof/imx/Kconfig | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+> >> index bae4f7b..81274906 100644
+> >> --- a/sound/soc/sof/imx/Kconfig
+> >> +++ b/sound/soc/sof/imx/Kconfig
+> >> @@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+> >>   config SND_SOC_SOF_IMX8_SUPPORT
+> >>       bool "SOF support for i.MX8"
+> >>       depends on IMX_SCU
+> >> -    depends on IMX_DSP
+> >> +    select IMX_DSP
+> >>       help
+> >>         This adds support for Sound Open Firmware for NXP i.MX8 platforms
+> >>         Say Y if you have such a device.
+> >>
+> >
+> > .
+> >
