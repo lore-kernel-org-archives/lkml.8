@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA54BC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6754DC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DC52086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D2B20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436169;
-	bh=lrSoaJ+41NV72mLriuzLEb/bZr4RGQ4KcYXzMnNdLv4=;
+	s=default; t=1581436172;
+	bh=tzy2zr3rlHo0SkQzCrxDNXZ5s5aCNmIDAN16Bfg7FN4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=QRXd+h+SxwTnWUTfDJ09ESDuoIEPbnctkztNUfZXiSZJXIuwJIaEG23XyAeb+Y9P0
-	 kgLpiewuHYkxv7mTNWmv3QWtBbfL6Rq0sbxbP3IGggM3OK8JcNtSoEsMam+dCEl847
-	 MB/Bh8saeQG8HAKlRgMMUtVgI2aLhgw2Lmo/N+Nw=
+	b=BnY7YCUBFdPIsjzHt3FEleo5gHO0wr6OFKbyq7cGnNGTnprnDB3xzH1C0t+n6ClyA
+	 355nM7ynpkrfCcohLg4C4DKzebbUCqkwxU9hL3K7VOjllg9O0aB7xoRP8YEBEXcFTh
+	 99P5W3KEXL/zKTsQfauWLJ+/jiiQ21i5GrHeJ5gU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgBKPt2 (ORCPT
+        id S1730463AbgBKPtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:49:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:48492 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:49:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:48510 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730377AbgBKPtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:49:25 -0500
+        id S1730401AbgBKPt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:49:27 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD3F531B;
-        Tue, 11 Feb 2020 07:49:24 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BFCD1063;
+        Tue, 11 Feb 2020 07:49:27 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 329183F68E;
-        Tue, 11 Feb 2020 07:49:24 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:49:22 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85EC33F68E;
+        Tue, 11 Feb 2020 07:49:26 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:49:25 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     alsa-devel@alsa-project.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Oder Chiou <oder_chiou@realtek.com>,
         Takashi Iwai <tiwai@suse.com>
-Subject: Applied "spi: pxa2xx: Enable support for compile-testing" to the asoc tree
-In-Reply-To: <20200210093027.6672-1-geert@linux-m68k.org>
-Message-Id: <applied-20200210093027.6672-1-geert@linux-m68k.org>
+Subject: Applied "ASoC: rt5659: remove redundant assignment to variable idx" to the asoc tree
+In-Reply-To: <20200208221529.37105-1-colin.king@canonical.com>
+Message-Id: <applied-20200208221529.37105-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -56,7 +53,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: pxa2xx: Enable support for compile-testing
+   ASoC: rt5659: remove redundant assignment to variable idx
 
 has been applied to the asoc tree at
 
@@ -81,45 +78,36 @@ to this mail.
 Thanks,
 Mark
 
-From 0d4416446897a91bb19ba837b97b607caea59a8f Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Feb 2020 10:30:27 +0100
-Subject: [PATCH] spi: pxa2xx: Enable support for compile-testing
+From 1646484ed2430e37f00945db4755449d54354b57 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Sat, 8 Feb 2020 22:15:29 +0000
+Subject: [PATCH] ASoC: rt5659: remove redundant assignment to variable idx
 
-m68k/allmodconfig:
+Variable idx is being assigned with a value that is never idx, it is
+assigned a new value a couple of statements later. The assignment is
+redundant and can be removed.
 
-    WARNING: unmet direct dependencies detected for SPI_PXA2XX
-      Depends on [n]: SPI [=y] && SPI_MASTER [=y] && (ARCH_PXA || ARCH_MMP || PCI [=n] || ACPI)
-      Selected by [m]:
-      - SND_SOC_INTEL_BDW_RT5677_MACH [=m] && SOUND [=m] && !UML && SND [=m] && SND_SOC [=m] && SND_SOC_INTEL_MACH [=y] && (SND_SOC_INTEL_HASWELL [=n] || SND_SOC_SOF_BROADWELL [=m]) && I2C [=m] && (I2C_DESIGNWARE_PLATFORM [=m] || COMPILE_TEST [=y]) && (GPIOLIB [=y] || COMPILE_TEST [=y]) && (X86_INTEL_LPSS || COMPILE_TEST [=y]) && SPI_MASTER [=y]
-
-This happens because SND_SOC_INTEL_BDW_RT5677_MACH selects SPI_PXA2XX,
-and the former depends on COMPILE_TEST, while the latter does not.
-
-Fix this by enabling compile-testing for SPI_PXA2XX.
-
-Fixes: 630db1549356f644 ("ASoC: Intel: bdw-rt5677: fix Kconfig dependencies")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210093027.6672-1-geert@linux-m68k.org
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200208221529.37105-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/Kconfig | 2 +-
+ sound/soc/codecs/rt5659.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index d6ed0c355954..912cd6e35726 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -551,7 +551,7 @@ config SPI_PPC4xx
+diff --git a/sound/soc/codecs/rt5659.c b/sound/soc/codecs/rt5659.c
+index e66d08398f74..89e0f58512fa 100644
+--- a/sound/soc/codecs/rt5659.c
++++ b/sound/soc/codecs/rt5659.c
+@@ -1604,7 +1604,7 @@ static int set_dmic_clk(struct snd_soc_dapm_widget *w,
+ {
+ 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
+ 	struct rt5659_priv *rt5659 = snd_soc_component_get_drvdata(component);
+-	int pd, idx = -EINVAL;
++	int pd, idx;
  
- config SPI_PXA2XX
- 	tristate "PXA2xx SSP SPI master"
--	depends on (ARCH_PXA || ARCH_MMP || PCI || ACPI)
-+	depends on ARCH_PXA || ARCH_MMP || PCI || ACPI || COMPILE_TEST
- 	select PXA_SSP if ARCH_PXA || ARCH_MMP
- 	help
- 	  This enables using a PXA2xx or Sodaville SSP port as a SPI master
+ 	pd = rl6231_get_pre_div(rt5659->regmap,
+ 		RT5659_ADDA_CLK_1, RT5659_I2S_PD1_SFT);
 -- 
 2.20.1
 
