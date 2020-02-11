@@ -2,197 +2,781 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFA3C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB2C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F10420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581425825;
-	bh=DoZwkXpi/2D9yx996XJ8ce1s5ncn9GFWNjxut6Ifr7o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=EDRAxkMNkrmQH5fjYQ87nN91vRKWdytE2D1pXe1sa0aYc6Opl15keLsotoqhYImH/
-	 3zJTJszc7gentPyXnL82OHgdjoxvuOwKpwZAq6SWO4GUmrVcIYvU4dYvbh2tBm789D
-	 sDw5PilaXSeSpzvTF1OVu7kVBZ4Y7NWDFhmJhLxc=
+	by mail.kernel.org (Postfix) with ESMTP id 8AA852082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="gELgADqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgBKM5E (ORCPT
+        id S1728685AbgBKM5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbgBKM5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:57:04 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC842082F;
-        Tue, 11 Feb 2020 12:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581425822;
-        bh=DoZwkXpi/2D9yx996XJ8ce1s5ncn9GFWNjxut6Ifr7o=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=1qmmckEuNFffmetSwQbN5k1DW8SZ/2dYpDp2oSEkbeJeJdaEDoN1V+Ip/50VPL/un
-         3AEKZY/t0ZrA6unBAfSnMDYSThUTP3bOh5+4k7aLt9PBbw+IjGNYCwm1iH7/XiEHxS
-         5Jqq6YHjRzq4vpJ3ExwU85smarLPgzHt/suJWC2Q=
-Message-ID: <538b41c956c3b69900c9166464d9621b2537d877.camel@kernel.org>
-Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
- writeback errors
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>,
-        Andres Freund <andres@anarazel.de>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        willy@infradead.org, dhowells@redhat.com, hch@infradead.org,
-        jack@suse.cz, akpm@linux-foundation.org
-Date:   Tue, 11 Feb 2020 07:57:00 -0500
-In-Reply-To: <20200210214657.GA10776@dread.disaster.area>
-References: <20200207170423.377931-1-jlayton@kernel.org>
-         <20200207205243.GP20628@dread.disaster.area>
-         <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
-         <20200210214657.GA10776@dread.disaster.area>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 11 Feb 2020 07:57:49 -0500
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:44244 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727567AbgBKM5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:57:49 -0500
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 146C92E1519;
+        Tue, 11 Feb 2020 15:57:44 +0300 (MSK)
+Received: from iva8-88b7aa9dc799.qloud-c.yandex.net (iva8-88b7aa9dc799.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:88b7:aa9d])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id pJkVXctvSi-vgH8b22C;
+        Tue, 11 Feb 2020 15:57:44 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1581425864; bh=NHH0wtXonm288LY4yrqGyPS2/VE8CjGul0VISCue9x4=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=gELgADqoLrkcq6kDQ9t+fS9PPRyMrm9o8U0sORmPdO5LRThEa9a499DSOcw1D2mcI
+         3Wvr8niyvf6hhXT8Vnbs8K5Q5HjlKL9van2W4yyxmBmh1OsNra4HtOVK7WgJhhNr7j
+         yHqywRajC4jKW+A4RI+EpYJ+HRqkwZX0HQ4qSSII=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
+        by iva8-88b7aa9dc799.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id KbadN9TSsO-vgVGiSwv;
+        Tue, 11 Feb 2020 15:57:42 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] lib/test_lockup: test module to generate lockups
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+References: <158132859146.2797.525923171323227836.stgit@buzz>
+ <202002101725.EE6D5A6@keescook>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <5e5ee6b7-68a9-1bcc-66c5-814e40a627be@yandex-team.ru>
+Date:   Tue, 11 Feb 2020 15:57:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <202002101725.EE6D5A6@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-11 at 08:46 +1100, Dave Chinner wrote:
-> On Fri, Feb 07, 2020 at 01:20:12PM -0800, Andres Freund wrote:
-> > Hi,
-> > 
-> > On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
-> > > On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
-> > > > You're probably wondering -- Where are v1 and v2 sets?
-> > > > The basic idea is to track writeback errors at the superblock level,
-> > > > so that we can quickly and easily check whether something bad happened
-> > > > without having to fsync each file individually. syncfs is then changed
-> > > > to reliably report writeback errors, and a new ioctl is added to allow
-> > > > userland to get at the current errseq_t value w/o having to sync out
-> > > > anything.
-> > > 
-> > > So what, exactly, can userspace do with this error? It has no idea
-> > > at all what file the writeback failure occurred on or even
-> > > what files syncfs() even acted on so there's no obvious error
-> > > recovery that it could perform on reception of such an error.
-> > 
-> > Depends on the application.  For e.g. postgres it'd to be to reset
-> > in-memory contents and perform WAL replay from the last checkpoint.
+On 11/02/2020 04.26, Kees Cook wrote:
+> On Mon, Feb 10, 2020 at 12:56:31PM +0300, Konstantin Khlebnikov wrote:
+>> CONFIG_TEST_LOCKUP=m adds module "test_lockup" that helps to make sure
+>> that watchdogs and lockup detectors are working properly.
 > 
-> What happens if a user runs 'sync -f /path/to/postgres/data' instead
-> of postgres? All the writeback errors are consumed at that point by
-> reporting them to the process that ran syncfs()...
+> Isn't this all already possible with CONFIG_LKDTM ?
+
+Yep, LKDTM covers some cases. But they are unrecoverable.
+
+It seems LKDTM is more like a fixed set of unit tests while
+test_lockup is a flexible tool for stress load.
+
 > 
-
-Well, no. If you keep a fd open, then you can be sure that you'll see
-any errors that occurred since that open at syncfs time, regardless of
-who else is issuing syncfs calls(). That's basically how errseq_t works.
-
-I guess I figured that part was obvious and didn't point it out here --
-mea culpa.
-
-> > Due
-> > to various reasons* it's very hard for us (without major performance
-> > and/or reliability impact) to fully guarantee that by the time we fsync
-> > specific files we do so on an old enough fd to guarantee that we'd see
-> > the an error triggered by background writeback.  But keeping track of
-> > all potential filesystems data resides on (with one fd open permanently
-> > for each) and then syncfs()ing them at checkpoint time is quite doable.
+> -Kees
 > 
-> Oh, you have to keep an fd permanently open to every superblock that
-> application holds data on so that errors detected by other users of
-> that filesystem are also reported to the application?
+>>
+>> Depending on module parameters test_lockup could emulate soft or hard
+>> lockup, "hung task", hold arbitrary lock, allocate bunch of pages.
+>>
+>> Also it could generate series of lockups with cooling-down periods,
+>> in this way it could be used as "ping" for locks or page allocator.
+>> Loop checks signals between iteration thus could be stopped by ^C.
+>>
+>>
+>> # modinfo test_lockup
+>> ...
+>> parm:           time_secs:lockup time in seconds, default 0 (uint)
+>> parm:           time_nsecs:nanoseconds part of lockup time, default 0 (uint)
+>> parm:           cooldown_secs:cooldown time between iterations in seconds, default 0 (uint)
+>> parm:           cooldown_nsecs:nanoseconds part of cooldown, default 0 (uint)
+>> parm:           iterations:lockup iterations, default 1 (uint)
+>> parm:           all_cpus:trigger lockup at all cpus at once (bool)
+>> parm:           state:wait in 'R' running (default), 'D' uninterruptible, 'K' killable, 'S' interruptible state (charp)
+>> parm:           use_hrtimer:use high-resolution timer for sleeping (bool)
+>> parm:           iowait:account sleep time as iowait (bool)
+>> parm:           lock_read:lock read-write locks for read (bool)
+>> parm:           lock_single:acquire locks only at one cpu (bool)
+>> parm:           reacquire_locks:release and reacquire locks/irq/preempt between iterations (bool)
+>> parm:           touch_softlockup:touch soft-lockup watchdog between iterations (bool)
+>> parm:           touch_hardlockup:touch hard-lockup watchdog between iterations (bool)
+>> parm:           call_cond_resched:call cond_resched() between iterations (bool)
+>> parm:           measure_lock_wait:measure lock wait time (bool)
+>> parm:           lock_wait_threshold:print lock wait time longer than this in nanoseconds, default off (ulong)
+>> parm:           disable_irq:disable interrupts: generate hard-lockups (bool)
+>> parm:           disable_softirq:disable bottom-half irq handlers (bool)
+>> parm:           disable_preempt:disable preemption: generate soft-lockups (bool)
+>> parm:           lock_rcu:grab rcu_read_lock: generate rcu stalls (bool)
+>> parm:           lock_mmap_sem:lock mm->mmap_sem: block procfs interfaces (bool)
+>> parm:           lock_rwsem_ptr:lock rw_semaphore at address (ulong)
+>> parm:           lock_mutex_ptr:lock mutex at address (ulong)
+>> parm:           lock_spinlock_ptr:lock spinlock at address (ulong)
+>> parm:           lock_rwlock_ptr:lock rwlock at address (ulong)
+>> parm:           alloc_pages_nr:allocate and free pages under locks (uint)
+>> parm:           alloc_pages_order:page order to allocate (uint)
+>> parm:           alloc_pages_gfp:allocate pages with this gfp_mask, default GFP_KERNEL (uint)
+>> parm:           alloc_pages_atomic:allocate pages with GFP_ATOMIC (bool)
+>> parm:           reallocate_pages:free and allocate pages between iterations (bool)
+>>
+>>
+>> Parameters for locking by address are unsafe and taints kernel. With
+>> CONFIG_DEBUG_SPINLOCK=y they at least check magics for embedded spinlocks.
+>>
+>>
+>> Examples:
+>>
+>> task hang in D-state:
+>> modprobe test_lockup time_secs=1 iterations=60 state=D
+>>
+>> task hang in io-wait D-state:
+>> modprobe test_lockup time_secs=1 iterations=60 state=D iowait
+>>
+>> softlockup:
+>> modprobe test_lockup time_secs=1 iterations=60 state=R
+>>
+>> hardlockup:
+>> modprobe test_lockup time_secs=1 iterations=60 state=R disable_irq
+>>
+>> system-wide hardlockup:
+>> modprobe test_lockup time_secs=1 iterations=60 state=R \
+>>   disable_irq all_cpus
+>>
+>> rcu stall:
+>> modprobe test_lockup time_secs=1 iterations=60 state=R \
+>>   lock_rcu touch_softlockup
+>>
+>> lock mmap_sem / block procfs interfaces:
+>> modprobe test_lockup time_secs=1 iterations=60 state=S lock_mmap_sem
+>>
+>> lock tasklist_lock for read / block forks:
+>> TASKLIST_LOCK=$(awk '$3 == "tasklist_lock" {print "0x"$1}' /proc/kallsyms)
+>> modprobe test_lockup time_secs=1 iterations=60 state=R \
+>>   disable_irq lock_read lock_rwlock_ptr=$TASKLIST_LOCK
+>>
+>> lock namespace_sem / block vfs mount operations:
+>> NAMESPACE_SEM=$(awk '$3 == "namespace_sem" {print "0x"$1}' /proc/kallsyms)
+>> modprobe test_lockup time_secs=1 iterations=60 state=S \
+>>   lock_rwsem_ptr=$NAMESPACE_SEM
+>>
+>> lock cgroup mutex / block cgroup operations:
+>> CGROUP_MUTEX=$(awk '$3 == "cgroup_mutex" {print "0x"$1}' /proc/kallsyms)
+>> modprobe test_lockup time_secs=1 iterations=60 state=S \
+>>   lock_mutex_ptr=$CGROUP_MUTEX
+>>
+>> ping cgroup_mutex every second and measure maximum lock wait time:
+>> modprobe test_lockup cooldown_secs=1 iterations=60 state=S \
+>>   lock_mutex_ptr=$CGROUP_MUTEX reacquire_locks measure_lock_wait
+>>
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> ---
+>>   lib/Kconfig.debug |   12 +
+>>   lib/Makefile      |    1
+>>   lib/test_lockup.c |  554 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 567 insertions(+)
+>>   create mode 100644 lib/test_lockup.c
+>>
+>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+>> index 69def4a9df00..8feaf71dab15 100644
+>> --- a/lib/Kconfig.debug
+>> +++ b/lib/Kconfig.debug
+>> @@ -978,6 +978,18 @@ config WQ_WATCHDOG
+>>   	  state.  This can be configured through kernel parameter
+>>   	  "workqueue.watchdog_thresh" and its sysfs counterpart.
+>>   
+>> +config TEST_LOCKUP
+>> +	tristate "Test module to generate lockups"
+>> +	help
+>> +	  This builds the "test_lockup" module that helps to make sure
+>> +	  that watchdogs and lockup detectors are working properly.
+>> +
+>> +	  Depending on module parameters it could emulate soft or hard
+>> +	  lockup, "hung task", or locking arbitrary lock for a long time.
+>> +	  Also it could generate series of lockups with cooling-down periods.
+>> +
+>> +	  If unsure, say N.
+>> +
+>>   endmenu # "Debug lockups and hangs"
+>>   
+>>   menu "Scheduler Debugging"
+>> diff --git a/lib/Makefile b/lib/Makefile
+>> index 5d64890d6b6a..b5372a83ebe2 100644
+>> --- a/lib/Makefile
+>> +++ b/lib/Makefile
+>> @@ -89,6 +89,7 @@ obj-$(CONFIG_TEST_OBJAGG) += test_objagg.o
+>>   obj-$(CONFIG_TEST_STACKINIT) += test_stackinit.o
+>>   obj-$(CONFIG_TEST_BLACKHOLE_DEV) += test_blackhole_dev.o
+>>   obj-$(CONFIG_TEST_MEMINIT) += test_meminit.o
+>> +obj-$(CONFIG_TEST_LOCKUP) += test_lockup.o
+>>   
+>>   obj-$(CONFIG_TEST_LIVEPATCH) += livepatch/
+>>   
+>> diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+>> new file mode 100644
+>> index 000000000000..f91cd44ad75a
+>> --- /dev/null
+>> +++ b/lib/test_lockup.c
+>> @@ -0,0 +1,554 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Test module to generate lockups
+>> + */
+>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/sched/signal.h>
+>> +#include <linux/sched/clock.h>
+>> +#include <linux/cpu.h>
+>> +#include <linux/nmi.h>
+>> +#include <linux/mm.h>
+>> +#include <linux/uaccess.h>
+>> +
+>> +static unsigned int time_secs;
+>> +module_param(time_secs, uint, 0600);
+>> +MODULE_PARM_DESC(time_secs, "lockup time in seconds, default 0");
+>> +
+>> +static unsigned int time_nsecs;
+>> +module_param(time_nsecs, uint, 0600);
+>> +MODULE_PARM_DESC(time_nsecs, "nanoseconds part of lockup time, default 0");
+>> +
+>> +static unsigned int cooldown_secs;
+>> +module_param(cooldown_secs, uint, 0600);
+>> +MODULE_PARM_DESC(cooldown_secs, "cooldown time between iterations in seconds, default 0");
+>> +
+>> +static unsigned int cooldown_nsecs;
+>> +module_param(cooldown_nsecs, uint, 0600);
+>> +MODULE_PARM_DESC(cooldown_nsecs, "nanoseconds part of cooldown, default 0");
+>> +
+>> +static unsigned int iterations = 1;
+>> +module_param(iterations, uint, 0600);
+>> +MODULE_PARM_DESC(iterations, "lockup iterations, default 1");
+>> +
+>> +static bool all_cpus;
+>> +module_param(all_cpus, bool, 0400);
+>> +MODULE_PARM_DESC(all_cpus, "trigger lockup at all cpus at once");
+>> +
+>> +static int wait_state;
+>> +static char *state = "R";
+>> +module_param(state, charp, 0400);
+>> +MODULE_PARM_DESC(state, "wait in 'R' running (default), 'D' uninterruptible, 'K' killable, 'S' interruptible state");
+>> +
+>> +static bool use_hrtimer;
+>> +module_param(use_hrtimer, bool, 0400);
+>> +MODULE_PARM_DESC(use_hrtimer, "use high-resolution timer for sleeping");
+>> +
+>> +static bool iowait;
+>> +module_param(iowait, bool, 0400);
+>> +MODULE_PARM_DESC(iowait, "account sleep time as iowait");
+>> +
+>> +static bool lock_read;
+>> +module_param(lock_read, bool, 0400);
+>> +MODULE_PARM_DESC(lock_read, "lock read-write locks for read");
+>> +
+>> +static bool lock_single;
+>> +module_param(lock_single, bool, 0400);
+>> +MODULE_PARM_DESC(lock_single, "acquire locks only at one cpu");
+>> +
+>> +static bool reacquire_locks;
+>> +module_param(reacquire_locks, bool, 0400);
+>> +MODULE_PARM_DESC(reacquire_locks, "release and reacquire locks/irq/preempt between iterations");
+>> +
+>> +static bool touch_softlockup;
+>> +module_param(touch_softlockup, bool, 0600);
+>> +MODULE_PARM_DESC(touch_softlockup, "touch soft-lockup watchdog between iterations");
+>> +
+>> +static bool touch_hardlockup;
+>> +module_param(touch_hardlockup, bool, 0600);
+>> +MODULE_PARM_DESC(touch_hardlockup, "touch hard-lockup watchdog between iterations");
+>> +
+>> +static bool call_cond_resched;
+>> +module_param(call_cond_resched, bool, 0600);
+>> +MODULE_PARM_DESC(call_cond_resched, "call cond_resched() between iterations");
+>> +
+>> +static bool measure_lock_wait;
+>> +module_param(measure_lock_wait, bool, 0400);
+>> +MODULE_PARM_DESC(measure_lock_wait, "measure lock wait time");
+>> +
+>> +static unsigned long lock_wait_threshold = ULONG_MAX;
+>> +module_param(lock_wait_threshold, ulong, 0400);
+>> +MODULE_PARM_DESC(lock_wait_threshold, "print lock wait time longer than this in nanoseconds, default off");
+>> +
+>> +static bool disable_irq;
+>> +module_param(disable_irq, bool, 0400);
+>> +MODULE_PARM_DESC(disable_irq, "disable interrupts: generate hard-lockups");
+>> +
+>> +static bool disable_softirq;
+>> +module_param(disable_softirq, bool, 0400);
+>> +MODULE_PARM_DESC(disable_softirq, "disable bottom-half irq handlers");
+>> +
+>> +static bool disable_preempt;
+>> +module_param(disable_preempt, bool, 0400);
+>> +MODULE_PARM_DESC(disable_preempt, "disable preemption: generate soft-lockups");
+>> +
+>> +static bool lock_rcu;
+>> +module_param(lock_rcu, bool, 0400);
+>> +MODULE_PARM_DESC(lock_rcu, "grab rcu_read_lock: generate rcu stalls");
+>> +
+>> +static bool lock_mmap_sem;
+>> +module_param(lock_mmap_sem, bool, 0400);
+>> +MODULE_PARM_DESC(lock_mmap_sem, "lock mm->mmap_sem: block procfs interfaces");
+>> +
+>> +static unsigned long lock_rwsem_ptr;
+>> +module_param_unsafe(lock_rwsem_ptr, ulong, 0400);
+>> +MODULE_PARM_DESC(lock_rwsem_ptr, "lock rw_semaphore at address");
+>> +
+>> +static unsigned long lock_mutex_ptr;
+>> +module_param_unsafe(lock_mutex_ptr, ulong, 0400);
+>> +MODULE_PARM_DESC(lock_mutex_ptr, "lock mutex at address");
+>> +
+>> +static unsigned long lock_spinlock_ptr;
+>> +module_param_unsafe(lock_spinlock_ptr, ulong, 0400);
+>> +MODULE_PARM_DESC(lock_spinlock_ptr, "lock spinlock at address");
+>> +
+>> +static unsigned long lock_rwlock_ptr;
+>> +module_param_unsafe(lock_rwlock_ptr, ulong, 0400);
+>> +MODULE_PARM_DESC(lock_rwlock_ptr, "lock rwlock at address");
+>> +
+>> +static unsigned int alloc_pages_nr;
+>> +module_param_unsafe(alloc_pages_nr, uint, 0600);
+>> +MODULE_PARM_DESC(alloc_pages_nr, "allocate and free pages under locks");
+>> +
+>> +static unsigned int alloc_pages_order;
+>> +module_param(alloc_pages_order, uint, 0400);
+>> +MODULE_PARM_DESC(alloc_pages_order, "page order to allocate");
+>> +
+>> +static gfp_t alloc_pages_gfp = GFP_KERNEL;
+>> +module_param_unsafe(alloc_pages_gfp, uint, 0400);
+>> +MODULE_PARM_DESC(alloc_pages_gfp, "allocate pages with this gfp_mask, default GFP_KERNEL");
+>> +
+>> +static bool alloc_pages_atomic;
+>> +module_param(alloc_pages_atomic, bool, 0400);
+>> +MODULE_PARM_DESC(alloc_pages_atomic, "allocate pages with GFP_ATOMIC");
+>> +
+>> +static bool reallocate_pages;
+>> +module_param(reallocate_pages, bool, 0400);
+>> +MODULE_PARM_DESC(reallocate_pages, "free and allocate pages between iterations");
+>> +
+>> +static atomic_t alloc_pages_failed = ATOMIC_INIT(0);
+>> +
+>> +static atomic64_t max_lock_wait = ATOMIC64_INIT(0);
+>> +
+>> +static struct task_struct *main_task;
+>> +static int master_cpu;
+>> +
+>> +static void test_lock(bool master, bool verbose)
+>> +{
+>> +	u64 uninitialized_var(wait_start);
+>> +
+>> +	if (measure_lock_wait)
+>> +		wait_start = local_clock();
+>> +
+>> +	if (lock_mutex_ptr && master) {
+>> +		if (verbose)
+>> +			pr_notice("lock mutex %ps\n", (void *)lock_mutex_ptr);
+>> +		mutex_lock((struct mutex *)lock_mutex_ptr);
+>> +	}
+>> +
+>> +	if (lock_rwsem_ptr && master) {
+>> +		if (verbose)
+>> +			pr_notice("lock rw_semaphore %ps\n",
+>> +				  (void *)lock_rwsem_ptr);
+>> +		if (lock_read)
+>> +			down_read((struct rw_semaphore *)lock_rwsem_ptr);
+>> +		else
+>> +			down_write((struct rw_semaphore *)lock_rwsem_ptr);
+>> +	}
+>> +
+>> +	if (lock_mmap_sem && master) {
+>> +		if (verbose)
+>> +			pr_notice("lock mmap_sem pid=%d\n", main_task->pid);
+>> +		if (lock_read)
+>> +			down_read(&main_task->mm->mmap_sem);
+>> +		else
+>> +			down_write(&main_task->mm->mmap_sem);
+>> +	}
+>> +
+>> +	if (disable_irq)
+>> +		local_irq_disable();
+>> +
+>> +	if (disable_softirq)
+>> +		local_bh_disable();
+>> +
+>> +	if (disable_preempt)
+>> +		preempt_disable();
+>> +
+>> +	if (lock_rcu)
+>> +		rcu_read_lock();
+>> +
+>> +	if (lock_spinlock_ptr && master) {
+>> +		if (verbose)
+>> +			pr_notice("lock spinlock %ps\n",
+>> +				  (void *)lock_spinlock_ptr);
+>> +		spin_lock((spinlock_t *)lock_spinlock_ptr);
+>> +	}
+>> +
+>> +	if (lock_rwlock_ptr && master) {
+>> +		if (verbose)
+>> +			pr_notice("lock rwlock %ps\n",
+>> +				  (void *)lock_rwlock_ptr);
+>> +		if (lock_read)
+>> +			read_lock((rwlock_t *)lock_rwlock_ptr);
+>> +		else
+>> +			write_lock((rwlock_t *)lock_rwlock_ptr);
+>> +	}
+>> +
+>> +	if (measure_lock_wait) {
+>> +		s64 cur_wait = local_clock() - wait_start;
+>> +		s64 max_wait = atomic64_read(&max_lock_wait);
+>> +
+>> +		do {
+>> +			if (cur_wait < max_wait)
+>> +				break;
+>> +			max_wait = atomic64_cmpxchg(&max_lock_wait,
+>> +						    max_wait, cur_wait);
+>> +		} while (max_wait != cur_wait);
+>> +
+>> +		if (cur_wait > lock_wait_threshold)
+>> +			pr_notice_ratelimited("lock wait %lld ns\n", cur_wait);
+>> +	}
+>> +}
+>> +
+>> +static void test_unlock(bool master, bool verbose)
+>> +{
+>> +	if (lock_rwlock_ptr && master) {
+>> +		if (lock_read)
+>> +			read_unlock((rwlock_t *)lock_rwlock_ptr);
+>> +		else
+>> +			write_unlock((rwlock_t *)lock_rwlock_ptr);
+>> +		if (verbose)
+>> +			pr_notice("unlock rwlock %ps\n",
+>> +				  (void *)lock_rwlock_ptr);
+>> +	}
+>> +
+>> +	if (lock_spinlock_ptr && master) {
+>> +		spin_unlock((spinlock_t *)lock_spinlock_ptr);
+>> +		if (verbose)
+>> +			pr_notice("unlock spinlock %ps\n",
+>> +				  (void *)lock_spinlock_ptr);
+>> +	}
+>> +
+>> +	if (lock_rcu)
+>> +		rcu_read_unlock();
+>> +
+>> +	if (disable_preempt)
+>> +		preempt_enable();
+>> +
+>> +	if (disable_softirq)
+>> +		local_bh_enable();
+>> +
+>> +	if (disable_irq)
+>> +		local_irq_enable();
+>> +
+>> +	if (lock_mmap_sem && master) {
+>> +		if (lock_read)
+>> +			up_read(&main_task->mm->mmap_sem);
+>> +		else
+>> +			up_write(&main_task->mm->mmap_sem);
+>> +		if (verbose)
+>> +			pr_notice("unlock mmap_sem pid=%d\n", main_task->pid);
+>> +	}
+>> +
+>> +	if (lock_rwsem_ptr && master) {
+>> +		if (lock_read)
+>> +			up_read((struct rw_semaphore *)lock_rwsem_ptr);
+>> +		else
+>> +			up_write((struct rw_semaphore *)lock_rwsem_ptr);
+>> +		if (verbose)
+>> +			pr_notice("unlock rw_semaphore %ps\n",
+>> +				  (void *)lock_rwsem_ptr);
+>> +	}
+>> +
+>> +	if (lock_mutex_ptr && master) {
+>> +		mutex_unlock((struct mutex *)lock_mutex_ptr);
+>> +		if (verbose)
+>> +			pr_notice("unlock mutex %ps\n",
+>> +				  (void *)lock_mutex_ptr);
+>> +	}
+>> +}
+>> +
+>> +static void test_alloc_pages(struct list_head *pages)
+>> +{
+>> +	struct page *page;
+>> +	unsigned int i;
+>> +
+>> +	for (i = 0; i < alloc_pages_nr; i++) {
+>> +		page = alloc_pages(alloc_pages_gfp, alloc_pages_order);
+>> +		if (!page) {
+>> +			atomic_inc(&alloc_pages_failed);
+>> +			break;
+>> +		}
+>> +		list_add(&page->lru, pages);
+>> +	}
+>> +}
+>> +
+>> +static void test_free_pages(struct list_head *pages)
+>> +{
+>> +	struct page *page, *next;
+>> +
+>> +	list_for_each_entry_safe(page, next, pages, lru)
+>> +		__free_pages(page, alloc_pages_order);
+>> +	INIT_LIST_HEAD(pages);
+>> +}
+>> +
+>> +static void test_wait(unsigned int secs, unsigned int nsecs)
+>> +{
+>> +	if (wait_state == TASK_RUNNING) {
+>> +		if (secs)
+>> +			mdelay(secs * MSEC_PER_SEC);
+>> +		if (nsecs)
+>> +			ndelay(nsecs);
+>> +		return;
+>> +	}
+>> +
+>> +	__set_current_state(wait_state);
+>> +	if (use_hrtimer) {
+>> +		ktime_t time;
+>> +
+>> +		time = ns_to_ktime((u64)secs * NSEC_PER_SEC + nsecs);
+>> +		schedule_hrtimeout(&time, HRTIMER_MODE_REL);
+>> +	} else {
+>> +		schedule_timeout(secs * HZ + nsecs_to_jiffies(nsecs));
+>> +	}
+>> +}
+>> +
+>> +static void test_lockup(bool master)
+>> +{
+>> +	u64 lockup_start = local_clock();
+>> +	unsigned int iter = 0;
+>> +	LIST_HEAD(pages);
+>> +
+>> +	pr_notice("Start on CPU%d\n", raw_smp_processor_id());
+>> +
+>> +	test_lock(master, true);
+>> +
+>> +	test_alloc_pages(&pages);
+>> +
+>> +	while (iter++ < iterations && !signal_pending(main_task)) {
+>> +
+>> +		if (iowait)
+>> +			current->in_iowait = 1;
+>> +
+>> +		test_wait(time_secs, time_nsecs);
+>> +
+>> +		if (iowait)
+>> +			current->in_iowait = 0;
+>> +
+>> +		if (reallocate_pages)
+>> +			test_free_pages(&pages);
+>> +
+>> +		if (reacquire_locks)
+>> +			test_unlock(master, false);
+>> +
+>> +		if (touch_softlockup)
+>> +			touch_softlockup_watchdog();
+>> +
+>> +		if (touch_hardlockup)
+>> +			touch_nmi_watchdog();
+>> +
+>> +		if (call_cond_resched)
+>> +			cond_resched();
+>> +
+>> +		test_wait(cooldown_secs, cooldown_nsecs);
+>> +
+>> +		if (reacquire_locks)
+>> +			test_lock(master, false);
+>> +
+>> +		if (reallocate_pages)
+>> +			test_alloc_pages(&pages);
+>> +	}
+>> +
+>> +	pr_notice("Finish on CPU%d in %lld ns\n", raw_smp_processor_id(),
+>> +		  local_clock() - lockup_start);
+>> +
+>> +	test_free_pages(&pages);
+>> +
+>> +	test_unlock(master, true);
+>> +}
+>> +
+>> +DEFINE_PER_CPU(struct work_struct, test_works);
+>> +
+>> +static void test_work_fn(struct work_struct *work)
+>> +{
+>> +	test_lockup(!lock_single ||
+>> +		    work == per_cpu_ptr(&test_works, master_cpu));
+>> +}
+>> +
+>> +static bool test_kernel_ptr(unsigned long addr, int size)
+>> +{
+>> +	void *ptr = (void *)addr;
+>> +	char buf;
+>> +
+>> +	if (!addr)
+>> +		return false;
+>> +
+>> +	/* should be at least readable kernel address */
+>> +	if (access_ok(ptr, 1) ||
+>> +	    access_ok(ptr + size - 1, 1) ||
+>> +	    probe_kernel_address(ptr, buf) ||
+>> +	    probe_kernel_address(ptr + size - 1, buf)) {
+>> +		pr_err("invalid kernel ptr: %#lx\n", addr);
+>> +		return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static bool __maybe_unused test_magic(unsigned long addr, int offset,
+>> +				      unsigned int expected)
+>> +{
+>> +	void *ptr = (void *)addr + offset;
+>> +	unsigned int magic = 0;
+>> +
+>> +	if (!addr)
+>> +		return false;
+>> +
+>> +	if (probe_kernel_address(ptr, magic) || magic != expected) {
+>> +		pr_err("invalid magic at %#lx + %#x = %#x, expected %#x\n",
+>> +		       addr, offset, magic, expected);
+>> +		return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static int __init test_lockup_init(void)
+>> +{
+>> +	u64 test_start = local_clock();
+>> +
+>> +	main_task = current;
+>> +
+>> +	switch (state[0]) {
+>> +	case 'S':
+>> +		wait_state = TASK_INTERRUPTIBLE;
+>> +		break;
+>> +	case 'D':
+>> +		wait_state = TASK_UNINTERRUPTIBLE;
+>> +		break;
+>> +	case 'K':
+>> +		wait_state = TASK_KILLABLE;
+>> +		break;
+>> +	case 'R':
+>> +		wait_state = TASK_RUNNING;
+>> +		break;
+>> +	default:
+>> +		pr_err("unknown state=%s\n", state);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (alloc_pages_atomic)
+>> +		alloc_pages_gfp = GFP_ATOMIC;
+>> +
+>> +	if (test_kernel_ptr(lock_spinlock_ptr, sizeof(spinlock_t)) ||
+>> +	    test_kernel_ptr(lock_rwlock_ptr, sizeof(rwlock_t)) ||
+>> +	    test_kernel_ptr(lock_mutex_ptr, sizeof(struct mutex)) ||
+>> +	    test_kernel_ptr(lock_rwsem_ptr, sizeof(struct rw_semaphore)))
+>> +		return -EINVAL;
+>> +
+>> +#ifdef CONFIG_DEBUG_SPINLOCK
+>> +	if (test_magic(lock_spinlock_ptr,
+>> +		       offsetof(spinlock_t, rlock.magic),
+>> +		       SPINLOCK_MAGIC) ||
+>> +	    test_magic(lock_rwlock_ptr,
+>> +		       offsetof(rwlock_t, magic),
+>> +		       RWLOCK_MAGIC) ||
+>> +	    test_magic(lock_mutex_ptr,
+>> +		       offsetof(struct mutex, wait_lock.rlock.magic),
+>> +		       SPINLOCK_MAGIC) ||
+>> +	    test_magic(lock_rwsem_ptr,
+>> +		       offsetof(struct rw_semaphore, wait_lock.magic),
+>> +		       SPINLOCK_MAGIC))
+>> +		return -EINVAL;
+>> +#endif
+>> +
+>> +	if ((wait_state != TASK_RUNNING ||
+>> +	     (call_cond_resched && !reacquire_locks) ||
+>> +	     (alloc_pages_nr && gfpflags_allow_blocking(alloc_pages_gfp))) &&
+>> +	    (disable_irq || disable_softirq || disable_preempt || lock_rcu ||
+>> +	     lock_spinlock_ptr || lock_rwlock_ptr)) {
+>> +		pr_err("refuse to sleep in atomic context\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (lock_mmap_sem && !main_task->mm) {
+>> +		pr_err("no mm to lock mmap_sem\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	pr_notice("START pid=%d time=%u +%u ns cooldown=%u +%u ns iteraions=%u state=%s %s%s%s%s%s%s%s%s%s%s%s\n",
+>> +		  main_task->pid, time_secs, time_nsecs,
+>> +		  cooldown_secs, cooldown_nsecs, iterations, state,
+>> +		  all_cpus ? "all_cpus " : "",
+>> +		  iowait ? "iowait " : "",
+>> +		  disable_irq ? "disable_irq " : "",
+>> +		  disable_softirq ? "disable_softirq " : "",
+>> +		  disable_preempt ? "disable_preempt " : "",
+>> +		  lock_rcu ? "lock_rcu " : "",
+>> +		  lock_read ? "lock_read " : "",
+>> +		  touch_softlockup ? "touch_softlockup " : "",
+>> +		  touch_hardlockup ? "touch_hardlockup " : "",
+>> +		  call_cond_resched ? "call_cond_resched " : "",
+>> +		  reacquire_locks ? "reacquire_locks " : "");
+>> +
+>> +	if (alloc_pages_nr)
+>> +		pr_notice("ALLOCATE PAGES nr=%u order=%u gfp=%pGg %s\n",
+>> +			  alloc_pages_nr, alloc_pages_order, &alloc_pages_gfp,
+>> +			  reallocate_pages ? "reallocate_pages " : "");
+>> +
+>> +	if (all_cpus) {
+>> +		unsigned int cpu;
+>> +
+>> +		cpus_read_lock();
+>> +
+>> +		preempt_disable();
+>> +		master_cpu = smp_processor_id();
+>> +		for_each_online_cpu(cpu) {
+>> +			INIT_WORK(per_cpu_ptr(&test_works, cpu), test_work_fn);
+>> +			queue_work_on(cpu, system_highpri_wq,
+>> +				      per_cpu_ptr(&test_works, cpu));
+>> +		}
+>> +		preempt_enable();
+>> +
+>> +		for_each_online_cpu(cpu)
+>> +			flush_work(per_cpu_ptr(&test_works, cpu));
+>> +
+>> +		cpus_read_unlock();
+>> +	} else {
+>> +		test_lockup(true);
+>> +	}
+>> +
+>> +	if (measure_lock_wait)
+>> +		pr_notice("Maximum lock wait: %lld ns\n",
+>> +			  atomic64_read(&max_lock_wait));
+>> +
+>> +	if (alloc_pages_nr)
+>> +		pr_notice("Page allocation failed %u times\n",
+>> +			  atomic_read(&alloc_pages_failed));
+>> +
+>> +	pr_notice("FINISH in %llu ns\n", local_clock() - test_start);
+>> +
+>> +	if (signal_pending(main_task))
+>> +		return -EINTR;
+>> +
+>> +	return -EAGAIN;
+>> +}
+>> +module_init(test_lockup_init);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Konstantin Khlebnikov <khlebnikov@yandex-team.ru>");
+>> +MODULE_DESCRIPTION("Test module to generate lockups");
+>>
 > 
-> This seems like a fairly important requirement for applications to
-> ensure this error reporting is "reliable" and that certainly wasn't
-> apparent from the patches or their description.  i.e. the API has an
-> explicit userspace application behaviour requirement for reliable
-> functioning, and that was not documented.  "we suck at APIs" and all
-> that..
-> 
-> It also seems to me as useful only to applications that have a
-> "rollback and replay" error recovery mechanism. If the application
-> doesn't have the ability to go back in time to before the
-> "unfindable" writeback error occurred, then this error is largely
-> useless to those applications because they can't do anything with
-> it, and so....
-> 
-
-Just knowing that an error occurred is still a better situation than
-letting the application obliviously chug along.
-
-In a sense I see the above argument as circular. Our error reporting
-mechanisms have historically sucked, and applications have been written
-accordingly. Unless we improve how errors are reported then applications
-will never improve.
-
-It is true that we can't reasonably report which inodes failed writeback
-with this interface, but syncfs only returns int. That's really the best
-we can do with it.
-
-> > > > - This adds a new generic fs ioctl to allow userland to scrape
-> > > > the current superblock's errseq_t value. It may be best to
-> > > > present this to userland via fsinfo() instead (once that's
-> > > > merged). I'm fine with dropping the last patch for now and
-> > > > reworking it for fsinfo if so.
-> > > 
-> > > What, exactly, is this useful for? Why would we consider
-> > > exposing an internal implementation detail to userspace like
-> > > this?
-> > 
-> > There is, as far as I can tell, so far no way but scraping the
-> > kernel log to figure out if there have been data loss errors on a
-> > machine/fs.
-> 
-> .... most applications will still require users to scrape their
-> logs to find out what error actually occurred. IOWs, we haven't
-> really changed the status quo with this new mechanism.
-> 
-> FWIW, explicit userspace error notifications for data loss events is
-> one of the features that David Howell's generic filesystem
-> notification mechanism is intended to provide.  Hence I'm not sure
-> that there's a huge amount of value in providing a partial solution
-> that only certain applications can use when there's a fully generic
-> mechanism for error notification just around the corner.
-> 
-
-David's notification work is great, but it's quite a bit more
-heavyweight than just allowing syncfs to return better errors. The
-application would need to register to be notified and watch a pipe. Not
-all application are going to want or need to do that.
-
-> > Even besides app specific reactions like outlined above,
-> > just generally being able to alert whenever there error count
-> > increases seems extremely useful.
-> 
-> Yup, a generic filesystem notification mechanism is perfect for
-> that, plus it can provide more explicit details of where the error
-> actually occurred rather than jsut a handwavy "some error occurred
-> some where" report....
-> 
-> > I'm not sure it makes sense to
-> > expose the errseq_t bits straight though - seems like it'd
-> > enshrine them in userspace ABI too much?
-> 
-> Even a little is way too much. Userspace ABI needs to be completely
-> independent of the kernel internal structures and implementation.
-> This is basic "we suck at APIs 101" stuff...
-> 
-
-Yeah, I've already self-NAK'ed that patch.
-
-If we are going to expose that info, we'll probably do it via fsinfo(),
-and put it in a struct with two fields: last reported error code, and an
-opaque token that you can use to see whether new errors have been
-recorded since you last checked. I think that should be enough to ensure
-that we don't tie this too closely to the internal kernel mplementation.
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
