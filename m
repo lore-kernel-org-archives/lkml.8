@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B48C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DA3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF4420714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE14E20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="o6WsPurw"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="OagUjMkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgBKKfF (ORCPT
+        id S1728447AbgBKKfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:35:05 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:30738 "EHLO rere.qmqm.pl"
+        Tue, 11 Feb 2020 05:35:19 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:39234 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbgBKKfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728368AbgBKKfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 05:35:04 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48GzgB3DDSz204;
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48GzgB1Ct2zfJ;
         Tue, 11 Feb 2020 11:35:02 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1581417302; bh=pM3kHma+Yvip/GLz2vbupcyRhREUkJGO1ZAbFLVGKU0=;
+        t=1581417302; bh=vJ8NUWITEPRXpkbxoGsrULQBqI+6p7Npd4ClhxGYj/Y=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=o6WsPurwin5fAaNOs8xOSe39rwq7VCDL8BRIpeupmWcrGT3UUVq7C295xB2OqqIK9
-         YtyugyBobgVjLJfkP8Gz9/COu2sOtMFj/MQ85/p7BE+SHLlj2v/FFcb4cT7YLxRuw5
-         WoKLDk/MhMhXaKxFXDKb0MxQVTZIL7R+jgmVEV1UVctj6VYLnpU8m75dLiZqMXVAQI
-         x4YNlv9whNIIF2g2xuFt4REcayXPw+AwEIpSC8PfJL9JdVySBDiB/wWJqmEfvmcqms
-         Nf56LrQNu1suABUD6fmawP/SZQGTdPoUz1EDPs3qtNksS24WBd9bEDLCRl4kyoL4OF
-         cVWMLBjvFKsZQ==
+        b=OagUjMkQfG5ZYGu77ODgUQyZtbdGkOXc/fjC4sC6MtxSDwdGw19s/NRUrAzkPM1Cp
+         ROA40S2z9fowEyomLfG7EdyQxp77js26SH/69y911FaTyMuIsrtyuJYubUKmMBa6um
+         p1N4PO0I67nfQ9RZVw33+AhfFkhCpyEuC/cZK15SoidZYowb4VAKhCOSvZCpLpX36w
+         BO34mOHS4r++XtbCDr0aoUvmElVJizgD7ltpvpyD+DnjrWEresoXkKAC8/FxF6/9S+
+         PDJ0PyrxpYhHGsraXzJ4kHqFktwWqAe54LTo+xof1TZd3ooA9QltnsIwggRPHNSSzJ
+         XcGVscxrRaQFw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.1 at mail
-Date:   Tue, 11 Feb 2020 11:35:02 +0100
-Message-Id: <0e6dda06f145676861860f073a53dc95987c7ab5.1581416843.git.mirq-linux@rere.qmqm.pl>
+Date:   Tue, 11 Feb 2020 11:35:01 +0100
+Message-Id: <5e30397af95854b4a7deea073b730c00229f42ba.1581416843.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1581416843.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1581416843.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 3/6] staging: wfx: add proper "compatible" string
+Subject: [PATCH v2 2/6] staging: wfx: annotate nested gc_list vs tx queue
+ locking
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -53,101 +54,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "compatible" string matching "vendor,chip" template and proper
-GPIO flags handling. Keep support for old name and reset polarity
-for older devicetrees.
+Lockdep is complaining about recursive locking, because it can't make
+a difference between locked skb_queues. Annotate nested locks and avoid
+double bh_disable/enable.
 
-Cc: stable@vger.kernel.org   # d3a5bcb4a17f ("gpio: add gpiod_toggle_active_low()")
+[...]
+insmod/815 is trying to acquire lock:
+cb7d6418 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xfc/0x198 [wfx]
+
+but task is already holding lock:
+cb7d61f4 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xa0/0x198 [wfx]
+
+[...]
+Possible unsafe locking scenario:
+
+      CPU0
+      ----
+ lock(&(&list->lock)->rlock);
+ lock(&(&list->lock)->rlock);
+
 Cc: stable@vger.kernel.org
-Fixes: 0096214a59a7 ("staging: wfx: add support for I/O access")
+Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- .../bindings/net/wireless/siliabs,wfx.txt          |  7 ++++---
- drivers/staging/wfx/bus_spi.c                      | 14 ++++++++++----
- 2 files changed, 14 insertions(+), 7 deletions(-)
+ drivers/staging/wfx/queue.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-index 26de6762b942..52f97673da1e 100644
---- a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-+++ b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-@@ -6,7 +6,7 @@ SPI
- You have to declare the WFxxx chip in your device tree.
- 
- Required properties:
-- - compatible: Should be "silabs,wfx-spi"
-+ - compatible: Should be "silabs,wf200"
-  - reg: Chip select address of device
-  - spi-max-frequency: Maximum SPI clocking speed of device in Hz
-  - interrupts-extended: Should contain interrupt line (interrupt-parent +
-@@ -15,6 +15,7 @@ Required properties:
- Optional properties:
-  - reset-gpios: phandle of gpio that will be used to reset chip during probe.
-    Without this property, you may encounter issues with warm boot.
-+   (Legacy: when compatible == "silabs,wfx-spi", the gpio is inverted.)
- 
- Please consult Documentation/devicetree/bindings/spi/spi-bus.txt for optional
- SPI connection related properties,
-@@ -23,12 +24,12 @@ Example:
- 
- &spi1 {
- 	wfx {
--		compatible = "silabs,wfx-spi";
-+		compatible = "silabs,wf200";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&wfx_irq &wfx_gpios>;
- 		interrupts-extended = <&gpio 16 IRQ_TYPE_EDGE_RISING>;
- 		wakeup-gpios = <&gpio 12 GPIO_ACTIVE_HIGH>;
--		reset-gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
- 		reg = <0>;
- 		spi-max-frequency = <42000000>;
- 	};
-diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_spi.c
-index 605ad74068b7..d6a75bd61595 100644
---- a/drivers/staging/wfx/bus_spi.c
-+++ b/drivers/staging/wfx/bus_spi.c
-@@ -27,6 +27,8 @@ MODULE_PARM_DESC(gpio_reset, "gpio number for reset. -1 for none.");
- #define SET_WRITE 0x7FFF        /* usage: and operation */
- #define SET_READ 0x8000         /* usage: or operation */
- 
-+#define WFX_RESET_INVERTED 1
-+
- static const struct wfx_platform_data wfx_spi_pdata = {
- 	.file_fw = "wfm_wf200",
- 	.file_pds = "wf200.pds",
-@@ -206,9 +208,11 @@ static int wfx_spi_probe(struct spi_device *func)
- 	if (!bus->gpio_reset) {
- 		dev_warn(&func->dev, "try to load firmware anyway\n");
- 	} else {
--		gpiod_set_value(bus->gpio_reset, 0);
--		udelay(100);
-+		if (spi_get_device_id(func)->driver_data & WFX_RESET_INVERTED)
-+			gpiod_toggle_active_low(bus->gpio_reset);
- 		gpiod_set_value(bus->gpio_reset, 1);
-+		udelay(100);
-+		gpiod_set_value(bus->gpio_reset, 0);
- 		udelay(2000);
+diff --git a/drivers/staging/wfx/queue.c b/drivers/staging/wfx/queue.c
+index 0bcc61feee1d..51d6c55ae91f 100644
+--- a/drivers/staging/wfx/queue.c
++++ b/drivers/staging/wfx/queue.c
+@@ -130,12 +130,12 @@ static void wfx_tx_queue_clear(struct wfx_dev *wdev, struct wfx_queue *queue,
+ 	spin_lock_bh(&queue->queue.lock);
+ 	while ((item = __skb_dequeue(&queue->queue)) != NULL)
+ 		skb_queue_head(gc_list, item);
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	for (i = 0; i < ARRAY_SIZE(stats->link_map_cache); ++i) {
+ 		stats->link_map_cache[i] -= queue->link_map_cache[i];
+ 		queue->link_map_cache[i] = 0;
  	}
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	spin_unlock_bh(&queue->queue.lock);
+ }
  
-@@ -245,14 +249,16 @@ static int wfx_spi_remove(struct spi_device *func)
-  * stripped.
-  */
- static const struct spi_device_id wfx_spi_id[] = {
--	{ "wfx-spi", 0 },
-+	{ "wfx-spi", WFX_RESET_INVERTED },
-+	{ "wf200", 0 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(spi, wfx_spi_id);
+@@ -207,9 +207,9 @@ void wfx_tx_queue_put(struct wfx_dev *wdev, struct wfx_queue *queue,
  
- #ifdef CONFIG_OF
- static const struct of_device_id wfx_spi_of_match[] = {
--	{ .compatible = "silabs,wfx-spi" },
-+	{ .compatible = "silabs,wfx-spi", .data = (void *)WFX_RESET_INVERTED },
-+	{ .compatible = "silabs,wf200" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, wfx_spi_of_match);
+ 	++queue->link_map_cache[tx_priv->link_id];
+ 
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	++stats->link_map_cache[tx_priv->link_id];
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	spin_unlock_bh(&queue->queue.lock);
+ }
+ 
+@@ -237,11 +237,11 @@ static struct sk_buff *wfx_tx_queue_get(struct wfx_dev *wdev,
+ 		__skb_unlink(skb, &queue->queue);
+ 		--queue->link_map_cache[tx_priv->link_id];
+ 
+-		spin_lock_bh(&stats->pending.lock);
++		spin_lock_nested(&stats->pending.lock, 1);
+ 		__skb_queue_tail(&stats->pending, skb);
+ 		if (!--stats->link_map_cache[tx_priv->link_id])
+ 			wakeup_stats = true;
+-		spin_unlock_bh(&stats->pending.lock);
++		spin_unlock(&stats->pending.lock);
+ 	}
+ 	spin_unlock_bh(&queue->queue.lock);
+ 	if (wakeup_stats)
+@@ -259,10 +259,10 @@ int wfx_pending_requeue(struct wfx_dev *wdev, struct sk_buff *skb)
+ 	spin_lock_bh(&queue->queue.lock);
+ 	++queue->link_map_cache[tx_priv->link_id];
+ 
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	++stats->link_map_cache[tx_priv->link_id];
+ 	__skb_unlink(skb, &stats->pending);
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	__skb_queue_tail(&queue->queue, skb);
+ 	spin_unlock_bh(&queue->queue.lock);
+ 	return 0;
 -- 
 2.20.1
 
