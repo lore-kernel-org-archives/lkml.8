@@ -2,188 +2,102 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F1DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCBBC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEFB20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED05F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YxQ7ZaN7"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="Ssoit/C7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgBKNw3 (ORCPT
+        id S1729361AbgBKNwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:52:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56196 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728624AbgBKNw3 (ORCPT
+        Tue, 11 Feb 2020 08:52:32 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:54546 "EHLO
+        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728624AbgBKNwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:52:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581429148;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=o2XF+6S9QP9MMONzva7MUWo1VqNBPmt53WQKr9NpEek=;
-        b=YxQ7ZaN7L8ohZIj+uyV8HP0bfWLi3q/G3snJXSjHzXBso+IGzUu77LuPFJXaFVQ90Y3SR0
-        xzxNFIZBAJ73fb61CYN4vUUzTMuqTRSLwLj6WprmfWoEQjwo2NTYLuCWuZpCGcAgFnx8Vo
-        NBMG+SNO8OUK9CfU8c9mt4CGED9WqAM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329-o7wJ414CP6SyQ53u_9hlhA-1; Tue, 11 Feb 2020 08:52:24 -0500
-X-MC-Unique: o7wJ414CP6SyQ53u_9hlhA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5A2F100726A;
-        Tue, 11 Feb 2020 13:52:22 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E95B26FB6;
-        Tue, 11 Feb 2020 13:52:19 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 90E0717447; Tue, 11 Feb 2020 14:52:18 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     daniel@ffwll.ch, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
-        BOCHS VIRTUAL GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4] drm/bochs: add drm_driver.release callback.
-Date:   Tue, 11 Feb 2020 14:52:18 +0100
-Message-Id: <20200211135218.22871-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Tue, 11 Feb 2020 08:52:30 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id CADA7D006F9;
+        Tue, 11 Feb 2020 13:52:28 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at serbinski.com
+Received: from mail.serbinski.com ([127.0.0.1])
+        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MnOnwGJcKCEn; Tue, 11 Feb 2020 08:52:23 -0500 (EST)
+Received: from mail.serbinski.com (localhost [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id 4F86CD00693;
+        Tue, 11 Feb 2020 08:52:23 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 4F86CD00693
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
+        s=default; t=1581429143;
+        bh=4UgsNF2DfSAJSAEAuD7fkyhncR/ncVh8kAIH7kgJv2A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ssoit/C7jtU+uEyLBQlHyTfLDiONn8FBviOZQ0wZQ7bzpeDh/52Y6RjL0hK95iw6w
+         CAsfhZGI5lqAnLqnO/pA3fRbCr2t+TeGXKjon6ZvGiVTc+vduNIAZmmKhNUTBOCw0b
+         nwYbCqj3d60oW8U+tkAROVgAxx84Q5ivNylYa9tA=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 11 Feb 2020 08:52:23 -0500
+From:   Adam Serbinski <adam@serbinski.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
+In-Reply-To: <20200211114256.GC4543@sirena.org.uk>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-9-adam@serbinski.com>
+ <20200210133636.GJ7685@sirena.org.uk>
+ <18057b47c76d350f8380f277713e0936@serbinski.com>
+ <20200210182609.GA14166@sirena.org.uk>
+ <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
+ <20200210200839.GG14166@sirena.org.uk>
+ <7c57801d8f671c40d4c6094e5ce89681@serbinski.com>
+ <20200211114256.GC4543@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4-beta
+Message-ID: <b386237a1c21a417afb25f79a8b3d4ce@serbinski.com>
+X-Sender: adam@serbinski.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call bochs_unload via drm_driver.release to make sure we release stuff
-when it is safe to do so.  Use drm_dev_{enter,exit,unplug} to avoid
-touching hardware after device removal.  Tidy up here and there.
+On 2020-02-11 06:42, Mark Brown wrote:
+> On Mon, Feb 10, 2020 at 04:13:52PM -0500, Adam Serbinski wrote:
+> 
+>> I am not aware of how this could be done for bluetooth, since the 
+>> value
+>> still has to originate from userspace. The driver you referred to 
+>> supports
+>> only a single sample rate, whereas for bluetooth, 2 sample rates are
+>> required, and nothing in the kernel is aware of the appropriate rate, 
+>> at
+>> least in the case of the qca6174a I'm working with right now, or for 
+>> that
+>> matter, TI Wilink 8, which I've also worked with.
+> 
+> There's generic support in the CODEC<->CODEC link code for setting the
+> DAI configuration from userspace.
 
-v4: add changelog.
-v3: use drm_dev_*().
-v2: move hardware deinit to pci_remove().
+Ok. Its going to take some time to get my head around that, so for the 
+time being I'm going to drop this feature and get the rest fixed for 
+inclusion.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/bochs/bochs_drv.c |  6 +++---
- drivers/gpu/drm/bochs/bochs_hw.c  | 24 +++++++++++++++++++++++-
- 2 files changed, 26 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
-index 10460878414e..addb0568c1af 100644
---- a/drivers/gpu/drm/bochs/bochs_drv.c
-+++ b/drivers/gpu/drm/bochs/bochs_drv.c
-@@ -23,7 +23,6 @@ static void bochs_unload(struct drm_device *dev)
- 
- 	bochs_kms_fini(bochs);
- 	bochs_mm_fini(bochs);
--	bochs_hw_fini(dev);
- 	kfree(bochs);
- 	dev->dev_private = NULL;
- }
-@@ -69,6 +68,7 @@ static struct drm_driver bochs_driver = {
- 	.major			= 1,
- 	.minor			= 0,
- 	DRM_GEM_VRAM_DRIVER,
-+	.release                = bochs_unload,
- };
- 
- /* ---------------------------------------------------------------------- */
-@@ -148,9 +148,9 @@ static void bochs_pci_remove(struct pci_dev *pdev)
- {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
- 
-+	drm_dev_unplug(dev);
- 	drm_atomic_helper_shutdown(dev);
--	drm_dev_unregister(dev);
--	bochs_unload(dev);
-+	bochs_hw_fini(dev);
- 	drm_dev_put(dev);
- }
- 
-diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-index b615b7dfdd9d..952199cc0462 100644
---- a/drivers/gpu/drm/bochs/bochs_hw.c
-+++ b/drivers/gpu/drm/bochs/bochs_hw.c
-@@ -4,6 +4,7 @@
- 
- #include <linux/pci.h>
- 
-+#include <drm/drm_drv.h>
- #include <drm/drm_fourcc.h>
- 
- #include "bochs.h"
-@@ -194,6 +195,8 @@ void bochs_hw_fini(struct drm_device *dev)
- {
- 	struct bochs_device *bochs = dev->dev_private;
- 
-+	/* TODO: shot down existing vram mappings */
-+
- 	if (bochs->mmio)
- 		iounmap(bochs->mmio);
- 	if (bochs->ioports)
-@@ -207,6 +210,11 @@ void bochs_hw_fini(struct drm_device *dev)
- void bochs_hw_setmode(struct bochs_device *bochs,
- 		      struct drm_display_mode *mode)
- {
-+	int idx;
-+
-+	if (!drm_dev_enter(bochs->dev, &idx))
-+		return;
-+
- 	bochs->xres = mode->hdisplay;
- 	bochs->yres = mode->vdisplay;
- 	bochs->bpp = 32;
-@@ -232,11 +240,18 @@ void bochs_hw_setmode(struct bochs_device *bochs,
- 
- 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_ENABLE,
- 			  VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
-+
-+	drm_dev_exit(idx);
- }
- 
- void bochs_hw_setformat(struct bochs_device *bochs,
- 			const struct drm_format_info *format)
- {
-+	int idx;
-+
-+	if (!drm_dev_enter(bochs->dev, &idx))
-+		return;
-+
- 	DRM_DEBUG_DRIVER("format %c%c%c%c\n",
- 			 (format->format >>  0) & 0xff,
- 			 (format->format >>  8) & 0xff,
-@@ -256,13 +271,18 @@ void bochs_hw_setformat(struct bochs_device *bochs,
- 			  __func__, format->format);
- 		break;
- 	}
-+
-+	drm_dev_exit(idx);
- }
- 
- void bochs_hw_setbase(struct bochs_device *bochs,
- 		      int x, int y, int stride, u64 addr)
- {
- 	unsigned long offset;
--	unsigned int vx, vy, vwidth;
-+	unsigned int vx, vy, vwidth, idx;
-+
-+	if (!drm_dev_enter(bochs->dev, &idx))
-+		return;
- 
- 	bochs->stride = stride;
- 	offset = (unsigned long)addr +
-@@ -277,4 +297,6 @@ void bochs_hw_setbase(struct bochs_device *bochs,
- 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_VIRT_WIDTH, vwidth);
- 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_X_OFFSET, vx);
- 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_Y_OFFSET, vy);
-+
-+	drm_dev_exit(idx);
- }
--- 
-2.18.2
-
+Thanks.
