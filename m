@@ -2,161 +2,90 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC2C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC2C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFD421569
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:00:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRMRCR8o"
+	by mail.kernel.org (Postfix) with ESMTP id B1B6D2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgBKP77 (ORCPT
+        id S1730048AbgBKQBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:59:59 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44370 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbgBKP77 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:59:59 -0500
-Received: by mail-io1-f66.google.com with SMTP id z16so12269527iod.11;
-        Tue, 11 Feb 2020 07:59:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9yyotndcLhvUKHC5GDiLNlYrWJmGfmUU1jrbauqKqrw=;
-        b=bRMRCR8oY9RFO5yYVwxFSVaEFSLu7eMobI6WkVrdMWmn1fF8mC2oPP75BDVReMKHqO
-         gOvFHPKRuWxVGzMpbjPO51vL3zSa9cEcp7Ee8VO6wdUEnmQEFzeHboPSV8H9e0zTJyA1
-         dDtUnOLnqTac3hlWF0mQTuuvRrgT9AdhG3ac0Nm6oi9FS6C/Hkd4N0/lisIHAXHz0CM5
-         hhKN8NCyUijGCoarBqU6EDfcDs+aqYuxXP55PX2TJHSBqxawBE7l5pqd2Ag+cYxxRdug
-         pkHH2hk1S8foGsylqyDjG/ITdVfSI4bKw8CuAbD9eLi/+BJmRgqz8N9zb2Y8I6wPBdm7
-         5XJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9yyotndcLhvUKHC5GDiLNlYrWJmGfmUU1jrbauqKqrw=;
-        b=UHL1zcYpJeVNwhzYIrK+KxEo+z+uD0M3avBCgSODrXHDDzh5hDHS65v5hrJCA9K7+v
-         Leah0ii1aJxMWhh9t/IWlCWy9KrV6RoFYece9XK3qhEbJnjb16oCIuAMMVf+NznSTSTe
-         /8t6Z0bUyMAM+LAMpI2RhQQ6C56gk6KzXvu5Fn9tklk9cTTduD86nRYpIyBESPbBy2Az
-         iS39Ir00qBt1qKUJE4AEDMWWVC/JvD4qtogIum7/sd+e1Sv1nZf2EntAYLBcX0+JAaTa
-         MpRObGYi617C5ac9OjWSkBXUkBhYV2ba9g0yZnwVILaozurgCGc1hUYAheYkxUdObSen
-         593g==
-X-Gm-Message-State: APjAAAXeX7fYFglcteHtImqWBJu7chpOLUmDk9xwMbF+Z6WGAF+v27mC
-        EBm1MygcXaPkTYdyDCuvNHDKHUisRB3/ZUHRPfo=
-X-Google-Smtp-Source: APXvYqzRgDSxtpGoPVVkFNDjDpnOEbay2M89fpnAYpRCiHPDQf41hjNJcWT+m5zGf6F3a1WQILXy8TFaYzj1gZKv58U=
-X-Received: by 2002:a6b:6205:: with SMTP id f5mr14270198iog.42.1581436797145;
- Tue, 11 Feb 2020 07:59:57 -0800 (PST)
+        Tue, 11 Feb 2020 11:01:53 -0500
+Received: from mga18.intel.com ([134.134.136.126]:40178 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729405AbgBKQBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:01:53 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:01:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="227539539"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Feb 2020 08:01:33 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j1Xyg-000lzA-0G; Tue, 11 Feb 2020 18:01:34 +0200
+Date:   Tue, 11 Feb 2020 18:01:33 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 18/18] MAINTAINERS: Update entry for Intel Broxton PMC
+ driver
+Message-ID: <20200211160133.GI10400@smile.fi.intel.com>
+References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
+ <20200211132603.73509-19-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
- <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
- <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
- <1d201377996e16ce25acb640867e1214@codeaurora.org> <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
-In-Reply-To: <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 11 Feb 2020 08:59:46 -0700
-Message-ID: <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211132603.73509-19-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 8:44 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
-> >
-> > On 2020-02-07 19:40, Jeffrey Hugo wrote:
-> > > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
-> > >>
-> > >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
-> > >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
-> > >> > wrote:
-> > >> >>
-> > >> >> For a given byte clock, if VCO recalc value is exactly same as
-> > >> >> vco set rate value, vco_set_rate does not get called assuming
-> > >> >> VCO is already set to required value. But Due to GDSC toggle,
-> > >> >> VCO values are erased in the HW. To make sure VCO is programmed
-> > >> >> correctly, we forcefully call set_rate from vco_prepare.
-> > >> >
-> > >> > Is this specific to certain SoCs? I don't think I've observed this.
-> > >>
-> > >> As far as Qualcomm SOCs are concerned, since pll is analog and the
-> > >> value
-> > >> is directly read from hardware if we get recalc value same as set rate
-> > >> value, the vco_set_rate will not be invoked. We checked in our idp
-> > >> device which has the same SOC but it works there since the rates are
-> > >> different.
-> > >
-> > > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
-> > > does this issue apply to?  Everything implementing the 10nm pll?  One
-> > > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
-> > > so I'm interested to know what is the actual impact here.  I don't see
-> > > an "IDP" SoC in the IP catalog, so I really have no idea what you are
-> > > referring to.
-> >
-> >
-> > This is not 10nm specific. It is applicable for other nms also.
-> > Its specific to the frequency being set. If vco_recalc returns the same
-> > value as being set by vco_set_rate,
-> > vco_set_rate will not be invoked second time onwards.
-> >
-> > For example: Lets take below devices:
-> >
-> > Cheza is based on SDM845 which is 10nm only.
-> > Clk frequency:206016
-> > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
-> > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
-> >
-> > Trogdor is based on sc7180 which is also 10nm.
-> > Clk frequency:69300
-> > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
-> > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
-> >
-> > In same trogdor device, we slightly changed the clock frequency and the
-> > values actually differ which will not cause any issue.
-> > Clk frequency:69310
-> > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
-> > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
->
->
-> tbh, loosing state when power is off is kind of the behavior that I'd
-> expect.  It kinda makes me wonder if things are not getting powered
-> off all the way on some SoCs?
->
-> jhugo, are you worried that this patch will cause problems on other
-> users of the 10nm pll?
+On Tue, Feb 11, 2020 at 04:26:03PM +0300, Mika Westerberg wrote:
+> The driver lives now under MFD so split the current entry into two parts
+> and add me as co-maintainer of the Intel Broxton PMC driver. While there
+> correct formatting of Zha Qipeng's email address.
 
-Essentially yes.  Conceptually it doesn't seem like this change should
-cause any harm, however -
+...
 
-This sounds like we are trying to work around the clk framework, which
-seems wrong.  It feels like we should be able to set a clk flag for
-this and make the framework deal with it.
+> -INTEL PMC/P-Unit IPC DRIVER
+> -M:	Zha Qipeng<qipeng.zha@intel.com>
+> +INTEL P-Unit IPC DRIVER
+> +M:	Zha Qipeng <qipeng.zha@intel.com>
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+> -F:	arch/x86/include/asm/intel_pmc_ipc.h
+>  F:	arch/x86/include/asm/intel_punit_ipc.h
+> -F:	drivers/platform/x86/intel_pmc_ipc.c
+>  F:	drivers/platform/x86/intel_punit_ipc.c
+>  
+>  INTEL PMIC GPIO DRIVERS
 
-Also, this fix is 10nm specific, yet this issue affects all
-implementations?  Seems like this should perhaps be in common code so
-that we don't need to play whack-a-mole by fixing every implementation
-piecemeal.
+Does it stays at the same place after executing parse-maintainers.pl?
 
-Finally, the PLLs are notorious for not taking a configuration unless
-they are running.  I admit, I haven't looked at this patch in detail
-to determine if that is the case here, but there doesn't seem to be
-any indication from the commit test or a comment that doing so is
-actually valid in all cases.
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
