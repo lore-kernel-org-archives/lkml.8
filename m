@@ -2,109 +2,107 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC66C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020BBC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4FE20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581455217;
-	bh=ial5lfm1joGz3c4sbCOYuWw3kSyd3YsJFbgXFfG8r/g=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=tPNMjFsQW3R0e4gpft2YY6W17N+Ive4XwUqni0A8t749HX5N5K8pwwDBugXoqqonI
-	 C3GpMIP3VOOUcsqc9GFYHhxwneErVsakPSIZB1aLLtzitoIKKF1Eu4Kz1tt0dRGqdJ
-	 VVgM9zVPUGUNKBm+3F57BHc87J2ENxGhuppUcM7M=
+	by mail.kernel.org (Postfix) with ESMTP id D20E320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:07:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsC1UsmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731949AbgBKVG4 (ORCPT
+        id S1731957AbgBKVHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:06:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbgBKVG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:06:56 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DC6820708;
-        Tue, 11 Feb 2020 21:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581455215;
-        bh=ial5lfm1joGz3c4sbCOYuWw3kSyd3YsJFbgXFfG8r/g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=msfipC7T9DKYbMKWk/VLVW4IMh7VnAItA5wtAxaobNWwXfYmHZ/X/Ymmq8lsnLEGN
-         Wu+pQMJuctk58waK3nUpMbXZ4UDxTjq9yOcqf5kjKIuTY+pyZfL45ptaFYdIywNhS+
-         cyd182nfjlqDLv5IJ8aOb17XICywoddq/X6ljmcc=
-Subject: Re: [PATCH v3 7/7] selftests/exec: Add READ_IMPLIES_EXEC tests
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jann Horn <jannh@google.com>,
-        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200210193049.64362-1-keescook@chromium.org>
- <20200210193049.64362-8-keescook@chromium.org>
- <4f8a5036-dc2a-90ad-5fc8-69560a5dd78e@kernel.org>
- <202002111124.0A334167@keescook>
-From:   shuah <shuah@kernel.org>
-Message-ID: <c09c345a-786f-25d2-1ee5-65f9cb23db6d@kernel.org>
-Date:   Tue, 11 Feb 2020 14:06:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 16:07:34 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35204 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729031AbgBKVHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 16:07:33 -0500
+Received: by mail-pj1-f68.google.com with SMTP id q39so1799044pjc.0;
+        Tue, 11 Feb 2020 13:07:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KpRqerCMQ04uyIy1W6ZXPeXHMY8KzTG2gyT5gFoRSVc=;
+        b=DsC1UsmRMmRXY8sU9+BTseC3/NFr2rLiH1mSi1tgFe0XBprAHzKLHjYMiXJaySCpe4
+         S9lHiKM2bj0x/UEAJuIx7Xup22fdWYJsZlGGWBq2KjtfaKQiGdZEAD0qyNmj51SEQD8q
+         MSw4qn+LtBhVmPzmyARmGef5mpvjGJTP6sbiUcBGhebXbDiH00FQMfzY29nDRqYbkHY8
+         zIi/C9fP0OQXrU6povPH++wuR+E/cRbA7PIHWXhofvuYuCa8JAjTmEqPgIjEQ5mRsFId
+         9Un3fJOm1KDqxml3H9y8nGDXmV03jIkyz0Cu3UCO486omPjkt8l3atAzog5y2BhY70pD
+         DLFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KpRqerCMQ04uyIy1W6ZXPeXHMY8KzTG2gyT5gFoRSVc=;
+        b=eTCU56lMBhhCwqI6p/lfJyqUJq9tTKjt2jyCnyGOr/+SFbyX24b091sqT8wWh+m5aK
+         7duPlRMbexUkBA/HAa8gOuzlOMECVQ3Uj4wkAzeCPZRqzWaoQez5RTftot/Qse2b71iq
+         nTF5yKwXPUhDqgNGCFPHacAW5YEwgMIFYWawt1tBBmgErARLie/umt/peZsefsCvxSw0
+         siRmw8NhUuj42+Z+WEfmvCEBhY7gE7ZZw7/5XlNTXr6+kDCk22jh91dHJWrkLWYOP/vR
+         TUoegVoNmpjg1/o3tZC79FABkYm6bSIMS74+6xuCubOvcvpjB9OG4Z7rWTQdD8z4aZfW
+         dM1g==
+X-Gm-Message-State: APjAAAWra1tb58rT0cJdzYEusaFK+ekp8NPRf5NI0TUWH+Ibgha/BWnn
+        8XI9BzmQQzizFgX+PTyGnVPu8E8NeFDdCr+qLZI=
+X-Google-Smtp-Source: APXvYqxmevX/lfQ/fN2gDs/u6hX13MluFuzD8BjfKrZJrTNFcQ+u+SNTLTxm61XjsRC5p6r9CReQxe8j7L+8IzyGG5A=
+X-Received: by 2002:a17:902:758e:: with SMTP id j14mr20279886pll.18.1581455252938;
+ Tue, 11 Feb 2020 13:07:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <202002111124.0A334167@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200211103530.41d1e6ed@canb.auug.org.au>
+In-Reply-To: <20200211103530.41d1e6ed@canb.auug.org.au>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 11 Feb 2020 23:07:21 +0200
+Message-ID: <CAHp75Vf6p4Sf3hcNV-q_pfDYvgDVodPykgn98mumcj13BGN+Vg@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the drivers-x86 tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gayatri Kammela <gayatri.kammela@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 12:25 PM, Kees Cook wrote:
-> On Tue, Feb 11, 2020 at 11:11:21AM -0700, shuah wrote:
->> On 2/10/20 12:30 PM, Kees Cook wrote:
->>> In order to check the matrix of possible states for handling
->>> READ_IMPLIES_EXEC across native, compat, and the state of PT_GNU_STACK,
->>> add tests for these execution conditions.
->>>
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>
->> No issues for this to go through tip.
->>
->> A few problems to fix first. This fails to compile when 32-bit libraries
->> aren't installed. It should fail the 32-bit part and run other checks.
-> 
-> Do you mean the Makefile should detect the missing compat build deps and
-> avoid building them? Testing compat is pretty important to this test, so
-> it seems like missing the build deps causing the build to fail is the
-> correct action here. This is likely true for the x86/ selftests too.
-> 
-> What would you like this to do?
-> 
+On Tue, Feb 11, 2020 at 1:35 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the drivers-x86 tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+>
+> drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
+> drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-conversion]
+>  1329 |   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
+>       |                                           ^~~~~~~~
+>       |                                           |
+>       |                                           char *
+> drivers/platform/x86/intel_pmc_core.c:978:30: note: expected 'u32' {aka 'unsigned int'} but argument is of type 'char *'
+>   978 |      struct seq_file *s, u32 offset,
+>       |                          ~~~~^~~~~~
+> drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-conversion]
+>  1329 |   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
+>       |                                                     ^~~~~~
+>       |                                                     |
+>       |                                                     int
+> drivers/platform/x86/intel_pmc_core.c:979:18: note: expected 'const char *' but argument is of type 'int'
+>   979 |      const char *str,
+>       |      ~~~~~~~~~~~~^~~
+>
+> Introduced by commit
+>
+>   2cf128fbf321 ("platform/x86: intel_pmc_core: Dump low power status registers on an S0ix.y failure")
 
-selftests/x86 does this already and runs the dependency check in 
-x86/Makefile.
+Thank you, Stephen,
+Fix had been incorporated.
 
 
-check_cc.sh:# check_cc.sh - Helper to test userspace compilation support
-Makefile:CAN_BUILD_I386 := $(shell ./check_cc.sh $(CC) 
-trivial_32bit_program.c -m32)
-Makefile:CAN_BUILD_X86_64 := $(shell ./check_cc.sh $(CC) 
-trivial_64bit_program.c)
-Makefile:CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh $(CC) 
-trivial_program.c -no-pie)
-
-Take a look and see if you can leverage this.
-
-thanks,
--- Shuah
+-- 
+With Best Regards,
+Andy Shevchenko
