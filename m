@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA6C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ECEC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F11982073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68B82073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgBKXiw (ORCPT
+        id S1728366AbgBKXj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:38:52 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63262 "EHLO
+        Tue, 11 Feb 2020 18:39:58 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53061 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgBKXir (ORCPT
+        with ESMTP id S1728130AbgBKXiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:38:47 -0500
+        Tue, 11 Feb 2020 18:38:51 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 20770e2449c7a7fa; Wed, 12 Feb 2020 00:38:45 +0100
+ id 173fdcca87f84597; Wed, 12 Feb 2020 00:38:50 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH 19/28] drivers: mmc: Call cpu_latency_qos_*() instead of pm_qos_*()
-Date:   Wed, 12 Feb 2020 00:21:53 +0100
-Message-ID: <3311890.58F1UHHIxI@kreacher>
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH 12/28] PM: QoS: Adjust pm_qos_request() signature and reorder pm_qos.h
+Date:   Wed, 12 Feb 2020 00:07:01 +0100
+Message-ID: <4773738.66pf8vIe9V@kreacher>
 In-Reply-To: <1654227.8mz0SueHsU@kreacher>
 References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
@@ -43,77 +42,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Call cpu_latency_qos_add/remove_request() instead of
-pm_qos_add/remove_request(), respectively, because the
-latter are going to be dropped.
+Change the return type of pm_qos_request() to be the same as the
+one of pm_qos_read_value() called by it internally and stop exporting
+it to modules (because its only caller, cpuidle, is not modular).
+
+Also move the pm_qos_read_value() header away from the CPU latency
+QoS API function headers in pm_qos.h (because it technically does
+not belong to that API).
 
 No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/mmc/host/sdhci-esdhc-imx.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ include/linux/pm_qos.h | 6 +++---
+ kernel/power/qos.c     | 3 +--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 382f25b2fa45..b2bdf5012c55 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1452,8 +1452,7 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
- 						  pdev->id_entry->driver_data;
- 
- 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
--		pm_qos_add_request(&imx_data->pm_qos_req,
--			PM_QOS_CPU_DMA_LATENCY, 0);
-+		cpu_latency_qos_add_request(&imx_data->pm_qos_req, 0);
- 
- 	imx_data->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
- 	if (IS_ERR(imx_data->clk_ipg)) {
-@@ -1572,7 +1571,7 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
- 	clk_disable_unprepare(imx_data->clk_per);
- free_sdhci:
- 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
--		pm_qos_remove_request(&imx_data->pm_qos_req);
-+		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
- 	sdhci_pltfm_free(pdev);
- 	return err;
+diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
+index a3e0bfc6c470..3c4bee29ecda 100644
+--- a/include/linux/pm_qos.h
++++ b/include/linux/pm_qos.h
+@@ -137,20 +137,20 @@ static inline int dev_pm_qos_request_active(struct dev_pm_qos_request *req)
+ 	return req->dev != NULL;
  }
-@@ -1595,7 +1594,7 @@ static int sdhci_esdhc_imx_remove(struct platform_device *pdev)
- 	clk_disable_unprepare(imx_data->clk_ahb);
  
- 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
--		pm_qos_remove_request(&imx_data->pm_qos_req);
-+		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
++s32 pm_qos_read_value(struct pm_qos_constraints *c);
+ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
+ 			 enum pm_qos_req_action action, int value);
+ bool pm_qos_update_flags(struct pm_qos_flags *pqf,
+ 			 struct pm_qos_flags_request *req,
+ 			 enum pm_qos_req_action action, s32 val);
++
+ void pm_qos_add_request(struct pm_qos_request *req, int pm_qos_class,
+ 			s32 value);
+ void pm_qos_update_request(struct pm_qos_request *req,
+ 			   s32 new_value);
+ void pm_qos_remove_request(struct pm_qos_request *req);
+-
+-int pm_qos_request(int pm_qos_class);
++s32 pm_qos_request(int pm_qos_class);
+ int pm_qos_request_active(struct pm_qos_request *req);
+-s32 pm_qos_read_value(struct pm_qos_constraints *c);
  
- 	sdhci_pltfm_free(pdev);
- 
-@@ -1667,7 +1666,7 @@ static int sdhci_esdhc_runtime_suspend(struct device *dev)
- 	clk_disable_unprepare(imx_data->clk_ahb);
- 
- 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
--		pm_qos_remove_request(&imx_data->pm_qos_req);
-+		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
- 
- 	return ret;
+ #ifdef CONFIG_PM
+ enum pm_qos_flags_status __dev_pm_qos_flags(struct device *dev, s32 mask);
+diff --git a/kernel/power/qos.c b/kernel/power/qos.c
+index afac7010e0f2..7bb55aca03bb 100644
+--- a/kernel/power/qos.c
++++ b/kernel/power/qos.c
+@@ -235,11 +235,10 @@ static struct pm_qos_constraints cpu_latency_constraints = {
+  *
+  * This function returns the current target value.
+  */
+-int pm_qos_request(int pm_qos_class)
++s32 pm_qos_request(int pm_qos_class)
+ {
+ 	return pm_qos_read_value(&cpu_latency_constraints);
  }
-@@ -1680,8 +1679,7 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
- 	int err;
+-EXPORT_SYMBOL_GPL(pm_qos_request);
  
- 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
--		pm_qos_add_request(&imx_data->pm_qos_req,
--			PM_QOS_CPU_DMA_LATENCY, 0);
-+		cpu_latency_qos_add_request(&imx_data->pm_qos_req, 0);
- 
- 	err = clk_prepare_enable(imx_data->clk_ahb);
- 	if (err)
-@@ -1714,7 +1712,7 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
- 	clk_disable_unprepare(imx_data->clk_ahb);
- remove_pm_qos_request:
- 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
--		pm_qos_remove_request(&imx_data->pm_qos_req);
-+		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
- 	return err;
- }
- #endif
+ int pm_qos_request_active(struct pm_qos_request *req)
+ {
 -- 
 2.16.4
 
