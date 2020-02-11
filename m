@@ -2,198 +2,139 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ADCC3B188
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA14C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0933520848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C4D20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:19:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="MHJXjCtm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgBKKQe (ORCPT
+        id S1728266AbgBKKTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:16:34 -0500
-Received: from outbound-smtp56.blacknight.com ([46.22.136.240]:39715 "EHLO
-        outbound-smtp56.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727937AbgBKKQd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:16:33 -0500
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp56.blacknight.com (Postfix) with ESMTPS id 4AEDCFA80D
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:16:30 +0000 (GMT)
-Received: (qmail 14398 invoked from network); 11 Feb 2020 10:16:29 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 11 Feb 2020 10:16:29 -0000
-Date:   Tue, 11 Feb 2020 10:16:27 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Ivan Babrou <ivan@cloudflare.com>
-Cc:     linux-mm@kvack.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: Reclaim regression after 1c30844d2dfe
-Message-ID: <20200211101627.GJ3466@techsingularity.net>
-References: <CABWYdi1eOUD1DHORJxTsWPMT3BcZhz++xP1pXhT=x4SgxtgQZA@mail.gmail.com>
+        Tue, 11 Feb 2020 05:19:06 -0500
+Received: from mga05.intel.com ([192.55.52.43]:31253 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727937AbgBKKTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:19:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 02:19:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="227464038"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Feb 2020 02:19:04 -0800
+Received: from orsmsx156.amr.corp.intel.com (10.22.240.22) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 11 Feb 2020 02:19:04 -0800
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX156.amr.corp.intel.com (10.22.240.22) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 11 Feb 2020 02:19:04 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 11 Feb 2020 02:19:04 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LkDIw5ZyglY/H9xhPwxH6pzusE5nsPes8nWUeL0gOzAy2KijQ62E/EmAzoXjTXLgVx8deJwP87qFpC3TH1ailAAzrSDwZvyN0ba6Bl5NrOC6vNtLibKTkf/50kadyhdezvo1F13sAaQaE4tU01FTHjgI9OuXNuNeW1RgG2XZtzvbOnvRb0kVffh2RADKzkl7kISeMcF5I/PmQ7588BX2UInzxOdlZ5N8KXx0yAf27xVTrUCRfHEURnJfR1KcqC2FquAnMl/2AT6G77gTnhxDgCqA0LNSUtX+QsoSJpmzIMBF4v6/ZX7wC2hnuICmj0q1peNN3ZL9RJKe3nMaZjyhcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t08cy6hoYoRcKho4WsOuUzRFbk4jrnmuBPHcix7WOVM=;
+ b=a4guwUgR3JUYXTUUMDeuQxvbfOt7s89CRSHvmbTnzhQWkRZ5gQej5RU3e54oW7thk4gLUfQZMtwTnVoOs8PkqPKfh/t+fH1e72mDFXCN00cGlDNGl6u9sLOeGTRJMR46Qed1WVRCk1eUcB7CiQzREVEIwAxSQSQgyoWWGvu4Twn6/WF/ZJsavVNrvfjp5gRsr9tNN7E1jMnWl7M6lhD0HHormFU7JlWuXcLoCTVBovZfbYHs0yK2W/EQcIfwtYKV6RLKalZ+73M+Nicy8NIMtywRk7eFNv8uqd0/u1oQ4+R8Pk0JTJaKWFF2DPB7OxXMMDaAh9HDmnMRH41ReTNtuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t08cy6hoYoRcKho4WsOuUzRFbk4jrnmuBPHcix7WOVM=;
+ b=MHJXjCtmBf7W37WD164H5Ikuv4GJZpTzil2Qs8IyhmNns2r9SeWU7qmPO2ZHy9k8J9hZj6LdLY0w6J+//L7U5WTU4AovLp9b6qx5VCaEmYgwluWjl4LhF0FGFcuo23jeTEv9ljJRqSSTPZ+bgx+J6mcyEAxxpWLApd+11H22fJA=
+Received: from SN6PR11MB2670.namprd11.prod.outlook.com (52.135.96.25) by
+ SN6PR11MB2637.namprd11.prod.outlook.com (52.135.89.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Tue, 11 Feb 2020 10:19:03 +0000
+Received: from SN6PR11MB2670.namprd11.prod.outlook.com
+ ([fe80::d9a3:52a2:97d7:89ec]) by SN6PR11MB2670.namprd11.prod.outlook.com
+ ([fe80::d9a3:52a2:97d7:89ec%4]) with mapi id 15.20.2707.028; Tue, 11 Feb 2020
+ 10:19:03 +0000
+From:   "Lu, Brent" <brent.lu@intel.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Support Opensource" <support.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cychiang@google.com" <cychiang@google.com>,
+        "Chiang, Mac" <mac.chiang@intel.com>
+Subject: RE: [PATCH] ASoC: da7219: check SRM lock in trigger callback
+Thread-Topic: [PATCH] ASoC: da7219: check SRM lock in trigger callback
+Thread-Index: AQHV3+tuqX6FpQoz5UK6Rt5tUMk2f6gUyH2AgAD/0UA=
+Date:   Tue, 11 Feb 2020 10:19:03 +0000
+Message-ID: <SN6PR11MB26709809E6900F1F1F9F422A97180@SN6PR11MB2670.namprd11.prod.outlook.com>
+References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
+ <20200210185905.GD14166@sirena.org.uk>
+In-Reply-To: <20200210185905.GD14166@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brent.lu@intel.com; 
+x-originating-ip: [192.55.52.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a59ade5-5f38-49b9-00f3-08d7aedbd1a2
+x-ms-traffictypediagnostic: SN6PR11MB2637:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB26373C0C5B68E724C748F9BB97180@SN6PR11MB2637.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0310C78181
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(376002)(39860400002)(396003)(189003)(199004)(8936002)(26005)(4326008)(71200400001)(4744005)(7696005)(107886003)(54906003)(6506007)(186003)(478600001)(66946007)(55016002)(9686003)(5660300002)(76116006)(66556008)(66476007)(86362001)(81166006)(81156014)(64756008)(6916009)(66446008)(2906002)(33656002)(316002)(8676002)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB2637;H:SN6PR11MB2670.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RTbFnD1j8GuV0+dA93vad6bWbhhQiazpVrjJdDczAlkWvtm92lrG4Od5T2+g3Edqs/a3TsbNQZP/zS4aejbJrnhmCG+Q2dCEJVLhEkBi5tf6MtxLqbfGVCYMvdKSXpWDXCeDfYazb6wYkmLCAC/sAujDatsqJRmRzNXi5Phi8BxFfrZKKcP8b7yQDleI3DxcwpYMHJYDmSGsyO5esTYpUEUCnarHjJWQEn96EcZokTmQcTTuT2mjMLMqp7wWTuzGXXK2CyeWJS1xdb6BJdf9R/U92HmxBXWkUEcoMf0d48Sh+7ZDl5tydCaLx7Yg6LbEjkz5f36YMnbnZ8L5o0uQFLQN082YYHQlKvwBIjGaIDURAm5p2YVDtQjHNW+wGJzzNnHxgiQP6bY5vH6wOMWDyMAtliqUWlLdFCxuX8l9BjU7UWwVI7sz+k+vBXWENWn5
+x-ms-exchange-antispam-messagedata: jXa7beB+fKYuauN3ThpeBwujcDTGRuUPjAnuoFTWSL3AOp78U+HhmrT2Ow10VAbHC+WORm/Q5biLPfSuRfrXnh/awnlhWqzSc2Jv2WvjsULNq/C6qysFKf9TKUbOfeSX1ujS2KTEoSsnw5TK49xwtw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CABWYdi1eOUD1DHORJxTsWPMT3BcZhz++xP1pXhT=x4SgxtgQZA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a59ade5-5f38-49b9-00f3-08d7aedbd1a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 10:19:03.2901
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: chE3dSI6K9jQiPnMO1DxOdwrY9em9QqKUFz0QTFvrrB1hukoXfG5QiRsOKun/tR0qU1mKQl8Yi9c+dR9t4QePw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2637
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 02:54:43PM -0800, Ivan Babrou wrote:
-> This change from 5.5 times:
-> 
-> * https://github.com/torvalds/linux/commit/1c30844d2dfe
-> 
-> > mm: reclaim small amounts of memory when an external fragmentation event occurs
-> 
-> Introduced undesired effects in our environment.
-> 
-> * NUMA with 2 x CPU
-> * 128GB of RAM
-> * THP disabled
-> * Upgraded from 4.19 to 5.4
-> 
-> Before we saw free memory hover at around 1.4GB with no spikes. After
-> the upgrade we saw some machines decide that they need a lot more than
-> that, with frequent spikes above 10GB, often only on a single numa
-> node.
-> 
-> We can see kswapd quite active in balance_pgdat (it didn't look like
-> it slept at all):
-> 
-> $ ps uax | fgrep kswapd
-> root       1850 23.0  0.0      0     0 ?        R    Jan30 1902:24 [kswapd0]
-> root       1851  1.8  0.0      0     0 ?        S    Jan30 152:16 [kswapd1]
-> 
-> This in turn massively increased pressure on page cache, which did not
-> go well to services that depend on having a quick response from a
-> local cache backed by solid storage.
-> 
-> Here's how it looked like when I zeroed vm.watermark_boost_factor:
-> 
-> * https://imgur.com/a/6IZWicU
-> 
-> IO subsided from 100% busy in page cache population at 300MB/s on a
-> single SATA drive down to under 100MB/s.
-> 
-> This sort of regression doesn't seem like a good thing.
+>=20
+> Independently of any other discussion trigger is expected to run very fas=
+t so
+> doesn't feel like a good place to do this - given that we're talking abou=
+t doing
+> this to avoid noise the mute operation seems like a more idiomatic place =
+to
+> do this, it exists to avoid playing back glitches from the digitial inter=
+face
+> during startup.
 
-It is not a good thing, so thanks for the report. Obviously I have not
-seen something similar or least not severe enough to show up on my radar.
-I'd seen some increases with reclaim activity affecting benchmarks that
-rely on use-twice data remaining resident but nothing severe enough to
-warrant action.
+It still take 50ms waiting for lock on in the trigger so I guess it's not a=
+ good
+implementation here. And I thought digital mute is called in the pcm_prepar=
+e?
+I'm afraid it does not work in our case...
 
-Can you tell me if it is *always* node 0 that shows crazy activity? I
-ask because some conditions would have to be met for the boost to always
-apply. It's already a per-zone attribute but it is treated indirectly as a
-pgdat property. What I'm thinking is that on node 0, the DMA32 or DMA zone
-gets boosted but vmscan then reclaims from higher zones until the boost is
-removed. That would excessively reclaim memory but be specific to node 0.
-
-I've cc'd Rik as he says he saw something similar even on single node
-systems. The boost applying to lower zones would still affect single
-node systems but NUMA machines always getting impacted by boost would
-show that the boost really needs to be a per-node flag. Sure, we *could*
-apply the reclaim to just the lower zones but that potentially means a
-*lot* of scan activity -- potentially 124G of pages before a lower zone
-page is found on Ivan's machine. That might be the very situation being
-encountered here.
-
-An alternative is that boosting is only ever applied to the highest
-populated zone in a system. The intent of the patch was primarily about
-THP which can use any zone to reduce their allocaation latency. While
-it's possible that there are cases where the latency of other orders
-matter *and* they require lower zones, I think it's unlikely and that
-this would be a safer option overall.
-
-However, overall I think the simpliest is to abort the boosting if
-reclaim is reaching higher priorities without being able to clear
-the boost. The boost is best-effort to reduce allocation latency in
-the future. This approach still has some overhead as there is a reclaim
-pass but kswapd will abort and go to sleep if the normal watermarks
-are met.
-
-This is build tested only. Ideally someone on the cc has a test case
-that can reproduce this specific problem of excessive kswapd activity.
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 572fb17c6273..71dd47172cef 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3462,6 +3462,25 @@ static bool pgdat_balanced(pg_data_t *pgdat, int order, int classzone_idx)
- 	return false;
- }
- 
-+static void acct_boosted_reclaim(pg_data_t *pgdat, int classzone_idx,
-+				unsigned long *zone_boosts)
-+{
-+	struct zone *zone;
-+	unsigned long flags;
-+	int i;
-+
-+	for (i = 0; i <= classzone_idx; i++) {
-+		if (!zone_boosts[i])
-+			continue;
-+
-+		/* Increments are under the zone lock */
-+		zone = pgdat->node_zones + i;
-+		spin_lock_irqsave(&zone->lock, flags);
-+		zone->watermark_boost -= min(zone->watermark_boost, zone_boosts[i]);
-+		spin_unlock_irqrestore(&zone->lock, flags);
-+	}
-+}
-+
- /* Clear pgdat state for congested, dirty or under writeback. */
- static void clear_pgdat_congested(pg_data_t *pgdat)
- {
-@@ -3654,9 +3673,17 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int classzone_idx)
- 		if (!nr_boost_reclaim && balanced)
- 			goto out;
- 
--		/* Limit the priority of boosting to avoid reclaim writeback */
--		if (nr_boost_reclaim && sc.priority == DEF_PRIORITY - 2)
--			raise_priority = false;
-+		/*
-+		 * Abort boosting if reclaiming at higher priority is not
-+		 * working to avoid excessive reclaim due to lower zones
-+		 * being boosted.
-+		 */
-+		if (nr_boost_reclaim && sc.priority == DEF_PRIORITY - 2) {
-+			acct_boosted_reclaim(pgdat, classzone_idx, zone_boosts);
-+			boosted = false;
-+			nr_boost_reclaim = 0;
-+			goto restart;
-+		}
- 
- 		/*
- 		 * Do not writeback or swap pages for boosted reclaim. The
-@@ -3738,18 +3765,7 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int classzone_idx)
- out:
- 	/* If reclaim was boosted, account for the reclaim done in this pass */
- 	if (boosted) {
--		unsigned long flags;
--
--		for (i = 0; i <= classzone_idx; i++) {
--			if (!zone_boosts[i])
--				continue;
--
--			/* Increments are under the zone lock */
--			zone = pgdat->node_zones + i;
--			spin_lock_irqsave(&zone->lock, flags);
--			zone->watermark_boost -= min(zone->watermark_boost, zone_boosts[i]);
--			spin_unlock_irqrestore(&zone->lock, flags);
--		}
-+		acct_boosted_reclaim(pgdat, classzone_idx, zone_boosts);
- 
- 		/*
- 		 * As there is now likely space, wakeup kcompact to defragment
+Regards,
+Brent
