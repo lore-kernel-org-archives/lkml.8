@@ -2,75 +2,88 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D468BC352A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8ECC352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED6320733
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c/krmNxl"
+	by mail.kernel.org (Postfix) with ESMTP id 5899F20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgBKCvE (ORCPT
+        id S1727946AbgBKC41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 21:51:04 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26046 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727855AbgBKCvE (ORCPT
+        Mon, 10 Feb 2020 21:56:27 -0500
+Received: from pindarots.xs4all.nl ([82.161.210.87]:59022 "EHLO
+        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727546AbgBKC41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 21:51:04 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581389463; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=DwinruQUTHVtb433tEVtKSujUuJq0mr9jS6Gc9Jj1Ik=; b=c/krmNxlI01+nkypTIL5AX2nk6L3Wz269H/M6bbFda8dXcR6NVwiBkVhl3dtYEH3tCSHq6ap
- FyFb4iqV5Tt8ePRBn92K6aiJKg8ib2WGZL5vYfsa3pOcwMciJlCiZdyvTdJtgeIpLVw4vDrq
- CONw/RStHZ14E585fYAdd1FMMD0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e421696.7fa215564b90-smtp-out-n01;
- Tue, 11 Feb 2020 02:51:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DC8E7C4479D; Tue, 11 Feb 2020 02:51:00 +0000 (UTC)
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4AE8FC43383;
-        Tue, 11 Feb 2020 02:50:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4AE8FC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v2 2/2] clk: qcom: gpucc: Add support for GX GDSC for
- SC7180
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-References: <1581307266-26989-1-git-send-email-tdas@codeaurora.org>
- <1581307266-26989-2-git-send-email-tdas@codeaurora.org>
- <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <9ac184a0-03a7-1354-1f18-890f3b66cdcb@codeaurora.org>
-Date:   Tue, 11 Feb 2020 08:20:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 10 Feb 2020 21:56:27 -0500
+Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
+        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id 01B2uPme145228
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Tue, 11 Feb 2020 03:56:25 +0100
+Subject: Re: 5.4+: PAGE FAULT crashes the system multiple times per 24h
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     "linux-mm@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <0495d7bd-7600-1936-d923-fa3b56a654bc@xs4all.nl>
+ <CAEJqkgir5yjgh-tnuz8dRgEG=Vpa6yU5K6hAA2oeBEmrLO7ubA@mail.gmail.com>
+ <fbb6fd06-0dc5-923a-c01f-d0bedfb004b1@xs4all.nl>
+ <CAEJqkgjq3pd8kJSBpv4moOjdjgXiwPS6HgoD81rVAL0X-SAGew@mail.gmail.com>
+From:   Udo van den Heuvel <udovdh@xs4all.nl>
+Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
+ 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
+ JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
+Organization: hierzo
+Message-ID: <8c43a767-282e-7d10-d7c5-d4587d6d012a@xs4all.nl>
+Date:   Tue, 11 Feb 2020 03:56:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAEJqkgjq3pd8kJSBpv4moOjdjgXiwPS6HgoD81rVAL0X-SAGew@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,99 +91,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
-
-On 2/10/2020 11:19 PM, Doug Anderson wrote:
-> Hi,
-> 
-> On Sun, Feb 9, 2020 at 8:01 PM Taniya Das <tdas@codeaurora.org> wrote:
+On 10-02-2020 18:01, Gabriel C wrote:
+>> rd.luks.options=discard
 >>
->> Most of the time the CPU should not be touching the GX domain on the
->> GPU except for a very special use case when the CPU needs to force the
->> GX headswitch off. Add the GX domain for that use case.  As part of
->> this add a dummy enable function for the GX gdsc to simulate success
->> so that the pm_runtime reference counting is correct.  This matches
->> what was done in sdm845 in commit 85a3d920d30a ("clk: qcom: Add a
->> dummy enable function for GX gdsc").
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>> We want to use discard on our ssd's.
 > 
-> For future reference, if you have someone's tag in your commit message
-> it's nice to CC them on the email.
-> 
-> 
+> Use mount options?
 
-My bad my miss.
-
->> ---
->>   drivers/clk/qcom/gpucc-sc7180.c | 37 +++++++++++++++++++++++++++++++++++++
->>   1 file changed, 37 insertions(+)
->>
->> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
->> index a96c0b9..7b656b6 100644
->> --- a/drivers/clk/qcom/gpucc-sc7180.c
->> +++ b/drivers/clk/qcom/gpucc-sc7180.c
->> @@ -170,8 +170,45 @@ static struct gdsc cx_gdsc = {
->>          .flags = VOTABLE,
->>   };
->>
->> +/*
->> + * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
->> + * running in the CX domain so the CPU doesn't need to know anything about the
->> + * GX domain EXCEPT....
->> + *
->> + * Hardware constraints dictate that the GX be powered down before the CX. If
->> + * the GMU crashes it could leave the GX on. In order to successfully bring back
->> + * the device the CPU needs to disable the GX headswitch. There being no sane
->> + * way to reach in and touch that register from deep inside the GPU driver we
->> + * need to set up the infrastructure to be able to ensure that the GPU can
->> + * ensure that the GX is off during this super special case. We do this by
->> + * defining a GX gdsc with a dummy enable function and a "default" disable
->> + * function.
->> + *
->> + * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
->> + * driver. During power up, nothing will happen from the CPU (and the GMU will
->> + * power up normally but during power down this will ensure that the GX domain
->> + * is *really* off - this gives us a semi standard way of doing what we need.
->> + */
->> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
->> +{
->> +       /* Do nothing but give genpd the impression that we were successful */
->> +       return 0;
->> +}
->> +
->> +static struct gdsc gx_gdsc = {
->> +       .gdscr = 0x100c,
->> +       .clamp_io_ctrl = 0x1508,
->> +       .pd = {
->> +               .name = "gx_gdsc",
->> +               .power_on = gx_gdsc_enable,
->> +       },
->> +       .pwrsts = PWRSTS_OFF_ON,
->> +       .flags = CLAMP_IO,
-> 
-> In my previous reply [1], I asked about these flags and if it was
-> intentional that they were different from sdm845.  I did see a private
-> response, but no public one.  In the future note that it's good to
-> reply publicly so everyone understands what happened.  In this case, I
-> was told "the GDSC's on 845 and SC7180 are different and hence the
-> change in flags is expected".  That answers my question and thus I'm
-> fine with my tag being here.  It also looks like you took my other
-> review feedback on v1, which is nice.
-> 
-> 
-> -Doug
-> 
-
-I am unable to respond to the other thread, thus we put out the reply.
+Not enough to make it work.
 
 > 
-> [1] https://lore.kernel.org/r/CAD=FV=V6yM7UJwu0ZLPCqmDgV9FS4=g+wcLg0TV51b72zvWT9Q@mail.gmail.com
+>> elevator=mq-deadline
+>> We want a different scheduler for ssd versus hdd.
 > 
+> If you really want that you should use udev rules for SSD/NVME/HDD/USB etc.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+Simply load the scheduler module and set the scheduler in rc.local is
+easier.
 
---
+
+Udo
+
