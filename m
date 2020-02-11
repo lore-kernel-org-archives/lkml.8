@@ -2,201 +2,189 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA62C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEDBC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAC320714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB9C20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhM+87nI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJ6f+xWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbgBKLTE (ORCPT
+        id S1728574AbgBKLTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:19:04 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44373 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727761AbgBKLTE (ORCPT
+        Tue, 11 Feb 2020 06:19:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32599 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727264AbgBKLTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:19:04 -0500
-Received: by mail-il1-f194.google.com with SMTP id s85so3083078ill.11;
-        Tue, 11 Feb 2020 03:19:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rVhcVjlq8na3czw/tkwf6l6sePScsOfYU5Ogr7k0eCs=;
-        b=jhM+87nIV3eGnOzI14WbJNrPKm1HIDv1USv22qODslUnAdL8F6u/kl61BxSpUOTnW4
-         xZfVVaajACAOZw+wxOUBKyxBjupzu/ErjqCyQD0iSgVqVP7l2q8KOOSRFZIyT4JiBq6K
-         NjNBWnlrJ7A0/ZnaU/nWC7qvGwzm6sEfZOKgzSncc1YwHqePggXpcG3QlQ9DiNQFINo8
-         2qN3krHATdz6m5NZOlpfV47HNzgcMQ6XB9B291HeVn78wmzUayrPbTOaiTgUaBLHKkrX
-         x/ajVJmuewSo2LRLOHlDcqkqJS1Jb5DhWnwimEEda3wtR4Ts7kxuu7G+n+4tu6ZuYfIi
-         lC+w==
+        Tue, 11 Feb 2020 06:19:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581419955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zSGk4DByZIhPCN8YAGetuggpX02PP2LILdI0T2sXvxE=;
+        b=hJ6f+xWOvlwvN8pfMdc3qdRGbVOvb3JUcVeO0Jk0ushWhsJcmheurKnDnw9hIDjMiq9dno
+        Bwf6L6gw7+2BXkjh1Uq1FC2yjKw17Par6/IUq1sO40Dn8Gt0PFq4cA+z+UdRXDhPgVDLG7
+        o+CBGe5orAbHaYewneJ2ihGH/KODl/s=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-LPwzWR38NMSzr0sqKFBBLg-1; Tue, 11 Feb 2020 06:19:14 -0500
+X-MC-Unique: LPwzWR38NMSzr0sqKFBBLg-1
+Received: by mail-qk1-f200.google.com with SMTP id i135so6832820qke.14
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:19:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rVhcVjlq8na3czw/tkwf6l6sePScsOfYU5Ogr7k0eCs=;
-        b=trBsuCdFfreE7U4bN2o5TgQZ4L0qjo0j5/F8GYHmEE5LHXh9fe/FYTPZeJuIkyGkqD
-         nCvnM1WwN40uK/fcDYpTSd4YNa96CC0K+WRnucvuM6ueR8V4DKDRsbcNuy2ayLw3iBxH
-         xTw9p8BLRQe2hVqQCIPoufLyv0PK5y6nbt0pBNbddXT35Q4oIRmdAQYM9DQQs+msedQ2
-         9v0ptihqNp+hXx/qja68XmTpoZ66czkVy0iDeEtw0VQkk+bdy4chfF66We0JW+6S2wkr
-         s9qushjV814HSu5+w59NkLsdRTJt0qJUQw7DFhaDnzJyRMJyMbxjNudx4rKlZRC8bRZF
-         yCFQ==
-X-Gm-Message-State: APjAAAXgNPEq4R3DNnLZAO+d5/iesGm+drpaCdE2QljuRB5+O6kNKSfp
-        WxqKTbD3dAv7/NdNhaAzih6O3rP8nAkuDs90NHY=
-X-Google-Smtp-Source: APXvYqwpJFGGow05e+peGMiccU09OXwxzA3q7JgF8vOUFvh3CVcgIle2N9uPDYB0Zu84nghhzJetQpekPDvKMOVQPjY=
-X-Received: by 2002:a92:50a:: with SMTP id q10mr6210854ile.294.1581419943357;
- Tue, 11 Feb 2020 03:19:03 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zSGk4DByZIhPCN8YAGetuggpX02PP2LILdI0T2sXvxE=;
+        b=K7tnxq/UDYrnIoPYMVkGLfCwb6ch9uF7c8k5PVuK0c9db6HZMCmH/8/KHiHMA5VlnT
+         +Jg5RGVZ5HKgCEyHnpSNHMgZN90kaUMKn961pCW9I0OOCTscoil+/Wlnzk2zK2NIJLXf
+         Zbk+FdHnoFsqO/Htrv0nWjopLm65Dfm8yqiRBEYzCmALROnGNuI4HeAG4DCdG6TnO2q6
+         Me79ty4Hr9HOpuTDwP/VrZfv5iuilbMs5T+wH0G414V5hDTsHoN4qS1WzJoeCKkzauNv
+         JmV10tMVI5ZEwl+2FbepiRejlc9Ae5Kx2lYyEtE8HX5T9Jxio1FkyEchfi3p3FHuR3Tb
+         d8lg==
+X-Gm-Message-State: APjAAAUb6ww/Qxo4jt+T9RRnr4FMlROYl3dchEXXGhUkSsoSGwRCwUz6
+        4brhD7oFzoFD3AaIQc9Az7eSzM2u/ttu3S3mCURK5U94dW47yuKXmqAjpQQCmp8B05ntq20hC/k
+        aPduovyqbyqEPgT/pV2k+4ybx
+X-Received: by 2002:a05:6214:118d:: with SMTP id t13mr2296517qvv.5.1581419953558;
+        Tue, 11 Feb 2020 03:19:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwYkabWO8BaOzkqEcEDtxnu6+npU98PB75JpNvCUUh3RdtmsBY+hd7Uve9DjDBn8TDJQxQngQ==
+X-Received: by 2002:a05:6214:118d:: with SMTP id t13mr2296501qvv.5.1581419953351;
+        Tue, 11 Feb 2020 03:19:13 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id 73sm1920892qtg.40.2020.02.11.03.19.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 03:19:12 -0800 (PST)
+Date:   Tue, 11 Feb 2020 06:19:08 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Zha Bin <zhabin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, jasowang@redhat.com, slp@redhat.com,
+        virtio-dev@lists.oasis-open.org, qemu-devel@nongnu.org,
+        gerry@linux.alibaba.com, jing2.liu@linux.intel.com,
+        chao.p.peng@linux.intel.com
+Subject: Re: [PATCH v2 2/5] virtio-mmio: refactor common functionality
+Message-ID: <20200211061758-mutt-send-email-mst@kernel.org>
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <0268807dc26ecdf5620de9000758d05ca0b21f3f.1581305609.git.zhabin@linux.alibaba.com>
 MIME-Version: 1.0
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-In-Reply-To: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-From:   Jerin Jacob <jerinjacobk@gmail.com>
-Date:   Tue, 11 Feb 2020 16:48:47 +0530
-Message-ID: <CALBAE1Oz2u+cmoL8LhEZ-4paXEebKh3DzfWGLQLQx0oaW=tBXw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dpdk-dev <dev@dpdk.org>,
-        mtosatti@redhat.com, Thomas Monjalon <thomas@monjalon.net>,
-        Luca Boccassi <bluca@debian.org>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        cohuck@redhat.com, Vamsi Attunuru <vattunuru@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0268807dc26ecdf5620de9000758d05ca0b21f3f.1581305609.git.zhabin@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 4:35 AM Alex Williamson
-<alex.williamson@redhat.com> wrote:
->
-> There seems to be an ongoing desire to use userspace, vfio-based
-> drivers for both SR-IOV PF and VF devices.  The fundamental issue
-> with this concept is that the VF is not fully independent of the PF
-> driver.  Minimally the PF driver might be able to deny service to the
-> VF, VF data paths might be dependent on the state of the PF device,
-> or the PF my have some degree of ability to inspect or manipulate the
-> VF data.  It therefore would seem irresponsible to unleash VFs onto
-> the system, managed by a user owned PF.
->
-> We address this in a few ways in this series.  First, we can use a bus
-> notifier and the driver_override facility to make sure VFs are bound
-> to the vfio-pci driver by default.  This should eliminate the chance
-> that a VF is accidentally bound and used by host drivers.  We don't
-> however remove the ability for a host admin to change this override.
->
-> The next issue we need to address is how we let userspace drivers
-> opt-in to this participation with the PF driver.  We do not want an
-> admin to be able to unwittingly assign one of these VFs to a tenant
-> that isn't working in collaboration with the PF driver.  We could use
-> IOMMU grouping, but this seems to push too far towards tightly coupled
-> PF and VF drivers.  This series introduces a "VF token", implemented
-> as a UUID, as a shared secret between PF and VF drivers.  The token
-> needs to be set by the PF driver and used as part of the device
-> matching by the VF driver.  Provisions in the code also account for
-> restarting the PF driver with active VF drivers, requiring the PF to
-> use the current token to re-gain access to the PF.
+On Mon, Feb 10, 2020 at 05:05:18PM +0800, Zha Bin wrote:
+> From: Liu Jiang <gerry@linux.alibaba.com>
+> 
+> Common functionality is refactored into virtio_mmio_common.h
+> in order to MSI support in later patch set.
+> 
+> Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
+> Co-developed-by: Zha Bin <zhabin@linux.alibaba.com>
+> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
+> Co-developed-by: Jing Liu <jing2.liu@linux.intel.com>
+> Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+> Co-developed-by: Chao Peng <chao.p.peng@linux.intel.com>
+> Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
 
-Thanks Alex for the series. DPDK realizes this use-case through, an out of
-tree igb_uio module, for non VFIO devices. Supporting this use case, with
-VFIO, will be a great enhancement for DPDK as we are planning to
-get rid of out of tree modules any focus only on userspace aspects.
+What does this proliferation of header files achieve?
+common with what?
 
-From the DPDK perspective, we have following use-cases
-
-1) VF representer or OVS/vSwitch  use cases where
-DPDK PF acts as an HW switch to steer traffic to VF
-using the rte_flow library backed by HW CAMs.
-
-2) Unlike, other PCI class of devices, Network class of PCIe devices
-would have additional
-capability on the PF devices such as promiscuous mode support etc
-leverage that in DPDK
-PF and VF use cases.
-
-That would boil down to the use of the following topology.
-a)  PF bound to DPDK/VFIO  and  VF bound to Linux
-b)  PF bound to DPDK/VFIO  and  VF bound to DPDK/VFIO
-
-Tested the use case (a) and it works this patch. Tested use case(b), it
-works with patch provided both PF and VF under the same application.
-
-Regarding the use case where  PF bound to DPDK/VFIO and
-VF bound to DPDK/VFIO are _two different_ processes then sharing the UUID
-will be a little tricky thing in terms of usage. But if that is the
-purpose of bringing
-UUID to the equation then it fine.
-
-Overall this series looks good to me.  We can test the next non-RFC
-series and give
-Tested-by by after testing with DPDK.
-
-
->
-> The above solutions introduce a bit of a modification to the VFIO ABI
-> and an additional ABI extension.  The modification is that the
-> VFIO_GROUP_GET_DEVICE_FD ioctl is specified to require a char string
-> from the user providing the device name.  For this solution, we extend
-> the syntax to allow the device name followed by key/value pairs.  In
-> this case we add "vf_token=3e7e882e-1daf-417f-ad8d-882eea5ee337", for
-> example.  These options are expected to be space separated.  Matching
-> these key/value pairs is entirely left to the vfio bus driver (ex.
-> vfio-pci) and the internal ops structure is extended to allow this
-> optional support.  This extension should be fully backwards compatible
-> to existing userspace, such code will simply fail to open these newly
-> exposed devices, as intended.
->
-> I've been debating whether instead of the above we should allow the
-> user to get the device fd as normal, but restrict the interfaces until
-> the user authenticates, but I'm afraid this would be a less backwards
-> compatible solution.  It would be just as unclear to the user why a
-> device read/write/mmap/ioctl failed as it might be to why getting the
-> device fd could fail.  However in the latter case, I believe we do a
-> better job of restricting how far userspace code might go before they
-> ultimately fail.  I'd welcome discussion in the space, and or course
-> the extension of the GET_DEVICE_FD string.
->
-> Finally, the user needs to be able to set a VF token.  I add a
-> VFIO_DEVICE_FEATURE ioctl for this that's meant to be reusable for
-> getting, setting, and probing arbitrary features of a device.
->
-> I'll reply to this cover letter with a very basic example of a QEMU
-> update to support this interface, though I haven't found a device yet
-> that behaves well with the PF running in one VM with the VF in
-> another, or really even just a PF running in a VM with SR-IOV enabled.
-> I know these devices exist though, and I suspect QEMU will not be the
-> primary user of this support for now, but this behavior reaffirms my
-> concerns to prevent mis-use.
->
-> Please comment.  In particular, does this approach meet the DPDK needs
-> for userspace PF and VF drivers, with the hopefully minor hurdle of
-> sharing a token between drivers.  The token is of course left to
-> userspace how to manage, and might be static (and not very secret) for
-> a given set of drivers.  Thanks,
->
-> Alex
->
 > ---
->
-> Alex Williamson (7):
->       vfio: Include optional device match in vfio_device_ops callbacks
->       vfio/pci: Implement match ops
->       vfio/pci: Introduce VF token
->       vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
->       vfio/pci: Add sriov_configure support
->       vfio/pci: Remove dev_fmt definition
->       vfio/pci: Cleanup .probe() exit paths
->
->
->  drivers/vfio/pci/vfio_pci.c         |  315 ++++++++++++++++++++++++++++++++---
->  drivers/vfio/pci/vfio_pci_private.h |   10 +
->  drivers/vfio/vfio.c                 |   19 ++
->  include/linux/vfio.h                |    3
->  include/uapi/linux/vfio.h           |   37 ++++
->  5 files changed, 356 insertions(+), 28 deletions(-)
->
+>  drivers/virtio/virtio_mmio.c        | 21 +--------------------
+>  drivers/virtio/virtio_mmio_common.h | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 32 insertions(+), 20 deletions(-)
+>  create mode 100644 drivers/virtio/virtio_mmio_common.h
+> 
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index 1733ab97..41e1c93 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -61,13 +61,12 @@
+>  #include <linux/io.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+> -#include <linux/virtio.h>
+>  #include <linux/virtio_config.h>
+>  #include <uapi/linux/virtio_mmio.h>
+>  #include <linux/virtio_ring.h>
+> +#include "virtio_mmio_common.h"
+>  
+>  
+>  
+> @@ -77,24 +76,6 @@
+>  
+>  
+>  
+> -#define to_virtio_mmio_device(_plat_dev) \
+> -	container_of(_plat_dev, struct virtio_mmio_device, vdev)
+> -
+> -struct virtio_mmio_device {
+> -	struct virtio_device vdev;
+> -	struct platform_device *pdev;
+> -
+> -	void __iomem *base;
+> -	unsigned long version;
+> -
+> -	/* a list of queues so we can dispatch IRQs */
+> -	spinlock_t lock;
+> -	struct list_head virtqueues;
+> -
+> -	unsigned short notify_base;
+> -	unsigned short notify_multiplier;
+> -};
+> -
+>  struct virtio_mmio_vq_info {
+>  	/* the actual virtqueue */
+>  	struct virtqueue *vq;
+> diff --git a/drivers/virtio/virtio_mmio_common.h b/drivers/virtio/virtio_mmio_common.h
+> new file mode 100644
+> index 0000000..90cb304
+> --- /dev/null
+> +++ b/drivers/virtio/virtio_mmio_common.h
+> @@ -0,0 +1,31 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef _DRIVERS_VIRTIO_VIRTIO_MMIO_COMMON_H
+> +#define _DRIVERS_VIRTIO_VIRTIO_MMIO_COMMON_H
+> +/*
+> + * Virtio MMIO driver - common functionality for all device versions
+> + *
+> + * This module allows virtio devices to be used over a memory-mapped device.
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/virtio.h>
+> +
+> +#define to_virtio_mmio_device(_plat_dev) \
+> +	container_of(_plat_dev, struct virtio_mmio_device, vdev)
+> +
+> +struct virtio_mmio_device {
+> +	struct virtio_device vdev;
+> +	struct platform_device *pdev;
+> +
+> +	void __iomem *base;
+> +	unsigned long version;
+> +
+> +	/* a list of queues so we can dispatch IRQs */
+> +	spinlock_t lock;
+> +	struct list_head virtqueues;
+> +
+> +	unsigned short notify_base;
+> +	unsigned short notify_multiplier;
+> +};
+> +
+> +#endif
+> -- 
+> 1.8.3.1
+
