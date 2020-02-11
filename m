@@ -2,57 +2,58 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AE8C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B95020842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2966E20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581460901;
-	bh=po7kqC7Pvn8ouUFSjitvJdsV90ZhZQbIOK4MtOWD+4c=;
+	s=default; t=1581461100;
+	bh=HuV9YLvJEvcc270R9dgBn2WFOwx6DXWaFOZ23rncsqY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z6s1HaeKge6xBIW4FgTTL2uLzUPsVyNCrPG11BdJz1ADqhuc/Hu1FJJ7nbtWGjWyJ
-	 dJlg185XFf4+ht6JOw0YminHlErRWTItDZ7Lf5Xmd6mwx0IT1DzPLi15e2pQ/GCOsU
-	 e+zHi4eqZOdCPfKc1x4S1rc1+RVQfvuDkdN6Fu2E=
+	b=ki/W1Ceqv6P9ZIzBpvfHV/0HgG6v74LXuM841nUu5KDij9EDEfYJ67bWPl8smHLx0
+	 bDl9pwIstX3FQoNMFWIIONwoQDjYI7Gw8ooQaOW9cYa6s2j/unis+hqSzCZ88PEK/T
+	 AmXtMb9W8i+ra9lIpcDdqGLX0w2cQNeq8KlffItM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgBKWlk (ORCPT
+        id S1727597AbgBKWo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:41:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59160 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 17:44:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727330AbgBKWlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:41:39 -0500
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        id S1727041AbgBKWo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:44:58 -0500
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF53C215A4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:41:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12049206ED
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581460899;
-        bh=po7kqC7Pvn8ouUFSjitvJdsV90ZhZQbIOK4MtOWD+4c=;
+        s=default; t=1581461098;
+        bh=HuV9YLvJEvcc270R9dgBn2WFOwx6DXWaFOZ23rncsqY=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=A9SjsBEnM3jsARVQH6Vr8mTRFYVGhigujF6r85gkGJDQV5NSgyXGAldP+bLnXh/9J
-         3m3NtP+kcfOzMI6mAYyqirz9/jX0YVwfQ8kfmP5qG/FH5JKPQCzOSv87B8D9c6/iCa
-         ssCsOD+3rbZeEUyj8gwWEpLOQGnncSrhXwJy9lZ0=
-Received: by mail-wr1-f47.google.com with SMTP id z3so14608478wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:41:38 -0800 (PST)
-X-Gm-Message-State: APjAAAX8x7oWabU+hM97mFj015xh8NrMtWgAyllnH3lxqTvOKGxzzDqE
-        Pm7sLLM0/UfPOMXN6MoNzsG6hLKt85vA9I2xlB8kvQ==
-X-Google-Smtp-Source: APXvYqwUKxKnR3eGbA73IwMOx/C58CVPpQncokUat63UmXlmSlb5cTd+e+rYF11OC5oIS9uMBg3BBmcyseI9oUikD18=
-X-Received: by 2002:a5d:5305:: with SMTP id e5mr11103645wrv.18.1581460897210;
- Tue, 11 Feb 2020 14:41:37 -0800 (PST)
+        b=OXdXWAWEuPD/brdjHF+3LN1PlTCFVy6XDEEKUxvsVrajJaDDhNW+QNfi5q2+tFTor
+         /+Rggqh3fb0KrBGOGo5vUTHH9UtuiRdaHtHzpuf43ULG7wlyVmRJDqGyhNQoumptQ7
+         r30a6CfCJmEE4IfKRkkYGbWMiOOE9GfUNMXmGUJ0=
+Received: by mail-wr1-f53.google.com with SMTP id c9so14621416wrw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:44:57 -0800 (PST)
+X-Gm-Message-State: APjAAAUbSAXDL+r9OtVppICChzrXNNx4rz/+v1pSGcdi/Rc/qbSQ8yI9
+        r6ZFH7j+DqGNTEUchEQLzMgBcx0gCkZ4d0BQWuUL3Q==
+X-Google-Smtp-Source: APXvYqzY81lEi55il13Ueps9hjsu2+bqHRuf6w5qFMRFH7D2LrQCDHIcGTkWr/CLssKA2NO/90BHC3DwgTV3gYkiss8=
+X-Received: by 2002:a5d:5305:: with SMTP id e5mr11114870wrv.18.1581461096590;
+ Tue, 11 Feb 2020 14:44:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-24-joro@8bytes.org>
-In-Reply-To: <20200211135256.24617-24-joro@8bytes.org>
+References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-31-joro@8bytes.org>
+In-Reply-To: <20200211135256.24617-31-joro@8bytes.org>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 11 Feb 2020 14:41:25 -0800
-X-Gmail-Original-Message-ID: <CALCETrXswGgGoNaZigboUn3-amTyCY2Ft_JaMMvXchLDDkhJfw@mail.gmail.com>
-Message-ID: <CALCETrXswGgGoNaZigboUn3-amTyCY2Ft_JaMMvXchLDDkhJfw@mail.gmail.com>
-Subject: Re: [PATCH 23/62] x86/idt: Move IDT to data segment
+Date:   Tue, 11 Feb 2020 14:44:45 -0800
+X-Gmail-Original-Message-ID: <CALCETrVLhTkZ2MMUD+WMWXnhmSvwVhinUtMJey2M6sx_iUREcg@mail.gmail.com>
+Message-ID: <CALCETrVLhTkZ2MMUD+WMWXnhmSvwVhinUtMJey2M6sx_iUREcg@mail.gmail.com>
+Subject: Re: [PATCH 30/62] x86/head/64: Move early exception dispatch to C code
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -78,13 +79,39 @@ On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
 >
 > From: Joerg Roedel <jroedel@suse.de>
 >
-> With SEV-ES, exception handling is needed very early, even before the
-> kernel has cleared the bss segment. In order to prevent clearing the
-> currently used IDT, move the IDT to the data segment.
+> Move the assembly coded dispatch between page-faults and all other
+> exceptions to C code to make it easier to maintain and extend.
+>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/kernel/head64.c  | 20 ++++++++++++++++++++
+>  arch/x86/kernel/head_64.S | 11 +----------
+>  2 files changed, 21 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> index 7cdfb7113811..d83c62ebaa85 100644
+> --- a/arch/x86/kernel/head64.c
+> +++ b/arch/x86/kernel/head64.c
+> @@ -36,6 +36,8 @@
+>  #include <asm/microcode.h>
+>  #include <asm/kasan.h>
+>  #include <asm/fixmap.h>
+> +#include <asm/extable.h>
+> +#include <asm/trap_defs.h>
+>
+>  /*
+>   * Manage page tables very early on.
+> @@ -377,6 +379,24 @@ int __init early_make_pgtable(unsigned long address)
+>         return __early_make_pgtable(address, pmd);
+>  }
+>
+> +void __init early_exception(struct pt_regs *regs, int trapnr)
+> +{
+> +       unsigned long cr2;
+> +       int r;
 
-Ugh.  At the very least this needs a comment in the code.
+How about int (or bool) handled;  Or just if (!early_make_pgtable)
+return;  This would also be nicer if you inverted the return value so
+that true means "I handled it".
 
-I had a patch to fix the kernel ELF loader to clear BSS, which would
-fix this problem once and for all, but it didn't work due to the messy
-way that the decompressor handles memory.  I never got around to
-fixing this, sadly.
+--Andy
