@@ -2,238 +2,181 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E592C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7049C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE5E214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977CB20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GF9oZg7Z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sl6W4amj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgBKOBs (ORCPT
+        id S1729786AbgBKOBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:01:48 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45674 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728857AbgBKOBr (ORCPT
+        Tue, 11 Feb 2020 09:01:54 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38399 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729742AbgBKOBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:01:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581429705;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=nFLpPJkgVueHSLYrO0cmInQWApCLH3bfoTimE/eH7FA=;
-        b=GF9oZg7ZvX15IRLqv5dRG82c3ic+Q+w91nPk8Z08NsOuMwnKOyc70MCAe/2ii87NYIYUsU
-        twCuoEcO+WIyN4CXARmNpi3Y4/7Ju0d0wZeLtYbxeDvoOL3dp/FXwQGOO+p9gzbb+HPCLD
-        cHypQujnzwXVJ/lGflK0qdQNnzRNueE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-W9H-8s6-ONCkO4I7p0HkSA-1; Tue, 11 Feb 2020 09:01:40 -0500
-X-MC-Unique: W9H-8s6-ONCkO4I7p0HkSA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B45FF1083835;
-        Tue, 11 Feb 2020 14:01:38 +0000 (UTC)
-Received: from [10.36.117.14] (ovpn-117-14.ams2.redhat.com [10.36.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DF82D90CFF;
-        Tue, 11 Feb 2020 14:01:36 +0000 (UTC)
-Subject: Re: [Patch v2] mm/sparsemem: get address to page struct instead of
- address to pfn
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
-References: <20200210005048.10437-1-richardw.yang@linux.intel.com>
- <90742479-cbb1-4ea9-c20c-53a1df34b806@redhat.com>
- <20200210231623.GC32495@richard>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <e36cd022-c1f1-a7e8-8888-5bf5b4cd993d@redhat.com>
-Date:   Tue, 11 Feb 2020 15:01:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 09:01:53 -0500
+Received: by mail-qt1-f194.google.com with SMTP id c24so7976168qtp.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 06:01:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y/BadYpECLUdWrQWnEHX25mgncmJfuysCIDqnuczrAk=;
+        b=sl6W4amjj3ULSa0duaz/GaF9sRD+HniXTrk8LTBCboI2KvwvnyLMORWRCs4K+dZlZT
+         T1f9kHEjuIh0lz3PEVYPSTz9R1ZmiQHUBePJXucm2un8ygS+PNn3ffjpTm3rIEVzdRxi
+         s9naMaPNWn6wkFShRl4LkpK239QTPDlj8gKZqa+GfFO2vg+ePKFMtRVY0BcMqOB3ruMK
+         oXl13ab9Iu9fud1YExcjkncZbggZOQcvRZ1F2LGfkfalU6/wTaoGTLs5ZSFl8WpPmyCa
+         1fE4W5Z6TNZ6CAoYfaZsaIKgj4lkrazjDRerS/EwbkNHjqu7ct46GnmsVkD4x12QUHj8
+         mxVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y/BadYpECLUdWrQWnEHX25mgncmJfuysCIDqnuczrAk=;
+        b=rEA/+pOyv5BmMWjEfRWlll/dwDeN0I7/VITZEWYXOBl0wwz+FGBTJpXeAeDdFqhCaz
+         Y+GId1GrekADahG8/rg95nwG5NPrk27BdAeh/eYh3w+jLzHgCsli4E0gyaO4U9vvQdda
+         GuXODqxFa9DSOyzvFkvy/1B/FM5SkTJPkm3AANcaJTPJI3iQOzfvvVoBazh5XXZOlo3+
+         cfoTDPRqhQwretm+9K1/eZuBMv5iC1bRvmmKvLydT8zGYT11ttfkefSe5bMCnYOl6sSh
+         ZBS38Dny8xYooOilBV48suSEvF3aqr/s5s4KXwoChsSPGqxvLqMSmX8YWXVMhVMo0dLa
+         2B/g==
+X-Gm-Message-State: APjAAAVltBeEa79U9erMptsE2Nug5isObB7Hrsbdg1j5BoJzScgBIUjC
+        eO5OB23G4OVmqjH3YTIMiOAdDthdbrqi40mmSZ6b7w==
+X-Google-Smtp-Source: APXvYqweNYSa/wrakmiOWVZk+K+1yhLLQ/TfkZzrAOVJstFKgWSIpPWJpdUmPwCkTdFURpQZZ4VIxfXyuBfdRE4AU0k=
+X-Received: by 2002:ac8:340c:: with SMTP id u12mr2498173qtb.257.1581429711919;
+ Tue, 11 Feb 2020 06:01:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200210231623.GC32495@richard>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <0000000000003313f0058fea8435@google.com> <8736ek9qir.fsf@miraculix.mork.no>
+ <1574159504.28617.5.camel@suse.de> <87pnho85h7.fsf@miraculix.mork.no>
+ <CACT4Y+YgLm2m0JG6qKKn9OpyXT9kKEPeyLSVGSfLbUukoCnB+g@mail.gmail.com>
+ <CACT4Y+ZjiCDgtGVMow3WNzjuqBLaxy_KB4cM10wbfUnDdjBYfQ@mail.gmail.com>
+ <CACT4Y+ZWDMkOmnXpBXFhU8XcHA_-ZcHdZpfrXcCWHRzcbQ39Gg@mail.gmail.com>
+ <ebc7b5e0-e968-0bdb-d75d-346e0b763d14@i-love.sakura.ne.jp>
+ <CACT4Y+bDNjj_RGLtvRCaV3k9+QX4eENyKyWWAbsHcbwR7CDrWQ@mail.gmail.com>
+ <CACT4Y+ZaNNAiRvKCMJ9t4H+H23OcjSd5haAcXkG68L8F6Mq6Wg@mail.gmail.com> <bbf26ea3-c11c-1cd2-0072-b78634ae9579@i-love.sakura.ne.jp>
+In-Reply-To: <bbf26ea3-c11c-1cd2-0072-b78634ae9579@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 11 Feb 2020 15:01:37 +0100
+Message-ID: <CACT4Y+Yv-T-MfW=mgzuD99tsfkmE5Tk6bBhio9KNtPTmXM4cEw@mail.gmail.com>
+Subject: Re: INFO: task hung in wdm_flush
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Oliver Neukum <oneukum@suse.de>,
+        syzbot <syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuehaibing@huawei.com, =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.02.20 00:16, Wei Yang wrote:
-> On Mon, Feb 10, 2020 at 10:00:47AM +0100, David Hildenbrand wrote:
->> On 10.02.20 01:50, Wei Yang wrote:
->>> memmap should be the address to page struct instead of address to pfn.
->>>
->>
->> "mm/sparsemem: fix wrong address in ms->section_mem_map with sub-sections
->>
->> We want to store the address of the memmap, not the address of the first
->> pfn.
->>
->> E.g., we can have both (boot) system memory and devmem residing in a
->> single section. Once we hot-add the devmem part, the address stored in
->> ms->section_mem_map would be wrong, and kdump would not be able to
->> dump the right memory.
->> "
->>
->> ? See below
->>
->>> As mentioned by David, if system memory and devmem sit within a
->>> section, the mismatch address would lead kdump to dump unexpected
->>> memory.
->>>
->>> Since sub-section only works for SPARSEMEM_VMEMMAP, pfn_to_page() is
->>> valid to get the page struct address at this point.
->>>
->>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->>> CC: Dan Williams <dan.j.williams@intel.com>
->>> CC: David Hildenbrand <david@redhat.com>
->>> CC: Baoquan He <bhe@redhat.com>
->>>
->>> ---
->>> v2:
->>>   * adjust comment to mention the mismatch data would affect kdump
->>>
->>> ---
->>>  mm/sparse.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/mm/sparse.c b/mm/sparse.c
->>> index 586d85662978..4862ec2cfbc0 100644
->>> --- a/mm/sparse.c
->>> +++ b/mm/sparse.c
->>> @@ -887,7 +887,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->>>  
->>>  	/* Align memmap to section boundary in the subsection case */
->>>  	if (section_nr_to_pfn(section_nr) != start_pfn)
->>> -		memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
->>> +		memmap = pfn_to_page(section_nr_to_pfn(section_nr));
->>
->> I think this whole code should be reworked.
->>
->> Callee returns a pointer. Caller: Nah, I know it better.
->>
->> Just nasty.
->>
->>
->> Can we do something like this instead:
->>
->>
->> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
->> index 200aef686722..c5091feef29e 100644
->> --- a/mm/sparse-vmemmap.c
->> +++ b/mm/sparse-vmemmap.c
->> @@ -266,5 +266,5 @@ struct page * __meminit
->> __populate_section_memmap(unsigned long pfn,
->>        if (vmemmap_populate(start, end, nid, altmap))
->>                return NULL;
->>
->> -       return pfn_to_page(pfn);
->> +       return pfn_to_page(SECTION_ALIGN_DOWN(pfn));
->> }
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index c184b69460b7..21902d7931e4 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -788,6 +788,10 @@ static void section_deactivate(unsigned long pfn,
->> unsigned long nr_pages,
->>                depopulate_section_memmap(pfn, nr_pages, altmap);
->> }
->>
->> +/*
->> + * Returns the memmap of the first pfn of the section (not of
->> + * sub-sections).
->> + */
->> static struct page * __meminit section_activate(int nid, unsigned long pfn,
->>                unsigned long nr_pages, struct vmem_altmap *altmap)
->> {
->> @@ -882,9 +886,6 @@ int __meminit sparse_add_section(int nid, unsigned
->> long start_pfn,
->>        set_section_nid(section_nr, nid);
->>        section_mark_present(ms);
->>
->> -       /* Align memmap to section boundary in the subsection case */
->> -       if (section_nr_to_pfn(section_nr) != start_pfn)
->> -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
->>        sparse_init_one_section(ms, section_nr, memmap, ms->usage, 0);
->>
->>        return 0;
->>
->>
->> Untested, of course :)
-> 
-> I think you get some point. As you mentioned in the following reply, we need
-> to adjust poisoning after this change.
+On Mon, Feb 10, 2020 at 4:22 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2020/02/11 0:06, Dmitry Vyukov wrote:
+> >> On Mon, Feb 10, 2020 at 4:03 PM Tetsuo Handa
+> >> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> >>>
+> >>> On 2020/02/10 21:46, Tetsuo Handa wrote:
+> >>>> On 2020/02/10 19:09, Dmitry Vyukov wrote:
+> >>>>> You may also try on the exact commit the bug was reported, because
+> >>>>> usb-fuzzer is tracking branch, things may change there.
+> >>>>
+> >>>> OK. I explicitly tried
+> >>>>
+> >>>>   #syz test: https://github.com/google/kasan.git e5cd56e94edde38ca4dafae5a450c5a16b8a5f23
+> >>>>
+> >>>> but syzbot still cannot reproduce this bug using the reproducer...
+> >>>
+> >>> It seems that there is non-trivial difference between kernel config in dashboard
+> >>> and kernel config in "syz test:" mails. Maybe that's the cause...
+> >
+> >
+> > syzkaller runs oldconfig when building any kernels:
+> > https://github.com/google/syzkaller/blob/master/pkg/build/linux.go#L56
+> > Is that difference what oldconfig produces?
+> >
+>
+> Here is the diff (with "#" lines excluded) between dashboard and "syz test:" mails.
+> I feel this difference is bigger than what simple oldconfig would cause.
+>
+> $ curl 'https://syzkaller.appspot.com/text?tag=KernelConfig&x=8cff427cc8996115' | sort > dashboard
 
-We can just poison after setting up the section (IOW, move it further down).
+I think you took a wrong config as a base.
+This 8cff427cc8996115 was only used for crashes without reproducers as
+far as I see, so it can't be used for patch testing.
+I would expect the one used for last patch testing is this one:
+https://syzkaller.appspot.com/text?tag=KernelConfig&x=8847e5384a16f66a
+associated with this crash:
+ci2-upstream-usb2019/09/23 13:26https://github.com/google/kasan.git
+usb-fuzzere0bd8d79d96e88f3
 
-> 
-> This looks like a trade off between two options. I don't have a strong
-> preference.
-
-I clearly prefer if *section*_activate() returns the memmap of the
-section. This code is just confusing. But I can send a cleanup on top if
-you want to keep it like that for now.
+I checked at least CONFIG_DYNAMIC_DEBUG, and it matches what was used
+for patch testing.
+So everything seems right to me as far as I see.
 
 
--- 
-Thanks,
 
-David / dhildenb
-
+> $ curl 'https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162' | sort > syz-test
+> $ diff -u dashboard syz-test | grep -vF '#' | grep '^[+-]'
+> --- dashboard   2020-02-11 00:19:14.793977153 +0900
+> +++ syz-test    2020-02-11 00:19:15.659977108 +0900
+> -CONFIG_BLK_DEV_LOOP_MIN_COUNT=16
+> +CONFIG_BLK_DEV_LOOP_MIN_COUNT=8
+> -CONFIG_BUG_ON_DATA_CORRUPTION=y
+> -CONFIG_DEBUG_CREDENTIALS=y
+> -CONFIG_DEBUG_PER_CPU_MAPS=y
+> -CONFIG_DEBUG_PLIST=y
+> -CONFIG_DEBUG_SG=y
+> -CONFIG_DEBUG_VIRTUAL=y
+> +CONFIG_DEVMEM=y
+> +CONFIG_DEVPORT=y
+> +CONFIG_DMA_OF=y
+> -CONFIG_DYNAMIC_DEBUG=y
+> -CONFIG_DYNAMIC_MEMORY_LAYOUT=y
+> +CONFIG_HID_REDRAGON=y
+> +CONFIG_IRQCHIP=y
+> -CONFIG_LSM="lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
+> +CONFIG_LSM="yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
+> -CONFIG_MAC80211_HWSIM=y
+> +CONFIG_MAGIC_SYSRQ=y
+> +CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=0x1
+> +CONFIG_MAGIC_SYSRQ_SERIAL=y
+> +CONFIG_NET_TC_SKB_EXT=y
+> +CONFIG_OF=y
+> +CONFIG_OF_ADDRESS=y
+> +CONFIG_OF_GPIO=y
+> +CONFIG_OF_IOMMU=y
+> +CONFIG_OF_IRQ=y
+> +CONFIG_OF_KOBJ=y
+> +CONFIG_OF_MDIO=y
+> +CONFIG_OF_NET=y
+> -CONFIG_PGTABLE_LEVELS=5
+> +CONFIG_PGTABLE_LEVELS=4
+> +CONFIG_PWRSEQ_EMMC=y
+> +CONFIG_PWRSEQ_SIMPLE=y
+> +CONFIG_RTLWIFI_DEBUG=y
+> -CONFIG_SECURITYFS=y
+> +CONFIG_STRICT_DEVMEM=y
+> +CONFIG_THERMAL_OF=y
+> +CONFIG_USB_CHIPIDEA_OF=y
+> +CONFIG_USB_DWC3_OF_SIMPLE=y
+> -CONFIG_USB_RAW_GADGET=y
+> +CONFIG_USB_SNP_UDC_PLAT=y
+> -CONFIG_VIRTIO_BLK_SCSI=y
+> -CONFIG_VIRT_WIFI=y
+> -CONFIG_X86_5LEVEL=y
