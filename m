@@ -2,176 +2,71 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB2EC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15457C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8503520873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:21:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="bFc+jsaX"
+	by mail.kernel.org (Postfix) with ESMTP id DA17520675
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgBKNVo (ORCPT
+        id S1728998AbgBKNW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:21:44 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33080 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbgBKNVo (ORCPT
+        Tue, 11 Feb 2020 08:22:29 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46228 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbgBKNW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:21:44 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n25so7004923lfl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 05:21:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hr4RM1uoMUp4PqitGEd8DPH0BhvKXrOmDlEYhlDDK/I=;
-        b=bFc+jsaX1bV6Bl3CuP+Cavm+epSok3Y8YuARU6618UpGWA+riHbOEsKSpMLVF0ZXnU
-         bY7fqdQ0bEnWWZfLd6Oqd9qX1D757FrAYb+O8BaQ+LQhdXMTPs51Hy2WUXzJ4Ad24uj4
-         cvUYk6SVn5+//nUOhXYL42dvCGwEwZFRn+X4g8zbG1FE0jal/OsaVU08xzOzzjWLIm0D
-         8MwIcgxr3JmYIH/VoOmj8XDIQ6QhVzIhQMilukMtaXwupCH3WebHq6ULuGRH9rDVgw9o
-         yY56NRlMCQ15lfK+PifbXajl/TM4KUteetaHmFwDIJm5VG8+ct0cSww9niJRGFLxEBTQ
-         oHNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hr4RM1uoMUp4PqitGEd8DPH0BhvKXrOmDlEYhlDDK/I=;
-        b=bWd9WFOJmHncZx6FR5ll8SsFpdq/PP96Vi2R0UJcfewiaCPk2jjSn97u3sSaJ31pLf
-         ONzEWaI4PGZdsZ+TnmoN9jOprzRi/oRuNlTDdIAwkQBpqYSC7hjSzIvlR0BnkJTWk5nO
-         XTsejInA3niW/gq5DjZ1yl58/dLxnKgtQSUhB/8a88orKu3F5CARyG+Zx2/32vPevNVM
-         UawETk8USxml0b/hYIEtLWP+Q389RgzCwcLEJdVWtVaS7P36o/ZsA5gJFUvCpWbDlDul
-         8+kt06JXQVYuiNPa1Yj/Sl4/IJgB09seC4dkq9703cOfYRbr97/BcLWLvOUyrqYlM9zM
-         4FWg==
-X-Gm-Message-State: APjAAAVmHx2CPVsqP8+QKJsRF5ES+IzD/7GQrH56gag3si2C+sL4it1+
-        o7lDXt+TPDXgbj5U1IBCUH/Waw==
-X-Google-Smtp-Source: APXvYqxV3rctot+0vYRe7IkamEeOz1L1i7WPyibLsi5dvBCjvN0112ivhIa5RgpfbLebu0hWGg8rAw==
-X-Received: by 2002:a19:8c4d:: with SMTP id i13mr3655524lfj.42.1581427301828;
-        Tue, 11 Feb 2020 05:21:41 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id a8sm2166091ljn.74.2020.02.11.05.21.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 05:21:41 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id D76B5100AFB; Tue, 11 Feb 2020 16:21:59 +0300 (+03)
-Date:   Tue, 11 Feb 2020 16:21:59 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v6 12/12] mm: dump_page(): additional diagnostics for
- huge pinned pages
-Message-ID: <20200211132159.pii2x5pssifemgaz@box>
-References: <20200211001536.1027652-1-jhubbard@nvidia.com>
- <20200211001536.1027652-13-jhubbard@nvidia.com>
+        Tue, 11 Feb 2020 08:22:28 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j1VUW-0000Dj-SZ; Tue, 11 Feb 2020 14:22:16 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7124D1013B2; Tue, 11 Feb 2020 14:22:16 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v2 3/6] kvm: x86: Emulate split-lock access as a write
+In-Reply-To: <95d29a81-62d5-f5b6-0eb6-9d002c0bba23@redhat.com>
+References: <20200203151608.28053-1-xiaoyao.li@intel.com> <20200203151608.28053-4-xiaoyao.li@intel.com> <95d29a81-62d5-f5b6-0eb6-9d002c0bba23@redhat.com>
+Date:   Tue, 11 Feb 2020 14:22:16 +0100
+Message-ID: <878sl945tj.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211001536.1027652-13-jhubbard@nvidia.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:15:36PM -0800, John Hubbard wrote:
-> As part of pin_user_pages() and related API calls, pages are
-> "dma-pinned". For the case of compound pages of order > 1, the per-page
-> accounting of dma pins is accomplished via the 3rd struct page in the
-> compound page. In order to support debugging of any pin_user_pages()-
-> related problems, enhance dump_page() so as to report the pin count
-> in that case.
-> 
-> Documentation/core-api/pin_user_pages.rst is also updated accordingly.
-> 
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  Documentation/core-api/pin_user_pages.rst |  7 +++++++
->  mm/debug.c                                | 21 ++++++++++++++++-----
->  2 files changed, 23 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core-api/pin_user_pages.rst
-> index 5c8a5f89756b..2e939ff10b86 100644
-> --- a/Documentation/core-api/pin_user_pages.rst
-> +++ b/Documentation/core-api/pin_user_pages.rst
-> @@ -238,6 +238,13 @@ long-term [R]DMA pins in place, or during pin/unpin transitions.
->  (...unless it was already out of balance due to a long-term RDMA pin being in
->  place.)
->  
-> +Other diagnostics
-> +=================
-> +
-> +dump_page() has been enhanced slightly, to handle these new counting fields, and
-> +to better report on compound pages in general. Specifically, for compound pages
-> +with order > 1, the exact (hpage_pinned_refcount) pincount is reported.
-> +
->  References
->  ==========
->  
-> diff --git a/mm/debug.c b/mm/debug.c
-> index f5ffb0784559..2189357f0987 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -85,11 +85,22 @@ void __dump_page(struct page *page, const char *reason)
->  	mapcount = PageSlab(head) ? 0 : page_mapcount(page);
->  
->  	if (compound)
-> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
-> -			"index:%#lx head:%px order:%u compound_mapcount:%d\n",
-> -			page, page_ref_count(head), mapcount,
-> -			mapping, page_to_pgoff(page), head,
-> -			compound_order(head), compound_mapcount(page));
-> +		if (hpage_pincount_available(page)) {
-> +			pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
-> +				"index:%#lx head:%px order:%u "
-> +				"compound_mapcount:%d compound_pincount:%d\n",
-> +				page, page_ref_count(head), mapcount,
-> +				mapping, page_to_pgoff(page), head,
-> +				compound_order(head), compound_mapcount(page),
-> +				compound_pincount(page));
-> +		} else {
-> +			pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
-> +				"index:%#lx head:%px order:%u "
-> +				"compound_mapcount:%d\n",
-> +				page, page_ref_count(head), mapcount,
-> +				mapping, page_to_pgoff(page), head,
-> +				compound_order(head), compound_mapcount(page));
-> +		}
+Paolo Bonzini <pbonzini@redhat.com> writes:
+> On 03/02/20 16:16, Xiaoyao Li wrote:
+>> A sane guest should never tigger emulation on a split-lock access, but
+>> it cannot prevent malicous guest from doing this. So just emulating the
+>> access as a write if it's a split-lock access to avoid malicous guest
+>> polluting the kernel log.
+>
+> Saying that anything doing a split lock access is malicious makes little
+> sense.
 
-Have you considered using pr_cont() here. I guess it would be easier to
-read.
+Correct, but we also have to accept, that split lock access can be used
+in a malicious way, aka. DoS.
 
-You can use my Ack anyway.
+> Split lock detection is essentially a debugging feature, there's a
+> reason why the MSR is called "TEST_CTL".  So you don't want to make the
 
+The fact that it ended up in MSR_TEST_CTL does not say anything. That's
+where they it ended up to be as it was hastily cobbled together for
+whatever reason.
 
->  	else
->  		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p index:%#lx\n",
->  			page, page_ref_count(page), mapcount,
-> -- 
-> 2.25.0
-> 
+Thanks,
 
--- 
- Kirill A. Shutemov
+        tglx
