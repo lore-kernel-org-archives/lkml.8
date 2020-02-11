@@ -2,112 +2,99 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBF8C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FBDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD32E2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13902173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581447978;
+	bh=nrvRIWnQUnk1P/L5m9G2XIN8KKI3HWQAciY5bRTbzJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LyoJQ8BLPRawTWIHt42KuPUejXEyePt/GBqifvRtaz0Ch72E/jE8cuZIxgmXsy+bo
+	 SenUoLDR24wM8ozm33ON8gLGa9/ckkQR1hmcNEJG/uBEPtFqZe45FSg6TytYXiUOHt
+	 Ot7o+Xm+sHxBgjTTK2D0qb5kFDR5hEJm6L6mE8Ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbgBKTGE (ORCPT
+        id S1731441AbgBKTGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:06:04 -0500
-Received: from shelob.surriel.com ([96.67.55.147]:58556 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728503AbgBKTGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:06:03 -0500
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1j1ar4-0001St-CT; Tue, 11 Feb 2020 14:05:54 -0500
-Message-ID: <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-From:   Rik van Riel <riel@surriel.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
-Date:   Tue, 11 Feb 2020 14:05:38 -0500
-In-Reply-To: <20200211175507.178100-1-hannes@cmpxchg.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-be8J/gfsysm0dy6l7psF"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Tue, 11 Feb 2020 14:06:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:52708 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728503AbgBKTGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:06:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 447741FB;
+        Tue, 11 Feb 2020 11:06:16 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD8913F68F;
+        Tue, 11 Feb 2020 11:06:15 -0800 (PST)
+Date:   Tue, 11 Feb 2020 19:06:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, mikko.mutanen@fi.rohmeurope.com,
+        markus.laine@fi.rohmeurope.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
+Message-ID: <20200211190614.GP4543@sirena.org.uk>
+References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+ <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ftQmbtOmUf2cr8rB"
+Content-Disposition: inline
+In-Reply-To: <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: Hire the morally handicapped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-be8J/gfsysm0dy6l7psF
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--ftQmbtOmUf2cr8rB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 2020-02-11 at 12:55 -0500, Johannes Weiner wrote:
-> The VFS inode shrinker is currently allowed to reclaim inodes with
-> populated page cache. As a result it can drop gigabytes of hot and
-> active page cache on the floor without consulting the VM (recorded as
-> "inodesteal" events in /proc/vmstat).
->=20
-> This causes real problems in practice. Consider for example how the
-> VM
-> would cache a source tree, such as the Linux git tree. As large parts
-> of the checked out files and the object database are accessed
-> repeatedly, the page cache holding this data gets moved to the active
-> list, where it's fully (and indefinitely) insulated from one-off
-> cache
-> moving through the inactive list.
+On Mon, Feb 10, 2020 at 02:13:13PM +0200, Matti Vaittinen wrote:
 
-> This behavior of invalidating page cache from the inode shrinker goes
-> back to even before the git import of the kernel tree. It may have
-> been less noticeable when the VM itself didn't have real workingset
-> protection, and floods of one-off cache would push out any active
-> cache over time anyway. But the VM has come a long way since then and
-> the inode shrinker is now actively subverting its caching strategy.
+> Provide a linear_range helper which can do conversion from user value
+> to register value 'selector'.
 
-Two things come to mind when looking at this:
-- highmem
-- NUMA
+> Mark, this is loosely bound to register handling... Do you think
+> the regmap could host these helpers?
 
-IIRC one of the reasons reclaim is done in this way is
-because a page cache page in one area of memory (highmem,
-or a NUMA node) can end up pinning inode slab memory in
-another memory area (normal zone, other NUMA node).
+There's no real tie to regmap here, something like this could quite
+happily be used by memory mapped devices where regmap has limited uses
+and would be a lot to pull in.  A separate library would probably make
+more sense.  Not sure how many users there would be outside of power
+related stuff, I don't recall seeing the pattern elsewhere.
 
-I do not know how much of a concern that still is nowadays,
-but it seemed something worth bringing up.
+Note also that we already have quite extensive helpers for this sort of
+stuff in the regulator API which I sense may have been involved in this
+implementation and to an extent in ALSA which takes a different approach
+with TLVs since it baked selectors directly into the ABI.
 
---=20
-All Rights Reversed.
-
---=-be8J/gfsysm0dy6l7psF
+--ftQmbtOmUf2cr8rB
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5C+wIACgkQznnekoTE
-3oO/IQgAl8ZKBW1n3o9BCqwLSqcu66jPS/q2dziIacDoXS3zW7ME3LAqluQa3Qen
-cN2+lPymRfObV9cUMHBd5Q8lZSPu4ABn/Vgp5I37pyA9WOgfC3yLVWvgbWIXn40u
-Rnl9TQn6TIsvZTY/3VD3MYrbry3Q87wrOrrUyRzeL7kZQ3s6njARKXrN44yN+ABf
-DirTGAH3PeBMd+JZNVT3yAGcp3EW1Oe2Fda99orpAh/kD7dKK1Gat/s2k0AwHvZz
-o3zhYqLbIi+4cNGj/g234KsMJpEfRwjZxVcsYaenm3qaWR4arNYV/5+M0lYsRNYK
-8YRHaOQR5GDctvip88bDvdThWfDplw==
-=XJG5
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5C+yUACgkQJNaLcl1U
+h9BvKAf/RRzCbi0uxTdR1wgKG+fIeGPs3TkKagNkbWs4xD+Ppm3RpSu7lGNVDe2P
+pNzxz4qP/9Q46Dm6iRplC5CsAARbYKjkflALvQ1TvuZB+vss5jc/9ARdOeKpRuhJ
+T9kFP6CfRPh5JgDPwqqk/lUhe9fe5Ta26uoegdG9wZsn8J/vW5pnY7EDUkV4axPt
+43zEvmzeyYnSBMARnvl9jdj4ysDEh6YpGy/lKGV9wvUMN8JmwtuEqbXgrtrVFzBd
+dS12KPckixezMm7VwMrcZ9ain+W5knJt1yh/fjnBCqjd73rsWvsD8ijNNn7U0wPR
+NdkkyrqpvCiXu7Om10I9uS2DhFOfYg==
+=hzV/
 -----END PGP SIGNATURE-----
 
---=-be8J/gfsysm0dy6l7psF--
-
+--ftQmbtOmUf2cr8rB--
