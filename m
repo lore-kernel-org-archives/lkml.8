@@ -2,182 +2,147 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20ACC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D344C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7A4206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581423649;
-	bh=9MQTtIlD4MIDKhQisnnow0DKeJ2MXGMRx580MlaZaIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UuCzxTVS3kitYPQeY/xiNvvdfQPRZltckBU9UD7bOBCg3aRvrG91DzJjryFXjzKnz
-	 7pe4BluGMDDaM/GLvsyjU1Cokqx2l4XZz1mI1p/XCUUKKJrlZeGG6AI9xYVRxyfNaL
-	 V2i98c7/CeOrxpsYTsxDMyyBO6gaY0cJrohsafQk=
+	by mail.kernel.org (Postfix) with ESMTP id 222D02082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:22:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LPurnbt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgBKMUt (ORCPT
+        id S1728737AbgBKMWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:20:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728740AbgBKMUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:20:47 -0500
-Received: from localhost (unknown [209.37.97.194])
+        Tue, 11 Feb 2020 07:22:07 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:55024 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgBKMWH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:22:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AOoahJaa0XQu0z17x8QpOsf5GIY7G1WYeDzmVVRXe4s=; b=LPurnbt4hKOaHJYBtMUk8/wcJx
+        X8ovDyQARSYDbWUZ2izxu5zCWRpxlH9SJut8b7ZfVoXnlhiHvjswkBNlEPtvKqXFwApn7G3K4SsC4
+        86dG6z/4nXGTjgiMEr9JogJ1jqeDxShdmsVHmIDg0xrO0rFbNta5CnNRYdurHGqQO/AIwGDOBE+k5
+        KEZ1SsqJ7JehS2hUOAZxbjltuUbKW0Ry6VRGEMZp/MYprPKzKb2FrIZ7Hgni5+nvj+cLk7bsOvn6l
+        S00k5P1uO7FzhLMzfQklnBgNy4OXuVPbcd2996wWiqxjWZKsYG4jlukl5FMTQEg+k4VKfDLvyv6is
+        oske3OsA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1UXb-0002yd-19; Tue, 11 Feb 2020 12:21:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A6620842;
-        Tue, 11 Feb 2020 12:20:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581423646;
-        bh=9MQTtIlD4MIDKhQisnnow0DKeJ2MXGMRx580MlaZaIg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BF7RRqQik5KJN+K8KXG2DuHNLQDE1XEYtgXgqssdDG1EjFhReLYHCYhEJIXLTrmUQ
-         nHs0HSHSrGJE2r9CIRcoYMW9wBKqCBEI242Taz7XSpkG52BA9Im+QE//gxX9KWlTH1
-         qWWwuZunfe9R3doIQ1WNN8hdGF0Rq+IZoU0tkiKY=
-Date:   Tue, 11 Feb 2020 04:20:46 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gaurav Kohli <gkohli@codeaurora.org>
-Cc:     akpm@linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        linux-arm-msm@vger.kernel.org, neeraju@codeaurora.org
-Subject: Re: Query: Regarding Notifier chain callback debugging or profiling
-Message-ID: <20200211122046.GE1856500@kroah.com>
-References: <82d5b63e-4ae6-fb5f-8a1c-2d5755db2638@codeaurora.org>
- <6e077b43-6c9e-3f4e-e079-db438e36a4eb@codeaurora.org>
- <20200210210626.GA1373304@kroah.com>
- <9d3206f9-5554-1f1d-7ee0-61fdcdf3070e@codeaurora.org>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4C1FB300446;
+        Tue, 11 Feb 2020 13:19:32 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C91ED2B88D73A; Tue, 11 Feb 2020 13:21:20 +0100 (CET)
+Date:   Tue, 11 Feb 2020 13:21:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [PATCH] tracing/perf: Move rcu_irq_enter/exit_irqson() to perf
+ trace point hook
+Message-ID: <20200211122120.GM14914@hirez.programming.kicks-ass.net>
+References: <20200210170643.3544795d@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9d3206f9-5554-1f1d-7ee0-61fdcdf3070e@codeaurora.org>
+In-Reply-To: <20200210170643.3544795d@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 10:16:03AM +0530, Gaurav Kohli wrote:
-> 
-> 
-> On 2/11/2020 2:36 AM, Greg KH wrote:
-> > On Mon, Feb 10, 2020 at 05:26:16PM +0530, Gaurav Kohli wrote:
-> > > Hi,
-> > > 
-> > > In Linux kernel, everywhere we are using notification chains to notify for
-> > > any kernel events, But we don't have any debugging or profiling mechanism to
-> > > know which callback is taking time or currently we are stuck on which call
-> > > back(without dumps it is difficult to say for last problem)
-> > 
-> > Callbacks are a mess, I agree.
-> > 
-> > > Below are the few ways, which we can implement to profile callback on need
-> > > basis:
-> > > 
-> > > 1) Use trace event before and after callback:
-> > > 
-> > > static int notifier_call_chain(struct notifier_block **nl,
-> > >                                 unsigned long val, void *v,
-> > >                                 int nr_to_call, int *nr_calls)
-> > > {
-> > >          int ret = NOTIFY_DONE;
-> > >          struct notifier_block *nb, *next_nb;
-> > > 
-> > > 
-> > > +		trace_event for entry of callback
-> > >                  ret = nb->notifier_call(nb, val, v);
-> > > +		trace_event for exit of callback
-> > 
-> > Ick.
-> > 
-> > >          }
-> > >          return ret;
-> > > }
-> > > 
-> > > 2) Or use pr_debug instead of trace_event
-> > > 
-> > > 3) Both of the above approach has certain problems, like it will dump
-> > > callback for each notifier chain, which might flood trace buffer or dmesg.
-> > > 
-> > > So we can use bool variable to control that and dump the required
-> > > notification chain only.
-> > > 
-> > > Some thing like below we can use:
-> > > 
-> > >   struct srcu_notifier_head {
-> > >          struct mutex mutex;
-> > >          struct srcu_struct srcu;
-> > >          struct notifier_block __rcu *head;
-> > > +       bool debug_callback;
-> > >   };
-> > > 
-> > > 
-> > >   static int notifier_call_chain(struct notifier_block **nl,
-> > >                                 unsigned long val, void *v,
-> > > -                              int nr_to_call, int *nr_calls)
-> > > +                              int nr_to_call, int *nr_calls, bool
-> > > debug_callback)
-> > >   {
-> > >          int ret = NOTIFY_DONE;
-> > >          struct notifier_block *nb, *next_nb;
-> > > @@ -526,6 +526,7 @@ void srcu_init_notifier_head(struct srcu_notifier_head
-> > > *nh)
-> > >          if (init_srcu_struct(&nh->srcu) < 0)
-> > >                  BUG();
-> > >          nh->head = NULL;
-> > > +       nh->debug_callback = false; -> by default it would be false for
-> > > every notifier chain.
-> > > 
-> > > 4) we can also think of something pre and post function, before and after
-> > > each callback, And we can enable only for those who wants to profile.
-> > > 
-> > > Please let us what approach we can use, or please suggest some debugging
-> > > mechanism for the same.
-> > 
-> > Why not just pay attention to the specific notifier you want?  Trace
-> > when the specific blocking_notifier_call_chain() is called.
-> > 
-> > What specific notifier call chain is causing you problems that you need
-> > to debug?
-> 
-> Thanks Greg for the reply.
-> I agree, we can trace specific notifier chain, but that is very hacky(we
-> have to add debug code here and there when problems comes)
-> 
-> We are using lot of SRCU notifier callchain to notify clients for events,
-> And if we have something generic debugging mechanism, we just have to switch
-> on for that particular client for initial testing phase.
+On Mon, Feb 10, 2020 at 05:06:43PM -0500, Steven Rostedt wrote:
+> diff --git a/include/trace/perf.h b/include/trace/perf.h
+> index dbc6c74defc3..1c94ce0cd4e2 100644
+> --- a/include/trace/perf.h
+> +++ b/include/trace/perf.h
+> @@ -39,17 +39,27 @@ perf_trace_##call(void *__data, proto)					\
+>  	u64 __count = 1;						\
+>  	struct task_struct *__task = NULL;				\
+>  	struct hlist_head *head;					\
+> +	bool rcu_watching;						\
+>  	int __entry_size;						\
+>  	int __data_size;						\
+>  	int rctx;							\
+>  									\
+> +	rcu_watching = rcu_is_watching();				\
+> +									\
+>  	__data_size = trace_event_get_offsets_##call(&__data_offsets, args); \
+>  									\
+> +	if (!rcu_watching) {						\
+> +		/* Can not use RCU if rcu is not watching and in NMI */	\
+> +		if (in_nmi())						\
+> +			return;						\
+> +		rcu_irq_enter_irqson();					\
+> +	}								\
+> +									\
+>  	head = this_cpu_ptr(event_call->perf_events);			\
+>  	if (!bpf_prog_array_valid(event_call) &&			\
+>  	    __builtin_constant_p(!__task) && !__task &&			\
+>  	    hlist_empty(head))						\
+> -		return;							\
+> +		goto out;						\
+>  									\
+>  	__entry_size = ALIGN(__data_size + sizeof(*entry) + sizeof(u32),\
+>  			     sizeof(u64));				\
+> @@ -57,7 +67,7 @@ perf_trace_##call(void *__data, proto)					\
+>  									\
+>  	entry = perf_trace_buf_alloc(__entry_size, &__regs, &rctx);	\
+>  	if (!entry)							\
+> -		return;							\
+> +		goto out;						\
+>  									\
+>  	perf_fetch_caller_regs(__regs);					\
+>  									\
+> @@ -68,6 +78,9 @@ perf_trace_##call(void *__data, proto)					\
+>  	perf_trace_run_bpf_submit(entry, __entry_size, rctx,		\
+>  				  event_call, __count, __regs,		\
+>  				  head, __task);			\
+> +out:									\
+> +	if (!rcu_watching)						\
+> +		rcu_irq_exit_irqson();					\
+>  }
 
-Why are you using SRCU notifier chains for events?
+It is probably okay to move that into perf_tp_event(), then this:
 
-What are you using them for like this, what in-kernel code is this so
-that I can see what you are doing?
+>  /*
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 1694a6b57ad8..3e6f07b62515 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -719,6 +719,7 @@ void rcu_irq_exit_irqson(void)
+>  	rcu_irq_exit();
+>  	local_irq_restore(flags);
+>  }
+> +EXPORT_SYMBOL_GPL(rcu_irq_exit_irqson);
+>  
+>  /*
+>   * Exit an RCU extended quiescent state, which can be either the
+> @@ -890,6 +891,7 @@ void rcu_irq_enter_irqson(void)
+>  	rcu_irq_enter();
+>  	local_irq_restore(flags);
+>  }
+> +EXPORT_SYMBOL_GPL(rcu_irq_enter_irqson);
+>  
+>  /*
+>   * If any sort of urgency was applied to the current CPU (for example,
 
-That feels like a very slow way of doing things, especially given the
-recent changes in compilers due to Spectre issues.
-
-> As mentioned above, if we can come up with something like below then only
-> client has to switch on who wants to debug:
-> >>   struct srcu_notifier_head {
-> >>          struct mutex mutex;
-> >>          struct srcu_struct srcu;
-> >>          struct notifier_block __rcu *head;
-> >> +       bool debug_callback; -> this we can turn on for particular
-> client.
-> >>   };
-> 
-> Right now we don't have any generic way to debug notifier chains, please
-> suggest some approach. On live target, it is difficult to say where
-> notification chain got stuck.
-
-I suggest not using notifier chains for events :)
-
-Seriously, try something local for your specific notifiers first.  It
-should be easy to just add tracing for all of them using ftrace or bpf,
-right?
-
-thanks,
-
-greg k-h
+can go too. Those things really should not be exported.
