@@ -2,86 +2,92 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFE1C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3921C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361DC20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0723206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgBKOcF (ORCPT
+        id S1730197AbgBKOeQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:32:05 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:45505 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729822AbgBKOcF (ORCPT
+        Tue, 11 Feb 2020 09:34:16 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20942 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727818AbgBKOeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:32:05 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 091892800A28D;
-        Tue, 11 Feb 2020 15:32:03 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id B9D48286F3E; Tue, 11 Feb 2020 15:32:02 +0100 (CET)
-Date:   Tue, 11 Feb 2020 15:32:02 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>
-Subject: Re: [PATCH v4 0/3] PCI: pciehp: Do not turn off slot if presence
- comes up after link
-Message-ID: <20200211143202.2sgryye4m234pymq@wunner.de>
-References: <20200211044940.72z4vcgbgxwbc7po@wunner.de>
- <20200211141443.GA204966@google.com>
+        Tue, 11 Feb 2020 09:34:15 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-54-dctIXTQ8O5OXh04oyb3tqA-1; Tue, 11 Feb 2020 14:34:11 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 11 Feb 2020 14:34:11 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 11 Feb 2020 14:34:11 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Xiaoyao Li' <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 3/6] kvm: x86: Emulate split-lock access as a write
+Thread-Topic: [PATCH v2 3/6] kvm: x86: Emulate split-lock access as a write
+Thread-Index: AQHV4OP68X/A1Fe8pUKXUjVj7zr1z6gWDhjw
+Date:   Tue, 11 Feb 2020 14:34:11 +0000
+Message-ID: <973e772012ce4f0f9a689fe33608236a@AcuMS.aculab.com>
+References: <20200203151608.28053-1-xiaoyao.li@intel.com>
+ <20200203151608.28053-4-xiaoyao.li@intel.com>
+ <95d29a81-62d5-f5b6-0eb6-9d002c0bba23@redhat.com>
+ <878sl945tj.fsf@nanos.tec.linutronix.de>
+ <d690c2e3-e9ef-a504-ede3-d0059ec1e0f6@redhat.com>
+ <f6d37da1-ce56-7a11-63d8-32126b76094a@intel.com>
+In-Reply-To: <f6d37da1-ce56-7a11-63d8-32126b76094a@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211141443.GA204966@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-MC-Unique: dctIXTQ8O5OXh04oyb3tqA-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 08:14:44AM -0600, Bjorn Helgaas wrote:
-> I'm a little confused about why pci_hp_initialize()/
-> __pci_hp_initialize()/pci_hp_register()/__pci_hp_register() is such a
-> rat's nest with hotplug drivers using a mix of them.
+From: Xiaoyao Li
+> Sent: 11 February 2020 14:03
+...
+> Alright, I don't know the history of TEST_CTRL, there is a bit 31 in it
+> which means "Disable LOCK# assertion for split locked access" when set.
+> Bit 31 exists for a long period, but linux seems not use it so I guess
+> it may be a testing purpose bit.
 
-This is modeled after device registration, which can be done either
-in two steps (device_initialize() + device_add()) or in 1 step
-(device_register()).
+My brain remembers something about some system just ignoring
+locked accesses for misaligned transfers.
+Trouble is it was probably nearly 30 years ago and there are
+no details coming out of 'long term storage'.
 
-So it's either pci_hp_initialize() + pci_hp_add() or pci_hp_register().
+It might be that some systems I had either set this bit
+or acted as if it was set.
 
-The rationale is provided in the commit message of 51bbf9bee34f
-("PCI: hotplug: Demidlayer registration with the core").
+	David
 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-> Feels like sort of a
-> double-negative situation, too.  Obviously the hardware bit has to be
-> "1 means disabled" to be compatible with previous spec versions, but
-> the code is usually easier to read if we test for something being
-> *enabled*.
-
-It's a similar situation with the "DisINTx" bit in the Command
-register, which, if disabled, is shown as "DisINTx-" in lspci even
-though the more intuitive notion is that INTx is *enabled*.  I think
-you did the right thing by showing it as "IbPresDis-" because it's
-consistent with how it's done elsewhere for similar bits.
-
-Thanks,
-
-Lukas
