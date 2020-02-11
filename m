@@ -2,112 +2,135 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C48CC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6B5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF89206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57752073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H7/LO54H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XB7DUxrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgBKXxn (ORCPT
+        id S1728057AbgBKXyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:53:43 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32997 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgBKXxm (ORCPT
+        Tue, 11 Feb 2020 18:54:10 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55262 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgBKXyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:53:42 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b18so141589otp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:53:40 -0800 (PST)
+        Tue, 11 Feb 2020 18:54:09 -0500
+Received: by mail-pj1-f68.google.com with SMTP id dw13so46273pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:54:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8pO1XQac3lRtY1M/28swyaSfh/76yG4K/A1KWDVLQMc=;
-        b=H7/LO54HPXlaugVHdCUKWXQWNaqDJGRL9AP74RA+bD/0uYm1aIgRD9AZUMJv5rbHXO
-         wa2TRAmOzpCukoY1O7GbT8ai4CWrjPZM3itJtBIsp3Nn3isaCmPTcimOh2zz+sayYYhJ
-         A/CkBQVrCxAm4LLiWttL/NpJabvPU8I5ONb7moY9nbbT8qlyDkVHUdA5qm6HTF3muSjT
-         EdcgHRgAbwNx/xFkJITYP94FV5vyTTADVzqHbeU8z9TOQvYPhWjTGm2cR6juMJADbRVu
-         1NoyZrnwbUSziuV8uMcwwujUEXiZt5lnnObwVAKMTTAe1OIQFmSgpbUu5o1D36oy9RPz
-         nNmw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BDlxFx20QE0gAgkEMA+u4mAwlJYSDizranolCfN6FSU=;
+        b=XB7DUxrOlRWKCxIVzsmwUiozIyPNm+XipqRy+ojNQXQ4il5NSGcySle4DA3copkxR0
+         txpPB/fPke36xIv/qe2phszSj0yMMBhZ7SSIKgC8wlYAX/nwLnydJ9528PktuoKka0Xo
+         FIQk6kwnmb94p+mMQF56OxOJi3mG8ahbOTuU8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8pO1XQac3lRtY1M/28swyaSfh/76yG4K/A1KWDVLQMc=;
-        b=GjoDvFiPUNNQAlVWko3KxBkFItfAoX92ytUUMZ1JYPzWfJmOVWux2/AL/cSeQioGrl
-         61NAEZmG9Hb4hW/L01REsAcZOWQssxchxdGOnDn2cytrnwOzkuupZxC5iRyDFiVRaWh8
-         VfJyvjzFP28nfnFlLLmTzRBfcyY6/grls4ezfN/67ylQqzjFRiBSckN9E2IAVeJ50ORw
-         pkF7nkLXLVY19b3qzXz29xu5gFWAOrkEkGkGwFJtl3f3VOEq/YN082zboZclLx5XGg8w
-         ua6uObRabH9NdzCTVMO8ccfXF9DfwOO7AQTpzLx2OGHZuKJyPknqmADMX+dxJcqUe9mj
-         0NFQ==
-X-Gm-Message-State: APjAAAVR+9DKUSavQPWjnToUTDu3uA3GKtdPDRJWfW2Ew7F3dxc5hSJ7
-        Is57iuO81mMX05vAryIdk3Ou55xlhEiluPw28BtlJQ==
-X-Google-Smtp-Source: APXvYqzsMv9hCvtLadRhB6LojTFq/xvtSEK1cMs76x7vatIdsmihFP0CQRxvF63yk9gOA14rSXjWir+Ykd+lS5oH4XY=
-X-Received: by 2002:a9d:34c:: with SMTP id 70mr138640otv.174.1581465219846;
- Tue, 11 Feb 2020 15:53:39 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BDlxFx20QE0gAgkEMA+u4mAwlJYSDizranolCfN6FSU=;
+        b=rTza/O1v905qRlOGwAmGXuROcs+W/iYSUPp0GvOs0MzoRkjpdRPX0p/0Fuog3K8p+v
+         6sRhr+JRaGs2sf+C25StxmR22yVc8yPeqpEBt8jirgJubivS9jGC/AgBllRWmRTfIARW
+         0V0NP2N1+AwDwJNnudGA/KHDj7Nu9FXGjSNy63rJgfIQI1n/EAUqVxPDWdgIYgAmvQOk
+         maama5OL6ZrEYglTm3XBIRkSOrewv/cuDnmRQ8No0f3Jy47Fav6mjSAqeKoSr+iXJ9cQ
+         9e/gjgFX5W7rvkEm16OJy/8nLCaAnjJZP/eaIGvASTZl0rdn5CClmubYeoJViIS+FtZ2
+         YCmg==
+X-Gm-Message-State: APjAAAVaugeIXrWnsCV/FNKP8T763FCV76FoZEvgB0gw/6Pphsa4U9/i
+        7+trZk8i4YmlJG2W++emBtdzzA==
+X-Google-Smtp-Source: APXvYqwqQSXGq4Fmc5d6MiCNIFPhP1UefR6VzsmHhkS/fi/pcrd5lNid2Jli/7N0q+/799PEFAxbdw==
+X-Received: by 2002:a17:902:708b:: with SMTP id z11mr5645748plk.121.1581465248817;
+        Tue, 11 Feb 2020 15:54:08 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l13sm4513339pjq.23.2020.02.11.15.54.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 15:54:08 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:54:06 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jann Horn <jannh@google.com>,
+        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] selftests/exec: Add READ_IMPLIES_EXEC tests
+Message-ID: <202002111549.CF18B7B3B@keescook>
+References: <20200210193049.64362-1-keescook@chromium.org>
+ <20200210193049.64362-8-keescook@chromium.org>
+ <4f8a5036-dc2a-90ad-5fc8-69560a5dd78e@kernel.org>
+ <202002111124.0A334167@keescook>
+ <c09c345a-786f-25d2-1ee5-65f9cb23db6d@kernel.org>
 MIME-Version: 1.0
-References: <20200207201856.46070-1-bgeffon@google.com> <CAKOZuevHH1pamEKy5n5RLWDP=tHk6_9bR+g3G+HKnqm_srHvrw@mail.gmail.com>
- <CADyq12ySxau=SyyNp6VSbwmvRm6Kq1=Y62wTbQZoEAQ1XaXcuw@mail.gmail.com>
-In-Reply-To: <CADyq12ySxau=SyyNp6VSbwmvRm6Kq1=Y62wTbQZoEAQ1XaXcuw@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 11 Feb 2020 15:53:03 -0800
-Message-ID: <CAKOZuet-vDU=p0HN5904VAmb+BpePPk77R+35cp6eQNL7fJrYg@mail.gmail.com>
-Subject: Re: [PATCH v4] mm: Add MREMAP_DONTUNMAP to mremap().
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c09c345a-786f-25d2-1ee5-65f9cb23db6d@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 3:32 PM Brian Geffon <bgeffon@google.com> wrote:
->
-> Hi Daniel,
->
-> > What about making the
-> > left-behind mapping PROT_NONE? This way, we'll still solve the
-> > address-space race in Lokesh's use case (because even a PROT_NONE
-> > mapping reserves address space) but won't incur any additional commit
-> > until someone calls mprotect(PROT_WRITE) on the left-behind mapping.
->
-> This limits the usefulness of the feature IMO and really is too
-> specific to that one use case, suppose you want to snapshot a memory
-> region to disk without having to stop a thread you can
-> mremap(MREMAP_DONTUNMAP) it to another location and safely write it to
-> disk knowing the faulting thread will be stopped and you can handle it
-> later if it was registered with userfaultfd, if we were to also change
-> it to PROT_NONE that thread would see a SEGV. There are other examples
-> where you can possibly use this flag instead of VM_UFFD_WP, but
-> changing the protections of the mapping prevents you from being able
-> to do this without a funny signal handler dance.
+On Tue, Feb 11, 2020 at 02:06:53PM -0700, shuah wrote:
+> On 2/11/20 12:25 PM, Kees Cook wrote:
+> > On Tue, Feb 11, 2020 at 11:11:21AM -0700, shuah wrote:
+> > > On 2/10/20 12:30 PM, Kees Cook wrote:
+> > > > In order to check the matrix of possible states for handling
+> > > > READ_IMPLIES_EXEC across native, compat, and the state of PT_GNU_STACK,
+> > > > add tests for these execution conditions.
+> > > > 
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > 
+> > > No issues for this to go through tip.
+> > > 
+> > > A few problems to fix first. This fails to compile when 32-bit libraries
+> > > aren't installed. It should fail the 32-bit part and run other checks.
+> > 
+> > Do you mean the Makefile should detect the missing compat build deps and
+> > avoid building them? Testing compat is pretty important to this test, so
+> > it seems like missing the build deps causing the build to fail is the
+> > correct action here. This is likely true for the x86/ selftests too.
+> > 
+> > What would you like this to do?
+> > 
+> 
+> selftests/x86 does this already and runs the dependency check in
+> x86/Makefile.
+> 
+> 
+> check_cc.sh:# check_cc.sh - Helper to test userspace compilation support
+> Makefile:CAN_BUILD_I386 := $(shell ./check_cc.sh $(CC)
+> trivial_32bit_program.c -m32)
+> Makefile:CAN_BUILD_X86_64 := $(shell ./check_cc.sh $(CC)
+> trivial_64bit_program.c)
+> Makefile:CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh $(CC)
+> trivial_program.c -no-pie)
+> 
+> Take a look and see if you can leverage this.
 
-We seem to have identified two use cases which require contradictory
-things. We can handle this with an option. Maybe the new region's
-protection bits should be specified in the flags argument. The most
-general API would accept any set of mmap flags to apply to the
-left-behind region, but it's probably hard to squeeze that
-functionality into the existing API.
+I did before, and it can certainly be done, but their stuff is somewhat
+specific to x86_64/ia32. I'm looking at supporting _all_ compat for any
+64-bit architecture. I can certainly write some similar build tooling,
+but the question I have for you is one of coverage:
+
+If a builder is 64-bit, it needs to be able to produce 32-bit compat
+binaries for testing, otherwise the test is incomplete. (i.e. the tests
+will only be able to test native behavior and not compat). This doesn't
+seem like an "XFAIL" situation to me, and it doesn't seem right to
+silently pass. It seems like the build should explicitly fail because
+the needed prerequisites are missing. Do you instead want me to just
+have it skip building the compat binaries if it can't build them?
+
+-- 
+Kees Cook
