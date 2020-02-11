@@ -2,204 +2,242 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF79C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD3AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960FB20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A4320637
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:15:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Rxb0aqCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgBKNNq (ORCPT
+        id S1728955AbgBKNPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:13:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24390 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728697AbgBKNNq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:13:46 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BCxJBw120214
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:13:45 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u2f08tj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:13:45 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 11 Feb 2020 13:13:43 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Feb 2020 13:13:40 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BDDdAH47906956
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 13:13:39 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1591E52059;
-        Tue, 11 Feb 2020 13:13:39 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.98.183])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BA0D75204E;
-        Tue, 11 Feb 2020 13:13:38 +0000 (GMT)
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
- crashes in KVM guests after reboot
-To:     =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-References: <20200107042401-mutt-send-email-mst@kernel.org>
- <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
- <20200107065434-mutt-send-email-mst@kernel.org>
- <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
- <20200120012724-mutt-send-email-mst@kernel.org>
- <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
- <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
- <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
- <20200206171349-mutt-send-email-mst@kernel.org>
- <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
- <20200207025806-mutt-send-email-mst@kernel.org>
- <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
- <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
- <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
- <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 11 Feb 2020 14:13:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 08:15:08 -0500
+Received: from mail-dm6nam11on2060.outbound.protection.outlook.com ([40.107.223.60]:6226
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727111AbgBKNPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:15:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MGFZdLw4yhAwo7JEI9G6AB/XyRuvF33XPXfWueVhpbm7nTQEeiNu6nf5Al8vrT1R9hbsR1lDTHMB7oGosT4u/UBnzTC/tez9tOzA/9Ltsuw3LP8xKl2rWVbrPQWeO8Ss0Cp1ogypXI6IklPHkNIUt5xhj4vkuZ0spIzoX1LCrp9CcOtFNoQmWt7AcF6b0ikvWdD5vy/Jiw/vfgZunJuAVHZl55+anbWy3bIsS3j9j2+xlXwNpnjcXzVsDc8awl7ZSl4x1aOwpIdtJpnavGDAKlIvplWb+QrgtdQMOvmPl3KCFNMoyFjNrz1wIarvaOiGDJL6m1OAL1ty3gSm3iHCAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PtCyoG3S19+HEBXd1vO0E8dxMwf4RutRwh58bgELnJ8=;
+ b=Qlw+Y5pq3tVB44dv2Lnzhk84agPCc2nb4bajc7FBBi//85wfZ0hAFiRiwv0i1FJugVjm7n+N8sNCVslKKhlpMmfyZuWIYuudXXv8G4IGV47YjgpwO00SfSQZeMjJ1jPjFjTEw7mpIZWVcHdEeoaEq2rWP06r99dT209xd9nwaS7ck98rw/5Q1mo9ceaWvQ6nXNU/BkkerQ/yYB+3nYudkTNQsA+lYwKhpj8ZzsA1cHv4z02oYwyRaK2lvucCFOF6XBq/4XxLMZAzKjWSuT7Qm2F9ybAThbwclndW8j8Kq+HxMqPCCOl5Wlg5g0MPsV73pXUlyIeLElJqhVJAKI1NwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PtCyoG3S19+HEBXd1vO0E8dxMwf4RutRwh58bgELnJ8=;
+ b=Rxb0aqCAik2BxV9jslltG4AyvXi98UTZ27tdpF8aubADqZdmqeRzaBsn7HfH+anQYY3pBfDJymXlvCazKKjSrWNRFDbWvzVUSSU30rRn5aqhnQgaM5RsNIgvPCUrJWF9VKq7n2f2YQqUMxd3qhJRGp+Qf3ryzIvfU17iQTzviTQ=
+Received: from MWHPR1201CA0011.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::21) by DM6PR12MB3881.namprd12.prod.outlook.com
+ (2603:10b6:5:148::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.28; Tue, 11 Feb
+ 2020 13:15:05 +0000
+Received: from DM6NAM11FT063.eop-nam11.prod.protection.outlook.com
+ (2a01:111:f400:7eaa::203) by MWHPR1201CA0011.outlook.office365.com
+ (2603:10b6:301:4a::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
+ Transport; Tue, 11 Feb 2020 13:15:05 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ DM6NAM11FT063.mail.protection.outlook.com (10.13.172.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.2707.21 via Frontend Transport; Tue, 11 Feb 2020 13:15:05 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 11 Feb
+ 2020 07:15:04 -0600
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 11 Feb
+ 2020 07:15:04 -0600
+Received: from vishnu-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
+ via Frontend Transport; Tue, 11 Feb 2020 07:15:00 -0600
+From:   Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     <Alexander.Deucher@amd.com>, <broonie@kernel.org>,
+        "Ravulapati Vishnu vardhan rao" <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ASoC: amd: Buffer Size instead of MAX Buffer
+Date:   Tue, 11 Feb 2020 18:42:28 +0530
+Message-ID: <1581426768-8937-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021113-0016-0000-0000-000002E5D512
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021113-0017-0000-0000-00003348CB1F
-Message-Id: <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_03:2020-02-10,2020-02-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=2
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110100
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(428003)(189003)(199004)(81156014)(81166006)(109986005)(426003)(36756003)(86362001)(8936002)(316002)(7696005)(6666004)(70206006)(70586007)(54906003)(8676002)(186003)(356004)(2616005)(478600001)(4326008)(7416002)(26005)(336012)(2906002)(5660300002)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3881;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a4185146-1515-4b1c-2536-08d7aef468e0
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3881:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3881B793BCDFD9393B50EF75E7180@DM6PR12MB3881.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-Forefront-PRVS: 0310C78181
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 95ZTNplCBs7/PodsaTaMYQ+A3MKThoGTaGKBTiFu1ZK8zdTZuhQ1XdiBmM4dlUkXF40DEGZKV1+/MJI1+jTKWd80u8prqrF9x+xdApbWdh4S081JMzOUCU31H2a8RULIqR7eNvf32W2LzSEqGscLZdsCZ5J1lWAdASr3R2f7Ta0iIR0vKU+bgvrJh1MJKWRhEDSZK1TOaO0CxJyyqxOvWBbORuoC2q9/7Wzp+2vUxzDOV77zySPUZ2UouBHti1be/NxWsPY63Wpi6OJCvZw7iqq3Pol2o3KPwlJf/+TbEZTy0YTvBxMGYPs20SU4X2BOxn5BkNHm44buWIjTmpWhocX24DrfaSvWv1GD3NNcItSSEeIOsVPynCsiEO+kfSZlH1U2UmdVk+zvhSl2XFHdQLWZb7YTAx84W60ajX9VlP/lzZK4IVhNW60XebL/j1aO22GEBj518HVsTXA3ey9DvjDB0fNrfuS+1o9dgWkr+oM=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 13:15:05.0014
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4185146-1515-4b1c-2536-08d7aef468e0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3881
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Because of MAX BUFFER size in register,when user/app give small
+buffer size produces noise of old data in buffer.
+This patch rectifies this noise when using different
+buffer sizes less than MAX BUFFER.
 
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+---
+ sound/soc/amd/raven/acp3x-i2s.c     | 8 ++++++++
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 7 +------
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-On 11.02.20 14:04, Eugenio Pérez wrote:
-> On Mon, 2020-02-10 at 12:01 +0100, Christian Borntraeger wrote:
->>
->> On 10.02.20 10:47, Eugenio Perez Martin wrote:
->>> Hi Christian.
->>>
->>> I'm not able to reproduce the failure with eccb852f1fe6bede630e2e4f1a121a81e34354ab commit. Could you add more data?
->>> Your configuration (libvirt or qemu line), and host's dmesg output if any?
->>>
->>> Thanks!
->>
->> If it was not obvious, this is on s390x, a big endian system.
->>
-> 
-> Hi Christian. Thank you very much for your fast responses.
-> 
-> Could you try this patch on top of eccb852f1fe6bede630e2e4f1a121a81e34354ab?
-
-I still get 
-[   43.665145] Guest moved used index from 0 to 289
-after some reboots.
-
-
-> 
-> Thanks!
-> 
-> From 71d0f9108a18aa894cc0c0c1c7efbad39f465a27 Mon Sep 17 00:00:00 2001
-> From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <
-> eperezma@redhat.com>
-> Date: Tue, 11 Feb 2020 13:19:10 +0100
-> Subject: [PATCH] vhost: fix return value of vhost_get_vq_desc
-> 
-> Before of the batch change, it was the chain's head. Need to keep that
-> way or we will not be able to free a chain of descriptors.
-> 
-> Fixes: eccb852f1fe6 ("vhost: batching fetches")
-> ---
->  drivers/vhost/vhost.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index b5a51b1f2e79..fc422c3e5c08 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -2409,12 +2409,11 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
->  			*out_num += ret;
->  		}
->  
-> -		ret = desc->id;
-> -
->  		if (!(desc->flags & VRING_DESC_F_NEXT))
->  			break;
->  	}
->  
-> +	ret = vq->descs[vq->first_desc].id;
->  	vq->first_desc = i + 1;
->  
->  	return ret;
-> 
+diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
+index 31cd400..91a3881 100644
+--- a/sound/soc/amd/raven/acp3x-i2s.c
++++ b/sound/soc/amd/raven/acp3x-i2s.c
+@@ -170,6 +170,7 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 	struct snd_soc_card *card;
+ 	struct acp3x_platform_info *pinfo;
+ 	u32 ret, val, period_bytes, reg_val, ier_val, water_val;
++	u32 buf_size, buf_reg;
+ 
+ 	prtd = substream->private_data;
+ 	rtd = substream->runtime->private_data;
+@@ -183,6 +184,8 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 	}
+ 	period_bytes = frames_to_bytes(substream->runtime,
+ 			substream->runtime->period_size);
++	buf_size = frames_to_bytes(substream->runtime,
++			substream->runtime->buffer_size);
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+@@ -196,6 +199,7 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 					mmACP_BT_TX_INTR_WATERMARK_SIZE;
+ 				reg_val = mmACP_BTTDM_ITER;
+ 				ier_val = mmACP_BTTDM_IER;
++				buf_reg = mmACP_BT_TX_RINGBUFSIZE;
+ 				break;
+ 			case I2S_SP_INSTANCE:
+ 			default:
+@@ -203,6 +207,7 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 					mmACP_I2S_TX_INTR_WATERMARK_SIZE;
+ 				reg_val = mmACP_I2STDM_ITER;
+ 				ier_val = mmACP_I2STDM_IER;
++				buf_reg = mmACP_I2S_TX_RINGBUFSIZE;
+ 			}
+ 		} else {
+ 			switch (rtd->i2s_instance) {
+@@ -211,6 +216,7 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 					mmACP_BT_RX_INTR_WATERMARK_SIZE;
+ 				reg_val = mmACP_BTTDM_IRER;
+ 				ier_val = mmACP_BTTDM_IER;
++				buf_reg = mmACP_BT_RX_RINGBUFSIZE;
+ 				break;
+ 			case I2S_SP_INSTANCE:
+ 			default:
+@@ -218,9 +224,11 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
+ 					mmACP_I2S_RX_INTR_WATERMARK_SIZE;
+ 				reg_val = mmACP_I2STDM_IRER;
+ 				ier_val = mmACP_I2STDM_IER;
++				buf_reg = mmACP_I2S_RX_RINGBUFSIZE;
+ 			}
+ 		}
+ 		rv_writel(period_bytes, rtd->acp3x_base + water_val);
++		rv_writel(buf_size, rtd->acp3x_base + buf_reg);
+ 		val = rv_readl(rtd->acp3x_base + reg_val);
+ 		val = val | BIT(0);
+ 		rv_writel(val, rtd->acp3x_base + reg_val);
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index aecc3c0..d62c0d9 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -110,7 +110,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ {
+ 	u16 page_idx;
+ 	u32 low, high, val, acp_fifo_addr, reg_fifo_addr;
+-	u32 reg_ringbuf_size, reg_dma_size, reg_fifo_size;
++	u32 reg_dma_size, reg_fifo_size;
+ 	dma_addr_t addr;
+ 
+ 	addr = rtd->dma_addr;
+@@ -157,7 +157,6 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		switch (rtd->i2s_instance) {
+ 		case I2S_BT_INSTANCE:
+-			reg_ringbuf_size = mmACP_BT_TX_RINGBUFSIZE;
+ 			reg_dma_size = mmACP_BT_TX_DMA_SIZE;
+ 			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+ 						BT_PB_FIFO_ADDR_OFFSET;
+@@ -169,7 +168,6 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 
+ 		case I2S_SP_INSTANCE:
+ 		default:
+-			reg_ringbuf_size = mmACP_I2S_TX_RINGBUFSIZE;
+ 			reg_dma_size = mmACP_I2S_TX_DMA_SIZE;
+ 			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+ 						SP_PB_FIFO_ADDR_OFFSET;
+@@ -181,7 +179,6 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 	} else {
+ 		switch (rtd->i2s_instance) {
+ 		case I2S_BT_INSTANCE:
+-			reg_ringbuf_size = mmACP_BT_RX_RINGBUFSIZE;
+ 			reg_dma_size = mmACP_BT_RX_DMA_SIZE;
+ 			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+ 						BT_CAPT_FIFO_ADDR_OFFSET;
+@@ -193,7 +190,6 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 
+ 		case I2S_SP_INSTANCE:
+ 		default:
+-			reg_ringbuf_size = mmACP_I2S_RX_RINGBUFSIZE;
+ 			reg_dma_size = mmACP_I2S_RX_DMA_SIZE;
+ 			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
+ 						SP_CAPT_FIFO_ADDR_OFFSET;
+@@ -203,7 +199,6 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 				rtd->acp3x_base + mmACP_I2S_RX_RINGBUFADDR);
+ 		}
+ 	}
+-	rv_writel(MAX_BUFFER, rtd->acp3x_base + reg_ringbuf_size);
+ 	rv_writel(DMA_SIZE, rtd->acp3x_base + reg_dma_size);
+ 	rv_writel(acp_fifo_addr, rtd->acp3x_base + reg_fifo_addr);
+ 	rv_writel(FIFO_SIZE, rtd->acp3x_base + reg_fifo_size);
+-- 
+2.7.4
 
