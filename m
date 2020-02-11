@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE06BC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084A9C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958722082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07FC2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436318;
-	bh=GO35Wl/Exr8/93NoO5ex5866PISS7aichWnVTvHaP9U=;
+	s=default; t=1581436320;
+	bh=H1UWUvPE11Tey7z8N4ZJJyV1JY6+1Xqezzb0Ch3AroQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=I5YCqq3OqVqVQyYwNyV4M4P7BShxMAlzMQiqrctHhcwHdaZZaaEYCmbpxv4dcO/aU
-	 SvZgtPSIEvtOkPF09kUAyzjn1zz2oYNw6sJMqP9ZfWt1NUQANOEyhMk9aOhu/ScnAq
-	 n1plKM65zKZhA+NhxA9J2cN5CwQQ8o9L+HKJ/8ig=
+	b=FV2h2UAPTeMpmJDRFSkq8bKoep9G7LWOzFEKXYVwSvOxnlT+hOmXBm+HhiFPVKTVv
+	 s/q3VNylEoUmdEPRvjGlaMjKIXv22grAUMt3vVru7a3GAWQOScW8GKZ0/zEIXm+mkq
+	 7WB6Y3PSW2ZRqAmZCNlkiPThoObTJGS4wXOgSGW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbgBKPv6 (ORCPT
+        id S1730691AbgBKPwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:51:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:48972 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:52:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:48988 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbgBKPvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:51:55 -0500
+        id S1730680AbgBKPv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:51:58 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D6E113A1;
-        Tue, 11 Feb 2020 07:51:55 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF54330E;
+        Tue, 11 Feb 2020 07:51:57 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0287F3F68E;
-        Tue, 11 Feb 2020 07:51:54 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:51:53 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53B8D3F68E;
+        Tue, 11 Feb 2020 07:51:57 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:51:55 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Alok Chauhan <alokc@codeaurora.org>,
@@ -44,9 +44,9 @@ Cc:     Alok Chauhan <alokc@codeaurora.org>,
         Girish Mahadevan <girishm@codeaurora.org>,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-geni-qcom: Grow a dev pointer to simplify code" to the spi tree
-In-Reply-To: <20200204191206.97036-3-swboyd@chromium.org>
-Message-Id: <applied-20200204191206.97036-3-swboyd@chromium.org>
+Subject: Applied "spi: spi-geni-qcom: Let firmware specify irq trigger flags" to the spi tree
+In-Reply-To: <20200204191206.97036-2-swboyd@chromium.org>
+Message-Id: <applied-20200204191206.97036-2-swboyd@chromium.org>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,7 +55,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-geni-qcom: Grow a dev pointer to simplify code
+   spi: spi-geni-qcom: Let firmware specify irq trigger flags
 
 has been applied to the spi tree at
 
@@ -80,15 +80,14 @@ to this mail.
 Thanks,
 Mark
 
-From ea1e5b3354b1610ac16a780535fbdabfda9e6912 Mon Sep 17 00:00:00 2001
+From ece9ef3b60cbc36237138af456b236d3d1d9b771 Mon Sep 17 00:00:00 2001
 From: Stephen Boyd <swboyd@chromium.org>
-Date: Tue, 4 Feb 2020 11:12:05 -0800
-Subject: [PATCH] spi: spi-geni-qcom: Grow a dev pointer to simplify code
+Date: Tue, 4 Feb 2020 11:12:04 -0800
+Subject: [PATCH] spi: spi-geni-qcom: Let firmware specify irq trigger flags
 
-Some lines are long here. Use a struct dev pointer to shorten lines and
-simplify code. The clk_get() call can fail because of EPROBE_DEFER
-problems too, so just remove the error print message because it isn't
-useful.
+We don't need to force IRQF_TRIGGER_HIGH here as the DT or ACPI tables
+should take care of this for us. Just use 0 instead so that we use the
+flags from the firmware.
 
 Cc: Girish Mahadevan <girishm@codeaurora.org>
 Cc: Dilip Kota <dkota@codeaurora.org>
@@ -96,85 +95,26 @@ Cc: Alok Chauhan <alokc@codeaurora.org>
 Cc: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200204191206.97036-3-swboyd@chromium.org
+Link: https://lore.kernel.org/r/20200204191206.97036-2-swboyd@chromium.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-geni-qcom.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/spi/spi-geni-qcom.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index 46e501fc87f3..f0ca7f5ae714 100644
+index 6f3d64a1a2b3..46e501fc87f3 100644
 --- a/drivers/spi/spi-geni-qcom.c
 +++ b/drivers/spi/spi-geni-qcom.c
-@@ -536,6 +536,7 @@ static int spi_geni_probe(struct platform_device *pdev)
- 	struct spi_geni_master *mas;
- 	void __iomem *base;
- 	struct clk *clk;
-+	struct device *dev = &pdev->dev;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
-@@ -545,28 +546,25 @@ static int spi_geni_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	clk = devm_clk_get(&pdev->dev, "se");
--	if (IS_ERR(clk)) {
--		dev_err(&pdev->dev, "Err getting SE Core clk %ld\n",
--						PTR_ERR(clk));
-+	clk = devm_clk_get(dev, "se");
-+	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
--	}
- 
--	spi = spi_alloc_master(&pdev->dev, sizeof(*mas));
-+	spi = spi_alloc_master(dev, sizeof(*mas));
- 	if (!spi)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, spi);
- 	mas = spi_master_get_devdata(spi);
- 	mas->irq = irq;
--	mas->dev = &pdev->dev;
--	mas->se.dev = &pdev->dev;
--	mas->se.wrapper = dev_get_drvdata(pdev->dev.parent);
-+	mas->dev = dev;
-+	mas->se.dev = dev;
-+	mas->se.wrapper = dev_get_drvdata(dev->parent);
- 	mas->se.base = base;
- 	mas->se.clk = clk;
- 
- 	spi->bus_num = -1;
--	spi->dev.of_node = pdev->dev.of_node;
-+	spi->dev.of_node = dev->of_node;
- 	spi->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LOOP | SPI_CS_HIGH;
- 	spi->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
- 	spi->num_chipselect = 4;
-@@ -579,13 +577,13 @@ static int spi_geni_probe(struct platform_device *pdev)
- 
- 	init_completion(&mas->xfer_done);
- 	spin_lock_init(&mas->lock);
--	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_enable(dev);
- 
- 	ret = spi_geni_init(mas);
+@@ -585,8 +585,7 @@ static int spi_geni_probe(struct platform_device *pdev)
  	if (ret)
  		goto spi_geni_probe_runtime_disable;
  
--	ret = request_irq(mas->irq, geni_spi_isr, 0, dev_name(&pdev->dev), spi);
-+	ret = request_irq(mas->irq, geni_spi_isr, 0, dev_name(dev), spi);
+-	ret = request_irq(mas->irq, geni_spi_isr,
+-			IRQF_TRIGGER_HIGH, "spi_geni", spi);
++	ret = request_irq(mas->irq, geni_spi_isr, 0, dev_name(&pdev->dev), spi);
  	if (ret)
  		goto spi_geni_probe_runtime_disable;
  
-@@ -597,7 +595,7 @@ static int spi_geni_probe(struct platform_device *pdev)
- spi_geni_probe_free_irq:
- 	free_irq(mas->irq, spi);
- spi_geni_probe_runtime_disable:
--	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_disable(dev);
- 	spi_master_put(spi);
- 	return ret;
- }
 -- 
 2.20.1
 
