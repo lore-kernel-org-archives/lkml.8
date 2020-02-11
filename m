@@ -2,273 +2,157 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8175FC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F3AC352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBAF20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A02920838
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="MZYF0oN+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LMi7uQsd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f9yPcb7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbgBKAEK (ORCPT
+        id S1727617AbgBKAE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:04:10 -0500
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:52275 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727516AbgBKAEK (ORCPT
+        Mon, 10 Feb 2020 19:04:59 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:41934 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbgBKAE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:04:10 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id 30ABA664;
-        Mon, 10 Feb 2020 19:04:08 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 10 Feb 2020 19:04:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=+YWviiEypY4/uSM7a/KOZGTlyXo
-        Sv+afDb7oMnLU4Ew=; b=MZYF0oN+qiSGhEtb1doYqf263EKGpRuUZQ6vmRnGSJY
-        +LnaukjCb+JPyKVzeqBqFDSL4Ze5UGigIJe7GkEbPVF2PAJ1hZin2Zb2aAKaRbgY
-        uIicwBeblBGJF5GHf7YaN26mwCMCUqEBILPaVW2eyHPWgAjt+uau49tEwjs2kDAw
-        +klTO0G95XTkcryioGbN/U7iLAbPXrIrue/LznK9A+tMk2EK8ah3FNxw3cZI2ETv
-        4azPneN9A6F1V2fhG3/DCFcz/vrmFVXlwQs4TEylPEK7Q64Y874i+Sy9BIrHkRCT
-        jhsnV+Zw4r7QcrnR8OzT6YlTHHP8eb6b9eqS/KsfLqw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+YWvii
-        EypY4/uSM7a/KOZGTlyXoSv+afDb7oMnLU4Ew=; b=LMi7uQsdhZcpFyxYXa4hPx
-        Xx8GnZwxIZO+lTki/ZSVbZRlCb72kNRLIAiH1THDEGfjH92d2pge0rPnb798ffFu
-        oWo0psgjieDdbX9n+6IRUzeyJlkcTbMuqPVjt+jtlQFqji2MXH6ygvWMNPpZCTE5
-        c9nJUk5AbFqraHXBwhqv+wQNoo5VgpuABbDvS5amB7uvNdJKEFRoxzQucSxRSM0T
-        phP7LWBr3SmqcT1VrPWdy2gvMXmJa9m/zwgdn6b8Ls8zKXhwIUZsLvjdtfJPl6o2
-        IQW3bwLJMREK8FNUyQ71ExKzfPnss9f5Bfqr0k6FSTdts53PaO+StUn1ezJkRU7Q
-        ==
-X-ME-Sender: <xms:du9BXrjrEmO6EdnJ_pc7WI-NfG5m8OGt-ycdBihJj8Ja4VmZPwMncQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedvgdduiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughrvghs
-    ucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuffhomhgrih
-    hnpehkvghrnhgvlhdrohhrghenucfkphepieejrdduiedtrddvudejrddvhedtnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvghsse
-    grnhgrrhgriigvlhdruggv
-X-ME-Proxy: <xmx:du9BXsSimq3cbHRr3nc7ziO8uEVPm-gCoNUp0Sc3HNWbBnhCGcXD7w>
-    <xmx:du9BXmFSbp83JHg_MPLSAqletsvqFPURC73kAGM22v6nxALTg7iZcA>
-    <xmx:du9BXslCZx5yOxfoh1xo5J6slwBt3PXipUO1qeaFCyK4aloLpYHYaQ>
-    <xmx:d-9BXrMAhFwi34YIb3KXjcE38Y_2CmGLQ_gAFji5DgsVihsWlPpNJRDrZu0>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5A45830606FB;
-        Mon, 10 Feb 2020 19:04:06 -0500 (EST)
-Date:   Mon, 10 Feb 2020 16:04:05 -0800
-From:   Andres Freund <andres@anarazel.de>
-To:     Dave Chinner <david@fromorbit.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
- writeback errors
-Message-ID: <20200211000405.5fohxgpt554gmnhu@alap3.anarazel.de>
-References: <20200207170423.377931-1-jlayton@kernel.org>
- <20200207205243.GP20628@dread.disaster.area>
- <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
- <20200210214657.GA10776@dread.disaster.area>
+        Mon, 10 Feb 2020 19:04:58 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01B02PPY102417;
+        Tue, 11 Feb 2020 00:04:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=6hRV+oc+Bf7KmfRTgGYMolEJVUABCzAUgVO168ZiNQc=;
+ b=f9yPcb7ctgY4PSRrO2pbnhVrwr4VMW62v0VEJgJMAgPtTwX6W8YwLxabLhM4n3Fk4Shm
+ FyJcABSmFIUiUUic1WuzBRzLvpTvldvtC4uGQ2kg7Dp5VHoeaBZXfGzYNgFQ3ipR0cRN
+ 0wnQ1dDohWukUlop6koRamqGZEUJSlUdy3zymxCxsqarcQ+dRtxY5GQnrNEBXS9UIVxW
+ FBBLFyMYAGb4KgktM7zBQfs4jsdKgAGMIWv0ACSDSIDsVQfkOh90Ua4p/7egfE74bAok
+ m1fRbqm68M3a5Yi+i1IAZfSzLeSlGVLsnnOBCoWmSySWAOcA3Hv9jkoAweiwcb/MTT0E 2w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2y2k88042y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Feb 2020 00:04:44 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01B02hAQ056698;
+        Tue, 11 Feb 2020 00:02:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2y26q077wx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Feb 2020 00:02:43 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01B02Nv6023038;
+        Tue, 11 Feb 2020 00:02:24 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 10 Feb 2020 16:02:23 -0800
+Subject: Re: [PATCH v2] mm: Don't overwrite user min_free_kbytes, consider THP
+ when adjusting
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+References: <20200210190121.10670-1-mike.kravetz@oracle.com>
+ <20200210141903.413880202fa3e858e27272fd@linux-foundation.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <834af4ca-5e3d-f034-fa48-f8672b75a9f2@oracle.com>
+Date:   Mon, 10 Feb 2020 16:02:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210214657.GA10776@dread.disaster.area>
+In-Reply-To: <20200210141903.413880202fa3e858e27272fd@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9527 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ mlxscore=0 adultscore=0 suspectscore=2 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002100171
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9527 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ suspectscore=2 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-(sorry if somebody got this twice)
-
-David added you, because there's discussion about your notify work
-below.
-
-On 2020-02-11 08:46:57 +1100, Dave Chinner wrote:
-> On Fri, Feb 07, 2020 at 01:20:12PM -0800, Andres Freund wrote:
-> > Hi,
-> > 
-> > On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
-> > > On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
-> > > > You're probably wondering -- Where are v1 and v2 sets?
-> > 
-> > > > The basic idea is to track writeback errors at the superblock level,
-> > > > so that we can quickly and easily check whether something bad happened
-> > > > without having to fsync each file individually. syncfs is then changed
-> > > > to reliably report writeback errors, and a new ioctl is added to allow
-> > > > userland to get at the current errseq_t value w/o having to sync out
-> > > > anything.
-> > > 
-> > > So what, exactly, can userspace do with this error? It has no idea
-> > > at all what file the writeback failure occurred on or even
-> > > what files syncfs() even acted on so there's no obvious error
-> > > recovery that it could perform on reception of such an error.
-> > 
-> > Depends on the application.  For e.g. postgres it'd to be to reset
-> > in-memory contents and perform WAL replay from the last checkpoint.
+On 2/10/20 2:19 PM, Andrew Morton wrote:
+> On Mon, 10 Feb 2020 11:01:21 -0800 Mike Kravetz <mike.kravetz@oracle.com> wrote:
 > 
-> What happens if a user runs 'sync -f /path/to/postgres/data' instead
-> of postgres? All the writeback errors are consumed at that point by
-> reporting them to the process that ran syncfs()...
-
-We'd have to keep an fd open from *before* we start durable operations,
-which has a sampled errseq_t from before we rely on seeing errors.
-
-
-> > Due to various reasons* it's very hard for us (without major performance
-> > and/or reliability impact) to fully guarantee that by the time we fsync
-> > specific files we do so on an old enough fd to guarantee that we'd see
-> > the an error triggered by background writeback.  But keeping track of
-> > all potential filesystems data resides on (with one fd open permanently
-> > for each) and then syncfs()ing them at checkpoint time is quite doable.
+>> The value of min_free_kbytes is calculated in two routines:
+>> 1) init_per_zone_wmark_min based on available memory
+>> 2) set_recommended_min_free_kbytes may reserve extra space for
+>>    THP allocations
+>>
+>> In both of these routines, a user defined min_free_kbytes value will
+>> be overwritten if the value calculated in the code is larger. No message
+>> is logged if the user value is overwritten.
 > 
-> Oh, you have to keep an fd permanently open to every superblock that
-> application holds data on so that errors detected by other users of
-> that filesystem are also reported to the application?
+> Could we provide a detailed description of why this is considered to be
+> a problem?  This is fairly easily guessable, but is there a real
+> in-field bad user experience we can point at?
 
-Right
+I do not have an example of a bad user experience.  This observation came
+about when I was modifying min_free_kbytes while working on some other
+issue.  To me, it seems like the current behavior is not what one would
+expect.  Logging messages when we do not overwrite the user value and not
+logging anything when we do seems a bit backward.
 
-Currently it's much worse (you probably now?):
+Changing this is not important to me.  It has been like this for quite some
+time and I am not aware of any user complaints/issues.
 
-Without error reporting capabilities in syncfs or such you have to keep
-an fd open to *every* single inode you want to reliably get errors
-for. Fds have an errseq_t to keep track of which errors have been seen
-by that fd, so if you have one open from *before* an error is triggered,
-you can be sure to detect that. But if the fd is not guaranteed to be
-old enough you can hit two cases:
-
-1) Some other application actually sees an error, address_space->wb_err
-   is marked ERRSEQ_SEEN. Any new fd will not see a report the problem
-   anymore.
-2) The inode with the error gets evicted (memory pressure on a database
-   server isn't rare) while there is no fd open. Nobody might see the
-   error.
-
-If there were a reliable (i.e. it may not wrap around or such) error
-counter available *somewhere*, we could just keep track of that, instead
-of actually needing an "old" open fd in the right process.
-
-
-> This seems like a fairly important requirement for applications to
-> ensure this error reporting is "reliable" and that certainly wasn't
-> apparent from the patches or their description.  i.e. the API has an
-> explicit userspace application behaviour requirement for reliable
-> functioning, and that was not documented.  "we suck at APIs" and all
-> that..
-
-Yup.
-
-
-> It also seems to me as useful only to applications that have a
-> "rollback and replay" error recovery mechanism. If the application
-> doesn't have the ability to go back in time to before the
-> "unfindable" writeback error occurred, then this error is largely
-> useless to those applications because they can't do anything with
-> it, and so....
-
-That's a pretty common thing these days for applications that actually
-care about data to some degree. Either they immediately f[data]sync
-after writing, or they use some form of storage that has journalling
-capabilities. Which e.g. sqlite provides for the myriad of cases that
-don't want a separate server.
-
-And even if they can't recover from the error, there's a huge difference
-between not noticing that shit has hit the fan and happily continuing to
-accept further data , and telling the user that something has gone wrong
-with data integrity without details.
-
-
-> .... most applications will still require users to scrape their
-> logs to find out what error actually occurred. IOWs, we haven't
-> really changed the status quo with this new mechanism.
-
-I think there's a huge practical difference between having to do so in
-case there was an actual error (on the relevant FSs), and having to do
-so continually.
-
-
-> FWIW, explicit userspace error notifications for data loss events is
-> one of the features that David Howell's generic filesystem
-> notification mechanism is intended to provide.  Hence I'm not sure
-> that there's a huge amount of value in providing a partial solution
-> that only certain applications can use when there's a fully generic
-> mechanism for error notification just around the corner.
-
-Interesting. I largely missed that work, unfortunately. It's hard to
-keep up with all kernel things, while also maintaining / developing an
-RDBMS :/
-
-I assume the last state that includes the superblock layer stuff is at
-https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications
-whereas there's a newer
-https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications-core
-not including that. There do seem to be some significant changes between
-the two.
-
-As far as I can tell the superblock based stuff does *not* actually
-report any errors yet (contrast to READONLY, EDQUOT). Is the plan here
-to include writeback errors as well? Or just filesystem metadata/journal
-IO?
-
-I don't think that block layer notifications would be sufficient for an
-individual userspace application's data integrity purposes? For one,
-it'd need to map devices to relevant filesystems afaictl. And there's
-also errors above the block layer.
-
-
-Based on skimming the commits in those two trees, I'm not quite sure I
-understand what the permission model will be for accessing the
-notifications will be? Seems anyone, even within a container or
-something, will see blockdev errors from everywhere?  The earlier
-superblock support (I'm not sure I like that name btw, hard to
-understand for us userspace folks), seems to have required exec
-permission, but nothing else.
-
-For it to be usable for integrity purposes delivery has to be reliable
-and there needs to be a clear ordering, in the sense that reading
-notification needs to return all errors that occured timewise before the
-last pending notification has been read. Looks like that's largely the
-case, although I'm a bit scared after seeing:
-
-+void __post_watch_notification(struct watch_list *wlist,
-+			       struct watch_notification *n,
-+			       const struct cred *cred,
-+			       u64 id)
-+
-+		if (security_post_notification(watch->cred, cred, n) < 0)
-+			continue;
-+
-
-if an LSM module just decides to hide notifications that relied upon for
-integrity, we'll be in trouble.
-
-
-> > I'm not sure it makes sense to
-> > expose the errseq_t bits straight though - seems like it'd
-> > enshrine them in userspace ABI too much?
+>> Change code to never overwrite user defined value.  However, do log a
+>> message (once per value) showing the value calculated in code.
+>>
+>> At system initialization time, both init_per_zone_wmark_min and
+>> set_recommended_min_free_kbytes are called to set the initial value
+>> for min_free_kbytes.  When memory is offlined or onlined, min_free_kbytes
+>> is recalculated and adjusted based on the amount of memory.  However,
+>> the adjustment for THP is not considered.  Here is an example from a 2
+>> node system with 8GB of memory.
+>>
+>>  # cat /proc/sys/vm/min_free_kbytes
+>>  90112
+>>  # echo 0 > /sys/devices/system/node/node1/memory56/online
+>>  # cat /proc/sys/vm/min_free_kbytes
+>>  11243
+>>  # echo 1 > /sys/devices/system/node/node1/memory56/online
+>>  # cat /proc/sys/vm/min_free_kbytes
+>>  11412
+>>
+>> One would expect that min_free_kbytes would return to it's original
+>> value after the offline/online operations.
+>>
+>> Create a simple interface for THP/khugepaged based adjustment and
+>> call this whenever min_free_kbytes is adjusted.
+>>
+>> ...
+>>
+>>  include/linux/khugepaged.h |  5 ++++
+>>  mm/internal.h              |  2 ++
+>>  mm/khugepaged.c            | 56 ++++++++++++++++++++++++++++++++------
+>>  mm/page_alloc.c            | 35 ++++++++++++++++--------
 > 
-> Even a little is way too much. Userspace ABI needs to be completely
-> independent of the kernel internal structures and implementation.
-> This is basic "we suck at APIs 101" stuff...
+> min_free_kbytes gets a few mentions in Documentation/.  Should we make
+> the appropriate updates there to bring this behavior to people's
+> attention?
 
-Well, if it were just a counter of errors that gets stuck at some well
-defined max, it seems like it'd be ok. But I agree that it'd not be the
-best possible interface, and that the notify API seems like it could
-turn into that.
-
-Greetings,
-
-Andres Freund
+I'm happy to update the documentation to match current behavior.  Changing
+the documentation may prompt people to ask if we should change the code. :)
+-- 
+Mike Kravetz
