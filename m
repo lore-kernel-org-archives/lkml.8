@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94690C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFB6C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776F42070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7A22070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgBKXjj (ORCPT
+        id S1728213AbgBKXjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:39:39 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61619 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbgBKXjB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 18:39:01 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62065 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgBKXiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:38:54 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 9bf901beddd75d4f; Wed, 12 Feb 2020 00:39:00 +0100
+ id 2726e77bf0a98ba8; Wed, 12 Feb 2020 00:38:50 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH 04/28] PM: QoS: Clean up pm_qos_update_target() and pm_qos_update_flags()
-Date:   Tue, 11 Feb 2020 23:58:33 +0100
-Message-ID: <1746259.hJgS1hQAGi@kreacher>
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 11/28] PM: QoS: Simplify definitions of CPU latency QoS trace events
+Date:   Wed, 12 Feb 2020 00:06:17 +0100
+Message-ID: <2473634.d0feZ6BIAp@kreacher>
 In-Reply-To: <1654227.8mz0SueHsU@kreacher>
 References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
@@ -42,130 +43,193 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Clean up the pm_qos_update_target() function:
- * Update its kerneldoc comment.
- * Drop the redundant ret local variable from it.
- * Reorder definitions of local variables in it.
- * Update a comment in it.
+Modify the definitions of the CPU latency QoS trace events to take
+one argument (since PM_QOS_CPU_DMA_LATENCY is always passed as the
+pm_qos_class argument to them) and update the documentation of them
+accordingly (while at it, make it explicitly mention CPU latency QoS
+and relocate it after the device PM QoS trace events documentation).
 
-Also update the kerneldoc comment of pm_qos_update_flags() (e.g.
-notifiers are not called by it any more) and add one emtpy line
-to its body (for more visual clarity).
+The names and output format of the trace events do not change to
+preserve user space compatibility.
 
 No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- kernel/power/qos.c | 56 ++++++++++++++++++++++++++++--------------------------
- 1 file changed, 29 insertions(+), 27 deletions(-)
+ Documentation/trace/events-power.rst | 19 ++++++++++---------
+ include/trace/events/power.h         | 35 +++++++++++++++++------------------
+ kernel/power/qos.c                   | 16 ++++++++--------
+ 3 files changed, 35 insertions(+), 35 deletions(-)
 
+diff --git a/Documentation/trace/events-power.rst b/Documentation/trace/events-power.rst
+index eec7453a168e..f45bf11fa88d 100644
+--- a/Documentation/trace/events-power.rst
++++ b/Documentation/trace/events-power.rst
+@@ -73,14 +73,6 @@ The second parameter is the power domain target state.
+ ================
+ The PM QoS events are used for QoS add/update/remove request and for
+ target/flags update.
+-::
+-
+-  pm_qos_add_request                 "pm_qos_class=%s value=%d"
+-  pm_qos_update_request              "pm_qos_class=%s value=%d"
+-  pm_qos_remove_request              "pm_qos_class=%s value=%d"
+-
+-The first parameter gives the QoS class name (e.g. "CPU_DMA_LATENCY").
+-The second parameter is value to be added/updated/removed.
+ ::
+ 
+   pm_qos_update_target               "action=%s prev_value=%d curr_value=%d"
+@@ -90,7 +82,7 @@ The first parameter gives the QoS action name (e.g. "ADD_REQ").
+ The second parameter is the previous QoS value.
+ The third parameter is the current QoS value to update.
+ 
+-And, there are also events used for device PM QoS add/update/remove request.
++There are also events used for device PM QoS add/update/remove request.
+ ::
+ 
+   dev_pm_qos_add_request             "device=%s type=%s new_value=%d"
+@@ -101,3 +93,12 @@ The first parameter gives the device name which tries to add/update/remove
+ QoS requests.
+ The second parameter gives the request type (e.g. "DEV_PM_QOS_RESUME_LATENCY").
+ The third parameter is value to be added/updated/removed.
++
++And, there are events used for CPU latency QoS add/update/remove request.
++::
++
++  pm_qos_add_request        "value=%d"
++  pm_qos_update_request     "value=%d"
++  pm_qos_remove_request     "value=%d"
++
++The parameter is the value to be added/updated/removed.
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index ecf39daabf16..af5018aa9517 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -359,51 +359,50 @@ DEFINE_EVENT(power_domain, power_domain_target,
+ );
+ 
+ /*
+- * The pm qos events are used for pm qos update
++ * CPU latency QoS events used for global CPU latency QoS list updates
+  */
+-DECLARE_EVENT_CLASS(pm_qos_request,
++DECLARE_EVENT_CLASS(cpu_latency_qos_request,
+ 
+-	TP_PROTO(int pm_qos_class, s32 value),
++	TP_PROTO(s32 value),
+ 
+-	TP_ARGS(pm_qos_class, value),
++	TP_ARGS(value),
+ 
+ 	TP_STRUCT__entry(
+-		__field( int,                    pm_qos_class   )
+ 		__field( s32,                    value          )
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->pm_qos_class = pm_qos_class;
+ 		__entry->value = value;
+ 	),
+ 
+-	TP_printk("pm_qos_class=%s value=%d",
+-		  __print_symbolic(__entry->pm_qos_class,
+-			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" }),
++	TP_printk("CPU_DMA_LATENCY value=%d",
+ 		  __entry->value)
+ );
+ 
+-DEFINE_EVENT(pm_qos_request, pm_qos_add_request,
++DEFINE_EVENT(cpu_latency_qos_request, pm_qos_add_request,
+ 
+-	TP_PROTO(int pm_qos_class, s32 value),
++	TP_PROTO(s32 value),
+ 
+-	TP_ARGS(pm_qos_class, value)
++	TP_ARGS(value)
+ );
+ 
+-DEFINE_EVENT(pm_qos_request, pm_qos_update_request,
++DEFINE_EVENT(cpu_latency_qos_request, pm_qos_update_request,
+ 
+-	TP_PROTO(int pm_qos_class, s32 value),
++	TP_PROTO(s32 value),
+ 
+-	TP_ARGS(pm_qos_class, value)
++	TP_ARGS(value)
+ );
+ 
+-DEFINE_EVENT(pm_qos_request, pm_qos_remove_request,
++DEFINE_EVENT(cpu_latency_qos_request, pm_qos_remove_request,
+ 
+-	TP_PROTO(int pm_qos_class, s32 value),
++	TP_PROTO(s32 value),
+ 
+-	TP_ARGS(pm_qos_class, value)
++	TP_ARGS(value)
+ );
+ 
++/*
++ * General PM QoS events used for updates of PM QoS request lists
++ */
+ DECLARE_EVENT_CLASS(pm_qos_update,
+ 
+ 	TP_PROTO(enum pm_qos_req_action action, int prev_value, int curr_value),
 diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-index a6be7faa1974..6a36809d6160 100644
+index a6bf53e9db17..afac7010e0f2 100644
 --- a/kernel/power/qos.c
 +++ b/kernel/power/qos.c
-@@ -129,24 +129,30 @@ static inline void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
+@@ -247,8 +247,8 @@ int pm_qos_request_active(struct pm_qos_request *req)
  }
+ EXPORT_SYMBOL_GPL(pm_qos_request_active);
  
- /**
-- * pm_qos_update_target - manages the constraints list and calls the notifiers
-- *  if needed
-- * @c: constraints data struct
-- * @node: request to add to the list, to update or to remove
-- * @action: action to take on the constraints list
-- * @value: value of the request to add or update
-+ * pm_qos_update_target - Update a list of PM QoS constraint requests.
-+ * @c: List of PM QoS requests.
-+ * @node: Target list entry.
-+ * @action: Action to carry out (add, update or remove).
-+ * @value: New request value for the target list entry.
-  *
-- * This function returns 1 if the aggregated constraint value has changed, 0
-- *  otherwise.
-+ * Update the given list of PM QoS constraint requests, @c, by carrying an
-+ * @action involving the @node list entry and @value on it.
-+ *
-+ * The recognized values of @action are PM_QOS_ADD_REQ (store @value in @node
-+ * and add it to the list), PM_QOS_UPDATE_REQ (remove @node from the list, store
-+ * @value in it and add it to the list again), and PM_QOS_REMOVE_REQ (remove
-+ * @node from the list, ignore @value).
-+ *
-+ * Return: 1 if the aggregate constraint value has changed, 0  otherwise.
-  */
- int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
- 			 enum pm_qos_req_action action, int value)
+-static void cpu_latency_qos_update(struct pm_qos_request *req,
+-				   enum pm_qos_req_action action, s32 value)
++static void cpu_latency_qos_apply(struct pm_qos_request *req,
++				  enum pm_qos_req_action action, s32 value)
  {
--	unsigned long flags;
- 	int prev_value, curr_value, new_value;
--	int ret;
-+	unsigned long flags;
+ 	int ret = pm_qos_update_target(req->qos, &req->node, action, value);
+ 	if (ret > 0)
+@@ -278,10 +278,10 @@ void pm_qos_add_request(struct pm_qos_request *req,
+ 		return;
+ 	}
  
- 	spin_lock_irqsave(&pm_qos_lock, flags);
-+
- 	prev_value = pm_qos_get_value(c);
- 	if (value == PM_QOS_DEFAULT_VALUE)
- 		new_value = c->default_value;
-@@ -159,9 +165,8 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
- 		break;
- 	case PM_QOS_UPDATE_REQ:
- 		/*
--		 * to change the list, we atomically remove, reinit
--		 * with new value and add, then see if the extremal
--		 * changed
-+		 * To change the list, atomically remove, reinit with new value
-+		 * and add, then see if the aggregate has changed.
- 		 */
- 		plist_del(node, &c->list);
- 		/* fall through */
-@@ -180,16 +185,14 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
- 	spin_unlock_irqrestore(&pm_qos_lock, flags);
+-	trace_pm_qos_add_request(PM_QOS_CPU_DMA_LATENCY, value);
++	trace_pm_qos_add_request(value);
  
- 	trace_pm_qos_update_target(action, prev_value, curr_value);
--	if (prev_value != curr_value) {
--		ret = 1;
--		if (c->notifiers)
--			blocking_notifier_call_chain(c->notifiers,
--						     (unsigned long)curr_value,
--						     NULL);
--	} else {
--		ret = 0;
--	}
--	return ret;
-+
-+	if (prev_value == curr_value)
-+		return 0;
-+
-+	if (c->notifiers)
-+		blocking_notifier_call_chain(c->notifiers, curr_value, NULL);
-+
-+	return 1;
+ 	req->qos = &cpu_latency_constraints;
+-	cpu_latency_qos_update(req, PM_QOS_ADD_REQ, value);
++	cpu_latency_qos_apply(req, PM_QOS_ADD_REQ, value);
  }
+ EXPORT_SYMBOL_GPL(pm_qos_add_request);
  
- /**
-@@ -211,14 +214,12 @@ static void pm_qos_flags_remove_req(struct pm_qos_flags *pqf,
+@@ -305,12 +305,12 @@ void pm_qos_update_request(struct pm_qos_request *req, s32 new_value)
+ 		return;
+ 	}
  
- /**
-  * pm_qos_update_flags - Update a set of PM QoS flags.
-- * @pqf: Set of flags to update.
-+ * @pqf: Set of PM QoS flags to update.
-  * @req: Request to add to the set, to modify, or to remove from the set.
-  * @action: Action to take on the set.
-  * @val: Value of the request to add or modify.
-  *
-- * Update the given set of PM QoS flags and call notifiers if the aggregate
-- * value has changed.  Returns 1 if the aggregate constraint value has changed,
-- * 0 otherwise.
-+ * Return: 1 if the aggregate constraint value has changed, 0 otherwise.
-  */
- bool pm_qos_update_flags(struct pm_qos_flags *pqf,
- 			 struct pm_qos_flags_request *req,
-@@ -254,6 +255,7 @@ bool pm_qos_update_flags(struct pm_qos_flags *pqf,
- 	spin_unlock_irqrestore(&pm_qos_lock, irqflags);
+-	trace_pm_qos_update_request(PM_QOS_CPU_DMA_LATENCY, new_value);
++	trace_pm_qos_update_request(new_value);
  
- 	trace_pm_qos_update_flags(action, prev_value, curr_value);
-+
- 	return prev_value != curr_value;
+ 	if (new_value == req->node.prio)
+ 		return;
+ 
+-	cpu_latency_qos_update(req, PM_QOS_UPDATE_REQ, new_value);
++	cpu_latency_qos_apply(req, PM_QOS_UPDATE_REQ, new_value);
  }
+ EXPORT_SYMBOL_GPL(pm_qos_update_request);
  
+@@ -333,9 +333,9 @@ void pm_qos_remove_request(struct pm_qos_request *req)
+ 		return;
+ 	}
+ 
+-	trace_pm_qos_remove_request(PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
++	trace_pm_qos_remove_request(PM_QOS_DEFAULT_VALUE);
+ 
+-	cpu_latency_qos_update(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
++	cpu_latency_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+ 	memset(req, 0, sizeof(*req));
+ }
+ EXPORT_SYMBOL_GPL(pm_qos_remove_request);
 -- 
 2.16.4
 
