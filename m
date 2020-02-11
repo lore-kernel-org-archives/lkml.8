@@ -6,59 +6,58 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86423C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F241C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE3620708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD2F20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581459140;
-	bh=yNqZod946paujAdEqMRJ1ejAWBjSCe4eeJhwXaauReA=;
+	s=default; t=1581459247;
+	bh=Tzo7oLihh6XmYdZ4fKdx4WcMxH4KEKF1Qm1JB/jwLwY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BKuEj0mWXOju+j8x11/HxI/K+MQMXvcqSiqbRs5xP+ywioQQ7CwuoWSMzPl2Z+Zbq
-	 11jsBmUXkifeoDXA1Q19RqlNTrCLPM3Uj4PtmDswsR/oAdjgHtX7//xCdpnzVXvKEu
-	 WlFpy/HiO9rfzNeZjpaNRCJ065jj5ryCvwndQXKg=
+	b=XGlu22CwtULptDy5o5CmXAcrZU2BshW4HQNNh9hiWbOEYs3izQ71sQjY3VEbmBh9Z
+	 Tb/OOkN/8JE1vpbnHP5kzmyw7TUcD3biohjGCRUL1okx0i9gYYyLpZtYZQNKSsOg4c
+	 t4nZxmMuL0qIxm5uZH1X6o2yV8TP0/jOV6gNDdKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgBKWMT (ORCPT
+        id S1727567AbgBKWOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:12:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48442 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 17:14:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgBKWMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:12:18 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        id S1727041AbgBKWOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:14:05 -0500
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFE7E20870
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C0D20848
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581459138;
-        bh=yNqZod946paujAdEqMRJ1ejAWBjSCe4eeJhwXaauReA=;
+        s=default; t=1581459244;
+        bh=Tzo7oLihh6XmYdZ4fKdx4WcMxH4KEKF1Qm1JB/jwLwY=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CIBIe+lFFTrJtJr5PAHqlakYHlpJHZ8/IxM6nu6BnvrvP7QlnGB0UYifJ+cLbPD1u
-         h1S/MFtkHV/kfSrWKBYyT33E1VvxImKO4GN0JxCZomOMAUqT1BPCihhCIlujCDaFTm
-         +HfJXF6DSOj/kVMp23bh1nYVKiS1eqyxL1JzNMCc=
-Received: by mail-wr1-f41.google.com with SMTP id z3so14535033wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:12:17 -0800 (PST)
-X-Gm-Message-State: APjAAAVqzWcHausQQ32fhuvb2s11PIhcsFZjgQLbZXmFOZ8XGwct8piG
-        7TwUko/dkEfzbgx9Kb4xMLB6aVa/M+A1/AZqOcav7w==
-X-Google-Smtp-Source: APXvYqx/FE/ZBM/IRE/iZmNcUdhlAsvuwyZQ8jxjO4FhrLlV/QjKqYE4nFeb7APUWZqWIeFWsWQE68sUQ55NIG/jAcY=
-X-Received: by 2002:a5d:494b:: with SMTP id r11mr10779334wrs.184.1581459136232;
- Tue, 11 Feb 2020 14:12:16 -0800 (PST)
+        b=VpUH9q2Ld9f0sZfPeirYatwOo0AY9GNGwCayffYWwmErMNp068fBLBmJfdfSc/lE1
+         1KTgyuEpfu3cUeSrxuONfZouwJuPNKBDZ+9U4pgZ1McQo3gStxCp/uwgNkRzBij3/W
+         mVANOrP5chQlopRUZpNrxR4trUkQQr/2dH+S486o=
+Received: by mail-wr1-f46.google.com with SMTP id t2so14552933wrr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:14:04 -0800 (PST)
+X-Gm-Message-State: APjAAAV9AFnmi6WrK80tmWsxEkg4xuJO08BwpXhttWaGjnSUAxi0z4hp
+        1TILHSs4pAgcDghG2hJc2DW7aG67MAY10/7n2VEMYA==
+X-Google-Smtp-Source: APXvYqydo76PkEmj5PG5O27EmrWOjY3nLu09O+yXpO0pI2+Gs1e7Uz84BfjfNy+FRfjeX2dRElyHGQ0YcfBM+E5UZeM=
+X-Received: by 2002:a5d:5305:: with SMTP id e5mr11001033wrv.18.1581459242661;
+ Tue, 11 Feb 2020 14:14:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20200211135256.24617-1-joro@8bytes.org> <20200211145008.GT14914@hirez.programming.kicks-ass.net>
- <20200211154321.GB22063@8bytes.org>
-In-Reply-To: <20200211154321.GB22063@8bytes.org>
+References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-8-joro@8bytes.org>
+In-Reply-To: <20200211135256.24617-8-joro@8bytes.org>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 11 Feb 2020 14:12:04 -0800
-X-Gmail-Original-Message-ID: <CALCETrUtvd0OuLoo=ZBRmaJRFxgFWV9hSZyHBwmWCs2+b4J-sg@mail.gmail.com>
-Message-ID: <CALCETrUtvd0OuLoo=ZBRmaJRFxgFWV9hSZyHBwmWCs2+b4J-sg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/62] Linux as SEV-ES Guest Support
+Date:   Tue, 11 Feb 2020 14:13:50 -0800
+X-Gmail-Original-Message-ID: <CALCETrVVjECt2TNVDJcuS68663ioPTiEY13-1uO_gWYjWaVwPA@mail.gmail.com>
+Message-ID: <CALCETrVVjECt2TNVDJcuS68663ioPTiEY13-1uO_gWYjWaVwPA@mail.gmail.com>
+Subject: Re: [PATCH 07/62] x86/boot/compressed/64: Disable red-zone usage
 To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Hellstrom <thellstrom@vmware.com>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -75,23 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 7:43 AM Joerg Roedel <joro@8bytes.org> wrote:
+On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
 >
-> On Tue, Feb 11, 2020 at 03:50:08PM +0100, Peter Zijlstra wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 >
-> > Oh gawd; so instead of improving the whole NMI situation, AMD went and
-> > made it worse still ?!?
+> The x86-64 ABI defines a red-zone on the stack:
 >
-> Well, depends on how you want to see it. Under SEV-ES an IRET will not
-> re-open the NMI window, but the guest has to tell the hypervisor
-> explicitly when it is ready to receive new NMIs via the NMI_COMPLETE
-> message.  NMIs stay blocked even when an exception happens in the
-> handler, so this could also be seen as a (slight) improvement.
+>   The 128-byte area beyond the location pointed to by %rsp is
+>   considered to be reserved and shall not be modified by signal or
+>   interrupt handlers. 10 Therefore, functions may use this area for
+>   temporary data that is not needed across function calls. In
+>   particular, leaf functions may use this area for their entire stack
+>   frame, rather than adjusting the stack pointer in the prologue and
+>   epilogue. This area is known as the red zone.
 >
+> This is not compatible with exception handling, so disable it for the
+> pre-decompression boot code.
 
-I don't get it.  VT-x has a VMCS bit "Interruptibility
-state"."Blocking by NMI" that tracks the NMI masking state.  Would it
-have killed AMD to solve the problem they same way to retain
-architectural behavior inside a SEV-ES VM?
+Acked-by: Andy Lutomirski <luto@kernel.org>
+
+I admit that I thought we already supported exceptions this early.  At
+least I seem to remember writing this code.  Maybe it never got
+upstreamed?
 
 --Andy
