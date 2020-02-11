@@ -2,174 +2,118 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3AAC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4C3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9809520848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5632086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTYBeN9y"
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="1tAsP1W7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgBKJdr (ORCPT
+        id S1727840AbgBKJf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:33:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54540 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727652AbgBKJdq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:33:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581413625;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OorDu29eE+PEol4sSArzlxHl7pCN4jrwJ8i6pGbkBeI=;
-        b=PTYBeN9ydEoeJ00Evl5w+JqVkX4V/F5r9Af5VOODU1bt8C4g2UrlsxsOYFR7Cizgxs23ig
-        YnHFh7ZaNjN7l3xwKbi1HmEizIGaXyd8tzGjOUud7gVH0mB9dYoR6tmDSv+1qxM7g8KcDQ
-        Wbo1xsrae1DzqfnIV7ckMJFCY4Oabs8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-WhPbg-DTMyW2i6tY-QqxyA-1; Tue, 11 Feb 2020 04:33:43 -0500
-X-MC-Unique: WhPbg-DTMyW2i6tY-QqxyA-1
-Received: by mail-wm1-f69.google.com with SMTP id p26so1080415wmg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:33:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OorDu29eE+PEol4sSArzlxHl7pCN4jrwJ8i6pGbkBeI=;
-        b=si/CulGL5VAhfA4NMdI/s5HVqL7DTKYtXVP5ozhvnjCqSBmPqwNcq7kpBcmV1lndfo
-         O/ei6iz3yBhPuYCB2+9/q9evzdG+mG/sfwyHhBcHxjv3H/4zd3iMIDsVh02V2S8xfnaD
-         r82S7NzdUbAcGZP9cTgCGRpwJHqds5Ba8tepxwF0OtcEl/CBvU7fW1/YT1xoyOfV7ODT
-         cDJ852PlLq6oqv2Gt/1Qiogfqru5X/wTkeeQvahc4SRQufdrwVxR7sbGMg9p70W2UL5P
-         Q4Y+fo/HrkTA6mQGjRltkvWGOcUjuktkOOQJ4JeNO3RopGFgCAhy4G2GIBl0PABafxz/
-         vYgg==
-X-Gm-Message-State: APjAAAWe2Nr39r9+pZa0NStgj0+ppuFaVlmTEJS+i2lRRKOgYsFdqs4d
-        b8Mveh6z8X8Txm+Nau1+Z6xlWCzeq7XUSVQZGr06KiMKy5cHWy/kRvte7MGUXH+loEisS0PHVlZ
-        GG2cCkQkz3xUE57XVedHTcWjs
-X-Received: by 2002:a1c:cc11:: with SMTP id h17mr4480290wmb.19.1581413622484;
-        Tue, 11 Feb 2020 01:33:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw7fKqgsGAyA5ikiliDn3jmpl1I5sX0SlqMj+bcLy70PjqPun6qfyugqk9My5h3IwXcNukCPg==
-X-Received: by 2002:a1c:cc11:: with SMTP id h17mr4480274wmb.19.1581413622269;
-        Tue, 11 Feb 2020 01:33:42 -0800 (PST)
-Received: from eperezma.remote.csb (121.142.221.87.dynamic.jazztel.es. [87.221.142.121])
-        by smtp.gmail.com with ESMTPSA id s8sm3070475wmf.45.2020.02.11.01.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 01:33:41 -0800 (PST)
-Message-ID: <5119e785ed98cc446ad96d893bd2c6efa127f8e1.camel@redhat.com>
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger
- random crashes in KVM guests after reboot
-From:   Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Date:   Tue, 11 Feb 2020 10:33:39 +0100
-In-Reply-To: <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
-References: <20200107042401-mutt-send-email-mst@kernel.org>
-         <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
-         <20200107065434-mutt-send-email-mst@kernel.org>
-         <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
-         <20200120012724-mutt-send-email-mst@kernel.org>
-         <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
-         <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
-         <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
-         <20200206171349-mutt-send-email-mst@kernel.org>
-         <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
-         <20200207025806-mutt-send-email-mst@kernel.org>
-         <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
-         <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
-         <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-6.el8) 
-Mime-Version: 1.0
+        Tue, 11 Feb 2020 04:35:27 -0500
+Received: from mail1.perex.cz ([77.48.224.245]:56140 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727556AbgBKJf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 04:35:27 -0500
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id D4441A0040;
+        Tue, 11 Feb 2020 10:35:24 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz D4441A0040
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1581413724; bh=9IvGzzJGYDpncBJXTDMIMmetMvPwcS5FQO6sWG2ZxZw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=1tAsP1W7o90yfr++XbusgfY8zfv4DAXfLPRYYILiXMMlAqIlryn66KifzDWpXbhJk
+         g1UeIqDxhktfoUsaJHSGVLpu6adOeEFYzUkRjZ//2GOP7AusIvsx7+Njcgn3Fqsa+s
+         iPy1whLIQ627dViOqlOXVUp3y3DfP7IQaMEDR6TI=
+Received: from p50.perex-int.cz (unknown [192.168.100.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Tue, 11 Feb 2020 10:35:19 +0100 (CET)
+Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th
+ quirk value
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>
+Cc:     Takashi Iwai <tiwai@suse.de>, Kailang Yang <kailang@realtek.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
+ <20200211055651.4405-2-benjamin.poirier@gmail.com>
+ <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz> <20200211081604.GA8286@f3>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <901c395a-7fb5-5672-5955-d6d211824177@perex.cz>
+Date:   Tue, 11 Feb 2020 10:35:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200211081604.GA8286@f3>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-10 at 12:01 +0100, Christian Borntraeger wrote:
+Dne 11. 02. 20 v 9:16 Benjamin Poirier napsal(a):
+> On 2020/02/11 08:40 +0100, Jaroslav Kysela wrote:
+> [...]
+>>>
+>>> In summary, Node 0x17 DAC connection 0x3 offers the loudest max volume and
+>>> the most detailed mixer controls. That connection is obtained with quirk
+>>> ALC295_FIXUP_DISABLE_DAC3. Therefore, change the ThinkPad X1 Carbon 7th to
+>>> use ALC295_FIXUP_DISABLE_DAC3.
+>>
+>> The volume split (individual volume control) will cause trouble for the UCM
+>> volume control at the moment which is the target for this device to get the
+>> digital microphone working. If there is no possibility to share DAC, it
+>> would be probably more nice to join the volume control in the driver.
+>>
+>> Have you tried to use 0x03 as source for all four speakers?
 > 
-> On 10.02.20 10:47, Eugenio Perez Martin wrote:
-> > Hi Christian.
-> > 
-> > I'm not able to reproduce the failure with eccb852f1fe6bede630e2e4f1a121a81e34354ab commit. Could you add more data?
-> > Your configuration (libvirt or qemu line), and host's dmesg output if any?
-> > 
-> > Thanks!
-> 
-> If it was not obvious, this is on s390x, a big endian system.
+> Front speakers are fixed to 0x02. Node 0x14
+>    Connection: 1
+>       0x02
 > 
 
-Hi Christian. Thank you very much for the hints.
+Yes, you're right. I forgot that.
 
-Could we add some debug traces? Something like the inline patch should give us some clues.
+>>
+>> Why PA handles the rear volume control with the current driver code in the
+>> legacy ALSA driver? It should be handled like standard stereo device. I'll
+>> check.
+> 
+> The device comes up with "Analog Stereo Output" profile by default. I
+> changed it to "Analog Surround 4.0 Output" to test controlling each
+> channel individually:
 
-Thanks!
+Yes, but does the volume control work (does PA change the appropriate ALSA 
+mixer volume)? Sometimes, it's difficult to see the difference between soft 
+volume attenuation and the hardware volume control.
 
-From a8d65d5f0ae3d305443ee84b4842b7c712a1ac1d Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
-Date: Tue, 11 Feb 2020 10:29:01 +0100
-Subject: [PATCH] Add some traces
+> 
+>>> pavucontrol controls are reported with the device configured with the
+>>> "Analog Surround 4.0 Output" profile.
+> 
+>>
+>> You should also test PA with UCM.
+> 
+> Please let me know what do I need to test exactly? I'm not familiar with
+> UCM.
 
----
- drivers/vhost/vhost.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Just install the latest pulseaudio (latest from repo), alsa-lib and 
+alsa-ucm-conf (also from repo). If pulseaudio detects UCM, it has the preference.
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index b5a51b1f2e79..60c048eebe4d 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2239,8 +2239,8 @@ static int fetch_buf(struct vhost_virtqueue *vq)
- 		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
- 
- 		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
--			vq_err(vq, "Guest moved used index from %u to %u",
--				last_avail_idx, vq->avail_idx);
-+			vq_err(vq, "Guest moved vq %p used index from %u to %u",
-+				vq, last_avail_idx, vq->avail_idx);
- 			return -EFAULT;
- 		}
- 
-@@ -2336,6 +2336,8 @@ static int fetch_descs(struct vhost_virtqueue *vq)
- 	while (!ret && vq->ndescs <= vq->batch_descs)
- 		ret = fetch_buf(vq);
- 
-+	pr_debug("[vq=%p][vq->ndescs=%d]", vq, vq->ndescs);
-+
- 	return vq->ndescs ? 0 : ret;
- }
- 
-@@ -2416,6 +2418,8 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
- 	}
- 
- 	vq->first_desc = i + 1;
-+	pr_debug("[vq=%p][vq->ndescs=%d][vq->first_desc=%d]", vq, vq->ndescs,
-+		 vq->first_desc);
- 
- 	return ret;
- 
-@@ -2459,6 +2463,7 @@ static int __vhost_add_used_n(struct vhost_virtqueue *vq,
- 
- 	start = vq->last_used_idx & (vq->num - 1);
- 	used = vq->used->ring + start;
-+	pr_debug("[vq=%p][start=%d][count=%u]", vq, start, count);
- 	if (vhost_put_used(vq, heads, start, count)) {
- 		vq_err(vq, "Failed to write used");
- 		return -EFAULT;
+						Jaroslav
+
+> 
+
+
 -- 
-2.18.1
-
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
