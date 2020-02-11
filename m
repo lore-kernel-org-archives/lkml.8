@@ -2,193 +2,157 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797E5C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA0BC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BADD214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD02A20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:17:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XBVARGgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgBKRQ5 (ORCPT
+        id S1729192AbgBKRRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:16:57 -0500
-Received: from muru.com ([72.249.23.125]:54736 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbgBKRQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:16:57 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id DA26E80D4;
-        Tue, 11 Feb 2020 17:17:39 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio graph card
-Date:   Tue, 11 Feb 2020 09:16:45 -0800
-Message-Id: <20200211171645.41990-1-tony@atomide.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 11 Feb 2020 12:17:43 -0500
+Received: from mail-eopbgr30088.outbound.protection.outlook.com ([40.107.3.88]:9230
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727954AbgBKRRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 12:17:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OeHom/HJim89x3juCTtIqbU6zatfiIQFH4bLLQD4WZlyvq/x0OaIlfY4E5Kag8g3yi84MgbaSLlMJrQ91bYevKBxtX0BpQvFhAoH4mW+ds4r6uFQ/b6aZ/bBeC0nTUtUWBAXXt+BJv9YW9v+wBdM9Tg/AI/bEaiUN/AZ1QL1X2kC5L7kaAKeOdcssgF2ic6maY+hZu83TNg7fucvPppqyY04IW/lAp0oLorCVGP1tDamFptQ4D2YCVY2SCwvM8kMrm5E8XxhCzy4dd28oYcaHoHP29AmJ2cGHZqgZ8d4YHZjRd3jPE1R5LDilH/VNdxpY8NRmfMzxxaEiDTb3jt83A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SokNiBXd71dtl3qu8pZM6zCc6wjMcp6v5Vd8J9tSyE0=;
+ b=kfA1Vb2r9NJnxv2bemn/7Ei2b/Bb/P+WY+RcdAc0Jhq5bCJZ/vbJymSsF6bGrbYaDgljaZaXpJzhg9YfY3ApywfZg/AOjfMHNNXQ8KNo+1NIXkq45FregfuIsk5/mxIivWVFIIMEPPMpsIPWCNZGYG4xf14710QJTLkYgICjv/lM5o/WtDFMafV1eGevFgHkYgITqsqjPqx9x4qt4J4vvhrLQI+3tRbc+aXyCO7epOGrkEu/wKziQE6S3MysLfCoKWseb6Lt5i6VXZTQpneT3OSWAVJD+6Y1zM1mWf7EFBYEon3VTxPynSFMPlDi3Y0iTObTYgGPPmJ8xixMneYDsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SokNiBXd71dtl3qu8pZM6zCc6wjMcp6v5Vd8J9tSyE0=;
+ b=XBVARGgmKnVn2apAtc4yJu4ZY0ejTCfjkbXWbaHv8jLHEqT+Tk032CuBBrRg0y8flCwp2BH3/QKiKnpBpVydaT+p1sCAYngLViwkwXMSmZgOM0lDeqYCTf2Z14IFJh2IRd5YJ9/UAtO5xgonbVnqQwn/G30nCm6C/6AGbk/3jG0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB6093.eurprd05.prod.outlook.com (20.178.204.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Tue, 11 Feb 2020 17:17:37 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
+ 17:17:37 +0000
+Date:   Tue, 11 Feb 2020 13:17:33 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] binfmt_elf: Update READ_IMPLIES_EXEC logic for
+ modern CPUs
+Message-ID: <20200211171733.GN4271@mellanox.com>
+References: <20200210193049.64362-1-keescook@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210193049.64362-1-keescook@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR08CA0020.namprd08.prod.outlook.com
+ (2603:10b6:208:239::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR08CA0020.namprd08.prod.outlook.com (2603:10b6:208:239::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Tue, 11 Feb 2020 17:17:36 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j1ZAD-0002g9-Hm; Tue, 11 Feb 2020 13:17:33 -0400
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 145f222c-729e-497a-c782-08d7af164a77
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6093:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB609342A30031A29D85922B30CF180@VI1PR05MB6093.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0310C78181
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(189003)(199004)(66476007)(66946007)(86362001)(2616005)(5660300002)(1076003)(6916009)(36756003)(33656002)(26005)(186003)(66556008)(7416002)(4326008)(316002)(54906003)(478600001)(966005)(9786002)(9746002)(8676002)(81156014)(81166006)(8936002)(2906002)(52116002)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6093;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uEMcmxlp3Uaei2Q0PxVVqHsYJ7/CT24wOOwO5qT0R1rRauSyh15xQuFFp+/4/+j79UceIeRWvfV+pa1xc4cD4l8uiddQRSfw+11gI5rHBeFi50WTlBmwjI2kAHbQ6vyfbsd1L4/06CPLrw3datYqNajtglLh68muLglfw69pPp4nCYRcHFPZZBQfYhSnF3zD9CZ8HgS0LNG49Fn6ASjtr8sAoOhgCpE31piSiCZjpS9sbOlV/mEJtGQ6dbuy0Ci4fCC5d//2DDG4wn0NnfpGRIHSnK5lvt4Cxza49Q9reP5Tcvoc7+nJpo5LlZVIDnxVJsSsQkOuQ+hLgOf9hGIzMrqdQy4N+iCp+1OhZwVssDrzEVJxyI/13Y3NH7lYz9zdzvKI4Paa+7IRcP71/nhuGfvSdPcst7RYQjiAbFZpOlC487kFi1ij7VzttBHS37rWMuXoi2sL68TPRyAkXrZvp12UCcuqmT0p1aLS4bLTzmE6fJuHAhmajQzAXKuKdtUkk4dB2OVUH4GDkQ678ZfM7Q2dGb9Nilhk49l0YMmEMocJpZ1H9YHSsYfF4Oz2PmYc
+X-MS-Exchange-AntiSpam-MessageData: 8qfC9zTo46UvZbNRiYr7Ik97iT6KZV3KR5u3FWPMnXjWmE3Y3rvR+lG21E0+cRe1hXvm+FBBWSO/iQy4+FywUHDc0xIFyccnJ8WE3h572AC/Ks3s1NSHOdBqXv4MJPAyqoVjShBYf+mwNUeHTgcNTQ==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 145f222c-729e-497a-c782-08d7af164a77
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 17:17:37.2278
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S46qNYUi4awAEUSW5flQxkYl0cfXzIHWh4mI+WpTTPNxkSJ6rF2A2ZsURuPPyiDJFpLQMc/ILuw2WG46Om0tZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can have multiple connections on a single McBSP instance configured
-with audio graph card when using TDM (Time Division Multiplexing). Let's
-allow that by configuring dais dynamically.
+On Mon, Feb 10, 2020 at 11:30:42AM -0800, Kees Cook wrote:
+> Hi,
+> 
+> This is a refresh of my earlier attempt to fix READ_IMPLIES_EXEC. I think
+> it incorporates the feedback from v2, and I've now added a selftest. This
+> series is for x86, arm, and arm64; I'd like it to go via -tip, though,
+> just to keep this change together with the selftest. To that end, I'd like
+> to collect Acks from the respective architecture maintainers. (Note that
+> most other architectures don't suffer from this problem. e.g. powerpc's
+> behavior appears to already be correct. MIPS may need adjusting but the
+> history of CPU features and toolchain behavior is very unclear to me.)
+> 
+> Repeating the commit log from later in the series:
+> 
+> 
+> The READ_IMPLIES_EXEC work-around was designed for old toolchains that
+> lacked the ELF PT_GNU_STACK marking under the assumption that toolchains
+> that couldn't specify executable permission flags for the stack may not
+> know how to do it correctly for any memory region.
+> 
+> This logic is sensible for having ancient binaries coexist in a system
+> with possibly NX memory, but was implemented in a way that equated having
+> a PT_GNU_STACK marked executable as being as "broken" as lacking the
+> PT_GNU_STACK marking entirely. Things like unmarked assembly and stack
+> trampolines may cause PT_GNU_STACK to need an executable bit, but they
+> do not imply all mappings must be executable.
+> 
+> This confusion has led to situations where modern programs with explicitly
+> marked executable stack are forced into the READ_IMPLIES_EXEC state when
+> no such thing is needed. (And leads to unexpected failures when mmap()ing
+> regions of device driver memory that wish to disallow VM_EXEC[1].)
+> 
+> In looking for other reasons for the READ_IMPLIES_EXEC behavior, Jann
+> Horn noted that glibc thread stacks have always been marked RWX (until
+> 2003 when they started tracking the PT_GNU_STACK flag instead[2]). And
+> musl doesn't support executable stacks at all[3]. As such, no breakage
+> for multithreaded applications is expected from this change.
+> 
+> [1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
+> [2] https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=54ee14b3882
+> [3] https://lkml.kernel.org/r/20190423192534.GN23599@brightrain.aerifal.cx
 
-See Documentation/devicetree/bindings/sound/audio-graph-card.txt and
-Documentation/devicetree/bindings/graph.txt for more details for
-multiple endpoints.
+I'm happy to see this, I think it will help the situation.
 
-I've tested this with droid4 where cpcap pmic and modem voice are both
-both wired to mcbsp3. I've also tested this on droid4 both with and
-without the pending modem audio codec driver that is waiting for n_gsm
-serdev dependencies to clear.
+While I'm not well versed in all the historical details, the general
+approach makes sense to me and I've looked through the patches.
 
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Arthur D. <spinal.by@gmail.com>
-Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- sound/soc/ti/omap-mcbsp-priv.h |  2 +
- sound/soc/ti/omap-mcbsp.c      | 76 ++++++++++++++++++++++++----------
- 2 files changed, 55 insertions(+), 23 deletions(-)
+I would like to follow this up with a patch to again block VM_EXEC
+from the RDMA related mmap of BAR paths..
 
-diff --git a/sound/soc/ti/omap-mcbsp-priv.h b/sound/soc/ti/omap-mcbsp-priv.h
---- a/sound/soc/ti/omap-mcbsp-priv.h
-+++ b/sound/soc/ti/omap-mcbsp-priv.h
-@@ -262,6 +262,8 @@ struct omap_mcbsp {
- 	struct omap_mcbsp_platform_data *pdata;
- 	struct omap_mcbsp_st_data *st_data;
- 	struct omap_mcbsp_reg_cfg cfg_regs;
-+	struct snd_soc_dai_driver *dais;
-+	int dai_count;
- 	struct snd_dmaengine_dai_dma_data dma_data[2];
- 	unsigned int dma_req[2];
- 	int dma_op_mode;
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -14,6 +14,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_graph.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -1304,23 +1305,53 @@ static int omap_mcbsp_remove(struct snd_soc_dai *dai)
- 	return 0;
- }
- 
--static struct snd_soc_dai_driver omap_mcbsp_dai = {
--	.probe = omap_mcbsp_probe,
--	.remove = omap_mcbsp_remove,
--	.playback = {
--		.channels_min = 1,
--		.channels_max = 16,
--		.rates = OMAP_MCBSP_RATES,
--		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE,
--	},
--	.capture = {
--		.channels_min = 1,
--		.channels_max = 16,
--		.rates = OMAP_MCBSP_RATES,
--		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE,
--	},
--	.ops = &mcbsp_dai_ops,
--};
-+static int omap_mcbsp_init_dais(struct omap_mcbsp *mcbsp)
-+{
-+	struct device_node *np = mcbsp->dev->of_node;
-+	int i;
-+
-+	if (np)
-+		mcbsp->dai_count = of_graph_get_endpoint_count(np);
-+
-+	if (!mcbsp->dai_count)
-+		mcbsp->dai_count = 1;
-+
-+	mcbsp->dais = devm_kcalloc(mcbsp->dev, mcbsp->dai_count,
-+				   sizeof(*mcbsp->dais), GFP_KERNEL);
-+	if (!mcbsp->dais)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < mcbsp->dai_count; i++) {
-+		struct snd_soc_dai_driver *dai = &mcbsp->dais[i];
-+
-+		dai->name = devm_kasprintf(mcbsp->dev, GFP_KERNEL, "%s-dai%i",
-+					   dev_name(mcbsp->dev), i);
-+
-+		if (i == 0) {
-+			dai->probe = omap_mcbsp_probe;
-+			dai->remove = omap_mcbsp_remove;
-+			dai->ops = &mcbsp_dai_ops;
-+		}
-+		dai->playback.channels_min = 1;
-+		dai->playback.channels_max = 16;
-+		dai->playback.rates = OMAP_MCBSP_RATES;
-+		if (mcbsp->pdata->reg_size == 2)
-+			dai->playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		else
-+			dai->playback.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+						SNDRV_PCM_FMTBIT_S32_LE;
-+		dai->capture.channels_min = 1;
-+		dai->capture.channels_max = 16;
-+		dai->capture.rates = OMAP_MCBSP_RATES;
-+		if (mcbsp->pdata->reg_size == 2)
-+			dai->capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		else
-+			dai->capture.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+					       SNDRV_PCM_FMTBIT_S32_LE;
-+	}
-+
-+	return 0;
-+}
- 
- static const struct snd_soc_component_driver omap_mcbsp_component = {
- 	.name		= "omap-mcbsp",
-@@ -1409,18 +1440,17 @@ static int asoc_mcbsp_probe(struct platform_device *pdev)
- 	mcbsp->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, mcbsp);
- 
--	ret = omap_mcbsp_init(pdev);
-+	ret = omap_mcbsp_init_dais(mcbsp);
- 	if (ret)
- 		return ret;
- 
--	if (mcbsp->pdata->reg_size == 2) {
--		omap_mcbsp_dai.playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
--		omap_mcbsp_dai.capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
--	}
-+	ret = omap_mcbsp_init(pdev);
-+	if (ret)
-+		return ret;
- 
- 	ret = devm_snd_soc_register_component(&pdev->dev,
- 					      &omap_mcbsp_component,
--					      &omap_mcbsp_dai, 1);
-+					      mcbsp->dais, mcbsp->dai_count);
- 	if (ret)
- 		return ret;
- 
--- 
-2.25.0
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Jason
