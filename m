@@ -2,209 +2,182 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6BDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CCBC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1802086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581439679;
-	bh=RjluxV/dumLEz6tGtwJt2Y/sWFfGURODQzYUETMkLOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yUAzGjT6q6aZgWSyUuBcnlfEBg0K40hoElgR0UfyQ3qugneTcMeV25iBrBfl2lFWC
-	 kAQ1VzbsGLWPp+t0SVScRHLrtf09fwnafOhV9ciR4KHZoKtoQftBizyGBH8GBAj3Sh
-	 auElwAPqEfHTF2fwrW/MiTzDRMTybrxFGvwKOso8=
+	by mail.kernel.org (Postfix) with ESMTP id C5B692086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:50:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ifBMmXPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgBKQr6 (ORCPT
+        id S1730904AbgBKQuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:47:58 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39803 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbgBKQr6 (ORCPT
+        Tue, 11 Feb 2020 11:50:40 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:35972 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgBKQuj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:47:58 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c84so4418455wme.4;
-        Tue, 11 Feb 2020 08:47:57 -0800 (PST)
+        Tue, 11 Feb 2020 11:50:39 -0500
+Received: by mail-qv1-f66.google.com with SMTP id db9so5298710qvb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:50:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jd5i4mX/Ogg4/ff2n6qJB7i2iFOPG1CrXa+uEUO9qsw=;
+        b=ifBMmXPW/zhL2PKm3FCrxT+p/6/F3wl9Kh2h+E5xu7Q2TD9qIPdzdgI8LOYyye3FRr
+         UtUBpmAtJ5follDHdD7SjZSZJGIh/ElsRSNlPKYJGDm6Uc7aM3xB468XblcMzBoTh6+j
+         d0kT2iJCbTsVnzeZqaXmiAsbbTrcaLDK5yrV0fr0hi36Nqpkqn78C+d0FDkn4OmBg1nH
+         +4J2crlppYnJKhtPKq6MpYFYYhz6L4hd/n8C0G8QoMdCooies8demjKz57mNc9gwuHqd
+         iFKcwsUCFKfcOjmcSUVqeuUAUMws9OsTOw/EUB4jt7cIljVzgx4W0yBnZwk0+X8slKI6
+         QdgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CMl+mRO9Zvf2SDJ75RJRDZjMrbhk+aBHXg/UK4B09DA=;
-        b=dChStUK8diMq2NGB+3sU0pNMSbHY4g8JxRBOwn5oxx2J07qo9MeLYByf3n2AYIWRFr
-         RizTB4uBHV/59FlSEW3G5ZfUNi8AvMm2Qxng4EhZXH8bHw0rZ9dlq7PTV5g4S2R4SWXY
-         fOtUnLqRP/0xV1+Xxwz8ReYJiNeDJHZ58J9JV2GPNPlitMCdz8WH3pPp5tBiTH2KvIOy
-         LocKwZIrMfFyMe6qnSpeD2Q2U5YdGYqZ/btVr78opI43VCF7CEWcyLQF/6DcUPdXbIaj
-         4WP981yYPv/AKOSUZRWPj5V2bySp9w+l2bojOgr6ao6jGrA9JgD4nk59HXleEbYE+Lr8
-         sOSA==
-X-Gm-Message-State: APjAAAVijj2Mrx3D+YElmZOGTWyWaXtqHqDRS4/cie6JTBUDbSKHQchA
-        n0RPlk7Qx7ad3CMPb++tdf83tBld
-X-Google-Smtp-Source: APXvYqyRmpnV0x90UnxeJU/1d5i6cXU6wvw0RqwIVycsFRl5ODFQlgFraCMrIyXLjxV9s936/PfKjA==
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr6892696wmf.133.1581439676118;
-        Tue, 11 Feb 2020 08:47:56 -0800 (PST)
-Received: from localhost (ip-37-188-227-72.eurotel.cz. [37.188.227.72])
-        by smtp.gmail.com with ESMTPSA id x11sm4418883wmg.46.2020.02.11.08.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 08:47:55 -0800 (PST)
-Date:   Tue, 11 Feb 2020 17:47:53 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200211164753.GQ10636@dhcp22.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200130170020.GZ24244@dhcp22.suse.cz>
- <20200203215201.GD6380@cmpxchg.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jd5i4mX/Ogg4/ff2n6qJB7i2iFOPG1CrXa+uEUO9qsw=;
+        b=fJHkpnbbnDq5NmLxBv84llET6aNtbDZkl7Gwr8jzAIecPGlv/OaZpuzuumCmf2W2fX
+         5NmouxGlJ3qh4KNAxtZSC+NULqqx3v5WuSppa5WBJCUKXOouEVJG9/IoeHeHuz05Rqpz
+         L/Af5pXVm8Op4XeuB+XgoT3IVAx7ac/3+s1tNfd9xVf4sPRnowEH89zXYs7fsDPAznF1
+         ckTmcaQ0SaYXkm5T9ddHg6JuWMHiYfwc2IZ8XGn4qAliDKR+m0q8ERr0eKO0p/FpZnhn
+         5mOzYtZV6UxP3HBtEv40vmE6VRa8ne5meh2ty+4/HEv+9+h0EXgI4+PUhwL/xcTULGly
+         dnFg==
+X-Gm-Message-State: APjAAAVSm9to37rNAh0b8BThgmPybmJ7m7y+ho0J3Z3XuId/jzWa7eU3
+        DSVZNY+/RytmzmQ1y13T1GNaQw==
+X-Google-Smtp-Source: APXvYqycWT/ED4KtAEPXSOdv+cBO6MkaZONwPU4iRoEq6Z7Ai40GB4O1dCWxrG5iz5rmSQk0gWbZzw==
+X-Received: by 2002:ad4:4c08:: with SMTP id bz8mr15982924qvb.241.1581439838304;
+        Tue, 11 Feb 2020 08:50:38 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id o6sm2206759qkk.53.2020.02.11.08.50.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Feb 2020 08:50:37 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j1Yk9-0002J8-7b; Tue, 11 Feb 2020 12:50:37 -0400
+Date:   Tue, 11 Feb 2020 12:50:37 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Joao Martins <joao.m.martins@oracle.com>
+Cc:     linux-nvdimm@lists.01.org, Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Liran Alon <liran.alon@oracle.com>,
+        Nikita Leshenko <nikita.leshchenko@oracle.com>,
+        Barret Rhoden <brho@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: [PATCH RFC 09/10] vfio/type1: Use follow_pfn for VM_FPNMAP VMAs
+Message-ID: <20200211165037.GA22564@ziepe.ca>
+References: <20200110190313.17144-1-joao.m.martins@oracle.com>
+ <20200110190313.17144-10-joao.m.martins@oracle.com>
+ <20200207210831.GA31015@ziepe.ca>
+ <98351044-a710-1d52-f030-022eec89d1d5@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203215201.GD6380@cmpxchg.org>
+In-Reply-To: <98351044-a710-1d52-f030-022eec89d1d5@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 03-02-20 16:52:01, Johannes Weiner wrote:
-> On Thu, Jan 30, 2020 at 06:00:20PM +0100, Michal Hocko wrote:
-> > On Thu 19-12-19 15:07:18, Johannes Weiner wrote:
-> > > Right now, the effective protection of any given cgroup is capped by
-> > > its own explicit memory.low setting, regardless of what the parent
-> > > says. The reasons for this are mostly historical and ease of
-> > > implementation: to make delegation of memory.low safe, effective
-> > > protection is the min() of all memory.low up the tree.
-> > > 
-> > > Unfortunately, this limitation makes it impossible to protect an
-> > > entire subtree from another without forcing the user to make explicit
-> > > protection allocations all the way to the leaf cgroups - something
-> > > that is highly undesirable in real life scenarios.
-> > > 
-> > > Consider memory in a data center host. At the cgroup top level, we
-> > > have a distinction between system management software and the actual
-> > > workload the system is executing. Both branches are further subdivided
-> > > into individual services, job components etc.
-> > > 
-> > > We want to protect the workload as a whole from the system management
-> > > software, but that doesn't mean we want to protect and prioritize
-> > > individual workload wrt each other. Their memory demand can vary over
-> > > time, and we'd want the VM to simply cache the hottest data within the
-> > > workload subtree. Yet, the current memory.low limitations force us to
-> > > allocate a fixed amount of protection to each workload component in
-> > > order to get protection from system management software in
-> > > general. This results in very inefficient resource distribution.
+On Tue, Feb 11, 2020 at 04:23:49PM +0000, Joao Martins wrote:
+> On 2/7/20 9:08 PM, Jason Gunthorpe wrote:
+> > On Fri, Jan 10, 2020 at 07:03:12PM +0000, Joao Martins wrote:
+> >> From: Nikita Leshenko <nikita.leshchenko@oracle.com>
+> >>
+> >> Unconditionally interpreting vm_pgoff as a PFN is incorrect.
+> >>
+> >> VMAs created by /dev/mem do this, but in general VM_PFNMAP just means
+> >> that the VMA doesn't have an associated struct page and is being managed
+> >> directly by something other than the core mmu.
+> >>
+> >> Use follow_pfn like KVM does to find the PFN.
+> >>
+> >> Signed-off-by: Nikita Leshenko <nikita.leshchenko@oracle.com>
+> >>  drivers/vfio/vfio_iommu_type1.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> >> index 2ada8e6cdb88..1e43581f95ea 100644
+> >> +++ b/drivers/vfio/vfio_iommu_type1.c
+> >> @@ -362,9 +362,9 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+> >>  	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+> >>  
+> >>  	if (vma && vma->vm_flags & VM_PFNMAP) {
+> >> -		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+> >> -		if (is_invalid_reserved_pfn(*pfn))
+> >> -			ret = 0;
+> >> +		ret = follow_pfn(vma, vaddr, pfn);
+> >> +		if (!ret && !is_invalid_reserved_pfn(*pfn))
+> >> +			ret = -EOPNOTSUPP;
+> >>  	}
 > > 
-> > I do agree that configuring the reclaim protection is not an easy task.
-> > Especially in a deeper reclaim hierarchy. systemd tends to create a deep
-> > and commonly shared subtrees. So having a protected workload really
-> > requires to be put directly into a new first level cgroup in practice
-> > AFAICT. That is a simpler example though. Just imagine you want to
-> > protect a certain user slice.
-> 
-> Can you elaborate a bit on this? I don't quite understand the two
-> usecases you are contrasting here.
+> > FWIW this existing code is a huge hack and a security problem.
+> > 
+> > I'm not sure how you could be successfully using this path on actual
+> > memory without hitting bad bugs?
+> > 
+> ATM I think this codepath is largelly hit at the moment for MMIO (GPU
+> passthrough, or mdev). In the context of this patch, guest memory would be
+> treated similarly meaning the device-dax backing memory wouldn't have a 'struct
+> page' (as introduced in this series).
 
-Essentially this is about two different usecases. The first one is about
-protecting a hierarchy and spreading the protection among different
-workloads and the second is how to protect an inner memcg without
-configuring protection all the way up the hierarchy.
+I think it is being used specifically to allow two VFIO's to be
+inserted into a VM and have the IOMMU setup to allow MMIO access.
+
+> > Fudamentally VFIO can't retain a reference to a page from within a VMA
+> > without some kind of recount/locking/etc to allow the thing that put
+> > the page there to know it is still being used (ie programmed in a
+> > IOMMU) by VFIO.
+> > 
+> > Otherwise it creates use-after-free style security problems on the
+> > page.
+>
+> I take it you're referring to the past problems with long term page pinning +
+> fsdax? Or you had something else in mind, perhaps related to your LSFMM topic?
+
+No. I'm refering to retaining access to memory backed a VMA without
+holding any kind of locking on it. This is an access after free scenario.
+
+It *should* be like a long term page pin so that the VMA owner knows
+something is happening.
  
-> > You seem to be facing a different problem though IIUC. You know how much
-> > memory you want to protect and you do not have to care about the cgroup
-> > hierarchy up but you do not know/care how to distribute that protection
-> > among workloads running under that protection. I agree that this is a
-> > reasonable usecase.
-> 
-> I'm not sure I'm parsing this right, but the use case is this:
-> 
-> When I'm running a multi-component workload on a host without any
-> cgrouping, the individual components compete over the host's memory
-> based on rate of allocation, how often they reference their memory and
-> so forth. It's a need-based distribution of pages, and the weight can
-> change as demand changes throughout the life of the workload.
-> 
-> If I now stick several of such workloads into a containerized
-> environment, I want to use memory.low to assign each workload as a
-> whole a chunk of memory it can use - I don't want to assign fixed-size
-> subchunks to each individual component of each workload! I want the
-> same free competition *within* the workload while setting clear rules
-> for competition *between* the different workloads.
+> Here the memory can't be used by the kernel (and there's no struct page) except
+> from device-dax managing/tearing/driving the pfn region (which is static and the
+> underlying PFNs won't change throughout device lifetime), and vfio
+> pinning/unpinning the pfns (which are refcounted against multiple map/unmaps);
 
-Yeah, that matches my understanding of the problem your are trying to
-solve here.
-> 
-> [ What I can do today to achieve this is disable the memory controller
->   for the subgroups. When I do this, all pages of the workload are on
->   one single LRU that is protected by one single memory.low.
-> 
->   But obviously I lose any detailed accounting as well.
-> 
->   This patch allows me to have the same recursive protection semantics
->   while retaining accounting. ]
-> 
-> > Those both problems however show that we have a more general
-> > configurability problem for both leaf and intermediate nodes. They are
-> > both a result of strong requirements imposed by delegation as you have
-> > noted above. I am thinking didn't we just go too rigid here?
-> 
-> The requirement for delegation is that child groups cannot claim more
-> than the parent affords. Is that the restriction you are referring to?
+For instance if you tear down the device-dax then VFIO will happily
+continue to reference the memory. This is a bug.
 
-yes.
+There are other cases that escalate to security bugs.
 
-> > Delegation points are certainly a security boundary and they should
-> > be treated like that but do we really need a strong containment when
-> > the reclaim protection is under admin full control? Does the admin
-> > really have to reconfigure a large part of the hierarchy to protect a
-> > particular subtree?
-> > 
-> > I do not have a great answer on how to implement this unfortunately. The
-> > best I could come up with was to add a "$inherited_protection" magic
-> > value to distinguish from an explicit >=0 protection. What's the
-> > difference? $inherited_protection would be a default and it would always
-> > refer to the closest explicit protection up the hierarchy (with 0 as a
-> > default if there is none defined).
-> >         A
-> >        / \
-> >       B   C (low=10G)
-> >          / \
-> >         D   E (low = 5G)
-> > 
-> > A, B don't get any protection (low=0). C gets protection (10G) and
-> > distributes the pressure to D, E when in excess. D inherits (low=10G)
-> > and E overrides the protection to 5G.
-> > 
-> > That would help both usecases AFAICS while the delegation should be
-> > still possible (configure the delegation point with an explicit
-> > value). I have very likely not thought that through completely.  Does
-> > that sound like a completely insane idea?
-> > 
-> > Or do you think that the two usecases are simply impossible to handle
-> > at the same time?
+> > This code needs to be deleted, not extended :(
 > 
-> Doesn't my patch accomplish this?
+> To some extent it isn't really an extension: the patch was just removing the
+> assumption @vm_pgoff being the 'start pfn' on PFNMAP vmas. This is also
+> similarly done by get_vaddr_frames().
 
-Unless I am missing something then I am afraid it doesn't. Say you have a
-default systemd cgroup deployment (aka deeper cgroup hierarchy with
-slices and scopes) and now you want to grant a reclaim protection on a
-leaf cgroup (or even a whole slice that is not really important). All the
-hierarchy up the tree has the protection set to 0 by default, right? You
-simply cannot get that protection. You would need to configure the
-protection up the hierarchy and that is really cumbersome.
+You are extending it in the sense that you plan to use it for more
+cases than VMAs created by some other VFIO. That should not be
+done as it will only complicate fixing this code.
 
-> Any cgroup or group of cgroups still cannot claim more than the
-> ancestral protection for the subtree. If a cgroup says 10G, the sum of
-> all children's protection will never exceed that. This ensures
-> delegation is safe.
+KVM is allowed to use follow_pfn because it uses MMU notifiers and
+does not allow the result of follow_pfn to outlive the VMA (AFAIK at
+least). So it should be safe.
 
-Right. And delegation usecase really requres that. No question about
-that. I am merely arguing that if you do not delegate then this is way
-too strict.
--- 
-Michal Hocko
-SUSE Labs
+Jason
