@@ -2,114 +2,106 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B5EC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE02C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C133320708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="KqMs6V0x"
+	by mail.kernel.org (Postfix) with ESMTP id 52CF920708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbgBKQ1i (ORCPT
+        id S1730849AbgBKQ2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:27:38 -0500
-Received: from mail.efficios.com ([167.114.26.124]:43692 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbgBKQ1h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:27:37 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9A87C24DA97;
-        Tue, 11 Feb 2020 11:27:36 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id hyHf05rlqMDp; Tue, 11 Feb 2020 11:27:36 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 4C46A24D8B5;
-        Tue, 11 Feb 2020 11:27:36 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4C46A24D8B5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1581438456;
-        bh=ec3kBvO2BqXkmdya9RuZRn0s5WZ1uU9YP5NHT2Lsw+4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=KqMs6V0xYFtD+UV2hHMObhS5rf/EEoO3WP7AvYBfNSujX/DzrBO3DhqTIRG3DQ8bS
-         hnIxFdkLkpeSGIUkNWpzMiR0B0S3MbE+BWl1bVL4fNYrpRq2x5WK6pDaM5ZgiMbhBc
-         6tq3ML4wDKYJs1IubsF+UF8dvQcRAmGYRLU3e/FpWS1O0ambkw/5oqNAnnwjP96m9A
-         q5AODi6mbSEebdVs+0U8JIixArTGW0evcEv5cdUSHqlGafFJybmsOcshtTsBHDnIeX
-         axDDjxee9K3DKV8zi1ss11vNgGGl1Nuj/TTXwLKiyXNz8GYVHuP70x6CjfCmH2E/g7
-         qre8dhICEa1xw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ldVQBVH-F97C; Tue, 11 Feb 2020 11:27:36 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 33A3C24D8B4;
-        Tue, 11 Feb 2020 11:27:36 -0500 (EST)
-Date:   Tue, 11 Feb 2020 11:27:36 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Message-ID: <698566505.617724.1581438456170.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200211111828.48058768@gandalf.local.home>
-References: <20200211095047.58ddf750@gandalf.local.home> <20200211153452.GW14914@hirez.programming.kicks-ass.net> <20200211111828.48058768@gandalf.local.home>
-Subject: Re: [PATCH v2] tracing/perf: Move rcu_irq_enter/exit_irqson() to
- perf trace point hook
+        Tue, 11 Feb 2020 11:28:32 -0500
+Received: from mga01.intel.com ([192.55.52.88]:50955 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729650AbgBKQ2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:28:32 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:28:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="233501271"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga003.jf.intel.com with ESMTP; 11 Feb 2020 08:28:30 -0800
+Date:   Tue, 11 Feb 2020 08:28:30 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 04/12] fs/xfs: Clean up DAX support check
+Message-ID: <20200211162830.GB12866@iweiny-DESK2.sc.intel.com>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <20200208193445.27421-5-ira.weiny@intel.com>
+ <20200211055745.GG10776@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: tracing/perf: Move rcu_irq_enter/exit_irqson() to perf trace point hook
-Thread-Index: YC6wRI/vCca3DODmn8oaF1GxqoNM3Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211055745.GG10776@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 11, 2020, at 11:18 AM, rostedt rostedt@goodmis.org wrote:
-
-> On Tue, 11 Feb 2020 16:34:52 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Feb 11, 2020 at 04:57:45PM +1100, Dave Chinner wrote:
+> On Sat, Feb 08, 2020 at 11:34:37AM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Rather than open coding xfs_inode_supports_dax() in
+> > xfs_ioctl_setattr_dax_invalidate() export xfs_inode_supports_dax() and
+> > call it in preparation for swapping dax flags.
+> > 
+> > This also means updating xfs_inode_supports_dax() to return true for a
+> > directory.
 > 
->> > +		if (unlikely(in_nmi()))
->> > +			goto out;
->> 
->> unless I'm mistaken, we can simply do rcu_nmi_enter() in this case, and
->> rcu_nmi_exit() on the other end.
->> 
->> > +		rcu_irq_enter_irqson();
+> That's not correct. This now means S_DAX gets set on directory inodes
+> because both xfs_inode_supports_dax() and the on-disk inode flag
+> checks return true in xfs_diflags_to_iflags(). Hence when we
+> instantiate a directory inode with a DAX inherit hint set on it
+> we'll set S_DAX on the inode and so IS_DAX() will return true for
+> directory inodes...
+
+I'm not following.  Don't we want S_DAX to get set on directory inodes?
+
+IIRC what we wanted was something like this where IS_DAX is the current state
+and "dax" is the inode flag:
+
+/ <IS_DAX=0 dax=0>
+	dir1 <IS_DAX=0 dax=0>
+		f0 <IS_DAX=0 dax=0>
+		f1 <IS_DAX=1 dax=1>
+	dir2 <IS_DAX=1 dax=1>
+		f2 <IS_DAX=1 dax=1>
+		f3 <IS_DAX=0 dax=0>
+		dir3 <IS_DAX=1 dax=1>
+			f4 <IS_DAX=1 dax=1>
+		dir4 <IS_DAX=0 dax=0>
+			f5 <IS_DAX=0 dax=0>
+		f6 <IS_DAX=1 dax=1>
+
+Where f1, dir2, f3, and dir4 required explicit state changes when they were
+created.  Because they inherited their dax state from the parent.  All the
+other creations happened based on the DAX state of the parent directory.  So we
+need to store and know the state of the directories.  What am I missing?
+
+Ira
+
 > 
-> The thing is, I don't think this can ever happen. We've had in the
-> tracepoint.h:
+> Cheers,
 > 
->		/* srcu can't be used from NMI */			\
->		WARN_ON_ONCE(rcuidle && in_nmi());			\
-> 
-> And this has yet to trigger.
-
-But that "rcuidle" state is defined on a per-tracepoint basis, whereas
-"!rcu_is_watching()" is a state which depends on the current execution
-context. I don't follow how the fact that this WARN_ON_ONCE() never
-triggered allows us to infer anything about (!rcu_is_watching() && in_nmi()).
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
