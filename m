@@ -2,65 +2,91 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD02C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC1C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7DF20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9758820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgBKFYc (ORCPT
+        id S1728207AbgBKFeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 00:24:32 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:37366 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727557AbgBKFYb (ORCPT
+        Tue, 11 Feb 2020 00:34:09 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:57351 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727662AbgBKFeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 00:24:31 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TpeTAeD_1581398658;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TpeTAeD_1581398658)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 11 Feb 2020 13:24:29 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] mm: vmpressure: use mem_cgroup_is_root API
-Date:   Tue, 11 Feb 2020 13:24:09 +0800
-Message-Id: <1581398649-125989-2-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1581398649-125989-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1581398649-125989-1-git-send-email-yang.shi@linux.alibaba.com>
+        Tue, 11 Feb 2020 00:34:08 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 4A505820702;
+        Tue, 11 Feb 2020 16:34:02 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j1OBN-0005yj-Jz; Tue, 11 Feb 2020 16:34:01 +1100
+Date:   Tue, 11 Feb 2020 16:34:01 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 05/12] fs: remove unneeded IS_DAX() check
+Message-ID: <20200211053401.GE10776@dread.disaster.area>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <20200208193445.27421-6-ira.weiny@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208193445.27421-6-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=Rwo4BHgMqpaIMKOmfJoA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use mem_cgroup_is_root() API to check if memcg is root memcg instead of
-open coding.
+On Sat, Feb 08, 2020 at 11:34:38AM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> The IS_DAX() check in io_is_direct() causes a race between changing the
+> DAX state and creating the iocb flags.
+> 
+> Remove the check because DAX now emulates the page cache API and
+> therefore it does not matter if the file state is DAX or not when the
+> iocb flags are created.
 
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/vmpressure.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This statement is ... weird.
 
-diff --git a/mm/vmpressure.c b/mm/vmpressure.c
-index 0590f00..d69019f 100644
---- a/mm/vmpressure.c
-+++ b/mm/vmpressure.c
-@@ -280,7 +280,7 @@ void vmpressure(gfp_t gfp, struct mem_cgroup *memcg, bool tree,
- 		enum vmpressure_levels level;
- 
- 		/* For now, no users for root-level efficiency */
--		if (!memcg || memcg == root_mem_cgroup)
-+		if (!memcg || mem_cgroup_is_root(memcg))
- 			return;
- 
- 		spin_lock(&vmpr->sr_lock);
+DAX doesn't "emulate" the page cache API at all - it has it's own
+read/write methods that filesystems call based on the iomap
+infrastructure (dax_iomap_rw()). i.e. there are 3 different IO paths
+through the filesystems: the DAX IO path, the direct IO path, and
+the buffered IO path.
+
+Indeed, it seems like this works a bit by luck: Ext4 and XFS always
+check IS_DAX(inode) in the read/write_iter methods before checking
+for IOCB_DIRECT, and hence the IOCB_DIRECT flag is ignored by the
+filesystems. i.e. when we got rid of the O_DIRECT paths from DAX, we
+forgot to clean up io_is_direct() and it's only due to the ordering
+of checks that we went down the DAX path correctly....
+
+That said, the code change is good, but the commit message needs a
+rewrite.
+
+Cheers,
+
+Dave.
 -- 
-1.8.3.1
-
+Dave Chinner
+david@fromorbit.com
