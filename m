@@ -2,103 +2,98 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFB9C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E7C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062B720842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S3kPeSSs"
+	by mail.kernel.org (Postfix) with ESMTP id D7A8A2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581423411;
+	bh=KHNDwelMhPhYYRCIOXWR7Xld6woG2x8V5JdMXH0YamI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O3wA7ggsfG77MJg3Bwia7XS1daKjVs9WJF/ckJTRdMvkif9S75iQ8M4sAmtPgBFeT
+	 Ohf6hiYlnVOgfkBU/H+HB+Vz3vWvneQ34JRlo2BXbVwRPVuRZzgkOxVGTHNstBFyyO
+	 kZt4NTk5VXJpxzRMXy7LBh8EKR8AdGevSlnUmk/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgBKMQd (ORCPT
+        id S1728536AbgBKMQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:16:33 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40991 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728079AbgBKMQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:16:32 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581423392; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=O4Uzm0kXYS5RWZJf/jv6Ip8Srev+mpFkK4pytBqAReM=; b=S3kPeSSsbtHpLhCjvXghNpEk6CFvpQIN1JLL1DAZq0x64vKRnwibvMgFAHKwnLZdTcUsFQ0z
- oG2LA9DStk/vkIaBJMPutyzyQzuKgUdX36JrVCn08o607t9DGW5Lm7kXOT/2XOQEC8eoCqWj
- gx9l0p98pNooM8sGCSD0HHeroFQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e429b17.7f533cb2a420-smtp-out-n03;
- Tue, 11 Feb 2020 12:16:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CB549C447A2; Tue, 11 Feb 2020 12:16:23 +0000 (UTC)
-Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 11 Feb 2020 07:16:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727950AbgBKMQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:16:49 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bgodavar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B739FC43383;
-        Tue, 11 Feb 2020 12:16:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B739FC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mka@chromium.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        hemantg@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        gubbaven@codeaurora.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: [PATCH v1] arm64: dts: qcom: sc7180: Add node for bluetooth soc wcn3990
-Date:   Tue, 11 Feb 2020 17:46:12 +0530
-Message-Id: <20200211121612.29075-1-bgodavar@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 394FE206DB;
+        Tue, 11 Feb 2020 12:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581423409;
+        bh=KHNDwelMhPhYYRCIOXWR7Xld6woG2x8V5JdMXH0YamI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dF9gsQ9y8v5ZtdFIFFa/ugYBc0DrIUCKgbUMfTkZdQn6RYF7pZe8TCQRLZRTyVtzY
+         TVoX1MxOwENUbyFr0DtlAAo9kZ7u9A7ksPE+x+tKxRat3HzPGYuWJArZZRsL9QXyQg
+         /t0E9A1lUwcvIwqhsR8L+0aUfT/AA8gzTY5DW47Q=
+Date:   Tue, 11 Feb 2020 04:16:48 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.5 000/367] 5.5.3-stable review
+Message-ID: <20200211121648.GA1856500@kroah.com>
+References: <20200210122423.695146547@linuxfoundation.org>
+ <ecd95628-a1c2-307a-1d59-34a37bf425ff@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecd95628-a1c2-307a-1d59-34a37bf425ff@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add node for bluetooth soc wcn3990.
+On Mon, Feb 10, 2020 at 08:05:39PM +0000, Jon Hunter wrote:
+> 
+> On 10/02/2020 12:28, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.3 release.
+> > There are 367 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.3-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.5:
+>     13 builds:	13 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     40 tests:	40 pass, 0 fail
+> 
+> Linux version:	5.5.3-rc1-g1d9d90e88c9f
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
 
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Wonderful, thanks for testing all of these and letting me know.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50ad4fde..19f82ddc1f09 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -19,6 +19,7 @@
- 	aliases {
- 		hsuart0 = &uart3;
- 		serial0 = &uart8;
-+		bluetooth0 = &bluetooth;
- 	};
- 
- 	chosen {
-@@ -256,6 +257,16 @@
- 
- &uart3 {
- 	status = "okay";
-+	bluetooth: wcn3990-bt {
-+		compatible = "qcom,wcn3990-bt";
-+		vddio-supply = <&vreg_l10a_1p8>;
-+		vddxo-supply = <&vreg_l1c_1p8>;
-+		vddrf-supply = <&vreg_l2c_1p3>;
-+		vddch0-supply = <&vreg_l10c_3p3>;
-+		max-speed = <3200000>;
-+		clocks = <&rpmhcc RPMH_RF_CLK2>;
-+		status = "okay";
-+	};
- };
- 
- &uart8 {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+greg k-h
