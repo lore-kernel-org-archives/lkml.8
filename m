@@ -2,115 +2,141 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE92C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75366C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CF0206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:37:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BFychGtd"
+	by mail.kernel.org (Postfix) with ESMTP id 4AF672070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgBKIhk (ORCPT
+        id S1727817AbgBKIpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 03:37:40 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33491 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbgBKIhj (ORCPT
+        Tue, 11 Feb 2020 03:45:04 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55532 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgBKIpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 03:37:39 -0500
-Received: by mail-wr1-f67.google.com with SMTP id u6so11172524wrt.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 00:37:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Na2M+tRUw3DCFcB3ipBiFwcqwV93zaQwJq0JYti7BI0=;
-        b=BFychGtdnTwxp2Sf7F4Rt8RgZ+OfTEpB7vJbBKJf451dCNA20TixK8NKfT3xl0SXrc
-         H2G5M+6IOPLvgRX/HF5rHWytHUKqhpIFHW/ZaxK097KnSLpQStH/GJQvOEgrmWpaKk2b
-         fQC+tl7jPlikLcNQRjCqh3V66K2hCMi6YgcHo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=Na2M+tRUw3DCFcB3ipBiFwcqwV93zaQwJq0JYti7BI0=;
-        b=qr4giigZMMoD+/DFIQPzD5KZ4cLcSutOvJrGRhg3EIPc7a43rJd/HQvGHAiihpOSf+
-         8LPg2lzk12u9oO7gSZMDwshqm7doskC89IezVg15rkk404uo3VYGiJR3aNJVFifWT1Vf
-         AN45HgvSBQ3jbDuFWmgMjngIvTTy4Lt9w5XX1UwJgPi0gpSbH+QIsSBE8HSoRJIOKFl9
-         08cNMJzUZlcSYaXze6ItvL+E5teXsX0Ob9MEQaVJiSA3znKG1xGjPXMZMa8k3+ooKDy1
-         3JIgj4FS8iq7y+EY7tg075BldbHfYJe7FqdvfzkSJPGrbReTFN3o4NZHDRVJkE40CLQP
-         WcmA==
-X-Gm-Message-State: APjAAAXpVTC8885DhKXTZ5TxqIjw6mppjxy7uhgQrDlXJtYUU516d/sU
-        JDLwo8HNdCTQJW1J23VCp4heVg==
-X-Google-Smtp-Source: APXvYqzvfJ8Za8TOVTfKZnBJ5oGi6BI/nCHpXb2BYNzjcWyMJFelUivBF/3aW3AvdilEpFm07Ix0SA==
-X-Received: by 2002:a5d:4c88:: with SMTP id z8mr7171037wrs.395.1581410256522;
-        Tue, 11 Feb 2020 00:37:36 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id b10sm4432682wrt.90.2020.02.11.00.37.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 00:37:35 -0800 (PST)
-Date:   Tue, 11 Feb 2020 09:37:33 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Emmanuel Vadot <manu@FreeBSD.org>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, tzimmermann@suse.de,
-        kraxel@redhat.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Dual licence some files in GPL-2.0 and MIT
-Message-ID: <20200211083733.GV43062@phenom.ffwll.local>
-Mail-Followup-To: Emmanuel Vadot <manu@FreeBSD.org>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, tzimmermann@suse.de, kraxel@redhat.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200210153544.24750-1-manu@FreeBSD.org>
+        Tue, 11 Feb 2020 03:45:04 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01B8iBMp005289;
+        Tue, 11 Feb 2020 03:44:50 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2y1udmtg66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Feb 2020 03:44:49 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01B8ilOw003719
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 11 Feb 2020 03:44:48 -0500
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 11 Feb 2020 00:44:46 -0800
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 11 Feb 2020 00:44:46 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 11 Feb 2020 00:44:45 -0800
+Received: from mircea-Precision-5530-2-in-1.ad.analog.com ([10.48.65.114])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01B8igmf029075;
+        Tue, 11 Feb 2020 03:44:43 -0500
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V4] iio: adc: ad7124: Add direct reg access
+Date:   Tue, 11 Feb 2020 10:44:53 +0200
+Message-ID: <20200211084453.16866-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200210153544.24750-1-manu@FreeBSD.org>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_02:2020-02-10,2020-02-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=1 bulkscore=0 adultscore=0 mlxlogscore=898 lowpriorityscore=0
+ clxscore=1015 mlxscore=0 impostorscore=0 spamscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002110065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:35:42PM +0100, Emmanuel Vadot wrote:
-> Hello all,
-> 
-> We had a discussion a while back with Noralf where he said that he wouldn't
-> mind dual licence his work under GPL-2 and MIT.
-> Those files are a problem with BSDs as we cannot include them.
-> For drm_client.c the main contributors are Noralf Trønnes and Thomas
-> Zimmermann, the other commits are just catch ups from changes elsewhere
-> (return values, struct member names, function renames etc ...).
-> For drm_format_helper the main contributors are Noralf Trønnes and
-> Gerd Hoffmann. Same comment as for drm_client.c for the other commits.
+This patch adds the posibility do read and write registers from userspace
+using the kernel debug direct register access option.
 
-Can you pls list all contributors for each file in the commit message, so
-we can make sure we're collecting all the required acks?
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+Changelog V4:
+- verify limit againg ARRAY_SIZE(ad7124_reg_size)
 
-Afaiui for official relicensing, we need everyone.
--Daniel
+ drivers/iio/adc/ad7124.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-> 
-> Emmanuel Vadot (2):
->   drm/client: Dual licence the file in GPL-2 and MIT
->   drm/format_helper: Dual licence the file in GPL 2 and MIT
-> 
->  drivers/gpu/drm/drm_client.c        | 2 +-
->  drivers/gpu/drm/drm_format_helper.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.25.0
-> 
-
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index f0206d819fda..a3c0647a5391 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -98,6 +98,14 @@ static const unsigned int ad7124_gain[8] = {
+ 	1, 2, 4, 8, 16, 32, 64, 128
+ };
+ 
++static const unsigned int ad7124_reg_size[] = {
++	1, 2, 3, 3, 2, 1, 3, 3, 1, 2, 2, 2, 2,
++	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
++	2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
++	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
++	3, 3, 3, 3, 3
++};
++
+ static const int ad7124_master_clk_freq_hz[3] = {
+ 	[AD7124_LOW_POWER] = 76800,
+ 	[AD7124_MID_POWER] = 153600,
+@@ -427,6 +435,27 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
++static int ad7124_reg_access(struct iio_dev *indio_dev,
++			     unsigned int reg,
++			     unsigned int writeval,
++			     unsigned int *readval)
++{
++	struct ad7124_state *st = iio_priv(indio_dev);
++	int ret;
++
++	if (reg >= ARRAY_SIZE(ad7124_reg_size))
++		return -EINVAL;
++
++	if (readval)
++		ret = ad_sd_read_reg(&st->sd, reg, ad7124_reg_size[reg],
++				     readval);
++	else
++		ret = ad_sd_write_reg(&st->sd, reg, ad7124_reg_size[reg],
++				      writeval);
++
++	return ret;
++}
++
+ static IIO_CONST_ATTR(in_voltage_scale_available,
+ 	"0.000001164 0.000002328 0.000004656 0.000009313 0.000018626 0.000037252 0.000074505 0.000149011 0.000298023");
+ 
+@@ -442,6 +471,7 @@ static const struct attribute_group ad7124_attrs_group = {
+ static const struct iio_info ad7124_info = {
+ 	.read_raw = ad7124_read_raw,
+ 	.write_raw = ad7124_write_raw,
++	.debugfs_reg_access = &ad7124_reg_access,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ 	.attrs = &ad7124_attrs_group,
+ };
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.1
+
