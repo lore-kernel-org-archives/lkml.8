@@ -2,114 +2,93 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EC8C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38705C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918832073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="y9yAC60A"
+	by mail.kernel.org (Postfix) with ESMTP id 1C6EC2073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgBKVtH (ORCPT
+        id S1727579AbgBKVtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:49:07 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42869 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgBKVtH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:49:07 -0500
-Received: by mail-oi1-f195.google.com with SMTP id j132so14320513oih.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 13:49:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FVB/FcS1YOjObTBIYNnVwzrPxX/PinI+dOSwT8ez2L8=;
-        b=y9yAC60AVrZQixjl326TyeNDbhyODKMwz9kKbdXLmYJ7yuLP7+N/R7imC2n5zmdjsd
-         xbQWK68oFv3C0BdUgO/mnokdGoADVVi54e6xpDyWasTg/i9BHP37QqPhIMeru8YsxH81
-         L76OFlAE096nnOxGKP1NP0crqf6AQGzM145x0vn2YDA3gi7kemrtwulQmVhIF0KumRDs
-         qT24enBkvSv6FAkgalwyqYijjHETJLlx2tCbLwLAShAX4rlYMjAJ94HFB9HlauYK6Rxn
-         no/KdVjAPrJon48Fth0FK03FqHomy5Pzl0NvHWL2YUQzxOk1aGvQA3OC0n4hJOnB1hvq
-         hgdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FVB/FcS1YOjObTBIYNnVwzrPxX/PinI+dOSwT8ez2L8=;
-        b=O+h6STbUtnX55tx1XXqV18CNrt1i7JpRTGeo2ZOyf936wwn6Gc//bH5kHTxOiEeW1X
-         M5wAXGLDgh7UC8i5lm2SyKhAk6KSAFIIrXGHInoZ7mlBPKUHaTp/mPsBhqT1K6XRdcuD
-         QOLg3btMz+tcm1rrujZC1uqrca6YEhVubrr4SHYhE9zwUOxLJfeNrdpKQLWMhIAAy4j5
-         st1NhiXPHSRySU2dHDfPVmmSszN8ORlcS/zrgGEek24vI76tXT7yS4L7SOETvDKEQm45
-         gKN8Jgrtg1eaS26rzjZVzSDmxl6juxIIeRQU1jSEqSxdrXXPZD7J9HVaB+1l8X+AqKN9
-         bzsA==
-X-Gm-Message-State: APjAAAUv9AvwxzYZt+lfXyZj5V/PKQ+eJkO2j8e/XLQAUU/FsjmQ1zca
-        H2ybainE3hQbZwP+SWpNTs5NEFk6Cf9lpFxkhXPjp4OnnRY=
-X-Google-Smtp-Source: APXvYqy8Gw71waEd6oNkzeNXV51JRxA7IyRoFOyWOQUMhEEWpqf0WTeOmjmyRiRWGbyVxa175PNVu9gVDG5VrM6mXw4=
-X-Received: by 2002:aca:aa0e:: with SMTP id t14mr4249907oie.149.1581457747093;
- Tue, 11 Feb 2020 13:49:07 -0800 (PST)
+        Tue, 11 Feb 2020 16:49:10 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21187 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbgBKVtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 16:49:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 13:49:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="256613513"
+Received: from lmgarret-mobl2.amr.corp.intel.com (HELO [10.251.152.253]) ([10.251.152.253])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Feb 2020 13:49:06 -0800
+Subject: Re: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
+ callback
+To:     "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
+Cc:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "Lu, Brent" <brent.lu@intel.com>,
+        "cychiang@google.com" <cychiang@google.com>
+References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
+ <AM6PR10MB2263F302A86B17C95B16361280190@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
+ <855c88fb-4438-aefb-ac9b-a9a5a2dc8caa@linux.intel.com>
+ <CAFQqKeWHDyyd_YBBaD6P2sCL5OCNEsiUU6B7eUwtiLv8GZU0yg@mail.gmail.com>
+ <2eeca7fe-aec9-c680-5d61-930de18b952b@linux.intel.com>
+ <CAFQqKeXK3OG7KXaHGUuC75sxWrdf11xJooC7XsDCOyd6KUgPTQ@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <c9dbcdd8-b943-94a6-581f-7bbebe8c6d25@linux.intel.com>
+Date:   Tue, 11 Feb 2020 15:49:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 11 Feb 2020 13:48:56 -0800
-Message-ID: <CAPcyv4iQf80XGwYVU3-GnbxU7u+bu2bn=+MwM54WGyG1kN=ddQ@mail.gmail.com>
-Subject: [GIT PULL] dax fixes for v5.6-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFQqKeXK3OG7KXaHGUuC75sxWrdf11xJooC7XsDCOyd6KUgPTQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, please pull from:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/dax-fixes-5.6-rc1
 
-...to receive a fix for an xfstest failure and some and an update that
-removes an fsdax dependency on block devices. The update is small
-enough that I held it back to merge with the fix post -rc1 and let it
-all appear in a -next release. No reported issues in -next.
+>>> Are you talking about the change in this commit acbf27746ecfa96b
+>>> "ASoC: pcm: update FE/BE trigger order based on the command"?
+>>>
+>>> We made this change to handle xruns during pause/release particularly on
+>>> the Intel HDA platforms.
+>>
+>> this change was just to mirror the behavior between start/stop, I
+>> thought there was a patch where we moved to TRIGGER_POST by default?
+>>
+>> What I am trying to figure out if whether using TRIGGER_PRE is ok or not
+>> for the SOF firmware.
+>>
+> 
+> Ahh yes, it was part of the same series as this one. fd274c2b7267b  "ASoC:
+> SOF: topology: set trigger order for FE DAI link"
+> 
+> TRIGGER_PRE won't really work in the case of SOF. We need the BE DAI to be
+> triggered before the FE DAI during start to prevent the xruns during
+> pause/release.
 
----
+Thanks Ranjani. That information closes the door on the idea of playing 
+with the trigger order suggested earlier in the thread, so my guess is 
+that we really need to expose the MCLK/BCLK with the clk API and turn 
+them on/off from the machine driver as needed. I hope is that we don't 
+need the FSYNC as well, that would be rather painful to implement.
 
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
-
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/dax-fixes-5.6-rc1
-
-for you to fetch changes up to 96222d53842dfe54869ec4e1b9d4856daf9105a2:
-
-  dax: pass NOWAIT flag to iomap_apply (2020-02-05 20:34:32 -0800)
-
-----------------------------------------------------------------
-dax fixes 5.6-rc1
-
-- Fix RWF_NOWAIT writes to properly return -EAGAIN
-
-- Clean up an unused helper
-
-- Update dax_writeback_mapping_range to not need a block_device argument
-
-----------------------------------------------------------------
-Jeff Moyer (1):
-      dax: pass NOWAIT flag to iomap_apply
-
-Vivek Goyal (2):
-      dax: Pass dax_dev instead of bdev to dax_writeback_mapping_range()
-      dax: Get rid of fs_dax_get_by_host() helper
-
- drivers/dax/super.c |  2 +-
- fs/dax.c            | 11 ++++-------
- fs/ext2/inode.c     |  5 +++--
- fs/ext4/inode.c     |  2 +-
- fs/xfs/xfs_aops.c   |  2 +-
- include/linux/dax.h | 14 ++------------
- 6 files changed, 12 insertions(+), 24 deletions(-)
