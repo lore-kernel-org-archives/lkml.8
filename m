@@ -2,166 +2,83 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E726C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00009C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6469A20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF92B2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:54:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ce3uez2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBKDwo (ORCPT
+        id S1727987AbgBKDyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 22:52:44 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9720 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727800AbgBKDwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 22:52:44 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0293FC4337C545197046;
-        Tue, 11 Feb 2020 11:52:42 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
- 11:52:33 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <axboe@kernel.dk>, <ming.lei@redhat.com>
-CC:     <yukuai3@huawei.com>, <yi.zhang@huawei.com>,
-        <zhangxiaoxu5@huawei.com>, <luoshijie1@huawei.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] block: rename 'q->debugfs_dir' in blk_unregister_queue()
-Date:   Tue, 11 Feb 2020 11:51:37 +0800
-Message-ID: <20200211035137.19454-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Mon, 10 Feb 2020 22:54:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56156 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727697AbgBKDyR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 22:54:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xyUxhDDylUL+UjwdQ8hbkvgcFL8EGI0zwerP7xmjMTY=; b=Ce3uez2venNJGkWfXOA3f8Qvpc
+        Z5WqJfuP4vnPqODgs/VUySyyQi02UwgVnbp9Dl+eKedNQi76FPTHzP2l2rmVE/sA3q0sQKgua5ZCi
+        Cfd5iWheXsoFFYcyugFnNrTFfablimvCWS7KcVgChJU5cT+A3QKVBfqiLKCxL6XTSMSlovKCGAzQJ
+        XmiloqT+o2B4DFQHpl7f+Sy9Vbw/lvLYOWbK/PVkA20vbYG1DeqWkGYFDy2b2ovf0ytSckeWnktU6
+        QYjyuWN/FMza0xOK6ap9YMPcQHi6BCU8GXsMoy3t7ko0gOwZ4jWKT47xUIFy7fxMckOh41ESzF23m
+        6BGgTQFg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1Mcm-00069F-51; Tue, 11 Feb 2020 03:54:12 +0000
+Date:   Mon, 10 Feb 2020 19:54:12 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: fix long time stall from mm_populate
+Message-ID: <20200211035412.GR8731@bombadil.infradead.org>
+References: <20200211001958.170261-1-minchan@kernel.org>
+ <20200211011021.GP8731@bombadil.infradead.org>
+ <20200211035004.GA242563@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211035004.GA242563@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting use after free bug in debugfs_remove[1].
+On Mon, Feb 10, 2020 at 07:50:04PM -0800, Minchan Kim wrote:
+> On Mon, Feb 10, 2020 at 05:10:21PM -0800, Matthew Wilcox wrote:
+> > On Mon, Feb 10, 2020 at 04:19:58PM -0800, Minchan Kim wrote:
+> > >       filemap_fault
+> > >         find a page form page(PG_uptodate|PG_readahead|PG_writeback)
+> > 
+> > Uh ... That shouldn't be possible.
+> 
+> Please see shrink_page_list. Vmscan uses PG_reclaim to accelerate
+> page reclaim when the writeback is done so the page will have both
+> flags at the same time and the PG reclaim could be regarded as
+> PG_readahead in fault conext.
 
-This is because in request_queue, 'q->debugfs_dir' and
-'q->blk_trace->dir' could be the same dir. And in __blk_release_queue(),
-blk_mq_debugfs_unregister() will remove everything inside the dir.
+What part of fault context can make that mistake?  The snippet I quoted
+below is from page_cache_async_readahead() where it will clearly not
+make that mistake.  There's a lot of code here; please don't presume I
+know all the areas you're talking about.
 
-With futher investigation of the reporduce repro, the problem can be
-reporduced by following procedure:
-
-1. LOOP_CTL_ADD, create a request_queue q1, blk_mq_debugfs_register() will
-create the dir.
-2. LOOP_CTL_REMOVE, blk_release_queue() will add q1 to release queue.
-3. LOOP_CTL_ADD, create another request_queue q2,blk_mq_debugfs_register()
-will fail because the dir aready exist.
-4. BLKTRACESETUP, create two files(msg and dropped) inside the dir.
-5. call __blk_release_queue() for q1, debugfs_remove_recursive() will
-delete the files created in step 4.
-6. LOOP_CTL_REMOVE, blk_release_queue() will add q2 to release queue.
-And when __blk_release_queue() is called for q2, blk_trace_shutdown() will
-try to release the two files created in step 4, wich are aready released
-in step 5.
-
-|thread1		  |kworker	             |thread2               |
-| ----------------------- | ------------------------ | -------------------- |
-|loop_control_ioctl       |                          |                      |
-| loop_add                |                          |                      |
-|  blk_mq_debugfs_register|                          |                      |
-|   debugfs_create_dir    |                          |                      |
-|loop_control_ioctl       |                          |                      |
-| loop_remove		  |                          |                      |
-|  blk_release_queue      |                          |                      |
-|   schedule_work         |                          |                      |
-|			  |			     |loop_control_ioctl    |
-|			  |			     | loop_add             |
-|			  |			     |  ...                 |
-|			  |			     |blk_trace_ioctl       |
-|			  |			     | __blk_trace_setup    |
-|			  |			     |   debugfs_create_file|
-|			  |__blk_release_queue       |                      |
-|			  | blk_mq_debugfs_unregister|                      |
-|			  |  debugfs_remove_recursive|                      |
-|			  |			     |loop_control_ioctl    |
-|			  |			     | loop_remove          |
-|			  |			     |  ...                 |
-|			  |__blk_release_queue       |                      |
-|			  | blk_trace_shutdown       |                      |
-|			  |  debugfs_remove          |                      |
-
-commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") pushed the
-final release of request_queue to a workqueue, so, when loop_add() is
-called again(step 3), __blk_release_queue() might not been called yet,
-which causes the problem.
-
-Fix the problem by renaming 'q->debugfs_dir' in blk_unregister_queue().
-
-[1] https://syzkaller.appspot.com/bug?extid=903b72a010ad6b7a40f2
-References: CVE-2019-19770
-Fixes: commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
-Reported-by: syzbot <syz...@syzkaller.appspotmail.com>
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- block/blk-sysfs.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index fca9b158f4a0..69d28b3f52d0 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -11,6 +11,7 @@
- #include <linux/blktrace_api.h>
- #include <linux/blk-mq.h>
- #include <linux/blk-cgroup.h>
-+#include <linux/debugfs.h>
- 
- #include "blk.h"
- #include "blk-mq.h"
-@@ -1011,6 +1012,33 @@ int blk_register_queue(struct gendisk *disk)
- }
- EXPORT_SYMBOL_GPL(blk_register_queue);
- 
-+/*
-+ * blk_prepare_release_queue - rename q->debugfs_dir
-+ * @q: request_queue of which the dir to be renamed belong to.
-+ *
-+ * Because the final release of request_queue is in a workqueue, the
-+ * cleanup might not been finished yet while the same device start to
-+ * create. It's not correct if q->debugfs_dir still exist while trying
-+ * to create a new one.
-+ */
-+static struct dentry *blk_prepare_release_queue(struct request_queue *q)
-+{
-+	struct dentry *new = NULL;
-+	char name[DNAME_INLINE_LEN];
-+	int i = 0;
-+
-+	if (IS_ERR_OR_NULL(q->debugfs_dir))
-+		return q->debugfs_dir;
-+
-+	while (new == NULL) {
-+		sprintf(name, "ready_to_remove_%d", i++);
-+		new = debugfs_rename(blk_debugfs_root, q->debugfs_dir,
-+				     blk_debugfs_root, name);
-+	}
-+
-+	return new;
-+}
-+
- /**
-  * blk_unregister_queue - counterpart of blk_register_queue()
-  * @disk: Disk of which the request queue should be unregistered from sysfs.
-@@ -1039,6 +1067,7 @@ void blk_unregister_queue(struct gendisk *disk)
- 	mutex_unlock(&q->sysfs_lock);
- 
- 	mutex_lock(&q->sysfs_dir_lock);
-+	q->debugfs_dir = blk_prepare_release_queue(q);
- 	/*
- 	 * Remove the sysfs attributes before unregistering the queue data
- 	 * structures that can be modified through sysfs.
--- 
-2.17.2
-
+> > 
+> >         /*
+> >          * Same bit is used for PG_readahead and PG_reclaim.
+> >          */
+> >         if (PageWriteback(page))
+> >                 return;
+> > 
+> >         ClearPageReadahead(page);
