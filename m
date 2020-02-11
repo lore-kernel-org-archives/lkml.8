@@ -2,138 +2,189 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D24C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF28C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26AE20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070B120637
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8I1B8bQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRgMwCSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbgBKT1o (ORCPT
+        id S1731663AbgBKTaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:27:44 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34820 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgBKT1n (ORCPT
+        Tue, 11 Feb 2020 14:30:14 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42427 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgBKTaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:27:43 -0500
-Received: by mail-qt1-f196.google.com with SMTP id n17so8898499qtv.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:27:42 -0800 (PST)
+        Tue, 11 Feb 2020 14:30:13 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q15so11280157qke.9;
+        Tue, 11 Feb 2020 11:30:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Li/4t3rWpOJsO39OQHX9FJXAU3jc67B61wTAR8MmF0k=;
-        b=O8I1B8bQOO8iZqdWfbuoMMB9Ioa6te/eprtlRpRSiGWgH0ZxUJJKZG0qzM1OcHWoKt
-         ceanH/wioA1gVchCLr9jk+sU3hJ1KvaKGxGIUCKIakCWN31tA/zGuV95xEvAnYiih0AG
-         a+EiUHbopmk3N9NvMwaaDW4wfN2grufAEtE9e/oOdwv+xpH3lJcj+X3Z1fQ0RZcQ9w9J
-         dVYDoFp7QoGkFN1EAt0EEVprGAgcbl94460VMw7rg98pD7JsB8dQ29ZbrrlcizNY5nHd
-         zkBX0kHjQJ8brQXs7V00m3unug5ThcJfSHV33E76CmMmDwmJwOCWIh6etBBOXUzbdM2B
-         64Zw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mtc3nhV1yFjtyZ72uQDRZQmFUp1an9UYV0/ZePw2JCY=;
+        b=JRgMwCSc06Tbaq6tXLRRPsebZ4U51bfbGDh7uFD7ElvOgNWtSNEHQzFpbPYOXHSaxr
+         MvOIVziC5npjqgPFgaL6hfAYsh0oy77XbPBODfewzN0QV0kS9WReWl0qpferJtWLw+v3
+         4sGJXUMswY5s6j1YrY0vCIP+BpJ+NOViRQB/J5kkDd1ah1Xbi7lOl+Wwu14s9XlM8H2h
+         VCHmLzd8yNWObKAOJGl4AeW2vCGGsCV07sgn2zDf/J6Nliov/42GiIU62gog/VFe3XoL
+         9Ye2hz0euj56TKlNinXUh/ZeOdGobudVUgeItilRtOEn12JA6HnfAPOqWKLYoERZaxd4
+         TXRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Li/4t3rWpOJsO39OQHX9FJXAU3jc67B61wTAR8MmF0k=;
-        b=PeHKlb9eDeSTZxi3B601hgnQRUOCRszQTEdBe0fcaqbbi6A/USAzRmR2n17EJVs+OS
-         3aeNcxcGWuhyirLdaUz7kGYTmOVqZMFkDQEKpEr/G1Yx4v25Dg3qkYJKoaJtvmgZ/qnH
-         oQcu+k8aQrUNa5rd/OfxaoqP7DH2mBIbC8kHQGjA1Ae1TbbkPQa54HsPrsvldapbCEiN
-         w+0FVH99VUeRlABboGR9OlZXJZT3tpjbPnLMEKwHWC49jmAJj2ugpAJHDguZ1Ix1S3bn
-         gpbl9+Q7l/xi37XDIYKNJEr53N1AipWDLHm2P+1F7flZZNL5IiJsZxk1Sz1kMSZh6Y7j
-         yYgQ==
-X-Gm-Message-State: APjAAAVaJ2n+p/vrltONA8lA162t1Us/u9tZ/8WIzvoXYYPCgoY5rHvl
-        JZrJ4TiCucYJgxMiDIRe0DE=
-X-Google-Smtp-Source: APXvYqxJe5VgrXcrX1y6fGSxS6IPV/Z6ysTe1ZYGbFAsZiy94KfVTPtXt+qa1HmqYHdT0IBUHR2mzg==
-X-Received: by 2002:ac8:7b24:: with SMTP id l4mr3873167qtu.3.1581449261689;
-        Tue, 11 Feb 2020 11:27:41 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v78sm2518767qkb.48.2020.02.11.11.27.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 11:27:41 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 11 Feb 2020 14:27:39 -0500
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Michael Matz <matz@suse.de>
-Subject: Re: [PATCH v2] x86/boot: Use 32-bit (zero-extended) move for
- z_output_len
-Message-ID: <20200211192739.GA1761914@rani.riverdale.lan>
-References: <20200211161739.GE32279@zn.tnic>
- <20200211173333.1722739-1-nivedita@alum.mit.edu>
- <20200211181559.GI32279@zn.tnic>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mtc3nhV1yFjtyZ72uQDRZQmFUp1an9UYV0/ZePw2JCY=;
+        b=lzg7xm/o7FI+0mW5viT80SHA7KUAqgSAGD2z5dc8DbWnVkYSwqhZf+fWkZscCV1mq5
+         mbj22Bic4mU0X/atygI6gfbxwD6kcftAMoXKNKoC6ZoaarhCeHNtSPyxRFPo4zj2ZJRq
+         FRGjFZC2iSNTY6XEkOcN+yIwczWCuoG1u32Im7BslaH4frgqCHRI7FoCEIFmIfDPkIAa
+         NIW9ekPK31I7SFCzD0tw9vdGR+WFyr0Iw/4vpxPpVgJ0ne2FUY7j3Hu03ZGZ4mja+c+f
+         Plgu8ni7LFitfzbWsx+mFgWANzjkRb26X2Iq2OLIQ8cuGbuYSDpZBH/fpNVNPDq7kdc/
+         +23w==
+X-Gm-Message-State: APjAAAU2ESK/M+oVitIx8Mr49R6D7itK2Pa3acFKW4XWyThMVa5Go3ZH
+        eCB2EhWAyI5YCFWBdolQJbH8S6tlIUsx/kk7YeU=
+X-Google-Smtp-Source: APXvYqzDRL8WUdWdfu/NIMmgyHqNWTLG1ythYteS9iJVNiC9RoJWX2HGhndP6u2TLymhMdgC8Cr216jYUxnmWOh4f58=
+X-Received: by 2002:ae9:eb48:: with SMTP id b69mr7708132qkg.39.1581449412579;
+ Tue, 11 Feb 2020 11:30:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200211181559.GI32279@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200210200737.13866-1-dxu@dxuuu.xyz> <20200210200737.13866-3-dxu@dxuuu.xyz>
+In-Reply-To: <20200210200737.13866-3-dxu@dxuuu.xyz>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 11 Feb 2020 11:30:01 -0800
+Message-ID: <CAEf4BzZfGXHL36ntjkQsTTEEa9yzqnS=Xs4XCibejpo5AKGpuQ@mail.gmail.com>
+Subject: Re: [PATCH v7 bpf-next RESEND 2/2] selftests/bpf: add
+ bpf_read_branch_records() selftest
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 07:15:59PM +0100, Borislav Petkov wrote:
-> On Tue, Feb 11, 2020 at 12:33:33PM -0500, Arvind Sankar wrote:
-> > z_output_len is the size of the decompressed payload (i.e. vmlinux +
-> > vmlinux.relocs) and is generated as an unsigned 32-bit quantity by
-> > mkpiggy.c.
-> > 
-> > The current movq $z_output_len, %r9 instruction generates a
-> > sign-extended move to %r9. Using movl $z_output_len, %r9d will instead
-> > zero-extend into %r9, which is appropriate for an unsigned 32-bit
-> > quantity. This is also what we already do for z_input_len, the size of
-> > the compressed payload.
-> 
-> Yes, thanks.
-> 
-> What I'll also add to this is the fact that
-> 
-> init_size:              .long INIT_SIZE         # kernel initialization size
-> 
-> where z_output_len participates in through INIT_SIZE is a 32-bit
-> quantity determined by the ".long" so even if something made
-> z_output_len bigger than 32-bit by explicitly using MOVABS so that it
-> builds fine, you'd still get:
-> 
-> arch/x86/boot/header.S: Assembler messages:
-> arch/x86/boot/header.S:568: Warning: value 0x10103b000 truncated to 0x103b000
-> 
-> as a warning.
+On Mon, Feb 10, 2020 at 12:09 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Add a selftest to test:
+>
+> * default bpf_read_branch_records() behavior
+> * BPF_F_GET_BRANCH_RECORDS_SIZE flag behavior
+> * error path on non branch record perf events
+> * using helper to write to stack
+> * using helper to write to map
+>
+> On host with hardware counter support:
+>
+>     # ./test_progs -t perf_branches
+>     #27/1 perf_branches_hw:OK
+>     #27/2 perf_branches_no_hw:OK
+>     #27 perf_branches:OK
+>     Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+>
+> On host without hardware counter support (VM):
+>
+>     # ./test_progs -t perf_branches
+>     #27/1 perf_branches_hw:OK
+>     #27/2 perf_branches_no_hw:OK
+>     #27 perf_branches:OK
+>     Summary: 1/2 PASSED, 1 SKIPPED, 0 FAILED
+>
+> Also sync tools/include/uapi/linux/bpf.h.
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  tools/include/uapi/linux/bpf.h                |  25 ++-
+>  .../selftests/bpf/prog_tests/perf_branches.c  | 182 ++++++++++++++++++
+>  .../selftests/bpf/progs/test_perf_branches.c  |  74 +++++++
+>  3 files changed, 280 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
+>
 
-Yes, this is just a "neatening" patch to use a more appropriate
-instruction. There would have to be a lot of work to allow kernels to be
-bigger than 2Gb, they're currently limited to at most 1Gb (or even 0.5Gb
-if KASLR is disabled) by KERNEL_IMAGE_SIZE definition in
-asm/page_64_types.h and there are checks in the linker script and a
-bunch of other places, so the decompressed length can't be much bigger
-than that.
+[...]
 
-> 
-> Btw, while poking at this, we found out that the MOV really remains
-> MOV and not MOVABS if gas doesn't know what the quantity behind the
-> z_output_len symbol is, as it is a symbol assignment. Which, AFAIU, with
-> ELF64 objects, it should be using 8-byte quantities in the symbol table
-> to accommodate such assignments. But for some reason it doesn't.
-> 
-> Anyway, Michael can correct me if I'm still imprecise here.
+> +       /* generate some branches on cpu 0 */
+> +       CPU_ZERO(&cpu_set);
+> +       CPU_SET(0, &cpu_set);
+> +       err = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
+> +       if (CHECK(err, "set_affinity", "cpu #0, err %d\n", err))
+> +               goto out_free_pb;
+> +       /* spin the loop for a while (random high number) */
+> +       for (i = 0; i < 1000000; ++i)
+> +               ++j;
+> +
 
-For absolute symbols that it sees in the same file it does use 64-bit
-immediate move for movq if necessary, but otherwise seems to need the
-explicit opcode.
+test_perf_branches__detach here?
 
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> +       /* read perf buffer */
+> +       err = perf_buffer__poll(pb, 500);
+> +       if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
+> +               goto out_free_pb;
+> +
+> +       if (CHECK(!ok, "ok", "not ok\n"))
+> +               goto out_free_pb;
+> +
+
+[...]
+
+> diff --git a/tools/testing/selftests/bpf/progs/test_perf_branches.c b/tools/testing/selftests/bpf/progs/test_perf_branches.c
+> new file mode 100644
+> index 000000000000..60327d512400
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/test_perf_branches.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019 Facebook
+> +
+> +#include <stddef.h>
+> +#include <linux/ptrace.h>
+> +#include <linux/bpf.h>
+> +#include <bpf/bpf_helpers.h>
+> +#include "bpf_trace_helpers.h"
+> +
+> +struct fake_perf_branch_entry {
+> +       __u64 _a;
+> +       __u64 _b;
+> +       __u64 _c;
+> +};
+> +
+> +struct output {
+> +       int required_size;
+> +       int written_stack;
+> +       int written_map;
+> +};
+> +
+> +struct {
+> +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> +       __uint(key_size, sizeof(int));
+> +       __uint(value_size, sizeof(int));
+> +} perf_buf_map SEC(".maps");
+> +
+> +typedef struct fake_perf_branch_entry fpbe_t[30];
+> +
+> +struct {
+> +       __uint(type, BPF_MAP_TYPE_ARRAY);
+> +       __uint(max_entries, 1);
+> +       __type(key, __u32);
+> +       __type(value, fpbe_t);
+> +} scratch_map SEC(".maps");
+
+Can you please use global variables instead of array and
+perf_event_array? Would make BPF side clearer and userspace simpler.
+struct output member will just become variables.
+
+[...]
