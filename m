@@ -2,356 +2,141 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CCEC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662CDC47409
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3422086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5B12173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=monjalon.net header.i=@monjalon.net header.b="hEAdjWRE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="y5Paqyy4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgBKN5p (ORCPT
+        id S1730025AbgBKN5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:57:45 -0500
-Received: from 8bytes.org ([81.169.241.247]:52218 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729508AbgBKNxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:22 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 018F6E06; Tue, 11 Feb 2020 14:53:10 +0100 (CET)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 22/62] x86/sev-es: Add handler for MMIO events
-Date:   Tue, 11 Feb 2020 14:52:16 +0100
-Message-Id: <20200211135256.24617-23-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
-References: <20200211135256.24617-1-joro@8bytes.org>
+        Tue, 11 Feb 2020 08:57:51 -0500
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:41711 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729509AbgBKN5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:57:49 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id 3E42970F;
+        Tue, 11 Feb 2020 08:57:47 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 11 Feb 2020 08:57:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monjalon.net; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding:content-type; s=mesmtp;
+         bh=noAzCHI04Ek8RDpgVHZPtuU30mmVFLmEki2n2dFXUfk=; b=hEAdjWREXeec
+        UBe4OGm3aAkBhgEuC6s/I22PkSk8Qp5WD9sZd2YG3U1I9YFFI1jI2JPfe7CE8kua
+        a9cwQ8EDSb1wXlcDnnJxxz05qpS73YVTsL1jk9BUPMwYuZQo55VetRWR4jgubvkw
+        VE0SEnS5aHX6ey2GRCcfRVDcGKBgVuY=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=noAzCHI04Ek8RDpgVHZPtuU30mmVFLmEki2n2dFXU
+        fk=; b=y5Paqyy4NiV6O7SNz07Qb80FTYAjxZH4YjIhM2t1gTxOdGMvkqxirSsjJ
+        Q6fSwKqri9dK8G3gtNgxo1R640+6+xgzBlaGD1ayurch2P6wA5yLj8n78rvxaiGI
+        Yd544n7+BS/0xChp4rzcHA5C4jkZDNiP2D4jcv+yyhWPyakBFyKM+hF5ezz0B+Tv
+        wVJpwUb4yM7QOHA7St4ivDthMER/Mxt+eMyQio8kRsUURkvHDRfHa5hZOTeTu77r
+        M0V9DbaHQcHuuWh7yYn1Tou9rsdsc1u3gZLL/OpXADtsIVOv9fN1fTxIelwXcRg2
+        zRedtOWfwsJyFjmaVOP8u1ziPH/5g==
+X-ME-Sender: <xms:2rJCXpDm4fNVO8qyaB36A6ti_RSmVSf2tsLD7ela3qvNr7hgN6edGA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieefgdehlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkjghfggfgtgesthfuredttddtvdenucfhrhhomhepvfhhohhmrghs
+    ucfoohhnjhgrlhhonhcuoehthhhomhgrshesmhhonhhjrghlohhnrdhnvghtqeenucfkph
+    epjeejrddufeegrddvtdefrddukeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepthhhohhmrghssehmohhnjhgrlhhonhdrnhgvth
+X-ME-Proxy: <xmx:2rJCXq7fF8aqvNdXEcyrvltANgu3CGdUxC0WpymCsa7MaNj8jgW4VA>
+    <xmx:2rJCXv2jjxQEkHCAQQYcMaI-DJDPYIKZPbiGvfK8f24-MoY664lTzw>
+    <xmx:2rJCXlSQdpgKERW12Dki5jngEP_sTxf67BMK7q97PS56vK1cDBp-dA>
+    <xmx:2rJCXuSprx1LlVxeacnKLUvMQm8fKQ7rvAe4dbSq2z_2yE6U4nH1TxQxK-0>
+Received: from xps.localnet (184.203.134.77.rev.sfr.net [77.134.203.184])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4AB833060840;
+        Tue, 11 Feb 2020 08:57:45 -0500 (EST)
+From:   Thomas Monjalon <thomas@monjalon.net>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     dev@dpdk.org, kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        Luca Boccassi <bluca@debian.org>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        cohuck@redhat.com, Vamsi Attunuru <vattunuru@marvell.com>,
+        Jerin Jacob <jerinjacobk@gmail.com>
+Subject: Re: [dpdk-dev] [RFC PATCH 0/7] vfio/pci: SR-IOV support
+Date:   Tue, 11 Feb 2020 14:57:44 +0100
+Message-ID: <2203508.9fHWaBTJ5E@xps>
+In-Reply-To: <CALBAE1Oz2u+cmoL8LhEZ-4paXEebKh3DzfWGLQLQx0oaW=tBXw@mail.gmail.com>
+References: <158085337582.9445.17682266437583505502.stgit@gimli.home> <CALBAE1Oz2u+cmoL8LhEZ-4paXEebKh3DzfWGLQLQx0oaW=tBXw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+11/02/2020 12:18, Jerin Jacob:
+> On Wed, Feb 5, 2020 at 4:35 AM Alex Williamson wrote:
+> >
+> > There seems to be an ongoing desire to use userspace, vfio-based
+> > drivers for both SR-IOV PF and VF devices.  The fundamental issue
+> > with this concept is that the VF is not fully independent of the PF
+> > driver.  Minimally the PF driver might be able to deny service to the
+> > VF, VF data paths might be dependent on the state of the PF device,
+> > or the PF my have some degree of ability to inspect or manipulate the
+> > VF data.  It therefore would seem irresponsible to unleash VFs onto
+> > the system, managed by a user owned PF.
+> >
+> > We address this in a few ways in this series.  First, we can use a bus
+> > notifier and the driver_override facility to make sure VFs are bound
+> > to the vfio-pci driver by default.  This should eliminate the chance
+> > that a VF is accidentally bound and used by host drivers.  We don't
+> > however remove the ability for a host admin to change this override.
+> >
+> > The next issue we need to address is how we let userspace drivers
+> > opt-in to this participation with the PF driver.  We do not want an
+> > admin to be able to unwittingly assign one of these VFs to a tenant
+> > that isn't working in collaboration with the PF driver.  We could use
+> > IOMMU grouping, but this seems to push too far towards tightly coupled
+> > PF and VF drivers.  This series introduces a "VF token", implemented
+> > as a UUID, as a shared secret between PF and VF drivers.  The token
+> > needs to be set by the PF driver and used as part of the device
+> > matching by the VF driver.  Provisions in the code also account for
+> > restarting the PF driver with active VF drivers, requiring the PF to
+> > use the current token to re-gain access to the PF.
+> 
+> Thanks Alex for the series. DPDK realizes this use-case through, an out of
+> tree igb_uio module, for non VFIO devices. Supporting this use case, with
+> VFIO, will be a great enhancement for DPDK as we are planning to
+> get rid of out of tree modules any focus only on userspace aspects.
+[..]
+> Regarding the use case where  PF bound to DPDK/VFIO and
+> VF bound to DPDK/VFIO are _two different_ processes then sharing the UUID
+> will be a little tricky thing in terms of usage. But if that is the
+> purpose of bringing UUID to the equation then it fine.
+> 
+> Overall this series looks good to me.  We can test the next non-RFC
+> series and give
+> Tested-by by after testing with DPDK.
+[..]
+> > Please comment.  In particular, does this approach meet the DPDK needs
+> > for userspace PF and VF drivers, with the hopefully minor hurdle of
+> > sharing a token between drivers.  The token is of course left to
+> > userspace how to manage, and might be static (and not very secret) for
+> > a given set of drivers.  Thanks,
 
-Add handler for VC exceptions caused by MMIO intercepts. These
-intercepts come along as nested page faults on pages with reserved
-bits set.
+Thanks Alex, it looks to be a great improvement.
 
-TODO:
-	- Add return values of helper functions
-	- Check permissions on page-table walks
-	- Check data segments
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to VC handling framework ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/boot/compressed/sev-es.c |   8 +
- arch/x86/include/uapi/asm/svm.h   |   5 +
- arch/x86/kernel/sev-es-shared.c   | 236 ++++++++++++++++++++++++++++++
- 3 files changed, 249 insertions(+)
+In the meantime, DPDK is going to move igb_uio (an out-of-tree
+Linux kernel module) from the main DPDK repository to a side-repo.
+This move and this patchset will hopefully encourage using VFIO.
+As Jerin said, DPDK prefers relying on upstream Linux modules.
 
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 270a23c05f53..55a78b42a2f2 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -67,6 +67,11 @@ static enum es_result es_read_mem(struct es_em_ctxt *ctxt,
- 	return ES_OK;
- }
- 
-+static phys_addr_t es_slow_virt_to_phys(struct ghcb *ghcb, long vaddr)
-+{
-+	return (phys_addr_t)vaddr;
-+}
-+
- #undef __init
- #undef __pa
- #define __init
-@@ -121,6 +126,9 @@ void boot_vc_handler(struct pt_regs *regs)
- 	case SVM_EXIT_CPUID:
- 		result = handle_cpuid(boot_ghcb, &ctxt);
- 		break;
-+	case SVM_EXIT_NPF:
-+		result = handle_mmio(boot_ghcb, &ctxt);
-+		break;
- 	default:
- 		result = ES_UNSUPPORTED;
- 		break;
-diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-index c68d1618c9b0..8f36ae021a7f 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -81,6 +81,11 @@
- #define SVM_EXIT_AVIC_INCOMPLETE_IPI		0x401
- #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS	0x402
- 
-+/* SEV-ES software-defined VMGEXIT events */
-+#define SVM_VMGEXIT_MMIO_READ			0x80000001
-+#define SVM_VMGEXIT_MMIO_WRITE			0x80000002
-+#define SVM_VMGEXIT_UNSUPPORTED_EVENT		0x8000ffff
-+
- #define SVM_EXIT_ERR           -1
- 
- #define SVM_EXIT_REASONS \
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index 0f422e3b2077..14693eff9614 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -483,3 +483,239 @@ static enum es_result handle_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- 
- 	return ES_OK;
- }
-+
-+/* Map from x86 register index to pt_regs offset */
-+static unsigned long *register_from_idx(struct pt_regs *regs, u8 reg)
-+{
-+	static int reg2pt_regs[] = {
-+		10, 11, 12, 5, 19, 4, 13, 14, 9, 8, 7, 6, 3, 2, 1, 0
-+	};
-+	unsigned long *regs_array = (unsigned long *)regs;
-+
-+	if (WARN_ONCE(reg > 15, "register index is not valid: %#hhx\n", reg))
-+		return NULL;
-+
-+	return &regs_array[reg2pt_regs[reg]];
-+}
-+
-+static u64 insn_get_eff_addr(struct es_em_ctxt *ctxt)
-+{
-+	u64 effective_addr;
-+	u8 mod, rm;
-+
-+	if (!ctxt->insn.modrm.nbytes)
-+		return 0;
-+
-+	if (insn_rip_relative(&ctxt->insn))
-+		return ctxt->regs->ip + ctxt->insn.displacement.value;
-+
-+	mod = X86_MODRM_MOD(ctxt->insn.modrm.value);
-+	rm = X86_MODRM_RM(ctxt->insn.modrm.value);
-+
-+	if (ctxt->insn.rex_prefix.nbytes &&
-+	    X86_REX_B(ctxt->insn.rex_prefix.value))
-+		rm |= 0x8;
-+
-+	if (mod == 3)
-+		return *register_from_idx(ctxt->regs, rm);
-+
-+	switch (mod) {
-+	case 1:
-+	case 2:
-+		effective_addr = ctxt->insn.displacement.value;
-+		break;
-+	default:
-+		effective_addr = 0;
-+	}
-+
-+	if (ctxt->insn.sib.nbytes) {
-+		u8 scale, index, base;
-+
-+		scale = X86_SIB_SCALE(ctxt->insn.sib.value);
-+		index = X86_SIB_INDEX(ctxt->insn.sib.value);
-+		base = X86_SIB_BASE(ctxt->insn.sib.value);
-+		if (ctxt->insn.rex_prefix.nbytes &&
-+		    X86_REX_X(ctxt->insn.rex_prefix.value))
-+			index |= 0x8;
-+		if (ctxt->insn.rex_prefix.nbytes &&
-+		    X86_REX_B(ctxt->insn.rex_prefix.value))
-+			base |= 0x8;
-+
-+		if (index != 4)
-+			effective_addr += (*register_from_idx(ctxt->regs, index)
-+					   << scale);
-+
-+		if ((base != 5) || mod)
-+			effective_addr += *register_from_idx(ctxt->regs, base);
-+		else
-+			effective_addr += ctxt->insn.displacement.value;
-+	} else {
-+		effective_addr += *register_from_idx(ctxt->regs, rm);
-+	}
-+
-+	return effective_addr;
-+}
-+
-+static unsigned long *insn_get_reg(struct es_em_ctxt *ctxt)
-+{
-+	u8 reg;
-+
-+	if (!ctxt->insn.modrm.nbytes)
-+		return NULL;
-+
-+	reg = X86_MODRM_REG(ctxt->insn.modrm.value);
-+	if (ctxt->insn.rex_prefix.nbytes &&
-+	    X86_REX_R(ctxt->insn.rex_prefix.value))
-+		reg |= 0x8;
-+
-+	return register_from_idx(ctxt->regs, reg);
-+}
-+
-+static enum es_result do_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
-+			      unsigned int bytes, bool read)
-+{
-+	u64 exit_code, exit_info_1, exit_info_2;
-+	unsigned long ghcb_pa = __pa(ghcb);
-+
-+	/* Register-direct addressing mode not supported with MMIO */
-+	if (X86_MODRM_MOD(ctxt->insn.modrm.value) == 3)
-+		return ES_UNSUPPORTED;
-+
-+	exit_code = read ? SVM_VMGEXIT_MMIO_READ : SVM_VMGEXIT_MMIO_WRITE;
-+
-+	exit_info_1 = insn_get_eff_addr(ctxt);
-+	exit_info_1 = es_slow_virt_to_phys(ghcb, exit_info_1);
-+	exit_info_2 = bytes;    /* Can never be greater than 8 */
-+
-+	ghcb->save.sw_scratch = ghcb_pa + offsetof(struct ghcb, shared_buffer);
-+
-+	return ghcb_hv_call(ghcb, ctxt, exit_code, exit_info_1, exit_info_2);
-+}
-+
-+static enum es_result handle_mmio_twobyte_ops(struct ghcb *ghcb,
-+					      struct es_em_ctxt *ctxt)
-+{
-+	struct insn *insn = &ctxt->insn;
-+	unsigned int bytes = 0;
-+	enum es_result ret;
-+	int sign_byte;
-+	long *reg_data;
-+
-+	switch (insn->opcode.bytes[1]) {
-+		/* MMIO Read w/ zero-extension */
-+	case 0xb6:
-+		bytes = 1;
-+		/* Fallthrough */
-+	case 0xb7:
-+		if (!bytes)
-+			bytes = 2;
-+
-+		ret = do_mmio(ghcb, ctxt, bytes, true);
-+		if (ret)
-+			break;
-+
-+		/* Zero extend based on operand size */
-+		reg_data = insn_get_reg(ctxt);
-+		memset(reg_data, 0, insn->opnd_bytes);
-+
-+		memcpy(reg_data, ghcb->shared_buffer, bytes);
-+		break;
-+
-+		/* MMIO Read w/ sign-extension */
-+	case 0xbe:
-+		bytes = 1;
-+		/* Fallthrough */
-+	case 0xbf:
-+		if (!bytes)
-+			bytes = 2;
-+
-+		ret = do_mmio(ghcb, ctxt, bytes, true);
-+		if (ret)
-+			break;
-+
-+		/* Sign extend based on operand size */
-+		reg_data = insn_get_reg(ctxt);
-+		if (bytes == 1) {
-+			u8 *val = (u8 *)ghcb->shared_buffer;
-+
-+			sign_byte = (*val & 0x80) ? 0x00 : 0xff;
-+		} else {
-+			u16 *val = (u16 *)ghcb->shared_buffer;
-+
-+			sign_byte = (*val & 0x8000) ? 0x00 : 0xff;
-+		}
-+		memset(reg_data, sign_byte, insn->opnd_bytes);
-+
-+		memcpy(reg_data, ghcb->shared_buffer, bytes);
-+		break;
-+
-+	default:
-+		ret = ES_UNSUPPORTED;
-+	}
-+
-+	return ret;
-+}
-+
-+static enum es_result handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+{
-+	struct insn *insn = &ctxt->insn;
-+	unsigned int bytes = 0;
-+	enum es_result ret;
-+	long *reg_data;
-+
-+	switch (insn->opcode.bytes[0]) {
-+	/* MMIO Write */
-+	case 0x88:
-+		bytes = 1;
-+		/* Fallthrough */
-+	case 0x89:
-+		if (!bytes)
-+			bytes = insn->opnd_bytes;
-+
-+		reg_data = insn_get_reg(ctxt);
-+		memcpy(ghcb->shared_buffer, reg_data, bytes);
-+
-+		ret = do_mmio(ghcb, ctxt, bytes, false);
-+		break;
-+
-+	case 0xc6:
-+		bytes = 1;
-+		/* Fallthrough */
-+	case 0xc7:
-+		if (!bytes)
-+			bytes = insn->opnd_bytes;
-+
-+		memcpy(ghcb->shared_buffer, insn->immediate1.bytes, bytes);
-+
-+		ret = do_mmio(ghcb, ctxt, bytes, false);
-+		break;
-+
-+		/* MMIO Read */
-+	case 0x8a:
-+		bytes = 1;
-+		/* Fallthrough */
-+	case 0x8b:
-+		if (!bytes)
-+			bytes = insn->opnd_bytes;
-+
-+		ret = do_mmio(ghcb, ctxt, bytes, true);
-+		if (ret)
-+			break;
-+
-+		reg_data = insn_get_reg(ctxt);
-+		if (bytes == 4)
-+			*reg_data = 0;  /* Zero-extend for 32-bit operation */
-+
-+		memcpy(reg_data, ghcb->shared_buffer, bytes);
-+		break;
-+
-+		/* Two-Byte Opcodes */
-+	case 0x0f:
-+		ret = handle_mmio_twobyte_ops(ghcb, ctxt);
-+		break;
-+	default:
-+		ret = ES_UNSUPPORTED;
-+	}
-+
-+	return ret;
-+}
--- 
-2.17.1
 
