@@ -2,123 +2,135 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2052C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCF9C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8270220637
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:11:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="tRlCSEkT"
+	by mail.kernel.org (Postfix) with ESMTP id D03AB20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbgBKNL4 (ORCPT
+        id S1729000AbgBKNMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:11:56 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54888 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbgBKNL4 (ORCPT
+        Tue, 11 Feb 2020 08:12:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9484 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728697AbgBKNMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:11:56 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g1so3455848wmh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 05:11:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=UA2beqx54fjO5bKZyYU4NwJP5Rv5VfOGPf4QXCsMCsQ=;
-        b=tRlCSEkTLWVkuZ2x7II5PMHiNXEp+jsbcFS9rtGPRIrvMoJ8CKFXAoQpoirL2AxmHA
-         bTcMlWGPVklAGpDhcozMQad0sbRQDJ57rVrqM0Q6wT5NA7aw31azy0FDSj7uVphSogqH
-         veisg3Z6r7cmHdX0JwUm0aklAnjjsIgsN1Q6zFautoRd2YA4pZirfP3IcRFCJ7hpSzX3
-         sDGPAIeub0+xHJnIar2p16e34t0PpVYqrIg0kewKChJv9Gesqtzn2Ot0qM4GRp8wXFGb
-         tvI/fXqvjQrRSHDnTQAG0n/TPrFZD0IqBbjm2MOSUL+5PVTjXZClEssqG9RDz0SifaWS
-         +MvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=UA2beqx54fjO5bKZyYU4NwJP5Rv5VfOGPf4QXCsMCsQ=;
-        b=EfJpm5qvY8YpFXIiuKcwvsru/sMSdh7VB5wxyAFlbz8bViSRqGh3cTXW1wDBRVEwdL
-         boF/0BHJomDiuPoRadlXmFJ43qvbBmV9c2b4zMKF+waufveDNIj9RxGc+MydfvNs491m
-         ttBEkjLW3osQtrUSKjkgdgUxZLtumiNIaaDyWL54KSrp7CLbGxvx5pCJXpFatBXBZ1Ek
-         miJJAaWTadvm+9cUAiPR6BfJfIfIW+rIFOOF8kSZiiWK5fKywtsUjIN6Gc9kigqNt/j4
-         57y7lj5ez37hLZweyxhj/Hbsk4u2Ejz4/km27YvHA4PUn2MNGT4xP/DSPyiSopuEFVbV
-         4/kw==
-X-Gm-Message-State: APjAAAVxkjP2NFoVmwyv3NxZhsB3w7QDQtFw8B8Fm4bAvY5lsETTNDjR
-        a5ArS6Xevzr4eZYXwAoDD0faqva1BWpJtGNw6LVGrlDGxx4=
-X-Google-Smtp-Source: APXvYqxvM7qrw/QIMcKN3V7aaR4Z2qEAHd99+tqYYcNGmDV8Id7gU7BMQ9V1GXU6KsiBR+rDjFZoQsFDBDa4dYfmrqw=
-X-Received: by 2002:a1c:7919:: with SMTP id l25mr5441871wme.135.1581426713763;
- Tue, 11 Feb 2020 05:11:53 -0800 (PST)
+        Tue, 11 Feb 2020 08:12:33 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BD2VWE100388
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:12:32 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn3u2xh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:12:24 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Tue, 11 Feb 2020 13:12:14 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Feb 2020 13:12:11 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BDCAtN21233696
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Feb 2020 13:12:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3222FA4060;
+        Tue, 11 Feb 2020 13:12:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C25C9A405F;
+        Tue, 11 Feb 2020 13:12:09 +0000 (GMT)
+Received: from localhost (unknown [9.145.77.145])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 11 Feb 2020 13:12:09 +0000 (GMT)
+Date:   Tue, 11 Feb 2020 14:12:08 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] s390/time: Fix clk type in get_tod_clock
+References: <20200208140858.47970-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-References: <a0f1570686e4cb99025d0c0b571f07a84d6467d9.1579004658.git.michal.simek@xilinx.com>
-In-Reply-To: <a0f1570686e4cb99025d0c0b571f07a84d6467d9.1579004658.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Date:   Tue, 11 Feb 2020 14:11:42 +0100
-Message-ID: <CAHTX3dLd_0G3x-bXYSAcad=9-1f3+ujQt8+Nm=7MZ=KwYY7C_Q@mail.gmail.com>
-Subject: Re: [PATCH] microblaze: Kernel parameters should be parsed earlier
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200208140858.47970-1-natechancellor@gmail.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20021113-0008-0000-0000-00000351E012
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021113-0009-0000-0000-00004A72814C
+Message-Id: <your-ad-here.call-01581426728-ext-3459@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_03:2020-02-10,2020-02-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002110100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C3=BAt 14. 1. 2020 v 13:24 odes=C3=ADlatel Michal Simek <michal.simek@xili=
-nx.com> napsal:
->
-> Kernel command line should be parsed before mmu_init is called to be able
-> to get for example cma sizes from command line. That's why call
-> parse_early_param() earlier in machine_early_init().
->
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+On Sat, Feb 08, 2020 at 07:08:59AM -0700, Nathan Chancellor wrote:
+> Clang warns:
+> 
+> In file included from ../arch/s390/boot/startup.c:3:
+> In file included from ../include/linux/elf.h:5:
+> In file included from ../arch/s390/include/asm/elf.h:132:
+> In file included from ../include/linux/compat.h:10:
+> In file included from ../include/linux/time.h:74:
+> In file included from ../include/linux/time32.h:13:
+> In file included from ../include/linux/timex.h:65:
+> ../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
+> [16]' to parameter of type 'char *' converts between pointers to integer
+> types with different sign [-Wpointer-sign]
+>         get_tod_clock_ext(clk);
+>                           ^~~
+> ../arch/s390/include/asm/timex.h:149:44: note: passing argument to
+> parameter 'clk' here
+> static inline void get_tod_clock_ext(char *clk)
+>                                            ^
+> 
+> Change clk's type to just be char so that it matches what happens in
+> get_tod_clock_ext.
+> 
+> Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/861
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
->
->  arch/microblaze/kernel/setup.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setu=
-p.c
-> index effed14eee06..34a082b17a01 100644
-> --- a/arch/microblaze/kernel/setup.c
-> +++ b/arch/microblaze/kernel/setup.c
-> @@ -54,7 +54,6 @@ void __init setup_arch(char **cmdline_p)
->         *cmdline_p =3D boot_command_line;
->
->         setup_memory();
-> -       parse_early_param();
->
->         console_verbose();
->
-> @@ -177,6 +176,8 @@ void __init machine_early_init(const char *cmdline, u=
-nsigned int ram,
->         /* Initialize global data */
->         per_cpu(KM, 0) =3D 0x1;   /* We start in kernel mode */
->         per_cpu(CURRENT_SAVE, 0) =3D (unsigned long)current;
-> +
-> +       parse_early_param();
->  }
->
->  void __init time_init(void)
-> --
-> 2.24.0
->
+> 
+> Alternatively, changing the clk type in get_tod_clock_ext to unsigned
+> which is what it was in the early 2000s.
+> 
+>  arch/s390/include/asm/timex.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
+> index 670f14a228e5..6bf3a45ccfec 100644
+> --- a/arch/s390/include/asm/timex.h
+> +++ b/arch/s390/include/asm/timex.h
+> @@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(char *clk)
+>  
+>  static inline unsigned long long get_tod_clock(void)
+>  {
+> -	unsigned char clk[STORE_CLOCK_EXT_SIZE];
+> +	char clk[STORE_CLOCK_EXT_SIZE];
+>  
+>  	get_tod_clock_ext(clk);
+>  	return *((unsigned long long *)&clk[1]);
+> -- 
+> 2.25.0
+> 
+Applied, thanks.
+I wonder though if Fixes: tag is really required for such changes. It
+triggers stable backports (for all stable branches since v2.6.35) and
+hence a lot of noise.
 
-We found that this breaks earlycon support that's why v2 is necessary.
-
-M
-
-
-
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
