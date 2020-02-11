@@ -2,85 +2,193 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D30C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797E5C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410A120870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581441346;
-	bh=g+2gIaMisgtrnsO0SyHLEWmhyLlRYwzciA6Edap8+RU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JvnTq416uSEN3VS2uL/t1jrtTjC817N4+UMB+2RvV7LvJ38cXDPaFH2u7FTFASCjF
-	 NgcqCYvmFvcMuGWRvdLIPPCwxJ5fcrWGvVstX+RowaS5P1U692LPXbX5+4jLtcFV4G
-	 Vd1mbMjwuG5QHr4BQvgQhPr44VEQweMB/KaL8Zus=
+	by mail.kernel.org (Postfix) with ESMTP id 5BADD214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgBKRPp (ORCPT
+        id S1729141AbgBKRQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:15:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43172 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 12:16:57 -0500
+Received: from muru.com ([72.249.23.125]:54736 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728078AbgBKRPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:15:45 -0500
-Received: from localhost (unknown [104.133.9.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA55620848;
-        Tue, 11 Feb 2020 17:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581441344;
-        bh=g+2gIaMisgtrnsO0SyHLEWmhyLlRYwzciA6Edap8+RU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y0aGiIyAaVVO0J9iefxmrJ0xHxm1khL6jjbw1n047KHv65w6GxCjelqC6vigPIFJC
-         py3GV0oyVen3P4WFtKjp3e/tmDj6tiJfD4h2Nf/S7ArYhFO7MDQdi5byte8iBYwcv/
-         WJKobnq/kr0IQcP0JJO6m18He7o1pIZbbuV55s5c=
-Date:   Tue, 11 Feb 2020 09:15:44 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     roman.sudarikov@linux.intel.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v5 3/3] perf =?iso-8859-1?Q?x86?=
- =?iso-8859-1?Q?=3A_Exposing_an_Uncore_unit_to_PMON_for_Intel_Xeon?=
- =?iso-8859-1?Q?=AE?= server platform
-Message-ID: <20200211171544.GA1933705@kroah.com>
-References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
- <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
+        id S1727954AbgBKRQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 12:16:57 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id DA26E80D4;
+        Tue, 11 Feb 2020 17:17:39 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio graph card
+Date:   Tue, 11 Feb 2020 09:16:45 -0800
+Message-Id: <20200211171645.41990-1-tony@atomide.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 07:15:49PM +0300, roman.sudarikov@linux.intel.com wrote:
-> +static ssize_t skx_iio_mapping_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct pmu *pmu = dev_get_drvdata(dev);
-> +	struct intel_uncore_pmu *uncore_pmu =
-> +		container_of(pmu, struct intel_uncore_pmu, pmu);
-> +
-> +	struct dev_ext_attribute *ea =
-> +		container_of(attr, struct dev_ext_attribute, attr);
-> +	long die = (long)ea->var;
-> +
-> +	return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
+We can have multiple connections on a single McBSP instance configured
+with audio graph card when using TDM (Time Division Multiplexing). Let's
+allow that by configuring dais dynamically.
 
-If "0000:" is always the "prefix" of the output of this file, why have
-it at all as you always know it is there?
+See Documentation/devicetree/bindings/sound/audio-graph-card.txt and
+Documentation/devicetree/bindings/graph.txt for more details for
+multiple endpoints.
 
-What is ever going to cause that to change?
+I've tested this with droid4 where cpcap pmic and modem voice are both
+both wired to mcbsp3. I've also tested this on droid4 both with and
+without the pending modem audio codec driver that is waiting for n_gsm
+serdev dependencies to clear.
 
-thanks,
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Arthur D. <spinal.by@gmail.com>
+Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ sound/soc/ti/omap-mcbsp-priv.h |  2 +
+ sound/soc/ti/omap-mcbsp.c      | 76 ++++++++++++++++++++++++----------
+ 2 files changed, 55 insertions(+), 23 deletions(-)
 
-greg k-h
+diff --git a/sound/soc/ti/omap-mcbsp-priv.h b/sound/soc/ti/omap-mcbsp-priv.h
+--- a/sound/soc/ti/omap-mcbsp-priv.h
++++ b/sound/soc/ti/omap-mcbsp-priv.h
+@@ -262,6 +262,8 @@ struct omap_mcbsp {
+ 	struct omap_mcbsp_platform_data *pdata;
+ 	struct omap_mcbsp_st_data *st_data;
+ 	struct omap_mcbsp_reg_cfg cfg_regs;
++	struct snd_soc_dai_driver *dais;
++	int dai_count;
+ 	struct snd_dmaengine_dai_dma_data dma_data[2];
+ 	unsigned int dma_req[2];
+ 	int dma_op_mode;
+diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
+--- a/sound/soc/ti/omap-mcbsp.c
++++ b/sound/soc/ti/omap-mcbsp.c
+@@ -14,6 +14,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_graph.h>
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+@@ -1304,23 +1305,53 @@ static int omap_mcbsp_remove(struct snd_soc_dai *dai)
+ 	return 0;
+ }
+ 
+-static struct snd_soc_dai_driver omap_mcbsp_dai = {
+-	.probe = omap_mcbsp_probe,
+-	.remove = omap_mcbsp_remove,
+-	.playback = {
+-		.channels_min = 1,
+-		.channels_max = 16,
+-		.rates = OMAP_MCBSP_RATES,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE,
+-	},
+-	.capture = {
+-		.channels_min = 1,
+-		.channels_max = 16,
+-		.rates = OMAP_MCBSP_RATES,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE,
+-	},
+-	.ops = &mcbsp_dai_ops,
+-};
++static int omap_mcbsp_init_dais(struct omap_mcbsp *mcbsp)
++{
++	struct device_node *np = mcbsp->dev->of_node;
++	int i;
++
++	if (np)
++		mcbsp->dai_count = of_graph_get_endpoint_count(np);
++
++	if (!mcbsp->dai_count)
++		mcbsp->dai_count = 1;
++
++	mcbsp->dais = devm_kcalloc(mcbsp->dev, mcbsp->dai_count,
++				   sizeof(*mcbsp->dais), GFP_KERNEL);
++	if (!mcbsp->dais)
++		return -ENOMEM;
++
++	for (i = 0; i < mcbsp->dai_count; i++) {
++		struct snd_soc_dai_driver *dai = &mcbsp->dais[i];
++
++		dai->name = devm_kasprintf(mcbsp->dev, GFP_KERNEL, "%s-dai%i",
++					   dev_name(mcbsp->dev), i);
++
++		if (i == 0) {
++			dai->probe = omap_mcbsp_probe;
++			dai->remove = omap_mcbsp_remove;
++			dai->ops = &mcbsp_dai_ops;
++		}
++		dai->playback.channels_min = 1;
++		dai->playback.channels_max = 16;
++		dai->playback.rates = OMAP_MCBSP_RATES;
++		if (mcbsp->pdata->reg_size == 2)
++			dai->playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
++		else
++			dai->playback.formats = SNDRV_PCM_FMTBIT_S16_LE |
++						SNDRV_PCM_FMTBIT_S32_LE;
++		dai->capture.channels_min = 1;
++		dai->capture.channels_max = 16;
++		dai->capture.rates = OMAP_MCBSP_RATES;
++		if (mcbsp->pdata->reg_size == 2)
++			dai->capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
++		else
++			dai->capture.formats = SNDRV_PCM_FMTBIT_S16_LE |
++					       SNDRV_PCM_FMTBIT_S32_LE;
++	}
++
++	return 0;
++}
+ 
+ static const struct snd_soc_component_driver omap_mcbsp_component = {
+ 	.name		= "omap-mcbsp",
+@@ -1409,18 +1440,17 @@ static int asoc_mcbsp_probe(struct platform_device *pdev)
+ 	mcbsp->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, mcbsp);
+ 
+-	ret = omap_mcbsp_init(pdev);
++	ret = omap_mcbsp_init_dais(mcbsp);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (mcbsp->pdata->reg_size == 2) {
+-		omap_mcbsp_dai.playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
+-		omap_mcbsp_dai.capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
+-	}
++	ret = omap_mcbsp_init(pdev);
++	if (ret)
++		return ret;
+ 
+ 	ret = devm_snd_soc_register_component(&pdev->dev,
+ 					      &omap_mcbsp_component,
+-					      &omap_mcbsp_dai, 1);
++					      mcbsp->dais, mcbsp->dai_count);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.25.0
