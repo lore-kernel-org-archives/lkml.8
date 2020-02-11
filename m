@@ -2,127 +2,173 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1AFC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7734C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FE72086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC1A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+5ascRq"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="aSuu2DmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgBKPQ5 (ORCPT
+        id S1729228AbgBKPTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:16:57 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:45872 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBKPQ5 (ORCPT
+        Tue, 11 Feb 2020 10:19:19 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38949 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbgBKPTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:16:57 -0500
-Received: by mail-vs1-f67.google.com with SMTP id v141so6487048vsv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 07:16:56 -0800 (PST)
+        Tue, 11 Feb 2020 10:19:18 -0500
+Received: by mail-ed1-f66.google.com with SMTP id m13so5078397edb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 07:19:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WENS2WcOxHmXvDO2pe8ifXBhkcUA3hWBPLeNHKN8EoM=;
-        b=C+5ascRqzPXGryltERKgpy4StkE4UDqzTw3z3ftMWMC3RwhZOcWM2KgPIGW6uTN7J7
-         si3ykSCHDvO4YTBpTF+fg/HXJdnzBJLgkqSW3lD080sgfeb58FaWgAmjAjogA7/v1nbI
-         DrBuwN/GHIMAMJgJzWS3GFcIdi24lIE8Tc0fYv2ERDU3MiUL0aAkHcyCKDepr/UU7usu
-         NJfGsdAQuyeQ4cvjkorfm4XpVogPPGbMOVux0+WFsU9o3zKwerLaQ9weCyCtuEpxpl/O
-         T05diV41zPXxkMmdYBtZObEYoxu5XCsB4ZgPd9WMT8MZE2bOaM/HNKk/BgefwQ9F1qHZ
-         wrQw==
+         :cc;
+        bh=16SLjLXO8g+qbOwDjgyf7x2FsF2pVisv4jB570F5ilM=;
+        b=aSuu2DmLP5BGoZWIgkKNcdwUhKU6htHEo28BK6My4sj4kupO+Haz8DWn2OJVKhqIO/
+         SdrQuM5vRc0nDFTBEL+8R8MUhNIUGFrMWJT/BEDG5aIFpN8ffqvbBheaJPJqYQzPbIYG
+         n67kIIUgWE0UkPxGo1Awiw7KRWecWqPJuGG1buEU2AuosK3U9CpDBIQajtQSfeq9aOSu
+         O+bf2+7XrxM/+AWzlli5bcNGowACJ3Jk3RXRtNM5KgjWB2CUwGTL5JHpswlckqjXNVUE
+         HUkGmprWvNphy3WJ64vrFxZQIf+6daO1KpvE06jgb4Y9GqSJsS2Bc9ESCc4O6LTIvT3K
+         bqSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WENS2WcOxHmXvDO2pe8ifXBhkcUA3hWBPLeNHKN8EoM=;
-        b=JtwyOSOinA09x74x231+Rtofauqk9fuAJDHsF/bgu+2cHUdIE++a0NcMvbmP3tWDAr
-         eCXrK+OYmBQdZOlj478lSDr+ThH8Q/XBjkiH3O4P8vqID/fANjvg9N6FxcQKQ6Ju2LQK
-         p0/pSkVA/Lp6SVJkUI3clo90hhmD7KhrG7/aXOCA/+hKfGBdvEiQ3p0gtSVgh5nF//vO
-         CW6sDTGwhNnDi+PmFwR2SYON0CGRlpoptOQbYnRhiQoNoUDt92IAQw7ieLOviigfK/XP
-         PMSjWxz42OyYKBZm8lewXM/wXnsbsVw/9FTu2waw33K8U8HSiLb/NsdkRywW/nyWQ60F
-         Gmzg==
-X-Gm-Message-State: APjAAAXFQ8pqcCnJJWh5wwpzAC3nYo3mVTAhl7govlS9iRck7QXsCpuo
-        zcxtcIfaiLNIbo788/GikSP7E6BuWK1qlH4VJ+FmBA==
-X-Google-Smtp-Source: APXvYqxX+g30kIlrE7sS/CTlKwzqSp/4IyXR9L+m+r5akbnOHy+rmb/ItP0h3AjrD+kKmmUxf62c/e8ix4e9zhDSy+c=
-X-Received: by 2002:a67:ee02:: with SMTP id f2mr9380622vsp.165.1581434215966;
- Tue, 11 Feb 2020 07:16:55 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=16SLjLXO8g+qbOwDjgyf7x2FsF2pVisv4jB570F5ilM=;
+        b=TtlFNj8Df7SEr14RNMmBV96n6Z8IU0QMYRuq7NxD2dx0fezMuvJ5NOcZihUm+VTM4j
+         o1Ne3YlwAmZ0lSC9C6r7IoysTk4LLuihErcKGV2z9Ad3HJS8mo8g5fsNRDozrW63KrMh
+         rBCNO08h8Xi1fEtT6RBxcXQ4wGNCxB9asm/pbu/S18CE6sykfv+j0CctHfCqOshs2Dg5
+         45bgXR7xacfM2+4rOnC3aQ9dBDVNxoTZM51NqEPqrYizppsxiOKGZph7LAbH5nyq+ycv
+         fnPKE+Fdf2cdP+e2mRjCSm2mpB+xz7CiTvpXUup7fu/ongtUylf8TFnDmzqhFW/FX8sf
+         fpgA==
+X-Gm-Message-State: APjAAAX0Cv1p0WFNXeJIosxnTYSqFVzD/0uK82CrM6chbyOXGyzdK87a
+        gBRcl9Ndu+9XPrcXEFT/HGhoWSfAJSLF3B0Ak0NO
+X-Google-Smtp-Source: APXvYqzvp0A3Md5np85OTOmVafrLccWiHt/aia4W8UTcrgVN+vogKxSKhOx0HDUUmxQaBGGAeCjSoxcBxitiPjBXBS8=
+X-Received: by 2002:a05:6402:61a:: with SMTP id n26mr5926242edv.135.1581434355583;
+ Tue, 11 Feb 2020 07:19:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20200128090636.13689-1-ludovic.barre@st.com> <0d4a3df8-fd1a-4839-116c-149f9e478f42@st.com>
-In-Reply-To: <0d4a3df8-fd1a-4839-116c-149f9e478f42@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 11 Feb 2020 16:16:20 +0100
-Message-ID: <CAPDyKFpD9GS2FNt2DOsnELtopzhAmyKizU6xhBrP5_uokFFHTw@mail.gmail.com>
-Subject: Re: [PATCH V2 0/9] mmc: mmci: sdmmc: add sdr104 support
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+References: <20200207180504.4200-1-frextrite@gmail.com> <20200207180504.4200-3-frextrite@gmail.com>
+In-Reply-To: <20200207180504.4200-3-frextrite@gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 11 Feb 2020 10:19:04 -0500
+Message-ID: <CAHC9VhQCbg1V290bYEZM+izDPRpr=XYXakohnDaMphkBBFgUaA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] auditsc: Do not use RCU primitive to read from cred pointer
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Eric Paris <eparis@redhat.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-audit@redhat.com,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 at 15:47, Ludovic BARRE <ludovic.barre@st.com> wrote:
+On Fri, Feb 7, 2020 at 1:08 PM Amol Grover <frextrite@gmail.com> wrote:
 >
-> hi Ulf
+> task_struct::cred is only used task-synchronously and does
+> not require any RCU locks, hence, rcu_dereference_check is
+> not required to read from it.
 >
-> Just a "gentleman ping" on this series
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=3D234011
+> Suggested-by: Jann Horn <jannh@google.com>
+> Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>  kernel/auditsc.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
 
-I will have a look later this week. The merge window closed yesterday
-and normally I don't queue anything but fixes during the merge window.
+Considering the other changes in this patchset this change seems
+reasonable to me.  I'm assuming you were intending this patchset to go
+in via some tree other than audit?
 
-Anyway, apologize for the delays.
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-Kind regards
-Uffe
-
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index 4effe01ebbe2..d3510513cdd1 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -430,24 +430,19 @@ static int audit_field_compare(struct task_struct *tsk,
+>  /* Determine if any context name data matches a rule's watch data */
+>  /* Compare a task_struct with an audit_rule.  Return 1 on match, 0
+>   * otherwise.
+> - *
+> - * If task_creation is true, this is an explicit indication that we are
+> - * filtering a task rule at task creation time.  This and tsk == current are
+> - * the only situations where tsk->cred may be accessed without an rcu read lock.
+>   */
+>  static int audit_filter_rules(struct task_struct *tsk,
+>                               struct audit_krule *rule,
+>                               struct audit_context *ctx,
+>                               struct audit_names *name,
+> -                             enum audit_state *state,
+> -                             bool task_creation)
+> +                             enum audit_state *state)
+>  {
+>         const struct cred *cred;
+>         int i, need_sid = 1;
+>         u32 sid;
+>         unsigned int sessionid;
 >
-> Regards
-> Ludo
+> -       cred = rcu_dereference_check(tsk->cred, tsk == current || task_creation);
+> +       cred = tsk->cred;
 >
-> Le 1/28/20 =C3=A0 10:06 AM, Ludovic Barre a =C3=A9crit :
-> > To support the sdr104 mode, sdmmc variant needs:
-> > -Hardware delay block support for sdmmc variant
-> >   with tuning procedure
-> > -Voltage switch callbacks
-> > -sdmmc revision 2.0
-> >
-> > V2:
-> > -regroup host->mmc_ops & mmc->ops assignment
-> > -add timeout define
-> > -rename prep_volt_switch to pre_sig_volt_switch
-> > -rename volt_switch to post_sig_volt_switch
-> > -add 'why' comment for "mmc: mmci: add volt_switch callbacks"
-> >
-> > Ludovic Barre (9):
-> >    mmc: mmci: sdmmc: replace sg_dma_xxx macros
-> >    mmc: mmci: sdmmc: rename sdmmc_priv struct to sdmmc_idma
-> >    mmc: mmci: add a reference at mmc_host_ops in mmci struct
-> >    mmc: mmci: add private pointer for variant
-> >    dt-bindings: mmc: mmci: add delay block base register for sdmmc
-> >    mmc: mmci: sdmmc: add execute tuning with delay block
-> >    mmc: mmci: add volt_switch callbacks
-> >    mmc: mmci: sdmmc: add voltage switch functions
-> >    mmc: mmci: add sdmmc variant revision 2.0
-> >
-> >   .../devicetree/bindings/mmc/mmci.txt          |   2 +
-> >   drivers/mmc/host/mmci.c                       |  42 +++-
-> >   drivers/mmc/host/mmci.h                       |   8 +
-> >   drivers/mmc/host/mmci_stm32_sdmmc.c           | 204 +++++++++++++++++=
--
-> >   4 files changed, 248 insertions(+), 8 deletions(-)
-> >
+>         for (i = 0; i < rule->field_count; i++) {
+>                 struct audit_field *f = &rule->fields[i];
+> @@ -745,7 +740,7 @@ static enum audit_state audit_filter_task(struct task_struct *tsk, char **key)
+>         rcu_read_lock();
+>         list_for_each_entry_rcu(e, &audit_filter_list[AUDIT_FILTER_TASK], list) {
+>                 if (audit_filter_rules(tsk, &e->rule, NULL, NULL,
+> -                                      &state, true)) {
+> +                                      &state)) {
+>                         if (state == AUDIT_RECORD_CONTEXT)
+>                                 *key = kstrdup(e->rule.filterkey, GFP_ATOMIC);
+>                         rcu_read_unlock();
+> @@ -791,7 +786,7 @@ static enum audit_state audit_filter_syscall(struct task_struct *tsk,
+>         list_for_each_entry_rcu(e, list, list) {
+>                 if (audit_in_mask(&e->rule, ctx->major) &&
+>                     audit_filter_rules(tsk, &e->rule, ctx, NULL,
+> -                                      &state, false)) {
+> +                                      &state)) {
+>                         rcu_read_unlock();
+>                         ctx->current_state = state;
+>                         return state;
+> @@ -815,7 +810,7 @@ static int audit_filter_inode_name(struct task_struct *tsk,
+>
+>         list_for_each_entry_rcu(e, list, list) {
+>                 if (audit_in_mask(&e->rule, ctx->major) &&
+> -                   audit_filter_rules(tsk, &e->rule, ctx, n, &state, false)) {
+> +                   audit_filter_rules(tsk, &e->rule, ctx, n, &state)) {
+>                         ctx->current_state = state;
+>                         return 1;
+>                 }
+> --
+> 2.24.1
+>
+
+
+-- 
+paul moore
+www.paul-moore.com
