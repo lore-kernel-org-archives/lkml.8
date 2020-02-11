@@ -2,180 +2,114 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D66AC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49388C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9AD2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283F220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbgBKQf4 convert rfc822-to-8bit (ORCPT
+        id S1730077AbgBKQid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:35:56 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:35438 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgBKQf4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:35:56 -0500
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 384DA67A894;
-        Tue, 11 Feb 2020 17:35:54 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 11 Feb
- 2020 17:35:53 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Tue, 11 Feb 2020 17:35:53 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        liaoweixiong <liaoweixiong@allwinnertech.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Peter Pan <peterpandong@micron.com>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "Richard Weinberger" <richard@nod.at>
-Subject: [PATCH 3/3] mtd: spinand: Wait for the erase op to finish before
- writing a bad block marker
-Thread-Topic: [PATCH 3/3] mtd: spinand: Wait for the erase op to finish before
- writing a bad block marker
-Thread-Index: AQHV4PlTblnHiLQcV0asTsn4OWAZ0A==
-Date:   Tue, 11 Feb 2020 16:35:53 +0000
-Message-ID: <20200211163452.25442-4-frieder.schrempf@kontron.de>
-References: <20200211163452.25442-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20200211163452.25442-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Tue, 11 Feb 2020 11:38:33 -0500
+Received: from mga06.intel.com ([134.134.136.31]:63625 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728049AbgBKQid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:38:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:38:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="405993172"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga005.jf.intel.com with ESMTP; 11 Feb 2020 08:38:31 -0800
+Date:   Tue, 11 Feb 2020 08:38:31 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 05/12] fs: remove unneeded IS_DAX() check
+Message-ID: <20200211163831.GC12866@iweiny-DESK2.sc.intel.com>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <20200208193445.27421-6-ira.weiny@intel.com>
+ <20200211053401.GE10776@dread.disaster.area>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 384DA67A894.AE793
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, git-commits@allycomm.com,
-        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        peterpandong@micron.com, richard@nod.at, stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211053401.GE10776@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Tue, Feb 11, 2020 at 04:34:01PM +1100, Dave Chinner wrote:
+> On Sat, Feb 08, 2020 at 11:34:38AM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > The IS_DAX() check in io_is_direct() causes a race between changing the
+> > DAX state and creating the iocb flags.
+> > 
+> > Remove the check because DAX now emulates the page cache API and
+> > therefore it does not matter if the file state is DAX or not when the
+> > iocb flags are created.
+> 
+> This statement is ... weird.
+> 
+> DAX doesn't "emulate" the page cache API at all
 
-Currently when marking a block, we use spinand_erase_op() to erase
-the block before writing the marker to the OOB area without waiting
-for the operation to succeed. This can lead to the marking failing
-silently and no bad block marker being written to the flash.
+ah...  yea emulate is a bad word here.
 
-To fix this we reuse the spinand_erase() function, that already does
-everything we need to do before actually writing the marker.
+> - it has it's own
+> read/write methods that filesystems call based on the iomap
+> infrastructure (dax_iomap_rw()). i.e. there are 3 different IO paths
+> through the filesystems: the DAX IO path, the direct IO path, and
+> the buffered IO path.
+> 
+> Indeed, it seems like this works a bit by luck: Ext4 and XFS always
+> check IS_DAX(inode) in the read/write_iter methods before checking
+> for IOCB_DIRECT, and hence the IOCB_DIRECT flag is ignored by the
+> filesystems. i.e. when we got rid of the O_DIRECT paths from DAX, we
+> forgot to clean up io_is_direct() and it's only due to the ordering
+> of checks that we went down the DAX path correctly....
+> 
+> That said, the code change is good, but the commit message needs a
+> rewrite.
 
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- drivers/mtd/nand/spi/core.c | 56 ++++++++++++++++++-------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+How about?
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 925db6269861..8a69d13639e2 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -600,6 +600,32 @@ static int spinand_mtd_block_isbad(struct mtd_info *mtd, loff_t offs)
- 	return ret;
- }
- 
-+static int __spinand_erase(struct nand_device *nand, const struct nand_pos *pos,
-+			   bool hard_fail)
-+{
-+	struct spinand_device *spinand = nand_to_spinand(nand);
-+	u8 status;
-+	int ret;
-+
-+	ret = spinand_select_target(spinand, pos->target);
-+	if (ret)
-+		return ret;
-+
-+	ret = spinand_write_enable_op(spinand);
-+	if (ret)
-+		return ret;
-+
-+	ret = spinand_erase_op(spinand, pos);
-+	if (ret && hard_fail)
-+		return ret;
-+
-+	ret = spinand_wait(spinand, &status);
-+	if (!ret && (status & STATUS_ERASE_FAILED))
-+		ret = -EIO;
-+
-+	return ret;
-+}
-+
- static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
- {
- 	struct spinand_device *spinand = nand_to_spinand(nand);
-@@ -614,16 +640,10 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
- 	int ret;
- 
- 	/* Erase block before marking it bad. */
--	ret = spinand_select_target(spinand, pos->target);
--	if (ret)
--		return ret;
--
--	ret = spinand_write_enable_op(spinand);
-+	ret = __spinand_erase(nand, pos, false);
- 	if (ret)
- 		return ret;
- 
--	spinand_erase_op(spinand, pos);
--
- 	return spinand_write_page(spinand, &req);
- }
- 
-@@ -644,27 +664,7 @@ static int spinand_mtd_block_markbad(struct mtd_info *mtd, loff_t offs)
- 
- static int spinand_erase(struct nand_device *nand, const struct nand_pos *pos)
- {
--	struct spinand_device *spinand = nand_to_spinand(nand);
--	u8 status;
--	int ret;
--
--	ret = spinand_select_target(spinand, pos->target);
--	if (ret)
--		return ret;
--
--	ret = spinand_write_enable_op(spinand);
--	if (ret)
--		return ret;
--
--	ret = spinand_erase_op(spinand, pos);
--	if (ret)
--		return ret;
--
--	ret = spinand_wait(spinand, &status);
--	if (!ret && (status & STATUS_ERASE_FAILED))
--		ret = -EIO;
--
--	return ret;
-+	return __spinand_erase(nand, pos, true);
- }
- 
- static int spinand_mtd_erase(struct mtd_info *mtd,
--- 
-2.17.1
+<commit msg>
+  fs: Remove unneeded IS_DAX() check
+  
+  The IS_DAX() check in io_is_direct() causes a race between changing the
+  DAX state and creating the iocb flags.
+
+  Remove the check because DAX now has it's own read/write methods and
+  file systems which support DAX check IS_DAX() prior to IOCB_DIRECT.
+  Therefore, it does not matter if the file state is DAX when the iocb
+  flags are created, and we can avoid the race.
+
+  Reviewed-by: Jan Kara <jack@suse.cz>
+  Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+</commit msg>
+
+Ira
+
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
