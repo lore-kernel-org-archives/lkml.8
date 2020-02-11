@@ -2,111 +2,88 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024E1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F16C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF0F20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ISuJhI95"
+	by mail.kernel.org (Postfix) with ESMTP id 44FA020848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgBKIvT (ORCPT
+        id S1727996AbgBKIvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 03:51:19 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:32977 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727704AbgBKIvS (ORCPT
+        Tue, 11 Feb 2020 03:51:38 -0500
+Received: from kernel.crashing.org ([76.164.61.194]:55248 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgBKIvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 03:51:18 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m7so740416pjs.0;
-        Tue, 11 Feb 2020 00:51:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Kufx2b86GhMKj2/5JRyQcdEYbiaBCWhtsF2yQMRwNJQ=;
-        b=ISuJhI952AfdvwSTac/cDpCFI/qpWyE+qRpiSDF8F50DWcKhHDp1sy9MaKVp5uCazY
-         X+dq/WQzT6gQb8eY4hqESnGG8bQrEA1Z/uAsVIu74NKdz4BqCgyafsBt1FwQ7SnXKn4E
-         cMeVKyLRS2zHdq1GrScxcz1Mj1RFR6B5dMTw1Prlw9oSRowV1Jz4e/xXImXryTkY93Iq
-         gerJNXOyJbQJKtbFdKhPg+ja353+WtT+9i3Vy2guNKNxOK3qHdFH0M6MpSBOYAJn4oUR
-         ohq/1x02oA6Zc+9vZdlhdBY4MmlEBnMuoNpD3sFWXrcEtKMojx69JZ+BXlMO/eX+L0ev
-         5INQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Kufx2b86GhMKj2/5JRyQcdEYbiaBCWhtsF2yQMRwNJQ=;
-        b=S4SjxqWcneIB2zxyZ2Rz+ZHIMmq7JxRQuIthb00rfhmUUiV7y/2KkYMel6NiZZjoia
-         UvLhuHMtVPKk6zZ9TCqmcoQ1YNmaBskFvrX7S8nVRAH4mQRzNLD6Rc5laaqEZXCX0qG8
-         xNhJjw0pjsQR1rMzVDHfIc4Wb5UxSs4USfRw/ZbiDw0D1Jv+qkvOKOSSrJKzA0KcCN/N
-         NPCX90bb20Tn8gUmUPbRX6f5QfYCpMAYapR2/354/2BgE4KPZqEd64FWxsOEfpdLplJ7
-         elA5WXvVLtFyHwV8SqTBnxJDBv3rzE2Lk3BusVGIiBsBJY/5HMxpwLIuzR4cv0ykNOEV
-         pmQQ==
-X-Gm-Message-State: APjAAAUlkX/+5aDoRO+lCCwr0wpsPiqWV8s+iWjD6WKfn5OaTGxbGQ6P
-        H88V/4L1m1qXHHTst403hwA=
-X-Google-Smtp-Source: APXvYqxnj7704HHSz3OzLC6RklyKHrNrKRxeJMkFXmg3pfeK2UpiIbXY1kMPj4g0PxeKZt8Dw5WO0g==
-X-Received: by 2002:a17:90a:c697:: with SMTP id n23mr2334308pjt.37.1581411076548;
-        Tue, 11 Feb 2020 00:51:16 -0800 (PST)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id g19sm3179271pfh.134.2020.02.11.00.51.14
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 11 Feb 2020 00:51:15 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        baolin.wang7@gmail.com, zhang.lyra@gmail.com, orsonzhai@gmail.com
-Subject: [PATCH] power: supply: Allow charger manager can be built as a module
-Date:   Tue, 11 Feb 2020 16:50:22 +0800
-Message-Id: <2d0854b00d7f85e988aff4f8186e8ac5d8a9aff2.1581410798.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 11 Feb 2020 03:51:37 -0500
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01B8oi95016379
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 11 Feb 2020 02:50:46 -0600
+Message-ID: <746b08aabf7ea976a382ad2ca30fa10a095e7ed8.camel@kernel.crashing.org>
+Subject: Re: [PATCH 1/3] usb: gadget: aspeed: read vhub config from
+ of_device_id
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Tao Ren <rentao.bupt@gmail.com>
+Cc:     Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 11 Feb 2020 09:50:42 +0100
+In-Reply-To: <20200210190744.GA5346@taoren-ubuntu-R90MNF91>
+References: <20200131222157.20849-1-rentao.bupt@gmail.com>
+         <20200131222157.20849-2-rentao.bupt@gmail.com>
+         <CACPK8Xe0b+zVNqf8v5YXOLkzqDeb4JHqec-bqFpaVFGTwHThhA@mail.gmail.com>
+         <386e905fb705266efcac0c1b3a10053889c7fead.camel@kernel.crashing.org>
+         <20200210190744.GA5346@taoren-ubuntu-R90MNF91>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow charger manager can be built as a module like other charger
-drivers.
+On Mon, 2020-02-10 at 11:07 -0800, Tao Ren wrote:
+> > > This looks generally okay. We should wait for Ben's ack before
+> > > applying.
+> > 
+> > Shouldn't we instead have DT fields indicating those values ?
+> 
+> May I ask why we prefer adding dt fields (such as "aspeed,vhub-max-ports"
+> and "aspeed,vhub-max-endpoints") instead of assigning these values based
+> on aspeed family? For example, is it to allow users to set a smaller
+> number of ports/endpoints?
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/power/supply/Kconfig          |    2 +-
- include/linux/power/charger-manager.h |    7 +------
- 2 files changed, 2 insertions(+), 7 deletions(-)
+It's not a strong drive but it makes it more convenient to add support
+to newer revisions if the only differences are those numbers.
+> 
+> > Also we should add a DT representation for the various ID/strings of
+> > the hub itself so manufacturers can customize them.
+> 
+> Sure. I will add DT nodes for vendor/product/device IDs/strings. As it's
+> not directly related to ast2600-support, shall I handle it in a separate
+> patch? Or I can include the patch in this patch series?
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 9a5591a..195bc04 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -480,7 +480,7 @@ config CHARGER_GPIO
- 	  called gpio-charger.
- 
- config CHARGER_MANAGER
--	bool "Battery charger manager for multiple chargers"
-+	tristate "Battery charger manager for multiple chargers"
- 	depends on REGULATOR
- 	select EXTCON
- 	help
-diff --git a/include/linux/power/charger-manager.h b/include/linux/power/charger-manager.h
-index ad19e68..40493b2 100644
---- a/include/linux/power/charger-manager.h
-+++ b/include/linux/power/charger-manager.h
-@@ -248,11 +248,6 @@ struct charger_manager {
- 	u64 charging_end_time;
- };
- 
--#ifdef CONFIG_CHARGER_MANAGER
- extern void cm_notify_event(struct power_supply *psy,
--				enum cm_event_types type, char *msg);
--#else
--static inline void cm_notify_event(struct power_supply *psy,
--				enum cm_event_types type, char *msg) { }
--#endif
-+			    enum cm_event_types type, char *msg);
- #endif /* _CHARGER_MANAGER_H */
--- 
-1.7.9.5
+Separate. Thanks !
+
+Cheers,
+Ben.
+
 
