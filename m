@@ -2,117 +2,148 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A9DC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D73C352A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE9520715
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1/CNSDa"
+	by mail.kernel.org (Postfix) with ESMTP id 2AE5620715
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581380408;
+	bh=2u/RhpeyhZbyGo5n8b7k2lWjMrohTRxWgqVkpmvJVIQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=S8EloAxG3UdLgzl+XmmSbID0CYOavSM6nI95t4LD5UBH9MI6ZxIDtONHANQQA5S3d
+	 xN3hnmoqXYVXoTqpNO89crhIuL15StzQHg8kgZFCOd42DfRvhfrkAV1dBCKWReAoGq
+	 P6fnL5crw9mkHW/v7WVgy3os2y/Fg203/7LSOF84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgBKASl (ORCPT
+        id S1727582AbgBKAUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:18:41 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44639 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbgBKASl (ORCPT
+        Mon, 10 Feb 2020 19:20:07 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41142 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbgBKAUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:18:41 -0500
-Received: by mail-oi1-f195.google.com with SMTP id d62so11085190oia.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 16:18:39 -0800 (PST)
+        Mon, 10 Feb 2020 19:20:06 -0500
+Received: by mail-pl1-f195.google.com with SMTP id t14so3491325plr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 16:20:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:mime-version
-         :content-disposition:user-agent;
-        bh=UhxPcj6/40TrfxQ8X9WmhGzj5RubLTtga5je0QqGKtU=;
-        b=t1/CNSDasjvg213eVPV628rx/NqyicZ9MHL3nZV9iyRb0gnoDGAyk3zo2CbHrXMmUl
-         WFvhDLBN1hBcGYvlgHjIs/vG4BS/ytAYuojaB6RCLOVzXa2Tm+GoJk8yREM2gpGS8rad
-         6ytY2A+Ek+kI5aA4FUBNcCPGjW4ZjNxbaPQ/OCdyP9+S/o+cMdtK/JKqbp9+6vzzD8vX
-         rDntq7w+1rgHOGeB5wwpBBDVQ2vQaWYcKSpSjw7syD7i4O00HiWDx8WYrL6JGkY9BC3n
-         g6A3TEldiQH2H+5/bufsQFXEln8xfTcdA/4B+Pp2Y6pgpFb+DN6dcVKT/XxYvOpE3HFG
-         OPBQ==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3OTREQOKy0gnIvXKXGDvE24tk+qLBMpu/Of2xHZqo/4=;
+        b=hA6VDB/o9xlXGxz9a3Jeb+DNW1qd5ufupvTSSjGfmKl1n4YanuCFru5Maw8WqpTWce
+         j4mqh4Darcqmj85XbyBJ9DuxBAgAyn03iQZuG88hqQEV2rOhxb2m4EyqzMNjt2PXHyg7
+         NUzcPEyyOU8dB0zDP1zV0B+ei6+d//2Mw7xfGgL/H/oT+pZNZySvjnlPZOUuBfXoZxbc
+         n5T/lj5bQ34VSC9MRZy0P/KMoWdJ562jRPrASKJ765OhI6YKnlKUPOe9kdLxpEGGqCxR
+         9wioDqCp+pHDcytTT5Lgnuq7TfeXC04Z7dUNOKfvIZMnO3FH8JnhPhG7/2NLNVbFNjQP
+         04HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:mime-version:content-disposition:user-agent;
-        bh=UhxPcj6/40TrfxQ8X9WmhGzj5RubLTtga5je0QqGKtU=;
-        b=Y91gICEvaFVcg6hvVNUPcov1FsPyiYuYsIsfv3rX/+6J1DVUkjj8ccaGaTwCAc4F4S
-         2RSR0d6i/vcREZWkStJVXr4sGHQqfhNQwkmvuY3vHH+Xo/V79ytNqPYPmNX5gDkGJNSb
-         EyhDgiwzUKGJMvyL2PUTUDWN6dWyTbe0uES3qw/I0JVja5ovmgcOAmB6wsnbStymVBlM
-         +Wz1UDG9xLOoUl/Z5F1Q+uVYnuv3p5M+3V/WC4ymhI+auoPe4BYFGIyEFd6xUILt8r7Y
-         25DcqVa7l1YEG4gPGLcbzRA2FVTcXiyYgp730/ZSSviCDD+soGK2TDUYyRIpZy/k4blL
-         DBmA==
-X-Gm-Message-State: APjAAAVwoouUvYslNxo2kfvgzebvURk+oCXqkYZMabwLWop/jW8X3BEf
-        CtUSN+w1FKRuXkHk77Olgwhsi1E=
-X-Google-Smtp-Source: APXvYqzo0+ahUj2sFEaT94kJPwXL9G3Uy6b+rEKAM/F/An1bpHkf8Zo5HWsdpCGERzDKdO4w+fT8YA==
-X-Received: by 2002:a05:6808:358:: with SMTP id j24mr1223199oie.89.1581380319211;
-        Mon, 10 Feb 2020 16:18:39 -0800 (PST)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id m185sm606084oia.26.2020.02.10.16.18.37
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=3OTREQOKy0gnIvXKXGDvE24tk+qLBMpu/Of2xHZqo/4=;
+        b=en2JxHmOgHQ6rmemFy3graeogYv8T0IOxUyuDiXMmp/BXAs19BP9G1FrxjcyRmFhcS
+         Xc/DM6Wu9oF1eWsyRfPzE5xsgskstyq0EMuApo7wrv0bCaZxHJ3SGhceV5tA5j8+3DZn
+         /sN8YPgOpOTRlvPlLq2qdlVYvdYG5eCaE+wyGIiYCgSFGQeh/QQ2pHIHpRW1kbuCoYoq
+         5yU8q0kVkVxXVcdGcGhCPGOdNoGjtHXdduBDV6fyfLhhSuJ+F5I1JZfAFHV1Pa5c596r
+         zPZAxrULfPTnnIVPZn/M7e7xqtjKM27Ual8BrXby5G5FTKTq1lGDcww/OfnhOfx8Ww4F
+         B3Jw==
+X-Gm-Message-State: APjAAAX8JQlkXv2GJh+wLjbjN0y3Oh1pgUVV/DPHHJqQlyM0XaUY5B6f
+        ywddB+5LzJKG0oGcV7vx6+ntTAOB
+X-Google-Smtp-Source: APXvYqyPeBczzNeYHJektBpOOUNWHawkwwYAhlRlcaRSELf4hUQd5E/C2uBZ3S7zpP0KWFXaRuBS2A==
+X-Received: by 2002:a17:90a:fb41:: with SMTP id iq1mr502054pjb.89.1581380404487;
+        Mon, 10 Feb 2020 16:20:04 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id c15sm1503020pfo.137.2020.02.10.16.20.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 16:18:38 -0800 (PST)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:4d7:9d24:84b2:ef45])
-        by serve.minyard.net (Postfix) with ESMTPSA id 4A338180046;
-        Tue, 11 Feb 2020 00:18:37 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 18:18:36 -0600
-From:   Corey Minyard <minyard@acm.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net
-Subject: [GIT PULL] IPMI bug fixes for 5.6
-Message-ID: <20200211001836.GI7842@minyard.net>
-Reply-To: minyard@acm.org
+        Mon, 10 Feb 2020 16:20:03 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm <linux-mm@kvack.org>, Josef Bacik <josef@toxicpanda.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH] mm: fix long time stall from mm_populate
+Date:   Mon, 10 Feb 2020 16:19:58 -0800
+Message-Id: <20200211001958.170261-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 6794862a16ef41f753abd75c03a152836e4c8028:
+Basically, fault handler releases mmap_sem before requesting readahead
+and then it is supposed to retry lookup the page from page cache with
+FAULT_FLAG_TRIED so that it avoids the live lock of infinite retry.
 
-  Merge tag 'for-5.5-rc1-kconfig-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux (2019-12-09 12:14:31 -0800)
+However, what happens if the fault handler find a page from page
+cache and the page has readahead marker but are waiting under
+writeback? Plus one more condition, it happens under mm_populate
+which repeats faulting unless it encounters error. So let's assemble
+conditions below.
 
-are available in the Git repository at:
+__mm_populate
+for (...)
+  get_user_pages(faluty_address)
+    handle_mm_fault
+      filemap_fault
+        find a page form page(PG_uptodate|PG_readahead|PG_writeback)
+	it will return VM_FAULT_RETRY
+  continue with faulty_address
 
-  https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.6-1
+IOW, it will repeat fault retry logic until the page will be written
+back in the long run. It makes big spike latency of several seconds.
 
-for you to fetch changes up to e0354d147e5889b5faa12e64fa38187aed39aad4:
+This patch solves the issue by turning off fault retry logic in second
+trial.
 
-  drivers: ipmi: fix off-by-one bounds check that leads to a out-of-bounds write (2020-01-20 11:01:00 -0600)
+Signed-off-by: Minchan Kim <minchan@kernel.org>
+---
+It was orignated from code review once I have seen several user reports
+but didn't confirm yet it's the root cause.
 
-----------------------------------------------------------------
-Minor bug fixes for IPMI
+ mm/gup.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-I know this is late; I've been travelling and, well, I've been
-distracted.
-
-This is just a few bug fixes and adding i2c support to the IPMB driver,
-which is something I wanted from the beginning for it.  It would be
-nice for the people doing IPMB to get this in.
-
--corey
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      drivers: ipmi: fix off-by-one bounds check that leads to a out-of-bounds write
-
-Corey Minyard (1):
-      ipmi:ssif: Handle a possible NULL pointer reference
-
-Vijay Khemka (2):
-      drivers: ipmi: Support raw i2c packet in IPMB
-      drivers: ipmi: Modify max length of IPMB packet
-
- Documentation/driver-api/ipmb.rst |  4 ++++
- drivers/char/ipmi/ipmb_dev_int.c  | 33 +++++++++++++++++++++++++++++++--
- drivers/char/ipmi/ipmi_ssif.c     | 10 +++++++---
- 3 files changed, 42 insertions(+), 5 deletions(-)
+diff --git a/mm/gup.c b/mm/gup.c
+index 1b521e0ac1de..b3f825092abf 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1196,6 +1196,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 	struct vm_area_struct *vma = NULL;
+ 	int locked = 0;
+ 	long ret = 0;
++	bool tried = false;
+ 
+ 	end = start + len;
+ 
+@@ -1226,14 +1227,18 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 		 * double checks the vma flags, so that it won't mlock pages
+ 		 * if the vma was already munlocked.
+ 		 */
+-		ret = populate_vma_page_range(vma, nstart, nend, &locked);
++		ret = populate_vma_page_range(vma, nstart, nend,
++						tried ? NULL : &locked);
+ 		if (ret < 0) {
+ 			if (ignore_errors) {
+ 				ret = 0;
+ 				continue;	/* continue at next VMA */
+ 			}
+ 			break;
+-		}
++		} else if (ret == 0)
++			tried = true;
++		else
++			tried = false;
+ 		nend = nstart + ret * PAGE_SIZE;
+ 		ret = 0;
+ 	}
+-- 
+2.25.0.225.g125e21ebc7-goog
 
