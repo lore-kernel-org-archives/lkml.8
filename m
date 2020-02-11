@@ -6,81 +6,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1926CC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D87C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB7220870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B39D214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgBKOP7 (ORCPT
+        id S1730015AbgBKORN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:15:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:46942 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgBKOP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:15:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76F3D30E;
-        Tue, 11 Feb 2020 06:15:58 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9163E3F68F;
-        Tue, 11 Feb 2020 06:15:57 -0800 (PST)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH] cgroup/cpuset: Fix a race condition when reading cpuset.*
-Date:   Tue, 11 Feb 2020 14:15:54 +0000
-Message-Id: <20200211141554.24181-1-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Feb 2020 09:17:13 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52088 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728495AbgBKORN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 09:17:13 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 12EAC98FE9F5F2753074;
+        Tue, 11 Feb 2020 22:16:55 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
+ 22:16:45 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linux-net-drivers@solarflare.com>, <ecree@solarflare.com>,
+        <mhabets@solarflare.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] sfc: remove unused variable 'efx_default_channel_type'
+Date:   Tue, 11 Feb 2020 22:16:06 +0800
+Message-ID: <20200211141606.47180-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LTP cpuset_hotplug_test.sh was failing with the following error message
+drivers/net/ethernet/sfc/efx.c:116:38: warning:
+ efx_default_channel_type defined but not used [-Wunused-const-variable=]
 
-	cpuset_hotplug 1 TFAIL: root group's cpus isn't expected(Result: 0-5, Expect: 0,2-5).
+commit 83975485077d ("sfc: move channel alloc/removal code")
+left behind this, remove it.
 
-Which is due to a race condition between cpu hotplug operation and
-reading cpuset.cpus file.
-
-When a cpu is onlined/offlined, cpuset schedules a workqueue to sync its
-internal data structures with the new values. If a read happens during
-this window, the user will read a stale value, hence triggering the
-failure above.
-
-To fix the issue make sure cpuset_wait_for_hotplug() is called before
-allowing any value to be read, hence forcing the synchronization to
-happen before the read.
-
-I ran 500 iterations with this fix applied with no failure triggered.
-
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
+ drivers/net/ethernet/sfc/efx.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I think it's okay to flush the workqueue from the read context? We do it on the
-write, so I assumed it's okay on the read too. But it'd be good to confirm it
-doesn't break any rule I'm not aware of.
-
- kernel/cgroup/cpuset.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 58f5073acff7..593055522626 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -2405,6 +2405,9 @@ static int cpuset_common_seq_show(struct seq_file *sf, void *v)
- 	cpuset_filetype_t type = seq_cft(sf)->private;
- 	int ret = 0;
+diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
+index 4481f21a1f43..256807c28ff7 100644
+--- a/drivers/net/ethernet/sfc/efx.c
++++ b/drivers/net/ethernet/sfc/efx.c
+@@ -113,7 +113,6 @@ MODULE_PARM_DESC(debug, "Bitmapped debugging message enable value");
+  *
+  *************************************************************************/
  
-+	/* Ensure all hotplug ops were done before reading any value */
-+	cpuset_wait_for_hotplug();
-+
- 	spin_lock_irq(&callback_lock);
- 
- 	switch (type) {
+-static const struct efx_channel_type efx_default_channel_type;
+ static void efx_remove_port(struct efx_nic *efx);
+ static int efx_xdp_setup_prog(struct efx_nic *efx, struct bpf_prog *prog);
+ static int efx_xdp(struct net_device *dev, struct netdev_bpf *xdp);
 -- 
-2.17.1
+2.20.1
+
 
