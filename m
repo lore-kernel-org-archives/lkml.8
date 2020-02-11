@@ -2,87 +2,135 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87BEC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D345DC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B387820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="HqWJVT2+"
+	by mail.kernel.org (Postfix) with ESMTP id B29FB20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgBKNBT (ORCPT
+        id S1728880AbgBKNBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:01:19 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:49582 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727041AbgBKNBS (ORCPT
+        Tue, 11 Feb 2020 08:01:40 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28382 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728475AbgBKNBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:01:18 -0500
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id B6C512E1590;
-        Tue, 11 Feb 2020 16:01:15 +0300 (MSK)
-Received: from vla1-5a8b76e65344.qloud-c.yandex.net (vla1-5a8b76e65344.qloud-c.yandex.net [2a02:6b8:c0d:3183:0:640:5a8b:76e6])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id tTygow4JdF-1FSSM519;
-        Tue, 11 Feb 2020 16:01:15 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1581426075; bh=D5lgADcjNeDpoHpl282aAWYt8Pd5KWAKw6hPxPX/Y+I=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=HqWJVT2+irkHY0JL0f2iDa/cx4+tLoX0FoWwtUjywSGdBD0BuLCYHlfS+v/c+ZIuG
-         nPjjJNpkqXeudejJ9O7I6lUsQYvm8eV6u2Poy16EFm38C44wMwRgadKWNnydH/FQwP
-         pcUYuhWf5EJrJw0m5tWiT+rE5M6dxcsuSL19J0Po=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
-        by vla1-5a8b76e65344.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 3IWGqE8uP2-1EXqpkZf;
-        Tue, 11 Feb 2020 16:01:14 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] lib/test_lockup: test module to generate lockups
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-References: <158132859146.2797.525923171323227836.stgit@buzz>
- <20200210144101.e144335455399d6d84d92370@linux-foundation.org>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <c7e9d2ac-0f6d-31ed-ec00-cc315b1e34f8@yandex-team.ru>
-Date:   Tue, 11 Feb 2020 16:01:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 11 Feb 2020 08:01:39 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BD0Hml008486
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:01:38 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y3pqfcvbu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:01:38 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Tue, 11 Feb 2020 13:01:36 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Feb 2020 13:01:33 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BD1VPJ53805174
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Feb 2020 13:01:31 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7735D52054;
+        Tue, 11 Feb 2020 13:01:31 +0000 (GMT)
+Received: from localhost (unknown [9.145.77.145])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 108C952051;
+        Tue, 11 Feb 2020 13:01:31 +0000 (GMT)
+Date:   Tue, 11 Feb 2020 14:01:29 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: -Wtautological-constant-compare in arch/s390/include/asm/page.h
+References: <20200208125714.GA9164@ubuntu-x2-xlarge-x86>
+ <1f54ae4c-8748-496b-0833-80749d8d4f6c@de.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200210144101.e144335455399d6d84d92370@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1f54ae4c-8748-496b-0833-80749d8d4f6c@de.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20021113-0020-0000-0000-000003A925FE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021113-0021-0000-0000-0000220105E5
+Message-Id: <your-ad-here.call-01581426089-ext-6170@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_03:2020-02-10,2020-02-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1031
+ bulkscore=0 malwarescore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=1 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002110100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 01.41, Andrew Morton wrote:
-> On Mon, 10 Feb 2020 12:56:31 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+On Mon, Feb 10, 2020 at 08:55:46AM +0100, Christian Borntraeger wrote:
 > 
->> CONFIG_TEST_LOCKUP=m adds module "test_lockup" that helps to make sure
->> that watchdogs and lockup detectors are working properly.
 > 
-> Now we'll get test robot reports "hey this makes my kernel lock up" ;)
+> On 08.02.20 13:57, Nathan Chancellor wrote:
+> > Hi all,
+> > 
+> > We noticed that you all added support for building s390 with clang,
+> > which is great! I have noticed a few warnings for which I will send
+> > patches but this one has me stumped.
+> > 
+> > In file included from ../lib/crypto/sha256.c:16:
+> > In file included from ../include/linux/module.h:13:
+> > In file included from ../include/linux/stat.h:19:
+> > In file included from ../include/linux/time.h:6:
+> > In file included from ../include/linux/seqlock.h:36:
+> > In file included from ../include/linux/spinlock.h:51:
+> > In file included from ../include/linux/preempt.h:78:
+> > In file included from ../arch/s390/include/asm/preempt.h:6:
+> > In file included from ../include/linux/thread_info.h:38:
+> > In file included from ../arch/s390/include/asm/thread_info.h:26:
+> > ../arch/s390/include/asm/page.h:45:6: warning: converting the result of '<<' to a boolean always evaluates to false [-Wtautological-constant-compare]
+> >         if (PAGE_DEFAULT_KEY)
+> >             ^
+> > ../arch/s390/include/asm/page.h:23:44: note: expanded from macro 'PAGE_DEFAULT_KEY'
+> > #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
+> >                                                   ^
+> > 1 warning generated.
 
-Without module parameters it is completely save and does nothing.
+This warning only shows up for the decompressor code and purgatory which
+have separate set of build flags not derived from top level KBUILD_CFLAGS.
+For the rest of the code this warning is suppressed by:
+Makefile:
+ 740 ifdef CONFIG_CC_IS_CLANG
+...
+ 744 # Quiet clang warning: comparison of unsigned expression < 0 is always false
+ 745 KBUILD_CFLAGS += -Wno-tautological-compare
 
+At the same time both decompressor and purgatory Makefiles include
+CLANG_FLAGS into their CFLAGS. And this -Wno-tautological-compare is
+clang specific. So I believe this option belongs to CLANG_FLAGS
+rather than being included into KBUILD_CFLAGS under ifdef
+CONFIG_CC_IS_CLANG. But this raises question about other clang
+specific options inside that ifdef CONFIG_CC_IS_CLANG. Should they all
+be made part of CLANG_FLAGS?
+
+> > 
+> > PAGE_DEFAULT_PAGE is always 0, meaning this function never does what it
+> > is supposed to. Is this intentional? It seems that commit 0b642ede4796
+> > ("[PATCH] s390: default storage key") added this and it mentions that it
+> > can be overwritten at build time but I do not see any infrastructure for
+> > doing that. Any clarification that you can give so we can solve this
+> > warning would be much appreciated!
 > 
-> Is there any way in which we can close the loop here?  Add a
-> tools/testing/selftests script which loads the module, attempts to
-> trigger a lockup and then checks whether it happened as expected?
-> Sounds tricky.
+> Yes, it is a debugging tool that we use from time to time. The user would then
+> change PAGE_DEFAULT_ACC in the header file when needed. It was not worth a config
+> option as normal users should not use it. 
 > 
 
-Yes, I'll try to script this.
