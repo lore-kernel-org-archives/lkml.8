@@ -2,311 +2,175 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FEBC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D468BC352A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B3220733
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED6320733
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WfyVV4BI"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c/krmNxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgBKCsL (ORCPT
+        id S1727885AbgBKCvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 21:48:11 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:49832 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727588AbgBKCsI (ORCPT
+        Mon, 10 Feb 2020 21:51:04 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:26046 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727855AbgBKCvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 21:48:08 -0500
-Received: from tusharsu-Ubuntu.corp.microsoft.com (unknown [131.107.147.225])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 434DA20B9C2F;
-        Mon, 10 Feb 2020 18:48:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 434DA20B9C2F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1581389287;
-        bh=t+ShYf2XwSIyB1oBmjrPH0u1zCu+ztC602aYBU8hwlU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WfyVV4BIL9kMrlTb9lQHGt6nSvMxsefl04N3zwcZHLc2zdr+GvKhlRQz9cnIZw7fy
-         pwsBURPcx7b0iGSLJOxx8xJYuY30TyRD6UlRyGxevW1ooR55Ku6no/7L9Nqo6rVO94
-         h6pzj3uPyN6e/G4llia+vyBgEd8mvl+H+f3K/41A=
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To:     zohar@linux.ibm.com, joe@perches.com, skhan@linuxfoundation.org,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] IMA: Add module name and base name prefix to log
-Date:   Mon, 10 Feb 2020 18:47:55 -0800
-Message-Id: <20200211024755.5579-3-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200211024755.5579-1-tusharsu@linux.microsoft.com>
-References: <20200211024755.5579-1-tusharsu@linux.microsoft.com>
+        Mon, 10 Feb 2020 21:51:04 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581389463; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=DwinruQUTHVtb433tEVtKSujUuJq0mr9jS6Gc9Jj1Ik=; b=c/krmNxlI01+nkypTIL5AX2nk6L3Wz269H/M6bbFda8dXcR6NVwiBkVhl3dtYEH3tCSHq6ap
+ FyFb4iqV5Tt8ePRBn92K6aiJKg8ib2WGZL5vYfsa3pOcwMciJlCiZdyvTdJtgeIpLVw4vDrq
+ CONw/RStHZ14E585fYAdd1FMMD0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e421696.7fa215564b90-smtp-out-n01;
+ Tue, 11 Feb 2020 02:51:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DC8E7C4479D; Tue, 11 Feb 2020 02:51:00 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4AE8FC43383;
+        Tue, 11 Feb 2020 02:50:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4AE8FC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 2/2] clk: qcom: gpucc: Add support for GX GDSC for
+ SC7180
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+References: <1581307266-26989-1-git-send-email-tdas@codeaurora.org>
+ <1581307266-26989-2-git-send-email-tdas@codeaurora.org>
+ <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <9ac184a0-03a7-1354-1f18-890f3b66cdcb@codeaurora.org>
+Date:   Tue, 11 Feb 2020 08:20:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The #define for formatting log messages, pr_fmt, is duplicated in the
-files under security/integrity.
+Hi Doug,
 
-This change moves the definition to security/integrity/integrity.h and
-removes the duplicate definitions in the other files under
-security/integrity. Also, it adds KBUILD_MODNAME and KBUILD_BASENAME prefix
-to the log messages.
+On 2/10/2020 11:19 PM, Doug Anderson wrote:
+> Hi,
+> 
+> On Sun, Feb 9, 2020 at 8:01 PM Taniya Das <tdas@codeaurora.org> wrote:
+>>
+>> Most of the time the CPU should not be touching the GX domain on the
+>> GPU except for a very special use case when the CPU needs to force the
+>> GX headswitch off. Add the GX domain for that use case.  As part of
+>> this add a dummy enable function for the GX gdsc to simulate success
+>> so that the pm_runtime reference counting is correct.  This matches
+>> what was done in sdm845 in commit 85a3d920d30a ("clk: qcom: Add a
+>> dummy enable function for GX gdsc").
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> 
+> For future reference, if you have someone's tag in your commit message
+> it's nice to CC them on the email.
+> 
+> 
 
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Suggested-by: Joe Perches <joe@perches.com>
-Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
----
- security/integrity/digsig.c                  | 2 --
- security/integrity/digsig_asymmetric.c       | 2 --
- security/integrity/evm/evm_crypto.c          | 2 --
- security/integrity/evm/evm_main.c            | 2 --
- security/integrity/evm/evm_secfs.c           | 2 --
- security/integrity/ima/ima_asymmetric_keys.c | 2 --
- security/integrity/ima/ima_crypto.c          | 2 --
- security/integrity/ima/ima_fs.c              | 2 --
- security/integrity/ima/ima_init.c            | 2 --
- security/integrity/ima/ima_kexec.c           | 1 -
- security/integrity/ima/ima_main.c            | 2 --
- security/integrity/ima/ima_policy.c          | 2 --
- security/integrity/ima/ima_queue.c           | 2 --
- security/integrity/ima/ima_queue_keys.c      | 2 --
- security/integrity/ima/ima_template.c        | 2 --
- security/integrity/ima/ima_template_lib.c    | 2 --
- security/integrity/integrity.h               | 6 ++++++
- 17 files changed, 6 insertions(+), 31 deletions(-)
+My bad my miss.
 
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index ea1aae3d07b3..e9cbadade74b 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -6,8 +6,6 @@
-  * Dmitry Kasatkin <dmitry.kasatkin@intel.com>
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/err.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/digsig_asymmetric.c
-index 55aec161d0e1..4e0d6778277e 100644
---- a/security/integrity/digsig_asymmetric.c
-+++ b/security/integrity/digsig_asymmetric.c
-@@ -6,8 +6,6 @@
-  * Dmitry Kasatkin <dmitry.kasatkin@intel.com>
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/err.h>
- #include <linux/ratelimit.h>
- #include <linux/key-type.h>
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index d485f6fc908e..35682852ddea 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -10,8 +10,6 @@
-  *	 Using root's kernel master key (kmk), calculate the HMAC
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/export.h>
- #include <linux/crypto.h>
- #include <linux/xattr.h>
-diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index f9a81b187fae..d361d7fdafc4 100644
---- a/security/integrity/evm/evm_main.c
-+++ b/security/integrity/evm/evm_main.c
-@@ -11,8 +11,6 @@
-  *	evm_inode_removexattr, and evm_verifyxattr
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/init.h>
- #include <linux/crypto.h>
- #include <linux/audit.h>
-diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-index c11c1f7b3ddd..39ad1038d45d 100644
---- a/security/integrity/evm/evm_secfs.c
-+++ b/security/integrity/evm/evm_secfs.c
-@@ -10,8 +10,6 @@
-  *	- Get the key and enable EVM
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/audit.h>
- #include <linux/uaccess.h>
- #include <linux/init.h>
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index 7678f0e3e84d..aaae80c4e376 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -9,8 +9,6 @@
-  *       create or update.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <keys/asymmetric-type.h>
- #include "ima.h"
- 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7967a6904851..423c84f95a14 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -10,8 +10,6 @@
-  *	Calculates md5/sha1 file hash, template hash, boot-aggreate hash
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/kernel.h>
- #include <linux/moduleparam.h>
- #include <linux/ratelimit.h>
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 2000e8df0301..a71e822a6e92 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -12,8 +12,6 @@
-  *	current measurement list and IMA statistics
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/fcntl.h>
- #include <linux/slab.h>
- #include <linux/init.h>
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 195cb4079b2b..567468188a61 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -11,8 +11,6 @@
-  *             initialization and cleanup functions
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/init.h>
- #include <linux/scatterlist.h>
- #include <linux/slab.h>
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 9e94eca48b89..121de3e04af2 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -6,7 +6,6 @@
-  * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-  * Mimi Zohar <zohar@linux.vnet.ibm.com>
-  */
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/seq_file.h>
- #include <linux/vmalloc.h>
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index ee01ee34eec8..e78d0aa665f3 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -15,8 +15,6 @@
-  *	and ima_file_check.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/module.h>
- #include <linux/file.h>
- #include <linux/binfmts.h>
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 453427048999..c334e0dc6083 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -7,8 +7,6 @@
-  *	- initialize default measure policy rules
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/fs.h>
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 1ce8b1701566..8753212ddb18 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -15,8 +15,6 @@
-  *       ever removed or changed during the boot-cycle.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/rculist.h>
- #include <linux/slab.h>
- #include "ima.h"
-diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-index 6a9ee52649c4..ffd78f09c5b6 100644
---- a/security/integrity/ima/ima_queue_keys.c
-+++ b/security/integrity/ima/ima_queue_keys.c
-@@ -8,8 +8,6 @@
-  *       Enables deferred processing of keys
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/workqueue.h>
- #include <keys/asymmetric-type.h>
- #include "ima.h"
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index 6aa6408603e3..062d9ad49afb 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -9,8 +9,6 @@
-  *      Helpers to manage template descriptors.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/rculist.h>
- #include "ima.h"
- #include "ima_template_lib.h"
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 32ae05d88257..9cd1e50f3ccc 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -9,8 +9,6 @@
-  *      Library of supported template fields.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include "ima_template_lib.h"
- 
- static bool ima_template_hash_algo_allowed(u8 algo)
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 73fc286834d7..b1bb4d2263be 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -6,6 +6,12 @@
-  * Mimi Zohar <zohar@us.ibm.com>
-  */
- 
-+#ifdef pr_fmt
-+#undef pr_fmt
-+#endif
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " KBUILD_BASENAME ": " fmt
-+
- #include <linux/types.h>
- #include <linux/integrity.h>
- #include <crypto/sha.h>
+>> ---
+>>   drivers/clk/qcom/gpucc-sc7180.c | 37 +++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
+>> index a96c0b9..7b656b6 100644
+>> --- a/drivers/clk/qcom/gpucc-sc7180.c
+>> +++ b/drivers/clk/qcom/gpucc-sc7180.c
+>> @@ -170,8 +170,45 @@ static struct gdsc cx_gdsc = {
+>>          .flags = VOTABLE,
+>>   };
+>>
+>> +/*
+>> + * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
+>> + * running in the CX domain so the CPU doesn't need to know anything about the
+>> + * GX domain EXCEPT....
+>> + *
+>> + * Hardware constraints dictate that the GX be powered down before the CX. If
+>> + * the GMU crashes it could leave the GX on. In order to successfully bring back
+>> + * the device the CPU needs to disable the GX headswitch. There being no sane
+>> + * way to reach in and touch that register from deep inside the GPU driver we
+>> + * need to set up the infrastructure to be able to ensure that the GPU can
+>> + * ensure that the GX is off during this super special case. We do this by
+>> + * defining a GX gdsc with a dummy enable function and a "default" disable
+>> + * function.
+>> + *
+>> + * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
+>> + * driver. During power up, nothing will happen from the CPU (and the GMU will
+>> + * power up normally but during power down this will ensure that the GX domain
+>> + * is *really* off - this gives us a semi standard way of doing what we need.
+>> + */
+>> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
+>> +{
+>> +       /* Do nothing but give genpd the impression that we were successful */
+>> +       return 0;
+>> +}
+>> +
+>> +static struct gdsc gx_gdsc = {
+>> +       .gdscr = 0x100c,
+>> +       .clamp_io_ctrl = 0x1508,
+>> +       .pd = {
+>> +               .name = "gx_gdsc",
+>> +               .power_on = gx_gdsc_enable,
+>> +       },
+>> +       .pwrsts = PWRSTS_OFF_ON,
+>> +       .flags = CLAMP_IO,
+> 
+> In my previous reply [1], I asked about these flags and if it was
+> intentional that they were different from sdm845.  I did see a private
+> response, but no public one.  In the future note that it's good to
+> reply publicly so everyone understands what happened.  In this case, I
+> was told "the GDSC's on 845 and SC7180 are different and hence the
+> change in flags is expected".  That answers my question and thus I'm
+> fine with my tag being here.  It also looks like you took my other
+> review feedback on v1, which is nice.
+> 
+> 
+> -Doug
+> 
+
+I am unable to respond to the other thread, thus we put out the reply.
+
+> 
+> [1] https://lore.kernel.org/r/CAD=FV=V6yM7UJwu0ZLPCqmDgV9FS4=g+wcLg0TV51b72zvWT9Q@mail.gmail.com
+> 
+
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
