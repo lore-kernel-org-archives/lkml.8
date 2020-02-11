@@ -2,132 +2,154 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EDFC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D40FC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2895420870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FqQJM5dW"
+	by mail.kernel.org (Postfix) with ESMTP id 3E93A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgBKKDA (ORCPT
+        id S1728192AbgBKKDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:03:00 -0500
-Received: from mail-wm1-f73.google.com ([209.85.128.73]:58630 "EHLO
-        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgBKKDA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:03:00 -0500
-Received: by mail-wm1-f73.google.com with SMTP id p2so1106340wmi.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 02:02:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=4ErgepGfDI3yrrGPodBZCow6kOhTX1ReLVCDrlwlOKY=;
-        b=FqQJM5dW1/FooZ2cFt2xQ5iJ1Tqxr/S+zlg1ivQ1SkzX+LJssklGFCSACCll8ncIth
-         S83G93n7UzkiRiLY4LZVPlBGJxjWhKyEOCfzt2k5IQxEuZUar1fNNb31Je07/gdPtqN3
-         GR5HvEGi2L0eWu31vlJE0S7lQaYr33Rib8WyHmURGcmy7+o+p9DW/VX6TqT+WNhZpo8P
-         EWlDnL+65tIdbLAnOxZQkDkXijD2FU7yD1U6IZicFllGphHU5B7O3M+jXYR6kMIs3/7L
-         zJqrwdE593crtsJvki30OZSyR34/duLqlP5/c07V4IdIa08jE5nKE/Y1RmxYbZ0RES0u
-         woOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=4ErgepGfDI3yrrGPodBZCow6kOhTX1ReLVCDrlwlOKY=;
-        b=f4VlAtgsWgGuLKSTIs49FFVorhWEqQit7zdCgR2GRAw2A6i0VweY//aqhFcra6xvtq
-         9qSxAhFBmo52e58cioZdHJ5IFfsJWXSay19NOherbqYUPzixwQcj09It5riT/rQhnV5N
-         llDj+pzMtt8ScqoIc4QQEmXTKiGeQKHVxYYvn0w9MES5uxX7XDaysBoIKgSAG9pU9bEJ
-         NVuL9hyIldK5dz16KHBYpUPhYQxx6EKeQW+PTpjd9ovjltSl2BuqhfeACAU1rvQdcHh3
-         Rsk/1ObVdAGj6MW88TA5di1lEFy00eJCjaMQKx59GUBuFFoYUm2mlkaNPSMkZw1tJVOX
-         BU8g==
-X-Gm-Message-State: APjAAAWn9/se7D+fvXOO8MX/fIzwz1oO3oBIC20PgpMDf3bKPJsvzM+L
-        JKq34ndVxtE8U6HXvCYub7Ow3nZAVw==
-X-Google-Smtp-Source: APXvYqxnsn5PVOziySVAlxU2el27ltIMmQsBTqh/nhzrnNWSlvuM7AUfSZCkjKrx+UCr7I7R6vQfm5DalQ==
-X-Received: by 2002:adf:fe43:: with SMTP id m3mr8140672wrs.213.1581415377060;
- Tue, 11 Feb 2020 02:02:57 -0800 (PST)
-Date:   Tue, 11 Feb 2020 11:02:43 +0100
-Message-Id: <20200211100243.101187-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
-Subject: [PATCH v2] kcsan: Fix misreporting if concurrent races on same address
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
+        Tue, 11 Feb 2020 05:03:03 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55194 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728073AbgBKKDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:03:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D3190B150;
+        Tue, 11 Feb 2020 10:02:57 +0000 (UTC)
+Message-ID: <28f7ea832ead04dd93cd582480fb946604bb407d.camel@suse.de>
+Subject: Re: [PATCH] usb: xhci: Enable LPM for VIA LABS VL805
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date:   Tue, 11 Feb 2020 11:02:55 +0100
+In-Reply-To: <19e1d141-2033-782f-e5a3-dcba6bdc0a8a@i2se.com>
+References: <20200120142422.3907-1-nsaenzjulienne@suse.de>
+         <20200210185921.GA1058087@kroah.com>
+         <1478f170-f0ec-96df-79cf-f7c44bebc290@linux.intel.com>
+         <19e1d141-2033-782f-e5a3-dcba6bdc0a8a@i2se.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-4mJyqWT1X0J6LlfdjyE7"
+User-Agent: Evolution 3.34.3 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there are at least 4 threads racing on the same address, it can
-happen that one of the readers may observe another matching reader in
-other_info. To avoid locking up, we have to consume 'other_info'
-regardless, but skip the report. See the added comment for more details.
 
-Signed-off-by: Marco Elver <elver@google.com>
----
-v2:
-* Improve comment to illustrate more concrete case.
----
- kernel/kcsan/report.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+--=-4mJyqWT1X0J6LlfdjyE7
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 3bc590e6be7e3..abf6852dff72f 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -422,6 +422,44 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
- 			return false;
- 		}
- 
-+		access_type |= other_info.access_type;
-+		if ((access_type & KCSAN_ACCESS_WRITE) == 0) {
-+			/*
-+			 * While the address matches, this is not the other_info
-+			 * from the thread that consumed our watchpoint, since
-+			 * neither this nor the access in other_info is a write.
-+			 * It is invalid to continue with the report, since we
-+			 * only have information about reads.
-+			 *
-+			 * This can happen due to concurrent races on the same
-+			 * address, with at least 4 threads. To avoid locking up
-+			 * other_info and all other threads, we have to consume
-+			 * it regardless.
-+			 *
-+			 * A concrete case to illustrate why we might lock up if
-+			 * we do not consume other_info:
-+			 *
-+			 *   We have 4 threads, all accessing the same address
-+			 *   (or matching address ranges). Assume the following
-+			 *   watcher and watchpoint consumer pairs:
-+			 *   write1-read1, read2-write2. The first to populate
-+			 *   other_info is write2, however, write1 consumes it,
-+			 *   resulting in a report of write1-write2. This report
-+			 *   is valid, however, now read1 populates other_info;
-+			 *   read2-read1 is an invalid conflict, yet, no other
-+			 *   conflicting access is left. Therefore, we must
-+			 *   consume read1's other_info.
-+			 *
-+			 * Since this case is assumed to be rare, it is
-+			 * reasonable to omit this report: one of the other
-+			 * reports includes information about the same shared
-+			 * data, and at this point the likelihood that we
-+			 * re-report the same race again is high.
-+			 */
-+			release_report(flags, KCSAN_REPORT_RACE_SIGNAL);
-+			return false;
-+		}
-+
- 		/*
- 		 * Matching & usable access in other_info: keep other_info_lock
- 		 * locked, as this thread consumes it to print the full report;
--- 
-2.25.0.225.g125e21ebc7-goog
+Hi Stefan, Mathias.
+
+On Tue, 2020-02-11 at 10:49 +0100, Stefan Wahren wrote:
+> Hi Mathias,
+>=20
+> On 11.02.20 10:34, Mathias Nyman wrote:
+> > On 10.2.2020 20.59, Greg Kroah-Hartman wrote:
+> > > On Mon, Jan 20, 2020 at 03:24:22PM +0100, Nicolas Saenz Julienne wrot=
+e:
+> > > > This PCIe controller chip is used on the Raspberry Pi 4 and multipl=
+e
+> > > > adapter cards. There is no publicly available documentation for the
+> > > > chip, yet both the downstream RPi4 kernel and the controller cards
+> > > > support/advertise LPM support.
+> > > >=20
+> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > > ---
+> > > >  drivers/usb/host/xhci-pci.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pc=
+i.c
+> > > > index 4917c5b033fa..c1976e98992b 100644
+> > > > --- a/drivers/usb/host/xhci-pci.c
+> > > > +++ b/drivers/usb/host/xhci-pci.c
+> > > > @@ -241,6 +241,9 @@ static void xhci_pci_quirks(struct device *dev,
+> > > > struct xhci_hcd *xhci)
+> > > >  			pdev->device =3D=3D 0x3432)
+> > > >  		xhci->quirks |=3D XHCI_BROKEN_STREAMS;
+> > > > =20
+> > > > +	if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=3D =
+0x3483)
+> > > > +		xhci->quirks |=3D XHCI_LPM_SUPPORT;
+> > > > +
+> > > >  	if (pdev->vendor =3D=3D PCI_VENDOR_ID_ASMEDIA &&
+> > > >  			pdev->device =3D=3D 0x1042)
+> > > >  		xhci->quirks |=3D XHCI_BROKEN_STREAMS;
+> > > Mathias, is this in your review queue?
+> > >=20
+> > Ah yes, before adding link power management support for this controller=
+ we
+> > should check that it has sane (or any) exit latency values set in its
+> > HCSPARAMS3 capability register.
+
+I did some checks myself before sending the patch, and tested with some dev=
+ices
+I own. The latencies seemd reasonable. For example I just hooked up an USB3=
+ HD,
+the root HUB exposes:
+
+	bU1DevExitLat           4 micro seconds
+	bU2DevExitLat         231 micro seconds
+
+And xhci configured the device with:
+
+	bU1DevExitLat          10 micro seconds
+	bU2DevExitLat        2047 micro seconds
+
+> > Nicolas, if you have this controller could you show the capability
+> > registers:
+> >=20
+> > cat /sys/kernel/debug/usb/xhci/*/reg-cap
+
+CAPLENGTH =3D 0x01000020
+HCSPARAMS1 =3D 0x05000420
+HCSPARAMS2 =3D 0xfc000031
+HCSPARAMS3 =3D 0x00e70004
+HCCPARAMS1 =3D 0x002841eb
+DOORBELLOFF =3D 0x00000100
+RUNTIMEOFF =3D 0x00000200
+HCCPARAMS2 =3D 0x00000000
+
+> sorry for the naive question, but do you need the dump with or without
+> this patch applied?
+
+IIRC these are dumps from xhci's extended registers. Shouldn't matter at al=
+l.=20
+
+Regards,
+Nicolas
+
+
+--=-4mJyqWT1X0J6LlfdjyE7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5Ce88ACgkQlfZmHno8
+x/7F9Qf+KWPtMeGt4zPdB2ls5zaDGQPrv3QRvhIdmu/ovQXjdcwOghNJtYpYtfod
+p75/dlkegGgfNF+6nlZSMydSAPlvy1/stxk12OhPASHLTA2knxSOUhlfmX82PC4P
+AGcGqCC7mXzeqYh4Bw1+MUkHHjNivZEOGswGkzZ8j6g/DabCEyMgByoYl1/G+hdM
+REqOtzfuxCQF+2BJLyRC7LHBO42cOLg2vGz+whF6PjmkSBJEr8MUGlOuCrtpJP2g
+ajtbxF8u7DcL+cI4m48gpIiWP/TPVb4qJOJ3B2/qKjO8NcXPveo08DGa/sy8wcDg
+8wicmtAbbG37PAVtD0R2XUmBnWudbw==
+=9y0c
+-----END PGP SIGNATURE-----
+
+--=-4mJyqWT1X0J6LlfdjyE7--
 
