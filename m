@@ -2,115 +2,82 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C59C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A5AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582D2208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eWC7poTU"
+	by mail.kernel.org (Postfix) with ESMTP id A625F208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgBKMyP (ORCPT
+        id S1728368AbgBKMyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:54:15 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48964 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgBKMyP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:54:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+uQN30cS5Bj87iEEBzdOLx8lg9+i0ExEu8VOZjq8Ndo=; b=eWC7poTUmbgHCYbKut5tUcDZwL
-        w3YYTT854/6orjDXWt0o8myOrLaqYxmNildHwtqHwB9P6sAmRSzUVkC2ndTa5MBo6vPhEIM38iBQg
-        3QFH9rbgbTMx5jUAauOSubj91u3I4QqJCftUeJ3u2BRZFY7uw1LRQwqgp3/dZBByXH8F5OzZAb0t+
-        miBihdnvmVJGXqnRBr1rG3atRoSZFunPwyyK3rI6Tg1RqDm7wVtET7WbIVm0KlJr9sAYInPEKF3Lu
-        GTYeC4TiyWPK4e73vfdDf6T1j5MFZMYQQejC42VttS5bt+wx+jfOtOIGuI60RBaTCQF1YD4hRLaX6
-        1eYOefYA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1V3O-0006U6-1C; Tue, 11 Feb 2020 12:54:14 +0000
-Date:   Tue, 11 Feb 2020 04:54:13 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 04/13] mm: Add readahead address space operation
-Message-ID: <20200211125413.GU8731@bombadil.infradead.org>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-5-willy@infradead.org>
- <20200211045230.GD10776@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211045230.GD10776@dread.disaster.area>
+        Tue, 11 Feb 2020 07:54:18 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:48932 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727567AbgBKMyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:54:16 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F6831A355E;
+        Tue, 11 Feb 2020 13:54:14 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A20C1A354D;
+        Tue, 11 Feb 2020 13:53:59 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CB51F40297;
+        Tue, 11 Feb 2020 20:53:45 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, andrew.smirnov@gmail.com,
+        manivannan.sadhasivam@linaro.org, marcel.ziswiler@toradex.com,
+        rjones@gateworks.com, sebastien.szymanski@armadeus.com,
+        aisheng.dong@nxp.com, gary.bisson@boundarydevices.com,
+        angus@akkea.ca, pramod.kumar_1@nxp.com, rabeeh@solid-run.com,
+        cosmin.stoica@nxp.com, l.stach@pengutronix.de,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 1/4] dt-bindings: spi: imx: Add i.MX8MM/i.MX8MN/i.MX8MP compatible
+Date:   Tue, 11 Feb 2020 20:48:24 +0800
+Message-Id: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 03:52:30PM +1100, Dave Chinner wrote:
-> > +struct readahead_control {
-> > +	struct file *file;
-> > +	struct address_space *mapping;
-> > +/* private: use the readahead_* accessors instead */
-> > +	pgoff_t start;
-> > +	unsigned int nr_pages;
-> > +	unsigned int batch_count;
-> > +};
-> > +
-> > +static inline struct page *readahead_page(struct readahead_control *rac)
-> > +{
-> > +	struct page *page;
-> > +
-> > +	if (!rac->nr_pages)
-> > +		return NULL;
-> > +
-> > +	page = xa_load(&rac->mapping->i_pages, rac->start);
-> > +	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> > +	rac->batch_count = hpage_nr_pages(page);
-> > +	rac->start += rac->batch_count;
-> 
-> There's no mention of large page support in the patch description
-> and I don't recall this sort of large page batching in previous
-> iterations.
-> 
-> This seems like new functionality to me, not directly related to
-> the initial ->readahead API change? What have I missed?
+Add compatible for imx8mm/imx8mn/imx8mp.
 
-I had a crisis of confidence when I was working on this -- the loop
-originally looked like this:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes since V2:
+	- fix typo in commit message, compatbile -> compatible.
+---
+ Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-#define readahead_for_each(rac, page)                                   \
-        for (; (page = readahead_page(rac)); rac->nr_pages--)
+diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+index 2d32641..33bc58f 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+@@ -10,7 +10,10 @@ Required properties:
+   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
+-  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8M
++  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
++  - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
++  - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
++  - "fsl,imx8mp-ecspi" for SPI compatible with the one integrated on i.MX8MP
+ - reg : Offset and length of the register set for the device
+ - interrupts : Should contain CSPI/eCSPI interrupt
+ - clocks : Clock specifiers for both ipg and per clocks.
+-- 
+2.7.4
 
-and then I started thinking about what I'd need to do to support large
-pages, and that turned into
-
-#define readahead_for_each(rac, page)                                   \
-        for (; (page = readahead_page(rac));				\
-		rac->nr_pages -= hpage_nr_pages(page))
-
-but I realised that was potentially a use-after-free because 'page' has
-certainly had put_page() called on it by then.  I had a brief period
-where I looked at moving put_page() away from being the filesystem's
-responsibility and into the iterator, but that would introduce more
-changes into the patchset, as well as causing problems for filesystems
-that want to break out of the loop.
-
-By this point, I was also looking at the readahead_for_each_batch()
-iterator that btrfs uses, and so we have the batch count anyway, and we
-might as well use it to store the number of subpages of the large page.
-And so it became easier to just put the whole ball of wax into the initial
-patch set, rather than introduce the iterator now and then fix it up in
-the patch set that I'm basing on this.
-
-So yes, there's a certain amount of excess functionality in this patch
-set ... I can remove it for the next release.
