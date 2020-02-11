@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63588C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A43C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD64206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4543F2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tT/48O3P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hC+23mR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgBKXGm (ORCPT
+        id S1727845AbgBKXIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:06:42 -0500
-Received: from gateway22.websitewelcome.com ([192.185.46.187]:37260 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727668AbgBKXGl (ORCPT
+        Tue, 11 Feb 2020 18:08:12 -0500
+Received: from gateway21.websitewelcome.com ([192.185.45.95]:28026 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727635AbgBKXIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:06:41 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id F3CB77798
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:06:40 -0600 (CST)
+        Tue, 11 Feb 2020 18:08:12 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 5D606400C7FC0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:08:11 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 1ec4jk0pgAGTX1ec4jwOCc; Tue, 11 Feb 2020 17:06:40 -0600
+        id 1edXjGpNxSl8q1edXjzuGp; Tue, 11 Feb 2020 17:08:11 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uII2w8HLPI2EpujQ1eqFhbWvGr5SMpElxb7M45UifLo=; b=tT/48O3PlLWTiCSdxW+SoGDggs
-        yKm+NTr4Dkvuu8z06snH/dr2RKNvmd1o2tGBrRAb81kAzcfoIndxPFBIvHJF0tkj7PE0Xkq2IYwRc
-        O7gFJTfjHB6HbdxqazER+UP+aXDABtK5i6QkzNSkoIeZg8Q5pMhkk9JbRuMTrGrIpWmtRqUrl1722
-        hGezU5eBuqiQC84qb27Vfz3Uxm8C5FNzVUkyxueKF9+acNrvyUtD+9/xAyeUwoIP6M/6mM9UfXRXQ
-        NMP+6t44HKOEWD6UXeYSrfaYufbvYO1lWxVhCLT/ym1V/+mFT9EKnvuT6ftJssWTL1inNIFvGsgtm
-        DQ1g2gqw==;
-Received: from [200.68.140.36] (port=20803 helo=embeddedor)
+        bh=qvSfuQFYsKcQDgSgLyA1EHEVbWWRJ67nDjKo4aX3BbU=; b=hC+23mR00EvCRhNIYaUSj7/XZ/
+        tr2JQnLc6zHX6LdlmSrBmXVFO9ocqAgmy+GLsfWKXPV68Viyfm+hS+hkCTAj+T3/mXK1eq6N+C2bN
+        1nu214K1/asD6QUsNsrD6UKpMaoGt93ewnWl1W2Hc8bRnWK/7W0A28rRt1fDCm4FtBK1I4vPVT9Ww
+        zs6JDAqav5dc5+fWdp5CLiA/KgAZDWq3vVarAtpRroYk4odw2x6W/oGTkwQX66ukYl7UD6GoHEBIs
+        eX/kwBSiAw7Dcy/gWhTWmUet4d+hvkEMU5RAyZYx5gQY/Ts6jCis17+LTdWEkKIWdonjfr/l16WJD
+        WYobjOKg==;
+Received: from [200.68.140.36] (port=21183 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j1ec3-003T8T-Kg; Tue, 11 Feb 2020 17:06:39 -0600
-Date:   Tue, 11 Feb 2020 17:09:14 -0600
+        id 1j1edW-003Trm-1q; Tue, 11 Feb 2020 17:08:10 -0600
+Date:   Tue, 11 Feb 2020 17:10:45 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] firewire: nosy: Replace zero-length array with
+Subject: [PATCH] firmware: arm_scmi: driver: Replace zero-length array with
  flexible-array member
-Message-ID: <20200211230914.GA13082@embeddedor>
+Message-ID: <20200211231045.GA13956@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +66,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.140.36
 X-Source-L: No
-X-Exim-ID: 1j1ec3-003T8T-Kg
+X-Exim-ID: 1j1edW-003Trm-1q
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:20803
+X-Source-Sender: (embeddedor) [200.68.140.36]:21183
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
+X-Email-Count: 12
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -104,22 +103,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/firewire/nosy.c | 2 +-
+ drivers/firmware/arm_scmi/driver.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firewire/nosy.c b/drivers/firewire/nosy.c
-index a128dd1126ae..4db4ccaacfbb 100644
---- a/drivers/firewire/nosy.c
-+++ b/drivers/firewire/nosy.c
-@@ -65,7 +65,7 @@ struct pcl {
- 
- struct packet {
- 	unsigned int length;
--	char data[0];
-+	char data[];
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 8f952f2f1a29..b40f71edc92d 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -148,7 +148,7 @@ struct scmi_shared_mem {
+ #define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
+ 	__le32 length;
+ 	__le32 msg_header;
+-	u8 msg_payload[0];
++	u8 msg_payload[];
  };
  
- struct packet_buffer {
+ static const int scmi_linux_errmap[] = {
 -- 
 2.25.0
 
