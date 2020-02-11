@@ -2,81 +2,89 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15532C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373EFC3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D7620714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0625F20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:03:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ZGUNhV0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbgBKQDC (ORCPT
+        id S1730554AbgBKQDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:03:02 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:51222 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbgBKQDC (ORCPT
+        Tue, 11 Feb 2020 11:03:37 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:35542 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbgBKQDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:03:02 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j1Y03-0005vu-A1; Tue, 11 Feb 2020 16:02:59 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] io_uring: fix return of an uninitialized variable ret
-Date:   Tue, 11 Feb 2020 16:02:59 +0000
-Message-Id: <20200211160259.90660-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 11 Feb 2020 11:03:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581437015; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=QIF/b3NfggKNaEL58o6pSYat7ZveBie4he5kxLcTGPo=;
+        b=ZGUNhV0gfDvILhJn6bxsImZOYBaZCFmiSm8Ay4DW6RpyKqjHzD/VJwR2GNriuQ6iupPYpF
+        sYRhBzULovbnF0J3BAH8D+Mx39h+t6zFqZ2LCulyvj3Pcn04rcNmVSMWjaZaDbFBaeucum
+        UrVGIuWktfaQFSDz8YDFZK7y4FxTafo=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, od@zcrc.me,
+        linux-pm@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [RFC PATCH 0/3] Introduce pm_ptr() / pm_sleep_ptr()
+Date:   Tue, 11 Feb 2020 13:03:18 -0300
+Message-Id: <20200211160321.22124-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi,
 
-Currently variable ret is not initialized and this value is being
-returned at the end of the function io_poll_double_wake.  Since
-ret is not being used anywhere else remove it and just return 0.
+I've seen many times things like:
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: f6e84af0767f ("io_uring: allow POLL_ADD with double poll_wait() users")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/io_uring.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+#ifdef CONFIG_PM_SLEEP
+static SIMPLE_DEV_PM_OPS(foo_pm_ops, foo_suspend, foo_resume);
+#define FOO_PM_OPS (&foo_pm_ops)
+#else
+#define FOO_PM_OPS NULL
+#endif
+static struct platform_driver foo_driver = {
+		.driver.pm = FOO_PM_OPS,
+};
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 72bc378edebc..5c6a899b51d8 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3707,7 +3707,6 @@ static int io_poll_double_wake(struct wait_queue_entry *wait, unsigned mode,
- 	struct io_poll_iocb *poll = (void *) req->io;
- 	__poll_t mask = key_to_poll(key);
- 	bool done = true;
--	int ret;
- 
- 	/* for instances that support it check for an event match first: */
- 	if (mask && !(mask & poll->events))
-@@ -3725,7 +3724,7 @@ static int io_poll_double_wake(struct wait_queue_entry *wait, unsigned mode,
- 	if (!done)
- 		__io_poll_wake(req, poll, mask);
- 	refcount_dec(&req->refs);
--	return ret;
-+	return 0;
- }
- 
- struct io_poll_table {
+And always wondered why there was no of-match-ptr-like macro to make
+things cleaner.
+
+So this RFC adds two macros, pm_ptr() and pm_sleep_ptr(), which resolve
+to their argument when CONFIG_PM or CONFIG_PM_SLEEP (respectively) are
+enabled, or NULL otherwise.
+
+Patch 3/3 is an example of what it would look like when used in a
+driver.
+
+Comments welcome.
+
+Cheers,
+-Paul
+
+
+Paul Cercueil (3):
+  PM: introduce pm_ptr() and pm_sleep_ptr()
+  PM: Make *_DEV_PM_OPS macros use __maybe_unused
+  mmc: jz4740: Use pm_sleep_ptr() macro
+
+ drivers/mmc/host/jz4740_mmc.c | 12 +++---------
+ include/linux/pm.h            | 16 ++++++++++++++--
+ 2 files changed, 17 insertions(+), 11 deletions(-)
+
 -- 
 2.25.0
 
