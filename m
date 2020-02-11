@@ -2,218 +2,108 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3143FC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6877BC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164302465D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581446400;
-	bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sBJAR615CNqNZ5OSXRxHFGn0llpaBDrBExgyfvYkc6qoTMwanjGFh6Rikze9SrgQJ
-	 zrTJmFxnLPQF76g0THWO8Tid7iinP+cFT8GbwRkvLTtfkiFrLu/sHukRqyWUlih0S5
-	 pirXPc3Ii2shjH9w6baQ9pkYSSpWEZmyensV7ybA=
+	by mail.kernel.org (Postfix) with ESMTP id 4A6F220848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IAx8P+Ts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731353AbgBKSj7 (ORCPT
+        id S1731421AbgBKSlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:39:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbgBKSj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:39:59 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4921F21D7D;
-        Tue, 11 Feb 2020 18:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581446398;
-        bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Yfk9Aym71n7UY3UN+lE89eXVArMALR9RRSHjbU15nRwqPGHFXoA1ja8mq0zCDu7dz
-         cv2te3hN261YhwgJ10ebBHRilfffIdsTNqcNVRWvxX0TU9Hzil0PMwUjOlsYlxxhlr
-         rP+mcFu9cI0LU1orG7grfVpIZhfV8oQvpb2Jyi5w=
-Received: by mail-qt1-f179.google.com with SMTP id d18so8716950qtj.10;
-        Tue, 11 Feb 2020 10:39:58 -0800 (PST)
-X-Gm-Message-State: APjAAAURRG7PxfC6lUuzI/d3gzYvUNwOoSCQAoug+q5qn3mAWQ0Oyz7c
-        huGRVKqPOhxKhxQ6Nk4TpY9tPCSdMB5H0tJW2w==
-X-Google-Smtp-Source: APXvYqxq3NT0xWbTbROx8zhNE6oXAj1noFgXpEXEkK4QFM7vJR0BN9sVbCnbiqH/hOyqmUsIGCM+GWUAroGve6ESwsc=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr3808050qtj.300.1581446397230;
- Tue, 11 Feb 2020 10:39:57 -0800 (PST)
+        Tue, 11 Feb 2020 13:41:39 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37592 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbgBKSlj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:41:39 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so1617734pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:41:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xu7EuHlbPmEdsWxeqhcpcHFWwOAxYugDEE3/io8b6Ag=;
+        b=IAx8P+TswPBtEzqo31P99hOqElFCCby5txh+Oscc2zELCGSh+V8oy9xOqlpkGbH7Ef
+         UFy/In+m0b4c3AGRoJGmixJlOzszq2Anj2nYT4LB+CjyumYjiOR9OwKa5M5eVJ9yrCQj
+         LsYE2AgdmmEVKL+ctWTreHKJiTPUspZyAsVoLnq2QY8iA6BJoabhj2etPGc+26+Xoe6H
+         rBe3EuzUVbQp45qhLda9c913cu/r8Soi8GmTUZ114PwZD/pP2wONUEpfJh8PHRkdLViT
+         HKNiH6pd0H7IQUZacCiMT5n8woKav6OgIXxSTJQ+VvypXnIouZyZPQeAplbzEnWV4EGm
+         0QAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xu7EuHlbPmEdsWxeqhcpcHFWwOAxYugDEE3/io8b6Ag=;
+        b=UPxEK6acylOaJ18l7MPXEFUgtECHFSaVoCDEBstx8dx2izQ7lvuE7a+ZipFRLNaFy3
+         FMC+u2RGDzWVAVq/uDv8pyWbQ24dms6Fzd4Tnzg2fSkeeYydVrrQhp6vWUQ43JkaM1rL
+         dX1OBxQ5ZMxtwJdjCRFYnL/5cCRkzEFvSW3uC6oR2bv+yYUZs94a6QyiIAPTYyOzjNz2
+         23JGB9cI/szojSphPwfUbJXhEu3i4JT3D4TmrVphqBfN6VkF6/5FhIfu59jzMWGSIZqB
+         F6IKTAJObpCQbsABEAkeayOiL4127XL+sgkliu8nWyzXo460FkCGzWmyWTAemaMvwy1m
+         r/Kg==
+X-Gm-Message-State: APjAAAVtkOeeS9a9WKfWNVE+9hpr/wl5uIj3VOKOQ8AZgrdexe3MLuQs
+        ZPBcP2LdSsyLreRX0vHLj0tz
+X-Google-Smtp-Source: APXvYqyCbupqRjFu0F6Wmci9gu6Qa/pIo2z9Yh3R6s5WBj8zjYf0kfRk0xoYd4RlP8k7jZYwU+Q/oA==
+X-Received: by 2002:a17:90a:a881:: with SMTP id h1mr5209231pjq.50.1581446497757;
+        Tue, 11 Feb 2020 10:41:37 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:638b:7653:754d:196d:c455:1f88])
+        by smtp.gmail.com with ESMTPSA id q66sm5543024pfq.27.2020.02.11.10.41.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Feb 2020 10:41:37 -0800 (PST)
+Date:   Wed, 12 Feb 2020 00:11:30 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200211184130.GA11908@Mani-XPS-13-9360>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+ <20200206165755.GB3894455@kroah.com>
 MIME-Version: 1.0
-References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
- <1580650021-8578-2-git-send-email-hadar.gat@arm.com> <20200206185651.GA14044@bogus>
- <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
-In-Reply-To: <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:39:46 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
-Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add device tree binding for Arm
- CryptoCell trng engine
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206165755.GB3894455@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 3:34 AM Hadar Gat <Hadar.Gat@arm.com> wrote:
->
-> Hi Rob,
-> Thanks for remarks.
-> Please see my answers.
-> Hadar
->
-> > On Sun, Feb 02, 2020 at 03:26:59PM +0200, Hadar Gat wrote:
-> > > The Arm CryptoCell is a hardware security engine. This patch adds DT
-> > > bindings for its TRNG (True Random Number Generator) engine.
-> > >
-> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> > > ---
-> > >  .../devicetree/bindings/rng/arm-cctrng.yaml        | 51
-> > ++++++++++++++++++++++
-> > >  1 file changed, 51 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > > b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > > new file mode 100644
-> > > index 0000000..fe9422e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > > @@ -0,0 +1,51 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > Dual license new bindings:
-> >
-> > (GPL-2.0-only OR BSD-2-Clause)
-> >
-> Okay.
->
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Arm ZrustZone CryptoCell TRNG engine
-> > > +
-> > > +maintainers:
-> > > +  - Hadar Gat <hadar.gat@arm.com>
-> > > +
-> > > +description: |+
-> > > +  Arm ZrustZone CryptoCell TRNG (True Random Number Generator)
-> > engine.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    description: Should be "arm,cryptocell-7x3-trng"
-> >
-> > Drop. That's what the schema says.
-> >
-> Okay.
->
-> > > +    const: arm,cryptocell-7x3-trng
-> >
-> > Is 'x' a wildcard? We don't do wildcards unless you have other ways to get the
-> > specific version.
-> >
-> Kind of a wildcard. It stands for either 703 or 713.
-> Should I fix this to the specific versions?
-> OR,
-> Since the specific version doesn't matter to the driver, should it changed?
+Hi Greg,
 
-Maybe not now, but both will always have the same errata and features?
-2 is not a large number, so just do 2.
+On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
+> On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> > --- /dev/null
+> > +++ b/drivers/bus/mhi/core/init.c
+> > @@ -0,0 +1,407 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> > + *
+> > + */
+> > +
+> > +#define dev_fmt(fmt) "MHI: " fmt
+> 
+> This should not be needed, right?  The bus/device name should give you
+> all you need here from what I can tell.  So why is this needed?
+> 
 
-Of course, errata can vary by revision. Most Arm IP has version
-registers, so I assume that's true here. If not, we'd need per SoC
-implementation compatible strings here.
+The log will have only the device name as like PCI-E. But that won't specify
+where the error is coming from. Having "MHI" prefix helps the users to
+quickly identify that the error is coming from MHI stack.
 
-> (checking out other rng drivers, I see this example in Samsung,exynos4.yaml:
->   - samsung,exynos4-rng # for Exynos4210 and Exynos4412 )
+Thanks,
+Mani
 
-Well, there's lots of bad examples, and also, some Samsung bindings
-are declared to not be stable.
-
->
-> > > +
-> > > +  interrupts:
-> > > +    description: Interrupt number for the device.
-> >
-> > Drop. That's all 'interrupts'.
-> >
-> Okay.
->
-> > > +    maxItems: 1
-> > > +
-> > > +  reg:
-> > > +    description: Base physical address of the engine and length of memory
-> > > +                 mapped region.
-> >
-> > Drop.
-> >
-> Okay.
->
-> > > +    maxItems: 1
-> > > +
-> > > +  rosc-ratio:
-> > > +    description: Sampling ratio values from calibration for 4 ring oscillators.
-> > > +    maxItems: 1
-> >
-> > Is this an array?
-> >
-> Yes, array of 4. (I'll mention in the description)
-
-Don't need a description as that's constraints the schema should express.
-
-> > Needs a vendor prefix, a type ref and any constraints you can come up with.
-> >
-> Do you mean in the name? instead of "rosc-ratio"?
-
-arm,rosc-ratio:
-  allOf:
-    - $ref: /schemas/types.yaml#/definitions/uint32-array
-  maxItems: 4
-
-> I didn't find anything about it in the documentation or examples in other rng drivers..
->
-> > > +
-> > > +  clocks:
-> > > +    description: Reference to the crypto engine clock.
-> >
-> > How many clocks?
-> >
-> One clock. (I will change clocks --> clock)
-
-No, the property name is always 'clocks'. You need just 'maxItems: 1'
-if there's a single clock.
-
-Rob
+> thanks,
+> 
+> greg k-h
