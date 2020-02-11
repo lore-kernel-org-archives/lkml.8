@@ -2,287 +2,162 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC228C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26843C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A3C20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581459686;
-	bh=q+rSFqo9elU7WRH3thbFoGn3yP+yIz3kC3wdjvUcEw4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c7VqPt1+yAtvXZyreIaOSO//136yAgpo1CDclDI3qjlvgdeQnTsCmeSZaVIj2ibVC
-	 SeyC5pzP8Uy7xX6KCW0t1iG0kpKJVvrW5u/5gtFhfTObilNU9vJ1KLwQTQ2T+XHZhQ
-	 9mZaLQ1Pf9lWwvFgXgm3To0ERj40q6GW/CW1WeN8=
+	by mail.kernel.org (Postfix) with ESMTP id F0CA6206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:21:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="cTscvQdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgBKWV0 (ORCPT
+        id S1727587AbgBKWVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:21:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50588 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 17:21:40 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:40828 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbgBKWV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:21:26 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0299420848;
-        Tue, 11 Feb 2020 22:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581459685;
-        bh=q+rSFqo9elU7WRH3thbFoGn3yP+yIz3kC3wdjvUcEw4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rV/nGp0DMw+OM4GyyfCZOEQrjZosAwguf7FJnjGVtcTwNFmezygvg8I4St45yyY2i
-         liF0fymRuqTIZY9te73bnT2DidMZonbQr1Jux4BdVLPu1WX5Z4qLQbbFGynBOlkYzy
-         YFpfu1tEgo6e7pGXCddgcRnLVzn6mRYQ1x3G2D/4=
-Received: by mail-qk1-f175.google.com with SMTP id z19so133173qkj.5;
-        Tue, 11 Feb 2020 14:21:24 -0800 (PST)
-X-Gm-Message-State: APjAAAUEZ0xB4WCSRGFgIgJYqjLsLyVdTE2hbo68Erel+YYZ9gq4cwON
-        oydbI5/O+hS36lwTT3PWASYwhCG3dx4K/rCNNQ==
-X-Google-Smtp-Source: APXvYqz63AEggW2LNGCOGY6poWM+6h8Md6Kh6G+Jq5ZCRemvNqvsOiXJhjYbYxk7LX/OKgDB4G6e6KML6WclOT/ISxg=
-X-Received: by 2002:a37:6042:: with SMTP id u63mr7617189qkb.119.1581459683937;
- Tue, 11 Feb 2020 14:21:23 -0800 (PST)
+        id S1727029AbgBKWVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:21:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o/px/Cwkq5jYDnhxW4czK4w1OaP63S+evUJw3Wy8PH0=; b=cTscvQdc5myFTYFkGInrp+o/j
+        1XaQFlnXbzhZ1GxD42SpREBuON3he14RsyXo1ZNvkLUME2fWVdYeBcydemFQh2/NvsfVdycvZys/K
+        X7f5dxtIZ33X1k4GqbFgAVTMRyitC0bkfl3p9hh9jJaqexzRbNuPhlnQTqqUuoPDE9pUU=;
+Received: from p200300ccff0bd500e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0b:d500:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j1duU-0004jk-4P; Tue, 11 Feb 2020 23:21:38 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j1duT-00049m-JE; Tue, 11 Feb 2020 23:21:37 +0100
+Date:   Tue, 11 Feb 2020 23:21:29 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: rn5t618: cleanup i2c_device_id
+Message-ID: <20200211232129.0594d397@kemnade.info>
+In-Reply-To: <20200130152428.GD3548@dell>
+References: <20191211215731.19350-1-andreas@kemnade.info>
+        <20200128194555.324cff21@kemnade.info>
+        <20200130152428.GD3548@dell>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
- <20200121223807.GA24850@bogus> <DB3PR0402MB3916ED6C3FCA9BCA224A5936F5180@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916ED6C3FCA9BCA224A5936F5180@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 16:21:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKqQdRZC08-BGJqTjzJZ8aWA41LHMbv0QyyVePVm0co7A@mail.gmail.com>
-Message-ID: <CAL_JsqKqQdRZC08-BGJqTjzJZ8aWA41LHMbv0QyyVePVm0co7A@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to json-schema
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/nxiL9CKKHkacqD+I6uRLg.G"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:20 AM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Rob
->
-> > Subject: Re: [PATCH V3 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to json-
-> > schema
-> >
-> > On Wed, Jan 15, 2020 at 09:30:43AM +0800, Anson Huang wrote:
-> > > Convert the i.MX8MQ pinctrl binding to DT schema format using
-> > > json-schema
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+--Sig_/nxiL9CKKHkacqD+I6uRLg.G
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 30 Jan 2020 15:24:28 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> On Tue, 28 Jan 2020, Andreas Kemnade wrote:
+>=20
+> > Hi,
+> >=20
+> > just re-checking the patch again. Seems that I have added it on top of =
+my RTC
+> > series. It breaks because of...
+> >=20
+> > On Wed, 11 Dec 2019 22:57:31 +0100
+> > Andreas Kemnade <andreas@kemnade.info> wrote:
+> >  =20
+> > > That list was just empty, so it can be removed if .probe_new
+> > > instead of .probe is used
+> > >=20
+> > > Suggested-by: Lee Jones <lee.jones@linaro.org>
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > > > ---
-> > > Changes since V2:
-> > >     - the lisence should be GPL-2.0.
-> > > ---
-> > >  .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 -----------
-> > >  .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       | 69
-> > ++++++++++++++++++++++
-> > >  2 files changed, 69 insertions(+), 36 deletions(-)  delete mode
-> > > 100644
-> > > Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> > > b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> > > deleted file mode 100644
-> > > index 66de750..0000000
-> > > --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> > > +++ /dev/null
-> > > @@ -1,36 +0,0 @@
-> > > -* Freescale IMX8MQ IOMUX Controller
-> > > -
-> > > -Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this
-> > > directory -for common binding part and usage.
-> > > -
-> > > -Required properties:
-> > > -- compatible: "fsl,imx8mq-iomuxc"
-> > > -- reg: should contain the base physical address and size of the
-> > > iomuxc
-> > > -  registers.
-> > > -
-> > > -Required properties in sub-nodes:
-> > > -- fsl,pins: each entry consists of 6 integers and represents the mux
-> > > and config
-> > > -  setting for one pin.  The first 5 integers <mux_reg conf_reg
-> > > input_reg mux_val
-> > > -  input_val> are specified using a PIN_FUNC_ID macro, which can be
-> > > found in
-> > > -  imx8mq-pinfunc.h under device tree source folder.  The last integer
-> > > CONFIG is
-> > > -  the pad setting value like pull-up on this pin.  Please refer to
-> > > i.MX8M Quad
-> > > -  Reference Manual for detailed CONFIG settings.
-> > > -
-> > > -Examples:
-> > > -
-> > > -&uart1 {
-> > > -       pinctrl-names = "default";
-> > > -       pinctrl-0 = <&pinctrl_uart1>;
+> > >  drivers/mfd/rn5t618.c | 11 ++---------
+> > >  1 file changed, 2 insertions(+), 9 deletions(-)
+> > >=20
+> > > diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> > > index 18d56a732b20..70d52b46ee8a 100644
+> > > --- a/drivers/mfd/rn5t618.c
+> > > +++ b/drivers/mfd/rn5t618.c
+> > > @@ -150,8 +150,7 @@ static const struct of_device_id rn5t618_of_match=
+[] =3D {
+> > >  };
+> > >  MODULE_DEVICE_TABLE(of, rn5t618_of_match);
+> > > =20
+> > > -static int rn5t618_i2c_probe(struct i2c_client *i2c,
+> > > -			     const struct i2c_device_id *id)
+> > > +static int rn5t618_i2c_probe(struct i2c_client *i2c)
+> > >  {
+> > >  	const struct of_device_id *of_id;
+> > >  	struct rn5t618 *priv;
+> > > @@ -251,11 +250,6 @@ static int __maybe_unused rn5t618_i2c_resume(str=
+uct device *dev)
+> > >  	return 0;
+> > >  }
+> > >   =20
+> > I added the pm stuff above ...
+> >=20
+> >  =20
+> > > -static const struct i2c_device_id rn5t618_i2c_id[] =3D {
+> > > -	{ }
 > > > -};
-> > > -
-> > > -iomuxc: pinctrl@30330000 {
-> > > -        compatible = "fsl,imx8mq-iomuxc";
-> > > -        reg = <0x0 0x30330000 0x0 0x10000>;
-> > > -
-> > > -        pinctrl_uart1: uart1grp {
-> > > -                fsl,pins = <
-> > > -                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
-> > > -                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
-> > > -                >;
-> > > -        };
-> > > -};
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-> > > b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-> > > new file mode 100644
-> > > index 0000000..e010808
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yam
-> > > +++ l
-> > > @@ -0,0 +1,69 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id:
-> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
-> > > +cetree.org%2Fschemas%2Fpinctrl%2Ffsl%2Cimx8mq-
-> > pinctrl.yaml%23&amp;dat
-> > >
-> > +a=02%7C01%7CAnson.Huang%40nxp.com%7C8471ec5c0f6848eafe0e08d79
-> > ec297db%
-> > >
-> > +7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63715243091635696
-> > 3&amp;s
-> > >
-> > +data=3SEytaczKAQzAlgI3XJANKuxRjuZj0NzI8eemFoPMeU%3D&amp;reserve
-> > d=0
-> > > +$schema:
-> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
-> > > +cetree.org%2Fmeta-
-> > schemas%2Fcore.yaml%23&amp;data=02%7C01%7CAnson.Hua
-> > >
-> > +ng%40nxp.com%7C8471ec5c0f6848eafe0e08d79ec297db%7C686ea1d3bc2b
-> > 4c6fa92
-> > >
-> > +cd99c5c301635%7C0%7C0%7C637152430916356963&amp;sdata=V4ul%2Fq
-> > CNNkKXmX
-> > > +270HNbhYci4aTwOvTCTpD3NqQAUoQ%3D&amp;reserved=0
-> > > +
-> > > +title: Freescale IMX8MQ IOMUX Controller
-> > > +
-> > > +maintainers:
-> > > +  - Anson Huang <Anson.Huang@nxp.com>
-> > > +
-> > > +description:
-> > > +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in
-> > > +this directory
-> > > +  for common binding part and usage.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: fsl,imx8mq-iomuxc
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +# Client device subnode's properties
-> > > +patternProperties:
-> > > +  'grp$':
-> > > +    type: object
-> > > +    description:
-> > > +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> > > +      Client device subnodes use below standard properties.
-> > > +
-> > > +    properties:
-> > > +      fsl,pins:
-> > > +        allOf:
-> > > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +        description:
-> > > +          each entry consists of 6 integers and represents the mux and config
-> > > +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-> > > +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which
-> > can
-> > > +          be found in <arch/arm64/boot/dts/freescale/imx8mq-pinfunc.h>.
-> > The last
-> > > +          integer CONFIG is the pad setting value like pull-up on this pin.
-> > Please
-> > > +          refer to i.MX8M Quad Reference Manual for detailed CONFIG
-> > settings.
-> >
-> > Based on the description, I think this should be an uint32-matrix type instead
-> > with a schema like this:
-> >
-> > items:
-> >   items:
-> >     - description: mux_reg
-> >     - description: conf_reg
-> >     - description: input_reg
-> >     - description: mux_val
-> >     - description: input_val
-> >     - description: pad setting
-> >
-> > (With better descriptions preferrably)
->
-> I will use something like below:
->
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +          - items:
-> +              items:
-> +                - description: |
-> +                    "mux_reg" indicates the offset of mux register.
-> +                - description: |
-> +                    "conf_reg" indicates the offset of pad configuration register.
-> +                - description: |
-> +                    "input_reg" indicates the offset of select input register.
-> +                - description: |
-> +                    "mux_val" indicates the mux value to be applied.
-> +                - description: |
-> +                    "input_val" gives the select input value to be applied.
-> +                - description: |
-> +                    "pad_setting" gives the pad configuration value to be applied.
->
->
-> >
-> > The dts files should then be bracketed accordingly.
->
-> Sorry, what do you mean of "dts files should then be bracketed accordingly"?
-> Do you mean dts file needs to be updated? I saw below example already has "<>" for
-> This matrix:
->
-> +            fsl,pins = <
-> +                0x234 0x49C 0x4F4 0x0 0x0      0x49
-> +                0x238 0x4A0 0x4F4 0x0 0x0      0x49
-> +            >;
->
-> Can you please advise and provide a simple example, I think we should avoid changes
-> In dts file.
+> > > -MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
+> > > - =20
+> >=20
+> > and below it in my RTC series.
+> >  =20
+> > >  static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
+> > >  			rn5t618_i2c_suspend,
+> > >  			rn5t618_i2c_resume); =20
+> >=20
+> > Do you want to have it rebased so it can be applied first?
+> > Sorry for the confusion here. =20
+>=20
+> You may as well wait until -rc1 is out and rebase on top of that.
+>=20
+hmm, then the RTC/IRQ series does not apply on top of it:
+https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
 
-Like this:
+and needs to be rebased. I have no idea if that is more favorable for you.
+The RTC/IRQ series happily applies on top of v5.6-rc1, but not on top of
+this patch.
 
-fsl,pins = <0x234 0x49C 0x4F4 0x0 0x0      0x49>,
-           <0x238 0x4A0 0x4F4 0x0 0x0      0x49>;
+Yes, I should have documented that apply-conflict, but was
+not aware of it while submitting this patch.
 
-The changes are unavoidable (though not something you're expected to
-fix immediately). We simply can't just accept any bracketing in dts
-files *and* have schema to validate them.
+Regards,
+Andreas
 
-Rob
+--Sig_/nxiL9CKKHkacqD+I6uRLg.G
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5DKOkACgkQl4jFM1s/
+ye8T9g/+OCOYZG7WNDbF0krSdNmZ/vyPBoqmgkHFoWZ4iNnnSiLVW3XABkPWjbvG
+cglCqYeBIrxYR6c/Am5GpAUkqRZiWizK77QHtrlb9dJIDb/GWoQ/IGYDJjr/MT3U
+OUmoW9VEo03Ph/Yero3eTn7tkYusKQeBb8fc877VMVwTx/MsTC6/4iwqog0effZh
+ot3g1J1RSzlshtqh26RNJADnPTEyqlEXsIer+aOn0SL/bAbukYvT2MZ8Ph4k4cEq
+TRnJvQgJ3tYODhXroJhUiXUDjio2st7Nuf32BVZ2EXN9SPBS9ywpKpxpOBy+FrEC
+TVGBg5LE2+HIL9kdZSB8GkAAlVKB9k/UAkzo7k6CM4UbYFcPD/oDdlJ0l3YFKIPD
+zfZnV6LojCPopDyuoTZKfiqgX0NRF/RWTM2jyH/dB2rI5XikkHVyVu30QrgTlIj3
+CkGLcL8v1z+rwPBnVwtWXynVaNi3EDSIhNHyMGKNQ5BMTXLcm0B6/iaVe3GcHj98
+gQ0CBdVQH3f+0GsSo0N2W7YgiyHR0Bg/V2ZaT25rA9xb9Pn/13Tlow8dKSZ4AZhW
+5/T7jmHXoOE4H3yKqmhuTMp1qH/5QXH5KU/xueoqXcerVs0NR6VCYPHhR0Zt1scP
+X/Ygr6xBRmwxofCCoju2mOVI0gGk6txGiZfLoadhy5rAn4QOkkQ=
+=4uhQ
+-----END PGP SIGNATURE-----
+
+--Sig_/nxiL9CKKHkacqD+I6uRLg.G--
