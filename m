@@ -2,228 +2,114 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6FBC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9E0C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCE520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D86220656
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgBKPlJ (ORCPT
+        id S1729638AbgBKPlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:41:09 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2410 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727962AbgBKPlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:41:09 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1D215EEB05FA2CFF9063;
-        Tue, 11 Feb 2020 15:41:08 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 11 Feb 2020 15:41:07 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 11 Feb
- 2020 15:41:07 +0000
-Subject: Re: [PATCH RFC 0/7] perf pmu-events: Support event aliasing for
- system PMUs
-To:     James Clark <james.clark@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>
-CC:     "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
- <91a62136-219a-766a-12e4-be2b2cc8ae54@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <9275c0a1-3257-494b-f777-8d0f85da5726@huawei.com>
-Date:   Tue, 11 Feb 2020 15:41:06 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 11 Feb 2020 10:41:55 -0500
+Received: from mga09.intel.com ([134.134.136.24]:12385 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728369AbgBKPly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:41:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 07:41:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="256505711"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Feb 2020 07:41:37 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j1XfO-000lpL-Ny; Tue, 11 Feb 2020 17:41:38 +0200
+Date:   Tue, 11 Feb 2020 17:41:38 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/18] platform/x86: intel_scu_ipc: Log more
+ information if SCU IPC command fails
+Message-ID: <20200211154138.GE10400@smile.fi.intel.com>
+References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
+ <20200211132603.73509-3-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <91a62136-219a-766a-12e4-be2b2cc8ae54@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211132603.73509-3-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 15:24, James Clark wrote:
-> Hi John,
-
-Hi James,
-
+On Tue, Feb 11, 2020 at 04:25:47PM +0300, Mika Westerberg wrote:
+> Currently we only log an error if the command times out which makes it
+> hard to figure out the failing command. This changes the driver to log
+> command and subcommand with the error code which should make debugging
+> easier. This also allows us to simplify the callers as they don't need
+> to log these errors themselves.
 > 
-> I tested this on an Arm N1 board and see the same list of CPU events from the JSONs
-> picked up so it looks ok from that point of view.
 
-ok, good.
+Thanks, my comments below.
 
-So does this platform have other PMUs (with a kernel driver) which we 
-may want to add aliases for, like uncore PMUs, SMMUv3 PMCG, etc?
+...
 
-Thanks,
-John
+>  	scu = ipcdev;
+> -	ipc_command(scu, sub << 12 | cmd);
+> +	cmdval = sub << 12 | cmd;
+> +	ipc_command(scu, cmdval);
+>  	err = intel_scu_ipc_check_status(scu);
 
-> 
-> James
-> 
-> On 1/24/20 2:34 PM, John Garry wrote:
->> Currently event aliasing for only CPU and uncore PMUs is supported. In
->> fact, only uncore PMUs aliasing for when the uncore PMUs are fixed for a
->> CPU is supported, which may not always be the case for certain
->> architectures.
->>
->> This series adds support for PMU event aliasing for system and other
->> uncore PMUs which are not fixed to a specific CPU.
->>
->> For this, we introduce support for another per-arch mapfile, which maps a
->> particular system identifier to a set of system PMU events for that
->> system. This is much the same as what we do for CPU event aliasing.
->>
->> To support this, we need to change how we match a PMU to a mapfile,
->> whether it should use a CPU or system mapfile. For this we do the
->> following:
->>
->> - For CPU PMU, we always match for the event mapfile based on the CPUID.
->>    This has not changed.
->>
->> - For an uncore or system PMU, we match first based on the SYSID (if set).
->>    If this fails, then we match on the CPUID.
->>
->>    This works for x86, as x86 would not have any system mapfiles for uncore
->>    PMUs (and match on the CPUID).
->>
->> Initial reference support is also added for ARM SMMUv3 PMCG (Performance
->> Monitor Event Group) PMU for HiSilicon hip08 platform with only a single
->> event so far - see driver in drivers/perf/arm_smmuv3_pmu.c for that driver.
->>
->> Here is a sample output with this series:
->>
->> root@ubuntu:/# ./perf list
->>    [...]
->>
->>    smmuv3_pmcg_100020/config_cache_miss/              [Kernel PMU event]
->>    smmuv3_pmcg_100020/config_struct_access/           [Kernel PMU event]
->>    smmuv3_pmcg_100020/cycles/                         [Kernel PMU event]
->>    smmuv3_pmcg_100020/pcie_ats_trans_passed/          [Kernel PMU event]
->>    smmuv3_pmcg_100020/pcie_ats_trans_rq/              [Kernel PMU event]
->>    smmuv3_pmcg_100020/tlb_miss/                       [Kernel PMU event]
->>    smmuv3_pmcg_100020/trans_table_walk_access/        [Kernel PMU event]
->>    smmuv3_pmcg_100020/transaction/                    [Kernel PMU event]
->>
->>    [...]
->>
->> smmu v3 pmcg:
->>    smmuv3_pmcg.l1_tlb
->>         [SMMUv3 PMCG l1_tlb. Unit: smmuv3_pmcg]
->>
->>    [...]
->>
->> root@ubuntu:/# ./perf stat -v -e smmuv3_pmcg.l1_tlb sleep 1
->> Using CPUID 0x00000000480fd010
->> Using SYSID HIP08
->>   -> smmuv3_pmcg_200100020/event=0x8a/
->>   -> smmuv3_pmcg_200140020/event=0x8a/
->>   -> smmuv3_pmcg_100020/event=0x8a/
->>   -> smmuv3_pmcg_140020/event=0x8a/
->>   -> smmuv3_pmcg_200148020/event=0x8a/
->>   -> smmuv3_pmcg_148020/event=0x8a/
->> smmuv3_pmcg.l1_tlb: 0 1001221690 1001221690
->> smmuv3_pmcg.l1_tlb: 0 1001220090 1001220090
->> smmuv3_pmcg.l1_tlb: 101 1001219660 1001219660
->> smmuv3_pmcg.l1_tlb: 0 1001219010 1001219010
->> smmuv3_pmcg.l1_tlb: 0 1001218360 1001218360
->> smmuv3_pmcg.l1_tlb: 134 1001217850 1001217850
->>
->>   Performance counter stats for 'system wide':
->>
->>                 235      smmuv3_pmcg.l1_tlb
->>
->>         1.001263128 seconds time elapsed
->>
->> root@ubuntu:/#
->>
->> Issues with this series which need to be addressed (aware to me):
->>
->> - It would be good to have a universal method to identify the system from
->>    sysfs. Nothing exists which I know about. There is DMI, but this is not
->>    always available (or has correct info). Maybe systems which want to
->>    support this feature will need a "soc" driver, and a
->>    /sys/devices/socX/machine file (which I used for testing this series -
->>    this driver is out of tree currently).
->>
->> - Maybe it is ok, but for systems which match on the system identifier,
->>    uncore PMUs should be in the system mapfile, and, as such, match on the
->>    system identifier and not CPU identifier.
->>
->> - We need a better way in jevents.c to give a direct mapping of PMU name
->>    aliases, i.e. for any PMU name not prefixed with "uncore_", we need to
->>    add this to table unit_to_pmu[]. Not scalable.
->>
->>    Having said that, maybe the kernel can introduce some future PMU naming
->>    convention in future.
->>
->> John Garry (7):
->>    perf jevents: Add support for an extra directory level
->>    perf vendor events arm64: Relocate hip08 core events
->>    perf jevents: Add support for a system events PMU
->>    perf pmu: Rename uncore symbols to include system pmus
->>    perf pmu: Support matching by sysid
->>    perf vendor events arm64: Relocate uncore events for hip08
->>    perf vendor events arm64: Add hip08 SMMUv3 PMCG IMP DEF events
->>
->>   tools/perf/arch/arm64/util/arm-spe.c          |   2 +-
->>   tools/perf/pmu-events/README                  |  47 ++++++--
->>   .../hip08/{ => cpu}/core-imp-def.json         |   0
->>   .../hisilicon/hip08/sys/smmu-v3-pmcg.json     |   9 ++
->>   .../hip08/{ => sys}/uncore-ddrc.json          |   0
->>   .../hisilicon/hip08/{ => sys}/uncore-hha.json |   0
->>   .../hisilicon/hip08/{ => sys}/uncore-l3c.json |   0
->>   tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +-
->>   .../pmu-events/arch/arm64/mapfile_sys.csv     |  14 +++
->>   tools/perf/pmu-events/jevents.c               |  65 ++++++++--
->>   tools/perf/pmu-events/pmu-events.h            |   1 +
->>   tools/perf/util/evsel.h                       |   2 +-
->>   tools/perf/util/parse-events.c                |  12 +-
->>   tools/perf/util/pmu.c                         | 111 +++++++++++++++---
->>   tools/perf/util/pmu.h                         |   2 +-
->>   15 files changed, 221 insertions(+), 46 deletions(-)
->>   rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/core-imp-def.json (100%)
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/sys/smmu-v3-pmcg.json
->>   rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => sys}/uncore-ddrc.json (100%)
->>   rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => sys}/uncore-hha.json (100%)
->>   rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => sys}/uncore-l3c.json (100%)
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/mapfile_sys.csv
->>
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> .
-> 
+> +	if (err)
+> +		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval,
+> +			err);
+
+We may move it out of the mutex, right? Also, please keep it one line.
+
+>  	mutex_unlock(&ipclock);
+>  	return err;
+
+...
+
+>  	mutex_lock(&ipclock);
+
+> +	cmdval = (inlen << 16) | (sub << 12) | cmd;
+> +	ipc_command(scu, cmdval);
+>  	err = intel_scu_ipc_check_status(scu);
+> -
+> -	if (!err) {
+> +	if (err) {
+> +		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval,
+> +			err);
+> +	} else {
+>  		for (i = 0; i < outlen; i++)
+>  			*out++ = ipc_data_readl(scu, 4 * i);
+>  	}
+
+It's not visible in this context but it looks like above applies here as well.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
