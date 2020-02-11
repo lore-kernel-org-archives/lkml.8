@@ -2,151 +2,113 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18EEC352A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D744C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1DD2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319A120661
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:07:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S387Mwab"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oemCS7u3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgBKEDJ (ORCPT
+        id S1728091AbgBKEHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 23:03:09 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60837 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728004AbgBKEDH (ORCPT
+        Mon, 10 Feb 2020 23:07:06 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:34447 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbgBKEHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 23:03:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581393785;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cQwP5yBQiPBYF1dt476zTOkcra/qaHWjGFa0BnYAY9Y=;
-        b=S387MwabuRkNC4AH8yjImNeQ57YdR1JU0AcRme3vGdPrAQaH+u8DrhqRTFcV7ncz5RqF5d
-        YRX24vaT9Anurp6iO4QDBuVT0eNhDBnxACN/dxQuqOfw5Tl9pPaDUr+M0TR4ul1R5BcEvl
-        9001ulGuBRVAjB/KZk8dpk7x1oT0hsc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-kMVZNqVNOdyeGT4OBNfS1Q-1; Mon, 10 Feb 2020 23:03:02 -0500
-X-MC-Unique: kMVZNqVNOdyeGT4OBNfS1Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A1F418A8C81;
-        Tue, 11 Feb 2020 04:03:00 +0000 (UTC)
-Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD54589F24;
-        Tue, 11 Feb 2020 04:02:51 +0000 (UTC)
-Subject: Re: [virtio-dev] Re: [PATCH v2 4/5] virtio-mmio: add MSI interrupt
- feature support
-To:     "Liu, Jing2" <jing2.liu@linux.intel.com>,
-        Zha Bin <zhabin@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org
-Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com, mst@redhat.com,
-        qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
-        gerry@linux.alibaba.com
-References: <cover.1581305609.git.zhabin@linux.alibaba.com>
- <4c3d13be5a391b1fc50416838de57d903cbf8038.1581305609.git.zhabin@linux.alibaba.com>
- <0c71ff9d-1a7f-cfd2-e682-71b181bdeae4@redhat.com>
- <c42c8b49-5357-f341-2942-ba84afc25437@linux.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ad96269f-753d-54b8-a4ae-59d1595dd3b2@redhat.com>
-Date:   Tue, 11 Feb 2020 12:02:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 10 Feb 2020 23:07:06 -0500
+Received: by mail-qv1-f65.google.com with SMTP id o18so4385771qvf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 20:07:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jP+KwizgAp4u1Hs+XLbuqhDNlKeTKCmKP2Xx0AvNis0=;
+        b=oemCS7u3/gb5Lykz976wCFdzzFs9p6bvICWvD4l9Z660JbUncxEpdnnJGGgz1g8xw2
+         n9NMBSkqV0AhsunxlxyV49c4r02SoM9t9phCEJEPYrdiWcaJ6Rtj2tpJPExeU2ZUeu8X
+         /w1ISfQIfRm/F/2J73ZCCO/Oxw9MFfn3OymoiQTA6ykdj3dNwHhyIvls7+9u9nxleTdS
+         7PvdTCcejTCUK55mLk5e6t3FQtYJf37mCt6p9eUqDLFG2tGiEAnRr4gGrTB6VTt9dFUH
+         2PqqmYM3QzB6sKD8mxMlAKVLVcrLGydvaB0WBzCA4iAjtH5M+h3vDKxXqGLwb7f2smrG
+         0E7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jP+KwizgAp4u1Hs+XLbuqhDNlKeTKCmKP2Xx0AvNis0=;
+        b=JirkF+LP4ljFmpnMDkADPDNpy92DglLel4qox64odmG9IB7noTTjQTMWZ7G/P7Ah60
+         sbJs8ZXum02mT7S+e95hThG7rCGyMSpeeABMym0XeeHpOvMIYC25afQBHYmU9gqZxp8x
+         LpYZ6H85G0i6YOPUTb/4Z48bGFR7+gPrLyWjDIKnq2TkgZLXGrOLqGoPSxz1MQV2/37l
+         eOQTjoMIwMW9cMtguqRHhk50Le7x5hQ+6qBbEkSjr59QxdcXWUhMIRLaFwKP+PPOp2+U
+         i9p9WSO+sUzc5hZ0gkyg67zrj2iLoTH9YTY5tGgNXOvcuts1bRs6GF12CKUqpGybwzC6
+         E8zA==
+X-Gm-Message-State: APjAAAVN+wiijBrGiKfENSmN3CgTCTENjvX7nrp7j/9BF9cBLZrvYUU9
+        E845Kkae5H7posJLK4PF6tiU8w==
+X-Google-Smtp-Source: APXvYqzHMokwWB2NbnFjmTdaE2IQhdwywU5g0W0ofZn9mazfQBr/9nQBvIn8cfiLFeJK/J7LxN4YmQ==
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr1241675qvv.85.1581394024919;
+        Mon, 10 Feb 2020 20:07:04 -0800 (PST)
+Received: from ovpn-120-145.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p135sm1315222qke.2.2020.02.10.20.07.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 20:07:04 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     peterz@infradead.org, mingo@redhat.com
+Cc:     will@kernel.org, elver@google.com, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] locking/osq_lock: annotate a data race in osq_lock
+Date:   Mon, 10 Feb 2020 23:06:51 -0500
+Message-Id: <20200211040651.1993-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-In-Reply-To: <c42c8b49-5357-f341-2942-ba84afc25437@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+prev->next could be accessed concurrently as noticed by KCSAN,
 
-On 2020/2/11 =E4=B8=8A=E5=8D=8811:35, Liu, Jing2 wrote:
->
-> On 2/11/2020 11:17 AM, Jason Wang wrote:
->>
->> On 2020/2/10 =E4=B8=8B=E5=8D=885:05, Zha Bin wrote:
->>> From: Liu Jiang<gerry@linux.alibaba.com>
->>>
->>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of usi=
-ng
->>> virtio over mmio devices as a lightweight machine model for modern
->>> cloud. The standard virtio over MMIO transport layer only supports on=
-e
->>> legacy interrupt, which is much heavier than virtio over PCI transpor=
-t
->>> layer using MSI. Legacy interrupt has long work path and causes=20
->>> specific
->>> VMExits in following cases, which would considerably slow down the
->>> performance:
->>>
->>> 1) read interrupt status register
->>> 2) update interrupt status register
->>> 3) write IOAPIC EOI register
->>>
->>> We proposed to add MSI support for virtio over MMIO via new feature
->>> bit VIRTIO_F_MMIO_MSI[1] which increases the interrupt performance.
->>>
->>> With the VIRTIO_F_MMIO_MSI feature bit supported, the virtio-mmio MSI
->>> uses msi_sharing[1] to indicate the event and vector mapping.
->>> Bit 1 is 0: device uses non-sharing and fixed vector per event mappin=
-g.
->>> Bit 1 is 1: device uses sharing mode and dynamic mapping.
->>
->>
->> I believe dynamic mapping should cover the case of fixed vector?
->>
-> Actually this bit *aims* for msi sharing or msi non-sharing.
->
-> It means, when msi sharing bit is 1, device doesn't want vector per que=
-ue
->
-> (it wants msi vector sharing as name) and doesn't want a high=20
-> interrupt rate.
->
-> So driver turns to !per_vq_vectors and has to do dynamical mapping.
->
-> So they are opposite not superset.
->
-> Thanks!
->
-> Jing
+ write (marked) to 0xffff9d3370dbbe40 of 8 bytes by task 3294 on cpu 107:
+  osq_lock+0x25f/0x350
+  osq_wait_next at kernel/locking/osq_lock.c:79
+  (inlined by) osq_lock at kernel/locking/osq_lock.c:185
+  rwsem_optimistic_spin
+  <snip>
 
+ read to 0xffff9d3370dbbe40 of 8 bytes by task 3398 on cpu 100:
+  osq_lock+0x196/0x350
+  osq_lock at kernel/locking/osq_lock.c:157
+  rwsem_optimistic_spin
+  <snip>
 
-I think you need add more comments on the command.
+Since the write only stores NULL to prev->next and the read tests if
+prev->next equals to this_cpu_ptr(&osq_node). Even if the value is
+shattered, the code is still working correctly. Thus, mark it as an
+intentional data race using the data_race() macro.
 
-E.g if I want to map vector 0 to queue 1, how do I need to do?
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ kernel/locking/osq_lock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-write(1, queue_sel);
-write(0, vector_sel);
-
-?
-
-Thanks
-
-
->
->
->> Thanks
->>
->>
->>
->> ---------------------------------------------------------------------
->> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
->> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
->>
->
+diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+index 1f7734949ac8..3c44ddbc11ce 100644
+--- a/kernel/locking/osq_lock.c
++++ b/kernel/locking/osq_lock.c
+@@ -154,7 +154,7 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+ 	 */
+ 
+ 	for (;;) {
+-		if (prev->next == node &&
++		if (data_race(prev->next == node) &&
+ 		    cmpxchg(&prev->next, node, NULL) == node)
+ 			break;
+ 
+-- 
+2.21.0 (Apple Git-122.2)
 
