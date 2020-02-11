@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37497C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435ECC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10FBE2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB9120842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Litq6Rf3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nKjjKE8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgBKVl4 (ORCPT
+        id S1728240AbgBKVmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:41:56 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.102]:27813 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgBKVly (ORCPT
+        Tue, 11 Feb 2020 16:42:32 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.122]:12041 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbgBKVlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
+        Tue, 11 Feb 2020 16:41:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457312;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=jlcXe1GGaAraVsZORKSVtw7OXag13VFOYmFZdQixrBw=;
-        b=Litq6Rf3xEHpN+uG1d5m40LruBTFqlFIo+ZWDJyD1VALXpJ97woHc+oPcIsnsIRNFR
-        7RjveUyCnRVXtxd7hAah7TBgJX3l5v+nmp6rQcnZdM6jjuNecA0pSZuGaeU5Q3RPhQj3
-        mcYMHprazmIaEctKQbA5wvFVjSDDGNh6+W3uCdLTtCFJ6HMi3XLbRGl98/EBeRB2JO23
-        k5sx4f17gmUUueHqyk8ptNsNYIphG7TUYsHeuo90NIGckdoaDljcoGvZJkPHWJNrTr3B
-        oSxmqosMaWURl4/tlMQiUugudtdRJP0+8R9fZnOjbufmTv8ox5hVP0aQYhHABIVXKrKP
-        N7mQ==
+        bh=HJKkK+L/+IvQc4t06WFqnt4bWf+FyU8DIYq2eP8LWiA=;
+        b=nKjjKE8y0iuVhSxf1aDlgkV+vhXAIRL34cIN1KMeYzaESe/Y/CBxtoUifbPMOSRa6r
+        Hc7GszW+vR8oJRxH/p2O7ryxIFKI8IDrB0c/xnnGwZdZuPuKM4J7cXPJ6zpIYCCZqetV
+        La548fWfLtbmo62U4lZrhh+rgHYkt521G+o8tFKzhtFCZd4/B95La8XXLur02Yd6UtJe
+        j4Je8wY/xS7dvpzUItrYOYp06KJL2dLYD+sdpQCK4GrE1MLq6nZqMhArxNajR/WiTHw6
+        5jUyTiN8FgpxufafnfAnOp70E8FCmrUHT9gMcP0msVZxPocdPXb4vTl94EtRgBcH6Wyj
+        5tRw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLfY0EI
+        with ESMTPSA id U06217w1BLfh0EV
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:34 +0100 (CET)
+        Tue, 11 Feb 2020 22:41:43 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -69,9 +69,9 @@ Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 02/14] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-Date:   Tue, 11 Feb 2020 22:41:19 +0100
-Message-Id: <94e63f456954f4e0c9a3ee7349f97281241db2f5.1581457290.git.hns@goldelico.com>
+Subject: [PATCH 14/14] MIPS: DTS: CI20: fix interrupt for pcf8563 RTC
+Date:   Tue, 11 Feb 2020 22:41:31 +0100
+Message-Id: <9d300f1bac15ef4a91052973f2ed593dd2513656.1581457290.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
@@ -82,27 +82,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MODULE_DEVICE_TABLE so that the driver can load by
-matching the device tree if compiled as module.
+Interrupts should not be specified by interrupt line but by
+gpio parent and reference.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 6d47ef7b148c..d8617096dd8e 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -844,6 +844,8 @@ static const struct of_device_id ingenic_drm_of_match[] = {
- 	{ /* sentinel */ },
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 8f9d182566db..4bacefa2cfce 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -298,7 +298,9 @@ Optional input supply properties:
+ 		rtc@51 {
+ 			compatible = "nxp,pcf8563";
+ 			reg = <0x51>;
+-			interrupts = <110>;
++
++			interrupt-parent = <&gpf>;
++			interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
+ 		};
  };
  
-+MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
-+
- static struct platform_driver ingenic_drm_driver = {
- 	.driver = {
- 		.name = "ingenic-drm",
 -- 
 2.23.0
 
