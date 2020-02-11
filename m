@@ -2,108 +2,310 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADB5C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4FDC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC68D20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCB120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:20:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="cT+Vkzid";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4NgOeEle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgBKHUI convert rfc822-to-8bit (ORCPT
+        id S1728132AbgBKHUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 02:20:08 -0500
-Received: from mail-ma1ind01hn2085.outbound.protection.outlook.com ([52.103.200.85]:31038
-        "EHLO IND01-MA1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727467AbgBKHUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 02:20:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EHrapA8tmORwt6Ws5qdIKW5wLn83TRxV5XTYTXi04uR2YX/4ugA0ap6UpzBFcl0tejS+GWZGLHaXHpxyzg8U4uf4ez8AXNBjlTJ2CQzD6ByNZLi9d0SC1ygNPKouG63uDHdMx8rkUOohC4wLTVgcWU9ObzrX2+9HP8Q+Va4jmu2TA5VdnTr/+QlL4iu2ze0JX12wcjHKCgWNP3JFq7XT0M4ovjyLgA8dMV6kQ11ugqy2JCAAa4rGcYTKTXv3uDZTc3fmerhI3LR0hilm4lAds5kTc1L3muUiHzEYrz77YSM2knu/eAp1ufXE41dlXWL0oh0n/AB6SkaYWXT3RuG9aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hqJENiPSFxfm5dNInRGodfcfiiYCSpueUcdne185ukw=;
- b=TFNHMPwrz5+MeXZr6Iefkp2aPmwYszUKza4v/OqcTedyqQxgqaVgNCi0hkphgGPaoRYj+w8UAMtyl/BYiEiwDY+62o3EFstWZZHAMEz9RbiGBF4mrpetaveT2og6s5BjYeFn0wf5Y17svz/EluGKGVBFdBuXVD9L1uqbsS220kB3VXV3BDyZN3CnnoQ7poHGrGzaZZ0C7pNSqFeTMxupijRW31R1mFtINC2bwEDRxFG4DbryOBErb81mGhZypK/UdYb9+afpRqeMnYQbu0V/l7bNGRVKUIOdL1f5WpcorOwhHrW5QbJalywBRAsXIyV4lUwDFL17Db7cUV3KvrUnSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=universaldigitaledata.com; dmarc=pass action=none
- header.from=universaldigitaledata.com; dkim=pass
- header.d=universaldigitaledata.com; arc=none
-Received: from BMXPR01MB0741.INDPRD01.PROD.OUTLOOK.COM (10.174.215.150) by
- BMXPR01MB3350.INDPRD01.PROD.OUTLOOK.COM (20.179.241.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Tue, 11 Feb 2020 07:20:05 +0000
-Received: from BMXPR01MB0741.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::f452:44da:855:f243]) by BMXPR01MB0741.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::f452:44da:855:f243%12]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 07:20:05 +0000
-Received: from dellPC (106.51.31.26) by MA1PR01CA0137.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::31) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2707.24 via Frontend Transport; Tue, 11 Feb 2020 07:20:02 +0000
-From:   Jessica Nicholas <jessica.nicholas@universaldigitaledata.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Visitors List Embedded World 2020
-Thread-Topic: Visitors List Embedded World 2020
-Thread-Index: AdXgq6xympZ/TnTZTryoitZba43PBQ==
-Date:   Tue, 11 Feb 2020 07:20:02 +0000
-Message-ID: <!&!AAAAAAAAAAAYAAAAAAAAAAcpiMWtUmhItmOqoPKBgt3CgAAAEAAAAHQVoy3eywBBjxQDXl80FAABAAAAAA==@universaldigitaledata.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MA1PR01CA0137.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:35::31) To BMXPR01MB0741.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:f::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jessica.nicholas@universaldigitaledata.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Microsoft Outlook 15.0
-x-originating-ip: [106.51.31.26]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 29e3a3df-3d1d-4961-e789-08d7aec2cfab
-x-ms-traffictypediagnostic: BMXPR01MB3350:
-x-microsoft-antispam-prvs: <BMXPR01MB33501789AAEE20EF8A19229380180@BMXPR01MB3350.INDPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(346002)(366004)(199004)(189003)(86362001)(8676002)(81156014)(81166006)(16526019)(71200400001)(6496006)(52116002)(38610400001)(186003)(586005)(6916009)(55236004)(8936002)(26005)(44832011)(2616005)(4744005)(956004)(508600001)(1006002)(2906002)(5660300002)(6486002)(66946007)(66476007)(66446008)(36756003)(64756008)(66556008)(32030200002);DIR:OUT;SFP:1501;SCL:5;SRVR:BMXPR01MB3350;H:BMXPR01MB0741.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: universaldigitaledata.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6stDbZhy1KIvdhqVNNdMmeZ4L2NVvqqRdz8jXsBipT/oRKl+2s3aZfBeaesgDPd8AL0bbwlzjzCmGTxTPkGMpGpYmDjZawbF1pnC1ZTPGnPzacuw1bjV4nWvL8mLgf+SsgGCZYiHZ4tVjucF/klt4Oxul7ThpRijGcnUG7LoP/CHav9BgAyxDkunwfgL50nrg7JF4G/BnMZtlOoY/A7fGIlzgAS8XdRhwc4+xvO3KhJvg15RbTHzogerz0uPID8+D4tFJAu7VHVlVKSmGuyUX10bbG7gKwVo1VI9vK1VPYqgv79UNAsJBdhiyVAweAhaPNiVAR3wOoh2JGdF7Ou4D1V9yEDgQCGyi6Y13KDIEpshMq+P/1hyTLpae0YlZ+MFcdL1eRD3quRQMi6fI1Cn28zzphC7CjrWOKlrq8UbCfbveGD3ak6Sf+zwXXd1jEJwWlOgXpQ9xI0Lix8868noRW6RJvOeDeDFPdKXpBsF9xmPhjJ0+VqP/CqOblDI7vnQCCBwm2ujgwhugKg+E2ICAciKUACG/nACA2KP9w4wtFCSdnHoIhV4GenRW8MZNi4JkhyBD2vPmvxzyl32ppmRbuxHOnxTbKO6bI3HEn91G/BD3QBhO9usXZ85Ggn1BD9n4+0qvUDTT9rSaCgG9HawVg==
-x-ms-exchange-antispam-messagedata: a5nQfoj5S9zoFOalb0zZC7GnlUCGa6le0TaJjwqnchcBb92WBOZN3ow+uAw339iI+YWUxehs8CCra0+e7BvNLjKeqrJQy65ghJfJad9dE8RtVy/Hod14OevKGF/YfAf1PwNdq8zeL3Q7U+fgbl4NBA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FA715850D1C99448AD0408E16A4837BD@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Tue, 11 Feb 2020 02:20:15 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:53977 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727467AbgBKHUO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 02:20:14 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4EC2221C0F;
+        Tue, 11 Feb 2020 02:20:13 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 11 Feb 2020 02:20:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=BU30pT44LeYjqGun9tCYcCsIKDQ
+        26EjzbD9vWsO8Hk4=; b=cT+VkzidJxvWZvNBOZfS46qlXD1n3kMzoPEXeBcZbiv
+        MYLbPwQf/KfbWBtE1al+zm8+lDYvS+RTCyMnDIi64aYWRa6p7NSGE84sCkZbBqVf
+        OIEk0sf2nzi1p0SnYCwJQf/GCLFUtCwDObtpifn9tp/yAaNLSFze6Dk8WeNEM61U
+        puDtmDNKM5OB0Oc/PWvwm2OPQj6+aNNiEwTnfRGs62uLN6YJaj7BEB0ejeeQx1Ai
+        VLv4ZrOxmzFz4IBEM5JoPh+AARCPVPAFGHfN+KzSpY76P4gST2p5BF5iwT6EWMoo
+        yJEURhKfule5UoOH+d94aJg7Q5TQL6sYyGHTgL+7SIg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=BU30pT
+        44LeYjqGun9tCYcCsIKDQ26EjzbD9vWsO8Hk4=; b=4NgOeEleWgaGYA6AO3YAqB
+        E/hjIUhUCGadDurB7nW0dgh4psqpdjQuOdb0pA2Z0r2lB3J3e6NgIOFE+hnnXPEB
+        T/h/JPQzHhYTvr/LT2bZZweabe4jMi/cUYAzOJzRJOeSCcGQ1flP6+KRL7+36hyz
+        8Wl22kqlTWNXI1P5NqCIv880/1/Ux19/GHYMyIdnxgedkBj66Deg0xpWHlDCUE71
+        cjY1aTJuBYGsfsloXdCnLo2h9AkHNyG42jYefJNSxiif19G3aXO9xLXqjHELGmLm
+        UI7N4JoTaVGm2kbhUKz6cEWE+BBuYd1i/wq8eaqaljGrQA1qGZaYQU1WEVjxuzFQ
+        ==
+X-ME-Sender: <xms:plVCXl4cif1LxJSmHn5w0D9a9vTDkgVDkIDeTNriHXFzKWKv5iBHWQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedvgddutdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:plVCXiWs7OhCqSHs03thXNB0Y-oKakEpoJbxesyoZZBnhb-ExMCUiQ>
+    <xmx:plVCXtiOtSvg6tpcrMcghYwln7R9ucHPmaX9grCCynKaKo3ODtWkiw>
+    <xmx:plVCXidVbu0QEnlAGDEh0t3m9yK2x2juH03UsyCO-v-u_u3d55e6zw>
+    <xmx:rVVCXjQU0ZA8Tp0TqLyLUX6R1WYxeGYBGkOrwG5d5CaYeb9fY_UTmQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2D4453280060;
+        Tue, 11 Feb 2020 02:20:06 -0500 (EST)
+Date:   Tue, 11 Feb 2020 08:20:04 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Support LVDS output on Allwinner A20
+Message-ID: <20200211072004.46tbqixn5ftilxae@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
 MIME-Version: 1.0
-X-OriginatorOrg: universaldigitaledata.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29e3a3df-3d1d-4961-e789-08d7aec2cfab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 07:20:02.8821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a1bb3990-870d-4842-b2e3-88f92e8fd504
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rXH9g9aA3ff4RpJnoTztNto3/bDzAitHy5PhjGaaGLq67ZVxK6UIbUstENTW+j8a+y69Gdoi4S2KKapy+QXawQrJSInX3/GCRvixy7Qj/JeA8l88f4+6g0uszyVhiiXFpoMuO+IeIEFF6tofzKiDhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BMXPR01MB3350
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7u7alefvy7ml5d3s"
+Content-Disposition: inline
+In-Reply-To: <20200210195633.GA21832@kedthinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+--7u7alefvy7ml5d3s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
 Hi,
 
-Good Day to you,
+On Mon, Feb 10, 2020 at 09:56:33PM +0200, Andrey Lebedev wrote:
+> A20 SoC (found in Cubieboard 2 among others) requires different LVDS set
+> up procedure than A33. Timing controller (tcon) driver only implements
+> sun6i-style procedure, that doesn't work on A20 (sun7i).
 
-I am just following up to see if you are interested in buying visitor list
-for Embedded World 2020, 25-29 Feb 2020, Nuremberg, Germany
+You're missing your Signed-off-by here.
 
-Please let me know so that I can provide price and other details. 
+> The support for such procedure is ported from u-boot and follows u-boot
+> naming convention: SUN6I* for sun6i-style procedure, and SUN4I for other
+> (which happens to be compatible with A20).
 
-I am looking forward to hear from you 
+A commit log is mostly about why you're doing a change, this part can
+be left out.
 
-Regards,
-Jessica Nicholas -Business Analyst
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 91 ++++++++++++++++++++----------
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h | 12 ++++
+>  2 files changed, 73 insertions(+), 30 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index c81cdce6ed55..78896e907ca9 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -114,46 +114,74 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+>  	}
+>  }
+>
+> +static void sun4i_tcon_lvds_sun6i_enable(struct sun4i_tcon *tcon,
+> +					 const struct drm_encoder *encoder) {
 
-If you're not interested kindly reply with the subject line "Opt-Out".
+This doesn't match the kernel coding style, make sure to run checkpatch.
 
+Also, using something like sun6i_tcon_setup_lvds_phy would be more fit
+to what this function is doing.
+
+> +	u8 val;
+> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +		     SUN6I_TCON0_LVDS_ANA0_C(2) |
+> +		     SUN6I_TCON0_LVDS_ANA0_V(3) |
+> +		     SUN6I_TCON0_LVDS_ANA0_PD(2) |
+> +		     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
+> +	udelay(2);
+> +
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_MB,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_MB);
+> +	udelay(2);
+> +
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
+> +
+> +	if (sun4i_tcon_get_pixel_depth(encoder) == 18)
+> +		val = 7;
+> +	else
+> +		val = 0xf;
+> +
+> +	regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
+> +			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
+> +
+> +}
+> +
+> +static void sun4i_tcon_lvds_sun4i_enable(struct sun4i_tcon *tcon) {
+
+And sun4i_tcon_setup_lvds_phy.
+
+> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +		     SUN4I_TCON0_LVDS_ANA0_CK_EN |
+> +		     SUN4I_TCON0_LVDS_ANA0_REG_V |
+> +		     SUN4I_TCON0_LVDS_ANA0_REG_C |
+> +		     SUN4I_TCON0_LVDS_ANA0_EN_MB |
+> +		     SUN4I_TCON0_LVDS_ANA0_PD |
+> +		     SUN4I_TCON0_LVDS_ANA0_DCHS);
+> +
+> +	udelay(2); /* delay at least 1200 ns */
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
+> +			   SUN4I_TCON0_LVDS_ANA1_INIT,
+> +			   SUN4I_TCON0_LVDS_ANA1_INIT);
+> +	udelay(1); /* delay at least 1200 ns */
+
+The delay and your comment don't match.
+
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
+> +			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
+> +			   SUN4I_TCON0_LVDS_ANA1_UPDATE);
+
+You refer to U-Boot in your commit log, but the sequence is not quite
+the same, why did you change it?
+
+> +}
+> +
+> +
+>  static void sun4i_tcon_lvds_set_status(struct sun4i_tcon *tcon,
+>  				       const struct drm_encoder *encoder,
+>  				       bool enabled)
+>  {
+>  	if (enabled) {
+> -		u8 val;
+> -
+> +		// Enable LVDS interface
+
+There's no need for that comment, it's simple enough :)
+
+>  		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+>  				   SUN4I_TCON0_LVDS_IF_EN,
+>  				   SUN4I_TCON0_LVDS_IF_EN);
+>
+> -		/*
+> -		 * As their name suggest, these values only apply to the A31
+> -		 * and later SoCs. We'll have to rework this when merging
+> -		 * support for the older SoCs.
+> -		 */
+> -		regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> -			     SUN6I_TCON0_LVDS_ANA0_C(2) |
+> -			     SUN6I_TCON0_LVDS_ANA0_V(3) |
+> -			     SUN6I_TCON0_LVDS_ANA0_PD(2) |
+> -			     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
+> -		udelay(2);
+> -
+> -		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> -				   SUN6I_TCON0_LVDS_ANA0_EN_MB,
+> -				   SUN6I_TCON0_LVDS_ANA0_EN_MB);
+> -		udelay(2);
+> -
+> -		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> -				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
+> -				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
+> -
+> -		if (sun4i_tcon_get_pixel_depth(encoder) == 18)
+> -			val = 7;
+> -		else
+> -			val = 0xf;
+> +		// Perform SoC-specific setup procedure
+
+Ditto.
+
+> +		if (tcon->quirks->sun6i_lvds_init) {
+> +			sun4i_tcon_lvds_sun6i_enable(tcon, encoder);
+> +		}
+> +		else {
+> +			sun4i_tcon_lvds_sun4i_enable(tcon);
+> +		}
+>
+> -		regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> -				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
+> -				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
+>  	} else {
+>  		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+>  				   SUN4I_TCON0_LVDS_IF_EN, 0);
+> @@ -1454,6 +1482,7 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
+>  };
+>
+>  static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
+> +	.supports_lvds		= true,
+>  	.has_channel_0		= true,
+>  	.has_channel_1		= true,
+>  	.dclk_min_div		= 4,
+> @@ -1464,11 +1493,13 @@ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
+>  static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+>  	.has_channel_0		= true,
+>  	.has_lvds_alt		= true,
+> +	.sun6i_lvds_init	= true,
+
+Using a function pointer here (like we're doing with set_mux) would be
+more future proof.
+
+>  	.dclk_min_div		= 1,
+>  };
+>
+>  static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
+>  	.supports_lvds		= true,
+> +	.sun6i_lvds_init	= true,
+>  	.has_channel_0		= true,
+>  	.dclk_min_div		= 1,
+>  };
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> index a62ec826ae71..973901c1bee5 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> @@ -193,6 +193,13 @@
+>  #define SUN4I_TCON_MUX_CTRL_REG			0x200
+>
+>  #define SUN4I_TCON0_LVDS_ANA0_REG		0x220
+> +#define SUN4I_TCON0_LVDS_ANA0_DCHS			BIT(16)
+> +#define SUN4I_TCON0_LVDS_ANA0_PD			BIT(20) | BIT(21)
+> +#define SUN4I_TCON0_LVDS_ANA0_EN_MB			BIT(22)
+> +#define SUN4I_TCON0_LVDS_ANA0_REG_C			BIT(24) | BIT(25)
+> +#define SUN4I_TCON0_LVDS_ANA0_REG_V			BIT(26) | BIT(27)
+> +#define SUN4I_TCON0_LVDS_ANA0_CK_EN			BIT(29) | BIT(28)
+> +
+>  #define SUN6I_TCON0_LVDS_ANA0_EN_MB			BIT(31)
+>  #define SUN6I_TCON0_LVDS_ANA0_EN_LDO			BIT(30)
+>  #define SUN6I_TCON0_LVDS_ANA0_EN_DRVC			BIT(24)
+> @@ -201,6 +208,10 @@
+>  #define SUN6I_TCON0_LVDS_ANA0_V(x)			(((x) & 3) << 8)
+>  #define SUN6I_TCON0_LVDS_ANA0_PD(x)			(((x) & 3) << 4)
+>
+> +#define SUN4I_TCON0_LVDS_ANA1_REG		0x224
+> +#define SUN4I_TCON0_LVDS_ANA1_INIT			(0x1f << 26 | 0x1f << 10)
+> +#define SUN4I_TCON0_LVDS_ANA1_UPDATE			(0x1f << 16 | 0x1f << 00)
+
+Having proper defines for those fields would be great too.
+
+Side question, this will need some DT changes too, right?
+
+Maxime
+
+--7u7alefvy7ml5d3s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkJVpAAKCRDj7w1vZxhR
+xbVKAQCeNvcaswq45QY1IeN4a1lVn0bCHRnVx5A6B6hs3R2IHQD5ASxx6F8VvA11
+Rk3zeIkh5pwhQnYBkw+TM0mmHeC7KQ4=
+=md1S
+-----END PGP SIGNATURE-----
+
+--7u7alefvy7ml5d3s--
