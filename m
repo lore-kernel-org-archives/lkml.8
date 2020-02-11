@@ -2,110 +2,119 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8BCC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16BCC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA19420870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:55:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="l/8+zDje"
+	by mail.kernel.org (Postfix) with ESMTP id D52C821739
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731719AbgBKTzK (ORCPT
+        id S1730912AbgBKT7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:55:10 -0500
-Received: from chill.innovation.ch ([216.218.245.220]:53738 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730021AbgBKTzJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:55:09 -0500
-X-Greylist: delayed 448 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 14:55:09 EST
-Received: from localhost (localhost [127.0.0.1])
-        by chill.innovation.ch (Postfix) with ESMTP id DB6556412AE;
-        Tue, 11 Feb 2020 11:47:35 -0800 (PST)
-X-Virus-Scanned: amavisd-new at 
-Received: from chill.innovation.ch ([127.0.0.1])
-        by localhost (chill.innovation.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id Yt8Xyz8cUtTD; Tue, 11 Feb 2020 11:47:29 -0800 (PST)
-From:   =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 0617D64012B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1581450449;
-        bh=pKyDgEF01POMD1o+SCeOkRD2KX+9ORpUNRhOfljEE+0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=l/8+zDjee0rYEua1qQlF3fSjIbLgjPn0NgFtJMojTap23v8RAHOGYXrnm+FtZ2mvv
-         uOCYbXQJGj4nePDyrz3k2Wh+ENIPX5UHIMo8522dI/n39cm28++TI8WrPPMGSMJtWO
-         PwJ+LYuUzZx35AWGHkYMfWb/F+GThXBG4nRF9MYNMa7TMxqHsrG31n1ZG7WPPNjE+u
-         ZnruWK2T+tuB5lToiSsJnavxSQahY+shWsbjklUvi4wL2vRKeUr295OKXosxvphcxC
-         gXR225rqTAaFaZUZYIzw08ucNyFhckoNmoKRlJJU/k1YuZLaCzDxQ+9OrX8Z8XfmqW
-         lBE10xCUJXO/Q==
-To:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] serdev: Fix detection of UART devices on Apple machines.
-Date:   Tue, 11 Feb 2020 11:47:23 -0800
-Message-Id: <20200211194723.486217-1-ronald@innovation.ch>
-X-Mailer: git-send-email 2.24.1
+        Tue, 11 Feb 2020 14:59:25 -0500
+Received: from mga01.intel.com ([192.55.52.88]:5496 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727955AbgBKT7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:59:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 11:59:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="251661231"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 11 Feb 2020 11:59:24 -0800
+Received: from [10.251.4.129] (kliang2-mobl.ccr.corp.intel.com [10.251.4.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id BEEB658045B;
+        Tue, 11 Feb 2020 11:59:22 -0800 (PST)
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v5_3/3=5d_perf_x86=3a_Exposing_an_Uncore_u?=
+ =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, bgregg@netflix.com, alexander.antonov@intel.com
+References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
+ <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
+ <20200211171544.GA1933705@kroah.com>
+ <20200211184200.GA302770@tassilo.jf.intel.com>
+ <20200211185759.GA1941673@kroah.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <25dca8dd-c52d-676d-ffe4-90f3a6ddc915@linux.intel.com>
+Date:   Tue, 11 Feb 2020 14:59:21 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200211185759.GA1941673@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Apple devices the _CRS method returns an empty resource template, and
-the resource settings are instead provided by the _DSM method. But
-commit 33364d63c75d6182fa369cea80315cf1bb0ee38e (serdev: Add ACPI
-devices by ResourceSource field) changed the search for serdev devices
-to require valid, non-empty resource template, thereby breaking Apple
-devices and causing bluetooth devices to not be found.
 
-This expands the check so that if we don't find a valid template, and
-we're on an Apple machine, then just check for the device being an
-immediate child of the controller and having a "baud" property.
 
-Cc: <stable@vger.kernel.org> # 5.5
-Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
----
- drivers/tty/serdev/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On 2/11/2020 1:57 PM, Greg KH wrote:
+> On Tue, Feb 11, 2020 at 10:42:00AM -0800, Andi Kleen wrote:
+>> On Tue, Feb 11, 2020 at 09:15:44AM -0800, Greg KH wrote:
+>>> On Tue, Feb 11, 2020 at 07:15:49PM +0300, roman.sudarikov@linux.intel.com wrote:
+>>>> +static ssize_t skx_iio_mapping_show(struct device *dev,
+>>>> +				struct device_attribute *attr, char *buf)
+>>>> +{
+>>>> +	struct pmu *pmu = dev_get_drvdata(dev);
+>>>> +	struct intel_uncore_pmu *uncore_pmu =
+>>>> +		container_of(pmu, struct intel_uncore_pmu, pmu);
+>>>> +
+>>>> +	struct dev_ext_attribute *ea =
+>>>> +		container_of(attr, struct dev_ext_attribute, attr);
+>>>> +	long die = (long)ea->var;
+>>>> +
+>>>> +	return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
+>>>
+>>> If "0000:" is always the "prefix" of the output of this file, why have
+>>> it at all as you always know it is there?
 
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index ce5309d00280..0f64a10ba51f 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -18,6 +18,7 @@
- #include <linux/sched.h>
- #include <linux/serdev.h>
- #include <linux/slab.h>
-+#include <linux/platform_data/x86/apple.h>
- 
- static bool is_registered;
- static DEFINE_IDA(ctrl_ida);
-@@ -630,6 +631,15 @@ static int acpi_serdev_check_resources(struct serdev_controller *ctrl,
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Apple machines provide an empty resource template, so on those
-+	 * machines just look for immediate children with a "baud" property
-+	 * (from the _DSM method) instead.
-+	 */
-+	if (!lookup.controller_handle && x86_apple_machine &&
-+	    !acpi_dev_get_property(adev, "baud", ACPI_TYPE_BUFFER, NULL))
-+		acpi_get_parent(adev->handle, &lookup.controller_handle);
-+
- 	/* Make sure controller and ResourceSource handle match */
- 	if (ACPI_HANDLE(ctrl->dev.parent) != lookup.controller_handle)
- 		return -ENODEV;
--- 
-2.24.1
 
+I think Roman only test with BIOS configured as single-segment. So he 
+hard-code the segment# here.
+
+I'm not sure if Roman can do some test with multiple-segment BIOS. If 
+not, I think we should at least print a warning here.
+
+>>>
+>>> What is ever going to cause that to change?
+>>
+>> I think it's just to make it a complete PCI address.
+> 
+> Is that what this really is?  If so, it's not a "complete" pci address,
+> is it?  If it is, use the real pci address please.
+
+I think we don't need a complete PCI address here. The attr is to 
+disclose the mapping information between die and PCI BUS. Segment:BUS 
+should be good enough.
+
+Thanks,
+Kan
+
+> 
+>> In theory it might be different on a complex multi node system with
+>> custom interconnect and multiple PCI segments, but that would need code
+>> changes too.
+>>
+>> This version of the patchkit only supports standard SKX systems
+>> at this point.
+> 
+> I have no idea what that means, please translate for non-Intel people :)
+> 
+> greg k-h
+> 
