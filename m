@@ -2,161 +2,124 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12563C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4A0C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92622070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FA420842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y/iRRfom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgBKFry (ORCPT
+        id S1728147AbgBKF4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 00:47:54 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44791 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727594AbgBKFrx (ORCPT
+        Tue, 11 Feb 2020 00:56:03 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60310 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727434AbgBKF4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 00:47:53 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 8AB503A353F;
-        Tue, 11 Feb 2020 16:47:49 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j1OOi-0005zL-VL; Tue, 11 Feb 2020 16:47:48 +1100
-Date:   Tue, 11 Feb 2020 16:47:48 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 03/12] fs/xfs: Separate functionality of
- xfs_inode_supports_dax()
-Message-ID: <20200211054748.GF10776@dread.disaster.area>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <20200208193445.27421-4-ira.weiny@intel.com>
+        Tue, 11 Feb 2020 00:56:02 -0500
+X-UUID: acb308b7595741e49e3624f002443ef0-20200211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=UZncKfN5pbA6KAUGfVcuH3KW3o6KJUR94XVtsqFT8Ho=;
+        b=Y/iRRfomGL7Q82xifLIQqXMjjXhnPsfS86r6Ht8HsmCW1/wKbPmxHs5lv35m6uIiq8inVZyxD3+8xblzxeZZGD+GKl3tM/sgS8xR8FJQ9xy4RL4Gh1Lq+QyM0pafv35uAtCwXJcy9/KSCY3urdpRqRCqPVdnqbunE2417l2NtAk=;
+X-UUID: acb308b7595741e49e3624f002443ef0-20200211
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 263313503; Tue, 11 Feb 2020 13:55:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 11 Feb 2020 13:55:10 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 11 Feb 2020 13:54:07 +0800
+From:   <gtk_ruiwang@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomasz Figa <tfiga@chromium.org>
+CC:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <gtk_ruiwang@mediatek.com>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH][v3] media: mtk-vcodec: reset segment data then trig decoder
+Date:   Tue, 11 Feb 2020 13:55:32 +0800
+Message-ID: <20200211055532.4563-1-gtk_ruiwang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208193445.27421-4-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=Yrr-Swfh6q8XfX9a3mMA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 11:34:36AM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> xfs_inode_supports_dax() should reflect if the inode can support DAX not
-> that it is enabled for DAX.  Leave that to other helper functions.
-> 
-> Change the caller of xfs_inode_supports_dax() to call
-> xfs_inode_use_dax() which reflects new logic to override the effective
-> DAX flag with either the mount option or the physical DAX flag.
-> 
-> To make the logic clear create 2 helper functions for the mount and
-> physical flag.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  fs/xfs/xfs_iops.c | 32 ++++++++++++++++++++++++++------
->  1 file changed, 26 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 81f2f93caec0..a7db50d923d4 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -1236,6 +1236,15 @@ static const struct inode_operations xfs_inline_symlink_inode_operations = {
->  	.update_time		= xfs_vn_update_time,
->  };
->  
-> +static bool
-> +xfs_inode_mount_is_dax(
-> +	struct xfs_inode *ip)
-> +{
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +
-> +	return (mp->m_flags & XFS_MOUNT_DAX) == XFS_MOUNT_DAX;
-> +}
-> +
->  /* Figure out if this file actually supports DAX. */
->  static bool
->  xfs_inode_supports_dax(
-> @@ -1247,11 +1256,6 @@ xfs_inode_supports_dax(
->  	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
->  		return false;
->  
-> -	/* DAX mount option or DAX iflag must be set. */
-> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
-> -	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
-> -		return false;
-> -
->  	/* Block size must match page size */
->  	if (mp->m_sb.sb_blocksize != PAGE_SIZE)
->  		return false;
-> @@ -1260,6 +1264,22 @@ xfs_inode_supports_dax(
->  	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
->  }
->  
-> +static bool
-> +xfs_inode_is_dax(
-> +	struct xfs_inode *ip)
-> +{
-> +	return (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX) == XFS_DIFLAG2_DAX;
-> +}
+RnJvbTogZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNvbT4NCg0KVlA5IGJpdHN0
+cmVhbSBzcGVjaWZpY2F0aW9uIGluZGljYXRlIHNlZ21lbnQgZGF0YSBzaG91bGQgcmVzZXQgdG8N
+CmRlZmF1bHQgd2hlbiBtZWV0IGtleSBmcmFtZXMsIGludHJhIG9ubHkgZnJhbWVzIG9yIGVuYWJs
+ZSBlcnJvcg0KcmVzaWxpZW5jZSBtb2RlLiBTbyBtZW1zZXQgc2VnbWVudGF0aW9uIG1hcCBidWZm
+ZXIgYmVmb3JlIGV2ZXJ5DQpkZWNvZGUgcHJvY2VzcyBpcyBub3QgYXBwcm9wcmlhdGUuDQoNClJl
+c2V0IHNlZ21lbnQgZGF0YSBvbmx5IHdoZW4gbmVlZGVkLCB0aGVuIHN0YXJ0IGRlY29kZXIgaGFy
+ZHdhcmUNCg0KU2lnbmVkLW9mZi1ieTogUnVpIFdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNv
+bT4NCi0tLQ0KQ2hhbmdlZCBpbiB2MzoNCi0gbW9kaWZ5IGJpdDMgdXNhZ2UgZGVzY3JpcHRpb24N
+Ci0tLQ0KIC4uLi9wbGF0Zm9ybS9tdGstdmNvZGVjL3ZkZWMvdmRlY192cDlfaWYuYyAgICB8IDI5
+ICsrKysrKysrKysrKysrKystLS0NCiAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwg
+NCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRr
+LXZjb2RlYy92ZGVjL3ZkZWNfdnA5X2lmLmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12
+Y29kZWMvdmRlYy92ZGVjX3ZwOV9pZi5jDQppbmRleCAyNGMxZjBiZjIxNDcuLjI1N2E1YjVhZDIx
+MiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVjL3Zk
+ZWNfdnA5X2lmLmMNCisrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVj
+L3ZkZWNfdnA5X2lmLmMNCkBAIC0xMTAsNyArMTEwLDExIEBAIHN0cnVjdCB2cDlfc2ZfcmVmX2Zi
+IHsNCiAgKiBAYnVmX2xlbl9zel9jIDogc2l6ZSB1c2VkIHRvIHN0b3JlIGNiY3IgcGxhbmUgdWZv
+IGluZm8gKEFQLVIsIFZQVS1XKQ0KIA0KICAqIEBwcm9maWxlIDogcHJvZmlsZSBzcGFyc2VkIGZy
+b20gdnB1IChBUC1SLCBWUFUtVykNCi0gKiBAc2hvd19mcmFtZSA6IGRpc3BsYXkgdGhpcyBmcmFt
+ZSBvciBub3QgKEFQLVIsIFZQVS1XKQ0KKyAqIEBzaG93X2ZyYW1lIDogW0JJVCgwKV0gZGlzcGxh
+eSB0aGlzIGZyYW1lIG9yIG5vdCAoQVAtUiwgVlBVLVcpDQorICoJW0JJVCgxKV0gcmVzZXQgc2Vn
+bWVudCBkYXRhIG9yIG5vdCAoQVAtUiwgVlBVLVcpDQorICoJW0JJVCgyKV0gdHJpZyBkZWNvZGVy
+IGhhcmR3YXJlIG9yIG5vdCAoQVAtUiwgVlBVLVcpDQorICoJW0JJVCgzKV0gYXNrIFZQVSB0byBz
+ZXQgYml0cygwfjQpIGFjY29yZGluZ2x5IChBUC1XLCBWUFUtUikNCisgKglbQklUKDQpXSBkbyBu
+b3QgcmVzZXQgc2VnbWVudCBkYXRhIGJlZm9yZSBldmVyeSBmcmFtZSAoQVAtUiwgVlBVLVcpDQog
+ICogQHNob3dfZXhpc3RpbmdfZnJhbWUgOiBpbmZvcm0gdGhpcyBmcmFtZSBpcyBzaG93IGV4aXN0
+aW5nIGZyYW1lDQogICoJKEFQLVIsIFZQVS1XKQ0KICAqIEBmcm1fdG9fc2hvd19pZHggOiBpbmRl
+eCB0byBzaG93IGZyYW1lIChBUC1SLCBWUFUtVykNCkBAIC00OTQsMTIgKzQ5OCwxMiBAQCBzdGF0
+aWMgdm9pZCB2cDlfc3dhcF9mcm1fYnVmcyhzdHJ1Y3QgdmRlY192cDlfaW5zdCAqaW5zdCkNCiAJ
+CQkJCWZybV90b19zaG93LT5mYi0+YmFzZV95LnNpemUpOw0KIAkJfQ0KIAkJaWYgKCF2cDlfaXNf
+c2ZfcmVmX2ZiKGluc3QsIGluc3QtPmN1cl9mYikpIHsNCi0JCQlpZiAodnNpLT5zaG93X2ZyYW1l
+KQ0KKwkJCWlmICh2c2ktPnNob3dfZnJhbWUgJiBCSVQoMCkpDQogCQkJCXZwOV9hZGRfdG9fZmJf
+ZGlzcF9saXN0KGluc3QsIGluc3QtPmN1cl9mYik7DQogCQl9DQogCX0gZWxzZSB7DQogCQlpZiAo
+IXZwOV9pc19zZl9yZWZfZmIoaW5zdCwgaW5zdC0+Y3VyX2ZiKSkgew0KLQkJCWlmICh2c2ktPnNo
+b3dfZnJhbWUpDQorCQkJaWYgKHZzaS0+c2hvd19mcmFtZSAmIEJJVCgwKSkNCiAJCQkJdnA5X2Fk
+ZF90b19mYl9kaXNwX2xpc3QoaW5zdCwgZnJtX3RvX3Nob3ctPmZiKTsNCiAJCX0NCiAJfQ0KQEAg
+LTgwMCw2ICs4MDQsOSBAQCBzdGF0aWMgaW50IHZkZWNfdnA5X2luaXQoc3RydWN0IG10a192Y29k
+ZWNfY3R4ICpjdHgpDQogCX0NCiANCiAJaW5zdC0+dnNpID0gKHN0cnVjdCB2ZGVjX3ZwOV92c2kg
+KilpbnN0LT52cHUudnNpOw0KKw0KKwlpbnN0LT52c2ktPnNob3dfZnJhbWUgfD0gQklUKDMpOw0K
+Kw0KIAlpbml0X2FsbF9mYl9saXN0cyhpbnN0KTsNCiANCiAJY3R4LT5kcnZfaGFuZGxlID0gaW5z
+dDsNCkBAIC04NzAsMTMgKzg3NywyNyBAQCBzdGF0aWMgaW50IHZkZWNfdnA5X2RlY29kZSh2b2lk
+ICpoX3ZkZWMsIHN0cnVjdCBtdGtfdmNvZGVjX21lbSAqYnMsDQogCQkJCQl2c2ktPnNmX2ZybV9z
+eltpZHhdKTsNCiAJCQl9DQogCQl9DQotCQltZW1zZXQoaW5zdC0+c2VnX2lkX2J1Zi52YSwgMCwg
+aW5zdC0+c2VnX2lkX2J1Zi5zaXplKTsNCisNCisJCWlmICghKHZzaS0+c2hvd19mcmFtZSAmIEJJ
+VCg0KSkpDQorCQkJbWVtc2V0KGluc3QtPnNlZ19pZF9idWYudmEsIDAsIGluc3QtPnNlZ19pZF9i
+dWYuc2l6ZSk7DQorDQogCQlyZXQgPSB2cHVfZGVjX3N0YXJ0KCZpbnN0LT52cHUsIGRhdGEsIDMp
+Ow0KIAkJaWYgKHJldCkgew0KIAkJCW10a192Y29kZWNfZXJyKGluc3QsICJ2cHVfZGVjX3N0YXJ0
+IGZhaWxlZCIpOw0KIAkJCWdvdG8gREVDT0RFX0VSUk9SOw0KIAkJfQ0KIA0KKwkJaWYgKHZzaS0+
+c2hvd19mcmFtZSAmIEJJVCgxKSkgew0KKwkJCW1lbXNldChpbnN0LT5zZWdfaWRfYnVmLnZhLCAw
+LCBpbnN0LT5zZWdfaWRfYnVmLnNpemUpOw0KKw0KKwkJCWlmICh2c2ktPnNob3dfZnJhbWUgJiBC
+SVQoMikpIHsNCisJCQkJaWYgKHZwdV9kZWNfc3RhcnQoJmluc3QtPnZwdSwgTlVMTCwgMCkpIHsN
+CisJCQkJCW10a192Y29kZWNfZXJyKGluc3QsICJ2cHUgdHJpZyBkZWNvZGVyIGZhaWxlZCIpOw0K
+KwkJCQkJZ290byBERUNPREVfRVJST1I7DQorCQkJCX0NCisJCQl9DQorCQl9DQorDQogCQlyZXQg
+PSB2YWxpZGF0ZV92c2lfYXJyYXlfaW5kZXhlcyhpbnN0LCB2c2kpOw0KIAkJaWYgKHJldCkgew0K
+IAkJCW10a192Y29kZWNfZXJyKGluc3QsICJJbnZhbGlkIHZhbHVlcyBmcm9tIFZQVS4iKTsNCi0t
+IA0KMi4xOC4wDQo=
 
-I don't think these wrappers add any value at all - the naming of
-them is entirely confusing, too. e.g. "inode is dax" doesn't tell me
-that it is checking the on disk flags - it doesn't tell me how it is
-different to IS_DAX, or why I'd use one versus the other. And then
-xfs_inode_mount_is_dax() is just... worse.
-
-Naming is hard. :)
-
-> +
-> +static bool
-> +xfs_inode_use_dax(
-> +	struct xfs_inode *ip)
-> +{
-> +	return xfs_inode_supports_dax(ip) &&
-> +		(xfs_inode_mount_is_dax(ip) ||
-> +		 xfs_inode_is_dax(ip));
-> +}
-
-Urk. Naming - we're not "using dax" here, we are checkign to see if
-we should enable DAX on this inode. IOWs:
-
-static bool
-xfs_inode_enable_dax(
-	struct xfs_inode *ip)
-{
-	if (!xfs_inode_supports_dax(ip))
-		return false;
-
-	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
-		return true;
-	if (ip->i_mount->m_flags & XFS_MOUNT_DAX)
-		return true;
-	return false;
-}
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
