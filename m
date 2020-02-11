@@ -2,118 +2,204 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4C3C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68046C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5632086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41045208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="1tAsP1W7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Edmq+U5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgBKJf1 (ORCPT
+        id S1727913AbgBKJhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:35:27 -0500
-Received: from mail1.perex.cz ([77.48.224.245]:56140 "EHLO mail1.perex.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbgBKJf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:35:27 -0500
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id D4441A0040;
-        Tue, 11 Feb 2020 10:35:24 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz D4441A0040
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-        t=1581413724; bh=9IvGzzJGYDpncBJXTDMIMmetMvPwcS5FQO6sWG2ZxZw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=1tAsP1W7o90yfr++XbusgfY8zfv4DAXfLPRYYILiXMMlAqIlryn66KifzDWpXbhJk
-         g1UeIqDxhktfoUsaJHSGVLpu6adOeEFYzUkRjZ//2GOP7AusIvsx7+Njcgn3Fqsa+s
-         iPy1whLIQ627dViOqlOXVUp3y3DfP7IQaMEDR6TI=
-Received: from p50.perex-int.cz (unknown [192.168.100.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 11 Feb 2020 04:37:05 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:35700 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727561AbgBKJhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 04:37:05 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581413824; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=7qpxFdovXRdAYK1v5HFVJvvWNNAqIbXe3E+fy0MrN08=; b=Edmq+U5Eq97t6QdeJqk0Ym/VysStPgP4D/k/L0MwzNMKEPjUR6uRspWelawCZFfrl5MP0pUk
+ 4uZTwLi7SVcnez1Aav++2itoEPd3xGxNvGwUxTV17UlyFnginPLjQnJUoe/V2Rt0aGxs7JA/
+ gf+T0cnwRgyeATumSFoSI308xJU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4275ba.7f0a6aada068-smtp-out-n03;
+ Tue, 11 Feb 2020 09:36:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 421BDC4479D; Tue, 11 Feb 2020 09:36:58 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: perex)
-        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-        Tue, 11 Feb 2020 10:35:19 +0100 (CET)
-Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th
- quirk value
-To:     Benjamin Poirier <benjamin.poirier@gmail.com>
-Cc:     Takashi Iwai <tiwai@suse.de>, Kailang Yang <kailang@realtek.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
- <20200211055651.4405-2-benjamin.poirier@gmail.com>
- <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz> <20200211081604.GA8286@f3>
-From:   Jaroslav Kysela <perex@perex.cz>
-Message-ID: <901c395a-7fb5-5672-5955-d6d211824177@perex.cz>
-Date:   Tue, 11 Feb 2020 10:35:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200211081604.GA8286@f3>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F96BC4479C;
+        Tue, 11 Feb 2020 09:36:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F96BC4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH V1] mmc: mmc_test: Pass different sg lists for non-blocking requests
+Date:   Tue, 11 Feb 2020 15:06:08 +0530
+Message-Id: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne 11. 02. 20 v 9:16 Benjamin Poirier napsal(a):
-> On 2020/02/11 08:40 +0100, Jaroslav Kysela wrote:
-> [...]
->>>
->>> In summary, Node 0x17 DAC connection 0x3 offers the loudest max volume and
->>> the most detailed mixer controls. That connection is obtained with quirk
->>> ALC295_FIXUP_DISABLE_DAC3. Therefore, change the ThinkPad X1 Carbon 7th to
->>> use ALC295_FIXUP_DISABLE_DAC3.
->>
->> The volume split (individual volume control) will cause trouble for the UCM
->> volume control at the moment which is the target for this device to get the
->> digital microphone working. If there is no possibility to share DAC, it
->> would be probably more nice to join the volume control in the driver.
->>
->> Have you tried to use 0x03 as source for all four speakers?
-> 
-> Front speakers are fixed to 0x02. Node 0x14
->    Connection: 1
->       0x02
-> 
+Supply a separate sg list for each of the request in non-blocking
+IO test cases where two requests will be issued at same time.
 
-Yes, you're right. I forgot that.
+Otherwise, sg memory may get unmapped when a request is done while
+same memory is being accessed by controller from the other request,
+and it leads to iommu errors with below call stack:
 
->>
->> Why PA handles the rear volume control with the current driver code in the
->> legacy ALSA driver? It should be handled like standard stereo device. I'll
->> check.
-> 
-> The device comes up with "Analog Stereo Output" profile by default. I
-> changed it to "Analog Surround 4.0 Output" to test controlling each
-> channel individually:
+	__arm_lpae_unmap+0x2e0/0x478
+	arm_lpae_unmap+0x54/0x70
+	arm_smmu_unmap+0x64/0xa4
+	__iommu_unmap+0xb8/0x1f0
+	iommu_unmap_fast+0x38/0x48
+	__iommu_dma_unmap+0x88/0x108
+	iommu_dma_unmap_sg+0x90/0xa4
+	sdhci_post_req+0x5c/0x78
+	mmc_test_start_areq+0x10c/0x120 [mmc_test]
+	mmc_test_area_io_seq+0x150/0x264 [mmc_test]
+	mmc_test_rw_multiple+0x174/0x1c0 [mmc_test]
+	mmc_test_rw_multiple_sg_len+0x44/0x6c [mmc_test]
+	mmc_test_profile_sglen_wr_nonblock_perf+0x6c/0x94 [mmc_test]
+	mtf_test_write+0x238/0x3cc [mmc_test]
 
-Yes, but does the volume control work (does PA change the appropriate ALSA 
-mixer volume)? Sometimes, it's difficult to see the difference between soft 
-volume attenuation and the hardware volume control.
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ drivers/mmc/core/mmc_test.c | 38 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 32 insertions(+), 6 deletions(-)
 
-> 
->>> pavucontrol controls are reported with the device configured with the
->>> "Analog Surround 4.0 Output" profile.
-> 
->>
->> You should also test PA with UCM.
-> 
-> Please let me know what do I need to test exactly? I'm not familiar with
-> UCM.
-
-Just install the latest pulseaudio (latest from repo), alsa-lib and 
-alsa-ucm-conf (also from repo). If pulseaudio detects UCM, it has the preference.
-
-						Jaroslav
-
-> 
-
-
+diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
+index 492dd45..69bdf60 100644
+--- a/drivers/mmc/core/mmc_test.c
++++ b/drivers/mmc/core/mmc_test.c
+@@ -71,6 +71,7 @@ struct mmc_test_mem {
+  * @sg_len: length of currently mapped scatterlist @sg
+  * @mem: allocated memory
+  * @sg: scatterlist
++ * @sg_areq: scatterlist for non blocking request
+  */
+ struct mmc_test_area {
+ 	unsigned long max_sz;
+@@ -82,6 +83,7 @@ struct mmc_test_area {
+ 	unsigned int sg_len;
+ 	struct mmc_test_mem *mem;
+ 	struct scatterlist *sg;
++	struct scatterlist *sg_areq;
+ };
+ 
+ /**
+@@ -836,7 +838,9 @@ static int mmc_test_start_areq(struct mmc_test_card *test,
+ }
+ 
+ static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
+-				      struct scatterlist *sg, unsigned sg_len,
++				      struct scatterlist *sg,
++				      struct scatterlist *sg_areq,
++				      unsigned int sg_len,
+ 				      unsigned dev_addr, unsigned blocks,
+ 				      unsigned blksz, int write, int count)
+ {
+@@ -867,6 +871,7 @@ static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
+ 			prev_mrq = &rq2->mrq;
+ 
+ 		swap(mrq, prev_mrq);
++		swap(sg, sg_areq);
+ 		dev_addr += blocks;
+ 	}
+ 
+@@ -1396,7 +1401,7 @@ static int mmc_test_no_highmem(struct mmc_test_card *test)
+  * Map sz bytes so that it can be transferred.
+  */
+ static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
+-			     int max_scatter, int min_sg_len)
++			     int max_scatter, int min_sg_len, bool nonblock)
+ {
+ 	struct mmc_test_area *t = &test->area;
+ 	int err;
+@@ -1411,6 +1416,20 @@ static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
+ 		err = mmc_test_map_sg(t->mem, sz, t->sg, 1, t->max_segs,
+ 				      t->max_seg_sz, &t->sg_len, min_sg_len);
+ 	}
++
++	if (err || !nonblock)
++		goto err;
++
++	if (max_scatter) {
++		err = mmc_test_map_sg_max_scatter(t->mem, sz, t->sg_areq,
++						  t->max_segs, t->max_seg_sz,
++				       &t->sg_len);
++	} else {
++		err = mmc_test_map_sg(t->mem, sz, t->sg_areq, 1, t->max_segs,
++				      t->max_seg_sz, &t->sg_len, min_sg_len);
++	}
++
++err:
+ 	if (err)
+ 		pr_info("%s: Failed to map sg list\n",
+ 		       mmc_hostname(test->card->host));
+@@ -1458,15 +1477,16 @@ static int mmc_test_area_io_seq(struct mmc_test_card *test, unsigned long sz,
+ 			sz = max_tfr;
+ 	}
+ 
+-	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len);
++	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len, nonblock);
+ 	if (ret)
+ 		return ret;
+ 
+ 	if (timed)
+ 		ktime_get_ts64(&ts1);
+ 	if (nonblock)
+-		ret = mmc_test_nonblock_transfer(test, t->sg, t->sg_len,
+-				 dev_addr, t->blocks, 512, write, count);
++		ret = mmc_test_nonblock_transfer(test, t->sg, t->sg_areq,
++				 t->sg_len, dev_addr, t->blocks, 512, write,
++				 count);
+ 	else
+ 		for (i = 0; i < count && ret == 0; i++) {
+ 			ret = mmc_test_area_transfer(test, dev_addr, write);
+@@ -1584,6 +1604,12 @@ static int mmc_test_area_init(struct mmc_test_card *test, int erase, int fill)
+ 		goto out_free;
+ 	}
+ 
++	t->sg_areq = kmalloc_array(t->max_segs, sizeof(*t->sg), GFP_KERNEL);
++	if (!t->sg_areq) {
++		ret = -ENOMEM;
++		goto out_free;
++	}
++
+ 	t->dev_addr = mmc_test_capacity(test->card) / 2;
+ 	t->dev_addr -= t->dev_addr % (t->max_sz >> 9);
+ 
+@@ -2468,7 +2494,7 @@ static int __mmc_test_cmds_during_tfr(struct mmc_test_card *test,
+ 	if (!(test->card->host->caps & MMC_CAP_CMD_DURING_TFR))
+ 		return RESULT_UNSUP_HOST;
+ 
+-	ret = mmc_test_area_map(test, sz, 0, 0);
++	ret = mmc_test_area_map(test, sz, 0, 0, use_areq);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
