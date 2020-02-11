@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC29C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3372C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DBB2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3FF24650
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgBKNxf (ORCPT
+        id S1729684AbgBKNxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:53:35 -0500
-Received: from 8bytes.org ([81.169.241.247]:52306 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:53:39 -0500
+Received: from 8bytes.org ([81.169.241.247]:52410 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgBKNx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:26 -0500
+        id S1729565AbgBKNx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:27 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 5E10CE85; Tue, 11 Feb 2020 14:53:14 +0100 (CET)
+        id 20CAFE8E; Tue, 11 Feb 2020 14:53:15 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -36,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 40/62] x86/sev-es: Filter exceptions not supported from user-space
-Date:   Tue, 11 Feb 2020 14:52:34 +0100
-Message-Id: <20200211135256.24617-41-joro@8bytes.org>
+Subject: [PATCH 44/62] x86/sev-es: Handle RDTSC Events
+Date:   Tue, 11 Feb 2020 14:52:38 +0100
+Message-Id: <20200211135256.24617-45-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -47,58 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Currently only CPUID caused #VC exceptions are supported from
-user-space. Filter the others out early.
+Implement a handler for #VC exceptions caused by RDTSC instructions.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/x86/kernel/sev-es.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index d128a9397639..84b5b8f7897a 100644
+index 491537b770fd..061557515f75 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -209,6 +209,26 @@ static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
- 	return result;
+@@ -272,6 +272,23 @@ static enum es_result handle_wbinvd(struct ghcb *ghcb,
+ 	return ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
  }
  
-+static enum es_result context_filter(struct pt_regs *regs, long exit_code)
++static enum es_result handle_rdtsc(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
 +{
-+	enum es_result r = ES_OK;
++	enum es_result ret;
 +
-+	if (user_mode(regs)) {
-+		switch (exit_code) {
-+		/* List of #VC exit-codes we support in user-space */
-+		case SVM_EXIT_EXCP_BASE ... SVM_EXIT_LAST_EXCP:
-+		case SVM_EXIT_CPUID:
-+			r = ES_OK;
-+			break;
-+		default:
-+			r = ES_UNSUPPORTED;
-+			break;
-+		}
-+	}
++	ret = ghcb_hv_call(ghcb, ctxt, SVM_EXIT_RDTSC, 0, 0);
++	if (ret != ES_OK)
++		return ret;
 +
-+	return r;
++	if (!(ghcb_is_valid_rax(ghcb) && ghcb_is_valid_rdx(ghcb)))
++		return ES_VMM_ERROR;
++
++	ctxt->regs->ax = ghcb->save.rax;
++	ctxt->regs->dx = ghcb->save.rdx;
++
++	return ES_OK;
 +}
 +
- static void forward_exception(struct es_em_ctxt *ctxt)
- {
- 	long error_code = ctxt->fi.error_code;
-@@ -245,6 +265,10 @@ dotraplinkage void do_vmm_communication(struct pt_regs *regs, unsigned long exit
- 	ghcb_invalidate(ghcb);
- 	result = init_em_ctxt(&ctxt, regs, exit_code);
- 
-+	/* Check if the exception is supported in the context we came from. */
-+	if (result == ES_OK)
-+		result = context_filter(regs, exit_code);
-+
- 	if (result == ES_OK)
- 		result = handle_vc_exception(&ctxt, ghcb, exit_code);
- 
+ static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
+ 					  struct ghcb *ghcb,
+ 					  unsigned long exit_code,
+@@ -286,6 +303,9 @@ static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = handle_dr7_write(ghcb, ctxt, early);
+ 		break;
++	case SVM_EXIT_RDTSC:
++		result = handle_rdtsc(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_CPUID:
+ 		result = handle_cpuid(ghcb, ctxt);
+ 		break;
 -- 
 2.17.1
 
