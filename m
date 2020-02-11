@@ -2,69 +2,75 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB4FC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72008C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4BD2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533FD215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBKCn0 (ORCPT
+        id S1727936AbgBKCn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 21:43:26 -0500
+        Mon, 10 Feb 2020 21:43:28 -0500
 Received: from mail1.bemta25.messagelabs.com ([195.245.230.2]:36438 "EHLO
         mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727655AbgBKCnZ (ORCPT
+        by vger.kernel.org with ESMTP id S1727747AbgBKCn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 21:43:25 -0500
+        Mon, 10 Feb 2020 21:43:27 -0500
 Received: from [100.112.192.239] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-a.eu-west-1.aws.symcld.net id 56/1B-51549-AC4124E5; Tue, 11 Feb 2020 02:43:22 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRWlGSWpSXmKPExsVy8MN7Xd1TIk5
-  xBscni1rMOd/CYtG8eD2bxaqF19gsLu+aw2bx/lMnk8X/PTvYHdg8tqy8yeTRcuQtq8emVZ1s
-  HvvnrmH3+LxJLoA1ijUzLym/IoE149W3xywFszgrds7aydbAOIuji5GLQ0hgLaPE8puHmboYO
-  YCcSomp/bpdjJwcvAIREp+uvWcEsTkFzCQO975hBrGFBEwlNt97zwpiswnoSDyauZ4JxGYRUJ
-  V4vPUaWI2wQIpE696ZbCDzRQQuMko8efyHDSTBLBAnMathOSvEAkGJkzOfsEDEJSQOvngBtUB
-  L4tyaVYwTGHlnISmbhaRsASPTKkaLpKLM9IyS3MTMHF1DAwNdQ0MjXUNLU10jAwO9xCrdRL3U
-  Ut3y1OISXUO9xPJiveLK3OScFL281JJNjMCwTSk4fGIH49Hl7/UOMUpyMCmJ8m447BgnxJeUn
-  1KZkVicEV9UmpNafIhRhoNDSYL3mrBTnJBgUWp6akVaZg4whmDSEhw8SiK8riBp3uKCxNzizH
-  SI1ClGXY6dR+ctYhZiycvPS5US550IUiQAUpRRmgc3AhbPlxhlpYR5GRkYGIR4ClKLcjNLUOV
-  fMYpzMCoJ8/qCTOHJzCuB2/QK6AgmoCOumziAHFGSiJCSamBauNKeu2gyl9/e0NLO6cxBibqh
-  v5faTF561OXgf37XjOPF+YkcQlfjs0omeBWGrtecznhbek3xtopDT8Nv9AtvWaNXyd7k/V0+u
-  c7CyyJlNrcny2+Hh4xVC30ZmOdXBZ3Lyp736B9/J0Ot/rsTJextN3SPFRXNPSLxLNvoRlpdBf
-  /iE5t4zjvtSGiwrrZgyj604aNMQ/B2s53+3msqA1Vk9UNWBtxIV3gdeC8yYlHX46Kg/53L3u/
-  Zs/HG2qI3ljdeqIWd99I32OTiyPI+SviBkqOz2hfR+7/Vvl1ZIL/11LYIX95Pm/5Nis1T4tGM
-  y2NifVprIaPEN1HtlYZwmsS17h2FwjZxJw3P1HPsV2Ipzkg01GIuKk4EAPqUfr5iAwAA
+        by server-2.bemta.az-a.eu-west-1.aws.symcld.net id B5/1B-51549-AC4124E5; Tue, 11 Feb 2020 02:43:22 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRWlGSWpSXmKPExsVy8MN7Xd1TIk5
+  xBm9ec1jMOd/CYjH/yDlWi8OLXjBaNC9ez2Zx/+tRRoubn76xWlzeNYfNon3jbFaLpdcvMlm8
+  /9TJZNG69wi7xf89O9gtfu6ax2Jxe+JkRgc+jzXz1jB6bFl5k8lj56y77B6bVnWyedy5tofNY
+  //cNewe/X8NPD5vkgvgiGLNzEvKr0hgzTi46ztLwQuOiivNJxgbGA+wdTFycQgJrGWUWH7zMF
+  MXIyeQUynxd9odRhCbV8BUYsnujawgNpuAjsSjmevBalgEVCUuTvwFFhcWcJD4eWwxO8ggEYG
+  TzBKd976ygDjMAtMYJfZ8PMwMMUlQ4uTMJywgNrOAhMTBFy+YIbZpSZxbs4pxAiP3LCRls5CU
+  LWBkWsVonlSUmZ5RkpuYmaNraGCga2hopGtoaaRrYq6XWKWbqJdaqlueWlyia6iXWF6sV1yZm
+  5yTopeXWrKJERj0KQUH9Hcw/lrzXu8QoyQHk5Io74bDjnFCfEn5KZUZicUZ8UWlOanFhxhlOD
+  iUJHivCTvFCQkWpaanVqRl5gAjECYtwcGjJMLrCpLmLS5IzC3OTIdInWLU5bj+fu9SZiGWvPy
+  8VClx3okgRQIgRRmleXAjYMngEqOslDAvIwMDgxBPQWpRbmYJqvwrRnEORiVhXl+QKTyZeSVw
+  m14BHcEEdMR1EweQI0oSEVJSDUzV7lMZw6e0e1TNuR530IHNdrGCrvKLQ9ckzE0nbQs89a9nx
+  maNa6bnzvMydDX/0Enx3BNqJeBRU/17yZaiSKf4+ffv3L34ae9Ohy5jW/FHqjapvusPLZT0zZ
+  BUUyt0ftdv0R/h2PP8r1J9mZXd1s/c+3ek7f2+b+c9vkVvDR/J71/d621ilBrsGlXjssRC8oz
+  Npnd8rOeuHBN80CrZGGfkubeW899d3emWfGqrXlbr9Ez56avZmH1A8+q3RSLXFoXE7N711mvd
+  kYqQGxdFDra6bTu69kVpYv4Oc7GW6qvV0Zt3yFmX7rSe+GGz8/w5+muZXkV8kMi+X5WU2TrN8
+  Vwr548FfX03QnQcltyMPqXEUpyRaKjFXFScCABS5bYCgQMAAA==
 X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-15.tower-262.messagelabs.com!1581389001!1529582!3
+X-Msg-Ref: server-15.tower-262.messagelabs.com!1581389001!1529582!2
 X-Originating-IP: [193.240.239.45]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.44.25; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 6618 invoked from network); 11 Feb 2020 02:43:22 -0000
+Received: (qmail 6598 invoked from network); 11 Feb 2020 02:43:22 -0000
 Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
   by server-15.tower-262.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 11 Feb 2020 02:43:22 -0000
 Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
  NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
  14.3.468.0; Tue, 11 Feb 2020 03:43:20 +0100
 Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 2688413F670; Tue, 11 Feb 2020 11:43:19 +0900 (KST)
-Message-ID: <43fb0155545edb2b722456cee1f1e97e13d14a56.1581383604.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1581383604.git.Roy.Im@diasemi.com>
-References: <cover.1581383604.git.Roy.Im@diasemi.com>
+ 24D7413F671; Tue, 11 Feb 2020 11:43:19 +0900 (KST)
+Message-ID: <cover.1581383604.git.Roy.Im@diasemi.com>
 From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Tue, 11 Feb 2020 10:13:23 +0900
-Subject: [RESEND PATCH V8 1/3] MAINTAINERS: da7280 updates to the Dialog
- Semiconductor search terms
+Date:   Tue, 11 Feb 2020 10:13:24 +0900
+Subject: [RESEND PATCH V8 0/3]  da7280: haptic driver submission
 To:     "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Support Opensource <support.opensource@diasemi.com>
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,44 +78,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the da7280 bindings doc and driver to the Dialog
-Semiconductor support list.
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+In this patch set the following is provided:
 
----
-v8: No changes.
-v7: No changes.
-v6: No changes.
-v5: No changes.
-v4: No changes.
-v3: No changes.
-v2: No changes.
+[PATCH V8 1/3] MAINTAINERS file update for DA7280
+[PATCH V8 2/3] DA7280 DT Binding
+[PATCH V8 3/3] DA7280 Driver
 
+This patch applies against linux-next and v5.5
 
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 56765f5..3f71379 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4856,6 +4856,7 @@ S:	Supported
- F:	Documentation/hwmon/da90??.rst
- F:	Documentation/devicetree/bindings/mfd/da90*.txt
- F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
-+F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
- F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
- F:	Documentation/devicetree/bindings/regulator/da92*.txt
- F:	Documentation/devicetree/bindings/regulator/slg51000.txt
-@@ -4865,6 +4866,7 @@ F:	drivers/gpio/gpio-da90??.c
- F:	drivers/hwmon/da90??-hwmon.c
- F:	drivers/iio/adc/da91??-*.c
- F:	drivers/input/misc/da90??_onkey.c
-+F:	drivers/input/misc/da72??.[ch]
- F:	drivers/input/touchscreen/da9052_tsi.c
- F:	drivers/leds/leds-da90??.c
- F:	drivers/mfd/da903x.c
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
+
+ .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1688 ++++++++++++++++++++
+ drivers/input/misc/da7280.h                        |  412 +++++
+ 6 files changed, 2225 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+ create mode 100644 drivers/input/misc/da7280.h
+
 -- 
 end-of-patch for RESEND PATCH V8
 
