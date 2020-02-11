@@ -7,42 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4517DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739B9C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C86214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538DD20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgBKMtO (ORCPT
+        id S1729140AbgBKMtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:49:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46088 "EHLO
+        Tue, 11 Feb 2020 07:49:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46072 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728617AbgBKMs3 (ORCPT
+        with ESMTP id S1728954AbgBKMs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:48:29 -0500
+        Tue, 11 Feb 2020 07:48:27 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j1Uxi-0007kU-Nn; Tue, 11 Feb 2020 13:48:22 +0100
+        id 1j1Uxj-0007kr-3t; Tue, 11 Feb 2020 13:48:23 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 67AF91C2018;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B6D2F1C2017;
         Tue, 11 Feb 2020 13:48:22 +0100 (CET)
 Date:   Tue, 11 Feb 2020 12:48:22 -0000
-From:   "tip-bot2 for Davidlohr Bueso" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking/percpu-rwsem: Fold __percpu_up_read()
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>, x86 <x86@kernel.org>,
+Subject: [tip: locking/core] locking/rwsem: Remove RWSEM_OWNER_UNKNOWN
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200131151540.212415454@infradead.org>
-References: <20200131151540.212415454@infradead.org>
+In-Reply-To: <20200204092228.GP14946@hirez.programming.kicks-ass.net>
+References: <20200204092228.GP14946@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <158142530217.411.5840640700611865076.tip-bot2@tip-bot2>
+Message-ID: <158142530249.411.6918743680307729294.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,103 +60,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     ac8dec420970f5cbaf2f6eda39153a60ec5b257b
-Gitweb:        https://git.kernel.org/tip/ac8dec420970f5cbaf2f6eda39153a60ec5b257b
-Author:        Davidlohr Bueso <dave@stgolabs.net>
-AuthorDate:    Mon, 18 Nov 2019 15:19:35 -08:00
+Commit-ID:     bcba67cd806800fa8e973ac49dbc7d2d8fb3e55e
+Gitweb:        https://git.kernel.org/tip/bcba67cd806800fa8e973ac49dbc7d2d8fb3e55e
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Tue, 04 Feb 2020 09:34:37 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 11 Feb 2020 13:10:58 +01:00
+CommitterDate: Tue, 11 Feb 2020 13:10:57 +01:00
 
-locking/percpu-rwsem: Fold __percpu_up_read()
+locking/rwsem: Remove RWSEM_OWNER_UNKNOWN
 
-Now that __percpu_up_read() is only ever used from percpu_up_read()
-merge them, it's a small function.
+Remove the now unused RWSEM_OWNER_UNKNOWN hack. This hack breaks
+PREEMPT_RT and getting rid of it was the entire motivation for
+re-writing the percpu rwsem.
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+The biggest problem is that it is fundamentally incompatible with any
+form of Priority Inheritance, any exclusively held lock must have a
+distinct owner.
+
+Requested-by: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
 Acked-by: Will Deacon <will@kernel.org>
 Acked-by: Waiman Long <longman@redhat.com>
-Link: https://lkml.kernel.org/r/20200131151540.212415454@infradead.org
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
+Link: https://lkml.kernel.org/r/20200204092228.GP14946@hirez.programming.kicks-ass.net
 ---
- include/linux/percpu-rwsem.h  | 19 +++++++++++++++----
- kernel/exit.c                 |  1 +
- kernel/locking/percpu-rwsem.c | 15 ---------------
- 3 files changed, 16 insertions(+), 19 deletions(-)
+ include/linux/rwsem.h  | 6 ------
+ kernel/locking/rwsem.c | 2 --
+ 2 files changed, 8 deletions(-)
 
-diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
-index f5ecf6a..5e033fe 100644
---- a/include/linux/percpu-rwsem.h
-+++ b/include/linux/percpu-rwsem.h
-@@ -43,7 +43,6 @@ is_static struct percpu_rw_semaphore name = {				\
- 	__DEFINE_PERCPU_RWSEM(name, static)
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index 00d6054..8a418d9 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -53,12 +53,6 @@ struct rw_semaphore {
+ #endif
+ };
  
- extern bool __percpu_down_read(struct percpu_rw_semaphore *, bool);
--extern void __percpu_up_read(struct percpu_rw_semaphore *);
- 
- static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
+-/*
+- * Setting all bits of the owner field except bit 0 will indicate
+- * that the rwsem is writer-owned with an unknown owner.
+- */
+-#define RWSEM_OWNER_UNKNOWN	(-2L)
+-
+ /* In all implementations count != 0 means locked */
+ static inline int rwsem_is_locked(struct rw_semaphore *sem)
  {
-@@ -103,10 +102,22 @@ static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
- 	/*
- 	 * Same as in percpu_down_read().
- 	 */
--	if (likely(rcu_sync_is_idle(&sem->rss)))
-+	if (likely(rcu_sync_is_idle(&sem->rss))) {
- 		__this_cpu_dec(*sem->read_count);
--	else
--		__percpu_up_read(sem); /* Unconditional memory barrier */
-+	} else {
-+		/*
-+		 * slowpath; reader will only ever wake a single blocked
-+		 * writer.
-+		 */
-+		smp_mb(); /* B matches C */
-+		/*
-+		 * In other words, if they see our decrement (presumably to
-+		 * aggregate zero, as that is the only time it matters) they
-+		 * will also see our critical section.
-+		 */
-+		__this_cpu_dec(*sem->read_count);
-+		rcuwait_wake_up(&sem->writer);
-+	}
- 	preempt_enable();
- }
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 81c0d75..e6f437b 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -659,8 +659,6 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem,
+ 	unsigned long flags;
+ 	bool ret = true;
  
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2833ffb..f64a8f9 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -258,6 +258,7 @@ void rcuwait_wake_up(struct rcuwait *w)
- 		wake_up_process(task);
- 	rcu_read_unlock();
- }
-+EXPORT_SYMBOL_GPL(rcuwait_wake_up);
- 
- /*
-  * Determine if a process group is "orphaned", according to the POSIX
-diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
-index a136677..8048a9a 100644
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -177,21 +177,6 @@ bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
- }
- EXPORT_SYMBOL_GPL(__percpu_down_read);
- 
--void __percpu_up_read(struct percpu_rw_semaphore *sem)
--{
--	smp_mb(); /* B matches C */
--	/*
--	 * In other words, if they see our decrement (presumably to aggregate
--	 * zero, as that is the only time it matters) they will also see our
--	 * critical section.
--	 */
--	__this_cpu_dec(*sem->read_count);
+-	BUILD_BUG_ON(!(RWSEM_OWNER_UNKNOWN & RWSEM_NONSPINNABLE));
 -
--	/* Prod writer to re-evaluate readers_active_check() */
--	rcuwait_wake_up(&sem->writer);
--}
--EXPORT_SYMBOL_GPL(__percpu_up_read);
--
- #define per_cpu_sum(var)						\
- ({									\
- 	typeof(var) __sum = 0;						\
+ 	if (need_resched()) {
+ 		lockevent_inc(rwsem_opt_fail);
+ 		return false;
