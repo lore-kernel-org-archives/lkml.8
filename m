@@ -2,189 +2,125 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF28C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0761DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070B120637
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C222086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRgMwCSc"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ReYqpjfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbgBKTaO (ORCPT
+        id S1731679AbgBKTbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:30:14 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42427 "EHLO
+        Tue, 11 Feb 2020 14:31:04 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41871 "EHLO
         mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgBKTaN (ORCPT
+        with ESMTP id S1731667AbgBKTbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:30:13 -0500
-Received: by mail-qk1-f193.google.com with SMTP id q15so11280157qke.9;
-        Tue, 11 Feb 2020 11:30:13 -0800 (PST)
+        Tue, 11 Feb 2020 14:31:03 -0500
+Received: by mail-qk1-f193.google.com with SMTP id d11so11288484qko.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:31:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mtc3nhV1yFjtyZ72uQDRZQmFUp1an9UYV0/ZePw2JCY=;
-        b=JRgMwCSc06Tbaq6tXLRRPsebZ4U51bfbGDh7uFD7ElvOgNWtSNEHQzFpbPYOXHSaxr
-         MvOIVziC5npjqgPFgaL6hfAYsh0oy77XbPBODfewzN0QV0kS9WReWl0qpferJtWLw+v3
-         4sGJXUMswY5s6j1YrY0vCIP+BpJ+NOViRQB/J5kkDd1ah1Xbi7lOl+Wwu14s9XlM8H2h
-         VCHmLzd8yNWObKAOJGl4AeW2vCGGsCV07sgn2zDf/J6Nliov/42GiIU62gog/VFe3XoL
-         9Ye2hz0euj56TKlNinXUh/ZeOdGobudVUgeItilRtOEn12JA6HnfAPOqWKLYoERZaxd4
-         TXRg==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SE2lIQx3P5mwY3EQaRSCUgCct2sPIMvI9iCNgtybvd8=;
+        b=ReYqpjfPtN0mGGjim5Vxe1D7me7yyrMd6UiO9aJzmfLByAaHdNIpNtjB7n9qUXmSFK
+         ugbHGIs7g+cxoaYJKyWMPXVoHRIpfbOJc6bSrffd7tbAPYExseRBxWT8fqYhJRuyEDR/
+         EnaUw8YK9RIQtJs8emRfcYw1FZSNtripVX5NARu5L+oeYeanwYE1TuLzfAkLz06lmhey
+         KYplkiBKiR91Vn6oMybNQNj3JC2O/Zv5Zm0qsP9fsU+yYoTa+wpQkt5GMLaWHWpd/iAY
+         BeCMdehRlvjIbQYeFvnPpTl0bz7+9JMPd5RbW/52X+D2jSSvxfEIWumljFERaAeX8gRX
+         LyKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mtc3nhV1yFjtyZ72uQDRZQmFUp1an9UYV0/ZePw2JCY=;
-        b=lzg7xm/o7FI+0mW5viT80SHA7KUAqgSAGD2z5dc8DbWnVkYSwqhZf+fWkZscCV1mq5
-         mbj22Bic4mU0X/atygI6gfbxwD6kcftAMoXKNKoC6ZoaarhCeHNtSPyxRFPo4zj2ZJRq
-         FRGjFZC2iSNTY6XEkOcN+yIwczWCuoG1u32Im7BslaH4frgqCHRI7FoCEIFmIfDPkIAa
-         NIW9ekPK31I7SFCzD0tw9vdGR+WFyr0Iw/4vpxPpVgJ0ne2FUY7j3Hu03ZGZ4mja+c+f
-         Plgu8ni7LFitfzbWsx+mFgWANzjkRb26X2Iq2OLIQ8cuGbuYSDpZBH/fpNVNPDq7kdc/
-         +23w==
-X-Gm-Message-State: APjAAAU2ESK/M+oVitIx8Mr49R6D7itK2Pa3acFKW4XWyThMVa5Go3ZH
-        eCB2EhWAyI5YCFWBdolQJbH8S6tlIUsx/kk7YeU=
-X-Google-Smtp-Source: APXvYqzDRL8WUdWdfu/NIMmgyHqNWTLG1ythYteS9iJVNiC9RoJWX2HGhndP6u2TLymhMdgC8Cr216jYUxnmWOh4f58=
-X-Received: by 2002:ae9:eb48:: with SMTP id b69mr7708132qkg.39.1581449412579;
- Tue, 11 Feb 2020 11:30:12 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SE2lIQx3P5mwY3EQaRSCUgCct2sPIMvI9iCNgtybvd8=;
+        b=YOJ51BohuEaqJPVW9LH/CU5xe1bsebZ+JNyTP7FQ/JABFbcNifjovSu3JhCC+7QdBp
+         fbL0jRDmnby5uthZf0eywFliiNtk3ZK1nwbgu0vrpLNI5YW3V6VG2tfHmEAADUZVwvNR
+         /9jP/bbPContgqQUhQn7Gc/Apt6URex84tZv0YoG4rBmL9LY2TdjGtxr06nwLFkknKxE
+         9nOEbaQV9p9Cw3w4mLAY8OyZlQ2jRp5d231jsVmbO2h+QIeA9JSy4Jk2WYQom64CHNQ/
+         KLICuDMAY8wOUHYRJ4Q1kT1tnG/ihxE6R+unvLfFgq1H/SMGUaOToXokNJwjPVXx4PE9
+         lUNA==
+X-Gm-Message-State: APjAAAU7cXvVU6ibrwuQkG+zzLdPVfvW0YMvTZhYkCZgW8iki5ItdzER
+        SZKqcAp+hGD2qks58hdn9dN5Tg==
+X-Google-Smtp-Source: APXvYqwcqY2c2mfW1BVMHT24Xz0JXGOIxC0CzaJ9T0HaNd3CVrTU9BYlUHiRtqnXvP3T7MhdUQBaOg==
+X-Received: by 2002:a05:620a:1010:: with SMTP id z16mr4305510qkj.237.1581449462363;
+        Tue, 11 Feb 2020 11:31:02 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:3189])
+        by smtp.gmail.com with ESMTPSA id z21sm2537612qka.122.2020.02.11.11.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 11:31:01 -0800 (PST)
+Date:   Tue, 11 Feb 2020 14:31:01 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200211193101.GA178975@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
 MIME-Version: 1.0
-References: <20200210200737.13866-1-dxu@dxuuu.xyz> <20200210200737.13866-3-dxu@dxuuu.xyz>
-In-Reply-To: <20200210200737.13866-3-dxu@dxuuu.xyz>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 11 Feb 2020 11:30:01 -0800
-Message-ID: <CAEf4BzZfGXHL36ntjkQsTTEEa9yzqnS=Xs4XCibejpo5AKGpuQ@mail.gmail.com>
-Subject: Re: [PATCH v7 bpf-next RESEND 2/2] selftests/bpf: add
- bpf_read_branch_records() selftest
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 12:09 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> Add a selftest to test:
->
-> * default bpf_read_branch_records() behavior
-> * BPF_F_GET_BRANCH_RECORDS_SIZE flag behavior
-> * error path on non branch record perf events
-> * using helper to write to stack
-> * using helper to write to map
->
-> On host with hardware counter support:
->
->     # ./test_progs -t perf_branches
->     #27/1 perf_branches_hw:OK
->     #27/2 perf_branches_no_hw:OK
->     #27 perf_branches:OK
->     Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
->
-> On host without hardware counter support (VM):
->
->     # ./test_progs -t perf_branches
->     #27/1 perf_branches_hw:OK
->     #27/2 perf_branches_no_hw:OK
->     #27 perf_branches:OK
->     Summary: 1/2 PASSED, 1 SKIPPED, 0 FAILED
->
-> Also sync tools/include/uapi/linux/bpf.h.
->
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> ---
->  tools/include/uapi/linux/bpf.h                |  25 ++-
->  .../selftests/bpf/prog_tests/perf_branches.c  | 182 ++++++++++++++++++
->  .../selftests/bpf/progs/test_perf_branches.c  |  74 +++++++
->  3 files changed, 280 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
->  create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
->
+On Tue, Feb 11, 2020 at 02:05:38PM -0500, Rik van Riel wrote:
+> On Tue, 2020-02-11 at 12:55 -0500, Johannes Weiner wrote:
+> > The VFS inode shrinker is currently allowed to reclaim inodes with
+> > populated page cache. As a result it can drop gigabytes of hot and
+> > active page cache on the floor without consulting the VM (recorded as
+> > "inodesteal" events in /proc/vmstat).
+> > 
+> > This causes real problems in practice. Consider for example how the
+> > VM
+> > would cache a source tree, such as the Linux git tree. As large parts
+> > of the checked out files and the object database are accessed
+> > repeatedly, the page cache holding this data gets moved to the active
+> > list, where it's fully (and indefinitely) insulated from one-off
+> > cache
+> > moving through the inactive list.
+> 
+> > This behavior of invalidating page cache from the inode shrinker goes
+> > back to even before the git import of the kernel tree. It may have
+> > been less noticeable when the VM itself didn't have real workingset
+> > protection, and floods of one-off cache would push out any active
+> > cache over time anyway. But the VM has come a long way since then and
+> > the inode shrinker is now actively subverting its caching strategy.
+> 
+> Two things come to mind when looking at this:
+> - highmem
+> - NUMA
+> 
+> IIRC one of the reasons reclaim is done in this way is
+> because a page cache page in one area of memory (highmem,
+> or a NUMA node) can end up pinning inode slab memory in
+> another memory area (normal zone, other NUMA node).
 
-[...]
+That's a good point, highmem does ring a bell now that you mention it.
 
-> +       /* generate some branches on cpu 0 */
-> +       CPU_ZERO(&cpu_set);
-> +       CPU_SET(0, &cpu_set);
-> +       err = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
-> +       if (CHECK(err, "set_affinity", "cpu #0, err %d\n", err))
-> +               goto out_free_pb;
-> +       /* spin the loop for a while (random high number) */
-> +       for (i = 0; i < 1000000; ++i)
-> +               ++j;
-> +
+If we still care, I think this could be solved by doing something
+similar to what we do with buffer_heads_over_limit: allow a lowmem
+allocation to reclaim page cache inside the highmem zone if the bhs
+(or inodes in this case) have accumulated excessively.
 
-test_perf_branches__detach here?
-
-> +       /* read perf buffer */
-> +       err = perf_buffer__poll(pb, 500);
-> +       if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
-> +               goto out_free_pb;
-> +
-> +       if (CHECK(!ok, "ok", "not ok\n"))
-> +               goto out_free_pb;
-> +
-
-[...]
-
-> diff --git a/tools/testing/selftests/bpf/progs/test_perf_branches.c b/tools/testing/selftests/bpf/progs/test_perf_branches.c
-> new file mode 100644
-> index 000000000000..60327d512400
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/test_perf_branches.c
-> @@ -0,0 +1,74 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2019 Facebook
-> +
-> +#include <stddef.h>
-> +#include <linux/ptrace.h>
-> +#include <linux/bpf.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include "bpf_trace_helpers.h"
-> +
-> +struct fake_perf_branch_entry {
-> +       __u64 _a;
-> +       __u64 _b;
-> +       __u64 _c;
-> +};
-> +
-> +struct output {
-> +       int required_size;
-> +       int written_stack;
-> +       int written_map;
-> +};
-> +
-> +struct {
-> +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-> +       __uint(key_size, sizeof(int));
-> +       __uint(value_size, sizeof(int));
-> +} perf_buf_map SEC(".maps");
-> +
-> +typedef struct fake_perf_branch_entry fpbe_t[30];
-> +
-> +struct {
-> +       __uint(type, BPF_MAP_TYPE_ARRAY);
-> +       __uint(max_entries, 1);
-> +       __type(key, __u32);
-> +       __type(value, fpbe_t);
-> +} scratch_map SEC(".maps");
-
-Can you please use global variables instead of array and
-perf_event_array? Would make BPF side clearer and userspace simpler.
-struct output member will just become variables.
-
-[...]
+AFAICS, we haven't done anything similar for NUMA, so it might not be
+much of a problem there. I could imagine this is in part because NUMA
+nodes tend to be more balanced in size, and the ratio between cache
+memory and inode/bh memory means that these objects won't turn into a
+significant externality. Whereas with extreme highmem:lowmem ratios,
+they can.
