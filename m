@@ -2,141 +2,124 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C09BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82195C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708852073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562E42082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mkl5Gmid"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="z9aOCVC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgBKXFg (ORCPT
+        id S1727891AbgBKXFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:05:36 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41574 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727806AbgBKXFg (ORCPT
+        Tue, 11 Feb 2020 18:05:40 -0500
+Received: from gateway33.websitewelcome.com ([192.185.145.190]:38695 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727804AbgBKXFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:05:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581462335;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QeJkTOJSqucr7TuGuD5+LQV+rMV+lFuwF5Rz1IX0QZ4=;
-        b=Mkl5GmidmZx94jr2ywkEmmjmxtF11fqocIySPxUkGjdWa0YufKjyx8kFNTQv6msFjJR1HO
-        24Udf/iN03DBcvUsGVIWU+RZxjM+5uzOXnWdIhVioFgMFZvKdDoDnc/ohZvn0Za+7kekse
-        MKWBA6XqWBWW17JyRkukd7cN1zqVrnA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-HcVH2L5WMN-9KW4I4nN_ww-1; Tue, 11 Feb 2020 18:05:31 -0500
-X-MC-Unique: HcVH2L5WMN-9KW4I4nN_ww-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 288951005502;
-        Tue, 11 Feb 2020 23:05:29 +0000 (UTC)
-Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E2CCF26FAA;
-        Tue, 11 Feb 2020 23:05:25 +0000 (UTC)
-Subject: [PATCH 1/7] vfio: Include optional device match in vfio_device_ops
- callbacks
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
-        bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com, cohuck@redhat.com
-Date:   Tue, 11 Feb 2020 16:05:25 -0700
-Message-ID: <158146232551.16827.14170770732904274160.stgit@gimli.home>
-In-Reply-To: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        Tue, 11 Feb 2020 18:05:38 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 6863D815860
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:05:37 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1eb3jGmIlSl8q1eb3jzrDj; Tue, 11 Feb 2020 17:05:37 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=r6W7e99wqSxpJufs0pmZ8FH4EPi49mq2sFzO815awQ4=; b=z9aOCVC2uJ4Xr1XmZn01NiP+GV
+        Q0R2flt6t9U23h95xgj7Yombr8L7FIcJ5DtOXkFjaY0/5hj6eRIrqdq4UznkQWE0q5BJNS7HLGkTG
+        lVP2GLTZ+BlvyIbP5N6McBQajtsnX5axvz+uEoHHibx353ZCCDvailIDtb3HcgM7xxZv45CKCsbsV
+        2V3/dMK+Vh/Twg0NPJ7MLFA2UqLsqRDoAAN+pf6qRI7spN549Bl5Fdq16mT1THe/fzWa/sh+sAu9e
+        sipPrHp8E3REOjkFAjvh2dw6rikqKEyZOlw2hFSG3mHhesKJhtiJAdZ3QF17g8L/CuHQ88Baxwjks
+        c7uaWtsA==;
+Received: from [200.68.140.36] (port=4449 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1eb1-003SYa-Ll; Tue, 11 Feb 2020 17:05:35 -0600
+Date:   Tue, 11 Feb 2020 17:08:10 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] firewire: ohci: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200211230810.GA12211@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1eb1-003SYa-Ll
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:4449
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow bus drivers to provide their own callback to match a device to
-the user provided string.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/vfio/vfio.c  |   20 ++++++++++++++++----
- include/linux/vfio.h |    4 ++++
- 2 files changed, 20 insertions(+), 4 deletions(-)
+ drivers/firewire/ohci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index c8482624ca34..0bd77d6ea691 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -875,11 +875,23 @@ EXPORT_SYMBOL_GPL(vfio_device_get_from_dev);
- static struct vfio_device *vfio_device_get_from_name(struct vfio_group *group,
- 						     char *buf)
- {
--	struct vfio_device *it, *device = NULL;
-+	struct vfio_device *it, *device = ERR_PTR(-ENODEV);
- 
- 	mutex_lock(&group->device_lock);
- 	list_for_each_entry(it, &group->device_list, group_next) {
--		if (!strcmp(dev_name(it->dev), buf)) {
-+		int ret;
-+
-+		if (it->ops->match) {
-+			ret = it->ops->match(it->device_data, buf);
-+			if (ret < 0) {
-+				device = ERR_PTR(ret);
-+				break;
-+			}
-+		} else {
-+			ret = !strcmp(dev_name(it->dev), buf);
-+		}
-+
-+		if (ret) {
- 			device = it;
- 			vfio_device_get(device);
- 			break;
-@@ -1430,8 +1442,8 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
- 		return -EPERM;
- 
- 	device = vfio_device_get_from_name(group, buf);
--	if (!device)
--		return -ENODEV;
-+	if (IS_ERR(device))
-+		return PTR_ERR(device);
- 
- 	ret = device->ops->open(device->device_data);
- 	if (ret) {
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index e42a711a2800..029694b977f2 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -26,6 +26,9 @@
-  *         operations documented below
-  * @mmap: Perform mmap(2) on a region of the device file descriptor
-  * @request: Request for the bus driver to release the device
-+ * @match: Optional device name match callback (return: 0 for no-match, >0 for
-+ *         match, -errno for abort (ex. match with insufficient or incorrect
-+ *         additional args)
-  */
- struct vfio_device_ops {
- 	char	*name;
-@@ -39,6 +42,7 @@ struct vfio_device_ops {
- 			 unsigned long arg);
- 	int	(*mmap)(void *device_data, struct vm_area_struct *vma);
- 	void	(*request)(void *device_data, unsigned int count);
-+	int	(*match)(void *device_data, char *buf);
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 45c048751f3b..afc022b4246f 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -124,7 +124,7 @@ struct descriptor_buffer {
+ 	dma_addr_t buffer_bus;
+ 	size_t buffer_size;
+ 	size_t used;
+-	struct descriptor buffer[0];
++	struct descriptor buffer[];
  };
  
- extern struct iommu_group *vfio_iommu_group_get(struct device *dev);
+ struct context {
+-- 
+2.25.0
 
