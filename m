@@ -2,106 +2,170 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A49BC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC688C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734EE20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C222520842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cKJVTis8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="faJGcOsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgBKK4e (ORCPT
+        id S1728462AbgBKK5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:56:34 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60260 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727884AbgBKK4d (ORCPT
+        Tue, 11 Feb 2020 05:57:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60630 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727558AbgBKK5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:56:33 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BAuKJR011415;
-        Tue, 11 Feb 2020 11:56:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=cV1Wais5QMnCi8AYrjauwcQtc7x8Akg7kC3DCHNTrfI=;
- b=cKJVTis8lYfFtJmiAwNtEstgu8ZuVu2qme2/jqgNfi7pG9/H8KjgeBt4JOPrcc/790wY
- ijOpUeKHTdkXZiW4s2GpQ5TARF1uFND/zPKxeJVMfGH/ryd4E4nglrEkvomKjcIfQ8uk
- NpGvOdYh0TnLxQYM7CLRDaaaz6ajHx3kv3l4loO3SAabEbPQEctkz8x6EQLXSmPLbPCv
- WwGQUUXgqs/50JLQEHG9Ho8g5q+ouF1s7IdkRvtR033cAT0Cpqu59gjz81I910V1mZ2x
- mBA1tHHsuktI3Gbi2QXPZE6za+GsD7erMLutX7W/4mdOMHvDKiNhlqVYISlpZIpGqecx PQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9m85f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 11:56:25 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A7594100050;
-        Tue, 11 Feb 2020 11:56:20 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 96D282AEAB8;
-        Tue, 11 Feb 2020 11:56:20 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Feb 2020 11:56:20
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <vilhelm.gray@gmail.com>, <alexandre.torgue@st.com>,
-        <mcoquelin.stm32@gmail.com>, <benjamin.gaignard@st.com>,
-        <fabrice.gasnier@st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] counter: stm32-timer-cnt: remove iio headers
-Date:   Tue, 11 Feb 2020 11:56:06 +0100
-Message-ID: <1581418566-31954-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 11 Feb 2020 05:57:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581418638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zHDZin+UZkvf57OXTiAEW8DlkByJ4zhgnoIg7b8L+NE=;
+        b=faJGcOsbQf9aU4IBHUxmzJEiwYkD+olJJ/UH+ZW2HYb4qPGWub9FRIDhhU5xrWyB6N7s8J
+        uqLZMjo73Jgitoa+EyhmsNAo4dFc4l6petiYQcMmYno4aBRLBj5S5OCbizA40GWH+nzAEG
+        VxHn6MznHSUPx5HUC1b4SYk/LiD3IY0=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-40-K3g9EBoYNGu5hbs7vf_xWg-1; Tue, 11 Feb 2020 05:57:15 -0500
+X-MC-Unique: K3g9EBoYNGu5hbs7vf_xWg-1
+Received: by mail-qt1-f197.google.com with SMTP id c8so6299378qte.22
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 02:57:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zHDZin+UZkvf57OXTiAEW8DlkByJ4zhgnoIg7b8L+NE=;
+        b=OXLgaVf3tzuM9Uoq4hlAurf+RPGU8UGmNlu7SizHGgF+nn0eZ8T+KEY6bHMPUe32zT
+         O4L/+3iJM6pOLNthCIOKFuFzrlWou29ZiUyHxbDtOZJzwJluu+Sd0ljFSPrJqrkMl3xx
+         rZ3RkfhK/LWNfBSFgFcEAV48NNO3E1Kd3UZ/rHKPW23OhnGDhKqDcjvqJoGd8iwiVDoz
+         +9NSpRqLyErNNNnDFHx/gMiyK6o49mxe/+fXXgUpm8TkO3QH4V98hvcnHx5QbjeUjSc/
+         jnsRxVI+u9hqaYIeknuVRJ9+/TtkrUU+HAuv3eNKfJG6F02GK8I5fEGtPTV1s3McGCd0
+         oeIA==
+X-Gm-Message-State: APjAAAWyOfGsIvO7iqk87lO0F8vdSVd8MJyCquuPjrZdfBEs2PnWbNzm
+        pzM7C+fUjTC26SbAR3/6s64C6ny9tS9v+X0Fhn3nelzN2/ZaMMqVWyRTKQH2LIOCmwHTDmx9nJP
+        M+V5SXLE/oqR0/OMf87+QGNTo
+X-Received: by 2002:ac8:6618:: with SMTP id c24mr1791420qtp.327.1581418634810;
+        Tue, 11 Feb 2020 02:57:14 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxcqApMTJKfRU4KaIK2j3dYSSGgI3NBh3ICYMKJb9stGPpMG+yyEwb6XYA+WHcmJ3qLyBYqvA==
+X-Received: by 2002:ac8:6618:: with SMTP id c24mr1791404qtp.327.1581418634534;
+        Tue, 11 Feb 2020 02:57:14 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id z1sm1872926qtq.69.2020.02.11.02.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 02:57:13 -0800 (PST)
+Date:   Tue, 11 Feb 2020 05:57:09 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Chao Peng <chao.p.peng@linux.intel.com>
+Cc:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+        jasowang@redhat.com, slp@redhat.com,
+        virtio-dev@lists.oasis-open.org, qemu-devel@nongnu.org,
+        gerry@linux.alibaba.com, jing2.liu@linux.intel.com
+Subject: Re: [PATCH v2 0/5] virtio mmio specification enhancement
+Message-ID: <20200211053953-mutt-send-email-mst@kernel.org>
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <20200210062938-mutt-send-email-mst@kernel.org>
+ <20200211160541.GA37446@chaop.bj.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_03:2020-02-10,2020-02-11 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211160541.GA37446@chaop.bj.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The stm32-timer-cnt driver doesn't use the iio interface. The iio headers
-aren't relevant and can be removed as reported by William in [1].
-With this change, mod_devicetable.h needs to be added to define the
-'of_device_id' struct.
+On Tue, Feb 11, 2020 at 04:05:41PM +0000, Chao Peng wrote:
+> On Mon, Feb 10, 2020 at 06:44:50AM -0500, Michael S. Tsirkin wrote:
+> > On Mon, Feb 10, 2020 at 05:05:16PM +0800, Zha Bin wrote:
+> > > We have compared the number of files and the lines of code between
+> > > virtio-mmio and virio-pci.
+> > > 
+> > > 				Virtio-PCI	    Virtio-MMIO	
+> > > 	number of files(Linux)	    161			1
+> > > 	lines of code(Linux)	    78237		538
+> > 
+> > 
+> > 
+> > Something's very wrong here. virtio PCI is 161 files?
+> > Are you counting the whole PCI subsystem?
+> 
+> Right, that is just a rough statistics.
 
-[1] https://lkml.org/lkml/2020/2/10/1516
+Please try not to make them look so wrong then.
+E.g. you don't include drivers/base/platform-msi.c for
+mmio do you? Your patch brings a bunch of code in there.
 
-Reported-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
-Note this applies on top of:
-- "counter: stm32-timer-cnt: add power management support"
----
- drivers/counter/stm32-timer-cnt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> Surely enough, some drivers will
+> never get enabled in a typcial config.
+> 
+> > Sure enough:
+> > 
+> > $ find drivers/pci -name '*c' |wc -l
+> > 150
+> 
+> and plus:
+> $ find arch/x86/pci/ -name '*c' |wc -l
+> 22
 
-diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-index 50496f4..ef2a974 100644
---- a/drivers/counter/stm32-timer-cnt.c
-+++ b/drivers/counter/stm32-timer-cnt.c
-@@ -8,9 +8,8 @@
-  *
-  */
- #include <linux/counter.h>
--#include <linux/iio/iio.h>
--#include <linux/iio/types.h>
- #include <linux/mfd/stm32-timers.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
--- 
-2.7.4
+But what's the point? This is code that is maintained by PCI core
+people anyway.
+
+> > 
+> > That's not reasonable, this includes a bunch of drivers that
+> > never run on a typical hypervisor.
+> > 
+> > MMIO is also not as small as you are trying to show:
+> > 
+> > $ cloc drivers/virtio/virtio_mmio.c include/uapi/linux/virtio_mmio.h
+> >        2 text files.
+> >        2 unique files.                              
+> >        0 files ignored.
+> > 
+> > github.com/AlDanial/cloc v 1.82  T=0.01 s (230.7 files/s, 106126.5 lines/s)
+> > -------------------------------------------------------------------------------
+> > Language                     files          blank        comment           code
+> > -------------------------------------------------------------------------------
+> > C                                1            144            100            535
+> > C/C++ Header                     1             39             66             36
+> > -------------------------------------------------------------------------------
+> > SUM:                             2            183            166            571
+> > -------------------------------------------------------------------------------
+> > 
+> > 
+> > I don't doubt MMIO is smaller than PCI. Of course that's because it has
+> > no features to speak of - just this patch already doubles it's size. If
+> > we keep doing that because we want the features then they will reach
+> > the same size in about 4 iterations.
+> 
+> Since current virtio-mmio size is small enough, so adding any notable
+> feature would easily double it.
+
+But really unlike PCI this is just PV stuff that is not reused by
+anyone. We end up maintaining all this by ourselves.
+
+> I have no objection that it may one day
+> reach the same level of PCI, but in this patch some are actually
+> generic changes and for MSI specific code we provide the option to
+> confige away.
+> 
+> Thanks,
+> Chao
+
+The option will make it fall down at runtime but
+it does not actually seem to remove all of the overhead.
+
+
+
+> > 
+> > 
+> > -- 
+> > MST
 
