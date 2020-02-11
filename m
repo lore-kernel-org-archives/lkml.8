@@ -2,126 +2,84 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8F8C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBCEC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A022206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A55206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:47:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O9j9/fkx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QbpBWdwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbgBKRrN (ORCPT
+        id S1729984AbgBKRrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:47:13 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43515 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728434AbgBKRrM (ORCPT
+        Tue, 11 Feb 2020 12:47:16 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40658 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729806AbgBKRrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 12:47:12 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r11so10279701wrq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:47:10 -0800 (PST)
+Received: by mail-wr1-f68.google.com with SMTP id t3so13526827wru.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:47:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GVBOb7DrBV2lxuO60nCMr09n1GF1C56jma5Qdz978IE=;
-        b=O9j9/fkx46gdb3bDhO7sj7Po7d7dmuG877RLoZMOtgLNFSK7ukSxsKUQMSaHv4mb4+
-         A9y5oNzJgDgoCpQ3K4XjNkaP/c7zAz9pu9e5fQ66omfCGP4pM8fWutUpVOBTiWdxXhle
-         DcF6sPG3frm19VyRmR7CcQTZEpXYlrO9ddvGI1/k9h4ogfp5mgEzsk2jW9VZVjybXpn8
-         JT7cU/2Sav7d1NjkBviXEBYqL38/7i2AqCGBcxNlL9Z7+MUcmlMCYWibMiUKlKWHi9VP
-         lBLiAasvruE6wiirzitSdqIyiRiXLzOxsIX9p3nw/q8qDgSJldEarE92VigjT5s935/l
-         3PlQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z0VAV2uAZn7cwf80RoSqvTXJTOGM5LDaGHKNSoNSGHk=;
+        b=QbpBWdwYnoWn8aPZgHyKzn+JoeOVAW1n6DG5fzvmx6mK8CHu9eCILwvxBg6NBGJJuA
+         d2B+KVtyYZWeH/pfbTDW3SyN5oE5YxrFt8hSPITYFciFg8mvz1zVCjHb5+hc8HX653zK
+         411typsd9Iw2yaMmXdMoUhdBGJfJlr4dDNAHf1ntJO4ncSiyXK7t3Xzj5FIt3ho6ykRK
+         wM3iX3nDhF4PYDhxcL1fFNGKifqtu7MWAuTALLPMGZO0YUmSR4hW6YAmp4gN8g2NrzgA
+         6oYvxc9hPaEBtL8CnE/C+CbfbAp/uM16GHLyl52ENJ3wePSA3d8G+hxOB2z16iqjFKmD
+         66Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GVBOb7DrBV2lxuO60nCMr09n1GF1C56jma5Qdz978IE=;
-        b=Sgqew0YSruCuW7OvY3/3rtR4B2eU2TzdQnQiPvHjtOGqr3eZXLxaqmDOlDiBpOc0P1
-         sG9cO9SJ7j7cm48TTVWDNWVNL1JArN/3EMVFjacFBnoododyf00pub/CfFSsUfBZTms7
-         pQIIbDEJNf+uE3MDS3CeBW5SOqfzwdpLRon1sHkUmIDEjp8XQRDBr8HQ6DEhQLltSEXh
-         hZOO4SaGILey47XNKleYNY6vd+IEbpn4FOqfeqGi2gLbfLxS/CJ+2RBTxayYi/3N68Zd
-         Ga01YpScFsPgoblc3O31s+M/OK2DlHDTYvGqonBbBBkyVS0OCtHpB9Yz6nKjJBQGyNdz
-         6oZg==
-X-Gm-Message-State: APjAAAUHikMunp6faPFDq8xA2QZsOt4up/y9d2v6oTu93nFshwmQc3vp
-        OzT79l7OSgcHlEqBvJgnGncK/Q==
-X-Google-Smtp-Source: APXvYqzvDb3VsBe+vvFMSLBB+jgYXnKTaTC+3mAoumpcWD4kUqyZ4EsL16x7g7UGU45JGGq77BnBpw==
-X-Received: by 2002:adf:f484:: with SMTP id l4mr10094371wro.207.1581443230173;
-        Tue, 11 Feb 2020 09:47:10 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:39bd:f3e9:9eaa:e898])
-        by smtp.gmail.com with ESMTPSA id s12sm6104764wrw.20.2020.02.11.09.47.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 09:47:09 -0800 (PST)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [RFC 4/4] sched/fair: Take into runnable_avg to classify group
-Date:   Tue, 11 Feb 2020 18:46:51 +0100
-Message-Id: <20200211174651.10330-5-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200211174651.10330-1-vincent.guittot@linaro.org>
-References: <20200211174651.10330-1-vincent.guittot@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z0VAV2uAZn7cwf80RoSqvTXJTOGM5LDaGHKNSoNSGHk=;
+        b=tDcg1nkKI3FBLQPhGM3YkjZ+4qDcBRhIOxeU4lUU14DyKl+mjoVi0FlJlr/bZAa+il
+         ijEULUO4GlvhoUBbvUMdcBXwgn3sO5gqSG8uU+WFXo/X70k4TQN1cqSEPpxcI9L5mKAs
+         fF5hsuQBhr4XuIxNCpt28pJ11mFRwE7YydftLMBppXSSdCDaLXvQPnHE2ozi0ODJAqdP
+         NyAoUF2bAZy0tiPTK8VVkedal6mq/MTxlXWZrtQWrDye0kw/aW5DtPhUYX3nWXazl54Z
+         pHEW3v85iQWPpQUijXuJZNTtgRudtKGHLhi12MRm+ubrJlIL6P+6dWQfTgU46Q11ltOH
+         yeCA==
+X-Gm-Message-State: APjAAAXHWuE1xu/qvgEhP7BVmKxogXgr0Z9YIVodog8EPU2Irt36+mxY
+        7y2gMyAcTwh8gm3nxe8XEd8AGGZRvM1FxvgBld38jw==
+X-Google-Smtp-Source: APXvYqxTiLAPBWBNjRiDwwF9xb8l42ZHllnWyO8r959e7mF1P+DYyJAKnd4NjVEsEhnkhq37FyrMm+yEO5iwmmCmPy0=
+X-Received: by 2002:a05:6000:108e:: with SMTP id y14mr9883732wrw.338.1581443230266;
+ Tue, 11 Feb 2020 09:47:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20200210225806.249297-1-trishalfonso@google.com> <CACT4Y+Y=Qj6coWpY107Dj+TsUJK1nruWAC=QMZBDC5snNZRTOw@mail.gmail.com>
+In-Reply-To: <CACT4Y+Y=Qj6coWpY107Dj+TsUJK1nruWAC=QMZBDC5snNZRTOw@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Tue, 11 Feb 2020 09:46:59 -0800
+Message-ID: <CAKFsvUL=maBVZ7v_N6W1skZRkYm4GacRGn-ohbf-o84p598XNQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] UML: add support for KASAN under x86_64
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take into account the new runnable_avg signal to classify a group and to
-mitigate the volatility of util_avg in face of intensive migration.
+> I started reviewing this, but I am spotting things that I already
+> commented on, like shadow start and about shadow size const. Please
+> either address them, or answer why they are not addressed, or add some
+> kind of TODOs so that I don't write the same comment again.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/fair.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 7d7cb207be30..5f8f12c902d4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7691,6 +7691,7 @@ struct sg_lb_stats {
- 	unsigned long group_load; /* Total load over the CPUs of the group */
- 	unsigned long group_capacity;
- 	unsigned long group_util; /* Total utilization of the group */
-+	unsigned long group_runnable; /* Total utilization of the group */
- 	unsigned int sum_nr_running; /* Nr of tasks running in the group */
- 	unsigned int sum_h_nr_running; /* Nr of CFS tasks running in the group */
- 	unsigned int idle_cpus;
-@@ -7911,6 +7912,10 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
- 	if (sgs->sum_nr_running < sgs->group_weight)
- 		return true;
- 
-+	if ((sgs->group_capacity * imbalance_pct) <
-+			(sgs->group_runnable * 100))
-+		return false;
-+
- 	if ((sgs->group_capacity * 100) >
- 			(sgs->group_util * imbalance_pct))
- 		return true;
-@@ -7936,6 +7941,10 @@ group_is_overloaded(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
- 			(sgs->group_util * imbalance_pct))
- 		return true;
- 
-+	if ((sgs->group_capacity * imbalance_pct) <
-+			(sgs->group_runnable * 100))
-+		return true;
-+
- 	return false;
- }
- 
-@@ -8030,6 +8039,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 
- 		sgs->group_load += cpu_load(rq);
- 		sgs->group_util += cpu_util(i);
-+		sgs->group_runnable += cpu_runnable(rq);
- 		sgs->sum_h_nr_running += rq->cfs.h_nr_running;
- 
- 		nr_running = rq->nr_running;
+I'm sorry; They must have gotten lost in all the emails. I'll go
+through them all again.
 -- 
-2.17.1
-
+Patricia Alfonso
