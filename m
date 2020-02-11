@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22EFC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D66AC3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05E220708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9AD2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgBKQfs convert rfc822-to-8bit (ORCPT
+        id S1730896AbgBKQf4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:35:48 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:35414 "EHLO
+        Tue, 11 Feb 2020 11:35:56 -0500
+Received: from skedge04.snt-world.com ([91.208.41.69]:35438 "EHLO
         skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgBKQfs (ORCPT
+        with ESMTP id S1728295AbgBKQf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:35:48 -0500
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        Tue, 11 Feb 2020 11:35:56 -0500
+Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 9272667A884;
-        Tue, 11 Feb 2020 17:35:44 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 384DA67A894;
+        Tue, 11 Feb 2020 17:35:54 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
+ (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 11 Feb
- 2020 17:35:44 +0100
+ 2020 17:35:53 +0100
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Tue, 11 Feb 2020 17:35:44 +0100
+ 15.01.1913.005; Tue, 11 Feb 2020 17:35:53 +0100
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     Boris Brezillon <bbrezillon@kernel.org>,
         Schrempf Frieder <frieder.schrempf@kontron.de>,
@@ -39,16 +39,17 @@ To:     Boris Brezillon <bbrezillon@kernel.org>,
         liaoweixiong <liaoweixiong@allwinnertech.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Peter Pan <peterpandong@micron.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
         "Richard Weinberger" <richard@nod.at>
-Subject: [PATCH 2/3] mtd: spinand: Explicitly use MTD_OPS_RAW to write the bad
- block marker to OOB
-Thread-Topic: [PATCH 2/3] mtd: spinand: Explicitly use MTD_OPS_RAW to write
- the bad block marker to OOB
-Thread-Index: AQHV4PlOqIGXKiRg80yCZpwMCvXHKw==
-Date:   Tue, 11 Feb 2020 16:35:43 +0000
-Message-ID: <20200211163452.25442-3-frieder.schrempf@kontron.de>
+Subject: [PATCH 3/3] mtd: spinand: Wait for the erase op to finish before
+ writing a bad block marker
+Thread-Topic: [PATCH 3/3] mtd: spinand: Wait for the erase op to finish before
+ writing a bad block marker
+Thread-Index: AQHV4PlTblnHiLQcV0asTsn4OWAZ0A==
+Date:   Tue, 11 Feb 2020 16:35:53 +0000
+Message-ID: <20200211163452.25442-4-frieder.schrempf@kontron.de>
 References: <20200211163452.25442-1-frieder.schrempf@kontron.de>
 In-Reply-To: <20200211163452.25442-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
@@ -62,14 +63,14 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 9272667A884.AE3E8
+X-SnT-MailScanner-ID: 384DA67A894.AE793
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
 X-SnT-MailScanner-To: bbrezillon@kernel.org, git-commits@allycomm.com,
         liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        peterpandong@micron.com, richard@nod.at
+        peterpandong@micron.com, richard@nod.at, stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -77,31 +78,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-When writing the bad block marker to the OOB area the access mode
-should be set to MTD_OPS_RAW as it is done for reading the marker.
-Currently this only works because req.mode is initialized to
-MTD_OPS_PLACE_OOB (0) and spinand_write_to_cache_op() checks for
-req.mode != MTD_OPS_AUTO_OOB.
+Currently when marking a block, we use spinand_erase_op() to erase
+the block before writing the marker to the OOB area without waiting
+for the operation to succeed. This can lead to the marking failing
+silently and no bad block marker being written to the flash.
 
-Fix this by explicitly setting req.mode to MTD_OPS_RAW.
+To fix this we reuse the spinand_erase() function, that already does
+everything we need to do before actually writing the marker.
 
 Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+Cc: stable@vger.kernel.org
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- drivers/mtd/nand/spi/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/nand/spi/core.c | 56 ++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 5d267a67a5f7..925db6269861 100644
+index 925db6269861..8a69d13639e2 100644
 --- a/drivers/mtd/nand/spi/core.c
 +++ b/drivers/mtd/nand/spi/core.c
-@@ -609,6 +609,7 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
- 		.ooboffs = 0,
- 		.ooblen = 2,
- 		.oobbuf.out = marker,
-+		.mode = MTD_OPS_RAW,
- 	};
+@@ -600,6 +600,32 @@ static int spinand_mtd_block_isbad(struct mtd_info *mtd, loff_t offs)
+ 	return ret;
+ }
+ 
++static int __spinand_erase(struct nand_device *nand, const struct nand_pos *pos,
++			   bool hard_fail)
++{
++	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 status;
++	int ret;
++
++	ret = spinand_select_target(spinand, pos->target);
++	if (ret)
++		return ret;
++
++	ret = spinand_write_enable_op(spinand);
++	if (ret)
++		return ret;
++
++	ret = spinand_erase_op(spinand, pos);
++	if (ret && hard_fail)
++		return ret;
++
++	ret = spinand_wait(spinand, &status);
++	if (!ret && (status & STATUS_ERASE_FAILED))
++		ret = -EIO;
++
++	return ret;
++}
++
+ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
+@@ -614,16 +640,10 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
  	int ret;
  
+ 	/* Erase block before marking it bad. */
+-	ret = spinand_select_target(spinand, pos->target);
+-	if (ret)
+-		return ret;
+-
+-	ret = spinand_write_enable_op(spinand);
++	ret = __spinand_erase(nand, pos, false);
+ 	if (ret)
+ 		return ret;
+ 
+-	spinand_erase_op(spinand, pos);
+-
+ 	return spinand_write_page(spinand, &req);
+ }
+ 
+@@ -644,27 +664,7 @@ static int spinand_mtd_block_markbad(struct mtd_info *mtd, loff_t offs)
+ 
+ static int spinand_erase(struct nand_device *nand, const struct nand_pos *pos)
+ {
+-	struct spinand_device *spinand = nand_to_spinand(nand);
+-	u8 status;
+-	int ret;
+-
+-	ret = spinand_select_target(spinand, pos->target);
+-	if (ret)
+-		return ret;
+-
+-	ret = spinand_write_enable_op(spinand);
+-	if (ret)
+-		return ret;
+-
+-	ret = spinand_erase_op(spinand, pos);
+-	if (ret)
+-		return ret;
+-
+-	ret = spinand_wait(spinand, &status);
+-	if (!ret && (status & STATUS_ERASE_FAILED))
+-		ret = -EIO;
+-
+-	return ret;
++	return __spinand_erase(nand, pos, true);
+ }
+ 
+ static int spinand_mtd_erase(struct mtd_info *mtd,
 -- 
 2.17.1
