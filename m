@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6B2C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57559C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A247214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D048215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgBKNxs (ORCPT
+        id S1729701AbgBKNxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:53:48 -0500
-Received: from 8bytes.org ([81.169.241.247]:52122 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:53:43 -0500
+Received: from 8bytes.org ([81.169.241.247]:52410 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729607AbgBKNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:30 -0500
+        id S1729596AbgBKNx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:29 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id BEC1CEAA; Tue, 11 Feb 2020 14:53:17 +0100 (CET)
+        id DF51AEA2; Tue, 11 Feb 2020 14:53:16 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +36,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 59/62] x86/head/64: Rename start_cpu0
-Date:   Tue, 11 Feb 2020 14:52:53 +0100
-Message-Id: <20200211135256.24617-60-joro@8bytes.org>
+Subject: [PATCH 54/62] x86/kvm: Add KVM specific VMMCALL handling under SEV-ES
+Date:   Tue, 11 Feb 2020 14:52:48 +0100
+Message-Id: <20200211135256.24617-55-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -46,96 +47,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-For SEV-ES this entry point will be used for restarting APs after they
-have been offlined. Remove the '0' from the name to reflect that.
+Implement the callbacks to copy the processor state required by KVM to
+the GHCB.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: - Split out of a larger patch
+                   - Adapt to different callback functions ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/cpu.h | 2 +-
- arch/x86/kernel/head_32.S  | 4 ++--
- arch/x86/kernel/head_64.S  | 6 +++---
- arch/x86/kernel/smpboot.c  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/kernel/kvm.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index adc6cc86b062..00668daf8991 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -29,7 +29,7 @@ struct x86_cpu {
- #ifdef CONFIG_HOTPLUG_CPU
- extern int arch_register_cpu(int num);
- extern void arch_unregister_cpu(int);
--extern void start_cpu0(void);
-+extern void start_cpu(void);
- #ifdef CONFIG_DEBUG_HOTPLUG_CPU0
- extern int _debug_hotplug_cpu(int cpu, int action);
- #endif
-diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
-index 3923ab4630d7..1a280152bd10 100644
---- a/arch/x86/kernel/head_32.S
-+++ b/arch/x86/kernel/head_32.S
-@@ -180,12 +180,12 @@ SYM_CODE_END(startup_32)
-  * up already except stack. We just set up stack here. Then call
-  * start_secondary().
-  */
--SYM_FUNC_START(start_cpu0)
-+SYM_FUNC_START(start_cpu)
- 	movl initial_stack, %ecx
- 	movl %ecx, %esp
- 	call *(initial_code)
- 1:	jmp 1b
--SYM_FUNC_END(start_cpu0)
-+SYM_FUNC_END(start_cpu)
- #endif
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index d817f255aed8..318eb906a0b5 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -34,6 +34,8 @@
+ #include <asm/hypervisor.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/ptrace.h>
++#include <asm/svm.h>
  
- /*
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 9dd602bd6244..681f3aafd424 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -293,15 +293,15 @@ SYM_CODE_END(secondary_startup_64)
+ static int kvmapf = 1;
  
- #ifdef CONFIG_HOTPLUG_CPU
- /*
-- * Boot CPU0 entry point. It's called from play_dead(). Everything has been set
-+ * CPU entry point. It's called from play_dead(). Everything has been set
-  * up already except stack. We just set up stack here. Then call
-  * start_secondary() via .Ljump_to_C_code.
-  */
--SYM_CODE_START(start_cpu0)
-+SYM_CODE_START(start_cpu)
- 	UNWIND_HINT_EMPTY
- 	movq	initial_stack(%rip), %rsp
- 	jmp	.Ljump_to_C_code
--SYM_CODE_END(start_cpu0)
-+SYM_CODE_END(start_cpu)
- #endif
- 
- 	/* Both SMP bootup and ACPI suspend change these variables */
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 69881b2d446c..19aa18f1e307 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1717,7 +1717,7 @@ static inline void mwait_play_dead(void)
- 		 * If NMI wants to wake up CPU0, start CPU0.
- 		 */
- 		if (wakeup_cpu0())
--			start_cpu0();
-+			start_cpu();
- 	}
+@@ -711,13 +713,34 @@ static void __init kvm_init_platform(void)
+ 	x86_platform.apic_post_init = kvm_apic_init;
  }
  
-@@ -1732,7 +1732,7 @@ void hlt_play_dead(void)
- 		 * If NMI wants to wake up CPU0, start CPU0.
- 		 */
- 		if (wakeup_cpu0())
--			start_cpu0();
-+			start_cpu();
- 	}
- }
++#if defined(CONFIG_AMD_MEM_ENCRYPT)
++static void kvm_sev_es_hcall_prepare(struct ghcb *ghcb, struct pt_regs *regs)
++{
++	/* RAX and CPL are already in the GHCB */
++	ghcb_set_rbx(ghcb, regs->bx);
++	ghcb_set_rcx(ghcb, regs->cx);
++	ghcb_set_rdx(ghcb, regs->dx);
++	ghcb_set_rsi(ghcb, regs->si);
++}
++
++static bool kvm_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
++{
++	/* No checking of the return state needed */
++	return true;
++}
++#endif
++
+ const __initconst struct hypervisor_x86 x86_hyper_kvm = {
+-	.name			= "KVM",
+-	.detect			= kvm_detect,
+-	.type			= X86_HYPER_KVM,
+-	.init.guest_late_init	= kvm_guest_init,
+-	.init.x2apic_available	= kvm_para_available,
+-	.init.init_platform	= kvm_init_platform,
++	.name				= "KVM",
++	.detect				= kvm_detect,
++	.type				= X86_HYPER_KVM,
++	.init.guest_late_init		= kvm_guest_init,
++	.init.x2apic_available		= kvm_para_available,
++	.init.init_platform		= kvm_init_platform,
++#if defined(CONFIG_AMD_MEM_ENCRYPT)
++	.runtime.sev_es_hcall_prepare	= kvm_sev_es_hcall_prepare,
++	.runtime.sev_es_hcall_finish	= kvm_sev_es_hcall_finish,
++#endif
+ };
  
+ static __init int activate_jump_labels(void)
 -- 
 2.17.1
 
