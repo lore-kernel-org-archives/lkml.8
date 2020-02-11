@@ -2,93 +2,225 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF212C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA53BC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93506206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E37206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbgBKSIh (ORCPT
+        id S1731165AbgBKSKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:08:37 -0500
-Received: from mga02.intel.com ([134.134.136.20]:56663 "EHLO mga02.intel.com"
+        Tue, 11 Feb 2020 13:10:11 -0500
+Received: from muru.com ([72.249.23.125]:54794 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728832AbgBKSIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:08:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 10:08:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="222014389"
-Received: from mahaling-mobl.amr.corp.intel.com (HELO [10.254.185.201]) ([10.254.185.201])
-  by orsmga007.jf.intel.com with ESMTP; 11 Feb 2020 10:08:34 -0800
-Subject: Re: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
- callback
-To:     "Lu, Brent" <brent.lu@intel.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        "cychiang@google.com" <cychiang@google.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
- <AM6PR10MB2263F302A86B17C95B16361280190@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <855c88fb-4438-aefb-ac9b-a9a5a2dc8caa@linux.intel.com>
-Date:   Tue, 11 Feb 2020 10:30:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727764AbgBKSKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:10:11 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id BCA5080D4;
+        Tue, 11 Feb 2020 18:10:53 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call support
+Date:   Tue, 11 Feb 2020 10:10:05 -0800
+Message-Id: <20200211181005.54008-1-tony@atomide.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For using cpcap for voice calls, we need to route audio directly from
+the modem to cpcap for TDM (Time Division Multiplexing). The voice call
+is direct data between the modem and cpcap with no CPU involvment. In
+this mode, the cpcap related audio mixer controls work for the speaker
+selection and volume though.
 
->> Could ensure? This change seems specific to Intel DSP based systems, at
->> least from the description. Having looked through the core, the trigger code
->> for a codec is seemingly always called before the trigger for the CPU. How will
->> this work for other platforms, assuming their clocks are enabled in the CPU
->> DAI trigger function by default?
->>
->> Can we always guarantee the CPU side isn't going to send anything other
->> than 0s until after SRM has locked?
+To do this, we need to implement standard snd_soc_dai_set_tdm_slot()
+for cpcap. Then the modem codec driver can use snd_soc_dai_set_sysclk(),
+snd_soc_dai_set_fmt(), and snd_soc_dai_set_tdm_slot() to configure a
+voice call.
 
-Not with the default mode for the SSP, all clocks are enabled at trigger 
-time.
-We can enable the MCLK and BCLK ahead of time (which would require a 
-change in firmware). But if we want to enable the FSYNC (word-clock), 
-then we have to trigger DMA transfers with pretend-buffers, this is a 
-lot more invasive.
+Let's add cpcap_voice_set_tdm_slot() for this, and cpcap_voice_call()
+helper to configure the additional registers needed for voice call.
 
-So just to be clear, which of the MCLK, BCLK, FSYNC do you need enabled?
+Let's also clear CPCAP_REG_VAUDIOC on init in case we have the bit for
+CPCAP_BIT_VAUDIO_MODE0 set on init.
 
-> I think the patch is for those systems which enable I2S clocks in pcm_start instead
-> of pcm_prepare. It has no effect on systems already be able to turn on clocks in
-> supply widgets or set_bias_level() function.
-> 
-> If the trigger type in the DAI link is TRIGGER_PRE, then the trigger function of FE port
-> (component or CPU DAI) will be called before codec driver's trigger function. In this
-> case we will be able to turn on the clock in time. However, if the trigger type is
-> TRIGGER_POST, then the patch does not help because just like what you said, codec
-> driver's trigger function is called first.
+Cc: Arthur D. <spinal.by@gmail.com>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ sound/soc/codecs/cpcap.c | 123 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
 
-IIRC we recently did a change to deal with underflows. Ranjani, can you 
-remind us what the issue was?
-Thanks
--Pierre
+diff --git a/sound/soc/codecs/cpcap.c b/sound/soc/codecs/cpcap.c
+--- a/sound/soc/codecs/cpcap.c
++++ b/sound/soc/codecs/cpcap.c
+@@ -16,6 +16,14 @@
+ #include <sound/soc.h>
+ #include <sound/tlv.h>
+ 
++/* Register 512 CPCAP_REG_VAUDIOC --- Audio Regulator and Bias Voltage */
++#define CPCAP_BIT_AUDIO_LOW_PWR           6
++#define CPCAP_BIT_AUD_LOWPWR_SPEED        5
++#define CPCAP_BIT_VAUDIOPRISTBY           4
++#define CPCAP_BIT_VAUDIO_MODE1            2
++#define CPCAP_BIT_VAUDIO_MODE0            1
++#define CPCAP_BIT_V_AUDIO_EN              0
++
+ /* Register 513 CPCAP_REG_CC     --- CODEC */
+ #define CPCAP_BIT_CDC_CLK2                15
+ #define CPCAP_BIT_CDC_CLK1                14
+@@ -221,6 +229,7 @@ struct cpcap_reg_info {
+ };
+ 
+ static const struct cpcap_reg_info cpcap_default_regs[] = {
++	{ CPCAP_REG_VAUDIOC, 0x003F, 0x0000 },
+ 	{ CPCAP_REG_CC, 0xFFFF, 0x0000 },
+ 	{ CPCAP_REG_CC, 0xFFFF, 0x0000 },
+ 	{ CPCAP_REG_CDI, 0xBFFF, 0x0000 },
+@@ -1370,6 +1379,119 @@ static int cpcap_voice_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	return 0;
+ }
+ 
++/*
++ * Configure codec for voice call if requested.
++ *
++ * We can configure most with snd_soc_dai_set_sysclk(), snd_soc_dai_set_fmt()
++ * and snd_soc_dai_set_tdm_slot(). This function configures the rest of the
++ * cpcap related hardware as CPU is not involved in the voice call.
++ */
++static int cpcap_voice_call(struct cpcap_audio *cpcap, struct snd_soc_dai *dai,
++			    bool voice_call)
++{
++	int mask, err;
++
++	/* Modem to codec VAUDIO_MODE1 */
++	mask = BIT(CPCAP_BIT_VAUDIO_MODE1);
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_VAUDIOC,
++				 mask, voice_call ? mask : 0);
++	if (err)
++		return err;
++
++	/* Clear MIC1_MUX for call */
++	mask = BIT(CPCAP_BIT_MIC1_MUX);
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI,
++				 mask, voice_call ? 0 : mask);
++	if (err)
++		return err;
++
++	/* Set MIC2_MUX for call */
++	mask = BIT(CPCAP_BIT_MB_ON1L) | BIT(CPCAP_BIT_MB_ON1R) |
++		BIT(CPCAP_BIT_MIC2_MUX) | BIT(CPCAP_BIT_MIC2_PGA_EN);
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI,
++				 mask, voice_call ? mask : 0);
++	if (err)
++		return err;
++
++	/* Enable LDSP for call */
++	mask = BIT(CPCAP_BIT_A2_LDSP_L_EN) | BIT(CPCAP_BIT_A2_LDSP_R_EN);
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_RXOA,
++				 mask, voice_call ? mask : 0);
++	if (err)
++		return err;
++
++	/* Enable CPCAP_BIT_PGA_CDC_EN for call */
++	mask = BIT(CPCAP_BIT_PGA_CDC_EN);
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_RXCOA,
++				 mask, voice_call ? mask : 0);
++	if (err)
++		return err;
++
++	/* Unmute voice for call */
++	if (dai) {
++		err = snd_soc_dai_digital_mute(dai, !voice_call,
++					       SNDRV_PCM_STREAM_PLAYBACK);
++		if (err)
++			return err;
++	}
++
++	/* Set modem to codec mic CDC and HPF for call */
++	mask = BIT(CPCAP_BIT_MIC2_CDC_EN) | BIT(CPCAP_BIT_CDC_EN_RX) |
++	       BIT(CPCAP_BIT_AUDOHPF_1) | BIT(CPCAP_BIT_AUDOHPF_0) |
++	       BIT(CPCAP_BIT_AUDIHPF_1) | BIT(CPCAP_BIT_AUDIHPF_0);
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_CC,
++				 mask, voice_call ? mask : 0);
++	if (err)
++		return err;
++
++	/* Enable modem to codec CDC for call*/
++	mask = BIT(CPCAP_BIT_CDC_CLK_EN);
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_CDI,
++				 mask, voice_call ? mask : 0);
++
++	return err;
++}
++
++static int cpcap_voice_set_tdm_slot(struct snd_soc_dai *dai,
++				    unsigned int tx_mask, unsigned int rx_mask,
++				    int slots, int slot_width)
++{
++	struct snd_soc_component *component = dai->component;
++	struct cpcap_audio *cpcap = snd_soc_component_get_drvdata(component);
++	int err, ts_mask, mask;
++	bool voice_call;
++
++	/*
++	 * Primitive test for voice call, probably needs more checks
++	 * later on for 16-bit calls detected, Bluetooth headset etc.
++	 */
++	if (tx_mask == 0 && rx_mask == 1 && slot_width == 8)
++		voice_call = true;
++	else
++		voice_call = false;
++
++	ts_mask = 0x7 << CPCAP_BIT_MIC2_TIMESLOT0;
++	ts_mask |= 0x7 << CPCAP_BIT_MIC1_RX_TIMESLOT0;
++
++	mask = (tx_mask & 0x7) << CPCAP_BIT_MIC2_TIMESLOT0;
++	mask |= (rx_mask & 0x7) << CPCAP_BIT_MIC1_RX_TIMESLOT0;
++
++	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_CDI,
++				 ts_mask, mask);
++	if (err)
++		return err;
++
++	err = cpcap_set_samprate(cpcap, CPCAP_DAI_VOICE, slot_width * 1000);
++	if (err)
++		return err;
++
++	err = cpcap_voice_call(cpcap, dai, voice_call);
++	if (err)
++		return err;
++
++	return 0;
++}
++
+ static int cpcap_voice_set_mute(struct snd_soc_dai *dai, int mute)
+ {
+ 	struct snd_soc_component *component = dai->component;
+@@ -1391,6 +1513,7 @@ static const struct snd_soc_dai_ops cpcap_dai_voice_ops = {
+ 	.hw_params	= cpcap_voice_hw_params,
+ 	.set_sysclk	= cpcap_voice_set_dai_sysclk,
+ 	.set_fmt	= cpcap_voice_set_dai_fmt,
++	.set_tdm_slot	= cpcap_voice_set_tdm_slot,
+ 	.digital_mute	= cpcap_voice_set_mute,
+ };
+ 
+-- 
+2.25.0
