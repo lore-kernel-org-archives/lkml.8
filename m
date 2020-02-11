@@ -2,141 +2,168 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE6FC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBA3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AD020842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581461187;
-	bh=9zLCa0HTXZYtXrs14B/zXbcAM+4CsAnHeAwUWEaDQbU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xq8c629GMhwZX1N1GSpHAk7mqYEG1EurC23xwb/KlBoixQ6469ycTI6D098eylEGF
-	 hc1yoqAfNLk+tuApbkZVxgitgNjGZSGoq7fmXX0emwjcIcRbpzFXSRr/gP06ad6m8I
-	 yVrJLYAtPAn9ld1SFvfkUyIim/znXwlCcw6B+Gd4=
+	by mail.kernel.org (Postfix) with ESMTP id 18985206ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:46:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVWz0nCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgBKWq0 (ORCPT
+        id S1727858AbgBKWqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:46:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727432AbgBKWqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:46:25 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BCAF24649
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581461184;
-        bh=9zLCa0HTXZYtXrs14B/zXbcAM+4CsAnHeAwUWEaDQbU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tEpjSeql3DYLAsrYSUbprtMEMw4C1h4U9B78zjw3Qwnq3PhruIVJrZW8I5dlgSnI6
-         RCIp+Vz9WgnqGblWwxpp3lhHSfdMKx+4t6P4j+em9epOg+/6e+14nf9fPQcXYTnq6P
-         +BDN9l79+1oay7W+lPw8cHQ29YuY1J1E6/p9/UXQ=
-Received: by mail-wr1-f41.google.com with SMTP id w12so14623013wrt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:46:24 -0800 (PST)
-X-Gm-Message-State: APjAAAV7BLBEkPhSg9u7nwi28aJ/cZlgQjVeaIAFenp7oiQDEST6n8fd
-        aJHi6r4aeernFYX5518W3WCs43Wzs5gGzOEJUtuEQA==
-X-Google-Smtp-Source: APXvYqzDG+yy1Y1bMAL59wrUEfua8nCDrkCgCp14PmWU1Fe0rMfRwXKkAP8PvX1rVCDgCCV2/NPugHE40sdjEg/9qFs=
-X-Received: by 2002:adf:a354:: with SMTP id d20mr10846226wrb.257.1581461182628;
- Tue, 11 Feb 2020 14:46:22 -0800 (PST)
+        Tue, 11 Feb 2020 17:46:33 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37617 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgBKWqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:46:32 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so14615994wru.4;
+        Tue, 11 Feb 2020 14:46:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=lZRwr3nMHRBktKFSV5Mq10r8EzROhEGh/FsmDXkj5s8=;
+        b=UVWz0nCQ/n8kmTOHKn86Gkoa3EPtzkq+4JVjUqPbfgBPDgmEJaph9S6hs2sBak3jnU
+         g2QHDxMYKDlKkSe/LGHE+hp1vu1mfvaOPkerXAuf6C72Dr47sF0u92JEa1eTvqlf/1nl
+         /ZuJoRL/qnqdmms5dhCbNXOo8e7yfbcSWt8vcwuLHyxwH3/1/CJGDEIOD9366lXX0Lfg
+         FtwE7sZudGoQrMrouqgktpZkk1XT7cQSid7VKMOzEwu+BlwNzmZm7Yf3z+gDxkzkDSAy
+         4Sk8Ikw0hh+cWYrMZE8xG7DV6nGWdHW/dHl61rYYLxTWL1X95FfA86wCKOMpg4MqBLSf
+         BXwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=lZRwr3nMHRBktKFSV5Mq10r8EzROhEGh/FsmDXkj5s8=;
+        b=UYD8M73WWsWN0AamevLfIG/UsovPY2co6Vw2x2Gwr0We4GKzJ976h703ajEbpSnt01
+         LTEEZywhkasq650d/qE1j4EhZISkZBvwyf2zlleuUDuN7TkfZwMAicpz/mp2LDZjCtoM
+         BkdRZGbbnukLUOJSVHN9vGRZK8e4Ouq5jQE2WMAnTqFR18CJ7z6FU9KXLF9CgFo0zsJu
+         GmsBz/2FCxj8NOmLXmLlO86YAsDcx+m+nWlKOiQRumMqd/04z6vjaVVQGWZqrznavWq0
+         GsmL+49fjmYdk29BZLTIEaYOekCoSJyGu1P95Bxk1d6Zp+TsI0dlwnbxEZQ5ZQNffqI3
+         Munw==
+X-Gm-Message-State: APjAAAUPvjVnCN5VVZEDRHUugh36FnepFA65fXGi+vpb4EHXvJxXWuyd
+        C621QKFmwEuDM6An2td2OOE=
+X-Google-Smtp-Source: APXvYqw/X8oh8x+2FHV4J/a8al9ZHaabt10Yx+k/wL6WSpd9P7SvzsR/yXN4EvmjPBua26XidW2KBw==
+X-Received: by 2002:adf:b7c2:: with SMTP id t2mr11022446wre.269.1581461190406;
+        Tue, 11 Feb 2020 14:46:30 -0800 (PST)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id 133sm5999318wmd.5.2020.02.11.14.46.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 14:46:29 -0800 (PST)
+Subject: [PATCH v17 3/9] mm: Add function __putback_isolated_page
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, mhocko@kernel.org,
+        alexander.h.duyck@linux.intel.com, vbabka@suse.cz,
+        osalvador@suse.de
+Date:   Tue, 11 Feb 2020 14:46:24 -0800
+Message-ID: <20200211224624.29318.89287.stgit@localhost.localdomain>
+In-Reply-To: <20200211224416.29318.44077.stgit@localhost.localdomain>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-36-joro@8bytes.org>
-In-Reply-To: <20200211135256.24617-36-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 11 Feb 2020 14:46:11 -0800
-X-Gmail-Original-Message-ID: <CALCETrWVYM_EQJYznNzPT0q2yYjUojCHYpHmdYoSCdqApitTrA@mail.gmail.com>
-Message-ID: <CALCETrWVYM_EQJYznNzPT0q2yYjUojCHYpHmdYoSCdqApitTrA@mail.gmail.com>
-Subject: Re: [PATCH 35/62] x86/sev-es: Setup per-cpu GHCBs for the runtime handler
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> From: Tom Lendacky <thomas.lendacky@amd.com>
->
-> The runtime handler needs a GHCB per CPU. Set them up and map them
-> unencrypted.
->
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/include/asm/mem_encrypt.h |  2 ++
->  arch/x86/kernel/sev-es.c           | 25 ++++++++++++++++++++++++-
->  arch/x86/kernel/traps.c            |  3 +++
->  3 files changed, 29 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-> index 6f61bb93366a..d48e7be9bb49 100644
-> --- a/arch/x86/include/asm/mem_encrypt.h
-> +++ b/arch/x86/include/asm/mem_encrypt.h
-> @@ -48,6 +48,7 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size);
->  void __init mem_encrypt_init(void);
->  void __init mem_encrypt_free_decrypted_mem(void);
->
-> +void __init encrypted_state_init_ghcbs(void);
->  bool sme_active(void);
->  bool sev_active(void);
->  bool sev_es_active(void);
-> @@ -71,6 +72,7 @@ static inline void __init sme_early_init(void) { }
->  static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
->  static inline void __init sme_enable(struct boot_params *bp) { }
->
-> +static inline void encrypted_state_init_ghcbs(void) { }
->  static inline bool sme_active(void) { return false; }
->  static inline bool sev_active(void) { return false; }
->  static inline bool sev_es_active(void) { return false; }
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index 0e0b28477627..9a5530857db7 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -8,8 +8,11 @@
->   */
->
->  #include <linux/sched/debug.h> /* For show_regs() */
-> -#include <linux/kernel.h>
-> +#include <linux/percpu-defs.h>
-> +#include <linux/mem_encrypt.h>
->  #include <linux/printk.h>
-> +#include <linux/set_memory.h>
-> +#include <linux/kernel.h>
->  #include <linux/mm.h>
->
->  #include <asm/trap_defs.h>
-> @@ -28,6 +31,9 @@ struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
->   */
->  struct ghcb __initdata *boot_ghcb;
->
-> +/* Runtime GHCBs */
-> +static DEFINE_PER_CPU_DECRYPTED(struct ghcb, ghcb_page) __aligned(PAGE_SIZE);
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Hmm.  This is a largeish amount of memory on large non-SEV-ES systems.
-Maybe store a pointer instead?  It would be even better if it could be
-DEFINE_PER_CPU like this but be discarded if we don't need it, but I
-don't think we have the infrastructure for that.
+There are cases where we would benefit from avoiding having to go through
+the allocation and free cycle to return an isolated page.
 
---Andy
+Examples for this might include page poisoning in which we isolate a page
+and then put it back in the free list without ever having actually
+allocated it.
+
+This will enable us to also avoid notifiers for the future free page
+reporting which will need to avoid retriggering page reporting when
+returning pages that have been reported on.
+
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ mm/internal.h       |    2 ++
+ mm/page_alloc.c     |   19 +++++++++++++++++++
+ mm/page_isolation.c |    6 ++----
+ 3 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/mm/internal.h b/mm/internal.h
+index 3cf20ab3ca01..7b108222e5f4 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -157,6 +157,8 @@ static inline struct page *pageblock_pfn_to_page(unsigned long start_pfn,
+ }
+ 
+ extern int __isolate_free_page(struct page *page, unsigned int order);
++extern void __putback_isolated_page(struct page *page, unsigned int order,
++				    int mt);
+ extern void memblock_free_pages(struct page *page, unsigned long pfn,
+ 					unsigned int order);
+ extern void __free_pages_core(struct page *page, unsigned int order);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index de916aa06a27..b711fc0159d9 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3217,6 +3217,25 @@ int __isolate_free_page(struct page *page, unsigned int order)
+ 	return 1UL << order;
+ }
+ 
++/**
++ * __putback_isolated_page - Return a now-isolated page back where we got it
++ * @page: Page that was isolated
++ * @order: Order of the isolated page
++ *
++ * This function is meant to return a page pulled from the free lists via
++ * __isolate_free_page back to the free lists they were pulled from.
++ */
++void __putback_isolated_page(struct page *page, unsigned int order, int mt)
++{
++	struct zone *zone = page_zone(page);
++
++	/* zone lock should be held when this function is called */
++	lockdep_assert_held(&zone->lock);
++
++	/* Return isolated page to tail of freelist. */
++	__free_one_page(page, page_to_pfn(page), zone, order, mt);
++}
++
+ /*
+  * Update NUMA hit/miss statistics
+  *
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index a9fd7c740c23..2c11a38d6e87 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -117,13 +117,11 @@ static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
+ 		__mod_zone_freepage_state(zone, nr_pages, migratetype);
+ 	}
+ 	set_pageblock_migratetype(page, migratetype);
++	if (isolated_page)
++		__putback_isolated_page(page, order, migratetype);
+ 	zone->nr_isolate_pageblock--;
+ out:
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+-	if (isolated_page) {
+-		post_alloc_hook(page, order, __GFP_MOVABLE);
+-		__free_pages(page, order);
+-	}
+ }
+ 
+ static inline struct page *
+
