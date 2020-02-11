@@ -2,219 +2,118 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1B8C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491D8C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D593920870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581424779;
-	bh=kzLCgKTPkI+N6fyK0lx70rE29ThRwi68n5bZdG+YZWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ogtJOst5opUXxAqzRgjEXVbuO6rtluPPhQ7rjhF6CDvM7U0FwuzH+vA8pm0bU6aXo
-	 /u+PwLDoV4RQY3oaaAu0obnFiB/0oPqt8IZnUGvpbISIQYwAPl+Tgj3hV8dZK8eEyM
-	 G1dniUtWMs+x29N9HoEoTb+2xgJWlflOLwUYFq2E=
+	by mail.kernel.org (Postfix) with ESMTP id 1C1AC206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:40:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlZ44Cp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgBKMjj (ORCPT
+        id S1728850AbgBKMkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:39:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbgBKMji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:39:38 -0500
-Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDBA3206DB;
-        Tue, 11 Feb 2020 12:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581424778;
-        bh=kzLCgKTPkI+N6fyK0lx70rE29ThRwi68n5bZdG+YZWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2V2oxVmA3ZU9a3hXs6yXvGpPxs249Jihi0gD1I+npFyX5WLNIBfkEiWnv+t6HTIsq
-         alLzC957QPlWyp7aJSFqZnxFabvuVMly0YqQHOsvF1W2x+m3S8AOba6/o9VdNFMHFa
-         BQnWtgzovTJpLev0wCvkAr5HrszBO0shgMuryLYc=
-Date:   Tue, 11 Feb 2020 13:39:32 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 10/11] module: Reorder functions
-Message-ID: <20200211123932.GA29598@linux-8ccs>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-11-kristen@linux.intel.com>
- <202002060440.E7ED91B@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <202002060440.E7ED91B@keescook>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 11 Feb 2020 07:40:20 -0500
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:38572 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbgBKMkT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:40:19 -0500
+Received: by mail-pf1-f178.google.com with SMTP id x185so5455087pfc.5;
+        Tue, 11 Feb 2020 04:40:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yA+BWfC41v7sN7/FMQVxmCc56IvmN2Onydier90xRBM=;
+        b=AlZ44Cp4EzAxC2mEOY/YZHa3XOpAJLbuIfGtgIWpvcF6J6Ed06XGvOKNAg+HmDfEb1
+         qUNtu3CuK7ekpsHnvbJ/EKmMkYE3dd6Qyilg4++kHOZa6yX4vsq80LhXrVA9Hrgv+WwT
+         hmiweLgrtE36m/JxfHudCMLI8DkJParLFafOqEVjd45z8UoGY/DzyHAl5UaC2sdpeg9u
+         nQXKDH6a2KI29Z0+SUEKcMeRBvztYJpYY88lXBOIhoSg6+jKPbQ3S1S58uPhtMZ2qyy1
+         2LEJ7J5sXeb22E4gMDVYcDZpav8MkkdRjorrTrz+UC+YoqAa+SwcQt83Hcr5Ggk1SgNP
+         80yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yA+BWfC41v7sN7/FMQVxmCc56IvmN2Onydier90xRBM=;
+        b=jD5YgO0riUbX8XCjdDjnif3W9KIpp8RZccfCAvGLYDxrukdcZDrGkvrKHV47kZefwn
+         NHLtY2RD3Ja7f0Y331tiiyNT+n5lB4A4R049RFOfrCLzwSFOxevMd1T9fKqJu6OPL3bI
+         vifcoZSvH8MFcVYD3w8erlNdnuTnv83sA0KZntLnAp4mvalZ8xa2GV8fKQIX50hvyy8p
+         d1UAPHcJuYyR61Jnssixc+MxjHqsPSwoKRE1NA92w0Xo/VPTyRqhTvykGu7PdsNCFPsM
+         jfdXSJnfiiPTfVW5GRcqcvabbBau+Jd1qVOOBM9wX/cEx1C3uXrjQ3j1l+KL9BzOkMzA
+         QXAA==
+X-Gm-Message-State: APjAAAXj+k3qdoxgUv/15MjOmXbxHlzRm+zKIEoMl1MDIgqXjzKz9a0s
+        3nfDXrYjBdwZlvs0r2pKFZ0=
+X-Google-Smtp-Source: APXvYqyjoLPV52xzZXhOjrAFGK0sL31ZJwLKBgzsG7aHUr7465yvu6d8LIlHbK/SEBvE4Ee5t1FJmw==
+X-Received: by 2002:aa7:8755:: with SMTP id g21mr6303821pfo.36.1581424819139;
+        Tue, 11 Feb 2020 04:40:19 -0800 (PST)
+Received: from localhost.localdomain ([2409:4041:69c:214f:144f:bb39:afc3:51b0])
+        by smtp.gmail.com with ESMTPSA id d1sm3876789pgj.79.2020.02.11.04.40.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 04:40:18 -0800 (PST)
+From:   Pragat Pandya <pragat.pandya@gmail.com>
+To:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu
+Cc:     devel@driverdev.osuosl.or, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Pragat Pandya <pragat.pandya@gmail.com>
+Subject: [PATCH 00/18] Rename some identifier and functions.
+Date:   Tue, 11 Feb 2020 18:08:41 +0530
+Message-Id: <20200211123859.10429-1-pragat.pandya@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Kees Cook [06/02/20 04:41 -0800]:
->On Wed, Feb 05, 2020 at 02:39:49PM -0800, Kristen Carlson Accardi wrote:
->> If a module has functions split out into separate text sections
->> (i.e. compiled with the -ffunction-sections flag), reorder the
->> functions to provide some code diversification to modules.
->>
->> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
->
->Probably a good idea to add Jessica to CC in next version:
->	Jessica Yu <jeyu@kernel.org>
+This patchset renames following variable and fucntions in source
+Fix checkpatch warning: Avoid CamelCase
+ -ffsUmountVol->ffs_umount_vol
+ -ffsGetVolInfo->ffs_get_vol_info
+ -ffsSyncVol->ffs_sync_vol
+ -ffsLookupFile->ffs_lookup_file
+ -ffsCreateFile->ffs_create_file
+ -ffsReadFile->ffs_read_file
+ -LogSector->log_sector
+ -ffsWriteFile->ffs_write_file
+ -ffsTruncateFile->ffs_truncate_file
+ -ffsMoveFile->ffs_move_file
+ -ffsRemoveFile->ffs_remove_file
+ -ffsMountVol->ffs_mount_vol
+ -ffsReadStat->ffs_read_stat
+ -ffsWriteStat->ffs_write_stat
+ -ffsMapCluster->ffs_map_cluster
+ -ffsCreateDir->ffs_create_dir
+ -ffsReadDir->ffs_read_dir
+ -ffsRemoveDir->ffs_remove_dir
 
-Thanks :)
+Pragat Pandya (18):
+  staging: exfat: Rename function "ffsUmountVol" to "ffs_umount_vol"
+  staging: exfat: Rename function "ffsGetVolInfo" to "ffs_get_vol_info"
+  staging: exfat: Rename function "ffsSyncVol" to "ffs_sync_vol"
+  staging: exfat: Rename function "ffsLookupFile" to "ffs_lookup_file"
+  staging: exfat: Rename function "ffsCreateFile" to "ffs_create_file"
+  staging: exfat: Rename function "ffsReadFile" to "ffs_read_file"
+  staging: exfat: Rename variable "LogSector" to "log_sector"
+  staging: exfat: Rename function "ffsWriteFile" to "ffs_write_file"
+  staging: exfat: Rename function "ffsTruncateFile" to
+    "ffs_truncate_file"
+  staging: exfat: Rename function "ffsMoveFile" to "ffs_move_file"
+  staging: exfat: Rename function "ffsRemoveFile" to "ffs_remove_file"
+  staging: exfat: Rename function "ffsMountVol" to "ffs_mount_vol"
+  staging: exfat: Rename function "ffsReadStat" to "ffs_read_stat"
+  staging: exfat: Rename function "ffsWriteStat" to "ffs_write_stat"
+  staging: exfat: Rename function "ffsMapCluster" to "ffs_map_cluster"
+  staging: exfat: Rename function "ffsCreateDir" to "ffs_create_dir"
+  staging: exfat: Rename function "ffsReadDir" to "ffs_read_dir"
+  staging: exfat: Rename function "ffsRemoveDir" to "ffs_remove_dir"
 
->Reviewed-by: Kees Cook <keescook@chromium.org>
->
->-Kees
->
->> ---
->>  kernel/module.c | 85 +++++++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 85 insertions(+)
->>
->> diff --git a/kernel/module.c b/kernel/module.c
->> index b56f3224b161..231563e95e61 100644
->> --- a/kernel/module.c
->> +++ b/kernel/module.c
->> @@ -53,6 +53,8 @@
->>  #include <linux/bsearch.h>
->>  #include <linux/dynamic_debug.h>
->>  #include <linux/audit.h>
->> +#include <linux/random.h>
->> +#include <asm/setup.h>
->>  #include <uapi/linux/module.h>
->>  #include "module-internal.h"
->>
->> @@ -3245,6 +3247,87 @@ static int find_module_sections(struct module *mod, struct load_info *info)
->>  	return 0;
->>  }
->>
->> +/*
->> + * shuffle_text_list()
->> + * Use a Fisher Yates algorithm to shuffle a list of text sections.
->> + */
->> +static void shuffle_text_list(Elf_Shdr **list, int size)
->> +{
->> +	int i;
->> +	unsigned int j;
->> +	Elf_Shdr *temp;
->> +
->> +	for (i = size - 1; i > 0; i--) {
->> +		/*
->> +		 * TBD - seed. We need to be able to use a known
->> +		 * seed so that we can non-randomly randomize for
->> +		 * debugging.
->> +		 */
->> +
->> +		// pick a random index from 0 to i
->> +		get_random_bytes(&j, sizeof(j));
->> +		j = j % (i + 1);
->> +
->> +		temp = list[i];
->> +		list[i] = list[j];
->> +		list[j] = temp;
->> +	}
->> +}
->> +
->> +/*
->> + * randomize_text()
->> + * Look through the core section looking for executable code sections.
->> + * Store sections in an array and then shuffle the sections
->> + * to reorder the functions.
->> + */
->> +static void randomize_text(struct module *mod, struct load_info *info)
->> +{
->> +	int i;
->> +	int num_text_sections = 0;
->> +	Elf_Shdr **text_list;
->> +	int size = 0;
->> +	int max_sections = info->hdr->e_shnum;
->> +	unsigned int sec = find_sec(info, ".text");
->> +
->> +	if (!IS_ENABLED(CONFIG_FG_KASLR) || !kaslr_enabled())
->> +		return;
+ drivers/staging/exfat/exfat_super.c | 114 ++++++++++++++--------------
+ 1 file changed, 57 insertions(+), 57 deletions(-)
 
-Maybe put this conditional before the call to randomize_text() in
-move_module()? Just for code readability reasons (i.e., we only call
-randomize_text() when CONFIG_FG_KASLR || kaslr_enabled()). But this is
-just a matter of preference.
+-- 
+2.17.1
 
->> +
->> +	if (sec == 0)
->> +		return;
->> +
->> +	text_list = kmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
->> +	if (text_list == NULL)
->> +		return;
->> +
->> +	for (i = 0; i < max_sections; i++) {
->> +		Elf_Shdr *shdr = &info->sechdrs[i];
->> +		const char *sname = info->secstrings + shdr->sh_name;
->> +
->> +		if (!(shdr->sh_flags & SHF_ALLOC) ||
->> +		    !(shdr->sh_flags & SHF_EXECINSTR) ||
->> +		    strstarts(sname, ".init"))
->> +			continue;
->> +
->> +		text_list[num_text_sections] = shdr;
->> +		num_text_sections++;
->> +	}
->> +
->> +	shuffle_text_list(text_list, num_text_sections);
->> +
->> +	for (i = 0; i < num_text_sections; i++) {
->> +		Elf_Shdr *shdr = text_list[i];
->> +		unsigned int infosec;
->> +		const char *sname;
->> +
->> +		sname = info->secstrings + shdr->sh_name;
-
-sname doesn't appear to be used after this (?)
-
->> +		infosec	= shdr->sh_info;
->> +
->> +		shdr->sh_entsize = get_offset(mod, &size, shdr, infosec);
-
-get_offset() expects a section index as the last argument, but sh_info
-is 0 for text sections (SHT_PROGBITS). It's really only used in
-arch_mod_section_prepend() though, which is only defined for parisc.
-We could perhaps save the section index in sh_info in the previous for
-loop (hacky, I have to double check if this is actually safe, but it
-seems sh_info only has signficance for SHT_REL* and SHT_SYMTAB
-sections).
-
->> +	}
->> +
->> +	kfree(text_list);
->> +}
->> +
->>  static int move_module(struct module *mod, struct load_info *info)
->>  {
->>  	int i;
->> @@ -3282,6 +3365,8 @@ static int move_module(struct module *mod, struct load_info *info)
->>  	} else
->>  		mod->init_layout.base = NULL;
->>
->> +	randomize_text(mod, info);
-
-Hm, I wonder if we should not incorporate the randomize_text() logic into
-layout_sections() instead of move_module(), since logically speaking
-layout_sections() determines all the section offsets and stores them
-in sh_entsize, whereas move_module() does all the allocations and
-copying to final destination. Just a thought.
-
-
-Thanks!
-
-Jessica
