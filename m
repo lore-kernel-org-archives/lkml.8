@@ -2,109 +2,104 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C829AC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2B2C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90D324680
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="aLYA6QD7"
+	by mail.kernel.org (Postfix) with ESMTP id 8151F20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbgBKSU6 (ORCPT
+        id S1731337AbgBKSVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:20:58 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40468 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729345AbgBKSU5 (ORCPT
+        Tue, 11 Feb 2020 13:21:01 -0500
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:52116 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730076AbgBKSTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:20:57 -0500
-Received: by mail-qt1-f195.google.com with SMTP id v25so8683112qto.7
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:20:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=d6/Te+6lAVYFK89u5s4ITvONIuwvEzCRENBRMlel8AM=;
-        b=aLYA6QD7r8l7BRmVYCdYFhLJ6+BTNSmfcsvcr1NKaO2FUg7e2sB0f5KZcSPi6p74nR
-         6O933w7cbNN+FMz4YGCHH4AVN9pElo92zZlPlGuW0gSBq93BAPgEVr601eiAKnaapD/P
-         GrnClfjV4wYOcuftH0Q5ekckpEe3ICyZVzmuNt9p75AlrUcLSUbK/YzbcYm34mH8OxqT
-         SfQIEy8AuBFAXjI1EbnHUegO1y6lcC3eyPs+Uqaoqt4qUKVp8fvgx9LN7qxXVuWu884y
-         xs/XxkT5R1DXkbm4qW8hogIMuJAsKO58D/GM+ADGdFgzSYgN2zco6ccBy5HHxO5WoFvi
-         2Zwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d6/Te+6lAVYFK89u5s4ITvONIuwvEzCRENBRMlel8AM=;
-        b=BnkN0PIYflJh+rJJSO4VXIE0NXZV6oYTh5quMBIFwbwWIbxfeMActE8BxBHy6er1Sh
-         yCcOC1Z9YRdBz5Gubus7Am+pQiQCVtrPcIOwyAD1ap7FUfdPI1QY+f9gTp1Gj45g3RQ0
-         FFvMS4t+QJjCsrJt8uz73HnxZtSSqnwFvAgVXJcSvHdyIh934JPeuex4wz0l2w+t4w1z
-         QJ37DekVzZZljq4nS1R4IVkOl3PKqEZWCszHsgcUvGj6a588rLiZtQcdK+lHZmQK+stF
-         hzYEPvdh2zoEc0xg/FfvBGcKnxwf75YiMiNlXlWTXXVM5Teo4NScHWvCBSY3WrxDiE5S
-         UFUA==
-X-Gm-Message-State: APjAAAUsxqiPSn1i2DWF0j0Njp0YKG9wKKiAoFpMU15xSNeBur5qw23n
-        nonkk7Yj138rFIHDXLd47yYC1Q==
-X-Google-Smtp-Source: APXvYqwDVs8B12ktsqqe14aSoG5G5O9rjJ6O2GFDhj+2bdU0bqJzMwN1LLweA+J2YzGHbm2yyex9eQ==
-X-Received: by 2002:ac8:4410:: with SMTP id j16mr3712001qtn.261.1581445256183;
-        Tue, 11 Feb 2020 10:20:56 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::3:3189])
-        by smtp.gmail.com with ESMTPSA id r37sm2562886qtj.44.2020.02.11.10.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 10:20:55 -0800 (PST)
-Date:   Tue, 11 Feb 2020 13:20:54 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200211182054.GA178155@cmpxchg.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211175507.178100-1-hannes@cmpxchg.org>
+        Tue, 11 Feb 2020 13:19:33 -0500
+Received: from ramsan ([84.195.182.253])
+        by baptiste.telenet-ops.be with bizsmtp
+        id 1WKV2200M5USYZQ01WKV6z; Tue, 11 Feb 2020 19:19:30 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j1a89-0002nt-Gy; Tue, 11 Feb 2020 19:19:29 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j1a89-0003yM-Fc; Tue, 11 Feb 2020 19:19:29 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 06/34] crypto: ccree - drop duplicated error message on SRAM exhaustion
+Date:   Tue, 11 Feb 2020 19:19:00 +0100
+Message-Id: <20200211181928.15178-7-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
+References: <20200211181928.15178-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 12:55:07PM -0500, Johannes Weiner wrote:
-> However, this change had to be reverted in 69056ee6a8a3 ("Revert "mm:
-> don't reclaim inodes with many attached pages"") because it caused
-> severe reclaim performance problems: Inodes that sit on the shrinker
-> LRU are attracting reclaim pressure away from the page cache and
-> toward the VFS. If we then permanently exempt sizable portions of this
-> pool from actually getting reclaimed when looked at, this pressure
-> accumulates as deferred shrinker work (a mechanism for *temporarily*
-> unreclaimable objects) until it causes mayhem in the VFS cache pools.
-> 
-> In the bug quoted in 69056ee6a8a3 in particular, the excessive
-> pressure drove the XFS shrinker into dirty objects, where it caused
-> synchronous, IO-bound stalls, even as there was plenty of clean page
-> cache that should have been reclaimed instead.
+When no SRAM can be allocated, cc_sram_alloc() already prints an error
+message.  Hence there is no need to duplicate this in all callers.
 
-A note on testing: the patch behaves much better on my machine and the
-inode shrinker doesn't drop hot page cache anymore, without noticable
-downsides so far.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - New.
 
-However, I tried to reproduce the xfs case that caused the
-69056ee6a8a3 revert and haven't managed to do so yet on 5.5 plus the
-reverted patch. I cannot provoke higher inode sync stalls in the xfs
-shrinker regardless of shrinker strategy. Maybe something else changed
-since 4.19 and it's less of a concern now.
+ drivers/crypto/ccree/cc_aead.c   | 1 -
+ drivers/crypto/ccree/cc_driver.c | 1 -
+ drivers/crypto/ccree/cc_hash.c   | 1 -
+ 3 files changed, 3 deletions(-)
 
-Nonetheless, I'm interested in opinions on the premise of this
-patch. And Yafang is working on his memcg-specific fix for this issue,
-so I wanted to put this proposal on the table sooner than later.
+diff --git a/drivers/crypto/ccree/cc_aead.c b/drivers/crypto/ccree/cc_aead.c
+index 7a62fb023d8d3769..db89144ce6c5e974 100644
+--- a/drivers/crypto/ccree/cc_aead.c
++++ b/drivers/crypto/ccree/cc_aead.c
+@@ -2682,7 +2682,6 @@ int cc_aead_alloc(struct cc_drvdata *drvdata)
+ 							 MAX_HMAC_DIGEST_SIZE);
+ 
+ 	if (aead_handle->sram_workspace_addr == NULL_SRAM_ADDR) {
+-		dev_err(dev, "SRAM pool exhausted\n");
+ 		rc = -ENOMEM;
+ 		goto fail1;
+ 	}
+diff --git a/drivers/crypto/ccree/cc_driver.c b/drivers/crypto/ccree/cc_driver.c
+index fc34d152f42090fc..599936a0b0a2cc63 100644
+--- a/drivers/crypto/ccree/cc_driver.c
++++ b/drivers/crypto/ccree/cc_driver.c
+@@ -477,7 +477,6 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 	new_drvdata->mlli_sram_addr =
+ 		cc_sram_alloc(new_drvdata, MAX_MLLI_BUFF_SIZE);
+ 	if (new_drvdata->mlli_sram_addr == NULL_SRAM_ADDR) {
+-		dev_err(dev, "Failed to alloc MLLI Sram buffer\n");
+ 		rc = -ENOMEM;
+ 		goto post_sram_mgr_err;
+ 	}
+diff --git a/drivers/crypto/ccree/cc_hash.c b/drivers/crypto/ccree/cc_hash.c
+index c3146f550268e7ab..defeb35a16a626ff 100644
+--- a/drivers/crypto/ccree/cc_hash.c
++++ b/drivers/crypto/ccree/cc_hash.c
+@@ -2001,7 +2001,6 @@ int cc_hash_alloc(struct cc_drvdata *drvdata)
+ 
+ 	sram_buff = cc_sram_alloc(drvdata, sram_size_to_alloc);
+ 	if (sram_buff == NULL_SRAM_ADDR) {
+-		dev_err(dev, "SRAM pool exhausted\n");
+ 		rc = -ENOMEM;
+ 		goto fail;
+ 	}
+-- 
+2.17.1
 
-Thanks
