@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3536DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96886C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D267E20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D23A20661
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/zSJegL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNkH+M/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbgBKRuH (ORCPT
+        id S1730683AbgBKRyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:50:07 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33229 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728965AbgBKRt7 (ORCPT
+        Tue, 11 Feb 2020 12:54:39 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32922 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729788AbgBKRyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:49:59 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so6124170pgk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:49:59 -0800 (PST)
+        Tue, 11 Feb 2020 12:54:39 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n7so5865073pfn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:54:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xv3c7jFsAprmuRnPHl4WTv2X5NYRFiGdq9ZxyOZMQzo=;
-        b=f/zSJegLiH2f8JBmtdkKhUxRD8Lv1NbbM+IjL++no2G6caDit3a4vXqfttGskvsTmT
-         NFkAxxb3n/5ENgYjR/BVsCLNtV4KVLf+8zvB1gozJTF4k6eJL6bPqlaVWpkT50UkHhNL
-         sExGddtylx66t7odEhZ1EW7uzZWFWQSgn1IdTkppP8NLV7AW4tVzXNqx80g/ktydbSbe
-         TprryF62aQpz+5h6Bgy9i0XClMbJKNEhxJ8ZqLwf7VEkOdunYm1HdssbEUjT2DxmTT9W
-         8KplnKcaSDHVCMuYxiO3fkeDzE4yvY3ndqcYO4XPzRkXI9bURJhosrl6r9NutYTFGkuh
-         d5yA==
+        bh=lhwMxE6m+hbjfdldTjoAs49IPO29e5T3zjT9L7XAt7k=;
+        b=dNkH+M/OfyjyHF0TcgxyzBaSdDXFJ6vu15/fz8ENR426ArEI0uHXffsL9+zgmmp3IN
+         GaXczkPQnqLIt7xP4LCgsvU6jnIZ8fRHbaETE65DamrBtypYykAyyOOPS28Ku09o1iAJ
+         HylwDue71XCSiahwkHpjYkMeYA9unuoE80ZE1xwaAwSPf+RkgNegpy5U7sExB0FCRe1l
+         EGTNNXtwfqU0riO8lxq6S40wGfWAee19ApeI4D9ILGGkOD2a5oHiRar+BeGxw/8sIlnd
+         J5KqibYSUrNYWJjm6txhxcRXR57sxJLdwMW/pgTFQe4mmLoulVXae8T8vv2hhwrhLQ9v
+         EHtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Xv3c7jFsAprmuRnPHl4WTv2X5NYRFiGdq9ZxyOZMQzo=;
-        b=dcNWtFkAup6KfPTcgLq2ve0Hc5HUVIGQSnEeRHPSEBDBUTHL/uRWPxgaErLDyIC9I9
-         U9t2zvb4RexzZxIPx4yFR8RK4ogz8PXrdzPC0K2OLsGuwH6Onm5/5IfJj2dRrn2ucviB
-         fctAbA9JGHav24viH4ZlZzCQ+jeD5kSbPx9IsrD7GKS1EgOF8ERrL4kgbhnyXPDno9AQ
-         3zbrS2FloGvKf61ouIfsbQAeR1hVLG9hCgSrOUX70VwXz8Hb2IlU9Y2Wp9ugUxM9XoNB
-         eu7uHWtIKhLX2ecU1DTewT62GsabKplz8dvQXvDGKVco/jICHGKaB/HjKiIiJtw+EGaR
-         FbEA==
-X-Gm-Message-State: APjAAAWqgFHjvj/KoQXeaO+bpoqsw5ny5WG4ZRxLJteSYGdxjeY8bvJv
-        anEXNoFZKJakrNUnvNb2G3s=
-X-Google-Smtp-Source: APXvYqxIdg2+AdoZBakwzL9HhpujI8uAk9hyEkRhUk3wZ2fqpoSG/2wWjcsk5BE25AeqimJqUKK+Cg==
-X-Received: by 2002:a65:4d0d:: with SMTP id i13mr7917441pgt.346.1581443398405;
-        Tue, 11 Feb 2020 09:49:58 -0800 (PST)
+        bh=lhwMxE6m+hbjfdldTjoAs49IPO29e5T3zjT9L7XAt7k=;
+        b=j81VBB7VK0MAWN0jJU7qv4O0jhYaJJ3++eUljtNFXGRfg/jaDLlvfJiBxUO4kZoP6e
+         kgUAEsvJuPUk9MaFDdOXJLeVVZMtaSmxXt7cM9QJIh70oOPjAz+m0hu3Xycr/fC6/6M9
+         suMWCdr5ZL/ezY9JpAGWzeOMHw5weZR7hff8IBXEWtG/iPgjqs7shiTYJZFzVgWd0O8B
+         STWvDDk4mYjUpV5jEmn8o6ORF7eXS3EJF8TTsWE/8VZ04GhsjChVgiAS2ags+tH7JO/Z
+         H+BukoJF+epYk0conZhM613EB7lBDopRDid7LG6HoFq1llJcpyxERgKBJGlBhB2eyDpk
+         VvDQ==
+X-Gm-Message-State: APjAAAW7yMZwsiG05qxHPicIYowBJM/4DO66jWelJiZ7q6ZVfTOWq6Bm
+        zygY0c2UX7xMd01gu/8GR74=
+X-Google-Smtp-Source: APXvYqxP05KVKzzDSlERDWaU0BlziQbGbaiRwwtdXw+b07g/iGlYM5R+CZmoxoRLzdOXdximkAHjyg==
+X-Received: by 2002:aa7:934a:: with SMTP id 10mr4422391pfn.233.1581443678329;
+        Tue, 11 Feb 2020 09:54:38 -0800 (PST)
 Received: from ziggy.stardust ([37.223.145.31])
-        by smtp.gmail.com with ESMTPSA id s23sm3987770pjq.17.2020.02.11.09.49.55
+        by smtp.gmail.com with ESMTPSA id w68sm21517pfc.20.2020.02.11.09.54.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 09:49:57 -0800 (PST)
-Subject: Re: [PATCH v11 04/10] soc: mediatek: Add multiple step bus protection
- control
+        Tue, 11 Feb 2020 09:54:37 -0800 (PST)
+Subject: Re: [PATCH v11 06/10] soc: mediatek: Add subsys clock control for bus
+ protection
 To:     Weiyi Lu <weiyi.lu@mediatek.com>,
         Nicolas Boichat <drinkcat@chromium.org>,
         Rob Herring <robh@kernel.org>,
@@ -69,7 +69,7 @@ Cc:     James Liao <jamesjj.liao@mediatek.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 References: <1576813564-23927-1-git-send-email-weiyi.lu@mediatek.com>
- <1576813564-23927-5-git-send-email-weiyi.lu@mediatek.com>
+ <1576813564-23927-7-git-send-email-weiyi.lu@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -145,12 +145,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <9cafe21c-2bd2-7ee6-9e7f-ce238b935069@gmail.com>
-Date:   Tue, 11 Feb 2020 18:49:53 +0100
+Message-ID: <b9ad8252-36e7-dacd-9040-de14e13f34f8@gmail.com>
+Date:   Tue, 11 Feb 2020 18:54:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1576813564-23927-5-git-send-email-weiyi.lu@mediatek.com>
+In-Reply-To: <1576813564-23927-7-git-send-email-weiyi.lu@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -161,569 +161,203 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 20/12/2019 04:45, Weiyi Lu wrote:
-> Both MT8183 & MT6765 have more control steps of bus protection
-> than previous project. And there add more bus protection registers
-> reside at infracfg & smi-common. Also add new APIs for multiple
-> step bus protection control with more customized arguments.
-> And then use bp_table for bus protection of all compatibles,
-> instead of mixing bus_prot_mask and bus_prot_reg_update.
+On 20/12/2019 04:46, Weiyi Lu wrote:
+> Add subsys CG control flow before/after the bus protect control
+> due to bus protection need SMI bus relative CGs enabled to feedback
+> its ack.
 > 
+
+Sorry, I don't understand the commit message. Can you please rephrase and
+explain better what this change is for.
+
 > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 > ---
->  drivers/soc/mediatek/Makefile         |   2 +-
->  drivers/soc/mediatek/mtk-scpsys-ext.c | 101 +++++++++++++++++++++++++++++
->  drivers/soc/mediatek/mtk-scpsys.c     | 117 +++++++++++++++++++++-------------
->  drivers/soc/mediatek/scpsys-ext.h     |  67 +++++++++++++++++++
->  4 files changed, 240 insertions(+), 47 deletions(-)
->  create mode 100644 drivers/soc/mediatek/mtk-scpsys-ext.c
->  create mode 100644 drivers/soc/mediatek/scpsys-ext.h
+>  drivers/soc/mediatek/mtk-scpsys.c | 72 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 70 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index b017330..b442be9 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
-> -obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
-> +obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o mtk-scpsys-ext.o
-
-It seems that we would need another patch which get's rid of the mtk-infracfg
-first and then add stuff like the possibility to have different steps.
-
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> diff --git a/drivers/soc/mediatek/mtk-scpsys-ext.c b/drivers/soc/mediatek/mtk-scpsys-ext.c
-> new file mode 100644
-> index 0000000..df402ac
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-scpsys-ext.c
-
-I'm not quite sure why we should put this into a new file. I suppose the
-rational behind it is the fact that we access other blocks through regmap.
-
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Owen Chen <Owen.Chen@mediatek.com>
-> + */
-> +#include <linux/ktime.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include "scpsys-ext.h"
-> +
-> +#define MTK_POLL_DELAY_US   10
-> +#define MTK_POLL_TIMEOUT    USEC_PER_SEC
-> +
-> +static int set_bus_protection(struct regmap *map, u32 mask,
-> +		u32 reg_set, u32 reg_sta, u32 reg_en)
-> +{
-> +	u32 val;
-> +
-> +	if (reg_set)
-> +		regmap_write(map, reg_set, mask);
-> +	else
-> +		regmap_update_bits(map, reg_en, mask, mask);
-> +
-> +	return regmap_read_poll_timeout(map, reg_sta,
-> +			val, (val & mask) == mask,
-> +			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-> +}
-> +
-> +static int clear_bus_protection(struct regmap *map, u32 mask,
-> +		u32 reg_clr, u32 reg_sta, u32 reg_en, bool ignore_ack)
-> +{
-> +	u32 val;
-> +
-> +	if (reg_clr)
-> +		regmap_write(map, reg_clr, mask);
-> +	else
-> +		regmap_update_bits(map, reg_en, mask, 0);
-> +
-> +	if (ignore_ack)
-> +		return 0;
-> +
-> +	return regmap_read_poll_timeout(map, reg_sta,
-> +			val, !(val & mask),
-> +			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-> +}
-> +
-> +int mtk_scpsys_ext_set_bus_protection(const struct bus_prot *bp_table,
-> +	struct regmap *infracfg, struct regmap *smi_common)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < MAX_STEPS; i++) {
-
-struct bus_prot bp_table = bp_table[i];
-
-> +		struct regmap *map = NULL;
-> +		int ret;
-> +
-> +		if (bp_table[i].type == INVALID_TYPE)
-> +			break;
-> +		else if (bp_table[i].type == IFR_TYPE)
-> +			map = infracfg;
-> +		else if (bp_table[i].type == SMI_TYPE)
-> +			map = smi_common;
-
-if (bp_table.type == IFR_TYPE)
-	map = infracfg;
-else if (bp_table.type == SMI_TYPE)
-	map = smi_common;
-else
-	break;
-
-> +
-> +		ret = set_bus_protection(map,
-> +				bp_table[i].mask, bp_table[i].set_ofs,
-> +				bp_table[i].sta_ofs, bp_table[i].en_ofs);
-
-passing map and bp_table here makes code much more readable. I always end-up
-counting the variables when the names in the callee changes.
-
-> +
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int mtk_scpsys_ext_clear_bus_protection(const struct bus_prot *bp_table,
-> +	struct regmap *infracfg, struct regmap *smi_common)
-> +{
-> +	int i;
-> +
-> +	for (i = MAX_STEPS - 1; i >= 0; i--) {
-> +		struct regmap *map = NULL;
-> +		int ret;
-> +
-> +		if (bp_table[i].type == INVALID_TYPE)
-> +			continue;
-> +		else if (bp_table[i].type == IFR_TYPE)
-> +			map = infracfg;
-> +		else if (bp_table[i].type == SMI_TYPE)
-> +			map = smi_common;
-> +
-> +		ret = clear_bus_protection(map,
-> +				bp_table[i].mask, bp_table[i].clr_ofs,
-> +				bp_table[i].sta_ofs, bp_table[i].en_ofs,
-> +				bp_table[i].ignore_clr_ack);
-> +
-
-same here.
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
 > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> index db35a28..763ca58 100644
+> index 763ca58..32be4b3 100644
 > --- a/drivers/soc/mediatek/mtk-scpsys.c
 > +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -11,7 +11,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_domain.h>
->  #include <linux/regulator/consumer.h>
-> -#include <linux/soc/mediatek/infracfg.h>
-> +#include "scpsys-ext.h"
+> @@ -79,6 +79,7 @@
+>  #define PWR_STATUS_WB			BIT(27)	/* MT7622 */
 >  
->  #include <dt-bindings/power/mt2701-power.h>
->  #include <dt-bindings/power/mt2712-power.h>
-> @@ -87,9 +87,9 @@
->   * @ctl_offs: The offset for main power control register.
+>  #define MAX_CLKS	3
+> +#define MAX_SUBSYS_CLKS 10
+>  
+>  /**
+>   * struct scp_domain_data - scp domain data for power on/off flow
+> @@ -88,6 +89,8 @@
 >   * @sram_pdn_bits: The mask for sram power control bits.
 >   * @sram_pdn_ack_bits: The mask for sram power control acked bits.
-> - * @bus_prot_mask: The mask for single step bus protection.
 >   * @basic_clk_name: The basic clocks required by this power domain.
+> + * @subsys_clk_prefix: The prefix name of the clocks need to be enabled
+> + *                     before releasing bus protection.
 >   * @caps: The flag for active wake-up action.
-> + * @bp_table: The mask table for multiple step bus protection.
+>   * @bp_table: The mask table for multiple step bus protection.
 >   */
->  struct scp_domain_data {
->  	const char *name;
-> @@ -97,9 +97,9 @@ struct scp_domain_data {
->  	int ctl_offs;
+> @@ -98,6 +101,7 @@ struct scp_domain_data {
 >  	u32 sram_pdn_bits;
 >  	u32 sram_pdn_ack_bits;
-> -	u32 bus_prot_mask;
 >  	const char *basic_clk_name[MAX_CLKS];
+> +	const char *subsys_clk_prefix;
 >  	u8 caps;
-> +	struct bus_prot bp_table[MAX_STEPS];
+>  	struct bus_prot bp_table[MAX_STEPS];
 >  };
->  
->  struct scp;
-> @@ -123,8 +123,8 @@ struct scp {
->  	struct device *dev;
->  	void __iomem *base;
->  	struct regmap *infracfg;
-> +	struct regmap *smi_common;
->  	struct scp_ctrl_reg ctrl_reg;
-> -	bool bus_prot_reg_update;
+> @@ -108,6 +112,7 @@ struct scp_domain {
+>  	struct generic_pm_domain genpd;
+>  	struct scp *scp;
+>  	struct clk *clk[MAX_CLKS];
+> +	struct clk *subsys_clk[MAX_SUBSYS_CLKS];
+>  	const struct scp_domain_data *data;
+>  	struct regulator *supply;
 >  };
+> @@ -301,16 +306,22 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+>  	val |= PWR_RST_B_BIT;
+>  	writel(val, ctl_addr);
 >  
->  struct scp_subdomain {
-> @@ -138,7 +138,6 @@ struct scp_soc_data {
->  	const struct scp_subdomain *subdomains;
->  	int num_subdomains;
->  	const struct scp_ctrl_reg regs;
-> -	bool bus_prot_reg_update;
->  };
->  
->  static int scpsys_domain_is_on(struct scp_domain *scpd)
-> @@ -252,24 +251,16 @@ static int scpsys_bus_protect_enable(struct scp_domain *scpd)
->  {
->  	struct scp *scp = scpd->scp;
->  
-> -	if (!scpd->data->bus_prot_mask)
-> -		return 0;
-> -
-> -	return mtk_infracfg_set_bus_protection(scp->infracfg,
-> -			scpd->data->bus_prot_mask,
-> -			scp->bus_prot_reg_update);
-> +	return mtk_scpsys_ext_set_bus_protection(scpd->data->bp_table,
-> +			scp->infracfg, scp->smi_common);
+> -	ret = scpsys_sram_enable(scpd, ctl_addr);
+> +	ret = scpsys_clk_enable(scpd->subsys_clk, MAX_SUBSYS_CLKS);
 
-Now that's just a wrapper which does add nothing but another indirection. We can
-call mtk_scpsys_ext_set_bus_protection() directly (also I don't like the name,
-actually why don't mtk_scpsys_set_bus_protection()?)
+Why can't we enable the subsystem clocks together with the rest just after
+enabeling the regulator?
 
->  }
+>  	if (ret < 0)
+>  		goto err_pwr_ack;
 >  
->  static int scpsys_bus_protect_disable(struct scp_domain *scpd)
->  {
->  	struct scp *scp = scpd->scp;
->  
-> -	if (!scpd->data->bus_prot_mask)
-> -		return 0;
-> -
-> -	return mtk_infracfg_clear_bus_protection(scp->infracfg,
-> -			scpd->data->bus_prot_mask,
-> -			scp->bus_prot_reg_update);
-> +	return mtk_scpsys_ext_clear_bus_protection(scpd->data->bp_table,
-> +			scp->infracfg, scp->smi_common);
->  }
->  
->  static int scpsys_power_on(struct generic_pm_domain *genpd)
-> @@ -404,8 +395,7 @@ static int init_basic_clks(struct platform_device *pdev, struct clk **clk,
->  
->  static struct scp *init_scp(struct platform_device *pdev,
->  			const struct scp_domain_data *scp_domain_data, int num,
-> -			const struct scp_ctrl_reg *scp_ctrl_reg,
-> -			bool bus_prot_reg_update)
-> +			const struct scp_ctrl_reg *scp_ctrl_reg)
->  {
->  	struct genpd_onecell_data *pd_data;
->  	struct resource *res;
-> @@ -419,8 +409,6 @@ static struct scp *init_scp(struct platform_device *pdev,
->  	scp->ctrl_reg.pwr_sta_offs = scp_ctrl_reg->pwr_sta_offs;
->  	scp->ctrl_reg.pwr_sta2nd_offs = scp_ctrl_reg->pwr_sta2nd_offs;
->  
-> -	scp->bus_prot_reg_update = bus_prot_reg_update;
-> -
->  	scp->dev = &pdev->dev;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -448,6 +436,17 @@ static struct scp *init_scp(struct platform_device *pdev,
->  		return ERR_CAST(scp->infracfg);
->  	}
->  
-> +	scp->smi_common = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> +			"smi_comm");
+> +	ret = scpsys_sram_enable(scpd, ctl_addr);
+> +	if (ret < 0)
+> +		goto err_sram;
 > +
-> +	if (scp->smi_common == ERR_PTR(-ENODEV)) {
-> +		scp->smi_common = NULL;
-> +	} else if (IS_ERR(scp->smi_common)) {
-> +		dev_err(&pdev->dev, "Cannot find smi_common controller: %ld\n",
-> +				PTR_ERR(scp->smi_common));
-> +		return ERR_CAST(scp->smi_common);
+>  	ret = scpsys_bus_protect_disable(scpd);
+>  	if (ret < 0)
+> -		goto err_pwr_ack;
+> +		goto err_sram;
+>  
+>  	return 0;
+>  
+> +err_sram:
+> +	scpsys_clk_disable(scpd->subsys_clk, MAX_SUBSYS_CLKS);
+>  err_pwr_ack:
+>  	scpsys_clk_disable(scpd->clk, MAX_CLKS);
+>  err_clk:
+> @@ -337,6 +348,8 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+>  	if (ret < 0)
+>  		goto out;
+>  
+> +	scpsys_clk_disable(scpd->subsys_clk, MAX_SUBSYS_CLKS);
+> +
+
+Same here, why can't we disable the clocks in the scpsys_clk_disable call?
+
+>  	/* subsys power off */
+>  	val = readl(ctl_addr);
+>  	val |= PWR_ISO_BIT;
+> @@ -374,6 +387,48 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+>  	return ret;
+>  }
+>  
+> +static int init_subsys_clks(struct platform_device *pdev,
+> +		const char *prefix, struct clk **clk)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	u32 prefix_len, sub_clk_cnt = 0;
+> +	struct property *prop;
+> +	const char *clk_name;
+> +
+> +	if (!node) {
+> +		dev_err(&pdev->dev, "Cannot find scpsys node: %ld\n",
+> +			PTR_ERR(node));
+> +		return PTR_ERR(node);
 > +	}
 > +
->  	for (i = 0; i < num; i++) {
+> +	prefix_len = strlen(prefix);
+> +
+> +	of_property_for_each_string(node, "clock-names", prop, clk_name) {
+> +		if (!strncmp(clk_name, prefix, prefix_len) &&
+> +				(clk_name[prefix_len] == '-')) {
+> +			if (sub_clk_cnt >= MAX_SUBSYS_CLKS) {
+> +				dev_err(&pdev->dev,
+> +					"subsys clk out of range %d\n",
+> +					sub_clk_cnt);
+> +				return -ENOMEM;
+
+EINVAL maybe, ENOMEM seems wrong here.
+
+> +			}
+> +
+> +			clk[sub_clk_cnt] = devm_clk_get(&pdev->dev,
+> +						clk_name);
+
+Here we get hit by the bad design of this driver in the first place. As we need
+the subsystem-name (eg mm-0, mm-1) to group clocks to one scp_domain.
+I think we should better try to model the domains and subdomains in DTS and add
+their clocks to it. This way we can also get rid of the scp_subdomain which can
+hit it's limit anytime soon when we have a chip with a sub-subdomain.
+That will need a new driver, but as it seems the mt8183 and the mt6765 have a
+more complex design I think it is worth it.
+
+That said, given that you are in v11 already I understand that your motivation
+to start over isn't the biggest. The problem is, any new driver will have new
+bindings and won't work with older DTS. So adding a lot of stuff on top of a not
+really nice driver isn't something I'm very keen on. On the other hand you
+already put a lot of work into this solution.
+
+My proposal, I'll try to bake up a new driver this week. If I fail to deliver,
+it's up to you to decide if you want to go on with the approach in this series
+or try to work on the new one.
+
+Regards,
+Matthias
+
+> +
+> +			if (IS_ERR(clk[sub_clk_cnt])) {
+> +				dev_err(&pdev->dev,
+> +					"Subsys clk get fail %ld\n",
+> +					PTR_ERR(clk[sub_clk_cnt]));
+> +				return PTR_ERR(clk[sub_clk_cnt]);
+> +			}
+> +			sub_clk_cnt++;
+> +		}
+> +	}
+> +
+> +	return sub_clk_cnt;
+> +}
+> +
+>  static int init_basic_clks(struct platform_device *pdev, struct clk **clk,
+>  			const char * const *name)
+>  {
+> @@ -466,6 +521,7 @@ static struct scp *init_scp(struct platform_device *pdev,
 >  		struct scp_domain *scpd = &scp->domains[i];
+>  		struct generic_pm_domain *genpd = &scpd->genpd;
 >  		const struct scp_domain_data *data = &scp_domain_data[i];
-> @@ -530,8 +529,11 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.name = "conn",
->  		.sta_mask = PWR_STATUS_CONN,
->  		.ctl_offs = SPM_CONN_PWR_CON,
-> -		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_CONN_M |
-> -				 MT2701_TOP_AXI_PROT_EN_CONN_S,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT2701_TOP_AXI_PROT_EN_CONN_M |
-> +				MT2701_TOP_AXI_PROT_EN_CONN_S),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->  	},
->  	[MT2701_POWER_DOMAIN_DISP] = {
-> @@ -540,7 +542,10 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.ctl_offs = SPM_DIS_PWR_CON,
->  		.sram_pdn_bits = GENMASK(11, 8),
->  		.basic_clk_name = {"mm"},
-> -		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_MM_M0,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT2701_TOP_AXI_PROT_EN_MM_M0),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->  	},
->  	[MT2701_POWER_DOMAIN_MFG] = {
-> @@ -675,7 +680,10 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.sram_pdn_bits = GENMASK(8, 8),
->  		.sram_pdn_ack_bits = GENMASK(16, 16),
->  		.basic_clk_name = {"mfg"},
-> -		.bus_prot_mask = BIT(14) | BIT(21) | BIT(23),
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0x260, 0x264, 0x220, 0x228,
-> +				BIT(14) | BIT(21) | BIT(23)),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->  	},
->  	[MT2712_POWER_DOMAIN_MFG_SC1] = {
-> @@ -747,7 +755,10 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.sram_pdn_bits = GENMASK(8, 8),
->  		.sram_pdn_ack_bits = GENMASK(12, 12),
->  		.basic_clk_name = {"mm"},
-> -		.bus_prot_mask = (BIT(1) | BIT(2)),
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				BIT(1) | BIT(2)),
-> +		},
->  	},
->  	[MT6797_POWER_DOMAIN_AUDIO] = {
->  		.name = "audio",
-> @@ -794,7 +805,10 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.ctl_offs = SPM_ETHSYS_PWR_CON,
->  		.sram_pdn_bits = GENMASK(11, 8),
->  		.sram_pdn_ack_bits = GENMASK(15, 12),
-> -		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_ETHSYS,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT7622_TOP_AXI_PROT_EN_ETHSYS),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->  	},
->  	[MT7622_POWER_DOMAIN_HIF0] = {
-> @@ -804,7 +818,10 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.sram_pdn_bits = GENMASK(11, 8),
->  		.sram_pdn_ack_bits = GENMASK(15, 12),
->  		.basic_clk_name = {"hif_sel"},
-> -		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_HIF0,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT7622_TOP_AXI_PROT_EN_HIF0),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->  	},
->  	[MT7622_POWER_DOMAIN_HIF1] = {
-> @@ -814,7 +831,10 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.sram_pdn_bits = GENMASK(11, 8),
->  		.sram_pdn_ack_bits = GENMASK(15, 12),
->  		.basic_clk_name = {"hif_sel"},
-> -		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_HIF1,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT7622_TOP_AXI_PROT_EN_HIF1),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->  	},
->  	[MT7622_POWER_DOMAIN_WB] = {
-> @@ -823,7 +843,10 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.ctl_offs = SPM_WB_PWR_CON,
->  		.sram_pdn_bits = 0,
->  		.sram_pdn_ack_bits = 0,
-> -		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_WB,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT7622_TOP_AXI_PROT_EN_WB),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP | MTK_SCPD_FWAIT_SRAM,
->  	},
->  };
-> @@ -837,8 +860,11 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.name = "conn",
->  		.sta_mask = PWR_STATUS_CONN,
->  		.ctl_offs = SPM_CONN_PWR_CON,
-> -		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_CONN_M |
-> -				 MT2701_TOP_AXI_PROT_EN_CONN_S,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT2701_TOP_AXI_PROT_EN_CONN_M |
-> +				MT2701_TOP_AXI_PROT_EN_CONN_S),
-> +		},
->  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->  	},
->  	[MT7623A_POWER_DOMAIN_ETH] = {
-> @@ -903,8 +929,11 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.sram_pdn_bits = GENMASK(11, 8),
->  		.sram_pdn_ack_bits = GENMASK(12, 12),
->  		.basic_clk_name = {"mm"},
-> -		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MM_M0 |
-> -			MT8173_TOP_AXI_PROT_EN_MM_M1,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT8173_TOP_AXI_PROT_EN_MM_M0 |
-> +				MT8173_TOP_AXI_PROT_EN_MM_M1),
-> +		},
->  	},
->  	[MT8173_POWER_DOMAIN_VENC_LT] = {
->  		.name = "venc_lt",
-> @@ -950,10 +979,13 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.ctl_offs = SPM_MFG_PWR_CON,
->  		.sram_pdn_bits = GENMASK(13, 8),
->  		.sram_pdn_ack_bits = GENMASK(21, 16),
-> -		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MFG_S |
-> -			MT8173_TOP_AXI_PROT_EN_MFG_M0 |
-> -			MT8173_TOP_AXI_PROT_EN_MFG_M1 |
-> -			MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT,
-> +		.bp_table = {
-> +			BUS_PROT(IFR_TYPE, 0, 0, 0x220, 0x228,
-> +				MT8173_TOP_AXI_PROT_EN_MFG_S |
-> +				MT8173_TOP_AXI_PROT_EN_MFG_M0 |
-> +				MT8173_TOP_AXI_PROT_EN_MFG_M1 |
-> +				MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT),
-> +		},
->  	},
->  };
->  
-> @@ -969,7 +1001,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.pwr_sta_offs = SPM_PWR_STATUS,
->  		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
->  	},
-> -	.bus_prot_reg_update = true,
->  };
->  
->  static const struct scp_soc_data mt2712_data = {
-> @@ -981,7 +1012,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.pwr_sta_offs = SPM_PWR_STATUS,
->  		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
->  	},
-> -	.bus_prot_reg_update = false,
->  };
->  
->  static const struct scp_soc_data mt6797_data = {
-> @@ -993,7 +1023,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.pwr_sta_offs = SPM_PWR_STATUS_MT6797,
->  		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND_MT6797
->  	},
-> -	.bus_prot_reg_update = true,
->  };
->  
->  static const struct scp_soc_data mt7622_data = {
-> @@ -1003,7 +1032,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.pwr_sta_offs = SPM_PWR_STATUS,
->  		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
->  	},
-> -	.bus_prot_reg_update = true,
->  };
->  
->  static const struct scp_soc_data mt7623a_data = {
-> @@ -1013,7 +1041,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.pwr_sta_offs = SPM_PWR_STATUS,
->  		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
->  	},
-> -	.bus_prot_reg_update = true,
->  };
->  
->  static const struct scp_soc_data mt8173_data = {
-> @@ -1025,7 +1052,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->  		.pwr_sta_offs = SPM_PWR_STATUS,
->  		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
->  	},
-> -	.bus_prot_reg_update = true,
->  };
->  
->  /*
-> @@ -1066,8 +1092,7 @@ static int scpsys_probe(struct platform_device *pdev)
->  
->  	soc = of_device_get_match_data(&pdev->dev);
->  
-> -	scp = init_scp(pdev, soc->domains, soc->num_domains, &soc->regs,
-> -			soc->bus_prot_reg_update);
-> +	scp = init_scp(pdev, soc->domains, soc->num_domains, &soc->regs);
->  	if (IS_ERR(scp))
->  		return PTR_ERR(scp);
->  
-> diff --git a/drivers/soc/mediatek/scpsys-ext.h b/drivers/soc/mediatek/scpsys-ext.h
-> new file mode 100644
-> index 0000000..458b2c5
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/scpsys-ext.h
-> @@ -0,0 +1,67 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __SOC_MEDIATEK_SCPSYS_EXT_H
-> +#define __SOC_MEDIATEK_SCPSYS_EXT_H
-> +
-> +#define MAX_STEPS	4
-> +
-> +#define _BUS_PROT(_type, _set_ofs, _clr_ofs,			\
-> +		_en_ofs, _sta_ofs, _mask, _ignore_clr_ack) {	\
-> +		.type = _type,					\
-> +		.set_ofs = _set_ofs,				\
-> +		.clr_ofs = _clr_ofs,				\
-> +		.en_ofs = _en_ofs,				\
-> +		.sta_ofs = _sta_ofs,				\
-> +		.mask = _mask,					\
-> +		.ignore_clr_ack = _ignore_clr_ack,		\
-> +	}
-> +
-> +#define BUS_PROT(_type, _set_ofs, _clr_ofs,		\
-> +		_en_ofs, _sta_ofs, _mask)		\
-> +		_BUS_PROT(_type, _set_ofs, _clr_ofs,	\
-> +		_en_ofs, _sta_ofs, _mask, false)
-> +
-> +#define BUS_PROT_IGN(_type, _set_ofs, _clr_ofs,	\
-> +		_en_ofs, _sta_ofs, _mask)		\
-> +		_BUS_PROT(_type, _set_ofs, _clr_ofs,	\
-> +		_en_ofs, _sta_ofs, _mask, true)
-> +
-> +#define MT2701_TOP_AXI_PROT_EN_MM_M0		BIT(1)
-> +#define MT2701_TOP_AXI_PROT_EN_CONN_M		BIT(2)
-> +#define MT2701_TOP_AXI_PROT_EN_CONN_S		BIT(8)
-> +
-> +#define MT7622_TOP_AXI_PROT_EN_ETHSYS		(BIT(3) | BIT(17))
-> +#define MT7622_TOP_AXI_PROT_EN_HIF0		(BIT(24) | BIT(25))
-> +#define MT7622_TOP_AXI_PROT_EN_HIF1		(BIT(26) | BIT(27) | \
-> +						 BIT(28))
-> +#define MT7622_TOP_AXI_PROT_EN_WB		(BIT(2) | BIT(6) | \
-> +						 BIT(7) | BIT(8))
-> +
-> +#define MT8173_TOP_AXI_PROT_EN_MM_M0		BIT(1)
-> +#define MT8173_TOP_AXI_PROT_EN_MM_M1		BIT(2)
-> +#define MT8173_TOP_AXI_PROT_EN_MFG_S		BIT(14)
-> +#define MT8173_TOP_AXI_PROT_EN_MFG_M0		BIT(21)
-> +#define MT8173_TOP_AXI_PROT_EN_MFG_M1		BIT(22)
-> +#define MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT	BIT(23)
-> +
-> +enum regmap_type {
-> +	INVALID_TYPE = 0,
-> +	IFR_TYPE,
-> +	SMI_TYPE,
-> +};
-> +
-> +struct bus_prot {
-> +	enum regmap_type type;
-> +	u32 set_ofs;
-> +	u32 clr_ofs;
+> +		int clk_cnt;
 
-Please try to keep variable names consistent. You change for example set_ofs to
-reg_set. That makes the code more difficult to read and understand.
+clk_cnt sounds to me like clock count, but the variable actually is only used to
+check the return value of init_subsys_clks. Please rename it to ret or something
+like this.
 
-> +	u32 en_ofs;
-> +	u32 sta_ofs;
-> +	u32 mask;
-> +	bool ignore_clr_ack;
-> +};
+>  
+>  		pd_data->domains[i] = genpd;
+>  		scpd->scp = scp;
+> @@ -476,6 +532,18 @@ static struct scp *init_scp(struct platform_device *pdev,
+>  		if (ret)
+>  			return ERR_PTR(ret);
+>  
+> +		if (data->subsys_clk_prefix) {
+> +			clk_cnt = init_subsys_clks(pdev,
+> +					data->subsys_clk_prefix,
+> +					scpd->subsys_clk);
+> +			if (clk_cnt < 0) {
+> +				dev_err(&pdev->dev,
+> +					"%s: subsys clk unavailable\n",
+> +					data->name);
+> +				return ERR_PTR(clk_cnt);
+> +			}
+> +		}
 > +
-> +int mtk_scpsys_ext_set_bus_protection(const struct bus_prot *bp_table,
-> +	struct regmap *infracfg, struct regmap *smi_common);
-> +int mtk_scpsys_ext_clear_bus_protection(const struct bus_prot *bp_table,
-> +	struct regmap *infracfg, struct regmap *smi_common);
-> +
-> +#endif /* __SOC_MEDIATEK_SCPSYS_EXT_H */
+>  		genpd->name = data->name;
+>  		genpd->power_off = scpsys_power_off;
+>  		genpd->power_on = scpsys_power_on;
 > 
