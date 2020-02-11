@@ -2,86 +2,90 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D952C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D0DC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720282173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB2E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgBKNyw convert rfc822-to-8bit (ORCPT
+        id S1729500AbgBKNzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:54:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50760 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 08:55:02 -0500
+Received: from 8bytes.org ([81.169.241.247]:52278 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729598AbgBKNyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:54:47 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 716F8214DB;
-        Tue, 11 Feb 2020 13:54:45 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 08:54:43 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        id S1729592AbgBKNx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:28 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 871A0E9C; Tue, 11 Feb 2020 14:53:16 +0100 (CET)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
-Subject: Re: [RFC] why can't dynamic isolation just like the static way
-Message-ID: <20200211085443.2a112c03@gandalf.local.home>
-In-Reply-To: <fed10a26-7423-23b5-316c-c74d354870dd@linux.alibaba.com>
-References: <fed10a26-7423-23b5-316c-c74d354870dd@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 52/62] x86/sev-es: Handle #DB Events
+Date:   Tue, 11 Feb 2020 14:52:46 +0100
+Message-Id: <20200211135256.24617-53-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
+References: <20200211135256.24617-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joerg Roedel <jroedel@suse.de>
 
-You forgot to include the cgroup maintainers.
+Handle #VC exceptions caused by #DB exceptions in the guest. Do not
+forward them to the hypervisor and handle them with do_debug() instead.
 
--- Steve
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kernel/sev-es.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-
-On Tue, 11 Feb 2020 16:17:34 +0800
-王贇 <yun.wang@linux.alibaba.com> wrote:
-
-> Hi, folks
-> 
-> We are dealing with isolcpus these days and try to do the isolation
-> dynamically.
-> 
-> The kernel doc lead us into the cpuset.sched_load_balance, it's fine
-> to achieve the dynamic isolation with it, however we got problem with
-> the systemd stuff.
-> 
-> It's keeping create cgroup with sched_load_balance enabled on default,
-> while the cpus are overlapped with the isolated ones, which lead into
-> sched domain rebuild and these cpus become non-isolated.
-> 
-> We're just looking forward an easy way to dynamic isolate some cpus,
-> just like the isolation parameter, but sched_load_balance forcing us
-> to dealing with the management of cgroups, we really don't get the
-> point in here...
-> 
-> Why do we have to mix the isolation with cgroups? Why not just provide
-> a proc entry to read cpumask and rebuild the domains?
-> 
-> Please let us know if there is any good reason to make the dynamic
-> isolation in that way, appreciated in advance :-)
-> 
-> Regards,
-> Michael Wang
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 1b873d00e38f..700f75fc13e7 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -361,6 +361,15 @@ static enum es_result handle_vmmcall(struct ghcb *ghcb,
+ 	return ES_OK;
+ }
+ 
++static enum es_result handle_db_exception(struct ghcb *ghcb,
++					  struct es_em_ctxt *ctxt)
++{
++	do_debug(ctxt->regs, 0);
++
++	/* Exception event, do not advance RIP */
++	return ES_RETRY;
++}
++
+ static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
+ 					  struct ghcb *ghcb,
+ 					  unsigned long exit_code,
+@@ -375,6 +384,9 @@ static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = handle_dr7_write(ghcb, ctxt, early);
+ 		break;
++	case SVM_EXIT_EXCP_BASE + X86_TRAP_DB:
++		result = handle_db_exception(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
+ 		do_alignment_check(ctxt->regs, 0);
+ 		result = ES_RETRY;
+-- 
+2.17.1
 
