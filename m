@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8A8C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6A5C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430A220848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D453D20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436145;
-	bh=Kx+9xBKj5yPpCTuOsXPyPS8hHIzC0nWbKVN1ck+1UQo=;
+	s=default; t=1581436148;
+	bh=kqHY5lKgz0ZcbLjVhgOSybzRZCnc2oH2Esk6zDmG0vM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=McQUlZbcRM5OZkOIpo2O7BCpSKkvcZow6Thj/ptnBVqySH2J5BdzVEnPredMg/KxE
-	 xjAbhu3n/IXQrZKhaGLhDAZXj0zG/bBN4qXJ4taw0WbgLpcR/aqCH+htx99kdIYj57
-	 E+M8tYiIF6lWFtIRIkxPNMVBokSWE72cHyjM+i/0=
+	b=R/p5L9PDBPJ07/JoC1tRSjxasKzfMcDJwSsjnDSxrkiYmjqKStubMbMNxkvMrSVYZ
+	 kNqKMsuiw+uyW2tL7pm66yGTiIokVspC97U+sO6SC01lRMaq63oAh2AGnc9rFFVNU+
+	 WoatQTHYTDVg5YtCG5OBSyYT3UP5Plhh1uvPjzO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgBKPtE (ORCPT
+        id S1730085AbgBKPtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:49:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:48340 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:49:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:48360 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbgBKPtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:49:04 -0500
+        id S1728348AbgBKPtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:49:06 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EB5030E;
-        Tue, 11 Feb 2020 07:49:03 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4065113E;
+        Tue, 11 Feb 2020 07:49:05 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02D3A3F68E;
-        Tue, 11 Feb 2020 07:49:02 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:49:01 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A5013F68E;
+        Tue, 11 Feb 2020 07:49:05 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:49:03 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: ti: davinci-mcasp: remove redundant assignment to variable ret" to the asoc tree
-In-Reply-To: <20200210092423.327499-1-colin.king@canonical.com>
-Message-Id: <applied-20200210092423.327499-1-colin.king@canonical.com>
+        perex@perex.cz, pierre-louis.bossart@linux.intel.com,
+        srinivas.kandagatla@linaro.org, tiwai@suse.com,
+        yuehaibing@huawei.com
+Subject: Applied "ASoC: wcd934x: Remove set but not unused variable 'hph_comp_ctrl7'" to the asoc tree
+In-Reply-To: <20200210150421.34680-1-yuehaibing@huawei.com>
+Message-Id: <applied-20200210150421.34680-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,7 +53,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: ti: davinci-mcasp: remove redundant assignment to variable ret
+   ASoC: wcd934x: Remove set but not unused variable 'hph_comp_ctrl7'
 
 has been applied to the asoc tree at
 
@@ -78,41 +78,49 @@ to this mail.
 Thanks,
 Mark
 
-From f4d95de415b286090c1bf739c20a5ea2aefda834 Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Mon, 10 Feb 2020 09:24:22 +0000
-Subject: [PATCH] ASoC: ti: davinci-mcasp: remove redundant assignment to
- variable ret
+From da22a95313197a349c557b98e3bee4e2b04d4f9d Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Mon, 10 Feb 2020 23:04:21 +0800
+Subject: [PATCH] ASoC: wcd934x: Remove set but not unused variable
+ 'hph_comp_ctrl7'
 
-The assignment to ret is redundant as it is not used in the error
-return path and hence can be removed.
+sound/soc/codecs/wcd934x.c: In function wcd934x_codec_hphdelay_lutbypass:
+sound/soc/codecs/wcd934x.c:3395:6: warning: variable hph_comp_ctrl7 set but not used [-Wunused-but-set-variable]
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200210092423.327499-1-colin.king@canonical.com
+commit da3e83f8bb86 ("ASoC: wcd934x: add audio routings")
+involved this unused variable.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20200210150421.34680-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/davinci-mcasp.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ sound/soc/codecs/wcd934x.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index d9c3a3210a24..734ffe925c4d 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -1765,10 +1765,8 @@ static struct davinci_mcasp_pdata *davinci_mcasp_set_pdata_from_of(
- 	} else if (match) {
- 		pdata = devm_kmemdup(&pdev->dev, match->data, sizeof(*pdata),
- 				     GFP_KERNEL);
--		if (!pdata) {
--			ret = -ENOMEM;
--			return pdata;
--		}
-+		if (!pdata)
-+			return NULL;
- 	} else {
- 		/* control shouldn't reach here. something is wrong */
- 		ret = -EINVAL;
+diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
+index e780ecd554d2..aefaadfba8a1 100644
+--- a/sound/soc/codecs/wcd934x.c
++++ b/sound/soc/codecs/wcd934x.c
+@@ -3388,18 +3388,15 @@ static void wcd934x_codec_hphdelay_lutbypass(struct snd_soc_component *comp,
+ {
+ 	u8 hph_dly_mask;
+ 	u16 hph_lut_bypass_reg = 0;
+-	u16 hph_comp_ctrl7 = 0;
+ 
+ 	switch (interp_idx) {
+ 	case INTERP_HPHL:
+ 		hph_dly_mask = 1;
+ 		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHL_COMP_LUT;
+-		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER1_CTL7;
+ 		break;
+ 	case INTERP_HPHR:
+ 		hph_dly_mask = 2;
+ 		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHR_COMP_LUT;
+-		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER2_CTL7;
+ 		break;
+ 	default:
+ 		return;
 -- 
 2.20.1
 
