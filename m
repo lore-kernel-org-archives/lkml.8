@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0092BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAB3C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B47206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0474720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731384AbgBKSVa (ORCPT
+        id S1731390AbgBKSVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:21:30 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:44992 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731096AbgBKSTd (ORCPT
+        Tue, 11 Feb 2020 13:21:33 -0500
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:52102 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729372AbgBKSTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:19:33 -0500
+        Tue, 11 Feb 2020 13:19:32 -0500
 Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id 1WKV2200K5USYZQ01WKV3C; Tue, 11 Feb 2020 19:19:30 +0100
+        by baptiste.telenet-ops.be with bizsmtp
+        id 1WKW220025USYZQ01WKW7D; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0002nb-Ar; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a89-0002oP-TR; Tue, 11 Feb 2020 19:19:29 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0003y7-9j; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a89-0003yq-S2; Tue, 11 Feb 2020 19:19:29 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -40,104 +40,87 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 01/34] debugfs: regset32: Add Runtime PM support
-Date:   Tue, 11 Feb 2020 19:18:55 +0100
-Message-Id: <20200211181928.15178-2-geert+renesas@glider.be>
+Subject: [PATCH v2 16/34] crypto: ccree - remove cc_pm_is_dev_suspended() wrapper
+Date:   Tue, 11 Feb 2020 19:19:10 +0100
+Message-Id: <20200211181928.15178-17-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
 References: <20200211181928.15178-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hardware registers of devices under control of power management cannot
-be accessed at all times.  If such a device is suspended, register
-accesses may lead to undefined behavior, like reading bogus values, or
-causing exceptions or system lock-ups.
+If CONFIG_PM=y, cc_pm_is_dev_suspended() is just a wrapper around
+pm_runtime_suspended().
+If CONFIG_PM=n, cc_pm_is_dev_suspended() a dummy that behaves exactly
+the same as the dummy for pm_runtime_suspended().
 
-Extend struct debugfs_regset32 with an optional field to let device
-drivers specify the device the registers in the set belong to.  This
-allows debugfs_show_regset32() to make sure the device is resumed while
-its registers are being read.
+Hence remove cc_pm_is_dev_suspended(), and call pm_runtime_suspended()
+directly.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-Affected drivers:
-  - drivers/crypto/ccree (fixed)
-  - drivers/gpu/drm/msm/disp/dpu1
-  - drivers/usb/dwc3
-  - drivers/usb/host/ehci-omap.c
-  - drivers/usb/host/ehci-tegra.c
-  - drivers/usb/host/ohci-platform.c
-  - drivers/usb/host/xhci-dbgcap.c
-  - drivers/usb/host/xhci-histb.c
-  - drivers/usb/host/xhci-hub.c
-  - drivers/usb/host/xhci-mtk.c
-  - drivers/usb/host/xhci-pci.c
-  - drivers/usb/host/xhci-tegra.c
-  - drivers/usb/host/xhci.c
-  - drivers/usb/mtu3
-  - drivers/usb/musb
-    drivers/usb/host/xhci-plat.c
-
-Some drivers call pm_runtime_forbid(), but given the comment "users
-should enable runtime pm using power/control in sysfs", this can be
-overridden from userspace?
-
 v2:
-  - Add Reviewed-by, Acked-by,
-  - s/locks/lock-ups/.
----
- fs/debugfs/file.c       | 8 ++++++++
- include/linux/debugfs.h | 1 +
- 2 files changed, 9 insertions(+)
+  - New.
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index 634b09d18b77f46f..204734f8d1c6d648 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -18,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/atomic.h>
- #include <linux/device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/poll.h>
- #include <linux/security.h>
+ drivers/crypto/ccree/cc_driver.c | 2 +-
+ drivers/crypto/ccree/cc_pm.c     | 6 ------
+ drivers/crypto/ccree/cc_pm.h     | 7 -------
+ 3 files changed, 1 insertion(+), 14 deletions(-)
+
+diff --git a/drivers/crypto/ccree/cc_driver.c b/drivers/crypto/ccree/cc_driver.c
+index e365ede32cc0e6a0..02442596310cd98d 100644
+--- a/drivers/crypto/ccree/cc_driver.c
++++ b/drivers/crypto/ccree/cc_driver.c
+@@ -136,7 +136,7 @@ static irqreturn_t cc_isr(int irq, void *dev_id)
  
-@@ -1060,7 +1061,14 @@ static int debugfs_show_regset32(struct seq_file *s, void *data)
- {
- 	struct debugfs_regset32 *regset = s->private;
+ 	/* STAT_OP_TYPE_GENERIC STAT_PHASE_0: Interrupt */
+ 	/* if driver suspended return, probably shared interrupt */
+-	if (cc_pm_is_dev_suspended(dev))
++	if (pm_runtime_suspended(dev))
+ 		return IRQ_NONE;
  
-+	if (regset->dev)
-+		pm_runtime_get_sync(regset->dev);
-+
- 	debugfs_print_regs32(s, regset->regs, regset->nregs, regset->base, "");
-+
-+	if (regset->dev)
-+		pm_runtime_put(regset->dev);
-+
- 	return 0;
+ 	/* read the interrupt status */
+diff --git a/drivers/crypto/ccree/cc_pm.c b/drivers/crypto/ccree/cc_pm.c
+index f7729fc1ee597e9a..3b4927c41a177752 100644
+--- a/drivers/crypto/ccree/cc_pm.c
++++ b/drivers/crypto/ccree/cc_pm.c
+@@ -74,9 +74,3 @@ void cc_pm_put_suspend(struct device *dev)
+ 	pm_runtime_mark_last_busy(dev);
+ 	pm_runtime_put_autosuspend(dev);
  }
+-
+-bool cc_pm_is_dev_suspended(struct device *dev)
+-{
+-	/* check device state using runtime api */
+-	return pm_runtime_suspended(dev);
+-}
+diff --git a/drivers/crypto/ccree/cc_pm.h b/drivers/crypto/ccree/cc_pm.h
+index 2dcf53fa108e77a6..1fe1fc827f62f49e 100644
+--- a/drivers/crypto/ccree/cc_pm.h
++++ b/drivers/crypto/ccree/cc_pm.h
+@@ -19,7 +19,6 @@ int cc_pm_suspend(struct device *dev);
+ int cc_pm_resume(struct device *dev);
+ int cc_pm_get(struct device *dev);
+ void cc_pm_put_suspend(struct device *dev);
+-bool cc_pm_is_dev_suspended(struct device *dev);
  
-diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-index 3d013de64f70ec42..ad416853e722fca7 100644
---- a/include/linux/debugfs.h
-+++ b/include/linux/debugfs.h
-@@ -35,6 +35,7 @@ struct debugfs_regset32 {
- 	const struct debugfs_reg32 *regs;
- 	int nregs;
- 	void __iomem *base;
-+	struct device *dev;	/* Optional device for Runtime PM */
- };
+ #else
  
- extern struct dentry *arch_debugfs_dir;
+@@ -30,12 +29,6 @@ static inline int cc_pm_get(struct device *dev)
+ 
+ static inline void cc_pm_put_suspend(struct device *dev) {}
+ 
+-static inline bool cc_pm_is_dev_suspended(struct device *dev)
+-{
+-	/* if PM not supported device is never suspend */
+-	return false;
+-}
+-
+ #endif
+ 
+ #endif /*__POWER_MGR_H__*/
 -- 
 2.17.1
 
