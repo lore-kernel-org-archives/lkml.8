@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F67C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA516C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00CB12070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5F12070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgBKXkF (ORCPT
+        id S1728111AbgBKXit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:40:05 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46019 "EHLO
+        Tue, 11 Feb 2020 18:38:49 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42015 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgBKXiv (ORCPT
+        with ESMTP id S1728052AbgBKXio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:38:51 -0500
+        Tue, 11 Feb 2020 18:38:44 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 7e947757f6db853b; Wed, 12 Feb 2020 00:38:48 +0100
+ id 1502ec76482e32b6; Wed, 12 Feb 2020 00:38:43 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 14/28] cpuidle: Call cpu_latency_qos_limit() instead of pm_qos_request()
-Date:   Wed, 12 Feb 2020 00:08:42 +0100
-Message-ID: <3830254.4za0FlGIKD@kreacher>
+        Peter Chen <Peter.Chen@nxp.com>, linux-usb@vger.kernel.org
+Subject: [PATCH 23/28] drivers: usb: Call cpu_latency_qos_*() instead of pm_qos_*()
+Date:   Wed, 12 Feb 2020 00:28:44 +0100
+Message-ID: <19064076.ICumzjfW0v@kreacher>
 In-Reply-To: <1654227.8mz0SueHsU@kreacher>
 References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
@@ -43,31 +43,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Call cpu_latency_qos_limit() instead of pm_qos_request(), because the
-latter is going to be dropped.
+Call cpu_latency_qos_add/remove_request() instead of
+pm_qos_add/remove_request(), respectively, because the
+latter are going to be dropped.
 
 No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/cpuidle/governor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/chipidea/ci_hdrc_imx.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/cpuidle/governor.c b/drivers/cpuidle/governor.c
-index e48271e117a3..29acaf48e575 100644
---- a/drivers/cpuidle/governor.c
-+++ b/drivers/cpuidle/governor.c
-@@ -109,9 +109,9 @@ int cpuidle_register_governor(struct cpuidle_governor *gov)
-  */
- s64 cpuidle_governor_latency_req(unsigned int cpu)
- {
--	int global_req = pm_qos_request(PM_QOS_CPU_DMA_LATENCY);
- 	struct device *device = get_cpu_device(cpu);
- 	int device_req = dev_pm_qos_raw_resume_latency(device);
-+	int global_req = cpu_latency_qos_limit();
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+index d8e7eb2f97b9..a479af3ae31d 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -393,8 +393,7 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 	}
  
- 	if (device_req > global_req)
- 		device_req = global_req;
+ 	if (pdata.flags & CI_HDRC_PMQOS)
+-		pm_qos_add_request(&data->pm_qos_req,
+-			PM_QOS_CPU_DMA_LATENCY, 0);
++		cpu_latency_qos_add_request(&data->pm_qos_req, 0);
+ 
+ 	ret = imx_get_clks(dev);
+ 	if (ret)
+@@ -478,7 +477,7 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 		/* don't overwrite original ret (cf. EPROBE_DEFER) */
+ 		regulator_disable(data->hsic_pad_regulator);
+ 	if (pdata.flags & CI_HDRC_PMQOS)
+-		pm_qos_remove_request(&data->pm_qos_req);
++		cpu_latency_qos_remove_request(&data->pm_qos_req);
+ 	data->ci_pdev = NULL;
+ 	return ret;
+ }
+@@ -499,7 +498,7 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
+ 	if (data->ci_pdev) {
+ 		imx_disable_unprepare_clks(&pdev->dev);
+ 		if (data->plat_data->flags & CI_HDRC_PMQOS)
+-			pm_qos_remove_request(&data->pm_qos_req);
++			cpu_latency_qos_remove_request(&data->pm_qos_req);
+ 		if (data->hsic_pad_regulator)
+ 			regulator_disable(data->hsic_pad_regulator);
+ 	}
+@@ -527,7 +526,7 @@ static int __maybe_unused imx_controller_suspend(struct device *dev)
+ 
+ 	imx_disable_unprepare_clks(dev);
+ 	if (data->plat_data->flags & CI_HDRC_PMQOS)
+-		pm_qos_remove_request(&data->pm_qos_req);
++		cpu_latency_qos_remove_request(&data->pm_qos_req);
+ 
+ 	data->in_lpm = true;
+ 
+@@ -547,8 +546,7 @@ static int __maybe_unused imx_controller_resume(struct device *dev)
+ 	}
+ 
+ 	if (data->plat_data->flags & CI_HDRC_PMQOS)
+-		pm_qos_add_request(&data->pm_qos_req,
+-			PM_QOS_CPU_DMA_LATENCY, 0);
++		cpu_latency_qos_add_request(&data->pm_qos_req, 0);
+ 
+ 	ret = imx_prepare_enable_clks(dev);
+ 	if (ret)
 -- 
 2.16.4
 
