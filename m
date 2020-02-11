@@ -2,98 +2,101 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2297C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F042EC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CDB2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA15C2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgBKN5f (ORCPT
+        id S1730001AbgBKN5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:57:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:46444 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 08:57:44 -0500
+Received: from 8bytes.org ([81.169.241.247]:52104 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbgBKN5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:57:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CB6431B;
-        Tue, 11 Feb 2020 05:57:32 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 541BF3F68F;
-        Tue, 11 Feb 2020 05:57:30 -0800 (PST)
-Subject: Re: [PATCH v7 11/11] arm64: scs: add shadow stacks for SDEI
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
+        id S1729509AbgBKNxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:22 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 6C46DE16; Tue, 11 Feb 2020 14:53:11 +0100 (CET)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200128184934.77625-1-samitolvanen@google.com>
- <20200128184934.77625-12-samitolvanen@google.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <dbb090ae-d1ec-cb1a-0710-e1d3cfe762b9@arm.com>
-Date:   Tue, 11 Feb 2020 13:57:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200128184934.77625-12-samitolvanen@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 24/62] x86/idt: Split idt_data setup out of set_intr_gate()
+Date:   Tue, 11 Feb 2020 14:52:18 +0100
+Message-Id: <20200211135256.24617-25-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
+References: <20200211135256.24617-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sami,
+From: Joerg Roedel <jroedel@suse.de>
 
-On 28/01/2020 18:49, Sami Tolvanen wrote:
-> This change adds per-CPU shadow call stacks for the SDEI handler.
-> Similarly to how the kernel stacks are handled, we add separate shadow
-> stacks for normal and critical events.
+The code to setup idt_data is needed for early exception handling, but
+set_intr_gate() can't be used that early because it has pv-ops in its
+code path, which don't work that early.
 
-Reviewed-by: James Morse <james.morse@arm.com>
-Tested-by: James Morse <james.morse@arm.com>
+Split out the idt_data initialization part from set_intr_gate() so
+that it can be used separatly.
 
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kernel/idt.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-> diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
-> index eaadf5430baa..dddb7c56518b 100644
-> --- a/arch/arm64/kernel/scs.c
-> +++ b/arch/arm64/kernel/scs.c
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 7f81c1294847..7d8fa631dca9 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -227,18 +227,24 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
+ 	}
+ }
+ 
++static void init_idt_data(struct idt_data *data, unsigned int n,
++			  const void *addr)
++{
++	BUG_ON(n > 0xFF);
++
++	memset(data, 0, sizeof(*data));
++	data->vector	= n;
++	data->addr	= addr;
++	data->segment	= __KERNEL_CS;
++	data->bits.type	= GATE_INTERRUPT;
++	data->bits.p	= 1;
++}
++
+ static void set_intr_gate(unsigned int n, const void *addr)
+ {
+ 	struct idt_data data;
+ 
+-	BUG_ON(n > 0xFF);
+-
+-	memset(&data, 0, sizeof(data));
+-	data.vector	= n;
+-	data.addr	= addr;
+-	data.segment	= __KERNEL_CS;
+-	data.bits.type	= GATE_INTERRUPT;
+-	data.bits.p	= 1;
++	init_idt_data(&data, n, addr);
+ 
+ 	idt_setup_from_table(idt_table, &data, 1, false);
+ }
+-- 
+2.17.1
 
-> +static int scs_alloc_percpu(unsigned long * __percpu *ptr, int cpu)
-> +{
-> +	unsigned long *p;
-> +
-> +	p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
-> +				 VMALLOC_START, VMALLOC_END,
-> +				 GFP_SCS, PAGE_KERNEL,
-> +				 0, cpu_to_node(cpu),
-> +				 __builtin_return_address(0));
-
-(What makes this arch specific? arm64 has its own calls like this for the regular vmap
-stacks because it plays tricks with the alignment. Here the alignment requirement comes
-from the core SCS code... Would another architecture implement these
-scs_alloc_percpu()/scs_free_percpu() differently?)
-
-
-Thanks,
-
-James
