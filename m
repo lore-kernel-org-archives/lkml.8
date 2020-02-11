@@ -2,122 +2,126 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D7BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AF8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF292073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9305920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:51:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gTnVVwFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgBKVtc (ORCPT
+        id S1727429AbgBKVvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:49:32 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63726 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727264AbgBKVt3 (ORCPT
+        Tue, 11 Feb 2020 16:51:44 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:45704 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbgBKVvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:49:29 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BLmk3W013999
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 16:49:28 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1ufmrw0x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 16:49:28 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 11 Feb 2020 21:49:26 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Feb 2020 21:49:22 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BLnLwb34799720
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 21:49:21 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33A3011C058;
-        Tue, 11 Feb 2020 21:49:21 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E69B11C052;
-        Tue, 11 Feb 2020 21:49:19 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.128.4])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Feb 2020 21:49:19 +0000 (GMT)
-Subject: Re: [PATCH 1/2] crypto: rename sm3-256 to sm3 in hash_algo_name
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        ebiggers@kernel.org
-Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 11 Feb 2020 16:49:19 -0500
-In-Reply-To: <20200210124440.23929-2-tianjia.zhang@linux.alibaba.com>
-References: <20200210124440.23929-1-tianjia.zhang@linux.alibaba.com>
-         <20200210124440.23929-2-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021121-0016-0000-0000-000002E5F3FA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021121-0017-0000-0000-00003348EC0C
-Message-Id: <1581457759.5125.18.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_06:2020-02-11,2020-02-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015
- mlxlogscore=999 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110141
+        Tue, 11 Feb 2020 16:51:43 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01BLh2m5065691;
+        Tue, 11 Feb 2020 21:51:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=q9CJH8blGd3JpsYmKV23Sgj8OEPJrRzAG9QrB6xaUUE=;
+ b=gTnVVwFTBUdHJ9eyfYo5Hmcz5SmP6JFCX2FdoK9AAaKAy4pE/nPnVjvP2xA7yiAfSd51
+ SV13Y+41lw/40Kz8+mkudhl4f25TKjG6pcLy27qm48RMTaC31bmONVIJdhxVoo6f3goM
+ C+YrHyyim7kYOG4Zw1kkJb0PCJVT/QrAg1sN1TutWMj6YwjBqqkHVBWAJyf4LfxJN06C
+ rH742UiXRU9FP7n9X6y6xBK/4QFovcvcwQZfpxznZUnsuJN0op3wgzcN8edxuaS1tjHD
+ KQQdbyS8QaaV1L8dDKyhbmpWXBuTF6xK/4sVabr5eeelDDl4MbC9owbEyJZZZAUOOpXF vg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2y2p3se9s1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Feb 2020 21:51:36 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01BLgcbM108989;
+        Tue, 11 Feb 2020 21:51:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2y26q21sym-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Feb 2020 21:51:35 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01BLpYhE024620;
+        Tue, 11 Feb 2020 21:51:34 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 11 Feb 2020 13:51:34 -0800
+Subject: Re: [PATCH v11 6/9] hugetlb_cgroup: support noreserve mappings
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-6-almasrymina@google.com>
+ <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
+ <CAHS8izMGreJgOhG8ivE2OH9bq98BmvxAqtBc=M9waTqOKv3eeQ@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <6b097a9d-3b2c-94cb-21a8-7e7a55a8f635@oracle.com>
+Date:   Tue, 11 Feb 2020 13:51:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <CAHS8izMGreJgOhG8ivE2OH9bq98BmvxAqtBc=M9waTqOKv3eeQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9528 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ mlxscore=0 adultscore=0 suspectscore=2 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002110141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9528 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=2 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002110141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-10 at 20:44 +0800, Tianjia Zhang wrote:
-> The name sm3-256 is defined in hash_algo_name in hash_info, but the
-> algorithm name implemented in sm3_generic.c is sm3, which will cause
-> the sm3-256 algorithm to be not found in some application scenarios of
-> the hash algorithm, and an ENOENT error will occur. For example,
-> IMA, keys, and other subsystems that reference hash_algo_name all use
-> the hash algorithm of sm3.
+On 2/11/20 1:35 PM, Mina Almasry wrote:
+> On Thu, Feb 6, 2020 at 2:31 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>> On 2/3/20 3:22 PM, Mina Almasry wrote:
+>>> +++ b/mm/hugetlb.c
+>>> @@ -1339,6 +1339,9 @@ static void __free_huge_page(struct page *page)
+>>>       clear_page_huge_active(page);
+>>>       hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
+>>>                                    page, false);
+>>> +     hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
+>>> +                                  page, true);
+>>> +
+>>
+>> When looking at the code without change markings, the two above lines
+>> look so similar my first thought is there must be a mistake.
+>>
+>> A suggestion for better code readability:
+>> - hugetlb_cgroup_uncharge_page could just take "struct hstate *h" and
+>>   get both hstate_index(h) and pages_per_huge_page(h).
+>> - Perhaps make hugetlb_cgroup_uncharge_page and
+>>   hugetlb_cgroup_uncharge_page_rsvd be wrappers around a common routine.
+>>   Then the above would look like:
+>>
+>>   hugetlb_cgroup_uncharge_page(h, page);
+>>   hugetlb_cgroup_uncharge_page_rsvd(h, page);
+>>
 > 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> I did modify the interfaces to this, as it's much better for
+> readability indeed. Unfortunately the patch the adds interfaces
+> probably needs a re-review now as it's changed quite a bit, I did not
+> carry your or David's Reviewed-by.
 
-The "hash_map" needs to be updated to reflect this change.
+No worries.  Happy to review again.
 
-static struct tpm2_hash tpm2_hash_map[] = {
-        {HASH_ALGO_SHA1, TPM_ALG_SHA1},
-        {HASH_ALGO_SHA256, TPM_ALG_SHA256},
-        {HASH_ALGO_SHA384, TPM_ALG_SHA384},
-        {HASH_ALGO_SHA512, TPM_ALG_SHA512},
-        {HASH_ALGO_SM3_256, TPM_ALG_SM3_256},
-};
-
-Mimi
-
-> ---
->  crypto/hash_info.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/crypto/hash_info.c b/crypto/hash_info.c
-> index c754cb75dd1a..a49ff96bde77 100644
-> --- a/crypto/hash_info.c
-> +++ b/crypto/hash_info.c
-> @@ -26,7 +26,7 @@ const char *const hash_algo_name[HASH_ALGO__LAST] = {
->  	[HASH_ALGO_TGR_128]	= "tgr128",
->  	[HASH_ALGO_TGR_160]	= "tgr160",
->  	[HASH_ALGO_TGR_192]	= "tgr192",
-> -	[HASH_ALGO_SM3_256]	= "sm3-256",
-> +	[HASH_ALGO_SM3_256]	= "sm3",
->  	[HASH_ALGO_STREEBOG_256] = "streebog256",
->  	[HASH_ALGO_STREEBOG_512] = "streebog512",
->  };
-
+-- 
+Mike Kravetz
