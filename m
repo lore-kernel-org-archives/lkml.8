@@ -2,106 +2,69 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5397CC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C8DC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 253A1206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A92206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 05:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgBKEwg (ORCPT
+        id S1728019AbgBKFAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 23:52:36 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:44681 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727121AbgBKEwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 23:52:36 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 11F74820924;
-        Tue, 11 Feb 2020 15:52:30 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j1NXC-0005dw-7j; Tue, 11 Feb 2020 15:52:30 +1100
-Date:   Tue, 11 Feb 2020 15:52:30 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 04/13] mm: Add readahead address space operation
-Message-ID: <20200211045230.GD10776@dread.disaster.area>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-5-willy@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211010348.6872-5-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=TWVYvH7QqZ0YkocKP0UA:9
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        Tue, 11 Feb 2020 00:00:30 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:33656 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgBKFAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 00:00:30 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6851F202471;
+        Tue, 11 Feb 2020 06:00:28 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 790DC202470;
+        Tue, 11 Feb 2020 06:00:24 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4985B4029B;
+        Tue, 11 Feb 2020 13:00:19 +0800 (SGT)
+From:   Yangbo Lu <yangbo.lu@nxp.com>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Li Yang <leoyang.li@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] arm64: dts: ls1028a: support external trigger timestamp fifo of PTP timer
+Date:   Tue, 11 Feb 2020 12:57:58 +0800
+Message-Id: <20200211045758.8231-1-yangbo.lu@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 05:03:39PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> This replaces ->readpages with a saner interface:
->  - Return void instead of an ignored error code.
->  - Pages are already in the page cache when ->readahead is called.
->  - Implementation looks up the pages in the page cache instead of
->    having them passed in a linked list.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+There is an external trigger timestamp fifo for PTP timer
+of LS1028A. Add property fsl,extts-fifo for that.
 
-....
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
->  
-> +/*
-> + * Readahead is of a block of consecutive pages.
-> + */
-> +struct readahead_control {
-> +	struct file *file;
-> +	struct address_space *mapping;
-> +/* private: use the readahead_* accessors instead */
-> +	pgoff_t start;
-> +	unsigned int nr_pages;
-> +	unsigned int batch_count;
-> +};
-> +
-> +static inline struct page *readahead_page(struct readahead_control *rac)
-> +{
-> +	struct page *page;
-> +
-> +	if (!rac->nr_pages)
-> +		return NULL;
-> +
-> +	page = xa_load(&rac->mapping->i_pages, rac->start);
-> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> +	rac->batch_count = hpage_nr_pages(page);
-> +	rac->start += rac->batch_count;
-
-There's no mention of large page support in the patch description
-and I don't recall this sort of large page batching in previous
-iterations.
-
-This seems like new functionality to me, not directly related to
-the initial ->readahead API change? What have I missed?
-
-Cheers,
-
-Dave.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 0bf375e..da39068 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -722,6 +722,7 @@
+ 				reg = <0x000400 0 0 0 0>;
+ 				clocks = <&clockgen 4 0>;
+ 				little-endian;
++				fsl,extts-fifo;
+ 			};
+ 		};
+ 	};
 -- 
-Dave Chinner
-david@fromorbit.com
+2.7.4
+
