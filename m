@@ -2,139 +2,111 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCB0C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515CDC352A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E012E20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:41:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MBKhz/fD"
+	by mail.kernel.org (Postfix) with ESMTP id 2E0782082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgBKDlL (ORCPT
+        id S1727998AbgBKDlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 22:41:11 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:61227 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727752AbgBKDlK (ORCPT
+        Mon, 10 Feb 2020 22:41:12 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:60918 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727831AbgBKDlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 22:41:10 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581392470; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=f1HTEkpxUdDYbFLcYWFshQ3BL0C5vGP4FbG4ywXAapM=; b=MBKhz/fDN4QBXWZVHhJaAtM2GnGPujgjFppF5UxsVFj0fkXPKZEKyax2l6A/BJHDxdjcZC4Z
- ZZnB+TF8WOdwuu5KsL8N+gsp/j3qvKeewFJTvkmTpGTJyJD90ugu8O7vGOx1Ke+OBU47buCE
- EMN6k4BIkAlmz1ZrRIWP5YPoQ7Q=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e422252.7ffa15fe9298-smtp-out-n02;
- Tue, 11 Feb 2020 03:41:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9B81EC447A6; Tue, 11 Feb 2020 03:41:04 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9E27C433A2;
-        Tue, 11 Feb 2020 03:41:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9E27C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Sayali Lokhande <sayalil@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v10 1/7] scsi: ufs: Flush exception event before suspend
-Date:   Mon, 10 Feb 2020 19:40:44 -0800
-Message-Id: <1581392451-28743-2-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581392451-28743-1-git-send-email-cang@codeaurora.org>
-References: <1581392451-28743-1-git-send-email-cang@codeaurora.org>
+        Mon, 10 Feb 2020 22:41:12 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=guoren@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TpeDRM7_1581392468;
+Received: from localhost(mailfrom:guoren@linux.alibaba.com fp:SMTPD_---0TpeDRM7_1581392468)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 11 Feb 2020 11:41:09 +0800
+From:   Guo Ren <guoren@linux.alibaba.com>
+To:     linux-csky@vger.kernel.org, majun258@linux.alibaba.com
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH] csky: Add PCI support
+Date:   Tue, 11 Feb 2020 11:41:07 +0800
+Message-Id: <20200211034107.11192-1-guoren@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sayali Lokhande <sayalil@codeaurora.org>
+From: MaJun <majun258@linux.alibaba.com>
 
-Exception event can be raised by the device when system
-suspend is in progress. This will result in unclocked
-register access in exception event handler as clocks will
-be turned off during suspend. This change makes sure to flush
-exception event handler work in suspend before disabling
-clocks to avoid unclocked register access issue.
+Add the pci related code for csky arch to support basic pci virtual
+function, such as qemu virt-pci-9pfs.
 
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: MaJun <majun258@linux.alibaba.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- drivers/scsi/ufs/ufshcd.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ arch/csky/Kconfig           |  5 +++++
+ arch/csky/include/asm/pci.h | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
+ create mode 100644 arch/csky/include/asm/pci.h
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index abd0e6b..10dbc0c 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4730,8 +4730,15 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
- 			 * UFS device needs urgent BKOPs.
- 			 */
- 			if (!hba->pm_op_in_progress &&
--			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr))
--				schedule_work(&hba->eeh_work);
-+			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr) &&
-+			    schedule_work(&hba->eeh_work)) {
-+				/*
-+				 * Prevent suspend once eeh_work is scheduled
-+				 * to avoid deadlock between ufshcd_suspend
-+				 * and exception event handler.
-+				 */
-+				pm_runtime_get_noresume(hba->dev);
-+			}
- 			break;
- 		case UPIU_TRANSACTION_REJECT_UPIU:
- 			/* TODO: handle Reject UPIU Response */
-@@ -5184,7 +5191,14 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index bf246b036dee..72b2999a889a 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -58,6 +58,11 @@ config CSKY
+ 	select TIMER_OF
+ 	select USB_ARCH_HAS_EHCI
+ 	select USB_ARCH_HAS_OHCI
++	select GENERIC_PCI_IOMAP
++	select HAVE_PCI
++	select PCI_DOMAINS_GENERIC if PCI
++	select PCI_SYSCALL if PCI
++	select PCI_MSI if PCI
  
- out:
- 	ufshcd_scsi_unblock_requests(hba);
--	pm_runtime_put_sync(hba->dev);
-+	/*
-+	 * pm_runtime_get_noresume is called while scheduling
-+	 * eeh_work to avoid suspend racing with exception work.
-+	 * Hence decrement usage counter using pm_runtime_put_noidle
-+	 * to allow suspend on completion of exception event handler.
-+	 */
-+	pm_runtime_put_noidle(hba->dev);
-+	pm_runtime_put(hba->dev);
- 	return;
- }
- 
-@@ -7924,6 +7938,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 			goto enable_gating;
- 	}
- 
-+	flush_work(&hba->eeh_work);
- 	ret = ufshcd_link_state_transition(hba, req_link_state, 1);
- 	if (ret)
- 		goto set_dev_active;
+ config CPU_HAS_CACHEV2
+ 	bool
+diff --git a/arch/csky/include/asm/pci.h b/arch/csky/include/asm/pci.h
+new file mode 100644
+index 000000000000..ebc765b1f78b
+--- /dev/null
++++ b/arch/csky/include/asm/pci.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __ASM_CSKY_PCI_H
++#define __ASM_CSKY_PCI_H
++
++#include <linux/types.h>
++#include <linux/slab.h>
++#include <linux/dma-mapping.h>
++
++#include <asm/io.h>
++
++#define PCIBIOS_MIN_IO		0
++#define PCIBIOS_MIN_MEM		0
++
++/* C-SKY shim does not initialize PCI bus */
++#define pcibios_assign_all_busses() 1
++
++extern int isa_dma_bridge_buggy;
++
++#ifdef CONFIG_PCI
++static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
++{
++	/* no legacy IRQ on csky */
++	return -ENODEV;
++}
++
++static inline int pci_proc_domain(struct pci_bus *bus)
++{
++	/* always show the domain in /proc */
++	return 1;
++}
++#endif  /* CONFIG_PCI */
++
++#endif  /* __ASM_CSKY_PCI_H */
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.0
+
