@@ -2,64 +2,144 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6682CC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67D9C3B188
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4559D20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EA821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvQExPCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgBKPnZ (ORCPT
+        id S1729710AbgBKPoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:43:25 -0500
-Received: from 8bytes.org ([81.169.241.247]:53508 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgBKPnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:43:25 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 520782FB; Tue, 11 Feb 2020 16:43:23 +0100 (CET)
-Date:   Tue, 11 Feb 2020 16:43:21 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [RFC PATCH 00/62] Linux as SEV-ES Guest Support
-Message-ID: <20200211154321.GB22063@8bytes.org>
-References: <20200211135256.24617-1-joro@8bytes.org>
- <20200211145008.GT14914@hirez.programming.kicks-ass.net>
+        Tue, 11 Feb 2020 10:44:22 -0500
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:45033 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbgBKPoW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:44:22 -0500
+Received: by mail-ed1-f43.google.com with SMTP id g19so5157361eds.11;
+        Tue, 11 Feb 2020 07:44:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xlR00ADJradjotkCl4UlmMojkVu0xcxZBqzsuQumm74=;
+        b=NvQExPCB8DI0IP1gFi+4sXuJgnDnc+3sGrABcCQBUhEtdW8umNWi+t6DLqUPNGUeCK
+         +2Fo1BxAKf9Ge7XhKz0zsotmk3csdx0+aPVkukynRe0EUzkmvsRViU4D71ZYDFtnj86Q
+         g3jqxsr8lTzrutSK3BNOyGpevnnnWU+qUZuxplWXAkvlgvm+mGS2e6uoZzslvqJ86mTS
+         to4PLxgKuZS5+2D7SttIzvMzyl8v9YPdyNeLJdICpVJ2t36bCNV6O4Nkf29KFl9yrt4P
+         VdHGJUulikhpW5WwkpQF3vYcZROgf72tQ09vs5ydiDKiMjgq0Cq9GM5CFHRHF8wzzW5F
+         as6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xlR00ADJradjotkCl4UlmMojkVu0xcxZBqzsuQumm74=;
+        b=SMl5Zu4w1wTLSdtKHmtWlbnmAszmWsTCOV5kXz1fhpm4cItRq97GRfKFq7uo/6mL9X
+         q1uos7JmRGKBPv8dRzWqg9hZqCDlmslb6J3yr2KbjkPsJbB3gQUTtsMQiQJRZiLxQfU6
+         5vGVpw3htb2S4kA63Y6j3/ZLUjZXJ9P0XWZBfJdPZQEDEsfcLpaD8qFjeThUK5yiHwkO
+         8vzGPiVFu0uDBVQs9o6KRFz+0ZyXI1e0dqVTeyMAw9iqkHzdB+/gmeHRy3iXiXVoWMTC
+         CVpOhe+MMmHAyKQ407FCXlO6ob3ZvgX2iP47FlH4maNPHdb11AuGTKFtQvDStZ6JQEgr
+         JWFg==
+X-Gm-Message-State: APjAAAW2kmtQADOf/oKmkWeMfzSTbJ7B0PBFnUpWsi6J4H+UCsrh/DjJ
+        3577snIB4CChfVJjOgxCTaptbBBX2rc9bEVMjjo=
+X-Google-Smtp-Source: APXvYqyCzdecpsQM0lw4triJNxJwSEFMbxi4XZz3qtjCH0Quta/P/aV1VGix4DQ+ffz64Nm+arwNBPjkvBa9ztigP+U=
+X-Received: by 2002:aa7:c6c5:: with SMTP id b5mr6258346eds.281.1581435860509;
+ Tue, 11 Feb 2020 07:44:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211145008.GT14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+ <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
+ <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+ <1d201377996e16ce25acb640867e1214@codeaurora.org>
+In-Reply-To: <1d201377996e16ce25acb640867e1214@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 11 Feb 2020 07:44:09 -0800
+Message-ID: <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        DTML <devicetree@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 03:50:08PM +0100, Peter Zijlstra wrote:
- 
-> Oh gawd; so instead of improving the whole NMI situation, AMD went and
-> made it worse still ?!?
+On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
+>
+> On 2020-02-07 19:40, Jeffrey Hugo wrote:
+> > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
+> >>
+> >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
+> >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
+> >> > wrote:
+> >> >>
+> >> >> For a given byte clock, if VCO recalc value is exactly same as
+> >> >> vco set rate value, vco_set_rate does not get called assuming
+> >> >> VCO is already set to required value. But Due to GDSC toggle,
+> >> >> VCO values are erased in the HW. To make sure VCO is programmed
+> >> >> correctly, we forcefully call set_rate from vco_prepare.
+> >> >
+> >> > Is this specific to certain SoCs? I don't think I've observed this.
+> >>
+> >> As far as Qualcomm SOCs are concerned, since pll is analog and the
+> >> value
+> >> is directly read from hardware if we get recalc value same as set rate
+> >> value, the vco_set_rate will not be invoked. We checked in our idp
+> >> device which has the same SOC but it works there since the rates are
+> >> different.
+> >
+> > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
+> > does this issue apply to?  Everything implementing the 10nm pll?  One
+> > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
+> > so I'm interested to know what is the actual impact here.  I don't see
+> > an "IDP" SoC in the IP catalog, so I really have no idea what you are
+> > referring to.
+>
+>
+> This is not 10nm specific. It is applicable for other nms also.
+> Its specific to the frequency being set. If vco_recalc returns the same
+> value as being set by vco_set_rate,
+> vco_set_rate will not be invoked second time onwards.
+>
+> For example: Lets take below devices:
+>
+> Cheza is based on SDM845 which is 10nm only.
+> Clk frequency:206016
+> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
+> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
+>
+> Trogdor is based on sc7180 which is also 10nm.
+> Clk frequency:69300
+> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
+> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
+>
+> In same trogdor device, we slightly changed the clock frequency and the
+> values actually differ which will not cause any issue.
+> Clk frequency:69310
+> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
+> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
 
-Well, depends on how you want to see it. Under SEV-ES an IRET will not
-re-open the NMI window, but the guest has to tell the hypervisor
-explicitly when it is ready to receive new NMIs via the NMI_COMPLETE
-message.  NMIs stay blocked even when an exception happens in the
-handler, so this could also be seen as a (slight) improvement.
 
-Regards,
+tbh, loosing state when power is off is kind of the behavior that I'd
+expect.  It kinda makes me wonder if things are not getting powered
+off all the way on some SoCs?
 
-	Joerg
+jhugo, are you worried that this patch will cause problems on other
+users of the 10nm pll?
+
+BR,
+-R
