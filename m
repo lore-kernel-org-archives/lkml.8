@@ -2,97 +2,123 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FE5C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12A2C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A6E206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BF7206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sjTLOn49"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqXh8ljW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgBKWaB (ORCPT
+        id S1727597AbgBKWaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:30:01 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:17620 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727653AbgBKWaA (ORCPT
+        Tue, 11 Feb 2020 17:30:46 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:44405 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBKWaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:30:00 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581460199; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=MmaRUC9JI9mDX2NiICGsGt9NUzdKQErcKa2NI9gq4Bg=; b=sjTLOn49D4HNjrpRL0OJF8wKmXtOQhZJqSLvC72zrOIjHtTsUnxz8zLzJV0lvOTw5X//9d0Q
- A9UeRFJn2lHgOe2pLsAL5on5cw5dyz1DHIbacQN2foj2TSy3bjW0x+YL49l4Skpr52mdBFE+
- zwyPuaz4nlCdbHENm3c5pIMiOfI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4329ba.7fe592670ed8-smtp-out-n03;
- Tue, 11 Feb 2020 22:24:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E2D70C43383; Tue, 11 Feb 2020 22:24:57 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B172FC433A2;
-        Tue, 11 Feb 2020 22:24:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B172FC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv3 2/2] dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845, SM8150
-Date:   Wed, 12 Feb 2020 03:54:30 +0530
-Message-Id: <a8bd3f4062fd7bb45aeab5aa55f6f31c14c69a96.1581459151.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
+        Tue, 11 Feb 2020 17:30:46 -0500
+Received: by mail-yb1-f196.google.com with SMTP id f21so6207799ybg.11;
+        Tue, 11 Feb 2020 14:30:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CHoiFuVyPb6jGydbvdkP7hbmi4a+GAh7Qj76wkBaMrw=;
+        b=KqXh8ljWsaeJuL5FZXSBYEMOEtwIDGtNhPOg0K+XUvNK9WNzlf102sQ8jl82PFo8XF
+         s+Ljzb/2DZuO0hfDjig0E+42lrnPZv/TPE7RJ8Aqcx5xI9V7autaDv1tzexHXbY8iQty
+         emEUEpwNSlANK1zORXQhRhy5tNQf2Ob0zLmcHG55uqs/alcX9ODLzR5BetAN9ZF5rmQ2
+         L25xAQtPyXz4zTfuqZZ/CpTP5vh7LsBhN8NpOxxgp0t58Zctl7vxGJbVRa2ovEgfn55s
+         i7Ls6CX0QpJTP0yd4t9igAHATrBZ+sxcHJfF2O09c0ls0c51XDilEOQdV2YfxfRxZoPj
+         KfZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CHoiFuVyPb6jGydbvdkP7hbmi4a+GAh7Qj76wkBaMrw=;
+        b=KdSoHhjkmF8+9QF0hlURq0C116oVY6hm7M8wSwZ0ulNqUei6pLlCFXShzIFMt+zN2Y
+         lSNfRwOYbeldU9r2VwMbbSSAHx8VxaN8tC5kcK0NNHpjikK1m0IMs/b47O2+P7UVpQt2
+         u5NcYqGfr3r8I3JEFsX3OxPJmCMHR/MrGSYiqxWsn0StM+iZw7co91ZyeLLbD234oik8
+         DeQUFpd+t3qIucZjO8GDCeMNu7LnF49OSUnIJHZ33+3kTR+XzFqpnallAUHILKEmJF6l
+         Mly0d1U9oFrHUKFHi1FkWGxFbQnG4cUDAwMprVVrw5locLsSXCnS5yTP/Wls5Hqzwkf0
+         6Jsw==
+X-Gm-Message-State: APjAAAVDKaqjWLDAB1h36pY43rps0qF71RQniRyhX24u5vTuJGuvNHgM
+        eAYZcPdvPrWfG4ZIbsi5kCU=
+X-Google-Smtp-Source: APXvYqyilsRsa87oczzBpnbDDzSd9mSalUhB8qVYON+pfbtfykYkhrGIfyKeqrrb88A0edcvtP8mkQ==
+X-Received: by 2002:a25:8290:: with SMTP id r16mr7654104ybk.4.1581460245400;
+        Tue, 11 Feb 2020 14:30:45 -0800 (PST)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id q130sm2560552ywg.52.2020.02.11.14.30.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 14:30:44 -0800 (PST)
+Date:   Tue, 11 Feb 2020 17:30:28 -0500
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     jic23@kernel.org, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com,
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] counter: stm32-timer-cnt: add power management support
+Message-ID: <20200211223028.GA7369@icarus>
+References: <1581355198-30428-1-git-send-email-fabrice.gasnier@st.com>
+ <20200210174550.GA4626@icarus>
+ <b1e2930a-eeaf-dcfe-3e2c-b666908262bf@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b1e2930a-eeaf-dcfe-3e2c-b666908262bf@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing compatible for watchdog timer on QCS404,
-SC7180, SDM845 and SM8150 SoCs.
+On Tue, Feb 11, 2020 at 11:54:17AM +0100, Fabrice Gasnier wrote:
+> On 2/10/20 6:45 PM, William Breathitt Gray wrote:
+> > On Mon, Feb 10, 2020 at 06:19:58PM +0100, Fabrice Gasnier wrote:
+> >> Add suspend/resume PM sleep ops. When going to low power, enforce the
+> >> counter isn't active. Gracefully restore its state upon resume in case
+> >> it's been left enabled prior to suspend.
+> >>
+> >> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> >> ---
+> >> Changes in v2:
+> >> - Don't refuse to suspend in case the counter has been left enabled.
+> >>   Gracefully disable it and restore its state upon resume.
+> >> ---
+> >>  drivers/counter/stm32-timer-cnt.c | 63 +++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 63 insertions(+)
+> >>
+> >> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+> >> index 3eafcce..50496f4 100644
+> >> --- a/drivers/counter/stm32-timer-cnt.c
+> >> +++ b/drivers/counter/stm32-timer-cnt.c
+> >> @@ -12,6 +12,7 @@
+> >>  #include <linux/iio/types.h>
+> > 
+> > Unrelated to your patch but it caught my eye: are iio headers necessary
+> > for this file? I suspect they are not needed since this driver does not
+> > make use of the IIO interface.
+> 
+> Hi William,
+> 
+> Yes, you're right. Thanks for pointing this!
+> I'll push a patch on top of this one to fix it. BTW, I'm not sure if
+> this needs to be a marked as a fix, as this seems a quite minor issue?
+> 
+> Best Regards,
+> Fabrice
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
- Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+No need for a Fixes tag in this case since this is not a bug fix, but
+rather just a minor clean up of the included headers.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-index 5448cc537a03..0709ddf0b6a5 100644
---- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-@@ -15,6 +15,10 @@ allOf:
- properties:
-   compatible:
-     enum:
-+      - qcom,apss-wdt-qcs404
-+      - qcom,apss-wdt-sc7180
-+      - qcom,apss-wdt-sdm845
-+      - qcom,apss-wdt-sm8150
-       - qcom,kpss-timer
-       - qcom,kpss-wdt
-       - qcom,kpss-wdt-apq8064
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks,
+
+William Breathitt Gray
