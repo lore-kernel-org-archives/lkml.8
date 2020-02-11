@@ -2,229 +2,339 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9BCC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849CBC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3009921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iKL3T3KT"
+	by mail.kernel.org (Postfix) with ESMTP id 59CD820708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgBKUJW (ORCPT
+        id S1730996AbgBKUJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:09:22 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34229 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgBKUJW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:09:22 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l136so14072019oig.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:09:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d79/juOKGQ3xhEKgN8cqkrkeeX6KR3FsfafPiPWnTjk=;
-        b=iKL3T3KT/E0Iwsb3fnUfmhLupejJLrt0Xw5IOfw8B/SqKyHuAmgD6b5kRaiIeb6uQi
-         4hqOAy9ePuT7GdoTUwr87pkUzlBm0LRqEEFiWmTJS7vLwJwDvOy2UWIrGEpnJS5HNg6L
-         UJ3OcYCcXDup4hmac0c8ZAtTXuIBB4C4CC3djbwDvtd6WU9keMA7joMyqQ4WttYi8EBN
-         vrOINTqg3CqyMUDW8SXtRJMA5A2vJY60W9spolclj6hO3pOdiey4rg0CUIfOnXDULfGo
-         s6RA3SPhR9ow2ObUxJ9XLAnHJ3VD73fdhMjBf6otQbBS3osn2sT48zUHMkQ908wokOCL
-         r57w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d79/juOKGQ3xhEKgN8cqkrkeeX6KR3FsfafPiPWnTjk=;
-        b=O2zyuiaG+/HqCDQmns5XebljSSM4exLWtQ/uEFnZF2TaJ4aBGa5HOuEZCsELwKu+Kc
-         UdaSCMT9wf6UDvZbmrqiqO3lCTTwISfYDVyHcA+mlys2/0GWh/jfuFu4dKbWYU/pA6wj
-         hZYQdSrvzgvn855PhAk2YsXfWd2oyQ7LZ7Q99gNH6bjrRNBtE2TqLc+6OkT25D90k4LR
-         RM6B5eeDLUSNQx9LjnNtfp3EVbuyyQGwMCRtII9cMJaWMQRARFeUV7xzwQ+CDxtRXKr9
-         Gj+q/uQjiPpus/x2asuoElcVEiKFHoowLCs6Kv27qbYA6G+t0dUgoIhrzlL2Irs2vKfi
-         goWg==
-X-Gm-Message-State: APjAAAXamb0lKo6PA22NTzXvOP54YLRgyh0vsn362Btcki5+MnhGIaft
-        G5PTapCwLhIPKHUsebm/EutenuXH1JSIu7OP1ffQkA==
-X-Google-Smtp-Source: APXvYqzxjGO2mFbbESSI+X8wqwDLJmq3XqFdPvI31wvyICH6y7/2J3dCeN49E5XfR2n7WblRYhIvydxmmpi6MKoWH0c=
-X-Received: by 2002:aca:ea43:: with SMTP id i64mr4107524oih.30.1581451761048;
- Tue, 11 Feb 2020 12:09:21 -0800 (PST)
+        Tue, 11 Feb 2020 15:09:32 -0500
+Received: from mga06.intel.com ([134.134.136.31]:14520 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728068AbgBKUJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 15:09:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 12:09:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="222051011"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 11 Feb 2020 12:09:31 -0800
+Received: from [10.251.4.129] (kliang2-mobl.ccr.corp.intel.com [10.251.4.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id EF237580696;
+        Tue, 11 Feb 2020 12:09:29 -0800 (PST)
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v5_3/3=5d_perf_x86=3a_Exposing_an_Uncore_u?=
+ =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
+To:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, bgregg@netflix.com, ak@linux.intel.com,
+        gregkh@linuxfoundation.org
+Cc:     alexander.antonov@intel.com
+References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
+ <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <45504018-6a4c-0ec0-9637-2eb79a4be36b@linux.intel.com>
+Date:   Tue, 11 Feb 2020 15:09:28 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-6-drinkcat@chromium.org> <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
-In-Reply-To: <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 11 Feb 2020 12:08:44 -0800
-Message-ID: <CAGETcx_3-ZoVAf+Uf0Yo86pUU1nL4S4-jrS0eZi50yvhCO985g@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:44 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> +Saravana
->
-> On Thu, Feb 6, 2020 at 11:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
-> >
-> > When there is a single power domain per device, the core will
-> > ensure the power domain is switched on (so it is technically
-> > equivalent to having not power domain specified at all).
-> >
-> > However, when there are multiple domains, as in MT8183 Bifrost
-> > GPU, we need to handle them in driver code.
-> >
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> >
-> > ---
-> >
-> > The downstream driver we use on chromeos-4.19 currently uses 2
-> > additional devices in device tree to accomodate for this [1], but
-> > I believe this solution is cleaner.
-> >
-> > [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
-> >
-> > v4:
-> >  - Match the exact power domain names as specified in the compatible
-> >    struct, instead of just matching the number of power domains.
-> >    [Review: Ulf Hansson]
-> >  - Dropped print and reordered function [Review: Steven Price]
-> >  - nits: Run through latest version of checkpatch:
-> >    - Use WARN instead of BUG_ON.
-> >    - Drop braces for single expression if block.
-> > v3:
-> >  - Use the compatible matching data to specify the number of power
-> >    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
-> >    as the core will handle these 2 cases in the exact same way
-> >    (automatically, without driver intervention), and there should
-> >    be no adverse consequence in this case (the concern is about
-> >    switching on only some power domains and not others).
-> >
-> >  drivers/gpu/drm/panfrost/panfrost_device.c | 97 ++++++++++++++++++++--
-> >  drivers/gpu/drm/panfrost/panfrost_device.h | 11 +++
-> >  drivers/gpu/drm/panfrost/panfrost_drv.c    |  2 +
-> >  3 files changed, 102 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-> > index 3720d50f6d9f965..8136babd3ba9935 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> > @@ -5,6 +5,7 @@
-> >  #include <linux/clk.h>
-> >  #include <linux/reset.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/pm_domain.h>
-> >  #include <linux/regulator/consumer.h>
-> >
-> >  #include "panfrost_device.h"
-> > @@ -120,6 +121,79 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
-> >                         pfdev->regulators);
-> >  }
-> >
-> > +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
-> > +               if (!pfdev->pm_domain_devs[i])
-> > +                       break;
-> > +
-> > +               if (pfdev->pm_domain_links[i])
-> > +                       device_link_del(pfdev->pm_domain_links[i]);
-> > +
-> > +               dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
-> > +       }
-> > +}
-> > +
-> > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
-> > +{
-> > +       int err;
-> > +       int i, num_domains;
-> > +
-> > +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
-> > +                                                "power-domains",
-> > +                                                "#power-domain-cells");
-> > +
-> > +       /*
-> > +        * Single domain is handled by the core, and, if only a single power
-> > +        * the power domain is requested, the property is optional.
-> > +        */
-> > +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
-> > +               return 0;
-> > +
-> > +       if (num_domains != pfdev->comp->num_pm_domains) {
-> > +               dev_err(pfdev->dev,
-> > +                       "Incorrect number of power domains: %d provided, %d needed\n",
-> > +                       num_domains, pfdev->comp->num_pm_domains);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
-> > +                       "Too many supplies in compatible structure.\n"))
-> > +               return -EINVAL;
-> > +
-> > +       for (i = 0; i < num_domains; i++) {
-> > +               pfdev->pm_domain_devs[i] =
-> > +                       dev_pm_domain_attach_by_name(pfdev->dev,
-> > +                                       pfdev->comp->pm_domain_names[i]);
-> > +               if (IS_ERR_OR_NULL(pfdev->pm_domain_devs[i])) {
-> > +                       err = PTR_ERR(pfdev->pm_domain_devs[i]) ? : -ENODATA;
-> > +                       pfdev->pm_domain_devs[i] = NULL;
-> > +                       dev_err(pfdev->dev,
-> > +                               "failed to get pm-domain %s(%d): %d\n",
-> > +                               pfdev->comp->pm_domain_names[i], i, err);
-> > +                       goto err;
-> > +               }
-> > +
-> > +               pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
-> > +                               pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
-> > +                               DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
->
-> We're in the process of adding device links based on DT properties.
-> Shouldn't we add power domains to that? See drivers/of/property.c for
-> what's handled.
 
-Rob,
 
-drivers/of/property.c doesn't enable the RPM_ACTIVE AND PM_RUNTIME
-flags. Wanted to start off conservative. But adding command line ops
-to change the default flags shouldn't be difficult. But before I do
-that, I want to change of_devlink to
-fw_devlink=<disabled|permissive|enabled>. May be I can extend that to
-"disabled, permissive, suspend, runtime".
+On 2/11/2020 11:15 AM, roman.sudarikov@linux.intel.com wrote:
+> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> 
+> Current version supports a server line starting Intel® Xeon® Processor
+> Scalable Family and introduces mapping for IIO Uncore units only.
+> Other units can be added on demand.
+> 
+> IIO stack to PMON mapping is exposed through:
+>      /sys/devices/uncore_iio_<pmu_idx>/nodeX
+>      where nodeX is file which holds PCIe root bus.
 
-Nicholas,
+I think the mapping information is from die to BUS#.
+Can we change the name nodeX to dieX?
 
-And the adding and removing of device links for power domains will be
-a 2 line change. I've been meaning to add a few more bindings like
-hwspinlocks and pinctrl. I can roll power domains support into that if
-you want.
 
--Saravana
+Thanks,
+Kan
+> 
+> Details are explained in Documentation/ABI/testing/sysfs-devices-mapping
+> 
+> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
+> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
+> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> ---
+>   .../ABI/testing/sysfs-devices-mapping         |  32 +++
+>   arch/x86/events/intel/uncore_snbep.c          | 183 ++++++++++++++++++
+>   2 files changed, 215 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-mapping b/Documentation/ABI/testing/sysfs-devices-mapping
+> new file mode 100644
+> index 000000000000..c26e4e0b6ca8
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-devices-mapping
+> @@ -0,0 +1,32 @@
+> +What:           /sys/devices/uncore_iio_x/nodeX
+> +Date:           February 2020
+> +Contact:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> +Description:
+> +                Each IIO stack (PCIe root port) has its own IIO PMON block, so
+> +                each nodeX file (where X node number) holds PCIe root port,
+> +                which can be monitored by that IIO PMON block.
+> +                For example, on 4-node Xeon platform with up to 6 IIO stacks per
+> +                node and, therefore, 6 IIO PMON blocks per node, the mapping of
+> +                IIO PMON block 0 exposes as the following:
+> +
+> +                $ ls /sys/devices/uncore_iio_0/node*
+> +                -r--r--r-- /sys/devices/uncore_iio_0/node0
+> +                -r--r--r-- /sys/devices/uncore_iio_0/node1
+> +                -r--r--r-- /sys/devices/uncore_iio_0/node2
+> +                -r--r--r-- /sys/devices/uncore_iio_0/node3
+> +
+> +                $ tail /sys/devices/uncore_iio_0/node*
+> +                ==> /sys/devices/uncore_iio_0/node0 <==
+> +                0000:00
+> +                ==> /sys/devices/uncore_iio_0/node1 <==
+> +                0000:40
+> +                ==> /sys/devices/uncore_iio_0/node2 <==
+> +                0000:80
+> +                ==> /sys/devices/uncore_iio_0/node3 <==
+> +                0000:c0
+> +
+> +                Which means:
+> +                IIO PMU 0 on node 0 belongs to PCI RP on bus 0x00, domain 0x0000
+> +                IIO PMU 0 on node 1 belongs to PCI RP on bus 0x40, domain 0x0000
+> +                IIO PMU 0 on node 2 belongs to PCI RP on bus 0x80, domain 0x0000
+> +                IIO PMU 0 on node 3 belongs to PCI RP on bus 0xc0, domain 0x0000
+> \ No newline at end of file
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index ad20220af303..96fca1ac22a4 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -273,6 +273,30 @@
+>   #define SKX_CPUNODEID			0xc0
+>   #define SKX_GIDNIDMAP			0xd4
+>   
+> +/*
+> + * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
+> + * that BIOS programmed. MSR has package scope.
+> + * |  Bit  |  Default  |  Description
+> + * | [63]  |    00h    | VALID - When set, indicates the CPU bus
+> + *                       numbers have been initialized. (RO)
+> + * |[62:48]|    ---    | Reserved
+> + * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(5). (RO)
+> + * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(4). (RO)
+> + * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(3). (RO)
+> + * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(2). (RO)
+> + * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(1). (RO)
+> + * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
+> + *                       CPUBUSNO(0). (RO)
+> + */
+> +#define SKX_MSR_CPU_BUS_NUMBER		0x300
+> +#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
+> +#define BUS_NUM_STRIDE			8
+> +
+>   /* SKX CHA */
+>   #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
+>   #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
+> @@ -3575,6 +3599,163 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
+>   	.read_counter		= uncore_msr_read_counter,
+>   };
+>   
+> +static inline u8 skx_iio_stack(struct intel_uncore_pmu *pmu, int die)
+> +{
+> +	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
+> +}
+> +
+> +static umode_t
+> +skx_iio_mapping_visible(struct kobject *kobj, struct attribute *attr, int die)
+> +{
+> +	struct intel_uncore_pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
+> +
+> +	//Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
+> +	return (!skx_iio_stack(pmu, die) && pmu->pmu_idx) ? 0 : attr->mode;
+> +}
+> +
+> +static ssize_t skx_iio_mapping_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct pmu *pmu = dev_get_drvdata(dev);
+> +	struct intel_uncore_pmu *uncore_pmu =
+> +		container_of(pmu, struct intel_uncore_pmu, pmu);
+> +
+> +	struct dev_ext_attribute *ea =
+> +		container_of(attr, struct dev_ext_attribute, attr);
+> +	long die = (long)ea->var;
+> +
+> +	return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
+> +}
+> +
+> +static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
+> +{
+> +	u64 msr_value;
+> +
+> +	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
+> +			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
+> +		return -ENXIO;
+> +
+> +	*topology = msr_value;
+> +
+> +	return 0;
+> +}
+> +
+> +static int die_to_cpu(int die)
+> +{
+> +	int res = 0, cpu, current_die;
+> +	/*
+> +	 * Using cpus_read_lock() to ensure cpu is not going down between
+> +	 * looking at cpu_online_mask.
+> +	 */
+> +	cpus_read_lock();
+> +	for_each_online_cpu(cpu) {
+> +		current_die = topology_logical_die_id(cpu);
+> +		if (current_die == die) {
+> +			res = cpu;
+> +			break;
+> +		}
+> +	}
+> +	cpus_read_unlock();
+> +	return res;
+> +}
+> +
+> +static int skx_iio_get_topology(struct intel_uncore_type *type)
+> +{
+> +	int i, ret;
+> +	struct pci_bus *bus = NULL;
+> +
+> +	/*
+> +	 * Verified single-segment environments only; disabled for multiple
+> +	 * segment topologies for now except VMD domains.
+> +	 * VMD domains start at 0x10000 to not clash with ACPI _SEG domains.
+> +	 */
+> +	while ((bus = pci_find_next_bus(bus))
+> +		&& (!pci_domain_nr(bus) || pci_domain_nr(bus) > 0xffff))
+> +		;
+> +	if (bus)
+> +		return -EPERM;
+> +
+> +	type->topology = kcalloc(uncore_max_dies(), sizeof(u64), GFP_KERNEL);
+> +	if (!type->topology)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < uncore_max_dies(); i++) {
+> +		ret = skx_msr_cpu_bus_read(die_to_cpu(i), &type->topology[i]);
+> +		if (ret) {
+> +			kfree(type->topology);
+> +			type->topology = NULL;
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct attribute *uncore_empry_attr;
+> +
+> +static struct attribute_group skx_iio_mapping_group = {
+> +	.attrs		= &uncore_empry_attr,
+> +	.is_visible	= skx_iio_mapping_visible,
+> +};
+> +
+> +const static struct attribute_group *skx_iio_attr_update[] = {
+> +	&skx_iio_mapping_group,
+> +	NULL,
+> +};
+> +
+> +static int skx_iio_set_mapping(struct intel_uncore_type *type)
+> +{
+> +	char buf[64];
+> +	int ret = 0;
+> +	long die;
+> +	struct attribute **attrs;
+> +	struct dev_ext_attribute *eas;
+> +
+> +	ret = skx_iio_get_topology(type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	// One more for NULL.
+> +	attrs = kzalloc((uncore_max_dies() + 1) * sizeof(*attrs), GFP_KERNEL);
+> +	if (!attrs) {
+> +		kfree(type->topology);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	eas = kzalloc(sizeof(*eas) * uncore_max_dies(), GFP_KERNEL);
+> +	if (!eas) {
+> +		kfree(attrs);
+> +		kfree(type->topology);
+> +		return -ENOMEM;
+> +	}
+> +	for (die = 0; die < uncore_max_dies(); die++) {
+> +		sprintf(buf, "node%ld", die);
+> +		eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
+> +		if (!eas[die].attr.attr.name) {
+> +			ret = -ENOMEM;
+> +			goto err;
+> +		}
+> +		eas[die].attr.attr.mode = 0444;
+> +		eas[die].attr.show = skx_iio_mapping_show;
+> +		eas[die].attr.store = NULL;
+> +		eas[die].var = (void *)die;
+> +		attrs[die] = &eas[die].attr.attr;
+> +	}
+> +
+> +	skx_iio_mapping_group.attrs = attrs;
+> +
+> +	return 0;
+> +
+> +err:
+> +	for (; die >= 0; die--)
+> +		kfree(eas[die].attr.attr.name);
+> +	kfree(eas);
+> +	kfree(attrs);
+> +	kfree(type->topology);
+> +
+> +	return ret;
+> +}
+> +
+>   static struct intel_uncore_type skx_uncore_iio = {
+>   	.name			= "iio",
+>   	.num_counters		= 4,
+> @@ -3589,6 +3770,8 @@ static struct intel_uncore_type skx_uncore_iio = {
+>   	.constraints		= skx_uncore_iio_constraints,
+>   	.ops			= &skx_uncore_iio_ops,
+>   	.format_group		= &skx_uncore_iio_format_group,
+> +	.attr_update		= skx_iio_attr_update,
+> +	.set_mapping		= skx_iio_set_mapping,
+>   };
+>   
+>   enum perf_uncore_iio_freerunning_type_id {
+> 
