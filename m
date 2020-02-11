@@ -2,104 +2,119 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487BAC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FA9C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256CC20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C936220873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581433202;
+	bh=cDTNZcgg66/Ybig1ICmYDt26oTPvUKighDuj4cR9lfQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G7SNqcu1LKQdy+f2Mbm5dmRTepp7iBrmMyRekifVXCgJS/HbsZ2sNifyYoCScRXd2
+	 CxQemToOvsL4P+DRCAGZrIYLnt+ylS8lVzffW3f+u9gD/hrA5MX6uEL8fGwZ24ChBd
+	 he92nh910XBR7IvezGmoPXaBKc4I5c+1aL0mcDf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgBKO5C (ORCPT
+        id S1728986AbgBKPAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:57:02 -0500
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:48274 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728874AbgBKO5B (ORCPT
+        Tue, 11 Feb 2020 10:00:02 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:59870 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbgBKPAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:57:01 -0500
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us5.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 49F184C006F;
-        Tue, 11 Feb 2020 14:57:00 +0000 (UTC)
-Received: from [10.17.20.62] (10.17.20.62) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 11 Feb
- 2020 14:56:50 +0000
-Subject: Re: [PATCH net-next] sfc: remove unused variable
- 'efx_default_channel_type'
-To:     YueHaibing <yuehaibing@huawei.com>,
-        <linux-net-drivers@solarflare.com>, <ecree@solarflare.com>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200211141606.47180-1-yuehaibing@huawei.com>
-From:   Martin Habets <mhabets@solarflare.com>
-Message-ID: <e246665f-fe9b-ec62-a621-0ea0dff06771@solarflare.com>
-Date:   Tue, 11 Feb 2020 14:56:50 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 10:00:02 -0500
+X-Greylist: delayed 75858 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 10:00:00 EST
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 01BExjGY029325;
+        Tue, 11 Feb 2020 23:59:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01BExjGY029325
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581433186;
+        bh=hROq0o9lHJ1U2TLCvbGvuP+PaSOx9kk2PnxAttc0w9I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Jx75HfHE3ZrnOuJ9J3z4P9/aY0PCFXz+asYVatNJId47vVkMTwGE2+lj/IazoDP+m
+         +8D9w2j1ZfupYBLvzkysIFS7lfLDk05sKN8gIYdyywOXoslk+CFxsc0K00nayKDELR
+         1M2L1lEKUel5MtHMMou3K3vEZ5bWTTGgoxpkahK4fAHMgNJubQtOvFxO6WWi3EEQGd
+         cifD6XZfR7JD6tLRgsJS7NEqr7VW3rwinVUGH3pxTz4R9K2dSeOT2oUbE1zG1uYiwo
+         rs2ZVepq8CQSY02TLP/ci3tyCZ51cUaPz2NfXHejcqzusd1Zw5ivwAZO4vlksQYinr
+         2l4PZtE/psBcA==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id b2so2481724vkk.4;
+        Tue, 11 Feb 2020 06:59:45 -0800 (PST)
+X-Gm-Message-State: APjAAAWucGMtN0Kw+4QtNRmzWwXhxyLufKXjL9eAQEvmnGEeyvGOPD4p
+        8H08sTE4SvYIvxMNsK1yWoEkbpFLqlb4gnTIniM=
+X-Google-Smtp-Source: APXvYqwaEhkM2LGDystFIroM3uA+deAF+AOLdRSitxDTFjOu34V62IFm0xHv3lwbg6gXEFp4DjWH9vKztbT7+FafnwY=
+X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr5042217vkb.96.1581433184417;
+ Tue, 11 Feb 2020 06:59:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211141606.47180-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.17.20.62]
-X-ClientProxiedBy: ukex01.SolarFlarecom.com (10.17.10.4) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25224.003
-X-TM-AS-Result: No-6.311000-8.000000-10
-X-TMASE-MatchedRID: hls5oAVArl/mLzc6AOD8DfHkpkyUphL9eouvej40T4gd0WOKRkwsh/pe
-        Js18NRDdXqyKGNlj+bAOxUl2LETEm3DrA8J4/NO6AZ0lncqeHqE6En2bnefhoGmycYYiBYyZks5
-        8+L3Ws1sEyFVhFPegL3HhDjUSt94q9juqgbPpsfEaLqFbxdotGXpDIEzkG1Rbva4hxzuVF7iHWB
-        ThHZKIVEY7rq7vfUPSj0IvV7jlqDgNqsPpeYMTRQKDWtq/hHcNMf5Pdi+0fLaKIo9dsR2z7nimo
-        7zurlpw6qOcH3wqCoCRk6XtYogiau9c69BWUTGwVnRXm1iHN1bEQdG7H66TyKsQd9qPXhnJyQqQ
-        ZrAazVxrL0lCM08Fjy/znIWgItwCFPvEepO3VJpudG3FQXoSjwDmDh4iZYYoDtU0eCvOON0gttP
-        P1len/on1TMBcKDRorp80Pt009yRR029mOM6P0LrcE8xytxC5d5hZXZFoB8PxWx93BSYyycC+ks
-        T6a9fy
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--6.311000-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25224.003
-X-MDID: 1581433021-xzmZwC1-6Iwd
+References: <20200210175452.5030-1-masahiroy@kernel.org> <20200210143052.1d89f7e26c9bd115d617cc92@linux-foundation.org>
+In-Reply-To: <20200210143052.1d89f7e26c9bd115d617cc92@linux-foundation.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 11 Feb 2020 23:59:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARZnyj7pynscGtz+hQF2LPvzxW5YjHAOivjYZhT8Yq7VQ@mail.gmail.com>
+Message-ID: <CAK7LNARZnyj7pynscGtz+hQF2LPvzxW5YjHAOivjYZhT8Yq7VQ@mail.gmail.com>
+Subject: Re: [PATCH] asm-generic: make more kernel-space headers mandatory
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 14:16, YueHaibing wrote:
-> drivers/net/ethernet/sfc/efx.c:116:38: warning:
->  efx_default_channel_type defined but not used [-Wunused-const-variable=]
+Hi Andrew,
 
-This is a good fix, but net-next is closed at the moment. Please resubmit it when it reopens.
+On Tue, Feb 11, 2020 at 7:30 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Tue, 11 Feb 2020 02:54:52 +0900 Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> > Change a header to mandatory-y if both of the following are met:
+> >
+> > [1] At least one architecture (except um) specifies it as generic-y in
+> >     arch/*/include/asm/Kbuild
+> >
+> > [2] Every architecture (except um) either has its own implementation
+> >     (arch/*/include/asm/*.h) or specifies it as generic-y in
+> >     arch/*/include/asm/Kbuild
+>
+> (reads Documentation/kbuild/makefiles.rst to remember what these things
+> do).
+>
+> Why are we making this change?  What's the benefit?
 
-> commit 83975485077d ("sfc: move channel alloc/removal code")
-> left behind this, remove it.
 
-Please add this info with a "Fixes:" tag.
+One obvious benefit is the diff stat:
 
-Thanks,
-Martin
+ 25 files changed, 52 insertions(+), 557 deletions(-)
 
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/ethernet/sfc/efx.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
-> index 4481f21a1f43..256807c28ff7 100644
-> --- a/drivers/net/ethernet/sfc/efx.c
-> +++ b/drivers/net/ethernet/sfc/efx.c
-> @@ -113,7 +113,6 @@ MODULE_PARM_DESC(debug, "Bitmapped debugging message enable value");
->   *
->   *************************************************************************/
->  
-> -static const struct efx_channel_type efx_default_channel_type;
->  static void efx_remove_port(struct efx_nic *efx);
->  static int efx_xdp_setup_prog(struct efx_nic *efx, struct bpf_prog *prog);
->  static int efx_xdp(struct net_device *dev, struct netdev_bpf *xdp);
-> 
+
+It is tedious to list generic-y for each arch
+that needs it.
+
+So, mandatory-y works like a fallback default
+(by just wrapping asm-generic one)
+when arch does not have a specific header implementation.
+
+See the following commits:
+
+def3f7cefe4e81c296090e1722a76551142c227c
+a1b39bae16a62ce4aae02d958224f19316d98b24
+
+
+It is tedious to convert headers one by one,
+so I processed by a shell script.
+
+
+-- 
+Best Regards
+Masahiro Yamada
