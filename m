@@ -2,225 +2,114 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA53BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C725C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E37206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A4620714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581444684;
+	bh=fCi7iGEzUFz55yqEcvf2QdYxh8pGHQFjh2eIogW1O7U=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Tb/uXMHSrW1uKxKFpAZvY/pJzCzCh9Fa045Xbd1qUY8ozko1s7gmPl/muh+/MqFZz
+	 s0Pe6PvPYzI+p8vP4fkC7Bpk5m5F3XOrY8oQHwqMsPdi1jsWDWGI10v6EqWFgVjDDK
+	 5aM8RwHgSI1jsqoetTPk/p1hNzZ/mLNzqxd3Juzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbgBKSKL (ORCPT
+        id S1731174AbgBKSLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:10:11 -0500
-Received: from muru.com ([72.249.23.125]:54794 "EHLO muru.com"
+        Tue, 11 Feb 2020 13:11:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbgBKSKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:10:11 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id BCA5080D4;
-        Tue, 11 Feb 2020 18:10:53 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call support
-Date:   Tue, 11 Feb 2020 10:10:05 -0800
-Message-Id: <20200211181005.54008-1-tony@atomide.com>
-X-Mailer: git-send-email 2.25.0
+        id S1727764AbgBKSLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:11:23 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D48206DB;
+        Tue, 11 Feb 2020 18:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581444682;
+        bh=fCi7iGEzUFz55yqEcvf2QdYxh8pGHQFjh2eIogW1O7U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sqJ97A8QIcyNMreWkO51N9AJETetiBfBcRXN9gx5CKrvprmwfwo8YMHxgwMDzkQDM
+         zdgThFTGIS6YitPfMwAGXptjc1IhDOR0zQwqp6O1ewNLHX6botCS733PBTZfglTpTN
+         E5LnjKkXHdOxsui31xVKNIPr9HhvWhP8PkYuuT0U=
+Subject: Re: [PATCH v3 7/7] selftests/exec: Add READ_IMPLIES_EXEC tests
+To:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>
+Cc:     Hector Marco-Gisbert <hecmargi@upv.es>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jann Horn <jannh@google.com>,
+        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200210193049.64362-1-keescook@chromium.org>
+ <20200210193049.64362-8-keescook@chromium.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <4f8a5036-dc2a-90ad-5fc8-69560a5dd78e@kernel.org>
+Date:   Tue, 11 Feb 2020 11:11:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200210193049.64362-8-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For using cpcap for voice calls, we need to route audio directly from
-the modem to cpcap for TDM (Time Division Multiplexing). The voice call
-is direct data between the modem and cpcap with no CPU involvment. In
-this mode, the cpcap related audio mixer controls work for the speaker
-selection and volume though.
+On 2/10/20 12:30 PM, Kees Cook wrote:
+> In order to check the matrix of possible states for handling
+> READ_IMPLIES_EXEC across native, compat, and the state of PT_GNU_STACK,
+> add tests for these execution conditions.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-To do this, we need to implement standard snd_soc_dai_set_tdm_slot()
-for cpcap. Then the modem codec driver can use snd_soc_dai_set_sysclk(),
-snd_soc_dai_set_fmt(), and snd_soc_dai_set_tdm_slot() to configure a
-voice call.
+No issues for this to go through tip.
 
-Let's add cpcap_voice_set_tdm_slot() for this, and cpcap_voice_call()
-helper to configure the additional registers needed for voice call.
+A few problems to fix first. This fails to compile when 32-bit libraries
+aren't installed. It should fail the 32-bit part and run other checks.
 
-Let's also clear CPCAP_REG_VAUDIOC on init in case we have the bit for
-CPCAP_BIT_VAUDIO_MODE0 set on init.
+make kselftest TARGETS=exec
+make --no-builtin-rules ARCH=x86 -C ../../.. headers_install
+make[2]: Entering directory '/lkml/linux_5.6'
+   INSTALL ./usr/include
+make[2]: Leaving directory '/lkml/linux_5.6'
+make[2]: Entering directory '/lkml/linux_5.6/tools/testing/selftests/exec'
+gcc -m32 -Wall -Wno-nonnull -D_GNU_SOURCE -Wl,-z,noexecstack -o 
+/lkml/linux_5.6/tools/testing/selftests/exec/rie-compat-nx-gnu-stack.new 
+read_implies_exec.c
+readelf -Wl 
+/lkml/linux_5.6/tools/testing/selftests/exec/rie-compat-nx-gnu-stack.new 
+| grep GNU_STACK | grep -q 'RW ' && \
+mv 
+/lkml/linux_5.6/tools/testing/selftests/exec/rie-compat-nx-gnu-stack.new 
+/lkml/linux_5.6/tools/testing/selftests/exec/rie-compat-nx-gnu-stack
+In file included from /usr/lib/gcc/x86_64-linux-gnu/9/include/stdint.h:9,
+                  from read_implies_exec.c:6:
+/usr/include/stdint.h:26:10: fatal error: bits/libc-header-start.h: No 
+such file or directory
+    26 | #include <bits/libc-header-start.h>
+       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+readelf: Error: 
+'/lkml/linux_5.6/tools/testing/selftests/exec/rie-compat-nx-gnu-stack.new': 
+No such file
+make[2]: *** [Makefile:58: 
+/lkml/linux_5.6/tools/testing/selftests/exec/rie-compat-nx-gnu-stack] 
+Error 1
+make[2]: Leaving directory '/lkml/linux_5.6/tools/testing/selftests/exec'
+make[1]: *** [Makefile:150: all] Error 2
+make: *** [Makefile:1217: kselftest] Error 2
 
-Cc: Arthur D. <spinal.by@gmail.com>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- sound/soc/codecs/cpcap.c | 123 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 123 insertions(+)
-
-diff --git a/sound/soc/codecs/cpcap.c b/sound/soc/codecs/cpcap.c
---- a/sound/soc/codecs/cpcap.c
-+++ b/sound/soc/codecs/cpcap.c
-@@ -16,6 +16,14 @@
- #include <sound/soc.h>
- #include <sound/tlv.h>
- 
-+/* Register 512 CPCAP_REG_VAUDIOC --- Audio Regulator and Bias Voltage */
-+#define CPCAP_BIT_AUDIO_LOW_PWR           6
-+#define CPCAP_BIT_AUD_LOWPWR_SPEED        5
-+#define CPCAP_BIT_VAUDIOPRISTBY           4
-+#define CPCAP_BIT_VAUDIO_MODE1            2
-+#define CPCAP_BIT_VAUDIO_MODE0            1
-+#define CPCAP_BIT_V_AUDIO_EN              0
-+
- /* Register 513 CPCAP_REG_CC     --- CODEC */
- #define CPCAP_BIT_CDC_CLK2                15
- #define CPCAP_BIT_CDC_CLK1                14
-@@ -221,6 +229,7 @@ struct cpcap_reg_info {
- };
- 
- static const struct cpcap_reg_info cpcap_default_regs[] = {
-+	{ CPCAP_REG_VAUDIOC, 0x003F, 0x0000 },
- 	{ CPCAP_REG_CC, 0xFFFF, 0x0000 },
- 	{ CPCAP_REG_CC, 0xFFFF, 0x0000 },
- 	{ CPCAP_REG_CDI, 0xBFFF, 0x0000 },
-@@ -1370,6 +1379,119 @@ static int cpcap_voice_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	return 0;
- }
- 
-+/*
-+ * Configure codec for voice call if requested.
-+ *
-+ * We can configure most with snd_soc_dai_set_sysclk(), snd_soc_dai_set_fmt()
-+ * and snd_soc_dai_set_tdm_slot(). This function configures the rest of the
-+ * cpcap related hardware as CPU is not involved in the voice call.
-+ */
-+static int cpcap_voice_call(struct cpcap_audio *cpcap, struct snd_soc_dai *dai,
-+			    bool voice_call)
-+{
-+	int mask, err;
-+
-+	/* Modem to codec VAUDIO_MODE1 */
-+	mask = BIT(CPCAP_BIT_VAUDIO_MODE1);
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_VAUDIOC,
-+				 mask, voice_call ? mask : 0);
-+	if (err)
-+		return err;
-+
-+	/* Clear MIC1_MUX for call */
-+	mask = BIT(CPCAP_BIT_MIC1_MUX);
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI,
-+				 mask, voice_call ? 0 : mask);
-+	if (err)
-+		return err;
-+
-+	/* Set MIC2_MUX for call */
-+	mask = BIT(CPCAP_BIT_MB_ON1L) | BIT(CPCAP_BIT_MB_ON1R) |
-+		BIT(CPCAP_BIT_MIC2_MUX) | BIT(CPCAP_BIT_MIC2_PGA_EN);
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_TXI,
-+				 mask, voice_call ? mask : 0);
-+	if (err)
-+		return err;
-+
-+	/* Enable LDSP for call */
-+	mask = BIT(CPCAP_BIT_A2_LDSP_L_EN) | BIT(CPCAP_BIT_A2_LDSP_R_EN);
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_RXOA,
-+				 mask, voice_call ? mask : 0);
-+	if (err)
-+		return err;
-+
-+	/* Enable CPCAP_BIT_PGA_CDC_EN for call */
-+	mask = BIT(CPCAP_BIT_PGA_CDC_EN);
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_RXCOA,
-+				 mask, voice_call ? mask : 0);
-+	if (err)
-+		return err;
-+
-+	/* Unmute voice for call */
-+	if (dai) {
-+		err = snd_soc_dai_digital_mute(dai, !voice_call,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		if (err)
-+			return err;
-+	}
-+
-+	/* Set modem to codec mic CDC and HPF for call */
-+	mask = BIT(CPCAP_BIT_MIC2_CDC_EN) | BIT(CPCAP_BIT_CDC_EN_RX) |
-+	       BIT(CPCAP_BIT_AUDOHPF_1) | BIT(CPCAP_BIT_AUDOHPF_0) |
-+	       BIT(CPCAP_BIT_AUDIHPF_1) | BIT(CPCAP_BIT_AUDIHPF_0);
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_CC,
-+				 mask, voice_call ? mask : 0);
-+	if (err)
-+		return err;
-+
-+	/* Enable modem to codec CDC for call*/
-+	mask = BIT(CPCAP_BIT_CDC_CLK_EN);
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_CDI,
-+				 mask, voice_call ? mask : 0);
-+
-+	return err;
-+}
-+
-+static int cpcap_voice_set_tdm_slot(struct snd_soc_dai *dai,
-+				    unsigned int tx_mask, unsigned int rx_mask,
-+				    int slots, int slot_width)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct cpcap_audio *cpcap = snd_soc_component_get_drvdata(component);
-+	int err, ts_mask, mask;
-+	bool voice_call;
-+
-+	/*
-+	 * Primitive test for voice call, probably needs more checks
-+	 * later on for 16-bit calls detected, Bluetooth headset etc.
-+	 */
-+	if (tx_mask == 0 && rx_mask == 1 && slot_width == 8)
-+		voice_call = true;
-+	else
-+		voice_call = false;
-+
-+	ts_mask = 0x7 << CPCAP_BIT_MIC2_TIMESLOT0;
-+	ts_mask |= 0x7 << CPCAP_BIT_MIC1_RX_TIMESLOT0;
-+
-+	mask = (tx_mask & 0x7) << CPCAP_BIT_MIC2_TIMESLOT0;
-+	mask |= (rx_mask & 0x7) << CPCAP_BIT_MIC1_RX_TIMESLOT0;
-+
-+	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_CDI,
-+				 ts_mask, mask);
-+	if (err)
-+		return err;
-+
-+	err = cpcap_set_samprate(cpcap, CPCAP_DAI_VOICE, slot_width * 1000);
-+	if (err)
-+		return err;
-+
-+	err = cpcap_voice_call(cpcap, dai, voice_call);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
- static int cpcap_voice_set_mute(struct snd_soc_dai *dai, int mute)
- {
- 	struct snd_soc_component *component = dai->component;
-@@ -1391,6 +1513,7 @@ static const struct snd_soc_dai_ops cpcap_dai_voice_ops = {
- 	.hw_params	= cpcap_voice_hw_params,
- 	.set_sysclk	= cpcap_voice_set_dai_sysclk,
- 	.set_fmt	= cpcap_voice_set_dai_fmt,
-+	.set_tdm_slot	= cpcap_voice_set_tdm_slot,
- 	.digital_mute	= cpcap_voice_set_mute,
- };
- 
--- 
-2.25.0
+thanks,
+-- Shuah
