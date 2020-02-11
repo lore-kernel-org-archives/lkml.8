@@ -2,132 +2,184 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D8AC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9103EC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1041E208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581414928;
-	bh=q0Fz9yIHjMR47rqb63t0DZl1MM211pLUxeDAzl1/TSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u3e2WMraKONdiw2xdHM0BMxCQwFXHobT2X+axuz/5Z5mN50sTweucrq/ClyNiZsWO
-	 KWzrIXaFM+Y+Ix8hYOMTtOf2TLdDG9BmAwPx/MMyNsG8SJ6PFdrUB1q/r+lOsJAl1L
-	 E3AjEqzpZXT4CYKAeDNNjKSdSRu2E44lkli9Ensg=
+	by mail.kernel.org (Postfix) with ESMTP id 651D320842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNOlJXof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgBKJz1 (ORCPT
+        id S1728103AbgBKJzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:55:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbgBKJz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:55:26 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 11 Feb 2020 04:55:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50030 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727945AbgBKJzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 04:55:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581414938;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=DCZ/HZY+BrMbXg5FbkPEvwFRllXttN9dTdmpwAbOBrg=;
+        b=SNOlJXof2JuAYqMeklFratztLKfVtUozyaoANdpyFQrwzqRtC0G2ZdIYDwvrxuuR3I2stL
+        um6scl3dfxiK7wBZLkevHA9meP7+tQISYw9jfQ/DAa2PFjqfwEIpG+Y+V974jfxW603POl
+        rKySstFNWQwzPMnzKoNWC11zB+NMLV4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-R89z60rxNr6iUvaiwZOc3w-1; Tue, 11 Feb 2020 04:55:35 -0500
+X-MC-Unique: R89z60rxNr6iUvaiwZOc3w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B570420714;
-        Tue, 11 Feb 2020 09:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581414926;
-        bh=q0Fz9yIHjMR47rqb63t0DZl1MM211pLUxeDAzl1/TSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hrXJkcSkEoSoFke6H/bWzn+haEaMNsTni9NIh0NgD7P0mnftHNPZG2n/2stHF8MKF
-         mUeshVt39Y4lYdMB5hiW9Q2LCA2kIHGnewOd1K85B0nChMIUWGAuZ249tThQJZU4P+
-         U/CFhsQ7s3AcDzue88/R8xKJUiKDB07ydtxZI/tI=
-Date:   Tue, 11 Feb 2020 09:55:19 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 09/11] arm64: disable SCS for hypervisor code
-Message-ID: <20200211095519.GB8560@willie-the-truck>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200128184934.77625-1-samitolvanen@google.com>
- <20200128184934.77625-10-samitolvanen@google.com>
- <6f62b3c0-e796-e91c-f53b-23bd80fcb065@arm.com>
- <20200210175214.GA23318@willie-the-truck>
- <20200210180327.GB20840@lakrids.cambridge.arm.com>
- <20200210180740.GA24354@willie-the-truck>
- <43839239237869598b79cab90e100127@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <43839239237869598b79cab90e100127@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 604CD8017DF;
+        Tue, 11 Feb 2020 09:55:33 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FC5760BF1;
+        Tue, 11 Feb 2020 09:55:30 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 537C616E15; Tue, 11 Feb 2020 10:55:29 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     daniel@ffwll.ch, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
+        BOCHS VIRTUAL GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3] drm/bochs: add drm_driver.release callback.
+Date:   Tue, 11 Feb 2020 10:55:29 +0100
+Message-Id: <20200211095529.30449-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 09:14:52AM +0000, Marc Zyngier wrote:
-> On 2020-02-10 18:07, Will Deacon wrote:
-> > On Mon, Feb 10, 2020 at 06:03:28PM +0000, Mark Rutland wrote:
-> > > On Mon, Feb 10, 2020 at 05:52:15PM +0000, Will Deacon wrote:
-> > > > On Mon, Feb 10, 2020 at 05:18:58PM +0000, James Morse wrote:
-> > > > > On 28/01/2020 18:49, Sami Tolvanen wrote:
-> > > > > > Filter out CC_FLAGS_SCS and -ffixed-x18 for code that runs at a
-> > > > > > different exception level.
-> > > > >
-> > > > > Hmmm, there are two things being disabled here.
-> > > > >
-> > > > > Stashing the lr in memory pointed to by VA won't work transparently at EL2 ... but
-> > > > > shouldn't KVM's C code still treat x18 as a fixed register?
-> > > >
-> > > > My review of v6 suggested dropping the -ffixed-x18 as well, since it's only
-> > > > introduced by SCS (in patch 5) and so isn't required by anything else. Why
-> > > > do you think it's needed?
-> > > 
-> > > When EL1 code calls up to hyp, it expects x18 to be preserved across
-> > > the
-> > > call, so hyp needs to either preserve it explicitly across a
-> > > transitions
-> > > from/to EL1 or always preserve it.
-> > 
-> > I thought we explicitly saved/restored it across the call after
-> > af12376814a5 ("arm64: kvm: stop treating register x18 as caller save").
-> > Is
-> > that not sufficient?
-> > 
-> > > The latter is easiest since any code used by VHE hyp code will need
-> > > x18
-> > > saved anyway (ans so any common hyp code needs to).
-> > 
-> > I would personally prefer to split the VHE and non-VHE code so they can
-> > be
-> > compiled with separate options.
-> 
-> This is going to generate a lot of code duplication (or at least object
-> duplication),
-> as the two code paths are intricately linked and splitting them to support
-> different
-> compilation options and/or calling conventions.
-> 
-> I'm not fundamentally opposed to that, but it should come with ways to still
-> manage it as a unified code base as much as possible, as ways to discard the
-> unused part at runtime (which should become easy to do once we have two
-> distinct sets of objects).
+Call bochs_unload via drm_driver.release to make sure we release stuff
+when it is safe to do so.  Use drm_dev_{enter,exit,unplug} to avoid
+touching hardware after device removal.  Tidy up here and there.
 
-Agreed, and I don't want to hold up the SCS patches because of this. I'm
-just nervous about the function attribute because I've only ever had
-terrible experiences with them. Maybe it will work this time (!)
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/bochs/bochs_drv.c |  6 +++---
+ drivers/gpu/drm/bochs/bochs_hw.c  | 24 +++++++++++++++++++++++-
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
-Will
+diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
+index 10460878414e..addb0568c1af 100644
+--- a/drivers/gpu/drm/bochs/bochs_drv.c
++++ b/drivers/gpu/drm/bochs/bochs_drv.c
+@@ -23,7 +23,6 @@ static void bochs_unload(struct drm_device *dev)
+ 
+ 	bochs_kms_fini(bochs);
+ 	bochs_mm_fini(bochs);
+-	bochs_hw_fini(dev);
+ 	kfree(bochs);
+ 	dev->dev_private = NULL;
+ }
+@@ -69,6 +68,7 @@ static struct drm_driver bochs_driver = {
+ 	.major			= 1,
+ 	.minor			= 0,
+ 	DRM_GEM_VRAM_DRIVER,
++	.release                = bochs_unload,
+ };
+ 
+ /* ---------------------------------------------------------------------- */
+@@ -148,9 +148,9 @@ static void bochs_pci_remove(struct pci_dev *pdev)
+ {
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 
++	drm_dev_unplug(dev);
+ 	drm_atomic_helper_shutdown(dev);
+-	drm_dev_unregister(dev);
+-	bochs_unload(dev);
++	bochs_hw_fini(dev);
+ 	drm_dev_put(dev);
+ }
+ 
+diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+index b615b7dfdd9d..952199cc0462 100644
+--- a/drivers/gpu/drm/bochs/bochs_hw.c
++++ b/drivers/gpu/drm/bochs/bochs_hw.c
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/pci.h>
+ 
++#include <drm/drm_drv.h>
+ #include <drm/drm_fourcc.h>
+ 
+ #include "bochs.h"
+@@ -194,6 +195,8 @@ void bochs_hw_fini(struct drm_device *dev)
+ {
+ 	struct bochs_device *bochs = dev->dev_private;
+ 
++	/* TODO: shot down existing vram mappings */
++
+ 	if (bochs->mmio)
+ 		iounmap(bochs->mmio);
+ 	if (bochs->ioports)
+@@ -207,6 +210,11 @@ void bochs_hw_fini(struct drm_device *dev)
+ void bochs_hw_setmode(struct bochs_device *bochs,
+ 		      struct drm_display_mode *mode)
+ {
++	int idx;
++
++	if (!drm_dev_enter(bochs->dev, &idx))
++		return;
++
+ 	bochs->xres = mode->hdisplay;
+ 	bochs->yres = mode->vdisplay;
+ 	bochs->bpp = 32;
+@@ -232,11 +240,18 @@ void bochs_hw_setmode(struct bochs_device *bochs,
+ 
+ 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_ENABLE,
+ 			  VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
++
++	drm_dev_exit(idx);
+ }
+ 
+ void bochs_hw_setformat(struct bochs_device *bochs,
+ 			const struct drm_format_info *format)
+ {
++	int idx;
++
++	if (!drm_dev_enter(bochs->dev, &idx))
++		return;
++
+ 	DRM_DEBUG_DRIVER("format %c%c%c%c\n",
+ 			 (format->format >>  0) & 0xff,
+ 			 (format->format >>  8) & 0xff,
+@@ -256,13 +271,18 @@ void bochs_hw_setformat(struct bochs_device *bochs,
+ 			  __func__, format->format);
+ 		break;
+ 	}
++
++	drm_dev_exit(idx);
+ }
+ 
+ void bochs_hw_setbase(struct bochs_device *bochs,
+ 		      int x, int y, int stride, u64 addr)
+ {
+ 	unsigned long offset;
+-	unsigned int vx, vy, vwidth;
++	unsigned int vx, vy, vwidth, idx;
++
++	if (!drm_dev_enter(bochs->dev, &idx))
++		return;
+ 
+ 	bochs->stride = stride;
+ 	offset = (unsigned long)addr +
+@@ -277,4 +297,6 @@ void bochs_hw_setbase(struct bochs_device *bochs,
+ 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_VIRT_WIDTH, vwidth);
+ 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_X_OFFSET, vx);
+ 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_Y_OFFSET, vy);
++
++	drm_dev_exit(idx);
+ }
+-- 
+2.18.2
+
