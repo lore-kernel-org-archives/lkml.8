@@ -2,200 +2,201 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7EAC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA62C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DD12173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAC320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhM+87nI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgBKLS4 (ORCPT
+        id S1728568AbgBKLTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:18:56 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:47757 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727761AbgBKLSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:18:55 -0500
-Received: from hypnotoad.molgen.mpg.de (hypnotoad.molgen.mpg.de [141.14.18.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id CDD2620643C51;
-        Tue, 11 Feb 2020 12:18:51 +0100 (CET)
-To:     Len Brown <lenb@kernel.org>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: turbostat: Display all C-states on AMD Ryzen processor
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Message-ID: <cf8b3db3-6daa-0da1-c3bb-1c0de029af7d@molgen.mpg.de>
-Date:   Tue, 11 Feb 2020 12:18:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 11 Feb 2020 06:19:04 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44373 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbgBKLTE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 06:19:04 -0500
+Received: by mail-il1-f194.google.com with SMTP id s85so3083078ill.11;
+        Tue, 11 Feb 2020 03:19:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rVhcVjlq8na3czw/tkwf6l6sePScsOfYU5Ogr7k0eCs=;
+        b=jhM+87nIV3eGnOzI14WbJNrPKm1HIDv1USv22qODslUnAdL8F6u/kl61BxSpUOTnW4
+         xZfVVaajACAOZw+wxOUBKyxBjupzu/ErjqCyQD0iSgVqVP7l2q8KOOSRFZIyT4JiBq6K
+         NjNBWnlrJ7A0/ZnaU/nWC7qvGwzm6sEfZOKgzSncc1YwHqePggXpcG3QlQ9DiNQFINo8
+         2qN3krHATdz6m5NZOlpfV47HNzgcMQ6XB9B291HeVn78wmzUayrPbTOaiTgUaBLHKkrX
+         x/ajVJmuewSo2LRLOHlDcqkqJS1Jb5DhWnwimEEda3wtR4Ts7kxuu7G+n+4tu6ZuYfIi
+         lC+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rVhcVjlq8na3czw/tkwf6l6sePScsOfYU5Ogr7k0eCs=;
+        b=trBsuCdFfreE7U4bN2o5TgQZ4L0qjo0j5/F8GYHmEE5LHXh9fe/FYTPZeJuIkyGkqD
+         nCvnM1WwN40uK/fcDYpTSd4YNa96CC0K+WRnucvuM6ueR8V4DKDRsbcNuy2ayLw3iBxH
+         xTw9p8BLRQe2hVqQCIPoufLyv0PK5y6nbt0pBNbddXT35Q4oIRmdAQYM9DQQs+msedQ2
+         9v0ptihqNp+hXx/qja68XmTpoZ66czkVy0iDeEtw0VQkk+bdy4chfF66We0JW+6S2wkr
+         s9qushjV814HSu5+w59NkLsdRTJt0qJUQw7DFhaDnzJyRMJyMbxjNudx4rKlZRC8bRZF
+         yCFQ==
+X-Gm-Message-State: APjAAAXgNPEq4R3DNnLZAO+d5/iesGm+drpaCdE2QljuRB5+O6kNKSfp
+        WxqKTbD3dAv7/NdNhaAzih6O3rP8nAkuDs90NHY=
+X-Google-Smtp-Source: APXvYqwpJFGGow05e+peGMiccU09OXwxzA3q7JgF8vOUFvh3CVcgIle2N9uPDYB0Zu84nghhzJetQpekPDvKMOVQPjY=
+X-Received: by 2002:a92:50a:: with SMTP id q10mr6210854ile.294.1581419943357;
+ Tue, 11 Feb 2020 03:19:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms030008080000080804000800"
+References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+In-Reply-To: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+From:   Jerin Jacob <jerinjacobk@gmail.com>
+Date:   Tue, 11 Feb 2020 16:48:47 +0530
+Message-ID: <CALBAE1Oz2u+cmoL8LhEZ-4paXEebKh3DzfWGLQLQx0oaW=tBXw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dpdk-dev <dev@dpdk.org>,
+        mtosatti@redhat.com, Thomas Monjalon <thomas@monjalon.net>,
+        Luca Boccassi <bluca@debian.org>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        cohuck@redhat.com, Vamsi Attunuru <vattunuru@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+On Wed, Feb 5, 2020 at 4:35 AM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> There seems to be an ongoing desire to use userspace, vfio-based
+> drivers for both SR-IOV PF and VF devices.  The fundamental issue
+> with this concept is that the VF is not fully independent of the PF
+> driver.  Minimally the PF driver might be able to deny service to the
+> VF, VF data paths might be dependent on the state of the PF device,
+> or the PF my have some degree of ability to inspect or manipulate the
+> VF data.  It therefore would seem irresponsible to unleash VFs onto
+> the system, managed by a user owned PF.
+>
+> We address this in a few ways in this series.  First, we can use a bus
+> notifier and the driver_override facility to make sure VFs are bound
+> to the vfio-pci driver by default.  This should eliminate the chance
+> that a VF is accidentally bound and used by host drivers.  We don't
+> however remove the ability for a host admin to change this override.
+>
+> The next issue we need to address is how we let userspace drivers
+> opt-in to this participation with the PF driver.  We do not want an
+> admin to be able to unwittingly assign one of these VFs to a tenant
+> that isn't working in collaboration with the PF driver.  We could use
+> IOMMU grouping, but this seems to push too far towards tightly coupled
+> PF and VF drivers.  This series introduces a "VF token", implemented
+> as a UUID, as a shared secret between PF and VF drivers.  The token
+> needs to be set by the PF driver and used as part of the device
+> matching by the VF driver.  Provisions in the code also account for
+> restarting the PF driver with active VF drivers, requiring the PF to
+> use the current token to re-gain access to the PF.
 
---------------ms030008080000080804000800
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Thanks Alex for the series. DPDK realizes this use-case through, an out of
+tree igb_uio module, for non VFIO devices. Supporting this use case, with
+VFIO, will be a great enhancement for DPDK as we are planning to
+get rid of out of tree modules any focus only on userspace aspects.
 
-Dear Len,
+From the DPDK perspective, we have following use-cases
 
+1) VF representer or OVS/vSwitch  use cases where
+DPDK PF acts as an HW switch to steer traffic to VF
+using the rte_flow library backed by HW CAMs.
 
-Running `turbostat` on an AMD Ryzen 5 PRO 1500, I do not see all C-states=
-=2E
+2) Unlike, other PCI class of devices, Network class of PCIe devices
+would have additional
+capability on the PF devices such as promiscuous mode support etc
+leverage that in DPDK
+PF and VF use cases.
 
-```
-$ git describe
-v5.6-rc1
-$ sudo ./turbostat=20
-turbostat version 19.08.31 - Len Brown <lenb@kernel.org>
-CPUID(0): AuthenticAMD 0xd CPUID levels; 0x8000001f xlevels; family:model=
-:stepping 0x17:1:1 (23:1:1)
-CPUID(1): SSE3 MONITOR - - - TSC MSR - HT -
-CPUID(6): APERF, No-TURBO, No-DTS, No-PTM, No-HWP, No-HWPnotify, No-HWPwi=
-ndow, No-HWPepp, No-HWPpkg, No-EPB
-CPUID(7): No-SGX
-RAPL: 262 sec. Joule Counter Range, at 250 Watts
-cpu7: POLL: CPUIDLE CORE POLL IDLE
-cpu7: C1: ACPI HLT
-cpu7: C2: ACPI IOPORT 0x414
-cpu7: cpufreq driver: acpi-cpufreq
-cpu7: cpufreq governor: performance
-cpufreq boost: 1
-cpu0: MSR_RAPL_PWR_UNIT: 0x000a1003 (0.125000 Watts, 0.000015 Joules, 0.0=
-00977 sec.)
-Core	CPU	Avg_MHz	Busy%	Bzy_MHz	TSC_MHz	IRQ	POLL	C1	C2	POLL%	C1%	C2%	CorWa=
-tt	PkgWatt
--	-	2	0.07	2973	3493	943	0	201	737	0.00	0.37	99.57	0.12	12.42
-0	0	2	0.08	3005	3493	122	0	7	116	0.00	0.12	99.81	0.03	12.42
-0	1	0	0.01	2998	3493	21	0	6	14	0.00	0.10	99.89
-1	2	0	0.01	3036	3493	25	0	13	11	0.00	0.21	99.78	0.04
-1	3	5	0.17	2960	3493	429	0	102	324	0.00	1.41	98.45
-4	4	2	0.05	3015	3493	74	0	24	50	0.00	0.32	99.64	0.03
-4	5	3	0.09	2921	3493	125	0	15	110	0.00	0.28	99.63
-5	6	2	0.07	2978	3493	124	0	26	97	0.00	0.39	99.54	0.03
-5	7	1	0.02	3012	3493	23	0	8	15	0.00	0.13	99.84
-```
+That would boil down to the use of the following topology.
+a)  PF bound to DPDK/VFIO  and  VF bound to Linux
+b)  PF bound to DPDK/VFIO  and  VF bound to DPDK/VFIO
 
-On an Intel processor more C-states are shown. Is support just lacking
-on AMD, or should a different tool be used?
+Tested the use case (a) and it works this patch. Tested use case(b), it
+works with patch provided both PF and VF under the same application.
+
+Regarding the use case where  PF bound to DPDK/VFIO and
+VF bound to DPDK/VFIO are _two different_ processes then sharing the UUID
+will be a little tricky thing in terms of usage. But if that is the
+purpose of bringing
+UUID to the equation then it fine.
+
+Overall this series looks good to me.  We can test the next non-RFC
+series and give
+Tested-by by after testing with DPDK.
 
 
-Kind regards,
-
-Paul
-
-
---------------ms030008080000080804000800
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
-AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
-VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
-Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
-BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
-IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
-Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
-ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
-FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
-eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
-WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
-xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
-AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
-4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
-/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
-AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
-ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
-MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
-Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
-ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
-eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
-MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
-PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
-2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
-ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
-CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
-dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
-BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
-NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
-BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
-A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
-59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
-G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
-rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
-OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
-Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
-VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
-IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
-BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
-dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
-Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
-Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
-L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
-Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
-dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
-YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
-/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
-jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
-dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
-wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
-qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
-/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
-A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
-VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
-MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
-DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
-DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
-enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
-peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
-6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
-+2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
-ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
-AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
-FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
-ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
-dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
-Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
-dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
-dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
-BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
-dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
-AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
-Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
-aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
-GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
-fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
-1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
-EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
-LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
-RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
-SIb3DQEJBTEPFw0yMDAyMTExMTE4NTFaMC8GCSqGSIb3DQEJBDEiBCCa3841n45yWIRcWs6J
-5m9OyLNem/uCzqtpnc+JC+NY9zBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
-BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
-MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
-bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
-gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
-DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
-BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBADYH
-YN5DFV94rJQckcGIe2yl5F9TcBI1Tf2lJh/qM9cxyQEQRKsjkfv+PAGacXQ3BT5dccsRhSVJ
-bUYvGe0/GBsc15r3ZyfxGUWPWe1wcr1OMIb6WfYZY0wbKj4iM+1SWC02wjFXj11GPzFX41dJ
-mnyNF0wFqMyBWnFaUgODmLogBIU+ZFwdyyJMRRdjnEOX93omBzEjx6EbyZIklQmhgxw3S46A
-NmduTo0RJOXDr0xUhiKFk2xFvYmfD03QpiPe13ay8l72Y+xtozCzs1Lz/Oj9w9xc+zrS3TMi
-4zZ8MGxfKCEecTFjgxUW97xg+iJycb6h9OD+PwzYZOc66g2FhckAAAAAAAA=
---------------ms030008080000080804000800--
+>
+> The above solutions introduce a bit of a modification to the VFIO ABI
+> and an additional ABI extension.  The modification is that the
+> VFIO_GROUP_GET_DEVICE_FD ioctl is specified to require a char string
+> from the user providing the device name.  For this solution, we extend
+> the syntax to allow the device name followed by key/value pairs.  In
+> this case we add "vf_token=3e7e882e-1daf-417f-ad8d-882eea5ee337", for
+> example.  These options are expected to be space separated.  Matching
+> these key/value pairs is entirely left to the vfio bus driver (ex.
+> vfio-pci) and the internal ops structure is extended to allow this
+> optional support.  This extension should be fully backwards compatible
+> to existing userspace, such code will simply fail to open these newly
+> exposed devices, as intended.
+>
+> I've been debating whether instead of the above we should allow the
+> user to get the device fd as normal, but restrict the interfaces until
+> the user authenticates, but I'm afraid this would be a less backwards
+> compatible solution.  It would be just as unclear to the user why a
+> device read/write/mmap/ioctl failed as it might be to why getting the
+> device fd could fail.  However in the latter case, I believe we do a
+> better job of restricting how far userspace code might go before they
+> ultimately fail.  I'd welcome discussion in the space, and or course
+> the extension of the GET_DEVICE_FD string.
+>
+> Finally, the user needs to be able to set a VF token.  I add a
+> VFIO_DEVICE_FEATURE ioctl for this that's meant to be reusable for
+> getting, setting, and probing arbitrary features of a device.
+>
+> I'll reply to this cover letter with a very basic example of a QEMU
+> update to support this interface, though I haven't found a device yet
+> that behaves well with the PF running in one VM with the VF in
+> another, or really even just a PF running in a VM with SR-IOV enabled.
+> I know these devices exist though, and I suspect QEMU will not be the
+> primary user of this support for now, but this behavior reaffirms my
+> concerns to prevent mis-use.
+>
+> Please comment.  In particular, does this approach meet the DPDK needs
+> for userspace PF and VF drivers, with the hopefully minor hurdle of
+> sharing a token between drivers.  The token is of course left to
+> userspace how to manage, and might be static (and not very secret) for
+> a given set of drivers.  Thanks,
+>
+> Alex
+>
+> ---
+>
+> Alex Williamson (7):
+>       vfio: Include optional device match in vfio_device_ops callbacks
+>       vfio/pci: Implement match ops
+>       vfio/pci: Introduce VF token
+>       vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+>       vfio/pci: Add sriov_configure support
+>       vfio/pci: Remove dev_fmt definition
+>       vfio/pci: Cleanup .probe() exit paths
+>
+>
+>  drivers/vfio/pci/vfio_pci.c         |  315 ++++++++++++++++++++++++++++++++---
+>  drivers/vfio/pci/vfio_pci_private.h |   10 +
+>  drivers/vfio/vfio.c                 |   19 ++
+>  include/linux/vfio.h                |    3
+>  include/uapi/linux/vfio.h           |   37 ++++
+>  5 files changed, 356 insertions(+), 28 deletions(-)
+>
