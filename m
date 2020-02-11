@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C57AC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACFFC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3F920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EBF20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436314;
-	bh=CW1ALRzDXQKDKjDV68hTjg2ZVzH2pIsj1iKoOAQXkIo=;
+	s=default; t=1581436316;
+	bh=8CK6aaDH73GgajcDczvJwXwL7Bn4fpZP8SuJWQJcOFQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=SPw0OBYCCrl5dfFpdvjYbdQr7QBlOrCQKxrHzOdUbyKwPcOX8biSAvjjTb/533fzJ
-	 KE457AV6BhKf3zfF0sxy7Vx74zY0ig1lm507HwE4xz+HWh5UTSrUCiCSShpB9o9Rd3
-	 quZ9VItkqblGF00X6HEhBCRLYw6BTB6nC+R+MTfs=
+	b=YHU7L+eNuXRist9aP4USqpJcM/zyR9R7qpG2UIBMSW2CnySvL6JOwzghqscgUrIZ0
+	 LTLAWWOIYTahP/nkliD6qn8DjKcuX49/x29BR0adZTYBYxFwlHgomzrtjz/1ApfB9l
+	 CHj992luNMOTlKRCl2zj9FqlzRO5uwegvVX1egcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbgBKPvy (ORCPT
+        id S1730671AbgBKPvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:51:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:48946 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:51:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:48962 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730647AbgBKPvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:51:51 -0500
+        id S1730657AbgBKPvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:51:53 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D032030E;
-        Tue, 11 Feb 2020 07:51:50 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D1EA31B;
+        Tue, 11 Feb 2020 07:51:53 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 563D13F68E;
-        Tue, 11 Feb 2020 07:51:50 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:51:48 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A73DF3F68E;
+        Tue, 11 Feb 2020 07:51:52 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:51:51 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Alok Chauhan <alokc@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
+To:     Etienne Carriere <etienne.carriere@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        christophe.kerello@st.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-geni-qcom: Drop of.h include" to the spi tree
-In-Reply-To: <20200204191206.97036-4-swboyd@chromium.org>
-Message-Id: <applied-20200204191206.97036-4-swboyd@chromium.org>
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        patrice.chotard@st.com
+Subject: Applied "spi: stm32-qspi: defer probe for reset controller" to the spi tree
+In-Reply-To: <20200203135048.1299-2-patrice.chotard@st.com>
+Message-Id: <applied-20200203135048.1299-2-patrice.chotard@st.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,7 +55,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-geni-qcom: Drop of.h include
+   spi: stm32-qspi: defer probe for reset controller
 
 has been applied to the spi tree at
 
@@ -80,38 +80,40 @@ to this mail.
 Thanks,
 Mark
 
-From 875014cb79ea4251e8800994640be1a8012b4133 Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <swboyd@chromium.org>
-Date: Tue, 4 Feb 2020 11:12:06 -0800
-Subject: [PATCH] spi: spi-geni-qcom: Drop of.h include
+From 8196f7bcc2adf21f83d82691d537fcef7abaa1c7 Mon Sep 17 00:00:00 2001
+From: Etienne Carriere <etienne.carriere@st.com>
+Date: Mon, 3 Feb 2020 14:50:47 +0100
+Subject: [PATCH] spi: stm32-qspi: defer probe for reset controller
 
-This driver doesn't call any DT functions like of_get_property(). Remove
-the of.h include as it isn't used.
+Changes stm32 QSPI driver to defer its probe operation when a reset
+controller device have not yet probed but is registered in the
+system.
 
-Cc: Girish Mahadevan <girishm@codeaurora.org>
-Cc: Dilip Kota <dkota@codeaurora.org>
-Cc: Alok Chauhan <alokc@codeaurora.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200204191206.97036-4-swboyd@chromium.org
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Link: https://lore.kernel.org/r/20200203135048.1299-2-patrice.chotard@st.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-geni-qcom.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/spi/spi-stm32-qspi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index f0ca7f5ae714..c3972424af71 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -6,7 +6,6 @@
- #include <linux/io.h>
- #include <linux/log2.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/qcom-geni-se.h>
+diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
+index 4ef569b47aa6..13bb64bf4c8f 100644
+--- a/drivers/spi/spi-stm32-qspi.c
++++ b/drivers/spi/spi-stm32-qspi.c
+@@ -615,7 +615,11 @@ static int stm32_qspi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	rstc = devm_reset_control_get_exclusive(dev, NULL);
+-	if (!IS_ERR(rstc)) {
++	if (IS_ERR(rstc)) {
++		ret = PTR_ERR(rstc);
++		if (ret == -EPROBE_DEFER)
++			goto err;
++	} else {
+ 		reset_control_assert(rstc);
+ 		udelay(2);
+ 		reset_control_deassert(rstc);
 -- 
 2.20.1
 
