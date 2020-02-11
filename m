@@ -2,36 +2,37 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02674C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124ABC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5BA20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83C920708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgBKQf1 convert rfc822-to-8bit (ORCPT
+        id S1730876AbgBKQfh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:35:27 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:35370 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgBKQf0 (ORCPT
+        Tue, 11 Feb 2020 11:35:37 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:55224 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728295AbgBKQfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:35:26 -0500
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        Tue, 11 Feb 2020 11:35:37 -0500
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 6F77767A884;
-        Tue, 11 Feb 2020 17:35:24 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 27DA467A6F1;
+        Tue, 11 Feb 2020 17:35:34 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 11 Feb
- 2020 17:35:24 +0100
+ 2020 17:35:33 +0100
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Tue, 11 Feb 2020 17:35:24 +0100
+ 15.01.1913.005; Tue, 11 Feb 2020 17:35:33 +0100
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     Boris Brezillon <bbrezillon@kernel.org>,
         Schrempf Frieder <frieder.schrempf@kontron.de>,
@@ -39,16 +40,19 @@ To:     Boris Brezillon <bbrezillon@kernel.org>,
         liaoweixiong <liaoweixiong@allwinnertech.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Peter Pan <peterpandong@micron.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
         "Richard Weinberger" <richard@nod.at>
-Subject: [PATCH 0/3] mtd: spinand: Fix reading and writing of bad block
- markers
-Thread-Topic: [PATCH 0/3] mtd: spinand: Fix reading and writing of bad block
- markers
-Thread-Index: AQHV4PlCb3KDs/8kSke/J9l27AdzOw==
-Date:   Tue, 11 Feb 2020 16:35:23 +0000
-Message-ID: <20200211163452.25442-1-frieder.schrempf@kontron.de>
+Subject: [PATCH 1/3] mtd: spinand: Stop using spinand->oobbuf for buffering
+ bad block markers
+Thread-Topic: [PATCH 1/3] mtd: spinand: Stop using spinand->oobbuf for
+ buffering bad block markers
+Thread-Index: AQHV4PlH+VPeFWBm8k+U84JJEiFI4w==
+Date:   Tue, 11 Feb 2020 16:35:33 +0000
+Message-ID: <20200211163452.25442-2-frieder.schrempf@kontron.de>
+References: <20200211163452.25442-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20200211163452.25442-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -60,14 +64,14 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 6F77767A884.AE72B
+X-SnT-MailScanner-ID: 27DA467A6F1.AFC22
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
 X-SnT-MailScanner-To: bbrezillon@kernel.org, git-commits@allycomm.com,
         liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        peterpandong@micron.com, richard@nod.at
+        peterpandong@micron.com, richard@nod.at, stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,24 +79,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-We were pointed to the issue of bad block markers not being saved to flash on
-one of our boards with SPI NAND flash. After a bit of investigation it seems
-like there are two overlapping bugs in the original framework that cause silent
-failure when writing a bad block marker.
+For reading and writing the bad block markers, spinand->oobbuf is
+currently used as a buffer for the marker bytes. During the
+underlying read and write operations to actually get/set the content
+of the OOB area, the content of spinand->oobbuf is reused and changed
+by accessing it through spinand->oobbuf and/or spinand->databuf.
 
-This set contains fixes for both of these issues and one more fix (patch 2) that
-should not affect the actual behavior of the driver.
+This is a flaw in the original design of the SPI MEM core and at the
+latest from 13c15e07eedf ("mtd: spinand: Handle the case where
+PROGRAM LOAD does not reset the cache") on, it results in not having
+the bad block marker written at all, as the spinand->oobbuf is
+cleared to 0xff after setting the marker bytes to zero.
 
-Frieder Schrempf (3):
-  mtd: spinand: Stop using spinand->oobbuf for buffering bad block
-    markers
-  mtd: spinand: Explicitly use MTD_OPS_RAW to write the bad block marker
-    to OOB
-  mtd: spinand: Wait for the erase op to finish before writing a bad
-    block marker
+To fix it, we now just store the two bytes for the marker on the
+stack and let the read/write operations copy it from/to the page
+buffer later.
 
- drivers/mtd/nand/spi/core.c | 67 +++++++++++++++++++------------------
- 1 file changed, 34 insertions(+), 33 deletions(-)
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ drivers/mtd/nand/spi/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 89f6beefb01c..5d267a67a5f7 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -568,18 +568,18 @@ static int spinand_mtd_write(struct mtd_info *mtd, loff_t to,
+ static bool spinand_isbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[] = { 0, 0 };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+ 		.ooblen = 2,
+ 		.ooboffs = 0,
+-		.oobbuf.in = spinand->oobbuf,
++		.oobbuf.in = marker,
+ 		.mode = MTD_OPS_RAW,
+ 	};
+ 
+-	memset(spinand->oobbuf, 0, 2);
+ 	spinand_select_target(spinand, pos->target);
+ 	spinand_read_page(spinand, &req, false);
+-	if (spinand->oobbuf[0] != 0xff || spinand->oobbuf[1] != 0xff)
++	if (marker[0] != 0xff || marker[1] != 0xff)
+ 		return true;
+ 
+ 	return false;
+@@ -603,11 +603,12 @@ static int spinand_mtd_block_isbad(struct mtd_info *mtd, loff_t offs)
+ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[] = { 0, 0 };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+ 		.ooboffs = 0,
+ 		.ooblen = 2,
+-		.oobbuf.out = spinand->oobbuf,
++		.oobbuf.out = marker,
+ 	};
+ 	int ret;
+ 
+@@ -622,7 +623,6 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ 
+ 	spinand_erase_op(spinand, pos);
+ 
+-	memset(spinand->oobbuf, 0, 2);
+ 	return spinand_write_page(spinand, &req);
+ }
+ 
 -- 
 2.17.1
