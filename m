@@ -2,144 +2,100 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67D9C3B188
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592F9C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EA821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249D120656
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvQExPCB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kvxfnr45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgBKPoW (ORCPT
+        id S1729258AbgBKPrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:44:22 -0500
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:45033 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbgBKPoW (ORCPT
+        Tue, 11 Feb 2020 10:47:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47474 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbgBKPrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:44:22 -0500
-Received: by mail-ed1-f43.google.com with SMTP id g19so5157361eds.11;
-        Tue, 11 Feb 2020 07:44:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xlR00ADJradjotkCl4UlmMojkVu0xcxZBqzsuQumm74=;
-        b=NvQExPCB8DI0IP1gFi+4sXuJgnDnc+3sGrABcCQBUhEtdW8umNWi+t6DLqUPNGUeCK
-         +2Fo1BxAKf9Ge7XhKz0zsotmk3csdx0+aPVkukynRe0EUzkmvsRViU4D71ZYDFtnj86Q
-         g3jqxsr8lTzrutSK3BNOyGpevnnnWU+qUZuxplWXAkvlgvm+mGS2e6uoZzslvqJ86mTS
-         to4PLxgKuZS5+2D7SttIzvMzyl8v9YPdyNeLJdICpVJ2t36bCNV6O4Nkf29KFl9yrt4P
-         VdHGJUulikhpW5WwkpQF3vYcZROgf72tQ09vs5ydiDKiMjgq0Cq9GM5CFHRHF8wzzW5F
-         as6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xlR00ADJradjotkCl4UlmMojkVu0xcxZBqzsuQumm74=;
-        b=SMl5Zu4w1wTLSdtKHmtWlbnmAszmWsTCOV5kXz1fhpm4cItRq97GRfKFq7uo/6mL9X
-         q1uos7JmRGKBPv8dRzWqg9hZqCDlmslb6J3yr2KbjkPsJbB3gQUTtsMQiQJRZiLxQfU6
-         5vGVpw3htb2S4kA63Y6j3/ZLUjZXJ9P0XWZBfJdPZQEDEsfcLpaD8qFjeThUK5yiHwkO
-         8vzGPiVFu0uDBVQs9o6KRFz+0ZyXI1e0dqVTeyMAw9iqkHzdB+/gmeHRy3iXiXVoWMTC
-         CVpOhe+MMmHAyKQ407FCXlO6ob3ZvgX2iP47FlH4maNPHdb11AuGTKFtQvDStZ6JQEgr
-         JWFg==
-X-Gm-Message-State: APjAAAW2kmtQADOf/oKmkWeMfzSTbJ7B0PBFnUpWsi6J4H+UCsrh/DjJ
-        3577snIB4CChfVJjOgxCTaptbBBX2rc9bEVMjjo=
-X-Google-Smtp-Source: APXvYqyCzdecpsQM0lw4triJNxJwSEFMbxi4XZz3qtjCH0Quta/P/aV1VGix4DQ+ffz64Nm+arwNBPjkvBa9ztigP+U=
-X-Received: by 2002:aa7:c6c5:: with SMTP id b5mr6258346eds.281.1581435860509;
- Tue, 11 Feb 2020 07:44:20 -0800 (PST)
+        Tue, 11 Feb 2020 10:47:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AKYwQXO+5oCtuoLtBZCS0r3+gAqpZfv/88e+bxs1V30=; b=kvxfnr45cFLxq6OPlh0AwInZem
+        qMvbeF4FT74/G1dIUEfhEZYC4+1JegHoCjHdsfa6GXbUPNZ6ITIcKq3Dsp1q7U8gtrEchxnIR92CG
+        Fq2PY8psQfyQPRWJ0F3ejbZz/ofkyNRUDLmVDhzgkGMzM6VlrUsVGRStgSOHlRSQHMgOUnV5pEr91
+        Z2SUZThVxywLTgguQ/i8L1yd/qn2TXqwz98eBJdskd2OOQGu6n9rwrio0cfkDJ21ApOat1alBAKdD
+        DkszHqnJK+rDKlhGZvSi8crM1Uj5eh6qUe4t5pJLcW6mp1paBaEq2rFyh2LUxj+c/HwsVt/NO23IJ
+        AIrpg1uQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1XkN-0002pO-Tq; Tue, 11 Feb 2020 15:46:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 44108300446;
+        Tue, 11 Feb 2020 16:44:57 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CBD112B91E730; Tue, 11 Feb 2020 16:46:45 +0100 (CET)
+Date:   Tue, 11 Feb 2020 16:46:45 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [PATCH v2] tracing/perf: Move rcu_irq_enter/exit_irqson() to
+ perf trace point hook
+Message-ID: <20200211154645.GX14914@hirez.programming.kicks-ass.net>
+References: <20200211095047.58ddf750@gandalf.local.home>
+ <504801580.617591.1581435278202.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
- <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
- <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
- <1d201377996e16ce25acb640867e1214@codeaurora.org>
-In-Reply-To: <1d201377996e16ce25acb640867e1214@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 11 Feb 2020 07:44:09 -0800
-Message-ID: <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <504801580.617591.1581435278202.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
->
-> On 2020-02-07 19:40, Jeffrey Hugo wrote:
-> > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
-> >>
-> >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
-> >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
-> >> > wrote:
-> >> >>
-> >> >> For a given byte clock, if VCO recalc value is exactly same as
-> >> >> vco set rate value, vco_set_rate does not get called assuming
-> >> >> VCO is already set to required value. But Due to GDSC toggle,
-> >> >> VCO values are erased in the HW. To make sure VCO is programmed
-> >> >> correctly, we forcefully call set_rate from vco_prepare.
-> >> >
-> >> > Is this specific to certain SoCs? I don't think I've observed this.
-> >>
-> >> As far as Qualcomm SOCs are concerned, since pll is analog and the
-> >> value
-> >> is directly read from hardware if we get recalc value same as set rate
-> >> value, the vco_set_rate will not be invoked. We checked in our idp
-> >> device which has the same SOC but it works there since the rates are
-> >> different.
-> >
-> > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
-> > does this issue apply to?  Everything implementing the 10nm pll?  One
-> > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
-> > so I'm interested to know what is the actual impact here.  I don't see
-> > an "IDP" SoC in the IP catalog, so I really have no idea what you are
-> > referring to.
->
->
-> This is not 10nm specific. It is applicable for other nms also.
-> Its specific to the frequency being set. If vco_recalc returns the same
-> value as being set by vco_set_rate,
-> vco_set_rate will not be invoked second time onwards.
->
-> For example: Lets take below devices:
->
-> Cheza is based on SDM845 which is 10nm only.
-> Clk frequency:206016
-> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
-> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
->
-> Trogdor is based on sc7180 which is also 10nm.
-> Clk frequency:69300
-> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
-> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
->
-> In same trogdor device, we slightly changed the clock frequency and the
-> values actually differ which will not cause any issue.
-> Clk frequency:69310
-> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
-> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
+On Tue, Feb 11, 2020 at 10:34:38AM -0500, Mathieu Desnoyers wrote:
+> 
+> I'm puzzled by this function. It does:
+> 
+> perf_tp_event(...)
+> {
+>      hlist_for_each_entry_rcu(event, head, hlist_entry) {
+>          ...
+>      }
+>      if (task && task != current) {
+>          rcu_read_lock();
+>          ... = rcu_dereference();
+>          list_for_each_entry_rcu(...) {
+>              ....
+>          }
+>          rcu_read_unlock();
+>      }
+> }
+> 
+> What is the purpose of the rcu_read_lock/unlock within the if (),
+> considering that there is already an hlist rcu iteration just before ?
+> It seems to assume that a RCU read-side of some kind of already
+> ongoing.
 
+IIRC the hlist_for_each_entry_rcu() uses the RCU stuff from the
+tracepoint API, while the stuff inside the if() uses regular RCU.
 
-tbh, loosing state when power is off is kind of the behavior that I'd
-expect.  It kinda makes me wonder if things are not getting powered
-off all the way on some SoCs?
-
-jhugo, are you worried that this patch will cause problems on other
-users of the 10nm pll?
-
-BR,
--R
+Them were note the same one -- tracepoints used rcu-sched, perf used
+rcu.
