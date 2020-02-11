@@ -2,88 +2,198 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD22C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D0FC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F26206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27138206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="YkVpS+MW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgBKHgl (ORCPT
+        id S1727652AbgBKHkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 02:36:41 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34352 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgBKHgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 02:36:41 -0500
-Received: by mail-ed1-f68.google.com with SMTP id r18so3552471edl.1;
-        Mon, 10 Feb 2020 23:36:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G4Z7VXCKOunamakdgxhm4cpbyrTmI1hya2jzoz0wGsM=;
-        b=HKB9+pjAgcqNwYzQR3pN3Zshcs/ttsVNFpcXrtIYIZO4+3tncvUUoH5hiIK9Ga8bAH
-         XCrD0caXoMyMqXMfdg9DQUEFlyFUMi0C+gWZnWG8kpozZu85yLVIFLGQ6jkxIZwPW7zH
-         hr9PInWEFf+fXr/cEMPig59wHVpk2heexnpG1ma8K1fVsXBeoZoNfWlIn3nK3763RTyP
-         BELKWu/VOerZqFFt6MMxu6rvMyS0/Qo1iq3y8L0u/DkAMacf2crdSbuibO8IUtmcrHoU
-         orhb6QmmwdS6yJIHrn+ay0t3hzJ5Ypi5cb/M+//hombD7i0yzBOWSrHJ4diHYJpUIcTn
-         dxGQ==
-X-Gm-Message-State: APjAAAV8nUstxrMTr/DZ3PGYg1A7KXDXJbZqcMOY9jEuFGjvkVO+n2Up
-        2O60kTkJo+Xw2UJg6yaUk9Mbgu3Kvkw=
-X-Google-Smtp-Source: APXvYqzqKtBJLtgKCxSXjRGHIY1cL24AaodwYsk5ckmw1bNhBKhqvhVjhheJZGwj7yIQwaRAQERZeA==
-X-Received: by 2002:a17:906:2296:: with SMTP id p22mr4812524eja.269.1581406598672;
-        Mon, 10 Feb 2020 23:36:38 -0800 (PST)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
-        by smtp.gmail.com with ESMTPSA id e13sm292618ejb.19.2020.02.10.23.36.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2020 23:36:38 -0800 (PST)
-Received: by mail-wr1-f50.google.com with SMTP id t3so10926547wru.7;
-        Mon, 10 Feb 2020 23:36:38 -0800 (PST)
-X-Received: by 2002:a5d:534b:: with SMTP id t11mr6826794wrv.120.1581406597700;
- Mon, 10 Feb 2020 23:36:37 -0800 (PST)
+        Tue, 11 Feb 2020 02:40:35 -0500
+Received: from mail1.perex.cz ([77.48.224.245]:55612 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbgBKHkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 02:40:35 -0500
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 0B3F1A0040;
+        Tue, 11 Feb 2020 08:40:32 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 0B3F1A0040
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1581406832; bh=REuN32AszY9i63pAP7wyB0Bevs0Di3fTL0d0VlG4R+8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YkVpS+MWC0LjjHaa1no+jx6K9PwzwYMFwWqQFHeLq58Elbailo9PdMeJjpX5yn/BB
+         v+bcqMDe/oEJkYJf0vY8DWKCUYs69iVVV2PgjdxPRrznFbS1R5ECQVm1CENKNCi//0
+         dPLD1aLSaYEiFKRTD+8hECYKB1k8MAiNcjke7w9k=
+Received: from p50.perex-int.cz (unknown [192.168.100.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Tue, 11 Feb 2020 08:40:26 +0100 (CET)
+Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th
+ quirk value
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
+ <20200211055651.4405-2-benjamin.poirier@gmail.com>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz>
+Date:   Tue, 11 Feb 2020 08:40:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200210222807.206426-1-jernej.skrabec@siol.net> <20200210222807.206426-3-jernej.skrabec@siol.net>
-In-Reply-To: <20200210222807.206426-3-jernej.skrabec@siol.net>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 11 Feb 2020 15:36:26 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65Y_8r+uxqL_rCC6-_yjYjoviqW9xL68-DpcyR3Nkh+OQ@mail.gmail.com>
-Message-ID: <CAGb2v65Y_8r+uxqL_rCC6-_yjYjoviqW9xL68-DpcyR3Nkh+OQ@mail.gmail.com>
-Subject: Re: [PATCH 2/7] clk: sunxi-ng: sun8i-de2: Split out H5 definitions
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200211055651.4405-2-benjamin.poirier@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 6:28 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
->
-> H5 has less clocks and resets than A64. Currently that's not obvious
-> because A64 is missing rotation core related clocks and reset.
->
-> Split out H5 definition. A64 structures will be fixed in subsequent
-> commit.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Dne 11. 02. 20 v 6:56 Benjamin Poirier napsal(a):
+> As a result of commit d2cd795c4ece ("ALSA: hda - fixup for the bass speaker
+> on Lenovo Carbon X1 7th gen"), the maximum sound output level on my
+> machine, an X1 Carbon, was reduced to ~60% of its previous level.
+> 
+> This laptop model has two sets of stereo speakers: Front and Bass (aka Rear
+> in some contexts).
+> Before commit d2cd795c4ece, volume control was commonly ineffective (using
+> the Master slider in alsa or pulseaudio apparently had little effect or
+> alternated between mute or max with nothing in between - more details
+> below)
+> commit d2cd795c4ece added quirk ALC285_FIXUP_SPEAKER2_TO_DAC1 which
+> resulted in assigning both sets of speakers to the same DAC, bringing
+> the two sets of speakers under one effective volume control but also
+> lowering the max output volume noticeably.
+> 
+> Fix this by changing the quirk so that each set of speakers can be
+> controlled individually and the max output volume is restored to what it
+> was before commit d2cd795c4ece.
+> 
+> Since there is no documentation about the audio codec, here is some
+> detailed information about the result of applying different quirks.
+> DAC connection (which is what's affected by the quirk) is reported as found
+> in /proc/asound/card0/codec#0, Node 0x17.
+> pavucontrol controls are reported with the device configured with the
+> "Analog Surround 4.0 Output" profile.
+> 
+> no quirk
+> 	Loud max output volume
+> 	DAC connection
+> 	  Connection: 3
+> 	     0x02 0x03 0x06*
+> 	Controls in alsamixer
+> 		Master controls front speakers only.
+> 		Speaker controls front speakers only.
+> 		Bass Speaker is a toggle that mutes everything.
+> 		PCM controls all speakers.
+> 		There is no "Front" mixer.
+> 	Controls in pavucontrol
+> 		"Front Left"/"Front Right" sliders work as expected.
+> 		"Rear Left"/"Rear Right" sliders seem to operate in a
+> 		non-linear fashion such that most values above 0% result in
+> 		max volume output.
+> 		-> Because the bass speakers (Rear) are more powerful, the
+> 		net effect is that when the channels are linked into a
+> 		single slider, it seems like it has just two modes: mute or
+> 		max.
+> ALC285_FIXUP_SPEAKER2_TO_DAC1
+> 	Weak (~60%) max output volume
+> 	DAC connection
+> 	  Connection: 3
+> 	     0x02* 0x03 0x06
+> 	  In-driver Connection: 1
+> 	     0x02
+> 	Controls in alsamixer
+> 		Master controls all four speakers.
+> 		Speaker controls all four speakers.
+> 		Bass Speaker is a toggle that mutes everything.
+> 		PCM controls all four speakers.
+> 		There is no "Front" mixer.
+> 	Controls in pavucontrol
+> 		"Front Left"/"Front Right" sliders have no effect.
+> 		"Rear Left"/"Rear Right" sliders control both front and
+> 		bass speakers.
+> 		-> Volume control is effective but it's not possible to
+> 		control front and bass speakers individually.
+> ALC295_FIXUP_DISABLE_DAC3
+> 	Loud max output volume
+> 	DAC connection
+> 	  Connection: 3
+> 	     0x02 0x03* 0x06
+> 	  In-driver Connection: 2
+> 	     0x02 0x03
+> 	Controls in alsamixer
+> 		Master controls all speakers.
+> 		Speaker is a toggle that mutes everything.
+> 		Bass Speaker controls bass speakers only.
+> 		PCM controls all speakers.
+> 		Front controls front speakers only.
+> 	Controls in pavucontrol
+> 		"Front Left"/"Front Right" sliders control front speakers
+> 		only.
+> 		"Rear Left"/"Rear Right" sliders control bass speakers
+> 		only.
+> 		-> Volume control is effective and it's possible to control
+> 		each of the four speakers individually.
+> 
+> In summary, Node 0x17 DAC connection 0x3 offers the loudest max volume and
+> the most detailed mixer controls. That connection is obtained with quirk
+> ALC295_FIXUP_DISABLE_DAC3. Therefore, change the ThinkPad X1 Carbon 7th to
+> use ALC295_FIXUP_DISABLE_DAC3.
 
-Fixes: 763c5bd045b1 ("clk: sunxi-ng: add support for DE2 CCU")
+The volume split (individual volume control) will cause trouble for the UCM 
+volume control at the moment which is the target for this device to get the 
+digital microphone working. If there is no possibility to share DAC, it would 
+be probably more nice to join the volume control in the driver.
 
-You should also note that this patch requires commit 19368d99746e
-("clk: sunxi-ng: add support for Allwinner H3 DE2 CCU") for the
-H3 clock list.
+Have you tried to use 0x03 as source for all four speakers?
 
-Code wise everything looks in order.
+Why PA handles the rear volume control with the current driver code in the 
+legacy ALSA driver? It should be handled like standard stereo device. I'll check.
 
-ChenYu
+You should also test PA with UCM.
+
+				Thanks,
+					Jaroslav
+
+> 
+> Fixes: d2cd795c4ece ("ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen")
+> Link: https://lore.kernel.org/alsa-devel/20200210025249.GA2700@f3/
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Kailang Yang <kailang@realtek.com>
+> Signed-off-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+> ---
+>   sound/pci/hda/patch_realtek.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index 05d44df2008e..3171da10123e 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -7268,7 +7268,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+>   	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+>   	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+>   	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+> -	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+> +	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Carbon 7th", ALC295_FIXUP_DISABLE_DAC3),
+>   	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+>   	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+>   	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+> 
+
+
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
