@@ -2,242 +2,134 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C076AC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAD3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8857420848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:32:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TepcdiYt"
+	by mail.kernel.org (Postfix) with ESMTP id 6B7E02051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBKJcT (ORCPT
+        id S1727880AbgBKJcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:32:19 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21208 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727579AbgBKJcT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:32:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581413537;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vUIoKsy00yC8FduSIq6A0fM/o1AiegnuIk2T9JsHl8s=;
-        b=TepcdiYtRvdMteBPrTZU6lmjory4r1dMLbBx/6WmkiWHpJF0p55gvFl/Txu3lD/yVjjIaB
-        zFCrwETcqVjbkHLR9iUKtkfYURgMhdzY/vYYjo33+7mODLNoEaN7LEzebxTFwJQEvKehKF
-        nNFLWYDOZniNw3GdFhJP2XVnEbyu9aQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-yhNg-sQ5N2ClZiwoQy9BMQ-1; Tue, 11 Feb 2020 04:32:14 -0500
-X-MC-Unique: yhNg-sQ5N2ClZiwoQy9BMQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3F60107B7DC;
-        Tue, 11 Feb 2020 09:32:12 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B6175C21B;
-        Tue, 11 Feb 2020 09:32:10 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 09:32:09 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Avi Kivity <avi@scylladb.com>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Masatake YAMATO <yamato@redhat.com>
-Subject: Re: [RFC] eventfd: add EFD_AUTORESET flag
-Message-ID: <20200211093209.GA420951@stefanha-x1.localdomain>
-References: <20200129172010.162215-1-stefanha@redhat.com>
- <20200204154035.GA47059@stefanha-x1.localdomain>
+        Tue, 11 Feb 2020 04:32:46 -0500
+Received: from mga14.intel.com ([192.55.52.115]:6176 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727652AbgBKJcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 04:32:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 01:32:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="405886472"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga005.jf.intel.com with ESMTP; 11 Feb 2020 01:32:43 -0800
+Subject: Re: [PATCH] usb: xhci: Enable LPM for VIA LABS VL805
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     linux-rpi-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200120142422.3907-1-nsaenzjulienne@suse.de>
+ <20200210185921.GA1058087@kroah.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <1478f170-f0ec-96df-79cf-f7c44bebc290@linux.intel.com>
+Date:   Tue, 11 Feb 2020 11:34:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204154035.GA47059@stefanha-x1.localdomain>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200210185921.GA1058087@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 03:40:35PM +0000, Stefan Hajnoczi wrote:
-> On Wed, Jan 29, 2020 at 05:20:10PM +0000, Stefan Hajnoczi wrote:
-> > Some applications simply use eventfd for inter-thread notifications
-> > without requiring counter or semaphore semantics.  They wait for the
-> > eventfd to become readable using poll(2)/select(2) and then call read(2)
-> > to reset the counter.
-> > 
-> > This patch adds the EFD_AUTORESET flag to reset the counter when
-> > f_ops->poll() finds the eventfd is readable, eliminating the need to
-> > call read(2) to reset the counter.
-> > 
-> > This results in a small but measurable 1% performance improvement with
-> > QEMU virtio-blk emulation.  Each read(2) takes 1 microsecond execution
-> > time in the event loop according to perf.
-> > 
-> > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > ---
-> > Does this look like a reasonable thing to do?  I'm not very familiar
-> > with f_ops->poll() or the eventfd internals, so maybe I'm overlooking a
-> > design flaw.
+On 10.2.2020 20.59, Greg Kroah-Hartman wrote:
+> On Mon, Jan 20, 2020 at 03:24:22PM +0100, Nicolas Saenz Julienne wrote:
+>> This PCIe controller chip is used on the Raspberry Pi 4 and multiple
+>> adapter cards. There is no publicly available documentation for the
+>> chip, yet both the downstream RPi4 kernel and the controller cards
+>> support/advertise LPM support.
+>>
+>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>> ---
+>>  drivers/usb/host/xhci-pci.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+>> index 4917c5b033fa..c1976e98992b 100644
+>> --- a/drivers/usb/host/xhci-pci.c
+>> +++ b/drivers/usb/host/xhci-pci.c
+>> @@ -241,6 +241,9 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+>>  			pdev->device == 0x3432)
+>>  		xhci->quirks |= XHCI_BROKEN_STREAMS;
+>>  
+>> +	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483)
+>> +		xhci->quirks |= XHCI_LPM_SUPPORT;
+>> +
+>>  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+>>  			pdev->device == 0x1042)
+>>  		xhci->quirks |= XHCI_BROKEN_STREAMS;
 > 
-> Ping?
+> Mathias, is this in your review queue?
+> 
 
-Ping?
+Ah yes, before adding link power management support for this controller we
+should check that it has sane (or any) exit latency values set in its
+HCSPARAMS3 capability register.
 
-I would appreciate an indication of whether EFD_AUTORESET is an
-acceptable new feature.  Thanks!
+Nicolas, if you have this controller could you show the capability registers:
 
-> > I've tested this with QEMU and it works fine:
-> > https://github.com/stefanha/qemu/commits/eventfd-autoreset
-> > ---
-> >  fs/eventfd.c            | 99 +++++++++++++++++++++++++----------------
-> >  include/linux/eventfd.h |  3 +-
-> >  2 files changed, 62 insertions(+), 40 deletions(-)
-> > 
-> > diff --git a/fs/eventfd.c b/fs/eventfd.c
-> > index 8aa0ea8c55e8..208f6b9e2234 100644
-> > --- a/fs/eventfd.c
-> > +++ b/fs/eventfd.c
-> > @@ -116,45 +116,62 @@ static __poll_t eventfd_poll(struct file *file, poll_table *wait)
-> >  
-> >  	poll_wait(file, &ctx->wqh, wait);
-> >  
-> > -	/*
-> > -	 * All writes to ctx->count occur within ctx->wqh.lock.  This read
-> > -	 * can be done outside ctx->wqh.lock because we know that poll_wait
-> > -	 * takes that lock (through add_wait_queue) if our caller will sleep.
-> > -	 *
-> > -	 * The read _can_ therefore seep into add_wait_queue's critical
-> > -	 * section, but cannot move above it!  add_wait_queue's spin_lock acts
-> > -	 * as an acquire barrier and ensures that the read be ordered properly
-> > -	 * against the writes.  The following CAN happen and is safe:
-> > -	 *
-> > -	 *     poll                               write
-> > -	 *     -----------------                  ------------
-> > -	 *     lock ctx->wqh.lock (in poll_wait)
-> > -	 *     count = ctx->count
-> > -	 *     __add_wait_queue
-> > -	 *     unlock ctx->wqh.lock
-> > -	 *                                        lock ctx->qwh.lock
-> > -	 *                                        ctx->count += n
-> > -	 *                                        if (waitqueue_active)
-> > -	 *                                          wake_up_locked_poll
-> > -	 *                                        unlock ctx->qwh.lock
-> > -	 *     eventfd_poll returns 0
-> > -	 *
-> > -	 * but the following, which would miss a wakeup, cannot happen:
-> > -	 *
-> > -	 *     poll                               write
-> > -	 *     -----------------                  ------------
-> > -	 *     count = ctx->count (INVALID!)
-> > -	 *                                        lock ctx->qwh.lock
-> > -	 *                                        ctx->count += n
-> > -	 *                                        **waitqueue_active is false**
-> > -	 *                                        **no wake_up_locked_poll!**
-> > -	 *                                        unlock ctx->qwh.lock
-> > -	 *     lock ctx->wqh.lock (in poll_wait)
-> > -	 *     __add_wait_queue
-> > -	 *     unlock ctx->wqh.lock
-> > -	 *     eventfd_poll returns 0
-> > -	 */
-> > -	count = READ_ONCE(ctx->count);
-> > +	if (ctx->flags & EFD_AUTORESET) {
-> > +		unsigned long flags;
-> > +		__poll_t requested = poll_requested_events(wait);
-> > +
-> > +		spin_lock_irqsave(&ctx->wqh.lock, flags);
-> > +		count = ctx->count;
-> > +
-> > +		/* Reset counter if caller is polling for read */
-> > +		if (count != 0 && (requested & EPOLLIN)) {
-> > +			ctx->count = 0;
-> > +			events |= EPOLLOUT;
-> > +			/* TODO is a EPOLLOUT wakeup necessary here? */
-> > +		}
-> > +
-> > +		spin_unlock_irqrestore(&ctx->wqh.lock, flags);
-> > +	} else {
-> > +		/*
-> > +		 * All writes to ctx->count occur within ctx->wqh.lock.  This read
-> > +		 * can be done outside ctx->wqh.lock because we know that poll_wait
-> > +		 * takes that lock (through add_wait_queue) if our caller will sleep.
-> > +		 *
-> > +		 * The read _can_ therefore seep into add_wait_queue's critical
-> > +		 * section, but cannot move above it!  add_wait_queue's spin_lock acts
-> > +		 * as an acquire barrier and ensures that the read be ordered properly
-> > +		 * against the writes.  The following CAN happen and is safe:
-> > +		 *
-> > +		 *     poll                               write
-> > +		 *     -----------------                  ------------
-> > +		 *     lock ctx->wqh.lock (in poll_wait)
-> > +		 *     count = ctx->count
-> > +		 *     __add_wait_queue
-> > +		 *     unlock ctx->wqh.lock
-> > +		 *                                        lock ctx->qwh.lock
-> > +		 *                                        ctx->count += n
-> > +		 *                                        if (waitqueue_active)
-> > +		 *                                          wake_up_locked_poll
-> > +		 *                                        unlock ctx->qwh.lock
-> > +		 *     eventfd_poll returns 0
-> > +		 *
-> > +		 * but the following, which would miss a wakeup, cannot happen:
-> > +		 *
-> > +		 *     poll                               write
-> > +		 *     -----------------                  ------------
-> > +		 *     count = ctx->count (INVALID!)
-> > +		 *                                        lock ctx->qwh.lock
-> > +		 *                                        ctx->count += n
-> > +		 *                                        **waitqueue_active is false**
-> > +		 *                                        **no wake_up_locked_poll!**
-> > +		 *                                        unlock ctx->qwh.lock
-> > +		 *     lock ctx->wqh.lock (in poll_wait)
-> > +		 *     __add_wait_queue
-> > +		 *     unlock ctx->wqh.lock
-> > +		 *     eventfd_poll returns 0
-> > +		 */
-> > +		count = READ_ONCE(ctx->count);
-> > +	}
-> >  
-> >  	if (count > 0)
-> >  		events |= EPOLLIN;
-> > @@ -400,6 +417,10 @@ static int do_eventfd(unsigned int count, int flags)
-> >  	if (flags & ~EFD_FLAGS_SET)
-> >  		return -EINVAL;
-> >  
-> > +	/* Semaphore semantics don't make sense when autoreset is enabled */
-> > +	if ((flags & EFD_SEMAPHORE) && (flags & EFD_AUTORESET))
-> > +		return -EINVAL;
-> > +
-> >  	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
-> >  	if (!ctx)
-> >  		return -ENOMEM;
-> > diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
-> > index ffcc7724ca21..27577fafc553 100644
-> > --- a/include/linux/eventfd.h
-> > +++ b/include/linux/eventfd.h
-> > @@ -21,11 +21,12 @@
-> >   * shared O_* flags.
-> >   */
-> >  #define EFD_SEMAPHORE (1 << 0)
-> > +#define EFD_AUTORESET (1 << 6) /* aliases O_CREAT */
-> >  #define EFD_CLOEXEC O_CLOEXEC
-> >  #define EFD_NONBLOCK O_NONBLOCK
-> >  
-> >  #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
-> > -#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
-> > +#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE | EFD_AUTORESET)
-> >  
-> >  struct eventfd_ctx;
-> >  struct file;
-> > -- 
-> > 2.24.1
-> > 
+cat /sys/kernel/debug/usb/xhci/*/reg-cap
 
-
+-Mathias
