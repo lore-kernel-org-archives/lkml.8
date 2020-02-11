@@ -2,119 +2,318 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FA9C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5978CC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C936220873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581433202;
-	bh=cDTNZcgg66/Ybig1ICmYDt26oTPvUKighDuj4cR9lfQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G7SNqcu1LKQdy+f2Mbm5dmRTepp7iBrmMyRekifVXCgJS/HbsZ2sNifyYoCScRXd2
-	 CxQemToOvsL4P+DRCAGZrIYLnt+ylS8lVzffW3f+u9gD/hrA5MX6uEL8fGwZ24ChBd
-	 he92nh910XBR7IvezGmoPXaBKc4I5c+1aL0mcDf4=
+	by mail.kernel.org (Postfix) with ESMTP id 362532086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgBKPAC (ORCPT
+        id S1729421AbgBKPAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:00:02 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:59870 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgBKPAC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:00:02 -0500
-X-Greylist: delayed 75858 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 10:00:00 EST
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 01BExjGY029325;
-        Tue, 11 Feb 2020 23:59:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01BExjGY029325
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581433186;
-        bh=hROq0o9lHJ1U2TLCvbGvuP+PaSOx9kk2PnxAttc0w9I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Jx75HfHE3ZrnOuJ9J3z4P9/aY0PCFXz+asYVatNJId47vVkMTwGE2+lj/IazoDP+m
-         +8D9w2j1ZfupYBLvzkysIFS7lfLDk05sKN8gIYdyywOXoslk+CFxsc0K00nayKDELR
-         1M2L1lEKUel5MtHMMou3K3vEZ5bWTTGgoxpkahK4fAHMgNJubQtOvFxO6WWi3EEQGd
-         cifD6XZfR7JD6tLRgsJS7NEqr7VW3rwinVUGH3pxTz4R9K2dSeOT2oUbE1zG1uYiwo
-         rs2ZVepq8CQSY02TLP/ci3tyCZ51cUaPz2NfXHejcqzusd1Zw5ivwAZO4vlksQYinr
-         2l4PZtE/psBcA==
-X-Nifty-SrcIP: [209.85.221.171]
-Received: by mail-vk1-f171.google.com with SMTP id b2so2481724vkk.4;
-        Tue, 11 Feb 2020 06:59:45 -0800 (PST)
-X-Gm-Message-State: APjAAAWucGMtN0Kw+4QtNRmzWwXhxyLufKXjL9eAQEvmnGEeyvGOPD4p
-        8H08sTE4SvYIvxMNsK1yWoEkbpFLqlb4gnTIniM=
-X-Google-Smtp-Source: APXvYqwaEhkM2LGDystFIroM3uA+deAF+AOLdRSitxDTFjOu34V62IFm0xHv3lwbg6gXEFp4DjWH9vKztbT7+FafnwY=
-X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr5042217vkb.96.1581433184417;
- Tue, 11 Feb 2020 06:59:44 -0800 (PST)
+        Tue, 11 Feb 2020 10:00:18 -0500
+Received: from mga03.intel.com ([134.134.136.65]:48803 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728073AbgBKPAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:00:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 07:00:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="280953217"
+Received: from mattu-haswell.fi.intel.com ([10.237.72.170])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 Feb 2020 07:00:14 -0800
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+To:     gregkh@linuxfoundation.org, m.szyprowski@samsung.com
+Cc:     pmenzel@molgen.mpg.de, mika.westerberg@linux.intel.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, krzk@kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable <stable@vger.kernel.org>
+Subject: [RFT PATCH v2] xhci: Fix memory leak when caching protocol extended capability PSI tables
+Date:   Tue, 11 Feb 2020 17:01:58 +0200
+Message-Id: <20200211150158.14475-1-mathias.nyman@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20d0559f-8d0f-42f5-5ebf-7f658a172161@linux.intel.com>
+References: <20d0559f-8d0f-42f5-5ebf-7f658a172161@linux.intel.com>
 MIME-Version: 1.0
-References: <20200210175452.5030-1-masahiroy@kernel.org> <20200210143052.1d89f7e26c9bd115d617cc92@linux-foundation.org>
-In-Reply-To: <20200210143052.1d89f7e26c9bd115d617cc92@linux-foundation.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 11 Feb 2020 23:59:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARZnyj7pynscGtz+hQF2LPvzxW5YjHAOivjYZhT8Yq7VQ@mail.gmail.com>
-Message-ID: <CAK7LNARZnyj7pynscGtz+hQF2LPvzxW5YjHAOivjYZhT8Yq7VQ@mail.gmail.com>
-Subject: Re: [PATCH] asm-generic: make more kernel-space headers mandatory
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+xhci driver assumed that xHC controllers have at most one custom
+supported speed table (PSI) for all usb 3.x ports.
+Memory was allocated for one PSI table under the xhci hub structure.
 
-On Tue, Feb 11, 2020 at 7:30 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Tue, 11 Feb 2020 02:54:52 +0900 Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> > Change a header to mandatory-y if both of the following are met:
-> >
-> > [1] At least one architecture (except um) specifies it as generic-y in
-> >     arch/*/include/asm/Kbuild
-> >
-> > [2] Every architecture (except um) either has its own implementation
-> >     (arch/*/include/asm/*.h) or specifies it as generic-y in
-> >     arch/*/include/asm/Kbuild
->
-> (reads Documentation/kbuild/makefiles.rst to remember what these things
-> do).
->
-> Why are we making this change?  What's the benefit?
+Turns out this is not the case, some controllers have a separate
+"supported protocol capability" entry with a PSI table for each port.
+This means each usb3 roothub port can in theory support different custom
+speeds.
 
+To solve this, cache all supported protocol capabilities with their PSI
+tables in an array, and add pointers to the xhci port structure so that
+every port points to its capability entry in the array.
 
-One obvious benefit is the diff stat:
+When creating the SuperSpeedPlus USB Device Capability BOS descriptor
+for the xhci USB 3.1 roothub we for now will use only data from the
+first USB 3.1 capable protocol capability entry in the array.
+This could be improved later, this patch focuses resolving
+the memory leak.
 
- 25 files changed, 52 insertions(+), 557 deletions(-)
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Reported-by: Sajja Venkateswara Rao <VenkateswaraRao.Sajja@amd.com>
+Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
+Cc: stable <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+---
 
+Changes since v1:
 
-It is tedious to list generic-y for each arch
-that needs it.
+- Clear xhci->num_port_caps in xhci_mem_cleanup()
+  Otherwise we fail to add new ports and cause NULL pointer dereference at
+  manual xhci re-initialization. This can happen at resume if host lost power
+  during suspend.
+---
+ drivers/usb/host/xhci-hub.c | 25 +++++++++++-----
+ drivers/usb/host/xhci-mem.c | 59 +++++++++++++++++++++++--------------
+ drivers/usb/host/xhci.h     | 14 +++++++--
+ 3 files changed, 65 insertions(+), 33 deletions(-)
 
-So, mandatory-y works like a fallback default
-(by just wrapping asm-generic one)
-when arch does not have a specific header implementation.
-
-See the following commits:
-
-def3f7cefe4e81c296090e1722a76551142c227c
-a1b39bae16a62ce4aae02d958224f19316d98b24
-
-
-It is tedious to convert headers one by one,
-so I processed by a shell script.
-
-
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 7a3a29e5e9d2..af92b2576fe9 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -55,6 +55,7 @@ static u8 usb_bos_descriptor [] = {
+ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 				     u16 wLength)
+ {
++	struct xhci_port_cap *port_cap = NULL;
+ 	int i, ssa_count;
+ 	u32 temp;
+ 	u16 desc_size, ssp_cap_size, ssa_size = 0;
+@@ -64,16 +65,24 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 	ssp_cap_size = sizeof(usb_bos_descriptor) - desc_size;
+ 
+ 	/* does xhci support USB 3.1 Enhanced SuperSpeed */
+-	if (xhci->usb3_rhub.min_rev >= 0x01) {
++	for (i = 0; i < xhci->num_port_caps; i++) {
++		if (xhci->port_caps[i].maj_rev == 0x03 &&
++		    xhci->port_caps[i].min_rev >= 0x01) {
++			usb3_1 = true;
++			port_cap = &xhci->port_caps[i];
++			break;
++		}
++	}
++
++	if (usb3_1) {
+ 		/* does xhci provide a PSI table for SSA speed attributes? */
+-		if (xhci->usb3_rhub.psi_count) {
++		if (port_cap->psi_count) {
+ 			/* two SSA entries for each unique PSI ID, RX and TX */
+-			ssa_count = xhci->usb3_rhub.psi_uid_count * 2;
++			ssa_count = port_cap->psi_uid_count * 2;
+ 			ssa_size = ssa_count * sizeof(u32);
+ 			ssp_cap_size -= 16; /* skip copying the default SSA */
+ 		}
+ 		desc_size += ssp_cap_size;
+-		usb3_1 = true;
+ 	}
+ 	memcpy(buf, &usb_bos_descriptor, min(desc_size, wLength));
+ 
+@@ -99,7 +108,7 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 	}
+ 
+ 	/* If PSI table exists, add the custom speed attributes from it */
+-	if (usb3_1 && xhci->usb3_rhub.psi_count) {
++	if (usb3_1 && port_cap->psi_count) {
+ 		u32 ssp_cap_base, bm_attrib, psi, psi_mant, psi_exp;
+ 		int offset;
+ 
+@@ -111,7 +120,7 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 
+ 		/* attribute count SSAC bits 4:0 and ID count SSIC bits 8:5 */
+ 		bm_attrib = (ssa_count - 1) & 0x1f;
+-		bm_attrib |= (xhci->usb3_rhub.psi_uid_count - 1) << 5;
++		bm_attrib |= (port_cap->psi_uid_count - 1) << 5;
+ 		put_unaligned_le32(bm_attrib, &buf[ssp_cap_base + 4]);
+ 
+ 		if (wLength < desc_size + ssa_size)
+@@ -124,8 +133,8 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 		 * USB 3.1 requires two SSA entries (RX and TX) for every link
+ 		 */
+ 		offset = desc_size;
+-		for (i = 0; i < xhci->usb3_rhub.psi_count; i++) {
+-			psi = xhci->usb3_rhub.psi[i];
++		for (i = 0; i < port_cap->psi_count; i++) {
++			psi = port_cap->psi[i];
+ 			psi &= ~USB_SSP_SUBLINK_SPEED_RSVD;
+ 			psi_exp = XHCI_EXT_PORT_PSIE(psi);
+ 			psi_mant = XHCI_EXT_PORT_PSIM(psi);
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index 0e2701649369..884c601bfa15 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1915,17 +1915,17 @@ void xhci_mem_cleanup(struct xhci_hcd *xhci)
+ 	xhci->usb3_rhub.num_ports = 0;
+ 	xhci->num_active_eps = 0;
+ 	kfree(xhci->usb2_rhub.ports);
+-	kfree(xhci->usb2_rhub.psi);
+ 	kfree(xhci->usb3_rhub.ports);
+-	kfree(xhci->usb3_rhub.psi);
+ 	kfree(xhci->hw_ports);
+ 	kfree(xhci->rh_bw);
+ 	kfree(xhci->ext_caps);
++	for (i = 0; i < xhci->num_port_caps; i++)
++		kfree(xhci->port_caps[i].psi);
++	kfree(xhci->port_caps);
++	xhci->num_port_caps = 0;
+ 
+ 	xhci->usb2_rhub.ports = NULL;
+-	xhci->usb2_rhub.psi = NULL;
+ 	xhci->usb3_rhub.ports = NULL;
+-	xhci->usb3_rhub.psi = NULL;
+ 	xhci->hw_ports = NULL;
+ 	xhci->rh_bw = NULL;
+ 	xhci->ext_caps = NULL;
+@@ -2126,6 +2126,7 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
+ 	u8 major_revision, minor_revision;
+ 	struct xhci_hub *rhub;
+ 	struct device *dev = xhci_to_hcd(xhci)->self.sysdev;
++	struct xhci_port_cap *port_cap;
+ 
+ 	temp = readl(addr);
+ 	major_revision = XHCI_EXT_PORT_MAJOR(temp);
+@@ -2160,31 +2161,39 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
+ 		/* WTF? "Valid values are ‘1’ to MaxPorts" */
+ 		return;
+ 
+-	rhub->psi_count = XHCI_EXT_PORT_PSIC(temp);
+-	if (rhub->psi_count) {
+-		rhub->psi = kcalloc_node(rhub->psi_count, sizeof(*rhub->psi),
+-				    GFP_KERNEL, dev_to_node(dev));
+-		if (!rhub->psi)
+-			rhub->psi_count = 0;
++	port_cap = &xhci->port_caps[xhci->num_port_caps++];
++	if (xhci->num_port_caps > max_caps)
++		return;
++
++	port_cap->maj_rev = major_revision;
++	port_cap->min_rev = minor_revision;
++	port_cap->psi_count = XHCI_EXT_PORT_PSIC(temp);
++
++	if (port_cap->psi_count) {
++		port_cap->psi = kcalloc_node(port_cap->psi_count,
++					     sizeof(*port_cap->psi),
++					     GFP_KERNEL, dev_to_node(dev));
++		if (!port_cap->psi)
++			port_cap->psi_count = 0;
+ 
+-		rhub->psi_uid_count++;
+-		for (i = 0; i < rhub->psi_count; i++) {
+-			rhub->psi[i] = readl(addr + 4 + i);
++		port_cap->psi_uid_count++;
++		for (i = 0; i < port_cap->psi_count; i++) {
++			port_cap->psi[i] = readl(addr + 4 + i);
+ 
+ 			/* count unique ID values, two consecutive entries can
+ 			 * have the same ID if link is assymetric
+ 			 */
+-			if (i && (XHCI_EXT_PORT_PSIV(rhub->psi[i]) !=
+-				  XHCI_EXT_PORT_PSIV(rhub->psi[i - 1])))
+-				rhub->psi_uid_count++;
++			if (i && (XHCI_EXT_PORT_PSIV(port_cap->psi[i]) !=
++				  XHCI_EXT_PORT_PSIV(port_cap->psi[i - 1])))
++				port_cap->psi_uid_count++;
+ 
+ 			xhci_dbg(xhci, "PSIV:%d PSIE:%d PLT:%d PFD:%d LP:%d PSIM:%d\n",
+-				  XHCI_EXT_PORT_PSIV(rhub->psi[i]),
+-				  XHCI_EXT_PORT_PSIE(rhub->psi[i]),
+-				  XHCI_EXT_PORT_PLT(rhub->psi[i]),
+-				  XHCI_EXT_PORT_PFD(rhub->psi[i]),
+-				  XHCI_EXT_PORT_LP(rhub->psi[i]),
+-				  XHCI_EXT_PORT_PSIM(rhub->psi[i]));
++				  XHCI_EXT_PORT_PSIV(port_cap->psi[i]),
++				  XHCI_EXT_PORT_PSIE(port_cap->psi[i]),
++				  XHCI_EXT_PORT_PLT(port_cap->psi[i]),
++				  XHCI_EXT_PORT_PFD(port_cap->psi[i]),
++				  XHCI_EXT_PORT_LP(port_cap->psi[i]),
++				  XHCI_EXT_PORT_PSIM(port_cap->psi[i]));
+ 		}
+ 	}
+ 	/* cache usb2 port capabilities */
+@@ -2219,6 +2228,7 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
+ 			continue;
+ 		}
+ 		hw_port->rhub = rhub;
++		hw_port->port_cap = port_cap;
+ 		rhub->num_ports++;
+ 	}
+ 	/* FIXME: Should we disable ports not in the Extended Capabilities? */
+@@ -2309,6 +2319,11 @@ static int xhci_setup_port_arrays(struct xhci_hcd *xhci, gfp_t flags)
+ 	if (!xhci->ext_caps)
+ 		return -ENOMEM;
+ 
++	xhci->port_caps = kcalloc_node(cap_count, sizeof(*xhci->port_caps),
++				flags, dev_to_node(dev));
++	if (!xhci->port_caps)
++		return -ENOMEM;
++
+ 	offset = cap_start;
+ 
+ 	while (offset) {
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 13d8838cd552..3ecee10fdcdc 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1702,12 +1702,20 @@ struct xhci_bus_state {
+  * Intel Lynx Point LP xHCI host.
+  */
+ #define	XHCI_MAX_REXIT_TIMEOUT_MS	20
++struct xhci_port_cap {
++	u32			*psi;	/* array of protocol speed ID entries */
++	u8			psi_count;
++	u8			psi_uid_count;
++	u8			maj_rev;
++	u8			min_rev;
++};
+ 
+ struct xhci_port {
+ 	__le32 __iomem		*addr;
+ 	int			hw_portnum;
+ 	int			hcd_portnum;
+ 	struct xhci_hub		*rhub;
++	struct xhci_port_cap	*port_cap;
+ };
+ 
+ struct xhci_hub {
+@@ -1719,9 +1727,6 @@ struct xhci_hub {
+ 	/* supported prococol extended capabiliy values */
+ 	u8			maj_rev;
+ 	u8			min_rev;
+-	u32			*psi;	/* array of protocol speed ID entries */
+-	u8			psi_count;
+-	u8			psi_uid_count;
+ };
+ 
+ /* There is one xhci_hcd structure per controller */
+@@ -1880,6 +1885,9 @@ struct xhci_hcd {
+ 	/* cached usb2 extened protocol capabilites */
+ 	u32                     *ext_caps;
+ 	unsigned int            num_ext_caps;
++	/* cached extended protocol port capabilities */
++	struct xhci_port_cap	*port_caps;
++	unsigned int		num_port_caps;
+ 	/* Compliance Mode Recovery Data */
+ 	struct timer_list	comp_mode_recovery_timer;
+ 	u32			port_status_u0;
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
