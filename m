@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BEEC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E507C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7777E2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230D32073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QCNo7kZy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="PdjXEc3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgBKVm5 (ORCPT
+        id S1728301AbgBKVnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:42:57 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.177]:23185 "EHLO
+        Tue, 11 Feb 2020 16:43:00 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:8857 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728003AbgBKVly (ORCPT
+        with ESMTP id S1727964AbgBKVly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 16:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457310;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3bosFD/maVT7s0PxPwS4PL1iP9bgaYLTqR2vJvqzmIk=;
-        b=QCNo7kZyeezapZKnNq2iHmq8qbL+LmjFODLMwnS3tshe4JqxsG/xBgE04yRBCbfO5N
-        XpeWcrroV9tUDab16JUbrzTRR8+i/qaudADWcIiqdB/Lec3QtxkxiS5WMRVfVNrS4D1U
-        QxTvHPISEI85iVxiTvprnD9svhaL5nIDQ6i6LhSQQpXKTIHJTE9pNLeGolZE9ZQ2RvAm
-        6chD/inDh77hqHN8L9wPliQhv8FrZNsbeE1P62F/8kdvTdx4VfkPwIXFdGWnYIMF9SE2
-        Bcq6a/WxKm4Rs+iaKREHkuzzlGxbTQW9QSDaXovMMxpf8Q6JnwEQ3xIE6w4gHocHlkc1
-        plCw==
+        bh=BRx4A/2BZ9iAXxHIzvSIgcM006QIyV49GXyT24CvguM=;
+        b=PdjXEc3aqPO9weOKkLX3nka0CwucPiTFbSngYI/e+WhI25Xp3wVRNu9f8BOUC+cazP
+        CuSEoKN2yixRCF3U0yUO9mi6MOrQgHQDRA1wiUjIDMG0B2veOvglXqjSEcG8Vw47KeKD
+        jaw9cFKBHsZEugqeqPaBCSq3Ja+2/pWTh0zSF+sYXSL6Qa2uXR4OP3J+U1AJJ49VpsjX
+        JtQjqoEUnob98Q9MGcyOf/tRv62dMZ+XyutA+BVFss1A6WN6L6ovIhVUFt6pv6TKGoWo
+        Sormdooo/llT6ICoITn2eJBzLmostFqp7MHAgcVW9IYWBpOTF37Jr5CwlfijZsEuzU4R
+        y3GQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLff0ES
+        with ESMTPSA id U06217w1BLfc0EN
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:41 +0100 (CET)
+        Tue, 11 Feb 2020 22:41:38 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -69,9 +69,9 @@ Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 11/14] MIPS: CI20: defconfig: compile gpio-ir driver
-Date:   Tue, 11 Feb 2020 22:41:28 +0100
-Message-Id: <4cda1587b8e380db7b2b921dfcd21e73c001505b.1581457290.git.hns@goldelico.com>
+Subject: [PATCH 07/14] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Date:   Tue, 11 Feb 2020 22:41:24 +0100
+Message-Id: <aa9725056a1d2bfb490a1c912f34302de0e27fad.1581457290.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
@@ -82,26 +82,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CI20 board has a gpio based IR receiver.
+There is a ACT8600 on the CI20 board and the bindings of the
+ACT8865 driver have changed without updating the CI20 device
+tree. Therefore the PMU can not be probed successfully and
+is running in power-on reset state.
+
+Fix DT to match the latest act8865-regulator bindings.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/configs/ci20_defconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 48 ++++++++++++++++++++---------
+ 1 file changed, 33 insertions(+), 15 deletions(-)
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index 74e5775b8a05..0458ea4d54e8 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -181,3 +181,8 @@ CONFIG_LEDS_TRIGGER_CPU=y
- CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
- CONFIG_LEDS_TRIGGER_TRANSIENT=y
- CONFIG_LEDS_TRIGGER_CAMERA=m
-+CONFIG_LIRC=y
-+CONFIG_MEDIA_SUPPORT=m
-+CONFIG_RC_DEVICES=y
-+CONFIG_IR_GPIO_CIR=m
-+CONFIG_IR_GPIO_TX=m
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 37b93166bf22..e02a19db7ef1 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -148,6 +148,8 @@
+ 	pinctrl-0 = <&pins_uart4>;
+ };
+ 
++#include <dt-bindings/regulator/active-semi,8865-regulator.h>
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -161,65 +163,81 @@
+ 		reg = <0x5a>;
+ 		status = "okay";
+ 
++/*
++Optional input supply properties:
++- for act8600:
++  - vp1-supply: The input supply for DCDC_REG1
++  - vp2-supply: The input supply for DCDC_REG2
++  - vp3-supply: The input supply for DCDC_REG3
++  - inl-supply: The input supply for LDO_REG5, LDO_REG6, LDO_REG7 and LDO_REG8
++  SUDCDC_REG4, LDO_REG9 and LDO_REG10 do not have separate supplies.
++*/
++
+ 		regulators {
+ 			vddcore: SUDCDC1 {
+-				regulator-name = "VDDCORE";
++				regulator-name = "DCDC_REG1";
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
+ 			};
+ 			vddmem: SUDCDC2 {
+-				regulator-name = "VDDMEM";
++				regulator-name = "DCDC_REG2";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_33: SUDCDC3 {
+-				regulator-name = "VCC33";
++				regulator-name = "DCDC_REG3";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_50: SUDCDC4 {
+-				regulator-name = "VCC50";
++				regulator-name = "SUDCDC_REG4";
+ 				regulator-min-microvolt = <5000000>;
+ 				regulator-max-microvolt = <5000000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_25: LDO_REG5 {
+-				regulator-name = "VCC25";
++				regulator-name = "LDO_REG5";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			wifi_io: LDO_REG6 {
+-				regulator-name = "WIFIIO";
++				regulator-name = "LDO_REG6";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_28: LDO_REG7 {
+-				regulator-name = "VCC28";
++				regulator-name = "LDO_REG7";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_15: LDO_REG8 {
+-				regulator-name = "VCC15";
++				regulator-name = "LDO_REG8";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+-			vcc_18: LDO_REG9 {
+-				regulator-name = "VCC18";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
++			vrtc_18: LDO_REG9 {
++				regulator-name = "LDO_REG9";
++				/* Despite the datasheet stating 3.3V for REG9 and
++				   driver expecting that, REG9 outputs 1.8V.
++				   Likely the CI20 uses a chip variant.
++				   Since it is a simple on/off LDO the exact values
++				   do not matter.
++				*/
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_11: LDO_REG10 {
+-				regulator-name = "VCC11";
+-				regulator-min-microvolt = <1100000>;
+-				regulator-max-microvolt = <1100000>;
++				regulator-name = "LDO_REG10";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
+ 				regulator-always-on;
+ 			};
+ 		};
 -- 
 2.23.0
 
