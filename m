@@ -2,107 +2,124 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B4C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A27C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439A3206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6B2206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="t1kKf1CM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fKj5Y5hx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgBKVne (ORCPT
+        id S1727567AbgBKVoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:43:34 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.223]:30035 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbgBKVly (ORCPT
+        Tue, 11 Feb 2020 16:44:16 -0500
+Received: from gateway36.websitewelcome.com ([192.185.188.18]:39150 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727043AbgBKVoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=o2aaGn+CrBGGFUCI/aU8qBP4BNQ+G25EUxt570OpKBY=;
-        b=t1kKf1CMl2v02AQpB3xHcmj4Dwxsrce6Ucp3Rcn2L1lWyYSByeffFSbhC+r41q3yHX
-        lLn9+LSSK0DoXI92s8wQTScT/9lPlD/FN78j2F6yRvjzdbk3vH61iWQcS9oMM5gE4xHo
-        cfAo8P8fjbAbfFvjFgTC8DashBNNSv3MWZnqXz8f3swQW/cwTZjpEj8cYfQwpY1dh6f3
-        EY/kk65s88jgzkkzoZlm4swb/r8yQStVRScd9ztP30xqhhVE8hKVhddNhMS9XujJR/Eb
-        t/t3XPa/lGpGlztn0IH/WYmkopg9ceV7NYFJPB2t+jgIpYMs5k7dL54AxkvgCiDdI/ZD
-        3gLQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLfc0EO
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:38 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH 08/14] MIPS: CI20: defconfig: configure CONFIG_REGULATOR_ACT8865 for PMU
-Date:   Tue, 11 Feb 2020 22:41:25 +0100
-Message-Id: <123a132d735a02c1fcbf989c25551a616b1cb991.1581457290.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
-References: <cover.1581457290.git.hns@goldelico.com>
+        Tue, 11 Feb 2020 16:44:16 -0500
+X-Greylist: delayed 2916 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 16:44:16 EST
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 1BF4D40BC0795
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:09:40 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1cZHjIfMOXVkQ1cZIjgzwJ; Tue, 11 Feb 2020 14:55:40 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Zjc5LElXJ0zIygghxh2TaQQ5QMBnKhOZ9bRBJCzRtXs=; b=fKj5Y5hxtG77C4OrRGtRsmqzFH
+        LmOdqavyDRDgSomroylBrffEtkaEUQlF/iwt2phvzghztPuyMqar6XMggvExMLKHjY9uj184VB4Mf
+        17Q8Ko8/U6QvGAbIGbebs6knEZuUnfu9z8+TGrA9OVskmBEcAbFjJzi1hCZiM9vx5vmaYxidtkLed
+        baps6upgIypNw/lIsT1kq/aErDchueSF04reoDkrhxEQdCfob2PsTZhrLbigDDOp2Naeweh6Y4BcJ
+        nkMbbK9GuLdHBcrYWzoyztdteIRPM/Ilp3Vxm1MTPwoxtcjUMH5XzPVeRiwu+KpqDLu0zUUy/oG1l
+        G3MCiGjw==;
+Received: from [200.68.140.36] (port=27335 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1cZG-001zvC-G4; Tue, 11 Feb 2020 14:55:38 -0600
+Date:   Tue, 11 Feb 2020 14:58:13 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] lib/ts_fsm: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200211205813.GA25602@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1cZG-001zvC-G4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:27335
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 47
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
-Since it is not compiled, the PMU and the CI20 board is running in
-power-on reset state of the PMU.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- arch/mips/configs/ci20_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ lib/ts_fsm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index 30a47a7a2994..74e5775b8a05 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -95,6 +95,7 @@ CONFIG_JZ4740_WDT=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_DEBUG=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-+CONFIG_REGULATOR_ACT8865=y
- # CONFIG_VGA_CONSOLE is not set
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
+diff --git a/lib/ts_fsm.c b/lib/ts_fsm.c
+index 69557c74ef9f..f7aed7b6f3fe 100644
+--- a/lib/ts_fsm.c
++++ b/lib/ts_fsm.c
+@@ -36,7 +36,7 @@
+ struct ts_fsm
+ {
+ 	unsigned int		ntokens;
+-	struct ts_fsm_token	tokens[0];
++	struct ts_fsm_token	tokens[];
+ };
+ 
+ /* other values derived from ctype.h */
 -- 
-2.23.0
+2.25.0
 
