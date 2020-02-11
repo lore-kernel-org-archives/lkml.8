@@ -2,123 +2,117 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F46CC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E553FC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A37206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF12C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ptfWdyKQ"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="I1xwH6By"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgBKU7k (ORCPT
+        id S1731943AbgBKU7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:59:40 -0500
-Received: from gateway34.websitewelcome.com ([192.185.148.222]:17565 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728624AbgBKU7k (ORCPT
+        Tue, 11 Feb 2020 15:59:53 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46092 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729286AbgBKU7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:59:40 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id C595448CE5C
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:59:39 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1cd9jIjl3XVkQ1cd9jh4Iw; Tue, 11 Feb 2020 14:59:39 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IPGuh4dJHUV6jC0H2DD+K0aSPx7nJ/9fjrtidfPd1Bo=; b=ptfWdyKQkcSnaRqzN+e9PKQsaX
-        PPFAU0pL1ijbOVJOaG+VQ9CmQM5Nn7elVWMpJG85ynyd5YUrrl5k2BsE7P5hs7bu8CwDooXCc89cS
-        6EUPU/QWQzTRz9KDlDVbRsQ0dmfSfrR78U3FzVB+R+d0VFN9ujMMFuDbfUV8BsB5aWk4PPJaLM7XH
-        FQPfJcURpt7gBQPW19Qbjl67vF/qLD93y/mZzzgylkiuCmvEspEIcjd3pBijTA3zDKVip4eMIYRZ/
-        tq7m7gTMz2kjNVpvot9lsPl0kQYgxw8iCK5Wb0wQaUgru3rm3mgclfD7PoEaRmbkrnKLv5pPuXkoN
-        /LD6H8yQ==;
-Received: from [200.68.140.36] (port=14955 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1cd8-0022a3-9c; Tue, 11 Feb 2020 14:59:38 -0600
-Date:   Tue, 11 Feb 2020 15:02:13 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] amba: tegra-ahb: Replace zero-length array with
- flexible-array member
-Message-ID: <20200211210213.GA28043@embeddedor>
+        Tue, 11 Feb 2020 15:59:52 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a22so14163572oid.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:59:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=extxsRRjmkIJZEh/sTfq/VSUaht64zLviDFgNerAR0E=;
+        b=I1xwH6Byix/62gQ54cfQkAhK3Jz6DZUnPEusCbQQ20skEH7t7q1ersOxFM2h8eTjFq
+         W7bs4biU+p5p2rBb8nacmQ+AyuU973vMUnU/taHRlqpu4s2LfDLV9nh68R67/9IHN54V
+         Zh1uALOWVcrlvsNNTZj0JZWfKbx+OG02U4MDSQGMPZxKTRuUDEWL3k7FpR4YqEPKNedQ
+         mbTRld4FShJFNSCJLfhgOHJtcCGpyJIJ05CACfqm36E8Iq18xxlsLL5OWXDS1sXJ/AEq
+         eWX5eMKrKADz9NYuNYEImIqQzMkm5dSAeKK6nzyOMYNcJHbAsQb7Ua1pJrY91i0sa1G7
+         ooQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=extxsRRjmkIJZEh/sTfq/VSUaht64zLviDFgNerAR0E=;
+        b=duHyUSHguPOanrmXcmzIxFfH6bNnvV1qkRCjKkIxo/2tAnUeLT7adTPqhcO5CEf/80
+         wKMpZWL/qg0bpLZ1e/DdbCiuNCNR8hbhMXJ6EpfjRq93VEJXrkZaAw8hRzUXRPz+OQWN
+         4VVZEKVEX4K1a5bAm3Bwff1yhcqnRm3luTVcGTnxAtBWwd6R2irkzzCQK+vAfVMWDKkR
+         GzEzaR1I3CZKIMpt/7WTDvvNaVu1FTKm/C6HNMeU43SW1+iP7VGEU2pctHYi4ErK3HXO
+         eb4IMXthiFU4eTKr15N/lodhGZ0oRfEQbO+i9TU61aUJ/2jq1TkfszvHzfKUSRVh9he0
+         Me8A==
+X-Gm-Message-State: APjAAAVU1kzZYhvUQ35m3ZoaG5JZZcEQ/un2wx4uBRZEHQPeGYmWhQEb
+        QgHxYi+cWAozDLhwHMONV2zVxTYWsrJoAItS/bBXrw==
+X-Google-Smtp-Source: APXvYqy2e6QuQme8tks+nFn6MGTK47SXBGcqgqEabGAFW6zHHoWaB1wrKQLyHPWb+JU7T/jGznd8vWOuaKeaLDE7Ygk=
+X-Received: by 2002:aca:3f54:: with SMTP id m81mr3957419oia.73.1581454791852;
+ Tue, 11 Feb 2020 12:59:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1cd8-0022a3-9c
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:14955
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 54
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200208193445.27421-1-ira.weiny@intel.com> <20200208193445.27421-8-ira.weiny@intel.com>
+ <20200211080035.GI10776@dread.disaster.area> <20200211201430.GE12866@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20200211201430.GE12866@iweiny-DESK2.sc.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 11 Feb 2020 12:59:40 -0800
+Message-ID: <CAPcyv4hLTg+1dx2bE2S7sLRK17EP_gT5kutwhyUfVB7Ad8khgw@mail.gmail.com>
+Subject: Re: [PATCH v3 07/12] fs: Add locking for a dynamic DAX state
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, Feb 11, 2020 at 12:14 PM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Tue, Feb 11, 2020 at 07:00:35PM +1100, Dave Chinner wrote:
+> > On Sat, Feb 08, 2020 at 11:34:40AM -0800, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > >
+> > > DAX requires special address space operations but many other functions
+> > > check the IS_DAX() state.
+> > >
+> > > While DAX is a property of the inode we perfer a lock at the super block
+> > > level because of the overhead of a rwsem within the inode.
+> > >
+> > > Define a vfs per superblock percpu rs semaphore to lock the DAX state
+> >
+> > ????
+>
+> oops...  I must have forgotten to update the commit message when I did the
+> global RW sem.  I implemented the per-SB, percpu rwsem first but it was
+> suggested that the percpu nature of the lock combined with the anticipated
+> infrequent use of the write side made using a global easier.
+>
+> But before I proceed on V4 I'd like to get consensus on which of the 2 locking
+> models to go with.
+>
+>         1) percpu per superblock lock
+>         2) per inode rwsem
+>
+> Depending on my mood I can convince myself of both being performant but the
+> percpu is very attractive because I don't anticipate many changes of state
+> during run time.  OTOH concurrent threads accessing the same file at run time
+> may also be low so there is likely to be little read contention across CPU's on
+> the per-inode lock?
+>
+> Opinions?
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/amba/tegra-ahb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
-index b0b688c481e8..e9e5c7bb580c 100644
---- a/drivers/amba/tegra-ahb.c
-+++ b/drivers/amba/tegra-ahb.c
-@@ -129,7 +129,7 @@ static const u32 tegra_ahb_gizmo[] = {
- struct tegra_ahb {
- 	void __iomem	*regs;
- 	struct device	*dev;
--	u32		ctx[0];
-+	u32		ctx[];
- };
- 
- static inline u32 gizmo_readl(struct tegra_ahb *ahb, u32 offset)
--- 
-2.25.0
-
+As one who thought a global lock would be reasonable relative to how
+often dax address_space_operations are swapped out (on the order of
+taking cgroup_threadgroup_rwsem for write), I think a per-superblock
+lock is also an ok starting point. We can always go to finer grained
+locking in the future if we see evidence that the benefits of percpu
+are lost to stopping the world at the superblock level.
