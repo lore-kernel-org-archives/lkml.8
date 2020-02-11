@@ -2,113 +2,199 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8ECC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FA5C352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5899F20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 02:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3480320733
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:01:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QdqXtOYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgBKC41 (ORCPT
+        id S1727959AbgBKDBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 21:56:27 -0500
-Received: from pindarots.xs4all.nl ([82.161.210.87]:59022 "EHLO
-        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727546AbgBKC41 (ORCPT
+        Mon, 10 Feb 2020 22:01:55 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46415 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727546AbgBKDBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 21:56:27 -0500
-Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
-        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id 01B2uPme145228
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Tue, 11 Feb 2020 03:56:25 +0100
-Subject: Re: 5.4+: PAGE FAULT crashes the system multiple times per 24h
-To:     Gabriel C <nix.or.die@gmail.com>
-Cc:     "linux-mm@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <0495d7bd-7600-1936-d923-fa3b56a654bc@xs4all.nl>
- <CAEJqkgir5yjgh-tnuz8dRgEG=Vpa6yU5K6hAA2oeBEmrLO7ubA@mail.gmail.com>
- <fbb6fd06-0dc5-923a-c01f-d0bedfb004b1@xs4all.nl>
- <CAEJqkgjq3pd8kJSBpv4moOjdjgXiwPS6HgoD81rVAL0X-SAGew@mail.gmail.com>
-From:   Udo van den Heuvel <udovdh@xs4all.nl>
-Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
- 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
- JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
-Organization: hierzo
-Message-ID: <8c43a767-282e-7d10-d7c5-d4587d6d012a@xs4all.nl>
-Date:   Tue, 11 Feb 2020 03:56:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 22:01:55 -0500
+Received: by mail-qk1-f193.google.com with SMTP id g195so8756220qke.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 19:01:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDuKz8LG6e/Q6OjAADX6nh47gn2hXYEAHBLoIv0xEDo=;
+        b=QdqXtOYRY6N8H8KoXWsYQuIDa5MloudL6cocwRCcO9e9jEeWtDY/GESCG5mAyybMvL
+         PzcPSTjcl1i99pQUjxn7zEYH634CSw+jE1UF16LMtcu+NYRbTZXmUrswtiIicCRWhAYl
+         NZjCeAhxrhZzKWF6bYFm4rqjy910Nlh60LnMTkjI+MUA3Zn5oQ984Dvev3I0A4D0agRm
+         ffZVjuk8VvKsSmpTpUEF3MbU0hwul0SnEb3vKC1RDyBBxL5Op/FsNIz2WkPljsywQMlQ
+         LpFj9wyu9QwcU2lqQbEl1Thvvfl8qghMv80IxM6aYZBTOMC8kJ+HxUD8P3iudv66P+ka
+         TyVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDuKz8LG6e/Q6OjAADX6nh47gn2hXYEAHBLoIv0xEDo=;
+        b=KDglWfnIGADeLtLmhGUHdwA+2Ga+4ThT6yvWMrvGDrmK4mcFfZkZNWKa7bQfbFp+hz
+         UlY7of5eQIEavfhsI+FPb4SxDW7GLm015l8J0ByJNXh2z/VufXhI0iWA3D3FDh1vcX0H
+         qYPUp1ZQTMyW0Rc9N+6sCvs7l+XjRBOm2JFpQF9p4dFOMjGYHbmq1U2nF6p1fq2Ytwx5
+         lCwD+ao+RCXJ+i1eng/1dwLuhSLo0cl3XFqVHtWVSmOXFxYnNNvGHGgh6MkwyQb2y1zK
+         LRYt0lEcnO5BxRq1SfWEz9WVuMcZj6+xR3j4ViTmiLsgDnn8NPTTRd0BH3JZK3IDjqVm
+         HZlQ==
+X-Gm-Message-State: APjAAAWnh0YJMeZ9e95iDonLTfkaWoBRSgCNBjg3KTsU7dtE555P2uRh
+        CeVZUZZzFxvv+H9+mDQUC3nT/A==
+X-Google-Smtp-Source: APXvYqwWgIBKHaGcKaZl3h0ngUDh7ttSd105xW5gy8kceaUNQbNSZx35PytD5R5FOB+GWeSxZPwKIg==
+X-Received: by 2002:a05:620a:1fa:: with SMTP id x26mr4439937qkn.311.1581390113130;
+        Mon, 10 Feb 2020 19:01:53 -0800 (PST)
+Received: from ovpn-120-145.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id h13sm1232613qtu.23.2020.02.10.19.01.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 19:01:52 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     elver@google.com, willy@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Subject: [PATCH v2] mm/filemap: fix a data race in filemap_fault()
+Date:   Mon, 10 Feb 2020 22:01:34 -0500
+Message-Id: <20200211030134.1847-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-In-Reply-To: <CAEJqkgjq3pd8kJSBpv4moOjdjgXiwPS6HgoD81rVAL0X-SAGew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-02-2020 18:01, Gabriel C wrote:
->> rd.luks.options=discard
->>
->> We want to use discard on our ssd's.
-> 
-> Use mount options?
+struct file_ra_state ra.mmap_miss could be accessed concurrently during
+page faults as noticed by KCSAN,
 
-Not enough to make it work.
+ BUG: KCSAN: data-race in filemap_fault / filemap_map_pages
 
-> 
->> elevator=mq-deadline
->> We want a different scheduler for ssd versus hdd.
-> 
-> If you really want that you should use udev rules for SSD/NVME/HDD/USB etc.
+ write to 0xffff9b1700a2c1b4 of 4 bytes by task 3292 on cpu 30:
+  filemap_fault+0x920/0xfc0
+  do_sync_mmap_readahead at mm/filemap.c:2384
+  (inlined by) filemap_fault at mm/filemap.c:2486
+  __xfs_filemap_fault+0x112/0x3e0 [xfs]
+  xfs_filemap_fault+0x74/0x90 [xfs]
+  __do_fault+0x9e/0x220
+  do_fault+0x4a0/0x920
+  __handle_mm_fault+0xc69/0xd00
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
-Simply load the scheduler module and set the scheduler in rc.local is
-easier.
+ read to 0xffff9b1700a2c1b4 of 4 bytes by task 3313 on cpu 32:
+  filemap_map_pages+0xc2e/0xd80
+  filemap_map_pages at mm/filemap.c:2625
+  do_fault+0x3da/0x920
+  __handle_mm_fault+0xc69/0xd00
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 32 PID: 3313 Comm: systemd-udevd Tainted: G        W    L 5.5.0-next-20200210+ #1
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
 
-Udo
+ra.mmap_miss is used to contribute the readahead decisions, a data race
+could be undesirable. Both the read and write is only under
+non-exclusive mmap_sem, two concurrent writers could even overflow the
+counter. Fixing the underflow by writing to a local variable before
+committing a final store to ra.mmap_miss given a small inaccuracy of the
+counter should be acceptable.
+
+Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v2: fix the underflow issue pointed out by Matthew.
+
+ mm/filemap.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 1784478270e1..2e298db2e80f 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2365,6 +2365,7 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	struct address_space *mapping = file->f_mapping;
+ 	struct file *fpin = NULL;
+ 	pgoff_t offset = vmf->pgoff;
++	unsigned int mmap_miss;
+ 
+ 	/* If we don't want any read-ahead, don't bother */
+ 	if (vmf->vma->vm_flags & VM_RAND_READ)
+@@ -2380,14 +2381,15 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	}
+ 
+ 	/* Avoid banging the cache line if not needed */
+-	if (ra->mmap_miss < MMAP_LOTSAMISS * 10)
+-		ra->mmap_miss++;
++	mmap_miss = READ_ONCE(ra->mmap_miss);
++	if (mmap_miss < MMAP_LOTSAMISS * 10)
++		WRITE_ONCE(ra->mmap_miss, ++mmap_miss);
+ 
+ 	/*
+ 	 * Do we miss much more than hit in this file? If so,
+ 	 * stop bothering with read-ahead. It will only hurt.
+ 	 */
+-	if (ra->mmap_miss > MMAP_LOTSAMISS)
++	if (mmap_miss > MMAP_LOTSAMISS)
+ 		return fpin;
+ 
+ 	/*
+@@ -2413,13 +2415,15 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+ 	struct file_ra_state *ra = &file->f_ra;
+ 	struct address_space *mapping = file->f_mapping;
+ 	struct file *fpin = NULL;
++	unsigned int mmap_miss;
+ 	pgoff_t offset = vmf->pgoff;
+ 
+ 	/* If we don't want any read-ahead, don't bother */
+ 	if (vmf->vma->vm_flags & VM_RAND_READ)
+ 		return fpin;
+-	if (ra->mmap_miss > 0)
+-		ra->mmap_miss--;
++	mmap_miss = READ_ONCE(ra->mmap_miss);
++	if (mmap_miss)
++		WRITE_ONCE(ra->mmap_miss, --mmap_miss);
+ 	if (PageReadahead(page)) {
+ 		fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+ 		page_cache_async_readahead(mapping, ra, file,
+@@ -2586,6 +2590,7 @@ void filemap_map_pages(struct vm_fault *vmf,
+ 	unsigned long max_idx;
+ 	XA_STATE(xas, &mapping->i_pages, start_pgoff);
+ 	struct page *page;
++	unsigned int mmap_miss = READ_ONCE(file->f_ra.mmap_miss);
+ 
+ 	rcu_read_lock();
+ 	xas_for_each(&xas, page, end_pgoff) {
+@@ -2622,8 +2627,8 @@ void filemap_map_pages(struct vm_fault *vmf,
+ 		if (page->index >= max_idx)
+ 			goto unlock;
+ 
+-		if (file->f_ra.mmap_miss > 0)
+-			file->f_ra.mmap_miss--;
++		if (mmap_miss > 0)
++			mmap_miss--;
+ 
+ 		vmf->address += (xas.xa_index - last_pgoff) << PAGE_SHIFT;
+ 		if (vmf->pte)
+@@ -2643,6 +2648,7 @@ void filemap_map_pages(struct vm_fault *vmf,
+ 			break;
+ 	}
+ 	rcu_read_unlock();
++	WRITE_ONCE(file->f_ra.mmap_miss, mmap_miss);
+ }
+ EXPORT_SYMBOL(filemap_map_pages);
+ 
+-- 
+2.21.0 (Apple Git-122.2)
 
