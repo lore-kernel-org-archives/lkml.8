@@ -2,154 +2,188 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA5DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0045AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233602070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:59:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ri9VQfWj"
+	by mail.kernel.org (Postfix) with ESMTP id D26E3206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgBKH71 (ORCPT
+        id S1727932AbgBKIAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 02:59:27 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45381 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727613AbgBKH70 (ORCPT
+        Tue, 11 Feb 2020 03:00:42 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:52470 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727613AbgBKIAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 02:59:26 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 2so5069802pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 23:59:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=vgfeWj4AjQyurf0xeK1Z635NiCQf4E21yKLT1OZCOxI=;
-        b=ri9VQfWjEpKz6UthsEkXDqvnC/vLM4tNXqWeNUw5XE4gn0yaVJfZkwQx4Sur/04JIb
-         dRI4HjhUXnEFs97ZzjuEffQhpy0By2DTATHsRhkAXqVliZZ4fHIwvWPO5TnQeWDUnLZg
-         TRdgI1Ei0NaaMFLHz8RAGH1G/K0sLzpTYyeoHEtYXyoujCLG0HHwpVteQX1xyBgglG0+
-         mB94kh5J+PtLDyeXSmXcseUkKQaf9div3/bJktotIn/0JC76R+oUZmJMIuHKE35UF3fF
-         QxxODrdCPPoiz3b3F+66ptTJbFyHIjbsYgGQ9LW4NL086BNGPr2bgIO54+RBmMXNQJWz
-         7MbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=vgfeWj4AjQyurf0xeK1Z635NiCQf4E21yKLT1OZCOxI=;
-        b=tDieHCPPS3QC3zHWM961cu6BU/GZbn5NoNb9o08v8EAfWFpSFNqW028kNqkOSC8GhM
-         7pJKQfYd6uFJrknZG3kkcA8Xw9okoW3gg5qWcmEA5P0BFeKAkg+kSq5rxwums0jUboyn
-         5GFzOwen5gGJKCbCbsxrQZpvLEa8MP7L81eKb3TvQjooYUOw8O4Uzi0mtcd2siUg87NP
-         AonrGynBAn4bHVuE4LxDe2cwVfJHlNx/32oeetiMyse/xK9DwTQIyC6+gau4vXdW65q+
-         /9PwquE/RV5yTHNGaFmfoscvbf9nOiF0gGWTsikSyLimCIeFd3YXXu3j75h7wwLkC7t3
-         1DQg==
-X-Gm-Message-State: APjAAAXnQxV1EBIRoUuJnJl19odXsoWMvieTSjnORn/gc0aaIFW5ahfw
-        Ey8MIGgKR0FJIF9loeFxI5tAfg==
-X-Google-Smtp-Source: APXvYqxCnM2bUDEVK6wbp7oZd2Lj9/7Nk8QoUV2401OvplRSyHu/dvSNfD4xv8uaAlqj8fId4WKGtQ==
-X-Received: by 2002:a63:8743:: with SMTP id i64mr1818578pge.243.1581407966063;
-        Mon, 10 Feb 2020 23:59:26 -0800 (PST)
-Received: from [10.96.0.154] ([45.135.186.96])
-        by smtp.gmail.com with ESMTPSA id s14sm2573821pgv.74.2020.02.10.23.59.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 23:59:25 -0800 (PST)
-Subject: Re: [PATCH v12 2/4] uacce: add uacce driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
- <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
- <20200210233711.GA1787983@kroah.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <837da172-1ec7-d077-bf54-18d620b1d3bb@linaro.org>
-Date:   Tue, 11 Feb 2020 15:59:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 11 Feb 2020 03:00:41 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E14517E80BF;
+        Tue, 11 Feb 2020 19:00:36 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j1QTE-0006r3-0q; Tue, 11 Feb 2020 19:00:36 +1100
+Date:   Tue, 11 Feb 2020 19:00:35 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 07/12] fs: Add locking for a dynamic DAX state
+Message-ID: <20200211080035.GI10776@dread.disaster.area>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <20200208193445.27421-8-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200210233711.GA1787983@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208193445.27421-8-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=h3PP_tJamRO6jpvV3pwA:9
+        a=WmZtUv9hpVdxJtTz:21 a=_coJ81u7d_13xe0U:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Feb 08, 2020 at 11:34:40AM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> DAX requires special address space operations but many other functions
+> check the IS_DAX() state.
+> 
+> While DAX is a property of the inode we perfer a lock at the super block
+> level because of the overhead of a rwsem within the inode.
+> 
+> Define a vfs per superblock percpu rs semaphore to lock the DAX state
+
+????
+
+> while performing various VFS layer operations.  Write lock calls are
+> provided here but are used in subsequent patches by the file systems
+> themselves.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from V2
+> 
+> 	Rebase on linux-next-08-02-2020
+> 
+> 	Fix locking order
+> 	Change all references from mode to state where appropriate
+> 	add CONFIG_FS_DAX requirement for state change
+> 	Use a static branch to enable locking only when a dax capable
+> 		device has been seen.
+> 
+> 	Move the lock to a global vfs lock
+> 
+> 		this does a few things
+> 			1) preps us better for ext4 support
+> 			2) removes funky callbacks from inode ops
+> 			3) remove complexity from XFS and probably from
+> 			   ext4 later
+> 
+> 		We can do this because
+> 			1) the locking order is required to be at the
+> 			   highest level anyway, so why complicate xfs
+> 			2) We had to move the sem to the super_block
+> 			   because it is too heavy for the inode.
+> 			3) After internal discussions with Dan we
+> 			   decided that this would be easier, just as
+> 			   performant, and with slightly less overhead
+> 			   than in the VFS SB.
+> 
+> 		We also change the functions names to up/down;
+> 		read/write as appropriate.  Previous names were over
+> 		simplified.
+
+This, IMO, is a bit of a train wreck.
+
+This patch has nothing to do with "DAX state", it's about
+serialising access to the aops vector. There should be zero
+references to DAX in this patch at all, except maybe to say
+"switching DAX on dynamically requires atomic switching of address
+space ops".
+
+Big problems I see here:
+
+1. static key to turn it on globally.
+  - just a gross hack around doing it properly with a per-sb
+    mechanism and enbaling it only on filesystems that are on DAX
+    capable block devices.
+  - you're already passing in an inode to all these functions. It's
+    trivial to do:
+
+	if (!inode->i_sb->s_flags & S_DYNAMIC_AOPS)
+		return
+	/* do sb->s_aops_lock manipulation */
+
+2. global lock
+  - OMG!
+  - global lock will cause entire system IO/page fault stalls
+    when someone does recursive/bulk DAX flag modification
+    operations. Per-cpu rwsem Contention on  large systems will be
+    utterly awful.
+  - ext4's use case almost never hits the exclusive lock side of the
+    percpu-rwsem - only when changing the journal mode flag on the
+    inode. And it only affects writeback in progress, so it's not
+    going to have massive concurrency on it like a VFS level global
+    lock has. -> Bad model to follow.
+  - per-sb lock is trivial - see #1 - which limits scope to single
+    filesystem
+  - per-inode rwsem would make this problem go away entirely.
+
+3. If we can use a global per-cpu rwsem, why can't we just use a
+   per-inode rwsem?
+  - locking context rules are the same
+  - rwsem scales pretty damn well for shared ops
+  - no "global" contention problems
+  - small enough that we can put another rwsem in the inode.
+
+4. "inode_dax_state_up_read"
+  - Eye bleeds.
+  - this is about the aops structure serialisation, not dax.
+  - The name makes no sense in the places that it has been added.
+
+5. We already have code that does almost exactly what we need: the
+   superblock freezing infrastructure.
+  - freezing implements a "hold operations on this superblock until
+    further notice" model we can easily follow.
+  - sb_start_write/sb_end_write provides a simple API model and a
+    clean, clear and concise naming convention we can use, too.
 
 
-On 2020/2/11 上午7:37, Greg Kroah-Hartman wrote:
-> On Wed, Jan 15, 2020 at 10:12:46PM +0800, Zhangfei Gao wrote:
->> From: Kenneth Lee <liguozhu@hisilicon.com>
->>
->> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
->> provide Shared Virtual Addressing (SVA) between accelerators and processes.
->> So accelerator can access any data structure of the main cpu.
->> This differs from the data sharing between cpu and io device, which share
->> only data content rather than address.
->> Since unified address, hardware and user space of process can share the
->> same virtual address in the communication.
->>
->> Uacce create a chrdev for every registration, the queue is allocated to
->> the process when the chrdev is opened. Then the process can access the
->> hardware resource by interact with the queue file. By mmap the queue
->> file space to user space, the process can directly put requests to the
->> hardware without syscall to the kernel space.
->>
->> The IOMMU core only tracks mm<->device bonds at the moment, because it
->> only needs to handle IOTLB invalidation and PASID table entries. However
->> uacce needs a finer granularity since multiple queues from the same
->> device can be bound to an mm. When the mm exits, all bound queues must
->> be stopped so that the IOMMU can safely clear the PASID table entry and
->> reallocate the PASID.
->>
->> An intermediate struct uacce_mm links uacce devices and queues.
->> Note that an mm may be bound to multiple devices but an uacce_mm
->> structure only ever belongs to a single device, because we don't need
->> anything more complex (if multiple devices are bound to one mm, then
->> we'll create one uacce_mm for each bond).
->>
->>          uacce_device --+-- uacce_mm --+-- uacce_queue
->>                         |              '-- uacce_queue
->>                         |
->>                         '-- uacce_mm --+-- uacce_queue
->>                                        +-- uacce_queue
->>                                        '-- uacce_queue
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
->> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
->> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Looks much saner now, thanks for all of the work on this:
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> Or am I supposed to take this in my tree?  If so, I can, but I need an
-> ack for the crypto parts.
->
->
-That's Great, thanks Greg.
+Really, I'm struggling to understand how we got to "global locking
+that stops the world" from "need to change per-inode state
+atomically". Can someone please explain to me why this patch isn't
+just a simple set of largely self-explanitory functions like this:
 
-For the convenience, I rebase the patchset on 5.6-rc1.
-Not sure is there any conflict to crypto tree.
-How about just pick the uacce part, patch 1 , 2.
-We can resend the crypto part to crypto tree.
+XX_start_aop()
+XX_end_aop()
 
-Thanks
+XX_lock_aops()
+XX_switch_aops(aops)
+XX_unlock_aops()
 
+where "XX" is "sb" or "inode" depending on what locking granularity
+is used...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
