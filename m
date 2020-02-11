@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F844C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B61C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516BD214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1E1214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgBKNxa (ORCPT
+        id S1729752AbgBKNyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:53:30 -0500
-Received: from 8bytes.org ([81.169.241.247]:52198 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:54:21 -0500
+Received: from 8bytes.org ([81.169.241.247]:51838 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729504AbgBKNxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:22 -0500
+        id S1729603AbgBKNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:30 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id D2D04DF5; Tue, 11 Feb 2020 14:53:10 +0100 (CET)
+        id 919D6EA8; Tue, 11 Feb 2020 14:53:17 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +36,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 21/62] x86/sev-es: Add CPUID handling to #VC handler
-Date:   Tue, 11 Feb 2020 14:52:15 +0100
-Message-Id: <20200211135256.24617-22-joro@8bytes.org>
+Subject: [PATCH 58/62] x86/head/64: Don't call verify_cpu() on starting APs
+Date:   Tue, 11 Feb 2020 14:52:52 +0100
+Message-Id: <20200211135256.24617-59-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -46,84 +47,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Handle #VC exceptions caused by CPUID instructions. These happen in
-early boot code when the KASLR code checks for RDTSC.
+The APs are not ready to handle exceptions when verify_cpu() is called
+in secondary_startup_64.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling framework ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/sev-es.c |  4 ++++
- arch/x86/kernel/sev-es-shared.c   | 34 +++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ arch/x86/include/asm/realmode.h | 1 +
+ arch/x86/kernel/head_64.S       | 1 +
+ arch/x86/realmode/init.c        | 6 ++++++
+ 3 files changed, 8 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index b2a2d068dc12..270a23c05f53 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -10,6 +10,7 @@
- #include <asm/sev-es.h>
- #include <asm/trap_defs.h>
- #include <asm/msr-index.h>
-+#include <asm/fpu/xcr.h>
- #include <asm/ptrace.h>
- #include <asm/svm.h>
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index 6590394af309..5c97807c38a4 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -69,6 +69,7 @@ extern unsigned char startup_32_smp[];
+ extern unsigned char boot_gdt[];
+ #else
+ extern unsigned char secondary_startup_64[];
++extern unsigned char secondary_startup_64_no_verify[];
+ #endif
  
-@@ -117,6 +118,9 @@ void boot_vc_handler(struct pt_regs *regs)
- 	case SVM_EXIT_IOIO:
- 		result = handle_ioio(boot_ghcb, &ctxt);
- 		break;
-+	case SVM_EXIT_CPUID:
-+		result = handle_cpuid(boot_ghcb, &ctxt);
-+		break;
- 	default:
- 		result = ES_UNSUPPORTED;
- 		break;
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index bd21a79da084..0f422e3b2077 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -449,3 +449,37 @@ static enum es_result handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ static inline size_t real_mode_size_needed(void)
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 13ebf7d3af2c..9dd602bd6244 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -144,6 +144,7 @@ SYM_CODE_START(secondary_startup_64)
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
  
- 	return ret;
- }
++SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
+ 	/*
+ 	 * Retrieve the modifier (SME encryption mask if SME is active) to be
+ 	 * added to the initial pgdir entry that will be programmed into CR3.
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 1c5cbfd102d5..030c38268069 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -109,6 +109,12 @@ static void __init setup_real_mode(void)
+ 		trampoline_header->flags |= TH_FLAGS_SME_ACTIVE;
+ 
+ 	if (sev_es_active()) {
++		/*
++		 * Skip the call to verify_cpu() in secondary_startup_64 as it
++		 * will cause #VC exceptions when the AP can't handle them yet.
++		 */
++		trampoline_header->start = (u64) secondary_startup_64_no_verify;
 +
-+static enum es_result handle_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+{
-+	struct pt_regs *regs = ctxt->regs;
-+	u32 cr4 = native_read_cr4();
-+	enum es_result ret;
-+
-+	ghcb_set_rax(ghcb, regs->ax);
-+	ghcb_set_rcx(ghcb, regs->cx);
-+
-+	if (cr4 & X86_CR4_OSXSAVE)
-+		/* Safe to read xcr0 */
-+		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
-+	else
-+		/* xgetbv will cause #GP - use reset value for xcr0 */
-+		ghcb_set_xcr0(ghcb, 1);
-+
-+	ret = ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (!(ghcb_is_valid_rax(ghcb) &&
-+	      ghcb_is_valid_rbx(ghcb) &&
-+	      ghcb_is_valid_rcx(ghcb) &&
-+	      ghcb_is_valid_rdx(ghcb)))
-+		return ES_VMM_ERROR;
-+
-+	regs->ax = ghcb->save.rax;
-+	regs->bx = ghcb->save.rbx;
-+	regs->cx = ghcb->save.rcx;
-+	regs->dx = ghcb->save.rdx;
-+
-+	return ES_OK;
-+}
+ 		if (sev_es_setup_ap_jump_table(real_mode_header))
+ 			panic("Failed to update SEV-ES AP Jump Table");
+ 	}
 -- 
 2.17.1
 
