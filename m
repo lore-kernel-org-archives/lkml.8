@@ -2,208 +2,172 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756BBC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03262C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC712173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C634C2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2WJVxmP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g1t2BGTG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbgBKNzf (ORCPT
+        id S1729883AbgBKNzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:55:35 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45443 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729799AbgBKNzb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:55:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581429329;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=LiI8OXeqApXKVycGwDYh1aLBwvgIFPPVhBrhusiyeE4=;
-        b=H2WJVxmPqDGbqr/ts4Av1Bf5MhBoIqPL4ROSUQ7vyc4FAfBAEvnQaHTjGmmNtO6O+7uZK+
-        /XR1ISbpBhCT+ADvXYSmTWTYWLQ3LtmgStrJ0pC1RXGneVzr0ouGOtKrvnebef9YbVJp/e
-        aFFzMNXyLmP2hkTy0ExZMUMh52zK6dU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-XXjEI8eUMeeF-aIDrc7KMg-1; Tue, 11 Feb 2020 08:55:27 -0500
-X-MC-Unique: XXjEI8eUMeeF-aIDrc7KMg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70085801E6C;
-        Tue, 11 Feb 2020 13:55:26 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3252F60BF1;
-        Tue, 11 Feb 2020 13:55:23 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 219DB17447; Tue, 11 Feb 2020 14:55:22 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
-        QEMU'S CIRRUS DEVICE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4] drm/cirrus: add drm_driver.release callback.
-Date:   Tue, 11 Feb 2020 14:55:22 +0100
-Message-Id: <20200211135522.23654-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 11 Feb 2020 08:55:33 -0500
+Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:2167
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729728AbgBKNz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:55:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O8SMXDLv95fz+PPZK0PSOhdZoQWu067TbiYIgnBod+F3Uq3PxI0uiK7vCI+Jlv++j+cAyGFlnyuwahxmaOqMOQQDQTbujmhPvRW3rzfAlPY6TqSNzuViTcFWgHQE26Jt/G+LR42Lm96Nzc0R6H60Mpw20BQT8MGSeAsDWVcqULtrO7h7V8OaHNuonNl5cmoE0sFxJm4rNZn2Mq5kH6QwGAASbb7ZIf3oSSrTDpDR/ToPjxu10Fgva/mfWp3HggXp6DVWy5ph3KFSW8xPNIQp/pNEps/bs/om57ZWf8DBgneeFQPZb4/a4VFQvJzqn0vUC5wskqCGWoMJgzLGnqpnRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GnvDDsjv8utb67OlAZqt+PpsW2P4WIynQMWEWfZalzE=;
+ b=Q0NKslzo/WzkwNdbWGy/xnev+kN3LbFqlu7ektpbj8/Jps21mznSKShB0BDeTI26kaIz93ObLW6jFGzB2VWnKbXf2nqdwf8hf3qu7iZYqSNuLzpGv8rmcfVLxZAhWvGBsoVskIYvCRY0V212YxjA+OZEgV08Wpjl56XcHx0QS+mmXFBQn0fYVksCWk7uzV8vf5/8lPZ/DNzJC6F7U06UqGIOBRvhtDsu2a3zZ4SphDswjAHUZYvZ2Q5UEDaI4mRRh0C3nclzpoXEnhuKUSUrUCTVtQS1IPoGrmSa4+O95lzXnGnLb/jcovgoyObvoT2hfQecZvRcQ1jNQ9ldvz9PTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GnvDDsjv8utb67OlAZqt+PpsW2P4WIynQMWEWfZalzE=;
+ b=g1t2BGTGysXp78pJoR5Ds92d6uQkReD5MBua1LphZqceW/UeefbrGaPN73ZaJzf8JC6Uo6fkhcOhdaIZJarT8cz42oZsmPHae7OGFf8QzGd3v/OAgU3t6d5bzgMonxDYQfbB0oMkYtdk0A0SI33M1qq284ortijuWCVPEPF6NH0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
+ AM6PR04MB5734.eurprd04.prod.outlook.com (20.178.87.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.25; Tue, 11 Feb 2020 13:55:24 +0000
+Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
+ ([fe80::bcef:1c59:7d27:d0e]) by AM6PR04MB5878.eurprd04.prod.outlook.com
+ ([fe80::bcef:1c59:7d27:d0e%6]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
+ 13:55:24 +0000
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     Robin Murphy <robin.murphy@arm.com>, Li Yang <leoyang.li@nxp.com>,
+        Olof Johansson <olof@lixom.net>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+ <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+ <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com>
+ <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Message-ID: <27e0acfc-0782-bd97-a80e-1143f1315891@nxp.com>
+Date:   Tue, 11 Feb 2020 15:55:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:d2::30) To AM6PR04MB5878.eurprd04.prod.outlook.com
+ (2603:10a6:20b:a2::25)
+MIME-Version: 1.0
+Received: from [10.171.82.13] (89.37.124.34) by LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend Transport; Tue, 11 Feb 2020 13:55:22 +0000
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 93f3a63c-5f17-44c6-771e-08d7aefa0a55
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5734:|AM6PR04MB5734:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB5734802C02AE5FA70C212F98EC180@AM6PR04MB5734.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0310C78181
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(199004)(189003)(2906002)(16526019)(186003)(54906003)(44832011)(110136005)(2616005)(956004)(81156014)(316002)(81166006)(8936002)(8676002)(16576012)(31686004)(52116002)(478600001)(5660300002)(6486002)(36756003)(4326008)(31696002)(86362001)(66476007)(66946007)(7416002)(66556008)(26005)(53546011)(11634003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5734;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5Va7D8uyZr2ZQJgTL2VClD4gO4c2KFrHu1m+xvDPe0M6crf3CxICXtgoIaQfhNvH3twPRFFRl5J0/6aczZf70ijSXAq7HXt9aq3Imu9HL/A4pTwXhUCdCWhBT6DM9kUordA6nMb2mH0dBm3ZpvJvghJf+b1QOsmTSHgRhQHNxZ3T8my4I8W0dy6Kd25Y0PG/HR0Cnc/48A9qMh2y3OE6r//90YkUYyeweQZfoaJQHbEgYIP3Ov9k3/1Yw9AWw4N0jwp0jRIaRR8x1jHnpx7PERovyePLThHg1Yr/rw5rg9NPTHAXMT27ztTp0imRowNVNYYjbiIW1AzFPJhHaRkV04h6RTyMk5v+D/1vhl45GdIRoeI3hvvpqoGx0kxRzlmDQBrX5VVFt7/PLqO0a1WDRw7ZmCyZ1RdKMBKotluoLtb5WipdVBnh8tG5BbVoMwE+AShGwrllavXyTuQry9gQCfZUS1DFpfIGD0F23s0RCCy2wes7SAgCWi0COumunmBF
+X-MS-Exchange-AntiSpam-MessageData: z3kyprvyf8AczE6ke7SbnmLLhNXJRJj8P3k1esD1Ncx7XLa0sMpV2YIppyA9icOqGuCqcbeav67WKS2y3UpQqXPJ4DyN8PPzv1sttXu5RnGzJYNLFiHlLTO00iwe7QJtSykfA63L36t8g/S1e3SpgQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93f3a63c-5f17-44c6-771e-08d7aefa0a55
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 13:55:24.0241
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uK2KU5Bcm5m/IW271CaIPeNZbycKs3re6viMQG3pe411HHY0F1TEK2M54emdh0Mcmc53Jn7zfSfxESmLYx9TAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5734
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move final cleanups from cirrus_pci_remove() to the new callback.
-Add drm_atomic_helper_shutdown() call to cirrus_pci_remove().
 
-Use drm_dev_{enter,exit,unplug} to avoid touching hardware after
-device removal.
 
-v4: add changelog.
-v3: use drm_dev*.
-v2: stop touching hardware after pci_remove().
+On 11.02.2020 15:04, Robin Murphy wrote:
+> On 2020-02-11 12:13 pm, Laurentiu Tudor wrote:
+> [...]
+>>> This is a known issue about DPAA2 MC bus not working well with SMMU
+>>> based IO mapping.  Adding Laurentiu to the chain who has been looking
+>>> into this issue.
+>>
+>> Yes, I'm closely following the issue. I actually have a workaround 
+>> (attached) but haven't submitted as it will probably raise a lot of 
+>> eyebrows. In the mean time I'm following some discussions [1][2][3] on 
+>> the iommu list which seem to try to tackle what appears to be a 
+>> similar issue but with framebuffers. My hope is that we will be able 
+>> to leverage whatever turns out.
+> 
+> Indeed it's more general than framebuffers - in fact there was a 
+> specific requirement from the IORT side to accommodate network/storage 
+> controllers with in-memory firmware/configuration data/whatever set up 
+> by the bootloader that want to be handed off 'live' to Linux because the 
+> overhead of stopping and restarting them is impractical. Thus this DPAA2 
+> setup is very much within scope of the desired solution, so please feel 
+> free to join in (particularly on the DT parts) :)
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Will sure do. Seems that the 2nd approach (the one with list of 
+compatibles in arm-smmu) fits really well with our scenario. Will this 
+be the way to go forward?
+
+> As for right now, note that your patch would only be a partial 
+> mitigation to slightly reduce the fault window but not remove it 
+> entirely. To be robust the SMMU driver *has* to know about live streams 
+> before the first arm_smmu_reset() - hence the need for generic firmware 
+> bindings - so doing anything from the MC driver is already too late (and 
+> indeed the current iommu_request_dm_for_dev() mechanism is itself a 
+> microcosm of the same problem).
+
+I think you might have missed in the patch that it pauses the firmware 
+at early boot, in its driver init and it resumes it only after 
+iommu_request_dm_for_dev() has completed. :)
+
 ---
- drivers/gpu/drm/cirrus/cirrus.c | 43 ++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/cirrus.c
-index a91fb0d7282c..d2ff63ce8eaf 100644
---- a/drivers/gpu/drm/cirrus/cirrus.c
-+++ b/drivers/gpu/drm/cirrus/cirrus.c
-@@ -151,9 +151,13 @@ static int cirrus_pitch(struct drm_framebuffer *fb)
- 
- static void cirrus_set_start_address(struct cirrus_device *cirrus, u32 offset)
- {
-+	int idx;
- 	u32 addr;
- 	u8 tmp;
- 
-+	if (!drm_dev_enter(&cirrus->dev, &idx))
-+		return;
-+
- 	addr = offset >> 2;
- 	wreg_crt(cirrus, 0x0c, (u8)((addr >> 8) & 0xff));
- 	wreg_crt(cirrus, 0x0d, (u8)(addr & 0xff));
-@@ -168,6 +172,8 @@ static void cirrus_set_start_address(struct cirrus_device *cirrus, u32 offset)
- 	tmp &= 0x7f;
- 	tmp |= (addr >> 12) & 0x80;
- 	wreg_crt(cirrus, 0x1d, tmp);
-+
-+	drm_dev_exit(idx);
- }
- 
- static int cirrus_mode_set(struct cirrus_device *cirrus,
-@@ -176,9 +182,12 @@ static int cirrus_mode_set(struct cirrus_device *cirrus,
- {
- 	int hsyncstart, hsyncend, htotal, hdispend;
- 	int vtotal, vdispend;
--	int tmp;
-+	int tmp, idx;
- 	int sr07 = 0, hdr = 0;
- 
-+	if (!drm_dev_enter(&cirrus->dev, &idx))
-+		return -1;
-+
- 	htotal = mode->htotal / 8;
- 	hsyncend = mode->hsync_end / 8;
- 	hsyncstart = mode->hsync_start / 8;
-@@ -264,6 +273,7 @@ static int cirrus_mode_set(struct cirrus_device *cirrus,
- 		hdr = 0xc5;
- 		break;
- 	default:
-+		drm_dev_exit(idx);
- 		return -1;
- 	}
- 
-@@ -292,6 +302,8 @@ static int cirrus_mode_set(struct cirrus_device *cirrus,
- 
- 	/* Unblank (needed on S3 resume, vgabios doesn't do it then) */
- 	outb(0x20, 0x3c0);
-+
-+	drm_dev_exit(idx);
- 	return 0;
- }
- 
-@@ -300,10 +312,16 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
- {
- 	struct cirrus_device *cirrus = fb->dev->dev_private;
- 	void *vmap;
-+	int idx, ret;
- 
-+	ret = -ENODEV;
-+	if (!drm_dev_enter(&cirrus->dev, &idx))
-+		goto out;
-+
-+	ret = -ENOMEM;
- 	vmap = drm_gem_shmem_vmap(fb->obj[0]);
- 	if (!vmap)
--		return -ENOMEM;
-+		goto out_dev_exit;
- 
- 	if (cirrus->cpp == fb->format->cpp[0])
- 		drm_fb_memcpy_dstclip(cirrus->vram,
-@@ -323,7 +341,12 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
- 		WARN_ON_ONCE("cpp mismatch");
- 
- 	drm_gem_shmem_vunmap(fb->obj[0], vmap);
--	return 0;
-+	ret = 0;
-+
-+out_dev_exit:
-+	drm_dev_exit(idx);
-+out:
-+	return ret;
- }
- 
- static int cirrus_fb_blit_fullscreen(struct drm_framebuffer *fb)
-@@ -502,6 +525,14 @@ static void cirrus_mode_config_init(struct cirrus_device *cirrus)
- 
- /* ------------------------------------------------------------------ */
- 
-+static void cirrus_release(struct drm_device *dev)
-+{
-+	struct cirrus_device *cirrus = dev->dev_private;
-+
-+	drm_mode_config_cleanup(dev);
-+	kfree(cirrus);
-+}
-+
- DEFINE_DRM_GEM_FOPS(cirrus_fops);
- 
- static struct drm_driver cirrus_driver = {
-@@ -515,6 +546,7 @@ static struct drm_driver cirrus_driver = {
- 
- 	.fops		 = &cirrus_fops,
- 	DRM_GEM_SHMEM_DRIVER_OPS,
-+	.release         = cirrus_release,
- };
- 
- static int cirrus_pci_probe(struct pci_dev *pdev,
-@@ -598,12 +630,11 @@ static void cirrus_pci_remove(struct pci_dev *pdev)
- 	struct drm_device *dev = pci_get_drvdata(pdev);
- 	struct cirrus_device *cirrus = dev->dev_private;
- 
--	drm_dev_unregister(dev);
--	drm_mode_config_cleanup(dev);
-+	drm_dev_unplug(dev);
-+	drm_atomic_helper_shutdown(dev);
- 	iounmap(cirrus->mmio);
- 	iounmap(cirrus->vram);
- 	drm_dev_put(dev);
--	kfree(cirrus);
- 	pci_release_regions(pdev);
- }
- 
--- 
-2.18.2
-
+Best Regards, Laurentiu
