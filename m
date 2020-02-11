@@ -2,145 +2,97 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4309C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C58BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB39C20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB2220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vdsk1oZr"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uLZ5+G6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgBKWrj (ORCPT
+        id S1727698AbgBKWsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:47:39 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39848 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727697AbgBKWri (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:47:38 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so14614140wrt.6;
-        Tue, 11 Feb 2020 14:47:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=d/px5ol/IpLIQI4VHOPlH6LMGgBauhkI55UKC6oSPnc=;
-        b=vdsk1oZrbgI3AQUQIbq7pQ1CHVFDsak9q0s76pRoLudWtUfRwf3J5HlnM6MZWEblNR
-         cFnbL7sx4HzGtJYFOoOuzaZjjpXmxu2wCk567PVYA3vNpL9Ie7OHqpAcF+HO3DeJApGA
-         sdLcAtiI1s+5tiXKsPIxagwX9ZFjbtzCd/fpIyD8DPXSt4xKxkOHgtkzMF05uuVjyvoU
-         eVf+QjCIivhcJzD/zKdy4fLQq221jrgoPehukk81ne5FuQtHh4D1/FeX4b9m+vCnX/U0
-         iVZq89sxbasT+1oGo4ParZzn9jA7pn47H7d4uqAcS/epFwny88QESv06TPF7y8JIOA+O
-         69pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=d/px5ol/IpLIQI4VHOPlH6LMGgBauhkI55UKC6oSPnc=;
-        b=kpjnQf0xy5mN6+P85CfxuFSv09/ahiaJ5PmL+iiP0VQnqACIBfCba6npEN7HDZhaHU
-         FH0Cl7N9J5yGkPLic0mS0nX8pVxTu6w0DkWA3uQfDjONmRcK9joYaDV47XqdDzprPOyY
-         bwD2LMX+Ejs0isVx2pfIhZqNPFm8QLIlbaYGX6xGM08i85HchCiCc3PNzFHsUVf1nKzU
-         FmCFUjTunED6eITnox1AxT3CjZxlHsc8ndR3zxZkVg+77TM5sL4YWJZ9jUoHAobNvo4a
-         ex59nfUfIasxo75sBsB4qG1+VINkKDrDpx96mKF8x/MablKtQ2LySnlloI+jIyKboZiL
-         R8TA==
-X-Gm-Message-State: APjAAAV91twkg/BrBPEDR9qP1v5CEIIxlNENC5dRLnxx+U6PefSr5Kwj
-        Qa37CUxxNb+lhKmqcdwKpJc=
-X-Google-Smtp-Source: APXvYqxmTNJrmWKOa80PFKVIATMpGG5MV1aZHzg2Jd9nAr8x2mSvQKWTHDAHSjCH7L9I0U/0vHXAkA==
-X-Received: by 2002:a5d:6ac4:: with SMTP id u4mr10824067wrw.318.1581461256311;
-        Tue, 11 Feb 2020 14:47:36 -0800 (PST)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id w19sm5366655wmc.22.2020.02.11.14.47.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 14:47:35 -0800 (PST)
-Subject: [PATCH v17 9/9] mm/page_reporting: Add free page reporting
- documentation
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, mhocko@kernel.org,
-        alexander.h.duyck@linux.intel.com, vbabka@suse.cz,
-        osalvador@suse.de
-Date:   Tue, 11 Feb 2020 14:47:30 -0800
-Message-ID: <20200211224730.29318.43815.stgit@localhost.localdomain>
-In-Reply-To: <20200211224416.29318.44077.stgit@localhost.localdomain>
-References: <20200211224416.29318.44077.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 11 Feb 2020 17:48:42 -0500
+Received: from ozlabs.org ([203.11.71.1]:58805 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727330AbgBKWsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:48:42 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HHxg0XwKz9sP7;
+        Wed, 12 Feb 2020 09:48:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581461319;
+        bh=R9xv6Pys0PNbzt3d2ihx44UNetT12TeT50cxg4Vktfo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uLZ5+G6mVv/p8CY4R49L7Bv1NqP1rkwYhiJpoRHHjV14yHpQYL6rPMg8cERH6IeXt
+         1Rp6syIh+ymBUxn8i0b5HwV52THRlTPwGk41N/53MMZB89r6g/dsIW9ocid01gZhFg
+         nY8Lvuo/Ir0TDK02p8S/gGlNdnNV35vGlAsl7282HbNj5MwW/BdXfokLX4JVdt5gYL
+         +GtgL7BwtGKZsx5gLPQsvvlM1cA+D93YomQ2vYXexSYaGusRfDAG87nwvAAtvaG0TT
+         BmIwrTJB+EKAnGkvhsR93u3B8R+ISMdtK8FC/OgWo1u/NUZpf/C4kLWpQmVaqK+CpR
+         tMWIgsmfMTgrA==
+Date:   Wed, 12 Feb 2020 09:48:38 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
+        Michael Strauss <Michael.Strauss@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Subject: linux-next: build failure after merge of the amdgpu tree
+Message-ID: <20200212094838.4465f954@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/LR=5Kstqi9lQOU5R_HTr5Z/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+--Sig_/LR=5Kstqi9lQOU5R_HTr5Z/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Add documentation for free page reporting. Currently the only consumer is
-virtio-balloon, however it is possible that other drivers might make use of
-this so it is best to add a bit of documetation explaining at a high level
-how to use the API.
+Hi all,
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- Documentation/vm/free_page_reporting.rst |   41 ++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/vm/free_page_reporting.rst
+After merging the amdgpu tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-diff --git a/Documentation/vm/free_page_reporting.rst b/Documentation/vm/free_page_reporting.rst
-new file mode 100644
-index 000000000000..33f54a450a4a
---- /dev/null
-+++ b/Documentation/vm/free_page_reporting.rst
-@@ -0,0 +1,41 @@
-+.. _free_page_reporting:
-+
-+=====================
-+Free Page Reporting
-+=====================
-+
-+Free page reporting is an API by which a device can register to receive
-+lists of pages that are currently unused by the system. This is useful in
-+the case of virtualization where a guest is then able to use this data to
-+notify the hypervisor that it is no longer using certain pages in memory.
-+
-+For the driver, typically a balloon driver, to use of this functionality
-+it will allocate and initialize a page_reporting_dev_info structure. The
-+field within the structure it will populate is the "report" function
-+pointer used to process the scatterlist. It must also guarantee that it can
-+handle at least PAGE_REPORTING_CAPACITY worth of scatterlist entries per
-+call to the function. A call to page_reporting_register will register the
-+page reporting interface with the reporting framework assuming no other
-+page reporting devices are already registered.
-+
-+Once registered the page reporting API will begin reporting batches of
-+pages to the driver. The API will start reporting pages 2 seconds after
-+the interface is registered and will continue to do so 2 seconds after any
-+page of a sufficiently high order is freed.
-+
-+Pages reported will be stored in the scatterlist passed to the reporting
-+function with the final entry having the end bit set in entry nent - 1.
-+While pages are being processed by the report function they will not be
-+accessible to the allocator. Once the report function has been completed
-+the pages will be returned to the free area from which they were obtained.
-+
-+Prior to removing a driver that is making use of free page reporting it
-+is necessary to call page_reporting_unregister to have the
-+page_reporting_dev_info structure that is currently in use by free page
-+reporting removed. Doing this will prevent further reports from being
-+issued via the interface. If another driver or the same driver is
-+registered it is possible for it to resume where the previous driver had
-+left off in terms of reporting free pages.
-+
-+Alexander Duyck, Dec 04, 2019
-+
+ERROR: "get_num_odm_splits" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefine=
+d!
 
+Presumably caused by commit
+
+  5bf24270d1cc ("drm/amd/display: add odm split logic to scaling calculatio=
+ns")
+
+I used the amdgpu tree from next-20200211 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/LR=5Kstqi9lQOU5R_HTr5Z/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5DL0YACgkQAVBC80lX
+0Gypigf9G6wEimkUpzfY+L7Geys21RHs3cARo5QAWvCT+27B40w5tuNXzhcjDMNc
+9TgpIAeArv+9pMUmhUzKSSmBobHqqRJk3jlVZEhyE/vUePWSpIjDMafvnDp9yqhr
+oBys3NBmCtejDI/CDT9LlHky4dDx3TCf/nRcq9Yees94NbD6sD3mDizmSxbV3Bce
+tQePJznBarpYNTS9+T4oqDEGKNeJ71u0VLmDE/IqfvvV6X4PY9pqc7wvthL2O1uq
+jApFQv0jAndHyL47QIgokgtyFMvgWMfTnA3jGCzvwEE1MzlYtQIYqAufmrzfKP1W
+Ekc15jv6v/5dBbpKL7uBzwNnPglEmw==
+=4HZY
+-----END PGP SIGNATURE-----
+
+--Sig_/LR=5Kstqi9lQOU5R_HTr5Z/--
