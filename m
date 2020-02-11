@@ -6,371 +6,162 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1263C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBFFC3B188
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE55C2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CE22070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgBKXjZ (ORCPT
+        id S1728226AbgBKXjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:39:25 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43420 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbgBKXjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 18:39:02 -0500
-Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 5a059576f132a7f4; Wed, 12 Feb 2020 00:38:57 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH 08/28] PM: QoS: Redefine struct pm_qos_request and drop struct pm_qos_object
-Date:   Wed, 12 Feb 2020 00:01:18 +0100
-Message-ID: <2443315.yJlvsR4f3f@kreacher>
-In-Reply-To: <1654227.8mz0SueHsU@kreacher>
-References: <1654227.8mz0SueHsU@kreacher>
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:15763 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbgBKXi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:38:56 -0500
+X-Originating-IP: 172.58.46.131
+Received: from localhost (unknown [172.58.46.131])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 845AC240003;
+        Tue, 11 Feb 2020 23:38:48 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 15:38:06 -0800
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org
+Cc:     Arjan van de Ven <arjan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] ACPI: Add new tiny-power-button driver to directly
+ signal init
+Message-ID: <af419b2293c486b5cff6834770fc8e02cfea06c9.1581463668.git.josh@joshtriplett.org>
+References: <cover.1581463668.git.josh@joshtriplett.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1581463668.git.josh@joshtriplett.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Virtual machines often use an ACPI power button event to tell the
+machine to shut down gracefully.
 
-First, change the definition of struct pm_qos_request so that it
-contains a struct pm_qos_constraints pointer (called "qos") instead
-of a PM QoS class number (in preparation for dropping the PM QoS
-classes concept altogether going forward) and move its definition
-(along with the definition of struct pm_qos_flags_request that does
-not change) after the definition of struct pm_qos_constraints.
+Provide an extremely lightweight "tiny power button" driver to handle
+this event by signaling init directly, rather than running a separate
+daemon (such as acpid or systemd-logind) that adds to startup time and
+VM image complexity.
 
-Next, drop the definition of struct pm_qos_object and the null_pm_qos
-and cpu_dma_pm_qos variables of that type along with pm_qos_array[]
-holding pointers to them and change the code to refer to the
-pm_qos_constraints structure directly or to use the new qos pointer
-in struct pm_qos_request for that instead of going through
-pm_qos_array[] to access it.  Also update kerneldoc comments that
-mention pm_qos_class to refer to PM_QOS_CPU_DMA_LATENCY directly
-instead.
+The kernel configuration defines the default signal to send init, and
+userspace can change this signal via a module parameter.
 
-Finally, drop register_pm_qos_misc(), introduce cpu_latency_qos_miscdev
-(with the name field set to "cpu_dma_latency") to implement the
-CPU latency QoS interface in /dev/ and register it directly from
-pm_qos_power_init().
-
-After these changes the notion of PM QoS classes remains only in the
-API (in the form of redundant function parameters that are ignored)
-and in the definitions of PM QoS trace events.
-
-While at it, some redundant local variables are dropped etc.
-
-No intentional functional impact.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
 ---
- include/linux/pm_qos.h |  20 ++++----
- kernel/power/qos.c     | 121 +++++++++++++++++--------------------------------
- 2 files changed, 51 insertions(+), 90 deletions(-)
+ drivers/acpi/Kconfig             | 24 +++++++++++++++++
+ drivers/acpi/Makefile            |  1 +
+ drivers/acpi/tiny-power-button.c | 46 ++++++++++++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
+ create mode 100644 drivers/acpi/tiny-power-button.c
 
-diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
-index 48bfb96a9360..bef110aa80cc 100644
---- a/include/linux/pm_qos.h
-+++ b/include/linux/pm_qos.h
-@@ -39,16 +39,6 @@ enum pm_qos_flags_status {
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index cc57bab146b5..ce2730d61a8f 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -190,6 +190,30 @@ config ACPI_BUTTON
+ 	  To compile this driver as a module, choose M here:
+ 	  the module will be called button.
  
- #define PM_QOS_FLAG_NO_POWER_OFF	(1 << 0)
++config ACPI_TINY_POWER_BUTTON
++	tristate "Tiny Power Button Driver"
++	depends on !ACPI_BUTTON
++	help
++	  This driver provides a tiny alternative to the ACPI Button driver.
++	  The tiny power button driver only handles the power button. Rather
++	  than notifying userspace via the input layer or a netlink event, this
++	  driver directly signals the init process to shut down.
++
++	  This driver is particularly suitable for cloud and VM environments,
++	  which use a simulated power button to initiate a controlled poweroff,
++	  but which may not want to run a separate userspace daemon to process
++	  input events.
++
++config ACPI_TINY_POWER_BUTTON_SIGNAL
++	int "Tiny Power Button Signal"
++	depends on ACPI_TINY_POWER_BUTTON
++	default 38
++	help
++	  Default signal to send to init in response to the power button.
++
++	  Likely values here include 38 (SIGRTMIN+4) to power off, or 2
++	  (SIGINT) to simulate Ctrl+Alt+Del.
++
+ config ACPI_VIDEO
+ 	tristate "Video"
+ 	depends on X86 && BACKLIGHT_CLASS_DEVICE
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 33fdaf67454e..e81e1ebbfb32 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -71,6 +71,7 @@ obj-$(CONFIG_ACPI_IPMI)		+= acpi_ipmi.o
  
--struct pm_qos_request {
--	struct plist_node node;
--	int pm_qos_class;
--};
--
--struct pm_qos_flags_request {
--	struct list_head node;
--	s32 flags;	/* Do not change to 64 bit */
--};
--
- enum pm_qos_type {
- 	PM_QOS_UNITIALIZED,
- 	PM_QOS_MAX,		/* return the largest value */
-@@ -69,6 +59,16 @@ struct pm_qos_constraints {
- 	struct blocking_notifier_head *notifiers;
- };
- 
-+struct pm_qos_request {
-+	struct plist_node node;
-+	struct pm_qos_constraints *qos;
+ obj-$(CONFIG_ACPI_AC) 		+= ac.o
+ obj-$(CONFIG_ACPI_BUTTON)	+= button.o
++obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+= tiny-power-button.o
+ obj-$(CONFIG_ACPI_FAN)		+= fan.o
+ obj-$(CONFIG_ACPI_VIDEO)	+= video.o
+ obj-$(CONFIG_ACPI_TAD)		+= acpi_tad.o
+diff --git a/drivers/acpi/tiny-power-button.c b/drivers/acpi/tiny-power-button.c
+new file mode 100644
+index 000000000000..6273d73c0b59
+--- /dev/null
++++ b/drivers/acpi/tiny-power-button.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include <linux/module.h>
++#include <linux/sched/signal.h>
++#include <linux/acpi.h>
++#include <acpi/button.h>
++
++ACPI_MODULE_NAME("tiny-power-button");
++MODULE_AUTHOR("Josh Triplett");
++MODULE_DESCRIPTION("ACPI Tiny Power Button Driver");
++MODULE_LICENSE("GPL");
++
++static int power_signal __read_mostly = CONFIG_ACPI_TINY_POWER_BUTTON_SIGNAL;
++module_param(power_signal, int, 0644);
++MODULE_PARM_DESC(power_signal, "Power button sends this signal to init");
++
++static const struct acpi_device_id tiny_power_button_device_ids[] = {
++	{ ACPI_BUTTON_HID_POWER, 0 },
++	{ ACPI_BUTTON_HID_POWERF, 0 },
++	{ "", 0 },
++};
++MODULE_DEVICE_TABLE(acpi, tiny_power_button_device_ids);
++
++static int acpi_noop_add_remove(struct acpi_device *device)
++{
++	return 0;
++}
++
++static void acpi_tiny_power_button_notify(struct acpi_device *device, u32 event)
++{
++	kill_cad_pid(power_signal, 1);
++}
++
++static struct acpi_driver acpi_tiny_power_button_driver = {
++	.name = "tiny-power-button",
++	.class = "tiny-power-button",
++	.ids = tiny_power_button_device_ids,
++	.ops = {
++		.add = acpi_noop_add_remove,
++		.remove = acpi_noop_add_remove,
++		.notify = acpi_tiny_power_button_notify,
++	},
 +};
 +
-+struct pm_qos_flags_request {
-+	struct list_head node;
-+	s32 flags;	/* Do not change to 64 bit */
-+};
-+
- struct pm_qos_flags {
- 	struct list_head list;
- 	s32 effective_flags;	/* Do not change to 64 bit */
-diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-index 9f67584d4466..952c5f55e23c 100644
---- a/kernel/power/qos.c
-+++ b/kernel/power/qos.c
-@@ -54,16 +54,8 @@
-  * or pm_qos_object list and pm_qos_objects need to happen with pm_qos_lock
-  * held, taken with _irqsave.  One lock to rule them all
-  */
--struct pm_qos_object {
--	struct pm_qos_constraints *constraints;
--	struct miscdevice pm_qos_power_miscdev;
--	char *name;
--};
--
- static DEFINE_SPINLOCK(pm_qos_lock);
- 
--static struct pm_qos_object null_pm_qos;
--
- static BLOCKING_NOTIFIER_HEAD(cpu_dma_lat_notifier);
- static struct pm_qos_constraints cpu_dma_constraints = {
- 	.list = PLIST_HEAD_INIT(cpu_dma_constraints.list),
-@@ -73,15 +65,6 @@ static struct pm_qos_constraints cpu_dma_constraints = {
- 	.type = PM_QOS_MIN,
- 	.notifiers = &cpu_dma_lat_notifier,
- };
--static struct pm_qos_object cpu_dma_pm_qos = {
--	.constraints = &cpu_dma_constraints,
--	.name = "cpu_dma_latency",
--};
--
--static struct pm_qos_object *pm_qos_array[] = {
--	&null_pm_qos,
--	&cpu_dma_pm_qos,
--};
- 
- /**
-  * pm_qos_read_value - Return the current effective constraint value.
-@@ -248,46 +231,34 @@ bool pm_qos_update_flags(struct pm_qos_flags *pqf,
- 
- /**
-  * pm_qos_request - returns current system wide qos expectation
-- * @pm_qos_class: identification of which qos value is requested
-+ * @pm_qos_class: Ignored.
-  *
-  * This function returns the current target value.
-  */
- int pm_qos_request(int pm_qos_class)
- {
--	return pm_qos_read_value(pm_qos_array[pm_qos_class]->constraints);
-+	return pm_qos_read_value(&cpu_dma_constraints);
- }
- EXPORT_SYMBOL_GPL(pm_qos_request);
- 
- int pm_qos_request_active(struct pm_qos_request *req)
- {
--	return req->pm_qos_class != 0;
-+	return req->qos == &cpu_dma_constraints;
- }
- EXPORT_SYMBOL_GPL(pm_qos_request_active);
- 
--static void __pm_qos_update_request(struct pm_qos_request *req,
--			   s32 new_value)
--{
--	trace_pm_qos_update_request(req->pm_qos_class, new_value);
--
--	if (new_value != req->node.prio)
--		pm_qos_update_target(
--			pm_qos_array[req->pm_qos_class]->constraints,
--			&req->node, PM_QOS_UPDATE_REQ, new_value);
--}
--
- /**
-  * pm_qos_add_request - inserts new qos request into the list
-  * @req: pointer to a preallocated handle
-- * @pm_qos_class: identifies which list of qos request to use
-+ * @pm_qos_class: Ignored.
-  * @value: defines the qos request
-  *
-- * This function inserts a new entry in the pm_qos_class list of requested qos
-- * performance characteristics.  It recomputes the aggregate QoS expectations
-- * for the pm_qos_class of parameters and initializes the pm_qos_request
-+ * This function inserts a new entry in the PM_QOS_CPU_DMA_LATENCY list of
-+ * requested QoS performance characteristics.  It recomputes the aggregate QoS
-+ * expectations for the PM_QOS_CPU_DMA_LATENCY list and initializes the @req
-  * handle.  Caller needs to save this handle for later use in updates and
-  * removal.
-  */
--
- void pm_qos_add_request(struct pm_qos_request *req,
- 			int pm_qos_class, s32 value)
- {
-@@ -298,10 +269,11 @@ void pm_qos_add_request(struct pm_qos_request *req,
- 		WARN(1, KERN_ERR "pm_qos_add_request() called for already added request\n");
- 		return;
- 	}
--	req->pm_qos_class = pm_qos_class;
--	trace_pm_qos_add_request(pm_qos_class, value);
--	pm_qos_update_target(pm_qos_array[pm_qos_class]->constraints,
--			     &req->node, PM_QOS_ADD_REQ, value);
-+
-+	trace_pm_qos_add_request(PM_QOS_CPU_DMA_LATENCY, value);
-+
-+	req->qos = &cpu_dma_constraints;
-+	pm_qos_update_target(req->qos, &req->node, PM_QOS_ADD_REQ, value);
- }
- EXPORT_SYMBOL_GPL(pm_qos_add_request);
- 
-@@ -310,13 +282,12 @@ EXPORT_SYMBOL_GPL(pm_qos_add_request);
-  * @req : handle to list element holding a pm_qos request to use
-  * @value: defines the qos request
-  *
-- * Updates an existing qos request for the pm_qos_class of parameters along
-- * with updating the target pm_qos_class value.
-+ * Updates an existing qos request for the PM_QOS_CPU_DMA_LATENCY list along
-+ * with updating the target PM_QOS_CPU_DMA_LATENCY value.
-  *
-  * Attempts are made to make this code callable on hot code paths.
-  */
--void pm_qos_update_request(struct pm_qos_request *req,
--			   s32 new_value)
-+void pm_qos_update_request(struct pm_qos_request *req, s32 new_value)
- {
- 	if (!req) /*guard against callers passing in null */
- 		return;
-@@ -326,7 +297,12 @@ void pm_qos_update_request(struct pm_qos_request *req,
- 		return;
- 	}
- 
--	__pm_qos_update_request(req, new_value);
-+	trace_pm_qos_update_request(PM_QOS_CPU_DMA_LATENCY, new_value);
-+
-+	if (new_value == req->node.prio)
-+		return;
-+
-+	pm_qos_update_target(req->qos, &req->node, PM_QOS_UPDATE_REQ, new_value);
- }
- EXPORT_SYMBOL_GPL(pm_qos_update_request);
- 
-@@ -335,7 +311,7 @@ EXPORT_SYMBOL_GPL(pm_qos_update_request);
-  * @req: handle to request list element
-  *
-  * Will remove pm qos request from the list of constraints and
-- * recompute the current target value for the pm_qos_class.  Call this
-+ * recompute the current target value for PM_QOS_CPU_DMA_LATENCY.  Call this
-  * on slow code paths.
-  */
- void pm_qos_remove_request(struct pm_qos_request *req)
-@@ -349,9 +325,9 @@ void pm_qos_remove_request(struct pm_qos_request *req)
- 		return;
- 	}
- 
--	trace_pm_qos_remove_request(req->pm_qos_class, PM_QOS_DEFAULT_VALUE);
--	pm_qos_update_target(pm_qos_array[req->pm_qos_class]->constraints,
--			     &req->node, PM_QOS_REMOVE_REQ,
-+	trace_pm_qos_remove_request(PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
-+
-+	pm_qos_update_target(req->qos, &req->node, PM_QOS_REMOVE_REQ,
- 			     PM_QOS_DEFAULT_VALUE);
- 	memset(req, 0, sizeof(*req));
- }
-@@ -359,41 +335,31 @@ EXPORT_SYMBOL_GPL(pm_qos_remove_request);
- 
- /**
-  * pm_qos_add_notifier - sets notification entry for changes to target value
-- * @pm_qos_class: identifies which qos target changes should be notified.
-+ * @pm_qos_class: Ignored.
-  * @notifier: notifier block managed by caller.
-  *
-  * will register the notifier into a notification chain that gets called
-- * upon changes to the pm_qos_class target value.
-+ * upon changes to the PM_QOS_CPU_DMA_LATENCY target value.
-  */
- int pm_qos_add_notifier(int pm_qos_class, struct notifier_block *notifier)
- {
--	int retval;
--
--	retval = blocking_notifier_chain_register(
--			pm_qos_array[pm_qos_class]->constraints->notifiers,
--			notifier);
--
--	return retval;
-+	return blocking_notifier_chain_register(cpu_dma_constraints.notifiers,
-+						notifier);
- }
- EXPORT_SYMBOL_GPL(pm_qos_add_notifier);
- 
- /**
-  * pm_qos_remove_notifier - deletes notification entry from chain.
-- * @pm_qos_class: identifies which qos target changes are notified.
-+ * @pm_qos_class: Ignored.
-  * @notifier: notifier block to be removed.
-  *
-  * will remove the notifier from the notification chain that gets called
-- * upon changes to the pm_qos_class target value.
-+ * upon changes to the PM_QOS_CPU_DMA_LATENCY target value.
-  */
- int pm_qos_remove_notifier(int pm_qos_class, struct notifier_block *notifier)
- {
--	int retval;
--
--	retval = blocking_notifier_chain_unregister(
--			pm_qos_array[pm_qos_class]->constraints->notifiers,
--			notifier);
--
--	return retval;
-+	return blocking_notifier_chain_unregister(cpu_dma_constraints.notifiers,
-+						  notifier);
- }
- EXPORT_SYMBOL_GPL(pm_qos_remove_notifier);
- 
-@@ -436,7 +402,7 @@ static ssize_t pm_qos_power_read(struct file *filp, char __user *buf,
- 		return -EINVAL;
- 
- 	spin_lock_irqsave(&pm_qos_lock, flags);
--	value = pm_qos_get_value(pm_qos_array[req->pm_qos_class]->constraints);
-+	value = pm_qos_get_value(&cpu_dma_constraints);
- 	spin_unlock_irqrestore(&pm_qos_lock, flags);
- 
- 	return simple_read_from_buffer(buf, count, f_pos, &value, sizeof(s32));
-@@ -471,25 +437,20 @@ static const struct file_operations pm_qos_power_fops = {
- 	.llseek = noop_llseek,
- };
- 
--static int register_pm_qos_misc(struct pm_qos_object *qos)
--{
--	qos->pm_qos_power_miscdev.minor = MISC_DYNAMIC_MINOR;
--	qos->pm_qos_power_miscdev.name = qos->name;
--	qos->pm_qos_power_miscdev.fops = &pm_qos_power_fops;
--
--	return misc_register(&qos->pm_qos_power_miscdev);
--}
-+static struct miscdevice cpu_latency_qos_miscdev = {
-+	.minor = MISC_DYNAMIC_MINOR,
-+	.name = "cpu_dma_latency",
-+	.fops = &pm_qos_power_fops,
-+};
- 
- static int __init pm_qos_power_init(void)
- {
- 	int ret;
- 
--	BUILD_BUG_ON(ARRAY_SIZE(pm_qos_array) != PM_QOS_NUM_CLASSES);
--
--	ret = register_pm_qos_misc(pm_qos_array[PM_QOS_CPU_DMA_LATENCY]);
-+	ret = misc_register(&cpu_latency_qos_miscdev);
- 	if (ret < 0)
- 		pr_err("%s: %s setup failed\n", __func__,
--		       pm_qos_array[PM_QOS_CPU_DMA_LATENCY]->name);
-+		       cpu_latency_qos_miscdev.name);
- 
- 	return ret;
- }
++module_driver(acpi_tiny_power_button_driver,
++		acpi_bus_register_driver,
++		acpi_bus_unregister_driver);
 -- 
-2.16.4
-
-
-
-
+2.25.0
 
