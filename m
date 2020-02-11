@@ -2,98 +2,81 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20894C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D242BC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE89220848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9958120848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s2Qm4CYl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yRb8+/31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgBKRbu (ORCPT
+        id S1729521AbgBKRcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:31:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47678 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729132AbgBKRbt (ORCPT
+        Tue, 11 Feb 2020 12:32:03 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:52116 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbgBKRcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:31:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=4o9PB9m+IrGK3QGZcB85cx3hPfCNyy1f4QLXCxJ20so=; b=s2Qm4CYlmVLrKiJ3B5meGqaMuw
-        iYaWQtUPnnBkS/wk9a9oLvTi/TcaSPyxSTleSDGPh2MfUqmAXwlUAHRZlkEnBuOX/+fdKRgZxDc8d
-        O8M84kaEeeSMsHwHl6tYMd0i4UXW6GdNIX2v9vmUSmIGr/dogFqJlHqJO2CskamMZpIXDEAaotHFU
-        CjBssQegvOGv8spzKEIIfbmmi6SahH83wZTjwPBIlRfvnhtt5eVCzoCOyLu0+dNQuPolRLyam6l1F
-        nqmABq7IbMaQInJ0yBq4aOnU18cYNuwYcQ3WuWuw67VTNC8w5VTVWfoyRcrnrwe6uLnaU1ewokZ1q
-        TqlHpoJg==;
-Received: from [2603:3004:32:9a00::c450]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1ZNz-0001g0-7U; Tue, 11 Feb 2020 17:31:47 +0000
-Subject: Re: [PATCH 01/24] user_namespace: introduce fsid mappings
- infrastructure
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
-Cc:     smbarber@chromium.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
- <20200211165753.356508-2-christian.brauner@ubuntu.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <25217d8b-f3e9-7362-e3d9-d8c37bf39558@infradead.org>
-Date:   Tue, 11 Feb 2020 09:26:17 -0800
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 12:32:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581442322; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=repdNbTnvNyihZR5giRVucEDG3b0naplUOtLwuModh0=;
+        b=yRb8+/31bMmrAPPCBKhT/7KIotyo4Yux58c2CBcNkxcaluCL9F4YJy5Ge1EiwRKpF7HpGf
+        +gNsrIMrii+X2GYnJ1jDSgfIksGrHRQJ4cM8/hmDg1oJYOuCBsJLMUqA6ej+C8SnR/mWCb
+        vZy37oEaIjmi7JkA94PxjWimZx8/6Lc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc:     od@zcrc.me, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] mtd: rawnand: ingenic: Use devm_platform_ioremap_resource()
+Date:   Tue, 11 Feb 2020 14:31:51 -0300
+Message-Id: <20200211173151.27587-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20200211165753.356508-2-christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 8:57 AM, Christian Brauner wrote:
-> diff --git a/init/Kconfig b/init/Kconfig
-> index a34064a031a5..4da082e4f787 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1102,6 +1102,17 @@ config USER_NS
->  
->  	  If unsure, say N.
->  
-> +config USER_NS_FSID
-> +	bool "User namespace fsid mappings"
-> +	depends on USER_NS
-> +	default n
-> +	help
-> +	  This allows containers, to alter their filesystem id mappings.
+Use devm_platform_ioremap_resource() instead of platform_get_resource()
++ devm_ioremap_resource().
 
-                   no comma   ^^^^
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/mtd/nand/raw/ingenic/ingenic_ecc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> +	  With this containers with different id mappings can still share
-> +	  the same filesystem.
-> +
-> +	  If unsure, say N.
-> +
->  config PID_NS
->  	bool "PID Namespaces"
->  	default y
-
-
+diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+index c954189606f6..8e22cd6ec71f 100644
+--- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
++++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+@@ -124,7 +124,6 @@ int ingenic_ecc_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct ingenic_ecc *ecc;
+-	struct resource *res;
+ 
+ 	ecc = devm_kzalloc(dev, sizeof(*ecc), GFP_KERNEL);
+ 	if (!ecc)
+@@ -134,8 +133,7 @@ int ingenic_ecc_probe(struct platform_device *pdev)
+ 	if (!ecc->ops)
+ 		return -EINVAL;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	ecc->base = devm_ioremap_resource(dev, res);
++	ecc->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(ecc->base))
+ 		return PTR_ERR(ecc->base);
+ 
 -- 
-~Randy
+2.25.0
+
