@@ -5,30 +5,30 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7153EC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E12C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4685420714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E9820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="w08LqxD5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="BfvKwi6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbgBKVOV (ORCPT
+        id S1731947AbgBKVOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:14:21 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.163]:15535 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729759AbgBKVOS (ORCPT
+        Tue, 11 Feb 2020 16:14:50 -0500
+Received: from gateway23.websitewelcome.com ([192.185.50.129]:45160 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730074AbgBKVOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:14:18 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id D6AEEB3B0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:45:21 -0600 (CST)
+        Tue, 11 Feb 2020 16:14:50 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id F17A05AAD
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:14:48 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 1cPIjhFyfAGTX1cPIjteUK; Tue, 11 Feb 2020 14:45:20 -0600
+        id 1croj7keFEfyq1crojHinV; Tue, 11 Feb 2020 15:14:48 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=efFfxVn8Jb7KD27vuCCDwjZQRJzIwoCIi3Vzmh6cNFE=; b=w08LqxD5luSX2N4SRteiaVp4oW
-        gSISNaLG49i17JIKLbyLAAiJssaXB5sYAzltOBV7x0KjfBGhmCZzD427tzobAeC/FhMLxYMS0jscM
-        /qtmE4nphazCw6n1fxbGP9kYVohxR29NTME8+qoeqOCB2qG3GLZOu6Ij2V+Zlr6ELtGkB0PzY7rW0
-        AyDjUUr6GYiSmKQbPVJEecawdyy5Fc7ASVYtttQob2ofhdt9IBTdkxeUBeZ4w5lcUfs3MuxtIHLsR
-        M1S21lGZF4X83AoduO1ulSVd3NRn+hyzAL2wb1Xg+L77P/o+q4D1GXg9bhE6RHxd5t9lpco0Bb9oZ
-        r8cOSDeA==;
-Received: from [200.68.140.36] (port=23001 helo=embeddedor)
+        bh=UxXLm2e5tI+unjVCZMlCPtSbwk/EQxrDUm9dV5vSwYM=; b=BfvKwi6nIvn6jAS8xL4I+BfQ6A
+        Kt6HICeS/cN87mOJIZoWN8ukUE5bGFgZSZBBI6+OQYoQjyzK2ACiXNfK1uUR274QfOJmW2wIjMXID
+        sp7gWOqOXPw2kC6komMHMfPjSxa6ml6jF/fMDHGJ0OhveAEoKOa9IRwsAS7HTipkkxi/F0k1xQpmF
+        xS6WZsU9yBunn/lSUyrU9jYM6DzNixC4UFQCJjhqHxhnEeiswnHOWEJMV+TvRA9c/6fgLWu7KEP5c
+        VNZ3P5NIWBwsvnbObFajjtKjS/pTR/G5PbXibcqOGAfpoi0ohorhBDnIR9DMuhJbX3DqY5UEZ1WkN
+        dOuzA3mg==;
+Received: from [200.68.140.36] (port=21551 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j1cPH-001tlJ-FQ; Tue, 11 Feb 2020 14:45:19 -0600
-Date:   Tue, 11 Feb 2020 14:47:54 -0600
+        id 1j1crn-002Eb7-GS; Tue, 11 Feb 2020 15:14:47 -0600
+Date:   Tue, 11 Feb 2020 15:17:22 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     David Kershner <david.kershner@unisys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     sparmaintainer@unisys.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] leds: is31fl32xx: Replace zero-length array with
+Subject: [PATCH] staging: unisys: visorinput: Replace zero-length array with
  flexible-array member
-Message-ID: <20200211204754.GA19451@embeddedor>
+Message-ID: <20200211211722.GA1640@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,11 +68,11 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.140.36
 X-Source-L: No
-X-Exim-ID: 1j1cPH-001tlJ-FQ
+X-Exim-ID: 1j1crn-002Eb7-GS
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:23001
+X-Source-Sender: (embeddedor) [200.68.140.36]:21551
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 33
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
@@ -104,22 +105,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/leds/leds-is31fl32xx.c | 2 +-
+ drivers/staging/unisys/visorinput/visorinput.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-is31fl32xx.c b/drivers/leds/leds-is31fl32xx.c
-index 31a9d749c8be..67032a799860 100644
---- a/drivers/leds/leds-is31fl32xx.c
-+++ b/drivers/leds/leds-is31fl32xx.c
-@@ -48,7 +48,7 @@ struct is31fl32xx_priv {
- 	const struct is31fl32xx_chipdef *cdef;
- 	struct i2c_client *client;
- 	unsigned int num_leds;
--	struct is31fl32xx_led_data leds[0];
-+	struct is31fl32xx_led_data leds[];
+diff --git a/drivers/staging/unisys/visorinput/visorinput.c b/drivers/staging/unisys/visorinput/visorinput.c
+index 9693fb559052..6d202cba8575 100644
+--- a/drivers/staging/unisys/visorinput/visorinput.c
++++ b/drivers/staging/unisys/visorinput/visorinput.c
+@@ -111,7 +111,7 @@ struct visorinput_devdata {
+ 	/* size of following array */
+ 	unsigned int keycode_table_bytes;
+ 	/* for keyboard devices: visorkbd_keycode[] + visorkbd_ext_keycode[] */
+-	unsigned char keycode_table[0];
++	unsigned char keycode_table[];
  };
  
- /**
+ static const guid_t visor_keyboard_channel_guid = VISOR_KEYBOARD_CHANNEL_GUID;
 -- 
 2.25.0
 
