@@ -2,32 +2,32 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A6C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A0FC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF552070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84B92082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbgBKQQ0 (ORCPT
+        id S1730765AbgBKQQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 11 Feb 2020 11:16:26 -0500
 Received: from mga09.intel.com ([134.134.136.24]:16669 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729335AbgBKQQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:16:25 -0500
+        id S1729560AbgBKQQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:16:26 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:15:55 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:15:59 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="266309574"
+   d="scan'208";a="266309611"
 Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Feb 2020 08:15:49 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 11 Feb 2020 08:15:55 -0800
 From:   roman.sudarikov@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
@@ -36,10 +36,12 @@ To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
         gregkh@linuxfoundation.org
 Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v5 0/3] perf x86: Exposing IO stack to IO PMON mapping through sysfs
-Date:   Tue, 11 Feb 2020 19:15:46 +0300
-Message-Id: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
+Subject: [PATCH v5 1/3] perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
+Date:   Tue, 11 Feb 2020 19:15:47 +0300
+Message-Id: <20200211161549.19828-2-roman.sudarikov@linux.intel.com>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
+References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -49,46 +51,6 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-
-The previous version can be found at:
-v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
-
-Changes in this revision are:
-v4 -> v5:
-- Addressed comments from Greg Kroah-Hartman:
-  1. Using the attr_update flow for newly introduced optional attributes
-  2. No subfolder, optional attributes are created the same level as 'cpumask'
-  3. No symlinks, optional attributes are created as files
-  4. Single file for each IIO PMON block to node mapping
-  5. Added Documentation/ABI/sysfs-devices-mapping
-
-The previous version can be found at:
-v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
-
-Changes in this revision are:
-v3 -> v4:
-- Addressed comments from Greg Kroah-Hartman:
-  1. Reworked handling of newly introduced attribute.
-  2. Required Documentation update is expected in the follow up patchset
-
-
-The previous version can be found at:
-v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
-
-Changes in this revision are:
-v2 -> v3:
-  1. Addressed comments from Peter and Kan
-
-The previous version can be found at:
-v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
-
-Changes in this revision are:
-v1 -> v2:
-  1. Fixed process related issues;
-  2. This patch set includes kernel support for IIO stack to PMON mapping;
-  3. Stephane raised concerns regarding output format which may require
-code changes in the user space part of the feature only. We will continue
-output format discussion in the context of user space update.
 
 Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
 significant changes in the integrated I/O (IIO) architecture. The new
@@ -108,93 +70,83 @@ IO device is connected to, or to identify an IIO PMON block to program
 for monitoring specific IIO stack assumes a lot of implicit knowledge
 about given Intel server platform architecture.
 
-This patch set introduces:
-1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
-   through sysfs-backend;
-2. A new --iiostat mode in perf stat to provide I/O performance metrics
-   per I/O device.
+Usage example:
+    ls /sys/devices/uncore_<type>_<pmu_idx>/node*
 
-Usage examples:
+Each Uncore unit type, by its nature, can be mapped to its own context,
+for example:
+1. CHA - each uncore_cha_<pmu_idx> is assigned to manage a distinct slice
+   of LLC capacity;
+2. UPI - each uncore_upi_<pmu_idx> is assigned to manage one link of Intel
+   UPI Subsystem;
+3. IIO - each uncore_iio_<pmu_idx> is assigned to manage one stack of the
+   IIO module;
+4. IMC - each uncore_imc_<pmu_idx> is assigned to manage one channel of
+   Memory Controller.
 
-1. List all devices below IIO stacks
-  ./perf stat --iiostat=show
+Implementation details:
+Optional callback added to struct intel_uncore_type to discover and map
+Uncore units to PMONs:
+    int (*set_mapping)(struct intel_uncore_type *type)
 
-Sample output w/o libpci:
+Details of IIO Uncore unit mapping to IIO PMON:
+Each IIO stack is either DMI port, x16 PCIe root port, MCP-Link or various
+built-in accelerators. For Uncore IIO Unit type, the mapping file
+holds bus numbers of devices, which can be monitored by that IIO PMON block
+on each die.
 
-    S0-RootPort0-uncore_iio_0<00:00.0>
-    S1-RootPort0-uncore_iio_0<81:00.0>
-    S0-RootPort1-uncore_iio_1<18:00.0>
-    S1-RootPort1-uncore_iio_1<86:00.0>
-    S1-RootPort1-uncore_iio_1<88:00.0>
-    S0-RootPort2-uncore_iio_2<3d:00.0>
-    S1-RootPort2-uncore_iio_2<af:00.0>
-    S1-RootPort3-uncore_iio_3<da:00.0>
+Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
+Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
+Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+---
+ arch/x86/events/intel/uncore.c | 5 +++++
+ arch/x86/events/intel/uncore.h | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-Sample output with libpci:
-
-    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
-    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
-    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
-    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
-    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
-    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
-    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
-    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
-
-2. Collect metrics for all I/O devices below IIO stack
-
-  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
-    357708+0 records in
-    357707+0 records out
-    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
-
-  Performance counter stats for 'system wide':
-
-     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
-    00:00.0                    0                    0                    0                    0
-    81:00.0                    0                    0                    0                    0
-    18:00.0                    0                    0                    0                    0
-    86:00.0                    0                    0                    0                    0
-    88:00.0                    0                    0                    0                    0
-    3b:00.0                    3                    0                    0                    0
-    3c:03.0                    3                    0                    0                    0
-    3d:00.0                    3                    0                    0                    0
-    af:00.0                    0                    0                    0                    0
-    da:00.0               358559                   44                    0                   22
-
-    215.383783574 seconds time elapsed
-
-
-3. Collect metrics for comma separted list of I/O devices
-
-  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
-    381555+0 records in
-    381554+0 records out
-    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
-
-  Performance counter stats for 'system wide':
-
-     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
-    da:00.0               382462                   47                    0                   23
-
-    374.045775505 seconds time elapsed
-
-
-Roman Sudarikov (3):
-  perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
-  perf x86: topology max dies for whole system
-  perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
-    platform
-
- .../ABI/testing/sysfs-devices-mapping         |  32 +++
- arch/x86/events/intel/uncore.c                |  18 +-
- arch/x86/events/intel/uncore.h                |   8 +
- arch/x86/events/intel/uncore_snbep.c          | 183 ++++++++++++++++++
- 4 files changed, 235 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
-
-
-base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 86467f85c383..98ab8539f126 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -843,10 +843,12 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
+ 			.read		= uncore_pmu_event_read,
+ 			.module		= THIS_MODULE,
+ 			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++			.attr_update	= pmu->type->attr_update,
+ 		};
+ 	} else {
+ 		pmu->pmu = *pmu->type->pmu;
+ 		pmu->pmu.attr_groups = pmu->type->attr_groups;
++		pmu->pmu.attr_update = pmu->type->attr_update;
+ 	}
+ 
+ 	if (pmu->type->num_boxes == 1) {
+@@ -954,6 +956,9 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
+ 
+ 	type->pmu_group = &uncore_pmu_attr_group;
+ 
++	if (type->set_mapping)
++		type->set_mapping(type);
++
+ 	return 0;
+ 
+ err:
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index bbfdaa720b45..8821f35e32f0 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -72,7 +72,12 @@ struct intel_uncore_type {
+ 	struct uncore_event_desc *event_descs;
+ 	struct freerunning_counters *freerunning;
+ 	const struct attribute_group *attr_groups[4];
++	const struct attribute_group **attr_update;
+ 	struct pmu *pmu; /* for custom pmu ops */
++	/* PMON's topologies */
++	u64 *topology;
++	/* mapping Uncore units to PMON ranges */
++	int (*set_mapping)(struct intel_uncore_type *type);
+ };
+ 
+ #define pmu_group attr_groups[0]
 -- 
 2.19.1
 
