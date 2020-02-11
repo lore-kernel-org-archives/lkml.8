@@ -2,215 +2,110 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F459C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8999CC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD40206ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="kqdtvxhh"
+	by mail.kernel.org (Postfix) with ESMTP id 6780D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgBKNxE (ORCPT
+        id S1729424AbgBKNxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:53:04 -0500
-Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:44190
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728667AbgBKNxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EshxchXTKH3ds93rmGnQKXGCvqr8gweZKE0IQ3GJXObAQoxICUSgHR/p8I4wjO9Alr/VQyFJ/wKDB9ByXlOJue8Qj4E+Ql4cDKKG9xriUnuO0eocQNs7W9o0eoasj5L3ZMKXkYr9RtG7wAetgXxpU4ftzlZowEjtkq8DNs1JRzxMREvgh/LppAGUv+Ogtlsvh7z7nv2zv6GUFWhlpSN9ISBzghZRVDckkMOItO4k75ZcGjsyRkki9rabBnf5SdJ2PHZs6rkFyU8TwGfdDraeAtmw74UXVkky7ZEUKt8KwUIMfAZSzcP3UG6lAFT9C1zYWxFwVOPlQ4iSkp7tHC7F8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2xekAfWSUqKcsRF4SHFOZ9dF34JQif76dyAouZKEWRM=;
- b=FOCe9L4Ud492pV841PQXpIo27vYx8VAr6ZrNXId8J4JFHvu3RiNqzTzAOBe2eyCI4KhmHWr0wKCPUB2nxV0cUpcUJSq8pRrpe/B6uYuDiLIhamNWb7QnnKRnT8kUiT4MKYXxs1PmyazyjnZdMfiAna1sym65ct6NlrTjdFAGd7WRda6fC8sGzEhkpRF3JLjPp9zFTZNkrPpO/c0YKPcEAe5wd4ZGRGk1HIpSnbB6VteNm6T/OQmj6qEmplYDPehDe8YyFAcHrU2Ge+FgVfAGdxbxetzeS9TRNlwJOh1oPdSPtdLlgCCMTNyrYfWG/T6ZXo0WQbu5rHJCdtW3pDHTBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2xekAfWSUqKcsRF4SHFOZ9dF34JQif76dyAouZKEWRM=;
- b=kqdtvxhhxDAbb0+bPDOCTAJamF7zZmePfhyzFhQeoNIgqfHNTuicAhj/lQOt0xY7Kb+GXqd4fCcX1OJBfqj5KEIwF9+kynAXxsX7BlMzxkjyVLg2MNcGMq0Celp+VhCCPWy/SNjVJdaLF/csP19JJ00dQ/5T4XmLzvKe538ezlU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5743.eurprd05.prod.outlook.com (20.178.121.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.25; Tue, 11 Feb 2020 13:52:59 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 13:52:59 +0000
-Date:   Tue, 11 Feb 2020 09:52:54 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
-Subject: Re: [PATCH V2 5/5] vdpasim: vDPA device simulator
-Message-ID: <20200211135254.GJ4271@mellanox.com>
-References: <20200210035608.10002-1-jasowang@redhat.com>
- <20200210035608.10002-6-jasowang@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210035608.10002-6-jasowang@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR0102CA0047.prod.exchangelabs.com
- (2603:10b6:208:25::24) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR0102CA0047.prod.exchangelabs.com (2603:10b6:208:25::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.24 via Frontend Transport; Tue, 11 Feb 2020 13:52:58 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j1VyA-0005R4-Dz; Tue, 11 Feb 2020 09:52:54 -0400
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: fbcf6dbb-8488-44d3-617a-08d7aef9b3b5
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5743:|VI1PR05MB5743:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB57432D71BE187D1882B9883DCF180@VI1PR05MB5743.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-Forefront-PRVS: 0310C78181
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(189003)(199004)(26005)(478600001)(86362001)(186003)(81166006)(8936002)(8676002)(81156014)(9786002)(9746002)(2906002)(4326008)(36756003)(2616005)(66946007)(1076003)(66556008)(33656002)(6916009)(316002)(52116002)(7416002)(5660300002)(66476007)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5743;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yczaXlOIs4IEaACaqiO2BNAAn0vQy8qUxi2Cr+452NUypT7nzmxIIEdwz9GGN69asD2esvqvtwOOy8rcogRBP7PDqVgircu0jylmCh62VlVLVaZQrfulJKnfFl0n3tfzMpQPyv1Mx/7Hp+qFeSPx36VZQfa4NlG9NSJONEWTpRTW8895dv6KTz662niPDdgvn7aEpN9feIleyGiCSei11xKNNORNkhw5k5aYRizc1uTwhqdt5syJ6ZWn7K/VmAJJoFAWI7MsEldDVlMIenk7Glz4/heatg08RO8zBpo2u+aADasyX+scLEjqZVpvzN0PZ12SAONvqx9gmdoH44aNe88sYzq9dRv6PZTR5vpnMFAEUxvPne444HixNFrS8T79kEWgrVFdBiW0+b0uAcwZf/zHe9K3KBOH2OIWMZzMcLxWhDub+OcOVdT5DUl6l1yWCmrvtCWYE87VGtZ6NbdnSC61F7l/UEammNN/PCepfxykxWTQv/Q1snSjOWcWeBb/
-X-MS-Exchange-AntiSpam-MessageData: kGFw4FR6jwbjhYs8rOTGWFz/Lf/0rSpOB/RJ2d5UqXuYEyvajMn+6ePKGfCIr2wEKMztruDWAYq2gvGjd/Drvgo9bRK/RPKAMIgVePCOZkkrc+AI9OaNb0XpGxzG5C3khw/xz+TxKBOhPGT9/HtdUg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbcf6dbb-8488-44d3-617a-08d7aef9b3b5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 13:52:59.1077
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: te/Ask29lgHgyp91igJGRk12hf9VkzuNF0BdCmHkG/64rzMkUuM/APy53eiQK0PN9FDVseKB/yemjVb8/wzIhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5743
+        Tue, 11 Feb 2020 08:53:11 -0500
+Received: from 8bytes.org ([81.169.241.247]:51838 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729391AbgBKNxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:10 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id B05E650C; Tue, 11 Feb 2020 14:53:07 +0100 (CET)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 03/62] x86/cpufeatures: Add SEV-ES CPU feature
+Date:   Tue, 11 Feb 2020 14:51:57 +0100
+Message-Id: <20200211135256.24617-4-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
+References: <20200211135256.24617-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 11:56:08AM +0800, Jason Wang wrote:
-> +
-> +static struct vdpasim *vdpasim_create(void)
-> +{
-> +	struct vdpasim *vdpasim;
-> +	struct virtio_net_config *config;
-> +	struct vdpa_device *vdpa;
-> +	struct device *dev;
-> +	int ret = -ENOMEM;
-> +
-> +	vdpasim = kzalloc(sizeof(*vdpasim), GFP_KERNEL);
-> +	if (!vdpasim)
-> +		goto err_vdpa_alloc;
-> +
-> +	vdpasim->buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> +	if (!vdpasim->buffer)
-> +		goto err_buffer_alloc;
-> +
-> +	vdpasim->iommu = vhost_iotlb_alloc(2048, 0);
-> +	if (!vdpasim->iommu)
-> +		goto err_iotlb;
-> +
-> +	config = &vdpasim->config;
-> +	config->mtu = 1500;
-> +	config->status = VIRTIO_NET_S_LINK_UP;
-> +	eth_random_addr(config->mac);
-> +
-> +	INIT_WORK(&vdpasim->work, vdpasim_work);
-> +	spin_lock_init(&vdpasim->lock);
-> +
-> +	vdpa = &vdpasim->vdpa;
-> +	vdpa->dev.release = vdpasim_release_dev;
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-The driver should not provide the release function.
+Add CPU feature detection for Secure Encrypted Virtualization with
+Encrypted State. This feature enhances SEV by also encrypting the
+guest register state, making it in-accessible to the hypervisor.
 
-Again the safest model is 'vdpa_alloc_device' which combines the
-kzalloc and the vdpa_init_device() and returns something that is
-error unwound with put_device()
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/amd.c          | 4 +++-
+ arch/x86/kernel/cpu/scattered.c    | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-The subsystem owns the release and does the kfree and other cleanup
-like releasing the IDA.
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index f3327cb56edf..26e4ee209f7b 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -285,6 +285,7 @@
+ #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
+ #define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
+ #define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
++#define X86_FEATURE_SEV_ES		(11*32+ 6) /* AMD Secure Encrypted Virtualization - Encrypted State */
+ 
+ /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
+ #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index ac83a0fef628..aad2223862ef 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -580,7 +580,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 	 *	      If BIOS has not enabled SME then don't advertise the
+ 	 *	      SME feature (set in scattered.c).
+ 	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
+-	 *            SEV feature (set in scattered.c).
++	 *            SEV and SEV_ES feature (set in scattered.c).
+ 	 *
+ 	 *   In all cases, since support for SME and SEV requires long mode,
+ 	 *   don't advertise the feature under CONFIG_X86_32.
+@@ -611,6 +611,8 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 		setup_clear_cpu_cap(X86_FEATURE_SME);
+ clear_sev:
+ 		setup_clear_cpu_cap(X86_FEATURE_SEV);
++		setup_clear_cpu_cap(X86_FEATURE_SEV);
++		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
+ 	}
+ }
+ 
+diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+index 62b137c3c97a..30f354989cf1 100644
+--- a/arch/x86/kernel/cpu/scattered.c
++++ b/arch/x86/kernel/cpu/scattered.c
+@@ -41,6 +41,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+ 	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
+ 	{ X86_FEATURE_SME,		CPUID_EAX,  0, 0x8000001f, 0 },
+ 	{ X86_FEATURE_SEV,		CPUID_EAX,  1, 0x8000001f, 0 },
++	{ X86_FEATURE_SEV_ES,		CPUID_EAX,  3, 0x8000001f, 0 },
+ 	{ 0, 0, 0, 0, 0 }
+ };
+ 
+-- 
+2.17.1
 
-> +	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
-> +	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
-> +
-> +	dev = &vdpa->dev;
-> +	dev->coherent_dma_mask = DMA_BIT_MASK(64);
-> +	set_dma_ops(dev, &vdpasim_dma_ops);
-> +
-> +	ret = vdpa_init_device(vdpa, &vdpasim_dev->dev, dev,
-> +			       &vdpasim_net_config_ops);
-> +	if (ret)
-> +		goto err_init;
-> +
-> +	ret = vdpa_register_device(vdpa);
-> +	if (ret)
-> +		goto err_register;
-
-See? This error unwind is now all wrong:
-
-> +
-> +	return vdpasim;
-> +
-> +err_register:
-> +	put_device(&vdpa->dev);
-
-Double put_device
-
-> +err_init:
-> +	vhost_iotlb_free(vdpasim->iommu);
-> +err_iotlb:
-> +	kfree(vdpasim->buffer);
-> +err_buffer_alloc:
-> +	kfree(vdpasim);
-
-kfree after vdpa_init_device() is incorrect, as the put_device now
-does kfree via release
-
-> +static int __init vdpasim_dev_init(void)
-> +{
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	vdpasim_dev = kzalloc(sizeof(*vdpasim_dev), GFP_KERNEL);
-> +	if (!vdpasim_dev)
-> +		return -ENOMEM;
-> +
-> +	dev = &vdpasim_dev->dev;
-> +	dev->release = vdpasim_device_release;
-> +	dev_set_name(dev, "%s", VDPASIM_NAME);
-> +
-> +	ret = device_register(&vdpasim_dev->dev);
-> +	if (ret)
-> +		goto err_register;
-> +
-> +	if (!vdpasim_create())
-> +		goto err_register;
-
-Wrong error unwind here too
-
-> +	return 0;
-> +
-> +err_register:
-> +	kfree(vdpasim_dev);
-> +	vdpasim_dev = NULL;
-> +	return ret;
-> +}
-
-Jason
