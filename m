@@ -2,249 +2,100 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A84C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E33FC3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF54B20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CF320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ieDwTSX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgBKKYL (ORCPT
+        id S1728354AbgBKKYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:24:11 -0500
-Received: from mga01.intel.com ([192.55.52.88]:22872 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727840AbgBKKYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 05:24:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 02:24:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="221888988"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by orsmga007.jf.intel.com with ESMTP; 11 Feb 2020 02:24:07 -0800
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     alex.williamson@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [RFC PATCH v3 7/9] samples/vfio-pci: add a sample vendor module of vfio-pci for IGD devices
-Date:   Tue, 11 Feb 2020 05:14:47 -0500
-Message-Id: <20200211101447.21137-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200211095727.20426-1-yan.y.zhao@intel.com>
-References: <20200211095727.20426-1-yan.y.zhao@intel.com>
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56092 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728236AbgBKKYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:24:10 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BAO3JI080604;
+        Tue, 11 Feb 2020 04:24:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581416643;
+        bh=IT0XtP14rOcxVvIjEkJLAVhnV8MbpGdBDYqA20Ogvvg=;
+        h=To:CC:From:Subject:Date;
+        b=ieDwTSX3jBi/zU1u4phaOZr/3Ii8HGFTXg5HGFMr7ljayvLceHG8Ur/umMkvypjRh
+         QAQk97bS+itM9Sg0T+qBvIFm/dBtzumU10HinzZarwXkKrmUxTzv/JcfNi8oIXIkIW
+         SvftF7u0/x73WxmsKAgW8ob+31xkdvsU5ZvYCsdk=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BAO2kT021354;
+        Tue, 11 Feb 2020 04:24:03 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
+ Feb 2020 04:24:02 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 11 Feb 2020 04:24:03 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BAO08Y044972;
+        Tue, 11 Feb 2020 04:24:01 -0600
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>
+CC:     <linux-rt-users@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Question about kthread_mod_delayed_work() allowed context
+Message-ID: <cfa886ad-e3b7-c0d2-3ff8-58d94170eab5@ti.com>
+Date:   Tue, 11 Feb 2020 12:23:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sample driver does nothing but calls default device ops of vfio-pci
-to pass through IGD devices.
+Hi All,
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- samples/Kconfig           |   6 ++
- samples/Makefile          |   1 +
- samples/vfio-pci/Makefile |   2 +
- samples/vfio-pci/igd_pt.c | 148 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 157 insertions(+)
- create mode 100644 samples/vfio-pci/Makefile
- create mode 100644 samples/vfio-pci/igd_pt.c
+I'd like to ask question about allowed calling context for kthread_mod_delayed_work().
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index c8dacb4dda80..84d6a91567af 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -169,4 +169,10 @@ config SAMPLE_VFS
- 	  as mount API and statx().  Note that this is restricted to the x86
- 	  arch whilst it accesses system calls that aren't yet in all arches.
- 
-+config SAMPLE_VFIO_PCI_IGD_PT
-+	tristate "Build VFIO sample vendor driver to pass through IGD devices -- loadable modules only"
-+	depends on VFIO_PCI && m
-+	help
-+	  Build a sample driver to pass through IGD devices as a vendor driver
-+	  of VFIO PCI.
- endif # SAMPLES
-diff --git a/samples/Makefile b/samples/Makefile
-index 7d6e4ca28d69..db56daf3a11c 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -19,4 +19,5 @@ obj-$(CONFIG_SAMPLE_TRACE_EVENTS)	+= trace_events/
- obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
- obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
- obj-y					+= vfio-mdev/
-+obj-y					+= vfio-pci/
- subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
-diff --git a/samples/vfio-pci/Makefile b/samples/vfio-pci/Makefile
-new file mode 100644
-index 000000000000..7125f0a325c2
---- /dev/null
-+++ b/samples/vfio-pci/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_SAMPLE_VFIO_PCI_IGD_PT) += igd_pt.o
-diff --git a/samples/vfio-pci/igd_pt.c b/samples/vfio-pci/igd_pt.c
-new file mode 100644
-index 000000000000..45acbd1ad2fb
---- /dev/null
-+++ b/samples/vfio-pci/igd_pt.c
-@@ -0,0 +1,148 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Pass through IGD devices as a vendor driver of vfio-pci device driver
-+ * Copyright(c) 2019 Intel Corporation.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/vfio.h>
-+#include <linux/sysfs.h>
-+#include <linux/file.h>
-+#include <linux/pci.h>
-+#include <linux/eventfd.h>
-+
-+#define VERSION_STRING  "0.1"
-+#define DRIVER_AUTHOR   "Intel Corporation"
-+
-+/*
-+ * below are pciids of IGD devices supported in this driver
-+ */
-+static const struct pci_device_id pciidlist[] = {
-+	{0x8086, 0x5927, ~0, ~0, 0x30000, 0xff0000, 0},
-+	{0x8086, 0x591d, ~0, ~0, 0x30000, 0xff0000, 0},
-+	{0x8086, 0x193b, ~0, ~0, 0x30000, 0xff0000, 0},
-+};
-+
-+struct igd_pt_device {
-+	__u32 vendor;
-+	__u32 device;
-+
-+};
-+
-+void *igd_pt_probe(struct pci_dev *pdev)
-+{
-+	int supported_dev_cnt =
-+		sizeof(pciidlist)/sizeof(struct pci_device_id);
-+	int i;
-+	struct igd_pt_device *igd_device;
-+
-+	for (i = 0; i < supported_dev_cnt; i++) {
-+		if (pciidlist[i].vendor == pdev->vendor &&
-+				pciidlist[i].device == pdev->device)
-+			goto support;
-+	}
-+
-+	return ERR_PTR(-ENODEV);
-+
-+support:
-+
-+	igd_device = kzalloc(sizeof(*igd_device), GFP_KERNEL);
-+
-+	if (!igd_device)
-+		return ERR_PTR(-ENOMEM);
-+
-+	igd_device->vendor = pdev->vendor;
-+	igd_device->device = pdev->device;
-+
-+	return igd_device;
-+}
-+
-+static void igd_pt_remove(void *vendor_data)
-+{
-+	struct igd_pt_device *igd_device =
-+		(struct igd_pt_device *)vendor_data;
-+
-+	kfree(igd_device);
-+}
-+
-+static int igd_pt_open(void *device_data)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	return vfio_pci_open(vdev);
-+}
-+
-+void igd_pt_release(void *device_data)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	vfio_pci_release(vdev);
-+}
-+
-+static long igd_pt_ioctl(void *device_data,
-+			 unsigned int cmd, unsigned long arg)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	return vfio_pci_ioctl(vdev, cmd, arg);
-+}
-+
-+static ssize_t igd_pt_read(void *device_data, char __user *buf,
-+			     size_t count, loff_t *ppos)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	return vfio_pci_read(vdev, buf, count, ppos);
-+}
-+
-+static ssize_t igd_pt_write(void *device_data, const char __user *buf,
-+			    size_t count, loff_t *ppos)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	return vfio_pci_write(vdev, buf, count, ppos);
-+}
-+
-+static int igd_pt_mmap(void *device_data, struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	return vfio_pci_mmap(vdev, vma);
-+}
-+
-+static void igd_pt_request(void *device_data, unsigned int count)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	vfio_pci_request(vdev, count);
-+}
-+
-+static struct vfio_device_ops igd_pt_device_ops_node = {
-+	.name		= "IGD dt",
-+	.open		= igd_pt_open,
-+	.release	= igd_pt_release,
-+	.ioctl		= igd_pt_ioctl,
-+	.read		= igd_pt_read,
-+	.write		= igd_pt_write,
-+	.mmap		= igd_pt_mmap,
-+	.request	= igd_pt_request,
-+};
-+
-+#define igd_pt_device_ops (&igd_pt_device_ops_node)
-+
-+module_vfio_pci_register_vendor_handler("IGD dt", igd_pt_probe,
-+					igd_pt_remove, igd_pt_device_ops);
-+
-+MODULE_ALIAS("vfio-pci:8086-591d");
-+MODULE_ALIAS("vfio-pci:8086-5927");
-+MODULE_LICENSE("GPL v2");
-+MODULE_INFO(supported, "Sample driver as vendor driver of vfio-pci to pass through IGD");
-+MODULE_VERSION(VERSION_STRING);
-+MODULE_AUTHOR(DRIVER_AUTHOR);
+The comment to kthread_mod_delayed_work() says:
+
+  * This function is safe to call from any context including IRQ handler.
+  * See __kthread_cancel_work() and kthread_delayed_work_timer_fn()
+  * for details.
+  */
+
+But it has del_timer_sync() inside which seems can't be called from hard_irq context:
+kthread_mod_delayed_work()
+   |-__kthread_cancel_work()
+      |- del_timer_sync()
+	|- WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
+
+My use case is related to PTP processing using PTP auxiliary worker:
+(commit d9535cb7b760 ("ptp: introduce ptp auxiliary worker")):
+  - periodic work A is started and res-schedules itself for every dtX
+  - on IRQ - the work A need to be scheduled immediately
+
+Any advice on how to proceed?
+Can kthread_queue_work() be used even if there is delayed work is
+scheduled already (in general, don't care if work A will be executed one
+more time after timer expiration)?
+
 -- 
-2.17.1
-
+Best regards,
+grygorii
