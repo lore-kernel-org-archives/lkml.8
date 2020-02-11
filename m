@@ -2,234 +2,209 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC55AC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6BDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8193A20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1802086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581439679;
+	bh=RjluxV/dumLEz6tGtwJt2Y/sWFfGURODQzYUETMkLOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yUAzGjT6q6aZgWSyUuBcnlfEBg0K40hoElgR0UfyQ3qugneTcMeV25iBrBfl2lFWC
+	 kAQ1VzbsGLWPp+t0SVScRHLrtf09fwnafOhV9ciR4KHZoKtoQftBizyGBH8GBAj3Sh
+	 auElwAPqEfHTF2fwrW/MiTzDRMTybrxFGvwKOso8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbgBKQqb (ORCPT
+        id S1730874AbgBKQr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:46:31 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53703 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbgBKQqb (ORCPT
+        Tue, 11 Feb 2020 11:47:58 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39803 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgBKQr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:46:31 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1Yg6-0000K1-Ao; Tue, 11 Feb 2020 17:46:26 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1Yg5-0003S6-KS; Tue, 11 Feb 2020 17:46:25 +0100
-Date:   Tue, 11 Feb 2020 17:46:25 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v3 1/3] pwm: jz4740: Use clocks from TCU driver
-Message-ID: <20200211164625.2z4i5w6gp23eiszx@pengutronix.de>
-References: <20191210152734.39588-1-paul@crapouillou.net>
+        Tue, 11 Feb 2020 11:47:58 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c84so4418455wme.4;
+        Tue, 11 Feb 2020 08:47:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CMl+mRO9Zvf2SDJ75RJRDZjMrbhk+aBHXg/UK4B09DA=;
+        b=dChStUK8diMq2NGB+3sU0pNMSbHY4g8JxRBOwn5oxx2J07qo9MeLYByf3n2AYIWRFr
+         RizTB4uBHV/59FlSEW3G5ZfUNi8AvMm2Qxng4EhZXH8bHw0rZ9dlq7PTV5g4S2R4SWXY
+         fOtUnLqRP/0xV1+Xxwz8ReYJiNeDJHZ58J9JV2GPNPlitMCdz8WH3pPp5tBiTH2KvIOy
+         LocKwZIrMfFyMe6qnSpeD2Q2U5YdGYqZ/btVr78opI43VCF7CEWcyLQF/6DcUPdXbIaj
+         4WP981yYPv/AKOSUZRWPj5V2bySp9w+l2bojOgr6ao6jGrA9JgD4nk59HXleEbYE+Lr8
+         sOSA==
+X-Gm-Message-State: APjAAAVijj2Mrx3D+YElmZOGTWyWaXtqHqDRS4/cie6JTBUDbSKHQchA
+        n0RPlk7Qx7ad3CMPb++tdf83tBld
+X-Google-Smtp-Source: APXvYqyRmpnV0x90UnxeJU/1d5i6cXU6wvw0RqwIVycsFRl5ODFQlgFraCMrIyXLjxV9s936/PfKjA==
+X-Received: by 2002:a1c:b603:: with SMTP id g3mr6892696wmf.133.1581439676118;
+        Tue, 11 Feb 2020 08:47:56 -0800 (PST)
+Received: from localhost (ip-37-188-227-72.eurotel.cz. [37.188.227.72])
+        by smtp.gmail.com with ESMTPSA id x11sm4418883wmg.46.2020.02.11.08.47.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 08:47:55 -0800 (PST)
+Date:   Tue, 11 Feb 2020 17:47:53 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200211164753.GQ10636@dhcp22.suse.cz>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200130170020.GZ24244@dhcp22.suse.cz>
+ <20200203215201.GD6380@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191210152734.39588-1-paul@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200203215201.GD6380@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hello Paul,
-
-thanks for the ping, I lost your series from my radar.
-
-On Tue, Dec 10, 2019 at 04:27:32PM +0100, Paul Cercueil wrote:
-> The ingenic-timer "TCU" driver provides us with clocks, that can be
-> (un)gated, reparented or reclocked from devicetree, instead of having
-> these settings hardcoded in this driver.
+On Mon 03-02-20 16:52:01, Johannes Weiner wrote:
+> On Thu, Jan 30, 2020 at 06:00:20PM +0100, Michal Hocko wrote:
+> > On Thu 19-12-19 15:07:18, Johannes Weiner wrote:
+> > > Right now, the effective protection of any given cgroup is capped by
+> > > its own explicit memory.low setting, regardless of what the parent
+> > > says. The reasons for this are mostly historical and ease of
+> > > implementation: to make delegation of memory.low safe, effective
+> > > protection is the min() of all memory.low up the tree.
+> > > 
+> > > Unfortunately, this limitation makes it impossible to protect an
+> > > entire subtree from another without forcing the user to make explicit
+> > > protection allocations all the way to the leaf cgroups - something
+> > > that is highly undesirable in real life scenarios.
+> > > 
+> > > Consider memory in a data center host. At the cgroup top level, we
+> > > have a distinction between system management software and the actual
+> > > workload the system is executing. Both branches are further subdivided
+> > > into individual services, job components etc.
+> > > 
+> > > We want to protect the workload as a whole from the system management
+> > > software, but that doesn't mean we want to protect and prioritize
+> > > individual workload wrt each other. Their memory demand can vary over
+> > > time, and we'd want the VM to simply cache the hottest data within the
+> > > workload subtree. Yet, the current memory.low limitations force us to
+> > > allocate a fixed amount of protection to each workload component in
+> > > order to get protection from system management software in
+> > > general. This results in very inefficient resource distribution.
+> > 
+> > I do agree that configuring the reclaim protection is not an easy task.
+> > Especially in a deeper reclaim hierarchy. systemd tends to create a deep
+> > and commonly shared subtrees. So having a protected workload really
+> > requires to be put directly into a new first level cgroup in practice
+> > AFAICT. That is a simpler example though. Just imagine you want to
+> > protect a certain user slice.
 > 
-> Each PWM channel's clk pointer is stored in PWM chip data to keep
-> the code simple. The calls to arch-specific timer code is replaced with
-> standard clock API calls to start and stop each channel's clock.
-> 
-> While this driver is devicetree-compatible, it is never (as of now)
-> probed from devicetree, so this change does not introduce a ABI problem
-> with current devicetree files.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
-> 
-> Notes:
->     v2: This patch is now before the patch introducing regmap, so the code
->     	has changed a bit.
->     v3: - Use %pe printf specifier to print error
->     	- Update commit message
->     	- Removed call to jz4740_timer_set_ctrl() in jz4740_pwm_free() which
->     	  was reseting the clock's parent.
-> 
->  drivers/pwm/Kconfig      |  1 +
->  drivers/pwm/pwm-jz4740.c | 53 +++++++++++++++++++++++++++++-----------
->  2 files changed, 40 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index bd21655c37a6..15d3816341f3 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -225,6 +225,7 @@ config PWM_IMX_TPM
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> +	depends on COMMON_CLK
->  	help
->  	  Generic PWM framework driver for Ingenic JZ47xx based
->  	  machines.
-> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> index 9d78cc21cb12..ee50ac5fabb6 100644
-> --- a/drivers/pwm/pwm-jz4740.c
-> +++ b/drivers/pwm/pwm-jz4740.c
-> @@ -24,7 +24,6 @@
->  
->  struct jz4740_pwm_chip {
->  	struct pwm_chip chip;
-> -	struct clk *clk;
->  };
->  
->  static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
-> @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
->  
->  static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
->  {
-> +	struct jz4740_pwm_chip *jz = to_jz4740(chip);
-> +	struct clk *clk;
-> +	char clk_name[16];
-> +	int ret;
-> +
->  	/*
->  	 * Timers 0 and 1 are used for system tasks, so they are unavailable
->  	 * for use as PWMs.
-> @@ -41,16 +45,32 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
->  	if (pwm->hwpwm < 2)
->  		return -EBUSY;
->  
-> -	jz4740_timer_start(pwm->hwpwm);
-> +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
-> +
-> +	clk = clk_get(chip->dev, clk_name);
-> +	if (IS_ERR(clk)) {
-> +		if (PTR_ERR(clk) != -EPROBE_DEFER)
-> +			dev_err(chip->dev, "Failed to get clock: %pe", clk);
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret) {
-> +		clk_put(clk);
-> +		return ret;
-> +	}
-> +
-> +	pwm_set_chip_data(pwm, clk);
->  
->  	return 0;
->  }
->  
->  static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
->  {
-> -	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
-> +	struct clk *clk = pwm_get_chip_data(pwm);
->  
-> -	jz4740_timer_stop(pwm->hwpwm);
-> +	clk_disable_unprepare(clk);
-> +	clk_put(clk);
->  }
->  
->  static int jz4740_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> @@ -91,17 +111,22 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  			    const struct pwm_state *state)
->  {
->  	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
-> +	struct clk *clk = pwm_get_chip_data(pwm),
-> +		   *parent_clk = clk_get_parent(clk);
-> +	unsigned long rate, period, duty;
->  	unsigned long long tmp;
-> -	unsigned long period, duty;
->  	unsigned int prescaler = 0;
->  	uint16_t ctrl;
-> +	int err;
->  
-> -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
-> +	rate = clk_get_rate(parent_clk);
-> +	tmp = (unsigned long long)rate * state->period;
->  	do_div(tmp, 1000000000);
->  	period = tmp;
->  
->  	while (period > 0xffff && prescaler < 6) {
->  		period >>= 2;
-> +		rate >>= 2;
->  		++prescaler;
->  	}
->  
-> @@ -117,14 +142,18 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  
->  	jz4740_pwm_disable(chip, pwm);
->  
-> +	err = clk_set_rate(clk, rate);
-> +	if (err) {
-> +		dev_err(chip->dev, "Unable to set rate: %d", err);
-> +		return err;
-> +	}
+> Can you elaborate a bit on this? I don't quite understand the two
+> usecases you are contrasting here.
 
-What I don't like here is that you use internal knowledge about the
-clock to set a specific rate. Given this is a 1:1 conversion to hide the
-previously contained register accesses behind the clk API (which is a
-fine move) this is ok. But IMHO this should be cleaned up to rely on the
-clk code. The more natural thing to do here would be to calculate the
-rate you can work with and request that. Maybe add a todo-comment to
-clean this up?
+Essentially this is about two different usecases. The first one is about
+protecting a hierarchy and spreading the protection among different
+workloads and the second is how to protect an inner memcg without
+configuring protection all the way up the hierarchy.
+ 
+> > You seem to be facing a different problem though IIUC. You know how much
+> > memory you want to protect and you do not have to care about the cgroup
+> > hierarchy up but you do not know/care how to distribute that protection
+> > among workloads running under that protection. I agree that this is a
+> > reasonable usecase.
+> 
+> I'm not sure I'm parsing this right, but the use case is this:
+> 
+> When I'm running a multi-component workload on a host without any
+> cgrouping, the individual components compete over the host's memory
+> based on rate of allocation, how often they reference their memory and
+> so forth. It's a need-based distribution of pages, and the weight can
+> change as demand changes throughout the life of the workload.
+> 
+> If I now stick several of such workloads into a containerized
+> environment, I want to use memory.low to assign each workload as a
+> whole a chunk of memory it can use - I don't want to assign fixed-size
+> subchunks to each individual component of each workload! I want the
+> same free competition *within* the workload while setting clear rules
+> for competition *between* the different workloads.
 
-> +
->  	jz4740_timer_set_count(pwm->hwpwm, 0);
->  	jz4740_timer_set_duty(pwm->hwpwm, duty);
->  	jz4740_timer_set_period(pwm->hwpwm, period);
->  
-> -	ctrl = JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT |
-> -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
-> -
-> -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
-> +	ctrl = jz4740_timer_get_ctrl(pwm->hwpwm);
-> +	ctrl |= JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->  
->  	switch (state->polarity) {
->  	case PWM_POLARITY_NORMAL:
-> @@ -158,10 +187,6 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
->  	if (!jz4740)
->  		return -ENOMEM;
->  
-> -	jz4740->clk = devm_clk_get(&pdev->dev, "ext");
-> -	if (IS_ERR(jz4740->clk))
-> -		return PTR_ERR(jz4740->clk);
+Yeah, that matches my understanding of the problem your are trying to
+solve here.
+> 
+> [ What I can do today to achieve this is disable the memory controller
+>   for the subgroups. When I do this, all pages of the workload are on
+>   one single LRU that is protected by one single memory.low.
+> 
+>   But obviously I lose any detailed accounting as well.
+> 
+>   This patch allows me to have the same recursive protection semantics
+>   while retaining accounting. ]
+> 
+> > Those both problems however show that we have a more general
+> > configurability problem for both leaf and intermediate nodes. They are
+> > both a result of strong requirements imposed by delegation as you have
+> > noted above. I am thinking didn't we just go too rigid here?
+> 
+> The requirement for delegation is that child groups cannot claim more
+> than the parent affords. Is that the restriction you are referring to?
 
-Huh, jz4740->clk was never enabled?
+yes.
 
-Best regards
-Uwe
+> > Delegation points are certainly a security boundary and they should
+> > be treated like that but do we really need a strong containment when
+> > the reclaim protection is under admin full control? Does the admin
+> > really have to reconfigure a large part of the hierarchy to protect a
+> > particular subtree?
+> > 
+> > I do not have a great answer on how to implement this unfortunately. The
+> > best I could come up with was to add a "$inherited_protection" magic
+> > value to distinguish from an explicit >=0 protection. What's the
+> > difference? $inherited_protection would be a default and it would always
+> > refer to the closest explicit protection up the hierarchy (with 0 as a
+> > default if there is none defined).
+> >         A
+> >        / \
+> >       B   C (low=10G)
+> >          / \
+> >         D   E (low = 5G)
+> > 
+> > A, B don't get any protection (low=0). C gets protection (10G) and
+> > distributes the pressure to D, E when in excess. D inherits (low=10G)
+> > and E overrides the protection to 5G.
+> > 
+> > That would help both usecases AFAICS while the delegation should be
+> > still possible (configure the delegation point with an explicit
+> > value). I have very likely not thought that through completely.  Does
+> > that sound like a completely insane idea?
+> > 
+> > Or do you think that the two usecases are simply impossible to handle
+> > at the same time?
+> 
+> Doesn't my patch accomplish this?
 
+Unless I am missing something then I am afraid it doesn't. Say you have a
+default systemd cgroup deployment (aka deeper cgroup hierarchy with
+slices and scopes) and now you want to grant a reclaim protection on a
+leaf cgroup (or even a whole slice that is not really important). All the
+hierarchy up the tree has the protection set to 0 by default, right? You
+simply cannot get that protection. You would need to configure the
+protection up the hierarchy and that is really cumbersome.
+
+> Any cgroup or group of cgroups still cannot claim more than the
+> ancestral protection for the subtree. If a cgroup says 10G, the sum of
+> all children's protection will never exceed that. This ensures
+> delegation is safe.
+
+Right. And delegation usecase really requres that. No question about
+that. I am merely arguing that if you do not delegate then this is way
+too strict.
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Michal Hocko
+SUSE Labs
