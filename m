@@ -5,30 +5,30 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6316C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C211C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE1820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EBD206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eQCMYuZH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jZxKKx/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBKXUc (ORCPT
+        id S1727979AbgBKXVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:20:32 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.175]:27870 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727811AbgBKXUb (ORCPT
+        Tue, 11 Feb 2020 18:21:50 -0500
+Received: from gateway20.websitewelcome.com ([192.185.52.45]:37750 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727597AbgBKXVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:20:31 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 5F5C1400C9D19
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:20:30 -0600 (CST)
+        Tue, 11 Feb 2020 18:21:49 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id B8F95400C4360
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 16:08:14 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 1epSjKOWOvBMd1epSjdzCK; Tue, 11 Feb 2020 17:20:30 -0600
+        id 1eqijehugRP4z1eqij6WuM; Tue, 11 Feb 2020 17:21:48 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZeEly4URcPzI9V6orzk6NjOSoTiGretqTjD58lLekkE=; b=eQCMYuZHqbsCvYuKUdAzhiRThO
-        F5cD2QfOAU6oUbZiMgeL9o9NWf7LLp8QkEWcQxmVztE+b8OyabyfUglGuUBTIn3Srj1Xi0oCPaf5e
-        AKWs6fJWzYy8xzP58ncH2FBLq5swhPrMAim1V37yi8/ItkPRynJEfTF0kGdYm060kjUKIedmYjKjX
-        PoqfFLrqQfXNKvt53nsKBnOokyOzBdLtt3SbonN7TdtdD9UYjlGzu8SDuAkvVrmsMIs9CwsDi2T2G
-        tV/vIdzxRtu/3rd+LKM47+03q7tukF+CA5pKhGblaXcgCEjnSoPMo2eQF5OxzbekWiCfVf09f/Qt0
-        m+39ZRXg==;
-Received: from [200.68.140.36] (port=5119 helo=embeddedor)
+        bh=n5ilMfy8gku9SOZFBLYy4Y+cibBJVLrMCr+czct/SY8=; b=jZxKKx/1yNPqJcOFhRKuRMVtcJ
+        TwctO5+9TOnW4gtBqVfwD0eK6eqFqRBjn6YJ9ngyF5og8apmAx14brohfTu/ctzyPkDeXfbAyRA8f
+        GqLLOxvvXwKU5tnskL48XmLBRHU2decBNOW0A6XDlheOKJcwKBR2+PGQ9MtsJiG6zcG5s/fzkTBJ4
+        jjNo8rzqvocHIs2kk/gJOIWXlMbUlCr/OIqX8CPph9Fy01wZh6XI7pdgsNdL10nakY1hmNgWSylQS
+        I65GCsQUtPHeE2RDHqCFsJ9M4E9r/w+munDkL7kSvZL8TVSYpk5ltuaGTCjJyisOB3/8e3qDRwkmb
+        l6nYkwhg==;
+Received: from [200.68.140.36] (port=9177 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j1epQ-003ZeJ-Ra; Tue, 11 Feb 2020 17:20:28 -0600
-Date:   Tue, 11 Feb 2020 17:23:03 -0600
+        id 1j1eqf-003aK6-F8; Tue, 11 Feb 2020 17:21:45 -0600
+Date:   Tue, 11 Feb 2020 17:24:20 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Felipe Balbi <balbi@kernel.org>,
+To:     Johan Hovold <johan@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] usb: gadget: f_phonet: Replace zero-length array with
- flexible-array member
-Message-ID: <20200211232303.GA21495@embeddedor>
+Subject: [PATCH] USB: serial: ti_usb_3410_5052: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200211232420.GA22388@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +67,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.140.36
 X-Source-L: No
-X-Exim-ID: 1j1epQ-003ZeJ-Ra
+X-Exim-ID: 1j1eqf-003aK6-F8
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:5119
+X-Source-Sender: (embeddedor) [200.68.140.36]:9177
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 40
+X-Email-Count: 44
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -104,22 +104,31 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/usb/gadget/function/f_phonet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ti_usb_3410_5052.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_phonet.c b/drivers/usb/gadget/function/f_phonet.c
-index 8b72b192c747..d7f6cc51b7ec 100644
---- a/drivers/usb/gadget/function/f_phonet.c
-+++ b/drivers/usb/gadget/function/f_phonet.c
-@@ -48,7 +48,7 @@ struct f_phonet {
- 	struct usb_ep			*in_ep, *out_ep;
+diff --git a/drivers/usb/serial/ti_usb_3410_5052.c b/drivers/usb/serial/ti_usb_3410_5052.c
+index dd0ad67aa71e..db3ab25d9228 100644
+--- a/drivers/usb/serial/ti_usb_3410_5052.c
++++ b/drivers/usb/serial/ti_usb_3410_5052.c
+@@ -219,7 +219,7 @@ struct ti_write_data_bytes {
+ 	u8	bDataCounter;
+ 	__be16	wBaseAddrHi;
+ 	__be16	wBaseAddrLo;
+-	u8	bData[0];
++	u8	bData[];
+ } __packed;
  
- 	struct usb_request		*in_req;
--	struct usb_request		*out_reqv[0];
-+	struct usb_request		*out_reqv[];
- };
+ struct ti_read_data_request {
+@@ -234,7 +234,7 @@ struct ti_read_data_bytes {
+ 	__u8	bCmdCode;
+ 	__u8	bModuleId;
+ 	__u8	bErrorCode;
+-	__u8	bData[0];
++	__u8	bData[];
+ } __packed;
  
- static int phonet_rxq_size = 17;
+ /* Interrupt struct */
 -- 
 2.25.0
 
