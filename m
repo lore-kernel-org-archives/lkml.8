@@ -2,94 +2,103 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D529C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E860C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150A724676
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581448857;
-	bh=FPnZuYXGNfI9DnJJwwdEqftI4D003QQkxbvVmqvW0uA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oxHFOCPvvWJVHsfDNVQUHowAIZlN2ykVygDTHcLaFB+MhFz7rSu3eZ5KPc+h2b5Vl
-	 ptJDeL58c4PxMfwA/bDaiUXuEfSLlCoFR8KcFMDWKoteK6ucAzBqLrSXUJFBSGJnme
-	 /qDHJi3n2TqUPND9x+Ty0s7Nkezz6jaAKih+4NKI=
+	by mail.kernel.org (Postfix) with ESMTP id 7192A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2TzVFOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbgBKTU4 (ORCPT
+        id S1731613AbgBKTVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:20:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729800AbgBKTU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:20:56 -0500
-Received: from localhost (unknown [104.133.9.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B6B2465D;
-        Tue, 11 Feb 2020 19:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581448855;
-        bh=FPnZuYXGNfI9DnJJwwdEqftI4D003QQkxbvVmqvW0uA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jY87CbT2FrZqH9dfgB7Ca3cqkAAQa1w5bB4t1lxEp981drSTF1rdupYPCqRtNrJBH
-         xV+LM4BL4lIaDa30WISJl2lvFGHiPmNHB6+0XQ9qA/qZla13gJJf2dh+WL0HivQDo9
-         QB5b78UN28Kb5Ajpf/u1VUiqKjUy1rxQQcQcHFrk=
-Date:   Tue, 11 Feb 2020 11:20:55 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200211192055.GA1962867@kroah.com>
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
- <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
- <20200206165755.GB3894455@kroah.com>
- <20200211184130.GA11908@Mani-XPS-13-9360>
+        Tue, 11 Feb 2020 14:21:22 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32943 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729800AbgBKTVW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:21:22 -0500
+Received: by mail-wr1-f67.google.com with SMTP id u6so13947816wrt.0;
+        Tue, 11 Feb 2020 11:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AEGWYfFX9245MukYgsGUL84+IjZfZx4XP83WQpnQkHw=;
+        b=A2TzVFOW6F10JBsePK3zu458Q3Vas14sw10YF6Uo0daSQJAYxApnG0/CppNxgLNFkC
+         62caMBdepV56f3CUUlOGU1KMLPNHRoueumUKE2HrBlFOmST6YIO4peQ2p09gyEwJmj45
+         5blcd8z3oTfYeXi546h4IE/QNiwSLqbjbYFZVKoWrNvWW0WeybSkyQY1qjOuCk6lwS8M
+         146Tc1XPAJNAS2SJg0O/FbFcT2NnuCqFGrRnMU6Bm9SAQOAOsLY81z3wjRg7l0fxhw/P
+         Ag1ghXSk0KrokGHYloHR6z3m78+C13HNldnl1QEKCm6GXf9PpRXqqhzs1e6y0eITbChv
+         jfHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AEGWYfFX9245MukYgsGUL84+IjZfZx4XP83WQpnQkHw=;
+        b=Y5Yz3woum8OPo0SeENOeGLCqv4o3WhKjZaVXWzKnoWrHrKN/6McoDpJTHGYF568QeR
+         7Agl3KK1LfpSIEwKO7EG8cq9C+WBbC3083dWtHLiTVzNF/oCb6FZ9Sl19ylMJ1M7A+wu
+         wMmHJMh5J/gxgMb356WB1Ve0pm/slZiA+qBFnW5qzFy8jDjr1Lmx2lCvZ/CLJzhH/KuS
+         EwPAHokT2zGNN/GFpTmQYHMHNuIPWK2NU9QTyo0wrjNsWA6YZStq3iT1X09nt153VewS
+         dU6pMtJ9WebRFV/AXZnulLMYIzpH3vb3YrYwAIqSzOa1e03xaSxrlYJisx8cvJlU8DHk
+         pg+w==
+X-Gm-Message-State: APjAAAWEFxXD6uWqrZHxCUHAf4N20Yw1B7u7zGbVsSDMK3DhSeuS6Oip
+        2F7KTIAP1QfW++ijoIDohO8=
+X-Google-Smtp-Source: APXvYqwMsryykfh9h+LtceOZt3ZKFIXxSljklwP6UXWA+eNQZ2lUmaSyqT7uS6SmQh98ZjvSee7Rwg==
+X-Received: by 2002:a5d:6082:: with SMTP id w2mr10143766wrt.300.1581448880361;
+        Tue, 11 Feb 2020 11:21:20 -0800 (PST)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id q10sm4941740wme.16.2020.02.11.11.21.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 11:21:19 -0800 (PST)
+Date:   Tue, 11 Feb 2020 20:21:18 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Eric Biggers <ebiggers@kernel.org>, davem@davemloft.net,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] crypto: export() overran state buffer on test vector
+Message-ID: <20200211192118.GA24059@Red>
+References: <20200206085442.GA5585@Red>
+ <20200207065719.GA8284@sol.localdomain>
+ <20200207104659.GA10979@Red>
+ <20200208085713.ftuqxhatk6iioz7e@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211184130.GA11908@Mani-XPS-13-9360>
+In-Reply-To: <20200208085713.ftuqxhatk6iioz7e@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 12:11:30AM +0530, Manivannan Sadhasivam wrote:
-> Hi Greg,
+On Sat, Feb 08, 2020 at 04:57:13PM +0800, Herbert Xu wrote:
+> On Fri, Feb 07, 2020 at 11:46:59AM +0100, Corentin Labbe wrote:
+> >
+> > My goal is to do like n2-crypto/rk3288crypto/etc..., fallback for init/update/final/finup and only do stuff with digest().
+> > So I have just exactly copied what they do.
 > 
-> On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
-> > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
-> > > --- /dev/null
-> > > +++ b/drivers/bus/mhi/core/init.c
-> > > @@ -0,0 +1,407 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-> > > + *
-> > > + */
-> > > +
-> > > +#define dev_fmt(fmt) "MHI: " fmt
-> > 
-> > This should not be needed, right?  The bus/device name should give you
-> > all you need here from what I can tell.  So why is this needed?
-> > 
+> n2 at least is totally broken wrt import/export.  The other ones
+> would work provided that the fallback have the same statesize as
+> the generic sha implementations.
 > 
-> The log will have only the device name as like PCI-E. But that won't specify
-> where the error is coming from. Having "MHI" prefix helps the users to
-> quickly identify that the error is coming from MHI stack.
 
-If the driver binds properly to the device, the name of the driver will
-be there in the message, so I suggest using that please.
+This behavour happen only on arm64, so it is why probably nobody (rockchip/n2) found it.
 
-No need for this prefix...
+> Are you not using the standard state sizes?
 
-thanks,
+I use the standard size (statesize = sizeof(struct shaxxx_state))
 
-greg k-h
+As a quick workaround, By simply adding (+ 8), all test pass.
+
+> 
+> This should probably be switched over to lib/crypto or at least
+> shash.
+> 
+
+Do you mean that I should abandon ahash as a fallback ?
