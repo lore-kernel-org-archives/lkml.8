@@ -2,212 +2,108 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6046C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619E2C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B379B20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD7E206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:38:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B36DxbZZ"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="LTR0BrkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgBKVfT (ORCPT
+        id S1727936AbgBKViD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:35:19 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42765 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbgBKVfS (ORCPT
+        Tue, 11 Feb 2020 16:38:03 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38237 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgBKViD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:35:18 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so11691014otd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 13:35:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FPD9BpDVwDUxM6Ip8EFlRULrgnjEP3aNdZIbOVFnMe0=;
-        b=B36DxbZZRwo0TP4rDikBCgdf0HltQGxfonCU0xN5pDZFDZm/IDCxFJLUu9RD4TJKjC
-         wXrxZ5GyC2AWBXmn87iB/TGJXJGGw/+YS4H5kRamVkLauyNnlgJ4ioKGHrocGiWjFhUo
-         MTaip7Vg7uEqbQi/ZBe8/pZgqKxATTSSJZ4D58a+AAvNtm0ZGHUwtkEYQlfFqAcnsgmi
-         qW2YpT1kG7XMDLPTauVsDkdRXFdNQd7izC6dJjaiv4QZcFjH4igk5gTy8LX24VHUCZOe
-         4pBCo9vJhQ/y3yhG9LcVjX0JcApXUBZMpckrwjYDzMwxpe8KWH4cy8wcGeKWD4fgi1Je
-         PbOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FPD9BpDVwDUxM6Ip8EFlRULrgnjEP3aNdZIbOVFnMe0=;
-        b=S5jaLlcqxJWBq3UbPHPTnszjEFur21O6fDJfB3P+3ylff1Kp+zunH1Z0GdNnJlmiRU
-         uwCzjNlGf6/ppgiwzwVZZgwMU3+rfVsOzJ0SwqFWJ8r5J0be90G7bD0OVICE58dvFGP4
-         uaWkHT1oB9pS9on1K90nEAikM1vVHrmI4uyl5PhLe74eDzuXlT7aa85xTcfyduPns87G
-         j7hdFuYmIQ19QaEGr9s2l2TS3+BpkdIM5zZSgrtkaYaNSw2az26e8GalMN6Ef16k0tHH
-         z1whoMY8XVLgGp6CjoybHQ3CZNwHxepsM1epfK2omCAD/fNLJ7dSOJpZ5mC6P4Ab9YMY
-         e4LA==
-X-Gm-Message-State: APjAAAX3oxzi9jltR4iGnXmf8fC1mAzNGBgPtB+3zpiKjLoa/kBvGBV0
-        dQ8E3VzJtXfQ3OxXmgUDYEJoemdt8+l/NujPcwUYcQ==
-X-Google-Smtp-Source: APXvYqySdzbnrv+gR5SkneeztGn1ucffOgBcWtCYQKZBmEqr59hxm0NevVeUFsu2lvl70k/1QsEa/2LYduVqhkRnevo=
-X-Received: by 2002:a9d:2dea:: with SMTP id g97mr6850754otb.33.1581456917229;
- Tue, 11 Feb 2020 13:35:17 -0800 (PST)
+        Tue, 11 Feb 2020 16:38:03 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2796683645;
+        Wed, 12 Feb 2020 10:38:00 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1581457080;
+        bh=BWZ3XnsKQFnPu8ywhW1/XL2Lfk2SJOoZsOxmckSWviw=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=LTR0BrkYbqoqfzr1pZ/Ce9YtZHhnc994WINaM8XjablsOtIDc8RikSeujSJrowEu8
+         Mwg0zI0n4IJOCRYIKHHljwA7qhl3fAuzuONam9DNHrdr8y+e8nY+izJw7lOajIbc9K
+         +U6QPRnmEvCwkDEKSf8MLOfhktxFppIv1WBIQPJThy6a14ne3m1yee0OEG6tssVqtc
+         SrG/AJfVuxDNIkZXX6gSYlS3YKhInGWve/NW39vOwGqRGStJ/Ai/hbqoIXbrgnIcJD
+         gMC1j+xQvuiL+mtxMl4nAQU+ZC4zK6MGnwXrnAMeII07H8wzirhPeTn94CQifc8A7N
+         KkUzK9UK99D9Q==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e431eb80001>; Wed, 12 Feb 2020 10:38:00 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Feb 2020 10:38:00 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1473.005; Wed, 12 Feb 2020 10:38:00 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
+Thread-Topic: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
+Thread-Index: AQHV4SHSo52AlyiF50aUibwtU28qqagVqt2A
+Date:   Tue, 11 Feb 2020 21:37:59 +0000
+Message-ID: <6fc1ab12ed330ffb35d4eb100e3b35c91d3d2d18.camel@alliedtelesis.co.nz>
+References: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
+In-Reply-To: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:816b:1e68:7f19:f27f]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A45D7E6472A10F4180B5FD19C77AB0D5@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200203232248.104733-1-almasrymina@google.com>
- <20200203232248.104733-6-almasrymina@google.com> <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
-In-Reply-To: <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Tue, 11 Feb 2020 13:35:06 -0800
-Message-ID: <CAHS8izMGreJgOhG8ivE2OH9bq98BmvxAqtBc=M9waTqOKv3eeQ@mail.gmail.com>
-Subject: Re: [PATCH v11 6/9] hugetlb_cgroup: support noreserve mappings
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 2:31 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 2/3/20 3:22 PM, Mina Almasry wrote:
-> > Support MAP_NORESERVE accounting as part of the new counter.
-> >
-> > For each hugepage allocation, at allocation time we check if there is
-> > a reservation for this allocation or not. If there is a reservation for
-> > this allocation, then this allocation was charged at reservation time,
-> > and we don't re-account it. If there is no reserevation for this
-> > allocation, we charge the appropriate hugetlb_cgroup.
-> >
-> > The hugetlb_cgroup to uncharge for this allocation is stored in
-> > page[3].private. We use new APIs added in an earlier patch to set this
-> > pointer.
->
-> Ah!  That reminded me to look at the migration code.  Turns out that none
-> of the existing cgroup information (page[2]) is being migrated today.  That
-> is a bug. :(  I'll confirm and fix in a patch separate from this series.
-> We will need to make sure that new information added by this series in page[3]
-> is also migrated.  That would be in an earlier patch where the use of the
-> field is introduced.
->
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >
-> > Changes in v10:
-> > - Refactored deferred_reserve check.
-> >
-> > ---
-> >  mm/hugetlb.c | 28 +++++++++++++++++++++++++++-
-> >  1 file changed, 27 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index 33818ccaf7e89..ec0b55ea1506e 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -1339,6 +1339,9 @@ static void __free_huge_page(struct page *page)
-> >       clear_page_huge_active(page);
-> >       hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
-> >                                    page, false);
-> > +     hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
-> > +                                  page, true);
-> > +
->
-> When looking at the code without change markings, the two above lines
-> look so similar my first thought is there must be a mistake.
->
-> A suggestion for better code readability:
-> - hugetlb_cgroup_uncharge_page could just take "struct hstate *h" and
->   get both hstate_index(h) and pages_per_huge_page(h).
-> - Perhaps make hugetlb_cgroup_uncharge_page and
->   hugetlb_cgroup_uncharge_page_rsvd be wrappers around a common routine.
->   Then the above would look like:
->
->   hugetlb_cgroup_uncharge_page(h, page);
->   hugetlb_cgroup_uncharge_page_rsvd(h, page);
->
-
-I did modify the interfaces to this, as it's much better for
-readability indeed. Unfortunately the patch the adds interfaces
-probably needs a re-review now as it's changed quite a bit, I did not
-carry your or David's Reviewed-by.
-
->
-> >       if (restore_reserve)
-> >               h->resv_huge_pages++;
-> >
-> > @@ -2172,6 +2175,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
-> >       long gbl_chg;
-> >       int ret, idx;
-> >       struct hugetlb_cgroup *h_cg;
-> > +     bool deferred_reserve;
-> >
-> >       idx = hstate_index(h);
-> >       /*
-> > @@ -2209,10 +2213,20 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
-> >                       gbl_chg = 1;
-> >       }
-> >
-> > +     /* If this allocation is not consuming a reservation, charge it now.
-> > +      */
-> > +     deferred_reserve = map_chg || avoid_reserve || !vma_resv_map(vma);
-> > +     if (deferred_reserve) {
-> > +             ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h),
-> > +                                                &h_cg, true);
-> > +             if (ret)
-> > +                     goto out_subpool_put;
-> > +     }
-> > +
-> >       ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg,
-> >                                          false);
->
-> Hmmm?  I'm starting to like the wrapper idea more as a way to help with
-> readability of the bool rsvd argument.
->
-> hugetlb_cgroup_charge_cgroup_rsvd()
-> hugetlb_cgroup_charge_cgroup()
->
-> At least to me it makes it easier to read.
-> --
-> Mike Kravetz
->
-> >       if (ret)
-> > -             goto out_subpool_put;
-> > +             goto out_uncharge_cgroup_reservation;
-> >
-> >       spin_lock(&hugetlb_lock);
-> >       /*
-> > @@ -2236,6 +2250,14 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
-> >       }
-> >       hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page,
-> >                                    false);
-> > +     /* If allocation is not consuming a reservation, also store the
-> > +      * hugetlb_cgroup pointer on the page.
-> > +      */
-> > +     if (deferred_reserve) {
-> > +             hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg,
-> > +                                          page, true);
-> > +     }
-> > +
-> >       spin_unlock(&hugetlb_lock);
-> >
-> >       set_page_private(page, (unsigned long)spool);
-> > @@ -2261,6 +2283,10 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
-> >  out_uncharge_cgroup:
-> >       hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg,
-> >                                      false);
-> > +out_uncharge_cgroup_reservation:
-> > +     if (deferred_reserve)
-> > +             hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h),
-> > +                                            h_cg, true);
-> >  out_subpool_put:
-> >       if (map_chg || avoid_reserve)
-> >               hugepage_subpool_put_pages(spool, 1);
-> > --
-> > 2.25.0.341.g760bfbb309-goog
+T24gV2VkLCAyMDIwLTAyLTEyIGF0IDEwOjI0ICsxMzAwLCBNYXJrIFRvbWxpbnNvbiB3cm90ZToN
+Cj4gVGhlIENhdml1bSBPY3Rlb24gQ1BVIHVzZXMgYSBzcGVjaWFsIHN5bmMgaW5zdHJ1Y3Rpb24g
+Zm9yIGltcGxlbWVudGluZw0KPiB3bWIsIGFuZCBkdWUgdG8gYSBDUFUgYnVnLCB0aGUgaW5zdHJ1
+Y3Rpb24gbXVzdCBhcHBlYXIgdHdpY2UuIEEgbWFjcm8NCj4gaGFkIGJlZW4gZGVmaW5lZCB0byBo
+aWRlIHRoaXM6DQo+IA0KPiAgI2RlZmluZSBfX1NZTkNfcnB0KHR5cGUpICAgICAoMSArICh0eXBl
+ID09IF9fU1lOQ193bWIpKQ0KPiANCj4gd2hpY2ggd2FzIGludGVuZGVkIHRvIGV2YWx1YXRlIHRv
+IDIgZm9yIF9fU1lOQ193bWIsIGFuZCAxIGZvciBhbnkgb3RoZXINCj4gdHlwZSBvZiBzeW5jLiBI
+b3dldmVyLCB0aGlzIGV4cHJlc3Npb24gaXMgZXZhbHVhdGVkIGJ5IHRoZSBhc3NlbWJsZXIsDQo+
+IGFuZCBub3QgdGhlIGNvbXBpbGVyLCBhbmQgdGhlIHJlc3VsdCBvZiAnPT0nIGluIHRoZSBhc3Nl
+bWJsZXIgaXMgMCBvcg0KPiAtMSwgbm90IDAgb3IgMSBhcyBpdCBpcyBpbiBDLiBUaGUgbmV0IHJl
+c3VsdCB3YXMgd21iKCkgcHJvZHVjaW5nIG5vIGNvZGUNCj4gYXQgYWxsLiBUaGUgc2ltcGxlIGZp
+eCBpbiB0aGlzIHBhdGNoIGlzIHRvIGNoYW5nZSB0aGUgJysnIHRvICctJy4NCj4gDQo+IEZpeGVz
+OiBiZjkyOTI3MjUxYjMgKCJNSVBTOiBiYXJyaWVyOiBBZGQgX19TWU5DKCkgaW5mcmFzdHJ1Y3R1
+cmUiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBNYXJrIFRvbWxpbnNvbiA8bWFyay50b21saW5zb25AYWxs
+aWVkdGVsZXNpcy5jby5uej4NCg0KRm9yIHdoYXQgaXQncyB3b3J0aA0KDQpUZXN0ZWQtYnk6IENo
+cmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4NCg0KPiAtLS0N
+Cj4gIGFyY2gvbWlwcy9pbmNsdWRlL2FzbS9zeW5jLmggfCA0ICsrKy0NCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9h
+cmNoL21pcHMvaW5jbHVkZS9hc20vc3luYy5oIGIvYXJjaC9taXBzL2luY2x1ZGUvYXNtL3N5bmMu
+aA0KPiBpbmRleCA3YzZhMTA5NWY1Li5hYWJkMDk3OTMzIDEwMDY0NA0KPiAtLS0gYS9hcmNoL21p
+cHMvaW5jbHVkZS9hc20vc3luYy5oDQo+ICsrKyBiL2FyY2gvbWlwcy9pbmNsdWRlL2FzbS9zeW5j
+LmgNCj4gQEAgLTE1NSw5ICsxNTUsMTEgQEANCj4gICAqIGVmZmVjdGl2ZSBiYXJyaWVyIGFzIG5v
+dGVkIGJ5IGNvbW1pdCA2YjA3ZDM4YWFhNTIgKCJNSVBTOiBPY3Rlb246IFVzZQ0KPiAgICogb3B0
+aW1pemVkIG1lbW9yeSBiYXJyaWVyIHByaW1pdGl2ZXMuIikuIEhlcmUgd2Ugc3BlY2lmeSB0aGF0
+IHRoZSBhZmZlY3RlZA0KPiAgICogc3luYyBpbnN0cnVjdGlvbnMgc2hvdWxkIGJlIGVtaXR0ZWQg
+dHdpY2UuDQo+ICsgKiBOb3RlIHRoYXQgdGhpcyBleHByZXNzaW9uIGlzIGV2YWx1YXRlZCBieSB0
+aGUgYXNzZW1ibGVyIChub3QgdGhlIGNvbXBpbGVyKSwNCj4gKyAqIGFuZCB0aGF0IHRoZSBhc3Nl
+bWJsZXIgZXZhbHVhdGVzICc9PScgYXMgMCBvciAtMSwgbm90IDAgb3IgMS4NCj4gICAqLw0KPiAg
+I2lmZGVmIENPTkZJR19DUFVfQ0FWSVVNX09DVEVPTg0KPiAtIyBkZWZpbmUgX19TWU5DX3JwdCh0
+eXBlKQkoMSArICh0eXBlID09IF9fU1lOQ193bWIpKQ0KPiArIyBkZWZpbmUgX19TWU5DX3JwdCh0
+eXBlKQkoMSAtICh0eXBlID09IF9fU1lOQ193bWIpKQ0KPiAgI2Vsc2UNCj4gICMgZGVmaW5lIF9f
+U1lOQ19ycHQodHlwZSkJMQ0KPiAgI2VuZGlmDQo=
