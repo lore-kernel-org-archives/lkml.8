@@ -2,65 +2,93 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BC3C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90115C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15FD206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5F520714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:33:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUNLEbkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgBKLcP (ORCPT
+        id S1728301AbgBKLc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:32:15 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57844 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727692AbgBKLcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:32:15 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1CE49B437;
-        Tue, 11 Feb 2020 11:32:14 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 12:32:13 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v5 1/7] console: Don't perform test for CON_BRL flag
-Message-ID: <20200211113213.eaftwrq3tbt3rjwo@pathway.suse.cz>
-References: <20200203133130.11591-1-andriy.shevchenko@linux.intel.com>
- <20200204013426.GB41358@google.com>
+        Tue, 11 Feb 2020 06:32:59 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42463 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbgBKLc7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 06:32:59 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 4so5356516pfz.9;
+        Tue, 11 Feb 2020 03:32:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R7XIwjb1NmupQsOWTxb+gUt0SoUoKsZRKZltoxsJ+0E=;
+        b=TUNLEbkwqFFXyUaExg1rcZ4cxXvBJgO0OMJCHgAQpqIUxfxxEbLICqd89J31UzbIUH
+         xw6R0MwtCWUWI5W7dMWfOSPAIdT9quhDDIwcABa8TBlQLunh2KAQVVtqfWJZCmj+w9zr
+         1bmhv/h7+Olj9CpXn9L0JB4g5Rw+gq2nvkKm8TD4/n65L0ZayZjyVlvrwc8QRx4ge551
+         md+gZAUhmh3aedgcjTUumQgVymRhjaHjJ/PmoDwT57mR/qnCb7o0y9nBdsmU+PrwHeji
+         2oTrxXmYIyMxbI9bzWwcbuWWkDjMpmiJi3Qin2lggaKoMM2vwEcHoDco4TfdnOC0Wfij
+         0xKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R7XIwjb1NmupQsOWTxb+gUt0SoUoKsZRKZltoxsJ+0E=;
+        b=SuiInuss+V+V6gcpBXigo4wTvbrMzKj9D5TL759QGAlbU1Mk+tO3jYNHZC/DRpHRZD
+         drjDZi87L2n+qVnziJU+N9GYQDIeHnIM9RfO2tLj5U5XQXrnqght7pfifBtb+Qp7QUk9
+         JKjcOzvYG0P/3tjC7FWqaI41A8NNtaHk9/adZEZvd+CnukJIjBtYqBctkjYKArcHwi7b
+         JE6OajOtcmXjxwhBAlXKhD6gY95viX8z0aIfSelzRMq+DccX0EjADMRyU33Pp53fulVe
+         B9Sp1Pe2PuxxOWxaMBGnw+2VP4c/r93eC9YCMQoVx9uqDmufaAmHwh6ObE2xgXJFfTqZ
+         rZRQ==
+X-Gm-Message-State: APjAAAX+QNrEhhEveWw7oHus7p+FwrlFPypl7Fe0inCsZkutlF4fVdJ9
+        APH6eObqcYhQ5fOlSW9oC7Q8omgW3SM=
+X-Google-Smtp-Source: APXvYqxPJQt/2QMW+tXXPqW8yLwcsk4nRTYq/zpCBsPECWConwDbHwxcBeM7DjrVf3AZfC0tUNpbrA==
+X-Received: by 2002:a63:7c17:: with SMTP id x23mr6367756pgc.436.1581420778563;
+        Tue, 11 Feb 2020 03:32:58 -0800 (PST)
+Received: from mentat.byu.edu ([128.187.112.29])
+        by smtp.gmail.com with ESMTPSA id x25sm4159009pfp.30.2020.02.11.03.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 03:32:57 -0800 (PST)
+From:   Isaac Young <isaac.young5@gmail.com>
+To:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Removing a duplicate condition.
+Date:   Tue, 11 Feb 2020 04:32:57 -0700
+Message-Id: <20200211113257.451781-1-isaac.young5@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204013426.GB41358@google.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-02-04 10:34:26, Sergey Senozhatsky wrote:
-> On (20/02/03 15:31), Andy Shevchenko wrote:
-> > 
-> > We don't call braille_register_console() without CON_BRL flag set.
-> > And the _braille_unregister_console() already tests for console to have
-> > CON_BRL flag. No need to repeat this in braille_unregister_console().
-> > 
-> > Drop the repetitive checks from Braille console driver.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> 
-> Looks good to me overall
-> 
-> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Isaac Young <isaac.young5@gmail.com>
+---
+ tools/testing/selftests/bpf/prog_tests/select_reuseport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The entire patchset has been commited into printk.git,
-branch for-5.7-console-exit
+diff --git a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
+index 098bcae5f827..0954c7a8aa08 100644
+--- a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
++++ b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
+@@ -823,7 +823,7 @@ void test_select_reuseport(void)
+ 
+ 	saved_tcp_fo = read_int_sysctl(TCP_FO_SYSCTL);
+ 	saved_tcp_syncookie = read_int_sysctl(TCP_SYNCOOKIE_SYSCTL);
+-	if (saved_tcp_syncookie < 0 || saved_tcp_syncookie < 0)
++	if (saved_tcp_syncookie < 0)
+ 		goto out;
+ 
+ 	if (enable_fastopen())
+-- 
+2.24.1
 
-Best Regards,
-Petr
