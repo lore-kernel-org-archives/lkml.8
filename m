@@ -2,148 +2,195 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D6AC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEC5C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC0F20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46E72086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K8+pbKZH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cLYNAEzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgBKPOJ (ORCPT
+        id S1730312AbgBKPOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:14:09 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35449 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728825AbgBKPOJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:14:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581434047;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=n+tOrDH4MBmdZZMXBYyuy9MqSS0t57S86W7QYdiUp0M=;
-        b=K8+pbKZHdjnzz1NNEH5Z8H3UZ1K9xocrAUX16HXj46gr7iplXYeKnjPOmkZZ03TP9kfLj6
-        s744dEBwFwvgnJ8rR95oWSy+sSSN/bt/ivNTJCLdGlSPzkc7Djo6rGX1p9AnLyhz1Ib4Qw
-        Z7lCxU+Da8/MB5yrAIbqAGiN0niZoDY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-tAZrFunEPuW7lmoSB6Fvhg-1; Tue, 11 Feb 2020 10:14:05 -0500
-X-MC-Unique: tAZrFunEPuW7lmoSB6Fvhg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3605184AEA9;
-        Tue, 11 Feb 2020 15:14:02 +0000 (UTC)
-Received: from [10.36.116.22] (ovpn-116-22.ams2.redhat.com [10.36.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D89C60BF1;
-        Tue, 11 Feb 2020 15:13:46 +0000 (UTC)
-Subject: Re: [PATCH v16.1 6/9] virtio-balloon: Add support for providing free
- page reports to host
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, vbabka@suse.cz,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
- <20200122174347.6142.92803.stgit@localhost.localdomain>
- <b8cbf72d-55a7-4a58-6d08-b0ac5fa86e82@redhat.com>
- <20200211063441-mutt-send-email-mst@kernel.org>
- <ada0ec83-8e7d-abb3-7053-0ec2bf2a9aa5@redhat.com>
- <20200211090052-mutt-send-email-mst@kernel.org>
- <d6b481fb-6c72-455d-f8e4-600a8677c7a8@redhat.com>
- <20200211094357-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <314cb54e-8dfc-7606-7135-c21dbf416505@redhat.com>
-Date:   Tue, 11 Feb 2020 16:13:46 +0100
+        Tue, 11 Feb 2020 10:14:50 -0500
+Received: from mail-am6eur05on2081.outbound.protection.outlook.com ([40.107.22.81]:3905
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728986AbgBKPOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:14:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cWPAGwkSQSo9Qcm5i/FsmEDbxmsRcsG69u4GOzc5cMsM24ROG1BOxDawPM9re7pobYDhbBKEJunDBoMdqVdTAQcMmfexAMJWniDbxVjIyVyqyixscCw9CPdOFLkGxxpRsUrSxNHzHQk43Y/2X28X2Tp/e/7kLO5+oDT/PYu8PBfveysENnsdkeJtM5Q9mNDU/wEqipn5jd1HpredjvIUdrdgdxb+YZHRJ6lx822RmtR2b23CcXHorUbvwFAY/mdRUMjYGLSTAVetTVIeYfnOnGP/fJyQuOXq44eHulTSuV2warHjDYzUQ6KMKOyxXO30qX9JlB4Jr77Z2YSi3dmrnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IKS0aVs2/1BfR6NyeyxhTrPrI3LZqEcDAfFy6/tanZA=;
+ b=W0qtgo3kxpSJkNAnt1HpAaH8m9BgRQJtaVRSKJYdf0THLWOzpXtMxQw6YYc8s5LangGdc6z3HXFC4Gexbhl4TITNTD3LW6vd+Clc0OSaheuvA9gEkizjQ9uG5i/Zps+lD6gTs7Pb9OJKPqIn5K8qIT3GkT76ZR5ZHlR3mVz/s3GJFkkvDE/XpKgKxzIf2iVmz0bImY+i2iQfmWLXjIzP1e6zf4ogeMXackYiQSth/uz4TS0z/aMdo5W8QF+zIt/I8Va1wsrubNLjo4/rZ5kfXRLFsT5H9yYskSuY8XFqFIFUmJF9SBbpUseb7q3/I1X3AVuvgNfPzayVO8Tctes/9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IKS0aVs2/1BfR6NyeyxhTrPrI3LZqEcDAfFy6/tanZA=;
+ b=cLYNAEzgLXMPS6nMBhXb22o736RBhsgoXju9IWnbcxw/tfjfOI1xnKKOAne8SoDXJfrj+g4lrLubCn2wf7m5e9Ls323JaVuwDAjKa1IxKwjnv4x4EYkbS8JO8ghS62JZFYceTgpX58ShqS8b10GQxWVEXA1Hxl4Hr303f771V5I=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
+ AM6PR04MB5318.eurprd04.prod.outlook.com (20.177.33.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Tue, 11 Feb 2020 15:14:44 +0000
+Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
+ ([fe80::bcef:1c59:7d27:d0e]) by AM6PR04MB5878.eurprd04.prod.outlook.com
+ ([fe80::bcef:1c59:7d27:d0e%6]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
+ 15:14:44 +0000
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     Olof Johansson <olof@lixom.net>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Li Yang <leoyang.li@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+ <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+ <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com>
+ <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
+ <CAOesGMhVA9NSbAi-BtcgQBBK90jeT+NcQ6j_FDgjuR7efE65Vg@mail.gmail.com>
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Message-ID: <f5930767-496b-2bd7-2cf6-5e68e39f65e8@nxp.com>
+Date:   Tue, 11 Feb 2020 17:14:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200211094357-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAOesGMhVA9NSbAi-BtcgQBBK90jeT+NcQ6j_FDgjuR7efE65Vg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0466.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a2::22) To AM6PR04MB5878.eurprd04.prod.outlook.com
+ (2603:10a6:20b:a2::25)
+MIME-Version: 1.0
+Received: from [10.171.82.13] (89.37.124.34) by LO2P265CA0466.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a2::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.28 via Frontend Transport; Tue, 11 Feb 2020 15:14:42 +0000
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0158cb96-689e-4f52-9fec-08d7af051fd5
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5318:|AM6PR04MB5318:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB5318DB2CEFF3AD93209B97E6EC180@AM6PR04MB5318.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0310C78181
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(189003)(199004)(2906002)(5660300002)(66476007)(66946007)(66556008)(110136005)(54906003)(6486002)(16576012)(966005)(478600001)(316002)(8676002)(81166006)(4326008)(81156014)(53546011)(7416002)(36756003)(52116002)(8936002)(186003)(16526019)(26005)(86362001)(31696002)(31686004)(2616005)(956004)(44832011)(11634003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5318;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: v4dQ5W4PYOtXqbrehomwD+M58TNHasSZuHzvfQpgO4EjYabE7NU9+x0jknbKi3GczzgL+lU4eZVVXvFlwuN5F0GqVGeFF/oEu8Sfv/KAO3cHAVQiZz5QBK6Go+koiwWtsRMJ1IvoEQDE2o5rgS6+aSE8AGP5R07qRgLm4UnhtKBQoSuHFaOaBcMcwW77VLzYO6A7tTSoBu75P21q/vEsp63FXtJH63lYW6LOaNF412NnucqemVazpLYbWjQBQ/GupenCpw7yoV1oL2O/0CWRlPioo8Y3WCMDkZEvdplFanlUpRYCTRrJkGvvgyq1FV2fODZnQbvqCiL5vtw++iLHvXQTfmv2vLTvoecLYfofKi/CIGjmxjrVbTNn/A10wULBgA2TnkTmun11kL8q2poJ2AvFy6A6EDk8g2bFZo2pAw4x3kVO5/CbAz3xB+QUBmItSosKwXoH2kx3/7DIqmoulAKY1JTyIUeVwS6f4nchGrVhClIL1Rlxl7RsL2v9wanLqUjYfp6of3i74ydfKyGkyq/r3Vte4MDGmoT2EccXnAoiFCM95HD+fP3sMoU6mIxj
+X-MS-Exchange-AntiSpam-MessageData: wo0cUvBZzOcUGxI1kRpJROQpGubqwoY8gvWkTOf0FFpY0t2ioxICZ4yVGRRrwHc2qxsS+/BkL92R810iXS23E49YvnWFofNWlzzZAdgxA7U7r8cJ3dK3AvNYcQaZGgTA6bT30NgUjaID6RR7iE34Iw==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0158cb96-689e-4f52-9fec-08d7af051fd5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 15:14:44.2194
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3thvKxcc6+j7uC+2aiYssNxTstX1s/RTYujH8nMtU6og8/xL+YXvspBfw8u257bstGDzODEaaKAHTRG2e3D15g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5318
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- >> AFAIKs, the guest could inflate/deflate (esp. temporarily) and
->> communicate via "actual" the actual balloon size as he sees it.
->=20
-> OK so you want hinted but unused pages counted, and reported
-> in "actual"? That's a vmexit before each page use ...
 
-No, not at all. I rather meant, that it is unclear how
-inflation/deflation requests and "actual" *could* interact. Especially
-if we would consider free page reporting as some way of inflation
-(+immediate deflation) triggered by the guest. IMHO, we would not touch
-"actual" in that case.
 
-But as I said, I am totally fine with keeping it as is in this patch.
-IOW not glue free page reporting to inflation/deflation but let it act
-like something different with its own semantics (and document these
-properly).
+On 11.02.2020 16:48, Olof Johansson wrote:
+> On Tue, Feb 11, 2020 at 5:04 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 2020-02-11 12:13 pm, Laurentiu Tudor wrote:
+>> [...]
+>>>> This is a known issue about DPAA2 MC bus not working well with SMMU
+>>>> based IO mapping.  Adding Laurentiu to the chain who has been looking
+>>>> into this issue.
+>>>
+>>> Yes, I'm closely following the issue. I actually have a workaround
+>>> (attached) but haven't submitted as it will probably raise a lot of
+>>> eyebrows. In the mean time I'm following some discussions [1][2][3] on
+>>> the iommu list which seem to try to tackle what appears to be a similar
+>>> issue but with framebuffers. My hope is that we will be able to leverage
+>>> whatever turns out.
+>>
+>> Indeed it's more general than framebuffers - in fact there was a
+>> specific requirement from the IORT side to accommodate network/storage
+>> controllers with in-memory firmware/configuration data/whatever set up
+>> by the bootloader that want to be handed off 'live' to Linux because the
+>> overhead of stopping and restarting them is impractical. Thus this DPAA2
+>> setup is very much within scope of the desired solution, so please feel
+>> free to join in (particularly on the DT parts) :)
+> 
+> That's a real problem that nees a solution, but that's not what's
+> happening here, since cold boots works fine.
+> 
+> Isn't it a whole lot more likely that something isn't
+> reset/reinitialized properly in u-boot, such that there is lingering
+> state in the setup, causing this?
 
---=20
-Thanks,
+Ok, so this is completely something else. I don't think our u-boots are 
+designed to run in ways other than coming from hard reset.
 
-David / dhildenb
+>> As for right now, note that your patch would only be a partial
+>> mitigation to slightly reduce the fault window but not remove it
+>> entirely. To be robust the SMMU driver *has* to know about live streams
+>> before the first arm_smmu_reset() - hence the need for generic firmware
+>> bindings - so doing anything from the MC driver is already too late (and
+>> indeed the current iommu_request_dm_for_dev() mechanism is itself a
+>> microcosm of the same problem).
+> 
+> This is more likely a live stream that's left behind from the previous
+> kernel (there are some error messages about being unable to detach
+> domains, but the errors make it hard to tell what driver didn't unbind
+> enough).
 
+I also noticed those messages. Perhaps our PCI driver doesn't do all the 
+required cleanup.
+
+> *BUT*, even with that bug, the system should reboot reliably and come
+> up clean. So, something isn't clearing up the state *on boot*.
+
+We do test some kexec based "soft-reset" scenarios, didn't hit your 
+issue but instead we hit this:
+
+https://lkml.org/lkml/2018/9/21/1066
+
+Can you please provide some more info on your scenario?
+
+---
+Best Regards, Laurentiu
