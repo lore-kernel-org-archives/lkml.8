@@ -2,83 +2,117 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EF1C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3446C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3912206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9943920848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UhUw4kZ1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NHUHDOfc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbgBKRah (ORCPT
+        id S1729441AbgBKRbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:30:37 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42068 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgBKRag (ORCPT
+        Tue, 11 Feb 2020 12:31:33 -0500
+Received: from gateway20.websitewelcome.com ([192.185.51.6]:22294 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729132AbgBKRbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:30:36 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 4so5802787pfz.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:30:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bM2xQLURwsdpapQPw/vmgOLzWTtBkTWZo2XFKd2Fc+8=;
-        b=UhUw4kZ1K/iv8XUFtbPsZE67iNVKeF3gHIfx4luTMSun/AiazJMw/EhJEbjEDMBGmB
-         IqkfDnBx6ZhCodlj5vim1mqgXSqx4dtTLeAMl1sHlPvPJrMFH+QjPQbnAhl8DRqzyE+0
-         bIMARUOacrDFUrqJe0XAE5Yej6WjDvGozDQToeELMtee1XjWWUOfbZdtE8RuI4cMQYMh
-         FSa1l1RbZdqAagpgEPYEpj3R5jY8Jt77f+SHxdbtFHupODk8rpqr6dsAe2WScGXupCO4
-         N4eiUMj6bxYgriLnjs33AThtA8d9tFc2NTnxxuziVV0X7UnODYSuSEAmeh8e8uSnsF0U
-         xyBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bM2xQLURwsdpapQPw/vmgOLzWTtBkTWZo2XFKd2Fc+8=;
-        b=uCxO23p1CPWX7Nrr7EFc+yEpLHyP6eKzPs/3nwwnA+dlfvB64RP5TwYHgrUQDY9HJx
-         EmZRJjTbkMraaHvayq8hjwNlxbU3YNqURNPBLpIOG4ZKwKyPnsNJIw/5/aVWjsdvZbLW
-         uxwajOpIWFdgbOVK431ZnPz23ZIaO9DMqYMT6uKEQc+atMFE97AL5uiCIeZro80J9QJg
-         +Fo790Rq1FQjxt9i2t9iJkj/zYz6hNlvlNSIA7v9u71X3dZoVuCABkQJkJmkdAXaE45S
-         wO7jSxpwL5SzLUna79OKOOPRDTEahiFclqDDBV5yGqLwgoAEfVK1A7A9HzXkaseVw5q7
-         5z4w==
-X-Gm-Message-State: APjAAAVhR0YPwPLONlDshlqfBllewmG/A+3wElUv9+GKfSLmB1GZRpJG
-        t4rDb6aCkaZurwpeZN5OWn0n6VsFIdB9xOZlhBOZCA==
-X-Google-Smtp-Source: APXvYqx1sbmFj+6yubaRWA1F7s2PkQxLnUx1wxZkhe3GdVuGxqkwu5RKJGr9IlPthyKETEuHKtKYLUWWHfSwkJVG48Y=
-X-Received: by 2002:a63:64c5:: with SMTP id y188mr7815807pgb.10.1581442235797;
- Tue, 11 Feb 2020 09:30:35 -0800 (PST)
+        Tue, 11 Feb 2020 12:31:33 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id C6BA84012ECE3;
+        Tue, 11 Feb 2020 10:17:58 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1ZNkjQrto8vkB1ZNkjP415; Tue, 11 Feb 2020 11:31:32 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YMSqBvn3OFsv1lNznyX5EeTk3+DH+Esm65JtcIOwnMY=; b=NHUHDOfcZNONgQ1WuY5dZ7AOCh
+        4mQkzvYwO/yKv3y/vPOypI8iKziwgDe3py2fiDT5L185TEMkA+8G2a0StgViX9Qwj3lRGN7rCloCo
+        a1G2hFqJxJbQveFpv4Jk8e/ogd6GBHWzcs5hw2JCiODZVyQGXIkV14HxbAgx+Dg/7PYG3LaEMXe9p
+        LGFr7/Ffzi1u21i8Du71DskqkRx31jb3D2gJQXPYxxXicXPJyaR9CTeYol4YzRpvPHUUhhbv3bAoT
+        r3q2yGh/8m6EknhOaFtx/7ZRs7LGXkZqROqzdD+BXtMCqmMQDZdk08lh+FDfr5Y5CKwizz/mZG+TJ
+        Xs72lOIA==;
+Received: from [200.68.141.48] (port=6149 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1Wm9-002prQ-E0; Tue, 11 Feb 2020 08:44:33 -0600
+Date:   Tue, 11 Feb 2020 08:47:04 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        David Laight <David.Laight@ACULAB.COM>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2] i2c: altera: Fix potential integer overflow
+Message-ID: <20200211144704.GA6461@embeddedor>
 MIME-Version: 1.0
-References: <20200208140858.47970-1-natechancellor@gmail.com> <your-ad-here.call-01581426728-ext-3459@work.hours>
-In-Reply-To: <your-ad-here.call-01581426728-ext-3459@work.hours>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 11 Feb 2020 17:30:24 +0000
-Message-ID: <CAKwvOd=CWKnrY_T8vP4a-KXkz-V57dFqk+6FC_krm=pVAVibyg@mail.gmail.com>
-Subject: Re: [PATCH] s390/time: Fix clk type in get_tod_clock
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.48
+X-Source-L: No
+X-Exim-ID: 1j1Wm9-002prQ-E0
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.48]:6149
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:12 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
-> Applied, thanks.
+Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
+instead of 64-bit.
 
-Hi Vasily, is this the expected tree+branch that the patch will be
-pushed to? (I'm trying to track when+where our patches land).
-https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/log/?h=fixes
+Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
+and there is no need for div_u64().
 
+Addresses-Coverity: 1458369 ("Unintentional integer overflow")
+Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Changes in v2:
+ - Update subject and changelog text.
+ - Avoid the need for 64-bit arithmetic at all.
+
+ drivers/i2c/busses/i2c-altera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index 5255d3755411..1de23b4f3809 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -171,7 +171,7 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
+ 	/* SCL Low Time */
+ 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
+ 	/* SDA Hold Time, 300ns */
+-	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
++	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+ 
+ 	/* Mask all master interrupt bits */
+ 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
 -- 
-Thanks,
-~Nick Desaulniers
+2.25.0
+
