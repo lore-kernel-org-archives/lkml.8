@@ -2,155 +2,210 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B888C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB844C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E8520873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NFwz3laf";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kr6PyWqz"
+	by mail.kernel.org (Postfix) with ESMTP id 9E3542082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgBKAsh (ORCPT
+        id S1727695AbgBKAsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:48:37 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6772 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727538AbgBKAsg (ORCPT
+        Mon, 10 Feb 2020 19:48:40 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43338 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727546AbgBKAsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:48:36 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01B0UVru017895;
-        Mon, 10 Feb 2020 16:48:26 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=QLhrZ6L7Tt6R3+ELTUSO6hJpw8yOInDYqbUpbxvsAqI=;
- b=NFwz3lafiYhuLGUIQSL7vTihPa7kwrRBchAMkUGkWBcpJjNVefTuETknsvjZjA/Epi1G
- rCzO3hXlMProIt50mWhDI9hvdkYTCIVyiuxBVZUZVXJLpU5DfjCmhNR0NhWJRjoVntlM
- zQGt1hjmGVra4j5eMw7FLLbQxlp1zpmic0A= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2y1ucuu0j0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 10 Feb 2020 16:48:25 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 10 Feb 2020 16:48:24 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lSQFbVEysPe8JKCRXro4QyNcnzfnNJL640M1PE1y+iL/47lWWjacz4gMQrJJcR16j4J128kHMmdB9cqOgk3sJHAYucctNsN+BWsx+27k48mJlN0/L06x1FVMno0tM2cKZ2uG74WuaaGzixU/sTR1mut8ByM9t/dtxUWdHFqzDGim/FbYqSELCALG7zMqFRsGtMDmSBI99F7Dz8JciJr+h/I2aLbPdfP7a9qzD+Cfga2JfMHQi1vEhp9h4Rzchxh/NBiaVVAMm7I9ShNdsg76CMh+7IGOLxcbvLdq/A6izuOgcXCsI9Dhi1XiOo4ULYWmkGTeHDzTanCaQCB8tNv8Gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QLhrZ6L7Tt6R3+ELTUSO6hJpw8yOInDYqbUpbxvsAqI=;
- b=kzOuWPJ2rMLbVU2luvLoTwk+pB1sSkwHR2gPi8gQLOldpVWB2+LDw0tcPiuQPbnUElV4W0edGuNfi32fXhP6zfa0UPRTjn06nUXiJG7hX5msq3QuOvROQEYzsbR3zB+PYiZSf9jBuy4wZAO9IZAOk1ru/ORBFRYdcWvWoj8W3Kv0+dnhZqfca65NEF/7lWFtCAC/SgxpKS9OyyP97U88vqwhB/+ES+fqk3flTdd1/UTOegtUm6narkxAnmUvbd+7p+s6ti+B3PgvXlyppGCyerB5kT/TfB75FZ9EtVLsGyxxDQnaA5ZWocFHJZEEiaATx4SX0oijMmb/AJ5JFJ9bUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QLhrZ6L7Tt6R3+ELTUSO6hJpw8yOInDYqbUpbxvsAqI=;
- b=kr6PyWqzdRHYvSleZ3bI54dmPrz/HRrhCijY8sEYTTHlknebVwr5eOxnMg5pNxPlx/HAIO3+cQ/kDRE8s5tK4vjWFMGs7vrseeTJ5xP0b2rnRD/VzO9Me7enbureK2lrTUJXuLorUCixXy1oGRdh5cR+/+45sI5Dw7wNf94Xx6M=
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com (10.173.234.137) by
- MWHPR15MB1229.namprd15.prod.outlook.com (10.175.7.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.26; Tue, 11 Feb 2020 00:48:22 +0000
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::c863:5ef9:530d:efd2]) by MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::c863:5ef9:530d:efd2%11]) with mapi id 15.20.2707.028; Tue, 11 Feb
- 2020 00:48:22 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Joel Stanley <joel@jms.id.au>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Eddie James <eajames@linux.ibm.com>
-Subject: Re: linux-next: build failure after merge of the aspeed tree
-Thread-Topic: linux-next: build failure after merge of the aspeed tree
-Thread-Index: AQHV4Fto3qGKenSQ/0+jrIkDB8Ejv6gUoxgA
-Date:   Tue, 11 Feb 2020 00:48:22 +0000
-Message-ID: <46287780-32D0-46D3-9604-D71BA190821E@fb.com>
-References: <20200211084449.05e3b3cb@canb.auug.org.au>
-In-Reply-To: <20200211084449.05e3b3cb@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::9581]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9aea5b4c-a2b0-4836-70ad-08d7ae8c1892
-x-ms-traffictypediagnostic: MWHPR15MB1229:
-x-microsoft-antispam-prvs: <MWHPR15MB12294E2ED81A9ED7F6F7791DDD180@MWHPR15MB1229.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(366004)(39860400002)(376002)(189003)(199004)(6512007)(66556008)(64756008)(66476007)(76116006)(66946007)(66446008)(6486002)(33656002)(478600001)(5660300002)(71200400001)(36756003)(2616005)(54906003)(6506007)(316002)(8676002)(81166006)(186003)(110136005)(86362001)(4326008)(2906002)(8936002)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1229;H:MWHPR15MB1597.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZPmQ2nxOpnAvwCwy/X5SUNzbt+yIpLMZ7to+wsm9HfuZB2QlOg31VnIz424JCrnhl28HpCz/6/eUj5ZwM3BDEuE5Gk/RsYJomEhVEj1CVSMgrGSeHT0CabJl6h+x4jllLYfvOHFvGl/oR1kD3ZtHaeXbGjlx0pdiLrBZGEJwuiP1MrO0Pr8dgtQG1gl3a5ISVzkVS27u7NVSrwx9Hx0r0OsZ1bGvcIdoOPWEZVaEXVCNykl4zcmGXSlZdbIhSalONbWAsbuFZacQBAk7mHRC98kBcR4/7bQM/NWagYMxT7vgECUYkhK85UBjRStLaSTIGzFeQ5PbsTX5tAfg2zonOA4nCCbTO5IeZeD85zRv2FNAzHDF0Vd3i2+t8zkw6tsIcaq7ypLtkep+qLsGhUQZ3iT6yXCb9Lm6Z0xzQfz2iJ1Np97N6KECEUyisniqYwU5
-x-ms-exchange-antispam-messagedata: i3a9pfAsSgPb3IE9dcZAP3suYoT5WQby3BpVx0G7dOT7jrY6Fj45qIG4OxR9d3c30Bks5xxETbGJl30q3JOEhfHl4Z5l6rQr+i97JvFp4u0xNFFoV5vZc5XAhDlR9eK9/E4EvXtiRu+O3t7DDcTTsd29ybzqadBnhgRRH9bAuXU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9542C36FEB22904086FA66A35DF145A1@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 10 Feb 2020 19:48:39 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4253A3A3735;
+        Tue, 11 Feb 2020 11:48:32 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j1Jj4-0004Gl-R4; Tue, 11 Feb 2020 11:48:30 +1100
+Date:   Tue, 11 Feb 2020 11:48:30 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Andres Freund <andres@anarazel.de>
+Cc:     David Howells <dhowells@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, willy@infradead.org, hch@infradead.org,
+        jack@suse.cz, akpm@linux-foundation.org
+Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
+ writeback errors
+Message-ID: <20200211004830.GB10737@dread.disaster.area>
+References: <20200207170423.377931-1-jlayton@kernel.org>
+ <20200207205243.GP20628@dread.disaster.area>
+ <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
+ <20200210214657.GA10776@dread.disaster.area>
+ <20200211000405.5fohxgpt554gmnhu@alap3.anarazel.de>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9aea5b4c-a2b0-4836-70ad-08d7ae8c1892
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 00:48:22.6069
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FgaSUB+8hrqryt5aKFlsXxdtW5PEA5HWTMqMTURb0HHbWQTox9iHiriQBq3F7jzFtDH0iA/7g0ygiFD/yDjDiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1229
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_08:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1011 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110001
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211000405.5fohxgpt554gmnhu@alap3.anarazel.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=vNYKtK0NrCcJUg9B7GIA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9lbCwNCkkgYW0gbG9va2luZyBpbnRvIGZpeGluZyB3YXJuaW5nIGZvciBteSBwYXRjaC4g
-SWYgeW91IGhhdmUgYW55IGlkZWEgb3Igc3VnZ2VzdGlvbnMsIHBsZWFzZSBhZHZpY2UuDQoNClJl
-Z2FyZHMNCi1WaWpheQ0KDQrvu79PbiAyLzEwLzIwLCAxOjQ1IFBNLCAiU3RlcGhlbiBSb3Rod2Vs
-bCIgPHNmckBjYW5iLmF1dWcub3JnLmF1PiB3cm90ZToNCg0KICAgIEhpIGFsbCwNCiAgICANCiAg
-ICBBZnRlciBtZXJnaW5nIHRoZSBhc3BlZWQgdHJlZSwgdG9kYXkncyBsaW51eC1uZXh0IGJ1aWxk
-IChhcm0NCiAgICBtdWx0aV92N19kZWZjb25maWcpIGZhaWxlZCBsaWtlIHRoaXM6DQogICAgDQog
-ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc2LmR0c2k6MzIyLjM1LTMyNy43OiBFUlJPUiAo
-ZHVwbGljYXRlX25vZGVfbmFtZXMpOiAvYWhiL2FwYi9zeXNjb25AMWU2ZTIwMDAvaW50ZXJydXB0
-LWNvbnRyb2xsZXI6IER1cGxpY2F0ZSBub2RlIG5hbWUNCiAgICBFUlJPUjogSW5wdXQgdHJlZSBo
-YXMgZXJyb3JzLCBhYm9ydGluZyAodXNlIC1mIHRvIGZvcmNlIG91dHB1dCkNCiAgICANCiAgICBD
-YXVzZWQgYnkgY29tbWl0DQogICAgDQogICAgICAwOTFmZjUyMDZlZjMgKCJBUk06IGR0czogYXNw
-ZWVkOiBhc3QyNjAwOiBGaXggU0NVIElSUSBjb250cm9sbGVyIG5vZGUgYWRkcmVzc2VzIikNCiAg
-ICANCiAgICBBbHNvIHRoZXNlIHdhcm5pbmdzOg0KICAgIA0KICAgIGFyY2gvYXJtL2Jvb3QvZHRz
-L2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0czo0MzUuMTEtNDM5LjQ6IFdhcm5pbmcg
-KGkyY19idXNfcmVnKTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2kyYy1idXNAMTQwL2lwbWIwQDEw
-OiBJMkMgYnVzIHVuaXQgYWRkcmVzcyBmb3JtYXQgZXJyb3IsIGV4cGVjdGVkICI0MDAwMDAxMCIN
-CiAgICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHM6
-NDM3LjMtMzA6IFdhcm5pbmcgKGkyY19idXNfcmVnKTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2ky
-Yy1idXNAMTQwL2lwbWIwQDEwOnJlZzogSTJDIGFkZHJlc3MgbXVzdCBiZSBsZXNzIHRoYW4gMTAt
-Yml0cywgZ290ICIweDQwMDAwMDEwIg0KICAgIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMt
-ZmFjZWJvb2stdGlvZ2FwYXNzLmR0czo1MjEuMTEtNTI1LjQ6IFdhcm5pbmcgKGkyY19idXNfcmVn
-KTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2kyYy1idXNAMzgwL2lwbWIwQDEwOiBJMkMgYnVzIHVu
-aXQgYWRkcmVzcyBmb3JtYXQgZXJyb3IsIGV4cGVjdGVkICI0MDAwMDAxMCINCiAgICBhcmNoL2Fy
-bS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHM6NTIzLjMtMzA6IFdh
-cm5pbmcgKGkyY19idXNfcmVnKTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2kyYy1idXNAMzgwL2lw
-bWIwQDEwOnJlZzogSTJDIGFkZHJlc3MgbXVzdCBiZSBsZXNzIHRoYW4gMTAtYml0cywgZ290ICIw
-eDQwMDAwMDEwIg0KICAgIA0KICAgIENhdXNlZCBieSBjb21taXQNCiAgICANCiAgICAgIGE1OWIx
-NzkyYWRmMSAoIkFSTTogZHRzOiBhc3BlZWQ6IHRpb2dhcGFzczogQWRkIElQTUIgZGV2aWNlIikN
-CiAgICANCiAgICBJIGhhdmUgdXNlZCB0aGUgYXNwZWVkIHRyZWUgZnJvbSBuZXh0LTIwMjAwMjEw
-IGZvciB0b2RheS4NCiAgICANCiAgICAtLSANCiAgICBDaGVlcnMsDQogICAgU3RlcGhlbiBSb3Ro
-d2VsbA0KICAgIA0KDQo=
+On Mon, Feb 10, 2020 at 04:04:05PM -0800, Andres Freund wrote:
+> Hi,
+> 
+> (sorry if somebody got this twice)
+> 
+> David added you, because there's discussion about your notify work
+> below.
+> 
+> On 2020-02-11 08:46:57 +1100, Dave Chinner wrote:
+> > On Fri, Feb 07, 2020 at 01:20:12PM -0800, Andres Freund wrote:
+> > > Hi,
+> > > 
+> > > On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
+> > > > On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
+> > > > > You're probably wondering -- Where are v1 and v2 sets?
+> > > 
+> > > > > The basic idea is to track writeback errors at the superblock level,
+> > > > > so that we can quickly and easily check whether something bad happened
+> > > > > without having to fsync each file individually. syncfs is then changed
+> > > > > to reliably report writeback errors, and a new ioctl is added to allow
+> > > > > userland to get at the current errseq_t value w/o having to sync out
+> > > > > anything.
+> > > > 
+> > > > So what, exactly, can userspace do with this error? It has no idea
+> > > > at all what file the writeback failure occurred on or even
+> > > > what files syncfs() even acted on so there's no obvious error
+> > > > recovery that it could perform on reception of such an error.
+> > > 
+> > > Depends on the application.  For e.g. postgres it'd to be to reset
+> > > in-memory contents and perform WAL replay from the last checkpoint.
+> > 
+> > What happens if a user runs 'sync -f /path/to/postgres/data' instead
+> > of postgres? All the writeback errors are consumed at that point by
+> > reporting them to the process that ran syncfs()...
+> 
+> We'd have to keep an fd open from *before* we start durable operations,
+> which has a sampled errseq_t from before we rely on seeing errors.
+> 
+> 
+> > > Due to various reasons* it's very hard for us (without major performance
+> > > and/or reliability impact) to fully guarantee that by the time we fsync
+> > > specific files we do so on an old enough fd to guarantee that we'd see
+> > > the an error triggered by background writeback.  But keeping track of
+> > > all potential filesystems data resides on (with one fd open permanently
+> > > for each) and then syncfs()ing them at checkpoint time is quite doable.
+> > 
+> > Oh, you have to keep an fd permanently open to every superblock that
+> > application holds data on so that errors detected by other users of
+> > that filesystem are also reported to the application?
+> 
+> Right
+> 
+> Currently it's much worse (you probably now?):
+
+*nod*
+
+> > FWIW, explicit userspace error notifications for data loss events is
+> > one of the features that David Howell's generic filesystem
+> > notification mechanism is intended to provide.  Hence I'm not sure
+> > that there's a huge amount of value in providing a partial solution
+> > that only certain applications can use when there's a fully generic
+> > mechanism for error notification just around the corner.
+> 
+> Interesting. I largely missed that work, unfortunately. It's hard to
+> keep up with all kernel things, while also maintaining / developing an
+> RDBMS :/
+
+It's hard enough trying to keep up with everything as a filesystem
+developer... :/
+
+> I assume the last state that includes the superblock layer stuff is at
+> https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications
+> whereas there's a newer
+> https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications-core
+> not including that. There do seem to be some significant changes between
+> the two.
+
+ANd they are out of date, anyway, because they are still based on
+a mmap'd ring buffer rather than the pipe infrastructure. See this
+branch for the latest:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications-pipe-core
+
+It doesn't have all the block/superblock/usb notification
+infrastructure in it, just the keyring implementation. No point
+reimplementing everything while the core notification mechanism is
+still changing...
+
+> 
+> As far as I can tell the superblock based stuff does *not* actually
+> report any errors yet (contrast to READONLY, EDQUOT). Is the plan here
+> to include writeback errors as well? Or just filesystem metadata/journal
+> IO?
+
+Right, that part hasn't been implemented yet, though it's repeatedly
+mentioned as intended to be supported functionality. It will depend
+on the filesystem to what it is going to report, but I would expect
+that it will initially be focussed on reporting user data errors
+(e.g. writeback errors, block device gone bad data loss reports,
+etc). It may not be possible to do anything sane with
+metadata/journal IO errors as they typically cause the filesystem to
+shutdown.
+
+Of course, a filesystem shutdown is likely to result in a thundering
+herd of userspace IO error notifications (think hundreds of GB of
+dirty page cache getting EIO errors). Hence individual filesystems
+will have to put some thought into how critical filesystem error
+notifications are handled.
+
+That said, we likely want userspace notification of metadata IO
+errors for our own purposes. e.g. so we can trigger the online
+filesystem repair code to start trying to fix whatever went wrong. I
+doubt there's much userspace can do with things like "bad freespace
+btree block" notifications, whilst the filesystem's online repair
+tool can trigger a free space scan and rebuild/repair it without
+userspace applications even being aware that we just detected and
+corrected a critical metadata corruption....
+
+> I don't think that block layer notifications would be sufficient for an
+> individual userspace application's data integrity purposes? For one,
+> it'd need to map devices to relevant filesystems afaictl. And there's
+> also errors above the block layer.
+
+Block device errors separate notifications to the superblock
+notifications. If you want the notification of raw block device
+errors, then that's what you listen for. If you want the filesystem
+to actually tell you what file and offset that EIO was generated
+for, then you'd get that through the superblock notifier, not the
+block device notifier...
+
+> Based on skimming the commits in those two trees, I'm not quite sure I
+> understand what the permission model will be for accessing the
+> notifications will be? Seems anyone, even within a container or
+> something, will see blockdev errors from everywhere?  The earlier
+> superblock support (I'm not sure I like that name btw, hard to
+> understand for us userspace folks), seems to have required exec
+> permission, but nothing else.
+
+I'm not really familiar with those details - I've only got all the
+"how it fits into the big picture" stuff in my head. Little
+implementation details like that :) aren't that important to me -
+all I need to know is how the infrastructure interacts with the
+kernel filesystem code and whether it provides the functionality we
+need to report filesystem errors directly to userspace...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
