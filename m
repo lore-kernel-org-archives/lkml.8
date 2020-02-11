@@ -2,266 +2,125 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB073C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FACC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BEA2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E502073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:44:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qD3S4rvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgBKXkd (ORCPT
+        id S1728005AbgBKXoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:40:33 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47266 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728035AbgBKXip (ORCPT
+        Tue, 11 Feb 2020 18:44:11 -0500
+Received: from gateway33.websitewelcome.com ([192.185.145.221]:34222 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727911AbgBKXoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:38:45 -0500
-Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 520e3db86b693f71; Wed, 12 Feb 2020 00:38:42 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Tue, 11 Feb 2020 18:44:11 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 4EE1C15CDB63
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:44:10 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1fCMjf244RP4z1fCMj6qsN; Tue, 11 Feb 2020 17:44:10 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HuWWbn9mG6qCqANbQu9GYRVgDmlnQe5rjU+iHf/AjzI=; b=qD3S4rvooZjnwz0ZXghoPw7ZpL
+        ngFyK6PbFW5DKFEiTRqdJF3WxsrLAJTFBKSod5A8MT6ahHCKWXh5AsWuJA1VqIcQdeuEqJ11BWW8K
+        M7pDnGAv80xQIg3wMeazsVGLx3qOaZeP1RVOBAiU7SVlg1b11u4YAC2romgUrX3lsKTNbgtcg02ua
+        OZ3ialpRyByBp2dNzfKBVMBmIubk3wzvJlQnXUN3UlJ5qi+YPeR5NSqsVrL+3Ws5mjZAhqiO03SUq
+        QVzq4cQS58Ec/U866KCYtJFwY1c7qkH4PmI7NWWDYWCyZcreqrnXCE3WCP30HJLDEY8xZbuHOIW8F
+        fq9ewb5w==;
+Received: from [200.68.140.36] (port=6741 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1fBp-003k23-1O; Tue, 11 Feb 2020 17:43:37 -0600
+Date:   Tue, 11 Feb 2020 17:46:12 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Support Opensource <support.opensource@diasemi.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 24/28] sound: Call cpu_latency_qos_*() instead of pm_qos_*()
-Date:   Wed, 12 Feb 2020 00:34:15 +0100
-Message-ID: <197693303.hiACyxC3Vm@kreacher>
-In-Reply-To: <1654227.8mz0SueHsU@kreacher>
-References: <1654227.8mz0SueHsU@kreacher>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] regulator: da9062: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200211234612.GA28682@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1fBp-003k23-1O
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:6741
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 56
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Call cpu_latency_qos_add/update/remove_request() and
-cpu_latency_qos_request_active() instead of
-pm_qos_add/update/remove_request() and pm_qos_request_active(),
-respectively, because the latter are going to be dropped.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-No intentional functional impact.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- sound/core/pcm_native.c               | 14 +++++++-------
- sound/soc/intel/atom/sst/sst.c        |  5 ++---
- sound/soc/intel/atom/sst/sst_loader.c |  4 ++--
- sound/soc/ti/omap-dmic.c              |  7 ++++---
- sound/soc/ti/omap-mcbsp.c             | 16 ++++++++--------
- sound/soc/ti/omap-mcpdm.c             | 16 ++++++++--------
- 6 files changed, 31 insertions(+), 31 deletions(-)
+ drivers/regulator/da9062-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 336406bcb59e..151bac1bbd0b 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -748,11 +748,11 @@ static int snd_pcm_hw_params(struct snd_pcm_substream *substream,
- 	snd_pcm_timer_resolution_change(substream);
- 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_SETUP);
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index b064d8a19d4c..c3b6ba9bafdf 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -86,7 +86,7 @@ struct da9062_regulators {
+ 	int					irq_ldo_lim;
+ 	unsigned				n_regulators;
+ 	/* Array size to be defined during init. Keep at end. */
+-	struct da9062_regulator			regulator[0];
++	struct da9062_regulator			regulator[];
+ };
  
--	if (pm_qos_request_active(&substream->latency_pm_qos_req))
--		pm_qos_remove_request(&substream->latency_pm_qos_req);
-+	if (cpu_latency_qos_request_active(&substream->latency_pm_qos_req))
-+		cpu_latency_qos_remove_request(&substream->latency_pm_qos_req);
- 	if ((usecs = period_to_usecs(runtime)) >= 0)
--		pm_qos_add_request(&substream->latency_pm_qos_req,
--				   PM_QOS_CPU_DMA_LATENCY, usecs);
-+		cpu_latency_qos_add_request(&substream->latency_pm_qos_req,
-+					    usecs);
- 	return 0;
-  _error:
- 	/* hardware might be unusable from this time,
-@@ -821,7 +821,7 @@ static int snd_pcm_hw_free(struct snd_pcm_substream *substream)
- 		return -EBADFD;
- 	result = do_hw_free(substream);
- 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_OPEN);
--	pm_qos_remove_request(&substream->latency_pm_qos_req);
-+	cpu_latency_qos_remove_request(&substream->latency_pm_qos_req);
- 	return result;
- }
- 
-@@ -2598,8 +2598,8 @@ void snd_pcm_release_substream(struct snd_pcm_substream *substream)
- 		substream->ops->close(substream);
- 		substream->hw_opened = 0;
- 	}
--	if (pm_qos_request_active(&substream->latency_pm_qos_req))
--		pm_qos_remove_request(&substream->latency_pm_qos_req);
-+	if (cpu_latency_qos_request_active(&substream->latency_pm_qos_req))
-+		cpu_latency_qos_remove_request(&substream->latency_pm_qos_req);
- 	if (substream->pcm_release) {
- 		substream->pcm_release(substream);
- 		substream->pcm_release = NULL;
-diff --git a/sound/soc/intel/atom/sst/sst.c b/sound/soc/intel/atom/sst/sst.c
-index 68bcec5241f7..d6563985e008 100644
---- a/sound/soc/intel/atom/sst/sst.c
-+++ b/sound/soc/intel/atom/sst/sst.c
-@@ -325,8 +325,7 @@ int sst_context_init(struct intel_sst_drv *ctx)
- 		ret = -ENOMEM;
- 		goto do_free_mem;
- 	}
--	pm_qos_add_request(ctx->qos, PM_QOS_CPU_DMA_LATENCY,
--				PM_QOS_DEFAULT_VALUE);
-+	cpu_latency_qos_add_request(ctx->qos, PM_QOS_DEFAULT_VALUE);
- 
- 	dev_dbg(ctx->dev, "Requesting FW %s now...\n", ctx->firmware_name);
- 	ret = request_firmware_nowait(THIS_MODULE, true, ctx->firmware_name,
-@@ -364,7 +363,7 @@ void sst_context_cleanup(struct intel_sst_drv *ctx)
- 	sysfs_remove_group(&ctx->dev->kobj, &sst_fw_version_attr_group);
- 	flush_scheduled_work();
- 	destroy_workqueue(ctx->post_msg_wq);
--	pm_qos_remove_request(ctx->qos);
-+	cpu_latency_qos_remove_request(ctx->qos);
- 	kfree(ctx->fw_sg_list.src);
- 	kfree(ctx->fw_sg_list.dst);
- 	ctx->fw_sg_list.list_len = 0;
-diff --git a/sound/soc/intel/atom/sst/sst_loader.c b/sound/soc/intel/atom/sst/sst_loader.c
-index ce11c36848c4..9b0e3739c738 100644
---- a/sound/soc/intel/atom/sst/sst_loader.c
-+++ b/sound/soc/intel/atom/sst/sst_loader.c
-@@ -412,7 +412,7 @@ int sst_load_fw(struct intel_sst_drv *sst_drv_ctx)
- 		return -ENOMEM;
- 
- 	/* Prevent C-states beyond C6 */
--	pm_qos_update_request(sst_drv_ctx->qos, 0);
-+	cpu_latency_qos_update_request(sst_drv_ctx->qos, 0);
- 
- 	sst_drv_ctx->sst_state = SST_FW_LOADING;
- 
-@@ -442,7 +442,7 @@ int sst_load_fw(struct intel_sst_drv *sst_drv_ctx)
- 
- restore:
- 	/* Re-enable Deeper C-states beyond C6 */
--	pm_qos_update_request(sst_drv_ctx->qos, PM_QOS_DEFAULT_VALUE);
-+	cpu_latency_qos_update_request(sst_drv_ctx->qos, PM_QOS_DEFAULT_VALUE);
- 	sst_free_block(sst_drv_ctx, block);
- 	dev_dbg(sst_drv_ctx->dev, "fw load successful!!!\n");
- 
-diff --git a/sound/soc/ti/omap-dmic.c b/sound/soc/ti/omap-dmic.c
-index 3f226be123d4..913579c43e9d 100644
---- a/sound/soc/ti/omap-dmic.c
-+++ b/sound/soc/ti/omap-dmic.c
-@@ -112,7 +112,7 @@ static void omap_dmic_dai_shutdown(struct snd_pcm_substream *substream,
- 
- 	mutex_lock(&dmic->mutex);
- 
--	pm_qos_remove_request(&dmic->pm_qos_req);
-+	cpu_latency_qos_remove_request(&dmic->pm_qos_req);
- 
- 	if (!dai->active)
- 		dmic->active = 0;
-@@ -230,8 +230,9 @@ static int omap_dmic_dai_prepare(struct snd_pcm_substream *substream,
- 	struct omap_dmic *dmic = snd_soc_dai_get_drvdata(dai);
- 	u32 ctrl;
- 
--	if (pm_qos_request_active(&dmic->pm_qos_req))
--		pm_qos_update_request(&dmic->pm_qos_req, dmic->latency);
-+	if (cpu_latency_qos_request_active(&dmic->pm_qos_req))
-+		cpu_latency_qos_update_request(&dmic->pm_qos_req,
-+					       dmic->latency);
- 
- 	/* Configure uplink threshold */
- 	omap_dmic_write(dmic, OMAP_DMIC_FIFO_CTRL_REG, dmic->threshold);
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-index 26b503bbdb5f..302d5c493c29 100644
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -836,10 +836,10 @@ static void omap_mcbsp_dai_shutdown(struct snd_pcm_substream *substream,
- 	int stream2 = tx ? SNDRV_PCM_STREAM_CAPTURE : SNDRV_PCM_STREAM_PLAYBACK;
- 
- 	if (mcbsp->latency[stream2])
--		pm_qos_update_request(&mcbsp->pm_qos_req,
--				      mcbsp->latency[stream2]);
-+		cpu_latency_qos_update_request(&mcbsp->pm_qos_req,
-+					       mcbsp->latency[stream2]);
- 	else if (mcbsp->latency[stream1])
--		pm_qos_remove_request(&mcbsp->pm_qos_req);
-+		cpu_latency_qos_remove_request(&mcbsp->pm_qos_req);
- 
- 	mcbsp->latency[stream1] = 0;
- 
-@@ -863,10 +863,10 @@ static int omap_mcbsp_dai_prepare(struct snd_pcm_substream *substream,
- 	if (!latency || mcbsp->latency[stream1] < latency)
- 		latency = mcbsp->latency[stream1];
- 
--	if (pm_qos_request_active(pm_qos_req))
--		pm_qos_update_request(pm_qos_req, latency);
-+	if (cpu_latency_qos_request_active(pm_qos_req))
-+		cpu_latency_qos_update_request(pm_qos_req, latency);
- 	else if (latency)
--		pm_qos_add_request(pm_qos_req, PM_QOS_CPU_DMA_LATENCY, latency);
-+		cpu_latency_qos_add_request(pm_qos_req, latency);
- 
- 	return 0;
- }
-@@ -1434,8 +1434,8 @@ static int asoc_mcbsp_remove(struct platform_device *pdev)
- 	if (mcbsp->pdata->ops && mcbsp->pdata->ops->free)
- 		mcbsp->pdata->ops->free(mcbsp->id);
- 
--	if (pm_qos_request_active(&mcbsp->pm_qos_req))
--		pm_qos_remove_request(&mcbsp->pm_qos_req);
-+	if (cpu_latency_qos_request_active(&mcbsp->pm_qos_req))
-+		cpu_latency_qos_remove_request(&mcbsp->pm_qos_req);
- 
- 	if (mcbsp->pdata->buffer_size)
- 		sysfs_remove_group(&mcbsp->dev->kobj, &additional_attr_group);
-diff --git a/sound/soc/ti/omap-mcpdm.c b/sound/soc/ti/omap-mcpdm.c
-index a726cd7a8252..d7ac4df6f2d9 100644
---- a/sound/soc/ti/omap-mcpdm.c
-+++ b/sound/soc/ti/omap-mcpdm.c
-@@ -281,10 +281,10 @@ static void omap_mcpdm_dai_shutdown(struct snd_pcm_substream *substream,
- 	}
- 
- 	if (mcpdm->latency[stream2])
--		pm_qos_update_request(&mcpdm->pm_qos_req,
--				      mcpdm->latency[stream2]);
-+		cpu_latency_qos_update_request(&mcpdm->pm_qos_req,
-+					       mcpdm->latency[stream2]);
- 	else if (mcpdm->latency[stream1])
--		pm_qos_remove_request(&mcpdm->pm_qos_req);
-+		cpu_latency_qos_remove_request(&mcpdm->pm_qos_req);
- 
- 	mcpdm->latency[stream1] = 0;
- 
-@@ -386,10 +386,10 @@ static int omap_mcpdm_prepare(struct snd_pcm_substream *substream,
- 	if (!latency || mcpdm->latency[stream1] < latency)
- 		latency = mcpdm->latency[stream1];
- 
--	if (pm_qos_request_active(pm_qos_req))
--		pm_qos_update_request(pm_qos_req, latency);
-+	if (cpu_latency_qos_request_active(pm_qos_req))
-+		cpu_latency_qos_update_request(pm_qos_req, latency);
- 	else if (latency)
--		pm_qos_add_request(pm_qos_req, PM_QOS_CPU_DMA_LATENCY, latency);
-+		cpu_latency_qos_add_request(pm_qos_req, latency);
- 
- 	if (!omap_mcpdm_active(mcpdm)) {
- 		omap_mcpdm_start(mcpdm);
-@@ -451,8 +451,8 @@ static int omap_mcpdm_remove(struct snd_soc_dai *dai)
- 	free_irq(mcpdm->irq, (void *)mcpdm);
- 	pm_runtime_disable(mcpdm->dev);
- 
--	if (pm_qos_request_active(&mcpdm->pm_qos_req))
--		pm_qos_remove_request(&mcpdm->pm_qos_req);
-+	if (cpu_latency_qos_request_active(&mcpdm->pm_qos_req))
-+		cpu_latency_qos_remove_request(&mcpdm->pm_qos_req);
- 
- 	return 0;
- }
+ /* BUCK modes */
 -- 
-2.16.4
-
-
-
-
+2.25.0
 
