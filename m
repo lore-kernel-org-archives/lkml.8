@@ -2,246 +2,81 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4CBC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6176C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCE1206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892F520873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JekHRGXU"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="NCQNv5Bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgBKKiz (ORCPT
+        id S1728389AbgBKKje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:38:55 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56801 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727805AbgBKKiz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:38:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581417533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=WRsorsLNWt5CKXnyeD76de0tKez7QGeyMkKNMQ9fWpw=;
-        b=JekHRGXUEspph1+/mHb6N7sAUhCcUqItgY2Rxp7ISePszZaHTA/tkZzOSBNIh0aAMNVHHO
-        7fsxoWXh3SnC/l1GN7G5qSjdU6UiYly0ym7NlaTcJ1jTd0Q79QKXSJF7cWOAoPdHHrrZpm
-        +HYSuwyFBQjOXmqhb4u3ASCRxt6/Mys=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-50-FgVyUUfEOouDKTsC4KwoQw-1; Tue, 11 Feb 2020 05:38:51 -0500
-X-MC-Unique: FgVyUUfEOouDKTsC4KwoQw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45BD4106BC3C;
-        Tue, 11 Feb 2020 10:38:50 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E7655C120;
-        Tue, 11 Feb 2020 10:38:47 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 3F88816E2D; Tue, 11 Feb 2020 11:38:46 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] drm/virtio: add drm_driver.release callback.
-Date:   Tue, 11 Feb 2020 11:38:46 +0100
-Message-Id: <20200211103846.22183-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Tue, 11 Feb 2020 05:39:34 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:28677 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728312AbgBKKje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:39:34 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48GzmN2qn7z6x;
+        Tue, 11 Feb 2020 11:39:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1581417572; bh=fbpKp3rnNkha0W+kf3wFRvFjsUb1cKB6hd3hwVW4juI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NCQNv5BwvMJX2NleSAIHdMpkye5lZU1rhL79/t3e97bdYTcs/aZDnA1fljHi+LT1e
+         BO0jx+0wQY26CopiJJj2xl68u68v9vFoRoK55p1DQUqfDUY0ulmdN83E3oRSLaGkCc
+         /9iIyzo8cjQ+CR9G5Pj3CDmqnxLS/vlQJnecsYXcv6OsgfJXyQK3pdDJCjOQTQvXEe
+         PjkXM5f+UsamTgncZ1DZqzoKUJWLDevByO3MiYUMaEwAXb16rzaLMuZQJNw2XGESEo
+         Nwkw62PjHoUBx3NsfODVp1yP1ukVjzmTCDmXCRa58PwZMpGlmX8fVsofeCq6b2HXGH
+         gF6HytFdHXJAw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.1 at mail
+Date:   Tue, 11 Feb 2020 11:39:31 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     =?iso-8859-2?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [[PATCH staging] 3/7] staging: wfx: fix init/remove vs IRQ race
+Message-ID: <20200211103931.GA26303@qmqm.qmqm.pl>
+References: <cover.1581410026.git.mirq-linux@rere.qmqm.pl>
+ <8f0c51acc3b98fc55d6960036daef7556445cd0a.1581410026.git.mirq-linux@rere.qmqm.pl>
+ <20200211092354.GE1778@kadam>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200211092354.GE1778@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split virtio_gpu_deinit(), move the drm shutdown and release to
-virtio_gpu_release().  Drop vqs_ready variable, instead use
-drm_dev_{enter,exit,unplug} to avoid touching hardware after
-device removal.  Tidy up here and there.
+On Tue, Feb 11, 2020 at 12:23:54PM +0300, Dan Carpenter wrote:
+> On Tue, Feb 11, 2020 at 09:46:54AM +0100, Micha³ Miros³aw wrote:
+> > @@ -234,8 +234,8 @@ static void wfx_sdio_remove(struct sdio_func *func)
+> >  	struct wfx_sdio_priv *bus = sdio_get_drvdata(func);
+> >  
+> >  	wfx_release(bus->core);
+> > -	wfx_free_common(bus->core);
+> >  	wfx_sdio_irq_unsubscribe(bus);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> This calls sdio_release_host(func);
+> 
+> > +	wfx_free_common(bus->core);
+> >  	sdio_claim_host(func);
+> >  	sdio_disable_func(func);
+> >  	sdio_release_host(func);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^
+> so is this a double free?
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_drv.h     |  3 ++-
- drivers/gpu/drm/virtio/virtgpu_display.c |  1 -
- drivers/gpu/drm/virtio/virtgpu_drv.c     |  6 +++++-
- drivers/gpu/drm/virtio/virtgpu_kms.c     |  7 ++++--
- drivers/gpu/drm/virtio/virtgpu_vq.c      | 27 +++++++++++++-----------
- 5 files changed, 27 insertions(+), 17 deletions(-)
+This is paired with sdio_claim_host() just above.
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 7fd8361e1c9e..af9403e1cf78 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -32,6 +32,7 @@
- #include <linux/virtio_gpu.h>
- 
- #include <drm/drm_atomic.h>
-+#include <drm/drm_drv.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_fb_helper.h>
- #include <drm/drm_gem.h>
-@@ -177,7 +178,6 @@ struct virtio_gpu_device {
- 	struct virtio_gpu_queue ctrlq;
- 	struct virtio_gpu_queue cursorq;
- 	struct kmem_cache *vbufs;
--	bool vqs_ready;
- 
- 	bool disable_notify;
- 	bool pending_notify;
-@@ -219,6 +219,7 @@ extern struct drm_ioctl_desc virtio_gpu_ioctls[DRM_VIRTIO_NUM_IOCTLS];
- /* virtio_kms.c */
- int virtio_gpu_init(struct drm_device *dev);
- void virtio_gpu_deinit(struct drm_device *dev);
-+void virtio_gpu_release(struct drm_device *dev);
- int virtio_gpu_driver_open(struct drm_device *dev, struct drm_file *file);
- void virtio_gpu_driver_postclose(struct drm_device *dev, struct drm_file *file);
- 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
-index 7b0f0643bb2d..af953db4a0c9 100644
---- a/drivers/gpu/drm/virtio/virtgpu_display.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_display.c
-@@ -368,6 +368,5 @@ void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev)
- 
- 	for (i = 0 ; i < vgdev->num_scanouts; ++i)
- 		kfree(vgdev->outputs[i].edid);
--	drm_atomic_helper_shutdown(vgdev->ddev);
- 	drm_mode_config_cleanup(vgdev->ddev);
- }
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-index 8cf27af3ad53..ab4bed78e656 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-@@ -31,6 +31,7 @@
- #include <linux/pci.h>
- 
- #include <drm/drm.h>
-+#include <drm/drm_atomic_helper.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_file.h>
- 
-@@ -135,7 +136,8 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
- {
- 	struct drm_device *dev = vdev->priv;
- 
--	drm_dev_unregister(dev);
-+	drm_dev_unplug(dev);
-+	drm_atomic_helper_shutdown(dev);
- 	virtio_gpu_deinit(dev);
- 	drm_dev_put(dev);
- }
-@@ -214,4 +216,6 @@ static struct drm_driver driver = {
- 	.major = DRIVER_MAJOR,
- 	.minor = DRIVER_MINOR,
- 	.patchlevel = DRIVER_PATCHLEVEL,
-+
-+	.release = virtio_gpu_release,
- };
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index c1086df49816..4009c2f97d08 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -199,7 +199,6 @@ int virtio_gpu_init(struct drm_device *dev)
- 	virtio_gpu_modeset_init(vgdev);
- 
- 	virtio_device_ready(vgdev->vdev);
--	vgdev->vqs_ready = true;
- 
- 	if (num_capsets)
- 		virtio_gpu_get_capsets(vgdev, num_capsets);
-@@ -234,12 +233,16 @@ void virtio_gpu_deinit(struct drm_device *dev)
- 	struct virtio_gpu_device *vgdev = dev->dev_private;
- 
- 	flush_work(&vgdev->obj_free_work);
--	vgdev->vqs_ready = false;
- 	flush_work(&vgdev->ctrlq.dequeue_work);
- 	flush_work(&vgdev->cursorq.dequeue_work);
- 	flush_work(&vgdev->config_changed_work);
- 	vgdev->vdev->config->reset(vgdev->vdev);
- 	vgdev->vdev->config->del_vqs(vgdev->vdev);
-+}
-+
-+void virtio_gpu_release(struct drm_device *dev)
-+{
-+	struct virtio_gpu_device *vgdev = dev->dev_private;
- 
- 	virtio_gpu_modeset_fini(vgdev);
- 	virtio_gpu_free_vbufs(vgdev);
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index a682c2fcbe9a..cfe9c54f87a3 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -330,7 +330,14 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
- {
- 	struct virtqueue *vq = vgdev->ctrlq.vq;
- 	bool notify = false;
--	int ret;
-+	int ret, idx;
-+
-+	if (!drm_dev_enter(vgdev->ddev, &idx)) {
-+		if (fence && vbuf->objs)
-+			virtio_gpu_array_unlock_resv(vbuf->objs);
-+		free_vbuf(vgdev, vbuf);
-+		return;
-+	}
- 
- 	if (vgdev->has_indirect)
- 		elemcnt = 1;
-@@ -338,14 +345,6 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
- again:
- 	spin_lock(&vgdev->ctrlq.qlock);
- 
--	if (!vgdev->vqs_ready) {
--		spin_unlock(&vgdev->ctrlq.qlock);
--
--		if (fence && vbuf->objs)
--			virtio_gpu_array_unlock_resv(vbuf->objs);
--		return;
--	}
--
- 	if (vq->num_free < elemcnt) {
- 		spin_unlock(&vgdev->ctrlq.qlock);
- 		wait_event(vgdev->ctrlq.ack_queue, vq->num_free >= elemcnt);
-@@ -379,6 +378,7 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
- 		else
- 			virtqueue_notify(vq);
- 	}
-+	drm_dev_exit(idx);
- }
- 
- static void virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
-@@ -460,12 +460,13 @@ static void virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
- {
- 	struct virtqueue *vq = vgdev->cursorq.vq;
- 	struct scatterlist *sgs[1], ccmd;
-+	int idx, ret, outcnt;
- 	bool notify;
--	int ret;
--	int outcnt;
- 
--	if (!vgdev->vqs_ready)
-+	if (!drm_dev_enter(vgdev->ddev, &idx)) {
-+		free_vbuf(vgdev, vbuf);
- 		return;
-+	}
- 
- 	sg_init_one(&ccmd, vbuf->buf, vbuf->size);
- 	sgs[0] = &ccmd;
-@@ -490,6 +491,8 @@ static void virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
- 
- 	if (notify)
- 		virtqueue_notify(vq);
-+
-+	drm_dev_exit(idx);
- }
- 
- /* just create gem objects for userspace and long lived objects,
--- 
-2.18.2
-
+Best Regards,
+Micha³ Miros³aw
