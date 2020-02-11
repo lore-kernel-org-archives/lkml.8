@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC6CC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F06C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC67206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4717F2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMF2A0nX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S90OjPJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgBKMlo (ORCPT
+        id S1729014AbgBKMlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:41:44 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37630 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbgBKMln (ORCPT
+        Tue, 11 Feb 2020 07:41:49 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51983 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbgBKMls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:41:43 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z12so5676712pgl.4;
-        Tue, 11 Feb 2020 04:41:42 -0800 (PST)
+        Tue, 11 Feb 2020 07:41:48 -0500
+Received: by mail-pj1-f67.google.com with SMTP id fa20so1275895pjb.1;
+        Tue, 11 Feb 2020 04:41:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6ta/xN7ibt+T77in/0spMP8Vv8W8F1AAImXcnffdDmE=;
-        b=dMF2A0nXHaqBW163aXh9SYI+GkTPe0xRrsia2BvafyJ1fcpcf0+R+gcP2bRZahm8Vc
-         Jxo4ZWHidfa6woObm5roDYiaV7iHQcUg4AwHkyoiJ6LTClKD1CqGMP/Satu2Bp/AC7Vd
-         mekoYYU/3NDfHOJ85K6XYbsPyO+0PZV1rim3STZA6yTn7J24nIxJSpgc4sSHDz+IDH+9
-         y875yzt0fhtapnXJViut3oTM+xKksBj1kwnf3oYVjmHP84Us2cH1BrmU4tzDIqxQArRd
-         5dR3hH+Dy/ERT+d3KRlM5xUNHE7u2iUBLo7IMgRlx2lONwBjvqd41sCirk7e8AjIH114
-         MmbA==
+        bh=AlXfI3TYENDO6EIV6539YfBeSyGhAhgJFR6rgHScXF4=;
+        b=S90OjPJkBgFMPll4NjkZiIQ2jRaq6iUsPwIjaYg4s565ns4MsPdSe1HsgjxTuiGnLP
+         2Xw5lWRCNMFFEpBPgSpEua/GqybPc4PtlbL1QShJ3Dkd1lp8vhoDLecwhEpW0O9LDBp/
+         EN/60+LLrwQnlmv11ezHpOQ+hvF7JktRNT1hGDu73lq5y5idhJhEdxLH6rlZzSstQK1q
+         aK9QY6A5WmplN52F30uePV90Y5JQJCs+ZHLrkuepMf6hAtsbfFU8QbZTTbx829vwzrOh
+         kLQ5ZpvjOLm++swwRG2EoX/HPUZPB9wvP0qx3h6FKbnHnkPAJoE4Bm1buMsE3FLINj0p
+         R+2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=6ta/xN7ibt+T77in/0spMP8Vv8W8F1AAImXcnffdDmE=;
-        b=rmIotMzOFBKpuEeA098WIZJoi+GSjTmI938PlJb99F1qXKnLtlTwBGa4d/rJbEK0Vb
-         NROSYo55cSMZc8j6pXHEyWfTJCMwGCUORQ9/KQUn+NSSIzLE6DGe0zwGxlh5ZLbTOcQp
-         ihnh5BjTryRXSsm0TqJCWKt2yAr+z8dbEgq81XEHWdcwVrmu/dLw6zDeRFDl7lD1vg+K
-         PcAajxokHLkDGrrn+eHrIWJZOd4Pk2jLsqC4bfHDBjSnJRC3WJfL796vTz/0Joxb8K8k
-         QQP9FlJPHinvElL0OrEF0He6l6yGQn/Rh0wqRWpTb6E3fsCx98I3rYjAMWf3i8gbdcgJ
-         acNQ==
-X-Gm-Message-State: APjAAAXpzCrIfvNipvF2C3a/WdRi6OhzC9EcM1pzI1VRJUOTAmHYBV2P
-        BW8azrse89bWwg/93jT0n0JyVmwrEZs=
-X-Google-Smtp-Source: APXvYqwtWIs1C5aTU+Az8XdsdfcbYa/Wellc0burgYlWjDs7rM4/stxvOvSOVZ/+y328JTtqOj9yhw==
-X-Received: by 2002:a63:7457:: with SMTP id e23mr6877579pgn.386.1581424902127;
-        Tue, 11 Feb 2020 04:41:42 -0800 (PST)
+        bh=AlXfI3TYENDO6EIV6539YfBeSyGhAhgJFR6rgHScXF4=;
+        b=Hp07wrT/180HUl1aXB9nwXstv4ta36S2u3M4S0h+lgO3i7U/+qxNsroerilnoIgXwT
+         BRTzxGJiyHsKwRgjuQie5yjxtFh3oajenMl9cBAwfv5AJsMaKjXX3xgufjIUeFFAlejN
+         vKs2B7vucPH2XAB+RlHCTgMhhdNj3kiGNiLIDny0ys8dRq6B77tbh+6i2XG3FoTJXwSE
+         n6xqtBAQjcSdM0gUxLJT9nP1KrCfn+aZP4XxTPNehKDqWpl1vkS2N88+dyaDyR2H1RBG
+         0kt+DMmmmSiJatNXgJRfMrJ633F+iZqu7CdjWoencGWO6RK/3EZGvhdmhes75wvjZZiT
+         Ft8Q==
+X-Gm-Message-State: APjAAAXS417jUCM2tRTYi7yIb4KXz/JD/SGdgcXvxHHVjl1CKQOnNOvo
+        eXwO99sPHs2wiy7Q1eGU6wY=
+X-Google-Smtp-Source: APXvYqz5gZKbIttVFpeyZfSqvDhLaMLAzotEcOmqptNaUCR7PV4pjEavYaL2/BUlCXNGvIxhf8oM7Q==
+X-Received: by 2002:a17:902:6b07:: with SMTP id o7mr17552526plk.141.1581424907655;
+        Tue, 11 Feb 2020 04:41:47 -0800 (PST)
 Received: from localhost.localdomain ([2409:4041:69c:214f:144f:bb39:afc3:51b0])
-        by smtp.gmail.com with ESMTPSA id d1sm3876789pgj.79.2020.02.11.04.41.37
+        by smtp.gmail.com with ESMTPSA id d1sm3876789pgj.79.2020.02.11.04.41.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 04:41:41 -0800 (PST)
+        Tue, 11 Feb 2020 04:41:47 -0800 (PST)
 From:   Pragat Pandya <pragat.pandya@gmail.com>
 To:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu
 Cc:     devel@driverdev.osuosl.or, linux-kernel@vger.kernel.org,
         skhan@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Pragat Pandya <pragat.pandya@gmail.com>
-Subject: [PATCH 15/18] staging: exfat: Rename function "ffsMapCluster" to "ffs_map_cluster"
-Date:   Tue, 11 Feb 2020 18:08:56 +0530
-Message-Id: <20200211123859.10429-16-pragat.pandya@gmail.com>
+Subject: [PATCH 16/18] staging: exfat: Rename function "ffsCreateDir" to "ffs_create_dir"
+Date:   Tue, 11 Feb 2020 18:08:57 +0530
+Message-Id: <20200211123859.10429-17-pragat.pandya@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211123859.10429-1-pragat.pandya@gmail.com>
 References: <20200211123859.10429-1-pragat.pandya@gmail.com>
@@ -74,8 +74,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix checkpatch warning: Avoid CamelCase
-Change all occurrences of function "ffsMapCluster" to "ffs_map_cluster"
-in source.
+Change all occurrences of function "ffsCreateDir" to "ffs_create_dir" in
+source.
 
 Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
 ---
@@ -83,27 +83,27 @@ Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 5fb084941c3b..87a7bcba4921 100644
+index 87a7bcba4921..d8265dabe37d 100644
 --- a/drivers/staging/exfat/exfat_super.c
 +++ b/drivers/staging/exfat/exfat_super.c
-@@ -1638,7 +1638,7 @@ static int ffs_write_stat(struct inode *inode, struct dir_entry_t *info)
- 	return ret;
- }
+@@ -1776,7 +1776,7 @@ static int ffs_map_cluster(struct inode *inode, s32 clu_offset, u32 *clu)
+ /*  Directory Operation Functions                                       */
+ /*----------------------------------------------------------------------*/
  
--static int ffsMapCluster(struct inode *inode, s32 clu_offset, u32 *clu)
-+static int ffs_map_cluster(struct inode *inode, s32 clu_offset, u32 *clu)
+-static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
++static int ffs_create_dir(struct inode *inode, char *path, struct file_id_t *fid)
  {
- 	s32 num_clusters, num_alloced;
- 	bool modified = false;
-@@ -2954,7 +2954,7 @@ static int exfat_bmap(struct inode *inode, sector_t sector, sector_t *phys,
+ 	int ret = 0;
+ 	struct chain_t dir;
+@@ -2505,7 +2505,7 @@ static int exfat_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
  
- 	EXFAT_I(inode)->fid.size = i_size_read(inode);
+ 	pr_debug("%s entered\n", __func__);
  
--	err = ffsMapCluster(inode, clu_offset, &cluster);
-+	err = ffs_map_cluster(inode, clu_offset, &cluster);
+-	err = ffsCreateDir(dir, (u8 *)dentry->d_name.name, &fid);
++	err = ffs_create_dir(dir, (u8 *)dentry->d_name.name, &fid);
+ 	if (err)
+ 		goto out;
  
- 	if (!err && (cluster != CLUSTER_32(~0))) {
- 		*phys = START_SECTOR(cluster) + sec_offset;
 -- 
 2.17.1
 
