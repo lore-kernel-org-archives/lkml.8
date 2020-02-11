@@ -2,81 +2,118 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DFDC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E57C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5304E20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A209D21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aebLhhBy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RH32kiQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbgBKRcd (ORCPT
+        id S1729605AbgBKRd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:32:33 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49076 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729132AbgBKRcd (ORCPT
+        Tue, 11 Feb 2020 12:33:27 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33848 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729470AbgBKRd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:32:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xEZn7flkyukRhdtqoKsfHjJ5Uqm8IWBX07W95P9+qgo=; b=aebLhhByFaUgdZm87khGrgzFgE
-        +M4fflT3Jowlwq9xYPDPnLXnbzTVAI9YBmhjVZFFo1Rw2T0oTj+2xiSuKJI/aND8bgqCCe3iJQ8/Q
-        L2MH8hqBg39qyhMcNcp7Y9mc5v/yxyC/31uuzAITeXkwB7m7yG6j0AdHd9D3uMfvoo3DnIv+8SeaF
-        wt7qWBaG+RAe/xTfY91ZIWQrHW0NsabHFY7hvoRIWDoqyQolXip2jRA58snyjhR2UbProrPvB/bSl
-        vMZS6AkpVco25Jx9K9yVgfm1YArYCuBIlVgQuujHNv6QDstklr5D7T8MpQTE4aw3WtrQBGqiax28p
-        rJxtm3Gg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1ZOR-0001pz-T0; Tue, 11 Feb 2020 17:32:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C13F7305803;
-        Tue, 11 Feb 2020 18:30:24 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7B71B2B920215; Tue, 11 Feb 2020 18:32:13 +0100 (CET)
-Date:   Tue, 11 Feb 2020 18:32:13 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH v2] tracing/perf: Move rcu_irq_enter/exit_irqson() to
- perf trace point hook
-Message-ID: <20200211173213.GX14946@hirez.programming.kicks-ass.net>
-References: <20200211095047.58ddf750@gandalf.local.home>
- <20200211153452.GW14914@hirez.programming.kicks-ass.net>
- <20200211111828.48058768@gandalf.local.home>
- <20200211172952.GY14914@hirez.programming.kicks-ass.net>
+        Tue, 11 Feb 2020 12:33:26 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i6so5832942pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:33:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lH4EbrzVbu3CvaS8sns78JlEG0bpnC0mv7bE+liJ2nA=;
+        b=RH32kiQsCKo1Gs+FkFdDvj1Kq3PKeLTjbRXjVS542Tg6Gb8IzEOXCl8KrAydPkosHL
+         SYGwlAdLYd5do6FGm6AtvSvYjLsBhTB3Zd2J02IAI1lWNxUZQ/5+ah4appWH9FO9tCfN
+         4dmS1PhdaopzWfZZudmSODT/lwSAYlGW8ZyJE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lH4EbrzVbu3CvaS8sns78JlEG0bpnC0mv7bE+liJ2nA=;
+        b=sAuHlFtdh08ExvKgzG64L0DRND452w5AfSnYDXX8ViZVBLTnpAME7qdXBuDLraryho
+         FFCgQw8TbwN0Ca/yZg7udyU19CE0r6h8Nnfiwq+LruBR4jR8F3rN5j/IVcNV/QQgYbGy
+         N34t73HPd7Uzd3rHZUd9DE70Yq+Q9jrG2aomee2juVtenuM9jbrKxqBO3Ws7/lG6hc35
+         VaC0y6OzO1378sYglojq8KVSybV/k04p/jIrxMV1mYSuOmvYXN/ZWiOaubZY45GPHmUP
+         EMkK3EMYu18B4KEz+EQyKeXNqJc88N+dYKxXhj+hAw7AGKJFEfojcKSr8ZmQwjC++0M3
+         8XIA==
+X-Gm-Message-State: APjAAAUw1U6kSkyuwpMfq9URFwV61cKSGgCO25ocROkwrRzVc1VCA32J
+        x9agdJ7yXbKYA1lsjv7fpD0fkg==
+X-Google-Smtp-Source: APXvYqxk99B0t8EHkrjFPb34havVNfFdZ7CHuqxMGO1VQir/2llQ9LuL+WBmfTO4aiFx3jXiqWC3cg==
+X-Received: by 2002:a63:6c82:: with SMTP id h124mr7923471pgc.328.1581442405558;
+        Tue, 11 Feb 2020 09:33:25 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id c26sm5104896pfj.8.2020.02.11.09.33.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2020 09:33:25 -0800 (PST)
+Date:   Tue, 11 Feb 2020 09:33:23 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, hemantg@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, gubbaven@codeaurora.org
+Subject: Re: [PATCH v1] arm64: dts: qcom: sc7180: Add node for bluetooth soc
+ wcn3990
+Message-ID: <20200211173323.GE18972@google.com>
+References: <20200211121612.29075-1-bgodavar@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200211172952.GY14914@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200211121612.29075-1-bgodavar@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 06:29:52PM +0100, Peter Zijlstra wrote:
-> +#define trace_rcu_enter()					\
-> +({								\
-> +	unsigned long state = 0;				\
-> +	if (!rcu_is_watching())	{				\
+On Tue, Feb 11, 2020 at 05:46:12PM +0530, Balakrishna Godavarthi wrote:
 
-Also, afaict rcu_is_watching() itself needs more love, the functio has
-notrace, but calls other stuff that does not have notrace or inline.
+> subject: arm64: dts: qcom: sc7180: Add node for bluetooth soc wcn3990
+
+Preferably say in the subjct that the node is added for the IDP board.
+
+> Add node for bluetooth soc wcn3990.
+> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50ad4fde..19f82ddc1f09 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -19,6 +19,7 @@
+>  	aliases {
+>  		hsuart0 = &uart3;
+>  		serial0 = &uart8;
+> +		bluetooth0 = &bluetooth;
+>  	};
+>  
+>  	chosen {
+> @@ -256,6 +257,16 @@
+>  
+>  &uart3 {
+>  	status = "okay";
+
+nit: add a blank line
+
+> +	bluetooth: wcn3990-bt {
+> +		compatible = "qcom,wcn3990-bt";
+> +		vddio-supply = <&vreg_l10a_1p8>;
+> +		vddxo-supply = <&vreg_l1c_1p8>;
+> +		vddrf-supply = <&vreg_l2c_1p3>;
+> +		vddch0-supply = <&vreg_l10c_3p3>;
+> +		max-speed = <3200000>;
+> +		clocks = <&rpmhcc RPMH_RF_CLK2>;
+> +		status = "okay";
+
+status is not needed here AFAIK.
