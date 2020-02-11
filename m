@@ -2,183 +2,104 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA59C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E278EC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2B720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF2920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgBKK2W (ORCPT
+        id S1728370AbgBKK2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:28:22 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33500 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbgBKK2W (ORCPT
+        Tue, 11 Feb 2020 05:28:53 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45600 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbgBKK2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:28:22 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9F6E22909F8
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@intel.com, bleung@chromium.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200207203752.209296-1-pmalani@chromium.org>
- <20200207203752.209296-2-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <dd9a8fa7-db6b-87a0-889d-b56a626a3078@collabora.com>
-Date:   Tue, 11 Feb 2020 11:28:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 11 Feb 2020 05:28:53 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j1Smb-00059T-Sk; Tue, 11 Feb 2020 11:28:46 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 18414101115; Tue, 11 Feb 2020 11:28:45 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v4 1/2] sched: Add sched_clock_register_new()
+In-Reply-To: <20200210134213.8324-1-paul@crapouillou.net>
+Date:   Tue, 11 Feb 2020 11:28:45 +0100
+Message-ID: <87lfp94duq.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200207203752.209296-2-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+Paul!
 
-On 7/2/20 21:37, Prashant Malani wrote:
-> Some Chrome OS devices with Embedded Controllers (EC) can read and
-> modify Type C port state.
-> 
-> Add an entry in the DT Bindings documentation that lists out the logical
-> device and describes the relevant port information, to be used by the
-> corresponding driver.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - No changes. Patch first introduced in v2 of series.
-> 
->  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> new file mode 100644
-> index 00000000000000..46ebcbe76db3c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Paul Cercueil <paul@crapouillou.net> writes:
 
-I think that Google is fine with the dual licensing here. Would be good if this
-can be (GPL-2.0-only OR BSD-2-Clause)
+> The sched_clock_register_new() behaves like sched_clock_register() but
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Prashant Malani <pmalani@chromium.org>
-> +
-> +description:
-> +  Chrome OS devices have an Embedded Controller(EC) which has access to
-> +  Type C port state. This node is intended to allow the host to read and
-> +  control the Type C ports. The node for this device should be under a
-> +  cros-ec node like google,cros-ec-spi.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-typec
-> +
-> +  port:
-> +    description: A node that represents a physical Type C port on the
-> +      device.
-> +    type: object
-> +    properties:
-> +      port-number:
-> +        description: The number used by the Chrome OS EC to identify
-> +          this type C port.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
+This function name does not make any sense. Two years from now you are
+going to provide sched_clock_register_new_2_dot_0() ?
 
-Any range of values allowed? 0 is okay?
+> takes an extra parameter which is passed to the read callback.
 
-> +      power-role:
+This lacks any form of justification why this function and the data
+pointer is required.
 
-Sorry if this question is silly, aren't this and below properties the same as
-provided by usb-connector?  Can't this be usb-c-connector?
+>   * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
+>   *			clocks.
+>   * @read_sched_clock:	Current clock source (or dummy source when suspended).
+> + * @data:		Callback data for the current clock source.
+>   * @mult:		Multipler for scaled math conversion.
+>   * @shift:		Shift value for scaled math conversion.
+>   *
+> @@ -39,7 +40,8 @@ struct clock_read_data {
+>  	u64 epoch_ns;
+>  	u64 epoch_cyc;
+>  	u64 sched_clock_mask;
+> -	u64 (*read_sched_clock)(void);
+> +	u64 (*read_sched_clock)(void *);
 
-Documentation/devicetree/bindings/connector/usb-connector.txt
+How is that supposed to work without fixing up _all_ sched clock
+instances? So the below typecast
 
-> +        description: Determines the power role that the Type C port will
-> +          adopt.
-> +        oneOf:
-> +          - items:
-> +            - const: sink
-> +            - const: source
-> +            - const: dual
-> +      data-role:
-> +        description: Determines the data role that the Type C port will
-> +          adopt.
-> +        oneOf:
-> +          - items:
-> +            - const: host
-> +            - const: device
-> +            - const: dual
-> +      try-power-role:
-> +        description: Determines the preferred power role of the Type C port.
-> +        oneOf:
-> +          - items:
-> +            - const: sink
-> +            - const: source
-> +            - const: dual
-> +
-> +    required:
-> +      - port-number
-> +      - power-role
-> +      - data-role
-> +      - try-power-role
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +examples:
-> +  - |+
+> +void __init
+> +sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
+> +{
+> +	sched_clock_register_new((u64 (*)(void *))read, bits, rate, NULL);
 
-Rob can confirm, but I think is a good practice add the parent node, so add the
-cros-ec-spi node here?
+makes it compile.
 
-> +    typec {
-> +      compatible = "google,cros-ec-typec";
-> +
-> +      port@0 {
+By pure luck this does not explode in your face at runtime when the
+existing read(void) functions are called with an argument. Any stack
+based argument passing calling convention would fall flat on it's nose.
 
-You can run:
+While clever this is really an ugly hack.
 
-  make dt_binding_check DT_SCHEMA_FILES=<...>/chrome/google,cros-ec-typec.yaml
+As the clocksource for which you are doing this is a single instance,
+what's wrong with having some static storage for the information you
+need as any other driver which has the same problem does as well?
 
-And you'll get an error:
+If there is really a point in avoiding a few bytes of static storage,
+then this needs to be cleaned up treewide and not hacked around.
 
- typec: 'port' is a required property
-
-> +        port-number = <0>;
-> +        power-role = "dual";
-> +        data-role = "dual";
-> +        try-power-role = "source";
-> +      };
-> +    };
-> 
 Thanks,
 
- Enric
+        tglx
+
+
+
