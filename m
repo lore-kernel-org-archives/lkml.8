@@ -2,131 +2,94 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D65C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6669C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F0920842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqOrIcn7"
+	by mail.kernel.org (Postfix) with ESMTP id A535A20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581435558;
+	bh=vaUxnP22bcA3W8Oj/H35rQr+94g+pJKRkOs3Xybfxfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JGtYkC5jjg7NDa4lx/lGOq8B6QwaGng3re3XWCYywIuFtgciHSlYV/IJRGGcc197t
+	 L6qkPJFR7Xhh/10f3IY7Yezgo+kwhsU6FsyKi3N5GrSPjRHul7ekI+FiL03aladLMJ
+	 0nCkI+oSAQu65bpIPA6MOCGU1VEf019jZlrrT6So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgBKPjB (ORCPT
+        id S1729401AbgBKPjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:39:01 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46339 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbgBKPjA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:39:00 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m8so5121981edi.13;
-        Tue, 11 Feb 2020 07:38:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CNtQvmrBREea9Fl7G/3MlJk6sbdKLk9I8E30fCKcW9E=;
-        b=NqOrIcn7ZyJR+lqAv/YIVy9x21yiVOoENdZzILnUjw7Ymti9bxM9vSGPtKxg21JQrf
-         auGZDdjLkDb9ZPrzTMXu39ZxQPHSdpM3ty6CE72NteZHjWMUp2mdvXRi0j5qqO+/+jKF
-         sOTAEVRYDEncWJNt3YEmL+MKSD8nNfEIawRL7RfEnkD2m5LxY0Cq33tBPq4oJtw1UljK
-         4rGYlJqCczX3M+LvUWcsD4Q3nSbBK0QBrSrSAYQfljR2PtjoWL6bM+JY3CJbfIqK1jMz
-         r58ew3i7nIlbKvPEIfb7UFwiww0gvU4eDwsSuJh8j+g44YF70tIwFUXfWeEXQgNqi4/J
-         dRcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CNtQvmrBREea9Fl7G/3MlJk6sbdKLk9I8E30fCKcW9E=;
-        b=nvlTJ5AQF+z16IEbPejtjBCxYIod6jttpAPI1W8W5QZfvVbEqoKoqUGnmxxvWjnITR
-         0JqwdCzK9zmncCyMyFXpIRDeNCLK3BcMyV+EvlVE99dN9jPBmdunD4LBnY/wsLDScaZy
-         5fJGfXFZ93OmY8PrLXTpySWkFp6WKT7V0NSaujnzSABzpuViMCYapkPUBQHmvzQy2hGw
-         eqLmjHpq433WGJiTmpCmvqa3SXWZRp0T9J4MozZ60aDIF6tgcPe7IQcHEq5GuJo3BlrG
-         +rX/bLCdUCG0P1axdE9F0CgiGOI7Wf6c40ty2dtWyb/sg9bIAHC2GzHUXCEAMs5CRnik
-         kvRg==
-X-Gm-Message-State: APjAAAVOWwSXrJHnbNvalMnORIfrtwf/074/+ELvp6cVAjJ49bc30A9x
-        qoG+e/N0JSj5Rob/vizqyIWNJQqDJR4cTW5dy2Q=
-X-Google-Smtp-Source: APXvYqwItQoYQSVcmwx9Ampy++4WJ+oHbL0RoUbskyAJSfcKVYY+fp30cb8KuY/v+oZod3elLZE+SS8Sm89ASpzUN/Y=
-X-Received: by 2002:a17:906:a44d:: with SMTP id cb13mr6685070ejb.258.1581435538265;
- Tue, 11 Feb 2020 07:38:58 -0800 (PST)
+        Tue, 11 Feb 2020 10:39:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:48008 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727962AbgBKPjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:39:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 430A231B;
+        Tue, 11 Feb 2020 07:39:15 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98DA83F68E;
+        Tue, 11 Feb 2020 07:39:14 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:39:13 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
+        marcel.ziswiler@toradex.com, rjones@gateworks.com,
+        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
+        gary.bisson@boundarydevices.com, angus@akkea.ca,
+        pramod.kumar_1@nxp.com, rabeeh@solid-run.com,
+        cosmin.stoica@nxp.com, l.stach@pengutronix.de,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V3 1/4] dt-bindings: spi: imx: Add
+ i.MX8MM/i.MX8MN/i.MX8MP compatible
+Message-ID: <20200211153913.GL4543@sirena.org.uk>
+References: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <1579868411-20837-1-git-send-email-akhilpo@codeaurora.org>
- <20200124182654.GA17149@jcrouse1-lnx.qualcomm.com> <9a9ec81d-f963-8d71-d6aa-d32956788d94@codeaurora.org>
-In-Reply-To: <9a9ec81d-f963-8d71-d6aa-d32956788d94@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 11 Feb 2020 07:38:47 -0800
-Message-ID: <CAF6AEGuAsN0QDULRHrvtAnVANNqRv4aZWof0YKZ+yNahwSXu9A@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH] drm/msm/a6xx: Correct the highestbank configuration
-To:     Akhil P Oommen <akhilpo@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xjamM5M9kpPM/bcu"
+Content-Disposition: inline
+In-Reply-To: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
+X-Cookie: Hire the morally handicapped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 12:00 AM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
->
-> On 1/24/2020 11:56 PM, Jordan Crouse wrote:
-> > On Fri, Jan 24, 2020 at 05:50:11PM +0530, Akhil P Oommen wrote:
-> >> Highest bank bit configuration is different for a618 gpu. Update
-> >> it with the correct configuration which is the reset value incidentally.
-> >>
-> >> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-> >> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> >> ---
-> >>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 10 ++++++----
-> >>   1 file changed, 6 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >> index daf0780..536d196 100644
-> >> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >> @@ -470,10 +470,12 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
-> >>      /* Select CP0 to always count cycles */
-> >>      gpu_write(gpu, REG_A6XX_CP_PERFCTR_CP_SEL_0, PERF_CP_ALWAYS_COUNT);
-> >>
-> >> -    gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL, 2 << 1);
-> >> -    gpu_write(gpu, REG_A6XX_TPL1_NC_MODE_CNTL, 2 << 1);
-> >> -    gpu_write(gpu, REG_A6XX_SP_NC_MODE_CNTL, 2 << 1);
-> >> -    gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL, 2 << 21);
-> >> +    if (adreno_is_a630(adreno_gpu)) {
-> >> +            gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL, 2 << 1);
-> >> +            gpu_write(gpu, REG_A6XX_TPL1_NC_MODE_CNTL, 2 << 1);
-> >> +            gpu_write(gpu, REG_A6XX_SP_NC_MODE_CNTL, 2 << 1);
-> >> +            gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL, 2 << 21);
-> >> +    }
-> > it shouldn't come as a surprise that everything in the a6xx family is going to
-> > have a highest bank bit setting. Even though the a618 uses the reset value, I
-> > think it would be less confusing to future folks if we explicitly program it:
-> >
-> > if (adreno_is_a630(adreno_dev))
-> >    hbb = 2;
-> > else
-> >    hbb = 0;
->
-> I think it would be better if we keep this in the adreno_info. Yes, this
-> would waste a tiny bit of space for other gpu
-> entries in the gpulist. It is also possible to move this to a separate
-> struct and keep a pointer to it in the adreno_info.
-> But that is something we should try when there are more a6xx specific
-> configurations in future.
->
-> I have a new patch, but testing it is taking longer that I expected. I
-> will share it as soon as possible.
->
 
-I'm going to pull this in as-is for msm-fixes.  Please rebase the
-change that you haven't posted yet on top of this patch, and send it
-as a cleanup for the next cycle.  Thanks
+--xjamM5M9kpPM/bcu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-BR,
--R
+On Tue, Feb 11, 2020 at 08:48:24PM +0800, Anson Huang wrote:
+> Add compatible for imx8mm/imx8mn/imx8mp.
+
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--xjamM5M9kpPM/bcu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5CyqAACgkQJNaLcl1U
+h9DOwwf9FtG/iaQJVuAEOHRrJ9sfIJHvcKeiEzx4CbvNw5x48fs24VzAWO2rg7+t
+iyze1NRFVPS9oH0RLhrQ7jTj+W2t/2Ab8aF6SdK7GhHrIHPRnISNg9Gw15CpTNhv
+G28a9MR8eOddt9JprJ9GE37oyZyaBrFKCojNYlCIRDUxWVQH9RLjh4WjEy2RXxFi
+/OY2G513MX3vivd/04F+9O3KtfOqYdMjgeZ5gi0wbmK4MauyjdMGdrkMbrFcWwKC
+HdoAfGE9ounM1hYtYgAJRoGl20p6Z1n5MQ8HUHeEQkViPA+x4hiFgnRfV3xxtMiu
+rMm3Cu+06Jk9hh/fqB6Qlc92m6Up0Q==
+=TZK0
+-----END PGP SIGNATURE-----
+
+--xjamM5M9kpPM/bcu--
