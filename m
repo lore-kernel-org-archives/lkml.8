@@ -2,196 +2,122 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1846EC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB4AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB78720848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5648420842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBKJEp (ORCPT
+        id S1727684AbgBKJLU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:04:45 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43935 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgBKJEo (ORCPT
+        Tue, 11 Feb 2020 04:11:20 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:37036 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgBKJLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:04:44 -0500
-Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id adfc0e3b68c92435; Tue, 11 Feb 2020 10:04:40 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>,
-        David Box <david.e.box@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v2] ACPI: EC: Fix flushing of pending work
-Date:   Tue, 11 Feb 2020 10:04:40 +0100
-Message-ID: <28760106.ljELEbzjY3@kreacher>
-In-Reply-To: <2209952.LFAxc7Zn43@kreacher>
-References: <2209952.LFAxc7Zn43@kreacher>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Tue, 11 Feb 2020 04:11:20 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01B9AopS011566, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01B9AopS011566
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Feb 2020 17:10:50 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 11 Feb 2020 17:10:50 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 11 Feb 2020 17:10:50 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f]) by
+ RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f%6]) with mapi id
+ 15.01.1779.005; Tue, 11 Feb 2020 17:10:50 +0800
+From:   Kailang <kailang@realtek.com>
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>
+CC:     Takashi Iwai <tiwai@suse.de>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk value
+Thread-Topic: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
+ 7th quirk value
+Thread-Index: AQHV4KAyVK0d0c4RkUCatRD1s4Jmc6gVFbAAgAAJ9ACAAJRvkA==
+Date:   Tue, 11 Feb 2020 09:10:50 +0000
+Message-ID: <ab7a0abd24df485d8f8cc3723403a44f@realtek.com>
+References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
+ <20200211055651.4405-2-benjamin.poirier@gmail.com>
+ <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz> <20200211081604.GA8286@f3>
+In-Reply-To: <20200211081604.GA8286@f3>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.105.169]
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi,
 
-Commit 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
-introduced a subtle bug into the flushing of pending EC work while
-suspended to idle, which may cause the EC driver to fail to
-re-enable the EC GPE after handling a non-wakeup event (like a
-battery status change event, for example).
+Speaker 2 connect to DAC 0x2 was Lenovo requested.
+This was tune for EQ setting.
+I didn't know more for this.
 
-The problem is that the work item flushed by flush_scheduled_work()
-in __acpi_ec_flush_work() may disable the EC GPE and schedule another
-work item expected to re-enable it, but that new work item is not
-flushed, so __acpi_ec_flush_work() returns with the EC GPE disabled
-and the CPU running it goes into an idle state subsequently.  If all
-of the other CPUs are in idle states at that point, the EC GPE won't
-be re-enabled until at least one CPU is woken up by another interrupt
-source, so system wakeup events that would normally come from the EC
-then don't work.
+BR,
+Kailang
 
-This is reproducible on a Dell XPS13 9360 in my office which
-sometimes stops reacting to power button and lid events (triggered
-by the EC on that machine) after switching from AC power to battery
-power or vice versa while suspended to idle (each of those switches
-causes the EC GPE to trigger for several times in a row, but they
-are not system wakeup events).
-
-To avoid this problem, it is necessary to drain the workqueue
-entirely in __acpi_ec_flush_work(), but that cannot be done with
-respect to system_wq, because work items may be added to it from
-other places while __acpi_ec_flush_work() is running.  For this
-reason, make the EC driver use a dedicated workqueue for EC events
-processing (let that workqueue be ordered so that EC events are
-processed sequentially) and use drain_workqueue() on it in
-__acpi_ec_flush_work().
-
-Fixes: 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
--> v2:
-   * Use a dedicated wq for EC events.
-
----
- drivers/acpi/ec.c |   43 ++++++++++++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
-
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -179,6 +179,7 @@ EXPORT_SYMBOL(first_ec);
- 
- static struct acpi_ec *boot_ec;
- static bool boot_ec_is_ecdt = false;
-+static struct workqueue_struct *ec_wq;
- static struct workqueue_struct *ec_query_wq;
- 
- static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
-@@ -469,7 +470,7 @@ static void acpi_ec_submit_query(struct
- 		ec_dbg_evt("Command(%s) submitted/blocked",
- 			   acpi_ec_cmd_string(ACPI_EC_COMMAND_QUERY));
- 		ec->nr_pending_queries++;
--		schedule_work(&ec->work);
-+		queue_work(ec_wq, &ec->work);
- 	}
- }
- 
-@@ -535,7 +536,7 @@ static void acpi_ec_enable_event(struct
- #ifdef CONFIG_PM_SLEEP
- static void __acpi_ec_flush_work(void)
- {
--	flush_scheduled_work(); /* flush ec->work */
-+	drain_workqueue(ec_wq); /* flush ec->work */
- 	flush_workqueue(ec_query_wq); /* flush queries */
- }
- 
-@@ -556,8 +557,8 @@ static void acpi_ec_disable_event(struct
- 
- void acpi_ec_flush_work(void)
- {
--	/* Without ec_query_wq there is nothing to flush. */
--	if (!ec_query_wq)
-+	/* Without ec_wq there is nothing to flush. */
-+	if (!ec_wq)
- 		return;
- 
- 	__acpi_ec_flush_work();
-@@ -2107,25 +2108,33 @@ static struct acpi_driver acpi_ec_driver
- 	.drv.pm = &acpi_ec_pm,
- };
- 
--static inline int acpi_ec_query_init(void)
-+static void acpi_ec_destroy_workqueues(void)
- {
--	if (!ec_query_wq) {
--		ec_query_wq = alloc_workqueue("kec_query", 0,
--					      ec_max_queries);
--		if (!ec_query_wq)
--			return -ENODEV;
-+	if (ec_wq) {
-+		destroy_workqueue(ec_wq);
-+		ec_wq = NULL;
- 	}
--	return 0;
--}
--
--static inline void acpi_ec_query_exit(void)
--{
- 	if (ec_query_wq) {
- 		destroy_workqueue(ec_query_wq);
- 		ec_query_wq = NULL;
- 	}
- }
- 
-+static int acpi_ec_init_workqueues(void)
-+{
-+	if (!ec_wq)
-+		ec_wq = alloc_ordered_workqueue("kec", 0);
-+
-+	if (!ec_query_wq)
-+		ec_query_wq = alloc_workqueue("kec_query", 0, ec_max_queries);
-+
-+	if (!ec_wq || !ec_query_wq) {
-+		acpi_ec_destroy_workqueues();
-+		return -ENODEV;
-+	}
-+	return 0;
-+}
-+
- static const struct dmi_system_id acpi_ec_no_wakeup[] = {
- 	{
- 		.ident = "Thinkpad X1 Carbon 6th",
-@@ -2157,7 +2166,7 @@ int __init acpi_ec_init(void)
- 	int ecdt_fail, dsdt_fail;
- 
- 	/* register workqueue for _Qxx evaluations */
--	result = acpi_ec_query_init();
-+	result = acpi_ec_init_workqueues();
- 	if (result)
- 		return result;
- 
-@@ -2188,6 +2197,6 @@ static void __exit acpi_ec_exit(void)
- {
- 
- 	acpi_bus_unregister_driver(&acpi_ec_driver);
--	acpi_ec_query_exit();
-+	acpi_ec_destroy_workqueues();
- }
- #endif	/* 0 */
-
-
-
+> -----Original Message-----
+> From: Benjamin Poirier <benjamin.poirier@gmail.com>
+> Sent: Tuesday, February 11, 2020 4:16 PM
+> To: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.de>; Kailang <kailang@realtek.com>;
+> alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
+> 7th quirk value
+> 
+> On 2020/02/11 08:40 +0100, Jaroslav Kysela wrote:
+> [...]
+> > >
+> > > In summary, Node 0x17 DAC connection 0x3 offers the loudest max
+> > > volume and the most detailed mixer controls. That connection is
+> > > obtained with quirk ALC295_FIXUP_DISABLE_DAC3. Therefore, change the
+> > > ThinkPad X1 Carbon 7th to use ALC295_FIXUP_DISABLE_DAC3.
+> >
+> > The volume split (individual volume control) will cause trouble for
+> > the UCM volume control at the moment which is the target for this
+> > device to get the digital microphone working. If there is no
+> > possibility to share DAC, it would be probably more nice to join the volume
+> control in the driver.
+> >
+> > Have you tried to use 0x03 as source for all four speakers?
+> 
+> Front speakers are fixed to 0x02. Node 0x14
+>   Connection: 1
+>      0x02
+> 
+> >
+> > Why PA handles the rear volume control with the current driver code in
+> > the legacy ALSA driver? It should be handled like standard stereo
+> > device. I'll check.
+> 
+> The device comes up with "Analog Stereo Output" profile by default. I changed
+> it to "Analog Surround 4.0 Output" to test controlling each channel individually:
+> 
+> > > pavucontrol controls are reported with the device configured with
+> > > the "Analog Surround 4.0 Output" profile.
+> 
+> >
+> > You should also test PA with UCM.
+> 
+> Please let me know what do I need to test exactly? I'm not familiar with UCM.
+> 
+> ------Please consider the environment before printing this e-mail.
