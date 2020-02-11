@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B15DC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85B6C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9334208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C821D214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731231AbgBKSUD (ORCPT
+        id S1731239AbgBKSUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:20:03 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:52104 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgBKSTe (ORCPT
+        Tue, 11 Feb 2020 13:20:05 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:34350 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730933AbgBKSTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 13:19:34 -0500
 Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id 1WKV2200S5USYZQ01WKV79; Tue, 11 Feb 2020 19:19:30 +0100
+        by andre.telenet-ops.be with bizsmtp
+        id 1WKV2200Y5USYZQ01WKVTg; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0002nz-JJ; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a89-0002oB-Nk; Tue, 11 Feb 2020 19:19:29 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0003yS-Hv; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a89-0003ye-MM; Tue, 11 Feb 2020 19:19:29 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -39,9 +39,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 08/34] crypto: ccree - clean up clock handling
-Date:   Tue, 11 Feb 2020 19:19:02 +0100
-Message-Id: <20200211181928.15178-9-geert+renesas@glider.be>
+Subject: [PATCH v2 12/34] crypto: ccree - remove bogus paragraph about freeing SRAM
+Date:   Tue, 11 Feb 2020 19:19:06 +0100
+Message-Id: <20200211181928.15178-13-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
 References: <20200211181928.15178-1-geert+renesas@glider.be>
@@ -50,152 +50,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_clk_get_optional() instead of devm_clk_get() and explicit
-optional clock handling.
-As clk_prepare_enable() and clk_disable_unprepare() handle optional
-clocks fine, the cc_clk_on() and cc_clk_off() wrappers can be removed.
+The SRAM allocator does not support deallocating memory.
+Hence remove all references to freeing SRAM.
 
-While at it, use the new "%pe" format specifier to print error codes.
+Fix grammar while at it.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
   - New.
 
- drivers/crypto/ccree/cc_driver.c | 55 ++++++--------------------------
- drivers/crypto/ccree/cc_driver.h |  2 --
- drivers/crypto/ccree/cc_pm.c     |  4 +--
- 3 files changed, 11 insertions(+), 50 deletions(-)
+ drivers/crypto/ccree/cc_sram_mgr.c | 3 ---
+ drivers/crypto/ccree/cc_sram_mgr.h | 5 +----
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_driver.c b/drivers/crypto/ccree/cc_driver.c
-index f8aba89e48730e4d..a7b7f65939e2f620 100644
---- a/drivers/crypto/ccree/cc_driver.c
-+++ b/drivers/crypto/ccree/cc_driver.c
-@@ -302,22 +302,12 @@ static int init_cc_resources(struct platform_device *plat_dev)
- 	platform_set_drvdata(plat_dev, new_drvdata);
- 	new_drvdata->plat_dev = plat_dev;
+diff --git a/drivers/crypto/ccree/cc_sram_mgr.c b/drivers/crypto/ccree/cc_sram_mgr.c
+index a3c13b37adce4641..7d0e0db4f8df6e66 100644
+--- a/drivers/crypto/ccree/cc_sram_mgr.c
++++ b/drivers/crypto/ccree/cc_sram_mgr.c
+@@ -50,9 +50,6 @@ int cc_sram_mgr_init(struct cc_drvdata *drvdata)
  
--	clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(clk))
--		switch (PTR_ERR(clk)) {
--		/* Clock is optional so this might be fine */
--		case -ENOENT:
--			break;
--
--		/* Clock not available, let's try again soon */
--		case -EPROBE_DEFER:
--			return -EPROBE_DEFER;
--
--		default:
--			dev_err(dev, "Error getting clock: %ld\n",
--				PTR_ERR(clk));
--			return PTR_ERR(clk);
--		}
-+	clk = devm_clk_get_optional(dev, NULL);
-+	if (IS_ERR(clk)) {
-+		if (PTR_ERR(clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Error getting clock: %pe\n", clk);
-+		return PTR_ERR(clk);
-+	}
- 	new_drvdata->clk = clk;
+ /*!
+  * Allocated buffer from SRAM pool.
+- * Note: Caller is responsible to free the LAST allocated buffer.
+- * This function does not taking care of any fragmentation may occur
+- * by the order of calls to alloc/free.
+  *
+  * \param drvdata
+  * \param size The requested bytes to allocate
+diff --git a/drivers/crypto/ccree/cc_sram_mgr.h b/drivers/crypto/ccree/cc_sram_mgr.h
+index 971029b0e2a16c36..3b62dc3bd422a9c2 100644
+--- a/drivers/crypto/ccree/cc_sram_mgr.h
++++ b/drivers/crypto/ccree/cc_sram_mgr.h
+@@ -30,10 +30,7 @@ typedef u64 cc_sram_addr_t;
+ int cc_sram_mgr_init(struct cc_drvdata *drvdata);
  
- 	new_drvdata->coherent = of_dma_is_coherent(np);
-@@ -362,7 +352,7 @@ static int init_cc_resources(struct platform_device *plat_dev)
- 		return rc;
- 	}
- 
--	rc = cc_clk_on(new_drvdata);
-+	rc = clk_prepare_enable(new_drvdata->clk);
- 	if (rc) {
- 		dev_err(dev, "Failed to enable clock");
- 		return rc;
-@@ -545,7 +535,7 @@ static int init_cc_resources(struct platform_device *plat_dev)
- post_regs_err:
- 	fini_cc_regs(new_drvdata);
- post_clk_err:
--	cc_clk_off(new_drvdata);
-+	clk_disable_unprepare(new_drvdata->clk);
- 	return rc;
- }
- 
-@@ -569,23 +559,7 @@ static void cleanup_cc_resources(struct platform_device *plat_dev)
- 	cc_fips_fini(drvdata);
- 	cc_debugfs_fini(drvdata);
- 	fini_cc_regs(drvdata);
--	cc_clk_off(drvdata);
--}
--
--int cc_clk_on(struct cc_drvdata *drvdata)
--{
--	struct clk *clk = drvdata->clk;
--	int rc;
--
--	if (IS_ERR(clk))
--		/* Not all devices have a clock associated with CCREE  */
--		return 0;
--
--	rc = clk_prepare_enable(clk);
--	if (rc)
--		return rc;
--
--	return 0;
-+	clk_disable_unprepare(drvdata->clk);
- }
- 
- unsigned int cc_get_default_hash_len(struct cc_drvdata *drvdata)
-@@ -596,17 +570,6 @@ unsigned int cc_get_default_hash_len(struct cc_drvdata *drvdata)
- 		return HASH_LEN_SIZE_630;
- }
- 
--void cc_clk_off(struct cc_drvdata *drvdata)
--{
--	struct clk *clk = drvdata->clk;
--
--	if (IS_ERR(clk))
--		/* Not all devices have a clock associated with CCREE */
--		return;
--
--	clk_disable_unprepare(clk);
--}
--
- static int ccree_probe(struct platform_device *plat_dev)
- {
- 	int rc;
-diff --git a/drivers/crypto/ccree/cc_driver.h b/drivers/crypto/ccree/cc_driver.h
-index c227718ba9923472..b983e721f2f758fe 100644
---- a/drivers/crypto/ccree/cc_driver.h
-+++ b/drivers/crypto/ccree/cc_driver.h
-@@ -212,8 +212,6 @@ static inline void dump_byte_array(const char *name, const u8 *the_array,
- bool cc_wait_for_reset_completion(struct cc_drvdata *drvdata);
- int init_cc_regs(struct cc_drvdata *drvdata, bool is_probe);
- void fini_cc_regs(struct cc_drvdata *drvdata);
--int cc_clk_on(struct cc_drvdata *drvdata);
--void cc_clk_off(struct cc_drvdata *drvdata);
- unsigned int cc_get_default_hash_len(struct cc_drvdata *drvdata);
- 
- static inline void cc_iowrite(struct cc_drvdata *drvdata, u32 reg, u32 val)
-diff --git a/drivers/crypto/ccree/cc_pm.c b/drivers/crypto/ccree/cc_pm.c
-index 24c368b866f6b5ea..81376173c3ecf48f 100644
---- a/drivers/crypto/ccree/cc_pm.c
-+++ b/drivers/crypto/ccree/cc_pm.c
-@@ -26,7 +26,7 @@ int cc_pm_suspend(struct device *dev)
- 	dev_dbg(dev, "set HOST_POWER_DOWN_EN\n");
- 	fini_cc_regs(drvdata);
- 	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
--	cc_clk_off(drvdata);
-+	clk_disable_unprepare(drvdata->clk);
- 	return 0;
- }
- 
-@@ -37,7 +37,7 @@ int cc_pm_resume(struct device *dev)
- 
- 	dev_dbg(dev, "unset HOST_POWER_DOWN_EN\n");
- 	/* Enables the device source clk */
--	rc = cc_clk_on(drvdata);
-+	rc = clk_prepare_enable(drvdata->clk);
- 	if (rc) {
- 		dev_err(dev, "failed getting clock back on. We're toast.\n");
- 		return rc;
+ /*!
+- * Allocated buffer from SRAM pool.
+- * Note: Caller is responsible to free the LAST allocated buffer.
+- * This function does not taking care of any fragmentation may occur
+- * by the order of calls to alloc/free.
++ * Allocate buffer from SRAM pool.
+  *
+  * \param drvdata
+  * \param size The requested bytes to allocate
 -- 
 2.17.1
 
