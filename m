@@ -2,404 +2,112 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0628DC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBF8C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C888624650
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:03:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="kSrhY5v7"
+	by mail.kernel.org (Postfix) with ESMTP id BD32E2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbgBKTDn (ORCPT
+        id S1730731AbgBKTGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:03:43 -0500
-Received: from mail-bn8nam11on2088.outbound.protection.outlook.com ([40.107.236.88]:24289
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729542AbgBKTDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:03:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=imXy9Z2kvK80ujDyt3o/Gfflkx8iyvEDVkvTiqfrhJyVcv8I8Yf/Qev44z8++Ga+tcpnL9DdJpeGGo43sZW/pV9LwpRWy/OAl723pDjGX7l2RNXxV2gtfnW6aeNNwirA99y0ha8PDOxRK4JvHGzXxKFNLT8G4tV06UHUeibUpP03r0LntfbV/JeWoLkUdr9tOZiLShKWyAR6by+fv17kCho2NJtC+9bCYu5Sp8EQkixavOohPyeBHhzIU5A4W06EVGpTQGCXdsjhMmu8nUB67djVyBjhHp9f8X9oF4MwY8lEzsZoV5xEn+GxqFEBvQ2AZy7cE0+IsRmurjM0ce/uyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pq+txHr9+Vvn3UAli4bGRo4uu6/+oPo4OIvzYDkO3KE=;
- b=QlT+S+WIVagi0RGCtrI8r+j4doauPVEqwKz0j8BqtX/I5rEjg89dUvaOU263k8zEwYtC6Knxq674YxIE5ZtbixZEDRnBwrigXM57CkYoreehVXtIJEeKwjt6lKPW91r+vawqGyvg0DtxtloaKBQKyj3GACV0zctQ7oQ9QFXPlOjRKrg0VjV/MjCI/eB9hL7lcUT2LfuVv+u/ZbMb5ZB7cGU2Z3zsRXHC23gcHTxEbEftvmezDK5IKQae7SiYs51tQfMkKlruxjI7hkQ4isWirQIg7l5yHXRT4hp6FbfYkd6aIFo74TWCc3+F8AsUW93QYH/UodmW7NFP5Vldr3bXLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linutronix.de smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pq+txHr9+Vvn3UAli4bGRo4uu6/+oPo4OIvzYDkO3KE=;
- b=kSrhY5v7efD6zLsWmbDBermeS4vNN1sW99xgGXkDYsR3ENNqgb692FVjVzgUPANh7umuCqVGohk9Bq+oogZTREv8rJ8CoEVEKFrFJCr27TGwStBWZ6puoNNXyApxi1ceEXV7wrcneVxHFRe8ZQkishpNtAgaxVYHLadxOazvDpM=
-Received: from BN6PR02CA0048.namprd02.prod.outlook.com (2603:10b6:404:5f::34)
- by BYAPR02MB4341.namprd02.prod.outlook.com (2603:10b6:a03:56::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.25; Tue, 11 Feb
- 2020 19:03:38 +0000
-Received: from SN1NAM02FT041.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by BN6PR02CA0048.outlook.office365.com
- (2603:10b6:404:5f::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend
- Transport; Tue, 11 Feb 2020 19:03:38 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT041.mail.protection.outlook.com (10.152.72.217) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2707.21
- via Frontend Transport; Tue, 11 Feb 2020 19:03:37 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <mubin.usman.sayyed@xilinx.com>)
-        id 1j1aor-0001dV-7P; Tue, 11 Feb 2020 11:03:37 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <mubin.usman.sayyed@xilinx.com>)
-        id 1j1aom-0001le-3j; Tue, 11 Feb 2020 11:03:32 -0800
-Received: from [10.140.6.23] (helo=xhdmubinusm40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <mubin.usman.sayyed@xilinx.com>)
-        id 1j1aog-0001kB-8C; Tue, 11 Feb 2020 11:03:26 -0800
-From:   Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, siva.durga.paladugu@xilinx.com,
-        anirudha.sarangi@xilinx.com,
-        Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-Subject: [PATCH v3] irqchip: xilinx: Add support for multiple instances
-Date:   Wed, 12 Feb 2020 00:33:03 +0530
-Message-Id: <20200211190303.7991-1-mubin.usman.sayyed@xilinx.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 11 Feb 2020 14:06:04 -0500
+Received: from shelob.surriel.com ([96.67.55.147]:58556 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728503AbgBKTGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:06:03 -0500
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1j1ar4-0001St-CT; Tue, 11 Feb 2020 14:05:54 -0500
+Message-ID: <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+From:   Rik van Riel <riel@surriel.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Date:   Tue, 11 Feb 2020 14:05:38 -0500
+In-Reply-To: <20200211175507.178100-1-hannes@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-be8J/gfsysm0dy6l7psF"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(136003)(376002)(199004)(189003)(426003)(336012)(9786002)(186003)(2906002)(6666004)(103116003)(7696005)(356004)(5660300002)(316002)(478600001)(8936002)(70206006)(81156014)(81166006)(70586007)(107886003)(26005)(2616005)(1076003)(8676002)(4326008)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4341;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 405a0f8c-8b0e-4470-da1b-08d7af2519cf
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4341:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB43412F9AE0603A31F8DC0B58A1180@BYAPR02MB4341.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0310C78181
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lhp7VIA22KXmuvmWTZ8m1dEYe8XcU3CrOplwj/uvXHRFmyn4iZOdsR76vqWuK5dd86UyFEFzDDtlxQYSd5EUt1n+Xu8S6Xvng5QDlYYfKZMX9oQmNY6VSd7oXowQach+0U5KciQlwKVsY+J7IuQIMfv0MHCCO0aA/cCQ/zL+hhkO6HeJXIfRCwQPR1+R7I0Ntro9nCYujjnTACjzGRkWm6OGE0C/Hrb/oCgDnCJKAuN0UY3WxPwUTBArzKkLnla1RzB5pk5T6HPI8p2C0mM8bqVnkAC9yXnDrNJeNZJkbMqftXDtlCJI2UBTWMwVWCmrVY7qhRkg2g2Ll0yLYirHzi3fh7GWGoG4vFEPq/TlnBrqY3cNy+tBe3u4F8v+iah/qtJTYubcGHRsAc+ILzUZK3eqI11QMZv/XqTTqSMCj8SiYXNUehoHmlUF6knrNYpQ
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 19:03:37.6085
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 405a0f8c-8b0e-4470-da1b-08d7af2519cf
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4341
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
 
-This patch adds support for multiple instances of
-xilinx interrupt controller. Below configurations are
-supported by driver,
+--=-be8J/gfsysm0dy6l7psF
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-- peripheral->xilinx-intc->xilinx-intc->gic
-- peripheral->xilinx-intc->xilinx-intc
+On Tue, 2020-02-11 at 12:55 -0500, Johannes Weiner wrote:
+> The VFS inode shrinker is currently allowed to reclaim inodes with
+> populated page cache. As a result it can drop gigabytes of hot and
+> active page cache on the floor without consulting the VM (recorded as
+> "inodesteal" events in /proc/vmstat).
+>=20
+> This causes real problems in practice. Consider for example how the
+> VM
+> would cache a source tree, such as the Linux git tree. As large parts
+> of the checked out files and the object database are accessed
+> repeatedly, the page cache holding this data gets moved to the active
+> list, where it's fully (and indefinitely) insulated from one-off
+> cache
+> moving through the inactive list.
 
-Signed-off-by: Anirudha Sarangi <anirudha.sarangi@xilinx.com>
-Signed-off-by: Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
----
-Changes for v3:
-	- Modified prototype of xintc_write/xintc_read
-	- Fixed review comments regarding indentation/variable
-	  names, used BIT
-	- Modified xintc_get_irq_local to return 0
-	  in case of failure/no pending interrupts
-	- Fixed return type of xintc_read
-	- Reverted changes related to device name and
-	  kept intc_dev as static
+> This behavior of invalidating page cache from the inode shrinker goes
+> back to even before the git import of the kernel tree. It may have
+> been less noticeable when the VM itself didn't have real workingset
+> protection, and floods of one-off cache would push out any active
+> cache over time anyway. But the VM has come a long way since then and
+> the inode shrinker is now actively subverting its caching strategy.
 
-Changes for v2:
-        - Removed write_fn/read_fn hooks, used xintc_write/
-	  xintc_read directly
-        - Moved primary_intc declaration after xintc_irq_chip
----
- drivers/irqchip/irq-xilinx-intc.c | 115 ++++++++++++++++++------------
- 1 file changed, 68 insertions(+), 47 deletions(-)
+Two things come to mind when looking at this:
+- highmem
+- NUMA
 
-diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
-index e3043ded8973..51f461d2934f 100644
---- a/drivers/irqchip/irq-xilinx-intc.c
-+++ b/drivers/irqchip/irq-xilinx-intc.c
-@@ -38,29 +38,32 @@ struct xintc_irq_chip {
- 	void		__iomem *base;
- 	struct		irq_domain *root_domain;
- 	u32		intr_mask;
-+	struct		irq_chip *intc_dev;
-+	u32		nr_irq;
- };
- 
--static struct xintc_irq_chip *xintc_irqc;
-+static struct xintc_irq_chip *primary_intc;
- 
--static void xintc_write(int reg, u32 data)
-+static void xintc_write(struct xintc_irq_chip *irqc, int reg, u32 data)
- {
- 	if (static_branch_unlikely(&xintc_is_be))
--		iowrite32be(data, xintc_irqc->base + reg);
-+		iowrite32be(data, irqc->base + reg);
- 	else
--		iowrite32(data, xintc_irqc->base + reg);
-+		iowrite32(data, irqc->base + reg);
- }
- 
--static unsigned int xintc_read(int reg)
-+static u32 xintc_read(struct xintc_irq_chip *irqc, int reg)
- {
- 	if (static_branch_unlikely(&xintc_is_be))
--		return ioread32be(xintc_irqc->base + reg);
-+		return ioread32be(irqc->base + reg);
- 	else
--		return ioread32(xintc_irqc->base + reg);
-+		return ioread32(irqc->base + reg);
- }
- 
- static void intc_enable_or_unmask(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->hwirq;
-+	unsigned long mask = BIT(d->hwirq);
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
- 
- 	pr_debug("irq-xilinx: enable_or_unmask: %ld\n", d->hwirq);
- 
-@@ -69,30 +72,35 @@ static void intc_enable_or_unmask(struct irq_data *d)
- 	 * acks the irq before calling the interrupt handler
- 	 */
- 	if (irqd_is_level_type(d))
--		xintc_write(IAR, mask);
-+		xintc_write(irqc, IAR, mask);
- 
--	xintc_write(SIE, mask);
-+	xintc_write(irqc, SIE, mask);
- }
- 
- static void intc_disable_or_mask(struct irq_data *d)
- {
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+
- 	pr_debug("irq-xilinx: disable: %ld\n", d->hwirq);
--	xintc_write(CIE, 1 << d->hwirq);
-+	xintc_write(irqc, CIE, BIT(d->hwirq));
- }
- 
- static void intc_ack(struct irq_data *d)
- {
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-+
- 	pr_debug("irq-xilinx: ack: %ld\n", d->hwirq);
--	xintc_write(IAR, 1 << d->hwirq);
-+	xintc_write(irqc, IAR, BIT(d->hwirq));
- }
- 
- static void intc_mask_ack(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->hwirq;
-+	unsigned long mask = BIT(d->hwirq);
-+	struct xintc_irq_chip *irqc = irq_data_get_irq_chip_data(d);
- 
- 	pr_debug("irq-xilinx: disable_and_ack: %ld\n", d->hwirq);
--	xintc_write(CIE, mask);
--	xintc_write(IAR, mask);
-+	xintc_write(irqc, CIE, mask);
-+	xintc_write(irqc, IAR, mask);
- }
- 
- static struct irq_chip intc_dev = {
-@@ -103,13 +111,28 @@ static struct irq_chip intc_dev = {
- 	.irq_mask_ack = intc_mask_ack,
- };
- 
-+static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
-+{
-+	u32 hwirq;
-+	unsigned int irq = 0;
-+
-+	hwirq = xintc_read(irqc, IVR);
-+	if (hwirq != -1U)
-+		irq = irq_find_mapping(irqc->root_domain, hwirq);
-+
-+	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
-+
-+	return irq;
-+}
-+
- unsigned int xintc_get_irq(void)
- {
--	unsigned int hwirq, irq = -1;
-+	u32 hwirq;
-+	unsigned int irq = -1;
- 
--	hwirq = xintc_read(IVR);
-+	hwirq = xintc_read(primary_intc, IVR);
- 	if (hwirq != -1U)
--		irq = irq_find_mapping(xintc_irqc->root_domain, hwirq);
-+		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
- 
- 	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
- 
-@@ -118,15 +141,18 @@ unsigned int xintc_get_irq(void)
- 
- static int xintc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
- {
--	if (xintc_irqc->intr_mask & (1 << hw)) {
--		irq_set_chip_and_handler_name(irq, &intc_dev,
-+	struct xintc_irq_chip *irqc = d->host_data;
-+
-+	if (irqc->intr_mask & BIT(hw)) {
-+		irq_set_chip_and_handler_name(irq, irqc->intc_dev,
- 						handle_edge_irq, "edge");
- 		irq_clear_status_flags(irq, IRQ_LEVEL);
- 	} else {
--		irq_set_chip_and_handler_name(irq, &intc_dev,
-+		irq_set_chip_and_handler_name(irq, irqc->intc_dev,
- 						handle_level_irq, "level");
- 		irq_set_status_flags(irq, IRQ_LEVEL);
- 	}
-+	irq_set_chip_data(irq, irqc);
- 	return 0;
- }
- 
-@@ -138,12 +164,14 @@ static const struct irq_domain_ops xintc_irq_domain_ops = {
- static void xil_intc_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct xintc_irq_chip *irqc =
-+		irq_data_get_irq_handler_data(&desc->irq_data);
- 	u32 pending;
- 
- 	chained_irq_enter(chip, desc);
- 	do {
--		pending = xintc_get_irq();
--		if (pending == -1U)
-+		pending = xintc_get_irq_local(irqc);
-+		if (pending == 0U)
- 			break;
- 		generic_handle_irq(pending);
- 	} while (true);
-@@ -153,28 +181,19 @@ static void xil_intc_irq_handler(struct irq_desc *desc)
- static int __init xilinx_intc_of_init(struct device_node *intc,
- 					     struct device_node *parent)
- {
--	u32 nr_irq;
- 	int ret, irq;
- 	struct xintc_irq_chip *irqc;
- 
--	if (xintc_irqc) {
--		pr_err("irq-xilinx: Multiple instances aren't supported\n");
--		return -EINVAL;
--	}
--
- 	irqc = kzalloc(sizeof(*irqc), GFP_KERNEL);
- 	if (!irqc)
- 		return -ENOMEM;
--
--	xintc_irqc = irqc;
--
- 	irqc->base = of_iomap(intc, 0);
- 	BUG_ON(!irqc->base);
- 
--	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &nr_irq);
-+	ret = of_property_read_u32(intc, "xlnx,num-intr-inputs", &irqc->nr_irq);
- 	if (ret < 0) {
- 		pr_err("irq-xilinx: unable to read xlnx,num-intr-inputs\n");
--		goto err_alloc;
-+		goto error;
- 	}
- 
- 	ret = of_property_read_u32(intc, "xlnx,kind-of-intr", &irqc->intr_mask);
-@@ -183,34 +202,35 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		irqc->intr_mask = 0;
- 	}
- 
--	if (irqc->intr_mask >> nr_irq)
-+	if (irqc->intr_mask >> irqc->nr_irq)
- 		pr_warn("irq-xilinx: mismatch in kind-of-intr param\n");
- 
- 	pr_info("irq-xilinx: %pOF: num_irq=%d, edge=0x%x\n",
--		intc, nr_irq, irqc->intr_mask);
-+		intc, irqc->nr_irq, irqc->intr_mask);
- 
-+	irqc->intc_dev = &intc_dev;
- 
- 	/*
- 	 * Disable all external interrupts until they are
- 	 * explicity requested.
- 	 */
--	xintc_write(IER, 0);
-+	xintc_write(irqc, IER, 0);
- 
- 	/* Acknowledge any pending interrupts just in case. */
--	xintc_write(IAR, 0xffffffff);
-+	xintc_write(irqc, IAR, 0xffffffff);
- 
- 	/* Turn on the Master Enable. */
--	xintc_write(MER, MER_HIE | MER_ME);
--	if (!(xintc_read(MER) & (MER_HIE | MER_ME))) {
-+	xintc_write(irqc, MER, MER_HIE | MER_ME);
-+	if (!(xintc_read(irqc, MER) & (MER_HIE | MER_ME))) {
- 		static_branch_enable(&xintc_is_be);
--		xintc_write(MER, MER_HIE | MER_ME);
-+		xintc_write(irqc, MER, MER_HIE | MER_ME);
- 	}
- 
--	irqc->root_domain = irq_domain_add_linear(intc, nr_irq,
-+	irqc->root_domain = irq_domain_add_linear(intc, irqc->nr_irq,
- 						  &xintc_irq_domain_ops, irqc);
- 	if (!irqc->root_domain) {
- 		pr_err("irq-xilinx: Unable to create IRQ domain\n");
--		goto err_alloc;
-+		goto error;
- 	}
- 
- 	if (parent) {
-@@ -222,16 +242,17 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		} else {
- 			pr_err("irq-xilinx: interrupts property not in DT\n");
- 			ret = -EINVAL;
--			goto err_alloc;
-+			goto error;
- 		}
- 	} else {
--		irq_set_default_host(irqc->root_domain);
-+		primary_intc = irqc;
-+		irq_set_default_host(primary_intc->root_domain);
- 	}
- 
- 	return 0;
- 
--err_alloc:
--	xintc_irqc = NULL;
-+error:
-+	iounmap(irqc->base);
- 	kfree(irqc);
- 	return ret;
- 
--- 
-2.25.0
+IIRC one of the reasons reclaim is done in this way is
+because a page cache page in one area of memory (highmem,
+or a NUMA node) can end up pinning inode slab memory in
+another memory area (normal zone, other NUMA node).
+
+I do not know how much of a concern that still is nowadays,
+but it seemed something worth bringing up.
+
+--=20
+All Rights Reversed.
+
+--=-be8J/gfsysm0dy6l7psF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5C+wIACgkQznnekoTE
+3oO/IQgAl8ZKBW1n3o9BCqwLSqcu66jPS/q2dziIacDoXS3zW7ME3LAqluQa3Qen
+cN2+lPymRfObV9cUMHBd5Q8lZSPu4ABn/Vgp5I37pyA9WOgfC3yLVWvgbWIXn40u
+Rnl9TQn6TIsvZTY/3VD3MYrbry3Q87wrOrrUyRzeL7kZQ3s6njARKXrN44yN+ABf
+DirTGAH3PeBMd+JZNVT3yAGcp3EW1Oe2Fda99orpAh/kD7dKK1Gat/s2k0AwHvZz
+o3zhYqLbIi+4cNGj/g234KsMJpEfRwjZxVcsYaenm3qaWR4arNYV/5+M0lYsRNYK
+8YRHaOQR5GDctvip88bDvdThWfDplw==
+=XJG5
+-----END PGP SIGNATURE-----
+
+--=-be8J/gfsysm0dy6l7psF--
 
