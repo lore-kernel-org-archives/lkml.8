@@ -2,141 +2,77 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9B1C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1851BC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F0D20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581424211;
-	bh=UOl+tQ/zZd+KwI4FO4cTDXiLUcocDiU1LoF+UqO99S4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l7KnFgujo7x8NGHEY487cxnwcQhVc2bnJUKnbvJ96664J1GDACoufIrB1Qylj30VH
-	 NS/mjXucgQyQ6mfHc2iV3q19QMIrSpzrytCy9W8Nh3NWWAk5r3GPXLRrgW7au7UW33
-	 qsun1yuHa+s5svGuuHRuHExm2tzrgZgAfHCYH3Cg=
+	by mail.kernel.org (Postfix) with ESMTP id D5D2E20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:31:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NOxUvXET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgBKMaL (ORCPT
+        id S1728810AbgBKMby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:30:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728467AbgBKMaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:30:10 -0500
-Received: from localhost (unknown [209.37.97.194])
+        Tue, 11 Feb 2020 07:31:54 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:55522 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728341AbgBKMbx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:31:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=d8hdSd/7aIqAefDk077COrSiAbGuHv2/hZDaRbUHx5o=; b=NOxUvXETeTx1yz6UwjTSSunpNI
+        kwvGGa78MbKRfwe/RFXQkj5DgLnQ/ApsOAdtNBUr67aLVxLnyqO8L3vXrp9AH0N/sxNR1Br6lWBxY
+        NkuQOO0h90BocBVdUBYcnRlAq4YnwGox6zB9KMwxDGVSKljAjDwobsR77xYYo04u22sN3I+7hOexb
+        BOzNK/tzrzDDX+WbI9ccFvw+wxtEe1+N/rrflhgIPjgq4/A6WPXtkur5fkLMclSWtA0QieFCY90g5
+        O7rsCI3T0AjeXe8zsRlzfDwPAeInZE2UVgK6hCh1CZJDxRCFYNYParzljOehktB8K4+XY+PR5NHnm
+        T+SO/evQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1UhZ-00035s-V3; Tue, 11 Feb 2020 12:31:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CD5820714;
-        Tue, 11 Feb 2020 12:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581424209;
-        bh=UOl+tQ/zZd+KwI4FO4cTDXiLUcocDiU1LoF+UqO99S4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TyAGYzmBk647Xic8+Af5jY50tMRYt9H5bHtn6wsE10WXBTvj6piI1yGy8Z6MCj+ZS
-         ansTqCI6m6WsvLaA3okd2k0EYZxvvCWq6Iq7nJE8mUUSf4uxk4FoLXexYzdDYJU1te
-         3efECLAoHJQaFnkycH7+U+jvYJPstPYkJ8I0fcYI=
-Date:   Tue, 11 Feb 2020 04:30:09 -0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH] serial: sh-sci: Support custom speed setting
-Message-ID: <20200211123009.GB1858119@kroah.com>
-References: <20200129161955.30562-1-erosca@de.adit-jv.com>
- <CAMuHMdWV0kkKq6sKOHsdz+FFGNHphzq_q7rvmYAL=U4fH2H3wQ@mail.gmail.com>
- <20200210205735.GB1347752@kroah.com>
- <CAMuHMdUa0fUHZF03QCLsgvS8LSN_rGUQ1gPtotQ3uNGEHkCm6g@mail.gmail.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6C18B300739;
+        Tue, 11 Feb 2020 13:29:49 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F9F62B88D73B; Tue, 11 Feb 2020 13:31:38 +0100 (CET)
+Date:   Tue, 11 Feb 2020 13:31:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/3] locking/mutex: Add mutex_timed_lock() to solve
+ potential deadlock problems
+Message-ID: <20200211123138.GN14914@hirez.programming.kicks-ass.net>
+References: <20200210204651.21674-1-longman@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUa0fUHZF03QCLsgvS8LSN_rGUQ1gPtotQ3uNGEHkCm6g@mail.gmail.com>
+In-Reply-To: <20200210204651.21674-1-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 09:15:02AM +0100, Geert Uytterhoeven wrote:
-> Hi Greg,
-> 
-> CC man
-> 
-> On Mon, Feb 10, 2020 at 9:57 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Thu, Jan 30, 2020 at 01:32:50PM +0100, Geert Uytterhoeven wrote:
-> > > On Wed, Jan 29, 2020 at 5:20 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > > > From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> > > >
-> > > > This patch is necessary to use BT module and XM module with DENSO TEN
-> > > > development board.
-> > > >
-> > > > This patch supports ASYNC_SPD_CUST flag by ioctl(TIOCSSERIAL), enables
-> > > > custom speed setting with setserial(1).
-> > > >
-> > > > The custom speed is calculated from uartclk and custom_divisor.
-> > > > If custom_divisor is zero, custom speed setting is invalid.
-> > > >
-> > > > Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> > > > [erosca: rebase against v5.5]
-> > > > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > While this seems to work fine[*], I have a few comments/questions:
-> > >   1. This feature seems to be deprecated:
-> > >
-> > >          sh-sci e6e68000.serial: setserial sets custom speed on
-> > > ttySC1. This is deprecated.
-> > >
-> > >   2. As the wanted speed is specified as a divider, the resulting speed
-> > >      may be off, cfr. the example for 57600 below.
-> > >      Note that the SCIF device has multiple clock inputs, and can do
-> > >      57600 perfectly if the right crystal has been fitted.
-> > >
-> > >  3. What to do with "[PATCH/RFC] serial: sh-sci: Update uartclk based
-> > >      on selected clock" (https://patchwork.kernel.org/patch/11103703/)?
-> > >      Combined with this, things become pretty complicated and
-> > >      unpredictable, as uartclk now always reflect the frequency of the
-> > >      last used base clock, which was the optimal one for the previously
-> > >      used speed....
-> > >
-> > > I think it would be easier if we just had an API to specify a raw speed.
-> > > Perhaps that already exists?
-> >
-> > Yes, see:
-> >         http://www.panix.com/~grante/arbitrary-baud.c
-> 
-> Thanks a lot!!
-> This must be one of the most guarded secrets of serial port programming ;-)
+On Mon, Feb 10, 2020 at 03:46:48PM -0500, Waiman Long wrote:
+> An alternative solution proposed by this patchset is to add a new
+> mutex_timed_lock() call that allows an additional timeout argument. This
+> function will return an error code if timeout happens. The use of this
+> new API will prevent deadlock from happening while allowing the task
+> to wait a sufficient period of time before giving up.
 
-It really is, I have to look it up each time it comes up :(
+We've always rejected timed_lock implementation because, as akpm has
+already expressed, their need is disgusting.
 
-> Implemented since 2006, commit edc6afc5496875a6 ("[PATCH] tty: switch to
-> ktermios and new framework"), not documented in today's man-pages.
-
-yeah, serial port control really needs to be documented better, there's
-all sorts of nice ways of controlling them that people don't seem to
-know about.  I used to have a link to a bunch of online examples, but
-can't seem to find that anymore either.  Ugh, another thing for the long
-TODO file...
-
-greg k-h
