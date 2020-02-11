@@ -2,106 +2,105 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F501C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40711C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1A92073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112A420708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oJdxQzfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBKXsK (ORCPT
+        id S1728069AbgBKXsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:48:10 -0500
-Received: from mga06.intel.com ([134.134.136.31]:29089 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgBKXsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:48:10 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 15:48:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="asc'?scan'208";a="233621554"
-Received: from jtkirshe-desk1.jf.intel.com ([134.134.177.74])
-  by orsmga003.jf.intel.com with ESMTP; 11 Feb 2020 15:48:09 -0800
-Message-ID: <43c9336e1c0c23e374420586868052e947b75126.camel@intel.com>
-Subject: Re: [PATCH 20/28] drivers: net: Call cpu_latency_qos_*() instead of
- pm_qos_*()
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Reply-To: jeffrey.t.kirsher@intel.com
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        intel-wired-lan@lists.osuosl.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org
-Date:   Tue, 11 Feb 2020 15:48:09 -0800
-In-Reply-To: <10624145.o336LLEsho@kreacher>
-References: <1654227.8mz0SueHsU@kreacher> <10624145.o336LLEsho@kreacher>
-Organization: Intel
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-GaZoanpPv4L3uFpFpUoG"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 11 Feb 2020 18:48:32 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33365 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgBKXsc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:48:32 -0500
+Received: by mail-wr1-f68.google.com with SMTP id u6so452wrt.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:48:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tKZVKd7LefiyWeQ0F2PuNMLHXMThkRotLuzYefuE5rc=;
+        b=oJdxQzfCxBdsUpaXuR3MdBuCWDzZwSB+Jo1UxVNnw86Ms70GwIxxKD/6QYko2IyH2W
+         yvF4XlGbc1jJfuDgM9BEJSme/WhY6lGm7BL7WKPG+5zBgNhGHoldlwm3eNzEI9lRBSsK
+         OgVBN+dMbDU0frPADxuudeG1r4i8tcy9KbYcvpLsmYIkh/5qwYUsyIa0/8phC29yXqJE
+         oFSnw9UkCLhShWSYyozwzNdXwzqMR+wKNN+NXrPnH19KTr9R4VKkCITGg257Z5JAfSwZ
+         HfILBc5Jd1qt0PQ6irlIoHA1NYEhYB2zOKsGMp/Hh61sUvKBeLznK4i7be8TeXck/D7/
+         QoWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tKZVKd7LefiyWeQ0F2PuNMLHXMThkRotLuzYefuE5rc=;
+        b=e8Uz+i0a1yu2CzMZuRawFEZmOzWvtKp2IppT9p+A3PVCiWbaraktRGO+cysDpX68yY
+         bUK6Pn3GGohpUkP8VqOLjeMiEL1ZXYxOMFtDSw56eeJs5L0mHNbC34/OiPhtALwtqL3m
+         JAwX7shsMM7tsTfOsPkUB9DfMrTL0qJh8FeSfUcwYDQ9tb2ODDN9DmTWQEpzv6SBmprB
+         nPpAHFUi8wsvY4wPxyQWVfVkicUTqNFIahrbdy6kP1jmmcb+lH8RI2bSEVEkoHNAjUn6
+         yx1LbBn8WzKDQ+S9ZfqzqVpq3ZBBz09znqge1aIaDblDzovq7eaoYUQOx9vsnj7oEPL7
+         KFKQ==
+X-Gm-Message-State: APjAAAULesEckwPnPnoOLeensWeauFo8S2q3T7Hagrlb7dBck0mM7Ayx
+        A4hyttanRWkGaVRNgcUdmZospQNFU4n9PxRfU9Od5A==
+X-Google-Smtp-Source: APXvYqzgPjm+6Ae93vV5GdgaxMOW+fUqoGME9hOeqCh/2kKErwHSyduMJTR409IMY5lgfqSel9EpaPO2WyLJIHU6PS8=
+X-Received: by 2002:adf:dd51:: with SMTP id u17mr10871983wrm.290.1581464909891;
+ Tue, 11 Feb 2020 15:48:29 -0800 (PST)
 MIME-Version: 1.0
+References: <20200115182816.33892-1-trishalfonso@google.com> <CACT4Y+bPzRbWw-dPQkLVENPKy_DBdjrbSce0f6XE3=W7RhfhBA@mail.gmail.com>
+In-Reply-To: <CACT4Y+bPzRbWw-dPQkLVENPKy_DBdjrbSce0f6XE3=W7RhfhBA@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Tue, 11 Feb 2020 15:48:18 -0800
+Message-ID: <CAKFsvUKhwAOV9O+LWBr=-zLEJCFJvKOH-ePsXMMVJzHotqd3Ug@mail.gmail.com>
+Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        linux-um@lists.infradead.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 16, 2020 at 12:44 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Wed, Jan 15, 2020 at 7:28 PM Patricia Alfonso
+> <trishalfonso@google.com> wrote:
+> > +config KASAN_SHADOW_OFFSET
+> > +       hex
+> > +       depends on KASAN
+> > +       default 0x100000000000
+> > +       help
+> > +         This is the offset at which the ~2.25TB of shadow memory is
+> > +         initialized and used by KASAN for memory debugging. The default
+> > +         is 0x100000000000.
+>
+> What are restrictions on this value?
+The only restriction is that there is enough space there to map all of
+the KASAN shadow memory without conflicting with anything else.
 
---=-GaZoanpPv4L3uFpFpUoG
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> In user-space we use 0x7fff8000 as a base (just below 2GB) and it's
+> extremely profitable wrt codegen since it fits into immediate of most
+> instructions.
+> We can load and add the base with a short instruction:
+>     2d8c: 48 81 c2 00 80 ff 7f    add    $0x7fff8000,%rdx
+> Or even add base, load shadow and check it with a single 7-byte instruction:
+>      1e4: 80 b8 00 80 ff 7f 00    cmpb   $0x0,0x7fff8000(%rax)
+>
+I just tested with 0x7fff8000 as the KASAN_SHADOW_OFFSET and it worked
+so I can make that the default if it will be more efficient.
 
-On Wed, 2020-02-12 at 00:24 +0100, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->=20
-> Call cpu_latency_qos_add/update/remove_request() instead of
-> pm_qos_add/update/remove_request(), respectively, because the
-> latter are going to be dropped.
->=20
-> No intentional functional impact.
->=20
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com
-
-For the e1000e changes
-
-> ---
->  drivers/net/ethernet/intel/e1000e/netdev.c   | 13 ++++++-------
->  drivers/net/wireless/ath/ath10k/core.c       |  4 ++--
->  drivers/net/wireless/intel/ipw2x00/ipw2100.c | 10 +++++-----
->  3 files changed, 13 insertions(+), 14 deletions(-)
-
-
---=-GaZoanpPv4L3uFpFpUoG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl5DPTkACgkQ5W/vlVpL
-7c4a3g//SCBWhCZ3vnz6qb26ASH5pK5fgz/l9o0FmD/sOn6jHfXbGmD3C8zTo6ic
-j1pQ488wAXMKm+Ay6CNyy3tqC3l9Lg1GKu6wQ4R/evm7cCk38Mwg7+sHa5aNdjwo
-6+KmMvHD9aY3Ya+QzsrJg5ZztvW/CWP69SJ1J2JfM9a401S0Us5MX/O2WmdyYo/9
-nXRGTYYj3Aekg1Ghs2JdWkYyiPGUDTic1R8psB8I7rDHZV5zmrrBferSMz8jB9Gk
-ReQE43h5rF0CZKQevMws/J6gO2Ndfbre5BZoXA7wydzs4kkV2O98u0aTc/HBP16l
-q8vf//TZ0cJy+rTEexxKIlWsfdIKQbYsWIenY6GEjR7W0n/chJYQZw40wGODisMd
-Et4ZZwL7fVpWxLxVtSrhlAieD2RpAYyCYl6l9s46lcmHSf59kbx1EyN/EmwrpEIn
-N9wCiCX9s1Nj4kH1CQAdTXhK8InLFKxKdApKSbACTwXyKuxMB/Pk65fbh4BVGTGo
-kX0PZgKNIFo4+YvZZUwin+rioyBGQopgfbgy5z4StXQ2Rd0jEpwrMIu0mxXy39PG
-X9A0+gUBAlsWDr+Jv8NCXpw5Q74vbSzHuUZwi4wpDbwnjqb6WO2yXv9mJXJCgR+b
-xJA8RDrjt9XmBr4zk43EzPZqqPlp5w2oiPH3e7cJ84sDSG7H9Sc=
-=6ivJ
------END PGP SIGNATURE-----
-
---=-GaZoanpPv4L3uFpFpUoG--
-
+-- 
+Patricia Alfonso
