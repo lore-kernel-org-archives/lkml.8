@@ -2,134 +2,118 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AA8C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1123EC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA0020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4A320659
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guvCAd2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731839AbgBKUiJ (ORCPT
+        id S1731844AbgBKUjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:38:09 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45707 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728063AbgBKUiJ (ORCPT
+        Tue, 11 Feb 2020 15:39:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38557 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgBKUjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:38:09 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id F25C17EAB21;
-        Wed, 12 Feb 2020 07:38:04 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j1cIG-0002wd-CD; Wed, 12 Feb 2020 07:38:04 +1100
-Date:   Wed, 12 Feb 2020 07:38:04 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 04/12] fs/xfs: Clean up DAX support check
-Message-ID: <20200211203804.GL10776@dread.disaster.area>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <20200208193445.27421-5-ira.weiny@intel.com>
- <20200211055745.GG10776@dread.disaster.area>
- <20200211162830.GB12866@iweiny-DESK2.sc.intel.com>
+        Tue, 11 Feb 2020 15:39:39 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z9so11543563oth.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:39:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=FkiL+nwntyVL1Depk52x54ARrFLNbJ/q2cGreWUpoIY=;
+        b=guvCAd2UOUpE5ajI+DyZuXuN5tRzCg1lxnzXs01Bvu2MlthWaB0XogL0T0x015uMCv
+         0Nvd5+Ig7erzbpig7CWn1Kiws8zHYl44P3bOkicvZaw2f51Qe4Ml6z6VRCQrCpJq24EY
+         DR4ynLgVuwECElLR2xmeFY2msAViOtRDcH1POsBv6CnnIHmPgLjAvG1MkNVIFWcMD8Te
+         UQDPiEB+WG1wY2ilnvK8g2oK/a8t9J2lFGd1pqTUbTOmoXak/wg6m63A9+dH4OIwsiJJ
+         RpARQc1c+3yEtHkG8gD7JGSh/lnpYuRTLockpE32Egd1RdTirJy3ErA0i2yfaNgW3aBD
+         rM4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=FkiL+nwntyVL1Depk52x54ARrFLNbJ/q2cGreWUpoIY=;
+        b=ED4SPRZiUUnv1eZuDwkYdeLbTPSgKnMetlThqGPosfgE6gfklkV9t81J0fHUGRay3a
+         0SAXMb4BzsTrq74J1kpSqC+EogFQyree5QZC0L54EHI/Gzy8sfK5HAlWqNWKPJfoIHn8
+         t5m79e4EYO+u0v8kX/WICSo0OLA8tXHXsrHTbXxU1TxnrNAJ/00+z7geFlbJOVI7r3Do
+         OjVxqhfdDqdFLvOSbtYeH558VmOYQMyrtOurFBYAMJSevJOhaGXNbH4di7Ix0ZDY24B4
+         Zu2FNxodbaOiG4U59uxMvVkJOBZWbA/YznCYftN1RAXffKYszZE5WKmOnpA/No8zRIDG
+         KPkg==
+X-Gm-Message-State: APjAAAX7JdW7tYY5CRFHBGSNKfjdooMVb1p+u6CHSH9aNCGQhjKYX9zN
+        Y4qoFyL34DWSddPV0nNEqZgIHTAWvC4=
+X-Google-Smtp-Source: APXvYqyRcLhd1pYN0o8cVbwvTHy9UM43N0APlTdoi5+8CTIzfL2EpJ/miK1zSlKVRAdQyxB4Sxva+g==
+X-Received: by 2002:a9d:64ca:: with SMTP id n10mr6692357otl.325.1581453577909;
+        Tue, 11 Feb 2020 12:39:37 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id w8sm1537795ote.80.2020.02.11.12.39.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Feb 2020 12:39:37 -0800 (PST)
+Date:   Tue, 11 Feb 2020 13:39:35 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        clang-built-linux@googlegroups.com,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2] drm/i915: Disable
+ -Wtautological-constant-out-of-range-compare
+Message-ID: <20200211203935.GA16176@ubuntu-m2-xlarge-x86>
+References: <20200211050808.29463-1-natechancellor@gmail.com>
+ <20200211061338.23666-1-natechancellor@gmail.com>
+ <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200211162830.GB12866@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=DmWA4bM_9KjgS68gnp8A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 08:28:30AM -0800, Ira Weiny wrote:
-> On Tue, Feb 11, 2020 at 04:57:45PM +1100, Dave Chinner wrote:
-> > On Sat, Feb 08, 2020 at 11:34:37AM -0800, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Rather than open coding xfs_inode_supports_dax() in
-> > > xfs_ioctl_setattr_dax_invalidate() export xfs_inode_supports_dax() and
-> > > call it in preparation for swapping dax flags.
-> > > 
-> > > This also means updating xfs_inode_supports_dax() to return true for a
-> > > directory.
+On Tue, Feb 11, 2020 at 10:41:48AM +0100, Michel Dänzer wrote:
+> On 2020-02-11 7:13 a.m., Nathan Chancellor wrote:
+> > A recent commit in clang added -Wtautological-compare to -Wall, which is
+> > enabled for i915 so we see the following warning:
 > > 
-> > That's not correct. This now means S_DAX gets set on directory inodes
-> > because both xfs_inode_supports_dax() and the on-disk inode flag
-> > checks return true in xfs_diflags_to_iflags(). Hence when we
-> > instantiate a directory inode with a DAX inherit hint set on it
-> > we'll set S_DAX on the inode and so IS_DAX() will return true for
-> > directory inodes...
+> > ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
+> > result of comparison of constant 576460752303423487 with expression of
+> > type 'unsigned int' is always false
+> > [-Wtautological-constant-out-of-range-compare]
+> >         if (unlikely(remain > N_RELOC(ULONG_MAX)))
+> >             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+> > 
+> > This warning only happens on x86_64 but that check is relevant for
+> > 32-bit x86 so we cannot remove it.
 > 
-> I'm not following.  Don't we want S_DAX to get set on directory inodes?
-
-No, because S_DAX is used for controlling direct user data access,
-and we *never* let users directly access directory data. Even the
-filesystems don't access directory data directly - the transactional
-change model of journaling filesystems requires metadata to be
-buffered in memory and never directly modified.
-
-Hence when filesystems like ext4 keep their directory data in the
-page cache, we do not want the kernel to think that this inode is
-accessed through the DAX subsystem - it is accessed via the buffered
-IO interfaces like page_cache_sync_readahead() and writeback is
-controlled by the journal. Hence setting S_DAX on these inodes is
-incorrect.
-
-Whilst XFS doesn't use the page cache for it's metadata
-buffering, the issue is the same as it's also a journalling
-filesystem. hence setting S_DAX on XFS directory inodes is also
-incorrect.
-
-> IIRC what we wanted was something like this where IS_DAX is the current state
-> and "dax" is the inode flag:
+> That's suprising. AFAICT N_RELOC(ULONG_MAX) works out to the same value
+> in both cases, and remain is a 32-bit value in both cases. How can it be
+> larger than N_RELOC(ULONG_MAX) on 32-bit (but not on 64-bit)?
 > 
-> / <IS_DAX=0 dax=0>
-> 	dir1 <IS_DAX=0 dax=0>
-> 		f0 <IS_DAX=0 dax=0>
-> 		f1 <IS_DAX=1 dax=1>
-> 	dir2 <IS_DAX=1 dax=1>
-> 		f2 <IS_DAX=1 dax=1>
-> 		f3 <IS_DAX=0 dax=0>
-> 		dir3 <IS_DAX=1 dax=1>
-> 			f4 <IS_DAX=1 dax=1>
-> 		dir4 <IS_DAX=0 dax=0>
-> 			f5 <IS_DAX=0 dax=0>
-> 		f6 <IS_DAX=1 dax=1>
-> 
-> Where f1, dir2, f3, and dir4 required explicit state changes when they were
-> created.  Because they inherited their dax state from the parent.  All the
-> other creations happened based on the DAX state of the parent directory.  So we
-> need to store and know the state of the directories.  What am I missing?
 
-I think that you are conflating internal filesystem feature
-management details (the inheritance of the DAX flag feature of
-directories) with kernel IO path behaviour (the inode S_DAX flag).
+Hi Michel,
 
-i.e. IS_DAX() indicates whether DAX is _actively being used_ to
-access the data of a regular file inode, not to indicate whether the
-on-disk flags used to manage default behaviour are set or not.
+Can't this condition be true when UINT_MAX == ULONG_MAX? clang does not
+warn on a 32-bit x86 build from what I remember. Honestly, my
+understanding of overflow is pretty shoddy, this is mostly based on what
+I have heard from others.
+
+I sent a patch trying to remove that check but had it rejected:
+
+https://lore.kernel.org/lkml/20191123195321.41305-1-natechancellor@gmail.com/
 
 Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Nathan
