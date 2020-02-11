@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BACC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135A1C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D36B2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C8E2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgBKN4P (ORCPT
+        id S1729540AbgBKNxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:56:15 -0500
-Received: from 8bytes.org ([81.169.241.247]:51838 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:53:24 -0500
+Received: from 8bytes.org ([81.169.241.247]:51850 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729546AbgBKNxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:25 -0500
+        id S1729484AbgBKNxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:18 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id CE3BEE7D; Tue, 11 Feb 2020 14:53:13 +0100 (CET)
+        id 70A96815; Tue, 11 Feb 2020 14:53:09 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -36,9 +36,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 37/62] x86/sev-es: Wire up existing #VC exit-code handlers
-Date:   Tue, 11 Feb 2020 14:52:31 +0100
-Message-Id: <20200211135256.24617-38-joro@8bytes.org>
+Subject: [PATCH 13/62] x86/boot/compressed/64: Change add_identity_map() to take start and end
+Date:   Tue, 11 Feb 2020 14:52:07 +0100
+Message-Id: <20200211135256.24617-14-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -49,69 +49,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Re-use the handlers for CPUID and IOIO caused #VC exceptions in the
-early boot handler.
+Changing the function to take start and end as parameters instead of
+start and size simplifies the callers, which don't need to calculate
+the size if they already have start and end.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es-shared.c | 9 +++------
- arch/x86/kernel/sev-es.c        | 9 +++++++++
- 2 files changed, 12 insertions(+), 6 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index 57c29c91fe87..14693eff9614 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -358,8 +358,7 @@ static enum es_result ioio_exitinfo(struct es_em_ctxt *ctxt, u64 *exitinfo)
- 	return ES_OK;
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index ab7a3d9705c0..ba5b88189220 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -91,10 +91,8 @@ static struct x86_mapping_info mapping_info;
+ /*
+  * Adds the specified range to the identity mappings.
+  */
+-static void add_identity_map(unsigned long start, unsigned long size)
++static void add_identity_map(unsigned long start, unsigned long end)
+ {
+-	unsigned long end = start + size;
+-
+ 	/* Align boundary to 2M. */
+ 	start = round_down(start, PMD_SIZE);
+ 	end = round_up(end, PMD_SIZE);
+@@ -109,8 +107,6 @@ static void add_identity_map(unsigned long start, unsigned long size)
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
+-	unsigned long start, size;
+-
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
+ 
+@@ -157,9 +153,7 @@ void initialize_identity_maps(void)
+ 	 * New page-table is set up - map the kernel image and load it
+ 	 * into cr3.
+ 	 */
+-	start = (unsigned long)_head;
+-	size  = _end - _head;
+-	add_identity_map(start, size);
++	add_identity_map((unsigned long)_head, (unsigned long)_end);
+ 	write_cr3(top_level_pgt);
  }
  
--static enum es_result __maybe_unused
--handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+static enum es_result handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+@@ -180,7 +174,8 @@ static void pf_error(unsigned long error_code, unsigned long address,
+ 
+ void do_boot_page_fault(struct pt_regs *regs)
  {
- 	struct pt_regs *regs = ctxt->regs;
- 	u64 exit_info_1, exit_info_2;
-@@ -451,8 +450,7 @@ handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- 	return ret;
+-	unsigned long address = native_read_cr2();
++	unsigned long address = native_read_cr2() & PMD_MASK;
++	unsigned long end = address + PMD_SIZE;
+ 	unsigned long error_code = regs->orig_ax;
+ 
+ 	/*
+@@ -196,5 +191,5 @@ void do_boot_page_fault(struct pt_regs *regs)
+ 	 * Error code is sane - now identity map the 2M region around
+ 	 * the faulting address.
+ 	 */
+-	add_identity_map(address & PMD_MASK, PMD_SIZE);
++	add_identity_map(address, end);
  }
- 
--static enum es_result __maybe_unused
--handle_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+static enum es_result handle_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
- 	u32 cr4 = native_read_cr4();
-@@ -658,8 +656,7 @@ static enum es_result handle_mmio_twobyte_ops(struct ghcb *ghcb,
- 	return ret;
- }
- 
--static enum es_result __maybe_unused
--handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+static enum es_result handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	struct insn *insn = &ctxt->insn;
- 	unsigned int bytes = 0;
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 1fb7128ff386..2a801919e7c0 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -174,6 +174,15 @@ static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
- 	enum es_result result;
- 
- 	switch (exit_code) {
-+	case SVM_EXIT_CPUID:
-+		result = handle_cpuid(ghcb, ctxt);
-+		break;
-+	case SVM_EXIT_IOIO:
-+		result = handle_ioio(ghcb, ctxt);
-+		break;
-+	case SVM_EXIT_NPF:
-+		result = handle_mmio(ghcb, ctxt);
-+		break;
- 	default:
- 		/*
- 		 * Unexpected #VC exception
 -- 
 2.17.1
 
