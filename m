@@ -2,240 +2,187 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFAEC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A922C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8DD324683
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716D02082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccP7FtOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgBKMt5 (ORCPT
+        id S1728211AbgBKMwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:49:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45988 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbgBKMrx (ORCPT
+        Tue, 11 Feb 2020 07:52:01 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:46782 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgBKMwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:47:53 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j1Ux7-0007YB-9f; Tue, 11 Feb 2020 13:47:45 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E168B1C2017;
-        Tue, 11 Feb 2020 13:47:44 +0100 (CET)
-Date:   Tue, 11 Feb 2020 12:47:44 -0000
-From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Add new branch sample type for HW index
- of raw branch records
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200127165355.27495-2-kan.liang@linux.intel.com>
-References: <20200127165355.27495-2-kan.liang@linux.intel.com>
+        Tue, 11 Feb 2020 07:52:01 -0500
+Received: by mail-qv1-f66.google.com with SMTP id y2so4878871qvu.13;
+        Tue, 11 Feb 2020 04:52:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=msU5D8ZEdFDxxqo3nG1mhJAEftZgJdXHg5DB8i9r690=;
+        b=ccP7FtOinfozM6R4vDJjCau6Npe4Tmqbkt8xc6j/l11pnNzuBm6vI5fsmdieL/ssPx
+         5d1ujsopUtmxY6FwQTj2bb6gY5H0LwU+T5AwI4TgaMsbfHI/lfKm2EDAeg9E8lMCa0y7
+         fRE2U1e8JQtiHHh7pYrOpk1lPZiAuoYhTxvXyoKUmZO4V9KFGJZViITCvqzc2z5F1xxM
+         WMB23So0V3C1qOmHSwSuAUCUsTqrDPiDHP9lHB9DSNOF1ljTVmViEgkynESAdWxnq5PP
+         +JlxFV/lo9K39OYXk314wrESa58rnFNKCm/PdSHxRnGdlZF3fOxkGX0oZqVW6AwR0oSq
+         8gzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=msU5D8ZEdFDxxqo3nG1mhJAEftZgJdXHg5DB8i9r690=;
+        b=sjZ0G/+YaBa6SQeV+NmwxO4H7sZgTSf59BLDrnzTtlnkEXAZIl+3qTLBzylJnt4ANW
+         LIC225f22RoL9yb9MBhHTXu0OHvSSqvouUx6+fu/iuaU7s6zUkYfNXf0s/ghR03lhKyQ
+         lWSFyUEHUvJYxyBazLv/SiEpC2p+77yPnXgyuZG/DpYfE2snGl2v6T17fjuIfvfNRsv5
+         1KWx+Wg9jN8rGSvUjR0yrHlW0YUfKLxUqhZySc3lC2SbuUqDWqtuL70yxNXy3oa8tJ7h
+         6/eTq1CSqkzezRcGPxbNjoYLk05E9ysK2+Zyrf0CcWba4MGFIWuQPCLeROqjwjJ/218M
+         W6ng==
+X-Gm-Message-State: APjAAAUB/BKJ/9WrfRWYhSOlZY5unq5U/gWwneFKf3/IsPsez0eRnqTr
+        Bz3FRmXQu3N7wjuv5wSBdzCMBqwp0ZzlepCERAE=
+X-Google-Smtp-Source: APXvYqwydnhG3yipz32Mkawa1LY3shaGvP6aeMT6scUZRjDnvZWkB3pSebXbk6lUTdgpE6f543iT2FwAZB4DPHPTEps=
+X-Received: by 2002:a0c:e34e:: with SMTP id a14mr14875544qvm.73.1581425520017;
+ Tue, 11 Feb 2020 04:52:00 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158142526469.411.17102678591362898511.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <cover.1580894083.git.baolin.wang7@gmail.com> <3fd82478e82b19c72dddcc17c85313725aa13ff6.1580894083.git.baolin.wang7@gmail.com>
+ <CAPDyKFq_tj+2yYf3YLA2vQkHGWWrY_ULUP=6-anpSJ0q+YvkFw@mail.gmail.com>
+In-Reply-To: <CAPDyKFq_tj+2yYf3YLA2vQkHGWWrY_ULUP=6-anpSJ0q+YvkFw@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Tue, 11 Feb 2020 20:51:48 +0800
+Message-ID: <CADBw62oWCO=LtGU9YA-hrfVnb3-45cr1f8gh31DMNV9dggbzHg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/5] mmc: Add MMC host software queue support
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On Tue, Feb 11, 2020 at 5:45 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 5 Feb 2020 at 13:51, Baolin Wang <baolin.wang7@gmail.com> wrote:
+> >
+> > From: Baolin Wang <baolin.wang@linaro.org>
+> >
+> > Now the MMC read/write stack will always wait for previous request is
+> > completed by mmc_blk_rw_wait(), before sending a new request to hardware,
+> > or queue a work to complete request, that will bring context switching
+> > overhead, especially for high I/O per second rates, to affect the IO
+> > performance.
+>
+> Would you mind adding some more context about the mmc_blk_rw_wait()?
+> Especially I want to make it clear that mmc_blk_rw_wait() is also used
+> to poll the card for busy completion for I/O writes, via sending
+> CMD13.
 
-Commit-ID:     bbfd5e4fab63703375eafaf241a0c696024a59e1
-Gitweb:        https://git.kernel.org/tip/bbfd5e4fab63703375eafaf241a0c696024a59e1
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Mon, 27 Jan 2020 08:53:54 -08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 11 Feb 2020 13:23:49 +01:00
+Sure.
 
-perf/core: Add new branch sample type for HW index of raw branch records
+>
+> >
+> > Thus this patch introduces MMC software queue interface based on the
+> > hardware command queue engine's interfaces, which is similar with the
+> > hardware command queue engine's idea, that can remove the context
+> > switching. Moreover we set the default queue depth as 64 for software
+> > queue, which allows more requests to be prepared, merged and inserted
+> > into IO scheduler to improve performance, but we only allow 2 requests
+> > in flight, that is enough to let the irq handler always trigger the
+> > next request without a context switch, as well as avoiding a long latency.
+>
+> I think it's important to clarify that to use this new interface, hsq,
+> the host controller/driver needs to support HW busy detection for I/O
+> operations.
+>
+> In other words, the host driver must not complete a data transfer
+> request, until after the card stops signals busy. This behaviour is
+> also required for "closed-ended-transmissions" with CMD23, as in this
+> path there is no CMD12 sent to complete the transfer, thus no R1B
+> response flag to trigger the HW busy detection behaviour in the
+> driver.
 
-The low level index is the index in the underlying hardware buffer of
-the most recently captured taken branch which is always saved in
-branch_entries[0]. It is very useful for reconstructing the call stack.
-For example, in Intel LBR call stack mode, the depth of reconstructed
-LBR call stack limits to the number of LBR registers. With the low level
-index information, perf tool may stitch the stacks of two samples. The
-reconstructed LBR call stack can break the HW limitation.
+Sure.
 
-Add a new branch sample type to retrieve low level index of raw branch
-records. The low level index is between -1 (unknown) and max depth which
-can be retrieved in /sys/devices/cpu/caps/branches.
+>
+> >
+> > From the fio testing data in cover letter, we can see the software
+> > queue can improve some performance with 4K block size, increasing
+> > about 16% for random read, increasing about 90% for random write,
+> > though no obvious improvement for sequential read and write.
+> >
+> > Moreover we can expand the software queue interface to support MMC
+> > packed request or packed command in future.
+> >
+> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > ---
+>
+> [...]
+>
+> > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> > index f6912de..7a9976f 100644
+> > --- a/drivers/mmc/core/mmc.c
+> > +++ b/drivers/mmc/core/mmc.c
+> > @@ -1851,15 +1851,22 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+> >          */
+> >         card->reenable_cmdq = card->ext_csd.cmdq_en;
+> >
+> > -       if (card->ext_csd.cmdq_en && !host->cqe_enabled) {
+> > +       if (host->cqe_ops && !host->cqe_enabled) {
+> >                 err = host->cqe_ops->cqe_enable(host, card);
+> >                 if (err) {
+> >                         pr_err("%s: Failed to enable CQE, error %d\n",
+> >                                 mmc_hostname(host), err);
+>
+> This means we are going to start printing an error message for those
+> eMMCs that doesn't support command queuing, but the host supports
+> MMC_CAP2_CQE.
+>
+> Not sure how big of a problem this is, but another option is simply to
+> leave the logging of the *failures* to the host driver, rather than
+> doing it here.
+>
+> Oh well, feel free to change or leave this as is for now. We can
+> always change it on top, if needed.
 
-Only when the new branch sample type is set, the low level index
-information is dumped into the PERF_SAMPLE_BRANCH_STACK output.
-Perf tool should check the attr.branch_sample_type, and apply the
-corresponding format for PERF_SAMPLE_BRANCH_STACK samples.
-Otherwise, some user case may be broken. For example, users may parse a
-perf.data, which include the new branch sample type, with an old version
-perf tool (without the check). Users probably get incorrect information
-without any warning.
+OK. I will move the failure log to cqe_enable() callback to keep the
+same logs'  logic. Thanks.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200127165355.27495-2-kan.liang@linux.intel.com
----
- arch/powerpc/perf/core-book3s.c |  1 +
- arch/x86/events/intel/lbr.c     |  3 +++
- include/linux/perf_event.h      | 12 ++++++++++++
- include/uapi/linux/perf_event.h |  8 +++++++-
- kernel/events/core.c            | 10 ++++++++++
- 5 files changed, 33 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 3086055..3dcfecf 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -518,6 +518,7 @@ static void power_pmu_bhrb_read(struct perf_event *event, struct cpu_hw_events *
- 		}
- 	}
- 	cpuhw->bhrb_stack.nr = u_index;
-+	cpuhw->bhrb_stack.hw_idx = -1ULL;
- 	return;
- }
- 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 534c766..7639e20 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -585,6 +585,7 @@ static void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc)
- 		cpuc->lbr_entries[i].reserved	= 0;
- 	}
- 	cpuc->lbr_stack.nr = i;
-+	cpuc->lbr_stack.hw_idx = -1ULL;
- }
- 
- /*
-@@ -680,6 +681,7 @@ static void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc)
- 		out++;
- 	}
- 	cpuc->lbr_stack.nr = out;
-+	cpuc->lbr_stack.hw_idx = -1ULL;
- }
- 
- void intel_pmu_lbr_read(void)
-@@ -1120,6 +1122,7 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr)
- 	int i;
- 
- 	cpuc->lbr_stack.nr = x86_pmu.lbr_nr;
-+	cpuc->lbr_stack.hw_idx = -1ULL;
- 	for (i = 0; i < x86_pmu.lbr_nr; i++) {
- 		u64 info = lbr->lbr[i].info;
- 		struct perf_branch_entry *e = &cpuc->lbr_entries[i];
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 547773f..68e21e8 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -93,14 +93,26 @@ struct perf_raw_record {
- /*
-  * branch stack layout:
-  *  nr: number of taken branches stored in entries[]
-+ *  hw_idx: The low level index of raw branch records
-+ *          for the most recent branch.
-+ *          -1ULL means invalid/unknown.
-  *
-  * Note that nr can vary from sample to sample
-  * branches (to, from) are stored from most recent
-  * to least recent, i.e., entries[0] contains the most
-  * recent branch.
-+ * The entries[] is an abstraction of raw branch records,
-+ * which may not be stored in age order in HW, e.g. Intel LBR.
-+ * The hw_idx is to expose the low level index of raw
-+ * branch record for the most recent branch aka entries[0].
-+ * The hw_idx index is between -1 (unknown) and max depth,
-+ * which can be retrieved in /sys/devices/cpu/caps/branches.
-+ * For the architectures whose raw branch records are
-+ * already stored in age order, the hw_idx should be 0.
-  */
- struct perf_branch_stack {
- 	__u64				nr;
-+	__u64				hw_idx;
- 	struct perf_branch_entry	entries[0];
- };
- 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 377d794..397cfd6 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -181,6 +181,8 @@ enum perf_branch_sample_type_shift {
- 
- 	PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT	= 16, /* save branch type */
- 
-+	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
-+
- 	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
- };
- 
-@@ -208,6 +210,8 @@ enum perf_branch_sample_type {
- 	PERF_SAMPLE_BRANCH_TYPE_SAVE	=
- 		1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
- 
-+	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
-+
- 	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
- };
- 
-@@ -853,7 +857,9 @@ enum perf_event_type {
- 	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
- 	 *
- 	 *	{ u64                   nr;
--	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
-+	 *	  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
-+	 *        { u64 from, to, flags } lbr[nr];
-+	 *      } && PERF_SAMPLE_BRANCH_STACK
- 	 *
- 	 * 	{ u64			abi; # enum perf_sample_regs_abi
- 	 * 	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e453589..3f1f77d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6555,6 +6555,11 @@ static void perf_output_read(struct perf_output_handle *handle,
- 		perf_output_read_one(handle, event, enabled, running);
- }
- 
-+static inline bool perf_sample_save_hw_index(struct perf_event *event)
-+{
-+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
-+}
-+
- void perf_output_sample(struct perf_output_handle *handle,
- 			struct perf_event_header *header,
- 			struct perf_sample_data *data,
-@@ -6643,6 +6648,8 @@ void perf_output_sample(struct perf_output_handle *handle,
- 			     * sizeof(struct perf_branch_entry);
- 
- 			perf_output_put(handle, data->br_stack->nr);
-+			if (perf_sample_save_hw_index(event))
-+				perf_output_put(handle, data->br_stack->hw_idx);
- 			perf_output_copy(handle, data->br_stack->entries, size);
- 		} else {
- 			/*
-@@ -6836,6 +6843,9 @@ void perf_prepare_sample(struct perf_event_header *header,
- 	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
- 		int size = sizeof(u64); /* nr */
- 		if (data->br_stack) {
-+			if (perf_sample_save_hw_index(event))
-+				size += sizeof(u64);
-+
- 			size += data->br_stack->nr
- 			      * sizeof(struct perf_branch_entry);
- 		}
+> >                 } else {
+> >                         host->cqe_enabled = true;
+> > -                       pr_info("%s: Command Queue Engine enabled\n",
+> > -                               mmc_hostname(host));
+> > +
+> > +                       if (card->ext_csd.cmdq_en) {
+> > +                               pr_info("%s: Command Queue Engine enabled\n",
+> > +                                       mmc_hostname(host));
+> > +                       } else {
+> > +                               host->hsq_enabled = true;
+> > +                               pr_info("%s: Host Software Queue enabled\n",
+> > +                                       mmc_hostname(host));
+> > +                       }
+> >                 }
+> >         }
+>
+> [...]
+>
+> Kind regards
+> Uffe
