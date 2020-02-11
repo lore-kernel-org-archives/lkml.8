@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B976C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18466C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305982086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38212086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbgBKN5H (ORCPT
+        id S1729981AbgBKN5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:57:07 -0500
-Received: from 8bytes.org ([81.169.241.247]:52122 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:57:24 -0500
+Received: from 8bytes.org ([81.169.241.247]:51838 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbgBKNxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:24 -0500
+        id S1729516AbgBKNxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:23 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7C652E49; Tue, 11 Feb 2020 14:53:12 +0100 (CET)
+        id 2ADFDE3A; Tue, 11 Feb 2020 14:53:12 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 30/62] x86/head/64: Move early exception dispatch to C code
-Date:   Tue, 11 Feb 2020 14:52:24 +0100
-Message-Id: <20200211135256.24617-31-joro@8bytes.org>
+Subject: [PATCH 28/62] x86/head/64: Switch to initial stack earlier
+Date:   Tue, 11 Feb 2020 14:52:22 +0100
+Message-Id: <20200211135256.24617-29-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -48,77 +48,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the assembly coded dispatch between page-faults and all other
-exceptions to C code to make it easier to maintain and extend.
+Make sure there is a stack once the kernel runs from virual addresses.
+At this stage any secondary CPU which boots will have lost its stack
+because the kernel switched to a new page-table which does not map the
+real-mode stack anymore.
+
+This is also needed for handling early #VC exceptions caused by
+instructions like CPUID.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head64.c  | 20 ++++++++++++++++++++
- arch/x86/kernel/head_64.S | 11 +----------
- 2 files changed, 21 insertions(+), 10 deletions(-)
+ arch/x86/kernel/head_64.S | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 7cdfb7113811..d83c62ebaa85 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -36,6 +36,8 @@
- #include <asm/microcode.h>
- #include <asm/kasan.h>
- #include <asm/fixmap.h>
-+#include <asm/extable.h>
-+#include <asm/trap_defs.h>
- 
- /*
-  * Manage page tables very early on.
-@@ -377,6 +379,24 @@ int __init early_make_pgtable(unsigned long address)
- 	return __early_make_pgtable(address, pmd);
- }
- 
-+void __init early_exception(struct pt_regs *regs, int trapnr)
-+{
-+	unsigned long cr2;
-+	int r;
-+
-+	switch (trapnr) {
-+	case X86_TRAP_PF:
-+		cr2 = native_read_cr2();
-+		r = early_make_pgtable(cr2);
-+		break;
-+	default:
-+		r = 1;
-+	}
-+
-+	if (r)
-+		early_fixup_exception(regs, trapnr);
-+}
-+
- /* Don't add a printk in there. printk relies on the PDA which is not initialized 
-    yet. */
- static void __init clear_bss(void)
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 0af79f783659..81cf6c5763ef 100644
+index 36f2f30ad200..eefd6838b895 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -357,18 +357,9 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
- 	pushq %r15				/* pt_regs->r15 */
- 	UNWIND_HINT_REGS
+@@ -188,6 +188,12 @@ SYM_CODE_START(secondary_startup_64)
+ 	movl	initial_gs+4(%rip),%edx
+ 	wrmsr
  
--	cmpq $14,%rsi		/* Page fault? */
--	jnz 10f
--	GET_CR2_INTO(%rdi)	/* can clobber %rax if pv */
--	call early_make_pgtable
--	andl %eax,%eax
--	jz 20f			/* All good */
++	/*
++	 * Setup a boot time stack - Any secondary CPU will have lost its stack
++	 * by now because the cr3-switch above unmaps the real-mode stack
++	 */
++	movq initial_stack(%rip), %rsp
++
+ 	/* Check if nx is implemented */
+ 	movl	$0x80000001, %eax
+ 	cpuid
+@@ -208,9 +214,6 @@ SYM_CODE_START(secondary_startup_64)
+ 	/* Make changes effective */
+ 	movq	%rax, %cr0
+ 
+-	/* Setup a boot time stack */
+-	movq initial_stack(%rip), %rsp
 -
--10:
- 	movq %rsp,%rdi		/* RDI = pt_regs; RSI is already trapnr */
--	call early_fixup_exception
-+	call early_exception
- 
--20:
- 	decl early_recursion_flag(%rip)
- 	jmp restore_regs_and_return_to_kernel
- SYM_CODE_END(early_idt_handler_common)
+ 	/* zero EFLAGS after setting rsp */
+ 	pushq $0
+ 	popfq
 -- 
 2.17.1
 
