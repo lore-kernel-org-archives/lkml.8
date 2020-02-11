@@ -2,217 +2,249 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE60C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D97C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415C92173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2130224672
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VeVjKxBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbgBKN6L (ORCPT
+        id S1730080AbgBKN6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:58:11 -0500
-Received: from 8bytes.org ([81.169.241.247]:52122 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbgBKNxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:21 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 33AF1CBB; Tue, 11 Feb 2020 14:53:10 +0100 (CET)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 17/62] x86/boot/compressed/64: Add function to map a page unencrypted
-Date:   Tue, 11 Feb 2020 14:52:11 +0100
-Message-Id: <20200211135256.24617-18-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
-References: <20200211135256.24617-1-joro@8bytes.org>
+        Tue, 11 Feb 2020 08:58:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49012 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730067AbgBKN6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:58:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581429494;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=sVe95hwJrcXX1VBf0GtrIkwXVPxpbZsIuV5redLdKjo=;
+        b=VeVjKxBdx+nxuLmPRDnyGPpqjzm6Rwng80Wt1FCvFf2uZHaD0uaN4Bx/Vp9l2SNQJ4PYxL
+        SGnAvy9DFfUlb1WfA/rEM9q9wVs9givh3JzcYPUxnqmCVkv6Cffg4a2o1gke4Pn2HfTPTt
+        HzhMTxJhBSYotTVJgC+2aw00Ii84zd8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-mG-hoTzsNS2QnUHbAZZGTw-1; Tue, 11 Feb 2020 08:58:10 -0500
+X-MC-Unique: mG-hoTzsNS2QnUHbAZZGTw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52A67107ACC9;
+        Tue, 11 Feb 2020 13:58:09 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1798F60BFB;
+        Tue, 11 Feb 2020 13:58:06 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 11E5217447; Tue, 11 Feb 2020 14:58:05 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4] drm/virtio: add drm_driver.release callback.
+Date:   Tue, 11 Feb 2020 14:58:04 +0100
+Message-Id: <20200211135805.24436-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Split virtio_gpu_deinit(), move the drm shutdown and release to
+virtio_gpu_release().  Drop vqs_ready variable, instead use
+drm_dev_{enter,exit,unplug} to avoid touching hardware after
+device removal.  Tidy up here and there.
 
-This function is needed to map the GHCB for SEV-ES guests. The GHCB is
-used for communication with the hypervisor, so its content must not be
-encrypted.
+v4: add changelog.
+v3: use drm_dev_*().
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 125 ++++++++++++++++++++++++
- arch/x86/boot/compressed/misc.h         |   1 +
- 2 files changed, 126 insertions(+)
+ drivers/gpu/drm/virtio/virtgpu_drv.h     |  3 ++-
+ drivers/gpu/drm/virtio/virtgpu_display.c |  1 -
+ drivers/gpu/drm/virtio/virtgpu_drv.c     |  6 +++++-
+ drivers/gpu/drm/virtio/virtgpu_kms.c     |  7 ++++--
+ drivers/gpu/drm/virtio/virtgpu_vq.c      | 27 +++++++++++++-----------
+ 5 files changed, 27 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index feb180cced28..04a5ff4bda66 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -26,6 +26,7 @@
- #include <asm/init.h>
- #include <asm/pgtable.h>
- #include <asm/trap_defs.h>
-+#include <asm/cmpxchg.h>
- /* Use the static base for this part of the boot process */
- #undef __PAGE_OFFSET
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
-@@ -157,6 +158,130 @@ void initialize_identity_maps(void)
- 	write_cr3(top_level_pgt);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 7fd8361e1c9e..af9403e1cf78 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -32,6 +32,7 @@
+ #include <linux/virtio_gpu.h>
+ 
+ #include <drm/drm_atomic.h>
++#include <drm/drm_drv.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_gem.h>
+@@ -177,7 +178,6 @@ struct virtio_gpu_device {
+ 	struct virtio_gpu_queue ctrlq;
+ 	struct virtio_gpu_queue cursorq;
+ 	struct kmem_cache *vbufs;
+-	bool vqs_ready;
+ 
+ 	bool disable_notify;
+ 	bool pending_notify;
+@@ -219,6 +219,7 @@ extern struct drm_ioctl_desc virtio_gpu_ioctls[DRM_VIRTIO_NUM_IOCTLS];
+ /* virtio_kms.c */
+ int virtio_gpu_init(struct drm_device *dev);
+ void virtio_gpu_deinit(struct drm_device *dev);
++void virtio_gpu_release(struct drm_device *dev);
+ int virtio_gpu_driver_open(struct drm_device *dev, struct drm_file *file);
+ void virtio_gpu_driver_postclose(struct drm_device *dev, struct drm_file *file);
+ 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+index 7b0f0643bb2d..af953db4a0c9 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_display.c
++++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+@@ -368,6 +368,5 @@ void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev)
+ 
+ 	for (i = 0 ; i < vgdev->num_scanouts; ++i)
+ 		kfree(vgdev->outputs[i].edid);
+-	drm_atomic_helper_shutdown(vgdev->ddev);
+ 	drm_mode_config_cleanup(vgdev->ddev);
+ }
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+index 8cf27af3ad53..ab4bed78e656 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.c
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+@@ -31,6 +31,7 @@
+ #include <linux/pci.h>
+ 
+ #include <drm/drm.h>
++#include <drm/drm_atomic_helper.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_file.h>
+ 
+@@ -135,7 +136,8 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+ {
+ 	struct drm_device *dev = vdev->priv;
+ 
+-	drm_dev_unregister(dev);
++	drm_dev_unplug(dev);
++	drm_atomic_helper_shutdown(dev);
+ 	virtio_gpu_deinit(dev);
+ 	drm_dev_put(dev);
+ }
+@@ -214,4 +216,6 @@ static struct drm_driver driver = {
+ 	.major = DRIVER_MAJOR,
+ 	.minor = DRIVER_MINOR,
+ 	.patchlevel = DRIVER_PATCHLEVEL,
++
++	.release = virtio_gpu_release,
+ };
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+index c1086df49816..4009c2f97d08 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -199,7 +199,6 @@ int virtio_gpu_init(struct drm_device *dev)
+ 	virtio_gpu_modeset_init(vgdev);
+ 
+ 	virtio_device_ready(vgdev->vdev);
+-	vgdev->vqs_ready = true;
+ 
+ 	if (num_capsets)
+ 		virtio_gpu_get_capsets(vgdev, num_capsets);
+@@ -234,12 +233,16 @@ void virtio_gpu_deinit(struct drm_device *dev)
+ 	struct virtio_gpu_device *vgdev = dev->dev_private;
+ 
+ 	flush_work(&vgdev->obj_free_work);
+-	vgdev->vqs_ready = false;
+ 	flush_work(&vgdev->ctrlq.dequeue_work);
+ 	flush_work(&vgdev->cursorq.dequeue_work);
+ 	flush_work(&vgdev->config_changed_work);
+ 	vgdev->vdev->config->reset(vgdev->vdev);
+ 	vgdev->vdev->config->del_vqs(vgdev->vdev);
++}
++
++void virtio_gpu_release(struct drm_device *dev)
++{
++	struct virtio_gpu_device *vgdev = dev->dev_private;
+ 
+ 	virtio_gpu_modeset_fini(vgdev);
+ 	virtio_gpu_free_vbufs(vgdev);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index a682c2fcbe9a..cfe9c54f87a3 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -330,7 +330,14 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+ {
+ 	struct virtqueue *vq = vgdev->ctrlq.vq;
+ 	bool notify = false;
+-	int ret;
++	int ret, idx;
++
++	if (!drm_dev_enter(vgdev->ddev, &idx)) {
++		if (fence && vbuf->objs)
++			virtio_gpu_array_unlock_resv(vbuf->objs);
++		free_vbuf(vgdev, vbuf);
++		return;
++	}
+ 
+ 	if (vgdev->has_indirect)
+ 		elemcnt = 1;
+@@ -338,14 +345,6 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+ again:
+ 	spin_lock(&vgdev->ctrlq.qlock);
+ 
+-	if (!vgdev->vqs_ready) {
+-		spin_unlock(&vgdev->ctrlq.qlock);
+-
+-		if (fence && vbuf->objs)
+-			virtio_gpu_array_unlock_resv(vbuf->objs);
+-		return;
+-	}
+-
+ 	if (vq->num_free < elemcnt) {
+ 		spin_unlock(&vgdev->ctrlq.qlock);
+ 		wait_event(vgdev->ctrlq.ack_queue, vq->num_free >= elemcnt);
+@@ -379,6 +378,7 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+ 		else
+ 			virtqueue_notify(vq);
+ 	}
++	drm_dev_exit(idx);
  }
  
-+static pte_t *split_large_pmd(struct x86_mapping_info *info,
-+			      pmd_t *pmdp, unsigned long __address)
-+{
-+	unsigned long page_flags;
-+	unsigned long address;
-+	pte_t *pte;
-+	pmd_t pmd;
-+	int i;
-+
-+	pte = (pte_t *)info->alloc_pgt_page(info->context);
-+	if (!pte)
-+		return NULL;
-+
-+	address     = __address & PMD_MASK;
-+	/* No large page - clear PSE flag */
-+	page_flags  = info->page_flag & ~_PAGE_PSE;
-+
-+	/* Populate the PTEs */
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		set_pte(&pte[i], __pte(address | page_flags));
-+		address += PAGE_SIZE;
-+	}
-+
-+	/*
-+	 * Ideally we need to clear the large PMD first and do a TLB
-+	 * flush before we write the new PMD. But the 2M range of the
-+	 * PMD might contain the code we execute and/or the stack
-+	 * we are on, so we can't do that. But that should be safe here
-+	 * because we are going from large to small mappings and we are
-+	 * also the only user of the page-table, so there is no chance
-+	 * of a TLB multihit.
-+	 */
-+	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
-+	set_pmd(pmdp, pmd);
-+	/* Flush TLB to establish the new PMD */
-+	write_cr3(top_level_pgt);
-+
-+	return pte + pte_index(__address);
-+}
-+
-+static void clflush_page(unsigned long address)
-+{
-+	unsigned int flush_size;
-+	char *cl, *start, *end;
-+
-+	/*
-+	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
-+	 * cause another #VC exception and the GHCB is not ready to use yet.
-+	 */
-+	flush_size = 64;
-+	start      = (char *)(address & PAGE_MASK);
-+	end        = start + PAGE_SIZE;
-+
-+	/*
-+	 * First make sure there are no pending writes on the cache-lines to
-+	 * flush.
-+	 */
-+	asm volatile("mfence" : : : "memory");
-+
-+	for (cl = start; cl != end; cl += flush_size)
-+		clflush(cl);
-+}
-+
-+static int __set_page_decrypted(struct x86_mapping_info *info,
-+				unsigned long address)
-+{
-+	unsigned long scratch, *target;
-+	pgd_t *pgdp = (pgd_t *)top_level_pgt;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep, pte;
-+
-+	/*
-+	 * First make sure there is a PMD mapping for 'address'.
-+	 * It should already exist, but keep things generic.
-+	 *
-+	 * To map the page just read from it and fault it in if there is no
-+	 * mapping yet. add_identity_map() can't be called here because that
-+	 * would unconditionally map the address on PMD level, destroying any
-+	 * PTE-level mappings that might already exist.  Also do something
-+	 * useless with 'scratch' so the access won't be optimized away.
-+	 */
-+	target = (unsigned long *)address;
-+	scratch = *target;
-+	arch_cmpxchg(target, scratch, scratch);
-+
-+	/*
-+	 * The page is mapped at least with PMD size - so skip checks and walk
-+	 * directly to the PMD.
-+	 */
-+	p4dp = p4d_offset(pgdp, address);
-+	pudp = pud_offset(p4dp, address);
-+	pmdp = pmd_offset(pudp, address);
-+
-+	if (pmd_large(*pmdp))
-+		ptep = split_large_pmd(info, pmdp, address);
-+	else
-+		ptep = pte_offset_kernel(pmdp, address);
-+
-+	if (!ptep)
-+		return -ENOMEM;
-+
-+	/* Clear encryption flag and write new pte */
-+	pte = pte_clear_flags(*ptep, _PAGE_ENC);
-+	set_pte(ptep, pte);
-+
-+	/* Flush TLB to map the page unencrypted */
-+	write_cr3(top_level_pgt);
-+
-+	/*
-+	 * Changing encryption attributes of a page requires to flush it from
-+	 * the caches.
-+	 */
-+	clflush_page(address);
-+
-+	return 0;
-+}
-+
-+int set_page_decrypted(unsigned long address)
-+{
-+	return __set_page_decrypted(&mapping_info, address);
-+}
-+
- static void pf_error(unsigned long error_code, unsigned long address,
- 		     struct pt_regs *regs)
+ static void virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
+@@ -460,12 +460,13 @@ static void virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
  {
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 0e3508c5c15c..42f68a858a35 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,6 +98,7 @@ static inline void choose_random_location(unsigned long input,
- #endif
+ 	struct virtqueue *vq = vgdev->cursorq.vq;
+ 	struct scatterlist *sgs[1], ccmd;
++	int idx, ret, outcnt;
+ 	bool notify;
+-	int ret;
+-	int outcnt;
  
- #ifdef CONFIG_X86_64
-+extern int set_page_decrypted(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
+-	if (!vgdev->vqs_ready)
++	if (!drm_dev_enter(vgdev->ddev, &idx)) {
++		free_vbuf(vgdev, vbuf);
+ 		return;
++	}
  
+ 	sg_init_one(&ccmd, vbuf->buf, vbuf->size);
+ 	sgs[0] = &ccmd;
+@@ -490,6 +491,8 @@ static void virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
+ 
+ 	if (notify)
+ 		virtqueue_notify(vq);
++
++	drm_dev_exit(idx);
+ }
+ 
+ /* just create gem objects for userspace and long lived objects,
 -- 
-2.17.1
+2.18.2
 
