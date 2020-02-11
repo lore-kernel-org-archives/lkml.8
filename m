@@ -2,109 +2,182 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEACC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B478C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9932073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F622086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581463528;
+	bh=8+QEMo0KaGrsQjqAphm6GxLxfHtuCWMrnJmpQjbwK/g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SeYlhB5+cMs6E/qj29N060Jx/AYSmlFQPmW7+D1NTH5H866YGnGrbsvWONczHe1HK
+	 0zROwg+sFbmUR0Fh8mYzyDhSVkGdPSxMrQxiPYCzWUeE1yho0fEH748I1yhbLBfTxN
+	 sMt4XDLdAtd5cqsokmFklxsdOCyaIQkZ5dlxcIEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgBKXYJ (ORCPT
+        id S1727949AbgBKXZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:24:09 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48448 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727880AbgBKXYJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:24:09 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BNKfs7036582
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 18:24:07 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tp32y8y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 18:24:07 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 11 Feb 2020 23:24:05 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Feb 2020 23:24:02 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BNO1Gv57147548
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 23:24:01 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 245B5AE045;
-        Tue, 11 Feb 2020 23:24:01 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC249AE057;
-        Tue, 11 Feb 2020 23:23:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.128.4])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Feb 2020 23:23:59 +0000 (GMT)
-Subject: Re: [PATCH 1/2] crypto: rename sm3-256 to sm3 in hash_algo_name
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        ebiggers@kernel.org
-Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 11 Feb 2020 18:23:59 -0500
-In-Reply-To: <1581457759.5125.18.camel@linux.ibm.com>
-References: <20200210124440.23929-1-tianjia.zhang@linux.alibaba.com>
-         <20200210124440.23929-2-tianjia.zhang@linux.alibaba.com>
-         <1581457759.5125.18.camel@linux.ibm.com>
+        Tue, 11 Feb 2020 18:25:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727597AbgBKXZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:25:27 -0500
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 886FF20842;
+        Tue, 11 Feb 2020 23:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581463526;
+        bh=8+QEMo0KaGrsQjqAphm6GxLxfHtuCWMrnJmpQjbwK/g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U5XTL5riMETDn7faoSi8Pnp1Px8TtrAUjPASWkZ48Csm8C17M0h/f5H02c1oTu7Bj
+         YLCaTDvUcL0k0QGpOtCw1hr4BFTTipSyF4zvsxGjFqNkpCQz6svyCfp+ycKAnP8zjp
+         XJPgTZqSgSJ75nAOl+T1YBlRCwO8V2cunXC07l4k=
+Received: by mail-qt1-f176.google.com with SMTP id e21so187717qtp.13;
+        Tue, 11 Feb 2020 15:25:26 -0800 (PST)
+X-Gm-Message-State: APjAAAXrkuJynduuEysHq34SG0pNlSXqutZ3CubcImPyAY4MoyNh3HxD
+        aGW9ZKWy4UU3ZuDG6dCFTHoOowoRwB9INARm/g==
+X-Google-Smtp-Source: APXvYqxNVEgCDQaNqwwCDpPOOn1rWM3YviMqI1BKXSNbUv+rnUKBni0IKUOeGhgwCvMRU7d2XppHctvfNrj2CeTDLd0=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr4831678qtj.300.1581463525519;
+ Tue, 11 Feb 2020 15:25:25 -0800 (PST)
+MIME-Version: 1.0
+References: <20200207203752.209296-1-pmalani@chromium.org> <20200207203752.209296-2-pmalani@chromium.org>
+In-Reply-To: <20200207203752.209296-2-pmalani@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 11 Feb 2020 17:25:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
+Message-ID: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        heikki.krogerus@intel.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021123-4275-0000-0000-000003A0404F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021123-4276-0000-0000-000038B47942
-Message-Id: <1581463439.5125.72.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_07:2020-02-11,2020-02-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 bulkscore=0 phishscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-11 at 16:49 -0500, Mimi Zohar wrote:
-> On Mon, 2020-02-10 at 20:44 +0800, Tianjia Zhang wrote:
-> > The name sm3-256 is defined in hash_algo_name in hash_info, but the
-> > algorithm name implemented in sm3_generic.c is sm3, which will cause
-> > the sm3-256 algorithm to be not found in some application scenarios of
-> > the hash algorithm, and an ENOENT error will occur. For example,
-> > IMA, keys, and other subsystems that reference hash_algo_name all use
-> > the hash algorithm of sm3.
-> > 
-> > Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> 
-> The "hash_map" needs to be updated to reflect this change.
-> 
-> static struct tpm2_hash tpm2_hash_map[] = {
->         {HASH_ALGO_SHA1, TPM_ALG_SHA1},
->         {HASH_ALGO_SHA256, TPM_ALG_SHA256},
->         {HASH_ALGO_SHA384, TPM_ALG_SHA384},
->         {HASH_ALGO_SHA512, TPM_ALG_SHA512},
->         {HASH_ALGO_SM3_256, TPM_ALG_SM3_256},
-> };
+On Fri, Feb 7, 2020 at 2:39 PM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Some Chrome OS devices with Embedded Controllers (EC) can read and
+> modify Type C port state.
+>
+> Add an entry in the DT Bindings documentation that lists out the logical
+> device and describes the relevant port information, to be used by the
+> corresponding driver.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>
+> Changes in v2:
+> - No changes. Patch first introduced in v2 of series.
+>
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> new file mode 100644
+> index 00000000000000..46ebcbe76db3c2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
+> +
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Prashant Malani <pmalani@chromium.org>
+> +
+> +description:
+> +  Chrome OS devices have an Embedded Controller(EC) which has access to
+> +  Type C port state. This node is intended to allow the host to read and
+> +  control the Type C ports. The node for this device should be under a
+> +  cros-ec node like google,cros-ec-spi.
+> +
+> +properties:
+> +  compatible:
+> +    const: google,cros-ec-typec
+> +
+> +  port:
+> +    description: A node that represents a physical Type C port on the
+> +      device.
+> +    type: object
+> +    properties:
+> +      port-number:
+> +        description: The number used by the Chrome OS EC to identify
+> +          this type C port.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +      power-role:
+> +        description: Determines the power role that the Type C port will
+> +          adopt.
+> +        oneOf:
+> +          - items:
+> +            - const: sink
+> +            - const: source
+> +            - const: dual
+> +      data-role:
+> +        description: Determines the data role that the Type C port will
+> +          adopt.
+> +        oneOf:
+> +          - items:
+> +            - const: host
+> +            - const: device
+> +            - const: dual
+> +      try-power-role:
+> +        description: Determines the preferred power role of the Type C port.
+> +        oneOf:
+> +          - items:
+> +            - const: sink
+> +            - const: source
+> +            - const: dual
+> +
+> +    required:
+> +      - port-number
+> +      - power-role
+> +      - data-role
+> +      - try-power-role
+> +
+> +required:
+> +  - compatible
+> +  - port
+> +
+> +examples:
+> +  - |+
+> +    typec {
+> +      compatible = "google,cros-ec-typec";
+> +
+> +      port@0 {
 
-Never mind, the enum name "HASH_ALGO_SM3_256" didn't change.  Just the
-string changed.
+'port' is reserved for OF graph binding which this is not.
 
-Mimi
+> +        port-number = <0>;
+> +        power-role = "dual";
+> +        data-role = "dual";
+> +        try-power-role = "source";
 
+These are usb-connector binding properties, but this is not a
+usb-connector node. However, I think it should be. The main thing to
+work out seems to be have multiple connectors.
+
+With your binding, how does one associate the USB host controller with
+each port/connector? That's a solved problem with the connector
+binding.
+
+Rob
