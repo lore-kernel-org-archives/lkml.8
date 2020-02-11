@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBADC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CD8C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF71624684
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6167924673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgBKNxU (ORCPT
+        id S1729653AbgBKNxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:53:20 -0500
-Received: from 8bytes.org ([81.169.241.247]:51950 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:53:33 -0500
+Received: from 8bytes.org ([81.169.241.247]:52426 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729452AbgBKNxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:15 -0500
+        id S1729538AbgBKNxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:25 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id CCAB9608; Tue, 11 Feb 2020 14:53:08 +0100 (CET)
+        id 19891E69; Tue, 11 Feb 2020 14:53:13 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 09/62] x86/boot/compressed/64: Rename kaslr_64.c to ident_map_64.c
-Date:   Tue, 11 Feb 2020 14:52:03 +0100
-Message-Id: <20200211135256.24617-10-joro@8bytes.org>
+Subject: [PATCH 33/62] x86/sev-es: Setup early #VC handler
+Date:   Tue, 11 Feb 2020 14:52:27 +0100
+Message-Id: <20200211135256.24617-34-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -48,95 +48,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The file contains only code related to identity mapped page-tables.
-Rename the file and compile it always in.
+Setup an early handler for #VC exceptions. There is no GHCB mapped
+yet, so just re-use the no_ghcb_vc_handler. It can only handle CPUID
+exit-codes, but that should be enough to get the kernel through
+verify_cpu() and __startup_64() until it runs on virtual addresses.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/Makefile                       | 2 +-
- arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} | 9 +++++++++
- arch/x86/boot/compressed/kaslr.c                        | 9 ---------
- arch/x86/boot/compressed/misc.h                         | 8 ++++++++
- 4 files changed, 18 insertions(+), 10 deletions(-)
- rename arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} (95%)
+ arch/x86/include/asm/desc.h      |  1 +
+ arch/x86/include/asm/processor.h |  1 +
+ arch/x86/include/asm/sev-es.h    |  2 ++
+ arch/x86/kernel/head64.c         | 17 ++++++++++++++++
+ arch/x86/kernel/head_64.S        | 35 ++++++++++++++++++++++++++++++++
+ arch/x86/kernel/idt.c            | 10 +++++++++
+ 6 files changed, 66 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 54d63526e856..e6b3e0fc48de 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -80,7 +80,7 @@ vmlinux-objs-y := $(obj)/vmlinux.lds $(obj)/kernel_info.o $(obj)/head_$(BITS).o
- vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
- vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
- ifdef CONFIG_X86_64
--	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
-+	vmlinux-objs-y += $(obj)/ident_map_64.o
- 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
-diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/ident_map_64.c
-similarity index 95%
-rename from arch/x86/boot/compressed/kaslr_64.c
-rename to arch/x86/boot/compressed/ident_map_64.c
-index 748456c365f4..3a2115582920 100644
---- a/arch/x86/boot/compressed/kaslr_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -29,6 +29,15 @@
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
- #include "../../mm/ident_map.c"
+diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
+index 8a4c642ee2b3..cc2db0325f9f 100644
+--- a/arch/x86/include/asm/desc.h
++++ b/arch/x86/include/asm/desc.h
+@@ -388,6 +388,7 @@ static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
  
-+#ifdef CONFIG_X86_5LEVEL
-+unsigned int __pgtable_l5_enabled;
-+unsigned int pgdir_shift = 39;
-+unsigned int ptrs_per_p4d = 1;
-+#endif
+ void update_intr_gate(unsigned int n, const void *addr);
+ void alloc_intr_gate(unsigned int n, const void *addr);
++void set_early_idt_handler(gate_desc *idt, int n, void *handler);
+ 
+ extern unsigned long system_vectors[];
+ 
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 09705ccc393c..4622427d01d4 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -768,6 +768,7 @@ extern int sysenter_setup(void);
+ 
+ /* Defined in head.S */
+ extern struct desc_ptr		early_gdt_descr;
++extern struct desc_ptr		early_idt_descr;
+ 
+ extern void switch_to_new_gdt(int);
+ extern void load_direct_gdt(int);
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 512d3ccb9832..caa29f75ce41 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -75,4 +75,6 @@ static inline u64 copy_lower_bits(u64 out, u64 in, unsigned int bits)
+ 	return out;
+ }
+ 
++extern void early_vc_handler(void);
 +
-+/* Used by PAGE_KERN* macros: */
-+pteval_t __default_kernel_pte_mask __read_mostly = ~0;
-+
- /* Used by pgtable.h asm code to force instruction serialization. */
- unsigned long __force_order;
- 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index d7408af55738..7c61a8c5b9cf 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -43,17 +43,8 @@
- #define STATIC
- #include <linux/decompress/mm.h>
- 
--#ifdef CONFIG_X86_5LEVEL
--unsigned int __pgtable_l5_enabled;
--unsigned int pgdir_shift __ro_after_init = 39;
--unsigned int ptrs_per_p4d __ro_after_init = 1;
--#endif
--
- extern unsigned long get_cmd_line_ptr(void);
- 
--/* Used by PAGE_KERN* macros: */
--pteval_t __default_kernel_pte_mask __read_mostly = ~0;
--
- /* Simplified build-specific string for starting entropy. */
- static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
- 		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 062ae3ae6930..3a030a878d53 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -134,6 +134,14 @@ int count_immovable_mem_regions(void);
- static inline int count_immovable_mem_regions(void) { return 0; }
  #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index d83c62ebaa85..eab04ac260d4 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -38,6 +38,7 @@
+ #include <asm/fixmap.h>
+ #include <asm/extable.h>
+ #include <asm/trap_defs.h>
++#include <asm/sev-es.h>
  
-+/* ident_map_64.c */
-+#ifdef CONFIG_X86_5LEVEL
-+extern unsigned int __pgtable_l5_enabled, pgdir_shift, ptrs_per_p4d;
+ /*
+  * Manage page tables very early on.
+@@ -516,3 +517,19 @@ void __head early_idt_setup_early_handler(unsigned long physaddr)
+ 
+ 	setup_early_handlers(idt);
+ }
++
++void __head early_idt_setup(unsigned long physbase)
++{
++	gate_desc *idt = fixup_pointer(idt_table, physbase);
++	void __maybe_unused *handler;
++
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	/* VMM Communication Exception */
++	handler = fixup_pointer(early_vc_handler, physbase);
++	set_early_idt_handler(idt, X86_TRAP_VC, handler);
 +#endif
 +
-+/* Used by PAGE_KERN* macros: */
-+extern pteval_t __default_kernel_pte_mask;
++	/* Initialize IDT descriptor and load IDT */
++	early_idt_descr.address = (unsigned long)idt;
++	native_load_idt(&early_idt_descr);
++}
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 81cf6c5763ef..13ebf7d3af2c 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -86,6 +86,12 @@ SYM_CODE_START_NOALIGN(startup_64)
+ .Lon_kernel_cs:
+ 	UNWIND_HINT_EMPTY
+ 
++	/* Setup IDT - Needed for SEV-ES */
++	leaq	_text(%rip), %rdi
++	pushq	%rsi
++	call	early_idt_setup
++	popq	%rsi
 +
- /* idt_64.c */
- extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
- extern struct desc_ptr boot_idt_desc;
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
+ 
+@@ -364,6 +370,32 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(early_idt_handler_common)
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/*
++ * VC Exception handler used during very early boot. The
++ * early_idt_handler_array can't be used because it returns via the
++ * paravirtualized INTERRUPT_RETURN and pv-ops don't work that early.
++ */
++SYM_CODE_START_NOALIGN(early_vc_handler)
++	UNWIND_HINT_IRET_REGS offset=8
++
++	/* Build pt_regs */
++	PUSH_AND_CLEAR_REGS
++
++	/* Call C handler */
++	movq    %rsp, %rdi
++	call    no_ghcb_vc_handler
++
++	/* Unwind pt_regs */
++	POP_REGS
++
++	/* Remove Error Code */
++	addq    $8, %rsp
++
++	/* Pure iret required here - don't use INTERRUPT_RETURN */
++	iretq
++SYM_CODE_END(early_vc_handler)
++#endif
+ 
+ #define SYM_DATA_START_PAGE_ALIGNED(name)			\
+ 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
+@@ -505,6 +537,9 @@ SYM_DATA_END(level1_fixmap_pgt)
+ SYM_DATA(early_gdt_descr,		.word GDT_ENTRIES*8-1)
+ SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
+ 
++SYM_DATA(early_idt_descr,		.word NUM_EXCEPTION_VECTORS * 16)
++SYM_DATA_LOCAL(early_idt_descr_base,	.quad 0)
++
+ 	.align 16
+ /* This must match the first entry in level2_kernel_pgt */
+ SYM_DATA(phys_base, .quad 0x0)
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 84250c090596..1bfee6981e9b 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -393,3 +393,13 @@ void alloc_intr_gate(unsigned int n, const void *addr)
+ 	if (!test_and_set_bit(n, system_vectors))
+ 		set_intr_gate(n, addr);
+ }
++
++void set_early_idt_handler(gate_desc *idt, int n, void *handler)
++{
++	struct idt_data data;
++	gate_desc desc;
++
++	init_idt_data(&data, n, handler);
++	idt_init_desc(&desc, &data);
++	native_write_idt_entry(idt, n, &desc);
++}
 -- 
 2.17.1
 
