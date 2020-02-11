@@ -2,67 +2,81 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73DCC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C67FC3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840C120848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAD820848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730959AbgBKQyM (ORCPT
+        id S1730080AbgBKQ7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:54:12 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42112 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730298AbgBKQyJ (ORCPT
+        Tue, 11 Feb 2020 11:59:34 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53373 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728633AbgBKQ7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:54:09 -0500
-Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id d2a3bbaa5cdf3a2b; Tue, 11 Feb 2020 17:54:07 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        David Box <david.e.box@linux.intel.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Subject: [PATCH 0/2] ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system
-Date:   Tue, 11 Feb 2020 17:51:36 +0100
-Message-ID: <6974889.tv0o8xEHfr@kreacher>
+        Tue, 11 Feb 2020 11:59:33 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j1YsS-00014T-BS; Tue, 11 Feb 2020 16:59:12 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
+Cc:     smbarber@chromium.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 06/24] fs: add is_userns_visible() helper
+Date:   Tue, 11 Feb 2020 17:57:35 +0100
+Message-Id: <20200211165753.356508-7-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200211165753.356508-1-christian.brauner@ubuntu.com>
+References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Introduce a helper which makes it possible to detect fileystems whose
+superblock is visible in multiple user namespace. This currently only
+means proc and sys. Such filesystems usually have special semantics so their
+behavior will not be changed with the introduction of fsid mappings.
 
-On some systems the platform generates spurious SCIs while the system is
-suspended to idle and those SCIs are treated as genuine system events after
-the rework of the main suspend-to-idle control flow in 5.4.  The patches
-here address this problem by adding a mechanism to check whether or not
-SCIs generated while the system is suspended to idle are spurious and to
-discard the spurious ones.
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ include/linux/fs.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Patch [1/2] updates ACPICA to provide a way to examine the status bits of
-all GPEs enabled at the moment in one go.
-
-Patch [2/2] uses that mechanism to implement the check mentioned above.
-
-This series is on top of https://patchwork.kernel.org/patch/11373185/ which
-should appear in linux-next tomorrow.
-
-Thanks!
-
-
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 98e0349adb52..1449cd363fb6 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3627,4 +3627,9 @@ static inline int inode_drain_writes(struct inode *inode)
+ 	return filemap_write_and_wait(inode->i_mapping);
+ }
+ 
++static inline bool is_userns_visible(unsigned long iflags)
++{
++	return (iflags & SB_I_USERNS_VISIBLE);
++}
++
+ #endif /* _LINUX_FS_H */
+-- 
+2.25.0
 
