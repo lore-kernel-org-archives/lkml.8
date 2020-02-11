@@ -2,136 +2,152 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99841C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5D5C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718A42082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:19:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ii6MWg1H";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="IE59z5+q"
+	by mail.kernel.org (Postfix) with ESMTP id 7500120675
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgBKITR (ORCPT
+        id S1727930AbgBKIVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 03:19:17 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:27006 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727613AbgBKITR (ORCPT
+        Tue, 11 Feb 2020 03:21:10 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:52958 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727613AbgBKIVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 03:19:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1581409157; x=1612945157;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=FDQF7YmUbf7aiT8pwm9gfOrtDMSYksmXliNItnHvbJM=;
-  b=ii6MWg1HKZX+3NNN5/LQ0JC1jWrdLKgnKm0P3SAyC9CFyMKHUXKXLgIn
-   W0Xx7xCEuMUMaRMLD/DhNeEigBrEeN6+TNAYwggwbYpEJ6/5qbp3mCiOE
-   YdR/DVl2nrlU5shgxFn7N239YROdgPQ1HLFR2KXNxxcRf1oRE5WxcnRMd
-   b6ctcXE84bDt7OZEkblWo9/5McGjkXDLMoXPF7fi+Y2HD2I/gJCy+VjPh
-   rflejigzhd//R1d8bm3mUy2x5w4DDfPQWECLubsPQmVJDprBxY3aezhJO
-   U75hOZF+x4jZC+H0LaCgxiPCCXs/VDkqPyL2yXvGiQA0hoq+O5+J2L+8O
-   Q==;
-IronPort-SDR: TTpGiZ+CrPrMqQD08kY+UMnaQ1VC8AGR3aneqoIUUY8TfLa6+gcKWb/1LnnK2sf5VVJpNfwodD
- eprhvkWp2D1y/As6LgwFt3RkNXQxROHtkx4jMzzq2dBDB1cytEO8cGS3akB+WaKNt8yrJkbpj1
- zT0ezXDptkOTRqEcQHdOzE/cfAUd5swPx02ua+4uNLHkxGkhvTzn5PlkNbyziR0tAnVQudOrXx
- PQTfZviWsfowVKubfDgGAxm3k1l4SLnUaZ45XNsnA1nGNnC+rLBrqC2Xyf9me48/6WhV6Eh+5+
- wJY=
-X-IronPort-AV: E=Sophos;i="5.70,428,1574092800"; 
-   d="scan'208";a="130107720"
-Received: from mail-mw2nam12lp2049.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.49])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Feb 2020 16:19:16 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DbOZ8PGX+pHGj8jZlYa7H686mXG5I5hjC92WnaqgN4AaL1gNhTtl9g7728BhIL67Pa0SEs1xZAyZAGhEQTofn5LAFhTdska0A0PzVs6pGyB1XgR/LCfyB6uGVWIuSGnL5qUFNBrtePvKSatxT9R3CdxPvlAvj40OFIEQYeF2Oo7BTj9ik96CBmVvuYLJiPOTyO7zaQhEHWp+ChZN9m6YA2j1WApo9+wqzAPG5cLPt7R4oSOCxigfzlOyrKE2dPYb4Syn/UBTKOOE7pTe2ZtcFP+rV5U8LLsnlfd7uswgujETcxbAq1xcN6PJboAI7yit67u/PIGryqHT4d6nivZY8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FDQF7YmUbf7aiT8pwm9gfOrtDMSYksmXliNItnHvbJM=;
- b=alcXa2EsGIL1Z1u/bimwyTA7Z1Gty5+WjaSIQpFBB4K9SRRxxKCP2vYM00yM+hHWb+rQEhkqX9Mm69yJdDGCIDH8Qq15nK31VXN73KaKL9u9gqbR7kEkBOmM852kPwJ/9T28xpwxHsiHXZahx5Ur+S5/SOIlrCtM2cmkVGYHl1ADIsMVFJahFmAJo51uFIAHT0QfeMSuaYrgJXFEgGc30FC9URtbi7lk6yddTRk2o/a3VGsopKE/9U/BC/O2/zjJL2VbgJp4JOo8wNq3qM0VBAAiLyziETvtJ6T54/vgOTszX0Qw9P5trPAli3mSLfXHlw7Y+6Iuo309lC5cCyFJ+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FDQF7YmUbf7aiT8pwm9gfOrtDMSYksmXliNItnHvbJM=;
- b=IE59z5+qfoiES6btuEYw/qK3SrBZJVRQBphYhK1Uw3zNftDlj6VNzH1BRJ/yIyu/BKfKxpJWUYdnjofN5YZFl0xUfRoZXWvJQ/sZzWWAakENjX/lLozVrqWiPsn83F7FeohsxPsQw6bb89DWHJS5tPdZl9XZr98kEnwJbxW5UG0=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com (10.167.139.149) by
- SN4PR0401MB3600.namprd04.prod.outlook.com (10.167.133.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.23; Tue, 11 Feb 2020 08:19:14 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::e5f5:84d2:cabc:da32]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::e5f5:84d2:cabc:da32%5]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 08:19:14 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v5 01/13] mm: Fix the return type of
- __do_page_cache_readahead
-Thread-Topic: [PATCH v5 01/13] mm: Fix the return type of
- __do_page_cache_readahead
-Thread-Index: AQHV4HdLtCSr29ig40CbWBOKZ39/Iw==
-Date:   Tue, 11 Feb 2020 08:19:14 +0000
-Message-ID: <SN4PR0401MB3598602411B75B46F5267B829B180@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-2-willy@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Johannes.Thumshirn@wdc.com; 
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 783a7c5e-dfd1-4f05-3ff8-08d7aecb14cd
-x-ms-traffictypediagnostic: SN4PR0401MB3600:
-x-microsoft-antispam-prvs: <SN4PR0401MB3600BE4DF5FBBC2A07AC38609B180@SN4PR0401MB3600.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(136003)(396003)(346002)(199004)(189003)(8936002)(9686003)(86362001)(110136005)(55016002)(52536014)(5660300002)(7416002)(66446008)(54906003)(8676002)(64756008)(66556008)(558084003)(81156014)(81166006)(316002)(76116006)(91956017)(66946007)(66476007)(26005)(33656002)(53546011)(6506007)(7696005)(71200400001)(478600001)(186003)(2906002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR0401MB3600;H:SN4PR0401MB3598.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: J13A6ReA9TSTt1c6bdBpTxtzneb1Ofpyc3HHteWqvtuXD5BIp25wWX5Jj9rty+z8IuBPjt/gIuHTYUfEoYTkHZrnnDILfKSy45g6ryMvZTy61yO2Q+D6ULUDMigsCCjurNntAWZl0Xm/OPaC21h9Uhg9UsfGDU8yRR7pJp/4RtZPLu8Aa+pkHWfnddkRl+me9f0vLAAtyn91TZCvcIqa+pIWQqEAD41sQwhxTwrZ9YYK66o/AOKckkO5BFfhPOEMko2jHkIElHDKQ2xLih2gDaEWxDyXVbnwiNcDQ14fDOc61glpj0fPDXD9wLRF+uURWIoMWc/4/v/xEcylXlRAUCkkC3JGDfLGO5P1vDoTTsL8HhGcdLdCMRrLdg1L3yxaPXNcB6PpBTBIbmB1SpRGyXF5mmIccM3isWoZ/4rvj3nw9fQi+IKdlplFkQzhShVs
-x-ms-exchange-antispam-messagedata: gfEyOKrwkPk8qghET5Arq6HHfBJaC0LBjYfYag1yvJsZYT4ZAH1sGnViMxzNGt5I12U+7zjXvc7zduxy+tXWxZcvuxjY2ApX92T48YFRi0PQXQLlLzOjG4KsqnzrprU7tnMP+4Gc0+BVeUyg7Qnipg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Feb 2020 03:21:10 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1j1Qmu-0029iO-8e; Tue, 11 Feb 2020 09:20:56 +0100
+Message-ID: <13b0ea0caff576e7944e4f9b91560bf46ac9caf0.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH v2] UML: add support for KASAN under x86_64
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Patricia Alfonso <trishalfonso@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com,
+        aryabinin@virtuozzo.com, dvyukov@google.com, davidgow@google.com,
+        brendanhiggins@google.com
+Cc:     kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-um@lists.infradead.org
+Date:   Tue, 11 Feb 2020 09:20:54 +0100
+In-Reply-To: <20200210225806.249297-1-trishalfonso@google.com> (sfid-20200210_235813_002927_509D549C)
+References: <20200210225806.249297-1-trishalfonso@google.com>
+         (sfid-20200210_235813_002927_509D549C)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 783a7c5e-dfd1-4f05-3ff8-08d7aecb14cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 08:19:14.6094
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +UkunN43yImZCGMmfIBExV/09gy+m2seRDcVr8m/zRykHkafS94C2sa/Bp5+xgnFqs3xnQdRlYKfhKG8VEjtTHo39tQdr+ZsU+hlmizKQRg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3600
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 02:05, Matthew Wilcox wrote:=0A=
-> even though I'm pretty sure we're not going to readahead more than 2^32=
-=0A=
-> pages ever.=0A=
-=0A=
-And 640K is more memory than anyone will ever need on a computer *scnr*=0A=
-=0A=
+Hi,
+
+Looks very nice! Some questions/comments below:
+
+> Depends on Constructor support in UML and is based off of
+> "[RFC PATCH] um: implement CONFIG_CONSTRUCTORS for modules"
+> (https://patchwork.ozlabs.org/patch/1234551/) 
+
+I guess I should resend this as a proper patch then. Did you test
+modules? I can try (later) too.
+
+> The location of the KASAN shadow memory, starting at
+> KASAN_SHADOW_OFFSET, can be configured using the
+> KASAN_SHADOW_OFFSET option. UML uses roughly 18TB of address
+> space, and KASAN requires 1/8th of this.
+
+That also means if I have say 512MB memory allocated for UML, KASAN will
+use an *additional* 64, unlike on a "real" system, where KASAN will take
+about 1/8th of the available physical memory, right?
+
+> +	help
+> +	  This is the offset at which the ~2.25TB of shadow memory is
+> +	  initialized 
+
+Maybe that should say "mapped" instead of "initialized", since there are
+relatively few machines on which it could actually all all be used?
+
+> +// used in kasan_mem_to_shadow to divide by 8
+> +#define KASAN_SHADOW_SCALE_SHIFT 3
+
+nit: use /* */ style comments
+
+> +#define KASAN_SHADOW_START (KASAN_SHADOW_OFFSET)
+> +#define KASAN_SHADOW_END (KASAN_SHADOW_START + KASAN_SHADOW_SIZE)
+> +
+> +#ifdef CONFIG_KASAN
+> +void kasan_init(void);
+> +#else
+> +static inline void kasan_init(void) { }
+> +#endif /* CONFIG_KASAN */
+> +
+> +void kasan_map_memory(void *start, unsigned long len);
+> +void kasan_unpoison_shadow(const void *address, size_t size);
+> +
+> +#endif /* __ASM_UM_KASAN_H */
+> diff --git a/arch/um/kernel/Makefile b/arch/um/kernel/Makefile
+> index 5aa882011e04..875e1827588b 100644
+> --- a/arch/um/kernel/Makefile
+> +++ b/arch/um/kernel/Makefile
+> @@ -8,6 +8,28 @@
+>  # kernel.
+>  KCOV_INSTRUMENT                := n
+>  
+> +# The way UMl deals with the stack causes seemingly false positive KASAN
+> +# reports such as:
+> +# BUG: KASAN: stack-out-of-bounds in show_stack+0x15e/0x1fb
+> +# Read of size 8 at addr 000000006184bbb0 by task swapper/1
+> +# ==================================================================
+> +# BUG: KASAN: stack-out-of-bounds in dump_trace+0x141/0x1c5
+> +# Read of size 8 at addr 0000000071057eb8 by task swapper/1
+> +# ==================================================================
+> +# BUG: KASAN: stack-out-of-bounds in get_wchan+0xd7/0x138
+> +# Read of size 8 at addr 0000000070e8fc80 by task systemd/1
+> +#
+> +# With these files removed from instrumentation, those reports are
+> +# eliminated, but KASAN still repeatedly reports a bug on syscall_stub_data:
+> +# ==================================================================
+> +# BUG: KASAN: stack-out-of-bounds in syscall_stub_data+0x299/0x2bf
+> +# Read of size 128 at addr 0000000071457c50 by task swapper/1
+
+So that's actually something to fix still? Just trying to understand,
+I'll test it later.
+
+> -extern int printf(const char *msg, ...);
+> -static void early_print(void)
+> +#ifdef CONFIG_KASAN
+> +void kasan_init(void)
+>  {
+> -	printf("I'm super early, before constructors\n");
+> +	kasan_map_memory((void *)KASAN_SHADOW_START, KASAN_SHADOW_SIZE);
+
+Heh, you *actually* based it on my patch, in git terms, not just in code
+terms. I think you should just pick up the few lines that you need from
+that patch and squash them into this one, I just posted that to
+demonstrate more clearly what I meant :-)
+
+> +/**
+> + * kasan_map_memory() - maps memory from @start with a size of @len.
+
+I think the () shouldn't be there?
+
+> +void kasan_map_memory(void *start, size_t len)
+> +{
+> +	if (mmap(start,
+> +		 len,
+> +		 PROT_READ|PROT_WRITE,
+> +		 MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE|MAP_NORESERVE,
+> +		 -1,
+> +		 0) == MAP_FAILED)
+> +		os_info("Couldn't allocate shadow memory %s", strerror(errno));
+
+If that fails, can we even continue?
+
+johannes
+
