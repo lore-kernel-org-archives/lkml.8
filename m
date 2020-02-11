@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BABDC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B4C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30AC7206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439A3206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="I21mB/n2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="t1kKf1CM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgBKVnb (ORCPT
+        id S1728375AbgBKVne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:43:31 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:12483 "EHLO
+        Tue, 11 Feb 2020 16:43:34 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.223]:30035 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbgBKVly (ORCPT
+        with ESMTP id S1727953AbgBKVly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 16:41:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=l2ioSw/GBEgoEsJDqdX898kUDDw9CYiqWmti4ETUA48=;
-        b=I21mB/n2lhtHTEfKUXkDqNk2zUpc68npeX+j6D/d1gucnaYuF6s1+H/6MDjCGRlPKZ
-        0UTjIE37xCtquqH06blYGEm4fUpqOb300ck98YuW6jS3tpRok2hX74uXvy/IwNxU+RXG
-        oPSbp5c5GUZVbYUCzl5dX9cR6lJyARfxNhuQySNr7wcThTqmRiLw327IY04hzdw+4n50
-        ORQ2Tj4Erejf+DakwdFx4Hi9T8ASrr+fiJSipmyNvch8QcTM1fZuW+xWpoeKXsUsaEIS
-        2hbq6jkqJiNwLm2Y2leVy9W+ShCg1grFZI1HyLQVTXageCiukurQgGH8fHAfsrehlqwf
-        Tf+A==
+        bh=o2aaGn+CrBGGFUCI/aU8qBP4BNQ+G25EUxt570OpKBY=;
+        b=t1kKf1CMl2v02AQpB3xHcmj4Dwxsrce6Ucp3Rcn2L1lWyYSByeffFSbhC+r41q3yHX
+        lLn9+LSSK0DoXI92s8wQTScT/9lPlD/FN78j2F6yRvjzdbk3vH61iWQcS9oMM5gE4xHo
+        cfAo8P8fjbAbfFvjFgTC8DashBNNSv3MWZnqXz8f3swQW/cwTZjpEj8cYfQwpY1dh6f3
+        EY/kk65s88jgzkkzoZlm4swb/r8yQStVRScd9ztP30xqhhVE8hKVhddNhMS9XujJR/Eb
+        t/t3XPa/lGpGlztn0IH/WYmkopg9ceV7NYFJPB2t+jgIpYMs5k7dL54AxkvgCiDdI/ZD
+        3gLQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLfa0EL
+        with ESMTPSA id U06217w1BLfc0EO
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:36 +0100 (CET)
+        Tue, 11 Feb 2020 22:41:38 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -69,9 +69,9 @@ Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 05/14] MIPS: CI20: defconfig: configure for supporting modules
-Date:   Tue, 11 Feb 2020 22:41:22 +0100
-Message-Id: <b490287210e46565733209197ffdae3bc90137dc.1581457290.git.hns@goldelico.com>
+Subject: [PATCH 08/14] MIPS: CI20: defconfig: configure CONFIG_REGULATOR_ACT8865 for PMU
+Date:   Tue, 11 Feb 2020 22:41:25 +0100
+Message-Id: <123a132d735a02c1fcbf989c25551a616b1cb991.1581457290.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
@@ -82,8 +82,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all drivers need to be compiled into the kernel.
-Support building and loading of kernel modules.
+The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
+Since it is not compiled, the PMU and the CI20 board is running in
+power-on reset state of the PMU.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
@@ -91,15 +92,17 @@ Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index be41df2a81fb..e0d3c9d4c2ae 100644
+index 30a47a7a2994..74e5775b8a05 100644
 --- a/arch/mips/configs/ci20_defconfig
 +++ b/arch/mips/configs/ci20_defconfig
-@@ -1,4 +1,5 @@
- # CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_MODULES=y
- CONFIG_KERNEL_XZ=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
+@@ -95,6 +95,7 @@ CONFIG_JZ4740_WDT=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_DEBUG=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_ACT8865=y
+ # CONFIG_VGA_CONSOLE is not set
+ # CONFIG_HID is not set
+ # CONFIG_USB_SUPPORT is not set
 -- 
 2.23.0
 
