@@ -2,106 +2,247 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719B9C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D0EC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F93C20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D64920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FtnyNGaI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zl6IOjX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBKL5I (ORCPT
+        id S1728151AbgBKL6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:57:08 -0500
-Received: from mail-qv1-f47.google.com ([209.85.219.47]:39822 "EHLO
-        mail-qv1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbgBKL5I (ORCPT
+        Tue, 11 Feb 2020 06:58:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43457 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727669AbgBKL6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:57:08 -0500
-Received: by mail-qv1-f47.google.com with SMTP id y8so4825382qvk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:57:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=NqSDjPBLt7KaMO3YE3bDtH3fJ1lzw5pAy6fF1/Y2SAI=;
-        b=FtnyNGaI+FRU6+YMQYtX66IH+nESFWjMFwsNUQtmKsT+4l0ORL3wRtKES0bkktkGz3
-         iEqocSU+QeHQE6OEJpPRmHgbdu05Bfuk1s8X+5nuq2n8OSlQmEgw1JJ4afgBDxCGadp7
-         EoJ7/uptRDimKV3TjVFcO5ONB0rcrtrA4k4ETUBfRYUa2exXs38fG+wLEawRlOoLxk11
-         PmQXPIMwXZrvE0pTwtFjjK/tbRckrFNrvYbmQn/YjouY3K5pXh2UNw26jnm2Rhkz45ka
-         4+h3C+E2slzFonxbsEegrBdkXEFmiObyNAtRcDMdc5/p95CSnvudV5+dzp+qAkc6AX8R
-         qkqA==
+        Tue, 11 Feb 2020 06:58:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581422321;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VHVm75D8rqdio+fBEx7/QYHo8H/jQwK3ulKDlXOb1xI=;
+        b=Zl6IOjX4hkj8rzu5wX5orZK+O6/l+lCiGeSKUvMa/2iYgXecwKamcJxY+x0o8uNb1J+jZL
+        3ZLuG9/uPIEuMVia6yHbTyXFPu8I8Jh+L31cs+QpqaZclPIERoORti1z+ouzlDn5iIOIOY
+        fIUCbrUjQCODTgamahK0/f99SC5/8qw=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-_JsqlZOgOCWtpUX1Q1lflQ-1; Tue, 11 Feb 2020 06:58:39 -0500
+X-MC-Unique: _JsqlZOgOCWtpUX1Q1lflQ-1
+Received: by mail-qt1-f199.google.com with SMTP id p12so6397842qtu.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:58:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=NqSDjPBLt7KaMO3YE3bDtH3fJ1lzw5pAy6fF1/Y2SAI=;
-        b=fbl1JmYC0/AC8bBiBPfzB1A3xcDmh5O7yU5HTPk1xkqalCAeOpTtrZOQrJfHi1RPU1
-         3knbwYkCFmBNxznxcs4VeIWfr6k6Dkul+mXL44EPKpup5hReb7MvPL6BONxhwGuVQJmY
-         5LVyad0cU2ga6h28Qdpd3EMOe90C9MYsvdyG118lQ+ExI6TrsaIYVFHudmmCA3dQEhg+
-         B/8mjl2tWPRbcj6P8pFtnFyoGePAcK8ITMZftuWtfj0VqptC7q6ckkhMdsgDDpEnTp18
-         bn1jy6+kdfDf9XcE6oapVqPDM45dbB+xKl/mo3A4U3lXaYPjpjIbtd4Mj+GMKmvRQmUY
-         j+qA==
-X-Gm-Message-State: APjAAAUalQeblelJvTWJHeYVJkk2zgkfQmmfLOOTC9tR5PlEsNd+iTa/
-        P3v2BCDxok7iy3SzTsGI1+/La10SeKHBxQ==
-X-Google-Smtp-Source: APXvYqwHubfElUXdoqcFG4jW4y4VIoJ3XWlawPU5C6G+kU4oibrcmZLwN6oftaasCKmSO9scx8CnHg==
-X-Received: by 2002:a0c:ab8f:: with SMTP id j15mr2451647qvb.223.1581422226683;
-        Tue, 11 Feb 2020 03:57:06 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v55sm2105189qtc.1.2020.02.11.03.57.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 03:57:06 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=VHVm75D8rqdio+fBEx7/QYHo8H/jQwK3ulKDlXOb1xI=;
+        b=omO/lNyi8538cC0KS2lT7gvAjZWpSocEkQwMNMZZmqMudIU3+vLDeia6y6tacYVL/4
+         1G3saZcTP4rjpdj0OViMAEmjdU+7fenAvCHbNjDgC4bFgUw1F05tEmZ1GGbedpF9mPql
+         uGkYyHdrXLhJ24yUG1PcS6O610FlowmI7ayTdLmnAc7pqpeIbkzp5VAWYS63V70CfJ5S
+         tNuu+pNUX/r/GnsXGo0lEWLiAQgDCod4vGVVyrxhANp0KHpf3aJCQG/+UbAvB7USuwKk
+         7BbYTP4qc6pdSOhboAFxfN+h+llL8oQCXo/6DEI5EkKNi+5TVht+adDdA4W1MOwSpuH6
+         ZPFw==
+X-Gm-Message-State: APjAAAWz4wAKaus4g38HrA+44yYMv2Gj3xPpaH80Sfa0aZ2pBwBHikdn
+        cBU4Ckiys5/ZJb360NPzq4/EMyjNFIYlDABOAlKbgvyvDai3pimNvbE0mNo8VT/ghCdniO+sspt
+        eEJp99qxEr467/+Nmo7xY/poz
+X-Received: by 2002:ac8:4e46:: with SMTP id e6mr2062798qtw.9.1581422319022;
+        Tue, 11 Feb 2020 03:58:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy3iwCy7bP7e6NfjLXRRT82iDb6Mi5NXCWXeUBQu8ZeoM18uqn2tMhurYWG6eCqvIq/nZKg1w==
+X-Received: by 2002:ac8:4e46:: with SMTP id e6mr2062781qtw.9.1581422318713;
+        Tue, 11 Feb 2020 03:58:38 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id e64sm2004999qtd.45.2020.02.11.03.58.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 03:58:37 -0800 (PST)
+Date:   Tue, 11 Feb 2020 06:58:33 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Liu, Jing2" <jing2.liu@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, virtio-dev@lists.oasis-open.org,
+        slp@redhat.com, qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
+        gerry@linux.alibaba.com
+Subject: Re: [virtio-dev] Re: [PATCH v2 4/5] virtio-mmio: add MSI interrupt
+ feature support
+Message-ID: <20200211065319-mutt-send-email-mst@kernel.org>
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <4c3d13be5a391b1fc50416838de57d903cbf8038.1581305609.git.zhabin@linux.alibaba.com>
+ <0c71ff9d-1a7f-cfd2-e682-71b181bdeae4@redhat.com>
+ <c42c8b49-5357-f341-2942-ba84afc25437@linux.intel.com>
+ <ad96269f-753d-54b8-a4ae-59d1595dd3b2@redhat.com>
+ <5522f205-207b-b012-6631-3cc77dde3bfe@linux.intel.com>
+ <45e22435-08d3-08fe-8843-d8db02fcb8e3@redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next] locking/osq_lock: annotate a data race in osq_lock
-Date:   Tue, 11 Feb 2020 06:57:05 -0500
-Message-Id: <295818C4-C5B8-43DF-9D5B-445EBA02FC4F@lca.pw>
-References: <CANpmjNPWCu+w3O8cg++X4=viVFsWNehTXzTuqbwV8-DcXXpFng@mail.gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <CANpmjNPWCu+w3O8cg++X4=viVFsWNehTXzTuqbwV8-DcXXpFng@mail.gmail.com>
-To:     Marco Elver <elver@google.com>
-X-Mailer: iPhone Mail (17D50)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <45e22435-08d3-08fe-8843-d8db02fcb8e3@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 11, 2020 at 03:40:23PM +0800, Jason Wang wrote:
+> 
+> On 2020/2/11 下午2:02, Liu, Jing2 wrote:
+> > 
+> > 
+> > On 2/11/2020 12:02 PM, Jason Wang wrote:
+> > > 
+> > > On 2020/2/11 上午11:35, Liu, Jing2 wrote:
+> > > > 
+> > > > On 2/11/2020 11:17 AM, Jason Wang wrote:
+> > > > > 
+> > > > > On 2020/2/10 下午5:05, Zha Bin wrote:
+> > > > > > From: Liu Jiang<gerry@linux.alibaba.com>
+> > > > > > 
+> > > > > > Userspace VMMs (e.g. Qemu microvm, Firecracker) take
+> > > > > > advantage of using
+> > > > > > virtio over mmio devices as a lightweight machine model for modern
+> > > > > > cloud. The standard virtio over MMIO transport layer
+> > > > > > only supports one
+> > > > > > legacy interrupt, which is much heavier than virtio over
+> > > > > > PCI transport
+> > > > > > layer using MSI. Legacy interrupt has long work path and
+> > > > > > causes specific
+> > > > > > VMExits in following cases, which would considerably slow down the
+> > > > > > performance:
+> > > > > > 
+> > > > > > 1) read interrupt status register
+> > > > > > 2) update interrupt status register
+> > > > > > 3) write IOAPIC EOI register
+> > > > > > 
+> > > > > > We proposed to add MSI support for virtio over MMIO via new feature
+> > > > > > bit VIRTIO_F_MMIO_MSI[1] which increases the interrupt performance.
+> > > > > > 
+> > > > > > With the VIRTIO_F_MMIO_MSI feature bit supported, the virtio-mmio MSI
+> > > > > > uses msi_sharing[1] to indicate the event and vector mapping.
+> > > > > > Bit 1 is 0: device uses non-sharing and fixed vector per
+> > > > > > event mapping.
+> > > > > > Bit 1 is 1: device uses sharing mode and dynamic mapping.
+> > > > > 
+> > > > > 
+> > > > > I believe dynamic mapping should cover the case of fixed vector?
+> > > > > 
+> > > > Actually this bit *aims* for msi sharing or msi non-sharing.
+> > > > 
+> > > > It means, when msi sharing bit is 1, device doesn't want vector
+> > > > per queue
+> > > > 
+> > > > (it wants msi vector sharing as name) and doesn't want a high
+> > > > interrupt rate.
+> > > > 
+> > > > So driver turns to !per_vq_vectors and has to do dynamical mapping.
+> > > > 
+> > > > So they are opposite not superset.
+> > > > 
+> > > > Thanks!
+> > > > 
+> > > > Jing
+> > > 
+> > > 
+> > > I think you need add more comments on the command.
+> > > 
+> > > E.g if I want to map vector 0 to queue 1, how do I need to do?
+> > > 
+> > > write(1, queue_sel);
+> > > write(0, vector_sel);
+> > 
+> > That's true. Besides, two commands are used for msi sharing mode,
+> > 
+> > VIRTIO_MMIO_MSI_CMD_MAP_CONFIG and VIRTIO_MMIO_MSI_CMD_MAP_QUEUE.
+> > 
+> > "To set up the event and vector mapping for MSI sharing mode, driver
+> > SHOULD write a valid MsiVecSel followed by
+> > VIRTIO_MMIO_MSI_CMD_MAP_CONFIG/VIRTIO_MMIO_MSI_CMD_MAP_QUEUE command to
+> > map the configuration change/selected queue events respectively.  " (See
+> > spec patch 5/5)
+> > 
+> > So if driver detects the msi sharing mode, when it does setup vq, writes
+> > the queue_sel (this already exists in setup vq), vector sel and then
+> > MAP_QUEUE command to do the queue event mapping.
+> > 
+> 
+> So actually the per vq msix could be done through this. I don't get why you
+> need to introduce MSI_SHARING_MASK which is the charge of driver instead of
+> device. The interrupt rate should have no direct relationship with whether
+> it has been shared or not.
+> 
+> Btw, you introduce mask/unmask without pending, how to deal with the lost
+> interrupt during the masking then?
+
+pending can be an internal device register. as long as device
+does not lose interrupts while masked, all's well.
+
+There's value is being able to say "this queue sends no
+interrupts do not bother checking used notification area".
+so we need way to say that. So I guess an enable interrupts
+register might have some value...
+But besides that, it's enough to have mask/unmask/address/data
+per vq.
 
 
-> On Feb 11, 2020, at 5:16 AM, Marco Elver <elver@google.com> wrote:
->=20
-> I have said this before: we're not just guarding against load/store
-> tearing, although on their own, they make it deceptively easy to
-> reason about data races.
->=20
-> The case here seems to be another instance of a C-CAS, to avoid
-> unnecessarily dirtying a cacheline.
->=20
-> Here, the loop would make me suspicious, because a compiler could
-> optimize out re-loading the value. Due to the smp_load_acquire,
-> however, at the least we have 1 implied compiler barrier in this loop
-> which means that will likely not happen.
->=20
-> Before jumping to 'data_race()', I would ask again: how bad is the
-> READ_ONCE? Is the generated code the same? If so, just use the
-> READ_ONCE. Do you want to reason about all compiler optimizations? For
-> this code here, I certainly don't want to.
->=20
-> But in the end it's up to what maintainers prefer, and maybe there is
-> a very compelling argument that I missed that makes the fact this is a
-> data race always safe.
+> 
+> > For msi non-sharing mode, no special action is needed because we make
+> > the rule of per_vq_vector and fixed relationship.
+> > 
+> > Correct me if this is not that clear for spec/code comments.
+> > 
+> 
+> The ABI is not as straightforward as PCI did. Why not just reuse the PCI
+> layout?
+> 
+> E.g having
+> 
+> queue_sel
+> queue_msix_vector
+> msix_config
+> 
+> for configuring map between msi vector and queues/config
+> 
+> Then
+> 
+> vector_sel
+> address
+> data
+> pending
+> mask
+> unmask
+> 
+> for configuring msi table?
+> 
+> Thanks
+> 
+> 
+> > Thanks!
+> > 
+> > Jing
+> > 
+> > 
+> > > 
+> > > ?
+> > > 
+> > > Thanks
+> > > 
+> > > 
+> > > > 
+> > > > 
+> > > > > Thanks
+> > > > > 
+> > > > > 
+> > > > > 
+> > > > > ---------------------------------------------------------------------
+> > > > > To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+> > > > > For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+> > > > > 
+> > > > 
+> > > 
 
-Yes, I feel like locking maintainers prefer data_race() rather than blindly a=
-dding READ_ONCE() unless there is an strong evidence that the later is neede=
-d.
-
-Since I can=E2=80=99t prove it is strictly needed to prevent from which spec=
-ific optimization, I had chosen the data_race() approach.=
