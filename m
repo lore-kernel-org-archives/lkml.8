@@ -2,154 +2,102 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D40FC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555F3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E93A20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213CD2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:06:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="qftOSpm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgBKKDD (ORCPT
+        id S1728156AbgBKKGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:03:03 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55194 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbgBKKDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:03:02 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D3190B150;
-        Tue, 11 Feb 2020 10:02:57 +0000 (UTC)
-Message-ID: <28f7ea832ead04dd93cd582480fb946604bb407d.camel@suse.de>
-Subject: Re: [PATCH] usb: xhci: Enable LPM for VIA LABS VL805
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 11 Feb 2020 11:02:55 +0100
-In-Reply-To: <19e1d141-2033-782f-e5a3-dcba6bdc0a8a@i2se.com>
-References: <20200120142422.3907-1-nsaenzjulienne@suse.de>
-         <20200210185921.GA1058087@kroah.com>
-         <1478f170-f0ec-96df-79cf-f7c44bebc290@linux.intel.com>
-         <19e1d141-2033-782f-e5a3-dcba6bdc0a8a@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-4mJyqWT1X0J6LlfdjyE7"
-User-Agent: Evolution 3.34.3 
+        Tue, 11 Feb 2020 05:06:46 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43978 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgBKKGq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:06:46 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so7457226qtj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 02:06:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FhWcZb4/vDUUKrqNOiBWVX9k45dIhS2uPcoT5/+VJdk=;
+        b=qftOSpm6devyYeZL7hFoKhny/GyTfM7ivFBXO4L4B35swa60u8djtiglSUOK6b0t0+
+         g96TifieG5DdeZcPGgGKcw7FLIKGJ9eTpvVmrffsOM0SNGYTVnDlrm+idu+hURZbSCTL
+         bJR27nkFP6K7egNCl0UO6RdRXTq8daK9x2C10=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FhWcZb4/vDUUKrqNOiBWVX9k45dIhS2uPcoT5/+VJdk=;
+        b=CWztYAZXCgqhNzHJ8Qeyfk5odE1urDz4Pdzfwqmoc0QOByoJPflwVGroGJbAfd4UDH
+         PCtJWr/tRXGe9Co8tHsDaNz+jXjE/uKwZ0qc06dI9rRcOT/yC55CxfB7wUqOEJJ3dKSc
+         hf+WUogG963X68NskxqqZuoYPW2vjnKAf+BhZm0fTSk4PmQxiIpwjyCzSLU6MIu0g2hu
+         Y5cGIPY4GkeBSc3OWJSSvUxuhn6iDCwCjZIdL1e/DPws04ZRxtZtFEbF+ba4k2BQiYzX
+         kp4juT1JyV9OimR7K0koK1bvj0xSJ/NzJa9O8DuVg6Ohj/5648PH7ObYhYfpv3+DaXJM
+         QZCw==
+X-Gm-Message-State: APjAAAWnQDQr/SorjaIvFuGVkUYCP0KfNftJg7aF55JXkRoi2foSem9F
+        ahwU9l9+ojl1PwibykhNzZqUmC8kzcSfAAPGRlDoDQ==
+X-Google-Smtp-Source: APXvYqxCG0ZPphjcEoKpJJiotsjqd9YtYvcKrxfujOFBGwJGO10fZZkMU8+3M5/sqXGHlHeOlPcZIPWJq94B3UpHQ2g=
+X-Received: by 2002:ac8:8d6:: with SMTP id y22mr1583188qth.85.1581415603366;
+ Tue, 11 Feb 2020 02:06:43 -0800 (PST)
 MIME-Version: 1.0
+References: <CABWYdi1ZKR=jmKnjoJTik08Q9uJBvyZ4W0C29iPiUJ5ef1obvw@mail.gmail.com>
+ <20191205123302.GA25750@kernel.org> <CABWYdi1+E7MQD8mC2xQfSP0m9_WFdx9mbLkw-36tJ8EtLaw2Jg@mail.gmail.com>
+ <CAJPywTKC8=O0zmNm-W4OUENpoZfrbr1Ts38gQw2ZA608_u5wpw@mail.gmail.com> <20200204192657.GB1554679@krava>
+In-Reply-To: <20200204192657.GB1554679@krava>
+From:   Marek Majkowski <marek@cloudflare.com>
+Date:   Tue, 11 Feb 2020 10:06:35 +0000
+Message-ID: <CAJPywTKuu+RPsspAT4Z_243KvtchTe7p7c4DpvG07Nv5A67fnw@mail.gmail.com>
+Subject: Re: perf not picking up symbols for namespaced processes
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ivan Babrou <ivan@cloudflare.com>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, sashal@kernel.org,
+        Kenton Varda <kenton@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jirka,
 
---=-4mJyqWT1X0J6LlfdjyE7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 4, 2020 at 7:27 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> > 11913 openat(AT_FDCWD, "/proc/9512/ns/mnt", O_RDONLY) = 197
+> > 11913 setns(197, CLONE_NEWNS) = 0
+> > 11913 stat("/home/marek/bin/runsc-debug", 0x7fffffff8480) = -1 ENOENT
+> > (No such file or directory)
+> > 11913 setns(196, CLONE_NEWNS) = 0
+>
+> hi,
+> could you guys please share more details on what you run exactly,
+> and perhaps that change you mentioned?
 
-Hi Stefan, Mathias.
+I was debugging gvisor (runsc), which does execve(/proc/self/exe), and
+then messes up with its mount namespace. The effect is that the binary
+running doesn't exist in the mount namespace. This confuses perf,
+which fails to load symbols for that process.
 
-On Tue, 2020-02-11 at 10:49 +0100, Stefan Wahren wrote:
-> Hi Mathias,
->=20
-> On 11.02.20 10:34, Mathias Nyman wrote:
-> > On 10.2.2020 20.59, Greg Kroah-Hartman wrote:
-> > > On Mon, Jan 20, 2020 at 03:24:22PM +0100, Nicolas Saenz Julienne wrot=
-e:
-> > > > This PCIe controller chip is used on the Raspberry Pi 4 and multipl=
-e
-> > > > adapter cards. There is no publicly available documentation for the
-> > > > chip, yet both the downstream RPi4 kernel and the controller cards
-> > > > support/advertise LPM support.
-> > > >=20
-> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > > ---
-> > > >  drivers/usb/host/xhci-pci.c | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > >=20
-> > > > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pc=
-i.c
-> > > > index 4917c5b033fa..c1976e98992b 100644
-> > > > --- a/drivers/usb/host/xhci-pci.c
-> > > > +++ b/drivers/usb/host/xhci-pci.c
-> > > > @@ -241,6 +241,9 @@ static void xhci_pci_quirks(struct device *dev,
-> > > > struct xhci_hcd *xhci)
-> > > >  			pdev->device =3D=3D 0x3432)
-> > > >  		xhci->quirks |=3D XHCI_BROKEN_STREAMS;
-> > > > =20
-> > > > +	if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=3D =
-0x3483)
-> > > > +		xhci->quirks |=3D XHCI_LPM_SUPPORT;
-> > > > +
-> > > >  	if (pdev->vendor =3D=3D PCI_VENDOR_ID_ASMEDIA &&
-> > > >  			pdev->device =3D=3D 0x1042)
-> > > >  		xhci->quirks |=3D XHCI_BROKEN_STREAMS;
-> > > Mathias, is this in your review queue?
-> > >=20
-> > Ah yes, before adding link power management support for this controller=
- we
-> > should check that it has sane (or any) exit latency values set in its
-> > HCSPARAMS3 capability register.
+To my understanding, by default, perf looks for the binary in the
+process mount namespace. In this case clearly the binary wasn't there.
+Ivan wrote a rough patch [1], which I just confirmed works. The patch
+attempts, after a failure to load binary from pids mount namespace, to
+load binary from the default mount namespace (the one running perf).
 
-I did some checks myself before sending the patch, and tested with some dev=
-ices
-I own. The latencies seemd reasonable. For example I just hooked up an USB3=
- HD,
-the root HUB exposes:
+[1] https://lkml.org/lkml/2019/12/5/878
 
-	bU1DevExitLat           4 micro seconds
-	bU2DevExitLat         231 micro seconds
-
-And xhci configured the device with:
-
-	bU1DevExitLat          10 micro seconds
-	bU2DevExitLat        2047 micro seconds
-
-> > Nicolas, if you have this controller could you show the capability
-> > registers:
-> >=20
-> > cat /sys/kernel/debug/usb/xhci/*/reg-cap
-
-CAPLENGTH =3D 0x01000020
-HCSPARAMS1 =3D 0x05000420
-HCSPARAMS2 =3D 0xfc000031
-HCSPARAMS3 =3D 0x00e70004
-HCCPARAMS1 =3D 0x002841eb
-DOORBELLOFF =3D 0x00000100
-RUNTIMEOFF =3D 0x00000200
-HCCPARAMS2 =3D 0x00000000
-
-> sorry for the naive question, but do you need the dump with or without
-> this patch applied?
-
-IIRC these are dumps from xhci's extended registers. Shouldn't matter at al=
-l.=20
-
-Regards,
-Nicolas
-
-
---=-4mJyqWT1X0J6LlfdjyE7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5Ce88ACgkQlfZmHno8
-x/7F9Qf+KWPtMeGt4zPdB2ls5zaDGQPrv3QRvhIdmu/ovQXjdcwOghNJtYpYtfod
-p75/dlkegGgfNF+6nlZSMydSAPlvy1/stxk12OhPASHLTA2knxSOUhlfmX82PC4P
-AGcGqCC7mXzeqYh4Bw1+MUkHHjNivZEOGswGkzZ8j6g/DabCEyMgByoYl1/G+hdM
-REqOtzfuxCQF+2BJLyRC7LHBO42cOLg2vGz+whF6PjmkSBJEr8MUGlOuCrtpJP2g
-ajtbxF8u7DcL+cI4m48gpIiWP/TPVb4qJOJ3B2/qKjO8NcXPveo08DGa/sy8wcDg
-8wicmtAbbG37PAVtD0R2XUmBnWudbw==
-=9y0c
------END PGP SIGNATURE-----
-
---=-4mJyqWT1X0J6LlfdjyE7--
-
+Marek
