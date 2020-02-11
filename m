@@ -3,37 +3,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCCDC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA6C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0091A2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11982073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgBKXiz (ORCPT
+        id S1728146AbgBKXiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:38:55 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56653 "EHLO
+        Tue, 11 Feb 2020 18:38:52 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63262 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgBKXiu (ORCPT
+        with ESMTP id S1728075AbgBKXir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:38:50 -0500
+        Tue, 11 Feb 2020 18:38:47 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 534515a4e8c04bea; Wed, 12 Feb 2020 00:38:47 +0100
+ id 20770e2449c7a7fa; Wed, 12 Feb 2020 00:38:45 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Amit Kucheria <amit.kucheria@linaro.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org
-Subject: [PATCH 16/28] drm: i915: Call cpu_latency_qos_*() instead of pm_qos_*()
-Date:   Wed, 12 Feb 2020 00:12:10 +0100
-Message-ID: <1759702.XAW9B0MHEz@kreacher>
+        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH 19/28] drivers: mmc: Call cpu_latency_qos_*() instead of pm_qos_*()
+Date:   Wed, 12 Feb 2020 00:21:53 +0100
+Message-ID: <3311890.58F1UHHIxI@kreacher>
 In-Reply-To: <1654227.8mz0SueHsU@kreacher>
 References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
@@ -46,115 +43,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Call cpu_latency_qos_add/update/remove_request() instead of
-pm_qos_add/update/remove_request(), respectively, because the
+Call cpu_latency_qos_add/remove_request() instead of
+pm_qos_add/remove_request(), respectively, because the
 latter are going to be dropped.
 
 No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/gpu/drm/i915/display/intel_dp.c |  4 ++--
- drivers/gpu/drm/i915/i915_drv.c         | 12 +++++-------
- drivers/gpu/drm/i915/intel_sideband.c   |  5 +++--
- 3 files changed, 10 insertions(+), 11 deletions(-)
+ drivers/mmc/host/sdhci-esdhc-imx.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index c7424e2a04a3..208457005a11 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -1360,7 +1360,7 @@ intel_dp_aux_xfer(struct intel_dp *intel_dp,
- 	 * lowest possible wakeup latency and so prevent the cpu from going into
- 	 * deep sleep states.
- 	 */
--	pm_qos_update_request(&i915->pm_qos, 0);
-+	cpu_latency_qos_update_request(&i915->pm_qos, 0);
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+index 382f25b2fa45..b2bdf5012c55 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -1452,8 +1452,7 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
+ 						  pdev->id_entry->driver_data;
  
- 	intel_dp_check_edp(intel_dp);
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
+-		pm_qos_add_request(&imx_data->pm_qos_req,
+-			PM_QOS_CPU_DMA_LATENCY, 0);
++		cpu_latency_qos_add_request(&imx_data->pm_qos_req, 0);
  
-@@ -1488,7 +1488,7 @@ intel_dp_aux_xfer(struct intel_dp *intel_dp,
- 
- 	ret = recv_bytes;
- out:
--	pm_qos_update_request(&i915->pm_qos, PM_QOS_DEFAULT_VALUE);
-+	cpu_latency_qos_update_request(&i915->pm_qos, PM_QOS_DEFAULT_VALUE);
- 
- 	if (vdd)
- 		edp_panel_vdd_off(intel_dp, false);
-diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index f7385abdd74b..74481a189cfc 100644
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -502,8 +502,7 @@ static int i915_driver_early_probe(struct drm_i915_private *dev_priv)
- 	mutex_init(&dev_priv->backlight_lock);
- 
- 	mutex_init(&dev_priv->sb_lock);
--	pm_qos_add_request(&dev_priv->sb_qos,
--			   PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
-+	cpu_latency_qos_add_request(&dev_priv->sb_qos, PM_QOS_DEFAULT_VALUE);
- 
- 	mutex_init(&dev_priv->av_mutex);
- 	mutex_init(&dev_priv->wm.wm_mutex);
-@@ -568,7 +567,7 @@ static void i915_driver_late_release(struct drm_i915_private *dev_priv)
- 	vlv_free_s0ix_state(dev_priv);
- 	i915_workqueues_cleanup(dev_priv);
- 
--	pm_qos_remove_request(&dev_priv->sb_qos);
-+	cpu_latency_qos_remove_request(&dev_priv->sb_qos);
- 	mutex_destroy(&dev_priv->sb_lock);
+ 	imx_data->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
+ 	if (IS_ERR(imx_data->clk_ipg)) {
+@@ -1572,7 +1571,7 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
+ 	clk_disable_unprepare(imx_data->clk_per);
+ free_sdhci:
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
+-		pm_qos_remove_request(&imx_data->pm_qos_req);
++		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
+ 	sdhci_pltfm_free(pdev);
+ 	return err;
  }
+@@ -1595,7 +1594,7 @@ static int sdhci_esdhc_imx_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(imx_data->clk_ahb);
  
-@@ -1226,8 +1225,7 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
- 		}
- 	}
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
+-		pm_qos_remove_request(&imx_data->pm_qos_req);
++		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
  
--	pm_qos_add_request(&dev_priv->pm_qos, PM_QOS_CPU_DMA_LATENCY,
--			   PM_QOS_DEFAULT_VALUE);
-+	cpu_latency_qos_add_request(&dev_priv->pm_qos, PM_QOS_DEFAULT_VALUE);
+ 	sdhci_pltfm_free(pdev);
  
- 	intel_gt_init_workarounds(dev_priv);
+@@ -1667,7 +1666,7 @@ static int sdhci_esdhc_runtime_suspend(struct device *dev)
+ 	clk_disable_unprepare(imx_data->clk_ahb);
  
-@@ -1273,7 +1271,7 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
- err_msi:
- 	if (pdev->msi_enabled)
- 		pci_disable_msi(pdev);
--	pm_qos_remove_request(&dev_priv->pm_qos);
-+	cpu_latency_qos_remove_request(&dev_priv->pm_qos);
- err_mem_regions:
- 	intel_memory_regions_driver_release(dev_priv);
- err_ggtt:
-@@ -1296,7 +1294,7 @@ static void i915_driver_hw_remove(struct drm_i915_private *dev_priv)
- 	if (pdev->msi_enabled)
- 		pci_disable_msi(pdev);
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
+-		pm_qos_remove_request(&imx_data->pm_qos_req);
++		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
  
--	pm_qos_remove_request(&dev_priv->pm_qos);
-+	cpu_latency_qos_remove_request(&dev_priv->pm_qos);
+ 	return ret;
  }
+@@ -1680,8 +1679,7 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
+ 	int err;
  
- /**
-diff --git a/drivers/gpu/drm/i915/intel_sideband.c b/drivers/gpu/drm/i915/intel_sideband.c
-index cbfb7171d62d..0648eda309e4 100644
---- a/drivers/gpu/drm/i915/intel_sideband.c
-+++ b/drivers/gpu/drm/i915/intel_sideband.c
-@@ -60,7 +60,7 @@ static void __vlv_punit_get(struct drm_i915_private *i915)
- 	 * to the Valleyview P-unit and not all sideband communications.
- 	 */
- 	if (IS_VALLEYVIEW(i915)) {
--		pm_qos_update_request(&i915->sb_qos, 0);
-+		cpu_latency_qos_update_request(&i915->sb_qos, 0);
- 		on_each_cpu(ping, NULL, 1);
- 	}
- }
-@@ -68,7 +68,8 @@ static void __vlv_punit_get(struct drm_i915_private *i915)
- static void __vlv_punit_put(struct drm_i915_private *i915)
- {
- 	if (IS_VALLEYVIEW(i915))
--		pm_qos_update_request(&i915->sb_qos, PM_QOS_DEFAULT_VALUE);
-+		cpu_latency_qos_update_request(&i915->sb_qos,
-+					       PM_QOS_DEFAULT_VALUE);
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
+-		pm_qos_add_request(&imx_data->pm_qos_req,
+-			PM_QOS_CPU_DMA_LATENCY, 0);
++		cpu_latency_qos_add_request(&imx_data->pm_qos_req, 0);
  
- 	iosf_mbi_punit_release();
+ 	err = clk_prepare_enable(imx_data->clk_ahb);
+ 	if (err)
+@@ -1714,7 +1712,7 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
+ 	clk_disable_unprepare(imx_data->clk_ahb);
+ remove_pm_qos_request:
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
+-		pm_qos_remove_request(&imx_data->pm_qos_req);
++		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
+ 	return err;
  }
+ #endif
 -- 
 2.16.4
 
