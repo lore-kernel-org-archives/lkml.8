@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E80C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54672C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12A12086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DE32086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730978AbgBKQ7i (ORCPT
+        id S1731098AbgBKRAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:59:38 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53401 "EHLO
+        Tue, 11 Feb 2020 12:00:21 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53432 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728128AbgBKQ7f (ORCPT
+        with ESMTP id S1730123AbgBKQ7h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:59:35 -0500
+        Tue, 11 Feb 2020 11:59:37 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j1YsT-00014T-3L; Tue, 11 Feb 2020 16:59:13 +0000
+        id 1j1YsX-00014T-Dz; Tue, 11 Feb 2020 16:59:17 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -39,9 +40,9 @@ Cc:     smbarber@chromium.org, Alexander Viro <viro@zeniv.linux.org.uk>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 07/24] namei: may_{o_}create(): handle fsid mappings
-Date:   Tue, 11 Feb 2020 17:57:36 +0100
-Message-Id: <20200211165753.356508-8-christian.brauner@ubuntu.com>
+Subject: [PATCH 12/24] posix_acl: handle fsid mappings
+Date:   Tue, 11 Feb 2020 17:57:41 +0100
+Message-Id: <20200211165753.356508-13-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200211165753.356508-1-christian.brauner@ubuntu.com>
 References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
@@ -52,71 +53,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch may_{o_}create() to lookup fsids in the fsid mappings. If no fsid
+Switch posix_acls() to lookup fsids in the fsid mappings. If no fsid
 mappings are setup the behavior is unchanged, i.e. fsids are looked up in the
 id mappings.
 
-Filesystems that share a superblock in all user namespaces they are mounted in
-will retain their old semantics even with the introduction of fsidmappings.
+Afaict, all filesystems that share a superblock in all user namespaces
+currently do not support acls so this change should be safe to do
+unconditionally.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- fs/namei.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ fs/posix_acl.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 4fb61e0754ed..c85c65adfa9d 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -39,6 +39,7 @@
- #include <linux/bitops.h>
- #include <linux/init_task.h>
- #include <linux/uaccess.h>
+diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+index 249672bf54fe..763bba24f380 100644
+--- a/fs/posix_acl.c
++++ b/fs/posix_acl.c
+@@ -22,6 +22,7 @@
+ #include <linux/xattr.h>
+ #include <linux/export.h>
+ #include <linux/user_namespace.h>
 +#include <linux/fsuidgid.h>
  
- #include "internal.h"
- #include "mount.h"
-@@ -2771,6 +2772,20 @@ static int may_delete(struct inode *dir, struct dentry *victim, bool isdir)
- 	return 0;
- }
- 
-+static bool fsid_has_mapping(struct user_namespace *ns, struct super_block *sb)
-+{
-+	if (is_userns_visible(sb->s_iflags)) {
-+		if (!kuid_has_mapping(ns, current_fsuid()) ||
-+		    !kgid_has_mapping(ns, current_fsgid()))
-+			return false;
-+	} else if (!kfsuid_has_mapping(ns, current_fsuid()) ||
-+		   !kfsgid_has_mapping(ns, current_fsgid())) {
-+		return false;
-+	}
+ static struct posix_acl **acl_by_type(struct inode *inode, int type)
+ {
+@@ -692,12 +693,12 @@ static void posix_acl_fix_xattr_userns(
+ 	for (end = entry + count; entry != end; entry++) {
+ 		switch(le16_to_cpu(entry->e_tag)) {
+ 		case ACL_USER:
+-			uid = make_kuid(from, le32_to_cpu(entry->e_id));
+-			entry->e_id = cpu_to_le32(from_kuid(to, uid));
++			uid = make_kfsuid(from, le32_to_cpu(entry->e_id));
++			entry->e_id = cpu_to_le32(from_kfsuid(to, uid));
+ 			break;
+ 		case ACL_GROUP:
+-			gid = make_kgid(from, le32_to_cpu(entry->e_id));
+-			entry->e_id = cpu_to_le32(from_kgid(to, gid));
++			gid = make_kfsgid(from, le32_to_cpu(entry->e_id));
++			entry->e_id = cpu_to_le32(from_kfsgid(to, gid));
+ 			break;
+ 		default:
+ 			break;
+@@ -746,12 +747,12 @@ posix_acl_from_xattr(struct user_namespace *user_ns,
+ 		return ERR_PTR(-EINVAL);
+ 	if (count == 0)
+ 		return NULL;
+-	
 +
-+	return true;
-+}
+ 	acl = posix_acl_alloc(count, GFP_NOFS);
+ 	if (!acl)
+ 		return ERR_PTR(-ENOMEM);
+ 	acl_e = acl->a_entries;
+-	
 +
- /*	Check whether we can create an object with dentry child in directory
-  *  dir.
-  *  1. We can't do it if child already exists (open has special treatment for
-@@ -2789,8 +2804,7 @@ static inline int may_create(struct inode *dir, struct dentry *child)
- 	if (IS_DEADDIR(dir))
- 		return -ENOENT;
- 	s_user_ns = dir->i_sb->s_user_ns;
--	if (!kuid_has_mapping(s_user_ns, current_fsuid()) ||
--	    !kgid_has_mapping(s_user_ns, current_fsgid()))
-+	if (!fsid_has_mapping(s_user_ns, dir->i_sb))
- 		return -EOVERFLOW;
- 	return inode_permission(dir, MAY_WRITE | MAY_EXEC);
- }
-@@ -2972,8 +2986,7 @@ static int may_o_create(const struct path *dir, struct dentry *dentry, umode_t m
- 		return error;
+ 	for (end = entry + count; entry != end; acl_e++, entry++) {
+ 		acl_e->e_tag  = le16_to_cpu(entry->e_tag);
+ 		acl_e->e_perm = le16_to_cpu(entry->e_perm);
+@@ -765,14 +766,14 @@ posix_acl_from_xattr(struct user_namespace *user_ns,
  
- 	s_user_ns = dir->dentry->d_sb->s_user_ns;
--	if (!kuid_has_mapping(s_user_ns, current_fsuid()) ||
--	    !kgid_has_mapping(s_user_ns, current_fsgid()))
-+	if (!fsid_has_mapping(s_user_ns, dir->dentry->d_sb))
- 		return -EOVERFLOW;
- 
- 	error = inode_permission(dir->dentry->d_inode, MAY_WRITE | MAY_EXEC);
+ 			case ACL_USER:
+ 				acl_e->e_uid =
+-					make_kuid(user_ns,
++					make_kfsuid(user_ns,
+ 						  le32_to_cpu(entry->e_id));
+ 				if (!uid_valid(acl_e->e_uid))
+ 					goto fail;
+ 				break;
+ 			case ACL_GROUP:
+ 				acl_e->e_gid =
+-					make_kgid(user_ns,
++					make_kfsgid(user_ns,
+ 						  le32_to_cpu(entry->e_id));
+ 				if (!gid_valid(acl_e->e_gid))
+ 					goto fail;
+@@ -817,11 +818,11 @@ posix_acl_to_xattr(struct user_namespace *user_ns, const struct posix_acl *acl,
+ 		switch(acl_e->e_tag) {
+ 		case ACL_USER:
+ 			ext_entry->e_id =
+-				cpu_to_le32(from_kuid(user_ns, acl_e->e_uid));
++				cpu_to_le32(from_kfsuid(user_ns, acl_e->e_uid));
+ 			break;
+ 		case ACL_GROUP:
+ 			ext_entry->e_id =
+-				cpu_to_le32(from_kgid(user_ns, acl_e->e_gid));
++				cpu_to_le32(from_kfsgid(user_ns, acl_e->e_gid));
+ 			break;
+ 		default:
+ 			ext_entry->e_id = cpu_to_le32(ACL_UNDEFINED_ID);
 -- 
 2.25.0
 
