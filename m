@@ -2,92 +2,112 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD382C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D2DC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ED52051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D7820848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="aKwwSGpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbgBKJZn (ORCPT
+        id S1727830AbgBKJ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:25:43 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33534 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbgBKJZn (ORCPT
+        Tue, 11 Feb 2020 04:26:34 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:44893 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbgBKJ0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:25:43 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so9431851otp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:25:42 -0800 (PST)
+        Tue, 11 Feb 2020 04:26:34 -0500
+Received: by mail-qv1-f68.google.com with SMTP id n8so4623437qvg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:26:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CyBYdlNzPZcwqhOp74T1XMugvpFC8qtdcMQo6cEAVoQ=;
+        b=aKwwSGpHuYhhyh8Ot2HBH1TVPddBoOM1IgloUFLULdhrSN3NAPSuSZIWQs8eem4tri
+         T7JYQJS3SZMMJYLfxkVjJnYpnWq8vNKGUZ7+5ls966HknA1txKwRewAYNTulEG8CUpmG
+         GDdDFylpEZsBJcSszVTY6u6KdbmlgXJgUiCXMiofFArq16MvBKq2ZBX8Q8AFPcquEHVI
+         zUNFHD65i3sVF7dgjDhGLUq/plddXcLFKeCo+DsO24NhkvixeZaEiZ4rGPNUElJjT5wQ
+         oh8lCGjDizwiTjjb850NGgHBA1iHQwHXcj6zuGJpveK3VBScYP+jSgJ1mmBKxin3qI8h
+         pQjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u1ZMuRusCoTAqMkdtdU8FV6cexR3vgoJmeR/zAbXdpE=;
-        b=NA7oD9KJD9dvpu2g8pcmvQhOjsKIsMkGgGDqBMmo0ctgUtM5AxoFN0Rm4TqWtflWFz
-         tXn0i9sbuY8z0EWEKH/E9d/0oPpqcwuIc3y1Mkbo7u/JrCdGvTNoojsEh5aRUg/unn7a
-         24cXCkPZqeLZpWDuAPriczVIc0rbWSLeB/Q+r3a++7SAtmblCZN8lrU1oyz3DKbm9CUk
-         +UnibGHhsfwPj4QATQAJn8/MhhZAoK5yjpOg+E0/1eAwTYULagSKFIVwXoa1ruQUN/yp
-         Qvp/Bso1e0fLQTBsEXBOaYHqJzYWlTKdmcv4g2w6HwXbHTO2ZxpgQhUwUsvX33lD17th
-         Dwdg==
-X-Gm-Message-State: APjAAAX3cNjEex/EFw/03Pkg0Lh+U9qru9z/1lZxrLjTxGvfgd6sHfNJ
-        CN5yip+OaPTnRKsrPJ0/JCW3dmwQJ0LpGudencEgXA==
-X-Google-Smtp-Source: APXvYqwmcqm1wbo0V34LBB/CSb7qX9XNQWdEtX4m7VY13qGkHYGr57VKehhvzcL3zExZrlFHWyiWtdgpOzTSkxY6vYg=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr4540072otm.297.1581413142376;
- Tue, 11 Feb 2020 01:25:42 -0800 (PST)
+        bh=CyBYdlNzPZcwqhOp74T1XMugvpFC8qtdcMQo6cEAVoQ=;
+        b=a5zufoujNGAv4WD/SO50EgWKJZj67I1X9+GRGpcB1L6Bp2fm9qI7FezLKMQGH9Say0
+         7DSbVN5Z9Tx1UtXMonoUN8h6GedhhoHtoTv3nDUtYkdh3afuE0SAyF4QSLN9DXtKGCfQ
+         a3HX1Q78DsqbqyFo//jW6I62EtqQ4+XPPqpweA10BdY7VklX/UEKK5Ava2zz+m/+ie1c
+         s3ixxvhYk2l826mKRWAtM2S1tehKSvT6JsYYljqgsGRQENjzTTyYKeHe4bEuCmFrSkjB
+         5xjRsEBas/qANX4NYGyzSb4Yd9vzWfiiWlNPxgzrBPG+tc48ns2VCTmAYfBCB6oE6QVl
+         n35Q==
+X-Gm-Message-State: APjAAAWORO8Di40FiFPsI4fFu5D6ar1ZyR0+zSIRX9O5itOVcVgwDzSk
+        GViTQJ7Yirob3vcmkYzTZBS0i+ESvkaIsGcFA8UXNQ==
+X-Google-Smtp-Source: APXvYqzPhqgXg8EP9ZxxdpibAsoCpblQWH+qYglareF2FNtSQYF1Fewu3sUdaISV8w2mebYx/WU9YaLaEHyjLDPiH/o=
+X-Received: by 2002:a05:6214:1389:: with SMTP id g9mr13997301qvz.40.1581413192840;
+ Tue, 11 Feb 2020 01:26:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20200114210316.450821675@goodmis.org> <20200114210336.259202220@goodmis.org>
- <20200206115405.GA22608@zn.tnic> <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
- <20200206175858.GG9741@zn.tnic> <20200207114617.3bda49673175d3fa33cbe85e@kernel.org>
- <20200207114122.GB24074@zn.tnic> <20200208000648.3383f991fee68af5ee229d65@kernel.org>
- <20200210112512.GA29627@zn.tnic> <20200211001007.62290c743e049b231bdd7052@kernel.org>
- <20200210174053.GD29627@zn.tnic>
-In-Reply-To: <20200210174053.GD29627@zn.tnic>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 11 Feb 2020 10:25:31 +0100
-Message-ID: <CAMuHMdUifvp==VQfsp1D8GTK_ZOyZxQJqqm59bQ2K3sNOnqAkA@mail.gmail.com>
-Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config support
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
+References: <20200203091009.196658-1-jian-hong@endlessm.com>
+ <aab0948d-c6a3-baa1-7343-f18c936d662d@linux.intel.com> <CAPpJ_edkkWm0DYHB3U8nQPv=z_o-aV4V7RDMuLTXL5N1H6ZYrA@mail.gmail.com>
+ <948da337-128f-22ae-7b2e-730b4b8da446@linux.intel.com> <CAPpJ_ecM0oCUjYLbG+uTprRk0=OTUBTxZc-d2BGBRDSYWk4uSQ@mail.gmail.com>
+ <c8d89c4f-1347-8b9d-0486-a29dd081f26c@linux.intel.com> <CAPpJ_ec6H9fqSLA9L8QXir=FBjJqV7xcXp4ea+6XJ8MotDWVyg@mail.gmail.com>
+ <b36c252b-943b-3b13-1f25-a8f23e431f39@linux.intel.com>
+In-Reply-To: <b36c252b-943b-3b13-1f25-a8f23e431f39@linux.intel.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Tue, 11 Feb 2020 17:26:21 +0800
+Message-ID: <CAD8Lp45U40ZLb8w22muDKQepXfuhW5hCdyzEtku11Y2X9ab=vQ@mail.gmail.com>
+Subject: Re: [PATCH] iommu/intel-iommu: set as DUMMY_DEVICE_DOMAIN_INFO if no IOMMU
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 6:41 PM Borislav Petkov <bp@alien8.de> wrote:
-> On Tue, Feb 11, 2020 at 12:10:07AM +0900, Masami Hiramatsu wrote:
-> > Boot time tracing is just a example. I think we can expand this for some
-> > other subsystems too. And this might be also helpful for adding a bit more
-> > complex syntax to those parameters without parser.
+On Sat, Feb 8, 2020 at 2:30 PM Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> > The devices under segment 1 are fake devices produced by
+> > intel-nvme-remap mentioned here https://lkml.org/lkml/2020/2/5/139
 >
-> Yes, I think I see it now. And I still don't think you want this enabled
-> by default on every box. It is expressed perfectly fine here:
->
-> config BOOTTIME_TRACING
->         bool "Boot-time Tracing support"
->         depends on BOOT_CONFIG && TRACING
+> Has this series been accepted?
 
-Which is BTW "default y", too...
+Sadly not - we didn't find any consensus on the right approach, and
+further conversation is hindered by the questionable hardware design
+and lack of further communication from Intel in explaining it. It's
+one of the exceptional cases where we carry a significant non-upstream
+kernel change, because unfortunately most of the current day consumer
+PCs we work with have this BIOS option on by default and hence
+unmodified Linux can't access the storage devices. On the offchance
+that you have some energy to bubble this up inside Intel please let me
+know and we will talk more... :)
 
-> so if distros want to enable that, they will enable BOOT_CONFIG too,
-> transitively. And other subsystems would simply depend on it the same if
-> they wanna use bootconfig.
+That said, this thread was indeed only opened since we thought we had
+found a more general issue that would potentially affect other cases.
+The issue described does seem to highlight a possible imperfection in
+code flow, although it may also be reasonable to say that (without
+crazy downstream patches at play) if intel_iommu_add_device() fails
+then we have bigger problems to face anyway...
 
-Gr{oetje,eeting}s,
+> Will this help here? https://www.spinics.net/lists/iommu/msg41300.html
 
-                        Geert
+Yes! Very useful info and a real improvement. We'll follow the same
+approach here. That does solve the problem we were facing, although we
+needed one more fixup which I've sent separately for your
+consideration: iommu/vt-d: consider real PCI device when checking if
+mapping is needed
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks!
+Daniel
