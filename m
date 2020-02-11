@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC15C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB22C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DB920659
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2277D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XOgfaAVB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aQZDQpEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgBKUvY (ORCPT
+        id S1731887AbgBKUxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:51:24 -0500
-Received: from gateway33.websitewelcome.com ([192.185.145.23]:45830 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727786AbgBKUvX (ORCPT
+        Tue, 11 Feb 2020 15:53:48 -0500
+Received: from gateway31.websitewelcome.com ([192.185.143.40]:18845 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727786AbgBKUxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:51:23 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id C48C299ABDC
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:51:22 -0600 (CST)
+        Tue, 11 Feb 2020 15:53:47 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id EB712132F447
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:53:46 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 1cV8jIabPXVkQ1cV8jgvDE; Tue, 11 Feb 2020 14:51:22 -0600
+        id 1cXSjHYSDvBMd1cXSjbAGm; Tue, 11 Feb 2020 14:53:46 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jrhREslNRp9I3XLIf7+FCkpvJMag3xowhs8nHJz6VDo=; b=XOgfaAVB1vZH+Fel1K2p6eC+T/
-        4ML05d0RHpy5WRNdnf33iJCmIezqNFBLDgFr53bZA3eGy2YmlgOXwV//wWRrJVOAUDCsN3+EjBspZ
-        dkBPDBAMkjm/xPAIetWrT1XTSq+Poe9SXYha8HageD/LVW90v0wOzIUfwgPH7+lZgmqI/ZVd2v/Dv
-        8WmGevfjhOHxYGJ0GL1hKgjjMLzrzDTOmkfhpWn1ENk0/ahaTLdYVvjl7M8Y1JZYfBLRRNkBoAKCf
-        12VkkIpuiM92RJEXmLQOD+ie3hQorSTmozqGNRry+o58wWzpOnrDihrTu6vE5Vec8FCsPazaFpk9F
-        HJTWEwOw==;
-Received: from [200.68.140.36] (port=15013 helo=embeddedor)
+        bh=09Yy50q1zaBedUbH5K7LBiquQOrxktM3eLjWmlSWnEM=; b=aQZDQpEXGWwJ02U9MMNMPZm/bH
+        fgdL1INynphOl24Zf+4auclQ/alj/FyI5N/5w9C1T0+MC/q95z98nNTPYb2W7ts17yrQkY7sWdW7A
+        CHXg+BSDMMynOJypDpyxSNDH03fr5XbrLPMAzCoyKLXpEy5oopCtk6pPCumz7aizZpiim02CQZXBf
+        Y2etP8KffbabWOVNKtKuyFnQYoEeRDssAg3m+HPAWxU1M0JqHyqi0ugX0YeF0mtDhofNPrrCm0p4i
+        7lhXGfzyx7kufv+60L716QST9iAHfQz1xekYAwVI+LJuK52M3NijBOBxY7+8GLiX1zrsDX68e6XcC
+        x9xGgh6Q==;
+Received: from [200.68.140.36] (port=23277 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j1cV7-001wuz-5G; Tue, 11 Feb 2020 14:51:21 -0600
-Date:   Tue, 11 Feb 2020 14:53:56 -0600
+        id 1j1cXR-001yJu-Du; Tue, 11 Feb 2020 14:53:45 -0600
+Date:   Tue, 11 Feb 2020 14:56:20 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jiri Pirko <jiri@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] lib: objagg: Replace zero-length arrays with flexible-array
+Subject: [PATCH] lib/ts_bm: Replace zero-length array with flexible-array
  member
-Message-ID: <20200211205356.GA23101@embeddedor>
+Message-ID: <20200211205620.GA24694@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +66,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.140.36
 X-Source-L: No
-X-Exim-ID: 1j1cV7-001wuz-5G
+X-Exim-ID: 1j1cXR-001yJu-Du
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:15013
+X-Source-Sender: (embeddedor) [200.68.140.36]:23277
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 43
+X-Email-Count: 45
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -104,31 +103,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- lib/objagg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/ts_bm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/objagg.c b/lib/objagg.c
-index 576be22e86de..668a2c0a88ac 100644
---- a/lib/objagg.c
-+++ b/lib/objagg.c
-@@ -28,7 +28,7 @@ struct objagg_hints_node {
- 	struct objagg_hints_node *parent;
- 	unsigned int root_id;
- 	struct objagg_obj_stats_info stats_info;
--	unsigned long obj[0];
-+	unsigned long obj[];
+diff --git a/lib/ts_bm.c b/lib/ts_bm.c
+index 9e66ee4020e9..9d64629fa8b8 100644
+--- a/lib/ts_bm.c
++++ b/lib/ts_bm.c
+@@ -56,7 +56,7 @@ struct ts_bm
+ 	u8 *		pattern;
+ 	unsigned int	patlen;
+ 	unsigned int 	bad_shift[ASIZE];
+-	unsigned int	good_shift[0];
++	unsigned int	good_shift[];
  };
  
- static struct objagg_hints_node *
-@@ -66,7 +66,7 @@ struct objagg_obj {
- 				* including nested objects
- 				*/
- 	struct objagg_obj_stats stats;
--	unsigned long obj[0];
-+	unsigned long obj[];
- };
- 
- static unsigned int objagg_obj_ref_inc(struct objagg_obj *objagg_obj)
+ static unsigned int bm_find(struct ts_config *conf, struct ts_state *state)
 -- 
 2.25.0
 
