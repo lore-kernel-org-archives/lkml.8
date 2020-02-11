@@ -2,251 +2,253 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A44DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC32C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A90220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E4B206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:33:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3PtefWP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgBKLdH (ORCPT
+        id S1728523AbgBKLdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:33:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45737 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727692AbgBKLdG (ORCPT
+        Tue, 11 Feb 2020 06:33:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27292 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727692AbgBKLdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:33:06 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j1Tmm-00065g-DP; Tue, 11 Feb 2020 12:33:00 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EABD31C1F86;
-        Tue, 11 Feb 2020 12:32:59 +0100 (CET)
-Date:   Tue, 11 Feb 2020 11:32:59 -0000
-From:   "tip-bot2 for Mel Gorman" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/fair: Allow a per-CPU kthread waking a task
- to stack on the same CPU, to fix XFS performance regression
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200128154006.GD3466@techsingularity.net>
-References: <20200128154006.GD3466@techsingularity.net>
+        Tue, 11 Feb 2020 06:33:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581420796;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=D/lzFb6M5bvE9Bs68snP5XHFoC0F0qfAXGRaFYDuNRc=;
+        b=N3PtefWPqWtzgC4wcJqvnzhAao2SlS2C54ySjaU6EFRb6J10Lgh6b3L3saXUJDGNIXMmwb
+        uOOkM8XkPdANChtWOx8bqoTBxojZP4W3gpagLXQguwLRlVAH0jtJbtSpVhZdACff4P3Ggy
+        4ewMC8lXqhxMNs5ba6HWASBHVEKchdg=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-361-1SDjI5SlPAKNqKsHWOTjxw-1; Tue, 11 Feb 2020 06:33:12 -0500
+X-MC-Unique: 1SDjI5SlPAKNqKsHWOTjxw-1
+Received: by mail-qt1-f199.google.com with SMTP id z11so6435837qts.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:33:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=D/lzFb6M5bvE9Bs68snP5XHFoC0F0qfAXGRaFYDuNRc=;
+        b=LaoizuUQMHU9QJ30/FWXYQUDw2vcVdHa7R0v8ymqzEO5AfwOLMzvepmXCX4DMQTLNY
+         pFcJxyQlIUBcKZrLLzoDlszuw32az41tlbs/mCHKFtn0TeMcGFITQ2PvXipMB6iWzPPG
+         ZaPdFiBGGe6keX4wVIFpibefZR/jospgT2QZAVKkA6gb8Yo2CFU630yTMxAMv0EWDacT
+         bHSTQB88Hcf4KXYJU/tHj6oNZaKGX2VKqLnWd24jkhSdxVXWchVXPwt+Nu7YsrbQvhFE
+         UUCVd8+tgCLwEywtsDt+o2/aIFeAYwnieGdkaxcZthqnPDs6VatIO5RriCWSHvS5F3Me
+         K/dw==
+X-Gm-Message-State: APjAAAU8lcY8IECnl9hALK8qFLYN6gvhABJQCA6QcsFN8fP5pYOd7+o6
+        Scn2lTGY5fxTGkxZOodpZfMO7qEXz+LB6Gcbfa90d2gAk2iddpaYZLUxZG5MBvRsWbQkZzTqJzp
+        h1nL/OYejz9AkNw1eLWT0QMI+
+X-Received: by 2002:ac8:6054:: with SMTP id k20mr1904685qtm.92.1581420791674;
+        Tue, 11 Feb 2020 03:33:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxnbFJLLegfw8YZVCiF3owsNTQHkwgJ4Q/16zX34tV8mdbYlVZwK65AzReMqRXo0mAJsdIpIQ==
+X-Received: by 2002:ac8:6054:: with SMTP id k20mr1904661qtm.92.1581420791343;
+        Tue, 11 Feb 2020 03:33:11 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id 17sm656443qkh.29.2020.02.11.03.33.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 03:33:10 -0800 (PST)
+Date:   Tue, 11 Feb 2020 06:33:05 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Zha Bin <zhabin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, jasowang@redhat.com, slp@redhat.com,
+        virtio-dev@lists.oasis-open.org, qemu-devel@nongnu.org,
+        gerry@linux.alibaba.com, jing2.liu@linux.intel.com,
+        chao.p.peng@linux.intel.com
+Subject: Re: [PATCH v2 1/5] virtio-mmio: add notify feature for per-queue
+Message-ID: <20200211062205-mutt-send-email-mst@kernel.org>
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <8a4ea95d6d77a2814aaf6897b5517353289a098e.1581305609.git.zhabin@linux.alibaba.com>
 MIME-Version: 1.0
-Message-ID: <158142077965.411.14340592040967006216.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a4ea95d6d77a2814aaf6897b5517353289a098e.1581305609.git.zhabin@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+On Mon, Feb 10, 2020 at 05:05:17PM +0800, Zha Bin wrote:
+> From: Liu Jiang <gerry@linux.alibaba.com>
+> 
+> The standard virtio-mmio devices use notification register to signal
+> backend. This will cause vmexits and slow down the performance when we
+> passthrough the virtio-mmio devices to guest virtual machines.
+> We proposed to update virtio over MMIO spec to add the per-queue
+> notify feature VIRTIO_F_MMIO_NOTIFICATION[1]. It can allow the VMM to
+> configure notify location for each queue.
+> 
+> [1] https://lkml.org/lkml/2020/1/21/31
+> 
+> Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
+> Co-developed-by: Zha Bin <zhabin@linux.alibaba.com>
+> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
+> Co-developed-by: Jing Liu <jing2.liu@linux.intel.com>
+> Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+> Co-developed-by: Chao Peng <chao.p.peng@linux.intel.com>
+> Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
 
-Commit-ID:     52262ee567ad14c9606be25f3caddcefa3c514e4
-Gitweb:        https://git.kernel.org/tip/52262ee567ad14c9606be25f3caddcefa3c514e4
-Author:        Mel Gorman <mgorman@techsingularity.net>
-AuthorDate:    Tue, 28 Jan 2020 15:40:06 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 10 Feb 2020 11:24:37 +01:00
 
-sched/fair: Allow a per-CPU kthread waking a task to stack on the same CPU, to fix XFS performance regression
+Hmm. Any way to make this static so we don't need
+base and multiplier?
 
-The following XFS commit:
+> ---
+>  drivers/virtio/virtio_mmio.c       | 37 +++++++++++++++++++++++++++++++++++--
+>  include/uapi/linux/virtio_config.h |  8 +++++++-
+>  2 files changed, 42 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index 97d5725..1733ab97 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -90,6 +90,9 @@ struct virtio_mmio_device {
+>  	/* a list of queues so we can dispatch IRQs */
+>  	spinlock_t lock;
+>  	struct list_head virtqueues;
+> +
+> +	unsigned short notify_base;
+> +	unsigned short notify_multiplier;
+>  };
+>  
+>  struct virtio_mmio_vq_info {
+> @@ -98,6 +101,9 @@ struct virtio_mmio_vq_info {
+>  
+>  	/* the list node for the virtqueues list */
+>  	struct list_head node;
+> +
+> +	/* Notify Address*/
+> +	unsigned int notify_addr;
+>  };
+>  
+>  
+> @@ -119,13 +125,23 @@ static u64 vm_get_features(struct virtio_device *vdev)
+>  	return features;
+>  }
+>  
+> +static void vm_transport_features(struct virtio_device *vdev, u64 features)
+> +{
+> +	if (features & BIT_ULL(VIRTIO_F_MMIO_NOTIFICATION))
+> +		__virtio_set_bit(vdev, VIRTIO_F_MMIO_NOTIFICATION);
+> +}
+> +
+>  static int vm_finalize_features(struct virtio_device *vdev)
+>  {
+>  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
+> +	u64 features = vdev->features;
+>  
+>  	/* Give virtio_ring a chance to accept features. */
+>  	vring_transport_features(vdev);
+>  
+> +	/* Give virtio_mmio a chance to accept features. */
+> +	vm_transport_features(vdev, features);
+> +
+>  	/* Make sure there is are no mixed devices */
+>  	if (vm_dev->version == 2 &&
+>  			!__virtio_test_bit(vdev, VIRTIO_F_VERSION_1)) {
+> @@ -272,10 +288,13 @@ static void vm_reset(struct virtio_device *vdev)
+>  static bool vm_notify(struct virtqueue *vq)
+>  {
+>  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vq->vdev);
+> +	struct virtio_mmio_vq_info *info = vq->priv;
+>  
+> -	/* We write the queue's selector into the notification register to
+> +	/* We write the queue's selector into the Notify Address to
+>  	 * signal the other end */
+> -	writel(vq->index, vm_dev->base + VIRTIO_MMIO_QUEUE_NOTIFY);
+> +	if (info)
+> +		writel(vq->index, vm_dev->base + info->notify_addr);
+> +
+>  	return true;
+>  }
+>  
+> @@ -434,6 +453,12 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned index,
+>  	vq->priv = info;
+>  	info->vq = vq;
+>  
+> +	if (__virtio_test_bit(vdev, VIRTIO_F_MMIO_NOTIFICATION))
+> +		info->notify_addr = vm_dev->notify_base +
+> +				vm_dev->notify_multiplier * vq->index;
+> +	else
+> +		info->notify_addr = VIRTIO_MMIO_QUEUE_NOTIFY;
+> +
+>  	spin_lock_irqsave(&vm_dev->lock, flags);
+>  	list_add(&info->node, &vm_dev->virtqueues);
+>  	spin_unlock_irqrestore(&vm_dev->lock, flags);
+> @@ -471,6 +496,14 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+>  		return irq;
+>  	}
+>  
+> +	if (__virtio_test_bit(vdev, VIRTIO_F_MMIO_NOTIFICATION)) {
+> +		unsigned int notify = readl(vm_dev->base +
+> +				VIRTIO_MMIO_QUEUE_NOTIFY);
 
-  8ab39f11d974 ("xfs: prevent CIL push holdoff in log recovery")
 
-changed the logic from using bound workqueues to using unbound
-workqueues. Functionally this makes sense but it was observed at the
-time that the dbench performance dropped quite a lot and CPU migrations
-were increased.
+that register is documented as:
 
-The current pattern of the task migration is straight-forward. With XFS,
-an IO issuer delegates work to xlog_cil_push_work ()on an unbound kworker.
-This runs on a nearby CPU and on completion, dbench wakes up on its old CPU
-as it is still idle and no migration occurs. dbench then queues the real
-IO on the blk_mq_requeue_work() work item which runs on a bound kworker
-which is forced to run on the same CPU as dbench. When IO completes,
-the bound kworker wakes dbench but as the kworker is a bound but,
-real task, the CPU is not considered idle and dbench gets migrated by
-select_idle_sibling() to a new CPU. dbench may ping-pong between two CPUs
-for a while but ultimately it starts a round-robin of all CPUs sharing
-the same LLC. High-frequency migration on each IO completion has poor
-performance overall. It has negative implications both in commication
-costs and power management. mpstat confirmed that at low thread counts
-that all CPUs sharing an LLC has low level of activity.
+/* Queue notifier - Write Only */
+#define VIRTIO_MMIO_QUEUE_NOTIFY        0x050
 
-Note that even if the CIL patch was reverted, there still would
-be migrations but the impact is less noticeable. It turns out that
-individually the scheduler, XFS, blk-mq and workqueues all made sensible
-decisions but in combination, the overall effect was sub-optimal.
+so at least you need to update the doc.
 
-This patch special cases the IO issue/completion pattern and allows
-a bound kworker waker and a task wakee to stack on the same CPU if
-there is a strong chance they are directly related. The expectation
-is that the kworker is likely going back to sleep shortly. This is not
-guaranteed as the IO could be queued asynchronously but there is a very
-strong relationship between the task and kworker in this case that would
-justify stacking on the same CPU instead of migrating. There should be
-few concerns about kworker starvation given that the special casing is
-only when the kworker is the waker.
+> +
+> +		vm_dev->notify_base = notify & 0xffff;
+> +		vm_dev->notify_multiplier = (notify >> 16) & 0xffff;
 
-DBench on XFS
-MMTests config: io-dbench4-async modified to run on a fresh XFS filesystem
+are 16 bit base/limit always enough?
+In fact won't we be short on 16 bit address space
+in a rather short order if queues use up a page
+of space at a time?
 
-UMA machine with 8 cores sharing LLC
-                          5.5.0-rc7              5.5.0-rc7
-                  tipsched-20200124           kworkerstack
-Amean     1        22.63 (   0.00%)       20.54 *   9.23%*
-Amean     2        25.56 (   0.00%)       23.40 *   8.44%*
-Amean     4        28.63 (   0.00%)       27.85 *   2.70%*
-Amean     8        37.66 (   0.00%)       37.68 (  -0.05%)
-Amean     64      469.47 (   0.00%)      468.26 (   0.26%)
-Stddev    1         1.00 (   0.00%)        0.72 (  28.12%)
-Stddev    2         1.62 (   0.00%)        1.97 ( -21.54%)
-Stddev    4         2.53 (   0.00%)        3.58 ( -41.19%)
-Stddev    8         5.30 (   0.00%)        5.20 (   1.92%)
-Stddev    64       86.36 (   0.00%)       94.53 (  -9.46%)
 
-NUMA machine, 48 CPUs total, 24 CPUs share cache
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Amean     1         58.69 (   0.00%)       30.21 *  48.53%*
-Amean     2         60.90 (   0.00%)       35.29 *  42.05%*
-Amean     4         66.77 (   0.00%)       46.55 *  30.28%*
-Amean     8         81.41 (   0.00%)       68.46 *  15.91%*
-Amean     16       113.29 (   0.00%)      107.79 *   4.85%*
-Amean     32       199.10 (   0.00%)      198.22 *   0.44%*
-Amean     64       478.99 (   0.00%)      477.06 *   0.40%*
-Amean     128     1345.26 (   0.00%)     1372.64 *  -2.04%*
-Stddev    1          2.64 (   0.00%)        4.17 ( -58.08%)
-Stddev    2          4.35 (   0.00%)        5.38 ( -23.73%)
-Stddev    4          6.77 (   0.00%)        6.56 (   3.00%)
-Stddev    8         11.61 (   0.00%)       10.91 (   6.04%)
-Stddev    16        18.63 (   0.00%)       19.19 (  -3.01%)
-Stddev    32        38.71 (   0.00%)       38.30 (   1.06%)
-Stddev    64       100.28 (   0.00%)       91.24 (   9.02%)
-Stddev    128      186.87 (   0.00%)      160.34 (  14.20%)
+> +	}
+> +
+>  	err = request_irq(irq, vm_interrupt, IRQF_SHARED,
+>  			dev_name(&vdev->dev), vm_dev);
+>  	if (err)
+> diff --git a/include/uapi/linux/virtio_config.h b/include/uapi/linux/virtio_config.h
+> index ff8e7dc..5d93c01 100644
+> --- a/include/uapi/linux/virtio_config.h
+> +++ b/include/uapi/linux/virtio_config.h
+> @@ -52,7 +52,7 @@
+>   * rest are per-device feature bits.
+>   */
+>  #define VIRTIO_TRANSPORT_F_START	28
+> -#define VIRTIO_TRANSPORT_F_END		38
+> +#define VIRTIO_TRANSPORT_F_END		40
+>  
+>  #ifndef VIRTIO_CONFIG_NO_LEGACY
+>  /* Do we get callbacks when the ring is completely used, even if we've
+> @@ -88,4 +88,10 @@
+>   * Does the device support Single Root I/O Virtualization?
+>   */
+>  #define VIRTIO_F_SR_IOV			37
+> +
+> +/*
+> + * This feature indicates the enhanced notification support on MMIO transport
+> + * layer.
 
-Dbench has been modified to report the time to complete a single "load
-file". This is a more meaningful metric for dbench that a throughput
-metric as the benchmark makes many different system calls that are not
-throughput-related
+Let's replace this with an actual description of the enhancement please
+otherwise it will not make sense in a couple of months.
 
-Patch shows a 9.23% and 48.53% reduction in the time to process a load
-file with the difference partially explained by the number of CPUs sharing
-a LLC. In a separate run, task migrations were almost eliminated by the
-patch for low client counts. In case people have issue with the metric
-used for the benchmark, this is a comparison of the throughputs as
-reported by dbench on the NUMA machine.
+e.g. "Per queue notification address"?
 
-dbench4 Throughput (misleading but traditional)
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Hmean     1        321.41 (   0.00%)      617.82 *  92.22%*
-Hmean     2        622.87 (   0.00%)     1066.80 *  71.27%*
-Hmean     4       1134.56 (   0.00%)     1623.74 *  43.12%*
-Hmean     8       1869.96 (   0.00%)     2212.67 *  18.33%*
-Hmean     16      2673.11 (   0.00%)     2806.13 *   4.98%*
-Hmean     32      3032.74 (   0.00%)     3039.54 (   0.22%)
-Hmean     64      2514.25 (   0.00%)     2498.96 *  -0.61%*
-Hmean     128     1778.49 (   0.00%)     1746.05 *  -1.82%*
 
-Note that this is somewhat specific to XFS and ext4 shows no performance
-difference as it does not rely on kworkers in the same way. No major
-problem was observed running other workloads on different machines although
-not all tests have completed yet.
+> + */
+> +#define VIRTIO_F_MMIO_NOTIFICATION	39
+>  #endif /* _UAPI_LINUX_VIRTIO_CONFIG_H */
+> -- 
+> 1.8.3.1
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200128154006.GD3466@techsingularity.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/core.c  | 11 -----------
- kernel/sched/fair.c  | 14 ++++++++++++++
- kernel/sched/sched.h | 13 +++++++++++++
- 3 files changed, 27 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 89e54f3..1a9983d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1447,17 +1447,6 @@ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- 
- #ifdef CONFIG_SMP
- 
--static inline bool is_per_cpu_kthread(struct task_struct *p)
--{
--	if (!(p->flags & PF_KTHREAD))
--		return false;
--
--	if (p->nr_cpus_allowed != 1)
--		return false;
--
--	return true;
--}
--
- /*
-  * Per-CPU kthreads are allowed to run on !active && online CPUs, see
-  * __set_cpus_allowed_ptr() and select_fallback_rq().
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 25dffc0..94c3b84 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5912,6 +5912,20 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
- 		return prev;
- 
-+	/*
-+	 * Allow a per-cpu kthread to stack with the wakee if the
-+	 * kworker thread and the tasks previous CPUs are the same.
-+	 * The assumption is that the wakee queued work for the
-+	 * per-cpu kthread that is now complete and the wakeup is
-+	 * essentially a sync wakeup. An obvious example of this
-+	 * pattern is IO completions.
-+	 */
-+	if (is_per_cpu_kthread(current) &&
-+	    prev == smp_processor_id() &&
-+	    this_rq()->nr_running <= 1) {
-+		return prev;
-+	}
-+
- 	/* Check a recently used CPU as a potential idle candidate: */
- 	recent_used_cpu = p->recent_used_cpu;
- 	if (recent_used_cpu != prev &&
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 1a88dc8..5876e6b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2479,3 +2479,16 @@ static inline void membarrier_switch_mm(struct rq *rq,
- {
- }
- #endif
-+
-+#ifdef CONFIG_SMP
-+static inline bool is_per_cpu_kthread(struct task_struct *p)
-+{
-+	if (!(p->flags & PF_KTHREAD))
-+		return false;
-+
-+	if (p->nr_cpus_allowed != 1)
-+		return false;
-+
-+	return true;
-+}
-+#endif
