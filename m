@@ -2,109 +2,310 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CFDC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEE9C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B59B20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EbGgUBfo"
+	by mail.kernel.org (Postfix) with ESMTP id 6244420842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgBKEBN (ORCPT
+        id S1728057AbgBKEDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 23:01:13 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34910 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgBKEBN (ORCPT
+        Mon, 10 Feb 2020 23:03:06 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:43848 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbgBKEDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 23:01:13 -0500
-Received: by mail-io1-f66.google.com with SMTP id h8so10224759iob.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 20:01:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4buYt5AgDWSnOLoqzB+NXq6gHo2NLQrY6EneimmcY/I=;
-        b=EbGgUBfok7BXKQEyRgMinLqphU/3PooP89wWbd7vhKCl0g7lneRf95+Z9BHqJ2sNUI
-         1+sgmoIVjtBNd1K4HhnUvO4vme2Ku/db+TkQXH+BpC9jqtSa8Zl7KC2L4T4qSebA+wze
-         6jig6NnzJnpimA+riQaQbTWJSnFMqHnIOLMBPYnZ5Tf+UZMfdBwdFpWI3fOarIL9y08s
-         AgL1oljChdQBeN3e6LQHHNqzhvfuoOkcUL++Qj42ndnF9umZ2J9DrNKMAvtC0J4GgK2q
-         PtFfH9EydP5T4LBKVl+r5tkDa2hIur/xg9jlZN4v3FU2Ij2lf0/P311eU4zgmxJDsbk2
-         4Fyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4buYt5AgDWSnOLoqzB+NXq6gHo2NLQrY6EneimmcY/I=;
-        b=mlxzNWP9iN5yT5JFsHWTmuOei+0ihvCyCDbZKnI27L+ZY1fYJf4zwwDopIhzAlDUeU
-         WjL0Q6/+Z1kA9EIbzBCo+cCbnTCCb7SVkz3wArzBOGKsC8Of5Fi6iwJFGVKe70fXOTN+
-         hWNBG/DwnpJ9rppeeSk0hQnrqnnIeM7uMw1nxd+BrVZiOhcO2AiKVOP4bOucLiiRswbF
-         HsqhJMFplPylS18pku355VjAn9mHj/uPZFCm6gDaNqUkg7tozM7LIz2dL7FnipC33xlJ
-         /2/tJcvJyAHzYx0/iq1U7F11/ubaQAuEFgKtgOHdEUkRddPMHwwmWD00KvK072s6S7So
-         iecQ==
-X-Gm-Message-State: APjAAAWQSmPQ7DUGGCKnAsJqPkqd/muIID+l/s/eo3vhDB6PQ0BceRWC
-        s4UL/oWp81KI92t6NQjM+pDYVSkQUQAAxhHbP7XJ6A==
-X-Google-Smtp-Source: APXvYqw+08fY8RTUXanCx7m69NxM7pqghw9BLW/ZXaw5EU7f0BChsUrONvpDowoY6RhmyzszawcD+PzKxe+IyrwkgxA=
-X-Received: by 2002:a02:950d:: with SMTP id y13mr12902796jah.139.1581393670761;
- Mon, 10 Feb 2020 20:01:10 -0800 (PST)
+        Mon, 10 Feb 2020 23:03:06 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1MlJ-0000du-Pq; Mon, 10 Feb 2020 21:03:01 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1MlI-0002ui-L3; Mon, 10 Feb 2020 21:03:01 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+        <20200210150519.538333-8-gladkov.alexey@gmail.com>
+        <87v9odlxbr.fsf@x220.int.ebiederm.org>
+Date:   Mon, 10 Feb 2020 22:01:06 -0600
+In-Reply-To: <87v9odlxbr.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 10 Feb 2020 19:36:08 -0600")
+Message-ID: <87d0allqm5.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
- <00ed82c4-404a-ec70-970e-56ddce9285ae@linux.intel.com> <CAOReqxhHfTuj6mxeX2e_ejMY8N4u+BFLfzKDgn=y5EbWLL_joA@mail.gmail.com>
- <a0aa0705-8d74-3316-13f8-8661d31e928b@linux.intel.com> <CAOReqxiNomQ7OOoE8LHWKH_LkaerSgsO-Yr4918Az2e_50THaA@mail.gmail.com>
-In-Reply-To: <CAOReqxiNomQ7OOoE8LHWKH_LkaerSgsO-Yr4918Az2e_50THaA@mail.gmail.com>
-From:   Fletcher Woodruff <fletcherw@google.com>
-Date:   Tue, 11 Feb 2020 13:00:33 +0900
-Message-ID: <CAMSu_6F5N27KY822uL8_ZD7iHDhiBYLrrFfNJe3QXtb9RNyogw@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger callback
-To:     Curtis Malainey <cujomalainey@google.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Mark Brown <broonie@kernel.org>, Brent Lu <brent.lu@intel.com>,
-        Jimmy Cheng-Yi Chiang <cychiang@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1j1MlI-0002ui-L3;;;mid=<87d0allqm5.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19Iatqt5yA9btGS91rLdTgZuh4QYly8b1g=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 1:18 AM Curtis Malainey <cujomalainey@google.com> wrote:
->
-> +Fletcher Woodruff
-> See comment #3 in the bug. This is not a GLK specific issue. If I remember correctly Fletcher found that this was occurring on 2-3 platforms.
+ebiederm@xmission.com (Eric W. Biederman) writes:
 
-Yes, I tested this and saw the same bug on a Pixelbook Go which I
-believe is Comet Lake.
+> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+>
+>> This allows to flush dcache entries of a task on multiple procfs mounts
+>> per pid namespace.
+>>
+>> The RCU lock is used because the number of reads at the task exit time
+>> is much larger than the number of procfs mounts.
+>
+> A couple of quick comments.
+>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
+>> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+>> ---
+>>  fs/proc/base.c                | 20 +++++++++++++++-----
+>>  fs/proc/root.c                | 27 ++++++++++++++++++++++++++-
+>>  include/linux/pid_namespace.h |  2 ++
+>>  include/linux/proc_fs.h       |  2 ++
+>>  4 files changed, 45 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/fs/proc/base.c b/fs/proc/base.c
+>> index 4ccb280a3e79..24b7c620ded3 100644
+>> --- a/fs/proc/base.c
+>> +++ b/fs/proc/base.c
+>> @@ -3133,7 +3133,7 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
+>>  	.permission	= proc_pid_permission,
+>>  };
+>>  
+>> -static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+>> +static void proc_flush_task_mnt_root(struct dentry *mnt_root, pid_t pid, pid_t tgid)
+> Perhaps just rename things like:
+>> +static void proc_flush_task_root(struct dentry *root, pid_t pid, pid_t tgid)
+>>  {
+>
+> I don't think the mnt_ prefix conveys any information, and it certainly
+> makes everything longer and more cumbersome.
+>
+>>  	struct dentry *dentry, *leader, *dir;
+>>  	char buf[10 + 1];
+>> @@ -3142,7 +3142,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+>>  	name.name = buf;
+>>  	name.len = snprintf(buf, sizeof(buf), "%u", pid);
+>>  	/* no ->d_hash() rejects on procfs */
+>> -	dentry = d_hash_and_lookup(mnt->mnt_root, &name);
+>> +	dentry = d_hash_and_lookup(mnt_root, &name);
+>>  	if (dentry) {
+>>  		d_invalidate(dentry);
+>>  		dput(dentry);
+>> @@ -3153,7 +3153,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+>>  
+>>  	name.name = buf;
+>>  	name.len = snprintf(buf, sizeof(buf), "%u", tgid);
+>> -	leader = d_hash_and_lookup(mnt->mnt_root, &name);
+>> +	leader = d_hash_and_lookup(mnt_root, &name);
+>>  	if (!leader)
+>>  		goto out;
+>>  
+>> @@ -3208,14 +3208,24 @@ void proc_flush_task(struct task_struct *task)
+>>  	int i;
+>>  	struct pid *pid, *tgid;
+>>  	struct upid *upid;
+>> +	struct dentry *mnt_root;
+>> +	struct proc_fs_info *fs_info;
+>>  
+>>  	pid = task_pid(task);
+>>  	tgid = task_tgid(task);
+>>  
+>>  	for (i = 0; i <= pid->level; i++) {
+>>  		upid = &pid->numbers[i];
+>> -		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
+>> -					tgid->numbers[i].nr);
+>> +
+>> +		rcu_read_lock();
+>> +		list_for_each_entry_rcu(fs_info, &upid->ns->proc_mounts, pidns_entry) {
+>> +			mnt_root = fs_info->m_super->s_root;
+>> +			proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
+>> +		}
+>> +		rcu_read_unlock();
+>> +
+>> +		mnt_root = upid->ns->proc_mnt->mnt_root;
+>> +		proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
+>
+> I don't think this following of proc_mnt is needed.  It certainly
+> shouldn't be.  The loop through all of the super blocks should be
+> enough.
+>
+> Once this change goes through.  UML can be given it's own dedicated
+> proc_mnt for the initial pid namespace, and proc_mnt can be removed
+> entirely.
+>
+> Unless something has changed recently UML is the only other user of
+> pid_ns->proc_mnt.  That proc_mnt really only exists to make the loop in
+> proc_flush_task easy to write.
+>
+> It also probably makes sense to take the rcu_read_lock() over
+> that entire for loop.
+>
+>
+>>  	}
+>>  }
+>>  
+>> diff --git a/fs/proc/root.c b/fs/proc/root.c
+>> index 5d5cba4c899b..e2bb015da1a8 100644
+>> --- a/fs/proc/root.c
+>> +++ b/fs/proc/root.c
+>> @@ -149,7 +149,22 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
+>>  	if (ret) {
+>>  		return ret;
+>>  	}
+>> -	return proc_setup_thread_self(s);
+>> +
+>> +	ret = proc_setup_thread_self(s);
+>> +	if (ret) {
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * back reference to flush dcache entries at process exit time.
+>> +	 */
+>> +	ctx->fs_info->m_super = s;
+>> +
+>> +	spin_lock(&pid_ns->proc_mounts_lock);
+>> +	list_add_tail_rcu(&ctx->fs_info->pidns_entry, &pid_ns->proc_mounts);
+>> +	spin_unlock(&pid_ns->proc_mounts_lock);
+>> +
+>> +	return 0;
+>>  }
+>>  
+>>  static int proc_reconfigure(struct fs_context *fc)
+>> @@ -211,10 +226,17 @@ static void proc_kill_sb(struct super_block *sb)
+>>  {
+>>  	struct proc_fs_info *fs_info = proc_sb_info(sb);
+>>  
+>> +	spin_lock(&fs_info->pid_ns->proc_mounts_lock);
+>> +	list_del_rcu(&fs_info->pidns_entry);
+>> +	spin_unlock(&fs_info->pid_ns->proc_mounts_lock);
+>> +
+>> +	synchronize_rcu();
+>> +
+>
+> Rather than a heavyweight synchronize_rcu here,
+> it probably makes sense to instead to change
+>
+> 	kfree(fs_info)
+> to
+> 	kfree_rcu(fs_info, some_rcu_head_in_fs_info)
+>
+> Or possibly doing a full call_rcu.
+>
+> The problem is that synchronize_rcu takes about 10ms when HZ=100.
+> Which makes synchronize_rcu incredibly expensive on any path where
+> anything can wait for it.
 
+I take it back.
 
->SST has the ability to turn on clocks on demand which is why this has not been an issue previously from what I understand on the bug.
+The crucial thing to insert a rcu delay before is
+shrink_dcache_for_umount.
+
+With the call chain:
+kill_anon_super
+    generic_shutdown_super
+        shrink_dcache_for_umount.
+
+So we do need synchronize_rcu or to put everything below this point into
+a call_rcu function.
+
+The practical concern is mntput calls does task_work_add.
+The task_work function is cleanup_mnt.
+When called cleanup_mnt calls deactivate_locked_super
+which in turn calls proc_kill_sb.
+
+Which is a long way of saying that the code will delay the
+exit of the process that calls mntput by 10ms (or
+however syncrhonize_rcu runs).
+
+We probably don't care.  But that is long enough in to be user
+visible, and potentially cause problems.
+
+But all it requires putting the code below in it's own
+function and triggering it with call_rcu if that causes a regression
+by bying so slow.
+
+>>  	if (fs_info->proc_self)
+>>  		dput(fs_info->proc_self);
+>>  	if (fs_info->proc_thread_self)
+>>  		dput(fs_info->proc_thread_self);
+>> +
+>>  	kill_anon_super(sb);
+>>  	put_pid_ns(fs_info->pid_ns);
+>>  	kfree(fs_info);
+>> @@ -336,6 +358,9 @@ int pid_ns_prepare_proc(struct pid_namespace *ns)
+>>  		ctx->fs_info->pid_ns = ns;
+>>  	}
+>>  
+>> +	spin_lock_init(&ns->proc_mounts_lock);
+>> +	INIT_LIST_HEAD_RCU(&ns->proc_mounts);
+>> +
+>>  	mnt = fc_mount(fc);
+>>  	put_fs_context(fc);
+>>  	if (IS_ERR(mnt))
+>> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+>> index 66f47f1afe0d..c36af1dfd862 100644
+>> --- a/include/linux/pid_namespace.h
+>> +++ b/include/linux/pid_namespace.h
+>> @@ -26,6 +26,8 @@ struct pid_namespace {
+>>  	struct pid_namespace *parent;
+>>  #ifdef CONFIG_PROC_FS
+>>  	struct vfsmount *proc_mnt; /* Internal proc mounted during each new pidns */
+>> +	spinlock_t proc_mounts_lock;
+>> +	struct list_head proc_mounts; /* list of separated procfs mounts */
+>>  #endif
+>>  #ifdef CONFIG_BSD_PROCESS_ACCT
+>>  	struct fs_pin *bacct;
+>> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+>> index 5f0b1b7e4271..f307940f8311 100644
+>> --- a/include/linux/proc_fs.h
+>> +++ b/include/linux/proc_fs.h
+>> @@ -20,6 +20,8 @@ enum {
+>>  };
+>>  
+>>  struct proc_fs_info {
+>> +	struct list_head pidns_entry;    /* Node in procfs_mounts of a pidns */
+>> +	struct super_block *m_super;
+>>  	struct pid_namespace *pid_ns;
+>>  	struct dentry *proc_self;        /* For /proc/self */
+>>  	struct dentry *proc_thread_self; /* For /proc/thread-self */
 >
-> And that is a fair point, we do need to consider other users of the codec.
 >
->
-> On Mon, Feb 10, 2020 at 8:07 AM Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> wrote:
->>
->>
->>
->> On 2/10/20 9:44 AM, Curtis Malainey wrote:
->> > +Jimmy Cheng-Yi Chiang <cychiang@google.com>
->> >
->> > This error is causing pcm_open commands to fail timing requirements,
->> > sometimes taking +500ms to open the PCM as a result. This work around is
->> > required so we can meet the timing requirements. The bug is explained in
->> > detail here https://github.com/thesofproject/sof/issues/2124
->>
->> Ah, thanks for the pointer, but this still does not tell me if it's a
->> GLK-only issue or not. And if yes, there are alternate proposals
->> discussed in that issue #2124, which has been idle since November 25.
->>
->> What I am really worried is side effects on unrelated platforms.
+> Eric
