@@ -2,787 +2,194 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBA2C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E18EC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1156206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5064620842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oSTwn0d9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731893AbgBKUzX (ORCPT
+        id S1731903AbgBKU4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:55:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgBKUzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:55:23 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60CDA206D6;
-        Tue, 11 Feb 2020 20:55:21 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 15:55:19 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [GIT PULL] tracing: Various fixes for v5.6-rc1
-Message-ID: <20200211155519.64c8c589@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 11 Feb 2020 15:56:15 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40204 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731844AbgBKU4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 15:56:15 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a142so14196343oii.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:56:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8CmYe462WzzksuPoSriUQOLEMXkyrL5p8rPiP/wqsQE=;
+        b=oSTwn0d967GW3bvPpoBPc4xhMNU+afmUYTMc5sQAtO/Ma8lCfPJAv7HDesC+gIohzv
+         DkMgSufBV3LkIlRnO8ywR8ElxhA0xazO1a2X1EbTK9CPzmmDGuVdsOscmiYi9VuWm70X
+         X4QugCq1j+ND5muENF+hw/7uZsm0+pB5emMxJt5J03IBuPoLcY5imni1oxNwtN0QogdK
+         WAEagflmLFa9Wa5QWR/mFSJKRXQpW/pCGiRZEZdFevJ2+fsXxxJwszGEIlweNqHKaZQR
+         OT/n2MH+QFAJl9CN6AifWx4rVch6UDYBcDpoOITmpCYfCzaqslfwsQD44XYhI2I7wpvH
+         apqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8CmYe462WzzksuPoSriUQOLEMXkyrL5p8rPiP/wqsQE=;
+        b=SHFhL5Xzad0ewOD2Q0ye5p4dV586UFVuCJsN80sEVlQQr7sfl7pWfV4VfWD3mg4rJi
+         khhSkm23jp1zfQYL4clIs+BYKbFR7QHwPttqNkgUaxxSGeEcdVewC1OiIfrIKapETq0L
+         k+CDBOEMOgEKvDSUz3aj7rerzBB29RfNz6UeF0APOzEoOTpZcUrruOBqkm3NEDPTGpNn
+         7oqC7kjOpjQGq62gIFCh4S+XS1GnInpcc8MsWJglo2v2Xu1dx6nIY5cAt2fwLBGnWFwH
+         c2oUJ4fzKysIX9azpMpifgiX/6rYaMv1pCfXvn14MMYoA0Y8rBRCBCK9ZBdOjFPb6Ekl
+         5bNw==
+X-Gm-Message-State: APjAAAWT7eykU1GAal+839Jlu35PV57ENQRSB9OgvzqDqBTFfbLZAk75
+        X3bnNgvjKdkUJlsicRR5R3x870S7LUI2Y4N5mW9I/9ra0lfwDQ==
+X-Google-Smtp-Source: APXvYqwwlaPw3WuE7pvp2R5+l4ejpzIZmHKNHqXHYwDJ9Aqnqi8TIPcj6j2+bVdD0QcpNjFx5mAc4EwEtqlmtCOsHEY=
+X-Received: by 2002:aca:b187:: with SMTP id a129mr4153590oif.175.1581454572660;
+ Tue, 11 Feb 2020 12:56:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20200211165753.356508-1-christian.brauner@ubuntu.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 11 Feb 2020 21:55:46 +0100
+Message-ID: <CAG48ez1GKOfXDZFD7-hGGjT8L9YEojn94DU5_=W8HL3pzdrCgg@mail.gmail.com>
+Subject: Re: [PATCH 00/24] user_namespace: introduce fsid mappings
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, smbarber@chromium.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 11, 2020 at 5:59 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> This is the implementation of shiftfs which was cooked up during lunch at
+> Linux Plumbers 2019 the day after the container's microconference. The
+> idea is a design-stew from St=C3=A9phane, Aleksa, Eric, and myself. Back =
+then
+> we all were quite busy with other work and couldn't really sit down and
+> implement it. But I took a few days last week to do this work, including
+> demos and performance testing.
+> This implementation does not require us to touch the vfs substantially
+> at all. Instead, we implement shiftfs via fsid mappings.
+> With this patch, it took me 20 mins to port both LXD and LXC to support
+> shiftfs via fsid mappings.
+>
+> For anyone wanting to play with this the branch can be pulled from:
+> https://github.com/brauner/linux/tree/fsid_mappings
+> https://gitlab.com/brauner/linux/-/tree/fsid_mappings
+> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=
+=3Dfsid_mappings
+>
+> The main use case for shiftfs for us is in allowing shared writable
+> storage to multiple containers using non-overlapping id mappings.
+> In such a scenario you want the fsids to be valid and identical in both
+> containers for the shared mount. A demo for this exists in [3].
+> If you don't want to read on, go straight to the other demos below in
+> [1] and [2].
 
-Linus,
+I guess essentially this means that you want to have UID separation
+between containers to prevent the containers - or their owners - from
+interfering between each other, but for filesystem access, you don't
+want to isolate them from each other using DAC controls on the files
+and folders inside the containers' directory hierarchies, instead
+relying on mode-0700 parent directories to restrict access to the
+container owner? Or would you still have separate UIDs for e.g. the
+container's UID range 0-65535, and then map the shared UID range at
+100000, or something like that?
 
-Various fixes:
+> People not as familiar with user namespaces might not be aware that fsid
+> mappings already exist. Right now, fsid mappings are always identical to
+> id mappings. Specifically, the kernel will lookup fsuids in the uid
+> mappings and fsgids in the gid mappings of the relevant user namespace.
 
- - Fix an uninitialized variable
+That's a bit like saying that a kernel without CONFIG_USER_NS still
+has user ID mappings, they just happen to be identity mappings. :P
 
- - Fix compile bug to bootconfig userspace tool (in tools directory)
+> With this patch series we simply introduce the ability to create fsid
+> mappings that are different from the id mappings of a user namespace.
+>
+> In the usual case of running an unprivileged container we will have
+> setup an id mapping, e.g. 0 100000 100000. The on-disk mapping will
+> correspond to this id mapping, i.e. all files which we want to appear as
+> 0:0 inside the user namespace will be chowned to 100000:100000 on the
+> host. This works, because whenever the kernel needs to do a filesystem
+> access it will lookup the corresponding uid and gid in the idmapping
+> tables of the container.
+> Now think about the case where we want to have an id mapping of 0 100000
+> 100000 but an on-disk mapping of 0 300000 100000 which is needed to e.g.
+> share a single on-disk mapping with multiple containers that all have
+> different id mappings.
+> This will be problematic. Whenever a filesystem access is requested, the
+> kernel will now try to lookup a mapping for 300000 in the id mapping
+> tables of the user namespace but since there is none the files will
+> appear to be owned by the overflow id, i.e. usually 65534:65534 or
+> nobody:nogroup.
+>
+> With fsid mappings we can solve this by writing an id mapping of 0
+> 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
+> access the kernel will now lookup the mapping for 300000 in the fsid
+> mapping tables of the user namespace. And since such a mapping exists,
+> the corresponding files will have correct ownership.
 
- - Suppress some error messages of bootconfig userspace tool
+Sorry to bring up something as disgusting as setuid execution, but:
+What happens when there's a setuid root file with ->i_uid=3D=3D300000? I
+guess the only way to make that work inside the containers would be
+something like make_kuid(current_user_ns(),
+from_kfsuid(current_user_ns(), inode->i_uid)) in the setuid execve
+path?
 
- - Remove unneeded CONFIG_LIBXBC from bootconfig
+> A note on proc (and sys), the proc filesystem is special in sofar as it
+> only has a single superblock that is (currently but might be about to
+> change) visible in all user namespaces (same goes for sys). This means
+> it has special semantics in many ways, including how file ownership and
+> access works. The fsid mapping implementation does not alter how proc
+> (and sys) ownership works. proc and sys will both continue to lookup
+> filesystem access in id mapping tables.
 
- - Allocate bootconfig xbc_nodes dynamically.
-   To ease complaints about taking up static memory at boot up
+In your example, a process with namespaced UID set (0, 0, 0, 0) will
+have kernel UIDs (100000, 100000, 100000, 300000), right? And then if
+I want to open /proc/$pid/personality of another process with the same
+UIDs, may_open() will call inode_permission() -> do_inode_permission()
+-> generic_permission() -> acl_permission_check(), which will compare
+current_fsuid() (which is 300000) against inode->i_uid. But
+inode->i_uid was filled by proc_pid_make_inode()->task_dump_owner(),
+which set inode->i_uid to 100000, right?
 
- - Use of parse_args() to parse bootconfig instead of strstr() usage
-   Prevents issues of double quotes containing the interested string
+Also, e.g. __ptrace_may_access() uses cred->fsuid for a comparison
+with another task's real/effective/saved UID.
 
- - Fix missing ring_buffer_nest_end() on synthetic event error path
+[...]
+> # Demos
+> [1]: Create a container with different id and fsid mappings.
+>      https://asciinema.org/a/300233
+> [2]: Create a container with id mappings but without fsid mappings.
+>      https://asciinema.org/a/300234
+> [3]: Share storage between multiple containers with non-overlapping id
+>      mappings.
+>      https://asciinema.org/a/300235
 
- - Return zero not -EINVAL on soft disabled synthetic event
-   (soft disabling must be the same as hard disabling, which returns zero)
-
- - Consolidate synthetic event code (remove duplicate code)
-
-
-Please pull the latest trace-v5.6-rc1 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.6-rc1
-
-Tag SHA1: 2c705fb783ee17474ff32f0b48024b70727732e5
-Head SHA1: 7276531d4036f5db2af15c8b6caa02e7741f5d80
-
-
-Gustavo A. R. Silva (1):
-      tracing/kprobe: Fix uninitialized variable bug
-
-Masami Hiramatsu (4):
-      tools/bootconfig: Fix wrong __VA_ARGS__ usage
-      bootconfig: Remove unneeded CONFIG_LIBXBC
-      bootconfig: Allocate xbc_nodes array dynamically
-      tools/bootconfig: Suppress non-error messages
-
-Steven Rostedt (VMware) (1):
-      bootconfig: Use parse_args() to find bootconfig and '--'
-
-Tom Zanussi (3):
-      tracing: Add missing nest end to synth_event_trace_start() error case
-      tracing: Don't return -EINVAL when tracing soft disabled synth events
-      tracing: Consolidate trace() functions
-
-----
- include/linux/trace_events.h              |   2 +-
- init/Kconfig                              |   1 -
- init/main.c                               |  37 ++++-
- kernel/trace/trace_events_hist.c          | 227 +++++++++++-------------------
- kernel/trace/trace_kprobe.c               |   2 +-
- lib/Kconfig                               |   3 -
- lib/Makefile                              |   2 +-
- lib/bootconfig.c                          |  15 +-
- tools/bootconfig/include/linux/memblock.h |  12 ++
- tools/bootconfig/include/linux/printk.h   |   2 +-
- tools/bootconfig/main.c                   |  28 ++--
- tools/bootconfig/test-bootconfig.sh       |   9 ++
- 12 files changed, 167 insertions(+), 173 deletions(-)
- create mode 100644 tools/bootconfig/include/linux/memblock.h
----------------------------
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 67f528ecb9e5..21098298b49b 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -424,7 +424,7 @@ struct synth_event_trace_state {
- 	struct synth_event *event;
- 	unsigned int cur_field;
- 	unsigned int n_u64;
--	bool enabled;
-+	bool disabled;
- 	bool add_next;
- 	bool add_name;
- };
-diff --git a/init/Kconfig b/init/Kconfig
-index 9506299a53e3..4a672c6629d0 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1218,7 +1218,6 @@ endif
- config BOOT_CONFIG
- 	bool "Boot config support"
- 	depends on BLK_DEV_INITRD
--	select LIBXBC
- 	default y
- 	help
- 	  Extra boot config allows system admin to pass a config file as
-diff --git a/init/main.c b/init/main.c
-index 491f1cdb3105..59248717c925 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -142,6 +142,15 @@ static char *extra_command_line;
- /* Extra init arguments */
- static char *extra_init_args;
- 
-+#ifdef CONFIG_BOOT_CONFIG
-+/* Is bootconfig on command line? */
-+static bool bootconfig_found;
-+static bool initargs_found;
-+#else
-+# define bootconfig_found false
-+# define initargs_found false
-+#endif
-+
- static char *execute_command;
- static char *ramdisk_execute_command;
- 
-@@ -336,17 +345,30 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
- 	return ret;
- }
- 
-+static int __init bootconfig_params(char *param, char *val,
-+				    const char *unused, void *arg)
-+{
-+	if (strcmp(param, "bootconfig") == 0) {
-+		bootconfig_found = true;
-+	} else if (strcmp(param, "--") == 0) {
-+		initargs_found = true;
-+	}
-+	return 0;
-+}
-+
- static void __init setup_boot_config(const char *cmdline)
- {
-+	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
- 	u32 size, csum;
- 	char *data, *copy;
--	const char *p;
- 	u32 *hdr;
- 	int ret;
- 
--	p = strstr(cmdline, "bootconfig");
--	if (!p || (p != cmdline && !isspace(*(p-1))) ||
--	    (p[10] && !isspace(p[10])))
-+	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-+	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-+		   bootconfig_params);
-+
-+	if (!bootconfig_found)
- 		return;
- 
- 	if (!initrd_end)
-@@ -563,11 +585,12 @@ static void __init setup_command_line(char *command_line)
- 		 * to init.
- 		 */
- 		len = strlen(saved_command_line);
--		if (!strstr(boot_command_line, " -- ")) {
-+		if (initargs_found) {
-+			saved_command_line[len++] = ' ';
-+		} else {
- 			strcpy(saved_command_line + len, " -- ");
- 			len += 4;
--		} else
--			saved_command_line[len++] = ' ';
-+		}
- 
- 		strcpy(saved_command_line + len, extra_init_args);
- 	}
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index b3bcfd8c7332..65b54d6a1422 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1791,6 +1791,60 @@ void synth_event_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen)
- }
- EXPORT_SYMBOL_GPL(synth_event_cmd_init);
- 
-+static inline int
-+__synth_event_trace_start(struct trace_event_file *file,
-+			  struct synth_event_trace_state *trace_state)
-+{
-+	int entry_size, fields_size = 0;
-+	int ret = 0;
-+
-+	/*
-+	 * Normal event tracing doesn't get called at all unless the
-+	 * ENABLED bit is set (which attaches the probe thus allowing
-+	 * this code to be called, etc).  Because this is called
-+	 * directly by the user, we don't have that but we still need
-+	 * to honor not logging when disabled.  For the the iterated
-+	 * trace case, we save the enabed state upon start and just
-+	 * ignore the following data calls.
-+	 */
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED) ||
-+	    trace_trigger_soft_disabled(file)) {
-+		trace_state->disabled = true;
-+		ret = -ENOENT;
-+		goto out;
-+	}
-+
-+	trace_state->event = file->event_call->data;
-+
-+	fields_size = trace_state->event->n_u64 * sizeof(u64);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	trace_state->buffer = file->tr->array_buffer.buffer;
-+	ring_buffer_nest_start(trace_state->buffer);
-+
-+	entry_size = sizeof(*trace_state->entry) + fields_size;
-+	trace_state->entry = trace_event_buffer_reserve(&trace_state->fbuffer,
-+							file,
-+							entry_size);
-+	if (!trace_state->entry) {
-+		ring_buffer_nest_end(trace_state->buffer);
-+		ret = -EINVAL;
-+	}
-+out:
-+	return ret;
-+}
-+
-+static inline void
-+__synth_event_trace_end(struct synth_event_trace_state *trace_state)
-+{
-+	trace_event_buffer_commit(&trace_state->fbuffer);
-+
-+	ring_buffer_nest_end(trace_state->buffer);
-+}
-+
- /**
-  * synth_event_trace - Trace a synthetic event
-  * @file: The trace_event_file representing the synthetic event
-@@ -1812,71 +1866,38 @@ EXPORT_SYMBOL_GPL(synth_event_cmd_init);
-  */
- int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
- {
--	struct trace_event_buffer fbuffer;
--	struct synth_trace_event *entry;
--	struct trace_buffer *buffer;
--	struct synth_event *event;
-+	struct synth_event_trace_state state;
- 	unsigned int i, n_u64;
--	int fields_size = 0;
- 	va_list args;
--	int ret = 0;
--
--	/*
--	 * Normal event generation doesn't get called at all unless
--	 * the ENABLED bit is set (which attaches the probe thus
--	 * allowing this code to be called, etc).  Because this is
--	 * called directly by the user, we don't have that but we
--	 * still need to honor not logging when disabled.
--	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED))
--		return 0;
--
--	event = file->event_call->data;
--
--	if (n_vals != event->n_fields)
--		return -EINVAL;
--
--	if (trace_trigger_soft_disabled(file))
--		return -EINVAL;
--
--	fields_size = event->n_u64 * sizeof(u64);
--
--	/*
--	 * Avoid ring buffer recursion detection, as this event
--	 * is being performed within another event.
--	 */
--	buffer = file->tr->array_buffer.buffer;
--	ring_buffer_nest_start(buffer);
-+	int ret;
- 
--	entry = trace_event_buffer_reserve(&fbuffer, file,
--					   sizeof(*entry) + fields_size);
--	if (!entry) {
--		ret = -EINVAL;
--		goto out;
-+	ret = __synth_event_trace_start(file, &state);
-+	if (ret) {
-+		if (ret == -ENOENT)
-+			ret = 0; /* just disabled, not really an error */
-+		return ret;
- 	}
- 
- 	va_start(args, n_vals);
--	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
-+	for (i = 0, n_u64 = 0; i < state.event->n_fields; i++) {
- 		u64 val;
- 
- 		val = va_arg(args, u64);
- 
--		if (event->fields[i]->is_string) {
-+		if (state.event->fields[i]->is_string) {
- 			char *str_val = (char *)(long)val;
--			char *str_field = (char *)&entry->fields[n_u64];
-+			char *str_field = (char *)&state.entry->fields[n_u64];
- 
- 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
- 		} else {
--			entry->fields[n_u64] = val;
-+			state.entry->fields[n_u64] = val;
- 			n_u64++;
- 		}
- 	}
- 	va_end(args);
- 
--	trace_event_buffer_commit(&fbuffer);
--out:
--	ring_buffer_nest_end(buffer);
-+	__synth_event_trace_end(&state);
- 
- 	return ret;
- }
-@@ -1903,64 +1924,31 @@ EXPORT_SYMBOL_GPL(synth_event_trace);
- int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
- 			    unsigned int n_vals)
- {
--	struct trace_event_buffer fbuffer;
--	struct synth_trace_event *entry;
--	struct trace_buffer *buffer;
--	struct synth_event *event;
-+	struct synth_event_trace_state state;
- 	unsigned int i, n_u64;
--	int fields_size = 0;
--	int ret = 0;
--
--	/*
--	 * Normal event generation doesn't get called at all unless
--	 * the ENABLED bit is set (which attaches the probe thus
--	 * allowing this code to be called, etc).  Because this is
--	 * called directly by the user, we don't have that but we
--	 * still need to honor not logging when disabled.
--	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED))
--		return 0;
--
--	event = file->event_call->data;
--
--	if (n_vals != event->n_fields)
--		return -EINVAL;
--
--	if (trace_trigger_soft_disabled(file))
--		return -EINVAL;
--
--	fields_size = event->n_u64 * sizeof(u64);
--
--	/*
--	 * Avoid ring buffer recursion detection, as this event
--	 * is being performed within another event.
--	 */
--	buffer = file->tr->array_buffer.buffer;
--	ring_buffer_nest_start(buffer);
-+	int ret;
- 
--	entry = trace_event_buffer_reserve(&fbuffer, file,
--					   sizeof(*entry) + fields_size);
--	if (!entry) {
--		ret = -EINVAL;
--		goto out;
-+	ret = __synth_event_trace_start(file, &state);
-+	if (ret) {
-+		if (ret == -ENOENT)
-+			ret = 0; /* just disabled, not really an error */
-+		return ret;
- 	}
- 
--	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
--		if (event->fields[i]->is_string) {
-+	for (i = 0, n_u64 = 0; i < state.event->n_fields; i++) {
-+		if (state.event->fields[i]->is_string) {
- 			char *str_val = (char *)(long)vals[i];
--			char *str_field = (char *)&entry->fields[n_u64];
-+			char *str_field = (char *)&state.entry->fields[n_u64];
- 
- 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
- 		} else {
--			entry->fields[n_u64] = vals[i];
-+			state.entry->fields[n_u64] = vals[i];
- 			n_u64++;
- 		}
- 	}
- 
--	trace_event_buffer_commit(&fbuffer);
--out:
--	ring_buffer_nest_end(buffer);
-+	__synth_event_trace_end(&state);
- 
- 	return ret;
- }
-@@ -1997,58 +1985,17 @@ EXPORT_SYMBOL_GPL(synth_event_trace_array);
- int synth_event_trace_start(struct trace_event_file *file,
- 			    struct synth_event_trace_state *trace_state)
- {
--	struct synth_trace_event *entry;
--	int fields_size = 0;
--	int ret = 0;
-+	int ret;
- 
--	if (!trace_state) {
--		ret = -EINVAL;
--		goto out;
--	}
-+	if (!trace_state)
-+		return -EINVAL;
- 
- 	memset(trace_state, '\0', sizeof(*trace_state));
- 
--	/*
--	 * Normal event tracing doesn't get called at all unless the
--	 * ENABLED bit is set (which attaches the probe thus allowing
--	 * this code to be called, etc).  Because this is called
--	 * directly by the user, we don't have that but we still need
--	 * to honor not logging when disabled.  For the the iterated
--	 * trace case, we save the enabed state upon start and just
--	 * ignore the following data calls.
--	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
--		trace_state->enabled = false;
--		goto out;
--	}
--
--	trace_state->enabled = true;
--
--	trace_state->event = file->event_call->data;
--
--	if (trace_trigger_soft_disabled(file)) {
--		ret = -EINVAL;
--		goto out;
--	}
-+	ret = __synth_event_trace_start(file, trace_state);
-+	if (ret == -ENOENT)
-+		ret = 0; /* just disabled, not really an error */
- 
--	fields_size = trace_state->event->n_u64 * sizeof(u64);
--
--	/*
--	 * Avoid ring buffer recursion detection, as this event
--	 * is being performed within another event.
--	 */
--	trace_state->buffer = file->tr->array_buffer.buffer;
--	ring_buffer_nest_start(trace_state->buffer);
--
--	entry = trace_event_buffer_reserve(&trace_state->fbuffer, file,
--					   sizeof(*entry) + fields_size);
--	if (!entry) {
--		ret = -EINVAL;
--		goto out;
--	}
--
--	trace_state->entry = entry;
--out:
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(synth_event_trace_start);
-@@ -2081,7 +2028,7 @@ static int __synth_event_add_val(const char *field_name, u64 val,
- 		trace_state->add_next = true;
- 	}
- 
--	if (!trace_state->enabled)
-+	if (trace_state->disabled)
- 		goto out;
- 
- 	event = trace_state->event;
-@@ -2216,9 +2163,7 @@ int synth_event_trace_end(struct synth_event_trace_state *trace_state)
- 	if (!trace_state)
- 		return -EINVAL;
- 
--	trace_event_buffer_commit(&trace_state->fbuffer);
--
--	ring_buffer_nest_end(trace_state->buffer);
-+	__synth_event_trace_end(trace_state);
- 
- 	return 0;
- }
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 51efc790aea8..21bafd48f2ac 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1012,7 +1012,7 @@ int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...)
- {
- 	struct dynevent_arg arg;
- 	va_list args;
--	int ret;
-+	int ret = 0;
- 
- 	if (cmd->type != DYNEVENT_TYPE_KPROBE)
- 		return -EINVAL;
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 10012b646009..6e790dc55c5b 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -566,9 +566,6 @@ config DIMLIB
- config LIBFDT
- 	bool
- 
--config LIBXBC
--	bool
--
- config OID_REGISTRY
- 	tristate
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 75a64d2552a2..74c1223828c1 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -228,7 +228,7 @@ $(foreach file, $(libfdt_files), \
- 	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
- lib-$(CONFIG_LIBFDT) += $(libfdt_files)
- 
--lib-$(CONFIG_LIBXBC) += bootconfig.o
-+lib-$(CONFIG_BOOT_CONFIG) += bootconfig.o
- 
- obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
- obj-$(CONFIG_INTERVAL_TREE_TEST) += interval_tree_test.o
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index afb2e767e6fe..3ea601a2eba5 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -6,12 +6,13 @@
- 
- #define pr_fmt(fmt)    "bootconfig: " fmt
- 
-+#include <linux/bootconfig.h>
- #include <linux/bug.h>
- #include <linux/ctype.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
-+#include <linux/memblock.h>
- #include <linux/printk.h>
--#include <linux/bootconfig.h>
- #include <linux/string.h>
- 
- /*
-@@ -23,7 +24,7 @@
-  * node (for array).
-  */
- 
--static struct xbc_node xbc_nodes[XBC_NODE_MAX] __initdata;
-+static struct xbc_node *xbc_nodes __initdata;
- static int xbc_node_num __initdata;
- static char *xbc_data __initdata;
- static size_t xbc_data_size __initdata;
-@@ -719,7 +720,8 @@ void __init xbc_destroy_all(void)
- 	xbc_data = NULL;
- 	xbc_data_size = 0;
- 	xbc_node_num = 0;
--	memset(xbc_nodes, 0, sizeof(xbc_nodes));
-+	memblock_free(__pa(xbc_nodes), sizeof(struct xbc_node) * XBC_NODE_MAX);
-+	xbc_nodes = NULL;
- }
- 
- /**
-@@ -748,6 +750,13 @@ int __init xbc_init(char *buf)
- 		return -ERANGE;
- 	}
- 
-+	xbc_nodes = memblock_alloc(sizeof(struct xbc_node) * XBC_NODE_MAX,
-+				   SMP_CACHE_BYTES);
-+	if (!xbc_nodes) {
-+		pr_err("Failed to allocate memory for bootconfig nodes.\n");
-+		return -ENOMEM;
-+	}
-+	memset(xbc_nodes, 0, sizeof(struct xbc_node) * XBC_NODE_MAX);
- 	xbc_data = buf;
- 	xbc_data_size = ret + 1;
- 	last_parent = NULL;
-diff --git a/tools/bootconfig/include/linux/memblock.h b/tools/bootconfig/include/linux/memblock.h
-new file mode 100644
-index 000000000000..7862f217d85d
---- /dev/null
-+++ b/tools/bootconfig/include/linux/memblock.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _XBC_LINUX_MEMBLOCK_H
-+#define _XBC_LINUX_MEMBLOCK_H
-+
-+#include <stdlib.h>
-+
-+#define __pa(addr)	(addr)
-+#define SMP_CACHE_BYTES	0
-+#define memblock_alloc(size, align)	malloc(size)
-+#define memblock_free(paddr, size)	free(paddr)
-+
-+#endif
-diff --git a/tools/bootconfig/include/linux/printk.h b/tools/bootconfig/include/linux/printk.h
-index 017bcd6912a5..e978a63d3222 100644
---- a/tools/bootconfig/include/linux/printk.h
-+++ b/tools/bootconfig/include/linux/printk.h
-@@ -7,7 +7,7 @@
- /* controllable printf */
- extern int pr_output;
- #define printk(fmt, ...)	\
--	(pr_output ? printf(fmt, __VA_ARGS__) : 0)
-+	(pr_output ? printf(fmt, ##__VA_ARGS__) : 0)
- 
- #define pr_err printk
- #define pr_warn	printk
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 47f488458328..e18eeb070562 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -140,7 +140,7 @@ int load_xbc_from_initrd(int fd, char **buf)
- 		return 0;
- 
- 	if (lseek(fd, -8, SEEK_END) < 0) {
--		printf("Failed to lseek: %d\n", -errno);
-+		pr_err("Failed to lseek: %d\n", -errno);
- 		return -errno;
- 	}
- 
-@@ -155,7 +155,7 @@ int load_xbc_from_initrd(int fd, char **buf)
- 		return 0;
- 
- 	if (lseek(fd, stat.st_size - 8 - size, SEEK_SET) < 0) {
--		printf("Failed to lseek: %d\n", -errno);
-+		pr_err("Failed to lseek: %d\n", -errno);
- 		return -errno;
- 	}
- 
-@@ -166,7 +166,7 @@ int load_xbc_from_initrd(int fd, char **buf)
- 	/* Wrong Checksum, maybe no boot config here */
- 	rcsum = checksum((unsigned char *)*buf, size);
- 	if (csum != rcsum) {
--		printf("checksum error: %d != %d\n", csum, rcsum);
-+		pr_err("checksum error: %d != %d\n", csum, rcsum);
- 		return 0;
- 	}
- 
-@@ -185,13 +185,13 @@ int show_xbc(const char *path)
- 
- 	fd = open(path, O_RDONLY);
- 	if (fd < 0) {
--		printf("Failed to open initrd %s: %d\n", path, fd);
-+		pr_err("Failed to open initrd %s: %d\n", path, fd);
- 		return -errno;
- 	}
- 
- 	ret = load_xbc_from_initrd(fd, &buf);
- 	if (ret < 0)
--		printf("Failed to load a boot config from initrd: %d\n", ret);
-+		pr_err("Failed to load a boot config from initrd: %d\n", ret);
- 	else
- 		xbc_show_compact_tree();
- 
-@@ -209,7 +209,7 @@ int delete_xbc(const char *path)
- 
- 	fd = open(path, O_RDWR);
- 	if (fd < 0) {
--		printf("Failed to open initrd %s: %d\n", path, fd);
-+		pr_err("Failed to open initrd %s: %d\n", path, fd);
- 		return -errno;
- 	}
- 
-@@ -222,7 +222,7 @@ int delete_xbc(const char *path)
- 	pr_output = 1;
- 	if (size < 0) {
- 		ret = size;
--		printf("Failed to load a boot config from initrd: %d\n", ret);
-+		pr_err("Failed to load a boot config from initrd: %d\n", ret);
- 	} else if (size > 0) {
- 		ret = fstat(fd, &stat);
- 		if (!ret)
-@@ -245,7 +245,7 @@ int apply_xbc(const char *path, const char *xbc_path)
- 
- 	ret = load_xbc_file(xbc_path, &buf);
- 	if (ret < 0) {
--		printf("Failed to load %s : %d\n", xbc_path, ret);
-+		pr_err("Failed to load %s : %d\n", xbc_path, ret);
- 		return ret;
- 	}
- 	size = strlen(buf) + 1;
-@@ -262,7 +262,7 @@ int apply_xbc(const char *path, const char *xbc_path)
- 	/* Check the data format */
- 	ret = xbc_init(buf);
- 	if (ret < 0) {
--		printf("Failed to parse %s: %d\n", xbc_path, ret);
-+		pr_err("Failed to parse %s: %d\n", xbc_path, ret);
- 		free(data);
- 		free(buf);
- 		return ret;
-@@ -279,20 +279,20 @@ int apply_xbc(const char *path, const char *xbc_path)
- 	/* Remove old boot config if exists */
- 	ret = delete_xbc(path);
- 	if (ret < 0) {
--		printf("Failed to delete previous boot config: %d\n", ret);
-+		pr_err("Failed to delete previous boot config: %d\n", ret);
- 		return ret;
- 	}
- 
- 	/* Apply new one */
- 	fd = open(path, O_RDWR | O_APPEND);
- 	if (fd < 0) {
--		printf("Failed to open %s: %d\n", path, fd);
-+		pr_err("Failed to open %s: %d\n", path, fd);
- 		return fd;
- 	}
- 	/* TODO: Ensure the @path is initramfs/initrd image */
- 	ret = write(fd, data, size + 8);
- 	if (ret < 0) {
--		printf("Failed to apply a boot config: %d\n", ret);
-+		pr_err("Failed to apply a boot config: %d\n", ret);
- 		return ret;
- 	}
- 	close(fd);
-@@ -334,12 +334,12 @@ int main(int argc, char **argv)
- 	}
- 
- 	if (apply && delete) {
--		printf("Error: You can not specify both -a and -d at once.\n");
-+		pr_err("Error: You can not specify both -a and -d at once.\n");
- 		return usage();
- 	}
- 
- 	if (optind >= argc) {
--		printf("Error: No initrd is specified.\n");
-+		pr_err("Error: No initrd is specified.\n");
- 		return usage();
- 	}
- 
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index 87725e8723f8..1de06de328e2 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -64,6 +64,15 @@ echo "File size check"
- new_size=$(stat -c %s $INITRD)
- xpass test $new_size -eq $initrd_size
- 
-+echo "No error messge while applying"
-+OUTFILE=`mktemp tempout-XXXX`
-+dd if=/dev/zero of=$INITRD bs=4096 count=1
-+printf " \0\0\0 \0\0\0" >> $INITRD
-+$BOOTCONF -a $TEMPCONF $INITRD > $OUTFILE 2>&1
-+xfail grep -i "failed" $OUTFILE
-+xfail grep -i "error" $OUTFILE
-+rm $OUTFILE
-+
- echo "Max node number check"
- 
- echo -n > $TEMPCONF
+(I really dislike this asciinema thing; if you want to quickly glance
+through the output instead of reading at the same speed as it was
+typed, a simple pastebin works much better unless you absolutely have
+to show things that use stuff like ncurses UI.)
