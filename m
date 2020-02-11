@@ -2,148 +2,78 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE7C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF24C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABFA20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F602086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0EBCoAc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M3lKc31l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgBKLn7 (ORCPT
+        id S1728596AbgBKLoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:43:59 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46880 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbgBKLn6 (ORCPT
+        Tue, 11 Feb 2020 06:44:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57376 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbgBKLoe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:43:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id z26so6720135lfg.13;
-        Tue, 11 Feb 2020 03:43:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=UKY2yNx98f0wrxQO2HifQLDDgPXF2YxanFOgdecaNyI=;
-        b=r0EBCoAccyjLPKtQMY0NTREF8UT8hrsi5GEnZgNbFh1YavxNM/H8Ak40cXs/BzFSFC
-         IaOs1dQxW322nSC9V5zU/roamH07Lp9XCSRSQ0fQIEiK4CN7OTWiivZgDMmiD/lw1WAj
-         9KIraaVm5R5fdtxvzZnvvgSGhRgUFH5gVRVFzY28KFjpAn8R07ltm0QLa5UFo1/9qH92
-         T/c5swV32IgZb5Ms7HGN+0c35bWoOhsbf+HJixcyeIVlzzs9IYHOTCgUJEHBa9MTCxmN
-         Dpv43snYl0pvee0ddBRbpwJ/cs/BLOxzDvD4q5ksq9jpd+/fNs9zz2a33v+5/P4ahdsw
-         OUkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UKY2yNx98f0wrxQO2HifQLDDgPXF2YxanFOgdecaNyI=;
-        b=ENCwCacfkB9u3ejDCwXzgy7coTZ7jIhrkI5okUiT4ybcSRUp/f0rXByctSQ1FUMF3L
-         4LlO3x8mZUTHVpscc3xO8iVJ3zzjlnsO30o1SQWSlZfobl3es780ks8dZO2fEqMHu22Y
-         lpdDAAz4JgCq4w1vfVKUytjSaxmkTmT3tK8Rjv/eNSem5c/6/BgpF2rKvx8p/mYGF229
-         2osmBvpzI582jE+q/MunKgJXIsrPp0IZwCu8ctEJnbPfCgxwlagZJOgf4IxBeAF3EXJY
-         fekpi12FYHNgdYes/fP1NKFWDrBAhd0OKgGErjpWwOacmVW7TdL1TuBWxGJBTY0171Z/
-         5JnQ==
-X-Gm-Message-State: APjAAAWQfagL33EFoj0mERHJ4f15+aF8LT6u7YF9DLiXc99zBm+l4aTq
-        +C0MN5WumBLtNiCaTRvz8HP7LVyp8To=
-X-Google-Smtp-Source: APXvYqzWuAJpq72GudvR3+/Z4gnGDgUTpVbNIlhzZ9v/jc676ulj40rkir7Tq0UAL125Doa9s2hTpg==
-X-Received: by 2002:a05:6512:15d:: with SMTP id m29mr3501323lfo.51.1581421435240;
-        Tue, 11 Feb 2020 03:43:55 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id v9sm2038325lfe.18.2020.02.11.03.43.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 03:43:54 -0800 (PST)
-Subject: Re: [PATCH] io_uring: fix iovec leaks
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Jens Axboe <axboe@kernel.dk>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <03aa734fcea29805635689cc2f1aa648f23b5cd3.1581102250.git.asml.silence@gmail.com>
- <1255e56851a54c8c805695f1160bec9f@AcuMS.aculab.com>
- <045f6c04-a6d8-146c-75f3-2c0d65e482d6@gmail.com>
- <0d61cafdb0b040ac8bb3542b6022d0fc@AcuMS.aculab.com>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <ff8ab9da-6548-647a-a375-4aab13e86c74@gmail.com>
-Date:   Tue, 11 Feb 2020 14:43:53 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 11 Feb 2020 06:44:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=yb5GHOYrvDrCPir3S3dAXtord7YBH2nReoEjVbLnpig=; b=M3lKc31lknavQUHl06nQY2QRQO
+        qlGAI27iPRTxB+Id872djWTSS4ech519C/GmkV0ux837l/B0ikq1+3HwIl8k9wG62YFv8KcNZOGsu
+        y+6M0KTIuc9Mjer5oTwcFw85F+X04LrJqzZtDmmAp4/TPXxKavDwPetpPYLznkxGeawDA5+H2U0P5
+        V1gAijwgQKCGfIf20X0shkg8h832U6Id+F5IfykQaNdbr8lowCMXO/c8OnS2gvssx0wk0OP4xzPtx
+        L489J/7ZRwoXzlJv3LKXCRsgJ4veqAE/1Ldx94+r/smA4BhidxIvmt7l4gnHD+/FlhPvNxsWnf030
+        JRJBSFTg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1TxJ-0001GO-0D; Tue, 11 Feb 2020 11:43:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ABE56300446;
+        Tue, 11 Feb 2020 12:42:01 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 55D832B88D75A; Tue, 11 Feb 2020 12:43:50 +0100 (CET)
+Date:   Tue, 11 Feb 2020 12:43:50 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] why can't dynamic isolation just like the static way
+Message-ID: <20200211114350.GJ14914@hirez.programming.kicks-ass.net>
+References: <fed10a26-7423-23b5-316c-c74d354870dd@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <0d61cafdb0b040ac8bb3542b6022d0fc@AcuMS.aculab.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fed10a26-7423-23b5-316c-c74d354870dd@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/2020 2:16 PM, David Laight wrote:
-> From: Pavel Begunkov
->> Sent: 11 February 2020 11:05
->> On 2/11/2020 1:07 PM, David Laight wrote:
->>> From: Pavel Begunkov
->>>> Sent: 07 February 2020 19:05
->>>> Allocated iovec is freed only in io_{read,write,send,recv)(), and just
->>>> leaves it if an error occured. There are plenty of such cases:
->>>> - cancellation of non-head requests
->>>> - fail grabbing files in __io_queue_sqe()
->>>> - set REQ_F_NOWAIT and returning in __io_queue_sqe()
->>>> - etc.
->>>>
->>>> Add REQ_F_NEED_CLEANUP, which will force such requests with custom
->>>> allocated resourses go through cleanup handlers on put.
->>>
->>> This looks horribly fragile.
->>
->> Well, not as horrible as it may appear -- set the flag, whenever you
->> want the corresponding destructor to be called, and clear it when is not
->> needed anymore.
->>
->> I'd love to have something better, maybe even something more intrusive
->> for-next, but that shouldn't hurt the hot path. Any ideas?
+On Tue, Feb 11, 2020 at 04:17:34PM +0800, 王贇 wrote:
+> Hi, folks
 > 
-> Given all the 'cud chewing' that happens in code paths
-> like the one that read iov from userspace just adding:
+> We are dealing with isolcpus these days and try to do the isolation
+> dynamically.
 > 
-> 	if (unlikely(foo->ptr))
-> 		kfree(foo->ptr);
-> 
-> before 'foo' goes out of scope (or is reused) is probably
-> not measurable.
+> The kernel doc lead us into the cpuset.sched_load_balance, it's fine
+> to achieve the dynamic isolation with it, however we got problem with
+> the systemd stuff.
 
-There are a bunch of problems with it:
-
-1. "out of scope" may end up in the generic code, but not opcode
-handler, so the deallocation should be in the generic path, otherwise
-it'll leak.
-
-2. @iovec is an opcode-specific thing, so you would need to call a
-proper destructor. And that's an indirect call or a switch (as in the
-cleanup()) in the hot path.
-
-2. we may need several such resources and/or other resource types (e.g.
-struct file, which is needed for splice(2).
-
-4. such fields are not initialised until custom opcode handler came to
-the scene. And I'm not sure zeroing will solve all cases and won't hurt
-performance. Workarounds with something like REQ_F_INITIALISED are not
-much better.
-
-That's why I think it's good enough for an immediate fix, it solves the
-issue and is easy to be backported. It'd be great to look for a more
-gracious approach, but that's most probably for 5.7
-
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
-
--- 
-Pavel Begunkov
+Then don't use systemd :-) Also, if systemd is the problem, why are you
+bugging us?
