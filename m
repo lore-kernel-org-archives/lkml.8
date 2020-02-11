@@ -2,235 +2,186 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DDDC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B36C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94AA206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6E3206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:14:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxVpd6ih"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZfIWcz7u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731552AbgBKTNE (ORCPT
+        id S1731575AbgBKTOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:13:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56066 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730748AbgBKTND (ORCPT
+        Tue, 11 Feb 2020 14:14:08 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:35106 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729934AbgBKTOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:13:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so5066485wmj.5;
-        Tue, 11 Feb 2020 11:12:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yV/W7OjVzhnhoaIiEdL5uYFmycb/yF6SI7jbHOa+uWc=;
-        b=XxVpd6ihEfbwxBp+qxEzeKf0oZ/85cRaNzdsbUqXfckCxjQG62IQBhPcPdizMenASB
-         qsuC9ar8wQz/krCqUR0J+X58c079DdyqoqkUuL/Y/VdBAXETCYrbBPUbswx17VOAjVfG
-         cFgYivKeJbcgOkoZFYKb7MxLWd6Pt6dlVRH+T/OXC/7DPNYK998M0fKHB7FFc2X3huGy
-         EnYAuKPEFUH4HrXnbjyn8m1qB6f/zkGU9/NpXx1Bz17ehNaKkn5ruhbg1oSVA9GVKLHA
-         fv83L/+adklWgobU+QCC91VEQ7A8wq8kjD+ikwZsAUzydC0CaB+NB6umg/94+bCcMQtp
-         CwDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yV/W7OjVzhnhoaIiEdL5uYFmycb/yF6SI7jbHOa+uWc=;
-        b=cltOUuu4BZFxBiXF+Yaf495dvi6OGPIwdKnDjlH2wkoJda3GAdcapPwDkxLYP9ZcfR
-         x5my3LziPfkCeVrpe6lz/hh+4Gv1GjJ/QT0kI0OjylYguR7qBEiqa4HwFNfrvC/lU453
-         z9uAtxQMaD42J0wUCQlhvWmJwsXYx5PF2qdQ5X43LXLsYECfYm6xF4J3kWzcRvjvI2iA
-         7sTup+MMKBsuQxNAOD064akrHXg4r+OYWDdNGCKapMTIoVIjKCCrONDCNNjzSOdP6Kf9
-         20YM2xYcD/8fJcYjBDr4vdvuBSN94waqsTHdT/vZbIO0bAUXs5Kf+5KZ4UJC6HSfGQ8v
-         yaTQ==
-X-Gm-Message-State: APjAAAXXVexfrZC4pZB8+Qmmyo+VFmzc8rRs5b4OpaJOU70PME0MQdrB
-        LmmlI7dibz+wUi9IyesFiYE=
-X-Google-Smtp-Source: APXvYqzHGEsEDjUipivXQXZOOpPKSbnu17FHNNxOAmtRHg7brAQ9dvSPOc6wceHdQw0a9+uOrmOSRw==
-X-Received: by 2002:a05:600c:2c06:: with SMTP id q6mr7570602wmg.154.1581448379274;
-        Tue, 11 Feb 2020 11:12:59 -0800 (PST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id w1sm7076839wro.72.2020.02.11.11.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 11:12:57 -0800 (PST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     mripard@kernel.org, wens@csie.org, linux-sunxi@googlegroups.com
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-sunxi@googlegroups.com, jernej.skrabec@siol.net
-Subject: Re: [linux-sunxi] [PATCH 0/8] media: sunxi: Add DE2 rotate driver
-Date:   Tue, 11 Feb 2020 20:12:56 +0100
-Message-ID: <4206703.LvFx2qVVIh@jernej-laptop>
-In-Reply-To: <20200124232014.574989-1-jernej.skrabec@siol.net>
-References: <20200124232014.574989-1-jernej.skrabec@siol.net>
+        Tue, 11 Feb 2020 14:14:08 -0500
+Received: from [10.137.112.97] (unknown [131.107.147.225])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4BEDA20B9C02;
+        Tue, 11 Feb 2020 11:14:07 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4BEDA20B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1581448447;
+        bh=RPlYEGk4m98iOqpw+g59ACgnUaVZv4TL9spVUV4kFFc=;
+        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
+        b=ZfIWcz7ux7kw0zZv3Ax6nQtTCh3MNWvcZHQYWCSGsQt1AO8pxctZD26sfIOyyRASC
+         +MKcb+sT89tq9HLc5Kk7rKpDyPL7hjzAK+v11qnGlzqt875/7CVP1nKSjmWc/NT9wz
+         hZ4I2czuN+oLacCQbfvCYzsu25Eyq+JJBN/kW2QE=
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Subject: Re: [PATCH v2 2/3] IMA: Add log statements for failure conditions.
+To:     Joe Perches <joe@perches.com>, zohar@linux.ibm.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+References: <20200211024755.5579-1-tusharsu@linux.microsoft.com>
+ <20200211024755.5579-2-tusharsu@linux.microsoft.com>
+ <9ed05e364f7eb7ccdeed7c580b3aded8fd8697f7.camel@perches.com>
+Message-ID: <ca5e6f88-6946-92ae-d4ac-0f07df54876a@linux.microsoft.com>
+Date:   Tue, 11 Feb 2020 11:14:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <9ed05e364f7eb7ccdeed7c580b3aded8fd8697f7.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sobota, 25. januar 2020 ob 00:20:06 CET je Jernej Skrabec napisal(a):
-> Some of Allwinner SoCs like A83T and A64 SoCs contain DE2 rotate core
-> which can flip image horizontal and vertical and rotate it in 90 deg.
-> steps. It support a lot of output formats, but a bit less capture
-> formats. All YUV input formats get converted to yuv420p, while RGB
-> formats are preserved.
-> 
-> Patches 1-2 fix few issues with DE2 clocks.
-> 
-> Patches 3-4 fix register range of DE2 clocks (it would overlap with
-> rotate driver)
-> 
-> Patches 5-8 provide binding, implement driver and add nodes.
-> 
-> v4l2-compliance SHA: ec55a961487b449bedbe07650674b4965814cf07, 32 bits,
-> 32-bit time_t
-> 
-> Compliance test for sun8i-rotate device /dev/video0:
-> 
-> Driver Info:
->         Driver name      : sun8i-rotate
->         Card type        : sun8i-rotate
->         Bus info         : platform:sun8i-rotate
->         Driver version   : 5.5.0
->         Capabilities     : 0x84208000
->                 Video Memory-to-Memory
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps      : 0x04208000
->                 Video Memory-to-Memory
->                 Streaming
->                 Extended Pix Format
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second /dev/video0 open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
-> 
->         test invalid ioctls: OK
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->         test VIDIOC_QUERYCTRL: OK
->         test VIDIOC_G/S_CTRL: OK
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->         Standard Controls: 4 Private Controls: 0
-> 
-> Format ioctls:
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->         test VIDIOC_G/S_PARM: OK (Not Supported)
->         test VIDIOC_G_FBUF: OK (Not Supported)
->         test VIDIOC_G_FMT: OK
->         test VIDIOC_TRY_FMT: OK
->         test VIDIOC_S_FMT: OK
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->         test Cropping: OK (Not Supported)
->         test Composing: OK (Not Supported)
->         test Scaling: OK (Not Supported)
-> 
-> Codec ioctls:
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls:
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
-> 
-> Total for sun8i-rotate device /dev/video0: 45, Succeeded: 45, Failed: 0,
-> Warnings: 0
-> 
-> Best regards,
-> Jernej
-> 
-> Jernej Skrabec (8):
->   clk: sunxi-ng: sun8i-de2: Swap A64 and H6 definitions
->   clk: sunxi-ng: sun8i-de2: Fix A83T clocks and reset
+Hi Joe,
 
-Please disregard above two patches. It turns out that many more changes are 
-required to fix mess with rotation clocks and reset. I sent separate patch 
-series: http://lists.infradead.org/pipermail/linux-arm-kernel/2020-February/
-710242.html
-
-Comments on the rest of the series are welcome, though.
-
-Best regards,
-Jernej
-
->   ARM: dts: sunxi: Fix DE2 clocks register range
->   arm64: dts: allwinner: a64: Fix display clock register range
->   media: dt-bindings: media: Add Allwinner A83T Rotate driver
->   media: sun8i: Add Allwinner A83T Rotate driver
->   ARM: dts: sun8i: a83t: Add device node for rotation core
->   arm64: dts: allwinner: a64: add node for rotation core
+On 2020-02-10 7:23 p.m., Joe Perches wrote:
+> On Mon, 2020-02-10 at 18:47 -0800, Tushar Sugandhi wrote:
+>> process_buffer_measurement() and ima_alloc_key_entry()
+>> functions do not have log messages for failure conditions.
 > 
->  .../allwinner,sun8i-a83t-de2-rotate.yaml      |  70 ++
->  MAINTAINERS                                   |   8 +
->  arch/arm/boot/dts/sun8i-a83t.dtsi             |  13 +-
->  arch/arm/boot/dts/sun8i-r40.dtsi              |   2 +-
->  arch/arm/boot/dts/sun8i-v3s.dtsi              |   2 +-
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   2 +-
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  14 +-
->  drivers/clk/sunxi-ng/ccu-sun8i-de2.c          |  49 +-
->  drivers/media/platform/Kconfig                |  12 +
->  drivers/media/platform/sunxi/Makefile         |   1 +
->  .../platform/sunxi/sun8i-rotate/Makefile      |   2 +
->  .../sunxi/sun8i-rotate/sun8i-formats.c        | 273 ++++++
->  .../sunxi/sun8i-rotate/sun8i-formats.h        |  25 +
->  .../sunxi/sun8i-rotate/sun8i-rotate.c         | 924 ++++++++++++++++++
->  .../sunxi/sun8i-rotate/sun8i-rotate.h         | 135 +++
->  15 files changed, 1512 insertions(+), 20 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/media/allwinner,sun8i-a83t-de2-rotate.yam
-> l create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/Makefile
-> create mode 100644
-> drivers/media/platform/sunxi/sun8i-rotate/sun8i-formats.c create mode
-> 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-formats.h create
-> mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-rotate.c create
-> mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-rotate.h
+> trivia:
+> 
+>> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> []
+>> @@ -757,6 +757,9 @@ void process_buffer_measurement(const void *buf, int size,
+>>   		ima_free_template_entry(entry);
+>>   
+>>   out:
+>> +	if (ret < 0)
+>> +		pr_err("Process buffer measurement failed, result: %d\n", ret);
+> 
+> perhaps use %s, __func__
+> 
+> 		pr_err("%s: failed, result: %d\n", __func__, ret);
+>   
+Sounds good. Will make this change in the next update.
+>> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+> []
+>> @@ -90,6 +90,7 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+>>   
+>>   out:
+>>   	if (rc) {
+>> +		pr_err("Key entry allocation failed, result: %d\n", rc);
+>>   		ima_free_key_entry(entry);
+>>   		entry = NULL;
+>>   	}
+> 
+> Likely the pr_err is unnecessary here as kmalloc, kstrdup
+> and kmemdup all emit a dump_stack() on allocation failure.
+Thanks for pointing out kmalloc, kstrdup, and kmemdup emit a 
+dump_stack(). But keeping the above pr_err() will help associate the 
+failure with IMA.
+For instance - "dmesg | grep ima:" will include this error.
+Perhaps I should add __func__ here as well.
+And since we are redefining the pr_fmt to prefix module and base names, 
+it will help further to pinpoint where exactly the failure is coming from.
 
+> 
+> Perhaps instead:
+> 
+> o Remove unnecessary indentation in ima_free_key_entry by
+>    returning early on NULL argument
+> o Remove unnecessary rc, tests and label in ima_alloc_key_entry
+> ---
+>   security/integrity/ima/ima_queue_keys.c | 37 +++++++++++++--------------------
+>   1 file changed, 15 insertions(+), 22 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+> index c87c722..ba449f 100644
+> --- a/security/integrity/ima/ima_queue_keys.c
+> +++ b/security/integrity/ima/ima_queue_keys.c
+> @@ -58,42 +58,35 @@ void ima_init_key_queue(void)
+>   
+>   static void ima_free_key_entry(struct ima_key_entry *entry)
+>   {
+> -	if (entry) {
+> -		kfree(entry->payload);
+> -		kfree(entry->keyring_name);
+> -		kfree(entry);
+> -	}
+> +	if (!entry)
+> +		return;
+> +
+> +	kfree(entry->payload);
+> +	kfree(entry->keyring_name);
+> +	kfree(entry);
+>   }
+>   
+Thanks for the feedback. Appreciate it. I would like to make this fix.
+But I am not sure if this patchset, which mainly focuses on improving 
+logging in IMA, is the right patchset for this.
+>   static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+>   						 const void *payload,
+>   						 size_t payload_len)
+>   {
+> -	int rc = 0;
+>   	struct ima_key_entry *entry;
+>   
+>   	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+> -	if (entry) {
+> -		entry->payload = kmemdup(payload, payload_len, GFP_KERNEL);
+> -		entry->keyring_name = kstrdup(keyring->description,
+> -					      GFP_KERNEL);
+> -		entry->payload_len = payload_len;
+> -	}
+> -
+> -	if ((entry == NULL) || (entry->payload == NULL) ||
+> -	    (entry->keyring_name == NULL)) {
+> -		rc = -ENOMEM;
+> -		goto out;
+> -	}
+> +	if (!entry)
+> +		return NULL;
+>   
+> -	INIT_LIST_HEAD(&entry->list);
+> +	entry->payload = kmemdup(payload, payload_len, GFP_KERNEL);
+> +	entry->payload_len = payload_len;
+> +	entry->keyring_name = kstrdup(keyring->description, GFP_KERNEL);
+>   
+> -out:
+> -	if (rc) {
+> +	if (!entry->payload || !entry->keyring_name) {
+>   		ima_free_key_entry(entry);
+> -		entry = NULL;
+> +		return NULL;
+>   	}
+>   
+> +	INIT_LIST_HEAD(&entry->list);
+> +
+>   	return entry;
+>   }
+>   
+> 
+Thanks again. This recommended change certainly makes the code more 
+readable. But again, I am not sure if this patchset is the right one for 
+this proposed change.
+Perhaps I can create another patchset for the above two recommended 
+changes, and only focus on improving logging in this patchset?
 
-
-
+Thanks,
+Tushar
