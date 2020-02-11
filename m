@@ -2,92 +2,166 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CEBC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E726C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAE520838
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581393148;
-	bh=SwOJ007DlzVaHhAfxj8kTa2Qa2osckocmYAkhDLCzo8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hYrodwzpdahyN0+emBm8nYfnTJeKWENVUs2mDoDQf/f9NcNbVEzmYEkZmyd0XMPbi
-	 +wCiAgvwE7SbLeOy5g/OainTRexQRoPu/KcIA5r+wfxEAD8rg/JcWdWHc5PO1SWP7u
-	 /Ocx9dBrEgAaH8qnNIkdHImw+iv0YSv5EhYd59es=
+	by mail.kernel.org (Postfix) with ESMTP id 6469A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgBKDw1 (ORCPT
+        id S1727984AbgBKDwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 22:52:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727800AbgBKDw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 22:52:27 -0500
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E590208C3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581393146;
-        bh=SwOJ007DlzVaHhAfxj8kTa2Qa2osckocmYAkhDLCzo8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X45AOYTK/2z2tJBJ2/KPVqQ75Plm5YduM66SbWef3glBImIIrrgcHzxXyiq04edaS
-         cZUxrLhCRvpCatPBYmm+UzMLw7V8YEUMFgs0AOiYvg2d+UWSMqkADFsrC37us26jmo
-         BJ/kjXsSKupVKlApw9nMkm7Y0+Pq+P5QOHRJk1Ho=
-Received: by mail-wm1-f47.google.com with SMTP id s144so1295212wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 19:52:26 -0800 (PST)
-X-Gm-Message-State: APjAAAViEVgs8kTXiUVbo8CzUgt7Ix5KhKjtcQP68Yaftlq2FBcGKDy0
-        7ov3uTkBriUgZc+WFC84cAQny79834qT7aK3N3iDAQ==
-X-Google-Smtp-Source: APXvYqxgbhqU637eohL+mE8vS87HxSjkCSN70aYM1/0pu6EKsQATjp/v+OfI4bu1ySc4Mfq5i4rBqGuW6P+CNAnBMec=
-X-Received: by 2002:a1c:bb82:: with SMTP id l124mr2708818wmf.176.1581393144706;
- Mon, 10 Feb 2020 19:52:24 -0800 (PST)
+        Mon, 10 Feb 2020 22:52:44 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9720 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727800AbgBKDwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 22:52:44 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0293FC4337C545197046;
+        Tue, 11 Feb 2020 11:52:42 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
+ 11:52:33 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <axboe@kernel.dk>, <ming.lei@redhat.com>
+CC:     <yukuai3@huawei.com>, <yi.zhang@huawei.com>,
+        <zhangxiaoxu5@huawei.com>, <luoshijie1@huawei.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] block: rename 'q->debugfs_dir' in blk_unregister_queue()
+Date:   Tue, 11 Feb 2020 11:51:37 +0800
+Message-ID: <20200211035137.19454-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-References: <20200203151608.28053-1-xiaoyao.li@intel.com> <20200203151608.28053-6-xiaoyao.li@intel.com>
- <20200203214300.GI19638@linux.intel.com> <829bd606-6852-121f-0d95-e9f1d35a3dde@intel.com>
- <20200204093725.GC14879@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200204093725.GC14879@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 10 Feb 2020 19:52:13 -0800
-X-Gmail-Original-Message-ID: <CALCETrUAsUzqLhhNkLSC2612odskjqPQvj4uXgBOaoBGoCQD0A@mail.gmail.com>
-Message-ID: <CALCETrUAsUzqLhhNkLSC2612odskjqPQvj4uXgBOaoBGoCQD0A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] kvm: x86: Emulate MSR IA32_CORE_CAPABILITIES
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Laight <David.Laight@aculab.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 1:37 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Feb 04, 2020 at 05:19:26PM +0800, Xiaoyao Li wrote:
->
-> > > > + case MSR_IA32_CORE_CAPS:
-> > > > +         if (!msr_info->host_initiated)
-> > >
-> > > Shouldn't @data be checked against kvm_get_core_capabilities()?
-> >
-> > Maybe it's for the case that userspace might have the ability to emulate SLD
-> > feature? And we usually let userspace set whatever it wants, e.g.,
-> > ARCH_CAPABILITIES.
->
-> If the 'sq_misc.split_lock' event is sufficiently accurate, I suppose
-> the host could use that to emulate the feature at the cost of one
-> counter used.
+syzbot is reporting use after free bug in debugfs_remove[1].
 
-I would be impressed if the event were to fire before executing the
-offending split lock.  Wouldn't the best possible result be for it to
-fire with RIP pointing to the *next* instruction?  This seems like it
-could be quite confusing to a guest.
+This is because in request_queue, 'q->debugfs_dir' and
+'q->blk_trace->dir' could be the same dir. And in __blk_release_queue(),
+blk_mq_debugfs_unregister() will remove everything inside the dir.
+
+With futher investigation of the reporduce repro, the problem can be
+reporduced by following procedure:
+
+1. LOOP_CTL_ADD, create a request_queue q1, blk_mq_debugfs_register() will
+create the dir.
+2. LOOP_CTL_REMOVE, blk_release_queue() will add q1 to release queue.
+3. LOOP_CTL_ADD, create another request_queue q2,blk_mq_debugfs_register()
+will fail because the dir aready exist.
+4. BLKTRACESETUP, create two files(msg and dropped) inside the dir.
+5. call __blk_release_queue() for q1, debugfs_remove_recursive() will
+delete the files created in step 4.
+6. LOOP_CTL_REMOVE, blk_release_queue() will add q2 to release queue.
+And when __blk_release_queue() is called for q2, blk_trace_shutdown() will
+try to release the two files created in step 4, wich are aready released
+in step 5.
+
+|thread1		  |kworker	             |thread2               |
+| ----------------------- | ------------------------ | -------------------- |
+|loop_control_ioctl       |                          |                      |
+| loop_add                |                          |                      |
+|  blk_mq_debugfs_register|                          |                      |
+|   debugfs_create_dir    |                          |                      |
+|loop_control_ioctl       |                          |                      |
+| loop_remove		  |                          |                      |
+|  blk_release_queue      |                          |                      |
+|   schedule_work         |                          |                      |
+|			  |			     |loop_control_ioctl    |
+|			  |			     | loop_add             |
+|			  |			     |  ...                 |
+|			  |			     |blk_trace_ioctl       |
+|			  |			     | __blk_trace_setup    |
+|			  |			     |   debugfs_create_file|
+|			  |__blk_release_queue       |                      |
+|			  | blk_mq_debugfs_unregister|                      |
+|			  |  debugfs_remove_recursive|                      |
+|			  |			     |loop_control_ioctl    |
+|			  |			     | loop_remove          |
+|			  |			     |  ...                 |
+|			  |__blk_release_queue       |                      |
+|			  | blk_trace_shutdown       |                      |
+|			  |  debugfs_remove          |                      |
+
+commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") pushed the
+final release of request_queue to a workqueue, so, when loop_add() is
+called again(step 3), __blk_release_queue() might not been called yet,
+which causes the problem.
+
+Fix the problem by renaming 'q->debugfs_dir' in blk_unregister_queue().
+
+[1] https://syzkaller.appspot.com/bug?extid=903b72a010ad6b7a40f2
+References: CVE-2019-19770
+Fixes: commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
+Reported-by: syzbot <syz...@syzkaller.appspotmail.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ block/blk-sysfs.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index fca9b158f4a0..69d28b3f52d0 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -11,6 +11,7 @@
+ #include <linux/blktrace_api.h>
+ #include <linux/blk-mq.h>
+ #include <linux/blk-cgroup.h>
++#include <linux/debugfs.h>
+ 
+ #include "blk.h"
+ #include "blk-mq.h"
+@@ -1011,6 +1012,33 @@ int blk_register_queue(struct gendisk *disk)
+ }
+ EXPORT_SYMBOL_GPL(blk_register_queue);
+ 
++/*
++ * blk_prepare_release_queue - rename q->debugfs_dir
++ * @q: request_queue of which the dir to be renamed belong to.
++ *
++ * Because the final release of request_queue is in a workqueue, the
++ * cleanup might not been finished yet while the same device start to
++ * create. It's not correct if q->debugfs_dir still exist while trying
++ * to create a new one.
++ */
++static struct dentry *blk_prepare_release_queue(struct request_queue *q)
++{
++	struct dentry *new = NULL;
++	char name[DNAME_INLINE_LEN];
++	int i = 0;
++
++	if (IS_ERR_OR_NULL(q->debugfs_dir))
++		return q->debugfs_dir;
++
++	while (new == NULL) {
++		sprintf(name, "ready_to_remove_%d", i++);
++		new = debugfs_rename(blk_debugfs_root, q->debugfs_dir,
++				     blk_debugfs_root, name);
++	}
++
++	return new;
++}
++
+ /**
+  * blk_unregister_queue - counterpart of blk_register_queue()
+  * @disk: Disk of which the request queue should be unregistered from sysfs.
+@@ -1039,6 +1067,7 @@ void blk_unregister_queue(struct gendisk *disk)
+ 	mutex_unlock(&q->sysfs_lock);
+ 
+ 	mutex_lock(&q->sysfs_dir_lock);
++	q->debugfs_dir = blk_prepare_release_queue(q);
+ 	/*
+ 	 * Remove the sysfs attributes before unregistering the queue data
+ 	 * structures that can be modified through sysfs.
+-- 
+2.17.2
+
