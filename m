@@ -2,139 +2,168 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70298C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907D6C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4872B206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6903F20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mz/Z2r+U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fqZNEJG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgBKMpv (ORCPT
+        id S1728250AbgBKMrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:45:51 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37142 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgBKMpv (ORCPT
+        Tue, 11 Feb 2020 07:47:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57040 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728023AbgBKMrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:45:51 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so12220221wru.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 04:45:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C9q8BGu7IB7PXt2yUMUBykDSQ0B6YXHjWHvkwjJyPU4=;
-        b=Mz/Z2r+UYxnjdLLVzkoZoBQVAuezwg4Xnwp3DOGa2wS7dUDOCMCMfxYlGRovBodSYd
-         1eoYYXHQI0cvtBwC45WV5/QfIxbvaGM3+Mq5paj29D1BmneE39YBBXxE2vhYJyjmgQNA
-         cfD6Ae6hI59JebLeC5+AswAzqZMnHk02PwZjY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C9q8BGu7IB7PXt2yUMUBykDSQ0B6YXHjWHvkwjJyPU4=;
-        b=KikoBdD72tkRLvzwVsl5zKJihtzn33/Rj9koQO0ZweEmHX+XXsvh7MN18hjgydWkTH
-         4lVbJfVLpNdf7W2BNs+wKt0l14cjkDB3UBZUX6lMWXdjTvFyZjTcrovf/opzzfgnxKaD
-         PeNhWD14z7UdeidXsTuNKnMTG2NYa1TwbCcIJWTlCjirdt568HNEwfa1RKNJ6cQvwLwk
-         ZgpGeJzwr/flQXKfIJRzyro3fw8xubO6D9BU6ybIPDxUmLV+SgppFhnGpl1jzwfIOHBs
-         rX/3Xi4x44rgtnI+uGvvZsUyRvSuRbd1clU+F/N+5b45UcGaKzh8dkL1YxWbzRixjabg
-         MsxA==
-X-Gm-Message-State: APjAAAUxuoApjmu1Qg1j3/2xy6aKcpPasy+/4S/lCU2T78WyjNA19nIo
-        av7QVbwsak8j8DURuMjaad9u/A==
-X-Google-Smtp-Source: APXvYqzAKYr3XKAmFzgDScO7mcJ05XPCyWTrDngMYlhcutSKBK5Ht3CrGf4S4X8JhNdaS07YsYKUNg==
-X-Received: by 2002:a5d:4446:: with SMTP id x6mr8281334wrr.312.1581425149398;
-        Tue, 11 Feb 2020 04:45:49 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id w15sm5371585wrs.80.2020.02.11.04.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 04:45:48 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 11 Feb 2020 13:45:47 +0100
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v3 02/10] bpf: lsm: Add a skeleton and config
- options
-Message-ID: <20200211124547.GC96694@google.com>
-References: <20200123152440.28956-1-kpsingh@chromium.org>
- <20200123152440.28956-3-kpsingh@chromium.org>
- <20200210235214.ypb56vrkvzol3qdu@ast-mbp>
+        Tue, 11 Feb 2020 07:47:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581425220;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/aoK1QXCzMorlswoGVCOoMeDkLwKz3AeoTqS+YSOfSw=;
+        b=fqZNEJG0yTotnJQV9KTWjyUGl6PyU2DY8qc2Bv2qZjDn2CkS1rS46Mg+wyf8BH89+WwuR7
+        rhpcwp0TbbOSiQr34Mg9Q8sDyUpC7kxzbjy72lnRXJjahL/hBDzW/5Ore45lUs24kx8rrb
+        f+ZV0bmxm97u8+BqVuEXxvaOc6l79Mg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-SXnDScXhMiOTsLtNUoNaXQ-1; Tue, 11 Feb 2020 07:46:56 -0500
+X-MC-Unique: SXnDScXhMiOTsLtNUoNaXQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D097C477;
+        Tue, 11 Feb 2020 12:46:54 +0000 (UTC)
+Received: from localhost (ovpn-12-50.pek2.redhat.com [10.72.12.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2754B5D9E2;
+        Tue, 11 Feb 2020 12:46:51 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 20:46:48 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        richardw.yang@linux.intel.com
+Subject: Re: [PATCH 1/7] mm/sparse.c: Introduce new function
+ fill_subsection_map()
+Message-ID: <20200211124648.GF8965@MiWiFi-R3L-srv>
+References: <20200209104826.3385-1-bhe@redhat.com>
+ <20200209104826.3385-2-bhe@redhat.com>
+ <0463a54b-12cb-667e-7c86-66cd707cec84@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210235214.ypb56vrkvzol3qdu@ast-mbp>
+In-Reply-To: <0463a54b-12cb-667e-7c86-66cd707cec84@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-Feb 15:52, Alexei Starovoitov wrote:
-> On Thu, Jan 23, 2020 at 07:24:32AM -0800, KP Singh wrote:
+On 02/10/20 at 10:49am, David Hildenbrand wrote:
+> On 09.02.20 11:48, Baoquan He wrote:
+> > Wrap the codes filling subsection map in section_activate() into
+> > fill_subsection_map(), this makes section_activate() cleaner and
+> > easier to follow.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/sparse.c | 45 ++++++++++++++++++++++++++++++++++-----------
+> >  1 file changed, 34 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/mm/sparse.c b/mm/sparse.c
+> > index c184b69460b7..9ad741ccbeb6 100644
+> > --- a/mm/sparse.c
+> > +++ b/mm/sparse.c
+> > @@ -788,24 +788,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >  		depopulate_section_memmap(pfn, nr_pages, altmap);
+> >  }
 > >  
-> > +BPF SECURITY MODULE
-> > +M:	KP Singh <kpsingh@chromium.org>
-> > +L:	linux-security-module@vger.kernel.org
-> > +L:	bpf@vger.kernel.org
-> > +S:	Maintained
-> > +F:	security/bpf/
+> > -static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> > -		unsigned long nr_pages, struct vmem_altmap *altmap)
+> > +/**
+> > + * fill_subsection_map - fill subsection map of a memory region
+> > + * @pfn - start pfn of the memory range
+> > + * @nr_pages - number of pfns to add in the region
+> > + *
+> > + * This clears the related subsection map inside one section, and only
+> > + * intended for hotplug.
+> > + *
+> > + * Return:
+> > + * * 0		- On success.
+> > + * * -EINVAL	- Invalid memory region.
+> > + * * -EEXIST	- Subsection map has been set.
+> > + */
+> > +static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> >  {
+> > -	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> >  	struct mem_section *ms = __pfn_to_section(pfn);
+> > -	struct mem_section_usage *usage = NULL;
+> > +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> >  	unsigned long *subsection_map;
+> > -	struct page *memmap;
+> >  	int rc = 0;
+> >  
+> >  	subsection_mask_set(map, pfn, nr_pages);
+> >  
+> > -	if (!ms->usage) {
+> > -		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+> > -		if (!usage)
+> > -			return ERR_PTR(-ENOMEM);
+> > -		ms->usage = usage;
+> > -	}
+> >  	subsection_map = &ms->usage->subsection_map[0];
+> >  
+> >  	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
+> > @@ -816,6 +820,25 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> >  		bitmap_or(subsection_map, map, subsection_map,
+> >  				SUBSECTIONS_PER_SECTION);
+> >  
+> > +	return rc;
+> > +}
+> > +
+> > +static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> > +		unsigned long nr_pages, struct vmem_altmap *altmap)
+> > +{
+> > +	struct mem_section *ms = __pfn_to_section(pfn);
+> > +	struct mem_section_usage *usage = NULL;
+> > +	struct page *memmap;
+> > +	int rc = 0;
+> > +
+> > +	if (!ms->usage) {
+> > +		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+> > +		if (!usage)
+> > +			return ERR_PTR(-ENOMEM);
+> > +		ms->usage = usage;
+> > +	}
+> > +
+> > +	rc = fill_subsection_map(pfn, nr_pages);
+> >  	if (rc) {
+> >  		if (usage)
+> >  			ms->usage = NULL;
+> > 
 > 
-> Instead of creating new entry I think it's more appropriate
-> to add this to main BPF entry like:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c74e4ea714a5..f656ddec0722 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3147,6 +3147,7 @@ R:        Martin KaFai Lau <kafai@fb.com>
->  R:     Song Liu <songliubraving@fb.com>
->  R:     Yonghong Song <yhs@fb.com>
->  R:     Andrii Nakryiko <andriin@fb.com>
-> +R:     KP Singh <kpsingh@chromium.org>
+> What about having two variants of
+> section_activate()/section_deactivate() instead? Then we don't have any
+> subsection related stuff in !subsection code.
 
-I am okay with this too :) Will update it in the next revision.
+Thanks for looking into this, David.
 
-- KP
+Having two variants of section_activate()/section_deactivate() is also
+good. Just not like memmap handling which is very different between classic
+sparse and vmemmap, makes having two variants very attractive, the code
+and logic in section_activate()/section_deactivate() is not too much,
+and both of them basically can share the most of code, these make the
+variants way not so necessary. I personally prefer the current way, what
+do you think?
 
->  L:     netdev@vger.kernel.org
->  L:     bpf@vger.kernel.org
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
-> @@ -3172,6 +3173,7 @@ F:        samples/bpf/
->  F:     tools/bpf/
->  F:     tools/lib/bpf/
->  F:     tools/testing/selftests/bpf/
-> +F:     security/bpf/
->  K:     bpf
->  N:     bpf
+Thanks
+Baoquan
+
