@@ -2,144 +2,86 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BA3C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27B5C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BDA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:14:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hzf5IVG6"
+	by mail.kernel.org (Postfix) with ESMTP id C53FB20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgBKLOw (ORCPT
+        id S1728544AbgBKLQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:14:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33772 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727950AbgBKLOw (ORCPT
+        Tue, 11 Feb 2020 06:16:45 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:27199 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727950AbgBKLQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:14:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581419691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=i64HviBme2Pz18uHeGw1tj3lHgv6ae4i2ihKiY1Sg+w=;
-        b=Hzf5IVG6IGm8rP2M9smA/MgaR79MQSzcLIP9DTpT9Z8Z8dEP9blRA4ftc2nGNxnKeVKPnV
-        07N9li4uHQJMPl/jI1sx7tQz8h117PU/DkQaNqaR3AO62PjYjI0EXkHQ9AcWg8ho6SJ+mM
-        13CYGBTmWwHsOwhRIc/ZNP5chR2XPxY=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-BWZL5bJEMaSL1fa_ysnj_Q-1; Tue, 11 Feb 2020 06:14:49 -0500
-X-MC-Unique: BWZL5bJEMaSL1fa_ysnj_Q-1
-Received: by mail-qt1-f198.google.com with SMTP id p12so6346409qtu.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:14:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i64HviBme2Pz18uHeGw1tj3lHgv6ae4i2ihKiY1Sg+w=;
-        b=il6JtQbfAZWR9mtYaaFJEQxjAx0BCMu8SLH3A5KJsk3jTuxGTvyO7puEiBInaKolnE
-         4GdGuKZmbmJLbVKj5PPG46UdgGo4cxp8qm5ZAbb129d5MyHQOsdppJnuDeldcs4GtZjX
-         UbPTPyXhGyUWII008REYche8v57JtXoXreFsGrylIFTrs2n0nVPyTzGtxqo6AEFzUU1W
-         ln13KQhFenLm0oxNwjRiW35a8K3g6FOQ7G8jSI7b/Jp4oOBq3WtbnfeH9dQ6akJKhfAt
-         PbTJKCWxkeaoc9/U19qQhxXpt+5Cma16Mtgf9lSYHg6ArdmGqvXY8c9+KDS61lG1aSdC
-         jFwg==
-X-Gm-Message-State: APjAAAX5UuwKfkasE71nxCirL5AG22aMADi+O7QPZRauo8oXekXnuJiF
-        FArBzQ9ap6+DAhmb/HK6sDZ+9dhxIJR/5RE+J/hHWqiy0a3av8zR2JOcrf/JMuE6yFFCnUkkmYW
-        lePfNaN03O7WoluGh08ljMdJ4
-X-Received: by 2002:aed:3109:: with SMTP id 9mr14435456qtg.166.1581419689077;
-        Tue, 11 Feb 2020 03:14:49 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzLxRMntZl/rmTH1PsMTVPwnKKD+vZxzh00c1RAAnvkD1CE3PAe5M25dTlN82sQ46lo8t4E8w==
-X-Received: by 2002:aed:3109:: with SMTP id 9mr14435436qtg.166.1581419688863;
-        Tue, 11 Feb 2020 03:14:48 -0800 (PST)
-Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
-        by smtp.gmail.com with ESMTPSA id x41sm1996691qtj.52.2020.02.11.03.14.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 03:14:48 -0800 (PST)
-Date:   Tue, 11 Feb 2020 06:14:43 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Zha Bin <zhabin@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, jasowang@redhat.com, slp@redhat.com,
-        virtio-dev@lists.oasis-open.org, qemu-devel@nongnu.org,
-        gerry@linux.alibaba.com, jing2.liu@linux.intel.com,
-        chao.p.peng@linux.intel.com
-Subject: Re: [PATCH v2 5/5] x86: virtio-mmio: support virtio-mmio with MSI
- for x86
-Message-ID: <20200211061148-mutt-send-email-mst@kernel.org>
-References: <cover.1581305609.git.zhabin@linux.alibaba.com>
- <946b71e77a34666a9b8c419c5a467d1628b50fa0.1581305609.git.zhabin@linux.alibaba.com>
+        Tue, 11 Feb 2020 06:16:45 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-23-PgiBXMjfOvS6uoYNOFN1Uw-1; Tue, 11 Feb 2020 11:16:41 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 11 Feb 2020 11:16:40 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 11 Feb 2020 11:16:40 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Pavel Begunkov' <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] io_uring: fix iovec leaks
+Thread-Topic: [PATCH] io_uring: fix iovec leaks
+Thread-Index: AQHV3emh7zgsynhUKk2BR9GeKazohKgVyZ8AgAAQxACAAAIkUA==
+Date:   Tue, 11 Feb 2020 11:16:40 +0000
+Message-ID: <0d61cafdb0b040ac8bb3542b6022d0fc@AcuMS.aculab.com>
+References: <03aa734fcea29805635689cc2f1aa648f23b5cd3.1581102250.git.asml.silence@gmail.com>
+ <1255e56851a54c8c805695f1160bec9f@AcuMS.aculab.com>
+ <045f6c04-a6d8-146c-75f3-2c0d65e482d6@gmail.com>
+In-Reply-To: <045f6c04-a6d8-146c-75f3-2c0d65e482d6@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <946b71e77a34666a9b8c419c5a467d1628b50fa0.1581305609.git.zhabin@linux.alibaba.com>
+X-MC-Unique: PgiBXMjfOvS6uoYNOFN1Uw-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 05:05:21PM +0800, Zha Bin wrote:
-> From: Liu Jiang <gerry@linux.alibaba.com>
-> 
-> virtio-mmio supports a generic MSI irq domain for all archs. This
-> patch adds the x86 architecture support.
-> 
-> Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
-> Co-developed-by: Zha Bin <zhabin@linux.alibaba.com>
-> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
-> Co-developed-by: Jing Liu <jing2.liu@linux.intel.com>
-> Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
-> Co-developed-by: Chao Peng <chao.p.peng@linux.intel.com>
-> Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
-> ---
->  arch/x86/kernel/apic/msi.c | 11 ++++++++++-
-
-Patches like this need to CC x86 maintainers.
-
-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
-> index 159bd0c..2fcd602 100644
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -45,7 +45,11 @@ static void __irq_msi_compose_msg(struct irq_cfg *cfg, struct msi_msg *msg)
->  		MSI_DATA_VECTOR(cfg->vector);
->  }
->  
-> -static void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
-> +/*
-> + * x86 PCI-MSI/HPET/DMAR related method.
-> + * Also can be used as arch specific method for virtio-mmio MSI.
-> + */
-> +void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
->  {
->  	__irq_msi_compose_msg(irqd_cfg(data), msg);
->  }
-> @@ -166,6 +170,11 @@ static void irq_msi_update_msg(struct irq_data *irqd, struct irq_cfg *cfg)
->  	return ret;
->  }
->  
-> +struct irq_domain *arch_msi_root_irq_domain(void)
-> +{
-> +	return x86_vector_domain;
-> +}
-> +
->  /*
->   * IRQ Chip for MSI PCI/PCI-X/PCI-Express Devices,
->   * which implement the MSI or MSI-X Capability Structure.
-
-
-So there's a new non-static functions with no callers here,
-and a previously static irq_msi_compose_msg is not longer
-static. No callers so how does this help anyone?
-And how does this achieve the goal of enabling virtio mmio?
-
-
-> -- 
-> 1.8.3.1
+RnJvbTogUGF2ZWwgQmVndW5rb3YNCj4gU2VudDogMTEgRmVicnVhcnkgMjAyMCAxMTowNQ0KPiBP
+biAyLzExLzIwMjAgMTowNyBQTSwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IEZyb206IFBhdmVs
+IEJlZ3Vua292DQo+ID4+IFNlbnQ6IDA3IEZlYnJ1YXJ5IDIwMjAgMTk6MDUNCj4gPj4gQWxsb2Nh
+dGVkIGlvdmVjIGlzIGZyZWVkIG9ubHkgaW4gaW9fe3JlYWQsd3JpdGUsc2VuZCxyZWN2KSgpLCBh
+bmQganVzdA0KPiA+PiBsZWF2ZXMgaXQgaWYgYW4gZXJyb3Igb2NjdXJlZC4gVGhlcmUgYXJlIHBs
+ZW50eSBvZiBzdWNoIGNhc2VzOg0KPiA+PiAtIGNhbmNlbGxhdGlvbiBvZiBub24taGVhZCByZXF1
+ZXN0cw0KPiA+PiAtIGZhaWwgZ3JhYmJpbmcgZmlsZXMgaW4gX19pb19xdWV1ZV9zcWUoKQ0KPiA+
+PiAtIHNldCBSRVFfRl9OT1dBSVQgYW5kIHJldHVybmluZyBpbiBfX2lvX3F1ZXVlX3NxZSgpDQo+
+ID4+IC0gZXRjLg0KPiA+Pg0KPiA+PiBBZGQgUkVRX0ZfTkVFRF9DTEVBTlVQLCB3aGljaCB3aWxs
+IGZvcmNlIHN1Y2ggcmVxdWVzdHMgd2l0aCBjdXN0b20NCj4gPj4gYWxsb2NhdGVkIHJlc291cnNl
+cyBnbyB0aHJvdWdoIGNsZWFudXAgaGFuZGxlcnMgb24gcHV0Lg0KPiA+DQo+ID4gVGhpcyBsb29r
+cyBob3JyaWJseSBmcmFnaWxlLg0KPiANCj4gV2VsbCwgbm90IGFzIGhvcnJpYmxlIGFzIGl0IG1h
+eSBhcHBlYXIgLS0gc2V0IHRoZSBmbGFnLCB3aGVuZXZlciB5b3UNCj4gd2FudCB0aGUgY29ycmVz
+cG9uZGluZyBkZXN0cnVjdG9yIHRvIGJlIGNhbGxlZCwgYW5kIGNsZWFyIGl0IHdoZW4gaXMgbm90
+DQo+IG5lZWRlZCBhbnltb3JlLg0KPiANCj4gSSdkIGxvdmUgdG8gaGF2ZSBzb21ldGhpbmcgYmV0
+dGVyLCBtYXliZSBldmVuIHNvbWV0aGluZyBtb3JlIGludHJ1c2l2ZQ0KPiBmb3ItbmV4dCwgYnV0
+IHRoYXQgc2hvdWxkbid0IGh1cnQgdGhlIGhvdCBwYXRoLiBBbnkgaWRlYXM/DQoNCkdpdmVuIGFs
+bCB0aGUgJ2N1ZCBjaGV3aW5nJyB0aGF0IGhhcHBlbnMgaW4gY29kZSBwYXRocw0KbGlrZSB0aGUg
+b25lIHRoYXQgcmVhZCBpb3YgZnJvbSB1c2Vyc3BhY2UganVzdCBhZGRpbmc6DQoNCglpZiAodW5s
+aWtlbHkoZm9vLT5wdHIpKQ0KCQlrZnJlZShmb28tPnB0cik7DQoNCmJlZm9yZSAnZm9vJyBnb2Vz
+IG91dCBvZiBzY29wZSAob3IgaXMgcmV1c2VkKSBpcyBwcm9iYWJseQ0Kbm90IG1lYXN1cmFibGUu
+DQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9h
+ZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBO
+bzogMTM5NzM4NiAoV2FsZXMpDQo=
 
