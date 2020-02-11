@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8C8C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AF2C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC3320870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774822086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgBKN4S (ORCPT
+        id S1729829AbgBKN4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:56:18 -0500
-Received: from 8bytes.org ([81.169.241.247]:52390 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:56:17 -0500
+Received: from 8bytes.org ([81.169.241.247]:52198 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbgBKNxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729544AbgBKNxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 08:53:25 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 35481E84; Tue, 11 Feb 2020 14:53:14 +0100 (CET)
+        id 09D04E82; Tue, 11 Feb 2020 14:53:13 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 39/62] x86/sev-es: Harden runtime #VC handler for exceptions from user-space
-Date:   Tue, 11 Feb 2020 14:52:33 +0100
-Message-Id: <20200211135256.24617-40-joro@8bytes.org>
+Subject: [PATCH 38/62] x86/sev-es: Handle instruction fetches from user-space
+Date:   Tue, 11 Feb 2020 14:52:32 +0100
+Message-Id: <20200211135256.24617-39-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -48,70 +48,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Send SIGBUS to the user-space process that caused the #VC exception
-instead of killing the machine. Also ratelimit the error messages so
-that user-space can't flood the kernel log.
+When a #VC exception is triggered by user-space the instruction
+decoder needs to read the instruction bytes from user addresses.
+Enhance es_fetch_insn_byte() to safely fetch kernel and user
+instruction bytes.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 32 +++++++++++++++++++++++---------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+ arch/x86/kernel/sev-es.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index f5bff4219f6f..d128a9397639 100644
+index 2a801919e7c0..f5bff4219f6f 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -254,16 +254,16 @@ dotraplinkage void do_vmm_communication(struct pt_regs *regs, unsigned long exit
- 		finish_insn(&ctxt);
- 		break;
- 	case ES_UNSUPPORTED:
--		pr_emerg("Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
--			 exit_code, regs->ip);
-+		pr_err_ratelimited("Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
-+				   exit_code, regs->ip);
- 		goto fail;
- 	case ES_VMM_ERROR:
--		pr_emerg("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
--			 exit_code, regs->ip);
-+		pr_err_ratelimited("Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
-+				   exit_code, regs->ip);
- 		goto fail;
- 	case ES_DECODE_FAILED:
--		pr_emerg("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
--			 exit_code, regs->ip);
-+		pr_err_ratelimited("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
-+				   exit_code, regs->ip);
- 		goto fail;
- 	case ES_EXCEPTION:
- 		forward_exception(&ctxt);
-@@ -278,10 +278,24 @@ dotraplinkage void do_vmm_communication(struct pt_regs *regs, unsigned long exit
- 	return;
- 
- fail:
--	show_regs(regs);
-+	if (user_mode(regs)) {
-+		/*
-+		 * Do not kill the machine if user-space triggered the
-+		 * exception. Send SIGBUS instead and let user-space deal with
-+		 * it.
-+		 */
-+		force_sig_fault(SIGBUS, BUS_OBJERR, (void __user *)0);
-+	} else {
-+		/* Show some debug info */
-+		show_regs(regs);
- 
--	while (true)
--		halt();
-+		/* Ask hypervisor to terminate */
-+		terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
+@@ -61,13 +61,29 @@ static enum es_result es_fetch_insn_byte(struct es_em_ctxt *ctxt,
+ 					 unsigned int offset,
+ 					 char *buffer)
+ {
+-	char *rip = (char *)ctxt->regs->ip;
+-
+-	/* More checks are needed when we boot to user-space */
+-	if (!check_kernel(ctxt->regs))
+-		return ES_UNSUPPORTED;
+-
+-	buffer[offset] = rip[offset];
++	if (user_mode(ctxt->regs)) {
++		unsigned long addr = ctxt->regs->ip + offset;
++		char __user *rip = (char __user *)addr;
 +
-+		/* If that fails and we get here - just halt the machine */
-+		while (true)
-+			halt();
++		if (unlikely(addr >= TASK_SIZE_MAX))
++			return ES_UNSUPPORTED;
++
++		if (copy_from_user(buffer + offset, rip, 1)) {
++			ctxt->fi.vector     = X86_TRAP_PF;
++			ctxt->fi.cr2        = addr;
++			ctxt->fi.error_code = X86_PF_INSTR | X86_PF_USER;
++			return ES_EXCEPTION;
++		}
++	} else {
++		char *rip = (char *)ctxt->regs->ip + offset;
++
++		if (probe_kernel_read(buffer + offset, rip, 1) != 0) {
++			ctxt->fi.vector     = X86_TRAP_PF;
++			ctxt->fi.cr2        = (unsigned long)rip;
++			ctxt->fi.error_code = X86_PF_INSTR;
++			return ES_EXCEPTION;
++		}
 +	}
- }
  
- int __init boot_vc_exception(struct pt_regs *regs)
+ 	return ES_OK;
+ }
 -- 
 2.17.1
 
