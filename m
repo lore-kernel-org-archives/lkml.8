@@ -7,208 +7,189 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FEAC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A65C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B83206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA25206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZMvGlPwf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YH7Iw99W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgBKMTN (ORCPT
+        id S1728738AbgBKMT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:19:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26612 "EHLO
+        Tue, 11 Feb 2020 07:19:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47155 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727779AbgBKMTN (ORCPT
+        with ESMTP id S1728060AbgBKMT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:19:13 -0500
+        Tue, 11 Feb 2020 07:19:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581423551;
+        s=mimecast20190719; t=1581423597;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ANsA7vqtjun7svPIoAV0ILYiLkp9u0k8cszuL0qtwAk=;
-        b=ZMvGlPwf+KPpB92RPSNx0Hjwf4V9pdqNegpcq3+qWrC41AQIZSOyMjOlP32UwII4FZCa75
-        A7zpd25phR7igXHl/HmUrKi5bCxQpbhmSPp95n2fin7YA9MiYZHQnbtF46PzKr6bVsDaus
-        0J9KeXIryMw2sWOJw7RuKf0XE1Ejt8Q=
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=rY7sfHFLE3EdoKM/Z4lC35365WbQC8hmWmWulIxlBt8=;
+        b=YH7Iw99WzeGasQPvP0PNkB3oCjirQHcBwmq/AuSSa9yhetHGeiviQ9upViNXWk98dZB2AH
+        QU+lKvmmcmh0v+i7LY+MUHnutX5MPnj1ZFTd72U2GEk7vBJs5r1SCn6zKCErHRM/r14KqN
+        zUfc8pjYsY5CDv3GrvTCIUhoe0qaYm0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-212--FL98XOyNniFvKlNRtNXHA-1; Tue, 11 Feb 2020 07:19:10 -0500
-X-MC-Unique: -FL98XOyNniFvKlNRtNXHA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-385-oKHjTAIXO_e1cT13bqrvSQ-1; Tue, 11 Feb 2020 07:19:55 -0500
+X-MC-Unique: oKHjTAIXO_e1cT13bqrvSQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A175618A8C81;
-        Tue, 11 Feb 2020 12:19:08 +0000 (UTC)
-Received: from [10.72.13.150] (ovpn-13-150.pek2.redhat.com [10.72.13.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B1FC857AE;
-        Tue, 11 Feb 2020 12:18:55 +0000 (UTC)
-Subject: Re: [virtio-dev] Re: [PATCH v2 4/5] virtio-mmio: add MSI interrupt
- feature support
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A5D018B5F6D;
+        Tue, 11 Feb 2020 12:19:53 +0000 (UTC)
+Received: from [10.36.117.14] (ovpn-117-14.ams2.redhat.com [10.36.117.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C187566838;
+        Tue, 11 Feb 2020 12:19:32 +0000 (UTC)
+Subject: Re: [PATCH v16.1 6/9] virtio-balloon: Add support for providing free
+ page reports to host
 To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtio-dev@lists.oasis-open.org,
-        Zha Bin <zhabin@linux.alibaba.com>, slp@redhat.com,
-        "Liu, Jing2" <jing2.liu@linux.intel.com>,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        chao.p.peng@linux.intel.com, gerry@linux.alibaba.com
-References: <cover.1581305609.git.zhabin@linux.alibaba.com>
- <4c3d13be5a391b1fc50416838de57d903cbf8038.1581305609.git.zhabin@linux.alibaba.com>
- <0c71ff9d-1a7f-cfd2-e682-71b181bdeae4@redhat.com>
- <c42c8b49-5357-f341-2942-ba84afc25437@linux.intel.com>
- <ad96269f-753d-54b8-a4ae-59d1595dd3b2@redhat.com>
- <5522f205-207b-b012-6631-3cc77dde3bfe@linux.intel.com>
- <45e22435-08d3-08fe-8843-d8db02fcb8e3@redhat.com>
- <20200211065319-mutt-send-email-mst@kernel.org>
- <c4a78a15-c889-df3f-3e1e-7df1a4d67838@redhat.com>
- <20200211070523-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <fdb19ef4-2003-6c6f-5c6f-c757a6320130@redhat.com>
-Date:   Tue, 11 Feb 2020 20:18:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz,
+        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com, osalvador@suse.de
+References: <20200122173040.6142.39116.stgit@localhost.localdomain>
+ <20200122174347.6142.92803.stgit@localhost.localdomain>
+ <b8cbf72d-55a7-4a58-6d08-b0ac5fa86e82@redhat.com>
+ <20200211063441-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <ada0ec83-8e7d-abb3-7053-0ec2bf2a9aa5@redhat.com>
+Date:   Tue, 11 Feb 2020 13:19:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200211070523-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200211063441-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/2/11 =E4=B8=8B=E5=8D=888:08, Michael S. Tsirkin wrote:
-> On Tue, Feb 11, 2020 at 08:04:24PM +0800, Jason Wang wrote:
->> On 2020/2/11 =E4=B8=8B=E5=8D=887:58, Michael S. Tsirkin wrote:
->>> On Tue, Feb 11, 2020 at 03:40:23PM +0800, Jason Wang wrote:
->>>> On 2020/2/11 =E4=B8=8B=E5=8D=882:02, Liu, Jing2 wrote:
->>>>> On 2/11/2020 12:02 PM, Jason Wang wrote:
->>>>>> On 2020/2/11 =E4=B8=8A=E5=8D=8811:35, Liu, Jing2 wrote:
->>>>>>> On 2/11/2020 11:17 AM, Jason Wang wrote:
->>>>>>>> On 2020/2/10 =E4=B8=8B=E5=8D=885:05, Zha Bin wrote:
->>>>>>>>> From: Liu Jiang<gerry@linux.alibaba.com>
->>>>>>>>>
->>>>>>>>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take
->>>>>>>>> advantage of using
->>>>>>>>> virtio over mmio devices as a lightweight machine model for mod=
-ern
->>>>>>>>> cloud. The standard virtio over MMIO transport layer
->>>>>>>>> only supports one
->>>>>>>>> legacy interrupt, which is much heavier than virtio over
->>>>>>>>> PCI transport
->>>>>>>>> layer using MSI. Legacy interrupt has long work path and
->>>>>>>>> causes specific
->>>>>>>>> VMExits in following cases, which would considerably slow down =
-the
->>>>>>>>> performance:
->>>>>>>>>
->>>>>>>>> 1) read interrupt status register
->>>>>>>>> 2) update interrupt status register
->>>>>>>>> 3) write IOAPIC EOI register
->>>>>>>>>
->>>>>>>>> We proposed to add MSI support for virtio over MMIO via new fea=
-ture
->>>>>>>>> bit VIRTIO_F_MMIO_MSI[1] which increases the interrupt performa=
-nce.
->>>>>>>>>
->>>>>>>>> With the VIRTIO_F_MMIO_MSI feature bit supported, the virtio-mm=
-io MSI
->>>>>>>>> uses msi_sharing[1] to indicate the event and vector mapping.
->>>>>>>>> Bit 1 is 0: device uses non-sharing and fixed vector per
->>>>>>>>> event mapping.
->>>>>>>>> Bit 1 is 1: device uses sharing mode and dynamic mapping.
->>>>>>>> I believe dynamic mapping should cover the case of fixed vector?
->>>>>>>>
->>>>>>> Actually this bit*aims*  for msi sharing or msi non-sharing.
->>>>>>>
->>>>>>> It means, when msi sharing bit is 1, device doesn't want vector
->>>>>>> per queue
->>>>>>>
->>>>>>> (it wants msi vector sharing as name) and doesn't want a high
->>>>>>> interrupt rate.
->>>>>>>
->>>>>>> So driver turns to !per_vq_vectors and has to do dynamical mappin=
-g.
->>>>>>>
->>>>>>> So they are opposite not superset.
->>>>>>>
->>>>>>> Thanks!
->>>>>>>
->>>>>>> Jing
->>>>>> I think you need add more comments on the command.
->>>>>>
->>>>>> E.g if I want to map vector 0 to queue 1, how do I need to do?
->>>>>>
->>>>>> write(1, queue_sel);
->>>>>> write(0, vector_sel);
->>>>> That's true. Besides, two commands are used for msi sharing mode,
->>>>>
->>>>> VIRTIO_MMIO_MSI_CMD_MAP_CONFIG and VIRTIO_MMIO_MSI_CMD_MAP_QUEUE.
->>>>>
->>>>> "To set up the event and vector mapping for MSI sharing mode, drive=
-r
->>>>> SHOULD write a valid MsiVecSel followed by
->>>>> VIRTIO_MMIO_MSI_CMD_MAP_CONFIG/VIRTIO_MMIO_MSI_CMD_MAP_QUEUE comman=
-d to
->>>>> map the configuration change/selected queue events respectively.=C2=
-=A0 " (See
->>>>> spec patch 5/5)
->>>>>
->>>>> So if driver detects the msi sharing mode, when it does setup vq, w=
-rites
->>>>> the queue_sel (this already exists in setup vq), vector sel and the=
-n
->>>>> MAP_QUEUE command to do the queue event mapping.
->>>>>
->>>> So actually the per vq msix could be done through this. I don't get =
-why you
->>>> need to introduce MSI_SHARING_MASK which is the charge of driver ins=
-tead of
->>>> device. The interrupt rate should have no direct relationship with w=
-hether
->>>> it has been shared or not.
->>>>
->>>> Btw, you introduce mask/unmask without pending, how to deal with the=
- lost
->>>> interrupt during the masking then?
->>> pending can be an internal device register. as long as device
->>> does not lose interrupts while masked, all's well.
 >>
->> You meant raise the interrupt during unmask automatically?
->>
->
-> yes - that's also what pci does.
->
-> the guest visible pending bit is partially implemented in qemu
-> as per pci spec but it's unused.
+>> Did you see the discussion regarding unifying handling of
+>> inflate/deflate/free_page_hinting_free_page_reporting, requested by
+>> Michael? I think free page reporting is special and shall be left alon=
+e.
+>=20
+> Not sure what do you mean by "left alone here". Could you clarify?
 
+Don't try to unify handling like I proposed below, because it's
+semantics are special.
 
-Ok.
+>=20
+>> VIRTIO_BALLOON_F_REPORTING is nothing but a more advanced inflate, rig=
+ht
+>> (sg, inflate based on size - not "virtio pages")?
+>=20
+>=20
+> Not exactly - it's also initiated by guest as opposed to host, and
+> not guided by the ballon size request set by the host.
 
+True, but AFAIKS you could use existing INFLATE/DEFLATE in a similar
+way. There is no way for the hypervisor to nack a request. The balloon
+size is not glued to inflate/deflate requests. The guests manually
+updates it.
 
->
->>> There's value is being able to say "this queue sends no
->>> interrupts do not bother checking used notification area".
->>> so we need way to say that. So I guess an enable interrupts
->>> register might have some value...
->>> But besides that, it's enough to have mask/unmask/address/data
->>> per vq.
->>
->> Just to check, do you mean "per vector" here?
->>
->> Thanks
->>
-> No, per VQ. An indirection VQ -> vector -> address/data isn't
-> necessary for PCI either, but that ship has sailed.
+> And uses a dedicated queue to avoid blocking other functionality ...
 
+True, but the other queues also don't allow for an easy extension
+AFAIKS, so that's another reason.
 
-Yes, it can work but it may bring extra effort when you want to mask a=20
-vector which is was shared by a lot of queues.
+>=20
+> I really think this is more like an inflate immediately followed by def=
+late.
 
-Thanks
+Depends on how you look at it. As inflate/deflate is not glued to the
+balloon size (the guest updates the size manually), it's not obvious.
 
->
+E.g., in QEMU, a deflate is just a performance improvement
+("MADV_WILLNEED") - in that regard, it's more like an optional deflation.
+
+[...]
+
+>=20
+> I'd rather wait until we have a usecase and preferably a POC
+> showing it helps before we add optional deflate ...
+> For now I personally am fine with just making this go ahead as is,
+> and imply SG and OPTIONAL_DEFLATE just for this VQ.
+
+Also fine with me, you asked about if we can abstract any of this if I
+am not wrong :) So this was my take.
+
+>=20
+> Do you feel strongly we need to bring this up to a TC vote?
+
+Not really. People have been asking about how to inflate/deflate huge
+pages a long time ago (comes with different challenges - e.g., balloon
+compaction). looked like this interface could have been reused for this
+as well.
+
+But yeah, I am not a fan of virtio-balloon and the whole inflate/deflate
+thingy. So at least I don't see a need to extend the inflate/deflate
+capability.
+
+Free page reporting is a different story (and the semantics require no
+inflate/deflate/balloon size) - it could have been moved to
+virtio-whatever without any issues. So I am fine with this.
+
+--=20
+Thanks,
+
+David / dhildenb
 
