@@ -7,68 +7,71 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ECFC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A865C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 799F1214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBE82082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZKGrFc5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcviG1/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgBKSs0 (ORCPT
+        id S1730825AbgBKTGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:48:26 -0500
-Received: from mail-yw1-f46.google.com ([209.85.161.46]:33072 "EHLO
+        Tue, 11 Feb 2020 14:06:10 -0500
+Received: from mail-yw1-f46.google.com ([209.85.161.46]:46432 "EHLO
         mail-yw1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgBKSs0 (ORCPT
+        with ESMTP id S1728503AbgBKTGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:48:26 -0500
-Received: by mail-yw1-f46.google.com with SMTP id 192so5694270ywy.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:48:25 -0800 (PST)
+        Tue, 11 Feb 2020 14:06:09 -0500
+Received: by mail-yw1-f46.google.com with SMTP id z141so5683043ywd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:06:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=+kQqg894ymcaPpTU+slbxV54o97AEArgCde/E/E3bK8=;
-        b=FZKGrFc5FVnFTZZQnm3tPFg0oD94ghQ5VqaGUx2qBVBlU4FBgKsQXLzTmXhI+totLr
-         3J1YcvUYg/r65kODV/71Vu55zJ600BnoSTl4jWLwqgwd8exJy5o2qpqzwQyBykWoDvVo
-         Vsru6M9oY+ION7cV0s5uXU7gvO8aw9EEwW+4FC2q4e5wfxrj4WAzq+d1jhHkJ52jUKoi
-         6XuFNWndwgXP4B9CyYJ7mWKt6In4v2VahQyNqrc3hh+grUQo/HzOcH/E96FqibsKky49
-         syD7h+kJeiEdjBf8zW6vCx799/LSIo6o3uPIkhHu2U/QxP8sp2UvBOQ9DOy8Q5jNZDa1
-         S6vw==
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=wPdyB8BXraQOD7tLtMr9ZV817UwsVe3LQShrz9AB71o=;
+        b=hcviG1/qorx7l4xH40ZtuRYm2w+B4cOpjR68es00EDjvVqtgKLGTMp2tWDQpxurDSP
+         B2tcidAOREXJ9g+9tnplWkUnE5PqcH/1Pwjk6J1ybG1r3+ZapTsYc0/p7CRZ2CMEFvci
+         gsLFkVJjDaR6SATkziFS3Kw5aLXZIPzbiVZ01nDpLHIxXdor2e9PXVo49LyE4nV6B2jI
+         NN/CVR7/rhSWKG1QzTDHQwWxeOAuRDelG1lSrSLoLK48sDXhqJPw7B7QSAntf/s1SeOn
+         GzAFSvu1GZdKPKWFQUVffJSllZ0lruxX1XgAWHQrUfsoGAn12KxdWf0R7isqwYxBiSYY
+         H5Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=+kQqg894ymcaPpTU+slbxV54o97AEArgCde/E/E3bK8=;
-        b=lehQ0P/uPGz0YwfYQYl4u0zskHML6ziv+WOn4RowiJAvwQUblHU3AjzJhzEQ9AZzt/
-         ZeEBu0iOiD/vopqLOcNRhnJ/Arn4t6nbbws6FtuZJSESzW2l7VMAshGuCdWH7q7n5vu0
-         EILI3dv1VvvAtzW6FjS9RSR5LKvqJqTcuD8ssXsS2U/q1e9vqdoXQ8V+y4UNRHda/8Px
-         u7V3YNV0E0rLlLik090eXpYH506cKnWVp2U7kicgpy15hfmRh9kbOz2WFT1T5PEx1m84
-         VgkmbDZVcmpGQAAsztoTdgUaAqD2QPwB4gQj2L/S1qlJhWsgNx6iOIBG6snFZ4tw5rGr
-         5Hrw==
-X-Gm-Message-State: APjAAAXYrsOm2atINU8R0eB+KmSG+hHdwE1BSg2QilHIT2/qXEs/mYRQ
-        wH4ywlsO8QyYzXa5mWwl7MY=
-X-Google-Smtp-Source: APXvYqz+yitDKBvBiImcBkAM8FgYP/5DBkRVCPyXQDlV/fhwFrrf9G3aKZAZ7P/sM9vt68EBYj8tTA==
-X-Received: by 2002:a0d:c4c1:: with SMTP id g184mr6620334ywd.305.1581446905354;
-        Tue, 11 Feb 2020 10:48:25 -0800 (PST)
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wPdyB8BXraQOD7tLtMr9ZV817UwsVe3LQShrz9AB71o=;
+        b=F6pogeqdrq0CQbqLKNdRBBYgE/8yuo+7dVileP9Dn5kqhri0NONuCKjb2mHHAI9h2t
+         VK7z4uAVzk19RmEHgCzPLCOBLQcoRCW4PQKVjR3C8kHTten24Mt28jnacQqlhHfCguKZ
+         +V1M3L9MeQ+ifoUxJx4rw9zxavWvS/7TAjfel0ssUq7ktoDshe3NgicYwRwnZtIh9UCK
+         hiZG73wUSXqIeE5r+kALbCPkajDkvLANjN+k2qaNjY5LOhm2Jmu9X2IAq1rfFe1QdqRj
+         eapH6MvkzImMFjNpcum45i+KiAArd2rhewtBeJq31m0dwr4v7wtBW27s1Smpg7mIV+e+
+         KoZA==
+X-Gm-Message-State: APjAAAUfpbeiINWWpyJrtXPGAPS797V+6SJGaKSDqJ17TyGq8elUI4CX
+        ea3oZKY0WmU8wWEXO0r4gHc=
+X-Google-Smtp-Source: APXvYqyrbf0Yi0My9AVtmvvXRiHg+YhKUVB+wqHwXuqkiygW0m3qa3XX1OCLmDSfhL6EsR/P1W3kDw==
+X-Received: by 2002:a81:50d6:: with SMTP id e205mr6470075ywb.208.1581447967258;
+        Tue, 11 Feb 2020 11:06:07 -0800 (PST)
 Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id d9sm2242276ywh.55.2020.02.11.10.48.24
+        by smtp.gmail.com with ESMTPSA id b73sm2281079ywe.28.2020.02.11.11.06.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 10:48:25 -0800 (PST)
+        Tue, 11 Feb 2020 11:06:06 -0800 (PST)
+Subject: Re: build error: f7655d42fcee drm/edid: Add CTA-861-G modes with VIC
+ >= 193
+From:   Frank Rowand <frowand.list@gmail.com>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Subject: build error: f7655d42fcee drm/edid: Add CTA-861-G modes with VIC >=
- 193
-Message-ID: <4e918a35-dbcd-b2fd-1888-a86e7d448128@gmail.com>
-Date:   Tue, 11 Feb 2020 12:48:23 -0600
+References: <4e918a35-dbcd-b2fd-1888-a86e7d448128@gmail.com>
+Message-ID: <3e5d7142-cacc-6830-94d3-f57ef18592d9@gmail.com>
+Date:   Tue, 11 Feb 2020 13:06:05 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <4e918a35-dbcd-b2fd-1888-a86e7d448128@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -77,31 +80,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am getting a kernel build error at version 5.6-rc1:
+On 2/11/20 12:48 PM, Frank Rowand wrote:
+> I am getting a kernel build error at version 5.6-rc1:
+> 
+> drivers/gpu/drm/drm_edid.c: In function 'cea_mode_alternate_timings':
+> drivers/gpu/drm/drm_edid.c:3275:2: error: call to '__compiletime_assert_3282' declared with attribute error: BUILD_BUG_ON failed: cea_mode_for_vic(8)->vtotal != 262 || cea_mode_for_vic(9)->vtotal != 262 || cea_mode_for_vic(12)->vtotal != 262 || cea_mode_for_vic(13)->vtotal != 262 || cea_mode_for_vic(23)->vtotal != 312 || cea_mode_for_vic(24)->vtotal != 312 || cea_mode_for_vic(27)->vtotal != 312 || cea_mode_for_vic(28)->vtotal != 312
+> make[4]: *** [drivers/gpu/drm/drm_edid.o] Error 1
+> 
+> 
+> Kernel configuration:
+>   make qcom_defconfig
+> 
+>   (arch/arm/configs/qcom_defconfig)
+> 
+> 
+> Compiler is arm-eabi-gcc 4.6.x
+> 
+> 
+> The build error goes away if I revert:
+> 
+>    f7655d42fcee drm/edid: Add CTA-861-G modes with VIC >= 193
 
-drivers/gpu/drm/drm_edid.c: In function 'cea_mode_alternate_timings':
-drivers/gpu/drm/drm_edid.c:3275:2: error: call to '__compiletime_assert_3282' declared with attribute error: BUILD_BUG_ON failed: cea_mode_for_vic(8)->vtotal != 262 || cea_mode_for_vic(9)->vtotal != 262 || cea_mode_for_vic(12)->vtotal != 262 || cea_mode_for_vic(13)->vtotal != 262 || cea_mode_for_vic(23)->vtotal != 312 || cea_mode_for_vic(24)->vtotal != 312 || cea_mode_for_vic(27)->vtotal != 312 || cea_mode_for_vic(28)->vtotal != 312
-make[4]: *** [drivers/gpu/drm/drm_edid.o] Error 1
+I did not actually revert f7655d42fcee from 5.6-rc1.  I checked out the commit
+before f7655d42fcee and was able to build the kernel.  Then I checked out
+f7655d42fcee and the build failed in the same manner as at 5.6-rc1.
 
-
-Kernel configuration:
-  make qcom_defconfig
-
-  (arch/arm/configs/qcom_defconfig)
-
-
-Compiler is arm-eabi-gcc 4.6.x
-
-
-The build error goes away if I revert:
-
-   f7655d42fcee drm/edid: Add CTA-861-G modes with VIC >= 193
-
-
-The build error also goes away if I comment out the two lines added to cea_mode_for_vic():
-
- 	if (vic >= 193 && vic < 193 + ARRAY_SIZE(edid_cea_modes_193))
- 		return &edid_cea_modes_193[vic - 193];
-
+Simply reverting f7655d42fcee at 5.6-rc1 does not result in a buildable
+kernel due to other related changes.
 
 -Frank
+
+> 
+> 
+> The build error also goes away if I comment out the two lines added to cea_mode_for_vic():
+> 
+>  	if (vic >= 193 && vic < 193 + ARRAY_SIZE(edid_cea_modes_193))
+>  		return &edid_cea_modes_193[vic - 193];
+> 
+> 
+> -Frank
+> 
+
