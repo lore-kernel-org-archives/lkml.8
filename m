@@ -2,106 +2,148 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C9CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DBBC352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C045920715
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE0720733
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQylGPxd"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="me0fYgFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgBKAPb (ORCPT
+        id S1727691AbgBKAPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:15:31 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45912 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbgBKAPa (ORCPT
+        Mon, 10 Feb 2020 19:15:42 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18802 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727599AbgBKAPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:15:30 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so4504937pfg.12;
-        Mon, 10 Feb 2020 16:15:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r5ohSbrtojTxCSFCkg8rYW9zCxgtMfpQZkLpXgHPTpk=;
-        b=KQylGPxdiaGvk+7Y+4BneWCRdxmvASR00418Jv7gHTm/EZxZkAZt8Hj7qbRh3JOGFy
-         oxl2x5m6yV6iMc5YLIlOjEox0c90qBOT+fwVam8DvtExHZ1JkoYBwPjGtqNhiRcZzwQq
-         TtY0mLuruewCig3yfcTFRMCAesZI8xyGIGReVInSiRC1XvxvpQq6veSmY1sNTWCG4Fwl
-         LLMc6e0KVLz+vy3Umv/5RTzT1ubEHIv95CCcWRKM8oKJcjqI1cX1Y8UcJSx9wMbYbBi7
-         H3aZXfZWPc9EK8I+72g6uwnDPYF0MUz4QJtn6UjV0uyHk3G1avz4AXDxhznkFQy9s/5o
-         JNFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r5ohSbrtojTxCSFCkg8rYW9zCxgtMfpQZkLpXgHPTpk=;
-        b=BWJkqB8kaXTQ6vRF2tfYkpBrwH5Aal6vL1eAr01oX1eJZmRWaMdlXeSb+bT5Wxq0ev
-         lnD7SH0TK7edouZG0a82L94GS6l2gAz2Ls9shKGUmebYbR7m7jI+MTkaeidC9DY8wEpG
-         pTiTkiBx9KioZ4HyKMvP9bNN7bEpqUhzP8XgsBjlqh/RC//rXTR5kmyy5lKSZZCqUIcK
-         appJ9QczHPEmclmdmhUVhdF6Z7vAy7Wk/Pu7eH4x1Jh1xN3b0L8S2WP7ze8C5wUWVu87
-         jcxchbeZgZedXllDkuiwxdvOR86zNa8zoG/A+DqQnXwTI4a3FwFFz2yxM1HAq7Ghl+ZB
-         fa7Q==
-X-Gm-Message-State: APjAAAWuyuIpZdTjeu2Lf6XZxEOFiZd6kCV23/J4MXkrVK1roLjQvTLf
-        DYorImDf4/koNJ1Pv9bat+s=
-X-Google-Smtp-Source: APXvYqwaI1pmqbF0HQJmCdNPwqmI2s1WtrWOIQeTyY/IRieg6LQrDFvOhcDN4OionXTTqMh7Vs1K2g==
-X-Received: by 2002:a65:5549:: with SMTP id t9mr4124065pgr.439.1581380129926;
-        Mon, 10 Feb 2020 16:15:29 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:200::2:685c])
-        by smtp.gmail.com with ESMTPSA id z26sm1201161pgu.80.2020.02.10.16.15.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 16:15:29 -0800 (PST)
-Date:   Mon, 10 Feb 2020 16:15:27 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-Cc:     Bjorn Topel <bjorn.topel@gmail.com>, daniel@iogearbox.net,
-        ast@kernel.org, zlim.lnx@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        andriin@fb.com, shuah@kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, kernel-team@android.com
-Subject: Re: [PATCH 4/4] arm64: bpf: Elide some moves to a0 after calls
-Message-ID: <20200211001526.xbfwdnpjqrg3ed6q@ast-mbp>
-References: <20200128021145.36774-1-palmerdabbelt@google.com>
- <20200128021145.36774-5-palmerdabbelt@google.com>
+        Mon, 10 Feb 2020 19:15:40 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e41f20f0004>; Mon, 10 Feb 2020 16:15:11 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 10 Feb 2020 16:15:38 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 10 Feb 2020 16:15:38 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Feb
+ 2020 00:15:38 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 11 Feb 2020 00:15:38 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e41f22a0009>; Mon, 10 Feb 2020 16:15:38 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v6 10/12] selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN coverage
+Date:   Mon, 10 Feb 2020 16:15:34 -0800
+Message-ID: <20200211001536.1027652-11-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200211001536.1027652-1-jhubbard@nvidia.com>
+References: <20200211001536.1027652-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128021145.36774-5-palmerdabbelt@google.com>
-User-Agent: NeoMutt/20180223
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581380111; bh=Q/jtf1QAQWUBdGa6x5cGwrQgIxtlzXz53YFDTgazJkU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=me0fYgFl3u2iBx6IZn3iJpA+e66CKBG24D5gmrYC2O4NljOdB6b3oRMXZ5qp2bUNQ
+         BGstaMFqf4iW77usOMFnA/kbS80U+ZYS+MOIyX8H5bMiw7tSkkjiHwpqKbeu5Yj4F7
+         n0plnAN4T/4Eg/2nOdux8CYkK8phzZ4QQWaKkfnylRU//a9phghQ1/A1HkuPK3CgEz
+         WKQaD343+kGHlAIK4tn/giXH7g6OYSSU3/uo5edLLceViLXhkTOz2A4w5O1ALfvsIz
+         QikSrwzENxjNN5a7TDLT6mFfTDe66pHyc+WwBXn3D8CadLaUxTWTD2gJLzQq7IoMd/
+         R0f5qq1nmQoUQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 06:11:45PM -0800, Palmer Dabbelt wrote:
->  
-> +	/* Handle BPF_REG_0, which may be in the wrong place because the ARM64
-> +	 * ABI doesn't match the BPF ABI for function calls. */
-> +	if (ctx->reg0_in_reg1) {
-> +		/* If we're writing BPF_REG_0 then we don't need to do any
-> +		 * extra work to get the registers back in their correct
-> +		 * locations. */
-> +		if (insn->dst_reg == BPF_REG_0)
-> +			ctx->reg0_in_reg1 = false;
-> +
-> +		/* If we're writing to BPF_REG_1 then we need to save BPF_REG_0
-> +		 * into the correct location if it's still alive, as otherwise
-> +		 * it will be clobbered. */
-> +		if (insn->dst_reg == BPF_REG_1) {
-> +			if (!dead_register(ctx, off + 1, BPF_REG_0))
-> +				emit(A64_MOV(1, A64_R(7), A64_R(0)), ctx);
-> +			ctx->reg0_in_reg1 = false;
-> +		}
-> +	}
+It's good to have basic unit test coverage of the new FOLL_PIN
+behavior. Fortunately, the gup_benchmark unit test is extremely
+fast (a few milliseconds), so adding it the the run_vmtests suite
+is going to cause no noticeable change in running time.
 
-I'm not sure this is correct, since it processes insns as a linear code, but
-there could be jumps in the middle. The logic should be following the control
-flow of the program. The verifier is a better place to do such analysis.
-I don't see how JITs can do it on their own.
+So, add two new invocations to run_vmtests:
+
+1) Run gup_benchmark with normal get_user_pages().
+
+2) Run gup_benchmark with pin_user_pages(). This is much like
+the first call, except that it sets FOLL_PIN.
+
+Running these two in quick succession also provide a visual
+comparison of the running times, which is convenient.
+
+The new invocations are fairly early in the run_vmtests script,
+because with test suites, it's usually preferable to put the
+shorter, faster tests first, all other things being equal.
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ tools/testing/selftests/vm/run_vmtests | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftes=
+ts/vm/run_vmtests
+index a692ea828317..df6a6bf3f238 100755
+--- a/tools/testing/selftests/vm/run_vmtests
++++ b/tools/testing/selftests/vm/run_vmtests
+@@ -112,6 +112,28 @@ echo "NOTE: The above hugetlb tests provide minimal co=
+verage.  Use"
+ echo "      https://github.com/libhugetlbfs/libhugetlbfs.git for"
+ echo "      hugetlb regression testing."
+=20
++echo "--------------------------------------------"
++echo "running 'gup_benchmark -U' (normal/slow gup)"
++echo "--------------------------------------------"
++./gup_benchmark -U
++if [ $? -ne 0 ]; then
++	echo "[FAIL]"
++	exitcode=3D1
++else
++	echo "[PASS]"
++fi
++
++echo "------------------------------------------"
++echo "running gup_benchmark -b (pin_user_pages)"
++echo "------------------------------------------"
++./gup_benchmark -b
++if [ $? -ne 0 ]; then
++	echo "[FAIL]"
++	exitcode=3D1
++else
++	echo "[PASS]"
++fi
++
+ echo "-------------------"
+ echo "running userfaultfd"
+ echo "-------------------"
+--=20
+2.25.0
+
