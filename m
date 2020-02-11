@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D0DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC21C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB2E2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C702173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgBKNzC (ORCPT
+        id S1729589AbgBKNx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:55:02 -0500
-Received: from 8bytes.org ([81.169.241.247]:52278 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:53:27 -0500
+Received: from 8bytes.org ([81.169.241.247]:52104 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729592AbgBKNx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:28 -0500
+        id S1729500AbgBKNxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:21 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 871A0E9C; Tue, 11 Feb 2020 14:53:16 +0100 (CET)
+        id ED384B40; Tue, 11 Feb 2020 14:53:09 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 52/62] x86/sev-es: Handle #DB Events
-Date:   Tue, 11 Feb 2020 14:52:46 +0100
-Message-Id: <20200211135256.24617-53-joro@8bytes.org>
+Subject: [PATCH 16/62] x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
+Date:   Tue, 11 Feb 2020 14:52:10 +0100
+Message-Id: <20200211135256.24617-17-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -48,44 +48,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handle #VC exceptions caused by #DB exceptions in the guest. Do not
-forward them to the hypervisor and handle them with do_debug() instead.
+The function can fail to create an identity mapping, check for that
+and bail out if it happens.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 1b873d00e38f..700f75fc13e7 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -361,6 +361,15 @@ static enum es_result handle_vmmcall(struct ghcb *ghcb,
- 	return ES_OK;
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index 5b720736a789..feb180cced28 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -93,6 +93,8 @@ static struct x86_mapping_info mapping_info;
+  */
+ static void add_identity_map(unsigned long start, unsigned long end)
+ {
++	int ret;
++
+ 	/* Align boundary to 2M. */
+ 	start = round_down(start, PMD_SIZE);
+ 	end = round_up(end, PMD_SIZE);
+@@ -100,8 +102,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
+ 		return;
+ 
+ 	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
++	if (ret)
++		error("Error: kernel_ident_mapping_init() failed\n");
  }
  
-+static enum es_result handle_db_exception(struct ghcb *ghcb,
-+					  struct es_em_ctxt *ctxt)
-+{
-+	do_debug(ctxt->regs, 0);
-+
-+	/* Exception event, do not advance RIP */
-+	return ES_RETRY;
-+}
-+
- static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
- 					  struct ghcb *ghcb,
- 					  unsigned long exit_code,
-@@ -375,6 +384,9 @@ static enum es_result handle_vc_exception(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_WRITE_DR7:
- 		result = handle_dr7_write(ghcb, ctxt, early);
- 		break;
-+	case SVM_EXIT_EXCP_BASE + X86_TRAP_DB:
-+		result = handle_db_exception(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
- 		do_alignment_check(ctxt->regs, 0);
- 		result = ES_RETRY;
+ /* Locates and clears a region for a new top level page table. */
 -- 
 2.17.1
 
