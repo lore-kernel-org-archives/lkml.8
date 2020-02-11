@@ -2,117 +2,89 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042D8C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CAC20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B95020842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581460901;
+	bh=po7kqC7Pvn8ouUFSjitvJdsV90ZhZQbIOK4MtOWD+4c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z6s1HaeKge6xBIW4FgTTL2uLzUPsVyNCrPG11BdJz1ADqhuc/Hu1FJJ7nbtWGjWyJ
+	 dJlg185XFf4+ht6JOw0YminHlErRWTItDZ7Lf5Xmd6mwx0IT1DzPLi15e2pQ/GCOsU
+	 e+zHi4eqZOdCPfKc1x4S1rc1+RVQfvuDkdN6Fu2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgBKWii (ORCPT
+        id S1727635AbgBKWlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:38:38 -0500
-Received: from mga09.intel.com ([134.134.136.24]:58431 "EHLO mga09.intel.com"
+        Tue, 11 Feb 2020 17:41:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgBKWih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:38:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 14:38:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="251707124"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 11 Feb 2020 14:38:36 -0800
-Date:   Tue, 11 Feb 2020 14:38:37 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: do not reset microcode version on INIT or RESET
-Message-ID: <20200211223837.GC21526@linux.intel.com>
-References: <1581444279-10033-1-git-send-email-pbonzini@redhat.com>
+        id S1727330AbgBKWlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:41:39 -0500
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF53C215A4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581460899;
+        bh=po7kqC7Pvn8ouUFSjitvJdsV90ZhZQbIOK4MtOWD+4c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=A9SjsBEnM3jsARVQH6Vr8mTRFYVGhigujF6r85gkGJDQV5NSgyXGAldP+bLnXh/9J
+         3m3NtP+kcfOzMI6mAYyqirz9/jX0YVwfQ8kfmP5qG/FH5JKPQCzOSv87B8D9c6/iCa
+         ssCsOD+3rbZeEUyj8gwWEpLOQGnncSrhXwJy9lZ0=
+Received: by mail-wr1-f47.google.com with SMTP id z3so14608478wru.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:41:38 -0800 (PST)
+X-Gm-Message-State: APjAAAX8x7oWabU+hM97mFj015xh8NrMtWgAyllnH3lxqTvOKGxzzDqE
+        Pm7sLLM0/UfPOMXN6MoNzsG6hLKt85vA9I2xlB8kvQ==
+X-Google-Smtp-Source: APXvYqwUKxKnR3eGbA73IwMOx/C58CVPpQncokUat63UmXlmSlb5cTd+e+rYF11OC5oIS9uMBg3BBmcyseI9oUikD18=
+X-Received: by 2002:a5d:5305:: with SMTP id e5mr11103645wrv.18.1581460897210;
+ Tue, 11 Feb 2020 14:41:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581444279-10033-1-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-24-joro@8bytes.org>
+In-Reply-To: <20200211135256.24617-24-joro@8bytes.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 11 Feb 2020 14:41:25 -0800
+X-Gmail-Original-Message-ID: <CALCETrXswGgGoNaZigboUn3-amTyCY2Ft_JaMMvXchLDDkhJfw@mail.gmail.com>
+Message-ID: <CALCETrXswGgGoNaZigboUn3-amTyCY2Ft_JaMMvXchLDDkhJfw@mail.gmail.com>
+Subject: Re: [PATCH 23/62] x86/idt: Move IDT to data segment
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 07:04:39PM +0100, Paolo Bonzini wrote:
-> The microcode version should be set just once, since it is essentially
-> a CPU feature; so do it on vCPU creation rather than reset.
+On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> With SEV-ES, exception handling is needed very early, even before the
+> kernel has cleared the bss segment. In order to prevent clearing the
+> currently used IDT, move the IDT to the data segment.
 
-I wouldn't call it a CPU feature, CPU features generally can't be
-arbitrarily changed while running.  I'd prefer to have a changelog that
-at least somewhat ties the change to hardware behavior. 
+Ugh.  At the very least this needs a comment in the code.
 
-  Do not initialize the microcode version at RESET or INIT.   Microcode
-  updates are not lost during INIT, and exact behavior across a warm RESET
-  is microarchitectural, i.e. defer to userspace to emulate behavior for
-  RESET as it sees fit.
-
-For the code:
-
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-> Userspace can tie the fix to the availability of MSR_IA32_UCODE_REV in
-> the list of emulated MSRs.
-> 
-> Reported-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/svm.c     | 2 +-
->  arch/x86/kvm/vmx/vmx.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index a7e63b613837..280f6d024e84 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2185,7 +2185,6 @@ static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  	u32 dummy;
->  	u32 eax = 1;
->  
-> -	vcpu->arch.microcode_version = 0x01000065;
->  	svm->spec_ctrl = 0;
->  	svm->virt_spec_ctrl = 0;
->  
-> @@ -2276,6 +2275,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
->  	init_vmcb(svm);
->  
->  	svm_init_osvw(vcpu);
-> +	vcpu->arch.microcode_version = 0x01000065;
->  
->  	return 0;
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 9a6664886f2e..d625b4b0e7b4 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4238,7 +4238,6 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  
->  	vmx->msr_ia32_umwait_control = 0;
->  
-> -	vcpu->arch.microcode_version = 0x100000000ULL;
->  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->  	vmx->hv_deadline_tsc = -1;
->  	kvm_set_cr8(vcpu, 0);
-> @@ -6763,6 +6762,7 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
->  	vmx->nested.posted_intr_nv = -1;
->  	vmx->nested.current_vmptr = -1ull;
->  
-> +	vcpu->arch.microcode_version = 0x100000000ULL;
->  	vmx->msr_ia32_feature_control_valid_bits = FEAT_CTL_LOCKED;
->  
->  	/*
-> -- 
-> 1.8.3.1
-> 
+I had a patch to fix the kernel ELF loader to clear BSS, which would
+fix this problem once and for all, but it didn't work due to the messy
+way that the decompressor handles memory.  I never got around to
+fixing this, sadly.
