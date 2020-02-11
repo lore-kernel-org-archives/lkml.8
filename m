@@ -2,297 +2,179 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_75_100,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5BEC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F375C352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AF72080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA402072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="V3Z2D62h";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Htshbs9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgBKA4Z (ORCPT
+        id S1727772AbgBKA4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:56:25 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:48686 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgBKA4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:56:24 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BE16D1C1DCF;
-        Tue, 11 Feb 2020 01:56:21 +0100 (CET)
-Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 63DEF1C1DC4;
-        Tue, 11 Feb 2020 01:56:21 +0100 (CET)
-Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.70])
-        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id A509F40CD8;
-        Mon, 10 Feb 2020 17:56:20 -0700 (MST)
-From:   Li Yang <leoyang.li@nxp.com>
-To:     shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>
-Subject: [PATCH 2/2] arm64: defconfig: enable additional drivers needed by NXP QorIQ boards
-Date:   Mon, 10 Feb 2020 18:55:59 -0600
-Message-Id: <1581382559-18520-2-git-send-email-leoyang.li@nxp.com>
-X-Mailer: git-send-email 1.9.0
-In-Reply-To: <1581382559-18520-1-git-send-email-leoyang.li@nxp.com>
-References: <1581382559-18520-1-git-send-email-leoyang.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 10 Feb 2020 19:56:32 -0500
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:57383 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727120AbgBKA4b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 19:56:31 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.west.internal (Postfix) with ESMTP id 7842D616;
+        Mon, 10 Feb 2020 19:56:29 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 10 Feb 2020 19:56:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=BRKC1Q2crlqSmyJltbGVPx60D4o
+        E6HR1IKWysJB/xmk=; b=V3Z2D62h2p2geUkz1ivzOU/STOqjNIPDn0Nt4X8KrWs
+        4cRhPbM20kAxyZv9un1daHYw7TZcAFobebmYpWwbsPrlSx65MTLayVDjc2ftUdUG
+        QlggkEtUJfgvdz/dqgwl5KtAaTe3u+Fq3h2f6V6H2uGpvkNDs22Ws3QFNy2lNheY
+        FPImjQhi1NTxyzo2eLpHf92QARyUyj3UislevoqCP6YE6O6wjT9KeTWuiV7DYBiX
+        qRLDp7xScsr6zc/BsX9YVZsQFx33Jqb/yqGXKTFePJDE31NHzbGhw3DfdeES7djf
+        LokYUWl9dq/Wh7LCYGbpKc84fyZtueqRlZN28wL7LFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=BRKC1Q
+        2crlqSmyJltbGVPx60D4oE6HR1IKWysJB/xmk=; b=Htshbs9ypNG6jEppMXTnn8
+        cFsnUxgiqPDZLIKLOH9WeXUfT/cTKOkm+AuDs9XiCgCCQs6Nl7U9Ee2C1YXlxPDi
+        Tla4D8TMbNoq1qMQOtVkL2ld45vD//jVug62+vNcuPkri0rr8voQrImeXh3OkOAa
+        q+bKUXbREfMMcx+voJkooztPI8hVFOyRshBkvEaBxgSnh/D3i8i8KQavbrstjdFz
+        XVpmeh5y+R5AxP+ECB7oX7Tfq3WmP/W+h1WP3m6KRUOUo9WvLdG4Z+7WxL/ON6Lr
+        GrXPKA43zlm+x56y0LWVCf/n03I89pg6FJmqca+oFg5yZIsC6t0KkzT9COS59taw
+        ==
+X-ME-Sender: <xms:vPtBXtyM2ztfKtemdxr7di2FeyiO9JOs3htTwSwNHghvmtIhZwcc8Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedvgddvjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughrvghs
+    ucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghenucfkphepieejrdduiedtrddvudejrddvhedtnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvghsse
+    grnhgrrhgriigvlhdruggv
+X-ME-Proxy: <xmx:vPtBXkDqDa_oJdxnD02XP-QYN1Ilt1u5O2NAOpBQ5LLs3ReOgDO7KQ>
+    <xmx:vPtBXgJKwvzzk7kOkz32scZWplNg74F2fWtyqKFCro9Lx1Gl7E8DUA>
+    <xmx:vPtBXkN8kIb0XEZTbwinLnIgrFzIOEf9tuxSbfDNeY_qTHXCN_aI-g>
+    <xmx:vftBXmRMXBgZM7LgwQFLrSWk-w66oJWQUE8irDhrWy7-U2xTHvoIvPHm41A>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DB4F03060840;
+        Mon, 10 Feb 2020 19:56:27 -0500 (EST)
+Date:   Mon, 10 Feb 2020 16:56:26 -0800
+From:   Andres Freund <andres@anarazel.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 00/14] pipe: Keyrings, Block and USB notifications
+ [ver #3]
+Message-ID: <20200211005626.7yqjf5rbs3vbwagd@alap3.anarazel.de>
+References: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
+ <CAHk-=wjrrOgznCy3yUmcmQY1z_7vXVr6GbvKiy8cLvWbxpmzcw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjrrOgznCy3yUmcmQY1z_7vXVr6GbvKiy8cLvWbxpmzcw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables the following SoC device drivers for NXP/FSL QorIQ SoCs:
-CONFIG_QORIQ_CPUFREQ=y
-CONFIG_NET_SWITCHDEV=y
-CONFIG_MSCC_OCELOT_SWITCH=y
-CONFIG_CAN=m
-CONFIG_CAN_FLEXCAN=m
-CONFIG_FSL_MC_BUS=y
-CONFIG_MTD_NAND_FSL_IFC=y
-CONFIG_FSL_ENETC=y
-CONFIG_FSL_ENETC_VF=y
-CONFIG_SPI_FSL_LPSPI=y
-CONFIG_SPI_FSL_QUADSPI=y
-CONFIG_SPI_FSL_DSPI=y
-CONFIG_GPIO_MPC8XXX=y
-CONFIG_ARM_SBSA_WATCHDOG=y
-CONFIG_DRM_MALI_DISPLAY=m
-CONFIG_FSL_MC_DPIO=y
-CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=m
-CONFIG_FSL_DPAA=y
-CONFIG_FSL_FMAN=y
-CONFIG_FSL_DPAA_ETH=y
-CONFIG_FSL_DPAA2_ETH=y
+Hi,
 
-And the drivers for on-board devices for the upstreamed QorIQ reference
-boards:
-CONFIG_MTD_CFI=y
-CONFIG_MTD_CFI_ADV_OPTIONS=y
-CONFIG_MTD_CFI_INTELEXT=y
-CONFIG_MTD_CFI_AMDSTD=y
-CONFIG_MTD_CFI_STAA=y
-CONFIG_MTD_PHYSMAP=y
-CONFIG_MTD_PHYSMAP_OF=y
-CONFIG_MTD_DATAFLASH=y
-CONFIG_MTD_SST25L=y
-CONFIG_EEPROM_AT24=m
-CONFIG_RTC_DRV_DS1307=y
-CONFIG_RTC_DRV_PCF85363=y
-CONFIG_RTC_DRV_PCF2127=y
-CONFIG_E1000=y
-CONFIG_AQUANTIA_PHY=y
-CONFIG_MICROSEMI_PHY=y
-CONFIG_VITESSE_PHY=y
-CONFIG_MDIO_BUS_MUX_MULTIPLEXER=y
-CONFIG_MUX_MMIO=y
+I only just now noticed this work after Dave Chinner pointed towards the
+feature in the email leading to
+https://lore.kernel.org/linux-fsdevel/20200211000405.5fohxgpt554gmnhu@alap3.anarazel.de/
 
-The following two options are implied by new options and removed from
-defconfig:
-CONFIG_CLK_QORIQ=y
-CONFIG_MEMORY=y
+On 2020-01-15 12:10:32 -0800, Linus Torvalds wrote:
+> So I no longer hate the implementation, but I do want to see the
+> actual user space users come out of the woodwork and try this out for
+> their use cases.
 
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
----
- arch/arm64/configs/defconfig | 42 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+Postgres has been looking for something roughly like this, fwiw (or
+well, been forced to).
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 618001ef5c81..0732d5aaf2cb 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -90,6 +90,7 @@ CONFIG_ARM_QCOM_CPUFREQ_NVMEM=y
- CONFIG_ARM_QCOM_CPUFREQ_HW=y
- CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
- CONFIG_ARM_TEGRA186_CPUFREQ=y
-+CONFIG_QORIQ_CPUFREQ=y
- CONFIG_ARM_SCPI_PROTOCOL=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
- CONFIG_INTEL_STRATIX10_SERVICE=y
-@@ -157,10 +158,13 @@ CONFIG_BRIDGE_VLAN_FILTERING=y
- CONFIG_VLAN_8021Q=m
- CONFIG_VLAN_8021Q_GVRP=y
- CONFIG_VLAN_8021Q_MVRP=y
-+CONFIG_NET_SWITCHDEV=y
- CONFIG_QRTR=m
- CONFIG_QRTR_SMD=m
- CONFIG_QRTR_TUN=m
- CONFIG_BPF_JIT=y
-+CONFIG_CAN=m
-+CONFIG_CAN_FLEXCAN=m
- CONFIG_BT=m
- CONFIG_BT_HIDP=m
- # CONFIG_BT_HS is not set
-@@ -207,11 +211,22 @@ CONFIG_FW_LOADER_USER_HELPER=y
- CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
- CONFIG_HISILICON_LPC=y
- CONFIG_SIMPLE_PM_BUS=y
-+CONFIG_FSL_MC_BUS=y
- CONFIG_MTD=y
- CONFIG_MTD_BLOCK=y
-+CONFIG_MTD_CFI=y
-+CONFIG_MTD_CFI_ADV_OPTIONS=y
-+CONFIG_MTD_CFI_INTELEXT=y
-+CONFIG_MTD_CFI_AMDSTD=y
-+CONFIG_MTD_CFI_STAA=y
-+CONFIG_MTD_PHYSMAP=y
-+CONFIG_MTD_PHYSMAP_OF=y
-+CONFIG_MTD_DATAFLASH=y
-+CONFIG_MTD_SST25L=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_DENALI_DT=y
- CONFIG_MTD_NAND_MARVELL=y
-+CONFIG_MTD_NAND_FSL_IFC=y
- CONFIG_MTD_NAND_QCOM=y
- CONFIG_MTD_SPI_NOR=y
- CONFIG_SPI_CADENCE_QUADSPI=y
-@@ -220,6 +235,7 @@ CONFIG_BLK_DEV_NBD=m
- CONFIG_VIRTIO_BLK=y
- CONFIG_BLK_DEV_NVME=m
- CONFIG_SRAM=y
-+CONFIG_EEPROM_AT24=m
- CONFIG_EEPROM_AT25=m
- # CONFIG_SCSI_PROC_FS is not set
- CONFIG_BLK_DEV_SD=y
-@@ -261,12 +277,18 @@ CONFIG_BNX2X=m
- CONFIG_MACB=y
- CONFIG_THUNDER_NIC_PF=y
- CONFIG_FEC=y
-+CONFIG_FSL_FMAN=y
-+CONFIG_FSL_DPAA_ETH=y
-+CONFIG_FSL_DPAA2_ETH=y
-+CONFIG_FSL_ENETC=y
-+CONFIG_FSL_ENETC_VF=y
- CONFIG_HIX5HD2_GMAC=y
- CONFIG_HNS_DSAF=y
- CONFIG_HNS_ENET=y
- CONFIG_HNS3=y
- CONFIG_HNS3_HCLGE=y
- CONFIG_HNS3_ENET=y
-+CONFIG_E1000=y
- CONFIG_E1000E=y
- CONFIG_IGB=y
- CONFIG_IGBVF=y
-@@ -276,6 +298,7 @@ CONFIG_SKY2=y
- CONFIG_MLX4_EN=m
- CONFIG_MLX5_CORE=m
- CONFIG_MLX5_CORE_EN=y
-+CONFIG_MSCC_OCELOT_SWITCH=y
- CONFIG_QCOM_EMAC=m
- CONFIG_RAVB=y
- CONFIG_SMC91X=y
-@@ -284,13 +307,17 @@ CONFIG_SNI_AVE=y
- CONFIG_SNI_NETSEC=y
- CONFIG_STMMAC_ETH=m
- CONFIG_MDIO_BUS_MUX_MMIOREG=y
-+CONFIG_MDIO_BUS_MUX_MULTIPLEXER=y
-+CONFIG_AQUANTIA_PHY=y
- CONFIG_MARVELL_PHY=m
- CONFIG_MARVELL_10G_PHY=m
- CONFIG_MESON_GXL_PHY=m
- CONFIG_MICREL_PHY=y
-+CONFIG_MICROSEMI_PHY=y
- CONFIG_AT803X_PHY=y
- CONFIG_REALTEK_PHY=m
- CONFIG_ROCKCHIP_PHY=y
-+CONFIG_VITESSE_PHY=y
- CONFIG_USB_PEGASUS=m
- CONFIG_USB_RTL8150=m
- CONFIG_USB_RTL8152=m
-@@ -388,8 +415,11 @@ CONFIG_SPI=y
- CONFIG_SPI_ARMADA_3700=y
- CONFIG_SPI_BCM2835=m
- CONFIG_SPI_BCM2835AUX=m
-+CONFIG_SPI_FSL_LPSPI=y
-+CONFIG_SPI_FSL_QUADSPI=y
- CONFIG_SPI_NXP_FLEXSPI=y
- CONFIG_SPI_IMX=m
-+CONFIG_SPI_FSL_DSPI=y
- CONFIG_SPI_MESON_SPICC=m
- CONFIG_SPI_MESON_SPIFC=m
- CONFIG_SPI_ORION=y
-@@ -424,6 +454,7 @@ CONFIG_PINCTRL_SM8150=y
- CONFIG_GPIO_ALTERA=m
- CONFIG_GPIO_DWAPB=y
- CONFIG_GPIO_MB86S7X=y
-+CONFIG_GPIO_MPC8XXX=y
- CONFIG_GPIO_PL061=y
- CONFIG_GPIO_RCAR=y
- CONFIG_GPIO_UNIPHIER=y
-@@ -466,6 +497,7 @@ CONFIG_QCOM_SPMI_TEMP_ALARM=m
- CONFIG_UNIPHIER_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_ARM_SP805_WATCHDOG=y
-+CONFIG_ARM_SBSA_WATCHDOG=y
- CONFIG_S3C2410_WATCHDOG=y
- CONFIG_DW_WATCHDOG=y
- CONFIG_SUNXI_WATCHDOG=m
-@@ -531,6 +563,7 @@ CONFIG_VIDEO_RENESAS_FCP=m
- CONFIG_VIDEO_RENESAS_VSP1=m
- CONFIG_DRM=m
- CONFIG_DRM_I2C_NXP_TDA998X=m
-+CONFIG_DRM_MALI_DISPLAY=m
- CONFIG_DRM_NOUVEAU=m
- CONFIG_DRM_EXYNOS=m
- CONFIG_DRM_EXYNOS5433_DECON=y
-@@ -664,11 +697,14 @@ CONFIG_LEDS_TRIGGER_PANIC=y
- CONFIG_EDAC=y
- CONFIG_EDAC_GHES=y
- CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_DS1307=y
- CONFIG_RTC_DRV_MAX77686=y
- CONFIG_RTC_DRV_RK808=m
-+CONFIG_RTC_DRV_PCF85363=y
- CONFIG_RTC_DRV_RX8581=m
- CONFIG_RTC_DRV_S5M=y
- CONFIG_RTC_DRV_DS3232=y
-+CONFIG_RTC_DRV_PCF2127=y
- CONFIG_RTC_DRV_EFI=y
- CONFIG_RTC_DRV_CROS_EC=y
- CONFIG_RTC_DRV_S3C=y
-@@ -709,7 +745,6 @@ CONFIG_COMMON_CLK_RK808=y
- CONFIG_COMMON_CLK_SCPI=y
- CONFIG_COMMON_CLK_CS2000_CP=y
- CONFIG_COMMON_CLK_S2MPS11=y
--CONFIG_CLK_QORIQ=y
- CONFIG_COMMON_CLK_PWM=y
- CONFIG_CLK_RASPBERRYPI=m
- CONFIG_CLK_IMX8MM=y
-@@ -753,6 +788,8 @@ CONFIG_RPMSG_QCOM_GLINK_SMEM=m
- CONFIG_RPMSG_QCOM_SMD=y
- CONFIG_OWL_PM_DOMAINS=y
- CONFIG_RASPBERRYPI_POWER=y
-+CONFIG_FSL_DPAA=y
-+CONFIG_FSL_MC_DPIO=y
- CONFIG_IMX_SCU_SOC=y
- CONFIG_QCOM_AOSS_QMP=y
- CONFIG_QCOM_GENI_SE=y
-@@ -785,7 +822,6 @@ CONFIG_ARCH_K3_J721E_SOC=y
- CONFIG_TI_SCI_PM_DOMAINS=y
- CONFIG_EXTCON_USB_GPIO=y
- CONFIG_EXTCON_USBC_CROS_EC=y
--CONFIG_MEMORY=y
- CONFIG_IIO=y
- CONFIG_EXYNOS_ADC=y
- CONFIG_QCOM_SPMI_ADC5=m
-@@ -849,6 +885,7 @@ CONFIG_FPGA_REGION=m
- CONFIG_OF_FPGA_REGION=m
- CONFIG_TEE=y
- CONFIG_OPTEE=y
-+CONFIG_MUX_MMIO=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT3_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
-@@ -880,6 +917,7 @@ CONFIG_CRYPTO_ANSI_CPRNG=y
- CONFIG_CRYPTO_USER_API_RNG=m
- CONFIG_CRYPTO_DEV_SUN8I_CE=m
- CONFIG_CRYPTO_DEV_FSL_CAAM=m
-+CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=m
- CONFIG_CRYPTO_DEV_QCOM_RNG=m
- CONFIG_CRYPTO_DEV_HISI_ZIP=m
- CONFIG_CMA_SIZE_MBYTES=32
--- 
-2.17.1
+While it's better than it used to be (due to b4678df184b3), we still
+have problems to reliably detect buffered IO errors, especially when
+done across multiple processes.  We can't easily keep an fd open that
+predates all writes to a file until, and ensure that fsyncs will happen
+only on that fd. The primary reasons for that are
+1) every connection (& some internal jobs) is a process, and neither do
+want to to fsyncing each touched file in short-lived connections, nor is
+it desirable to have to add the complication of having to transfer fds
+between processes just to reliably get an error in fsync().
+2) we have to cope with having more files open than allowed, so we have
+a layer that limits the number of OS level FDs open at the same time. We
+don't want to fsync whenever we have to juggle open fds though, as
+that'd be too costly.
 
+So it'd good to have a way to *reliably* know when writeback io failed,
+so we can abort a checkpoint if necessary, and instead perform journal
+replay.
+
+
+For our purposes we'd probably want errors on the fs/superblock level,
+rather than block devices. It's not always easy to map between blockdevs
+and relevant filesystems, there are errors above the block layer, and we
+definitely don'tt want to crash & restart a database just because
+somebody pulled an USB storage device that didn't have any of the
+database's data on it.
+
+An earlier version of this patchset had some support for that, albeit
+perhaps not fully implemented (no errors raised, afaict?):
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=notifications&id=338eec77a0cb29a7d2ae9350066c1990408ae58e
+
+Is the plan to pick this up again once the basic feature is in?
+
+
+A few notes from the email referenced above (that actually seem to belong
+into this thread more than the other:
+
+1) From the angle of reliably needing to detect writeback errors, I find it
+somewhat concerning that an LSM may end up entirely filtering away error
+notifications, without a consumer being able to detect that:
+
++void __post_watch_notification(struct watch_list *wlist,
++			       struct watch_notification *n,
++			       const struct cred *cred,
++			       u64 id)
++{
+...
++		if (security_post_notification(watch->cred, cred, n) < 0)
++			continue;
+
+It's an unpleasant thought that an overly restrictive [-ly configured]
+LSM could lead to silently swallowing data integrity errors.
+
+2) It'd be good if there were documentation, aimed at userland consumers
+of this, explaining what the delivery guarantees are. To be useful for
+us, it needs to be guaranteed that consuming all notifications ensures
+that there are no pending notifications queued up somewhere (so we can
+do fsync(data); fsync(journal); check_for_errors();
+durable_rename(checkpoint_state.tmp, checkpoint_state);).
+
+3) What will the permission model for accessing the notifications be?
+It seems currently anyone, even within a container/namespace or
+something, will see blockdev errors from everywhere?  The earlier
+superblock support (I'm not sure I like that name btw, hard to
+understand for us userspace folks), seems to have required exec
+permission, but nothing else.
+
+Greetings,
+
+Andres Freund
