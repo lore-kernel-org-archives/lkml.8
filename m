@@ -2,131 +2,158 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCC3C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FF5C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5EE20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5DC20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YXpNNOp7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PCzzM/8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgBKQYS (ORCPT
+        id S1729873AbgBKQY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:24:18 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:42256 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgBKQYS (ORCPT
+        Tue, 11 Feb 2020 11:24:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21133 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727722AbgBKQY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:24:18 -0500
-Received: by mail-qv1-f68.google.com with SMTP id dc14so5234285qvb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:24:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=wLPl/cstzWTeMlUQRCBJAM9GpFQjWbFFR3GkPG8wzQ4=;
-        b=YXpNNOp7JzrPirfuXj4Fw25ulXJOqSKTXSPMTVYD9fnCBtHtOGvBwQrHPCC3N8K77O
-         B1nOurTpEqdnUGs/JUG4AS3TKNe1cQjqkHH8YZxwy6BYHb5vIKSqnOnKvYwn5FLAt9uY
-         u5pdbKDdsbXdPFPBu6Rleu1Np1Nepu3O3Hfn+v3pRY3uv/K4nd5mWQ8pIS/5Sc257iLm
-         9q9ak1rO4E8PK0mfS8gyzF2o55Mv11UBU7bdPD4TLLSj1mIm/Eru1KA3tTovFGVOAc1m
-         5EDP2K3WtRMkMKhq4Te52he7Zms7OHmkZxoTfz5ltoRnv2TdY65neO41fWQ1ngljxVN6
-         ZyVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wLPl/cstzWTeMlUQRCBJAM9GpFQjWbFFR3GkPG8wzQ4=;
-        b=blcd1moFH1hsUkrbY8xnUl3uRkMGW5LNRSBitwpNBVk1OYXu46+bsVeVu51DDQMEne
-         a3nW4OiKSeN1/ywYZkSDJBrAZoH97y3hRDoNxsxkyHoO3H8zhST41pN+e+NNVR4q64sG
-         2i+2SLI7jYr+deZIqXv4G52aPzjv0CYbaecstNqlyT9QQA0fq4l/B6KBylB1Tk3Z8r0A
-         SByopz4TvExIS4n8LfOZKvWQOqA0gvVPhliNI86R6tX4ysnm+BVnpcOMMoT/mOTNwBTb
-         Jubcx+yI9gbPoN0dB4QpQSVU1/P12YVs7Nn129VtUaKGosRUcx6oIkIg1g20oIGeaKtY
-         V9+w==
-X-Gm-Message-State: APjAAAW/0j8nPWn3tFI9H183hukg8eXPawVkJisfs0Nl6G3jMnpRGRLr
-        EJhkflKzIhScGx9xwu5PVHO9tw==
-X-Google-Smtp-Source: APXvYqzs+bk5h6W/Qj9KvzQVLRqIJFLobB26Q9E2sfed40GYLzcTZmIP0wnbXsGmesBTAwmcsiz69g==
-X-Received: by 2002:a0c:eac7:: with SMTP id y7mr3695907qvp.86.1581438257600;
-        Tue, 11 Feb 2020 08:24:17 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id k4sm2315242qtj.74.2020.02.11.08.24.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 08:24:17 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, catalin.marinas@arm.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/kmemleak: annotate a data race in checksum
-Date:   Tue, 11 Feb 2020 11:24:05 -0500
-Message-Id: <1581438245-24391-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 11 Feb 2020 11:24:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581438266;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=W0ZDjuaIZ1KLsnFDXhfjcN6b+4tlT6PGYmx69L4Q8Yg=;
+        b=PCzzM/8kQ/YV2yJT8Rt4CFCs3meBEOD1tAdMZo2XntNWViZM/dPMcMEAicoPxGsNxigc1T
+        k3mxWd83JzSdrpAVon85BriDyORsUFfQiJZb4XNgPSqyuUnCxeIaC5bOPWs2xyItq9H7Ru
+        gc3BZdhBIpZr4n926V6yv+RnMkeiHjU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-93-IyBcJEbxMLGWlODOxC7_dA-1; Tue, 11 Feb 2020 11:24:25 -0500
+X-MC-Unique: IyBcJEbxMLGWlODOxC7_dA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B4A1107ACC4;
+        Tue, 11 Feb 2020 16:24:24 +0000 (UTC)
+Received: from lithium.redhat.com (ovpn-204-63.brq.redhat.com [10.40.204.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9889A26FB0;
+        Tue, 11 Feb 2020 16:24:22 +0000 (UTC)
+From:   Giuseppe Scrivano <gscrivan@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     rcu@vger.kernel.org, ebiederm@xmission.com, paulmck@kernel.org
+Subject: [PATCH] ipc: use a work queue to free_ipc
+Date:   Tue, 11 Feb 2020 17:24:08 +0100
+Message-Id: <20200211162408.2194037-1-gscrivan@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of object->pointer could be accessed concurrently as noticed
-by KCSAN,
+it avoids blocking on synchronize_rcu() in kern_umount().
 
- BUG: KCSAN: data-race in crc32_le_base / do_raw_spin_lock
+the code:
 
- write to 0xffffb0ea683a7d50 of 4 bytes by task 23575 on cpu 12:
-  do_raw_spin_lock+0x114/0x200
-  debug_spin_lock_after at kernel/locking/spinlock_debug.c:91
-  (inlined by) do_raw_spin_lock at kernel/locking/spinlock_debug.c:115
-  _raw_spin_lock+0x40/0x50
-  __handle_mm_fault+0xa9e/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+\#define _GNU_SOURCE
+\#include <sched.h>
+\#include <error.h>
+\#include <errno.h>
+\#include <stdlib.h>
+int main()
+{
+  int i;
+  for (i  =3D 0; i < 1000; i++)
+    if (unshare (CLONE_NEWIPC) < 0)
+      error (EXIT_FAILURE, errno, "unshare");
+}
 
- read to 0xffffb0ea683a7d50 of 4 bytes by task 839 on cpu 60:
-  crc32_le_base+0x67/0x350
-  crc32_le_base+0x67/0x350:
-  crc32_body at lib/crc32.c:106
-  (inlined by) crc32_le_generic at lib/crc32.c:179
-  (inlined by) crc32_le at lib/crc32.c:197
-  kmemleak_scan+0x528/0xd90
-  update_checksum at mm/kmemleak.c:1172
-  (inlined by) kmemleak_scan at mm/kmemleak.c:1497
-  kmemleak_scan_thread+0xcc/0xfa
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
+gets from:
 
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 60 PID: 839 Comm: kmemleak Tainted: G        W    L 5.5.0-next-20200210+ #3
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+	Command being timed: "./ipc-namespace"
+	User time (seconds): 0.00
+	System time (seconds): 0.06
+	Percent of CPU this job got: 0%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.05
 
-crc32() will dereference object->pointer. If a shattered value was
-returned due to a data race, it will be corrected in the next scan.
-Thus, annotate it as an intentional data race using the data_race()
-macro.
+to:
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+	Command being timed: "./ipc-namespace"
+	User time (seconds): 0.00
+	System time (seconds): 0.02
+	Percent of CPU this job got: 96%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
+
+Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
 ---
- mm/kmemleak.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/ipc_namespace.h |  2 ++
+ ipc/namespace.c               | 17 +++++++++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 3a4259eeb5a0..25b4bcc32b5f 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1169,7 +1169,12 @@ static bool update_checksum(struct kmemleak_object *object)
- 	u32 old_csum = object->checksum;
- 
- 	kasan_disable_current();
--	object->checksum = crc32(0, (void *)object->pointer, object->size);
-+	/*
-+	 * crc32() will dereference object->pointer. If an unstable value was
-+	 * returned due to a data race, it will be corrected in the next scan.
-+	 */
-+	object->checksum = data_race(crc32(0, (void *)object->pointer,
-+					   object->size));
- 	kasan_enable_current();
- 
- 	return object->checksum != old_csum;
--- 
-1.8.3.1
+diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.=
+h
+index c309f43bde45..a06a78c67f19 100644
+--- a/include/linux/ipc_namespace.h
++++ b/include/linux/ipc_namespace.h
+@@ -68,6 +68,8 @@ struct ipc_namespace {
+ 	struct user_namespace *user_ns;
+ 	struct ucounts *ucounts;
+=20
++	struct llist_node mnt_llist;
++
+ 	struct ns_common ns;
+ } __randomize_layout;
+=20
+diff --git a/ipc/namespace.c b/ipc/namespace.c
+index b3ca1476ca51..37d27e1b807a 100644
+--- a/ipc/namespace.c
++++ b/ipc/namespace.c
+@@ -117,6 +117,7 @@ void free_ipcs(struct ipc_namespace *ns, struct ipc_i=
+ds *ids,
+=20
+ static void free_ipc_ns(struct ipc_namespace *ns)
+ {
++	mq_put_mnt(ns);
+ 	sem_exit_ns(ns);
+ 	msg_exit_ns(ns);
+ 	shm_exit_ns(ns);
+@@ -127,6 +128,17 @@ static void free_ipc_ns(struct ipc_namespace *ns)
+ 	kfree(ns);
+ }
+=20
++static LLIST_HEAD(free_ipc_list);
++static void free_ipc(struct work_struct *unused)
++{
++	struct llist_node *node =3D llist_del_all(&free_ipc_list);
++	struct ipc_namespace *n, *t;
++
++	llist_for_each_entry_safe(n, t, node, mnt_llist)
++		free_ipc_ns(n);
++}
++static DECLARE_WORK(free_ipc_work, free_ipc);
++
+ /*
+  * put_ipc_ns - drop a reference to an ipc namespace.
+  * @ns: the namespace to put
+@@ -148,8 +160,9 @@ void put_ipc_ns(struct ipc_namespace *ns)
+ 	if (refcount_dec_and_lock(&ns->count, &mq_lock)) {
+ 		mq_clear_sbinfo(ns);
+ 		spin_unlock(&mq_lock);
+-		mq_put_mnt(ns);
+-		free_ipc_ns(ns);
++
++		if (llist_add(&ns->mnt_llist, &free_ipc_list))
++			schedule_work(&free_ipc_work);
+ 	}
+ }
+=20
+--=20
+2.24.1
 
