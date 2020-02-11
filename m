@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DA3C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3774C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE14E20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7C520714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="OagUjMkQ"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="GX/TfeW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgBKKfT (ORCPT
+        id S1728457AbgBKKfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:35:19 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:39234 "EHLO rere.qmqm.pl"
+        Tue, 11 Feb 2020 05:35:21 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:15594 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgBKKfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728237AbgBKKfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 05:35:04 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48GzgB1Ct2zfJ;
-        Tue, 11 Feb 2020 11:35:02 +0100 (CET)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48Gzg94jdqzC7;
+        Tue, 11 Feb 2020 11:35:01 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1581417302; bh=vJ8NUWITEPRXpkbxoGsrULQBqI+6p7Npd4ClhxGYj/Y=;
+        t=1581417301; bh=gsI64DD1kNeK+TXxunWfPL4x93Hi8VLx1d+WlAIlPgE=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=OagUjMkQfG5ZYGu77ODgUQyZtbdGkOXc/fjC4sC6MtxSDwdGw19s/NRUrAzkPM1Cp
-         ROA40S2z9fowEyomLfG7EdyQxp77js26SH/69y911FaTyMuIsrtyuJYubUKmMBa6um
-         p1N4PO0I67nfQ9RZVw33+AhfFkhCpyEuC/cZK15SoidZYowb4VAKhCOSvZCpLpX36w
-         BO34mOHS4r++XtbCDr0aoUvmElVJizgD7ltpvpyD+DnjrWEresoXkKAC8/FxF6/9S+
-         PDJ0PyrxpYhHGsraXzJ4kHqFktwWqAe54LTo+xof1TZd3ooA9QltnsIwggRPHNSSzJ
-         XcGVscxrRaQFw==
+        b=GX/TfeW0mldC+XmYLfwocJWvzPuONFxy6JTFHHhauhWhlMHI2lK5bZxM6h0+zcA4N
+         whoGDhAgD9ECfey8Ui/9fWsOUhxU2DJvExM9YZBm9/k5XM3CFK7skhClvGJ2GTAtC9
+         8rWdTKnxqpLXZs1fLDiuFQpsoRP/qXt8gXieu6izZjXtosl43Htk1OvUiiqcCcmKrM
+         tDVSvBNG78SBC0cIUSgoq5CJ+8ISfpDJoj8NJlAkFMP7cAs82K42As5BjGQ91VqDwp
+         m3Ij5p2Ek9m3CfIlNo6iBjp2p8I2Vpt7zcl0oCvZXwF4hUReeQg+KV4uS6l9iCBcQY
+         ZR8sw4VsNdt+w==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.1 at mail
 Date:   Tue, 11 Feb 2020 11:35:01 +0100
-Message-Id: <5e30397af95854b4a7deea073b730c00229f42ba.1581416843.git.mirq-linux@rere.qmqm.pl>
+Message-Id: <f0c66cbb3110c2736cd4357c753fba8c14ee3aee.1581416843.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1581416843.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1581416843.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 2/6] staging: wfx: annotate nested gc_list vs tx queue
- locking
+Subject: [PATCH v2 1/6] staging: wfx: fix init/remove vs IRQ race
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -54,90 +53,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lockdep is complaining about recursive locking, because it can't make
-a difference between locked skb_queues. Annotate nested locks and avoid
-double bh_disable/enable.
+Current code races in init/exit with interrupt handlers. This is noticed
+by the warning below. Fix it by using devres for ordering allocations and
+IRQ de/registration.
 
-[...]
-insmod/815 is trying to acquire lock:
-cb7d6418 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xfc/0x198 [wfx]
-
-but task is already holding lock:
-cb7d61f4 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xa0/0x198 [wfx]
-
-[...]
-Possible unsafe locking scenario:
-
-      CPU0
-      ----
- lock(&(&list->lock)->rlock);
- lock(&(&list->lock)->rlock);
+WARNING: CPU: 0 PID: 827 at drivers/staging/wfx/bus_spi.c:142 wfx_spi_irq_handler+0x5c/0x64 [wfx]
+race condition in driver init/deinit
 
 Cc: stable@vger.kernel.org
-Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
+Fixes: 0096214a59a7 ("staging: wfx: add support for I/O access")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/staging/wfx/queue.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+v2: use devres to fix the races
+---
+ drivers/staging/wfx/bus_sdio.c | 15 ++++++---------
+ drivers/staging/wfx/bus_spi.c  | 27 ++++++++++++++-------------
+ drivers/staging/wfx/main.c     | 21 +++++++++++++--------
+ drivers/staging/wfx/main.h     |  1 -
+ 4 files changed, 33 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/staging/wfx/queue.c b/drivers/staging/wfx/queue.c
-index 0bcc61feee1d..51d6c55ae91f 100644
---- a/drivers/staging/wfx/queue.c
-+++ b/drivers/staging/wfx/queue.c
-@@ -130,12 +130,12 @@ static void wfx_tx_queue_clear(struct wfx_dev *wdev, struct wfx_queue *queue,
- 	spin_lock_bh(&queue->queue.lock);
- 	while ((item = __skb_dequeue(&queue->queue)) != NULL)
- 		skb_queue_head(gc_list, item);
--	spin_lock_bh(&stats->pending.lock);
-+	spin_lock_nested(&stats->pending.lock, 1);
- 	for (i = 0; i < ARRAY_SIZE(stats->link_map_cache); ++i) {
- 		stats->link_map_cache[i] -= queue->link_map_cache[i];
- 		queue->link_map_cache[i] = 0;
+diff --git a/drivers/staging/wfx/bus_sdio.c b/drivers/staging/wfx/bus_sdio.c
+index f8901164c206..5450bd5e1b5d 100644
+--- a/drivers/staging/wfx/bus_sdio.c
++++ b/drivers/staging/wfx/bus_sdio.c
+@@ -200,25 +200,23 @@ static int wfx_sdio_probe(struct sdio_func *func,
+ 	if (ret)
+ 		goto err0;
+ 
+-	ret = wfx_sdio_irq_subscribe(bus);
+-	if (ret)
+-		goto err1;
+-
+ 	bus->core = wfx_init_common(&func->dev, &wfx_sdio_pdata,
+ 				    &wfx_sdio_hwbus_ops, bus);
+ 	if (!bus->core) {
+ 		ret = -EIO;
+-		goto err2;
++		goto err1;
  	}
--	spin_unlock_bh(&stats->pending.lock);
-+	spin_unlock(&stats->pending.lock);
- 	spin_unlock_bh(&queue->queue.lock);
- }
  
-@@ -207,9 +207,9 @@ void wfx_tx_queue_put(struct wfx_dev *wdev, struct wfx_queue *queue,
++	ret = wfx_sdio_irq_subscribe(bus);
++	if (ret)
++		goto err1;
++
+ 	ret = wfx_probe(bus->core);
+ 	if (ret)
+-		goto err3;
++		goto err2;
  
- 	++queue->link_map_cache[tx_priv->link_id];
- 
--	spin_lock_bh(&stats->pending.lock);
-+	spin_lock_nested(&stats->pending.lock, 1);
- 	++stats->link_map_cache[tx_priv->link_id];
--	spin_unlock_bh(&stats->pending.lock);
-+	spin_unlock(&stats->pending.lock);
- 	spin_unlock_bh(&queue->queue.lock);
- }
- 
-@@ -237,11 +237,11 @@ static struct sk_buff *wfx_tx_queue_get(struct wfx_dev *wdev,
- 		__skb_unlink(skb, &queue->queue);
- 		--queue->link_map_cache[tx_priv->link_id];
- 
--		spin_lock_bh(&stats->pending.lock);
-+		spin_lock_nested(&stats->pending.lock, 1);
- 		__skb_queue_tail(&stats->pending, skb);
- 		if (!--stats->link_map_cache[tx_priv->link_id])
- 			wakeup_stats = true;
--		spin_unlock_bh(&stats->pending.lock);
-+		spin_unlock(&stats->pending.lock);
- 	}
- 	spin_unlock_bh(&queue->queue.lock);
- 	if (wakeup_stats)
-@@ -259,10 +259,10 @@ int wfx_pending_requeue(struct wfx_dev *wdev, struct sk_buff *skb)
- 	spin_lock_bh(&queue->queue.lock);
- 	++queue->link_map_cache[tx_priv->link_id];
- 
--	spin_lock_bh(&stats->pending.lock);
-+	spin_lock_nested(&stats->pending.lock, 1);
- 	++stats->link_map_cache[tx_priv->link_id];
- 	__skb_unlink(skb, &stats->pending);
--	spin_unlock_bh(&stats->pending.lock);
-+	spin_unlock(&stats->pending.lock);
- 	__skb_queue_tail(&queue->queue, skb);
- 	spin_unlock_bh(&queue->queue.lock);
  	return 0;
+ 
+-err3:
+-	wfx_free_common(bus->core);
+ err2:
+ 	wfx_sdio_irq_unsubscribe(bus);
+ err1:
+@@ -234,7 +232,6 @@ static void wfx_sdio_remove(struct sdio_func *func)
+ 	struct wfx_sdio_priv *bus = sdio_get_drvdata(func);
+ 
+ 	wfx_release(bus->core);
+-	wfx_free_common(bus->core);
+ 	wfx_sdio_irq_unsubscribe(bus);
+ 	sdio_claim_host(func);
+ 	sdio_disable_func(func);
+diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_spi.c
+index 40bc33035de2..605ad74068b7 100644
+--- a/drivers/staging/wfx/bus_spi.c
++++ b/drivers/staging/wfx/bus_spi.c
+@@ -154,6 +154,11 @@ static void wfx_spi_request_rx(struct work_struct *work)
+ 	wfx_bh_request_rx(bus->core);
+ }
+ 
++static void wfx_flush_irq_work(void *w)
++{
++	flush_work(w);
++}
++
+ static size_t wfx_spi_align_size(void *priv, size_t size)
+ {
+ 	// Most of SPI controllers avoid DMA if buffer size is not 32bit aligned
+@@ -207,22 +212,23 @@ static int wfx_spi_probe(struct spi_device *func)
+ 		udelay(2000);
+ 	}
+ 
+-	ret = devm_request_irq(&func->dev, func->irq, wfx_spi_irq_handler,
+-			       IRQF_TRIGGER_RISING, "wfx", bus);
+-	if (ret)
+-		return ret;
+-
+ 	INIT_WORK(&bus->request_rx, wfx_spi_request_rx);
+ 	bus->core = wfx_init_common(&func->dev, &wfx_spi_pdata,
+ 				    &wfx_spi_hwbus_ops, bus);
+ 	if (!bus->core)
+ 		return -EIO;
+ 
+-	ret = wfx_probe(bus->core);
++	ret = devm_add_action_or_reset(&func->dev, wfx_flush_irq_work,
++				       &bus->request_rx);
+ 	if (ret)
+-		wfx_free_common(bus->core);
++		return ret;
+ 
+-	return ret;
++	ret = devm_request_irq(&func->dev, func->irq, wfx_spi_irq_handler,
++			       IRQF_TRIGGER_RISING, "wfx", bus);
++	if (ret)
++		return ret;
++
++	return wfx_probe(bus->core);
+ }
+ 
+ static int wfx_spi_remove(struct spi_device *func)
+@@ -230,11 +236,6 @@ static int wfx_spi_remove(struct spi_device *func)
+ 	struct wfx_spi_priv *bus = spi_get_drvdata(func);
+ 
+ 	wfx_release(bus->core);
+-	wfx_free_common(bus->core);
+-	// A few IRQ will be sent during device release. Hopefully, no IRQ
+-	// should happen after wdev/wvif are released.
+-	devm_free_irq(&func->dev, func->irq, bus);
+-	flush_work(&bus->request_rx);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/staging/wfx/main.c b/drivers/staging/wfx/main.c
+index 84adad64fc30..76b2ff7fc7fe 100644
+--- a/drivers/staging/wfx/main.c
++++ b/drivers/staging/wfx/main.c
+@@ -262,6 +262,16 @@ static int wfx_send_pdata_pds(struct wfx_dev *wdev)
+ 	return ret;
+ }
+ 
++static void wfx_free_common(void *data)
++{
++	struct wfx_dev *wdev = data;
++
++	mutex_destroy(&wdev->rx_stats_lock);
++	mutex_destroy(&wdev->conf_mutex);
++	wfx_tx_queues_deinit(wdev);
++	ieee80211_free_hw(wdev->hw);
++}
++
+ struct wfx_dev *wfx_init_common(struct device *dev,
+ 				const struct wfx_platform_data *pdata,
+ 				const struct hwbus_ops *hwbus_ops,
+@@ -332,17 +342,12 @@ struct wfx_dev *wfx_init_common(struct device *dev,
+ 	wfx_init_hif_cmd(&wdev->hif_cmd);
+ 	wfx_tx_queues_init(wdev);
+ 
++	if (devm_add_action_or_reset(dev, wfx_free_common, wdev))
++		return NULL;
++
+ 	return wdev;
+ }
+ 
+-void wfx_free_common(struct wfx_dev *wdev)
+-{
+-	mutex_destroy(&wdev->rx_stats_lock);
+-	mutex_destroy(&wdev->conf_mutex);
+-	wfx_tx_queues_deinit(wdev);
+-	ieee80211_free_hw(wdev->hw);
+-}
+-
+ int wfx_probe(struct wfx_dev *wdev)
+ {
+ 	int i;
+diff --git a/drivers/staging/wfx/main.h b/drivers/staging/wfx/main.h
+index 875f8c227803..9c9410072def 100644
+--- a/drivers/staging/wfx/main.h
++++ b/drivers/staging/wfx/main.h
+@@ -34,7 +34,6 @@ struct wfx_dev *wfx_init_common(struct device *dev,
+ 				const struct wfx_platform_data *pdata,
+ 				const struct hwbus_ops *hwbus_ops,
+ 				void *hwbus_priv);
+-void wfx_free_common(struct wfx_dev *wdev);
+ 
+ int wfx_probe(struct wfx_dev *wdev);
+ void wfx_release(struct wfx_dev *wdev);
 -- 
 2.20.1
 
