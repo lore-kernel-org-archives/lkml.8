@@ -2,117 +2,98 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3446C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20894C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9943920848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE89220848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NHUHDOfc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s2Qm4CYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgBKRbd (ORCPT
+        id S1729477AbgBKRbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:31:33 -0500
-Received: from gateway20.websitewelcome.com ([192.185.51.6]:22294 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729132AbgBKRbd (ORCPT
+        Tue, 11 Feb 2020 12:31:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47678 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbgBKRbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:31:33 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id C6BA84012ECE3;
-        Tue, 11 Feb 2020 10:17:58 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1ZNkjQrto8vkB1ZNkjP415; Tue, 11 Feb 2020 11:31:32 -0600
-X-Authority-Reason: nr=8
+        Tue, 11 Feb 2020 12:31:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YMSqBvn3OFsv1lNznyX5EeTk3+DH+Esm65JtcIOwnMY=; b=NHUHDOfcZNONgQ1WuY5dZ7AOCh
-        4mQkzvYwO/yKv3y/vPOypI8iKziwgDe3py2fiDT5L185TEMkA+8G2a0StgViX9Qwj3lRGN7rCloCo
-        a1G2hFqJxJbQveFpv4Jk8e/ogd6GBHWzcs5hw2JCiODZVyQGXIkV14HxbAgx+Dg/7PYG3LaEMXe9p
-        LGFr7/Ffzi1u21i8Du71DskqkRx31jb3D2gJQXPYxxXicXPJyaR9CTeYol4YzRpvPHUUhhbv3bAoT
-        r3q2yGh/8m6EknhOaFtx/7ZRs7LGXkZqROqzdD+BXtMCqmMQDZdk08lh+FDfr5Y5CKwizz/mZG+TJ
-        Xs72lOIA==;
-Received: from [200.68.141.48] (port=6149 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1Wm9-002prQ-E0; Tue, 11 Feb 2020 08:44:33 -0600
-Date:   Tue, 11 Feb 2020 08:47:04 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Thor Thayer <thor.thayer@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        David Laight <David.Laight@ACULAB.COM>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v2] i2c: altera: Fix potential integer overflow
-Message-ID: <20200211144704.GA6461@embeddedor>
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=4o9PB9m+IrGK3QGZcB85cx3hPfCNyy1f4QLXCxJ20so=; b=s2Qm4CYlmVLrKiJ3B5meGqaMuw
+        iYaWQtUPnnBkS/wk9a9oLvTi/TcaSPyxSTleSDGPh2MfUqmAXwlUAHRZlkEnBuOX/+fdKRgZxDc8d
+        O8M84kaEeeSMsHwHl6tYMd0i4UXW6GdNIX2v9vmUSmIGr/dogFqJlHqJO2CskamMZpIXDEAaotHFU
+        CjBssQegvOGv8spzKEIIfbmmi6SahH83wZTjwPBIlRfvnhtt5eVCzoCOyLu0+dNQuPolRLyam6l1F
+        nqmABq7IbMaQInJ0yBq4aOnU18cYNuwYcQ3WuWuw67VTNC8w5VTVWfoyRcrnrwe6uLnaU1ewokZ1q
+        TqlHpoJg==;
+Received: from [2603:3004:32:9a00::c450]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1ZNz-0001g0-7U; Tue, 11 Feb 2020 17:31:47 +0000
+Subject: Re: [PATCH 01/24] user_namespace: introduce fsid mappings
+ infrastructure
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
+Cc:     smbarber@chromium.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
+References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
+ <20200211165753.356508-2-christian.brauner@ubuntu.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <25217d8b-f3e9-7362-e3d9-d8c37bf39558@infradead.org>
+Date:   Tue, 11 Feb 2020 09:26:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.48
-X-Source-L: No
-X-Exim-ID: 1j1Wm9-002prQ-E0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.48]:6149
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200211165753.356508-2-christian.brauner@ubuntu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
-instead of 64-bit.
+On 2/11/20 8:57 AM, Christian Brauner wrote:
+> diff --git a/init/Kconfig b/init/Kconfig
+> index a34064a031a5..4da082e4f787 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1102,6 +1102,17 @@ config USER_NS
+>  
+>  	  If unsure, say N.
+>  
+> +config USER_NS_FSID
+> +	bool "User namespace fsid mappings"
+> +	depends on USER_NS
+> +	default n
+> +	help
+> +	  This allows containers, to alter their filesystem id mappings.
 
-Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
-and there is no need for div_u64().
+                   no comma   ^^^^
 
-Addresses-Coverity: 1458369 ("Unintentional integer overflow")
-Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Changes in v2:
- - Update subject and changelog text.
- - Avoid the need for 64-bit arithmetic at all.
+> +	  With this containers with different id mappings can still share
+> +	  the same filesystem.
+> +
+> +	  If unsure, say N.
+> +
+>  config PID_NS
+>  	bool "PID Namespaces"
+>  	default y
 
- drivers/i2c/busses/i2c-altera.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-index 5255d3755411..1de23b4f3809 100644
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -171,7 +171,7 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
- 	/* SCL Low Time */
- 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
- 	/* SDA Hold Time, 300ns */
--	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
-+	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
- 
- 	/* Mask all master interrupt bits */
- 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
 -- 
-2.25.0
-
+~Randy
