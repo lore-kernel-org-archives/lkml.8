@@ -2,124 +2,202 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE8C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B77C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1F520842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NdyQDeY1"
+	by mail.kernel.org (Postfix) with ESMTP id EBFCE20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:44:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581450241;
+	bh=DvzM0ydj4D5pq1pifhh+bBq3fqq6xA8Afwwx469Vkho=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=V/ZnPUKIrb34zT2/i+RcQsBbjjSIQ0+uM3WM2FQADBRWKF9xdZk7r1GHegpkCHxk5
+	 NTU5BZ2ZuzDFdDWuHqGzTNWYAZxV30ELA50IuDs8SzDPYX9B+FaVWa/x4siwUGaibO
+	 iVDPF2eopdkeO3aNcTRsKYzeSCgIly20DwD1Lbb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbgBKTjw (ORCPT
+        id S1731055AbgBKToA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:39:52 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.155]:20246 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727668AbgBKTjw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:39:52 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 46666400C5F67
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 13:39:51 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1bNvjUERM8vkB1bNvjSPfl; Tue, 11 Feb 2020 13:39:51 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=n3MEAaSo+ySPB0dRTUiR+Yk3gNhROG/lQbEkZaa1y24=; b=NdyQDeY10ga3LJUt2mEUQXYizX
-        GGnVRgiKkwBIo/n9rJmvYeMnNGcS/mniXbS3v2Th5jI2k1QV3I1E0QwVMXrQfqAtqnjJWu5u+n3Jz
-        tyzDNAe0T6LkjhBQTApfCSDB1rRd+rsTtUb+EkbbK/uLNuFBYVDDAZBhG0r+y0DPIQlBi0iTI3kXj
-        SPST3mjGZbdSp992CXwzoQsS9E/OWFl3fXZRxHY+lbvCA/GKGs+S9pmenaKOC8ATeZo0OjtnRpC1E
-        /zmR5SU0fpdhtbMq9jA31DkENeTHoEvxpqNaNSeIh+kTbsR0H00P/wit+0QS5MxkEDTJvbqNW2KXu
-        IqtDHizw==;
-Received: from [200.68.140.36] (port=1945 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1bNt-001JBU-S3; Tue, 11 Feb 2020 13:39:49 -0600
-Date:   Tue, 11 Feb 2020 13:42:24 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] ALSA: usb-midi: Replace zero-length array with
- flexible-array member
-Message-ID: <20200211194224.GA9383@embeddedor>
+        Tue, 11 Feb 2020 14:44:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729462AbgBKToA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:44:00 -0500
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 893432467D;
+        Tue, 11 Feb 2020 19:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581450238;
+        bh=DvzM0ydj4D5pq1pifhh+bBq3fqq6xA8Afwwx469Vkho=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UNht+1KGl/nLZWZpg26EufuWcgrSTOX3VAIgakbRdyF2CL16G2d4+TZBX36/+LFWD
+         hZVpXwfUvNeNOeXs4r2ZZDOuxALHac6LbPjwBx8kLxlOLqouwe2fLw1ue4BoFTRlbA
+         TsB1ToXb6pvScjFYZwFZQLoiCU5100lh5WwswRSI=
+Received: by mail-qv1-f49.google.com with SMTP id dc14so5574755qvb.9;
+        Tue, 11 Feb 2020 11:43:58 -0800 (PST)
+X-Gm-Message-State: APjAAAUxjBfdD+jsWNlplxY/6YFDOPpXU63idb7/ZowHv1SJF15khioU
+        HmNcjsfEZK5Hg0Xd5+qbSz7SxZV4oXTT9sPeag==
+X-Google-Smtp-Source: APXvYqwWjbNjReDsgQKr6XDaSggOqqPVRJvQCHJ/GYq2amBCeGZ41X9dHAmHfM9j4TENY3W9kgIrEy30L5K8rEJVBI8=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr4422199qvv.85.1581450237590;
+ Tue, 11 Feb 2020 11:43:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1bNt-001JBU-S3
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:1945
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200207052627.130118-1-drinkcat@chromium.org> <20200207052627.130118-6-drinkcat@chromium.org>
+In-Reply-To: <20200207052627.130118-6-drinkcat@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 11 Feb 2020 13:43:46 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
+Message-ID: <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
++Saravana
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On Thu, Feb 6, 2020 at 11:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> When there is a single power domain per device, the core will
+> ensure the power domain is switched on (so it is technically
+> equivalent to having not power domain specified at all).
+>
+> However, when there are multiple domains, as in MT8183 Bifrost
+> GPU, we need to handle them in driver code.
+>
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+>
+> ---
+>
+> The downstream driver we use on chromeos-4.19 currently uses 2
+> additional devices in device tree to accomodate for this [1], but
+> I believe this solution is cleaner.
+>
+> [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+>
+> v4:
+>  - Match the exact power domain names as specified in the compatible
+>    struct, instead of just matching the number of power domains.
+>    [Review: Ulf Hansson]
+>  - Dropped print and reordered function [Review: Steven Price]
+>  - nits: Run through latest version of checkpatch:
+>    - Use WARN instead of BUG_ON.
+>    - Drop braces for single expression if block.
+> v3:
+>  - Use the compatible matching data to specify the number of power
+>    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+>    as the core will handle these 2 cases in the exact same way
+>    (automatically, without driver intervention), and there should
+>    be no adverse consequence in this case (the concern is about
+>    switching on only some power domains and not others).
+>
+>  drivers/gpu/drm/panfrost/panfrost_device.c | 97 ++++++++++++++++++++--
+>  drivers/gpu/drm/panfrost/panfrost_device.h | 11 +++
+>  drivers/gpu/drm/panfrost/panfrost_drv.c    |  2 +
+>  3 files changed, 102 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index 3720d50f6d9f965..8136babd3ba9935 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/reset.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/regulator/consumer.h>
+>
+>  #include "panfrost_device.h"
+> @@ -120,6 +121,79 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+>                         pfdev->regulators);
+>  }
+>
+> +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> +               if (!pfdev->pm_domain_devs[i])
+> +                       break;
+> +
+> +               if (pfdev->pm_domain_links[i])
+> +                       device_link_del(pfdev->pm_domain_links[i]);
+> +
+> +               dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> +       }
+> +}
+> +
+> +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> +{
+> +       int err;
+> +       int i, num_domains;
+> +
+> +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> +                                                "power-domains",
+> +                                                "#power-domain-cells");
+> +
+> +       /*
+> +        * Single domain is handled by the core, and, if only a single power
+> +        * the power domain is requested, the property is optional.
+> +        */
+> +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> +               return 0;
+> +
+> +       if (num_domains != pfdev->comp->num_pm_domains) {
+> +               dev_err(pfdev->dev,
+> +                       "Incorrect number of power domains: %d provided, %d needed\n",
+> +                       num_domains, pfdev->comp->num_pm_domains);
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
+> +                       "Too many supplies in compatible structure.\n"))
+> +               return -EINVAL;
+> +
+> +       for (i = 0; i < num_domains; i++) {
+> +               pfdev->pm_domain_devs[i] =
+> +                       dev_pm_domain_attach_by_name(pfdev->dev,
+> +                                       pfdev->comp->pm_domain_names[i]);
+> +               if (IS_ERR_OR_NULL(pfdev->pm_domain_devs[i])) {
+> +                       err = PTR_ERR(pfdev->pm_domain_devs[i]) ? : -ENODATA;
+> +                       pfdev->pm_domain_devs[i] = NULL;
+> +                       dev_err(pfdev->dev,
+> +                               "failed to get pm-domain %s(%d): %d\n",
+> +                               pfdev->comp->pm_domain_names[i], i, err);
+> +                       goto err;
+> +               }
+> +
+> +               pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> +                               pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> +                               DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+We're in the process of adding device links based on DT properties.
+Shouldn't we add power domains to that? See drivers/of/property.c for
+what's handled.
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- sound/usb/midi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/usb/midi.c b/sound/usb/midi.c
-index b737f0ec77d0..f15d36731cbe 100644
---- a/sound/usb/midi.c
-+++ b/sound/usb/midi.c
-@@ -91,7 +91,7 @@ struct usb_ms_endpoint_descriptor {
- 	__u8  bDescriptorType;
- 	__u8  bDescriptorSubtype;
- 	__u8  bNumEmbMIDIJack;
--	__u8  baAssocJackID[0];
-+	__u8  baAssocJackID[];
- } __attribute__ ((packed));
- 
- struct snd_usb_midi_in_endpoint;
--- 
-2.25.0
-
+Rob
