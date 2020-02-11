@@ -2,139 +2,99 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6C7C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ED6C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B40206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581459965;
-	bh=jwOvEweDP3a6frfUBwUsTRLm3KUOaJHDLObO3bfMngQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ck8Tlbtmxnvw4B1ny6nd/MStau+Lyz3LETJprXzlZhUkZCxMLmdkGwn2Ybkz89GSv
-	 LhBaksG3O2yBstXYfk0U7wU+EgjLhlKGHQIEwTHLx34gQIec7ov65ZortErpkGF57X
-	 RJYs8v7MpvK9ckBMTRAcfTvxVLV0tLMzyi5b+Wc8=
+	by mail.kernel.org (Postfix) with ESMTP id 1A4BE2073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="osmpEyyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbgBKW0E (ORCPT
+        id S1727684AbgBKW0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:26:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53994 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 17:26:10 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:41948 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgBKW0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:26:04 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F21C52082F
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581459963;
-        bh=jwOvEweDP3a6frfUBwUsTRLm3KUOaJHDLObO3bfMngQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zZYakXND4nSyArsUYniGdrmaKSyq1gknzDCuf0po+GIXwSJFpic9i7FaMFT5+FR+2
-         OgpeNiEc6wN+3KbrRoQWDiWm0QjF4KCTdbL02gOc9XOuU4E8hi2JKG7ZHCh98mPmnM
-         bw7k9TPplzbMJREMCV+2FkmwzoEhDOOarizM7dEo=
-Received: by mail-wr1-f41.google.com with SMTP id t3so14558363wru.7
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:26:02 -0800 (PST)
-X-Gm-Message-State: APjAAAWRiWLXRV9GWEQzILX/S0IjcUMnC2urbQXrlOag7qygQlDjvVEc
-        pWX2Bp2gcid8CBP5DWRcYm1LG4FgYlq7ISG0LdFtgA==
-X-Google-Smtp-Source: APXvYqzhlwE9e/rHSQa1i4zUzoVmEyewXxrV5b2agTpUtz0bDQeneWSxaZrnHZkjhP0nWHhNPn8gEdVFwZOXFNRhQHY=
-X-Received: by 2002:a5d:494b:: with SMTP id r11mr10831273wrs.184.1581459961446;
- Tue, 11 Feb 2020 14:26:01 -0800 (PST)
+        id S1727613AbgBKW0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:26:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FTbc6NWScTx2sMAyMo0DXlq+GgMPVN13Zi2VFXkQ5NQ=; b=osmpEyybgIujO885bvEjDsmCfE
+        rKPM5qtQkwuJ5S+jzyGh+X20JBzUCJpD4L5chAuCV6Iq3sfnOmZxf4P6XDBSfCY7Y5FK938LtFVLV
+        4dZYvibf2P2pNxgItfmFVMP53Y0y3/4hNROve54Z1zPdzOG60mvjXVFxbyni7oVcZ7pg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j1dxq-0003J4-92; Tue, 11 Feb 2020 23:25:06 +0100
+Date:   Tue, 11 Feb 2020 23:25:06 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [PATCH 03/14] net: davicom: dm9000: allow to pass MAC address
+ through mac_addr module parameter
+Message-ID: <20200211222506.GP19213@lunn.ch>
+References: <cover.1581457290.git.hns@goldelico.com>
+ <4e11dd4183da55012198824ca7b8933b1eb57e4a.1581457290.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-19-joro@8bytes.org>
-In-Reply-To: <20200211135256.24617-19-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 11 Feb 2020 14:25:49 -0800
-X-Gmail-Original-Message-ID: <CALCETrVWoG7ugfE_FJgNKyyWYCmZh1162kfceJ2bs+O7Qyf-8A@mail.gmail.com>
-Message-ID: <CALCETrVWoG7ugfE_FJgNKyyWYCmZh1162kfceJ2bs+O7Qyf-8A@mail.gmail.com>
-Subject: Re: [PATCH 18/62] x86/boot/compressed/64: Setup GHCB Based VC
- Exception handler
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e11dd4183da55012198824ca7b8933b1eb57e4a.1581457290.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> From: Joerg Roedel <jroedel@suse.de>
->
-> Install an exception handler for #VC exception that uses a GHCB. Also
-> add the infrastructure for handling different exit-codes by decoding
-> the instruction that caused the exception and error handling.
->
+On Tue, Feb 11, 2020 at 10:41:20PM +0100, H. Nikolaus Schaller wrote:
+> This is needed to give the MIPS Ingenic CI20 board a stable MAC address
+> which can be optionally provided by vendor U-Boot.
+> 
+> For get_mac_addr() we use an adapted copy of from ksz884x.c which
+> has very similar functionality.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-> diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-> index 8d13121a8cf2..02fb6f57128b 100644
-> --- a/arch/x86/boot/compressed/sev-es.c
-> +++ b/arch/x86/boot/compressed/sev-es.c
-> @@ -8,12 +8,16 @@
->  #include <linux/kernel.h>
->
->  #include <asm/sev-es.h>
-> +#include <asm/trap_defs.h>
->  #include <asm/msr-index.h>
->  #include <asm/ptrace.h>
->  #include <asm/svm.h>
->
->  #include "misc.h"
->
-> +struct ghcb boot_ghcb_page __aligned(PAGE_SIZE);
-> +struct ghcb *boot_ghcb;
-> +
->  static inline u64 read_ghcb_msr(void)
->  {
->         unsigned long low, high;
-> @@ -35,8 +39,95 @@ static inline void write_ghcb_msr(u64 val)
->                         "a"(low), "d" (high) : "memory");
->  }
->
-> +static enum es_result es_fetch_insn_byte(struct es_em_ctxt *ctxt,
-> +                                        unsigned int offset,
-> +                                        char *buffer)
-> +{
-> +       char *rip = (char *)ctxt->regs->ip;
-> +
-> +       buffer[offset] = rip[offset];
-> +
-> +       return ES_OK;
-> +}
-> +
-> +static enum es_result es_write_mem(struct es_em_ctxt *ctxt,
-> +                                  void *dst, char *buf, size_t size)
-> +{
-> +       memcpy(dst, buf, size);
-> +
-> +       return ES_OK;
-> +}
-> +
-> +static enum es_result es_read_mem(struct es_em_ctxt *ctxt,
-> +                                 void *src, char *buf, size_t size)
-> +{
-> +       memcpy(buf, src, size);
-> +
-> +       return ES_OK;
-> +}
+Hi Nikolaus
 
+Please split these patches by subsystem. So this one patch needs to go
+via netdev.
 
-What are all these abstractions for?
+> +static char *mac_addr = ":";
+> +module_param(mac_addr, charp, 0);
+> +MODULE_PARM_DESC(mac_addr, "MAC address");
+
+Module parameters are not liked.
+
+Can it be passed via device tree? The driver already has code to get
+it out of the device tree.
+
+   Andrew
