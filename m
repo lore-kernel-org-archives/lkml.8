@@ -2,418 +2,182 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D792C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19554C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE7E20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="CeMaUaM2"
+	by mail.kernel.org (Postfix) with ESMTP id DD81C20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581439203;
+	bh=C9T10J9m3j/fSDpeitNSnf+yQc+1UCLPMTcmLnxvTsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ND62doJZjiewphzi6w4lL0omvpIY5U/vKQUZkHWbfH54oRE3NOC80rIaCdtD+q9VT
+	 CUMhm/TP1A9znKzf3+qzxeHAjQ3uPfIzxHGe2iV68dODzeyJis9xUERVSCB5nAHj9S
+	 FVTW5XduEe6Upl3NQSSqvmcBWyHTnEoKGsZTBTUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbgBKQj1 (ORCPT
+        id S1730940AbgBKQkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:39:27 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:45940 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgBKQj0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:39:26 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 1106B27E03A0;
-        Tue, 11 Feb 2020 17:39:23 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id x5g-CL3ZOOOs; Tue, 11 Feb 2020 17:39:22 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 3B38227E1003;
-        Tue, 11 Feb 2020 17:39:22 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 3B38227E1003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1581439162;
-        bh=8/HJBOOSglzCp3HuPAJfL4hVUnBGD/cVbGlSIGBH1CE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=CeMaUaM2PpTqglaFJW0OQBKWUDhJqCRb0aCthjAd0iqU3gzh+C6Nz7lxk74XXUAgG
-         SZ7ck1Z6md4fW4hMY6LSV1gq1Mu21JE927hjphQr949o7ia9A+217qLAebO8kGzVDq
-         OdzRpviVw9dglWJuB38eY5Pb10J9tGW4RnxbgTk4=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Td__kMPthJ66; Tue, 11 Feb 2020 17:39:22 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 1CEA627E03A0;
-        Tue, 11 Feb 2020 17:39:22 +0100 (CET)
-Date:   Tue, 11 Feb 2020 17:39:21 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Message-ID: <884697376.3644142.1581439161953.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <4465bade-e3de-88b8-63a5-e5410de9adc0@st.com>
-References: <527785289.2852303.1581062223707.JavaMail.zimbra@kalray.eu> <20200210162209.23149-1-cleger@kalray.eu> <20200210162209.23149-2-cleger@kalray.eu> <4465bade-e3de-88b8-63a5-e5410de9adc0@st.com>
-Subject: Re: [PATCH v4 1/5] remoteproc: Use u64 len for da_to_va
+        Tue, 11 Feb 2020 11:40:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728049AbgBKQkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:40:01 -0500
+Received: from localhost (unknown [104.133.9.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A51D20714;
+        Tue, 11 Feb 2020 16:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581439200;
+        bh=C9T10J9m3j/fSDpeitNSnf+yQc+1UCLPMTcmLnxvTsA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eQDyW1I/zB83Q58sWcZoNS+5WGf0xFZHgNSDajCzvvgpkpn85dORflqZoEUe9xZZm
+         gOGZCbPkdwVXNr7N1zWMWeVtyhGZuehfIbPdQ1EHMKasoRssYxXUTbIv/IEp15Hem+
+         zN7VoV9UvivD6xKT6dPjkd5wRPyIoEmB5qewsK/k=
+Date:   Tue, 11 Feb 2020 08:39:59 -0800
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Petar Kovacevic <petar.kovacevic@displaylink.com>,
+        Stefan Lugonjic <stefan.lugonjic@displaylink.com>,
+        Nikola Simic <nikola.simic@displaylink.com>,
+        Marko Miljkovic <marko.miljkovic@displaylink.com>
+Subject: Re: [PATCH 1/1] usb: Add MA USB Host driver
+Message-ID: <20200211163959.GB1931506@kroah.com>
+References: <VI1PR10MB1965B4B61D7A9808B2EA095591180@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
+ <61e63056-31f9-9d4b-60c1-8cbf0372d34f@displaylink.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: remoteproc: Use u64 len for da_to_va
-Thread-Index: /D6a0TgT7qxVtvc7mnAdJNBR4bQtYw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61e63056-31f9-9d4b-60c1-8cbf0372d34f@displaylink.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaud,
+On Tue, Feb 11, 2020 at 04:21:24PM +0000, Vladimir Stankovic wrote:
+> MA-USB Host driver provides USB connectivity over an available
+> network, allowing host device to access remote USB devices attached
+> to one or more MA USB devices (accessible via network).
+> 
+> This driver has been developed to enable the host to communicate
+> with DisplayLink products supporting MA USB protocol (MA USB device,
+> in terms of MA USB Specification).
+> 
+> MA-USB protocol used by MA-USB Host driver has been implemented in
+> accordance with MA USB Specification Release 1.0b.
+> 
+> This driver depends on the functions provided by DisplayLink's
+> user-space driver.
+> 
+> Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+> ---
+>   drivers/usb/Kconfig                           |    2 +
+>   drivers/usb/Makefile                          |    2 +
+>   drivers/usb/mausb_host/Kconfig                |   15 +
+>   drivers/usb/mausb_host/Makefile               |   30 +
+>   .../usb/mausb_host/include/common/ma_usb.h    |  873 +++++++++
+>   .../mausb_host/include/common/mausb_address.h |   38 +
+>   .../include/common/mausb_driver_status.h      |   21 +
+>   .../mausb_host/include/common/mausb_event.h   |  228 +++
+>   drivers/usb/mausb_host/include/hcd/hub.h      |  115 ++
+>   drivers/usb/mausb_host/include/hcd/vhcd.h     |   79 +
+>   .../usb/mausb_host/include/hpal/data_common.h |   66 +
+>   drivers/usb/mausb_host/include/hpal/data_in.h |   18 +
+>   .../usb/mausb_host/include/hpal/data_out.h    |   22 +
+>   drivers/usb/mausb_host/include/hpal/hpal.h    |  184 ++
+>   .../usb/mausb_host/include/hpal/isoch_in.h    |   22 +
+>   .../usb/mausb_host/include/hpal/isoch_out.h   |   20 +
+>   .../mausb_host/include/hpal/mausb_events.h    |   99 +
+>   .../include/hpal/network_callbacks.h          |   20 +
+>   .../mausb_host/include/link/mausb_ip_link.h   |   87 +
+>   .../include/utils/mausb_data_iterator.h       |   52 +
+>   .../usb/mausb_host/include/utils/mausb_logs.h |   35 +
+>   .../usb/mausb_host/include/utils/mausb_mmap.h |   21 +
+>   .../include/utils/mausb_ring_buffer.h         |   67 +
+>   .../mausb_host/include/utils/mausb_version.h  |   17 +
+>   drivers/usb/mausb_host/src/hcd/hub.c          | 1684 +++++++++++++++++
+>   drivers/usb/mausb_host/src/hcd/module_init.c  |  219 +++
+>   drivers/usb/mausb_host/src/hcd/vhcd.c         |  291 +++
+>   drivers/usb/mausb_host/src/hpal/data_common.c |  141 ++
+>   drivers/usb/mausb_host/src/hpal/data_in.c     |   73 +
+>   drivers/usb/mausb_host/src/hpal/data_out.c    |  202 ++
+>   drivers/usb/mausb_host/src/hpal/hpal.c        | 1306 +++++++++++++
+>   drivers/usb/mausb_host/src/hpal/isoch_in.c    |  241 +++
+>   drivers/usb/mausb_host/src/hpal/isoch_out.c   |  361 ++++
+>   .../usb/mausb_host/src/hpal/mausb_events.c    |  659 +++++++
+>   .../mausb_host/src/hpal/network_callbacks.c   |  160 ++
+>   .../usb/mausb_host/src/link/mausb_ip_link.c   |  354 ++++
+>   .../src/utils/mausb_data_iterator.c           |  295 +++
+>   drivers/usb/mausb_host/src/utils/mausb_mmap.c |  381 ++++
+>   .../mausb_host/src/utils/mausb_ring_buffer.c  |  168 ++
+>   39 files changed, 8668 insertions(+)
+>   create mode 100644 drivers/usb/mausb_host/Kconfig
+>   create mode 100644 drivers/usb/mausb_host/Makefile
+>   create mode 100644 drivers/usb/mausb_host/include/common/ma_usb.h
+>   create mode 100644 drivers/usb/mausb_host/include/common/mausb_address.h
+>   create mode 100644 
+> drivers/usb/mausb_host/include/common/mausb_driver_status.h
+>   create mode 100644 drivers/usb/mausb_host/include/common/mausb_event.h
+>   create mode 100644 drivers/usb/mausb_host/include/hcd/hub.h
+>   create mode 100644 drivers/usb/mausb_host/include/hcd/vhcd.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/data_common.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/data_in.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/data_out.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/hpal.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/isoch_in.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/isoch_out.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/mausb_events.h
+>   create mode 100644 drivers/usb/mausb_host/include/hpal/network_callbacks.h
+>   create mode 100644 drivers/usb/mausb_host/include/link/mausb_ip_link.h
+>   create mode 100644 
+> drivers/usb/mausb_host/include/utils/mausb_data_iterator.h
+>   create mode 100644 drivers/usb/mausb_host/include/utils/mausb_logs.h
+>   create mode 100644 drivers/usb/mausb_host/include/utils/mausb_mmap.h
+>   create mode 100644 
+> drivers/usb/mausb_host/include/utils/mausb_ring_buffer.h
+>   create mode 100644 drivers/usb/mausb_host/include/utils/mausb_version.h
+>   create mode 100644 drivers/usb/mausb_host/src/hcd/hub.c
+>   create mode 100644 drivers/usb/mausb_host/src/hcd/module_init.c
+>   create mode 100644 drivers/usb/mausb_host/src/hcd/vhcd.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/data_common.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/data_in.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/data_out.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/hpal.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/isoch_in.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/isoch_out.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/mausb_events.c
+>   create mode 100644 drivers/usb/mausb_host/src/hpal/network_callbacks.c
+>   create mode 100644 drivers/usb/mausb_host/src/link/mausb_ip_link.c
+>   create mode 100644 drivers/usb/mausb_host/src/utils/mausb_data_iterator.c
+>   create mode 100644 drivers/usb/mausb_host/src/utils/mausb_mmap.c
+>   create mode 100644 drivers/usb/mausb_host/src/utils/mausb_ring_buffer.c
+> 
+> 
 
------ On 11 Feb, 2020, at 16:53, Arnaud Pouliquen arnaud.pouliquen@st.com w=
-rote:
+> From 0324b3a49d0ef41480a0a42ab27f70edeb007980 Mon Sep 17 00:00:00 2001
+> From: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+> Date: Tue, 11 Feb 2020 16:03:43 +0100
+> Subject: [PATCH] usb: Add MA USB Host driver
+> 
+> MA-USB Host driver provides USB connectivity over an available
+> network, allowing host device to access remote USB devices attached
+> to one or more MA USB devices (accessible via network).
 
-> On 2/10/20 5:22 PM, Clement Leger wrote:
->> With upcoming changes in elf loader for elf64 support, section size will
->> be a u64. When used with da_to_va, this will potentially lead to
->> overflow if using the current "int" type for len argument. Change
->> da_to_va prototype to use a u64 for len and fix all users of this
->> function.
->>=20
->> Signed-off-by: Clement Leger <cleger@kalray.eu>
->> ---
->>  drivers/remoteproc/imx_rproc.c           | 11 ++++++-----
->>  drivers/remoteproc/keystone_remoteproc.c |  4 ++--
->>  drivers/remoteproc/qcom_q6v5_adsp.c      |  2 +-
->>  drivers/remoteproc/qcom_q6v5_mss.c       |  2 +-
->>  drivers/remoteproc/qcom_q6v5_pas.c       |  2 +-
->>  drivers/remoteproc/qcom_q6v5_wcss.c      |  2 +-
->>  drivers/remoteproc/qcom_wcnss.c          |  2 +-
->>  drivers/remoteproc/remoteproc_core.c     |  2 +-
->>  drivers/remoteproc/remoteproc_internal.h |  2 +-
->>  drivers/remoteproc/st_slim_rproc.c       |  4 ++--
->>  drivers/remoteproc/wkup_m3_rproc.c       |  4 ++--
->>  include/linux/remoteproc.h               |  2 +-
->>  12 files changed, 20 insertions(+), 19 deletions(-)
->>=20
->> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rpr=
-oc.c
->> index 3e72b6f38d4b..f497f5b49b18 100644
->> --- a/drivers/remoteproc/imx_rproc.c
->> +++ b/drivers/remoteproc/imx_rproc.c
->> @@ -186,7 +186,7 @@ static int imx_rproc_stop(struct rproc *rproc)
->>  }
->> =20
->>  static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
->> -=09=09=09       int len, u64 *sys)
->> +=09=09=09       u64 len, u64 *sys)
->>  {
->>  =09const struct imx_rproc_dcfg *dcfg =3D priv->dcfg;
->>  =09int i;
->> @@ -203,19 +203,19 @@ static int imx_rproc_da_to_sys(struct imx_rproc *p=
-riv, u64
->> da,
->>  =09=09}
->>  =09}
->> =20
->> -=09dev_warn(priv->dev, "Translation failed: da =3D 0x%llx len =3D 0x%x\=
-n",
->> +=09dev_warn(priv->dev, "Translation failed: da =3D 0x%llx len =3D 0x%ll=
-x\n",
->>  =09=09 da, len);
->>  =09return -ENOENT;
->>  }
->> =20
->> -static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->> +static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->>  {
->>  =09struct imx_rproc *priv =3D rproc->priv;
->>  =09void *va =3D NULL;
->>  =09u64 sys;
->>  =09int i;
->> =20
->> -=09if (len <=3D 0)
->> +=09if (len =3D=3D 0)
->>  =09=09return NULL;
->> =20
->>  =09/*
->> @@ -235,7 +235,8 @@ static void *imx_rproc_da_to_va(struct rproc *rproc,=
- u64 da,
->> int len)
->>  =09=09}
->>  =09}
->> =20
->> -=09dev_dbg(&rproc->dev, "da =3D 0x%llx len =3D 0x%x va =3D 0x%p\n", da,=
- len, va);
->> +=09dev_dbg(&rproc->dev, "da =3D 0x%llx len =3D 0x%llx va =3D 0x%p\n",
->> +=09=09da, len, va);
->> =20
->>  =09return va;
->>  }
->> diff --git a/drivers/remoteproc/keystone_remoteproc.c
->> b/drivers/remoteproc/keystone_remoteproc.c
->> index 5c4658f00b3d..466093f48814 100644
->> --- a/drivers/remoteproc/keystone_remoteproc.c
->> +++ b/drivers/remoteproc/keystone_remoteproc.c
->> @@ -246,7 +246,7 @@ static void keystone_rproc_kick(struct rproc *rproc,=
- int
->> vqid)
->>   * can be used either by the remoteproc core for loading (when using ke=
-rnel
->>   * remoteproc loader), or by any rpmsg bus drivers.
->>   */
->> -static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, int l=
-en)
->> +static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, u64 l=
-en)
->>  {
->>  =09struct keystone_rproc *ksproc =3D rproc->priv;
->>  =09void __iomem *va =3D NULL;
->> @@ -255,7 +255,7 @@ static void *keystone_rproc_da_to_va(struct rproc *r=
-proc,
->> u64 da, int len)
->>  =09size_t size;
->>  =09int i;
->> =20
->> -=09if (len <=3D 0)
->> +=09if (len =3D=3D 0)
->>  =09=09return NULL;
->> =20
->>  =09for (i =3D 0; i < ksproc->num_mems; i++) {
->> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c
->> b/drivers/remoteproc/qcom_q6v5_adsp.c
->> index e953886b2eb7..7518e67a49e5 100644
->> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
->> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
->> @@ -270,7 +270,7 @@ static int adsp_stop(struct rproc *rproc)
->>  =09return ret;
->>  }
->> =20
->> -static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
->> +static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
->>  {
->>  =09struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
->>  =09int offset;
->> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
->> b/drivers/remoteproc/qcom_q6v5_mss.c
->> index 471128a2e723..248febde6fc1 100644
->> --- a/drivers/remoteproc/qcom_q6v5_mss.c
->> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
->> @@ -1148,7 +1148,7 @@ static int q6v5_stop(struct rproc *rproc)
->>  =09return 0;
->>  }
->> =20
->> -static void *q6v5_da_to_va(struct rproc *rproc, u64 da, int len)
->> +static void *q6v5_da_to_va(struct rproc *rproc, u64 da, u64 len)
->>  {
->>  =09struct q6v5 *qproc =3D rproc->priv;
->>  =09int offset;
->> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c
->> b/drivers/remoteproc/qcom_q6v5_pas.c
->> index db4b3c4bacd7..cf2cd609c90d 100644
->> --- a/drivers/remoteproc/qcom_q6v5_pas.c
->> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
->> @@ -159,7 +159,7 @@ static int adsp_stop(struct rproc *rproc)
->>  =09return ret;
->>  }
->> =20
->> -static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
->> +static void *adsp_da_to_va(struct rproc *rproc, u64 da, u64 len)
->>  {
->>  =09struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
->>  =09int offset;
->> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c
->> b/drivers/remoteproc/qcom_q6v5_wcss.c
->> index f93e1e4a1cc0..3a6b82a16961 100644
->> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
->> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
->> @@ -406,7 +406,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
->>  =09return 0;
->>  }
->> =20
->> -static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, int len)
->> +static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, u64 len)
->>  {
->>  =09struct q6v5_wcss *wcss =3D rproc->priv;
->>  =09int offset;
->> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_w=
-cnss.c
->> index dc135754bb9c..f893219e45a8 100644
->> --- a/drivers/remoteproc/qcom_wcnss.c
->> +++ b/drivers/remoteproc/qcom_wcnss.c
->> @@ -287,7 +287,7 @@ static int wcnss_stop(struct rproc *rproc)
->>  =09return ret;
->>  }
->> =20
->> -static void *wcnss_da_to_va(struct rproc *rproc, u64 da, int len)
->> +static void *wcnss_da_to_va(struct rproc *rproc, u64 da, u64 len)
->>  {
->>  =09struct qcom_wcnss *wcnss =3D (struct qcom_wcnss *)rproc->priv;
->>  =09int offset;
->> diff --git a/drivers/remoteproc/remoteproc_core.c
->> b/drivers/remoteproc/remoteproc_core.c
->> index 307df98347ba..9e6d3c6a60ee 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -185,7 +185,7 @@ EXPORT_SYMBOL(rproc_va_to_pa);
->>   * here the output of the DMA API for the carveouts, which should be mo=
-re
->>   * correct.
->>   */
->> -void *rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->> +void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->=20
-> This function is exported, don't see any update in consequence...
-> references:
-> https://elixir.bootlin.com/linux/v5.6-rc1/ident/rproc_da_to_va
-> For instance the function rproc_trace_read use it. it quite strange that =
-my gcc
-> does not warns for the cast but i suppose that some could.
+<snip>
 
-Agreed, even if len should never have been a signed type since it can't be
-negative. I will try to fix all callers.
+You attached the patch, as well as put the description above in the
+email as well, so I couldn't apply this even if I wanted to :(
 
-> An indirect consequence is that the len field in rproc_mem_entry struct s=
-hould
-> probably been updated to u64 to be aligned.
+Please just submit the patch all inline, like all other kernel patches
+are.
 
-Ok, I will do that once we settle on the type of len.
+thanks,
 
->=20
-> I'm still wondering about the use of size_t instead,which seems more rati=
-onal
-> from my window.
-> So i you or Mathieu remember it was decided to use u64, please could remi=
-nd me
-> the arguments?
-
-I tried to find the notes of a meeting we had for OpenAMP but I did not fou=
-nd
-them. Anyway, the argument was coming from Tomas or someone else, (I can't
-remember) talking about a 32 bits CPU executing code on a 64 bits accelerat=
-or.
-In that case, the size_t type could fail due to being only 32bits on the ho=
-st
-CPU but larger than 4G.
-
-However, I can't say if it's a real usecase or not... All I can say is
-that keeping it open is probably better if one day somebody comes with such
-architecture.
-
-> As an alternative a check should be added for 32 bits processors to ensur=
-e that
-> the size is not higher than
-> its address range capability...
-
-Agreed.
-I was even thinking about a mecanism for remoteproc drivers to declare the =
-type
-of supported elfs files (such as EM_*, ELFCLASS* and other needed thing).
-Or should it be supported by overriding .sanity_check in drivers  to reject
-elf64 for instance ?
-
-Since elf is a "specific format" and that rproc can support other formats,
-I did not want to add a specific elf_sanity_check field to rproc ops.
-
-Regards,
-
-Cl=C3=A9ment
-
->=20
-> Regards
-> Arnaud
->=20
->>  {
->>  =09struct rproc_mem_entry *carveout;
->>  =09void *ptr =3D NULL;
->> diff --git a/drivers/remoteproc/remoteproc_internal.h
->> b/drivers/remoteproc/remoteproc_internal.h
->> index 493ef9262411..004867061721 100644
->> --- a/drivers/remoteproc/remoteproc_internal.h
->> +++ b/drivers/remoteproc/remoteproc_internal.h
->> @@ -50,7 +50,7 @@ void rproc_exit_sysfs(void);
->>  void rproc_free_vring(struct rproc_vring *rvring);
->>  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->> =20
->> -void *rproc_da_to_va(struct rproc *rproc, u64 da, int len);
->> +void *rproc_da_to_va(struct rproc *rproc, u64 da, u64 len);
->>  phys_addr_t rproc_va_to_pa(void *cpu_addr);
->>  int rproc_trigger_recovery(struct rproc *rproc);
->> =20
->> diff --git a/drivers/remoteproc/st_slim_rproc.c
->> b/drivers/remoteproc/st_slim_rproc.c
->> index 04492fead3c8..fc01cd879b60 100644
->> --- a/drivers/remoteproc/st_slim_rproc.c
->> +++ b/drivers/remoteproc/st_slim_rproc.c
->> @@ -174,7 +174,7 @@ static int slim_rproc_stop(struct rproc *rproc)
->>  =09return 0;
->>  }
->> =20
->> -static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->> +static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, u64 len)
->>  {
->>  =09struct st_slim_rproc *slim_rproc =3D rproc->priv;
->>  =09void *va =3D NULL;
->> @@ -191,7 +191,7 @@ static void *slim_rproc_da_to_va(struct rproc *rproc=
-, u64
->> da, int len)
->>  =09=09}
->>  =09}
->> =20
->> -=09dev_dbg(&rproc->dev, "da =3D 0x%llx len =3D 0x%x va =3D 0x%pK\n",
->> +=09dev_dbg(&rproc->dev, "da =3D 0x%llx len =3D 0x%llx va =3D 0x%pK\n",
->>  =09=09da, len, va);
->> =20
->>  =09return va;
->> diff --git a/drivers/remoteproc/wkup_m3_rproc.c
->> b/drivers/remoteproc/wkup_m3_rproc.c
->> index 3984e585c847..91485b467407 100644
->> --- a/drivers/remoteproc/wkup_m3_rproc.c
->> +++ b/drivers/remoteproc/wkup_m3_rproc.c
->> @@ -80,14 +80,14 @@ static int wkup_m3_rproc_stop(struct rproc *rproc)
->>  =09return 0;
->>  }
->> =20
->> -static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, int le=
-n)
->> +static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, u64 le=
-n)
->>  {
->>  =09struct wkup_m3_rproc *wkupm3 =3D rproc->priv;
->>  =09void *va =3D NULL;
->>  =09int i;
->>  =09u32 offset;
->> =20
->> -=09if (len <=3D 0)
->> +=09if (len =3D=3D 0)
->>  =09=09return NULL;
->> =20
->>  =09for (i =3D 0; i < WKUPM3_MEM_MAX; i++) {
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index 16ad66683ad0..f84bd5fe0211 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -374,7 +374,7 @@ struct rproc_ops {
->>  =09int (*start)(struct rproc *rproc);
->>  =09int (*stop)(struct rproc *rproc);
->>  =09void (*kick)(struct rproc *rproc, int vqid);
->> -=09void * (*da_to_va)(struct rproc *rproc, u64 da, int len);
->> +=09void * (*da_to_va)(struct rproc *rproc, u64 da, u64 len);
->>  =09int (*parse_fw)(struct rproc *rproc, const struct firmware *fw);
->>  =09int (*handle_rsc)(struct rproc *rproc, u32 rsc_type, void *rsc,
->>  =09=09=09  int offset, int avail);
+greg k-h
