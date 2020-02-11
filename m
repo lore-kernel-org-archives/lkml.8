@@ -2,134 +2,109 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28474C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC66C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AA2206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="l7x6RPEy"
+	by mail.kernel.org (Postfix) with ESMTP id 1C4FE20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581455217;
+	bh=ial5lfm1joGz3c4sbCOYuWw3kSyd3YsJFbgXFfG8r/g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=tPNMjFsQW3R0e4gpft2YY6W17N+Ive4XwUqni0A8t749HX5N5K8pwwDBugXoqqonI
+	 C3GpMIP3VOOUcsqc9GFYHhxwneErVsakPSIZB1aLLtzitoIKKF1Eu4Kz1tt0dRGqdJ
+	 VVgM9zVPUGUNKBm+3F57BHc87J2ENxGhuppUcM7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbgBKVFu (ORCPT
+        id S1731949AbgBKVG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:05:50 -0500
-Received: from gateway32.websitewelcome.com ([192.185.145.18]:49587 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729031AbgBKVFt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:05:49 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id E8EB811A1AA
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:05:48 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1cj6jHsAZvBMd1cj6jbTsw; Tue, 11 Feb 2020 15:05:48 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0/N7mjdKi9+R4kLcU/SMx8qgiSYzHOVxoh2RqMly75s=; b=l7x6RPEyjpONSlZYpjiakJQvc6
-        Mi+OP2QYKKI7djRIwgHBGlZHzptDixPY2EEESwk2Bql58vPJQmXeC10SHraA0SrO0aju5i5sc2tC3
-        LuLw3sVQMpqYTAIGftANtXkoJQfyN13VEbdbZ8KJYlPRth3Sb/l8wleorcQz2Bz01G+nmmWv+YyK6
-        ppu2OlDpwvOMZsHQrLDHL8mZGPqACiIeVKcBGqtQBhGVNGp18vDg2USf5hj5b3Yw8oxtMGY6V8eZT
-        XF2ha5sQy+Sv9gqc3zqhXko1ST+CklRpWehTtCTqrq4RYy1yHn/3k/y4e3SfAnWmNBVYk6uZj/TOt
-        xaBLMHcg==;
-Received: from [200.68.140.36] (port=31691 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1cj5-0028BD-CP; Tue, 11 Feb 2020 15:05:47 -0600
-Date:   Tue, 11 Feb 2020 15:08:22 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] mei: bus: replace zero-length array with flexible-array
- member
-Message-ID: <20200211210822.GA31368@embeddedor>
+        Tue, 11 Feb 2020 16:06:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729031AbgBKVG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 16:06:56 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DC6820708;
+        Tue, 11 Feb 2020 21:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581455215;
+        bh=ial5lfm1joGz3c4sbCOYuWw3kSyd3YsJFbgXFfG8r/g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=msfipC7T9DKYbMKWk/VLVW4IMh7VnAItA5wtAxaobNWwXfYmHZ/X/Ymmq8lsnLEGN
+         Wu+pQMJuctk58waK3nUpMbXZ4UDxTjq9yOcqf5kjKIuTY+pyZfL45ptaFYdIywNhS+
+         cyd182nfjlqDLv5IJ8aOb17XICywoddq/X6ljmcc=
+Subject: Re: [PATCH v3 7/7] selftests/exec: Add READ_IMPLIES_EXEC tests
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jann Horn <jannh@google.com>,
+        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200210193049.64362-1-keescook@chromium.org>
+ <20200210193049.64362-8-keescook@chromium.org>
+ <4f8a5036-dc2a-90ad-5fc8-69560a5dd78e@kernel.org>
+ <202002111124.0A334167@keescook>
+From:   shuah <shuah@kernel.org>
+Message-ID: <c09c345a-786f-25d2-1ee5-65f9cb23db6d@kernel.org>
+Date:   Tue, 11 Feb 2020 14:06:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1cj5-0028BD-CP
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:31691
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <202002111124.0A334167@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On 2/11/20 12:25 PM, Kees Cook wrote:
+> On Tue, Feb 11, 2020 at 11:11:21AM -0700, shuah wrote:
+>> On 2/10/20 12:30 PM, Kees Cook wrote:
+>>> In order to check the matrix of possible states for handling
+>>> READ_IMPLIES_EXEC across native, compat, and the state of PT_GNU_STACK,
+>>> add tests for these execution conditions.
+>>>
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>
+>> No issues for this to go through tip.
+>>
+>> A few problems to fix first. This fails to compile when 32-bit libraries
+>> aren't installed. It should fail the 32-bit part and run other checks.
+> 
+> Do you mean the Makefile should detect the missing compat build deps and
+> avoid building them? Testing compat is pretty important to this test, so
+> it seems like missing the build deps causing the build to fail is the
+> correct action here. This is likely true for the x86/ selftests too.
+> 
+> What would you like this to do?
+> 
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+selftests/x86 does this already and runs the dependency check in 
+x86/Makefile.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
 
-This issue was found with the help of Coccinelle.
+check_cc.sh:# check_cc.sh - Helper to test userspace compilation support
+Makefile:CAN_BUILD_I386 := $(shell ./check_cc.sh $(CC) 
+trivial_32bit_program.c -m32)
+Makefile:CAN_BUILD_X86_64 := $(shell ./check_cc.sh $(CC) 
+trivial_64bit_program.c)
+Makefile:CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh $(CC) 
+trivial_program.c -no-pie)
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+Take a look and see if you can leverage this.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/misc/mei/bus-fixup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
-index 5fcac02233af..aa3648d59a8a 100644
---- a/drivers/misc/mei/bus-fixup.c
-+++ b/drivers/misc/mei/bus-fixup.c
-@@ -107,7 +107,7 @@ struct mkhi_rule_id {
- struct mkhi_fwcaps {
- 	struct mkhi_rule_id id;
- 	u8 len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- struct mkhi_fw_ver_block {
-@@ -135,7 +135,7 @@ struct mkhi_msg_hdr {
- 
- struct mkhi_msg {
- 	struct mkhi_msg_hdr hdr;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- #define MKHI_OSVER_BUF_LEN (sizeof(struct mkhi_msg_hdr) + \
--- 
-2.25.0
-
+thanks,
+-- Shuah
