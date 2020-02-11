@@ -2,154 +2,172 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADC7C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA61C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E49206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E212082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="y7YXlnma"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G2Qwcsqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbgBKOsn (ORCPT
+        id S1730277AbgBKOs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:48:43 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41232 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729041AbgBKOsn (ORCPT
+        Tue, 11 Feb 2020 09:48:56 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48142 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729041AbgBKOsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:48:43 -0500
-Received: by mail-io1-f68.google.com with SMTP id m25so11997571ioo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 06:48:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v+pLeKHNc80Td51F5FW28IMFZU66wu+UJlU6jTA+b20=;
-        b=y7YXlnma2BOJT3nhEPn9Qsz9bwFH4bvsgNaF09IFU6kIx/USIOMBqguQnWUcHKv3Vr
-         iIMR4qekXeCU1c6vj5OUBoEwuBOU7fA/lPUXfD4NhkhKu26TcJegQZp3BQYIKSsHbCyD
-         UFfbq9JnIieNNsfJTVOq2vQHuDY74ZU3t0PHrseD+5PH5yIk0BHS5lrGMNBiuWrnOpby
-         v9/imyprT0WSefrIF1Ezi9+Mern+xeMocTygoKQhw2cWL46fgqetyoLoGBLKqgSpeVpk
-         tyJ4sOfny8gP1MX71ywMIqCCF1toCDoesXqxm9fmEgeL+Nyn3UsodDpwR2p23aW+tqkL
-         GOog==
+        Tue, 11 Feb 2020 09:48:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581432534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7nfesydZoKg7wB4eAKrBh2n+G/3uidxo6nvSZCLKjmc=;
+        b=G2Qwcsqe2pTU2JCLflby/hBLZNmxuLyRDhFfyOVESFDIfoAjmRyc9gGemYFLG0MVfoX1Rw
+        Lh+bnh3s109m57H0Py88/SK7/w+33Taz/om1t5PNyNHui2zaga2wx1VCv7AqUY6uBmriFc
+        N1EfLSZHX3MLwWjhAXyxJpvnA4K8Juo=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-MQiLjUbIMJCI0Afqd4Sa1A-1; Tue, 11 Feb 2020 09:48:52 -0500
+X-MC-Unique: MQiLjUbIMJCI0Afqd4Sa1A-1
+Received: by mail-qv1-f69.google.com with SMTP id d7so7280332qvq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 06:48:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+pLeKHNc80Td51F5FW28IMFZU66wu+UJlU6jTA+b20=;
-        b=T/Ljx+rqurUvR/0/RyqMF1FVGPhQ7WQt0xBd9WkyiJy2VI7MQMsH53ddLArT7lrBMu
-         X1j9Lny2tu7ydeGk0gLsHEoP3ADWsxDfTaouYtEsVsTwPtvwMT1uV59YUK8siVurd5WS
-         APfhU1LsaODqKMQPJ409fWcvNyE7Cld1sMoErEm0vOYi/ACSdrIuKzkn5k8r9k0gXAZO
-         QjZpWSwQyH/l5jGRBWVPd4pD2jHsDbu4xSMyE/dKv6PwG9fIFrRpU1bY7pyrdhOSfcHT
-         AjzDDh2op6rlBAMsVSmfQ6ivH4DcmfHlePHp473JWDGszhzoEHd9Lr+cuPo4aTcByDEz
-         tu5Q==
-X-Gm-Message-State: APjAAAUzebtcJnLZo0Z6nZeiczUJUtgZS1WeU+KwDSHxs19ucuBz7uH5
-        i+6u1QpadalkzDJRU1AbaVot8dipnuSyeW06bRs+Cw==
-X-Google-Smtp-Source: APXvYqzQkHpxNUNbT8iGzEE6+mY56WpbAPOnMfEmck2hBCbgU6rudH4lqadMsXsNnIp/kJnlKbr6zxgOaHMU22bpgQo=
-X-Received: by 2002:a02:7fd0:: with SMTP id r199mr15038510jac.126.1581432522140;
- Tue, 11 Feb 2020 06:48:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7nfesydZoKg7wB4eAKrBh2n+G/3uidxo6nvSZCLKjmc=;
+        b=b2iywpT8QxQqzLaSaDN/4bg9GdEsBYMuxZiYpopNY/7aOCEIM8UJ2/nV2cB7Jt2GZD
+         wCw0MMI5gNmi0oAC9HyDeTqIohkMKl32r/ZrRtSL8KYrkUTSrL/BzoNPGIjaU0E5cE5d
+         Cux8ZA74RjDKk3wp5HwrCetRwKu1VPK5TymuBJItgIt52Fim8oHsjV/TUtQdLRTUigeP
+         lrmPH8hYrXtJXQrdS+eLodEXcRMFpugncXbToYFOYcxIj8C3aCdeI/AWiJvYyzWnDv8U
+         RHxML55eJKu9lyFiYKc703n2ZVF1knxzEvgd0ZtgEy7wMp3nb7MN7KG7nNJHEuWK/6X5
+         mwHw==
+X-Gm-Message-State: APjAAAVQbqLF3vucV0+hc4uYS5c14LpSgkLazol7eCv8IOJoLgQOZQ7b
+        TxQS7S/VUn8FJjrx/+GnC0mbOxbJlFOb28CWqvWyvuNobWVdOfDKjdwR9UU+fi1SdSuANh+Qmc4
+        i6SMYx0cjH3ItSPNNy/p66c0q
+X-Received: by 2002:a37:903:: with SMTP id 3mr3033669qkj.388.1581432532236;
+        Tue, 11 Feb 2020 06:48:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyUijSiSAKNmsG0wLQ4U4khGmkyoOv0nfwK5grGPQCYnR4o3HHFiCAQ1Fz9hORrM7QHvkhP8g==
+X-Received: by 2002:a37:903:: with SMTP id 3mr3033633qkj.388.1581432531928;
+        Tue, 11 Feb 2020 06:48:51 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id p18sm2137225qkp.47.2020.02.11.06.48.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 06:48:51 -0800 (PST)
+Date:   Tue, 11 Feb 2020 09:48:44 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz,
+        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com, osalvador@suse.de
+Subject: Re: [PATCH v16.1 6/9] virtio-balloon: Add support for providing free
+ page reports to host
+Message-ID: <20200211094357-mutt-send-email-mst@kernel.org>
+References: <20200122173040.6142.39116.stgit@localhost.localdomain>
+ <20200122174347.6142.92803.stgit@localhost.localdomain>
+ <b8cbf72d-55a7-4a58-6d08-b0ac5fa86e82@redhat.com>
+ <20200211063441-mutt-send-email-mst@kernel.org>
+ <ada0ec83-8e7d-abb3-7053-0ec2bf2a9aa5@redhat.com>
+ <20200211090052-mutt-send-email-mst@kernel.org>
+ <d6b481fb-6c72-455d-f8e4-600a8677c7a8@redhat.com>
 MIME-Version: 1.0
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
- <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
- <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com> <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
-In-Reply-To: <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Tue, 11 Feb 2020 06:48:30 -0800
-Message-ID: <CAOesGMhVA9NSbAi-BtcgQBBK90jeT+NcQ6j_FDgjuR7efE65Vg@mail.gmail.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6b481fb-6c72-455d-f8e4-600a8677c7a8@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:04 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-02-11 12:13 pm, Laurentiu Tudor wrote:
-> [...]
-> >> This is a known issue about DPAA2 MC bus not working well with SMMU
-> >> based IO mapping.  Adding Laurentiu to the chain who has been looking
-> >> into this issue.
-> >
-> > Yes, I'm closely following the issue. I actually have a workaround
-> > (attached) but haven't submitted as it will probably raise a lot of
-> > eyebrows. In the mean time I'm following some discussions [1][2][3] on
-> > the iommu list which seem to try to tackle what appears to be a similar
-> > issue but with framebuffers. My hope is that we will be able to leverage
-> > whatever turns out.
->
-> Indeed it's more general than framebuffers - in fact there was a
-> specific requirement from the IORT side to accommodate network/storage
-> controllers with in-memory firmware/configuration data/whatever set up
-> by the bootloader that want to be handed off 'live' to Linux because the
-> overhead of stopping and restarting them is impractical. Thus this DPAA2
-> setup is very much within scope of the desired solution, so please feel
-> free to join in (particularly on the DT parts) :)
-
-That's a real problem that nees a solution, but that's not what's
-happening here, since cold boots works fine.
-
-Isn't it a whole lot more likely that something isn't
-reset/reinitialized properly in u-boot, such that there is lingering
-state in the setup, causing this?
-
-> As for right now, note that your patch would only be a partial
-> mitigation to slightly reduce the fault window but not remove it
-> entirely. To be robust the SMMU driver *has* to know about live streams
-> before the first arm_smmu_reset() - hence the need for generic firmware
-> bindings - so doing anything from the MC driver is already too late (and
-> indeed the current iommu_request_dm_for_dev() mechanism is itself a
-> microcosm of the same problem).
-
-This is more likely a live stream that's left behind from the previous
-kernel (there are some error messages about being unable to detach
-domains, but the errors make it hard to tell what driver didn't unbind
-enough).
-
-*BUT*, even with that bug, the system should reboot reliably and come
-up clean. So, something isn't clearing up the state *on boot*.
-
-> > In the mean time, can you try the workaround Leo suggested?
->
-> Agreed, I'd imagine the command-line option is probably the best choice
-> for these platforms, since it's likely to be easier to set that by
-> default in the bootloader than faff with rebuilding generic kernel configs.
-
-For the generic user, definitely. I'll give it a go later this week
-when I have a bit more spare time with the device physically present.
+On Tue, Feb 11, 2020 at 03:31:18PM +0100, David Hildenbrand wrote:
+> On 11.02.20 15:07, Michael S. Tsirkin wrote:
+> > On Tue, Feb 11, 2020 at 01:19:31PM +0100, David Hildenbrand wrote:
+> >>>>
+> >>>> Did you see the discussion regarding unifying handling of
+> >>>> inflate/deflate/free_page_hinting_free_page_reporting, requested by
+> >>>> Michael? I think free page reporting is special and shall be left alone.
+> >>>
+> >>> Not sure what do you mean by "left alone here". Could you clarify?
+> >>
+> >> Don't try to unify handling like I proposed below, because it's
+> >> semantics are special.
+> >>
+> >>>
+> >>>> VIRTIO_BALLOON_F_REPORTING is nothing but a more advanced inflate, right
+> >>>> (sg, inflate based on size - not "virtio pages")?
+> >>>
+> >>>
+> >>> Not exactly - it's also initiated by guest as opposed to host, and
+> >>> not guided by the ballon size request set by the host.
+> >>
+> >> True, but AFAIKS you could use existing INFLATE/DEFLATE in a similar
+> >> way. There is no way for the hypervisor to nack a request. The balloon
+> >> size is not glued to inflate/deflate requests. The guests manually
+> >> updates it.
+> > 
+> > Hmm how isn't it? num_pages is the only way to inflate/deflate.
+> 
+> Usually, guests are nice and respond to num_pages changes in an
+> appropriate way, except:
+> - Triggering deflate: Unload the driver. Suspend/hibernate. OOM.
+>   (+ Reboot, although that's special)
+> - Triggering inflate + deflate: Simple balloon compaction / page
+>   migration.
 
 
--Olof
+These are all real situations but balloon always has been best effort.
+
+
+> But that's not what I meant.
+> 
+> "actual" is updated by the guest, not by the host. So the "actual
+> balloon size" is set by the guest. It's not glued to inflation/deflation
+> requests. "num_pages" is the host request.
+
+Well the expectation is that as long as guest has ample
+available memory, when num_pages changes then
+guest starts sending inflate/deflate requests,
+until actual matches num_pages.
+
+If it does not match, and we wait and it still doesn't,
+then something unusual happened. People do depend on that
+behaviour.
+
+> AFAIKs, the guest could inflate/deflate (esp. temporarily) and
+> communicate via "actual" the actual balloon size as he sees it.
+
+OK so you want hinted but unused pages counted, and reported
+in "actual"? That's a vmexit before each page use ...
+
+
+
+> > Spec also says:
+> > The device is driven either by the receipt of a configuration change notification, or by changing guest memory
+> > needs, such as performing memory compaction or responding to out of memory conditions.
+> > 
+> > so ignoring compaction/oom (later is under-specified, not a good example
+> > to follow) yes inflate/deflate are tied to host specified configuration
+> Yes, "num_pages" is the host request. But I'd say the statement (esp.
+> "the device is driven by") in the spec is rather weak. It does not
+> explicitly state when inflation/deflation is allowed IMHO.
+
+Right since it's all best effort anyway.
+
+
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+
