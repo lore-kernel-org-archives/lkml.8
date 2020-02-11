@@ -2,118 +2,154 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B72C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADC7C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C381206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E49206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:48:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1MOS4e4n"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="y7YXlnma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbgBKOri (ORCPT
+        id S1730266AbgBKOsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:47:38 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6314 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727511AbgBKOrh (ORCPT
+        Tue, 11 Feb 2020 09:48:43 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41232 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729041AbgBKOsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:47:37 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BEhxtu031462;
-        Tue, 11 Feb 2020 15:47:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=4odbdGyV5/+IAGjp9TQdg9pxlhPR5wtUbp4gIY0SBm8=;
- b=1MOS4e4ncw/kDNfQr8/cX7QpgjwFPMEHqD2n3akoDcWaw3SXXs3MZlNcqXzns/nILAQ0
- AYy55VbzeWSDdblBzLcEYdCK4g+MV2mz9OkgqpDZvNMBjsKn+My9En+6sPGXgWrHu2HX
- ksFM9bc3uNFzNl1b5zGh3gk3h4HtRsaI3tcmBuzZjC2uDwMFnVt85Fx4Tmd2/nxTT2gA
- 6MnF8IUPsr2umgdYLnc0uzdxu2rwNR3LY/Jyc/uVsz3NXbl4hD1ji9uThAIF45emp3Le
- YiK1M1ljfRs+ohhH4uYRuu/UT0XVfA2pknjw0LAAbPdIaKbjX9TDtqVd/B/f4MQqcKbB IA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1uvddt9x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 15:47:27 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2BDBC10002A;
-        Tue, 11 Feb 2020 15:47:27 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1AC802BD409;
-        Tue, 11 Feb 2020 15:47:27 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.48) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Feb
- 2020 15:47:26 +0100
-Subject: Re: [PATCH V2 0/9] mmc: mmci: sdmmc: add sdr104 support
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200128090636.13689-1-ludovic.barre@st.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <0d4a3df8-fd1a-4839-116c-149f9e478f42@st.com>
-Date:   Tue, 11 Feb 2020 15:47:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 11 Feb 2020 09:48:43 -0500
+Received: by mail-io1-f68.google.com with SMTP id m25so11997571ioo.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 06:48:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+pLeKHNc80Td51F5FW28IMFZU66wu+UJlU6jTA+b20=;
+        b=y7YXlnma2BOJT3nhEPn9Qsz9bwFH4bvsgNaF09IFU6kIx/USIOMBqguQnWUcHKv3Vr
+         iIMR4qekXeCU1c6vj5OUBoEwuBOU7fA/lPUXfD4NhkhKu26TcJegQZp3BQYIKSsHbCyD
+         UFfbq9JnIieNNsfJTVOq2vQHuDY74ZU3t0PHrseD+5PH5yIk0BHS5lrGMNBiuWrnOpby
+         v9/imyprT0WSefrIF1Ezi9+Mern+xeMocTygoKQhw2cWL46fgqetyoLoGBLKqgSpeVpk
+         tyJ4sOfny8gP1MX71ywMIqCCF1toCDoesXqxm9fmEgeL+Nyn3UsodDpwR2p23aW+tqkL
+         GOog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+pLeKHNc80Td51F5FW28IMFZU66wu+UJlU6jTA+b20=;
+        b=T/Ljx+rqurUvR/0/RyqMF1FVGPhQ7WQt0xBd9WkyiJy2VI7MQMsH53ddLArT7lrBMu
+         X1j9Lny2tu7ydeGk0gLsHEoP3ADWsxDfTaouYtEsVsTwPtvwMT1uV59YUK8siVurd5WS
+         APfhU1LsaODqKMQPJ409fWcvNyE7Cld1sMoErEm0vOYi/ACSdrIuKzkn5k8r9k0gXAZO
+         QjZpWSwQyH/l5jGRBWVPd4pD2jHsDbu4xSMyE/dKv6PwG9fIFrRpU1bY7pyrdhOSfcHT
+         AjzDDh2op6rlBAMsVSmfQ6ivH4DcmfHlePHp473JWDGszhzoEHd9Lr+cuPo4aTcByDEz
+         tu5Q==
+X-Gm-Message-State: APjAAAUzebtcJnLZo0Z6nZeiczUJUtgZS1WeU+KwDSHxs19ucuBz7uH5
+        i+6u1QpadalkzDJRU1AbaVot8dipnuSyeW06bRs+Cw==
+X-Google-Smtp-Source: APXvYqzQkHpxNUNbT8iGzEE6+mY56WpbAPOnMfEmck2hBCbgU6rudH4lqadMsXsNnIp/kJnlKbr6zxgOaHMU22bpgQo=
+X-Received: by 2002:a02:7fd0:: with SMTP id r199mr15038510jac.126.1581432522140;
+ Tue, 11 Feb 2020 06:48:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200128090636.13689-1-ludovic.barre@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_04:2020-02-10,2020-02-11 signatures=0
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+ <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+ <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com> <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
+In-Reply-To: <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 11 Feb 2020 06:48:30 -0800
+Message-ID: <CAOesGMhVA9NSbAi-BtcgQBBK90jeT+NcQ6j_FDgjuR7efE65Vg@mail.gmail.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ulf
+On Tue, Feb 11, 2020 at 5:04 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-02-11 12:13 pm, Laurentiu Tudor wrote:
+> [...]
+> >> This is a known issue about DPAA2 MC bus not working well with SMMU
+> >> based IO mapping.  Adding Laurentiu to the chain who has been looking
+> >> into this issue.
+> >
+> > Yes, I'm closely following the issue. I actually have a workaround
+> > (attached) but haven't submitted as it will probably raise a lot of
+> > eyebrows. In the mean time I'm following some discussions [1][2][3] on
+> > the iommu list which seem to try to tackle what appears to be a similar
+> > issue but with framebuffers. My hope is that we will be able to leverage
+> > whatever turns out.
+>
+> Indeed it's more general than framebuffers - in fact there was a
+> specific requirement from the IORT side to accommodate network/storage
+> controllers with in-memory firmware/configuration data/whatever set up
+> by the bootloader that want to be handed off 'live' to Linux because the
+> overhead of stopping and restarting them is impractical. Thus this DPAA2
+> setup is very much within scope of the desired solution, so please feel
+> free to join in (particularly on the DT parts) :)
 
-Just a "gentleman ping" on this series
-https://patchwork.kernel.org/project/linux-mmc/list/?series=234011
+That's a real problem that nees a solution, but that's not what's
+happening here, since cold boots works fine.
 
-Regards
-Ludo
+Isn't it a whole lot more likely that something isn't
+reset/reinitialized properly in u-boot, such that there is lingering
+state in the setup, causing this?
 
-Le 1/28/20 à 10:06 AM, Ludovic Barre a écrit :
-> To support the sdr104 mode, sdmmc variant needs:
-> -Hardware delay block support for sdmmc variant
->   with tuning procedure
-> -Voltage switch callbacks
-> -sdmmc revision 2.0
-> 
-> V2:
-> -regroup host->mmc_ops & mmc->ops assignment
-> -add timeout define
-> -rename prep_volt_switch to pre_sig_volt_switch
-> -rename volt_switch to post_sig_volt_switch
-> -add 'why' comment for "mmc: mmci: add volt_switch callbacks"
-> 
-> Ludovic Barre (9):
->    mmc: mmci: sdmmc: replace sg_dma_xxx macros
->    mmc: mmci: sdmmc: rename sdmmc_priv struct to sdmmc_idma
->    mmc: mmci: add a reference at mmc_host_ops in mmci struct
->    mmc: mmci: add private pointer for variant
->    dt-bindings: mmc: mmci: add delay block base register for sdmmc
->    mmc: mmci: sdmmc: add execute tuning with delay block
->    mmc: mmci: add volt_switch callbacks
->    mmc: mmci: sdmmc: add voltage switch functions
->    mmc: mmci: add sdmmc variant revision 2.0
-> 
->   .../devicetree/bindings/mmc/mmci.txt          |   2 +
->   drivers/mmc/host/mmci.c                       |  42 +++-
->   drivers/mmc/host/mmci.h                       |   8 +
->   drivers/mmc/host/mmci_stm32_sdmmc.c           | 204 +++++++++++++++++-
->   4 files changed, 248 insertions(+), 8 deletions(-)
-> 
+> As for right now, note that your patch would only be a partial
+> mitigation to slightly reduce the fault window but not remove it
+> entirely. To be robust the SMMU driver *has* to know about live streams
+> before the first arm_smmu_reset() - hence the need for generic firmware
+> bindings - so doing anything from the MC driver is already too late (and
+> indeed the current iommu_request_dm_for_dev() mechanism is itself a
+> microcosm of the same problem).
+
+This is more likely a live stream that's left behind from the previous
+kernel (there are some error messages about being unable to detach
+domains, but the errors make it hard to tell what driver didn't unbind
+enough).
+
+*BUT*, even with that bug, the system should reboot reliably and come
+up clean. So, something isn't clearing up the state *on boot*.
+
+> > In the mean time, can you try the workaround Leo suggested?
+>
+> Agreed, I'd imagine the command-line option is probably the best choice
+> for these platforms, since it's likely to be easier to set that by
+> default in the bootloader than faff with rebuilding generic kernel configs.
+
+For the generic user, definitely. I'll give it a go later this week
+when I have a bit more spare time with the device physically present.
+
+
+-Olof
