@@ -2,81 +2,172 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116DEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACABEC352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A7520873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581384400;
-	bh=JlPKEIh8RKhZFMW+vF9rWMVYIXjVmrqJTbfUL5mEP9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=biO6beNe/fNlILY95rEMy6LnDwEyJzJRLjkQJZiLQ/qxUX0QEA/1oDmxRLuLOQxF2
-	 ctYkzxVjGUDz807CrH5lVeuEs6huucX09DwKn9jPABKgj44ZqgrKcy97PTcvQCOduV
-	 w5AmcX/vU9OY5a8M+0B/KBLa7Wy3TjGjzDz+tBBM=
+	by mail.kernel.org (Postfix) with ESMTP id 692C620838
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="Kox7VrMJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LTniJWHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgBKB0k (ORCPT
+        id S1727791AbgBKBbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 20:26:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727640AbgBKB0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 20:26:39 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D2920838;
-        Tue, 11 Feb 2020 01:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581384399;
-        bh=JlPKEIh8RKhZFMW+vF9rWMVYIXjVmrqJTbfUL5mEP9E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vr9VNxazm24qUHGqVBrH/OWrxtdiY2b4SMPh7p1aRN97ZH4kIEBRNM6i83/IxiR6p
-         yToBZKo3Hhu36GmZuzg2XAIgS1cyiton68lceguxmIT7d8wft9iHfMzWn3hefTW/Pm
-         FIY52odExs2o/o/um/ZtbLGxQok89gq8wMpVyP5A=
-Date:   Mon, 10 Feb 2020 20:26:38 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Amol Grover <frextrite@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable <stable@vger.kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: Re: [PATCH 5.5 150/367] tracing: Annotate ftrace_graph_hash pointer
- with __rcu
-Message-ID: <20200211012638.GB13097@sasha-vm>
-References: <20200210122423.695146547@linuxfoundation.org>
- <20200210122438.674498788@linuxfoundation.org>
- <CAEXW_YSPDHcuLiM4B8uXvw-0ei2Gj0x=QE1h+NMqzRiBph1oNw@mail.gmail.com>
+        Mon, 10 Feb 2020 20:31:22 -0500
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:57241 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727599AbgBKBbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 20:31:22 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.west.internal (Postfix) with ESMTP id 99B2C3BE;
+        Mon, 10 Feb 2020 20:31:20 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 10 Feb 2020 20:31:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=y/Fnv943LYH/Lk/Amb909SmXxb/
+        iCqOAVAq5vX+rEoY=; b=Kox7VrMJzfNc2khvsfALGd1cFbgRBrSDWo6qp6J61v2
+        nzeoWKK5l+oxPo9FfDJ3fp0jNo5O9l18csC2riph4GT4yQexFQ9hf4ogWY9NGZTx
+        Jp07f/0z4S5KZQ9Kmj+Kn6SMtzrAnOUrS+3lNFKXYT79ROzauxkMR8mD/PDLzvJf
+        DNcoIR4KJY++Q65g50oBJovqnzDPwZhD6PRaIfowSjaeOf3y8QQZHEYArr0ZNY6B
+        hG5K2CIoge9O9NkRskXBzIKLLDM1+Z3Mbi9YIU0DcC1Wpk/YTLcJ4AUtSwTJMc39
+        iKv2aM6LU5JDyym40rlNh7u9sJQP+GIDaS2ZVpkn9Tw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=y/Fnv9
+        43LYH/Lk/Amb909SmXxb/iCqOAVAq5vX+rEoY=; b=LTniJWHNoESl1lWEuvhOBU
+        7RKw/FDmw2nT+BEB8ggI9dwN19EtHAGHXlzNJKgP4ngoG/W/3IyNL6a33+uEcYqT
+        J/smPupvfhqOw7jOQz4/wYXuvfA3RtykQ1DUFuWkEkqrEiNOB4eq5OzLzT9KayEl
+        xv+WeJLpEk8zm5Yp2t/ToRAxnVLLngDzmZBSSVRL3/xfd85xK8rVfd3PVlWxSOmg
+        BXeZAJNdAj/liIyda28t7LbYHNPf+euDANMrM44if88GUEGVgPe3Yyz9vHRHQyFU
+        /woGQKMHHKeDDAyRVvyoVzbE4wFaw7h0zv4a+sl32BdVFi7HVDXgtQt5fh8RpBtA
+        ==
+X-ME-Sender: <xms:5wNCXvO681y0lBQ83HzlcDhjEvLwcS36QYdVId9-kshO_6nzGLaRTw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedvgdefhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughrvghs
+    ucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghenucfkphepieejrdduiedtrddvudejrddvhedtnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvghsse
+    grnhgrrhgriigvlhdruggv
+X-ME-Proxy: <xmx:5wNCXkBLDvIU_vcO5IbCFrc3Nnm51eYlnhpXSWdyJUs8tAx1won64w>
+    <xmx:5wNCXuLlizr61gtKenj4P440ZodRX7olVZZGPl_L6rgjjkSi7KC4qg>
+    <xmx:5wNCXlPo2hQG4n_hkwMubKV04fYO-TnIRuLQwQbSW-pYyPyuLKF_yA>
+    <xmx:6ANCXhbpsSt17C0cfaY-P4sugOTox2SfJafTar2Rn2YBMjqdUxo25RFLAcc>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E8F9F3060840;
+        Mon, 10 Feb 2020 20:31:18 -0500 (EST)
+Date:   Mon, 10 Feb 2020 17:31:17 -0800
+From:   Andres Freund <andres@anarazel.de>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, willy@infradead.org, hch@infradead.org,
+        jack@suse.cz, akpm@linux-foundation.org
+Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
+ writeback errors
+Message-ID: <20200211013117.23z3ftgeorx6a3qk@alap3.anarazel.de>
+References: <20200207170423.377931-1-jlayton@kernel.org>
+ <20200207205243.GP20628@dread.disaster.area>
+ <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
+ <20200210214657.GA10776@dread.disaster.area>
+ <20200211000405.5fohxgpt554gmnhu@alap3.anarazel.de>
+ <20200211004830.GB10737@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEXW_YSPDHcuLiM4B8uXvw-0ei2Gj0x=QE1h+NMqzRiBph1oNw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211004830.GB10737@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:36:20AM -0800, Joel Fernandes wrote:
->On Mon, Feb 10, 2020 at 4:40 AM Greg Kroah-Hartman
-><gregkh@linuxfoundation.org> wrote:
->>
->> From: Amol Grover <frextrite@gmail.com>
->>
->> [ Upstream commit 24a9729f831462b1d9d61dc85ecc91c59037243f ]
->
->Amol, can you send a follow-up patch to annotate
->ftrace_graph_notrace_hash as well?
+Hi,
 
-Note that I took this to make later stable tagged patch apply cleanly. I
-don't expect these annotation changes to be picked up for stable on
-their own.
+I shortly after this found a thread where Linus was explicitly asking
+for potential userspace users of the feature, so I also responded there:
+https://lore.kernel.org/linux-fsdevel/20200211005626.7yqjf5rbs3vbwagd@alap3.anarazel.de/
 
--- 
+On 2020-02-11 11:48:30 +1100, Dave Chinner wrote:
+> On Mon, Feb 10, 2020 at 04:04:05PM -0800, Andres Freund wrote:
+> > On 2020-02-11 08:46:57 +1100, Dave Chinner wrote:
+> > As far as I can tell the superblock based stuff does *not* actually
+> > report any errors yet (contrast to READONLY, EDQUOT). Is the plan here
+> > to include writeback errors as well? Or just filesystem metadata/journal
+> > IO?
+> 
+> Right, that part hasn't been implemented yet, though it's repeatedly
+> mentioned as intended to be supported functionality. It will depend
+> on the filesystem to what it is going to report
+
+There really ought to be some clear guidelines what is expected to be
+reported though. Otherwise we'll just end up with a hodgepodge of
+different semantics, which'd be, ummm, not good.
+
+
+> but I would expect that it will initially be focussed on reporting
+> user data errors (e.g. writeback errors, block device gone bad data
+> loss reports, etc). It may not be possible to do anything sane with
+> metadata/journal IO errors as they typically cause the filesystem to
+> shutdown.
+
+I was mostly referencing the metadata/journal errors because it's what a
+number of filesystems seem to treat as errors (cf errors=remount-ro
+etc), and I just wanted to be sure that more than just those get
+reported up...
+
+I think the patch already had support for getting a separate type of
+notification for SBs remounted ro, shouldn't be too hard to change that
+so it'd report error shutdowns / remount-ro as a different
+category. Without
+
+
+> Of course, a filesystem shutdown is likely to result in a thundering
+> herd of userspace IO error notifications (think hundreds of GB of
+> dirty page cache getting EIO errors). Hence individual filesystems
+> will have to put some thought into how critical filesystem error
+> notifications are handled.
+
+Probably would make sense to stop reporting them individually once the
+whole FS is shutdown/remounted due to errors, and a notification about
+that fact has been sent.
+
+
+> That said, we likely want userspace notification of metadata IO
+> errors for our own purposes. e.g. so we can trigger the online
+> filesystem repair code to start trying to fix whatever went wrong. I
+> doubt there's much userspace can do with things like "bad freespace
+> btree block" notifications, whilst the filesystem's online repair
+> tool can trigger a free space scan and rebuild/repair it without
+> userspace applications even being aware that we just detected and
+> corrected a critical metadata corruption....
+
+Neat.
+
+
+> > I don't think that block layer notifications would be sufficient for an
+> > individual userspace application's data integrity purposes? For one,
+> > it'd need to map devices to relevant filesystems afaictl. And there's
+> > also errors above the block layer.
+> 
+> Block device errors separate notifications to the superblock
+> notifications. If you want the notification of raw block device
+> errors, then that's what you listen for. If you want the filesystem
+> to actually tell you what file and offset that EIO was generated
+> for, then you'd get that through the superblock notifier, not the
+> block device notifier...
+
+Not something we urgently need, but it might come in handy at a later
+point.
+
 Thanks,
-Sasha
+
+Andres
