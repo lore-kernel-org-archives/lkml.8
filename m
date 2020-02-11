@@ -2,88 +2,103 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED384C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D03C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD35D20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BdxaDYVl"
+	by mail.kernel.org (Postfix) with ESMTP id 3D7132082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgBKHGK (ORCPT
+        id S1728075AbgBKHKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 02:06:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46262 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbgBKHGJ (ORCPT
+        Tue, 11 Feb 2020 02:10:02 -0500
+Received: from mailoutvs60.siol.net ([185.57.226.251]:46974 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727467AbgBKHKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 02:06:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=2m3bJGcjxT5w2At1D6gwWee6qZSAoYez4Br/b+/pfLg=; b=BdxaDYVl1q7FXFALHROLjfbP2X
-        rnmeYPRJzn21xXVs0qg+Nw3pnX+VvQMBc3jRB+6TYRLy0OQY0AifZwyD3jyxjIoMXoYW6s7XJp6uD
-        XepOs/4dcpSjTOsRj3KVDQohqS7C0a4b8gTJ7IdhZCCes29UJgpJpor8I5puhD0ly6/M5HaEwzM/f
-        VcpEidrvaJu0Kp/gJXRoVVVyZTIO8MUalO43SKXxdu2qpAjA89d5OSXz0TgRQzErLFemrE0pQ0JYn
-        NR/4OjXKTOOwzaK8nRCZbE8zsfY1jSckC1dtIlLgzYKeVZn0SKfvDmArZKIsABcUsBRJQOnbQ17PD
-        B7F9r7iA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1PcX-0002HA-5y; Tue, 11 Feb 2020 07:06:09 +0000
-Subject: Re: linux-next: Tree for Feb 11
- (drivers/platform/x86/intel_pmc_core.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-References: <20200211130054.001bfce9@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
-Date:   Mon, 10 Feb 2020 23:06:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 02:10:02 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id F143A521267;
+        Tue, 11 Feb 2020 08:09:58 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id sUOmFP3lA8oO; Tue, 11 Feb 2020 08:09:58 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 9883F521FDA;
+        Tue, 11 Feb 2020 08:09:58 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id E6842521FD0;
+        Tue, 11 Feb 2020 08:09:57 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2] arm64: dts: allwinner: h6: orangepi-3: Add eMMC node
+Date:   Tue, 11 Feb 2020 08:09:57 +0100
+Message-ID: <5325319.DvuYhMxLoT@jernej-laptop>
+In-Reply-To: <20200211065141.2kn2gsg5kvzu7kl6@gilmour.lan>
+References: <20200210174007.118575-1-jernej.skrabec@siol.net> <20200211065141.2kn2gsg5kvzu7kl6@gilmour.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200211130054.001bfce9@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 6:00 PM, Stephen Rothwell wrote:
-> Hi all,
+Hi!
+
+Dne torek, 11. februar 2020 ob 07:51:41 CET je Maxime Ripard napisal(a):
+> On Mon, Feb 10, 2020 at 06:40:07PM +0100, Jernej Skrabec wrote:
+> > OrangePi 3 can optionally have 8 GiB eMMC (soldered on board). Because
+> > those pins are dedicated to eMMC exclusively, node can be added for both
+> > variants (with and without eMMC). Kernel will then scan bus for presence
+> > of eMMC and act accordingly.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > Changes since v1:
+> > - don't make separate DT just for -emmc variant - add node to existing
+> > 
+> >   orangepi 3 DT
+> >  
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts index
+> > c311eee52a35..1e0abd9d047f 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > @@ -144,6 +144,15 @@ brcm: sdio-wifi@1 {
+> > 
+> >  	};
+> >  
+> >  };
+> > 
+> > +&mmc2 {
+> > +	vmmc-supply = <&reg_cldo1>;
+> > +	vqmmc-supply = <&reg_bldo2>;
+> > +	cap-mmc-hw-reset;
+> > +	non-removable;
 > 
-> Changes since 20200210:
-> 
+> Given that non-removable is documented as "Non-removable slot (like
+> eMMC); assume always present.", we should probably get rid of that
+> property?
 
-on i386:
+I checked mmc core code and this property means that bus will be scanned only 
+once. In this form, node doesn't tell what kind of device is connected, so 
+core has to scan it no matter if "non-removable" property is present or not. I 
+maybe missed something though, so it would be great if someone can check it 
+again.
 
-Function args are reversed (offset and status);
-
-../drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
-../drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-conversion]
-   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
-                                           ^~~~~~~~
-../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'u32 {aka unsigned int}' but argument is of type 'char *'
- static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
-             ^~~~~~~~~~~~~~~~~~~~
-../drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-conversion]
-   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
-                                                     ^~~~~~
-../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'const char *' but argument is of type 'int'
- static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
-             ^~~~~~~~~~~~~~~~~~~~
+Best regards,
+Jernej
 
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
