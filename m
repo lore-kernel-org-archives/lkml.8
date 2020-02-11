@@ -2,109 +2,137 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5401BC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30859C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29FD320842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0467E20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RhMzGbJY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H7ryttcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgBKKN5 (ORCPT
+        id S1728218AbgBKKQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:13:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40178 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728154AbgBKKN5 (ORCPT
+        Tue, 11 Feb 2020 05:16:18 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43165 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgBKKQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:13:57 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BADnsq041177;
-        Tue, 11 Feb 2020 04:13:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581416029;
-        bh=Ab19tWANqLz4W0BIfQpv5yDQrKNtAPUTkU+NkqUXqRw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RhMzGbJYhtVdiTbgfJe8SzC3v7cVRd/6fVu44qXlxTeInoTUFfiZh5CbpW7+YD7qq
-         IrdnapR1koxUifUS+sPrnyG2fSoZRoCUnG/pE1hX5dQq/3M+vkuLNJwn8EWgObHjMa
-         fbuDVKNHWUFJS3s0ioCGaou6D7ONSDPTWRDdS0G4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BADnMO007640;
-        Tue, 11 Feb 2020 04:13:49 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
- Feb 2020 04:13:49 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 11 Feb 2020 04:13:49 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BADlRO027902;
-        Tue, 11 Feb 2020 04:13:48 -0600
-Subject: Re: [PATCH for-next 1/4] dmaengine: ti: k3-udma: Use
- ktime/usleep_range based TX completion check
-To:     Vinod Koul <vkoul@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>
-References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
- <20200127132111.20464-2-peter.ujfalusi@ti.com>
- <20200128114820.GS2841@vkoul-mobl>
- <d968f32d-dc5f-0567-5aa4-faf318025c23@ti.com>
- <20200128124403.GV2841@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f6f6b1ca-03ee-c2f0-ffeb-c274e787706c@ti.com>
-Date:   Tue, 11 Feb 2020 12:13:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 11 Feb 2020 05:16:18 -0500
+Received: by mail-oi1-f195.google.com with SMTP id p125so12243641oif.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 02:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vsA40FNHXnwLHh7IKmzOeNQWBgQCJUOT8ocz3FCyoBA=;
+        b=H7ryttcSvSi2c/NOyUxx2HNIADaLVIIiHGrsf3P7Kn2+W5EkpMUgTJu7CkRD22Rv21
+         +GYrszbQPgsAP+gPTQsD0LnwSneb5Xb2Qd7dpUSy6qcFF3Nhi4tW8p18lFO35l7B45/1
+         /JEptDTHdevfE9O5k/AAdPwF9CMS71pMWVHJvufWEI1P6MmWg/gERLChPEW9PK7kM63q
+         6KgsbLyyWT4UBJArNFc35q4J6748QMwOqz5nNkN5Epz1i2fHrDirawIiRZod08cbhLEZ
+         O+dSxR3N7ngFieDWORjCFQS3VEZgx3mryuvsTNJZWDmkxORwoyNNlN/8keMjist73zG+
+         /0ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vsA40FNHXnwLHh7IKmzOeNQWBgQCJUOT8ocz3FCyoBA=;
+        b=nydTbT+WukriZMUZcDdu+OhFT8bldGlhCBDahUAnD1q5OrUnT5dl56Q4PJUY/fP7A2
+         WvC4YBE04MKUkLVWVgKx4AAu7ACsVzkqukzrWyi3PiMR5XbQd5uT73s8XQJB3au+AL9I
+         vg7BRiHhNqCV+EZiOFOXc7KOPuOTdlVFPGwUwxfkQOs2fZWxXK3WWtHJmz4elRzC/38Q
+         aQZ+lh3p3Vk02B2VsqVLQH5YgnX+kFuAChoyodeDs71rYkO10pGkFx3nHYHQbKTccnT3
+         8QNe2L9RlHOcaVgS5MD1Zms0MfeW+P/Mzx8x9vjdO+TX0zzeWlGf20mYy9q7uT5dgcgQ
+         N5QQ==
+X-Gm-Message-State: APjAAAVIqVHczDaAZFNSGC92KjAQz/PZ2ztTbQPyLDXG5PUigaYW8UYC
+        7fxQTsKUsqYyByX7KYjSxK/t0TM8fIVqMX+TWSuTgLSTomc=
+X-Google-Smtp-Source: APXvYqw2B3pRY9MF1dFTffoobcC6Y+kYzR8zLeIW330fSpUi4VWItgwKGGgo8RxmjgVW4FqCTplSsAZ8sj+d1AsFemM=
+X-Received: by 2002:aca:d4c1:: with SMTP id l184mr2430494oig.172.1581416176894;
+ Tue, 11 Feb 2020 02:16:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200128124403.GV2841@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200211040651.1993-1-cai@lca.pw>
+In-Reply-To: <20200211040651.1993-1-cai@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 11 Feb 2020 11:16:05 +0100
+Message-ID: <CANpmjNPWCu+w3O8cg++X4=viVFsWNehTXzTuqbwV8-DcXXpFng@mail.gmail.com>
+Subject: Re: [PATCH -next] locking/osq_lock: annotate a data race in osq_lock
+To:     Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 11 Feb 2020 at 05:07, Qian Cai <cai@lca.pw> wrote:
+>
+> prev->next could be accessed concurrently as noticed by KCSAN,
+>
+>  write (marked) to 0xffff9d3370dbbe40 of 8 bytes by task 3294 on cpu 107:
+>   osq_lock+0x25f/0x350
+>   osq_wait_next at kernel/locking/osq_lock.c:79
+>   (inlined by) osq_lock at kernel/locking/osq_lock.c:185
+>   rwsem_optimistic_spin
+>   <snip>
+>
+>  read to 0xffff9d3370dbbe40 of 8 bytes by task 3398 on cpu 100:
+>   osq_lock+0x196/0x350
+>   osq_lock at kernel/locking/osq_lock.c:157
+>   rwsem_optimistic_spin
+>   <snip>
+>
+> Since the write only stores NULL to prev->next and the read tests if
+> prev->next equals to this_cpu_ptr(&osq_node). Even if the value is
+> shattered, the code is still working correctly. Thus, mark it as an
+> intentional data race using the data_race() macro.
 
+I have said this before: we're not just guarding against load/store
+tearing, although on their own, they make it deceptively easy to
+reason about data races.
 
-On 28/01/2020 14.44, Vinod Koul wrote:
-> On 28-01-20, 17:35, Vignesh Raghavendra wrote:
-> 
->>>> +	/* Transfer is incomplete, store current residue and time stamp */
->>>>  	if (peer_bcnt < bcnt) {
->>>>  		uc->tx_drain.residue = bcnt - peer_bcnt;
->>>> -		uc->tx_drain.jiffie = jiffies;
->>>> +		uc->tx_drain.tstamp = ktime_get();
->>>
->>> Any reason why ktime_get() is better than jiffies..?
->>
->> Resolution of jiffies is 4ms. ktime_t is has better resolution (upto ns
->> scale). With jiffies, I observed that code was either always polling DMA
->> progress counters (which affects HW data transfer speed) or sleeping too
->> long, both causing performance loss. Switching to ktime_t provides
->> better prediction of how long transfer takes to complete.
-> 
-> Thanks for explanation, i think it is good info to add in changelog.
+The case here seems to be another instance of a C-CAS, to avoid
+unnecessarily dirtying a cacheline.
 
-It turns out that this patch causes lockup with UART stress testing.
-The strange thing is that we have identical patch in production with
-4.19 without issues.
+Here, the loop would make me suspicious, because a compiler could
+optimize out re-loading the value. Due to the smp_load_acquire,
+however, at the least we have 1 implied compiler barrier in this loop
+which means that will likely not happen.
 
-I'll send two series for UDMA update as we have found a way to induce a
-kernel crash with experimental UART patches.
-One with patches as must bug fixes for 5.6 and another one with lower
-priority fixes.
+Before jumping to 'data_race()', I would ask again: how bad is the
+READ_ONCE? Is the generated code the same? If so, just use the
+READ_ONCE. Do you want to reason about all compiler optimizations? For
+this code here, I certainly don't want to.
 
-- Péter
+But in the end it's up to what maintainers prefer, and maybe there is
+a very compelling argument that I missed that makes the fact this is a
+data race always safe.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+-- Marco
+
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  kernel/locking/osq_lock.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+> index 1f7734949ac8..3c44ddbc11ce 100644
+> --- a/kernel/locking/osq_lock.c
+> +++ b/kernel/locking/osq_lock.c
+> @@ -154,7 +154,7 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+>          */
+>
+>         for (;;) {
+> -               if (prev->next == node &&
+> +               if (data_race(prev->next == node) &&
+>                     cmpxchg(&prev->next, node, NULL) == node)
+>                         break;
+>
+> --
+> 2.21.0 (Apple Git-122.2)
+>
