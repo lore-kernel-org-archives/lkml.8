@@ -2,205 +2,168 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E600FC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB00C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EE7206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:09:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtcYiYEY"
+	by mail.kernel.org (Postfix) with ESMTP id E477F2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgBKMJJ (ORCPT
+        id S1728624AbgBKMK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:09:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43755 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728171AbgBKMJJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:09:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581422947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ufoJT05czgf06ShT8pfV9Iol2IxotHxx6vkzP8roYuc=;
-        b=CtcYiYEYhfnGruIPK79Mqaqe5q5sPCQO9lXpak2vCYoWhaVlTTn7neYOgNIBbL3IqP892I
-        q1oQzUOGZltv/jjEWVqwpBaN/Ro3EOQt/8xwuvWFAJhfI+LIiJBd97vavihwcjekeWuurd
-        Fdkb6+Y9cTe9iUBLWLPSs6ytkb3a0Gk=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-7sRHr7A4P0uGIcorL5Xrjw-1; Tue, 11 Feb 2020 07:09:04 -0500
-X-MC-Unique: 7sRHr7A4P0uGIcorL5Xrjw-1
-Received: by mail-qv1-f72.google.com with SMTP id g15so6993364qvq.20
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 04:09:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ufoJT05czgf06ShT8pfV9Iol2IxotHxx6vkzP8roYuc=;
-        b=QyZ+yN4wortUKPD8jTsmBfwU7dltxr4nwcbod3YLKrIRGhn1Fy5rOd9Ly5NjNF9NAA
-         mzr5k5XHlpvBF1GnqjrafNRq96Wq2rtXNqPvEFFqJ/edt4MTTEF2U3w0/bjnGGWFKjcA
-         tv2ZFOsDfVKty1EWn9JyE+XUOBa1wm6+H19CvFSbCJ0LN5wn8gIzGCbnJZe1ssVSQZPV
-         YgxoZlGdlvqTcK+RFwoSKm2AIT4bvuDRsfZKiiZU3w7juMTi92ZmewesspAI8bEhOGBh
-         w1nzWOO4hLBGdRbldTlrfQqaRqA9OgDUFE615bcPEp0tnl3lW5jAhGAy7qWbLERBLT6O
-         pxKw==
-X-Gm-Message-State: APjAAAXA3RFxcOEWXi+r8aIT2gWnwqaf7dsdo2zn2cm9C0DixmM3s7dA
-        3ewM6jzLQW717szoSma3O3FEZKTze1nJB1WOssgyNYALGNcQBZZVUfvVnpYsAQJKAuJGDMZQJ9H
-        41VZhu7BePydaD5/Ovf0fm/m4
-X-Received: by 2002:a05:620a:2218:: with SMTP id m24mr5895582qkh.442.1581422944002;
-        Tue, 11 Feb 2020 04:09:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxOkWykl/bzXB1cDdfnXTHW8u+3R2Hz17uN99zDLH5T5H+7OEGnlmCqphx5dLGWOWkVHeL7qA==
-X-Received: by 2002:a05:620a:2218:: with SMTP id m24mr5895559qkh.442.1581422943717;
-        Tue, 11 Feb 2020 04:09:03 -0800 (PST)
-Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
-        by smtp.gmail.com with ESMTPSA id r6sm1997742qtm.63.2020.02.11.04.09.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 04:09:02 -0800 (PST)
-Date:   Tue, 11 Feb 2020 07:08:58 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     virtio-dev@lists.oasis-open.org,
-        Zha Bin <zhabin@linux.alibaba.com>, slp@redhat.com,
-        "Liu, Jing2" <jing2.liu@linux.intel.com>,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        chao.p.peng@linux.intel.com, gerry@linux.alibaba.com
-Subject: Re: [virtio-dev] Re: [PATCH v2 4/5] virtio-mmio: add MSI interrupt
- feature support
-Message-ID: <20200211070523-mutt-send-email-mst@kernel.org>
-References: <cover.1581305609.git.zhabin@linux.alibaba.com>
- <4c3d13be5a391b1fc50416838de57d903cbf8038.1581305609.git.zhabin@linux.alibaba.com>
- <0c71ff9d-1a7f-cfd2-e682-71b181bdeae4@redhat.com>
- <c42c8b49-5357-f341-2942-ba84afc25437@linux.intel.com>
- <ad96269f-753d-54b8-a4ae-59d1595dd3b2@redhat.com>
- <5522f205-207b-b012-6631-3cc77dde3bfe@linux.intel.com>
- <45e22435-08d3-08fe-8843-d8db02fcb8e3@redhat.com>
- <20200211065319-mutt-send-email-mst@kernel.org>
- <c4a78a15-c889-df3f-3e1e-7df1a4d67838@redhat.com>
+        Tue, 11 Feb 2020 07:10:57 -0500
+Received: from mga09.intel.com ([134.134.136.24]:55112 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727936AbgBKMK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:10:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 04:10:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="405920074"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga005.jf.intel.com with ESMTP; 11 Feb 2020 04:10:53 -0800
+Subject: Re: [PATCH] usb: xhci: Enable LPM for VIA LABS VL805
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200120142422.3907-1-nsaenzjulienne@suse.de>
+ <20200210185921.GA1058087@kroah.com>
+ <1478f170-f0ec-96df-79cf-f7c44bebc290@linux.intel.com>
+ <19e1d141-2033-782f-e5a3-dcba6bdc0a8a@i2se.com>
+ <28f7ea832ead04dd93cd582480fb946604bb407d.camel@suse.de>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <ad5ed5d0-5599-656f-6d40-9e252fb26dec@linux.intel.com>
+Date:   Tue, 11 Feb 2020 14:13:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <28f7ea832ead04dd93cd582480fb946604bb407d.camel@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c4a78a15-c889-df3f-3e1e-7df1a4d67838@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 08:04:24PM +0800, Jason Wang wrote:
+On 11.2.2020 12.02, Nicolas Saenz Julienne wrote:
+> Hi Stefan, Mathias.
 > 
-> On 2020/2/11 下午7:58, Michael S. Tsirkin wrote:
-> > On Tue, Feb 11, 2020 at 03:40:23PM +0800, Jason Wang wrote:
-> > > On 2020/2/11 下午2:02, Liu, Jing2 wrote:
-> > > > On 2/11/2020 12:02 PM, Jason Wang wrote:
-> > > > > On 2020/2/11 上午11:35, Liu, Jing2 wrote:
-> > > > > > On 2/11/2020 11:17 AM, Jason Wang wrote:
-> > > > > > > On 2020/2/10 下午5:05, Zha Bin wrote:
-> > > > > > > > From: Liu Jiang<gerry@linux.alibaba.com>
-> > > > > > > > 
-> > > > > > > > Userspace VMMs (e.g. Qemu microvm, Firecracker) take
-> > > > > > > > advantage of using
-> > > > > > > > virtio over mmio devices as a lightweight machine model for modern
-> > > > > > > > cloud. The standard virtio over MMIO transport layer
-> > > > > > > > only supports one
-> > > > > > > > legacy interrupt, which is much heavier than virtio over
-> > > > > > > > PCI transport
-> > > > > > > > layer using MSI. Legacy interrupt has long work path and
-> > > > > > > > causes specific
-> > > > > > > > VMExits in following cases, which would considerably slow down the
-> > > > > > > > performance:
-> > > > > > > > 
-> > > > > > > > 1) read interrupt status register
-> > > > > > > > 2) update interrupt status register
-> > > > > > > > 3) write IOAPIC EOI register
-> > > > > > > > 
-> > > > > > > > We proposed to add MSI support for virtio over MMIO via new feature
-> > > > > > > > bit VIRTIO_F_MMIO_MSI[1] which increases the interrupt performance.
-> > > > > > > > 
-> > > > > > > > With the VIRTIO_F_MMIO_MSI feature bit supported, the virtio-mmio MSI
-> > > > > > > > uses msi_sharing[1] to indicate the event and vector mapping.
-> > > > > > > > Bit 1 is 0: device uses non-sharing and fixed vector per
-> > > > > > > > event mapping.
-> > > > > > > > Bit 1 is 1: device uses sharing mode and dynamic mapping.
-> > > > > > > I believe dynamic mapping should cover the case of fixed vector?
-> > > > > > > 
-> > > > > > Actually this bit*aims*  for msi sharing or msi non-sharing.
-> > > > > > 
-> > > > > > It means, when msi sharing bit is 1, device doesn't want vector
-> > > > > > per queue
-> > > > > > 
-> > > > > > (it wants msi vector sharing as name) and doesn't want a high
-> > > > > > interrupt rate.
-> > > > > > 
-> > > > > > So driver turns to !per_vq_vectors and has to do dynamical mapping.
-> > > > > > 
-> > > > > > So they are opposite not superset.
-> > > > > > 
-> > > > > > Thanks!
-> > > > > > 
-> > > > > > Jing
-> > > > > I think you need add more comments on the command.
-> > > > > 
-> > > > > E.g if I want to map vector 0 to queue 1, how do I need to do?
-> > > > > 
-> > > > > write(1, queue_sel);
-> > > > > write(0, vector_sel);
-> > > > That's true. Besides, two commands are used for msi sharing mode,
-> > > > 
-> > > > VIRTIO_MMIO_MSI_CMD_MAP_CONFIG and VIRTIO_MMIO_MSI_CMD_MAP_QUEUE.
-> > > > 
-> > > > "To set up the event and vector mapping for MSI sharing mode, driver
-> > > > SHOULD write a valid MsiVecSel followed by
-> > > > VIRTIO_MMIO_MSI_CMD_MAP_CONFIG/VIRTIO_MMIO_MSI_CMD_MAP_QUEUE command to
-> > > > map the configuration change/selected queue events respectively.  " (See
-> > > > spec patch 5/5)
-> > > > 
-> > > > So if driver detects the msi sharing mode, when it does setup vq, writes
-> > > > the queue_sel (this already exists in setup vq), vector sel and then
-> > > > MAP_QUEUE command to do the queue event mapping.
-> > > > 
-> > > So actually the per vq msix could be done through this. I don't get why you
-> > > need to introduce MSI_SHARING_MASK which is the charge of driver instead of
-> > > device. The interrupt rate should have no direct relationship with whether
-> > > it has been shared or not.
-> > > 
-> > > Btw, you introduce mask/unmask without pending, how to deal with the lost
-> > > interrupt during the masking then?
-> > pending can be an internal device register. as long as device
-> > does not lose interrupts while masked, all's well.
+> On Tue, 2020-02-11 at 10:49 +0100, Stefan Wahren wrote:
+>> Hi Mathias,
+>>
+>> On 11.02.20 10:34, Mathias Nyman wrote:
+>>> On 10.2.2020 20.59, Greg Kroah-Hartman wrote:
+>>>> On Mon, Jan 20, 2020 at 03:24:22PM +0100, Nicolas Saenz Julienne wrote:
+>>>>> This PCIe controller chip is used on the Raspberry Pi 4 and multiple
+>>>>> adapter cards. There is no publicly available documentation for the
+>>>>> chip, yet both the downstream RPi4 kernel and the controller cards
+>>>>> support/advertise LPM support.
+>>>>>
+>>>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>>>> ---
+>>>>>  drivers/usb/host/xhci-pci.c | 3 +++
+>>>>>  1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+>>>>> index 4917c5b033fa..c1976e98992b 100644
+>>>>> --- a/drivers/usb/host/xhci-pci.c
+>>>>> +++ b/drivers/usb/host/xhci-pci.c
+>>>>> @@ -241,6 +241,9 @@ static void xhci_pci_quirks(struct device *dev,
+>>>>> struct xhci_hcd *xhci)
+>>>>>  			pdev->device == 0x3432)
+>>>>>  		xhci->quirks |= XHCI_BROKEN_STREAMS;
+>>>>>  
+>>>>> +	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483)
+>>>>> +		xhci->quirks |= XHCI_LPM_SUPPORT;
+>>>>> +
+>>>>>  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+>>>>>  			pdev->device == 0x1042)
+>>>>>  		xhci->quirks |= XHCI_BROKEN_STREAMS;
+>>>> Mathias, is this in your review queue?
+>>>>
+>>> Ah yes, before adding link power management support for this controller we
+>>> should check that it has sane (or any) exit latency values set in its
+>>> HCSPARAMS3 capability register.
 > 
+> I did some checks myself before sending the patch, and tested with some devices
+> I own. The latencies seemd reasonable. For example I just hooked up an USB3 HD,
+> the root HUB exposes:
 > 
-> You meant raise the interrupt during unmask automatically?
+> 	bU1DevExitLat           4 micro seconds
+> 	bU2DevExitLat         231 micro seconds
 > 
+> And xhci configured the device with:
+> 
+> 	bU1DevExitLat          10 micro seconds
+> 	bU2DevExitLat        2047 micro seconds
+> 
+>>> Nicolas, if you have this controller could you show the capability
+>>> registers:
+>>>
+>>> cat /sys/kernel/debug/usb/xhci/*/reg-cap
+> 
+> CAPLENGTH = 0x01000020
+> HCSPARAMS1 = 0x05000420
+> HCSPARAMS2 = 0xfc000031
+> HCSPARAMS3 = 0x00e70004
 
+Thanks, looks sane, U1 Device exit latency is 4us, and U2 is 231us, and as
+showed above these were set correctly to the roothub.
 
-yes - that's also what pci does.
+Greg, if you want you can pick this patch as is, otherwise I'll send it later
+with other usb-next patches.
 
-the guest visible pending bit is partially implemented in qemu
-as per pci spec but it's unused.
-
-> > 
-> > There's value is being able to say "this queue sends no
-> > interrupts do not bother checking used notification area".
-> > so we need way to say that. So I guess an enable interrupts
-> > register might have some value...
-> > But besides that, it's enough to have mask/unmask/address/data
-> > per vq.
-> 
-> 
-> Just to check, do you mean "per vector" here?
-> 
-> Thanks
-> 
-
-No, per VQ. An indirection VQ -> vector -> address/data isn't
-necessary for PCI either, but that ship has sailed.
-
--- 
-MST
-
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
