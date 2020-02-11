@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2AFC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1B9C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D722070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832852070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L6mIbZho"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xVOXcSr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgBKNe1 (ORCPT
+        id S1728924AbgBKNec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:34:27 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57942 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbgBKNeX (ORCPT
+        Tue, 11 Feb 2020 08:34:32 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55716 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbgBKNe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:34:23 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BDYEO7085720;
-        Tue, 11 Feb 2020 07:34:14 -0600
+        Tue, 11 Feb 2020 08:34:26 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BDY8TN130314;
+        Tue, 11 Feb 2020 07:34:08 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581428054;
-        bh=tg5lVWtgcaAec3Kw2nWplmrwbgO3I2UETTo4WpiW3uI=;
+        s=ti-com-17Q1; t=1581428048;
+        bh=oxzh4C7KqjCeurLvFg3+mMLTcJ3kM+cj9SbzjeDFlvY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=L6mIbZhoMmNegyub+E0gZuV/hdWvSg9144XEAKwf0GXvG4hIf9UdPzQOcR0xFrbD5
-         KgAF6YQR3e7jF/XjejYWyqaQB/Alape+PM+jb1WUGEy2KTlrxVUV7EW1Da5UPBBiWM
-         CW1w1pqjkplmzjlCr6JqDRpWaUJz8kv8rCAQjhc0=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BDYEOR025961;
-        Tue, 11 Feb 2020 07:34:14 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+        b=xVOXcSr8CUZGRRL2r5aSYulikUteqbnOTYwU0qAl5K7SdaJiJ+CJONA60ANWuXrJE
+         yUSiARu8Yeuoe7CsVeqBNPmZ2ia00iSLfy50SgX6mNxatQ04V+amTlWuz/LucLzLea
+         oAIu2QWz0M3PBVqfo41yiLvlFKbS53ZC1oSlnMS0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01BDY7ol070639
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Feb 2020 07:34:08 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
- Feb 2020 07:34:14 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 07:34:07 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 11 Feb 2020 07:34:14 -0600
+ Frontend Transport; Tue, 11 Feb 2020 07:34:07 -0600
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BDXm5O087522;
-        Tue, 11 Feb 2020 07:34:11 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BDXm5M087522;
+        Tue, 11 Feb 2020 07:34:05 -0600
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -56,9 +57,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-spi@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
         Pratyush Yadav <p.yadav@ti.com>
-Subject: [PATCH 7/9] mtd: spi-nor: use dummy cycle and address width info from SFDP
-Date:   Tue, 11 Feb 2020 19:03:46 +0530
-Message-ID: <20200211133348.15558-8-p.yadav@ti.com>
+Subject: [PATCH 5/9] mtd: spi-nor: get command opcode extension type from BFPT
+Date:   Tue, 11 Feb 2020 19:03:44 +0530
+Message-ID: <20200211133348.15558-6-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200211133348.15558-1-p.yadav@ti.com>
 References: <20200211133348.15558-1-p.yadav@ti.com>
@@ -71,52 +72,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The xSPI Profile 1.0 table specifies how many dummy cycles and address
-bytes are needed for the Read Status Register command in octal DTR mode.
-Use that information to send the correct Read SR command.
+Some devices in DTR mode expect an extra command byte called the
+extension. The extension can either be same as the opcode, bitwise
+inverse of the opcode, or another additional byte forming a 16-byte
+opcode. Get the extension type from the BFPT. For now, only flashes with
+"repeat" and "inverse" extensions are supported.
+
+As of JESD216D.01, BFPT is 20 DWORDs, so update the table size to
+reflect that.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index eefde5abff8a..8c5d7bfa4f16 100644
+index 371e56f3cdab..ff0b25754939 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -525,6 +525,8 @@ static int spi_nor_write_disable(struct spi_nor *nor)
- static int spi_nor_read_sr(struct spi_nor *nor, u8 *sr)
- {
- 	int ret;
-+	u8 addr_bytes = nor->params.rdsr_addr_nbytes;
-+	u8 dummy = nor->params.rdsr_dummy;
+@@ -79,11 +79,11 @@ struct sfdp_header {
+ /* Basic Flash Parameter Table */
  
- 	if (nor->spimem) {
- 		struct spi_mem_op op =
-@@ -533,10 +535,21 @@ static int spi_nor_read_sr(struct spi_nor *nor, u8 *sr)
- 				   SPI_MEM_OP_NO_DUMMY,
- 				   SPI_MEM_OP_DATA_IN(1, sr, 1));
+ /*
+- * JESD216 rev B defines a Basic Flash Parameter Table of 16 DWORDs.
+- * They are indexed from 1 but C arrays are indexed from 0.
++ * JESD216 rev D defines a Basic Flash Parameter Table of 20 DWORDs. They are
++ * indexed from 1 but C arrays are indexed from 0.
+  */
+ #define BFPT_DWORD(i)		((i) - 1)
+-#define BFPT_DWORD_MAX		16
++#define BFPT_DWORD_MAX		20
  
-+		if (spi_nor_protocol_is_dtr(nor->reg_proto)) {
-+			op.addr.nbytes = addr_bytes;
-+			op.addr.val = 0;
-+			op.dummy.nbytes = dummy;
-+		}
+ /* The first version of JESD216 defined only 9 DWORDs. */
+ #define BFPT_DWORD_MAX_JESD216			9
+@@ -148,6 +148,12 @@ struct sfdp_header {
+ #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
+ #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
+ 
++#define BFPT_DWORD18_CMD_EXT_MASK		GENMASK(30, 29)
++#define BFPT_DWORD18_CMD_EXT_REP		(0x0UL << 29) /* Repeat */
++#define BFPT_DWORD18_CMD_EXT_INV		(0x1UL << 29) /* Invert */
++#define BFPT_DWORD18_CMD_EXT_RES		(0x2UL << 29) /* Reserved */
++#define BFPT_DWORD18_CMD_EXT_16B		(0x3UL << 29) /* 16-bit opcode */
 +
-+		spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
-+
- 		ret = spi_mem_exec_op(nor->spimem, &op);
- 	} else {
--		ret = nor->controller_ops->read_reg(nor, SPINOR_OP_RDSR,
--						    sr, 1);
-+		if (spi_nor_protocol_is_dtr(nor->reg_proto))
-+			ret = -ENOTSUPP;
-+		else
-+			ret = nor->controller_ops->read_reg(nor, SPINOR_OP_RDSR,
-+							    sr, 1);
+ struct sfdp_bfpt {
+ 	u32	dwords[BFPT_DWORD_MAX];
+ };
+@@ -3867,6 +3873,24 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 		return -EINVAL;
  	}
  
- 	if (ret)
++	/* 8D-8D-8D command extension. */
++	switch (bfpt.dwords[BFPT_DWORD(18)] & BFPT_DWORD18_CMD_EXT_MASK) {
++	case BFPT_DWORD18_CMD_EXT_REP:
++		nor->cmd_ext = SPI_MEM_EXT_REPEAT;
++		break;
++
++	case BFPT_DWORD18_CMD_EXT_INV:
++		nor->cmd_ext = SPI_MEM_EXT_INVERT;
++		break;
++
++	case BFPT_DWORD18_CMD_EXT_RES:
++		return -EINVAL;
++
++	case BFPT_DWORD18_CMD_EXT_16B:
++		dev_err(nor->dev, "16-bit opcodes not supported\n");
++		return -ENOTSUPP;
++	}
++
+ 	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
+ }
+ 
 -- 
 2.25.0
 
