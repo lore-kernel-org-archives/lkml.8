@@ -2,150 +2,66 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82482C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D468C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6599D20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709D120842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgBKLie (ORCPT
+        id S1728385AbgBKLjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:38:34 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:42884 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727770AbgBKLid (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:38:33 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Feb 2020 17:07:58 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 11 Feb 2020 17:07:38 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 5290D1CC5; Tue, 11 Feb 2020 17:07:37 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v2] arm64: dts: sc7180: add dsi controller and phy entries for idp dts
-Date:   Tue, 11 Feb 2020 17:07:35 +0530
-Message-Id: <20200211113735.6840-1-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
+        Tue, 11 Feb 2020 06:39:10 -0500
+Received: from relay.sw.ru ([185.231.240.75]:54562 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbgBKLjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 06:39:10 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j1TsX-0007P4-KK; Tue, 11 Feb 2020 14:38:57 +0300
+Subject: [PATCH] mm: Add missed mem_cgroup_iter_break() into
+ shrink_node_memcgs()
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     akpm@linux-foundation.org, guro@fb.com, vvs@virtuozzo.com,
+        ktkhai@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 11 Feb 2020 14:38:57 +0300
+Message-ID: <158142103093.888182.8911729633457501747.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding dsi controller and phy entries for idp dt.
+Leaving mem_cgroup_iter() loop requires mem_cgroup_iter_break().
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Fixes: bf8d5d52ffe8 "memcg: introduce memory.min"
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
+ mm/vmscan.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changes in v1:
-	- Added dsi controller and dsi phy entries for idp dts
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b1863de475fb..f6efe2348ba3 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2653,8 +2653,9 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+ 				continue;
+ 			}
+ 			memcg_memory_event(memcg, MEMCG_LOW);
+-			break;
++			/* fallthrough */
+ 		case MEMCG_PROT_NONE:
++			mem_cgroup_iter_break(target_memcg, memcg);
+ 			/*
+ 			 * All protection thresholds breached. We may
+ 			 * still choose to vary the scan pressure
 
-Changes in v2:
-	- Adding dependency patchwork series
-	- Removing suspend configuration
-	- Adding blank before curly brace
-
-This patch depends on following patchwork series:
-
-https://patchwork.kernel.org/patch/11364687/
-https://patchwork.kernel.org/patch/11366303/
-
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 55 +++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50ad4fde..6ccf8c3603ab 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -7,6 +7,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
-@@ -232,6 +233,49 @@ vreg_bob: bob {
- 	};
- };
- 
-+&dsi0 {
-+	status = "okay";
-+
-+	vdda-supply = <&vreg_l3c_1p2>;
-+
-+	panel@0 {
-+		compatible = "visionox,rm69299-1080p-display";
-+		reg = <0>;
-+
-+		vdda-supply = <&vreg_l8c_1p8>;
-+		vdd3p3-supply = <&vreg_l18a_2p8>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&disp_pins>;
-+
-+		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&panel0_in>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi_phy {
-+	status = "okay";
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -289,6 +333,17 @@ &usb_1_qmpphy {
- 
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
-+&pm6150l_gpio {
-+	disp_pins: disp-pins {
-+		pins = "gpio3";
-+		function = "func1";
-+		qcom,drive-strength = <2>;
-+		power-source = <0>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
-+
- &qspi_clk {
- 	pinconf {
- 		pins = "gpio63";
--- 
-2.25.0
 
