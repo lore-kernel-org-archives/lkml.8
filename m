@@ -2,90 +2,115 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EC6C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52DDC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD652070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703A52070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:14:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mpdesouza.com header.i=@mpdesouza.com header.b="RfIyznYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbgBKQOM (ORCPT
+        id S1730740AbgBKQOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:14:12 -0500
-Received: from mga14.intel.com ([192.55.52.115]:36060 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728206AbgBKQOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:14:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:14:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="233497223"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga003.jf.intel.com with ESMTP; 11 Feb 2020 08:14:08 -0800
-Subject: Re: [PATCH -next] dmaengine: idxd: remove set but not used variable
- 'group'
-To:     YueHaibing <yuehaibing@huawei.com>, dan.j.williams@intel.com,
-        vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200211135335.55924-1-yuehaibing@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <397d824a-8827-c5b8-4dda-60fe79c6512d@intel.com>
-Date:   Tue, 11 Feb 2020 09:14:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 11 Feb 2020 11:14:45 -0500
+Received: from gateway23.websitewelcome.com ([192.185.47.80]:23995 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727561AbgBKQOp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:14:45 -0500
+X-Greylist: delayed 1494 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 11:14:44 EST
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 9B31DED33
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:24:58 -0600 (CST)
+Received: from br540.hostgator.com.br ([108.179.252.180])
+        by cmsmtp with SMTP
+        id 1XPGjTITeRP4z1XPGjvCTQ; Tue, 11 Feb 2020 09:24:58 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=mpdesouza.com; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hm/23NW+SCo6nlE9b57ji0EYuqf5cV9tPkdyZTDdTQ8=; b=RfIyznYBariRuSfgxU4Tdx787H
+        vM29DFGT+UBMC1lYUWWzG/2T+qhEPz8mu8sg4bbA1WCbn6+c6yIJjByz5rtNg2AkwaBcATwOY6Inm
+        /8jkjJktneFBKgwqL6n+SS6HoU4zvVj1rkiT7U5s7MNWv+/+tmh5LKYdcPGs4O/fXW2m/zIJFutU6
+        M/00Mk0nND/H4j+tWH6WFuRHzdLo+kakzwsYgRkp3Xh1/ZEbBn38HSqKpMtOEHzoRV1wL/pWbYRvO
+        29yUGa6ESVLJ0LDgxihW2gKQLAR7XSTd9ELbEzmmgWIVVQRLSdAT56rNpY35/zOJRvpzZH0iCZMtd
+        PwavwcaQ==;
+Received: from [189.114.219.35] (port=33352 helo=hephaestus.suse.de)
+        by br540.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <marcos@mpdesouza.com>)
+        id 1j1Vj7-000xng-1U; Tue, 11 Feb 2020 10:37:21 -0300
+From:   Marcos Paulo de Souza <marcos@mpdesouza.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Marcos Paulo de Souza <marcos@mpdesouza.com>
+Subject: [PATCH] btrfs: ioctl: resize: Only how new size if size changed
+Date:   Tue, 11 Feb 2020 10:39:57 -0300
+Message-Id: <20200211133957.14399-1-marcos@mpdesouza.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200211135335.55924-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br540.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - mpdesouza.com
+X-BWhitelist: no
+X-Source-IP: 189.114.219.35
+X-Source-L: No
+X-Exim-ID: 1j1Vj7-000xng-1U
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (hephaestus.suse.de) [189.114.219.35]:33352
+X-Source-Auth: marcos@mpdesouza.com
+X-Email-Count: 0
+X-Source-Cap: bXBkZXNvNTM7bXBkZXNvNTM7YnI1NDAuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is no point to inform the user about "new size" if didn't changed
+at all.
 
+Signed-off-by: Marcos Paulo de Souza <marcos@mpdesouza.com>
+---
+ fs/btrfs/ioctl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 2/11/20 6:53 AM, YueHaibing wrote:
-> drivers/dma/idxd/sysfs.c: In function engine_group_id_store:
-> drivers/dma/idxd/sysfs.c:419:29: warning: variable group set but not used [-Wunused-but-set-variable]
-> 
-> It is not used, so remove it.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index be5350582955..fa31a8021d24 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -1712,9 +1712,6 @@ static noinline int btrfs_ioctl_resize(struct file *file,
+ 
+ 	new_size = round_down(new_size, fs_info->sectorsize);
+ 
+-	btrfs_info_in_rcu(fs_info, "new size for %s is %llu",
+-			  rcu_str_deref(device->name), new_size);
+-
+ 	if (new_size > old_size) {
+ 		trans = btrfs_start_transaction(root, 0);
+ 		if (IS_ERR(trans)) {
+@@ -1727,6 +1724,9 @@ static noinline int btrfs_ioctl_resize(struct file *file,
+ 		ret = btrfs_shrink_device(device, new_size);
+ 	} /* equal, nothing need to do */
+ 
++	if (ret == 0 && new_size != old_size)
++		btrfs_info_in_rcu(fs_info, "new size for %s is %llu",
++			  rcu_str_deref(device->name), new_size);
+ out_free:
+ 	kfree(vol_args);
+ out:
+-- 
+2.24.0
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->   drivers/dma/idxd/sysfs.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-> index 6d907fe..e4f35bd 100644
-> --- a/drivers/dma/idxd/sysfs.c
-> +++ b/drivers/dma/idxd/sysfs.c
-> @@ -416,7 +416,7 @@ static ssize_t engine_group_id_store(struct device *dev,
->   	struct idxd_device *idxd = engine->idxd;
->   	long id;
->   	int rc;
-> -	struct idxd_group *prevg, *group;
-> +	struct idxd_group *prevg;
->   
->   	rc = kstrtol(buf, 10, &id);
->   	if (rc < 0)
-> @@ -436,7 +436,6 @@ static ssize_t engine_group_id_store(struct device *dev,
->   		return count;
->   	}
->   
-> -	group = &idxd->groups[id];
->   	prevg = engine->group;
->   
->   	if (prevg)
-> 
