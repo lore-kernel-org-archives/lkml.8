@@ -2,137 +2,262 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F3AC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA8C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AD920848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B122A20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:16:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="l8gxy+0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgBKENA (ORCPT
+        id S1728148AbgBKEQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 23:13:00 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9721 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727728AbgBKENA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 23:13:00 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0053940FAABA12F48003;
-        Tue, 11 Feb 2020 12:12:54 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.66) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
- 12:12:49 +0800
-Subject: Re: [v3] nbd: fix potential NULL pointer fault in nbd_genl_disconnect
-To:     Mike Christie <mchristi@redhat.com>, <josef@toxicpanda.com>,
-        <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200210073241.41813-1-sunke32@huawei.com>
- <5E418D62.8090102@redhat.com>
-From:   "sunke (E)" <sunke32@huawei.com>
-Message-ID: <c3531fc5-73b3-6ef4-816e-97f491f45c18@huawei.com>
-Date:   Tue, 11 Feb 2020 12:12:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 10 Feb 2020 23:16:09 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36382 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728107AbgBKEQI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 23:16:08 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t13so7017472qto.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 20:16:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=g4UVj/3nD2GCgjBJx7udq7R9Zkro+Ee2Fk3ZRlrxre8=;
+        b=l8gxy+0JA+Xx2/R031Bg2Xr2vnVqWMmud62gvKIfCNjIX0JLF8fUCRK4N2L9kvaph+
+         GqtW26faddXhkJZPzSQgLiFSXDhPcIFfWPOGVp18yHSqJN6kM+tuot7i1BNHrtz4/OH3
+         +ACu+Rf9OtWiTZ9TbSPGkI2iw915DRF8RykbIsZJncFnGL9mLESkWDU1mRJ8/r8xiSY9
+         TRejrsuhm7OqNuJFEqHkT1Et3PF46N7f8n5CYM7dm87qiesBvdBHC82MCjyL0D3IqgvT
+         /0VKrDtrCNOyi8d2XazeUHqWVymN4NCJSZwE23g6AOcvUMI553vCYy4Y34/h8PzI7U/X
+         t3PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=g4UVj/3nD2GCgjBJx7udq7R9Zkro+Ee2Fk3ZRlrxre8=;
+        b=aqqL18yDsHtlhPrdx5q1lzVd//uCDVGrmjHoWSb9o0N73lANi9nxKAnKuQJ6+YQYJl
+         pKk1ZFPOSgPBAXbzF0Kwomv2wzBFb+XpcRXEtT1zSwNuLHmBWWQcRblbJNlWKMm9RsYd
+         AY1CeL8J7ahdbZqnLH/NhHlBUnY47ykW+J1Po7+cC2cUTc5lYzN8nc1CaHHQ4oHh7Z7O
+         HzZ4k7dFS9EZanYBWWmg1dIYIjGwxQwl1gnThEjzd0IDWg4IYiqgLozJ3JQuf7bVb0XR
+         SUXEcRK3h4xdghaR0/JtarbX4u6aLW/BaG6mRFYHm22CRom2LiWX50kCkRd6H4rCmf6r
+         DvMw==
+X-Gm-Message-State: APjAAAWVLoJvxg10UTNCM/NAdzP7VyKhZBYWXba0EcjyWogOVEAbyq7q
+        3HWz/winuTZdNYExo2qmr7bNZQ==
+X-Google-Smtp-Source: APXvYqzSJD0QeVzM2toPT/R0emZr7QFOvMD5d26xgde3TYvFx+VuGCFgzV0tXAzgQH1m/0XzzcUN5g==
+X-Received: by 2002:ac8:2bf9:: with SMTP id n54mr12959664qtn.280.1581394567220;
+        Mon, 10 Feb 2020 20:16:07 -0800 (PST)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id r5sm1358287qtn.25.2020.02.10.20.16.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 20:16:06 -0800 (PST)
+Message-ID: <f3b8c40fa84f9819959bf60cc9a1f4951bcda36a.camel@ndufresne.ca>
+Subject: Re: [PATCH v3 0/3] Enable Hantro G1 post-processor
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        kernel@collabora.com,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Date:   Mon, 10 Feb 2020 23:16:05 -0500
+In-Reply-To: <CAAFQd5A8Y3C64NozqXjMDV0CQ5==dW9Y-6KtFigYFmO3EDd3+A@mail.gmail.com>
+References: <20191113175603.24742-1-ezequiel@collabora.com>
+         <74fea061a52ee3f8e25793bf9e47eba90a52c3e3.camel@ndufresne.ca>
+         <CAAFQd5A8Y3C64NozqXjMDV0CQ5==dW9Y-6KtFigYFmO3EDd3+A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <5E418D62.8090102@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.66]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le lundi 10 février 2020 à 11:45 +0900, Tomasz Figa a écrit :
+> On Mon, Feb 10, 2020 at 4:52 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+> > Le mercredi 13 novembre 2019 à 14:56 -0300, Ezequiel Garcia a écrit :
+> > > Hi all,
+> > > 
+> > > The Hantro G1 VPU post-processor block can be pipelined with
+> > > the decoder hardware, allowing to perform operations such as
+> > > color conversion, scaling, rotation, cropping, among others.
+> > > 
+> > > When the post-processor is enabled, the decoder hardware
+> > > needs its own set of NV12 buffers (the native decoder format),
+> > > and the post-processor is the owner of the CAPTURE buffers,
+> > > allocated for the post-processed format.
+> > > 
+> > > This way, applications obtain post-processed
+> > > (scaled, converted, etc) buffers transparently.
+> > > 
+> > > This feature is implemented by exposing the post-processed pixel
+> > > formats on ENUM_FMT, ordered as "preferred pixelformat first":
+> > > 
+> > > v4l2-ctl -d 1 --list-formats
+> > > ioctl: VIDIOC_ENUM_FMT
+> > >       Type: Video Capture Multiplanar
+> > > 
+> > >       [0]: 'NV12' (Y/CbCr 4:2:0)
+> > >       [1]: 'YUYV' (YUYV 4:2:2)
+> > > 
+> > > The order of preference in ENUM_FMT can be used as a hint
+> > > by applications. This series updates the uAPI specification
+> > > accordingly.
+> > 
+> > As I'm implementing this, I realize that there may me a gap in being
+> > able to implement both IPP and non-IPP support in a generic framework.
+> > Unlike the above comment, we for non-IPP decoder we cannot naively pick
+> > the first format. In fact we parse the chroma and depth information
+> > from the headers (like pps from H264), and we pick a matching pixel
+> > format. This way, if we have a 10bit stream, and our IP supports 10bit,
+> > we will pick a 10bit pixel formats, otherwise decoding will just fail.
+> > 
+> > None of this information is passed to the driver prior to the first
+> > Request being made, so there is no way (as of current spec) that the
+> > driver can validate this in try_fmt ahead of time. Unless I set picture
+> > parameters without a request_fd for that purpose. If this is the way,
+> > then we should document this.
+> 
+> +Alexandre Courbot
+> 
+> It was suggested in the very early RFC stage, but it looks like it
+> didn't make it to the final spec.
+> https://patchwork.kernel.org/patch/10583233/#22209555
 
+Ok, maybe we should revive it, it would fill that gap. Again, only an
+issue if you have a post processor. I'm still surprised we didn't
+expose the IPP functions through the topology, it would make so much
+sense to me, and I can make better code with that knowledge.
 
-在 2020/2/11 1:05, Mike Christie 写道:
-> On 02/10/2020 01:32 AM, Sun Ke wrote:
->> Open /dev/nbdX first, the config_refs will be 1 and
->> the pointers in nbd_device are still null. Disconnect
->> /dev/nbdX, then reference a null recv_workq. The
->> protection by config_refs in nbd_genl_disconnect is useless.
->>
->> To fix it, just add a check for a non null task_recv in
->> nbd_genl_disconnect.
->>
->> Signed-off-by: Sun Ke <sunke32@huawei.com>
->> ---
->> v1 -> v2:
->> Add an omitted mutex_unlock.
->>
->> v2 -> v3:
->> Add nbd->config_lock, suggested by Josef.
->> ---
->>   drivers/block/nbd.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
->> index b4607dd96185..870b3fd0c101 100644
->> --- a/drivers/block/nbd.c
->> +++ b/drivers/block/nbd.c
->> @@ -2008,12 +2008,20 @@ static int nbd_genl_disconnect(struct sk_buff *skb, struct genl_info *info)
->>   		       index);
->>   		return -EINVAL;
->>   	}
->> +	mutex_lock(&nbd->config_lock);
->>   	if (!refcount_inc_not_zero(&nbd->refs)) {
->> +		mutex_unlock(&nbd->config_lock);
->>   		mutex_unlock(&nbd_index_mutex);
->>   		printk(KERN_ERR "nbd: device at index %d is going down\n",
->>   		       index);
->>   		return -EINVAL;
->>   	}
->> +	if (!nbd->recv_workq) {
->> +		mutex_unlock(&nbd->config_lock);
->> +		mutex_unlock(&nbd_index_mutex);
->> +		return -EINVAL;
->> +	}
->> +	mutex_unlock(&nbd->config_lock);
->>   	mutex_unlock(&nbd_index_mutex);
->>   	if (!refcount_inc_not_zero(&nbd->config_refs)) {
->>   		nbd_put(nbd);
->>
-> 
-> With my other patch then we will not need this right? It handles your
-> case by just being integrated with the existing checks in:
-> 
-> nbd_disconnect_and_put->nbd_clear_sock->sock_shutdown
-> 
-> ...
-> 
-> static void sock_shutdown(struct nbd_device *nbd)
-> {
-> 
-> ....
-> 
->          if (config->num_connections == 0)
->                  return;
-> 
-> 
-> num_connections is zero for your case since we never did a
-> nbd_genl_disconnect so we would return here.
-> 
-> 
-> .
-> 
-Hi Mike
+I found while coding this, that even if it's more difficult,
+classification of device by looking at the topology and the entity
+functions is much nicer, less of a guess.
 
-Your point is not right totally.
+Though, we lack some documentation (or clarification) for how to
+properly handle formats, size and selection in order to configure the
+IPP. Ezequiel was saying that we don't implement selection in Hanto, so
+I guess the scaling is a bit ambiguous then in regard to coded/display
+sizes. Though we pass a size to the OUTPUT side, so the driver can
+always control a little bit.
 
-Yes, config->num_connections is 0 and will return in sock_shutdown. Then 
-it will back to nbd_disconnect_and_put and do flush_workqueue 
-(nbd->recv_workq).
+> 
+> > Is this the intended way to negotiation IPP functions with the driver ?
+> > 
+> 
+> In theory, if the userspace knows whether the stream is 4:2:0 or 4:2:2
+> and 8-bit or 10-bit, it can still select the first format from the top
+> that matches these properties.
 
-nbd_disconnect_and_put
-	->nbd_clear_sock
-		->sock_shutdown
-	->flush_workqueue
+That's exactly what I do, I have a map of the formats and their
+chroma/depth, and take the first one that match. If that fails, I just
+fallback to the first one. It's something you need to do anyway, as we
+prefer the native format first (even if there is an IPP).
 
-Thanks,
-Sun Ke
+> 
+> That's not how format handling in V4L2 works, though. ENUM_FMT is
+> expected to return a list of valid formats and if we forget about the
+> image processor for a moment, a stateless decoder would always return
+> any possible format, including ones invalid for the stream.
+> 
+> Now back to the image processor, if it handles conversions from any to
+> any format listed by ENUM_FMT, we kind of regain the V4L2 compliance,
+> but if the conversions are limited, the above requirement still
+> doesn't hold and we're not implementing V4L2 correctly.
+> 
+> Perhaps we can still amend the spec and require controls that
+> determine the stream properties to be set before starting the
+> streaming? I can imagine it could also help the driver filter out some
+> unsupported streams early, before allocating buffers and attempting to
+> decode.
+
+I think it would make sense, so just to make sure, for H264 we could
+set the V4L2_CID_MPEG_VIDEO_H264_SPS along with the OUTPUT format,
+prior to CAPTURE enumeration.
+
+> 
+> Best regards,
+> Tomasz
+> 
+> > > When the application sets a pixel format other than NV12,
+> > > the post-processor is transparently enabled.
+> > > 
+> > > Patch 1 is a cleanups needed to easier integrate the post-processor.
+> > > Patch 2 introduces the post-processing support.
+> > > Patch 3 updates the uAPI specification.
+> > > 
+> > > This is tested on RK3288 platforms with MPEG-2, VP8 and
+> > > H264 streams, decoding to YUY2 surfaces. For now, this series
+> > > is only adding support for NV12-to-YUY2 conversion.
+> > > 
+> > > Applies to media/master.
+> > > 
+> > > Future plans
+> > > ------------
+> > > 
+> > > It seems to me that we should start moving this driver to use
+> > > regmap-based access to registers. However, such move is out of scope
+> > > and not entirely related to this post-processor enablement.
+> > > 
+> > > We'll work on that as follow-up patches.
+> > > 
+> > > Changelog
+> > > ---------
+> > > 
+> > > Changes v3:
+> > > 
+> > > * After discussing with Hans and Tomasz during the media summit
+> > > in ELCE, we decided to go back on the MC changes. The MC topology
+> > > is now untouched. This means the series is now similar to v1,
+> > > except we explicitly use the ENUM_FMT to hint about the post-processed
+> > > formats.
+> > > 
+> > > Changes v2:
+> > > 
+> > > * The decoder->post-processor topology is now exposed
+> > >   explicitly and applications need to configure the pipeline.
+> > >   By default, the decoder is enabled and the post-processor
+> > >   is disabled.
+> > > 
+> > > * RGB post-processing output has been dropped. We might
+> > >   add this in the future, but for now, it seems it would
+> > >   make the code more complex without a use-case in mind.
+> > >   RGB is much more memory-consuming so less attractive
+> > >   than YUV, and modern GPUs and display controllers support YUV.
+> > > 
+> > > * The post-processor implementation still supports RK3288
+> > >   only. However, a generic register infrastructure is introduced
+> > >   to make addition of other variants such as RK3399 really easy.
+> > > 
+> > > Ezequiel Garcia (3):
+> > >   media: hantro: Cleanup format negotiation helpers
+> > >   media: hantro: Support color conversion via post-processing
+> > >   media: vidioc-enum-fmt.rst: clarify format preference
+> > > 
+> > >  .../media/uapi/v4l/vidioc-enum-fmt.rst        |   4 +-
+> > >  drivers/staging/media/hantro/Makefile         |   1 +
+> > >  drivers/staging/media/hantro/hantro.h         |  64 +++++++-
+> > >  drivers/staging/media/hantro/hantro_drv.c     |   8 +-
+> > >  .../staging/media/hantro/hantro_g1_h264_dec.c |   2 +-
+> > >  .../media/hantro/hantro_g1_mpeg2_dec.c        |   2 +-
+> > >  drivers/staging/media/hantro/hantro_g1_regs.h |  53 +++++++
+> > >  .../staging/media/hantro/hantro_g1_vp8_dec.c  |   2 +-
+> > >  drivers/staging/media/hantro/hantro_h264.c    |   6 +-
+> > >  drivers/staging/media/hantro/hantro_hw.h      |  13 ++
+> > >  .../staging/media/hantro/hantro_postproc.c    | 141 ++++++++++++++++++
+> > >  drivers/staging/media/hantro/hantro_v4l2.c    | 105 ++++++++-----
+> > >  drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 ++
+> > >  13 files changed, 366 insertions(+), 45 deletions(-)
+> > >  create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
+> > > 
 
