@@ -2,197 +2,134 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2ECC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AA8C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4BD20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qeozm3+R"
+	by mail.kernel.org (Postfix) with ESMTP id EEA0020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbgBKUeR (ORCPT
+        id S1731839AbgBKUiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:34:17 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36939 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730566AbgBKUeR (ORCPT
+        Tue, 11 Feb 2020 15:38:09 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45707 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728063AbgBKUiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:34:17 -0500
-Received: by mail-ot1-f65.google.com with SMTP id d3so11533618otp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:34:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q11zsssSHeKjTpfbV0UQcFcGMIVXHOWVWu3BFYxakp4=;
-        b=qeozm3+R7EnJiUqxAO5WKU6Hyo8tOvNoKIv3sqG0gwJnruWChpe1RHY1CoExS/DHwK
-         he5Szs4itn3GjZWTFLBu9ib1jeaKQF7I8F/J6ZCd+raCeXX8Ml8qL2LsKQzBrsvmpZWi
-         LQGGl/dWBrexM2f/haFE13HCd+3IpMAZkvvGpB5n55Z5/Ag2N3RjnXl8xgLc2+1aFkTR
-         UPSbLDiLCbU/Cb4J4f2WFKJTYxS11Fr3qOVTalvoCvAxRpL5kc/w5gTC8sfJ/NDgEgT6
-         jeFEpLJm7a3am8dmDSuwym2sTtDNasMRQr77XiJDdvOXMmN3Pf70q/USLL7OUWvG29yX
-         4aCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q11zsssSHeKjTpfbV0UQcFcGMIVXHOWVWu3BFYxakp4=;
-        b=XpNMa9eo0cBNLyRs6gPXILG92EmLc2NsHCd6LohUUDNstNL1I291i9c/qvwJaEu6Jv
-         mhlI2FNGVwio1xKlhBybDXjydAUX6QAmhgienWuoH3Nrx5BnCnQzyIjVVBNyp3XOYztt
-         pqWz3+yXl/sdI1GUWT54cdNx/87Dt2h1TC3QJX/5AiVH2gaiyXMsqzMusMoaCML6cU/R
-         jf2BlNBxmfaov+mqHFDiwMzvS5YuNzc3HESyZNmd/jMBiM/rIIrtqt02piBGkmgDposf
-         qJXGHcPkDBY2lI4hJvyDFZp/fPWz9dQfje1xnnLbBdM8kVLbH2SQrVg2WA/5GU83qTix
-         iWJg==
-X-Gm-Message-State: APjAAAVdHNpg36diOxVZ6U/Ji8JAyhpiOJJ6vhsCF438BkMrGWSrD8dn
-        rU9WhUDdStZy/kNonBThG/gESqgov14tlAqMEDk1lQ==
-X-Google-Smtp-Source: APXvYqwN+vAsdRxgGOaSrJORQpfpoOK0DTUx7e2DVI860NZpm9RoWnlwAaQwqmRW/lEAu1tBxxXl1zt3MnY8gyqlm3Y=
-X-Received: by 2002:a9d:65c1:: with SMTP id z1mr6936015oth.180.1581453255514;
- Tue, 11 Feb 2020 12:34:15 -0800 (PST)
+        Tue, 11 Feb 2020 15:38:09 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id F25C17EAB21;
+        Wed, 12 Feb 2020 07:38:04 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j1cIG-0002wd-CD; Wed, 12 Feb 2020 07:38:04 +1100
+Date:   Wed, 12 Feb 2020 07:38:04 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 04/12] fs/xfs: Clean up DAX support check
+Message-ID: <20200211203804.GL10776@dread.disaster.area>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <20200208193445.27421-5-ira.weiny@intel.com>
+ <20200211055745.GG10776@dread.disaster.area>
+ <20200211162830.GB12866@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <20200123152440.28956-1-kpsingh@chromium.org> <20200123152440.28956-5-kpsingh@chromium.org>
- <20200211031208.e6osrcathampoog7@ast-mbp> <20200211124334.GA96694@google.com>
- <20200211175825.szxaqaepqfbd2wmg@ast-mbp> <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
- <20200211190943.sysdbz2zuz5666nq@ast-mbp> <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
- <20200211201039.om6xqoscfle7bguz@ast-mbp>
-In-Reply-To: <20200211201039.om6xqoscfle7bguz@ast-mbp>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 11 Feb 2020 21:33:49 +0100
-Message-ID: <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211162830.GB12866@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=DmWA4bM_9KjgS68gnp8A:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-()On Tue, Feb 11, 2020 at 9:10 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> On Tue, Feb 11, 2020 at 08:36:18PM +0100, Jann Horn wrote:
-> > On Tue, Feb 11, 2020 at 8:09 PM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > > On Tue, Feb 11, 2020 at 07:44:05PM +0100, Jann Horn wrote:
-> > > > On Tue, Feb 11, 2020 at 6:58 PM Alexei Starovoitov
-> > > > <alexei.starovoitov@gmail.com> wrote:
-> > > > > On Tue, Feb 11, 2020 at 01:43:34PM +0100, KP Singh wrote:
-> > > > [...]
-> > > > > > * When using the semantic provided by fexit, the BPF LSM program will
-> > > > > >   always be executed and will be able to override / clobber the
-> > > > > >   decision of LSMs which appear before it in the ordered list. This
-> > > > > >   semantic is very different from what we currently have (i.e. the BPF
-> > > > > >   LSM hook is only called if all the other LSMs allow the action) and
-> > > > > >   seems to be bypassing the LSM framework.
-> > > > >
-> > > > > It that's a concern it's trivial to add 'if (RC == 0)' check to fexit
-> > > > > trampoline generator specific to lsm progs.
-> > > > [...]
-> > > > > Using fexit mechanism and bpf_sk_storage generalization is
-> > > > > all that is needed. None of it should touch security/*.
-> > > >
-> > > > If I understand your suggestion correctly, that seems like a terrible
-> > > > idea to me from the perspective of inspectability and debuggability.
-> > > > If at runtime, a function can branch off elsewhere to modify its
-> > > > decision, I want to see that in the source code. If someone e.g.
-> > > > changes the parameters or the locking rules around a security hook,
-> > > > how are they supposed to understand the implications if that happens
-> > > > through some magic fexit trampoline that is injected at runtime?
-> > >
-> > > I'm not following the concern. There is error injection facility that is
-> > > heavily used with and without bpf. In this case there is really no difference
-> > > whether trampoline is used with direct call or indirect callback via function
-> > > pointer. Both will jump to bpf prog. The _source code_ of bpf program will
-> > > _always_ be available for humans to examine via "bpftool prog dump" since BTF
-> > > is required. So from inspectability and debuggability point of view lsm+bpf
-> > > stuff is way more visible than any builtin LSM. At any time people will be able
-> > > to see what exactly is running on the system. Assuming folks can read C code.
-> >
-> > You said that you want to use fexit without touching security/, which
-> > AFAIU means that the branch from security_*() to the BPF LSM will be
-> > invisible in the *kernel's* source code unless the reader already
-> > knows about the BPF LSM. But maybe I'm just misunderstanding your
-> > idea.
-> >
-> > If a random developer is trying to change the locking rules around
-> > security_blah(), and wants to e.g. figure out whether it's okay to
-> > call that thing with a spinlock held, or whether one of the arguments
-> > is actually used, or stuff like that, the obvious way to verify that
-> > is to follow all the direct and indirect calls made from
-> > security_blah(). It's tedious, but it works, unless something is
-> > hooked up to it in a way that is visible in no way in the source code.
-> >
-> > I agree that the way in which the call happens behind the scenes
-> > doesn't matter all that much - I don't really care all that much
-> > whether it's an indirect call, a runtime-patched direct call in inline
-> > assembly, or an fexit hook. What I do care about is that someone
-> > reading through any affected function can immediately see that the
-> > branch exists - in other words, ideally, I'd like it to be something
-> > happening in the method body, but if you think that's unacceptable, I
-> > think there should at least be a function attribute that makes it very
-> > clear what's going on.
->
-> Got it. Then let's whitelist them ?
-> All error injection points are marked with ALLOW_ERROR_INJECTION().
-> We can do something similar here, but let's do it via BTF and avoid
-> abusing yet another elf section for this mark.
-> I think BTF_TYPE_EMIT() should work. Just need to pick explicit enough
-> name and extensive comment about what is going on.
+On Tue, Feb 11, 2020 at 08:28:30AM -0800, Ira Weiny wrote:
+> On Tue, Feb 11, 2020 at 04:57:45PM +1100, Dave Chinner wrote:
+> > On Sat, Feb 08, 2020 at 11:34:37AM -0800, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > Rather than open coding xfs_inode_supports_dax() in
+> > > xfs_ioctl_setattr_dax_invalidate() export xfs_inode_supports_dax() and
+> > > call it in preparation for swapping dax flags.
+> > > 
+> > > This also means updating xfs_inode_supports_dax() to return true for a
+> > > directory.
+> > 
+> > That's not correct. This now means S_DAX gets set on directory inodes
+> > because both xfs_inode_supports_dax() and the on-disk inode flag
+> > checks return true in xfs_diflags_to_iflags(). Hence when we
+> > instantiate a directory inode with a DAX inherit hint set on it
+> > we'll set S_DAX on the inode and so IS_DAX() will return true for
+> > directory inodes...
+> 
+> I'm not following.  Don't we want S_DAX to get set on directory inodes?
 
-Sounds reasonable to me. :)
+No, because S_DAX is used for controlling direct user data access,
+and we *never* let users directly access directory data. Even the
+filesystems don't access directory data directly - the transactional
+change model of journaling filesystems requires metadata to be
+buffered in memory and never directly modified.
 
-> Locking rules and cleanup around security_blah() shouldn't change though.
-> Like security_task_alloc() should be paired with security_task_free().
-> And so on. With bpf_sk_storage like logic the alloc/free of scratch
-> space will be similar to the way socket and bpf progs deal with it.
->
-> Some of the lsm hooks are in critical path. Like security_socket_sendmsg().
-> retpoline hurts. If we go with indirect calls right now it will be harder to
-> optimize later. It took us long time to come up with bpf trampoline and build
-> bpf dispatcher on top of it to remove single indirect call from XDP runtime.
-> For bpf+lsm would be good to avoid it from the start.
+Hence when filesystems like ext4 keep their directory data in the
+page cache, we do not want the kernel to think that this inode is
+accessed through the DAX subsystem - it is accessed via the buffered
+IO interfaces like page_cache_sync_readahead() and writeback is
+controlled by the journal. Hence setting S_DAX on these inodes is
+incorrect.
 
-Just out of curiosity: Are fexit hooks really much cheaper than indirect calls?
+Whilst XFS doesn't use the page cache for it's metadata
+buffering, the issue is the same as it's also a journalling
+filesystem. hence setting S_DAX on XFS directory inodes is also
+incorrect.
 
-AFAIK ftrace on x86-64 replaces the return pointer for fexit
-instrumentation (see prepare_ftrace_return()). So when the function
-returns, there is one return misprediction for branching into
-return_to_handler(), and then the processor's internal return stack
-will probably be misaligned so that after ftrace_return_to_handler()
-is done running, all the following returns will also be mispredicted.
+> IIRC what we wanted was something like this where IS_DAX is the current state
+> and "dax" is the inode flag:
+> 
+> / <IS_DAX=0 dax=0>
+> 	dir1 <IS_DAX=0 dax=0>
+> 		f0 <IS_DAX=0 dax=0>
+> 		f1 <IS_DAX=1 dax=1>
+> 	dir2 <IS_DAX=1 dax=1>
+> 		f2 <IS_DAX=1 dax=1>
+> 		f3 <IS_DAX=0 dax=0>
+> 		dir3 <IS_DAX=1 dax=1>
+> 			f4 <IS_DAX=1 dax=1>
+> 		dir4 <IS_DAX=0 dax=0>
+> 			f5 <IS_DAX=0 dax=0>
+> 		f6 <IS_DAX=1 dax=1>
+> 
+> Where f1, dir2, f3, and dir4 required explicit state changes when they were
+> created.  Because they inherited their dax state from the parent.  All the
+> other creations happened based on the DAX state of the parent directory.  So we
+> need to store and know the state of the directories.  What am I missing?
 
-So I would've thought that fexit hooks would have at least roughly the
-same impact as indirect calls - indirect calls via retpoline do one
-mispredicted branch, fexit hooks do at least two AFAICS. But I guess
-indirect calls could still be slower if fexit benefits from having all
-the mispredicted pointers stored on the cache-hot stack while the
-indirect branch target is too infrequently accessed to be in L1D, or
-something like that?
+I think that you are conflating internal filesystem feature
+management details (the inheritance of the DAX flag feature of
+directories) with kernel IO path behaviour (the inode S_DAX flag).
+
+i.e. IS_DAX() indicates whether DAX is _actively being used_ to
+access the data of a regular file inode, not to indicate whether the
+on-disk flags used to manage default behaviour are set or not.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
