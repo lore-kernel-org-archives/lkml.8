@@ -2,140 +2,100 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A66C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DADC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BFE215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581444967;
-	bh=ZiipSWDzgeHjJz2WH9FL395eNO0cu9ekXYQl99Q8TGU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UtCGfflt/YOTphoDoqmKn2ur2E+aMFa8mL/bRJq0vTppeT3TRYoTybVJX1ym4xZYf
-	 1//wP1FOEUNDE4vV7w96x40BAfjfCWPDxjPEZszqGZfQlIOJjIQ/g5RvuTZIDGqEIj
-	 lSFhE/Uyc1WVDJjhrheoNODls4kb//gbjotpT8bY=
+	by mail.kernel.org (Postfix) with ESMTP id 4082820708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UxHnwRmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgBKSQG (ORCPT
+        id S1730218AbgBKSQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:16:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44094 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 13:16:07 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:44084 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgBKSQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728951AbgBKSQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 13:16:06 -0500
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zn.tnic (p200300EC2F0955008CA74DB1104365B1.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:8ca7:4db1:1043:65b1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7886920708;
-        Tue, 11 Feb 2020 18:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581444965;
-        bh=ZiipSWDzgeHjJz2WH9FL395eNO0cu9ekXYQl99Q8TGU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WYxW6t8G73ZXqPoAZrUSFtPqrtlwKARwA85m1jL6Z3ZedBgHQ3XaEFu2wG412mXbq
-         lRdAsBCdeoQ3loqvdpsBxWXv3lKkaB0pTIYA7Y0mE6asS0iRix/G4zEMBB3ACwhKIM
-         WfUEr2u4/mD+oq0aX7UbAlLPduKjQYQIC3j5M58w=
-Received: by mail-qv1-f41.google.com with SMTP id dc14so5422982qvb.9;
-        Tue, 11 Feb 2020 10:16:05 -0800 (PST)
-X-Gm-Message-State: APjAAAUxvG7mM9VtV4oWSiXmMgDHXg8mGn8zgl9U+e0yObSYvQswFwwY
-        CKnAlkPm7KEJlhuE0ucRdpada54KCqIahwzDjQ==
-X-Google-Smtp-Source: APXvYqz7/HTjD/gmg7y3b1mBaiiVOST5LC3rVQ1S5d9nr8xvkVknjzihFw+CABsBG25SKvfgK9kM5f/8APejN+nuOaU=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr3796364qvu.136.1581444964504;
- Tue, 11 Feb 2020 10:16:04 -0800 (PST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9B57F1EC0C9D;
+        Tue, 11 Feb 2020 19:16:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581444965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=79gSAJuHXd9FQgV8hkDXwq/zTEBL/3eyIbYBMFeVs/c=;
+        b=UxHnwRmLLHcobz76VlQXvHRtcPfffcTdGfdsw2thwedsLEEXm3mS1ZhAJ/+e94jSLaK/om
+        qbTgtlJ38DZM+jfpORVMmZZqIhOwwKiH8jbLzYIrNVldKUt1UYj1adSsEiBi+6UiHVkwBC
+        oUHc2Ey+FWYuE/xEb72fxynDQ71N4wM=
+Date:   Tue, 11 Feb 2020 19:15:59 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Michael Matz <matz@suse.de>
+Subject: Re: [PATCH v2] x86/boot: Use 32-bit (zero-extended) move for
+ z_output_len
+Message-ID: <20200211181559.GI32279@zn.tnic>
+References: <20200211161739.GE32279@zn.tnic>
+ <20200211173333.1722739-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-2-git-send-email-spujar@nvidia.com> <20200206181045.GA31521@bogus>
- <af58b6b2-25b2-e968-73c9-d87e1a9e2746@nvidia.com>
-In-Reply-To: <af58b6b2-25b2-e968-73c9-d87e1a9e2746@nvidia.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:15:53 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKCzR5DXm_ip-mrrPyeAUcZJRWi_cQEhPd7agp9T_uumA@mail.gmail.com>
-Message-ID: <CAL_JsqKCzR5DXm_ip-mrrPyeAUcZJRWi_cQEhPd7agp9T_uumA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: sound: tegra: add DT binding for AHUB
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
-        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200211173333.1722739-1-nivedita@alum.mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 5:31 AM Sameer Pujar <spujar@nvidia.com> wrote:
->
->
->
-> On 2/6/2020 11:40 PM, Rob Herring wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > On Thu, Jan 30, 2020 at 04:03:34PM +0530, Sameer Pujar wrote:
-> >> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
-> >> pre-processing and post-processing and a programmable full crossbar for
-> >> audio routing across these accelerators. This patch adds YAML schema for DT
-> >> binding of AHUB and few of its following components. These devices will be
-> >> registered as ASoC components.
-> >>   * ADMAIF
-> >>   * I2S
-> >>   * DMIC
-> >>   * DSPK
-> >>
-> >> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> >> ---
-> >>   .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 +++++++++++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 ++++++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 ++++++++++++++
-> >>   5 files changed, 617 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> >> new file mode 100644
-> >> index 0000000..dc9fef3
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> >> @@ -0,0 +1,105 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0)
-> . . .
-> >> +    items:
-> >> +      - description: initial module clock rate
-> >> +
-> >> +  "#sound-dai-cells":
-> >> +    const: 1
-> >> +
-> >> +  sound-name-prefix:
-> >> +    $ref: /schemas/types.yaml#/definitions/string
-> >> +    description:
-> >> +      Used as prefix for sink/source names of the component. Must be a
-> >> +      unique string among multiple instances of the same component.
-> >> +      The name can be "DSPK1" or "DSPKx", where x depends on the maximum
-> > Sounds like a constraint.
->
-> Is there a better way to convey the recommended strings above?
+On Tue, Feb 11, 2020 at 12:33:33PM -0500, Arvind Sankar wrote:
+> z_output_len is the size of the decompressed payload (i.e. vmlinux +
+> vmlinux.relocs) and is generated as an unsigned 32-bit quantity by
+> mkpiggy.c.
+> 
+> The current movq $z_output_len, %r9 instruction generates a
+> sign-extended move to %r9. Using movl $z_output_len, %r9d will instead
+> zero-extend into %r9, which is appropriate for an unsigned 32-bit
+> quantity. This is also what we already do for z_input_len, the size of
+> the compressed payload.
 
-pattern: '^DSPK[1-9]$'
+Yes, thanks.
 
-Adjusting the number range regex as you need.
+What I'll also add to this is the fact that
 
-(And $ref will need to be under an 'allOf')
+init_size:              .long INIT_SIZE         # kernel initialization size
 
-Rob
+where z_output_len participates in through INIT_SIZE is a 32-bit
+quantity determined by the ".long" so even if something made
+z_output_len bigger than 32-bit by explicitly using MOVABS so that it
+builds fine, you'd still get:
+
+arch/x86/boot/header.S: Assembler messages:
+arch/x86/boot/header.S:568: Warning: value 0x10103b000 truncated to 0x103b000
+
+as a warning.
+
+Btw, while poking at this, we found out that the MOV really remains
+MOV and not MOVABS if gas doesn't know what the quantity behind the
+z_output_len symbol is, as it is a symbol assignment. Which, AFAIU, with
+ELF64 objects, it should be using 8-byte quantities in the symbol table
+to accommodate such assignments. But for some reason it doesn't.
+
+Anyway, Michael can correct me if I'm still imprecise here.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
