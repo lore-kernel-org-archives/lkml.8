@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE34C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F46C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C0F2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D2D2073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="dupIz7K1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oUp/bIW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgBKVmB (ORCPT
+        id S1728068AbgBKVmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:42:01 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:23707 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbgBKVly (ORCPT
+        Tue, 11 Feb 2020 16:42:05 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:29479 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbgBKVly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 16:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457310;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=tz5FT9e8j/vOF6dHesX7jElKIt8MXbKvwaqQV2chsVc=;
-        b=dupIz7K1QDO5pGf0QzjaY/pv9gX+ybe0O1d3Bobc6KX5ZyzXJFni4IpZASVsyF7+Ri
-        r0+tbbsNO/SQ79AAgQ+tUFt9EBmXUmIIQMn6XNk17hvLd2ROC8FdVONpck59jqOc5ZzE
-        uiyvx23s7XXMNuZLSulLxIfVS+LNmwCuMH76/NcnczU+WodrKh914bmvtqsZhYdTAsnv
-        bruuayI0ER2VfsoFasLekSNbzYH4b0UvmInlqSaZnpVStIAf0lLrkueCMnldhodZPHzE
-        6i1gTpTfKvlcFEcnrHzv+LYTz0vGGxZwafAJvD9R+AaKGmIU4rBetwjwNt4r1SEOdeGw
-        lyjQ==
+        bh=TdyjL7fnovA7v90cI49fyycJRI+MxjJc1+DrsqTzedE=;
+        b=oUp/bIW39rInx7cXXy+sj1W/5gOp1Xq/12yM9Q7Lbf34tNsASdymmF7KCzHywfEGeM
+        oRvbegRP6v8E61nGt1mxPjEq3cDU42jUVqgwQWAN3dBvEaIggGmOVFCWdqVb+QfwGg/X
+        H7b6ZCbOiMTaTnavWzyvfe7bElHApQt/NK59tk1W3c7z3sZQcZ6BVGaVP7Z2AzPv8mVm
+        hn3JUIMpeHTSSUz7yzW1lamE/ob3NmEAXmZ9noDqmzFYAWUTQR8/VMBrKRgYlDuNhtcR
+        dj9xy/Q8oxyEckplx5GqKYfr+xMaQnrPN2wZs05s+xNF3gx5Ahs/7Qjr+I15v0bDmh6P
+        AswA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLfe0EQ
+        with ESMTPSA id U06217w1BLfX0EH
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:40 +0100 (CET)
+        Tue, 11 Feb 2020 22:41:33 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -69,9 +69,9 @@ Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 10/14] MIPS: DTS: CI20: add DT node for IR sensor
-Date:   Tue, 11 Feb 2020 22:41:27 +0100
-Message-Id: <5ba2ba43f06955bbfcd8465271bb01cfc1101d13.1581457290.git.hns@goldelico.com>
+Subject: [PATCH 01/14] i2c: jz4780: suppress txabrt reports for i2cdetect
+Date:   Tue, 11 Feb 2020 22:41:18 +0100
+Message-Id: <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
@@ -82,34 +82,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+This suppresses "simple" error reasons
 
-The infrared sensor on the CI20 board is connected to a GPIO and can
-be operated by using the gpio-ir-recv driver. Add a DT node for the
-sensor to allow that driver to be used.
+	ABRT_7B_ADDR_NOACK
+	ABRT_10ADDR1_NOACK
+	ABRT_10ADDR2_NOACK
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+from flooding the console log when running i2cdetect on
+addresses without a responding slave.
+
+Additionally, reading the JZ4780_I2C_TAR in this situation
+seems to harm the controller state.
+
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/i2c/busses/i2c-jz4780.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index e1364f941c7d..b4a820313992 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -62,6 +62,11 @@
- 		enable-active-high;
- 	};
+diff --git a/drivers/i2c/busses/i2c-jz4780.c b/drivers/i2c/busses/i2c-jz4780.c
+index 16a67a64284a..55b7518435f1 100644
+--- a/drivers/i2c/busses/i2c-jz4780.c
++++ b/drivers/i2c/busses/i2c-jz4780.c
+@@ -578,6 +578,9 @@ static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
+ {
+ 	int i;
  
-+	ir: ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
-+	};
++	if (!(src & ~7))
++		return;
 +
- 	wlan0_power: fixedregulator@1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "wlan0_power";
+ 	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
+ 	dev_err(&i2c->adap.dev, "device addr=%x\n",
+ 		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
 -- 
 2.23.0
 
