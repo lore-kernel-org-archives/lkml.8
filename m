@@ -7,129 +7,105 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7197C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8BCC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AD92086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA19420870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bNkzHJqc"
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="l/8+zDje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731712AbgBKTyo (ORCPT
+        id S1731719AbgBKTzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:54:44 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:42400 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730021AbgBKTyo (ORCPT
+        Tue, 11 Feb 2020 14:55:10 -0500
+Received: from chill.innovation.ch ([216.218.245.220]:53738 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730021AbgBKTzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:54:44 -0500
-Received: by mail-qv1-f67.google.com with SMTP id dc14so5593462qvb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:54:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=YBwt2MVU6nNAOe4QsbbS2Wq8hC+X3+hnvO1hd669kyE=;
-        b=bNkzHJqcIbI9AGRseJS/hpar5VZUMk3hF0nwURpQlNFRYDlq0eOz3zvUNIt+7G6fv9
-         cct8I1VFykeWKa/q+TDiXCPtUEPaYZaUJmx3ewF0TOdLhX5769K2GOnYbWXJ6m2VPawB
-         t0d8RLV0cxjsvSlBoOapyco4bWtS2ZkeCH7pMU2ewnt9stGtAvbn/3yTL+kJ8oqG6e5N
-         Jp7K9rt7IZzGrrIUYnW5ZxlAi13HnRKu79XQadDcekY+0Tj8hbRBDzGGbGr8gcZ6fVTd
-         T/1Mks2cdNz548n75JhdhryCxm56LPZuuNQcfkTKaNbYqrDmB36FOxmYDAuQByV2PPmP
-         ri0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YBwt2MVU6nNAOe4QsbbS2Wq8hC+X3+hnvO1hd669kyE=;
-        b=DwS8kvIy7mLFTRY9hhSpjUOMmdfC4AXnNR5gaWyebdq4iiy+3zgQI1715mHYSO7zMq
-         u9kY4MExeVou1CK0DbCnL8S6b7d/atPccFQBNKzzH0CWjkAf4NUoVqushuW98U8YY+RZ
-         23yffT0/50Jd0uIcC7w6mWqXSGh8UMe3JjQlrc+mkTk2fF4zuCU6sHWp8bUgCnUWzRsi
-         T6QOiZwmPQUZKxxn2eqPBW6ctpCBFii77LWKOCXVmzIKIKzQn42AuuabH6u1rCyeKENq
-         bQTXq1ScSIN2XXt2GxXPaZ3O3dypjto3cXcPKnPumlzZHAGDni56Vq9L6W4A2m3ia/+A
-         IjJQ==
-X-Gm-Message-State: APjAAAWDSl4UlJ0q9qCHKQW8FhV5GfOr8BLFquVIx+xClG9HWvAFS/du
-        Zrm4epWfVZ8tW95DtJ2t8UZLgLmPUC+AjQ==
-X-Google-Smtp-Source: APXvYqxG4o0AqrcL5cNxPIj5MSCzJZzrIg1LV+xpXY+PlPSxzrGJUnqHcW13cNE3gP04Zi5ACEFIjQ==
-X-Received: by 2002:a05:6214:923:: with SMTP id dk3mr4282819qvb.96.1581450882350;
-        Tue, 11 Feb 2020 11:54:42 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w16sm2454811qkj.135.2020.02.11.11.54.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 11:54:41 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/rmap: annotate a data race at tlb_flush_batched
-Date:   Tue, 11 Feb 2020 14:53:03 -0500
-Message-Id: <1581450783-8262-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 11 Feb 2020 14:55:09 -0500
+X-Greylist: delayed 448 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 14:55:09 EST
+Received: from localhost (localhost [127.0.0.1])
+        by chill.innovation.ch (Postfix) with ESMTP id DB6556412AE;
+        Tue, 11 Feb 2020 11:47:35 -0800 (PST)
+X-Virus-Scanned: amavisd-new at 
+Received: from chill.innovation.ch ([127.0.0.1])
+        by localhost (chill.innovation.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id Yt8Xyz8cUtTD; Tue, 11 Feb 2020 11:47:29 -0800 (PST)
+From:   =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 0617D64012B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1581450449;
+        bh=pKyDgEF01POMD1o+SCeOkRD2KX+9ORpUNRhOfljEE+0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l/8+zDjee0rYEua1qQlF3fSjIbLgjPn0NgFtJMojTap23v8RAHOGYXrnm+FtZ2mvv
+         uOCYbXQJGj4nePDyrz3k2Wh+ENIPX5UHIMo8522dI/n39cm28++TI8WrPPMGSMJtWO
+         PwJ+LYuUzZx35AWGHkYMfWb/F+GThXBG4nRF9MYNMa7TMxqHsrG31n1ZG7WPPNjE+u
+         ZnruWK2T+tuB5lToiSsJnavxSQahY+shWsbjklUvi4wL2vRKeUr295OKXosxvphcxC
+         gXR225rqTAaFaZUZYIzw08ucNyFhckoNmoKRlJJU/k1YuZLaCzDxQ+9OrX8Z8XfmqW
+         lBE10xCUJXO/Q==
+To:     Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] serdev: Fix detection of UART devices on Apple machines.
+Date:   Tue, 11 Feb 2020 11:47:23 -0800
+Message-Id: <20200211194723.486217-1-ronald@innovation.ch>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mm->tlb_flush_batched could be accessed concurrently as noticed by
-KCSAN,
+On Apple devices the _CRS method returns an empty resource template, and
+the resource settings are instead provided by the _DSM method. But
+commit 33364d63c75d6182fa369cea80315cf1bb0ee38e (serdev: Add ACPI
+devices by ResourceSource field) changed the search for serdev devices
+to require valid, non-empty resource template, thereby breaking Apple
+devices and causing bluetooth devices to not be found.
 
- BUG: KCSAN: data-race in flush_tlb_batched_pending / try_to_unmap_one
+This expands the check so that if we don't find a valid template, and
+we're on an Apple machine, then just check for the device being an
+immediate child of the controller and having a "baud" property.
 
- write to 0xffff93f754880bd0 of 1 bytes by task 822 on cpu 6:
-  try_to_unmap_one+0x59a/0x1ab0
-  set_tlb_ubc_flush_pending at mm/rmap.c:635
-  (inlined by) try_to_unmap_one at mm/rmap.c:1538
-  rmap_walk_anon+0x296/0x650
-  rmap_walk+0xdf/0x100
-  try_to_unmap+0x18a/0x2f0
-  shrink_page_list+0xef6/0x2870
-  shrink_inactive_list+0x316/0x880
-  shrink_lruvec+0x8dc/0x1380
-  shrink_node+0x317/0xd80
-  balance_pgdat+0x652/0xd90
-  kswapd+0x396/0x8d0
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
-
- read to 0xffff93f754880bd0 of 1 bytes by task 6364 on cpu 4:
-  flush_tlb_batched_pending+0x29/0x90
-  flush_tlb_batched_pending at mm/rmap.c:682
-  change_p4d_range+0x5dd/0x1030
-  change_pte_range at mm/mprotect.c:44
-  (inlined by) change_pmd_range at mm/mprotect.c:212
-  (inlined by) change_pud_range at mm/mprotect.c:240
-  (inlined by) change_p4d_range at mm/mprotect.c:260
-  change_protection+0x222/0x310
-  change_prot_numa+0x3e/0x60
-  task_numa_work+0x219/0x350
-  task_work_run+0xed/0x140
-  prepare_exit_to_usermode+0x2cc/0x2e0
-  ret_from_intr+0x32/0x42
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 4 PID: 6364 Comm: mtest01 Tainted: G        W    L 5.5.0-next-20200210+ #5
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-flush_tlb_batched_pending() is under PTL but the write is not, but
-mm->tlb_flush_batched is only a bool type, so the value is unlikely to
-be shattered. Thus, mark it as an intentional data race by using the
-data race macro.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Cc: <stable@vger.kernel.org> # 5.5
+Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
 ---
- mm/rmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serdev/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index b3e381919835..6983f5d5b114 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -679,7 +679,7 @@ static bool should_defer_flush(struct mm_struct *mm, enum ttu_flags flags)
-  */
- void flush_tlb_batched_pending(struct mm_struct *mm)
- {
--	if (mm->tlb_flush_batched) {
-+	if (data_race(mm->tlb_flush_batched)) {
- 		flush_tlb_mm(mm);
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index ce5309d00280..0f64a10ba51f 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -18,6 +18,7 @@
+ #include <linux/sched.h>
+ #include <linux/serdev.h>
+ #include <linux/slab.h>
++#include <linux/platform_data/x86/apple.h>
  
- 		/*
+ static bool is_registered;
+ static DEFINE_IDA(ctrl_ida);
+@@ -630,6 +631,15 @@ static int acpi_serdev_check_resources(struct serdev_controller *ctrl,
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Apple machines provide an empty resource template, so on those
++	 * machines just look for immediate children with a "baud" property
++	 * (from the _DSM method) instead.
++	 */
++	if (!lookup.controller_handle && x86_apple_machine &&
++	    !acpi_dev_get_property(adev, "baud", ACPI_TYPE_BUFFER, NULL))
++		acpi_get_parent(adev->handle, &lookup.controller_handle);
++
+ 	/* Make sure controller and ResourceSource handle match */
+ 	if (ACPI_HANDLE(ctrl->dev.parent) != lookup.controller_handle)
+ 		return -ENODEV;
 -- 
-1.8.3.1
+2.24.1
 
