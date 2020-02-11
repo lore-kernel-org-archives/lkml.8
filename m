@@ -2,157 +2,135 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C59C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27996C352A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B882082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FE82080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiFfmrpP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw3P/38w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgBKDMS (ORCPT
+        id S1728036AbgBKDMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 22:12:18 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40960 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgBKDMS (ORCPT
+        Mon, 10 Feb 2020 22:12:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21859 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727600AbgBKDMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 22:12:18 -0500
-Received: by mail-pf1-f196.google.com with SMTP id j9so4712068pfa.8;
-        Mon, 10 Feb 2020 19:12:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oRkW2XcGN+ZHJ9q4kvQ0RJqBXUTFywBUYhv5rDLEKt4=;
-        b=LiFfmrpPkGv8orByK7ryOHRuSbxDPbDtap4XnRxM2WiWbrTLuzoVc1WzE3+7o0+j7a
-         96q4pj8s1P7YiIyXttfVHAJMWqN0u4W7UTvLRkCKaF6188tyHJ9Kam0mBBMK2ou11mCt
-         jLN51YfcQlpWz3VXPS604ua96Z85QQyG1ZJdSA46P6mdFbCWBR/w0jeBRzP3SDXP0Skw
-         ub49gjtxGJARvm2R6E1/Gl6aqCPLKlazBLChN+xS5mcMGEqi7nrXWS4JWjnLnOm3iXqo
-         O/BsniCzd3omUK/KMjnsUueVdfdn90UIN2p4vTvbPAac2GeFq4PvayCtIqtYRXcuMRvN
-         AAjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oRkW2XcGN+ZHJ9q4kvQ0RJqBXUTFywBUYhv5rDLEKt4=;
-        b=nvQO1BFOv60It4HHEoSYI+Sfj0r9knR5a//SBwRedbpsljUpPlsr7RhoP27N6g0VTS
-         3sBq73SYilnMim4d6FiBpBoy67nSVP/7KxM+ccd61xXyoEX6VH6s8VMK61S+tqdPQ9Te
-         o5xedbnQ2Am1uI5TkYc92V0TCkDINJl6bDg7KuOes0CDtxlz61cjwKMEK0Ni7S2D6Sot
-         3M+E3SGgHJfQ6fDegATw2/lnnarPHdZib8FSz4oMCo6qLIYfOGXnFr1UPMBZP3G2JQoD
-         cRR/WV47H+MVWllS4lMLpNtjqEDafc6NjR8frqxXxgybpH72NDB3KvO0DYdbdnEaFjf9
-         ahsQ==
-X-Gm-Message-State: APjAAAVPd+9iaLw6BEP4A2C/+enyUZuRCgo3bGrLW+ybVIauK2zdt/55
-        cQIe69FlCvfoV7amWsnxOJc=
-X-Google-Smtp-Source: APXvYqwc01uHRhO/VzOcwfGgjJ6ss+01OI/rhtKnBbJ8zS2rIV8h2kZFXUDdDbS9ZO4xzuWRtCdwqw==
-X-Received: by 2002:aa7:9edd:: with SMTP id r29mr4230502pfq.14.1581390737242;
-        Mon, 10 Feb 2020 19:12:17 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:400::3:8bd])
-        by smtp.gmail.com with ESMTPSA id 3sm761134pjg.27.2020.02.10.19.12.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 19:12:16 -0800 (PST)
-Date:   Mon, 10 Feb 2020 19:12:10 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-team@fb.com
-Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
- the BPF LSM
-Message-ID: <20200211031208.e6osrcathampoog7@ast-mbp>
-References: <20200123152440.28956-1-kpsingh@chromium.org>
- <20200123152440.28956-5-kpsingh@chromium.org>
+        Mon, 10 Feb 2020 22:12:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581390764;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q+EmKIrsTYodqEbhl714OL2yeXOxjPittki/IV3oU/E=;
+        b=Bw3P/38weRF4kZWBaULPb2UQONoUp8hrbBUXNIaAnGzjAMWFLcHPYQylBUFiMj8hCpTIFk
+        0OXSOUlHl7AdfIPhPh7FUE3tNd4p6AnctJ47gYavPpINbEwwmbRSQZRdlm9ABkpwb1dAKx
+        qnAfhzv0tro34QaE8P9+rlJkkqXEVx0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-j-AC7TOhNd6v0QTR3XvrnQ-1; Mon, 10 Feb 2020 22:12:41 -0500
+X-MC-Unique: j-AC7TOhNd6v0QTR3XvrnQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DF6A800EBB;
+        Tue, 11 Feb 2020 03:12:39 +0000 (UTC)
+Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA73A89F24;
+        Tue, 11 Feb 2020 03:12:20 +0000 (UTC)
+Subject: Re: [PATCH V2 5/5] vdpasim: vDPA device simulator
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
+References: <20200210035608.10002-1-jasowang@redhat.com>
+ <20200210035608.10002-6-jasowang@redhat.com>
+ <20200210062219-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d738e251-d03b-c2a0-bf0a-045ea0b1871c@redhat.com>
+Date:   Tue, 11 Feb 2020 11:12:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123152440.28956-5-kpsingh@chromium.org>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20200210062219-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 07:24:34AM -0800, KP Singh wrote:
-> +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) ({			\
-> +	int _ret = 0;						\
-> +	do {							\
-> +		struct security_hook_list *P;			\
-> +		int _idx;					\
-> +								\
-> +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
-> +			break;					\
-> +								\
-> +		_idx = bpf_lsm_srcu_read_lock();		\
-> +								\
-> +		hlist_for_each_entry(P,				\
-> +			&bpf_lsm_hook_heads.FUNC, list) {	\
-> +			_ret = P->hook.FUNC(__VA_ARGS__);		\
-> +			if (_ret && IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE)) \
-> +				break;				\
-> +		}						\
-> +		bpf_lsm_srcu_read_unlock(_idx);			\
-> +	} while (0);						\
-> +	IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE) ? _ret : 0;	\
-> +})
 
-This extra CONFIG_SECURITY_BPF_ENFORCE doesn't make sense to me.
-Why do all the work for bpf-lsm and ignore return code? Such framework already
-exists. For audit only case the user could have kprobed security_*() in
-security/security.c and had access to exactly the same data. There is no need
-in any of these patches if audit the only use case.
-Obviously bpf-lsm has to be capable of making go/no-go decision, so
-my preference is to drop this extra kconfig knob.
-I think the agreement seen in earlier comments in this thread that the prefered
-choice is to always have bpf-based lsm to be equivalent to LSM_ORDER_LAST. In
-such case how about using bpf-trampoline fexit logic instead?
-Pros:
-- no changes to security/ directory
-- no changes to call_int_hook() macro
-- patches 4, 5, 6 no longer necessary
-- when security is off all security_*() hooks do single
-  if (hlist_empty(&bpf_lsm_hook_heads.FUNC)) check.
-  With patch 4 there will two such checks. Tiny perf penalty.
-  With fexit approach there will be no extra check.
-- fexit approach is fast even on kernels compiled with retpoline, since
-  its using direct calls
-Cons:
-- bpf trampoline so far is x86 only and arm64 support is wip
+On 2020/2/10 =E4=B8=8B=E5=8D=887:23, Michael S. Tsirkin wrote:
+> On Mon, Feb 10, 2020 at 11:56:08AM +0800, Jason Wang wrote:
+>> This patch implements a software vDPA networking device. The datapath
+>> is implemented through vringh and workqueue. The device has an on-chip
+>> IOMMU which translates IOVA to PA. For kernel virtio drivers, vDPA
+>> simulator driver provides dma_ops. For vhost driers, set_map() methods
+>> of vdpa_config_ops is implemented to accept mappings from vhost.
+>>
+>> Currently, vDPA device simulator will loopback TX traffic to RX. So
+>> the main use case for the device is vDPA feature testing, prototyping
+>> and development.
+>>
+>> Note, there's no management API implemented, a vDPA device will be
+>> registered once the module is probed. We need to handle this in the
+>> future development.
+>>
+>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>> ---
+>>   drivers/virtio/vdpa/Kconfig    |  17 +
+>>   drivers/virtio/vdpa/Makefile   |   1 +
+>>   drivers/virtio/vdpa/vdpa_sim.c | 678 +++++++++++++++++++++++++++++++=
+++
+>>   3 files changed, 696 insertions(+)
+>>   create mode 100644 drivers/virtio/vdpa/vdpa_sim.c
+>>
+>> diff --git a/drivers/virtio/vdpa/Kconfig b/drivers/virtio/vdpa/Kconfig
+>> index 7a99170e6c30..a7888974dda8 100644
+>> --- a/drivers/virtio/vdpa/Kconfig
+>> +++ b/drivers/virtio/vdpa/Kconfig
+>> @@ -7,3 +7,20 @@ config VDPA
+>>             datapath which complies with virtio specifications with
+>>             vendor specific control path.
+>>  =20
+>> +menuconfig VDPA_MENU
+>> +	bool "VDPA drivers"
+>> +	default n
+>> +
+>> +if VDPA_MENU
+>> +
+>> +config VDPA_SIM
+>> +	tristate "vDPA device simulator"
+>> +        select VDPA
+>> +        default n
+>> +        help
+>> +          vDPA networking device simulator which loop TX traffic back
+>> +          to RX. This device is used for testing, prototyping and
+>> +          development of vDPA.
+> So how about we make this depend on RUNTIME_TESTING_MENU?
+>
+>
 
-By plugging into fexit I'm proposing to let bpf-lsm prog type modify return
-value. Currently bpf-fexit prog type has read-only access to it. Adding write
-access is a straightforward verifier change. The bpf progs from patch 9 will
-still look exactly the same way:
-SEC("lsm/file_mprotect")
-int BPF_PROG(mprotect_audit, struct vm_area_struct *vma,
-            unsigned long reqprot, unsigned long prot) { ... }
-The difference that libbpf will be finding btf_id of security_file_mprotect()
-function and adding fexit trampoline to it instead of going via
-security_list_options and its own lsm_hook_idx uapi. I think reusing existing
-tracing facilities to attach and multiplex multiple programs is cleaner. More
-code reuse. Unified testing of lsm and tracing, etc.
+I'm not sure how much it can help but I can do that in next version.
+
+Thanks
+
+RUNTIME_TESTING_MENU
+
