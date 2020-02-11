@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334AFC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDFAC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B4320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390CD20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436184;
-	bh=tgjqLexN1mFN7jpx+9BhpkG4ae6W7StNpQ3e9JuiRFg=;
+	s=default; t=1581436186;
+	bh=NeKOtKE8EvR1hteFJIWgc00lxpPStymx8g9tR/Td5lw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fPcMgv6yOJWGna/GJlGcKvXgb0C/Zcc6kOQti6DoRQ3QKsVjmG1uTnJrQPHhJT00h
-	 Yv5ApAYDvYYjwDjMVj3FT9Zway/firTfuOTl6vRsKnbLJtuP0hVKwcWgJPabcG6v/z
-	 O3e+KWWwj7QIbDIYL9+XKAUZ6ipUoXzYmfo7yMDE=
+	b=wcUjzMMMNpLeYRpbvfP2C1q/yVm2OE+HYnhFDfnK0XVz5hGtea1IllKbss8UddMHC
+	 dt/EFv9aQ4qnAOdzexXRcF7XMS+O4zb8+2wj5iEwMPcOc0wLbawaOryTUrRtT/l3Xi
+	 Zl2qg5/f5rWVRudhjJCNEn13TBKjGlK1n9+NKJl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgBKPtm (ORCPT
+        id S1730555AbgBKPtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:49:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:48614 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:49:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:48652 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgBKPtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:49:39 -0500
+        id S1730534AbgBKPtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:49:43 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE7B730E;
-        Tue, 11 Feb 2020 07:49:38 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7843713A1;
+        Tue, 11 Feb 2020 07:49:43 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 448953F68E;
-        Tue, 11 Feb 2020 07:49:38 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:49:36 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2AF73F68E;
+        Tue, 11 Feb 2020 07:49:42 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:49:41 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Olivier Moysan <olivier.moysan@st.com>
 Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
@@ -43,9 +43,9 @@ Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
         linux-stm32@st-md-mailman.stormreply.com,
         Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
         olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: stm32: i2s: manage error when getting reset controller" to the asoc tree
-In-Reply-To: <20200203100814.22944-4-olivier.moysan@st.com>
-Message-Id: <applied-20200203100814.22944-4-olivier.moysan@st.com>
+Subject: Applied "ASoC: stm32: sai: manage error when getting reset controller" to the asoc tree
+In-Reply-To: <20200203100814.22944-2-olivier.moysan@st.com>
+Message-Id: <applied-20200203100814.22944-2-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -54,7 +54,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: i2s: manage error when getting reset controller
+   ASoC: stm32: sai: manage error when getting reset controller
 
 has been applied to the asoc tree at
 
@@ -79,30 +79,30 @@ to this mail.
 Thanks,
 Mark
 
-From 158ecc65c05314cd02fcf67fa54ebef537358e5c Mon Sep 17 00:00:00 2001
+From 028476c861e3eb660d8d104ef39fccb34c04a0d5 Mon Sep 17 00:00:00 2001
 From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 3 Feb 2020 11:08:11 +0100
-Subject: [PATCH] ASoC: stm32: i2s: manage error when getting reset controller
+Date: Mon, 3 Feb 2020 11:08:09 +0100
+Subject: [PATCH] ASoC: stm32: sai: manage error when getting reset controller
 
-Return an error when the i2s driver fails to get a reset controller.
+Return an error when the SAI driver fails to get a reset controller.
 Also add an error trace, except on probe defer status.
 
 Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20200203100814.22944-4-olivier.moysan@st.com
+Link: https://lore.kernel.org/r/20200203100814.22944-2-olivier.moysan@st.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_i2s.c | 14 +++++++++-----
+ sound/soc/stm/stm32_sai.c | 14 +++++++++-----
  1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 3e7226a53e53..cdcc00d9a67e 100644
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -866,12 +866,16 @@ static int stm32_i2s_parse_dt(struct platform_device *pdev,
- 	}
+diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
+index e20267504b16..b824ba6cb028 100644
+--- a/sound/soc/stm/stm32_sai.c
++++ b/sound/soc/stm/stm32_sai.c
+@@ -197,12 +197,16 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 		return sai->irq;
  
- 	/* Reset */
+ 	/* reset */
 -	rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
 -	if (!IS_ERR(rst)) {
 -		reset_control_assert(rst);
@@ -119,8 +119,8 @@ index 3e7226a53e53..cdcc00d9a67e 100644
 +	udelay(2);
 +	reset_control_deassert(rst);
  
- 	return 0;
- }
+ 	/* Enable peripheral clock to allow register access */
+ 	ret = clk_prepare_enable(sai->pclk);
 -- 
 2.20.1
 
