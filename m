@@ -2,175 +2,245 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6546C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E546C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A400D2465D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C542173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:02:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J9JXf+ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbgBKTBR (ORCPT
+        id S1731560AbgBKTCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:01:17 -0500
-Received: from mailoutvs55.siol.net ([185.57.226.246]:37497 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730813AbgBKTBN (ORCPT
+        Tue, 11 Feb 2020 14:02:00 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37873 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730414AbgBKTCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:01:13 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id EDFEA520674;
-        Tue, 11 Feb 2020 20:01:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id BhECTqe-gCir; Tue, 11 Feb 2020 20:01:09 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 9403252012A;
-        Tue, 11 Feb 2020 20:01:09 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 526AA525187;
-        Tue, 11 Feb 2020 20:01:07 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, icenowy@aosc.io,
-        jernej.skrabec@siol.net, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/7] clk: sunxi-ng: sun8i-de2: H6 doesn't have rotate core
-Date:   Tue, 11 Feb 2020 19:59:32 +0100
-Message-Id: <20200211185936.245174-4-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200211185936.245174-1-jernej.skrabec@siol.net>
-References: <20200211185936.245174-1-jernej.skrabec@siol.net>
+        Tue, 11 Feb 2020 14:02:00 -0500
+Received: by mail-qt1-f195.google.com with SMTP id w47so8807504qtk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:01:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v8ElLutl/m0ZH3q/Jagn5Sm+o4lBHaVCMWC2w+7i5dQ=;
+        b=J9JXf+efOVR0SzD70t/aui7ZMlj9gDR5dOzMNHqIi3LnZA939xxuLrhEUjLovPPR6r
+         saDD3EshQmGnPX294Pi+A4dLvQrAYlLtt2KovymDgkzXqEYBrke6MqaUadLRIzzT0OQe
+         KJ5ow30BgnINxPHCoZbay5J1cCeJjgpQp44/w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v8ElLutl/m0ZH3q/Jagn5Sm+o4lBHaVCMWC2w+7i5dQ=;
+        b=uLCtQdkzrbeEdLu9V/G+PKaSpxVYlkPFVewguXckAXHgb4m9dN2lfJ6uo0R30WH/Id
+         zAvJmyAkLm8NzmPDilAipbcfWqeqzCtyiATu9Ua/1WFSF4efczYO6SZSNkn7yzUJ+VvG
+         tlUH8dGs1VU5giZcHBS/67cZpMnIMdw/q7dLaFEyY9S0YPdO4/F8mQvJmdWW6AWlc80Y
+         6/29YlPc1Ciera2NfnubuzsK6k6lVUMhQfjNB+L+PX6KMI/+B/CSQiYVZrN03sOZE1oe
+         2JohgJZavNhuErjXNQD2jvXzFGXc7vUj4hp2MS55ylpO5WY+vG3wD3jz6faUuxYUnu5D
+         JjTg==
+X-Gm-Message-State: APjAAAUBn3NtXq+oSdBGTNylUL9Z8BY7EH8YoPFp72YZBrP/kp77PTQ6
+        ZP5WhoZkMDmvCDQFw/ZkKPbD+TKK5kE5iv3gpMdmCg==
+X-Google-Smtp-Source: APXvYqzmkg+zFNZFV+4XiRoVMucGNuL9B4PTIUZALU995dSqbzMrvzrX9103Tqq3ReaFYomO3EipG7KbvJpkCDjbUKM=
+X-Received: by 2002:ac8:5457:: with SMTP id d23mr3594214qtq.93.1581447717756;
+ Tue, 11 Feb 2020 11:01:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20200207203752.209296-1-pmalani@chromium.org> <20200207203752.209296-2-pmalani@chromium.org>
+ <dd9a8fa7-db6b-87a0-889d-b56a626a3078@collabora.com> <CACeCKac-OjvCLZ4FefsGbH9JR_suB3nL5CVLa_N0o9qnSqi3-g@mail.gmail.com>
+In-Reply-To: <CACeCKac-OjvCLZ4FefsGbH9JR_suB3nL5CVLa_N0o9qnSqi3-g@mail.gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Tue, 11 Feb 2020 11:01:46 -0800
+Message-ID: <CACeCKaeXQK8KCwyZb2JBkLyCYA=+hRAHzdGr5Ycd1mAioAmNPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        heikki.krogerus@intel.com, Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DE3 documentation regarding presence of rotate core in H6 is a bit
-confusing. Register descriptions mention bits for enabling rotate core
-clocks and reset, but general overview doesn't list it as feature of H6
-display engine, BSP kernel doesn't support it and there is no interrupt
-listed for it. Manual poking registers also didn't reveal presence of
-rotate core.
+Resending (because I didn't send it in PlainText mode, so the MLs
+blocked the email). Sorry.
 
-Let's assume there isn't any rotate core on H6 present and remove
-related clocks. With that done, structures are same as those for H5, so
-just reuse H5 structure.
 
-Fixes: 56808da9f97f ("clk: sunxi-ng: Add support for H6 DE3 clocks")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 57 +---------------------------
- 1 file changed, 1 insertion(+), 56 deletions(-)
-
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/=
-ccu-sun8i-de2.c
-index c6220be8e205..87a30d072ae9 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-@@ -51,24 +51,6 @@ static SUNXI_CCU_M(mixer1_div_a83_clk, "mixer1-div", "=
-pll-de", 0x0c, 4, 4,
- static SUNXI_CCU_M(wb_div_a83_clk, "wb-div", "pll-de", 0x0c, 8, 4,
- 		   CLK_SET_RATE_PARENT);
-=20
--static struct ccu_common *sun50i_h6_de3_clks[] =3D {
--	&mixer0_clk.common,
--	&mixer1_clk.common,
--	&wb_clk.common,
--
--	&bus_mixer0_clk.common,
--	&bus_mixer1_clk.common,
--	&bus_wb_clk.common,
--
--	&mixer0_div_clk.common,
--	&mixer1_div_clk.common,
--	&wb_div_clk.common,
--
--	&bus_rot_clk.common,
--	&rot_clk.common,
--	&rot_div_clk.common,
--};
--
- static struct ccu_common *sun8i_a83t_de2_clks[] =3D {
- 	&mixer0_clk.common,
- 	&mixer1_clk.common,
-@@ -194,26 +176,6 @@ static struct clk_hw_onecell_data sun50i_a64_de2_hw_=
-clks =3D {
- 	.num	=3D CLK_NUMBER_WITH_ROT,
- };
-=20
--static struct clk_hw_onecell_data sun50i_h6_de3_hw_clks =3D {
--	.hws	=3D {
--		[CLK_MIXER0]		=3D &mixer0_clk.common.hw,
--		[CLK_MIXER1]		=3D &mixer1_clk.common.hw,
--		[CLK_WB]		=3D &wb_clk.common.hw,
--		[CLK_ROT]		=3D &rot_clk.common.hw,
--
--		[CLK_BUS_MIXER0]	=3D &bus_mixer0_clk.common.hw,
--		[CLK_BUS_MIXER1]	=3D &bus_mixer1_clk.common.hw,
--		[CLK_BUS_WB]		=3D &bus_wb_clk.common.hw,
--		[CLK_BUS_ROT]		=3D &bus_rot_clk.common.hw,
--
--		[CLK_MIXER0_DIV]	=3D &mixer0_div_clk.common.hw,
--		[CLK_MIXER1_DIV]	=3D &mixer1_div_clk.common.hw,
--		[CLK_WB_DIV]		=3D &wb_div_clk.common.hw,
--		[CLK_ROT_DIV]		=3D &rot_div_clk.common.hw,
--	},
--	.num	=3D CLK_NUMBER_WITH_ROT,
--};
--
- static struct ccu_reset_map sun8i_a83t_de2_resets[] =3D {
- 	[RST_MIXER0]	=3D { 0x08, BIT(0) },
- 	/*
-@@ -237,13 +199,6 @@ static struct ccu_reset_map sun50i_h5_de2_resets[] =3D=
- {
- 	[RST_WB]	=3D { 0x08, BIT(2) },
- };
-=20
--static struct ccu_reset_map sun50i_h6_de3_resets[] =3D {
--	[RST_MIXER0]	=3D { 0x08, BIT(0) },
--	[RST_MIXER1]	=3D { 0x08, BIT(1) },
--	[RST_WB]	=3D { 0x08, BIT(2) },
--	[RST_ROT]	=3D { 0x08, BIT(3) },
--};
--
- static const struct sunxi_ccu_desc sun8i_a83t_de2_clk_desc =3D {
- 	.ccu_clks	=3D sun8i_a83t_de2_clks,
- 	.num_ccu_clks	=3D ARRAY_SIZE(sun8i_a83t_de2_clks),
-@@ -284,16 +239,6 @@ static const struct sunxi_ccu_desc sun50i_h5_de2_clk=
-_desc =3D {
- 	.num_resets	=3D ARRAY_SIZE(sun50i_h5_de2_resets),
- };
-=20
--static const struct sunxi_ccu_desc sun50i_h6_de3_clk_desc =3D {
--	.ccu_clks	=3D sun50i_h6_de3_clks,
--	.num_ccu_clks	=3D ARRAY_SIZE(sun50i_h6_de3_clks),
--
--	.hw_clks	=3D &sun50i_h6_de3_hw_clks,
--
--	.resets		=3D sun50i_h6_de3_resets,
--	.num_resets	=3D ARRAY_SIZE(sun50i_h6_de3_resets),
--};
--
- static const struct sunxi_ccu_desc sun8i_v3s_de2_clk_desc =3D {
- 	.ccu_clks	=3D sun8i_v3s_de2_clks,
- 	.num_ccu_clks	=3D ARRAY_SIZE(sun8i_v3s_de2_clks),
-@@ -406,7 +351,7 @@ static const struct of_device_id sunxi_de2_clk_ids[] =
-=3D {
- 	},
- 	{
- 		.compatible =3D "allwinner,sun50i-h6-de3-clk",
--		.data =3D &sun50i_h6_de3_clk_desc,
-+		.data =3D &sun50i_h5_de2_clk_desc,
- 	},
- 	{ }
- };
---=20
-2.25.0
-
+On Tue, Feb 11, 2020 at 11:00 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Hi Enric,
+>
+> Thanks as always for reviewing the patch. Kindly see my responses inline:
+>
+> On Tue, Feb 11, 2020 at 2:28 AM Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+>>
+>> Hi Prashant,
+>>
+>> On 7/2/20 21:37, Prashant Malani wrote:
+>> > Some Chrome OS devices with Embedded Controllers (EC) can read and
+>> > modify Type C port state.
+>> >
+>> > Add an entry in the DT Bindings documentation that lists out the logical
+>> > device and describes the relevant port information, to be used by the
+>> > corresponding driver.
+>> >
+>> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+>> > ---
+>> >
+>> > Changes in v2:
+>> > - No changes. Patch first introduced in v2 of series.
+>> >
+>> >  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
+>> >  1 file changed, 77 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>> > new file mode 100644
+>> > index 00000000000000..46ebcbe76db3c2
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>> > @@ -0,0 +1,77 @@
+>> > +# SPDX-License-Identifier: GPL-2.0
+>>
+>> I think that Google is fine with the dual licensing here. Would be good if this
+>> can be (GPL-2.0-only OR BSD-2-Clause)
+>
+>
+> Thanks for catching this. I will update it in the next version.
+>>
+>>
+>> > +%YAML 1.2
+>> > +---
+>> > +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
+>> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > +
+>> > +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
+>> > +
+>> > +maintainers:
+>> > +  - Benson Leung <bleung@chromium.org>
+>> > +  - Prashant Malani <pmalani@chromium.org>
+>> > +
+>> > +description:
+>> > +  Chrome OS devices have an Embedded Controller(EC) which has access to
+>> > +  Type C port state. This node is intended to allow the host to read and
+>> > +  control the Type C ports. The node for this device should be under a
+>> > +  cros-ec node like google,cros-ec-spi.
+>> > +
+>> > +properties:
+>> > +  compatible:
+>> > +    const: google,cros-ec-typec
+>> > +
+>> > +  port:
+>> > +    description: A node that represents a physical Type C port on the
+>> > +      device.
+>> > +    type: object
+>> > +    properties:
+>> > +      port-number:
+>> > +        description: The number used by the Chrome OS EC to identify
+>> > +          this type C port.
+>> > +        $ref: /schemas/types.yaml#/definitions/uint32
+>>
+>> Any range of values allowed? 0 is okay?
+>
+>
+> 0 is acceptable. Looks like Chrome OS EC numbers the ports as 0 to (num_ports - 1).
+> Actually, looking at it more closely, the port info EC command struct uses uint8_t (https://elixir.bootlin.com/linux/latest/source/include/linux/platform_data/cros_ec_commands.h#L4879)
+> Also, num_ports cannot be larger than: https://elixir.bootlin.com/linux/latest/ident/EC_USB_PD_MAX_PORTS
+>
+> So perhaps this should be updated to say it can be any value from 0 - EC_USB_PD_MAX_PORTS ? (Not sure if I can reference #defines from header files in the DT bindings file....)
+>>
+>>
+>> > +      power-role:
+>>
+>> Sorry if this question is silly, aren't this and below properties the same as
+>> provided by usb-connector?  Can't this be usb-c-connector?
+>>
+>> Documentation/devicetree/bindings/connector/usb-connector.txt
+>
+>
+> That's correct, it is the same. I think there is a slight difference between the properties of usb-connector (what properties are defined as optional and required) so I don't know if we can re-use usb-connector.
+> TBH I wasn't sure about this myself. I am also not sure whether there will be an issue with usb-c-connector being "claimed" by another driver. I think Heikki could perhaps guide us here.
+>>
+>>
+>> > +        description: Determines the power role that the Type C port will
+>> > +          adopt.
+>> > +        oneOf:
+>> > +          - items:
+>> > +            - const: sink
+>> > +            - const: source
+>> > +            - const: dual
+>> > +      data-role:
+>> > +        description: Determines the data role that the Type C port will
+>> > +          adopt.
+>> > +        oneOf:
+>> > +          - items:
+>> > +            - const: host
+>> > +            - const: device
+>> > +            - const: dual
+>> > +      try-power-role:
+>> > +        description: Determines the preferred power role of the Type C port.
+>> > +        oneOf:
+>> > +          - items:
+>> > +            - const: sink
+>> > +            - const: source
+>> > +            - const: dual
+>> > +
+>> > +    required:
+>> > +      - port-number
+>> > +      - power-role
+>> > +      - data-role
+>> > +      - try-power-role
+>> > +
+>> > +required:
+>> > +  - compatible
+>> > +  - port
+>> > +
+>> > +examples:
+>> > +  - |+
+>>
+>> Rob can confirm, but I think is a good practice add the parent node, so add the
+>> cros-ec-spi node here?
+>
+> Done. Will add it in the next version.
+>>
+>>
+>> > +    typec {
+>> > +      compatible = "google,cros-ec-typec";
+>> > +
+>> > +      port@0 {
+>>
+>> You can run:
+>>
+>>   make dt_binding_check DT_SCHEMA_FILES=<...>/chrome/google,cros-ec-typec.yaml
+>>
+>> And you'll get an error:
+>>
+>>  typec: 'port' is a required property
+>
+> Noted. I will run this check before pushing next time and fix the error.
+>>
+>>
+>> > +        port-number = <0>;
+>> > +        power-role = "dual";
+>> > +        data-role = "dual";
+>> > +        try-power-role = "source";
+>> > +      };
+>> > +    };
+>> >
+>> Thanks,
+>>
+>>  Enric
+>
+>
+>
+> Thanks,
+>
+> -Prashant
