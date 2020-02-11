@@ -2,234 +2,213 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1B8C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4ADC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DAE20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581443856;
-	bh=2GLnU7gkg34WRP7oYPhsHi3Gf2Gz+rkE9pWEj+jtpAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nfHp+fw8vwtApiNu+O3Ff6+GfeHDXoz4jASXbFDFjc/SDmyRKwOKDABDrrVl74yR3
-	 mKpoUlUuZcAkAXSm2Y9DB5sunZSuycPtm4BxJhTU9/rsla0VSB9riX6UUlSEZQWRfX
-	 HlsEHCW/U465IjFmvabFhZIiugqZKAEbCCHC/5n4=
+	by mail.kernel.org (Postfix) with ESMTP id 8EE79206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCn2Wxhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbgBKR5f (ORCPT
+        id S1731098AbgBKR6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:57:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44056 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgBKR5f (ORCPT
+        Tue, 11 Feb 2020 12:58:31 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37958 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbgBKR6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:57:35 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d9so4548031plo.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 09:57:34 -0800 (PST)
+        Tue, 11 Feb 2020 12:58:31 -0500
+Received: by mail-pl1-f195.google.com with SMTP id t6so4565075plj.5;
+        Tue, 11 Feb 2020 09:58:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ee/QPVUg4JGlwVOzU8K+YCc/CraaQUhiWKFtj6iWDA0=;
-        b=mOWoGN/xq5ldX9x2Jl/Yr3A9lTAyWJcsXsEEzsHx8DIwic7D8eZbicDVojpUJCm3fj
-         5KUIXy2OiT1PddkwIj1o9paqpmYMwrObDreM5q/T1RUwg2hHe/KAbCze+X4yzEC8uG5c
-         vSgWTtj8KYPECj7yGgG45ruxlAA8qLSdgjcdgU7mdqMz7sibokla7klShVjQLH3EFNc3
-         q0S+9FYL6UikzrQG+Whi13GyUjSCiQxsBspVpqY4k98ZHyNn7v2XmUwH4RscOEG42mnY
-         P6NeykkGb74WjnYKeTmarvsgeNOhzh2w34StKPp1squDpOetyLUfTWve/lZVyswYZdUm
-         ERwQ==
+        bh=rptgnpdljC5x2bhptwLXpbtKJ/HkIadlAqVDXaT95LU=;
+        b=eCn2WxhbxODwWTEQoefBVinrom6bS+mgcBkXBuHwVC4mipCdsujuGpAh2CeQ1w/fG+
+         NHNsbrWdzQKZbKF4YsDIR4lUOMYbtyBWJ9Ca8AP9Xfkc/3MRpyNiOlp6YIXFFpyRTq5/
+         KiLp/jrYJ+45+/nJOEAkt1cCUMciUY8WZIT2vHcuGW/YTb11XUvaObIsJTrZmq0RRsKL
+         +fmo420j77BIqDkdks8pYM1l0RhcpyQS5rWoG0KBWZuK3gTaMj2V6elXOIGT4cjD2b2v
+         lOXd8jMqcwXBN60bcFFch9l4L6+zIouf/bJSXIOy8BZgs8fNlZSK9DFV+HBgQ6twF+C5
+         Okbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ee/QPVUg4JGlwVOzU8K+YCc/CraaQUhiWKFtj6iWDA0=;
-        b=G14NDSV80Ybhvr2jjx8/3y2Th7LjL8+cnaAwAx6QSIQ0dkOg+lO2otLuOlLrem9ShI
-         hsO8hk1hj9Qn69M0n/UpLUA1uO1eMHqyY770rx83TLZ/3dzhUAM5jqUHHeSsjfl/rgZs
-         3bOXF4h51enLqh5IZez25By+x1UMeEQM8d6Mtl0061LrVswr0fbtczIEXNY5Yavmi+LJ
-         YjqKbDYdW8gwAfZLNsog9Xy11PpzV20o4NODL8kjKgOCerfRyVnjylMQk17NuH22djme
-         vVxdFQ96Golu/WICaqWzMT9XEaIBD4b2dfM97vXGe2OmhRm6VpnXCajixGZT44VCPHaI
-         SA7w==
-X-Gm-Message-State: APjAAAX7YxMIjTdHli8T/n8QsgvT1ckZCRrYoBgOO1HX527mtod6nUvx
-        ScDn3njmpWDt4udPGMccEwc=
-X-Google-Smtp-Source: APXvYqy/TGOb9tzofwDr3E69kRs8YnvZcECcYVGKsZStAadrg0H3M1mXekJQywMwu6tjRKMel4tKog==
-X-Received: by 2002:a17:902:8d83:: with SMTP id v3mr4353288plo.282.1581443854319;
-        Tue, 11 Feb 2020 09:57:34 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id z3sm5037869pfz.155.2020.02.11.09.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 09:57:33 -0800 (PST)
-Date:   Tue, 11 Feb 2020 09:57:31 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: fix long time stall from mm_populate
-Message-ID: <20200211175731.GA185752@google.com>
-References: <20200211001958.170261-1-minchan@kernel.org>
- <20200211011021.GP8731@bombadil.infradead.org>
- <20200211035004.GA242563@google.com>
- <20200211035412.GR8731@bombadil.infradead.org>
- <20200211042536.GB242563@google.com>
- <20200211122323.GS8731@bombadil.infradead.org>
- <20200211163404.GC242563@google.com>
- <20200211172803.GA7778@bombadil.infradead.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rptgnpdljC5x2bhptwLXpbtKJ/HkIadlAqVDXaT95LU=;
+        b=QvgFgO5pDHcDUKqEOilaauyxuHgLMMOme+I9BSIE1iaLBfThZxtPM5ai0iJrkRd+AL
+         CU5D0uasAPeey6cZNn1RCHqpolLRpprCs8CikQZDVat+1hshfm8Hte6mhIaQeCLPHqT6
+         85glL78TtNOJGBCWT6PALtAtSvzfKH2Vtaznydif3X5yFFCbne1b8iuxsYizuMOpzWPQ
+         U9MpsdAWwMDRmAm6GZUZ4FEP3zuXt2WBztGzyfU1BQi9SQfl60LFBD++6d2C5qR7zy7J
+         rVozxv/Hb4jP7eRuewW8t8LjE1wcy2YU3VQWxFpDkliFErpUxgsrYc+U8Ttj2P+4u92a
+         LLJw==
+X-Gm-Message-State: APjAAAWCrRIFnUEsb5GhdWBmRGDeJu6R4Vdo03MV/DLXfR6t7ZAB/o+G
+        czp+33P8aZt+TOZ7LXxjHtM=
+X-Google-Smtp-Source: APXvYqyq0aeXQPknw0aJdqRVkPfZrGR5i6YUVphYlNhjXpItzPVkQdArr7E199v9AJHzFp1eUC+rxA==
+X-Received: by 2002:a17:90a:3243:: with SMTP id k61mr5093197pjb.43.1581443910071;
+        Tue, 11 Feb 2020 09:58:30 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::1:aeb4])
+        by smtp.gmail.com with ESMTPSA id e9sm3993074pjt.16.2020.02.11.09.58.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 09:58:29 -0800 (PST)
+Date:   Tue, 11 Feb 2020 09:58:27 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@fb.com
+Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
+ the BPF LSM
+Message-ID: <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-5-kpsingh@chromium.org>
+ <20200211031208.e6osrcathampoog7@ast-mbp>
+ <20200211124334.GA96694@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211172803.GA7778@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211124334.GA96694@google.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 09:28:03AM -0800, Matthew Wilcox wrote:
-> On Tue, Feb 11, 2020 at 08:34:04AM -0800, Minchan Kim wrote:
-> > On Tue, Feb 11, 2020 at 04:23:23AM -0800, Matthew Wilcox wrote:
-> > > On Mon, Feb 10, 2020 at 08:25:36PM -0800, Minchan Kim wrote:
-> > > > On Mon, Feb 10, 2020 at 07:54:12PM -0800, Matthew Wilcox wrote:
-> > > > > On Mon, Feb 10, 2020 at 07:50:04PM -0800, Minchan Kim wrote:
-> > > > > > On Mon, Feb 10, 2020 at 05:10:21PM -0800, Matthew Wilcox wrote:
-> > > > > > > On Mon, Feb 10, 2020 at 04:19:58PM -0800, Minchan Kim wrote:
-> > > > > > > >       filemap_fault
-> > > > > > > >         find a page form page(PG_uptodate|PG_readahead|PG_writeback)
-> > > > > > > 
-> > > > > > > Uh ... That shouldn't be possible.
-> > > > > > 
-> > > > > > Please see shrink_page_list. Vmscan uses PG_reclaim to accelerate
-> > > > > > page reclaim when the writeback is done so the page will have both
-> > > > > > flags at the same time and the PG reclaim could be regarded as
-> > > > > > PG_readahead in fault conext.
-> > > > > 
-> > > > > What part of fault context can make that mistake?  The snippet I quoted
-> > > > > below is from page_cache_async_readahead() where it will clearly not
-> > > > > make that mistake.  There's a lot of code here; please don't presume I
-> > > > > know all the areas you're talking about.
-> > > > 
-> > > > Sorry about being not clear. I am saying  filemap_fault ->
-> > > > do_async_mmap_readahead
-> > > > 
-> > > > Let's assume the page is hit in page cache and vmf->flags is !FAULT_FLAG
-> > > > TRIED so it calls do_async_mmap_readahead. Since the page has PG_reclaim
-> > > > and PG_writeback by shrink_page_list, it goes to 
-> > > > 
-> > > > do_async_mmap_readahead
-> > > >   if (PageReadahead(page))
-> > > >     fpin = maybe_unlock_mmap_for_io();
-> > > >     page_cache_async_readahead
-> > > >       if (PageWriteback(page))
-> > > >         return;
-> > > >       ClearPageReadahead(page); <- doesn't reach here until the writeback is clear
-> > > >       
-> > > > So, mm_populate will repeat the loop until the writeback is done.
-> > > > It's my just theory but didn't comfirm it by the testing.
-> > > > If I miss something clear, let me know it.
-> > > 
-> > > Ah!  Surely the right way to fix this is ...
-> > 
-> > I'm not sure it's right fix. Actually, I wanted to remove PageWriteback check
-> > in page_cache_async_readahead because I don't see corelation. Why couldn't we
-> > do readahead if the marker page is PG_readahead|PG_writeback design PoV?
-> > Only reason I can think of is it makes *a page* will be delayed for freeing
-> > since we removed PG_reclaim bit, which would be over-optimization for me.
+On Tue, Feb 11, 2020 at 01:43:34PM +0100, KP Singh wrote:
 > 
-> You're confused.  Because we have a shortage of bits in the page flags,
-> we use the same bit for both PageReadahead and PageReclaim.  That doesn't
-> mean that a page marked as PageReclaim should be treated as PageReadahead.
-
-My point is why we couldn't do readahead if the marker page is under PG_writeback.
-It was there for a long time and you were adding one more so I was curious what's
-reasoning comes from. Let me find why PageWriteback check in
-page_cache_async_readahead from the beginning.
-
-	fe3cba17c4947, mm: share PG_readahead and PG_reclaim
-
-The reason comes from the description
-
-    b) clear PG_readahead => implicit clear of PG_reclaim
-            one(and only one) page will not be reclaimed in time
-            it can be avoided by checking PageWriteback(page) in readahead first
-
-The goal was to avoid delay freeing of the page by clearing PG_reclaim.
-I'm saying that I feel it's over optimization. IOW, it would be okay to
-lose a page to be accelerated reclaim.
-
+> > Pros:
+> > - no changes to security/ directory
 > 
-> > Other concern is isn't it's racy? IOW, page was !PG_writeback at the check below
-> > in your snippet but it was under PG_writeback in page_cache_async_readahead and
-> > then the IO was done before refault reaching the code again. It could be repeated
-> > *theoretically* even though it's very hard to happen in real practice.
-> > Thus, I think it would be better to remove PageWriteback check from
-> > page_cache_async_readahead if we really want to go the approach.
+> * We do need to initialize the BPF LSM as a proper LSM (i.e. in
+>   security/bpf) because it needs access to security blobs. This is
+>   only possible statically for now as they should be set after boot
+>   time to provide guarantees to any helper that uses information in
+>   security blobs. I have proposed how we could make this dynamic as a
+>   discussion topic for the BPF conference:
 > 
-> PageReclaim is always cleared before PageWriteback.  eg here:
+>     https://lore.kernel.org/bpf/20200127171516.GA2710@chromium.org
 > 
-> void end_page_writeback(struct page *page)
-> ...
->         if (PageReclaim(page)) {
->                 ClearPageReclaim(page);
->                 rotate_reclaimable_page(page);
->         }
+>   As you can see from some of the prototype use cases e.g:
 > 
->         if (!test_clear_page_writeback(page))
->                 BUG();
+>     https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
 > 
-> so if PageWriteback is clear, PageReclaim must already be observable as clear.
+>   that they do rely on security blobs and that they are key in doing
+>   meaningful security analysis.
+
+above example doesn't use security blob from bpf prog.
+Are you referring to
+https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/security/bpf/ops.c#L455
+Then it's a bpf helper that is using it. And that helper could have been
+implemented differently. I think it should be a separate discussion on merits
+of such helper, its api, and its implementation.
+
+At the same time I agree that additional scratch space accessible by lsm in
+inode->i_security, cred->security and other kernel structs is certainly
+necessary, but it's a nack to piggy back on legacy lsm way of doing it. The
+implementation of bpf_lsm_blob_sizes.lbs_inode fits one single purpose. It's
+fine for builtin LSM where blob sizes and code that uses it lives in one place
+in the kernel and being modified at once when need for more space arises. For
+bpf progs such approach is a non starter. Progs need to have flexible amount
+scratch space. Thankfully this problem is not new. It was solved already.
+Please see how bpf_sk_storage is implemented. It's a flexible amount of scratch
+spaces available to bpf progs that is available in every socket. It's done on
+demand. No space is wasted when progs are not using it. Not all sockets has to
+have it either. I strongly believe that the same approach should be used for
+scratch space in inode, cred, etc. It can be a union of existing 'void
+*security' pointer or a new pointer. net/core/bpf_sk_storage.c implementation
+is not socket specific. It can be generalized for inode, cred, task, etc.
+
+> * When using the semantic provided by fexit, the BPF LSM program will
+>   always be executed and will be able to override / clobber the
+>   decision of LSMs which appear before it in the ordered list. This
+>   semantic is very different from what we currently have (i.e. the BPF
+>   LSM hook is only called if all the other LSMs allow the action) and
+>   seems to be bypassing the LSM framework.
+
+It that's a concern it's trivial to add 'if (RC == 0)' check to fexit
+trampoline generator specific to lsm progs.
+
+> * Not all security_* wrappers simply call the attached hooks and return
+>   their exit code and not all of them pass the same arguments to the
+>   hook e.g. security_bprm_check, security_file_open,
+>   security_task_alloc to just name a few. Illustrating this further
+>   using security_task_alloc as an example:
 > 
+> 	rc = call_int_hook(task_alloc, 0, task, clone_flags);
+> 	if (unlikely(rc))
+> 		security_task_free(task);
+> 	return rc;
+> 
+> Which means we would leak task_structs in this case. While
+> call_int_hook is sort of equivalent to the fexit trampoline for most
+> hooks, it's not really the case for some (quite important) LSM hooks.
 
-I'm saying live lock siutation below.
-It would be hard to trigger since IO is very slow but isn't it possible
-theoretically?
+let's look at them one by one.
+1.
+security_bprm_check() calling ima_bprm_check.
+I think it's layering violation.
+Was it that hard to convince vfs folks to add it in fs/exec.c where
+it belongs?
 
-
-                 CPU 1                                                CPU 2
-mm_populate
-1st trial
-  __get_user_pages
-    handle_mm_fault
-      filemap_fault
-        do_async_mmap_readahead 
-        if (!PageWriteback(page) && PageReadahead(page)) {
-          fpin = maybe_unlock_mmap_for_io
-          page_cache_async_readahead
-                                                                    set_page_writeback here
-            if (PageWriteback(page))
-	      return; <- hit
-
-                                                                     writeback completed and reclaimed the page
-								     ..
-								     ondemand readahead allocates new page and mark it to PG_readahead
-2nd trial
- __get_user_pages
-    handle_mm_fault
-      filemap_fault
-        do_async_mmap_readahead 
-        if (!PageWriteback(page) && PageReadahead(page)) {
-          fpin = maybe_unlock_mmap_for_io
-          page_cache_async_readahead
-                                                                    set_page_writeback here
-            if (PageWriteback(page))
-	      return; <- hit
-
-                                                                     writeback completed and reclaimed the page
-								     ..
-								     ondemand readahead allocates new page and mark it to PG_readahead
-
-3rd trial
-..
-
-
-Let's consider ra_pages, too as I mentioned. Isn't it another hole to make
-such live lock if other task suddenly reset it to zero?
-
-void page_cache_async_readahead(..)
+2.
+security_file_open() calling fsnotify_perm().
+Same layering violation and it's clearly broken.
+When CONFIG_SECURITY is not defined:
+static inline int security_file_open(struct file *file)
 {
-        /* no read-ahead */
-        if (!ra->ra_pages)
-                return;
+        return 0;
+}
+There is no call to fsnotify_perm().
+So fsnotify_open/mkdir/etc() work fine with and without CONFIG_SECURITY,
+but fsnotify_perm() events can be lost depending on kconfig.
+fsnotify_perm() should be moved in fs/open.c.
 
+3.
+security_task_alloc(). hmm.
+when CONFIG_SECURITY is enabled and corresponding LSM with
+non zero blob_sizes.lbs_task is registered that hook allocates
+memory even if task_alloc is empty.
+Doing security_task_free() in that hook also looks wrong.
+It should have been:
+diff --git a/kernel/fork.c b/kernel/fork.c
+index ef82feb4bddc..a0d31e781341 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2062,7 +2062,7 @@ static __latent_entropy struct task_struct *copy_process(
+        shm_init_task(p);
+        retval = security_task_alloc(p, clone_flags);
+        if (retval)
+-               goto bad_fork_cleanup_audit;
++               goto bad_fork_cleanup_security;
+Same issue with security_file_alloc().
+
+I think this layering issues should be fixed, but it's not a blocker for
+lsm-bpf to proceed. Using fexit mechanism and bpf_sk_storage generalization is
+all that is needed. None of it should touch security/*.
