@@ -2,68 +2,69 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB7EC352A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86482C352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E5C20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581383430;
-	bh=guCa2llgRydWfRl+c7oA1nbkgyMewINUy/9UmgXfW5E=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=BPm1wK0+8pr32ASk3f98Mg5RaqlTZbGo9+4MoTh0DNYWxsbZ8oCWpGCj2DuLik3JX
-	 yKzPfqnE3mowLgdYUJF4w66rQ3WgmnlNhdyc+TKwXOhXYPr9RNCfkVfcuT+kijttIT
-	 2NhA6PbImfAUtsj+Hl8tCtiwO1/CDoMU9I2O/sE8=
+	by mail.kernel.org (Postfix) with ESMTP id 5FD2B20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UfzGHdBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgBKBK2 (ORCPT
+        id S1727695AbgBKBK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 20:10:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbgBKBKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 20:10:27 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55358 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727575AbgBKBKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 20:10:25 -0500
-Subject: Re: [GIT PULL] cgroup fix for v5.6-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581383425;
-        bh=guCa2llgRydWfRl+c7oA1nbkgyMewINUy/9UmgXfW5E=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=cjj1Yopaow2AIBEyw7jSrcBzsAtrcznLw5WuhPfwESJNNd/OFCLehxY6AwMChwevL
-         Fvt3UWMWykSN2DdIbC5b2wFbKw2haJZysOQHcw3Bi+E5SZ3uSs8kqN0qjBS3BUBJ7+
-         ZCoxD/Nr+/c1u359mDekzkZ/05Ix+MrHMsaVEQas=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200210225512.GA9161@mtj.thefacebook.com>
-References: <20200210225512.GA9161@mtj.thefacebook.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200210225512.GA9161@mtj.thefacebook.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.6-fixes
-X-PR-Tracked-Commit-Id: 0cd9d33ace336bc424fc30944aa3defd6786e4fe
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0a679e13ea30f85a1aef0669ee0c5a9fd7860b34
-Message-Id: <158138342496.12297.2527992854131955626.pr-tracker-bot@kernel.org>
-Date:   Tue, 11 Feb 2020 01:10:24 +0000
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Vtx3GuoucCB7GHmDuyJEH6fVHqrp/1ZumwqI2mL1l24=; b=UfzGHdBQv58rdN0fTCxFUQMUML
+        6aRCWb0mQMzxLmctfZv4Ar0eK3ud5abaYIYVXGCl1FKucrkL/b5S7X2fUWzhrUnFHqVVWWhjA0ApF
+        GDYvAfbLvR57bnyvmU04VGEpKQFlLek+UlkWrybi/bTUnUoGb5IZW7+y565jQJcnlh5NIDWVPxjro
+        7E8PY24rHv6x8BoXdWCmdICj3E43+/8MKOq5UPX+NiuDLYqbZlwN/quukXUzzuDNx3Ht3KNZbachV
+        nNQOiM2P5WHVen9pJWoWQ5Z/ildtTuAA/En9XeDOtJiV7aptvCQIFS5RFUasjGqUj+VtGoYSh8TwV
+        C/rL77aw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1K4E-00053D-0Q; Tue, 11 Feb 2020 01:10:22 +0000
+Date:   Mon, 10 Feb 2020 17:10:21 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: fix long time stall from mm_populate
+Message-ID: <20200211011021.GP8731@bombadil.infradead.org>
+References: <20200211001958.170261-1-minchan@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211001958.170261-1-minchan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 10 Feb 2020 17:55:12 -0500:
+On Mon, Feb 10, 2020 at 04:19:58PM -0800, Minchan Kim wrote:
+>       filemap_fault
+>         find a page form page(PG_uptodate|PG_readahead|PG_writeback)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.6-fixes
+Uh ... That shouldn't be possible.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0a679e13ea30f85a1aef0669ee0c5a9fd7860b34
+        /*
+         * Same bit is used for PG_readahead and PG_reclaim.
+         */
+        if (PageWriteback(page))
+                return;
 
-Thank you!
+        ClearPageReadahead(page);
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
