@@ -2,144 +2,114 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FFAC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B5EC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DF720708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C133320708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWg35xF/"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="KqMs6V0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbgBKQ1T (ORCPT
+        id S1730836AbgBKQ1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:27:19 -0500
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:46301 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbgBKQ1S (ORCPT
+        Tue, 11 Feb 2020 11:27:38 -0500
+Received: from mail.efficios.com ([167.114.26.124]:43692 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbgBKQ1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:27:18 -0500
-Received: by mail-wr1-f48.google.com with SMTP id z7so13091577wrl.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:27:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bb55gTYbvX5LbdEf+EUAlbMGla2WoqoUJ8i650G+fRc=;
-        b=bWg35xF/yD9pqZ9r9gAfcFYbcO01dATtpd5p/Yu+BmIBqo+lRQ7+4bsut1tsRWTfl8
-         ToapJrBfwq6ld3O/77RBF5A79hiOM6g53wO86v0uru9JZHUyJafV178juS00IiaXfjAe
-         9pGroEiCI1KvXxFiQhXBU1zOAE3dv4jVg2ed1BQvvhevAE33L4S4WpnjFLif2zoIOgBC
-         lVi8zE6ih4CZRsKn5tpzo6dd5D1pro92eh6b1R9vnZRMtYQBvnjX9bwHlrxsLCw/KV3u
-         6u84QJPojqmGpfz+rDkMuVWm5A5qe2jRENq8gsrIXsz6I3e+XyVF7K8vM58p/7rPxR7l
-         KyAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bb55gTYbvX5LbdEf+EUAlbMGla2WoqoUJ8i650G+fRc=;
-        b=mEb6ShYopRRxpIGqv0/NNwqDUq+1FdU7qtR9fPFNYuXBIPVfkq7WgS2rIdqGYhgYx+
-         ONGzC22fIz7Knsj9obx2slnKT69+D5pBrpa5pCD/v8H33roseyXWQr+VukfFDvM04xMQ
-         mVW88VQ+f9pRDu7GTb59ZRbnlQzUSso5pqr/7czyJlLkFvzPknrKM2LchpdUvSe7jA+K
-         /VmRgWLSY7ZhLPLw2U7J5U/LvLNfLgTOyqghpL3dJ6GfsaUeZlN4/DtUpljtSkwhXYVn
-         E+LZj8AC69yDgas2/H4A1TM/Qlan0g0nS4jaTgsNJ5bTvyTqQ2XkTCL/Kg+bEe1JzZk2
-         Feqw==
-X-Gm-Message-State: APjAAAXEcxiTzIUfk/YvxYv6I+tsReTrHa9Nscwc4if9igxrE/64LRMc
-        sIXHYjZz2X073EuMX2BmVPdBlkksnJTIpETgJgY=
-X-Google-Smtp-Source: APXvYqxJIVk57by6TFkLMzF0DpAckbyFa0fFzF1uA/eHJG2PTvQ3sdvui9aGi+JIzbggU7p4lUEdYv2UQenZQmQYUyM=
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr9786904wrn.124.1581438437502;
- Tue, 11 Feb 2020 08:27:17 -0800 (PST)
+        Tue, 11 Feb 2020 11:27:37 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9A87C24DA97;
+        Tue, 11 Feb 2020 11:27:36 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id hyHf05rlqMDp; Tue, 11 Feb 2020 11:27:36 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 4C46A24D8B5;
+        Tue, 11 Feb 2020 11:27:36 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4C46A24D8B5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1581438456;
+        bh=ec3kBvO2BqXkmdya9RuZRn0s5WZ1uU9YP5NHT2Lsw+4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=KqMs6V0xYFtD+UV2hHMObhS5rf/EEoO3WP7AvYBfNSujX/DzrBO3DhqTIRG3DQ8bS
+         hnIxFdkLkpeSGIUkNWpzMiR0B0S3MbE+BWl1bVL4fNYrpRq2x5WK6pDaM5ZgiMbhBc
+         6tq3ML4wDKYJs1IubsF+UF8dvQcRAmGYRLU3e/FpWS1O0ambkw/5oqNAnnwjP96m9A
+         q5AODi6mbSEebdVs+0U8JIixArTGW0evcEv5cdUSHqlGafFJybmsOcshtTsBHDnIeX
+         axDDjxee9K3DKV8zi1ss11vNgGGl1Nuj/TTXwLKiyXNz8GYVHuP70x6CjfCmH2E/g7
+         qre8dhICEa1xw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ldVQBVH-F97C; Tue, 11 Feb 2020 11:27:36 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 33A3C24D8B4;
+        Tue, 11 Feb 2020 11:27:36 -0500 (EST)
+Date:   Tue, 11 Feb 2020 11:27:36 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Message-ID: <698566505.617724.1581438456170.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200211111828.48058768@gandalf.local.home>
+References: <20200211095047.58ddf750@gandalf.local.home> <20200211153452.GW14914@hirez.programming.kicks-ass.net> <20200211111828.48058768@gandalf.local.home>
+Subject: Re: [PATCH v2] tracing/perf: Move rcu_irq_enter/exit_irqson() to
+ perf trace point hook
 MIME-Version: 1.0
-References: <20200210150826.35200-1-yuehaibing@huawei.com>
-In-Reply-To: <20200210150826.35200-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 11 Feb 2020 11:27:06 -0500
-Message-ID: <CADnq5_My4OM4CvDHHWN3MxVKAon78pvbw71mO2yzer-FdxYu1w@mail.gmail.com>
-Subject: Re: [RFC PATCH -next] drm/amd/display: Remove set but not unused
- variable 'stream_status'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        "Cyr, Aric" <aric.cyr@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Eric Yang <Eric.Yang2@amd.com>,
-        Yongqiang Sun <yongqiang.sun@amd.com>,
-        Martin Leung <martin.leung@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: tracing/perf: Move rcu_irq_enter/exit_irqson() to perf trace point hook
+Thread-Index: YC6wRI/vCca3DODmn8oaF1GxqoNM3Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:38 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:
->  In function dcn10_post_unlock_program_front_end:
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2623:29:
->  warning: variable stream_status set but not used [-Wunused-but-set-variable]
->
-> commit bbf5f6c3f83b ("drm/amd/display: Split program front end part that occur outside lock")
-> involved this unused variable.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+----- On Feb 11, 2020, at 11:18 AM, rostedt rostedt@goodmis.org wrote:
 
-Applied.  Thanks!
+> On Tue, 11 Feb 2020 16:34:52 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+>> > +		if (unlikely(in_nmi()))
+>> > +			goto out;
+>> 
+>> unless I'm mistaken, we can simply do rcu_nmi_enter() in this case, and
+>> rcu_nmi_exit() on the other end.
+>> 
+>> > +		rcu_irq_enter_irqson();
+> 
+> The thing is, I don't think this can ever happen. We've had in the
+> tracepoint.h:
+> 
+>		/* srcu can't be used from NMI */			\
+>		WARN_ON_ONCE(rcuidle && in_nmi());			\
+> 
+> And this has yet to trigger.
 
-Alex
+But that "rcuidle" state is defined on a per-tracepoint basis, whereas
+"!rcu_is_watching()" is a state which depends on the current execution
+context. I don't follow how the fact that this WARN_ON_ONCE() never
+triggered allows us to infer anything about (!rcu_is_watching() && in_nmi()).
 
-> ---
->  drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-> index 42fcfee..b2ed0fa 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-> @@ -2610,7 +2610,7 @@ void dcn10_post_unlock_program_front_end(
->                 struct dc *dc,
->                 struct dc_state *context)
->  {
-> -       int i, j;
-> +       int i;
->
->         DC_LOGGER_INIT(dc->ctx->logger);
->
-> @@ -2620,14 +2620,8 @@ void dcn10_post_unlock_program_front_end(
->                 if (!pipe_ctx->top_pipe &&
->                         !pipe_ctx->prev_odm_pipe &&
->                         pipe_ctx->stream) {
-> -                       struct dc_stream_status *stream_status = NULL;
->                         struct timing_generator *tg = pipe_ctx->stream_res.tg;
->
-> -                       for (j = 0; j < context->stream_count; j++) {
-> -                               if (pipe_ctx->stream == context->streams[j])
-> -                                       stream_status = &context->stream_status[j];
-> -                       }
-> -
->                         if (context->stream_status[i].plane_count == 0)
->                                 false_optc_underflow_wa(dc, pipe_ctx->stream, tg);
->                 }
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
