@@ -2,130 +2,224 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD4BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E1DC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704B320708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:16:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmF0Qn78"
+	by mail.kernel.org (Postfix) with ESMTP id DCD512073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581459546;
+	bh=BtTTbf66d4ZndImglbcpTn7JSHa69QCkwdohC6uLX1M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U9uRPLDyZQxEhEk4cXOuzbghRrf3j04e6FMNJhWjgQMlUNPtyOfOyBVw0DGo5a4pt
+	 f3RAud5btR0ukBzWyMx9WGL40lLofgogD2YHfi3IjG5NMNRPUlEEadpbv48rMHf7ao
+	 /BqXDGfQg36bLbFkdVopxvLgqG0TTPddjUkwrxEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbgBKWQM (ORCPT
+        id S1727566AbgBKWTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:16:12 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:44180 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgBKWQM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:16:12 -0500
-Received: by mail-il1-f195.google.com with SMTP id s85so4861528ill.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:16:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H6KlLlplsizPpKg7w1wwWFh0NtfbnywsiGoeM+An45U=;
-        b=tmF0Qn78uukVn/7m3JgznZh14E1BbLbdzDeNuplNjnXZHkeVmluNenRKCBDlMWzGWi
-         zNw7wHXcWOj8goeYAeJhTbN/mf9EvwzuPIUc1D2mqdyRke3Pi5c5pLUN8RJnFeqyyVHI
-         LQMghKWEwzQypBfuBs/CvLlfxDGHGNOFqODbQg/1+PGvgZHvFlFXE5EGuQnJPFlGCyty
-         Y8N5XVoig8JgX8mtJnb1HPFWka4M18YNoFbKXlmQAwoqo6x8/MUz0OmdQv6kBnZcHm5d
-         HcKAAh+DggxrZm+g0jqSG7O1B8jb38CatG/7m+PxfZLBdC/j58KNBJx30cWdxtOeZu4u
-         BTuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H6KlLlplsizPpKg7w1wwWFh0NtfbnywsiGoeM+An45U=;
-        b=nvHxA0iYZfShp1wct8BRpcV9duTMiBbH+EnCyqXnBYjNfX5vuv/NmRUobnHD1VFSiW
-         ctyvRGui5JAIB3QA5LbBfxtjsth2G+8eHy6Cx7LWCS4GwU3DWHm3C5ewPJXhNHV+9pW5
-         baPNS4MHaG6WE2NRv07sd9+eJb3x/WLzuQTAIr6O16/5ju/2I/+EvRedGFj3mQ90iv8/
-         j/D3fc1pPTuxf/ijdVwxvx+MT9e1tPpJ7tuI5nWtfVN0pcBsqkpwvsRF5ggMpQU3tiRb
-         FVy850yshpFQYQy4DYfPoUnG+Y2wCtb5OuKaCzYjkCjSYCKjgJGznS0974+SKVR+s6fx
-         tQ2g==
-X-Gm-Message-State: APjAAAUDAaKHXQzSjxXGxBnve4jx84JNTWEGEZxM8lLyVOtS/U+RlAOL
-        MUiYO5AYuT3Yym7cxmbIHv6d8C05P/0tAg==
-X-Google-Smtp-Source: APXvYqzTqJNXmNj4lMWwdLNrDnJkdwd3aVpL7i2tk1tOW88coogfvaC/JMWvkpyM8dBzuY4epaT2ZA==
-X-Received: by 2002:a05:6e02:8eb:: with SMTP id n11mr8102929ilt.26.1581459369847;
-        Tue, 11 Feb 2020 14:16:09 -0800 (PST)
-Received: from [172.22.22.10] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id s10sm1376816iop.36.2020.02.11.14.16.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 14:16:09 -0800 (PST)
-Subject: Re: [greybus-dev] [PATCH] staging: greybus: Replace zero-length array
- with flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, greybus-dev@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20200211211219.GA673@embeddedor>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <e465ca6e-ed9f-4340-9f4c-104f9b6acb74@linaro.org>
-Date:   Tue, 11 Feb 2020 16:15:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 17:19:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727054AbgBKWTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:19:05 -0500
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B40CC20842
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581459545;
+        bh=BtTTbf66d4ZndImglbcpTn7JSHa69QCkwdohC6uLX1M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pNbwbbi6Ci2U0CegsqKkSd0uMThWVqEvNPAYsf2DpZ1yT7m/16h5w6LqKBIT55mpA
+         THrH5gPXzGb2YyfOdKfRYRkZLwBp2YMoxW1WQvz59IVtCxpT0/OjlzQSRJE30Dp6uP
+         Ax4QtsSW0xKQ05QmUFM/gxvOnDNW6Zv1C9MiE140=
+Received: by mail-wm1-f47.google.com with SMTP id p9so5745167wmc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:19:04 -0800 (PST)
+X-Gm-Message-State: APjAAAXNoUMYqOtNH98mgcjgxAmRBrU5XZvlq8/kuKDYkvmy0gzipFvy
+        MuCCvSHiHrg7ac7XNyTZuQ1SbWdMImT1i1xR+L5FWA==
+X-Google-Smtp-Source: APXvYqxgH/L+PTOkvq4VwpcjEPNRJ4Rn+9UAJW/4iUfZMfvCSX5HF6lMTrDQecp2ABQPGJPH/KdOIIfJxqSFOOyTAqE=
+X-Received: by 2002:a1c:3906:: with SMTP id g6mr8465912wma.49.1581459543059;
+ Tue, 11 Feb 2020 14:19:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211211219.GA673@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-9-joro@8bytes.org>
+In-Reply-To: <20200211135256.24617-9-joro@8bytes.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 11 Feb 2020 14:18:52 -0800
+X-Gmail-Original-Message-ID: <CALCETrWznWHQNfd80G95G_CB-yCw8Botqee8bsLz3OcC4-SS=w@mail.gmail.com>
+Message-ID: <CALCETrWznWHQNfd80G95G_CB-yCw8Botqee8bsLz3OcC4-SS=w@mail.gmail.com>
+Subject: Re: [PATCH 08/62] x86/boot/compressed/64: Add IDT Infrastructure
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 3:12 PM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/staging/greybus/raw.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/greybus/raw.c b/drivers/staging/greybus/raw.c
-> index 838acbe84ca0..2b301b2aa107 100644
-> --- a/drivers/staging/greybus/raw.c
-> +++ b/drivers/staging/greybus/raw.c
-> @@ -30,7 +30,7 @@ struct gb_raw {
->  struct raw_data {
->  	struct list_head entry;
->  	u32 len;
-> -	u8 data[0];
-> +	u8 data[];
->  };
->  
->  static struct class *raw_class;
-> 
+On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> Add code needed to setup an IDT in the early pre-decompression
+> boot-code. The IDT is loaded first in startup_64, which is after
+> EfiExitBootServices() has been called, and later reloaded when the
+> kernel image has been relocated to the end of the decompression area.
+>
+> This allows to setup different IDT handlers before and after the
+> relocation.
+>
 
-Does the kamlloc() call in receive_data() have any problems
-with the sizeof(*raw_data) passed as its argument?
+> diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+> new file mode 100644
+> index 000000000000..46ecea671b90
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/idt_64.c
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <asm/trap_defs.h>
+> +#include <asm/segment.h>
+> +#include "misc.h"
+> +
+> +static void set_idt_entry(int vector, void (*handler)(void))
+> +{
+> +       unsigned long address = (unsigned long)handler;
+> +       gate_desc entry;
+> +
+> +       memset(&entry, 0, sizeof(entry));
+> +
+> +       entry.offset_low    = (u16)(address & 0xffff);
+> +       entry.segment       = __KERNEL_CS;
+> +       entry.bits.type     = GATE_TRAP;
 
-I'm not entirely sure what sizeof(struct-with-flexible-array-member)
-produces.
+^^^
 
-					-Alex
+I realize we're not running a real kernel here, but GATE_TRAP is
+madness.  Please use GATE_INTERRUPT.
+
+> +       entry.bits.p        = 1;
+> +       entry.offset_middle = (u16)((address >> 16) & 0xffff);
+> +       entry.offset_high   = (u32)(address >> 32);
+> +
+> +       memcpy(&boot_idt[vector], &entry, sizeof(entry));
+> +}
+> +
+> +/* Have this here so we don't need to include <asm/desc.h> */
+> +static void load_boot_idt(const struct desc_ptr *dtr)
+> +{
+> +       asm volatile("lidt %0"::"m" (*dtr));
+> +}
+> +
+> +/* Setup IDT before kernel jumping to  .Lrelocated */
+> +void load_stage1_idt(void)
+> +{
+> +       boot_idt_desc.address = (unsigned long)boot_idt;
+> +
+> +       load_boot_idt(&boot_idt_desc);
+> +}
+> +
+> +/* Setup IDT after kernel jumping to  .Lrelocated */
+> +void load_stage2_idt(void)
+> +{
+> +       boot_idt_desc.address = (unsigned long)boot_idt;
+> +
+> +       load_boot_idt(&boot_idt_desc);
+> +}
+> diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+> new file mode 100644
+> index 000000000000..0b2b6cf747d2
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/idt_handlers_64.S
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Early IDT handler entry points
+> + *
+> + * Copyright (C) 2019 SUSE
+> + *
+> + * Author: Joerg Roedel <jroedel@suse.de>
+> + */
+> +
+> +#include <asm/segment.h>
+> +
+> +.macro EXCEPTION_HANDLER name function error_code=0
+> +SYM_FUNC_START(\name)
+> +
+> +       /* Build pt_regs */
+> +       .if \error_code == 0
+> +       pushq   $0
+> +       .endif
+
+cld
+
+> +
+> +       pushq   %rdi
+> +       pushq   %rsi
+> +       pushq   %rdx
+> +       pushq   %rcx
+> +       pushq   %rax
+> +       pushq   %r8
+> +       pushq   %r9
+> +       pushq   %r10
+> +       pushq   %r11
+> +       pushq   %rbx
+> +       pushq   %rbp
+> +       pushq   %r12
+> +       pushq   %r13
+> +       pushq   %r14
+> +       pushq   %r15
+> +
+> +       /* Call handler with pt_regs */
+> +       movq    %rsp, %rdi
+> +       call    \function
+> +
+> +       /* Restore regs */
+> +       popq    %r15
+> +       popq    %r14
+> +       popq    %r13
+> +       popq    %r12
+> +       popq    %rbp
+> +       popq    %rbx
+> +       popq    %r11
+> +       popq    %r10
+> +       popq    %r9
+> +       popq    %r8
+> +       popq    %rax
+> +       popq    %rcx
+> +       popq    %rdx
+> +       popq    %rsi
+> +       popq    %rdi
+
+if error_code?
+
+> +
+> +       /* Remove error code and return */
+> +       addq    $8, %rsp
+> +
+> +       /*
+> +        * Make sure we return to __KERNEL_CS - the CS selector on
+> +        * the IRET frame might still be from an old BIOS GDT
+> +        */
+> +       movq    $__KERNEL_CS, 8(%rsp)
+> +
+
+If this actually happens, you have a major bug.  Please sanitize all
+the segment registers after installing the GDT rather than hacking
+around it here.
