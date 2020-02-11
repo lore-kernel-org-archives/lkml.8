@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739B9C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4F0C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538DD20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7413220637
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgBKMtS (ORCPT
+        id S1728795AbgBKMs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:49:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46072 "EHLO
+        Tue, 11 Feb 2020 07:48:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46017 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728954AbgBKMs1 (ORCPT
+        with ESMTP id S1728620AbgBKMr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:48:27 -0500
+        Tue, 11 Feb 2020 07:47:56 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j1Uxj-0007kr-3t; Tue, 11 Feb 2020 13:48:23 +0100
+        id 1j1UxD-0007cv-Kq; Tue, 11 Feb 2020 13:47:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B6D2F1C2017;
-        Tue, 11 Feb 2020 13:48:22 +0100 (CET)
-Date:   Tue, 11 Feb 2020 12:48:22 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CFD101C201C;
+        Tue, 11 Feb 2020 13:47:49 +0100 (CET)
+Date:   Tue, 11 Feb 2020 12:47:49 -0000
+From:   "tip-bot2 for Morten Rasmussen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking/rwsem: Remove RWSEM_OWNER_UNKNOWN
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: sched/core] sched/fair: Add asymmetric CPU capacity wakeup scan
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
+        Quentin Perret <qperret@google.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200204092228.GP14946@hirez.programming.kicks-ass.net>
-References: <20200204092228.GP14946@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200206191957.12325-2-valentin.schneider@arm.com>
+References: <20200206191957.12325-2-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Message-ID: <158142530249.411.6918743680307729294.tip-bot2@tip-bot2>
+Message-ID: <158142526956.411.9603515034414305045.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,65 +57,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     bcba67cd806800fa8e973ac49dbc7d2d8fb3e55e
-Gitweb:        https://git.kernel.org/tip/bcba67cd806800fa8e973ac49dbc7d2d8fb3e55e
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 04 Feb 2020 09:34:37 +01:00
+Commit-ID:     913c310c8e8abb6a9eb8b3c8bfc33bd1dddded04
+Gitweb:        https://git.kernel.org/tip/913c310c8e8abb6a9eb8b3c8bfc33bd1dddded04
+Author:        Morten Rasmussen <morten.rasmussen@arm.com>
+AuthorDate:    Thu, 06 Feb 2020 19:19:54 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 11 Feb 2020 13:10:57 +01:00
+CommitterDate: Tue, 11 Feb 2020 13:01:43 +01:00
 
-locking/rwsem: Remove RWSEM_OWNER_UNKNOWN
+sched/fair: Add asymmetric CPU capacity wakeup scan
 
-Remove the now unused RWSEM_OWNER_UNKNOWN hack. This hack breaks
-PREEMPT_RT and getting rid of it was the entire motivation for
-re-writing the percpu rwsem.
+Issue
+=====
 
-The biggest problem is that it is fundamentally incompatible with any
-form of Priority Inheritance, any exclusively held lock must have a
-distinct owner.
+On asymmetric CPU capacity topologies, we currently rely on wake_cap() to
+drive select_task_rq_fair() towards either:
 
-Requested-by: Christoph Hellwig <hch@infradead.org>
+- its slow-path (find_idlest_cpu()) if either the previous or
+  current (waking) CPU has too little capacity for the waking task
+- its fast-path (select_idle_sibling()) otherwise
+
+Commit:
+
+  3273163c6775 ("sched/fair: Let asymmetric CPU configurations balance at wake-up")
+
+points out that this relies on the assumption that "[...]the CPU capacities
+within an SD_SHARE_PKG_RESOURCES domain (sd_llc) are homogeneous".
+
+This assumption no longer holds on newer generations of big.LITTLE
+systems (DynamIQ), which can accommodate CPUs of different compute capacity
+within a single LLC domain. To hopefully paint a better picture, a regular
+big.LITTLE topology would look like this:
+
+  +---------+ +---------+
+  |   L2    | |   L2    |
+  +----+----+ +----+----+
+  |CPU0|CPU1| |CPU2|CPU3|
+  +----+----+ +----+----+
+      ^^^         ^^^
+    LITTLEs      bigs
+
+which would result in the following scheduler topology:
+
+  DIE [         ] <- sd_asym_cpucapacity
+  MC  [   ] [   ] <- sd_llc
+       0 1   2 3
+
+Conversely, a DynamIQ topology could look like:
+
+  +-------------------+
+  |        L3         |
+  +----+----+----+----+
+  | L2 | L2 | L2 | L2 |
+  +----+----+----+----+
+  |CPU0|CPU1|CPU2|CPU3|
+  +----+----+----+----+
+     ^^^^^     ^^^^^
+    LITTLEs    bigs
+
+which would result in the following scheduler topology:
+
+  MC [       ] <- sd_llc, sd_asym_cpucapacity
+      0 1 2 3
+
+What this means is that, on DynamIQ systems, we could pass the wake_cap()
+test (IOW presume the waking task fits on the CPU capacities of some LLC
+domain), thus go through select_idle_sibling().
+This function operates on an LLC domain, which here spans both bigs and
+LITTLEs, so it could very well pick a CPU of too small capacity for the
+task, despite there being fitting idle CPUs - it very much depends on the
+CPU iteration order, on which we have absolutely no guarantees
+capacity-wise.
+
+Implementation
+==============
+
+Introduce yet another select_idle_sibling() helper function that takes CPU
+capacity into account. The policy is to pick the first idle CPU which is
+big enough for the task (task_util * margin < cpu_capacity). If no
+idle CPU is big enough, we pick the idle one with the highest capacity.
+
+Unlike other select_idle_sibling() helpers, this one operates on the
+sd_asym_cpucapacity sched_domain pointer, which is guaranteed to span all
+known CPU capacities in the system. As such, this will work for both
+"legacy" big.LITTLE (LITTLEs & bigs split at MC, joined at DIE) and for
+newer DynamIQ systems (e.g. LITTLEs and bigs in the same MC domain).
+
+Note that this limits the scope of select_idle_sibling() to
+select_idle_capacity() for asymmetric CPU capacity systems - the LLC domain
+will not be scanned, and no further heuristic will be applied.
+
+Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Acked-by: Will Deacon <will@kernel.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lkml.kernel.org/r/20200204092228.GP14946@hirez.programming.kicks-ass.net
+Reviewed-by: Quentin Perret <qperret@google.com>
+Link: https://lkml.kernel.org/r/20200206191957.12325-2-valentin.schneider@arm.com
 ---
- include/linux/rwsem.h  | 6 ------
- kernel/locking/rwsem.c | 2 --
- 2 files changed, 8 deletions(-)
+ kernel/sched/fair.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 56 insertions(+)
 
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 00d6054..8a418d9 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -53,12 +53,6 @@ struct rw_semaphore {
- #endif
- };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1a0ce83..6fb47a2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5897,6 +5897,40 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ }
  
--/*
-- * Setting all bits of the owner field except bit 0 will indicate
-- * that the rwsem is writer-owned with an unknown owner.
-- */
--#define RWSEM_OWNER_UNKNOWN	(-2L)
--
- /* In all implementations count != 0 means locked */
- static inline int rwsem_is_locked(struct rw_semaphore *sem)
- {
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 81c0d75..e6f437b 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -659,8 +659,6 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem,
- 	unsigned long flags;
- 	bool ret = true;
+ /*
++ * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
++ * the task fits. If no CPU is big enough, but there are idle ones, try to
++ * maximize capacity.
++ */
++static int
++select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
++{
++	unsigned long best_cap = 0;
++	int cpu, best_cpu = -1;
++	struct cpumask *cpus;
++
++	sync_entity_load_avg(&p->se);
++
++	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
++	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
++
++	for_each_cpu_wrap(cpu, cpus, target) {
++		unsigned long cpu_cap = capacity_of(cpu);
++
++		if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu))
++			continue;
++		if (task_fits_capacity(p, cpu_cap))
++			return cpu;
++
++		if (cpu_cap > best_cap) {
++			best_cap = cpu_cap;
++			best_cpu = cpu;
++		}
++	}
++
++	return best_cpu;
++}
++
++/*
+  * Try and locate an idle core/thread in the LLC cache domain.
+  */
+ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+@@ -5904,6 +5938,28 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 	struct sched_domain *sd;
+ 	int i, recent_used_cpu;
  
--	BUILD_BUG_ON(!(RWSEM_OWNER_UNKNOWN & RWSEM_NONSPINNABLE));
--
- 	if (need_resched()) {
- 		lockevent_inc(rwsem_opt_fail);
- 		return false;
++	/*
++	 * For asymmetric CPU capacity systems, our domain of interest is
++	 * sd_asym_cpucapacity rather than sd_llc.
++	 */
++	if (static_branch_unlikely(&sched_asym_cpucapacity)) {
++		sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
++		/*
++		 * On an asymmetric CPU capacity system where an exclusive
++		 * cpuset defines a symmetric island (i.e. one unique
++		 * capacity_orig value through the cpuset), the key will be set
++		 * but the CPUs within that cpuset will not have a domain with
++		 * SD_ASYM_CPUCAPACITY. These should follow the usual symmetric
++		 * capacity path.
++		 */
++		if (!sd)
++			goto symmetric;
++
++		i = select_idle_capacity(p, sd, target);
++		return ((unsigned)i < nr_cpumask_bits) ? i : target;
++	}
++
++symmetric:
+ 	if (available_idle_cpu(target) || sched_idle_cpu(target))
+ 		return target;
+ 
