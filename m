@@ -2,118 +2,119 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07E3C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C049CC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CBA20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vy4ePc0n"
+	by mail.kernel.org (Postfix) with ESMTP id 9517020848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581439160;
+	bh=+c17h2YOAC6qly9Pfgfbh6132QCNWwY0g/0TEAWM35c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hmhKT6UXACXeloMs/eknaBpXrNjUFKbfziz21txYXx4mdwMma/iqrWCvXmQwfUnWn
+	 uNkApV2MJBOhQn1tqi/oApPCnby6+b4b7HrbV+eEaknl24y6nZ860G+UYV9FvQ6tyw
+	 lVgkrcnPues9yxIkyb7KUJFQjacgV7eu1t+ssqSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbgBKQjN (ORCPT
+        id S1730916AbgBKQjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:39:13 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37333 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgBKQjM (ORCPT
+        Tue, 11 Feb 2020 11:39:20 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:51178 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbgBKQjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:39:12 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m13so1464591pjb.2;
-        Tue, 11 Feb 2020 08:39:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b5SWMMkJOd/6WCjohw4ec3oXVDA3cc/tfQSWjqNAn/k=;
-        b=Vy4ePc0nmBwtSpe2cs/4Ul4iDsNg6N7bc/SK+figGy/l9SVtogqnjXYvGTLXsmyo40
-         jRzkP6aTk4echAqPd+Fux6uExsVWmnMLF/jp2JgtPGp46Bf7g6MUc1IjDAzonEosGVwH
-         ZA1joxtUK61iXCKj2amtxUCvCJYT/vNMc+OhdA5FRKeCOD1qurIPhGmRXc4N0YOXqLgj
-         JPvmtw10jYDSXnCvKcaDK7Gn5PI/w6LN8tLnA8lfKr8lD5SaCGrm1HjpyC5zM9DBq8k6
-         zEjc91Qop2Fnl32R69LsJusylLG+gRjdQHPFqFzbyqsumXe+v2DxK/Cc871C984jbVKk
-         JmVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b5SWMMkJOd/6WCjohw4ec3oXVDA3cc/tfQSWjqNAn/k=;
-        b=ZfhoH6wLwfShINRIQFNNvPqqATA1ShiPXyTaikU4tsonFkiPhTRKG7j/UEBhRer204
-         ICv34dB4aHjx/O6YxTRKfl6kWmsK/LI/uI0uV6+jzr9h18jtPO8N5MqTX9xz/jaaraei
-         FzoBv2exrztcSoGxyWHtBrF9E0/4NV4yLYKz1Cp4mHcbMzpPYbPFp1Ll8CenEzXZb0Vo
-         A7Z+9nMplyeMTe6g6QThdfdTuuLqt/9wZLiPxb0qpzSpM92m5gzgnQGZ+kosGO3tjkBd
-         LUNudPvEzblFyb6tlIE+SQRPF1S+tKXbeqMKEjQ52a6/twVHsPTpLAT4Ie4KOh8MRiZz
-         82uw==
-X-Gm-Message-State: APjAAAWK9YBfCWwz9RxFaggp7413Y/z4IhA2u55ky+veNmE+gOUgZ1E0
-        Evgq4Nag9DqRhaT5SbgmyTikK0Bp
-X-Google-Smtp-Source: APXvYqwIewJIKXckCSq0MvZkIQaU4p16PRmxkgrFLcOQqIkZOG0FcWhRxrjqw+6XMtCu19kM5aQjtg==
-X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr4487379pjz.135.1581439151751;
-        Tue, 11 Feb 2020 08:39:11 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s124sm5086820pfc.57.2020.02.11.08.39.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Feb 2020 08:39:10 -0800 (PST)
-Date:   Tue, 11 Feb 2020 08:39:10 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] hwmon: axi-fan-control: fix uninitialized
- dereference of pointer res
-Message-ID: <20200211163910.GA2975@roeck-us.net>
-References: <20200211162059.94233-1-colin.king@canonical.com>
+        Tue, 11 Feb 2020 11:39:19 -0500
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01BGcrQs030668;
+        Wed, 12 Feb 2020 01:38:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01BGcrQs030668
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581439134;
+        bh=Fx7J1tLvigpB2TQEKEHL9mZZJiUbmOHvoP/GiGlFxss=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ml5vePaorXfWR1IkIk8aVOLkwlszo/+IPtOdpx3YlN/JlOhIDQ1811ZmaQg7TQzKf
+         bcDqvAXL4TZhPPQP3QYuoomkHT+lEzdWKy0TWGCJ0+LapfKTzHltrwMTcheEu9mzYu
+         SXLbW1/Bfmtc1F6G4cZifJzDpf35danf/c1FpWsQWYcMk6TOtRcAXpV+kFrgItqOz3
+         YZUK/KUSpMN7kT6+3AhYk5oHM+exipqr+dgQ/12DV4pkfyT79UCk/jOU4rokh3E/DZ
+         FgjL5ZyrIoqWGTRNUbmKU3Fx+yx4yPtBV+1cBl4SxehYVGl2Zr4PDx5okApw3FZt0F
+         Kp2SnkqOUuqTQ==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id h32so4188299uah.4;
+        Tue, 11 Feb 2020 08:38:53 -0800 (PST)
+X-Gm-Message-State: APjAAAXjXLcxN7pwBgvcFvWjBouV4X8r9VfvNJ7+WGSqeYind4wQ1Q0m
+        /J+C9JhESH2Qjh3YIxQ4di4X9NcTYs/NEgyrkAI=
+X-Google-Smtp-Source: APXvYqwHm08bawF4IR7j/P5H17OzWDZmArcl2jYMsqSgfZ5kjpP6JGy/GtBXXkiRnojqD0Ml3k0SUtEHhHi7Machn7o=
+X-Received: by 2002:ab0:2ea6:: with SMTP id y6mr2151127uay.25.1581439132256;
+ Tue, 11 Feb 2020 08:38:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211162059.94233-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200207091351.18133-1-geert@linux-m68k.org> <CAK7LNAQGcw1jbb=fWd_CbWv5hQrkqG_QFCw3uY4LXroONGM6BA@mail.gmail.com>
+ <20200211161905.GM4543@sirena.org.uk>
+In-Reply-To: <20200211161905.GM4543@sirena.org.uk>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 12 Feb 2020 01:38:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARCr8afvs=h5-ZWVs=Bkk7PSMNvX+M_SeBSF-L99UencA@mail.gmail.com>
+Message-ID: <CAK7LNARCr8afvs=h5-ZWVs=Bkk7PSMNvX+M_SeBSF-L99UencA@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] ASoC: Use imply for SND_SOC_ALL_CODECS
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:20:59PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the resource pointer ret is uninitialized and it is
-> being dereferenced when printing out a debug message. Fix this
-> by fetching the resource and assigning pointer res.  It is
-> a moot point that we sanity check for a null res since a successful
-> call to devm_platform_ioremap_resource has already occurred so
-> in theory it should never be non-null.
-> 
-> Addresses-Coverity: ("Uninitialized pointer read")
-> Fixes: 690dd9ce04f6 ("hwmon: Support ADI Fan Control IP")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Wed, Feb 12, 2020 at 1:19 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Feb 12, 2020 at 01:09:30AM +0900, Masahiro Yamada wrote:
+>
+> > Why does SND_SOC_ALL_CODECS exist in the first place?
+> > Is this compile-test or run-test?
+>
+> It's for compile coverage.
+>
+> > If it is the former, allyesconfig / allmodconfig
+> > covers all of them.
+>
+> No it doesn't.  Those only enable user selectable options, many CODEC
+> drivers don't have user selectable options as they are selected by
+> machine drivers some of which either have more platform specific
+> dependencies that the CODEC drivers or aren't upstream.
 
-This has already been fixed by removing the message (and the
-then unused variable). The message was useless anyway since
-it printed the remapped address with %p.
 
-Guenter
+Maybe, can you add a prompt which is only displayed
+if COMPILE_TEST is enabled?
 
-> ---
->  drivers/hwmon/axi-fan-control.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/hwmon/axi-fan-control.c b/drivers/hwmon/axi-fan-control.c
-> index 8041ba7cc152..36e0d060510a 100644
-> --- a/drivers/hwmon/axi-fan-control.c
-> +++ b/drivers/hwmon/axi-fan-control.c
-> @@ -415,6 +415,9 @@ static int axi_fan_control_probe(struct platform_device *pdev)
->  	if (!ctl->clk_rate)
->  		return -EINVAL;
->  
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -EINVAL;
->  	dev_dbg(&pdev->dev, "Re-mapped from 0x%08llX to %p\n",
->  		(unsigned long long)res->start, ctl->base);
->  
-> -- 
-> 2.25.0
-> 
+
+
+For example,
+
+config SND_SOC_L3
+        tristate "some prompt" if COMPILE_TEST
+
+
+
+
+In normal use-cases, this CONFIG option is hidden
+since we expect it to be selected by some machine options.
+
+If COMPILE_TEST is enabled, we can toggle as you like.
+
+
+If I run
+ $ git grep  "if COMPILE_TEST"
+
+I see many usages of this tip.
+
+
+-- 
+Best Regards
+Masahiro Yamada
