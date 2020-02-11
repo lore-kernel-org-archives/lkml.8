@@ -2,62 +2,62 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EF7C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8290206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:06:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aQeCQQp0"
+	by mail.kernel.org (Postfix) with ESMTP id A032E20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581433579;
+	bh=YYyt2OCC9eBuYsDoh3tr+CDHOzpZLf/SDjdzf6+ew/s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=y2G9copdh0z08Kktjs86RxV7ybnj9b0VPG+6KOCCmLS5lS9zWChbRUx96s/xL8af0
+	 dcx6O5ZzfyEOP5usnzpzJxxErpNeWtS/foYfs/AUX4psVui3NpM1PXtDu+N6uRjutF
+	 xcdAmEYUfq1PEf914wES/eB7TQKSleCcSBe7dA0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgBKPGO (ORCPT
+        id S1729875AbgBKPGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:06:14 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:43572 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgBKPGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:06:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kOVM19xgvEpzNbdc34dGz9f33pbISrxSA6jBH/Bi6So=; b=aQeCQQp0OxFOcoJ8vnnGz7DEKt
-        oR7osXGRsXoca1k5+TmdiEJvRabVb6ElkP0ZmZrNG2BXx12YaCVHSVPuSPM59TaNmahz3nYnk+G3h
-        bkrs1CrjM4b9Xrp8zOjk9PJZDQv4SGnm+HdsqQRNXl1aiAyCaHiX5GxkYjDN7n5VGAtwR3ZCy3vYN
-        VUnK89EVOl+KiBNcmNZaDt9P+UMam1Tf0sWubBWzmveYa5B1PsT074ln+8T62ZpIMe+TjMR64cDte
-        wMpCjFR1KytcQ3gi3AepbDSQrKrH0NntQdIJli72rwrftYJvCrL7O1ezIwbwZ4gNrIkDTC11uAkGE
-        JrKESysQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1X6V-0006JB-RU; Tue, 11 Feb 2020 15:05:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 11 Feb 2020 10:06:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbgBKPGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:06:18 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [193.85.242.128])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5450430066E;
-        Tue, 11 Feb 2020 16:03:44 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F2D092B920EF1; Tue, 11 Feb 2020 16:05:32 +0100 (CET)
-Date:   Tue, 11 Feb 2020 16:05:32 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D93182082F;
+        Tue, 11 Feb 2020 15:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581433578;
+        bh=YYyt2OCC9eBuYsDoh3tr+CDHOzpZLf/SDjdzf6+ew/s=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=rqpQZa8+kqwP6emgG6WeQ319BmyuH15Fd/uuaF9ut4XDsUYwERE+HG6uf0GG/BS2x
+         OW7oOf1Jf23/mGXlfTT7h530Eock1yzjC6E6D7pAe6Sh+ZHfZNF3003yp3/LWYyN5/
+         yWjQaNwfL/pe3ob4zIuAH2W8AMdQ7IuykBOvpvT4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B2DEB3520CBE; Tue, 11 Feb 2020 07:06:15 -0800 (PST)
+Date:   Tue, 11 Feb 2020 07:06:15 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
         Josh Triplett <josh@joshtriplett.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>
 Subject: Re: [PATCH] tracing/perf: Move rcu_irq_enter/exit_irqson() to perf
  trace point hook
-Message-ID: <20200211150532.GU14914@hirez.programming.kicks-ass.net>
+Message-ID: <20200211150615.GK2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 References: <20200210170643.3544795d@gandalf.local.home>
  <20200211114954.GK14914@hirez.programming.kicks-ass.net>
  <20200211090503.68c0d70f@gandalf.local.home>
@@ -65,7 +65,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20200211090503.68c0d70f@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -101,39 +101,13 @@ On Tue, Feb 11, 2020 at 09:05:03AM -0500, Steven Rostedt wrote:
 > And if we are tracing preempt_enable and preempt_disable (as Joel added
 > trace events there), it may be the case for trace events too.
 
-Bloody hell; what a trainwreck. Luckily there's comments around that
-explain this!
+Ah, thank you for the reminder!
 
-So we haz:
+Should Documentation/RCU/Design/Requirements/Requirements.rst be
+updated to include this?
 
-| #define nmi_enter()						\
-| 	do {							\
-| 		arch_nmi_enter();				\
+And I have to ask...  What happens if we are very early in from-idle
+NMI entry (or very late in NMI exit), such that both in_nmi() and
+rcu_is_watching() are returning false?  Or did I miss a turn somewhere?
 
-arm64 only, lets ignore for now
-
-| 		printk_nmi_enter();				\
-
-notrace
-
-| 		lockdep_off();					\
-
-notrace
-
-| 		ftrace_nmi_enter();				\
-
-!notrace !!!
-
-| 		BUG_ON(in_nmi());				\
-| 		preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);\
-
-lets make this __preempt_count_add() ASAP !
-
-| 		rcu_nmi_enter();				\
-
-are you _really_ sure you want to go trace that ?!?
-
-| 		trace_hardirq_enter();				\
-| 	} while (0)
-
-
+							Thanx, Paul
