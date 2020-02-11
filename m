@@ -2,147 +2,267 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF6EC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22D4C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F500214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DD820842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OG3isFzY"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kq0tQxmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgBKNmB (ORCPT
+        id S1728778AbgBKNmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:42:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38521 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727653AbgBKNmA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:42:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581428520;
+        Tue, 11 Feb 2020 08:42:16 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59864 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728619AbgBKNmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:42:15 -0500
+Received: from zn.tnic (p200300EC2F095500BD9EB4A201E18C86.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:bd9e:b4a2:1e1:8c86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 633C31EC0C8A;
+        Tue, 11 Feb 2020 14:42:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581428532;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MmX2QxmJTgqsJ7E84KMlupoW9uqlsOY7ScXnAyaxj68=;
-        b=OG3isFzYu6jgKns9FbkE0RaeZOwytekk9mFOg6b5BG8Xud4y3EQx+/AEb3yKKRYdt3/OUx
-        6T77pNma2Iv/RNXlg9jmQMl8QuC1mz240dqkx+uNbCyW+0RvvhDWKqJa8ws91TJ92OP35r
-        jS9OgSMSbidk5kg4Dyb0l5g0twKRKqI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-j2ABBXtlP6qzTAgIyTaP7Q-1; Tue, 11 Feb 2020 08:41:54 -0500
-X-MC-Unique: j2ABBXtlP6qzTAgIyTaP7Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63B2A1B18BFB;
-        Tue, 11 Feb 2020 13:41:52 +0000 (UTC)
-Received: from krava (ovpn-204-250.brq.redhat.com [10.40.204.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 062D65D9CA;
-        Tue, 11 Feb 2020 13:41:48 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 14:41:45 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     Joe Perches <joe@perches.com>, acme@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
+        bh=dosw9ntDX7QDINjNhfhbT5aAzrLjfsYCUC0faBP+Wz0=;
+        b=kq0tQxmwUYy42AMdJOVWEyLhI5TVx/84YmySoB2IXJGHvR9gUOmxPHGocYMI9rn0v8OZrd
+        mNswhLPkd034/yv27q3bJsZ25w71dy58PeHoUwICP5hvvC1HUInjCFK7vKNVxusYPF7I9l
+        YItw/xOiWKc5SaQIpd5QeFq5WtfbBiU=
+Date:   Tue, 11 Feb 2020 14:42:05 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Message-ID: <20200211134145.GA93194@krava>
-References: <20200131052522.7267-1-kjain@linux.ibm.com>
- <20200206184510.GA1669706@krava>
- <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
- <20200210121135.GI1907700@krava>
- <c168e38f-ee24-f02c-9510-912ef4d3d6b4@linux.ibm.com>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Babu Moger <babu.moger@amd.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Huang Rui <ray.huang@amd.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luwei Kang <luwei.kang@intel.com>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2 v2 RESEND] x86/cpu/amd: Enable the fixed intructions
+ retired free counter IRPERF
+Message-ID: <20200211134205.GB32279@zn.tnic>
+References: <20200207230427.26515-1-kim.phillips@amd.com>
+ <20200207230427.26515-2-kim.phillips@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c168e38f-ee24-f02c-9510-912ef4d3d6b4@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200207230427.26515-2-kim.phillips@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:50:41PM +0530, kajoljain wrote:
+On Fri, Feb 07, 2020 at 05:04:27PM -0600, Kim Phillips wrote:
+> commit aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions
+> Retired) performance counter") added support for 'perf -e msr/irperf/',
+> but when exercised, we always get a 0 count:
 > 
+> BEFORE:
 > 
-> On 2/10/20 5:41 PM, Jiri Olsa wrote:
-> > On Thu, Feb 06, 2020 at 10:58:12AM -0800, Joe Perches wrote:
-> >> On Thu, 2020-02-06 at 19:45 +0100, Jiri Olsa wrote:
-> >>> On Fri, Jan 31, 2020 at 10:55:22AM +0530, Kajol Jain wrote:
-> >>>
-> >>> SNIP
-> >>>
-> >>>>  				ev->metric_leader = metric_events[i];
-> >>>>  			}
-> >>>> +			j++;
-> >>>>  		}
-> >>>> +		ev = metric_events[i];
-> >>>> +		evlist_used[ev->idx] = true;
-> >>>>  	}
-> >>>>  
-> >>>>  	return metric_events[0];
-> >>>> @@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
-> >>>>  	int ret = 0;
-> >>>>  	struct egroup *eg;
-> >>>>  	struct evsel *evsel;
-> >>>> +	bool evlist_used[perf_evlist->core.nr_entries];
-> >>>> +
-> >>>> +	memset(evlist_used, 0, perf_evlist->core.nr_entries);
-> >>>
-> >>> I know I posted this in the previous email, but are we sure bool
-> >>> is always 1 byte?  would sizeod(evlist_used) be safer?
+> $ sudo perf stat -e instructions,msr/irperf/ true
 > 
+>  Performance counter stats for 'true':
 > 
-> Hi jiri,
->      Yes you are right. We should use 'evlist_used' size itself.
+>            624,833      instructions
+>                                                   #    0.00  stalled cycles per insn
+>                  0      msr/irperf/
 > 
-> >>>
-> >>> other than that it looks ok
-> >>>
-> >>> Andi, you're ok with this?
-> >>
-> >> stack declarations of variable length arrays are not
-> >> a good thing.
-> >>
-> >> https://lwn.net/Articles/749089/
-> >>
-> >> and
-> >>
-> >> 	bool evlist_used[perf_evlist->core.nr_entries] = {};
+> It turns out it simply needs its enable bit - HWCR bit 30 - set.  This patch
+
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
+
+Also, do
+
+$ git grep 'This patch' Documentation/process
+
+for more details.
+
+> does just that.
 > 
+> Enablement is restricted to all machines advertising IRPERF capability,
+> except those susceptible to an erratum that makes the IRPERF return
+> bad values.
 > 
-> I am planning to use calloc and free that memory later in function 'metricgroup__setup_events'.
-> Something like this. 
+> That erratum occurs in Family 17h models 00-1fh [1], but not in F17h
+> models 20h and above [2].
 > 
+> AFTER (on a family 17h model 31h machine):
 > 
-> +       bool *evlist_used;
+> $ sudo perf stat -e instructions,msr/irperf/ true
+> 
+>  Performance counter stats for 'true':
+> 
+>            621,690      instructions
+>                                                   #    0.00  stalled cycles per insn
+>            622,490      msr/irperf/
+> 
+> [1] "Revision Guide for AMD Family 17h Models 00h-0Fh Processors",
+>     currently available here:
+> 
+>     https://www.amd.com/system/files/TechDocs/55449_Fam_17h_M_00h-0Fh_Rev_Guide.pdf
+> 
+> [2] "Revision Guide for AMD Family 17h Models 30h-3Fh Processors",
+>     currently available here:
+> 
+>     https://developer.amd.com/wp-content/resources/56323-PUB_0.74.pdf
+
+How stable are those links? Past experience shows not very.
+
+Please upload those to a bugzilla.kernel.org entry and add that URL here
+with a Link: tag.
+
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Babu Moger <babu.moger@amd.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Frank van der Linden <fllinden@amazon.com>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Huang Rui <ray.huang@amd.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+> Cc: Jan Beulich <jbeulich@suse.com>
+> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Luwei Kang <luwei.kang@intel.com>
+> Cc: Martin Liška <mliska@suse.cz>
+> Cc: Matt Fleming <matt@codeblueprint.co.uk>
+> Cc: Michael Petlan <mpetlan@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Fixes: aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired) performance counter")
+> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+> ---
+> RESEND, adding Michael Petlan to cc. Original v2:
+> 
+> https://lore.kernel.org/lkml/20200121171232.28839-2-kim.phillips@amd.com/
+> 
+> v2: Based on Andi Kleen's review:
+> 
+>     https://lore.kernel.org/lkml/20200116040324.GI302770@tassilo.jf.intel.com/
+> 
+>     Add an amd_erratum_1054 and use cpu_has_bug infrastructure instead of
+>     open-coding the {family,model} check.
+> 
+>  arch/x86/include/asm/cpufeatures.h |  1 +
+>  arch/x86/include/asm/msr-index.h   |  2 ++
+>  arch/x86/kernel/cpu/amd.c          | 17 +++++++++++++++++
+>  3 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index f3327cb56edf..1c1600e7476b 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -404,5 +404,6 @@
+>  #define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
+>  #define X86_BUG_TAA			X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
+>  #define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
+> +#define X86_BUG_AMD_E1054		X86_BUG(24) /* CPU is among the affected by Erratum 1054 */
+
+That is visible in /proc/cpuinfo and the string "amd_e1054" means
+nothing. Call that
+
+X86_BUG_IRPERF
+
+or so to at least give some hint as to what the bug is.
+
+>  
+>  #endif /* _ASM_X86_CPUFEATURES_H */
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index ebe1685e92dd..d5e517d1c3dd 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -512,6 +512,8 @@
+>  #define MSR_K7_HWCR			0xc0010015
+>  #define MSR_K7_HWCR_SMMLOCK_BIT		0
+>  #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
+> +#define MSR_K7_HWCR_IRPERF_EN_BIT	30
+> +#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
+>  #define MSR_K7_FID_VID_CTL		0xc0010041
+>  #define MSR_K7_FID_VID_STATUS		0xc0010042
+>  
+> diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+> index 62c30279be77..c067234a271f 100644
+> --- a/arch/x86/kernel/cpu/amd.c
+> +++ b/arch/x86/kernel/cpu/amd.c
+> @@ -28,6 +28,7 @@
+>  
+>  static const int amd_erratum_383[];
+>  static const int amd_erratum_400[];
+> +static const int amd_erratum_1054[];
+>  static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum);
+>  
+>  /*
+> @@ -701,6 +702,9 @@ static void early_init_amd(struct cpuinfo_x86 *c)
+>  	if (cpu_has_amd_erratum(c, amd_erratum_400))
+>  		set_cpu_bug(c, X86_BUG_AMD_E400);
+>  
+> +	if (cpu_has_amd_erratum(c, amd_erratum_1054))
+> +		set_cpu_bug(c, X86_BUG_AMD_E1054);
 > +
-> +       evlist_used = (bool *)calloc(perf_evlist->core.nr_entries,
-> +                                    sizeof(bool));
-> +       if (!evlist_used) {
-> +               ret = -ENOMEM;
-> +               break;
-> +       }
-> 
-> Please let me know if its looking fine.
+>  	early_detect_mem_encrypt(c);
+>  
+>  	/* Re-enable TopologyExtensions if switched off by BIOS */
+> @@ -978,6 +982,15 @@ static void init_amd(struct cpuinfo_x86 *c)
+>  	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
+>  	if (!cpu_has(c, X86_FEATURE_XENPV))
+>  		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
+> +
+> +	/*
+> +	 * Turn on the Instructions Retired free counter on machines not
+> +	 * susceptible to erratum #1054 "Instructions Retired Performance
+> +	 * Counter May Be Inaccurate"
+				     .
+				     ^
+				     |--- fullstop.
 
-I'm also ok with the array on the stack, but I don't mind
-this change as well
+Thx.
 
-thanks,
-jirka
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
