@@ -2,150 +2,109 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C29C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C829AC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B48020848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90D324680
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lDSRjevb"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="aLYA6QD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbgBKSUx (ORCPT
+        id S1731328AbgBKSU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:20:53 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33185 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731309AbgBKSUu (ORCPT
+        Tue, 11 Feb 2020 13:20:58 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40468 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729345AbgBKSU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:20:50 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n7so5902556pfn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:20:50 -0800 (PST)
+        Tue, 11 Feb 2020 13:20:57 -0500
+Received: by mail-qt1-f195.google.com with SMTP id v25so8683112qto.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:20:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4OgG0hetIsP1V38kbC307zOjczZWs0KOp5Ez5Rl0KME=;
-        b=lDSRjevbxM40tz/93zZtEf0l5hvgAJaYkwnSWnpl1y1J058EWn71+v9gGdFqjyE+LM
-         1s4OIdw7yTpcWQTOq78Kzb/qRXieUEXKhZD1e2no6c6b8LIKHiCiOhHk5IQ7CvjD+4ZG
-         iamdeGk/eC+W3+8zZ3SoHfWNLug+eDxbO22PGJxFXTjmO3FyBy9bpuBT9fAD+SJoPWRy
-         swmj5LdJkecykIqqY9Xqa+ITTp8kIdfwQlM67qbKEfKq2cmKZSsVZ+Ghx1T9cJJCeA3s
-         sPO8DhjPO+7NsB6lmFx1DVTzfI3s0fn2XPRQlZb5shxgKYa3Qgijkc12NseHBQcRqo+R
-         LdDw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=d6/Te+6lAVYFK89u5s4ITvONIuwvEzCRENBRMlel8AM=;
+        b=aLYA6QD7r8l7BRmVYCdYFhLJ6+BTNSmfcsvcr1NKaO2FUg7e2sB0f5KZcSPi6p74nR
+         6O933w7cbNN+FMz4YGCHH4AVN9pElo92zZlPlGuW0gSBq93BAPgEVr601eiAKnaapD/P
+         GrnClfjV4wYOcuftH0Q5ekckpEe3ICyZVzmuNt9p75AlrUcLSUbK/YzbcYm34mH8OxqT
+         SfQIEy8AuBFAXjI1EbnHUegO1y6lcC3eyPs+Uqaoqt4qUKVp8fvgx9LN7qxXVuWu884y
+         xs/XxkT5R1DXkbm4qW8hogIMuJAsKO58D/GM+ADGdFgzSYgN2zco6ccBy5HHxO5WoFvi
+         2Zwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4OgG0hetIsP1V38kbC307zOjczZWs0KOp5Ez5Rl0KME=;
-        b=D1Bb316KZ263NmUUWpKPfRAYG4KZHDcUSH++J6N1cHlTmqsYPf2OjX7BjIigSv1ir9
-         G7XwMpLnly4Y3YIpsd87H6EpWGFHfF6IHaolhAT+Z6ZtueI2lfi6vT1Wfo0R4L6ltMvA
-         C5EoxBYT4y/8jlkO/bzu0O6Xojz/4EbzuLtkSAnH1wXb38NwQ5IvRogcgiA73h+0FQFA
-         gzQFmH92JXVHFzUbeb1YbJZ/rErxZJxIcxoXJvPHrM6zIlAuGudysoixqtX46BxLnLH6
-         wIsw9WNuOX+sir8BcIhc7AKBN/hKlqSD4OhINuFa9SKMpxW93LVWfRAbCtbfBE+qGA0k
-         mFAw==
-X-Gm-Message-State: APjAAAWLmzwsKAWJOWETTOPzuVGFHpAJ5/GlnVPCcHNBraXq+NhU0PY9
-        9KNsyhjS7ILSjOTKMZpXy9eS06VCe79moImEQkv4Sw==
-X-Google-Smtp-Source: APXvYqxMvSkOVcfNtGbDzyRqqzjTst6GjcEty8BqJsis9ObxAC/QNdkqDYmzeMZhO0NEe3Lhmu8jwxwDkyO1K6X7SpM=
-X-Received: by 2002:a62:1615:: with SMTP id 21mr4402234pfw.84.1581445249952;
- Tue, 11 Feb 2020 10:20:49 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=d6/Te+6lAVYFK89u5s4ITvONIuwvEzCRENBRMlel8AM=;
+        b=BnkN0PIYflJh+rJJSO4VXIE0NXZV6oYTh5quMBIFwbwWIbxfeMActE8BxBHy6er1Sh
+         yCcOC1Z9YRdBz5Gubus7Am+pQiQCVtrPcIOwyAD1ap7FUfdPI1QY+f9gTp1Gj45g3RQ0
+         FFvMS4t+QJjCsrJt8uz73HnxZtSSqnwFvAgVXJcSvHdyIh934JPeuex4wz0l2w+t4w1z
+         QJ37DekVzZZljq4nS1R4IVkOl3PKqEZWCszHsgcUvGj6a588rLiZtQcdK+lHZmQK+stF
+         hzYEPvdh2zoEc0xg/FfvBGcKnxwf75YiMiNlXlWTXXVM5Teo4NScHWvCBSY3WrxDiE5S
+         UFUA==
+X-Gm-Message-State: APjAAAUsxqiPSn1i2DWF0j0Njp0YKG9wKKiAoFpMU15xSNeBur5qw23n
+        nonkk7Yj138rFIHDXLd47yYC1Q==
+X-Google-Smtp-Source: APXvYqwDVs8B12ktsqqe14aSoG5G5O9rjJ6O2GFDhj+2bdU0bqJzMwN1LLweA+J2YzGHbm2yyex9eQ==
+X-Received: by 2002:ac8:4410:: with SMTP id j16mr3712001qtn.261.1581445256183;
+        Tue, 11 Feb 2020 10:20:56 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:3189])
+        by smtp.gmail.com with ESMTPSA id r37sm2562886qtj.44.2020.02.11.10.20.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 10:20:55 -0800 (PST)
+Date:   Tue, 11 Feb 2020 13:20:54 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200211182054.GA178155@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-References: <20200128021145.36774-1-palmerdabbelt@google.com> <20200128021145.36774-2-palmerdabbelt@google.com>
-In-Reply-To: <20200128021145.36774-2-palmerdabbelt@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 11 Feb 2020 18:20:39 +0000
-Message-ID: <CAKwvOdnPu8-0O5kLDY2t=wq1rqWNX7v0CSrRmomPYLA1=BX=GQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] selftests/bpf: Elide a check for LLVM versions that
- can't compile it
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-Cc:     Bjorn Topel <bjorn.topel@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>, zlim.lnx@gmail.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        andriin@fb.com, Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211175507.178100-1-hannes@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 6:14 PM 'Palmer Dabbelt' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> The current stable LLVM BPF backend fails to compile the BPF selftests
-> due to a compiler bug.  The bug has been fixed in trunk, but that fix
-> hasn't landed in the binary packages I'm using yet (Fedora arm64).
-> Without this workaround the tests don't compile for me.
->
-> This patch triggers a preprocessor warning on LLVM versions that
-> definitely have the bug.  The test may be conservative (ie, I'm not sure
-> if 9.1 will have the fix), but it should at least make the current set
-> of stable releases work together.
+On Tue, Feb 11, 2020 at 12:55:07PM -0500, Johannes Weiner wrote:
+> However, this change had to be reverted in 69056ee6a8a3 ("Revert "mm:
+> don't reclaim inodes with many attached pages"") because it caused
+> severe reclaim performance problems: Inodes that sit on the shrinker
+> LRU are attracting reclaim pressure away from the page cache and
+> toward the VFS. If we then permanently exempt sizable portions of this
+> pool from actually getting reclaimed when looked at, this pressure
+> accumulates as deferred shrinker work (a mechanism for *temporarily*
+> unreclaimable objects) until it causes mayhem in the VFS cache pools.
+> 
+> In the bug quoted in 69056ee6a8a3 in particular, the excessive
+> pressure drove the XFS shrinker into dirty objects, where it caused
+> synchronous, IO-bound stalls, even as there was plenty of clean page
+> cache that should have been reclaimed instead.
 
-Do older versions of clang still work? Should there be a lower bounds?
+A note on testing: the patch behaves much better on my machine and the
+inode shrinker doesn't drop hot page cache anymore, without noticable
+downsides so far.
 
->
-> See https://reviews.llvm.org/D69438 for more information on the fix.  I
-> obtained the workaround from
-> https://lore.kernel.org/linux-kselftest/aed8eda7-df20-069b-ea14-f06628984566@gmail.com/T/
->
-> Fixes: 20a9ad2e7136 ("selftests/bpf: add CO-RE relocs array tests")
-> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> ---
->  .../testing/selftests/bpf/progs/test_core_reloc_arrays.c  | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
-> index bf67f0fdf743..c9a3e0585a84 100644
-> --- a/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
-> +++ b/tools/testing/selftests/bpf/progs/test_core_reloc_arrays.c
-> @@ -40,15 +40,23 @@ int test_core_arrays(void *ctx)
->         /* in->a[2] */
->         if (BPF_CORE_READ(&out->a2, &in->a[2]))
->                 return 1;
-> +#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
-> +# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
-> +#else
->         /* in->b[1][2][3] */
->         if (BPF_CORE_READ(&out->b123, &in->b[1][2][3]))
->                 return 1;
-> +#endif
->         /* in->c[1].c */
->         if (BPF_CORE_READ(&out->c1c, &in->c[1].c))
->                 return 1;
-> +#if defined(__clang__) && (__clang_major__ < 10) && (__clang_minor__ < 1)
-> +# warning "clang 9.0 SEGVs on multidimensional arrays, see https://reviews.llvm.org/D69438"
-> +#else
->         /* in->d[0][0].d */
->         if (BPF_CORE_READ(&out->d00d, &in->d[0][0].d))
->                 return 1;
-> +#endif
->
->         return 0;
->  }
-> --
-> 2.25.0.341.g760bfbb309-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200128021145.36774-2-palmerdabbelt%40google.com.
+However, I tried to reproduce the xfs case that caused the
+69056ee6a8a3 revert and haven't managed to do so yet on 5.5 plus the
+reverted patch. I cannot provoke higher inode sync stalls in the xfs
+shrinker regardless of shrinker strategy. Maybe something else changed
+since 4.19 and it's less of a concern now.
 
+Nonetheless, I'm interested in opinions on the premise of this
+patch. And Yafang is working on his memcg-specific fix for this issue,
+so I wanted to put this proposal on the table sooner than later.
 
-
--- 
-Thanks,
-~Nick Desaulniers
+Thanks
