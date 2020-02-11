@@ -2,243 +2,138 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9115C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EF7C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5F520675
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8290206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ub42KBzl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aQeCQQp0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgBKPFJ (ORCPT
+        id S1729157AbgBKPGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:05:09 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:52974 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgBKPFI (ORCPT
+        Tue, 11 Feb 2020 10:06:14 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:43572 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgBKPGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:05:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581433504; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8jH9ow+F3VaHnW1LlMrPIb3SceE2+/Inbzw5IEM161Q=;
-        b=Ub42KBzlq2cA1hhiydthdJX6iJ3wvUEgJPI5Zmu923CzpgW07KZv8RKL7Pgha34uCVyO1u
-        2H6qi0VMP0XXk+fbDFMDGRXFS2i/2IAdSLlT0w4WoIkfCmN27f/6b0htWUYwS/SI9bWkja
-        r6XYhT5jlF54KjF4fEB4CSVIWfx7kw0=
-Date:   Tue, 11 Feb 2020 12:04:49 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 1/3] pwm: jz4740: Use clocks from TCU driver
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1581433489.3.1@crapouillou.net>
-In-Reply-To: <20191210152734.39588-1-paul@crapouillou.net>
-References: <20191210152734.39588-1-paul@crapouillou.net>
+        Tue, 11 Feb 2020 10:06:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kOVM19xgvEpzNbdc34dGz9f33pbISrxSA6jBH/Bi6So=; b=aQeCQQp0OxFOcoJ8vnnGz7DEKt
+        oR7osXGRsXoca1k5+TmdiEJvRabVb6ElkP0ZmZrNG2BXx12YaCVHSVPuSPM59TaNmahz3nYnk+G3h
+        bkrs1CrjM4b9Xrp8zOjk9PJZDQv4SGnm+HdsqQRNXl1aiAyCaHiX5GxkYjDN7n5VGAtwR3ZCy3vYN
+        VUnK89EVOl+KiBNcmNZaDt9P+UMam1Tf0sWubBWzmveYa5B1PsT074ln+8T62ZpIMe+TjMR64cDte
+        wMpCjFR1KytcQ3gi3AepbDSQrKrH0NntQdIJli72rwrftYJvCrL7O1ezIwbwZ4gNrIkDTC11uAkGE
+        JrKESysQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1X6V-0006JB-RU; Tue, 11 Feb 2020 15:05:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5450430066E;
+        Tue, 11 Feb 2020 16:03:44 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F2D092B920EF1; Tue, 11 Feb 2020 16:05:32 +0100 (CET)
+Date:   Tue, 11 Feb 2020 16:05:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [PATCH] tracing/perf: Move rcu_irq_enter/exit_irqson() to perf
+ trace point hook
+Message-ID: <20200211150532.GU14914@hirez.programming.kicks-ass.net>
+References: <20200210170643.3544795d@gandalf.local.home>
+ <20200211114954.GK14914@hirez.programming.kicks-ass.net>
+ <20200211090503.68c0d70f@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211090503.68c0d70f@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Feb 11, 2020 at 09:05:03AM -0500, Steven Rostedt wrote:
+> On Tue, 11 Feb 2020 12:49:54 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Mon, Feb 10, 2020 at 05:06:43PM -0500, Steven Rostedt wrote:
+> > > +	if (!rcu_watching) {						\
+> > > +		/* Can not use RCU if rcu is not watching and in NMI */	\
+> > > +		if (in_nmi())						\
+> > > +			return;						\
+> > > +		rcu_irq_enter_irqson();					\
+> > > +	}								\  
+> > 
+> > I saw the same weirdness in __trace_stack(), and I'm confused by it.
+> > 
+> > How can we ever get to: in_nmi() && !rcu_watching() ? That should be a
+> > BUG.  In particular, nmi_enter() has rcu_nmi_enter().
+> > 
+> > Paul, can that really happen?
+> 
+> The stack tracer connects to the function tracer and is called at all
+> the places that function tracing can be called from. As I like being
+> able to trace RCU internal functions (especially as they are complex),
+> I don't want to set them all to notrace. But, for callbacks that
+> require RCU to be watching, we need this check, because there's some
+> internal state that we can be in an NMI and RCU is not watching (as
+> there's some places in nmi_enter that can be traced!).
+> 
+> And if we are tracing preempt_enable and preempt_disable (as Joel added
+> trace events there), it may be the case for trace events too.
 
-Any feedback on this patchset?
+Bloody hell; what a trainwreck. Luckily there's comments around that
+explain this!
 
--Paul
+So we haz:
 
+| #define nmi_enter()						\
+| 	do {							\
+| 		arch_nmi_enter();				\
 
-Le mar., d=E9c. 10, 2019 at 16:27, Paul Cercueil <paul@crapouillou.net>=20
-a =E9crit :
-> The ingenic-timer "TCU" driver provides us with clocks, that can be
-> (un)gated, reparented or reclocked from devicetree, instead of having
-> these settings hardcoded in this driver.
->=20
-> Each PWM channel's clk pointer is stored in PWM chip data to keep
-> the code simple. The calls to arch-specific timer code is replaced=20
-> with
-> standard clock API calls to start and stop each channel's clock.
->=20
-> While this driver is devicetree-compatible, it is never (as of now)
-> probed from devicetree, so this change does not introduce a ABI=20
-> problem
-> with current devicetree files.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->=20
-> Notes:
->     v2: This patch is now before the patch introducing regmap, so the=20
-> code
->     	has changed a bit.
->     v3: - Use %pe printf specifier to print error
->     	- Update commit message
->     	- Removed call to jz4740_timer_set_ctrl() in jz4740_pwm_free()=20
-> which
->     	  was reseting the clock's parent.
->=20
->  drivers/pwm/Kconfig      |  1 +
->  drivers/pwm/pwm-jz4740.c | 53=20
-> +++++++++++++++++++++++++++++-----------
->  2 files changed, 40 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index bd21655c37a6..15d3816341f3 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -225,6 +225,7 @@ config PWM_IMX_TPM
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> +	depends on COMMON_CLK
->  	help
->  	  Generic PWM framework driver for Ingenic JZ47xx based
->  	  machines.
-> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> index 9d78cc21cb12..ee50ac5fabb6 100644
-> --- a/drivers/pwm/pwm-jz4740.c
-> +++ b/drivers/pwm/pwm-jz4740.c
-> @@ -24,7 +24,6 @@
->=20
->  struct jz4740_pwm_chip {
->  	struct pwm_chip chip;
-> -	struct clk *clk;
->  };
->=20
->  static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip=20
-> *chip)
-> @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip=20
-> *to_jz4740(struct pwm_chip *chip)
->=20
->  static int jz4740_pwm_request(struct pwm_chip *chip, struct=20
-> pwm_device *pwm)
->  {
-> +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
-> +	struct clk *clk;
-> +	char clk_name[16];
-> +	int ret;
-> +
->  	/*
->  	 * Timers 0 and 1 are used for system tasks, so they are unavailable
->  	 * for use as PWMs.
-> @@ -41,16 +45,32 @@ static int jz4740_pwm_request(struct pwm_chip=20
-> *chip, struct pwm_device *pwm)
->  	if (pwm->hwpwm < 2)
->  		return -EBUSY;
->=20
-> -	jz4740_timer_start(pwm->hwpwm);
-> +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
-> +
-> +	clk =3D clk_get(chip->dev, clk_name);
-> +	if (IS_ERR(clk)) {
-> +		if (PTR_ERR(clk) !=3D -EPROBE_DEFER)
-> +			dev_err(chip->dev, "Failed to get clock: %pe", clk);
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	ret =3D clk_prepare_enable(clk);
-> +	if (ret) {
-> +		clk_put(clk);
-> +		return ret;
-> +	}
-> +
-> +	pwm_set_chip_data(pwm, clk);
->=20
->  	return 0;
->  }
->=20
->  static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device=20
-> *pwm)
->  {
-> -	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
-> +	struct clk *clk =3D pwm_get_chip_data(pwm);
->=20
-> -	jz4740_timer_stop(pwm->hwpwm);
-> +	clk_disable_unprepare(clk);
-> +	clk_put(clk);
->  }
->=20
->  static int jz4740_pwm_enable(struct pwm_chip *chip, struct=20
-> pwm_device *pwm)
-> @@ -91,17 +111,22 @@ static int jz4740_pwm_apply(struct pwm_chip=20
-> *chip, struct pwm_device *pwm,
->  			    const struct pwm_state *state)
->  {
->  	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
-> +	struct clk *clk =3D pwm_get_chip_data(pwm),
-> +		   *parent_clk =3D clk_get_parent(clk);
-> +	unsigned long rate, period, duty;
->  	unsigned long long tmp;
-> -	unsigned long period, duty;
->  	unsigned int prescaler =3D 0;
->  	uint16_t ctrl;
-> +	int err;
->=20
-> -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
-> +	rate =3D clk_get_rate(parent_clk);
-> +	tmp =3D (unsigned long long)rate * state->period;
->  	do_div(tmp, 1000000000);
->  	period =3D tmp;
->=20
->  	while (period > 0xffff && prescaler < 6) {
->  		period >>=3D 2;
-> +		rate >>=3D 2;
->  		++prescaler;
->  	}
->=20
-> @@ -117,14 +142,18 @@ static int jz4740_pwm_apply(struct pwm_chip=20
-> *chip, struct pwm_device *pwm,
->=20
->  	jz4740_pwm_disable(chip, pwm);
->=20
-> +	err =3D clk_set_rate(clk, rate);
-> +	if (err) {
-> +		dev_err(chip->dev, "Unable to set rate: %d", err);
-> +		return err;
-> +	}
-> +
->  	jz4740_timer_set_count(pwm->hwpwm, 0);
->  	jz4740_timer_set_duty(pwm->hwpwm, duty);
->  	jz4740_timer_set_period(pwm->hwpwm, period);
->=20
-> -	ctrl =3D JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT |
-> -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
-> -
-> -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
-> +	ctrl =3D jz4740_timer_get_ctrl(pwm->hwpwm);
-> +	ctrl |=3D JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->=20
->  	switch (state->polarity) {
->  	case PWM_POLARITY_NORMAL:
-> @@ -158,10 +187,6 @@ static int jz4740_pwm_probe(struct=20
-> platform_device *pdev)
->  	if (!jz4740)
->  		return -ENOMEM;
->=20
-> -	jz4740->clk =3D devm_clk_get(&pdev->dev, "ext");
-> -	if (IS_ERR(jz4740->clk))
-> -		return PTR_ERR(jz4740->clk);
-> -
->  	jz4740->chip.dev =3D &pdev->dev;
->  	jz4740->chip.ops =3D &jz4740_pwm_ops;
->  	jz4740->chip.npwm =3D NUM_PWM;
-> --
-> 2.24.0
->=20
+arm64 only, lets ignore for now
 
-=
+| 		printk_nmi_enter();				\
+
+notrace
+
+| 		lockdep_off();					\
+
+notrace
+
+| 		ftrace_nmi_enter();				\
+
+!notrace !!!
+
+| 		BUG_ON(in_nmi());				\
+| 		preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);\
+
+lets make this __preempt_count_add() ASAP !
+
+| 		rcu_nmi_enter();				\
+
+are you _really_ sure you want to go trace that ?!?
+
+| 		trace_hardirq_enter();				\
+| 	} while (0)
+
 
