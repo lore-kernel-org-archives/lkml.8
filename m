@@ -2,47 +2,54 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0C6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983D0C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C66F20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C3A2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="aS9S3lr0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rohdewald.de header.i=@rohdewald.de header.b="cVrovoho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbgBKQD7 (ORCPT
+        id S1730699AbgBKQET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:03:59 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:35636 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbgBKQD6 (ORCPT
+        Tue, 11 Feb 2020 11:04:19 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.221]:24114 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbgBKQES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:03:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581437025; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GxhdVQMuODyhj8Ef1OMGPYNtTlY3IQiUcj0GELNasU4=;
-        b=aS9S3lr0RX/TZHUDSfSMyjljjgL6X7fGX0B/FV4bcp7eOErZXfYDigSnFOe7UXe/T5aufw
-        bptWWqlgAXme/vwC2h/JJe7J5q60EROG4LV46T+mHPIqM9uqGnDp+frhwbj2FqzmrA2VWV
-        QluMd154+yb1J0ZFtL8hNPmE8Oezbew=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, od@zcrc.me,
-        linux-pm@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [RFC PATCH 3/3] mmc: jz4740: Use pm_sleep_ptr() macro
-Date:   Tue, 11 Feb 2020 13:03:21 -0300
-Message-Id: <20200211160321.22124-4-paul@crapouillou.net>
-In-Reply-To: <20200211160321.22124-1-paul@crapouillou.net>
-References: <20200211160321.22124-1-paul@crapouillou.net>
+        Tue, 11 Feb 2020 11:04:18 -0500
+X-Greylist: delayed 356 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 11:04:17 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581437056;
+        s=strato-dkim-0002; d=rohdewald.de;
+        h=Date:To:From:Subject:Message-ID:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=qJmySs6qQV9IutXAi+VuRvohRb5yxnhpN42gg+YHbGQ=;
+        b=cVrovohoPSMQdDEUeudPZ/5VXUc4OEVzoX01iOUZwxWz1L1HRmGms4JqnyQcfW5usQ
+        Serxz2KWfDkD7rl/b6XFnbZBfMEXrZ+X6VYR2fecrYeVE5265gBlrKSboU0IZB7++SmT
+        CwCQSrqMLhbB3p2MV1xN/dQqf/ImTUNo5EbrGLwyoa7Hv0ONQ4NyLa8DqieTDBbbXBJG
+        s9fvTcViMxFsHaI3P5vQs3ASDE2sx7SGUG4Fa8hAGaHqg5vZcKc6qyj+YwPntAehuE9s
+        iWJzrANyRW0KPIJvcqfTA91PZ2yAkZTwKZPAGK1fikUwyCCr0x9cHHTDOUj+wo7fc4YH
+        UWbg==
+X-RZG-AUTH: ":O2MIc0epdfgAjoV+frHI3UhxNCLBO5P+YT7khnlEbwYQlWfkbhtsmC7w4vbjaDWHXQAjCw=="
+X-RZG-CLASS-ID: mo00
+Received: from skull
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id e01925w1BFwGgUs
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate)
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 11 Feb 2020 16:58:16 +0100 (CET)
+Message-ID: <22d66e6fe7439db9c29f6715cdc3290680b6598d.camel@rohdewald.de>
+Subject: iwlwifi trigger 15 fired.
+From:   Wolfgang Rohdewald <wolfgang.kde@rohdewald.de>
+To:     linux-kernel@vger.kernel.org
+Date:   Tue, 11 Feb 2020 16:58:11 +0100
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-3 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,53 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the newly introduced pm_sleep_ptr() macro to simplify the code.
+Kernel 5.5.2 on an Intel NUC Skull Canyon
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/mmc/host/jz4740_mmc.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Happened today for the first time when booting. 
+Worked again after rmmod / modprobe iwlmvm and iwlwifi
 
-diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-index fbae87d1f017..09554f9831de 100644
---- a/drivers/mmc/host/jz4740_mmc.c
-+++ b/drivers/mmc/host/jz4740_mmc.c
-@@ -1099,24 +1099,18 @@ static int jz4740_mmc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--
--static int jz4740_mmc_suspend(struct device *dev)
-+static int __maybe_unused jz4740_mmc_suspend(struct device *dev)
- {
- 	return pinctrl_pm_select_sleep_state(dev);
- }
- 
--static int jz4740_mmc_resume(struct device *dev)
-+static int __maybe_unused jz4740_mmc_resume(struct device *dev)
- {
- 	return pinctrl_select_default_state(dev);
- }
- 
- static SIMPLE_DEV_PM_OPS(jz4740_mmc_pm_ops, jz4740_mmc_suspend,
- 	jz4740_mmc_resume);
--#define JZ4740_MMC_PM_OPS (&jz4740_mmc_pm_ops)
--#else
--#define JZ4740_MMC_PM_OPS NULL
--#endif
- 
- static struct platform_driver jz4740_mmc_driver = {
- 	.probe = jz4740_mmc_probe,
-@@ -1124,7 +1118,7 @@ static struct platform_driver jz4740_mmc_driver = {
- 	.driver = {
- 		.name = "jz4740-mmc",
- 		.of_match_table = of_match_ptr(jz4740_mmc_of_match),
--		.pm = JZ4740_MMC_PM_OPS,
-+		.pm = pm_sleep_ptr(&jz4740_mmc_pm_ops),
- 	},
- };
- 
+# dmesg |grep iwlwifi
+[    3.762226] iwlwifi 0000:03:00.0: enabling device (0000 -> 0002)
+[    3.776264] iwlwifi 0000:03:00.0: loaded firmware version 36.8fd77bb3.0 op_mode iwlmvm
+[    3.962808] iwlwifi 0000:03:00.0: Detected Intel(R) Dual Band Wireless AC 8260, REV=0x208
+[    5.017086] iwlwifi 0000:03:00.0: Collecting data: trigger 15 fired.
+[    5.265221] iwlwifi 0000:03:00.0: Not valid error log pointer 0x00000000 for Init uCode
+[    5.265931] iwlwifi 0000:03:00.0: Fseq Registers:
+[    5.266633] iwlwifi 0000:03:00.0: 0x252030D9 | FSEQ_ERROR_CODE
+[    5.267340] iwlwifi 0000:03:00.0: 0x745346CD | FSEQ_TOP_INIT_VERSION
+[    5.268026] iwlwifi 0000:03:00.0: 0x66904604 | FSEQ_CNVIO_INIT_VERSION
+[    5.268732] iwlwifi 0000:03:00.0: 0x0000A052 | FSEQ_OTP_VERSION
+[    5.269499] iwlwifi 0000:03:00.0: 0xFC308367 | FSEQ_TOP_CONTENT_VERSION
+[    5.270179] iwlwifi 0000:03:00.0: 0xD74D5BB1 | FSEQ_ALIVE_TOKEN
+[    5.270884] iwlwifi 0000:03:00.0: 0xE4092179 | FSEQ_CNVI_ID
+[    5.271559] iwlwifi 0000:03:00.0: 0x54DEAD4D | FSEQ_CNVR_ID
+[    5.272260] iwlwifi 0000:03:00.0: 0x03000000 | CNVI_AUX_MISC_CHIP
+[    5.272957] iwlwifi 0000:03:00.0: 0x0BADCAFE | CNVR_AUX_MISC_CHIP
+[    5.273713] iwlwifi 0000:03:00.0: 0x0BADCAFE | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[    5.274407] iwlwifi 0000:03:00.0: 0x0BADCAFE | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[    5.275931] iwlwifi 0000:03:00.0: SecBoot CPU1 Status: 0x3090001, CPU2 Status: 0x0
+[    5.276525] iwlwifi 0000:03:00.0: Failed to start INIT ucode: -110
+[    5.277182] iwlwifi 0000:03:00.0: Firmware not running - cannot dump error
+[    5.290893] iwlwifi 0000:03:00.0: Failed to run INIT ucode: -110
+
 -- 
-2.25.0
+mit freundlichen Grüssen
+
+Wolfgang Rohdewald
 
