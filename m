@@ -2,124 +2,137 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C925C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59F3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3355A206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C656206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:23:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="iqggwRpX"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XU25pqpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgBKXWr (ORCPT
+        id S1727966AbgBKXXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:22:47 -0500
-Received: from gateway20.websitewelcome.com ([192.185.52.45]:32343 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727786AbgBKXWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:22:46 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id A0988400C81E2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 16:09:11 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1erdjA7kTEfyq1erdjK4T2; Tue, 11 Feb 2020 17:22:45 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=d45YxL3ZVwmUXRXXaNk1DepB3rRpGpao2lxAWUtx6bM=; b=iqggwRpX32grupnHhcMZ8HGQP6
-        +vewtQpKtwwjgKiIYlS8OkZgst6U7rTXLHzQpFHADvx0KzIYhXTpTDCwkQYWad6YzUVVBcafCftkF
-        iOJmwV9P/q/LuaYLY+x2Tcxnh1RwvuwaNGFDM4tBRs1oIIdw02z2bvDRfuI3RGO9zn5mbJGcl603K
-        WHQbBwLclwpPQmrwSksRJg08d/+qFP2/WiuGbio5wQyOlqCzVPrIsIb6HbFiGok8KX/kICrdx8qwp
-        McG5drN6KRJXlHhw3PoBJzDhkeey1sYigSbXD1z9xsspkwCRhgE6fzpcMnQvn+eTUTZtTvZua3qX/
-        h43smIaQ==;
-Received: from [200.68.140.36] (port=25379 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1erc-003arP-Hs; Tue, 11 Feb 2020 17:22:44 -0600
-Date:   Tue, 11 Feb 2020 17:25:19 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] USB: musb: Replace zero-length array with flexible-array
- member
-Message-ID: <20200211232519.GA23263@embeddedor>
+        Tue, 11 Feb 2020 18:23:13 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44349 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727817AbgBKXXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:23:13 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HJjV74lvz9sP7;
+        Wed, 12 Feb 2020 10:23:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581463391;
+        bh=bRFdwr1yIJuc3EcV6OsD8j33boY4/PcXu5Y4KzG6ok4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XU25pqpYaUos07ZmrbUdYJgzuaQgziYVXOvmCBlgYzvnFn1Ojtf4ZRIJitFKSaa9C
+         Kqf3ZGQXRnngittXhqJkJCzpgDRcJZQKS+l3q/gFXETkskk0E7UglthdONFXutpTrr
+         WHDIaho/iIIl+lCdALlkEY/jhqItLQgO1XpXLp4Mole7TRSfGO/R35TfsHjHBP10RS
+         R1RsW2xCCvfL9RMtsQG/Mb9zx2JWOg1IZ1lEU/fmA3pWAdMIC11wd8jaCxVtrs5Yul
+         XGZD4DpsuuCn8k5a9xhjhjglvdr2rYQR68IaZiAlD5K7CFhkqhqBE0HB8Gv2BsKWi5
+         yPXmFEFD6y6Kg==
+Date:   Wed, 12 Feb 2020 10:23:09 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the keys tree
+Message-ID: <20200212102309.61c3fa7e@canb.auug.org.au>
+In-Reply-To: <20200210100743.7a6a0116@canb.auug.org.au>
+References: <20200210100555.7497d69b@canb.auug.org.au>
+        <20200210100743.7a6a0116@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1erc-003arP-Hs
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:25379
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 48
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; boundary="Sig_/E/cTBMWLd7RjEmxLl0rLyEw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+--Sig_/E/cTBMWLd7RjEmxLl0rLyEw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Hi all,
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+On Mon, 10 Feb 2020 10:07:43 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Mon, 10 Feb 2020 10:05:55 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > After merging the keys tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this: =20
+>=20
+> kernel/watch_queue.c: In function 'post_one_notification':
+> kernel/watch_queue.c:89:21: error: 'struct pipe_inode_info' has no member=
+ named 'wait'
+>    89 |  spin_lock_irq(&pipe->wait.lock);
+>       |                     ^~
+> kernel/watch_queue.c:122:24: error: 'struct pipe_inode_info' has no membe=
+r named 'wait'
+>   122 |   spin_unlock_irq(&pipe->wait.lock);
+>       |                        ^~
+> In file included from include/linux/mmzone.h:10,
+>                  from include/linux/gfp.h:6,
+>                  from include/linux/umh.h:4,
+>                  from include/linux/kmod.h:9,
+>                  from include/linux/module.h:16,
+>                  from kernel/watch_queue.c:11:
+> kernel/watch_queue.c:125:46: error: 'struct pipe_inode_info' has no membe=
+r named 'wait'
+>   125 |  wake_up_interruptible_sync_poll_locked(&pipe->wait, EPOLLIN | EP=
+OLLRDNORM);
+>       |                                              ^~
+> include/linux/wait.h:234:29: note: in definition of macro 'wake_up_interr=
+uptible_sync_poll_locked'
+>   234 |  __wake_up_locked_sync_key((x), TASK_INTERRUPTIBLE, poll_to_key(m=
+))
+>       |                             ^
+> kernel/watch_queue.c:129:23: error: 'struct pipe_inode_info' has no membe=
+r named 'wait'
+>   129 |  spin_unlock_irq(&pipe->wait.lock);
+>       |                       ^~
+>=20
+> > Caused by commit(s) in the keys tree interacting with commit
+> >=20
+> >   0ddad21d3e99 ("pipe: use exclusive waits when reading or writing")
+> >=20
+> > from Linus' tree.
+> >=20
+> > Given that I haven't seen a pull request for the keys tree yet, it seems
+> > that this work will not be in v5.6, so I have just dropped the keys tree
+> > for today. =20
 
-This issue was found with the help of Coccinelle.
+=46rom today, I have just disabled CONFIG_WATCH_QUEUE instead of dropping
+the keys tree completely.  Please let me know when it has been fixed up
+in case I don't notice.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+--=20
+Cheers,
+Stephen Rothwell
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/usb/musb/musb_host.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--Sig_/E/cTBMWLd7RjEmxLl0rLyEw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-index eb308ec35c66..3dab821c1b30 100644
---- a/drivers/usb/musb/musb_host.c
-+++ b/drivers/usb/musb/musb_host.c
-@@ -2576,7 +2576,7 @@ static int musb_bus_resume(struct usb_hcd *hcd)
- struct musb_temp_buffer {
- 	void *kmalloc_ptr;
- 	void *old_xfer_buffer;
--	u8 data[0];
-+	u8 data[];
- };
- 
- static void musb_free_temp_buffer(struct urb *urb)
--- 
-2.25.0
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5DN10ACgkQAVBC80lX
+0GycMwgAgx3N4wiuk/navM0aVqqNQPa1vV00JX25nr4b1TM8QTustgKk3z8miXGP
+xiRd9t940N5uhQxhrJZDHL/sss5gViRfjlZ6g+wWSC7vRJ5R/LCW4glddExZTVmc
+jW6/BdoG15cTaVjAiS/E/0GtSy3toiTMdxtK8y/PTng8m0bXg3MX+nvYPs9Rk4Ba
+kAw3l6BRE83nL9+m4Tk12fsUH+aacl5IMZ4gBMDieoY3o7muTaUqCo8JvRCm11/x
+qpXohFPbF5ejkxslLFtYVYZsrELxS6Wns7HLxIJQKN9F0PYeTv8JUrWLJ2Cd2bk+
+E9JzgGUbvOhmYtCp0CxIt5j1ON5oaQ==
+=9gIq
+-----END PGP SIGNATURE-----
+
+--Sig_/E/cTBMWLd7RjEmxLl0rLyEw--
