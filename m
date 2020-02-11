@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13FDC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B3DC3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B8520848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E8920848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="CaoXz8Eh"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="YWVot15E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgBKKfG (ORCPT
+        id S1728425AbgBKKfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:35:06 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:57186 "EHLO rere.qmqm.pl"
+        Tue, 11 Feb 2020 05:35:09 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:3586 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbgBKKfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:35:05 -0500
+        id S1728398AbgBKKfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:35:06 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48GzgC0Wtzz20t;
-        Tue, 11 Feb 2020 11:35:03 +0100 (CET)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48GzgD2PKMz22X;
+        Tue, 11 Feb 2020 11:35:04 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1581417303; bh=ZyBwZUGyD7qjPPbQlhdlCzFxIwy0/NfhkGAFyrsfD7Q=;
+        t=1581417304; bh=Y/BhaKgufO/WllM1ns+0PP41KsNOl+WZqBMZudUzapE=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=CaoXz8EhHAoo2lAK9lz+Q0VDhnel5DjRjx1ioqTJSf2RloKgI7K1WvmVuJbLFhcgE
-         Ljl6Dt/EzGzT7yYfNwWKnMcW4SCQvZIiHhYDjwOFliEPxju8RJqpDAacAX5JV2MwF0
-         hiEctQogTxhvsZPfneLihAiIY5XLY2C9vB+RWTdnpZ3gZyeuIy7zkPjz3HC7MjK0FL
-         1G7MnTDUDoI/NbjkIur8emYcMk0hQvF0qrXmw3gz1l7Hloa1QOoykcQNMTLWmzgS1Q
-         NpnCXIQOOUXoNESfbL+GCiVeXpS0/bhxKrN2GhyqnxmmTyhUZByNZakGKxBDiBTK2q
-         y+LkXFDWpuhEw==
+        b=YWVot15Ex/8hLXM0K/dIivih3pVRZnDcDgPU+Gwm6Ld/xcqE/sLbr/WyLqpAn2kaF
+         XqMi76Pau1mcsbCM70cWAN+YpuVJgwcKItrHJzBOY+NnZoBZqqhYxbCCEjk504EvfW
+         3BY8DTjIKBAZ2bm7kCOR13UMgiGQPCjrVHj48G1f3XZG5hh1Z8oMR+P476xeDRKsEZ
+         vZrSuBg8ZYZpt/TfGxXhBqqa41/IlywkHMSiIT6Ot10ddXQFiQOl8Oa0uGt5B4xsoY
+         pz7KQM1ecBBtcLGTfj6vpoP3CSGDaZAqfuWwXogpO6ztYWnwhL8q423trk//BGEopF
+         z5I6diGdO1vqg==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.1 at mail
-Date:   Tue, 11 Feb 2020 11:35:02 +0100
-Message-Id: <96b95d52d0b613065fe655f1d0fe9d7c6adf65fb.1581416843.git.mirq-linux@rere.qmqm.pl>
+Date:   Tue, 11 Feb 2020 11:35:04 +0100
+Message-Id: <59e1e4e5bd80c1879ef36eaa59916e47005dbb04.1581416843.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1581416843.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1581416843.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 4/6] staging: wfx: follow compatible = vendor,chip format
+Subject: [PATCH v2 6/6] staging: wfx: use more power-efficient sleep for reset
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -53,50 +53,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As for SPI, follow "vendor,chip" format 'compatible' string also for
-SDIO bus.
+Replace udelay() with usleep_range() as all uses are in a sleepable context.
 
-Fixes: 0096214a59a7 ("staging: wfx: add support for I/O access")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- .../devicetree/bindings/net/wireless/siliabs,wfx.txt          | 4 ++--
- drivers/staging/wfx/bus_sdio.c                                | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/staging/wfx/bh.c      | 2 +-
+ drivers/staging/wfx/bus_spi.c | 4 ++--
+ drivers/staging/wfx/hwio.c    | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-index 52f97673da1e..ffec79c14786 100644
---- a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-+++ b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
-@@ -45,7 +45,7 @@ case. Thus declaring WFxxx chip in device tree is strongly recommended (and may
- become mandatory in the future).
+diff --git a/drivers/staging/wfx/bh.c b/drivers/staging/wfx/bh.c
+index c6319ab7e71a..9fcab00a3733 100644
+--- a/drivers/staging/wfx/bh.c
++++ b/drivers/staging/wfx/bh.c
+@@ -26,7 +26,7 @@ static void device_wakeup(struct wfx_dev *wdev)
+ 	gpiod_set_value_cansleep(wdev->pdata.gpio_wakeup, 1);
+ 	if (wfx_api_older_than(wdev, 1, 4)) {
+ 		if (!completion_done(&wdev->hif.ctrl_ready))
+-			udelay(2000);
++			usleep_range(2000, 2500);
+ 	} else {
+ 		// completion.h does not provide any function to wait
+ 		// completion without consume it (a kind of
+diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_spi.c
+index e3cd12592662..61e99b09decb 100644
+--- a/drivers/staging/wfx/bus_spi.c
++++ b/drivers/staging/wfx/bus_spi.c
+@@ -211,9 +211,9 @@ static int wfx_spi_probe(struct spi_device *func)
+ 		if (spi_get_device_id(func)->driver_data & WFX_RESET_INVERTED)
+ 			gpiod_toggle_active_low(bus->gpio_reset);
+ 		gpiod_set_value_cansleep(bus->gpio_reset, 1);
+-		udelay(100);
++		usleep_range(100, 150);
+ 		gpiod_set_value_cansleep(bus->gpio_reset, 0);
+-		udelay(2000);
++		usleep_range(2000, 2500);
+ 	}
  
- Required properties:
-- - compatible: Should be "silabs,wfx-sdio"
-+ - compatible: Should be "silabs,wf200"
-  - reg: Should be 1
- 
- In addition, it is recommended to declare a mmc-pwrseq on SDIO host above WFx.
-@@ -71,7 +71,7 @@ Example:
- 	#size = <0>;
- 
- 	mmc@1 {
--		compatible = "silabs,wfx-sdio";
-+		compatible = "silabs,wf200";
- 		reg = <1>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&wfx_wakeup>;
-diff --git a/drivers/staging/wfx/bus_sdio.c b/drivers/staging/wfx/bus_sdio.c
-index 5450bd5e1b5d..dedc3ff58d3e 100644
---- a/drivers/staging/wfx/bus_sdio.c
-+++ b/drivers/staging/wfx/bus_sdio.c
-@@ -251,6 +251,7 @@ MODULE_DEVICE_TABLE(sdio, wfx_sdio_ids);
- #ifdef CONFIG_OF
- static const struct of_device_id wfx_sdio_of_match[] = {
- 	{ .compatible = "silabs,wfx-sdio" },
-+	{ .compatible = "silabs,wf200" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
+ 	INIT_WORK(&bus->request_rx, wfx_spi_request_rx);
+diff --git a/drivers/staging/wfx/hwio.c b/drivers/staging/wfx/hwio.c
+index 47e04c59ed93..d3a141d95a0e 100644
+--- a/drivers/staging/wfx/hwio.c
++++ b/drivers/staging/wfx/hwio.c
+@@ -142,7 +142,7 @@ static int indirect_read(struct wfx_dev *wdev, int reg, u32 addr, void *buf,
+ 			goto err;
+ 		if (!(cfg & prefetch))
+ 			break;
+-		udelay(200);
++		usleep_range(200, 250);
+ 	}
+ 	if (i == 20) {
+ 		ret = -ETIMEDOUT;
 -- 
 2.20.1
 
