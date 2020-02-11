@@ -2,152 +2,212 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FFBC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6046C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708DC20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B379B20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sPb+i27r"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B36DxbZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgBKVdF (ORCPT
+        id S1727897AbgBKVfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:33:05 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36560 "EHLO
+        Tue, 11 Feb 2020 16:35:19 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42765 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBKVdF (ORCPT
+        with ESMTP id S1727594AbgBKVfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:33:05 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j20so11712137otq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 13:33:04 -0800 (PST)
+        Tue, 11 Feb 2020 16:35:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so11691014otd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 13:35:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w7t90g4c6XNbG2IVEsLyCTMS996Wdaa8ZX4sfkSxqPY=;
-        b=sPb+i27ruMFTvdaOm/MyeY4Oz9L1b8r1xJSqYOfN+o5NMuR8tLmfXcwUTIumlqIiYW
-         2N8lzmIaxjR+23jnTm7qAer4rFagk617Vw5fp6rbbZAoseCihITs9GNCZ4bnVda2WJnk
-         oiLpm3H8xB22+xnzg0KozaxmzWdWjbLz64ru6WrEx0MMiBBMRsPvHBFlRVuQAdlBaR5O
-         YUpX/nkFwO39yJTtfwvmkOhu73zPYObk0PdEjCMmWCpJ2YWhjbHOa+ZOUJCgxialqOvU
-         x3LpOiDBJtwItD0ieD23vk+I1qQp1gvNs12BQTOn4RGIJYOyWze2v5PeqFwz0IpDf+dV
-         UZiw==
+        bh=FPD9BpDVwDUxM6Ip8EFlRULrgnjEP3aNdZIbOVFnMe0=;
+        b=B36DxbZZRwo0TP4rDikBCgdf0HltQGxfonCU0xN5pDZFDZm/IDCxFJLUu9RD4TJKjC
+         wXrxZ5GyC2AWBXmn87iB/TGJXJGGw/+YS4H5kRamVkLauyNnlgJ4ioKGHrocGiWjFhUo
+         MTaip7Vg7uEqbQi/ZBe8/pZgqKxATTSSJZ4D58a+AAvNtm0ZGHUwtkEYQlfFqAcnsgmi
+         qW2YpT1kG7XMDLPTauVsDkdRXFdNQd7izC6dJjaiv4QZcFjH4igk5gTy8LX24VHUCZOe
+         4pBCo9vJhQ/y3yhG9LcVjX0JcApXUBZMpckrwjYDzMwxpe8KWH4cy8wcGeKWD4fgi1Je
+         PbOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w7t90g4c6XNbG2IVEsLyCTMS996Wdaa8ZX4sfkSxqPY=;
-        b=A0MeaGQXIYFaZvWfOnY+oJ6AqkhM1N1s5FhHTkOF6guaMGTiKvXU5ClKrMYLG+jrGg
-         tDrIHefBH2kbE6xeVzr8H33MsTDYGRTBa2h7/TAF8SjfA4vuxxvD9zfsOlaUBDMTLDLM
-         2jFd3PSwtPGnpPcPQPF/5Q4G0DU37OPA+4Uk20ILc9Za+bxuzBRXfmDfQU5J+X0WjxhC
-         IfiERnkdHY73sCqqYJ8epn2oB5WVRWlWL/q79H/HcBI+Jv/oKkbPlKrl3eiZdRwuYnfA
-         cc5/aTSGz+dpLeQWIocGHq+ncZmJHCMB60abt8U0mFDxXOTL2NfzoLr1fW3jUZ24Y/X+
-         UMaQ==
-X-Gm-Message-State: APjAAAWXgPWc2CuFOFAmMdQMHIJhdokKRdHBpQP2G94CNds0Iqt9ajCm
-        sY6NY2cYg9oPMBY/pXH7LQXAq+Y3qcazV25J1vZFMQ==
-X-Google-Smtp-Source: APXvYqyx2YfO3CrgVT8Ue7KGbrpANlKv/7s2kPE1d6utD3uoHxPksjBi0y8VM3cugmkfUj0o0k+v0rF5MEB6CHlQjRg=
-X-Received: by 2002:a05:6830:22cc:: with SMTP id q12mr7016668otc.110.1581456783363;
- Tue, 11 Feb 2020 13:33:03 -0800 (PST)
+        bh=FPD9BpDVwDUxM6Ip8EFlRULrgnjEP3aNdZIbOVFnMe0=;
+        b=S5jaLlcqxJWBq3UbPHPTnszjEFur21O6fDJfB3P+3ylff1Kp+zunH1Z0GdNnJlmiRU
+         uwCzjNlGf6/ppgiwzwVZZgwMU3+rfVsOzJ0SwqFWJ8r5J0be90G7bD0OVICE58dvFGP4
+         uaWkHT1oB9pS9on1K90nEAikM1vVHrmI4uyl5PhLe74eDzuXlT7aa85xTcfyduPns87G
+         j7hdFuYmIQ19QaEGr9s2l2TS3+BpkdIM5zZSgrtkaYaNSw2az26e8GalMN6Ef16k0tHH
+         z1whoMY8XVLgGp6CjoybHQ3CZNwHxepsM1epfK2omCAD/fNLJ7dSOJpZ5mC6P4Ab9YMY
+         e4LA==
+X-Gm-Message-State: APjAAAX3oxzi9jltR4iGnXmf8fC1mAzNGBgPtB+3zpiKjLoa/kBvGBV0
+        dQ8E3VzJtXfQ3OxXmgUDYEJoemdt8+l/NujPcwUYcQ==
+X-Google-Smtp-Source: APXvYqySdzbnrv+gR5SkneeztGn1ucffOgBcWtCYQKZBmEqr59hxm0NevVeUFsu2lvl70k/1QsEa/2LYduVqhkRnevo=
+X-Received: by 2002:a9d:2dea:: with SMTP id g97mr6850754otb.33.1581456917229;
+ Tue, 11 Feb 2020 13:35:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20200123152440.28956-1-kpsingh@chromium.org> <20200123152440.28956-5-kpsingh@chromium.org>
- <20200211031208.e6osrcathampoog7@ast-mbp> <20200211124334.GA96694@google.com>
- <20200211175825.szxaqaepqfbd2wmg@ast-mbp> <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
- <20200211190943.sysdbz2zuz5666nq@ast-mbp> <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
- <20200211201039.om6xqoscfle7bguz@ast-mbp> <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
-In-Reply-To: <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 11 Feb 2020 22:32:37 +0100
-Message-ID: <CAG48ez0gxY5bzTpk+6DjkXqTPDM+06yy8spKdqoF7Edt9Nx_JQ@mail.gmail.com>
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-6-almasrymina@google.com> <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
+In-Reply-To: <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Tue, 11 Feb 2020 13:35:06 -0800
+Message-ID: <CAHS8izMGreJgOhG8ivE2OH9bq98BmvxAqtBc=M9waTqOKv3eeQ@mail.gmail.com>
+Subject: Re: [PATCH v11 6/9] hugetlb_cgroup: support noreserve mappings
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 9:33 PM Jann Horn <jannh@google.com> wrote:
-> On Tue, Feb 11, 2020 at 9:10 PM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> > On Tue, Feb 11, 2020 at 08:36:18PM +0100, Jann Horn wrote:
-> > > On Tue, Feb 11, 2020 at 8:09 PM Alexei Starovoitov
-> > > <alexei.starovoitov@gmail.com> wrote:
-> > > > On Tue, Feb 11, 2020 at 07:44:05PM +0100, Jann Horn wrote:
-> > > > > On Tue, Feb 11, 2020 at 6:58 PM Alexei Starovoitov
-> > > > > <alexei.starovoitov@gmail.com> wrote:
-> > > > > > On Tue, Feb 11, 2020 at 01:43:34PM +0100, KP Singh wrote:
-> > > > > [...]
-> > > > > > > * When using the semantic provided by fexit, the BPF LSM program will
-> > > > > > >   always be executed and will be able to override / clobber the
-> > > > > > >   decision of LSMs which appear before it in the ordered list. This
-> > > > > > >   semantic is very different from what we currently have (i.e. the BPF
-> > > > > > >   LSM hook is only called if all the other LSMs allow the action) and
-> > > > > > >   seems to be bypassing the LSM framework.
-> > > > > >
-> > > > > > It that's a concern it's trivial to add 'if (RC == 0)' check to fexit
-> > > > > > trampoline generator specific to lsm progs.
-> > > > > [...]
-> > > > > > Using fexit mechanism and bpf_sk_storage generalization is
-> > > > > > all that is needed. None of it should touch security/*.
-[...]
-> > Some of the lsm hooks are in critical path. Like security_socket_sendmsg().
-> > retpoline hurts. If we go with indirect calls right now it will be harder to
-> > optimize later. It took us long time to come up with bpf trampoline and build
-> > bpf dispatcher on top of it to remove single indirect call from XDP runtime.
-> > For bpf+lsm would be good to avoid it from the start.
+On Thu, Feb 6, 2020 at 2:31 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
 >
-> Just out of curiosity: Are fexit hooks really much cheaper than indirect calls?
+> On 2/3/20 3:22 PM, Mina Almasry wrote:
+> > Support MAP_NORESERVE accounting as part of the new counter.
+> >
+> > For each hugepage allocation, at allocation time we check if there is
+> > a reservation for this allocation or not. If there is a reservation for
+> > this allocation, then this allocation was charged at reservation time,
+> > and we don't re-account it. If there is no reserevation for this
+> > allocation, we charge the appropriate hugetlb_cgroup.
+> >
+> > The hugetlb_cgroup to uncharge for this allocation is stored in
+> > page[3].private. We use new APIs added in an earlier patch to set this
+> > pointer.
 >
-> AFAIK ftrace on x86-64 replaces the return pointer for fexit
-> instrumentation (see prepare_ftrace_return()). So when the function
-> returns, there is one return misprediction for branching into
-> return_to_handler(), and then the processor's internal return stack
-> will probably be misaligned so that after ftrace_return_to_handler()
-> is done running, all the following returns will also be mispredicted.
+> Ah!  That reminded me to look at the migration code.  Turns out that none
+> of the existing cgroup information (page[2]) is being migrated today.  That
+> is a bug. :(  I'll confirm and fix in a patch separate from this series.
+> We will need to make sure that new information added by this series in page[3]
+> is also migrated.  That would be in an earlier patch where the use of the
+> field is introduced.
 >
-> So I would've thought that fexit hooks would have at least roughly the
-> same impact as indirect calls - indirect calls via retpoline do one
-> mispredicted branch, fexit hooks do at least two AFAICS. But I guess
-> indirect calls could still be slower if fexit benefits from having all
-> the mispredicted pointers stored on the cache-hot stack while the
-> indirect branch target is too infrequently accessed to be in L1D, or
-> something like that?
+> >
+> > Signed-off-by: Mina Almasry <almasrymina@google.com>
+> >
+> > ---
+> >
+> > Changes in v10:
+> > - Refactored deferred_reserve check.
+> >
+> > ---
+> >  mm/hugetlb.c | 28 +++++++++++++++++++++++++++-
+> >  1 file changed, 27 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index 33818ccaf7e89..ec0b55ea1506e 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -1339,6 +1339,9 @@ static void __free_huge_page(struct page *page)
+> >       clear_page_huge_active(page);
+> >       hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
+> >                                    page, false);
+> > +     hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
+> > +                                  page, true);
+> > +
+>
+> When looking at the code without change markings, the two above lines
+> look so similar my first thought is there must be a mistake.
+>
+> A suggestion for better code readability:
+> - hugetlb_cgroup_uncharge_page could just take "struct hstate *h" and
+>   get both hstate_index(h) and pages_per_huge_page(h).
+> - Perhaps make hugetlb_cgroup_uncharge_page and
+>   hugetlb_cgroup_uncharge_page_rsvd be wrappers around a common routine.
+>   Then the above would look like:
+>
+>   hugetlb_cgroup_uncharge_page(h, page);
+>   hugetlb_cgroup_uncharge_page_rsvd(h, page);
+>
 
-Ah, kpsingh explained to me that BPF trampolines work differently from
-normal ftrace and don't do the return address poking. Still, the
-processor's internal call stack will be misaligned by the BPF
-trampoline, right? Since there is one more call than return, if e.g.
-security_blah() is hooked, then the kernel will probably predict
-security_blah+5 as the target when returning from the trampoline to
-security_blah's parent, then when returning from security_blah's
-parent to the grandparent predict the parent, and so on, right?
+I did modify the interfaces to this, as it's much better for
+readability indeed. Unfortunately the patch the adds interfaces
+probably needs a re-review now as it's changed quite a bit, I did not
+carry your or David's Reviewed-by.
+
+>
+> >       if (restore_reserve)
+> >               h->resv_huge_pages++;
+> >
+> > @@ -2172,6 +2175,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+> >       long gbl_chg;
+> >       int ret, idx;
+> >       struct hugetlb_cgroup *h_cg;
+> > +     bool deferred_reserve;
+> >
+> >       idx = hstate_index(h);
+> >       /*
+> > @@ -2209,10 +2213,20 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+> >                       gbl_chg = 1;
+> >       }
+> >
+> > +     /* If this allocation is not consuming a reservation, charge it now.
+> > +      */
+> > +     deferred_reserve = map_chg || avoid_reserve || !vma_resv_map(vma);
+> > +     if (deferred_reserve) {
+> > +             ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h),
+> > +                                                &h_cg, true);
+> > +             if (ret)
+> > +                     goto out_subpool_put;
+> > +     }
+> > +
+> >       ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg,
+> >                                          false);
+>
+> Hmmm?  I'm starting to like the wrapper idea more as a way to help with
+> readability of the bool rsvd argument.
+>
+> hugetlb_cgroup_charge_cgroup_rsvd()
+> hugetlb_cgroup_charge_cgroup()
+>
+> At least to me it makes it easier to read.
+> --
+> Mike Kravetz
+>
+> >       if (ret)
+> > -             goto out_subpool_put;
+> > +             goto out_uncharge_cgroup_reservation;
+> >
+> >       spin_lock(&hugetlb_lock);
+> >       /*
+> > @@ -2236,6 +2250,14 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+> >       }
+> >       hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page,
+> >                                    false);
+> > +     /* If allocation is not consuming a reservation, also store the
+> > +      * hugetlb_cgroup pointer on the page.
+> > +      */
+> > +     if (deferred_reserve) {
+> > +             hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg,
+> > +                                          page, true);
+> > +     }
+> > +
+> >       spin_unlock(&hugetlb_lock);
+> >
+> >       set_page_private(page, (unsigned long)spool);
+> > @@ -2261,6 +2283,10 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+> >  out_uncharge_cgroup:
+> >       hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg,
+> >                                      false);
+> > +out_uncharge_cgroup_reservation:
+> > +     if (deferred_reserve)
+> > +             hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h),
+> > +                                            h_cg, true);
+> >  out_subpool_put:
+> >       if (map_chg || avoid_reserve)
+> >               hugepage_subpool_put_pages(spool, 1);
+> > --
+> > 2.25.0.341.g760bfbb309-goog
