@@ -2,106 +2,152 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE02C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E492AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CF920708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98F820708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:29:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OqEGPXPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgBKQ2c (ORCPT
+        id S1730813AbgBKQ30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:28:32 -0500
-Received: from mga01.intel.com ([192.55.52.88]:50955 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbgBKQ2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:28:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:28:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="233501271"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga003.jf.intel.com with ESMTP; 11 Feb 2020 08:28:30 -0800
-Date:   Tue, 11 Feb 2020 08:28:30 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 04/12] fs/xfs: Clean up DAX support check
-Message-ID: <20200211162830.GB12866@iweiny-DESK2.sc.intel.com>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <20200208193445.27421-5-ira.weiny@intel.com>
- <20200211055745.GG10776@dread.disaster.area>
+        Tue, 11 Feb 2020 11:29:26 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52386 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729769AbgBKQ3Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:29:25 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BGTBSI003892;
+        Tue, 11 Feb 2020 10:29:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581438551;
+        bh=s1rC3bq7DiLStu9i9FHCNZqJRoyzQUYiiRwZ0lgfqNk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OqEGPXPt5QwUNgkg/gJ83e8RQiQA1cziseyMFONvToT9J19EOR1xLkr/hYeIJDZgO
+         zMlzp8JU1iAaFXl3PvZoDoIunbcxrU+RCl+QKuhLDRsgCn9enG+LnR+Te/9TR7CHk3
+         CVjBpAscqMiQg6QPj6u2cgbsc5MrO1uys1f6rFVg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01BGTBel084455
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Feb 2020 10:29:11 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
+ Feb 2020 10:29:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 11 Feb 2020 10:29:11 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BGTAKw024424;
+        Tue, 11 Feb 2020 10:29:10 -0600
+Subject: Re: [PATCH 2/2] ASoC: tlv320adcx140: Add the tlv320adcx140 codec
+ driver family
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20200207194533.29967-1-dmurphy@ti.com>
+ <20200207194533.29967-2-dmurphy@ti.com> <20200210135252.GK7685@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1148672d-4053-65cd-61dd-0039658d85a4@ti.com>
+Date:   Tue, 11 Feb 2020 10:24:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211055745.GG10776@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200210135252.GK7685@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:57:45PM +1100, Dave Chinner wrote:
-> On Sat, Feb 08, 2020 at 11:34:37AM -0800, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Rather than open coding xfs_inode_supports_dax() in
-> > xfs_ioctl_setattr_dax_invalidate() export xfs_inode_supports_dax() and
-> > call it in preparation for swapping dax flags.
-> > 
-> > This also means updating xfs_inode_supports_dax() to return true for a
-> > directory.
-> 
-> That's not correct. This now means S_DAX gets set on directory inodes
-> because both xfs_inode_supports_dax() and the on-disk inode flag
-> checks return true in xfs_diflags_to_iflags(). Hence when we
-> instantiate a directory inode with a DAX inherit hint set on it
-> we'll set S_DAX on the inode and so IS_DAX() will return true for
-> directory inodes...
+Mark
 
-I'm not following.  Don't we want S_DAX to get set on directory inodes?
+Thanks for the review
 
-IIRC what we wanted was something like this where IS_DAX is the current state
-and "dax" is the inode flag:
+On 2/10/20 7:52 AM, Mark Brown wrote:
+> On Fri, Feb 07, 2020 at 01:45:33PM -0600, Dan Murphy wrote:
+>
+>> +	/* interface format */
+>> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+>> +	case SND_SOC_DAIFMT_I2S:
+>> +		iface_reg1 |= ADCX140_I2S_MODE_BIT;
+>> +		break;
+>> +	case SND_SOC_DAIFMT_LEFT_J:
+>> +		iface_reg1 |= ADCX140_LEFT_JUST_BIT;
+>> +		break;
+>> +	case SND_SOC_DAIFMT_DSP_A:
+>> +	case SND_SOC_DAIFMT_DSP_B:
+>> +		break;
+> _DSP_A and _DSP_B are two different format so I'd expect the device to
+> be configured differently for them, or for only one to be supported.
+Ack.  I will need to adjust the TX offset for these.  I will do add a 
+prepare call back and set the offset there.  These can fall through 
+since TDM is default.
+>
+>> +static int adcx140_mute(struct snd_soc_dai *codec_dai, int mute)
+>> +{
+>> +	struct snd_soc_component *component = codec_dai->component;
+>> +	int config_reg;
+>> +	int mic_enable;
+>> +	int i;
+>> +
+>> +	/* There is not a single register to mute.  Each enabled path has to be
+>> +	 * muted individually.  Read which path is enabled and mute it.
+>> +	 */
+>> +	snd_soc_component_read(component, ADCX140_IN_CH_EN, &mic_enable);
+>> +	if (!mic_enable)
+>> +		return 0;
+> You could also just offer this control to userspace, it's not
+> *essential* to have this operation though it can help with glitching
+> during stream startup.
+>
+>> +
+>> +	for (i = 0; i < ADCX140_MAX_CHANNELS; i++) {
+>> +		config_reg = ADCX140_CH8_CFG2 - (5 * i);
+>> +		if (!(mic_enable & BIT(i)))
+>> +			continue;
+>> +
+>> +		if (mute)
+>> +			snd_soc_component_write(component, config_reg, 0);
+>> +	}
+> How does the unmute work?
+This is unmuted through volume control.  I can remove this as the device 
+is muted when the volume register is set to 0.  That will force the user 
+to have to set a volume.
+>
+>> +	internal_reg = device_property_present(adcx140->dev,
+>> +					       "ti,use-internal-areg");
+>> +
+>> +	if (internal_reg)
+>> +		sleep_cfg_val |= ADCX140_AREG_INTERNAL;
+> Does this actually need a specific property or could you support the
+> regulator API and then use regulator_get_optional() to figure out if an
+> external AVDD is attached?
 
-/ <IS_DAX=0 dax=0>
-	dir1 <IS_DAX=0 dax=0>
-		f0 <IS_DAX=0 dax=0>
-		f1 <IS_DAX=1 dax=1>
-	dir2 <IS_DAX=1 dax=1>
-		f2 <IS_DAX=1 dax=1>
-		f3 <IS_DAX=0 dax=0>
-		dir3 <IS_DAX=1 dax=1>
-			f4 <IS_DAX=1 dax=1>
-		dir4 <IS_DAX=0 dax=0>
-			f5 <IS_DAX=0 dax=0>
-		f6 <IS_DAX=1 dax=1>
+Yes we could set internal AREG bit if no supply is given.
 
-Where f1, dir2, f3, and dir4 required explicit state changes when they were
-created.  Because they inherited their dax state from the parent.  All the
-other creations happened based on the DAX state of the parent directory.  So we
-need to store and know the state of the directories.  What am I missing?
+>
+>> +static int adcx140_codec_probe(struct snd_soc_component *component)
+>> +{
+>> +	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
+>> +
+>> +	return adc5410_init(adcx140);
+>> +}
+> Does the separate init function buy us anything?
 
-Ira
+No that is an artifact of my development I can move everything to 
+codec_probe
 
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Dan
+
