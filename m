@@ -2,130 +2,124 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D406C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE8C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3340E20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581449938;
-	bh=DWVq3ZXFoLGeUdlpAjgyaHA6wqWdK8uMWTgLFkVA13k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cuqPgE9HjDXM1W+BZfYuMFBkht0nrV9r6KaZQr5N1rxtQ8qkOcgbnoOQwpSXAQJ+s
-	 FB66IQY9AH6NIcucauYnaqEMBB6rQaAsdxaMtUDoVDjGb4P9LU0V6Zbw/sNNMIViHM
-	 fW2+QNc2+xiWeyYtRZmDcFW66s/EzukATo3yQwik=
+	by mail.kernel.org (Postfix) with ESMTP id 0A1F520842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NdyQDeY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbgBKTi5 (ORCPT
+        id S1731059AbgBKTjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:38:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgBKTiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:38:55 -0500
-Received: from localhost (unknown [104.133.9.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 145F520848;
-        Tue, 11 Feb 2020 19:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581449935;
-        bh=DWVq3ZXFoLGeUdlpAjgyaHA6wqWdK8uMWTgLFkVA13k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AFkBVFR4FioxWg06MDhGcDIcsr87r0HVTYowLudkUyK7dozpJdYEhAGFn1BebOQHG
-         71/5NNZc8G17HNDVwLyEFMjyDVf08iCdpl70IrBXultI6SPx/GBg0rhG2sSBjRd+Fe
-         fBgi5PzzjDQd3QEMtRaeaAqUG9oZ8O9T0jzQPnDo=
-Date:   Tue, 11 Feb 2020 11:38:54 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] treewide: Replace zero-length arrays with flexible-array
- member
-Message-ID: <20200211193854.GA1972490@kroah.com>
-References: <20200211174126.GA29960@embeddedor>
- <20200211183229.GA1938663@kroah.com>
- <3fdbb16a-897c-aa5b-d45d-f824f6810412@embeddedor.com>
- <202002111129.77DB1CCC7B@keescook>
+        Tue, 11 Feb 2020 14:39:52 -0500
+Received: from gateway21.websitewelcome.com ([192.185.45.155]:20246 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727668AbgBKTjw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:39:52 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 46666400C5F67
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 13:39:51 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1bNvjUERM8vkB1bNvjSPfl; Tue, 11 Feb 2020 13:39:51 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=n3MEAaSo+ySPB0dRTUiR+Yk3gNhROG/lQbEkZaa1y24=; b=NdyQDeY10ga3LJUt2mEUQXYizX
+        GGnVRgiKkwBIo/n9rJmvYeMnNGcS/mniXbS3v2Th5jI2k1QV3I1E0QwVMXrQfqAtqnjJWu5u+n3Jz
+        tyzDNAe0T6LkjhBQTApfCSDB1rRd+rsTtUb+EkbbK/uLNuFBYVDDAZBhG0r+y0DPIQlBi0iTI3kXj
+        SPST3mjGZbdSp992CXwzoQsS9E/OWFl3fXZRxHY+lbvCA/GKGs+S9pmenaKOC8ATeZo0OjtnRpC1E
+        /zmR5SU0fpdhtbMq9jA31DkENeTHoEvxpqNaNSeIh+kTbsR0H00P/wit+0QS5MxkEDTJvbqNW2KXu
+        IqtDHizw==;
+Received: from [200.68.140.36] (port=1945 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1bNt-001JBU-S3; Tue, 11 Feb 2020 13:39:49 -0600
+Date:   Tue, 11 Feb 2020 13:42:24 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] ALSA: usb-midi: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200211194224.GA9383@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202002111129.77DB1CCC7B@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1bNt-001JBU-S3
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:1945
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:32:04AM -0800, Kees Cook wrote:
-> On Tue, Feb 11, 2020 at 01:20:36PM -0600, Gustavo A. R. Silva wrote:
-> > 
-> > 
-> > On 2/11/20 12:32, Greg KH wrote:
-> > > On Tue, Feb 11, 2020 at 11:41:26AM -0600, Gustavo A. R. Silva wrote:
-> > >> The current codebase makes use of the zero-length array language
-> > >> extension to the C90 standard, but the preferred mechanism to declare
-> > >> variable-length types such as these ones is a flexible array member[1][2],
-> > >> introduced in C99:
-> > >>
-> > >> struct foo {
-> > >>         int stuff;
-> > >>         struct boo array[];
-> > >> };
-> > >>
-> > >> By making use of the mechanism above, we will get a compiler warning
-> > >> in case the flexible array does not occur last in the structure, which
-> > >> will help us prevent some kind of undefined behavior bugs from being
-> > >> unadvertenly introduced[3] to the codebase from now on.
-> > >>
-> > >> All these instances of code were found with the help of the following
-> > >> Coccinelle script:
-> > >>
-> > >> @@
-> > >> identifier S, member, array;
-> > >> type T1, T2;
-> > >> @@
-> > >>
-> > >> struct S {
-> > >>   ...
-> > >>   T1 member;
-> > >>   T2 array[
-> > >> - 0
-> > >>   ];
-> > >> };
-> > >>
-> > >> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > >> [2] https://github.com/KSPP/linux/issues/21
-> > >> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> > >>
-> > >> NOTE: I'll carry this in my -next tree for the v5.6 merge window.
-> > > 
-> > > Why not carve this up into per-subsystem patches so that we can apply
-> > > them to our 5.7-rc1 trees and then you submit the "remaining" that don't
-> > > somehow get merged at that timeframe for 5.7-rc2?
-> > > 
-> > 
-> > Yep, sounds good. I'll do that.
-> 
-> FWIW, I'd just like to point out that since this is a mechanical change
-> with no code generation differences (unlike the pre-C90 1-byte array
-> conversions), it's a way better use of everyone's time to just splat
-> this in all at once.
-> 
-> That said, it looks like Gustavo is up for it, but I'd like us to
-> generally consider these kinds of mechanical changes as being easier to
-> manage in a single patch. (Though getting Acks tends to be a bit
-> harder...)
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Hey, if this is such a mechanical patch, let's get it to Linus now,
-what's preventing that from being merged now?
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-thanks,
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
 
-greg k-h
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ sound/usb/midi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/usb/midi.c b/sound/usb/midi.c
+index b737f0ec77d0..f15d36731cbe 100644
+--- a/sound/usb/midi.c
++++ b/sound/usb/midi.c
+@@ -91,7 +91,7 @@ struct usb_ms_endpoint_descriptor {
+ 	__u8  bDescriptorType;
+ 	__u8  bDescriptorSubtype;
+ 	__u8  bNumEmbMIDIJack;
+-	__u8  baAssocJackID[0];
++	__u8  baAssocJackID[];
+ } __attribute__ ((packed));
+ 
+ struct snd_usb_midi_in_endpoint;
+-- 
+2.25.0
+
