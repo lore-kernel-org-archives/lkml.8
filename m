@@ -2,377 +2,159 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0320AC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D689C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98E02086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0104720842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:19:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vAzh8AIn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="xYy9YEwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgBKJPX (ORCPT
+        id S1727956AbgBKJTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:15:23 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37404 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbgBKJPX (ORCPT
+        Tue, 11 Feb 2020 04:19:50 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35624 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbgBKJTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:15:23 -0500
-Received: by mail-il1-f193.google.com with SMTP id v13so2824692iln.4;
-        Tue, 11 Feb 2020 01:15:22 -0800 (PST)
+        Tue, 11 Feb 2020 04:19:48 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w12so11321436wrt.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:19:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sdIlZUjUiU9Et+TLRdOE3MZltBw9dwJzx4JE2mijFcw=;
-        b=vAzh8AIn/myfslUNkQhS0VSXss0Lr8ulQmFfaCTUDXGkAucLfzIxaN2uTJJE0wgGes
-         4ZDlE3vpfToIbqFOSo9RiOT7CsilTQ2LLz3xN86S4leU8cf/t5E6cGoyV+yoiWxyAGQ7
-         SesIuynVStDzK5WSMXQ8rQZPniP8b9LDZHE1Wta6u+bJLK1q/ZoRXhlql4Evqw+B5nMe
-         aN7NCp1Gqm4G3ZJbNfMO2F3iPeLj5syEJYeE4abTk2Ne4xgOs61Og4UW2v00ycF/LTwb
-         ZuH5P3dwxBB9bZPfO9ab7lgPhTu113Z3fDo5deDSRup9fIBGDfsmLJokIxMVobuWVyGS
-         26Sg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UVlESJACG89pklyqt5dku74uDucYx/inw781yhYszzY=;
+        b=xYy9YEwOd9zZ/ik7pbrssQUXxyjszoulOXUQj8EoL34h7OY5pAzh43t1vT0dtAbln8
+         7BA4R5YCHBr4ydY3sUzLXNlVyyf97waTKEfcSk1LDGRBn80b9PuTibFQuZQKkgKFASsb
+         9m9IN6LR8JZorC0hARXRmw3zlNhoroISTgXbee9H2+OJ0estGuBJCSix0C0XkwbGx25U
+         QgNAgYXHTCzrjGoPeHJ7AunyV+90U5rvmVoiAnik3ayvtPznNlpHSXmWFJ3bnEHSGYSC
+         DKbsc3MuHhkm0WS4pqCv78bXIiaug8Ba3I5RNq//mMqIBOvXTniwbZWnb06QTSYlHe/8
+         rlbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sdIlZUjUiU9Et+TLRdOE3MZltBw9dwJzx4JE2mijFcw=;
-        b=PnqsKPY/wDT89T5cxNYDdXWUhhyOBfMPXEBUf18/U0VidFi3AMOl50z/8R+YqD4fnB
-         bGneubYBP6imWTmkl/WKjlPFBNM4BTAAek94z3ZKCaWmmo29IfFcedaiVrf8AwMZ0Ohi
-         OS/VCgfabxibeVkt3Ontm/SAFiJcWL5BtQUpLOzNFLd5sj5vUzHJ4E8i4oh5wi1UYFNy
-         Dcpkhq8kXU2RZgeLI2J3YaTBKzB39JiIdc5d96fRQsY5FcTr0iHX39DLTeSrlQmCEQYJ
-         EwfZm5MR8cnwurw5dvvJ5PfLj7mgrJp5TE2NMYMNf3BORhL/iLLXGaLVaPrO4I2vXh8L
-         Fk8g==
-X-Gm-Message-State: APjAAAWvLnPX27MoWXc5ScVZBzJ3KE40PXu8vYD15+V+AFS/0ALesYwU
-        rp+x/+s01caZ8/0Sgsb5y9ai7/7FM8+WgHQECLI=
-X-Google-Smtp-Source: APXvYqwxH0MRKWbVi9LF/FoS86IWI88iWJvc+h1fAl/sYAxz77xQva2vuGHZH8OmP5XBBqDHauboTH/jr5BS0j0Ef1U=
-X-Received: by 2002:a92:d7c6:: with SMTP id g6mr5423861ilq.282.1581412522484;
- Tue, 11 Feb 2020 01:15:22 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UVlESJACG89pklyqt5dku74uDucYx/inw781yhYszzY=;
+        b=cMQHTlGpyOzPDy9n2YDdRx1RBtEIqMdWkkYRmVh0Zlp1R64nmIwRwWUPXdFmftepar
+         XwrpKVKEhq8UKpYYHZZhv53BDvyfAPww8MYLNdAe/eTTgWVoZVkn2iHnnxZMYhCCB5qK
+         3D90nipAfRhUymQHW3nh+bf4SnjQGXaSNL+PaexuBBojxhPPfc/3V9//LZrZQynYRUJO
+         v+xs0MlaSFPWY8ew8mZZaXGxM7XDnlaGRX4u2e/FIGUTC2KJ2+uFf+9ozy39ynRpXiGt
+         0dMrAVVDA5WhZEmF0DEKh8uu+y8qK9jcaDyS/Ldf2nZaYe2SN6NlwoheGgafpMfhU9YX
+         eNww==
+X-Gm-Message-State: APjAAAUAAYScqRrYJrs2p/1VufyjSPW1alPnl2Ez1ZPzBQFYyo5EBj6I
+        MdppfxQlAgnQhHlD36S3C9nl9Q==
+X-Google-Smtp-Source: APXvYqwNRTbfJgQ3bARtabhxG+X0aIsyLQ0k4H1EKu6LHKxMKj9fzDNNZ2wxF/MoEtIq3fWGqXmGIw==
+X-Received: by 2002:adf:dd52:: with SMTP id u18mr7348760wrm.131.1581412785245;
+        Tue, 11 Feb 2020 01:19:45 -0800 (PST)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id y131sm2958622wmc.13.2020.02.11.01.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 01:19:44 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [RESEND PATCH v6 0/7] gpiolib: add an ioctl() for monitoring line status changes
+Date:   Tue, 11 Feb 2020 10:19:30 +0100
+Message-Id: <20200211091937.29558-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200207214948.1073419-1-jlayton@kernel.org>
-In-Reply-To: <20200207214948.1073419-1-jlayton@kernel.org>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 11 Feb 2020 10:15:41 +0100
-Message-ID: <CAOi1vP-z4+NKMMhCz19Ld_=X5B7nvzVbS-fErS9MA3cq+SMvGg@mail.gmail.com>
-Subject: Re: [PATCH] ceph: fix allocation under spinlock in mount option parsing
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Xiubo Li <xiubli@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 10:49 PM Jeff Layton <jlayton@kernel.org> wrote:
->
-> Al and syzbot reported that 4fbc0c711b24 (ceph: remove the extra slashes
-> in the server path) had caused a regression where an allocation could be
-> done under spinlock.
->
-> Fix this by keeping a canonicalized version of the path in the mount
-> options. Then we can simply compare those without making copies at all
-> during the comparison.
->
-> Fixes: 4fbc0c711b24 ("ceph: remove the extra slashes in the server path")
-> Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/ceph/super.c | 170 ++++++++++++++++++++++--------------------------
->  fs/ceph/super.h |   1 +
->  2 files changed, 79 insertions(+), 92 deletions(-)
->
-> diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-> index 5fa28e98d2b8..196d547c7054 100644
-> --- a/fs/ceph/super.c
-> +++ b/fs/ceph/super.c
-> @@ -208,6 +208,69 @@ struct ceph_parse_opts_ctx {
->         struct ceph_mount_options       *opts;
->  };
->
-> +/**
-> + * canonicalize_path - Remove the extra slashes in the server path
-> + * @server_path: the server path and could be NULL
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Hi Jeff,
+Resending rebased on top of v5.6-rc1 and retested.
 
-It doesn't look like server_path can be NULL, and the code doesn't
-handle that either.
+When discussing the recent user-space changes with Kent and while working
+on dbus API for libgpiod I noticed that we really don't have any way of
+keeping the line info synchronized between the kernel and user-space
+processes. We can of course periodically re-read the line information or
+even do it every time we want to read a property but this isn't optimal.
 
-> + *
-> + * Return NULL if the path is NULL or only consists of "/", or a string
-> + * without any extra slashes including the leading slash(es) and the
+This series adds a new ioctl() that allows user-space to set up a watch on
+the GPIO chardev file-descriptor which can then be polled for events
+emitted by the kernel when the line is requested, released or its status
+changed. This of course doesn't require the line to be requested. Multiple
+user-space processes can watch the same lines.
 
-It can return an error, so this should say "string, NULL or error", but
-see below.
+This series also includes a variety of minor tweaks & fixes for problems
+discovered during development. For instance it addresses a race-condition
+in current line event fifo.
 
-> + * slash(es) at the end of the server path, such as:
-> + * "//dir1////dir2///" --> "dir1/dir2"
-> + */
-> +static char *canonicalize_path(const char *server_path)
-> +{
-> +       const char *path = server_path;
-> +       const char *cur, *end;
-> +       char *buf, *p;
-> +       int len;
-> +
-> +       /* remove all the leading slashes */
-> +       while (*path == '/')
-> +               path++;
-> +
-> +       /* if the server path only consists of slashes */
-> +       if (*path == '\0')
-> +               return NULL;
-> +
-> +       len = strlen(path);
-> +
-> +       buf = kmalloc(len + 1, GFP_KERNEL);
-> +       if (!buf)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       end = path + len;
-> +       p = buf;
-> +       do {
-> +               cur = strchr(path, '/');
-> +               if (!cur)
-> +                       cur = end;
-> +
-> +               len = cur - path;
-> +
-> +               /* including one '/' */
-> +               if (cur != end)
-> +                       len += 1;
-> +
-> +               memcpy(p, path, len);
-> +               p += len;
-> +
-> +               while (cur <= end && *cur == '/')
-> +                       cur++;
-> +               path = cur;
-> +       } while (path < end);
-> +
-> +       *p = '\0';
-> +
-> +       /*
-> +        * remove the last slash if there has and just to make sure that
-> +        * we will get something like "dir1/dir2"
-> +        */
-> +       if (*(--p) == '/')
-> +               *p = '\0';
-> +
-> +       return buf;
-> +}
+First two patches add new helpers to kfifo, that are used in the later
+parts of the series.
 
-I realize that you just adapted the existing function, but it really
-looks like a mouthful -- both the signature (string, NULL or error)
-and the code.  It could be a lot more concise...
+v1: https://lkml.org/lkml/2019/11/27/327
 
-> +
->  /*
->   * Parse the source parameter.  Distinguish the server list from the path.
->   *
-> @@ -230,15 +293,23 @@ static int ceph_parse_source(struct fs_parameter *param, struct fs_context *fc)
->
->         dev_name_end = strchr(dev_name, '/');
->         if (dev_name_end) {
-> -               kfree(fsopt->server_path);
->
+v1 -> v2:
+- rework the main patch of the series: re-use the existing file-descriptor
+  associated with an open character device
+- add a patch adding a debug message when the line event kfifo is full and
+  we're discarding another event
+- rework the locking mechanism for lineevent kfifo: reuse the spinlock
+  from the waitqueue structure
+- other minor changes
 
-Blank line.
+v2 -> v3:
+- added patches providing new implementation for some kfifo macros
+- fixed a regression in the patch reworking the line event fifo: reading
+  multiple events is now still possible
+- reworked the structure for new ioctl: it's now padded such that there
+  be no alignment issues if running a 64-bit kernel on 32-bit userspace
+- fixed a bug where one process could disable the status watch of another
+- use kstrtoul() instead of atoi() in gpio-watch for string validation
 
->                 /*
->                  * The server_path will include the whole chars from userland
->                  * including the leading '/'.
->                  */
-> +               kfree(fsopt->server_path);
->                 fsopt->server_path = kstrdup(dev_name_end, GFP_KERNEL);
->                 if (!fsopt->server_path)
->                         return -ENOMEM;
-> +
-> +               kfree(fsopt->canon_path);
-> +               fsopt->canon_path = canonicalize_path(fsopt->server_path);
-> +               if (fsopt->canon_path && IS_ERR(fsopt->canon_path)) {
-> +                       ret = PTR_ERR(fsopt->canon_path);
-> +                       fsopt->canon_path = NULL;
-> +                       return ret;
-> +               }
->         } else {
->                 dev_name_end = dev_name + strlen(dev_name);
->         }
-> @@ -447,6 +518,7 @@ static void destroy_mount_options(struct ceph_mount_options *args)
->         kfree(args->snapdir_name);
->         kfree(args->mds_namespace);
->         kfree(args->server_path);
-> +       kfree(args->canon_path);
->         kfree(args->fscache_uniq);
->         kfree(args);
->  }
-> @@ -462,73 +534,6 @@ static int strcmp_null(const char *s1, const char *s2)
->         return strcmp(s1, s2);
->  }
->
-> -/**
-> - * path_remove_extra_slash - Remove the extra slashes in the server path
-> - * @server_path: the server path and could be NULL
-> - *
-> - * Return NULL if the path is NULL or only consists of "/", or a string
-> - * without any extra slashes including the leading slash(es) and the
-> - * slash(es) at the end of the server path, such as:
-> - * "//dir1////dir2///" --> "dir1/dir2"
-> - */
-> -static char *path_remove_extra_slash(const char *server_path)
-> -{
-> -       const char *path = server_path;
-> -       const char *cur, *end;
-> -       char *buf, *p;
-> -       int len;
-> -
-> -       /* if the server path is omitted */
-> -       if (!path)
-> -               return NULL;
-> -
-> -       /* remove all the leading slashes */
-> -       while (*path == '/')
-> -               path++;
-> -
-> -       /* if the server path only consists of slashes */
-> -       if (*path == '\0')
-> -               return NULL;
-> -
-> -       len = strlen(path);
-> -
-> -       buf = kmalloc(len + 1, GFP_KERNEL);
-> -       if (!buf)
-> -               return ERR_PTR(-ENOMEM);
-> -
-> -       end = path + len;
-> -       p = buf;
-> -       do {
-> -               cur = strchr(path, '/');
-> -               if (!cur)
-> -                       cur = end;
-> -
-> -               len = cur - path;
-> -
-> -               /* including one '/' */
-> -               if (cur != end)
-> -                       len += 1;
-> -
-> -               memcpy(p, path, len);
-> -               p += len;
-> -
-> -               while (cur <= end && *cur == '/')
-> -                       cur++;
-> -               path = cur;
-> -       } while (path < end);
-> -
-> -       *p = '\0';
-> -
-> -       /*
-> -        * remove the last slash if there has and just to make sure that
-> -        * we will get something like "dir1/dir2"
-> -        */
-> -       if (*(--p) == '/')
-> -               *p = '\0';
-> -
-> -       return buf;
-> -}
-> -
->  static int compare_mount_options(struct ceph_mount_options *new_fsopt,
->                                  struct ceph_options *new_opt,
->                                  struct ceph_fs_client *fsc)
-> @@ -536,7 +541,6 @@ static int compare_mount_options(struct ceph_mount_options *new_fsopt,
->         struct ceph_mount_options *fsopt1 = new_fsopt;
->         struct ceph_mount_options *fsopt2 = fsc->mount_options;
->         int ofs = offsetof(struct ceph_mount_options, snapdir_name);
-> -       char *p1, *p2;
->         int ret;
->
->         ret = memcmp(fsopt1, fsopt2, ofs);
-> @@ -546,21 +550,12 @@ static int compare_mount_options(struct ceph_mount_options *new_fsopt,
->         ret = strcmp_null(fsopt1->snapdir_name, fsopt2->snapdir_name);
->         if (ret)
->                 return ret;
-> +
->         ret = strcmp_null(fsopt1->mds_namespace, fsopt2->mds_namespace);
->         if (ret)
->                 return ret;
->
-> -       p1 = path_remove_extra_slash(fsopt1->server_path);
-> -       if (IS_ERR(p1))
-> -               return PTR_ERR(p1);
-> -       p2 = path_remove_extra_slash(fsopt2->server_path);
-> -       if (IS_ERR(p2)) {
-> -               kfree(p1);
-> -               return PTR_ERR(p2);
-> -       }
-> -       ret = strcmp_null(p1, p2);
-> -       kfree(p1);
-> -       kfree(p2);
-> +       ret = strcmp_null(fsopt1->canon_path, fsopt2->canon_path);
->         if (ret)
->                 return ret;
->
-> @@ -963,7 +958,9 @@ static struct dentry *ceph_real_mount(struct ceph_fs_client *fsc,
->         mutex_lock(&fsc->client->mount_mutex);
->
->         if (!fsc->sb->s_root) {
-> -               const char *path, *p;
-> +               const char *path = fsc->mount_options->canon_path ?
-> +                                       fsc->mount_options->canon_path : "";
-> +
->                 err = __ceph_open_session(fsc->client, started);
->                 if (err < 0)
->                         goto out;
-> @@ -975,22 +972,11 @@ static struct dentry *ceph_real_mount(struct ceph_fs_client *fsc,
->                                 goto out;
->                 }
->
-> -               p = path_remove_extra_slash(fsc->mount_options->server_path);
-> -               if (IS_ERR(p)) {
-> -                       err = PTR_ERR(p);
-> -                       goto out;
-> -               }
-> -               /* if the server path is omitted or just consists of '/' */
-> -               if (!p)
-> -                       path = "";
-> -               else
-> -                       path = p;
->                 dout("mount opening path '%s'\n", path);
->
->                 ceph_fs_debugfs_init(fsc);
->
->                 root = open_root_dentry(fsc, path, started);
-> -               kfree(p);
->                 if (IS_ERR(root)) {
->                         err = PTR_ERR(root);
->                         goto out;
-> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-> index e8f891770f9d..70aa32cfb64d 100644
-> --- a/fs/ceph/super.h
-> +++ b/fs/ceph/super.h
-> @@ -94,6 +94,7 @@ struct ceph_mount_options {
->         char *snapdir_name;   /* default ".snap" */
->         char *mds_namespace;  /* default NULL */
->         char *server_path;    /* default  "/" */
-> +       char *canon_path;     /* default "/" */
+v3 -> v4:
+- removed a binary file checked in by mistake
+- drop __func__ from debug messages
+- restructure the code in the notifier call
+- add comments about the alignment of the new uAPI structure
+- remove a stray new line that doesn't belong in this series
+- tested the series on 32-bit user-space with 64-bit kernel
 
-Why keep both the original and canon_path around?  It looks like
-the only remaining use of server_path is in create_session_open_msg().
-Since that's just metadata, I think we can safely switch it over.
+v4 -> v5:
+- dropped patches already merged upstream
+- collected review tags
 
-Also, the comment is misleading.  The default is NULL (which _means_
-"/" for metadata purposes but "/" is never stored here).
+v5 -> v6:
+- coding style tweak as pointed out by Andy
+- fixed a wrong comment in the uapi header
+- switch to using ktime_get_ns() for the GPIO line change timestamps
+  as discussed with Arnd[1]
 
-I'll post what I have in mind as a patch shortly.
+[1] https://lore.kernel.org/linux-gpio/CAK8P3a1t3MquLPuZqgds4osrTNTOG494s4fk_nhdn+N=B3qdhg@mail.gmail.com/
 
-Thanks,
+Bartosz Golaszewski (7):
+  kfifo: provide noirqsave variants of spinlocked in and out helpers
+  kfifo: provide kfifo_is_empty_spinlocked()
+  gpiolib: rework the locking mechanism for lineevent kfifo
+  gpiolib: emit a debug message when adding events to a full kfifo
+  gpiolib: provide a dedicated function for setting lineinfo
+  gpiolib: add new ioctl() for monitoring changes in line info
+  tools: gpio: implement gpio-watch
 
-                Ilya
+ drivers/gpio/gpiolib.c    | 350 +++++++++++++++++++++++++++++---------
+ drivers/gpio/gpiolib.h    |   1 +
+ include/linux/kfifo.h     |  73 ++++++++
+ include/uapi/linux/gpio.h |  30 ++++
+ tools/gpio/.gitignore     |   1 +
+ tools/gpio/Build          |   1 +
+ tools/gpio/Makefile       |  11 +-
+ tools/gpio/gpio-watch.c   |  99 +++++++++++
+ 8 files changed, 485 insertions(+), 81 deletions(-)
+ create mode 100644 tools/gpio/gpio-watch.c
+
+-- 
+2.25.0
+
