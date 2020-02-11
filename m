@@ -2,101 +2,112 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3FCC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5E4C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212EE24650
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9DD214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hpCIi6+1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dlqQhCmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbgBKSr5 (ORCPT
+        id S1730806AbgBKSsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:47:57 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:46870 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgBKSr5 (ORCPT
+        Tue, 11 Feb 2020 13:48:31 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39590 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730752AbgBKSsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:47:57 -0500
-Received: by mail-qv1-f65.google.com with SMTP id y2so5470532qvu.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:47:56 -0800 (PST)
+        Tue, 11 Feb 2020 13:48:31 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so4617257plp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:48:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WW6skYTkWTR1YRkvvQUrNrT8hjiq0jQHnJpZVkMjaaQ=;
-        b=hpCIi6+1ayP+tW2keaENP2APYj2FgrMZs5NVPprFOi/KWNw3+iHpZznL6c4BKJS922
-         QZTVndXoo2l4xwVYHZP/hZjd39pQ88POjJzpBdcJW24MO2ZbCyR+e8+lcyyOoVb/Ja42
-         DQ4yp3DT+vmCNBRzO8/kmw99D6rXNF4LITIwo=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CU1W+ehrAiS3jw2NJvVJpdaUBPu6nkbnRDzhgkpWwa0=;
+        b=dlqQhCmuU8Uioh1M8bOeS+GLp9N1MbISkwrAfoMmSuChZxiDVR397U7J+9XD3riMI2
+         8V6PLYYK4JZ/5qhJF2R/sfHyPLuErPmjTkqKN44uiSfNvd8WJMpVvAMpZDHQTMYyQ+Fx
+         lgS31IAh+J0IdJPNMYcvqtyOV2jkqRWOlMfJMwyyHc0E+IfbWg9MMgUR/8nWFxOb6z0+
+         bshcTHAfb3KR6uEGGp8sca69Kve7JaCeJ9Rr/J41Rk0BYi0/QshjvfXwyQuEqMR40uIi
+         g81JgSc+2rBNpyRq7x6Xo0DAhHfu8HZIoXxxX29qDSnjXyFGDTPkvmpuNV+Q1TBBPU4C
+         TleQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WW6skYTkWTR1YRkvvQUrNrT8hjiq0jQHnJpZVkMjaaQ=;
-        b=ScYrWtqvylGBD9P7z7eVQCIRSm7PwRoX+Qyf9CET8EXWy3nepPEnlHidD5djcIuScS
-         YHwiR+EWpugO82KiV5fa8TNhvBFW9PTQ7dCwHhrgJHX03hgXhPV41YgbFZgx2bSZhftN
-         Rhp5whzwhYkllY6TaHR/Ng6OK0yzp9YEegDrpElqIsFkZbl0P/IedAMxOjMPTuNKDZV1
-         tG2n6JnHK/uAS4TQHR3cSXDcC+RSEZguASIuL/efPuwneIe/BrnAWWQbvROeXts0sX9r
-         orScGrynpRY4IK984brl5Wt7/K00E++vS0DQ+RwFAsUdQ2lBw/+vzIuM253pvDN0wmgz
-         RGWg==
-X-Gm-Message-State: APjAAAWs1GzxlmHapLMOtoV6IpqcTbv3F1UVshenvZdBvxY5GyC9r2ex
-        tYoxOALcWcmhFNs24vAHDzPrhg==
-X-Google-Smtp-Source: APXvYqxuKhGzwecOKVakvuorhqFT/Msgz+GyKOBCyFJL/qjlp+QOBsZ+S9qe87XSTYwmivq7/TLuPw==
-X-Received: by 2002:ad4:4a14:: with SMTP id m20mr4226356qvz.100.1581446875885;
-        Tue, 11 Feb 2020 10:47:55 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id m95sm2586112qte.41.2020.02.11.10.47.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 10:47:55 -0800 (PST)
-Date:   Tue, 11 Feb 2020 13:47:51 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Amol Grover <frextrite@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable <stable@vger.kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: Re: [PATCH 5.5 150/367] tracing: Annotate ftrace_graph_hash pointer
- with __rcu
-Message-ID: <20200211184751.GB250925@google.com>
-References: <20200210122423.695146547@linuxfoundation.org>
- <20200210122438.674498788@linuxfoundation.org>
- <CAEXW_YSPDHcuLiM4B8uXvw-0ei2Gj0x=QE1h+NMqzRiBph1oNw@mail.gmail.com>
- <20200211012638.GB13097@sasha-vm>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CU1W+ehrAiS3jw2NJvVJpdaUBPu6nkbnRDzhgkpWwa0=;
+        b=I/Rh2RJZ3QlMNA+GSbSkBJwRXH3RChgLGlWji5hiq/nX6KpUu7U4ckzAMlm8YhjbGw
+         DZkLXAdRiLscm7LnNH8JVJ28j9XZ8bEkwIGR6TXMR/yh/yisDoGheAP/bjoB6UPwt0kH
+         WlCC+HFPw7TtO7Pcb6org/k+/7GGyFdTjqlRlvouTKZmCN8jhfTDBWfWeAYoac5csLvP
+         WLNXcxjJvFLQ0TS7eLt6BBqoz9h/mSfFBeB0kn0YnxWE754DC1G73QliLw/kBsgt3BT3
+         tHI6LDz6U60BbNqTICMtZXjm4CbSb2oRpaHM6u0ZIwyrair4476r20LPz8w1/w8U+Jxs
+         P44A==
+X-Gm-Message-State: APjAAAWRC60GAQPIIPkvOkK7pYAwSL7RuGVMY7nFTIx50qgQKr/oe8wh
+        DnDY8syuM5AAV9s9YlV3PwNfpKPIeichDvWk+U/KkQ==
+X-Google-Smtp-Source: APXvYqzCtifK++9lU+veDLagxYT88pdnTXDwtsRsjuJox3lr45kptA7x3tmjR8V6/ceymntHN46hg1A0VktNhSWpNEg=
+X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr5191369pjn.117.1581446909986;
+ Tue, 11 Feb 2020 10:48:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211012638.GB13097@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200211002551.147187-1-heidifahim@google.com>
+ <CAFd5g47LFvRxHMJ+XHcw2dFe2xU+1GmDnXsm=STvCFAT74rm7g@mail.gmail.com> <MWHPR13MB08959C9951D826A9D0B19BCFFD180@MWHPR13MB0895.namprd13.prod.outlook.com>
+In-Reply-To: <MWHPR13MB08959C9951D826A9D0B19BCFFD180@MWHPR13MB0895.namprd13.prod.outlook.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 11 Feb 2020 10:48:19 -0800
+Message-ID: <CAFd5g44E=OFaMun7Y4FaOrjGewZybjgC54hBzMrBeLi51g7Nag@mail.gmail.com>
+Subject: Re: [PATCH] kunit: run kunit_tool from any directory
+To:     "Bird, Tim" <Tim.Bird@sony.com>
+Cc:     Heidi Fahim <heidifahim@google.com>,
+        David Gow <davidgow@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 08:26:38PM -0500, Sasha Levin wrote:
-> On Mon, Feb 10, 2020 at 06:36:20AM -0800, Joel Fernandes wrote:
-> > On Mon, Feb 10, 2020 at 4:40 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > From: Amol Grover <frextrite@gmail.com>
-> > > 
-> > > [ Upstream commit 24a9729f831462b1d9d61dc85ecc91c59037243f ]
-> > 
-> > Amol, can you send a follow-up patch to annotate
-> > ftrace_graph_notrace_hash as well?
-> 
-> Note that I took this to make later stable tagged patch apply cleanly. I
-> don't expect these annotation changes to be picked up for stable on
-> their own.
+On Tue, Feb 11, 2020 at 10:26 AM Bird, Tim <Tim.Bird@sony.com> wrote:
+> > -----Original Message-----
+> > From: Brendan Higgins
+> > Sent: Monday, February 10, 2020 5:32 PM
+> > To: Heidi Fahim <heidifahim@google.com>; David Gow <davidgow@google.com>; Daniel Latypov <dlatypov@google.com>
+> > Cc: open list:KERNEL SELFTEST FRAMEWORK <linux-kselftest@vger.kernel.org>; KUnit Development <kunit-dev@googlegroups.com>; Linux
+> > Kernel Mailing List <linux-kernel@vger.kernel.org>
+> > Subject: Re: [PATCH] kunit: run kunit_tool from any directory
+> >
+> > On Mon, Feb 10, 2020 at 4:26 PM Heidi Fahim <heidifahim@google.com> wrote:
+> > >
+> > > Implemented small fix so that the script changes work directories to the
+> > > linux directory where kunit.py is run. This enables the user to run
+> > > kunit from any working directory. Originally considered using
+> > > os.path.join but this is more error prone as we would have to find all
+> > > file path usages and modify them accordingly. Using os.chdir ensures
+> > > that the entire script is run within /linux.
+> > >
+> > > Signed-off-by: Heidi Fahim <heidifahim@google.com>
+> >
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> >
+> Sorry - I'm not a current kunit user, but does this mean that the
+> kernel source has to be present in order to run the unit tests?
+> That's problematical for embedded systems.  Maybe that's outside
+> the scope of what unit tests were envisioned for?
 
-Yes, that should be fine.
+No worries.
 
-thanks,
+It is already the case that the kunit_tool assumes you have the
+source. It's purpose is to build tests, run them, and collect results.
+We are working on separating these functions, but right now given that
+the script assumes it will build the kernel for you, it is necessarily
+the case that you have source.
 
- - Joel
-
+You can, nevertheless, build and run KUnit tests without the use of
+our scripts, which should work for most applications.
