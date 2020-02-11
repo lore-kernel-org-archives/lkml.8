@@ -2,141 +2,63 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75366C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B1AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF672070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9628B2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgBKIpE (ORCPT
+        id S1727804AbgBKIsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 03:45:04 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55532 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725787AbgBKIpE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 03:45:04 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01B8iBMp005289;
-        Tue, 11 Feb 2020 03:44:50 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y1udmtg66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 03:44:49 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01B8ilOw003719
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 11 Feb 2020 03:44:48 -0500
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 11 Feb 2020 00:44:46 -0800
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 11 Feb 2020 00:44:46 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 11 Feb 2020 00:44:45 -0800
-Received: from mircea-Precision-5530-2-in-1.ad.analog.com ([10.48.65.114])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01B8igmf029075;
-        Tue, 11 Feb 2020 03:44:43 -0500
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V4] iio: adc: ad7124: Add direct reg access
-Date:   Tue, 11 Feb 2020 10:44:53 +0200
-Message-ID: <20200211084453.16866-1-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Feb 2020 03:48:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47578 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727566AbgBKIsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 03:48:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 62C06B2F6;
+        Tue, 11 Feb 2020 08:48:09 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 09:47:57 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 3/3] objtool: Add relocation check for alternative
+ sections
+Message-ID: <20200211084757.GA31812@zn.tnic>
+References: <cover.1581359535.git.jpoimboe@redhat.com>
+ <7b90b68d093311e4e8f6b504a9e1c758fd7e0002.1581359535.git.jpoimboe@redhat.com>
+ <CAHk-=wgN0RtGNnYHjnaxtjO3BxL=t-nTUnEEwZu5J--BDhb95A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_02:2020-02-10,2020-02-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=1 bulkscore=0 adultscore=0 mlxlogscore=898 lowpriorityscore=0
- clxscore=1015 mlxscore=0 impostorscore=0 spamscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110065
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wgN0RtGNnYHjnaxtjO3BxL=t-nTUnEEwZu5J--BDhb95A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the posibility do read and write registers from userspace
-using the kernel debug direct register access option.
+On Mon, Feb 10, 2020 at 05:51:44PM -0800, Linus Torvalds wrote:
+> On Mon, Feb 10, 2020 at 10:33 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> LGTM. Did this actually find anything? And if not, did you verify that
+> it would by intentionally creating a bad alternative (perhaps the
+> broken one from my patch?)
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
-Changelog V4:
-- verify limit againg ARRAY_SIZE(ad7124_reg_size)
+Yeah, we used your patch while playing with this. Lemme do some builds
+with this and see what fires. Nothing should, I would strongly assume.
 
- drivers/iio/adc/ad7124.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index f0206d819fda..a3c0647a5391 100644
---- a/drivers/iio/adc/ad7124.c
-+++ b/drivers/iio/adc/ad7124.c
-@@ -98,6 +98,14 @@ static const unsigned int ad7124_gain[8] = {
- 	1, 2, 4, 8, 16, 32, 64, 128
- };
- 
-+static const unsigned int ad7124_reg_size[] = {
-+	1, 2, 3, 3, 2, 1, 3, 3, 1, 2, 2, 2, 2,
-+	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-+	2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3
-+};
-+
- static const int ad7124_master_clk_freq_hz[3] = {
- 	[AD7124_LOW_POWER] = 76800,
- 	[AD7124_MID_POWER] = 153600,
-@@ -427,6 +435,27 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
- 	}
- }
- 
-+static int ad7124_reg_access(struct iio_dev *indio_dev,
-+			     unsigned int reg,
-+			     unsigned int writeval,
-+			     unsigned int *readval)
-+{
-+	struct ad7124_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (reg >= ARRAY_SIZE(ad7124_reg_size))
-+		return -EINVAL;
-+
-+	if (readval)
-+		ret = ad_sd_read_reg(&st->sd, reg, ad7124_reg_size[reg],
-+				     readval);
-+	else
-+		ret = ad_sd_write_reg(&st->sd, reg, ad7124_reg_size[reg],
-+				      writeval);
-+
-+	return ret;
-+}
-+
- static IIO_CONST_ATTR(in_voltage_scale_available,
- 	"0.000001164 0.000002328 0.000004656 0.000009313 0.000018626 0.000037252 0.000074505 0.000149011 0.000298023");
- 
-@@ -442,6 +471,7 @@ static const struct attribute_group ad7124_attrs_group = {
- static const struct iio_info ad7124_info = {
- 	.read_raw = ad7124_read_raw,
- 	.write_raw = ad7124_write_raw,
-+	.debugfs_reg_access = &ad7124_reg_access,
- 	.validate_trigger = ad_sd_validate_trigger,
- 	.attrs = &ad7124_attrs_group,
- };
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
