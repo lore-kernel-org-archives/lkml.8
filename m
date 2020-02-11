@@ -2,107 +2,123 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F66C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A2EC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443BA20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC2E20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ielnlRFK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="weMQvBYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731759AbgBKUDH (ORCPT
+        id S1730041AbgBKUFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:03:07 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55648 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730912AbgBKUCz (ORCPT
+        Tue, 11 Feb 2020 15:05:06 -0500
+Received: from gateway30.websitewelcome.com ([192.185.198.26]:45517 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727762AbgBKUFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:02:55 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so5266377wmj.5;
-        Tue, 11 Feb 2020 12:02:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=OiH+02ziKtnOG8xgRb7M30iMhSugqwUS+kAPH3uo6xE=;
-        b=ielnlRFKPlRS7XN3izTLQLFmjbKK8WMP872CwhuwIi0M5AYP4JG2PNz0xbKn2/lfxC
-         O/vM5Vxnip39X7w8jkvTy3fQ1Rx5o7Mj1nUaLLj072+GSYy92CT1Yt5JUbrLOwpeHyiX
-         ZkY7QICICj8Cll9UeC0a9BhyyYNXzw9LwAz+ymJLK34ZKODFI6fV/R9AMYTjq++Peu/a
-         HTWevZSnbNdWiZ0KrBp7IhNhdUiPsLRcEb36GB9bPHYBlHP59kfJ4+aDvLoToygKJ8uD
-         NAjONvGnXcgElHlbXS5W9XSsgf+aayT1zxRNFwAfdlG4JjXZrX0aTQUGcJYQEkN4BJT3
-         ZfXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OiH+02ziKtnOG8xgRb7M30iMhSugqwUS+kAPH3uo6xE=;
-        b=VQ35Le0Y+SAIf1JvnpB7x3N3xCD9WldOEOvUHiWnKkKOPo4eUzsHKYJWCX4lzdohvC
-         Cwu78mFEE5FRTe28clmjUrzl/iDdKAmyNzI/M9qlFvHfYC0XLU6HqrjSUpZolDlmjmbV
-         avtWf/zz/zF3+8/41BPjHgBLa0jTDov9zuisvbYqz8GlqV7KFrrdp9X+cgDspmEvcnNs
-         0NaDIoJ9lvLNscHIWZUSOYQTpVTy7ZdXhkDVuC+YKHFz6yaWBYWyN+KEUoj7z28f5Dg/
-         px2sWahTYsNg8T1jPgZcr2QOmVmkRlzY/XiPm8si1ZUs+lNl+6XIkRYdlJWF2OlJo7Vj
-         EauA==
-X-Gm-Message-State: APjAAAVKTPyHPgpxKysnd0rJ82ItLx4l5+R6o2i7Pcvi8yD90iE1ykFV
-        xaJpcYxtM7y7PqstnY8lauQ=
-X-Google-Smtp-Source: APXvYqyzJuDfzjvW2+rfty1C+evPWsoiWOWwUIYZ3RoQa7ydIAi0d6gDDk/DKntfMPt+rP/ZNcn3sw==
-X-Received: by 2002:a1c:688a:: with SMTP id d132mr7990674wmc.189.1581451372841;
-        Tue, 11 Feb 2020 12:02:52 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.62])
-        by smtp.gmail.com with ESMTPSA id 4sm4955101wmg.22.2020.02.11.12.02.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 12:02:52 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] io_uring: add missing io_req_cancelled()
-Date:   Tue, 11 Feb 2020 23:01:57 +0300
-Message-Id: <0a34342f63cd7a535cc54e5e1fe3ab73907a7da9.1581450491.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1581450491.git.asml.silence@gmail.com>
-References: <cover.1581450491.git.asml.silence@gmail.com>
+        Tue, 11 Feb 2020 15:05:06 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id AF7564F63
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:05:05 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1bmLjDBaeSl8q1bmLjwJ4y; Tue, 11 Feb 2020 14:05:05 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/tp6uW3/KGGzX+IaZSk0xiuqdbBGhNQT/R1tOYylFy8=; b=weMQvBYmjgdObbIebT4M8WF6fv
+        kPl/oEy0+cyPOhCdmXHd4fMLEObGBQID/VsVYRX6pKJw90lddBPBbvyASHnaZl21iUcRzgvhAN+Xv
+        QTFJY2U3KEB28zzoeKVCwql8KG0s88fEnIaNTcWaIrwglakJRH3UI7jvJHOs4ip04IaWFJECOrA5/
+        KRe/FR9CmiUnG+kLNg8gTPlvPGndr/cHja091MEST2cR7/3onb487vMXL7p8R22Xs0Hc/4pE9By/z
+        h2YS5t+S6gOiOUhWpMcMepZjvk18jfNW67YiYXwZGHOF/PezTs2wmrlmbri5KUCtdvXpYuhDkStgj
+        1XaoIm4Q==;
+Received: from [200.68.140.36] (port=21189 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1bmK-001XNW-Bj; Tue, 11 Feb 2020 14:05:04 -0600
+Date:   Tue, 11 Feb 2020 14:07:39 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] ALSA: hda_codec: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200211200739.GA12948@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1bmK-001XNW-Bj
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:21189
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fallocate_finish() is missing cancellation check. Add it.
-It's safe to do that, as only flags setup and sqe fields copy are done
-before it gets into __io_fallocate().
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- fs/io_uring.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/hda_codec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index f3108bce4afe..b33f2521040e 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2529,6 +2529,8 @@ static void io_fallocate_finish(struct io_wq_work **workptr)
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
- 	struct io_kiocb *nxt = NULL;
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 701a69d856f5..0fbca35509cd 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -102,7 +102,7 @@ struct hda_conn_list {
+ 	struct list_head list;
+ 	int len;
+ 	hda_nid_t nid;
+-	hda_nid_t conns[0];
++	hda_nid_t conns[];
+ };
  
-+	if (io_req_cancelled(req))
-+		return;
- 	__io_fallocate(req, &nxt);
- 	if (nxt)
- 		io_wq_assign_next(workptr, nxt);
-@@ -2905,6 +2907,7 @@ static void io_close_finish(struct io_wq_work **workptr)
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
- 	struct io_kiocb *nxt = NULL;
- 
-+	/* not cancellable, don't io_req_cancelled() */
- 	__io_close_finish(req, &nxt);
- 	if (nxt)
- 		io_wq_assign_next(workptr, nxt);
+ /* look up the cached results */
 -- 
-2.24.0
+2.25.0
 
