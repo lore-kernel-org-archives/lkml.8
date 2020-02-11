@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AD8C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D44C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28FF52086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5CA2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbgBKSTd (ORCPT
+        id S1731263AbgBKSUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:19:33 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:52118 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbgBKSTc (ORCPT
+        Tue, 11 Feb 2020 13:20:24 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:45462 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730804AbgBKSTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:19:32 -0500
+        Tue, 11 Feb 2020 13:19:34 -0500
 Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id 1WKV220115USYZQ01WKW7C; Tue, 11 Feb 2020 19:19:30 +0100
+        by xavier.telenet-ops.be with bizsmtp
+        id 1WKW220035USYZQ01WKWwT; Tue, 11 Feb 2020 19:19:31 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0002oL-SM; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a8A-0002ov-9t; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0003yn-QL; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a8A-0003zK-8W; Tue, 11 Feb 2020 19:19:30 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -40,9 +40,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 15/34] crypto: ccree - use of_device_get_match_data()
-Date:   Tue, 11 Feb 2020 19:19:09 +0100
-Message-Id: <20200211181928.15178-16-geert+renesas@glider.be>
+Subject: [PATCH v2 26/34] crypto: ccree - improve kerneldoc in cc_hash.[ch]
+Date:   Tue, 11 Feb 2020 19:19:20 +0100
+Message-Id: <20200211181928.15178-27-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
 References: <20200211181928.15178-1-geert+renesas@glider.be>
@@ -51,51 +51,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the driver is probed, it means a match was found in
-arm_ccree_dev_of_match[].  Hence we can just use the
-of_device_get_match_data() helper.
+Miscellaneous improvements:
+  - Start comment blocks with "/**" to enable kerneldoc,
+  - Mark parameters using "@" instead of "\param",
+  - Add missing function names to kerneldoc headers,
+  - Add missing parameter descriptions.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
   - New.
 
- drivers/crypto/ccree/cc_driver.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/crypto/ccree/cc_hash.c | 11 ++++++-----
+ drivers/crypto/ccree/cc_hash.h | 24 ++++++++++++------------
+ 2 files changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_driver.c b/drivers/crypto/ccree/cc_driver.c
-index c7e44f212d4b0ac5..e365ede32cc0e6a0 100644
---- a/drivers/crypto/ccree/cc_driver.c
-+++ b/drivers/crypto/ccree/cc_driver.c
-@@ -14,6 +14,7 @@
- #include <linux/of.h>
- #include <linux/clk.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/pm_runtime.h>
+diff --git a/drivers/crypto/ccree/cc_hash.c b/drivers/crypto/ccree/cc_hash.c
+index f3adc1ab0e01abec..738f0debee98ebf1 100644
+--- a/drivers/crypto/ccree/cc_hash.c
++++ b/drivers/crypto/ccree/cc_hash.c
+@@ -2238,14 +2238,15 @@ static const void *cc_larval_digest(struct device *dev, u32 mode)
+ 	}
+ }
  
- #include "cc_driver.h"
-@@ -270,7 +271,6 @@ static int init_cc_resources(struct platform_device *plat_dev)
- 	u32 val, hw_rev_pidr, sig_cidr;
- 	u64 dma_mask;
- 	const struct cc_hw_data *hw_rev;
--	const struct of_device_id *dev_id;
- 	struct clk *clk;
- 	int irq;
- 	int rc = 0;
-@@ -279,11 +279,7 @@ static int init_cc_resources(struct platform_device *plat_dev)
- 	if (!new_drvdata)
- 		return -ENOMEM;
+-/*!
+- * Gets the address of the initial digest in SRAM
++/**
++ * cc_larval_digest_addr() - Get the address of the initial digest in SRAM
+  * according to the given hash mode
+  *
+- * \param drvdata
+- * \param mode The Hash mode. Supported modes: MD5/SHA1/SHA224/SHA256
++ * @drvdata: Associated device driver context
++ * @mode: The Hash mode. Supported modes: MD5/SHA1/SHA224/SHA256
+  *
+- * \return u32 The address of the initial digest in SRAM
++ * Return:
++ * The address of the initial digest in SRAM
+  */
+ u32 cc_larval_digest_addr(void *drvdata, u32 mode)
+ {
+diff --git a/drivers/crypto/ccree/cc_hash.h b/drivers/crypto/ccree/cc_hash.h
+index d76ecae996ca3fa0..3d0f2179e07ec1ce 100644
+--- a/drivers/crypto/ccree/cc_hash.h
++++ b/drivers/crypto/ccree/cc_hash.h
+@@ -80,26 +80,26 @@ int cc_hash_alloc(struct cc_drvdata *drvdata);
+ int cc_init_hash_sram(struct cc_drvdata *drvdata);
+ int cc_hash_free(struct cc_drvdata *drvdata);
  
--	dev_id = of_match_node(arm_ccree_dev_of_match, np);
--	if (!dev_id)
--		return -ENODEV;
--
--	hw_rev = (struct cc_hw_data *)dev_id->data;
-+	hw_rev = of_device_get_match_data(dev);
- 	new_drvdata->hw_rev_name = hw_rev->name;
- 	new_drvdata->hw_rev = hw_rev->rev;
- 	new_drvdata->std_bodies = hw_rev->std_bodies;
+-/*!
+- * Gets the initial digest length
++/**
++ * cc_digest_len_addr() - Gets the initial digest length
+  *
+- * \param drvdata
+- * \param mode The Hash mode. Supported modes:
+- *             MD5/SHA1/SHA224/SHA256/SHA384/SHA512
++ * @drvdata: Associated device driver context
++ * @mode: The Hash mode. Supported modes: MD5/SHA1/SHA224/SHA256/SHA384/SHA512
+  *
+- * \return u32 returns the address of the initial digest length in SRAM
++ * Return:
++ * Returns the address of the initial digest length in SRAM
+  */
+ u32 cc_digest_len_addr(void *drvdata, u32 mode);
+ 
+-/*!
+- * Gets the address of the initial digest in SRAM
++/**
++ * cc_larval_digest_addr() - Gets the address of the initial digest in SRAM
+  * according to the given hash mode
+  *
+- * \param drvdata
+- * \param mode The Hash mode. Supported modes:
+- *             MD5/SHA1/SHA224/SHA256/SHA384/SHA512
++ * @drvdata: Associated device driver context
++ * @mode: The Hash mode. Supported modes: MD5/SHA1/SHA224/SHA256/SHA384/SHA512
+  *
+- * \return u32 The address of the initial digest in SRAM
++ * Return:
++ * The address of the initial digest in SRAM
+  */
+ u32 cc_larval_digest_addr(void *drvdata, u32 mode);
+ 
 -- 
 2.17.1
 
