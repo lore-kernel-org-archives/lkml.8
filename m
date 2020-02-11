@@ -2,103 +2,234 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA50C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC55AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95AE42086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581439527;
-	bh=aCtP2cb8D9+1rYH7hnwsImH/n7sWk2VSHTk5eZtSmfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nfV9+mwDeqdc+9FRFNerSEu33jqT4+B33yg1Jt/9PCd13WR/KNxQ2RT7nQ9TMzKn0
-	 03ZfJr/iB5k/ku+xLCtkcie1U9EdULdpugYYJ3pebxkomNc8xvDQH7svnG6Md4xOVt
-	 IzZZi9fGi6oWxXZQD9+Sf7j4mtKQ5nVNnx9t3pUc=
+	by mail.kernel.org (Postfix) with ESMTP id 8193A20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgBKQp1 (ORCPT
+        id S1730864AbgBKQqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:45:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:49630 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgBKQp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:45:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4071130E;
-        Tue, 11 Feb 2020 08:45:26 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B991C3F68E;
-        Tue, 11 Feb 2020 08:45:25 -0800 (PST)
-Date:   Tue, 11 Feb 2020 16:45:24 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] [RFC] ASoC: Use imply for SND_SOC_ALL_CODECS
-Message-ID: <20200211164524.GN4543@sirena.org.uk>
-References: <20200207091351.18133-1-geert@linux-m68k.org>
- <CAK7LNAQGcw1jbb=fWd_CbWv5hQrkqG_QFCw3uY4LXroONGM6BA@mail.gmail.com>
- <20200211161905.GM4543@sirena.org.uk>
- <CAK7LNARCr8afvs=h5-ZWVs=Bkk7PSMNvX+M_SeBSF-L99UencA@mail.gmail.com>
+        Tue, 11 Feb 2020 11:46:31 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53703 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgBKQqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:46:31 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1Yg6-0000K1-Ao; Tue, 11 Feb 2020 17:46:26 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1Yg5-0003S6-KS; Tue, 11 Feb 2020 17:46:25 +0100
+Date:   Tue, 11 Feb 2020 17:46:25 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v3 1/3] pwm: jz4740: Use clocks from TCU driver
+Message-ID: <20200211164625.2z4i5w6gp23eiszx@pengutronix.de>
+References: <20191210152734.39588-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YuJye9aIuN0w6xGV"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARCr8afvs=h5-ZWVs=Bkk7PSMNvX+M_SeBSF-L99UencA@mail.gmail.com>
-X-Cookie: Hire the morally handicapped.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210152734.39588-1-paul@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+hello Paul,
 
---YuJye9aIuN0w6xGV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+thanks for the ping, I lost your series from my radar.
 
-On Wed, Feb 12, 2020 at 01:38:16AM +0900, Masahiro Yamada wrote:
-> On Wed, Feb 12, 2020 at 1:19 AM Mark Brown <broonie@kernel.org> wrote:
+On Tue, Dec 10, 2019 at 04:27:32PM +0100, Paul Cercueil wrote:
+> The ingenic-timer "TCU" driver provides us with clocks, that can be
+> (un)gated, reparented or reclocked from devicetree, instead of having
+> these settings hardcoded in this driver.
+> 
+> Each PWM channel's clk pointer is stored in PWM chip data to keep
+> the code simple. The calls to arch-specific timer code is replaced with
+> standard clock API calls to start and stop each channel's clock.
+> 
+> While this driver is devicetree-compatible, it is never (as of now)
+> probed from devicetree, so this change does not introduce a ABI problem
+> with current devicetree files.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+> 
+> Notes:
+>     v2: This patch is now before the patch introducing regmap, so the code
+>     	has changed a bit.
+>     v3: - Use %pe printf specifier to print error
+>     	- Update commit message
+>     	- Removed call to jz4740_timer_set_ctrl() in jz4740_pwm_free() which
+>     	  was reseting the clock's parent.
+> 
+>  drivers/pwm/Kconfig      |  1 +
+>  drivers/pwm/pwm-jz4740.c | 53 +++++++++++++++++++++++++++++-----------
+>  2 files changed, 40 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index bd21655c37a6..15d3816341f3 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -225,6 +225,7 @@ config PWM_IMX_TPM
+>  config PWM_JZ4740
+>  	tristate "Ingenic JZ47xx PWM support"
+>  	depends on MACH_INGENIC
+> +	depends on COMMON_CLK
+>  	help
+>  	  Generic PWM framework driver for Ingenic JZ47xx based
+>  	  machines.
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> index 9d78cc21cb12..ee50ac5fabb6 100644
+> --- a/drivers/pwm/pwm-jz4740.c
+> +++ b/drivers/pwm/pwm-jz4740.c
+> @@ -24,7 +24,6 @@
+>  
+>  struct jz4740_pwm_chip {
+>  	struct pwm_chip chip;
+> -	struct clk *clk;
+>  };
+>  
+>  static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
+> @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
+>  
+>  static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>  {
+> +	struct jz4740_pwm_chip *jz = to_jz4740(chip);
+> +	struct clk *clk;
+> +	char clk_name[16];
+> +	int ret;
+> +
+>  	/*
+>  	 * Timers 0 and 1 are used for system tasks, so they are unavailable
+>  	 * for use as PWMs.
+> @@ -41,16 +45,32 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>  	if (pwm->hwpwm < 2)
+>  		return -EBUSY;
+>  
+> -	jz4740_timer_start(pwm->hwpwm);
+> +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
+> +
+> +	clk = clk_get(chip->dev, clk_name);
+> +	if (IS_ERR(clk)) {
+> +		if (PTR_ERR(clk) != -EPROBE_DEFER)
+> +			dev_err(chip->dev, "Failed to get clock: %pe", clk);
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret) {
+> +		clk_put(clk);
+> +		return ret;
+> +	}
+> +
+> +	pwm_set_chip_data(pwm, clk);
+>  
+>  	return 0;
+>  }
+>  
+>  static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>  {
+> -	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
+> +	struct clk *clk = pwm_get_chip_data(pwm);
+>  
+> -	jz4740_timer_stop(pwm->hwpwm);
+> +	clk_disable_unprepare(clk);
+> +	clk_put(clk);
+>  }
+>  
+>  static int jz4740_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> @@ -91,17 +111,22 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			    const struct pwm_state *state)
+>  {
+>  	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
+> +	struct clk *clk = pwm_get_chip_data(pwm),
+> +		   *parent_clk = clk_get_parent(clk);
+> +	unsigned long rate, period, duty;
+>  	unsigned long long tmp;
+> -	unsigned long period, duty;
+>  	unsigned int prescaler = 0;
+>  	uint16_t ctrl;
+> +	int err;
+>  
+> -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
+> +	rate = clk_get_rate(parent_clk);
+> +	tmp = (unsigned long long)rate * state->period;
+>  	do_div(tmp, 1000000000);
+>  	period = tmp;
+>  
+>  	while (period > 0xffff && prescaler < 6) {
+>  		period >>= 2;
+> +		rate >>= 2;
+>  		++prescaler;
+>  	}
+>  
+> @@ -117,14 +142,18 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  
+>  	jz4740_pwm_disable(chip, pwm);
+>  
+> +	err = clk_set_rate(clk, rate);
+> +	if (err) {
+> +		dev_err(chip->dev, "Unable to set rate: %d", err);
+> +		return err;
+> +	}
 
-> > No it doesn't.  Those only enable user selectable options, many CODEC
-> > drivers don't have user selectable options as they are selected by
-> > machine drivers some of which either have more platform specific
-> > dependencies that the CODEC drivers or aren't upstream.
+What I don't like here is that you use internal knowledge about the
+clock to set a specific rate. Given this is a 1:1 conversion to hide the
+previously contained register accesses behind the clk API (which is a
+fine move) this is ok. But IMHO this should be cleaned up to rely on the
+clk code. The more natural thing to do here would be to calculate the
+rate you can work with and request that. Maybe add a todo-comment to
+clean this up?
 
-> Maybe, can you add a prompt which is only displayed
-> if COMPILE_TEST is enabled?
+> +
+>  	jz4740_timer_set_count(pwm->hwpwm, 0);
+>  	jz4740_timer_set_duty(pwm->hwpwm, duty);
+>  	jz4740_timer_set_period(pwm->hwpwm, period);
+>  
+> -	ctrl = JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT |
+> -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
+> -
+> -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
+> +	ctrl = jz4740_timer_get_ctrl(pwm->hwpwm);
+> +	ctrl |= JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
+>  
+>  	switch (state->polarity) {
+>  	case PWM_POLARITY_NORMAL:
+> @@ -158,10 +187,6 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
+>  	if (!jz4740)
+>  		return -ENOMEM;
+>  
+> -	jz4740->clk = devm_clk_get(&pdev->dev, "ext");
+> -	if (IS_ERR(jz4740->clk))
+> -		return PTR_ERR(jz4740->clk);
 
-> For example,
+Huh, jz4740->clk was never enabled?
 
-> config SND_SOC_L3
->         tristate "some prompt" if COMPILE_TEST
+Best regards
+Uwe
 
-That's effectively what this is doing, it's just making it a single
-option that enables everything en masse rather than lots of per driver
-options and isn't as esoteric so is easier to understand (almost all the
-existing examples are Renesas specific).
-
---YuJye9aIuN0w6xGV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5C2iMACgkQJNaLcl1U
-h9C39wf+LExhl27QS0xwjrmLu461Qr4UrkCcrNBX4/WGttFKbi2xbL1A7I8Tc9sh
-eNIYtW64RUY96X6wT3BeuNRoBDHbJhm4p8j4gRhsbxtXp2nKazBcVURs/p+3ShKd
-huwUYOohkLVxJOxlJ2EBV7iode/CfXYs7rfhK0SjjSqZ8edmGZvpXjZTaeWyYHwH
-wYUdfWVMMAcQ5vJPGRVYrPBF7oHrjB3fyVtwNgFe7QfoEe0A5LXImI18wMztBifs
-1s0gXzUdZGUpcoUXiHyd/qiq18lHGqcrEzOMqSVUyprOK4NE42dvX73LptIIZnEc
-Gw9JHwmbgxgHt85hG64pBAnPJ/I7aA==
-=ABsK
------END PGP SIGNATURE-----
-
---YuJye9aIuN0w6xGV--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
