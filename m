@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD8AC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6B2C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBA82168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A247214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgBKNxq (ORCPT
+        id S1729720AbgBKNxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:53:46 -0500
-Received: from 8bytes.org ([81.169.241.247]:52218 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:53:48 -0500
+Received: from 8bytes.org ([81.169.241.247]:52122 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729599AbgBKNx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:53:29 -0500
+        id S1729607AbgBKNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:53:30 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 3D1ACE9D; Tue, 11 Feb 2020 14:53:17 +0100 (CET)
+        id BEC1CEAA; Tue, 11 Feb 2020 14:53:17 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 56/62] x86/realmode: Add SEV-ES specific trampoline entry point
-Date:   Tue, 11 Feb 2020 14:52:50 +0100
-Message-Id: <20200211135256.24617-57-joro@8bytes.org>
+Subject: [PATCH 59/62] x86/head/64: Rename start_cpu0
+Date:   Tue, 11 Feb 2020 14:52:53 +0100
+Message-Id: <20200211135256.24617-60-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -48,87 +48,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The code at the trampoline entry point is executed in real-mode. In
-real-mode #VC exceptions can't be handled, so anything that might cause
-such an exception must be avoided.
-
-In the standard trampoline entry code this is the WBINVD instruction and
-the call to verify_cpu(), which are both not needed anyway when running
-as an SEV-ES guest.
+For SEV-ES this entry point will be used for restarting APs after they
+have been offlined. Remove the '0' from the name to reflect that.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/realmode.h      |  3 +++
- arch/x86/realmode/rm/header.S        |  3 +++
- arch/x86/realmode/rm/trampoline_64.S | 20 ++++++++++++++++++++
- 3 files changed, 26 insertions(+)
+ arch/x86/include/asm/cpu.h | 2 +-
+ arch/x86/kernel/head_32.S  | 4 ++--
+ arch/x86/kernel/head_64.S  | 6 +++---
+ arch/x86/kernel/smpboot.c  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index b35030eeec36..6590394af309 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -21,6 +21,9 @@ struct real_mode_header {
- 	/* SMP trampoline */
- 	u32	trampoline_start;
- 	u32	trampoline_header;
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	u32	sev_es_trampoline_start;
-+#endif
- #ifdef CONFIG_X86_64
- 	u32	trampoline_pgd;
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index adc6cc86b062..00668daf8991 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -29,7 +29,7 @@ struct x86_cpu {
+ #ifdef CONFIG_HOTPLUG_CPU
+ extern int arch_register_cpu(int num);
+ extern void arch_unregister_cpu(int);
+-extern void start_cpu0(void);
++extern void start_cpu(void);
+ #ifdef CONFIG_DEBUG_HOTPLUG_CPU0
+ extern int _debug_hotplug_cpu(int cpu, int action);
  #endif
-diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
-index af04512c02d9..8c1db5bf5d78 100644
---- a/arch/x86/realmode/rm/header.S
-+++ b/arch/x86/realmode/rm/header.S
-@@ -20,6 +20,9 @@ SYM_DATA_START(real_mode_header)
- 	/* SMP trampoline */
- 	.long	pa_trampoline_start
- 	.long	pa_trampoline_header
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	.long	pa_sev_es_trampoline_start
-+#endif
- #ifdef CONFIG_X86_64
- 	.long	pa_trampoline_pgd;
+diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
+index 3923ab4630d7..1a280152bd10 100644
+--- a/arch/x86/kernel/head_32.S
++++ b/arch/x86/kernel/head_32.S
+@@ -180,12 +180,12 @@ SYM_CODE_END(startup_32)
+  * up already except stack. We just set up stack here. Then call
+  * start_secondary().
+  */
+-SYM_FUNC_START(start_cpu0)
++SYM_FUNC_START(start_cpu)
+ 	movl initial_stack, %ecx
+ 	movl %ecx, %esp
+ 	call *(initial_code)
+ 1:	jmp 1b
+-SYM_FUNC_END(start_cpu0)
++SYM_FUNC_END(start_cpu)
  #endif
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index 251758ed7443..84c5d1b33d10 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -56,6 +56,7 @@ SYM_CODE_START(trampoline_start)
- 	testl   %eax, %eax		# Check for return code
- 	jnz	no_longmode
  
-+.Lswitch_to_protected:
- 	/*
- 	 * GDT tables in non default location kernel can be beyond 16MB and
- 	 * lgdt will not be able to load the address as in real mode default
-@@ -80,6 +81,25 @@ no_longmode:
- 	jmp no_longmode
- SYM_CODE_END(trampoline_start)
+ /*
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 9dd602bd6244..681f3aafd424 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -293,15 +293,15 @@ SYM_CODE_END(secondary_startup_64)
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+/* SEV-ES supports non-zero IP for entry points - no alignment needed */
-+SYM_CODE_START(sev_es_trampoline_start)
-+	cli			# We should be safe anyway
-+
-+	LJMPW_RM(1f)
-+1:
-+	mov	%cs, %ax	# Code and data in the same place
-+	mov	%ax, %ds
-+	mov	%ax, %es
-+	mov	%ax, %ss
-+
-+	# Setup stack
-+	movl	$rm_stack_end, %esp
-+
-+	jmp	.Lswitch_to_protected
-+SYM_CODE_END(sev_es_trampoline_start)
-+#endif	/* CONFIG_AMD_MEM_ENCRYPT */
-+
- #include "../kernel/verify_cpu.S"
+ #ifdef CONFIG_HOTPLUG_CPU
+ /*
+- * Boot CPU0 entry point. It's called from play_dead(). Everything has been set
++ * CPU entry point. It's called from play_dead(). Everything has been set
+  * up already except stack. We just set up stack here. Then call
+  * start_secondary() via .Ljump_to_C_code.
+  */
+-SYM_CODE_START(start_cpu0)
++SYM_CODE_START(start_cpu)
+ 	UNWIND_HINT_EMPTY
+ 	movq	initial_stack(%rip), %rsp
+ 	jmp	.Ljump_to_C_code
+-SYM_CODE_END(start_cpu0)
++SYM_CODE_END(start_cpu)
+ #endif
  
- 	.section ".text32","ax"
+ 	/* Both SMP bootup and ACPI suspend change these variables */
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 69881b2d446c..19aa18f1e307 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1717,7 +1717,7 @@ static inline void mwait_play_dead(void)
+ 		 * If NMI wants to wake up CPU0, start CPU0.
+ 		 */
+ 		if (wakeup_cpu0())
+-			start_cpu0();
++			start_cpu();
+ 	}
+ }
+ 
+@@ -1732,7 +1732,7 @@ void hlt_play_dead(void)
+ 		 * If NMI wants to wake up CPU0, start CPU0.
+ 		 */
+ 		if (wakeup_cpu0())
+-			start_cpu0();
++			start_cpu();
+ 	}
+ }
+ 
 -- 
 2.17.1
 
