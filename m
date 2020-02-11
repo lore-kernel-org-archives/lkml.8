@@ -2,112 +2,197 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284CAC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2ECC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EDA20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581452977;
-	bh=050Spu/rOU3M2mOId8IXyEhwRlEOjhxlUycw+DTlrAU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L6rPmvvlMafjN+DgXwvzkYaL9Ri4VaS8GnwfPFAiRJMkXDLpFxSc8zjUYPC/ZOj2E
-	 YmH5qtSl+8sdyE77gCRcbjgsZo70btt5qV+sbOIaKojfgtVbQ/RDEDXOEGom1jdhmB
-	 Hbi5ZiNjt7S0QpVpIyoGubeu+tXA4kvAIUgciQJA=
+	by mail.kernel.org (Postfix) with ESMTP id 0F4BD20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qeozm3+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbgBKU3g (ORCPT
+        id S1731831AbgBKUeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:29:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgBKU3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:29:35 -0500
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0566F20842;
-        Tue, 11 Feb 2020 20:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581452975;
-        bh=050Spu/rOU3M2mOId8IXyEhwRlEOjhxlUycw+DTlrAU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LefOiRP31zOt17a/0mZeErAs3SLjX6rxUajiE6zk+ZHw5rNpW0kPYozl2m3vp2OvQ
-         HTUuTEX4/6m9nO8mHTctSbXZ+j7kHj5fdynX4FmZfVJsBmiKpM6eIPUkSXdnnXoY6H
-         o3er5cfpYWlylCbvpwchBWOog+/g/IfGeFIzw2Ro=
-Received: by mail-qv1-f43.google.com with SMTP id y8so5666231qvk.6;
-        Tue, 11 Feb 2020 12:29:34 -0800 (PST)
-X-Gm-Message-State: APjAAAUVTN7tt6WYFKAoFCsLCDPUfg0JDMmLUk1WUpsIDpGEAXXOuCqo
-        GCdbPISWrAAOBcDbTabTbUUsDOWjaRiUXDHVkQ==
-X-Google-Smtp-Source: APXvYqzMzy8SAQGTADa4Ad/96d4YLO1HXcb+kYrifg+OyLqqb/8mxacdP4IS2fUuUglqP9jTUMsTBcYW3SYhp8BSfEE=
-X-Received: by 2002:ad4:4511:: with SMTP id k17mr4321626qvu.135.1581452974077;
- Tue, 11 Feb 2020 12:29:34 -0800 (PST)
+        Tue, 11 Feb 2020 15:34:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36939 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730566AbgBKUeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 15:34:17 -0500
+Received: by mail-ot1-f65.google.com with SMTP id d3so11533618otp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:34:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q11zsssSHeKjTpfbV0UQcFcGMIVXHOWVWu3BFYxakp4=;
+        b=qeozm3+R7EnJiUqxAO5WKU6Hyo8tOvNoKIv3sqG0gwJnruWChpe1RHY1CoExS/DHwK
+         he5Szs4itn3GjZWTFLBu9ib1jeaKQF7I8F/J6ZCd+raCeXX8Ml8qL2LsKQzBrsvmpZWi
+         LQGGl/dWBrexM2f/haFE13HCd+3IpMAZkvvGpB5n55Z5/Ag2N3RjnXl8xgLc2+1aFkTR
+         UPSbLDiLCbU/Cb4J4f2WFKJTYxS11Fr3qOVTalvoCvAxRpL5kc/w5gTC8sfJ/NDgEgT6
+         jeFEpLJm7a3am8dmDSuwym2sTtDNasMRQr77XiJDdvOXMmN3Pf70q/USLL7OUWvG29yX
+         4aCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q11zsssSHeKjTpfbV0UQcFcGMIVXHOWVWu3BFYxakp4=;
+        b=XpNMa9eo0cBNLyRs6gPXILG92EmLc2NsHCd6LohUUDNstNL1I291i9c/qvwJaEu6Jv
+         mhlI2FNGVwio1xKlhBybDXjydAUX6QAmhgienWuoH3Nrx5BnCnQzyIjVVBNyp3XOYztt
+         pqWz3+yXl/sdI1GUWT54cdNx/87Dt2h1TC3QJX/5AiVH2gaiyXMsqzMusMoaCML6cU/R
+         jf2BlNBxmfaov+mqHFDiwMzvS5YuNzc3HESyZNmd/jMBiM/rIIrtqt02piBGkmgDposf
+         qJXGHcPkDBY2lI4hJvyDFZp/fPWz9dQfje1xnnLbBdM8kVLbH2SQrVg2WA/5GU83qTix
+         iWJg==
+X-Gm-Message-State: APjAAAVdHNpg36diOxVZ6U/Ji8JAyhpiOJJ6vhsCF438BkMrGWSrD8dn
+        rU9WhUDdStZy/kNonBThG/gESqgov14tlAqMEDk1lQ==
+X-Google-Smtp-Source: APXvYqwN+vAsdRxgGOaSrJORQpfpoOK0DTUx7e2DVI860NZpm9RoWnlwAaQwqmRW/lEAu1tBxxXl1zt3MnY8gyqlm3Y=
+X-Received: by 2002:a9d:65c1:: with SMTP id z1mr6936015oth.180.1581453255514;
+ Tue, 11 Feb 2020 12:34:15 -0800 (PST)
 MIME-Version: 1.0
-References: <CGME20200204125854eucas1p19ace564a5f45b9231e0fba8af07009cd@eucas1p1.samsung.com>
- <20200204125844.19955-1-m.szyprowski@samsung.com> <20200205054508.GG60221@umbus.fritz.box>
- <bc380fd8-71bb-897e-f060-b51386dec9be@samsung.com> <20200210234406.GH22584@umbus.fritz.box>
-In-Reply-To: <20200210234406.GH22584@umbus.fritz.box>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 14:29:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJLLWnx-K9T5wv_i+FnPwbWpfak4RD_9P1Xz_2-XkYncA@mail.gmail.com>
-Message-ID: <CAL_JsqJLLWnx-K9T5wv_i+FnPwbWpfak4RD_9P1Xz_2-XkYncA@mail.gmail.com>
-Subject: Re: [PATCH] libfdt: place new nodes & properties after the parent's ones
-To:     David Gibson <david@gibson.dropbear.id.au>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <20200123152440.28956-1-kpsingh@chromium.org> <20200123152440.28956-5-kpsingh@chromium.org>
+ <20200211031208.e6osrcathampoog7@ast-mbp> <20200211124334.GA96694@google.com>
+ <20200211175825.szxaqaepqfbd2wmg@ast-mbp> <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+ <20200211190943.sysdbz2zuz5666nq@ast-mbp> <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
+ <20200211201039.om6xqoscfle7bguz@ast-mbp>
+In-Reply-To: <20200211201039.om6xqoscfle7bguz@ast-mbp>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 11 Feb 2020 21:33:49 +0100
+Message-ID: <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
+Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
+ mutable hooks list for the BPF LSM]
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 5:44 PM David Gibson
-<david@gibson.dropbear.id.au> wrote:
->
-> On Mon, Feb 10, 2020 at 12:40:19PM +0100, Marek Szyprowski wrote:
-> > Hi David,
-> >
-> > On 05.02.2020 06:45, David Gibson wrote:
-> > > On Tue, Feb 04, 2020 at 01:58:44PM +0100, Marek Szyprowski wrote:
-> > >> While applying dt-overlays using libfdt code, the order of the applied
-> > >> properties and sub-nodes is reversed. This should not be a problem in
-> > >> ideal world (mainline), but this matters for some vendor specific/custom
-> > >> dtb files. This can be easily fixed by the little change to libfdt code:
-> > >> any new properties and sub-nodes should be added after the parent's node
-> > >> properties and subnodes.
-> > >>
-> > >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > I'm not convinced this is a good idea.
+()On Tue, Feb 11, 2020 at 9:10 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> On Tue, Feb 11, 2020 at 08:36:18PM +0100, Jann Horn wrote:
+> > On Tue, Feb 11, 2020 at 8:09 PM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > > On Tue, Feb 11, 2020 at 07:44:05PM +0100, Jann Horn wrote:
+> > > > On Tue, Feb 11, 2020 at 6:58 PM Alexei Starovoitov
+> > > > <alexei.starovoitov@gmail.com> wrote:
+> > > > > On Tue, Feb 11, 2020 at 01:43:34PM +0100, KP Singh wrote:
+> > > > [...]
+> > > > > > * When using the semantic provided by fexit, the BPF LSM program will
+> > > > > >   always be executed and will be able to override / clobber the
+> > > > > >   decision of LSMs which appear before it in the ordered list. This
+> > > > > >   semantic is very different from what we currently have (i.e. the BPF
+> > > > > >   LSM hook is only called if all the other LSMs allow the action) and
+> > > > > >   seems to be bypassing the LSM framework.
+> > > > >
+> > > > > It that's a concern it's trivial to add 'if (RC == 0)' check to fexit
+> > > > > trampoline generator specific to lsm progs.
+> > > > [...]
+> > > > > Using fexit mechanism and bpf_sk_storage generalization is
+> > > > > all that is needed. None of it should touch security/*.
+> > > >
+> > > > If I understand your suggestion correctly, that seems like a terrible
+> > > > idea to me from the perspective of inspectability and debuggability.
+> > > > If at runtime, a function can branch off elsewhere to modify its
+> > > > decision, I want to see that in the source code. If someone e.g.
+> > > > changes the parameters or the locking rules around a security hook,
+> > > > how are they supposed to understand the implications if that happens
+> > > > through some magic fexit trampoline that is injected at runtime?
 > > >
-> > > First, anything that relies on the order of properties or subnodes in
-> > > a dtb is deeply, fundamentally broken.  That can't even really be a
-> > > problem with a dtb file itself, only with the code processing it.
+> > > I'm not following the concern. There is error injection facility that is
+> > > heavily used with and without bpf. In this case there is really no difference
+> > > whether trampoline is used with direct call or indirect callback via function
+> > > pointer. Both will jump to bpf prog. The _source code_ of bpf program will
+> > > _always_ be available for humans to examine via "bpftool prog dump" since BTF
+> > > is required. So from inspectability and debuggability point of view lsm+bpf
+> > > stuff is way more visible than any builtin LSM. At any time people will be able
+> > > to see what exactly is running on the system. Assuming folks can read C code.
 > >
-> > I agree about the properties, but generally the order of nodes usually
-> > implies the order of creation of some devices or objects.
+> > You said that you want to use fexit without touching security/, which
+> > AFAIU means that the branch from security_*() to the BPF LSM will be
+> > invisible in the *kernel's* source code unless the reader already
+> > knows about the BPF LSM. But maybe I'm just misunderstanding your
+> > idea.
+> >
+> > If a random developer is trying to change the locking rules around
+> > security_blah(), and wants to e.g. figure out whether it's okay to
+> > call that thing with a spinlock held, or whether one of the arguments
+> > is actually used, or stuff like that, the obvious way to verify that
+> > is to follow all the direct and indirect calls made from
+> > security_blah(). It's tedious, but it works, unless something is
+> > hooked up to it in a way that is visible in no way in the source code.
+> >
+> > I agree that the way in which the call happens behind the scenes
+> > doesn't matter all that much - I don't really care all that much
+> > whether it's an indirect call, a runtime-patched direct call in inline
+> > assembly, or an fexit hook. What I do care about is that someone
+> > reading through any affected function can immediately see that the
+> > branch exists - in other words, ideally, I'd like it to be something
+> > happening in the method body, but if you think that's unacceptable, I
+> > think there should at least be a function attribute that makes it very
+> > clear what's going on.
 >
-> Huh?  From the device tree client's point of view the devices just
-> exist - the order of creation should not be visible to it.
+> Got it. Then let's whitelist them ?
+> All error injection points are marked with ALLOW_ERROR_INJECTION().
+> We can do something similar here, but let's do it via BTF and avoid
+> abusing yet another elf section for this mark.
+> I think BTF_TYPE_EMIT() should work. Just need to pick explicit enough
+> name and extensive comment about what is going on.
 
-I'm not sure if downstream is different, but upstream this stems from
-Linux initcalls being processed in link order within a given level.
-It's much better than it used to be, but short of randomizing the
-ordering, I'm not sure we'll ever find and fix all these hidden
-dependencies.
+Sounds reasonable to me. :)
 
-> > This sometimes
-> > has some side-effects.
+> Locking rules and cleanup around security_blah() shouldn't change though.
+> Like security_task_alloc() should be paired with security_task_free().
+> And so on. With bpf_sk_storage like logic the alloc/free of scratch
+> space will be similar to the way socket and bpf progs deal with it.
 >
-> If those side effects matter, your code is broken.  If you need to
-> apply an order to nodes, you should be looking at 'reg' or other
-> properties.
+> Some of the lsm hooks are in critical path. Like security_socket_sendmsg().
+> retpoline hurts. If we go with indirect calls right now it will be harder to
+> optimize later. It took us long time to come up with bpf trampoline and build
+> bpf dispatcher on top of it to remove single indirect call from XDP runtime.
+> For bpf+lsm would be good to avoid it from the start.
 
-The general preference is to sort by 'reg'. And we try to catch and
-reject any node re-ordering patches.
+Just out of curiosity: Are fexit hooks really much cheaper than indirect calls?
 
-Rob
+AFAIK ftrace on x86-64 replaces the return pointer for fexit
+instrumentation (see prepare_ftrace_return()). So when the function
+returns, there is one return misprediction for branching into
+return_to_handler(), and then the processor's internal return stack
+will probably be misaligned so that after ftrace_return_to_handler()
+is done running, all the following returns will also be mispredicted.
+
+So I would've thought that fexit hooks would have at least roughly the
+same impact as indirect calls - indirect calls via retpoline do one
+mispredicted branch, fexit hooks do at least two AFAICS. But I guess
+indirect calls could still be slower if fexit benefits from having all
+the mispredicted pointers stored on the cache-hot stack while the
+indirect branch target is too infrequently accessed to be in L1D, or
+something like that?
