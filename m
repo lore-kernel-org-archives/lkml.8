@@ -2,128 +2,229 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4962EC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9BCC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335C520708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3009921734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iKL3T3KT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbgBKUIf (ORCPT
+        id S1730954AbgBKUJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:08:35 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:38631 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728537AbgBKUIf (ORCPT
+        Tue, 11 Feb 2020 15:09:22 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34229 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgBKUJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:08:35 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2D0293A3899;
-        Wed, 12 Feb 2020 07:08:28 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j1bpa-0002l0-DL; Wed, 12 Feb 2020 07:08:26 +1100
-Date:   Wed, 12 Feb 2020 07:08:26 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 04/13] mm: Add readahead address space operation
-Message-ID: <20200211200826.GK10776@dread.disaster.area>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-5-willy@infradead.org>
- <20200211045230.GD10776@dread.disaster.area>
- <20200211125413.GU8731@bombadil.infradead.org>
+        Tue, 11 Feb 2020 15:09:22 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l136so14072019oig.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 12:09:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d79/juOKGQ3xhEKgN8cqkrkeeX6KR3FsfafPiPWnTjk=;
+        b=iKL3T3KT/E0Iwsb3fnUfmhLupejJLrt0Xw5IOfw8B/SqKyHuAmgD6b5kRaiIeb6uQi
+         4hqOAy9ePuT7GdoTUwr87pkUzlBm0LRqEEFiWmTJS7vLwJwDvOy2UWIrGEpnJS5HNg6L
+         UJ3OcYCcXDup4hmac0c8ZAtTXuIBB4C4CC3djbwDvtd6WU9keMA7joMyqQ4WttYi8EBN
+         vrOINTqg3CqyMUDW8SXtRJMA5A2vJY60W9spolclj6hO3pOdiey4rg0CUIfOnXDULfGo
+         s6RA3SPhR9ow2ObUxJ9XLAnHJ3VD73fdhMjBf6otQbBS3osn2sT48zUHMkQ908wokOCL
+         r57w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d79/juOKGQ3xhEKgN8cqkrkeeX6KR3FsfafPiPWnTjk=;
+        b=O2zyuiaG+/HqCDQmns5XebljSSM4exLWtQ/uEFnZF2TaJ4aBGa5HOuEZCsELwKu+Kc
+         UdaSCMT9wf6UDvZbmrqiqO3lCTTwISfYDVyHcA+mlys2/0GWh/jfuFu4dKbWYU/pA6wj
+         hZYQdSrvzgvn855PhAk2YsXfWd2oyQ7LZ7Q99gNH6bjrRNBtE2TqLc+6OkT25D90k4LR
+         RM6B5eeDLUSNQx9LjnNtfp3EVbuyyQGwMCRtII9cMJaWMQRARFeUV7xzwQ+CDxtRXKr9
+         Gj+q/uQjiPpus/x2asuoElcVEiKFHoowLCs6Kv27qbYA6G+t0dUgoIhrzlL2Irs2vKfi
+         goWg==
+X-Gm-Message-State: APjAAAXamb0lKo6PA22NTzXvOP54YLRgyh0vsn362Btcki5+MnhGIaft
+        G5PTapCwLhIPKHUsebm/EutenuXH1JSIu7OP1ffQkA==
+X-Google-Smtp-Source: APXvYqzxjGO2mFbbESSI+X8wqwDLJmq3XqFdPvI31wvyICH6y7/2J3dCeN49E5XfR2n7WblRYhIvydxmmpi6MKoWH0c=
+X-Received: by 2002:aca:ea43:: with SMTP id i64mr4107524oih.30.1581451761048;
+ Tue, 11 Feb 2020 12:09:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211125413.GU8731@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=7-415B0cAAAA:8 a=EnYlyWvjhy6VBD_eMqkA:9 a=CdacwtsPoHkD4rhW:21
-        a=vlsg44Ume0T2P6Xz:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-6-drinkcat@chromium.org> <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
+In-Reply-To: <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 11 Feb 2020 12:08:44 -0800
+Message-ID: <CAGETcx_3-ZoVAf+Uf0Yo86pUU1nL4S4-jrS0eZi50yvhCO985g@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:54:13AM -0800, Matthew Wilcox wrote:
-> On Tue, Feb 11, 2020 at 03:52:30PM +1100, Dave Chinner wrote:
-> > > +struct readahead_control {
-> > > +	struct file *file;
-> > > +	struct address_space *mapping;
-> > > +/* private: use the readahead_* accessors instead */
-> > > +	pgoff_t start;
-> > > +	unsigned int nr_pages;
-> > > +	unsigned int batch_count;
-> > > +};
-> > > +
-> > > +static inline struct page *readahead_page(struct readahead_control *rac)
-> > > +{
-> > > +	struct page *page;
-> > > +
-> > > +	if (!rac->nr_pages)
-> > > +		return NULL;
-> > > +
-> > > +	page = xa_load(&rac->mapping->i_pages, rac->start);
-> > > +	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> > > +	rac->batch_count = hpage_nr_pages(page);
-> > > +	rac->start += rac->batch_count;
-> > 
-> > There's no mention of large page support in the patch description
-> > and I don't recall this sort of large page batching in previous
-> > iterations.
-> > 
-> > This seems like new functionality to me, not directly related to
-> > the initial ->readahead API change? What have I missed?
-> 
-> I had a crisis of confidence when I was working on this -- the loop
-> originally looked like this:
-> 
-> #define readahead_for_each(rac, page)                                   \
->         for (; (page = readahead_page(rac)); rac->nr_pages--)
-> 
-> and then I started thinking about what I'd need to do to support large
-> pages, and that turned into
-> 
-> #define readahead_for_each(rac, page)                                   \
->         for (; (page = readahead_page(rac));				\
-> 		rac->nr_pages -= hpage_nr_pages(page))
-> 
-> but I realised that was potentially a use-after-free because 'page' has
-> certainly had put_page() called on it by then.  I had a brief period
-> where I looked at moving put_page() away from being the filesystem's
-> responsibility and into the iterator, but that would introduce more
-> changes into the patchset, as well as causing problems for filesystems
-> that want to break out of the loop.
-> 
-> By this point, I was also looking at the readahead_for_each_batch()
-> iterator that btrfs uses, and so we have the batch count anyway, and we
-> might as well use it to store the number of subpages of the large page.
-> And so it became easier to just put the whole ball of wax into the initial
-> patch set, rather than introduce the iterator now and then fix it up in
-> the patch set that I'm basing on this.
-> 
-> So yes, there's a certain amount of excess functionality in this patch
-> set ... I can remove it for the next release.
+On Tue, Feb 11, 2020 at 11:44 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> +Saravana
+>
+> On Thu, Feb 6, 2020 at 11:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >
+> > When there is a single power domain per device, the core will
+> > ensure the power domain is switched on (so it is technically
+> > equivalent to having not power domain specified at all).
+> >
+> > However, when there are multiple domains, as in MT8183 Bifrost
+> > GPU, we need to handle them in driver code.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> >
+> > ---
+> >
+> > The downstream driver we use on chromeos-4.19 currently uses 2
+> > additional devices in device tree to accomodate for this [1], but
+> > I believe this solution is cleaner.
+> >
+> > [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+> >
+> > v4:
+> >  - Match the exact power domain names as specified in the compatible
+> >    struct, instead of just matching the number of power domains.
+> >    [Review: Ulf Hansson]
+> >  - Dropped print and reordered function [Review: Steven Price]
+> >  - nits: Run through latest version of checkpatch:
+> >    - Use WARN instead of BUG_ON.
+> >    - Drop braces for single expression if block.
+> > v3:
+> >  - Use the compatible matching data to specify the number of power
+> >    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+> >    as the core will handle these 2 cases in the exact same way
+> >    (automatically, without driver intervention), and there should
+> >    be no adverse consequence in this case (the concern is about
+> >    switching on only some power domains and not others).
+> >
+> >  drivers/gpu/drm/panfrost/panfrost_device.c | 97 ++++++++++++++++++++--
+> >  drivers/gpu/drm/panfrost/panfrost_device.h | 11 +++
+> >  drivers/gpu/drm/panfrost/panfrost_drv.c    |  2 +
+> >  3 files changed, 102 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > index 3720d50f6d9f965..8136babd3ba9935 100644
+> > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/clk.h>
+> >  #include <linux/reset.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/pm_domain.h>
+> >  #include <linux/regulator/consumer.h>
+> >
+> >  #include "panfrost_device.h"
+> > @@ -120,6 +121,79 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+> >                         pfdev->regulators);
+> >  }
+> >
+> > +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> > +               if (!pfdev->pm_domain_devs[i])
+> > +                       break;
+> > +
+> > +               if (pfdev->pm_domain_links[i])
+> > +                       device_link_del(pfdev->pm_domain_links[i]);
+> > +
+> > +               dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> > +       }
+> > +}
+> > +
+> > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> > +{
+> > +       int err;
+> > +       int i, num_domains;
+> > +
+> > +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> > +                                                "power-domains",
+> > +                                                "#power-domain-cells");
+> > +
+> > +       /*
+> > +        * Single domain is handled by the core, and, if only a single power
+> > +        * the power domain is requested, the property is optional.
+> > +        */
+> > +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> > +               return 0;
+> > +
+> > +       if (num_domains != pfdev->comp->num_pm_domains) {
+> > +               dev_err(pfdev->dev,
+> > +                       "Incorrect number of power domains: %d provided, %d needed\n",
+> > +                       num_domains, pfdev->comp->num_pm_domains);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
+> > +                       "Too many supplies in compatible structure.\n"))
+> > +               return -EINVAL;
+> > +
+> > +       for (i = 0; i < num_domains; i++) {
+> > +               pfdev->pm_domain_devs[i] =
+> > +                       dev_pm_domain_attach_by_name(pfdev->dev,
+> > +                                       pfdev->comp->pm_domain_names[i]);
+> > +               if (IS_ERR_OR_NULL(pfdev->pm_domain_devs[i])) {
+> > +                       err = PTR_ERR(pfdev->pm_domain_devs[i]) ? : -ENODATA;
+> > +                       pfdev->pm_domain_devs[i] = NULL;
+> > +                       dev_err(pfdev->dev,
+> > +                               "failed to get pm-domain %s(%d): %d\n",
+> > +                               pfdev->comp->pm_domain_names[i], i, err);
+> > +                       goto err;
+> > +               }
+> > +
+> > +               pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> > +                               pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> > +                               DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+>
+> We're in the process of adding device links based on DT properties.
+> Shouldn't we add power domains to that? See drivers/of/property.c for
+> what's handled.
 
-I'd say "Just document it" as that was the main reason I noticed it.
-Or perhaps add the batching function as a stand-alone patch so it's
-clear that the batch interface solves two problems at once - large
-pages and the btrfs page batching implementation...
+Rob,
 
-Cheers,
+drivers/of/property.c doesn't enable the RPM_ACTIVE AND PM_RUNTIME
+flags. Wanted to start off conservative. But adding command line ops
+to change the default flags shouldn't be difficult. But before I do
+that, I want to change of_devlink to
+fw_devlink=<disabled|permissive|enabled>. May be I can extend that to
+"disabled, permissive, suspend, runtime".
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Nicholas,
+
+And the adding and removing of device links for power domains will be
+a 2 line change. I've been meaning to add a few more bindings like
+hwspinlocks and pinctrl. I can roll power domains support into that if
+you want.
+
+-Saravana
