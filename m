@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5742EC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C57AC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F09120714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3F920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436312;
-	bh=2A4ie07n10RcdHUGNtTz2fQzwVBNRCPkC3INpiRjXhQ=;
+	s=default; t=1581436314;
+	bh=CW1ALRzDXQKDKjDV68hTjg2ZVzH2pIsj1iKoOAQXkIo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jjSfInGNt5CyFQ4ONUQx8p0IpKzz67rmLkfT1mGuCjWPZSC9JsstrfO9zpGU6IZQ2
-	 XAQpLpYwp1hFkcI8gZUSP/A+6YXw2uVah2tr3D8Q2HFN6vwEm1S2rRmvcW3CVvoQ7w
-	 s2Eu8gH5PwvN0gcXQtAIV/VbW+WPyK7Ood3U0JF4=
+	b=SPw0OBYCCrl5dfFpdvjYbdQr7QBlOrCQKxrHzOdUbyKwPcOX8biSAvjjTb/533fzJ
+	 KE457AV6BhKf3zfF0sxy7Vx74zY0ig1lm507HwE4xz+HWh5UTSrUCiCSShpB9o9Rd3
+	 quZ9VItkqblGF00X6HEhBCRLYw6BTB6nC+R+MTfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgBKPvv (ORCPT
+        id S1730662AbgBKPvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:51:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:48928 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:51:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:48946 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730630AbgBKPvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:51:49 -0500
+        id S1730647AbgBKPvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:51:51 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8376930E;
-        Tue, 11 Feb 2020 07:51:48 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D032030E;
+        Tue, 11 Feb 2020 07:51:50 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08B753F68E;
-        Tue, 11 Feb 2020 07:51:47 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:51:46 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 563D13F68E;
+        Tue, 11 Feb 2020 07:51:50 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:51:48 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Lionel Debieve <lionel.debieve@st.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        christophe.kerello@st.com,
-        Etienne Carriere <etienne.carriere@st.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        patrice.chotard@st.com
-Subject: Applied "spi: stm32-qspi: properly manage probe errors" to the spi tree
-In-Reply-To: <20200203135048.1299-3-patrice.chotard@st.com>
-Message-Id: <applied-20200203135048.1299-3-patrice.chotard@st.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dilip Kota <dkota@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: spi-geni-qcom: Drop of.h include" to the spi tree
+In-Reply-To: <20200204191206.97036-4-swboyd@chromium.org>
+Message-Id: <applied-20200204191206.97036-4-swboyd@chromium.org>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,7 +55,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: stm32-qspi: properly manage probe errors
+   spi: spi-geni-qcom: Drop of.h include
 
 has been applied to the spi tree at
 
@@ -82,118 +80,38 @@ to this mail.
 Thanks,
 Mark
 
-From 4a08d6c8662472121b0ddc29180ab3c94c34f586 Mon Sep 17 00:00:00 2001
-From: Lionel Debieve <lionel.debieve@st.com>
-Date: Mon, 3 Feb 2020 14:50:48 +0100
-Subject: [PATCH] spi: stm32-qspi: properly manage probe errors
+From 875014cb79ea4251e8800994640be1a8012b4133 Mon Sep 17 00:00:00 2001
+From: Stephen Boyd <swboyd@chromium.org>
+Date: Tue, 4 Feb 2020 11:12:06 -0800
+Subject: [PATCH] spi: spi-geni-qcom: Drop of.h include
 
-Fix resource release issues when driver probe operation fails.
+This driver doesn't call any DT functions like of_get_property(). Remove
+the of.h include as it isn't used.
 
-Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Link: https://lore.kernel.org/r/20200203135048.1299-3-patrice.chotard@st.com
+Cc: Girish Mahadevan <girishm@codeaurora.org>
+Cc: Dilip Kota <dkota@codeaurora.org>
+Cc: Alok Chauhan <alokc@codeaurora.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200204191206.97036-4-swboyd@chromium.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-stm32-qspi.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ drivers/spi/spi-geni-qcom.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 13bb64bf4c8f..d066f5144c3e 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -565,7 +565,7 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	qspi->io_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(qspi->io_base)) {
- 		ret = PTR_ERR(qspi->io_base);
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	qspi->phys_base = res->start;
-@@ -574,24 +574,26 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	qspi->mm_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(qspi->mm_base)) {
- 		ret = PTR_ERR(qspi->mm_base);
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	qspi->mm_size = resource_size(res);
- 	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ) {
- 		ret = -EINVAL;
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
-+	if (irq < 0) {
-+		ret = irq;
-+		goto err_master_put;
-+	}
- 
- 	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
- 			       dev_name(dev), qspi);
- 	if (ret) {
- 		dev_err(dev, "failed to request irq\n");
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	init_completion(&qspi->data_completion);
-@@ -599,26 +601,26 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	qspi->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(qspi->clk)) {
- 		ret = PTR_ERR(qspi->clk);
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	qspi->clk_rate = clk_get_rate(qspi->clk);
- 	if (!qspi->clk_rate) {
- 		ret = -EINVAL;
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	ret = clk_prepare_enable(qspi->clk);
- 	if (ret) {
- 		dev_err(dev, "can not enable the clock\n");
--		goto err;
-+		goto err_master_put;
- 	}
- 
- 	rstc = devm_reset_control_get_exclusive(dev, NULL);
- 	if (IS_ERR(rstc)) {
- 		ret = PTR_ERR(rstc);
- 		if (ret == -EPROBE_DEFER)
--			goto err;
-+			goto err_qspi_release;
- 	} else {
- 		reset_control_assert(rstc);
- 		udelay(2);
-@@ -629,7 +631,7 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, qspi);
- 	ret = stm32_qspi_dma_setup(qspi);
- 	if (ret)
--		goto err;
-+		goto err_qspi_release;
- 
- 	mutex_init(&qspi->lock);
- 
-@@ -645,8 +647,9 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	if (!ret)
- 		return 0;
- 
--err:
-+err_qspi_release:
- 	stm32_qspi_release(qspi);
-+err_master_put:
- 	spi_master_put(qspi->ctrl);
- 
- 	return ret;
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index f0ca7f5ae714..c3972424af71 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -6,7 +6,6 @@
+ #include <linux/io.h>
+ #include <linux/log2.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/qcom-geni-se.h>
 -- 
 2.20.1
 
