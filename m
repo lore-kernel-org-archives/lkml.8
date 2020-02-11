@@ -2,136 +2,138 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4509CC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C058CC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250C820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D1520714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:42:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WqyC94s0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgBKQlf (ORCPT
+        id S1730152AbgBKQmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:41:35 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52626 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgBKQlf (ORCPT
+        Tue, 11 Feb 2020 11:42:17 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45766 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbgBKQmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:41:35 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j1YbM-0008Q1-EW; Tue, 11 Feb 2020 16:41:32 +0000
-Subject: Re: [PATCH][next] hwmon: axi-fan-control: fix uninitialized
- dereference of pointer res
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200211162059.94233-1-colin.king@canonical.com>
- <20200211163910.GA2975@roeck-us.net>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <c4dfa7e1-a833-7bfd-2d5b-800892fb5fe4@canonical.com>
-Date:   Tue, 11 Feb 2020 16:41:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 11 Feb 2020 11:42:16 -0500
+Received: by mail-vs1-f65.google.com with SMTP id v141so6689355vsv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 08:42:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KHkfZzNh1B4XmJZnXfgIQNWZsT5whG1kE8qQBYWXMgc=;
+        b=WqyC94s0CD5d0ZPRr4dlQ93j+b50OoCaoHuxaKOKZ9lGE/26eG7Zpz10axDbzf5cxb
+         agJY2MIEOmDQnmVeVxsWhCyJlffhvrtK79hVkzi4usTyPTyl3c9gdHucQAN6P9UAgoYx
+         nArWP2wSBEJ1rS5b1O2lHsPS6x/yo/iTXctxezgmJsdLoyJlqvpWzge5pVPLcoU06f8E
+         G6oLEE7mUeGdksmjfGbnMX+hoNNlbG4oxSYRlzwIb/R52rtvOPBSDc2MY48vpEV+dG97
+         55ylTus7812YtsujzGDOnd4LmnifnC4HV86nRK0NaOuphuOpMPKW+5WOtR80XRx0/onh
+         4xJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KHkfZzNh1B4XmJZnXfgIQNWZsT5whG1kE8qQBYWXMgc=;
+        b=cgEjrJnDYGTK6mjTd5gjzBBBSKcofpTCwy5i1VxVwMIhGyOJr3FrH41RLepnHK1z0x
+         PBaZ1D4BPE9akjgi1Yyo59473Dj64OSlbN5YxltI6Jj1wr0jEMmMrtNMfwXx/NmmwRXn
+         WGnu1hMrbiuvZNg8BmGG8a0XA/0GTZ1uUXYlltv42RWRNn4T3epSKlSPxmMFmp78Ps/d
+         JGGUgXX7BXAYg4DktuoddhHjNLgddp/8LpR2ZY8/3pBEb35SbuuOem5XzmxNzjdofZlV
+         s36Uf5B86YycnMtVEn/RxqZkmSEqF1Bjg8VKCd1+KAZ6Hlts4Aw3uc3J607ufPXZVnQr
+         BvXw==
+X-Gm-Message-State: APjAAAWNackGW6pyfNVanS18gdjL+eTRLaotkKPdKpoi/qLPqw5TRFan
+        yPfL3M1OFJeCypTdhE0SxJJ1kudfUSIWRAaaS6NjQg==
+X-Google-Smtp-Source: APXvYqxqMq+ejXxPsl9/xIf55OXMeWrD7wxRfObKKoy3oMAN0UARPc8I0EQfK/M1BGYcb9ZuENsUbz+LrH8gmb00USk=
+X-Received: by 2002:a67:fa1a:: with SMTP id i26mr9638813vsq.169.1581439335360;
+ Tue, 11 Feb 2020 08:42:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211163910.GA2975@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+From:   Doug Anderson <dianders@google.com>
+Date:   Tue, 11 Feb 2020 08:42:01 -0800
+Message-ID: <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com>
+Subject: Re: [PATCH V1] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 16:39, Guenter Roeck wrote:
-> On Tue, Feb 11, 2020 at 04:20:59PM +0000, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently the resource pointer ret is uninitialized and it is
->> being dereferenced when printing out a debug message. Fix this
->> by fetching the resource and assigning pointer res.  It is
->> a moot point that we sanity check for a null res since a successful
->> call to devm_platform_ioremap_resource has already occurred so
->> in theory it should never be non-null.
->>
->> Addresses-Coverity: ("Uninitialized pointer read")
->> Fixes: 690dd9ce04f6 ("hwmon: Support ADI Fan Control IP")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> This has already been fixed by removing the message (and the
-> then unused variable). The message was useless anyway since
-> it printed the remapped address with %p.
-> 
-> Guenter
+Hi,
 
-OK, thanks. My static anaylsis can't keep up!
-> 
->> ---
->>  drivers/hwmon/axi-fan-control.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/hwmon/axi-fan-control.c b/drivers/hwmon/axi-fan-control.c
->> index 8041ba7cc152..36e0d060510a 100644
->> --- a/drivers/hwmon/axi-fan-control.c
->> +++ b/drivers/hwmon/axi-fan-control.c
->> @@ -415,6 +415,9 @@ static int axi_fan_control_probe(struct platform_device *pdev)
->>  	if (!ctl->clk_rate)
->>  		return -EINVAL;
->>  
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	if (!res)
->> +		return -EINVAL;
->>  	dev_dbg(&pdev->dev, "Re-mapped from 0x%08llX to %p\n",
->>  		(unsigned long long)res->start, ctl->base);
->>  
->> -- 
->> 2.25.0
->>
+On Tue, Feb 11, 2020 at 7:29 AM Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> CQE feature has been enabled on sdhci-msm. Add CQE reg map
+> that needs to be supplied for supporting CQE feature.
+>
+> Change-Id: I788c4bd5b7cbca16bc1030a410cc5550ed7204e1
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 7ee639b..eaa0998 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -27,6 +27,11 @@ Required properties:
+>  - reg: Base address and length of the register in the following order:
+>         - Host controller register map (required)
+>         - SD Core register map (required for msm-v4 and below)
+> +       - CQE register map (Optional, needed only for eMMC and msm-v4.2 above)
 
+I did a quick search and it appears that SD cards implementing 6.0 of
+the spec can also use CQE.  Is that correct?  If so, maybe remove the
+part about "eMMC"?
+
+Maybe also change "needed" to "useful" to make it clear that this
+entry isn't actually required for all msm-v4.2 controllers?
+
+
+> +- reg-names: When CQE register map is supplied, below reg-names are required
+> +       - "hc_mem" for Host controller register map
+> +       - "core_mem" for SD cpre regoster map
+
+s/regoster/register
+
+
+> +       - "cqhci_mem" for CQE register map
+
+I'm at least slightly confused.  You say that reg-names are there only
+if CQE register map is supplied.  ...and that requires 4.2 and above.
+...but "core_mem" is only there on 4.0 and below.  So there should
+never be a "core_mem" entry?
+
+Trying to specify that sanely in free-form text seems like it's gonna
+be hard and not worth it.  You should probably transition to yaml
+first?
+
+
+I will also note that Rob isn't a huge fan of "reg-names".  In a
+different conversation I think you mentioned you had a reason for
+having it.  I guess just be prepared to defend yourself against Rob if
+you feel strongly about keeping reg-names.
+
+
+-Doug
