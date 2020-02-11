@@ -2,146 +2,138 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9532C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F40C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4070206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57396215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="Rw7AO+Tx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCcZP1t+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgBKKp7 (ORCPT
+        id S1728423AbgBKKtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:45:59 -0500
-Received: from mail-dm6nam12on2072.outbound.protection.outlook.com ([40.107.243.72]:6259
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727805AbgBKKp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:45:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CDqKJwkzJp51OxmFz1B10Hv3vljPec9P7Bo+5+fPiM63ybgB1VTkzFcdtqx++usJntE6uHWkUQgZqjoNDaPsfS6Yoza9NOluhhX3lGslueQVT01S/7cr5FdDQF3RfofIytouvEYNdaV7epTW1e6HTz4d9YxdjVIYSQnqB+1qKDLWtzUOSXZSHBDdB3zDfUH9AnRlOoA1whIF7S9HGyhDv57ucMcBMyIwXA8PwYYIAc7y6iq+jlyYR9W6m6XMCDfYSO65jWBGf0bgopjZ4iWKr7qCkwv0BPviX+pcwobLRgfv6GqPKinGo0KruNNooKNNxPyFEJ0OMxqiVLloGo0bsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4MBTICax0x2ZwHWB8tsc9goElv6cGNhSAZ/01Ml4VHI=;
- b=dxeRJ3ExJzv2YYa2xL+ZTzPPCfXx6gbsr0H6Vr5ZNNPUVG6wZaB7tXhNShI36E6IQgBnZi5PMsR2LHRbh3ENxHmDe9EY5DXShjnSGG5dmJsuQmRdHLeC9hv/qxJQ7T/z9o13N/HWTyHa1eR9WFjfQ+lZViMnA9tt9cHGSBaDYdrJcxuHEbjXCCyGPp382Ch3uZHqhYRu2H7JBuzPi1N2if8NbZ5Ay10ZPaOmFatihb7NKF0su5yctqjvBxBz0RsYDEcQVyVtHSfPHbB3TLpXk1HX+nXpySYDkL+mSjDVwN+OpaxnWZg78hlpwABYLzrIkJ/mIc5W6Hs2xl6N1qksPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Tue, 11 Feb 2020 05:49:52 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36212 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbgBKKtw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:49:52 -0500
+Received: by mail-il1-f196.google.com with SMTP id b15so3047289iln.3;
+        Tue, 11 Feb 2020 02:49:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4MBTICax0x2ZwHWB8tsc9goElv6cGNhSAZ/01Ml4VHI=;
- b=Rw7AO+Tx5IYpxMsh6AbPO4M1IvuLNMpkV0q+GdWwxWGfWywNMQYSk7YA7hxLEIkeI+/3r+UB9xhnznjDEv+9KaI2mhnuxwRzWEduqBdCjA6i0DcNlIeSKBooZ4FgGTzePervnYubDsQSspbrJmEKCai62/oxuJrZSYQs5sNL0y0=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4430.namprd11.prod.outlook.com (52.135.39.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Tue, 11 Feb 2020 10:45:44 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 10:45:44 +0000
-From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [[PATCH staging] 7/7] staging: wfx: use more power-efficient
- sleep for reset
-Thread-Topic: [[PATCH staging] 7/7] staging: wfx: use more power-efficient
- sleep for reset
-Thread-Index: AQHV4LfWwjaGGUkfz0qcKeUdYm85kagVz2GA
-Date:   Tue, 11 Feb 2020 10:45:44 +0000
-Message-ID: <2074006.CDZ1VyBi8C@pc-42>
-References: <cover.1581410026.git.mirq-linux@rere.qmqm.pl>
- <f32c850dcb02bf26faf04655c01aee4c4d20c139.1581410026.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <f32c850dcb02bf26faf04655c01aee4c4d20c139.1581410026.git.mirq-linux@rere.qmqm.pl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 38484214-703a-4443-2640-08d7aedf8bdd
-x-ms-traffictypediagnostic: MN2PR11MB4430:
-x-microsoft-antispam-prvs: <MN2PR11MB44302CC5F1F703B90583327493180@MN2PR11MB4430.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(346002)(366004)(376002)(39850400004)(136003)(396003)(189003)(199004)(6916009)(86362001)(6486002)(6506007)(66574012)(478600001)(54906003)(85182001)(5660300002)(26005)(66946007)(66556008)(76116006)(186003)(91956017)(33716001)(66476007)(66446008)(85202003)(64756008)(2906002)(4326008)(71200400001)(9686003)(6512007)(81156014)(316002)(8936002)(81166006)(8676002)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4430;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0fzw+k8ooNBx64C8G5lvZH+GUVoh9e/sHayvLPJjEVcxbmsJ+cJ4gc9tPnfLgvBeufmj8dB3kG9kwutETsq4octn7vokZc4JydK4V76GsVKwu2wFadRmPKE+zlebatFIi41NGP49CCbuSn6uALO6jaosDpdM+n3ZERY5cS3Jp6qWoB5JHF4Z9+IFNgbvhd5WSf/GSUwRXAIriiNlcVDKYJ0WD/mYqcjIknSdr14Z9z+18L7+Den8vLn6fyBMa730NOb0Q2O6b33cdjzyhICLbA+mseFQa/jVMT+eACxUCJ+q0InavZ80o1RydogTI3cEnfRCT8sBoayhfbwZIILJAYfJvc4CYOBVLMYuwV9c+FLJbE+G6n6E7hQn9A+zcYh8zXvNj6H7gXe5YH54CKDAdXKt36tuMAX0nj4j+RpJszS1MIjPWZzNUoTIjZ4Olz5JmV0XgrumJwkUHbwP+OHofYAYsK9bdtnUmHHNENH7CaFlzkmz6eK/0zfGdd13flj7
-x-ms-exchange-antispam-messagedata: SUDEEyjLlZpjQjygiDmVkny9Q9D4tzj+l1ijEZFbaZRnD7jl9j8CePBgmN/57MJ4gUNimPj/4yMyr9B2TPyMEwzvcvn8b15lqZ0BCOBxHer57nVyxUYWsU2OKCAl8Lx0GRfqZwFVT2XwQ8b+GP3ZdQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4FD07A54F615E64780007E8D4C524A03@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eHqxkFhOftXeIrIg8vUiaV+dk3ty7YkSnlLZYLlo5Ko=;
+        b=qCcZP1t+3ytI3YacltBjs5aKyI9mSEFglR48Tb8Mrub6EIG2JXT27BMmeSwlJsMmE5
+         nD3++mwLzkcVxY5Sdec9Mubfc/z4ZWB5alqUoO8Sn6YnKKM/R3iQtfo+iXt6ALg/ukhj
+         urQg/71GNxQoYQeiUcku2HlWH5uhLitfmxayfbJbMfkPReSc9D0lvKNilG/HXLcI3TMZ
+         U6yHFwNBJociSPqISHUoLEssn8rQ5Z5YHScHZKxEjflOdHHWll4yHLuD+NNMjUWQ1wC+
+         KODO6dsc8Z7WswM0+DXXxwwRQ4iqg2N6q1tj3zBW31JmM/W0BSZQhcOuJ5SCenFgRdfO
+         HELA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eHqxkFhOftXeIrIg8vUiaV+dk3ty7YkSnlLZYLlo5Ko=;
+        b=rRMmp85JxsbyG4MeYtxYw24Aclv0aUyFDJIv8d1T8mDCr76IcDuVC6wZZB61++qZSV
+         g43KU3D3QUqk4x1SDWwI+phzAFGwD30ToO6RWt39hVf4b1agdNEzoq4T4MjhnIQqtGcK
+         tMUncrAWs1MrKflSvf+uG3freRFiIbuNIPytgZExI5+SOkV7mG0VanMPMZJUbqQ8d99J
+         k/gjThCBBCQ+tiOyko1S+VT83ZwW/ps4ioegqptKtkMjGC6TnHAf0200biLp/pgh69l8
+         trVkZj50ztwTkeZUsl6mxBkjMQG002ynovMPZmbdUg4VnBZBNBVg8P65l2o9P+L+omRu
+         Ot0w==
+X-Gm-Message-State: APjAAAXVRS8DVbHAeA9wmDFGkbLS5AZGjTEqwF/KJ13PRmMAH5VjB3Xw
+        SQvgpIaF5xf8HJarTt7NWyuMwTMrsJGQ+GONRuw=
+X-Google-Smtp-Source: APXvYqyV+gu2TZnHhPamDm/mFEOi79lFtDv1oEvHa0mxrqSPfvikSLJ/I2MVcG7LFj84tE+XHcvU+qhf4aKcVcfBz3k=
+X-Received: by 2002:a92:350d:: with SMTP id c13mr6001818ila.205.1581418191475;
+ Tue, 11 Feb 2020 02:49:51 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38484214-703a-4443-2640-08d7aedf8bdd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 10:45:44.1222
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ELehLiEveZxkbMqRXK5SDr8g00i/EGLIwWPn82Jwap0PCgLkRD3gnB0Ac7o0+uPdFKjA772Wf/5Vjv+Hc3MONQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4430
+References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-4-aford173@gmail.com>
+ <20200206184030.GA11381@bogus>
+In-Reply-To: <20200206184030.GA11381@bogus>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Tue, 11 Feb 2020 04:49:39 -0600
+Message-ID: <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
+Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
+ imx8mm, imx8qxp
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlc2RheSAxMSBGZWJydWFyeSAyMDIwIDA5OjQ2OjU2IENFVCBNaWNoYcWCIE1pcm9zxYJh
-dyB3cm90ZToNCj4NCj4gUmVwbGFjZSB1ZGVsYXkoKSB3aXRoIHVzbGVlcF9yYW5nZSgpIGFzIGFs
-bCB1c2VzIGFyZSBpbiBhIHNsZWVwYWJsZSBjb250ZXh0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-TWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPg0KPiAtLS0NCj4gIGRy
-aXZlcnMvc3RhZ2luZy93ZngvYmguYyAgICAgIHwgMiArLQ0KPiAgZHJpdmVycy9zdGFnaW5nL3dm
-eC9idXNfc3BpLmMgfCA0ICsrLS0NCj4gIGRyaXZlcnMvc3RhZ2luZy93ZngvaHdpby5jICAgIHwg
-MiArLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0p
-DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9iaC5jIGIvZHJpdmVycy9z
-dGFnaW5nL3dmeC9iaC5jDQo+IGluZGV4IGM2MzE5YWI3ZTcxYS4uOWZjYWIwMGEzNzMzIDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L2JoLmMNCj4gKysrIGIvZHJpdmVycy9zdGFn
-aW5nL3dmeC9iaC5jDQo+IEBAIC0yNiw3ICsyNiw3IEBAIHN0YXRpYyB2b2lkIGRldmljZV93YWtl
-dXAoc3RydWN0IHdmeF9kZXYgKndkZXYpDQo+ICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNs
-ZWVwKHdkZXYtPnBkYXRhLmdwaW9fd2FrZXVwLCAxKTsNCj4gICAgICAgICBpZiAod2Z4X2FwaV9v
-bGRlcl90aGFuKHdkZXYsIDEsIDQpKSB7DQo+ICAgICAgICAgICAgICAgICBpZiAoIWNvbXBsZXRp
-b25fZG9uZSgmd2Rldi0+aGlmLmN0cmxfcmVhZHkpKQ0KPiAtICAgICAgICAgICAgICAgICAgICAg
-ICB1ZGVsYXkoMjAwMCk7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZSgy
-MDAwLCAyNTAwKTsNCj4gICAgICAgICB9IGVsc2Ugew0KPiAgICAgICAgICAgICAgICAgLy8gY29t
-cGxldGlvbi5oIGRvZXMgbm90IHByb3ZpZGUgYW55IGZ1bmN0aW9uIHRvIHdhaXQNCj4gICAgICAg
-ICAgICAgICAgIC8vIGNvbXBsZXRpb24gd2l0aG91dCBjb25zdW1lIGl0IChhIGtpbmQgb2YNCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93ZngvYnVzX3NwaS5jIGIvZHJpdmVycy9zdGFn
-aW5nL3dmeC9idXNfc3BpLmMNCj4gaW5kZXggNjM0YjRlNWJiMDU1Li4xNDcyOWFmMmM0MDUgMTAw
-NjQ0DQo+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy93ZngvYnVzX3NwaS5jDQo+ICsrKyBiL2RyaXZl
-cnMvc3RhZ2luZy93ZngvYnVzX3NwaS5jDQo+IEBAIC0yMDksOSArMjA5LDkgQEAgc3RhdGljIGlu
-dCB3Znhfc3BpX3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpmdW5jKQ0KPiAgICAgICAgICAgICAg
-ICAgaWYgKHNwaV9nZXRfZGV2aWNlX2lkKGZ1bmMpLT5kcml2ZXJfZGF0YSAmIFdGWF9SRVNFVF9J
-TlZFUlRFRCkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb2RfdG9nZ2xlX2FjdGl2ZV9s
-b3coYnVzLT5ncGlvX3Jlc2V0KTsNCj4gICAgICAgICAgICAgICAgIGdwaW9kX3NldF92YWx1ZV9j
-YW5zbGVlcChidXMtPmdwaW9fcmVzZXQsIDEpOw0KPiAtICAgICAgICAgICAgICAgdWRlbGF5KDEw
-MCk7DQo+ICsgICAgICAgICAgICAgICB1c2xlZXBfcmFuZ2UoMTAwLCAxNTApOw0KPiAgICAgICAg
-ICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKGJ1cy0+Z3Bpb19yZXNldCwgMCk7DQo+
-IC0gICAgICAgICAgICAgICB1ZGVsYXkoMjAwMCk7DQo+ICsgICAgICAgICAgICAgICB1c2xlZXBf
-cmFuZ2UoMjAwMCwgMjUwMCk7DQo+ICAgICAgICAgfQ0KPiANCj4gICAgICAgICBJTklUX1dPUkso
-JmJ1cy0+cmVxdWVzdF9yeCwgd2Z4X3NwaV9yZXF1ZXN0X3J4KTsNCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvc3RhZ2luZy93ZngvaHdpby5jIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9od2lvLmMNCj4g
-aW5kZXggNDdlMDRjNTllZDkzLi5kM2ExNDFkOTVhMGUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-c3RhZ2luZy93ZngvaHdpby5jDQo+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy93ZngvaHdpby5jDQo+
-IEBAIC0xNDIsNyArMTQyLDcgQEAgc3RhdGljIGludCBpbmRpcmVjdF9yZWFkKHN0cnVjdCB3Znhf
-ZGV2ICp3ZGV2LCBpbnQgcmVnLCB1MzIgYWRkciwgdm9pZCAqYnVmLA0KPiAgICAgICAgICAgICAg
-ICAgICAgICAgICBnb3RvIGVycjsNCj4gICAgICAgICAgICAgICAgIGlmICghKGNmZyAmIHByZWZl
-dGNoKSkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+IC0gICAgICAgICAgICAg
-ICB1ZGVsYXkoMjAwKTsNCj4gKyAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZSgyMDAsIDI1MCk7
-DQo+ICAgICAgICAgfQ0KPiAgICAgICAgIGlmIChpID09IDIwKSB7DQo+ICAgICAgICAgICAgICAg
-ICByZXQgPSAtRVRJTUVET1VUOw0KPiAtLQ0KPiAyLjIwLjENCj4gDQoNClJldmlld2VkLWJ5OiBK
-w6lyw7RtZSBQb3VpbGxlciA8amVyb21lLnBvdWlsbGVyQHNpbGFicy5jb20+DQoNCi0tIA0KSsOp
-csO0bWUgUG91aWxsZXINCg0K
+On Thu, Feb 6, 2020 at 2:46 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
+> > Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
+>
+> s/do/to/
+
+Oops.  Thanks for catching that.
+
+>
+> > document.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > ---
+> > V2: No change
+> >
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > index 2cd67eb727d4..7ac60d9fe357 100644
+> > --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > @@ -2,6 +2,9 @@
+> >
+> >  Required properties:
+> >    - compatible : Should be "nxp,lx2160a-fspi"
+> > +                         "nxp,imx8qxp-fspi"
+> > +                         "nxp,imx8mm-fspi"
+>
+> All 3 are different and no compatibility?
+
+This was all based on a series from NXP's repo where they have some
+data tables all associated to the various compatible entries, and they
+created a place holder for quirks.  Based on an older NXP repo, it
+seems like there might be some quirks associated to the different
+families, but the newer repo where I got this patch series didn't
+implement them, however, it's possible the quirks may enhance
+functionality later. If that's true, I think this is the best solution
+for future enhancements without having to change the compatibility
+names down the road.  Maybe someone from NXP can comment?  I am just
+trying to help push things upstream so we can support QSPI flash.  I
+would prefer to keep them separate for now, because we might have
+these improvements later. However, I'll do what you request.  Do you
+want me to drop the additional compatible flags and just use the
+original, or create a new one that's a bit more generic?
+
+adam
+
+
+adam
+>
+> > +
+> >    - reg :        First contains the register location and length,
+> >                   Second contains the memory mapping address and length
+> >    - reg-names :  Should contain the resource reg names:
+> > --
+> > 2.24.0
+> >
