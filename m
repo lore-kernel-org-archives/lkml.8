@@ -2,104 +2,134 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD5DC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28474C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4666720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3AA2206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:05:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="l7x6RPEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbgBKVEp (ORCPT
+        id S1731935AbgBKVFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:04:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41372 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729582AbgBKVEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:04:45 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DB55DAB7F;
-        Tue, 11 Feb 2020 21:04:42 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 21:04:39 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        linux-kernel@vger.kernel.org, pauld@redhat.com,
-        parth@linux.ibm.com, valentin.schneider@arm.com
-Subject: Re: [PATCH 0/4] remove runnable_load_avg and improve group_classify
-Message-ID: <20200211210439.GS3420@suse.de>
-References: <20200211174651.10330-1-vincent.guittot@linaro.org>
+        Tue, 11 Feb 2020 16:05:50 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.18]:49587 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729031AbgBKVFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 16:05:49 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id E8EB811A1AA
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:05:48 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1cj6jHsAZvBMd1cj6jbTsw; Tue, 11 Feb 2020 15:05:48 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0/N7mjdKi9+R4kLcU/SMx8qgiSYzHOVxoh2RqMly75s=; b=l7x6RPEyjpONSlZYpjiakJQvc6
+        Mi+OP2QYKKI7djRIwgHBGlZHzptDixPY2EEESwk2Bql58vPJQmXeC10SHraA0SrO0aju5i5sc2tC3
+        LuLw3sVQMpqYTAIGftANtXkoJQfyN13VEbdbZ8KJYlPRth3Sb/l8wleorcQz2Bz01G+nmmWv+YyK6
+        ppu2OlDpwvOMZsHQrLDHL8mZGPqACiIeVKcBGqtQBhGVNGp18vDg2USf5hj5b3Yw8oxtMGY6V8eZT
+        XF2ha5sQy+Sv9gqc3zqhXko1ST+CklRpWehTtCTqrq4RYy1yHn/3k/y4e3SfAnWmNBVYk6uZj/TOt
+        xaBLMHcg==;
+Received: from [200.68.140.36] (port=31691 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1cj5-0028BD-CP; Tue, 11 Feb 2020 15:05:47 -0600
+Date:   Tue, 11 Feb 2020 15:08:22 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] mei: bus: replace zero-length array with flexible-array
+ member
+Message-ID: <20200211210822.GA31368@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211174651.10330-1-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1cj5-0028BD-CP
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:31691
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 06:46:47PM +0100, Vincent Guittot wrote:
-> NUMA load balancing is the last remaining piece of code that uses the 
-> runnable_load_avg of PELT to balance tasks between nodes. The normal
-> load_balance has replaced it by a better description of the current state
-> of the group of cpus.  The same policy can be applied to the numa
-> balancing.
-> 
-> Once unused, runnable_load_avg can be replaced by a simpler runnable_avg
-> signal that tracks the waiting time of tasks on rq. Currently, the state
-> of a group of CPUs is defined thanks to the number of running task and the
-> level of utilization of rq. But the utilization can be temporarly low
-> after the migration of a task whereas the rq is still overloaded with
-> tasks. In such case where tasks were competing for the rq, the
-> runnable_avg will stay high after the migration.
-> 
-> Some hackbench results:
-> 
-> - small arm64 dual quad cores system
-> hackbench -l (2560/#grp) -g #grp
-> 
-> grp    tip/sched/core         +patchset              improvement
-> 1       1,327(+/-10,06 %)     1,247(+/-5,45 %)       5,97 %
-> 4       1,250(+/- 2,55 %)     1,207(+/-2,12 %)       3,42 %
-> 8       1,189(+/- 1,47 %)     1,179(+/-1,93 %)       0,90 %
-> 16      1,221(+/- 3,25 %)     1,219(+/-2,44 %)       0,16 %						
-> 
-> - large arm64 2 nodes / 224 cores system
-> hackbench -l (256000/#grp) -g #grp
-> 
-> grp    tip/sched/core         +patchset              improvement
-> 1      14,197(+/- 2,73 %)     13,917(+/- 2,19 %)     1,98 %
-> 4       6,817(+/- 1,27 %)      6,523(+/-11,96 %)     4,31 %
-> 16      2,930(+/- 1,07 %)      2,911(+/- 1,08 %)     0,66 %
-> 32      2,735(+/- 1,71 %)      2,725(+/- 1,53 %)     0,37 %
-> 64      2,702(+/- 0,32 %)      2,717(+/- 1,07 %)    -0,53 %
-> 128     3,533(+/-14,66 %)     3,123(+/-12,47 %)     11,59 %
-> 256     3,918(+/-19,93 %)     3,390(+/- 5,93 %)     13,47 %
-> 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-I haven't reviewed this yet because by co-incidence I'm finalising a
-series that tries to reconcile the load balancer with the NUMA balancer
-and it has been very tricky to get right.  One aspect though is that
-hackbench is generally not long-running enough to detect any performance
-regressions in NUMA balancing. At least I've never observed it to be a
-good evaluation for NUMA balancing.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> Without the patchset, there is a significant number of time that a CPU has
-> spare capacity with more than 1 running task. Although this is a valid
-> case, this is not a state that should often happen when 160 tasks are
-> competing on 8 cores like for this test. The patchset fixes the situation
-> by taking into account the runnable_avg, which stays high after the
-> migration of a task on another CPU.
-> 
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
 
-FWIW, during the rewrite, I ended up moving away from runnable_load to
-get the load balancer and NUMA balancer to use the same metrics.
+This issue was found with the help of Coccinelle.
 
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/misc/mei/bus-fixup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
+index 5fcac02233af..aa3648d59a8a 100644
+--- a/drivers/misc/mei/bus-fixup.c
++++ b/drivers/misc/mei/bus-fixup.c
+@@ -107,7 +107,7 @@ struct mkhi_rule_id {
+ struct mkhi_fwcaps {
+ 	struct mkhi_rule_id id;
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct mkhi_fw_ver_block {
+@@ -135,7 +135,7 @@ struct mkhi_msg_hdr {
+ 
+ struct mkhi_msg {
+ 	struct mkhi_msg_hdr hdr;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ #define MKHI_OSVER_BUF_LEN (sizeof(struct mkhi_msg_hdr) + \
 -- 
-Mel Gorman
-SUSE Labs
+2.25.0
+
