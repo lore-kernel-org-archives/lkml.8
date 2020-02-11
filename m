@@ -2,105 +2,106 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DDDC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F501C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9725620708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:46:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="g20JzSdZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3A1A92073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgBKXqH (ORCPT
+        id S1728043AbgBKXsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:46:07 -0500
-Received: from ozlabs.org ([203.11.71.1]:51717 "EHLO ozlabs.org"
+        Tue, 11 Feb 2020 18:48:10 -0500
+Received: from mga06.intel.com ([134.134.136.31]:29089 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbgBKXqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:46:07 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HKCw1wk6z9sP7;
-        Wed, 12 Feb 2020 10:46:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581464766;
-        bh=exESUYWPe1Tez79Fvw6VBBOxsvDzDK7Ow0tx3QysHD4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=g20JzSdZc8SHAYRc355DMI3I1qAs4wBl+n6q8F4VYyN0g4baXYsK9WFDI7XpgQmRh
-         h7BX3CVFEZ54rC3AgkKGKXLkjqNRtdGPSmCU+y31QSs7POKsmQlLqIeTTRPLXXeYQD
-         cc++nKZAP4MtSNkUrdhGFwW/dUGaFuFvROTKT1H6d7vyoJgTErp18BmbKKLLIY0pXz
-         r3QCbGYW9w1MEqBmmXeOiNX8A4Gn8lOZKPjsTZCxDPF+XBaJQGmJEXHq4mUAyt1KnN
-         IVvH8x/fobTUkWh0ALB9AVFc/8awqppLIuG3aS1/YtNqZHxMCE8OaBqf6mVOnG3JLZ
-         wIxBjZ84qt17A==
-Date:   Wed, 12 Feb 2020 10:46:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Subject: linux-next: manual merge of the devicetree tree with the etnaviv
- tree
-Message-ID: <20200212104603.56f59785@canb.auug.org.au>
+        id S1727955AbgBKXsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:48:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 15:48:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="asc'?scan'208";a="233621554"
+Received: from jtkirshe-desk1.jf.intel.com ([134.134.177.74])
+  by orsmga003.jf.intel.com with ESMTP; 11 Feb 2020 15:48:09 -0800
+Message-ID: <43c9336e1c0c23e374420586868052e947b75126.camel@intel.com>
+Subject: Re: [PATCH 20/28] drivers: net: Call cpu_latency_qos_*() instead of
+ pm_qos_*()
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Reply-To: jeffrey.t.kirsher@intel.com
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        intel-wired-lan@lists.osuosl.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org
+Date:   Tue, 11 Feb 2020 15:48:09 -0800
+In-Reply-To: <10624145.o336LLEsho@kreacher>
+References: <1654227.8mz0SueHsU@kreacher> <10624145.o336LLEsho@kreacher>
+Organization: Intel
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-GaZoanpPv4L3uFpFpUoG"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/E87cHN2xRimx6.cQE3hrfbt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/E87cHN2xRimx6.cQE3hrfbt
-Content-Type: text/plain; charset=US-ASCII
+
+--=-GaZoanpPv4L3uFpFpUoG
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, 2020-02-12 at 00:24 +0100, Rafael J. Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>=20
+> Call cpu_latency_qos_add/update/remove_request() instead of
+> pm_qos_add/update/remove_request(), respectively, because the
+> latter are going to be dropped.
+>=20
+> No intentional functional impact.
+>=20
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Today's linux-next merge of the devicetree tree got a conflict in:
+Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com
 
-  Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+For the e1000e changes
 
-between commit:
+> ---
+>  drivers/net/ethernet/intel/e1000e/netdev.c   | 13 ++++++-------
+>  drivers/net/wireless/ath/ath10k/core.c       |  4 ++--
+>  drivers/net/wireless/intel/ipw2x00/ipw2100.c | 10 +++++-----
+>  3 files changed, 13 insertions(+), 14 deletions(-)
 
-  22567d017c2c ("dt-bindings: etnaviv: Add #cooling-cells")
 
-from the etnaviv tree and commit:
-
-  90aeca875f8a ("dt-bindings: display: Convert etnaviv to json-schema")
-
-from the devicetree tree.
-
-I fixed it up (I just dropped the etnaviv tree change ... someone should
-maybe add that change to the devicetree tree) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/E87cHN2xRimx6.cQE3hrfbt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--=-GaZoanpPv4L3uFpFpUoG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5DPLsACgkQAVBC80lX
-0GzBjwf+Jvz6qbuN1A6TBaXUvWrHaTlwLFDSVt/gt2Nuq1OgH8GQtVo1P46PIvmt
-82QmD2YpSoaRnTM8dY44uv4CqFuOBVhqv1YBaC4kYwhmFfari1xsEnH+NO98drS4
-KVJjuONeQ+6Z8J1umhbx+bTelldgSCJTEkHhe34cOlHFftXlHOxanQiRgH0bNV33
-xBdXJntQXNkpGir5dO1q7IAjWSsESIL1WzEuDbbfT9ms+VJMRZ2mjgaHImMm0Z29
-s+PEsVlpzhjQmefqLeQR5KI5ChgrwdKfhhLVyiEa7Qke19/k4KRC1+E06elGs5Qn
-CEeqUdyUnkqIFZ1vs4+5SNmFWsiLOQ==
-=VA0O
+iQIzBAABCAAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl5DPTkACgkQ5W/vlVpL
+7c4a3g//SCBWhCZ3vnz6qb26ASH5pK5fgz/l9o0FmD/sOn6jHfXbGmD3C8zTo6ic
+j1pQ488wAXMKm+Ay6CNyy3tqC3l9Lg1GKu6wQ4R/evm7cCk38Mwg7+sHa5aNdjwo
+6+KmMvHD9aY3Ya+QzsrJg5ZztvW/CWP69SJ1J2JfM9a401S0Us5MX/O2WmdyYo/9
+nXRGTYYj3Aekg1Ghs2JdWkYyiPGUDTic1R8psB8I7rDHZV5zmrrBferSMz8jB9Gk
+ReQE43h5rF0CZKQevMws/J6gO2Ndfbre5BZoXA7wydzs4kkV2O98u0aTc/HBP16l
+q8vf//TZ0cJy+rTEexxKIlWsfdIKQbYsWIenY6GEjR7W0n/chJYQZw40wGODisMd
+Et4ZZwL7fVpWxLxVtSrhlAieD2RpAYyCYl6l9s46lcmHSf59kbx1EyN/EmwrpEIn
+N9wCiCX9s1Nj4kH1CQAdTXhK8InLFKxKdApKSbACTwXyKuxMB/Pk65fbh4BVGTGo
+kX0PZgKNIFo4+YvZZUwin+rioyBGQopgfbgy5z4StXQ2Rd0jEpwrMIu0mxXy39PG
+X9A0+gUBAlsWDr+Jv8NCXpw5Q74vbSzHuUZwi4wpDbwnjqb6WO2yXv9mJXJCgR+b
+xJA8RDrjt9XmBr4zk43EzPZqqPlp5w2oiPH3e7cJ84sDSG7H9Sc=
+=6ivJ
 -----END PGP SIGNATURE-----
 
---Sig_/E87cHN2xRimx6.cQE3hrfbt--
+--=-GaZoanpPv4L3uFpFpUoG--
+
