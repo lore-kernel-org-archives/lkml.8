@@ -2,99 +2,106 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D502BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5397CC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AEC208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253A1206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgBKEtn (ORCPT
+        id S1728172AbgBKEwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 23:49:43 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:33757 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgBKEtm (ORCPT
+        Mon, 10 Feb 2020 23:52:36 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:44681 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727121AbgBKEwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 23:49:42 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 752DA2800BB55;
-        Tue, 11 Feb 2020 05:49:40 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 44C58DD1F; Tue, 11 Feb 2020 05:49:40 +0100 (CET)
-Date:   Tue, 11 Feb 2020 05:49:40 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>
-Subject: Re: [PATCH v4 0/3] PCI: pciehp: Do not turn off slot if presence
- comes up after link
-Message-ID: <20200211044940.72z4vcgbgxwbc7po@wunner.de>
-References: <20191025190047.38130-1-stuart.w.hayes@gmail.com>
- <20200211000816.GA89075@google.com>
+        Mon, 10 Feb 2020 23:52:36 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 11F74820924;
+        Tue, 11 Feb 2020 15:52:30 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j1NXC-0005dw-7j; Tue, 11 Feb 2020 15:52:30 +1100
+Date:   Tue, 11 Feb 2020 15:52:30 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v5 04/13] mm: Add readahead address space operation
+Message-ID: <20200211045230.GD10776@dread.disaster.area>
+References: <20200211010348.6872-1-willy@infradead.org>
+ <20200211010348.6872-5-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211000816.GA89075@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200211010348.6872-5-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=TWVYvH7QqZ0YkocKP0UA:9
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:08:16PM -0600, Bjorn Helgaas wrote:
-> used ctrl_info() instead of pci_info() (I would actually like to change
-> the whole driver to use pci_info(), but better to be consistent for now)
+On Mon, Feb 10, 2020 at 05:03:39PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> This replaces ->readpages with a saner interface:
+>  - Return void instead of an ignored error code.
+>  - Pages are already in the page cache when ->readahead is called.
+>  - Implementation looks up the pages in the page cache instead of
+>    having them passed in a linked list.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Most of the ctrl_info() calls prepend "Slot(%s): " to the message.
-However that prefix can only be used once pci_hp_initialize() has
-been called.
+....
 
-It would probably make sense to change ctrl_info() to always
-include the prefix and change those invocations of ctrl_info()
-which happen when the slot is not yet or no longer registered,
-to pci_info().
-
-
-> @@ -930,7 +940,7 @@ struct controller *pcie_init(struct pcie_device *dev)
->  		PCI_EXP_SLTSTA_MRLSC | PCI_EXP_SLTSTA_CC |
->  		PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC);
 >  
-> -	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c LLActRep%c%s\n",
-> +	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c IbPresDis%c LLActRep%c%s\n",
->  		(slot_cap & PCI_EXP_SLTCAP_PSN) >> 19,
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_ABP),
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_PCP),
-> @@ -941,19 +951,10 @@ struct controller *pcie_init(struct pcie_device *dev)
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_HPS),
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_EIP),
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_NCCS),
-> +		ctrl->inband_presence_disabled,
->  		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
->  		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+> +/*
+> + * Readahead is of a block of consecutive pages.
+> + */
+> +struct readahead_control {
+> +	struct file *file;
+> +	struct address_space *mapping;
+> +/* private: use the readahead_* accessors instead */
+> +	pgoff_t start;
+> +	unsigned int nr_pages;
+> +	unsigned int batch_count;
+> +};
+> +
+> +static inline struct page *readahead_page(struct readahead_control *rac)
+> +{
+> +	struct page *page;
+> +
+> +	if (!rac->nr_pages)
+> +		return NULL;
+> +
+> +	page = xa_load(&rac->mapping->i_pages, rac->start);
+> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
+> +	rac->batch_count = hpage_nr_pages(page);
+> +	rac->start += rac->batch_count;
 
-I've just reviewed the resulting commits on pci/hotplug once more and
-think there's a small issue here:  If ctrl->inband_presence_disabled is 0,
-the string will contain ASCII character 0 (end of string) and if it's 1
-it will contain ASCII character 1 (start of header).  A possible solution
-would be FLAG(ctrl->inband_presence_disabled, 1).
+There's no mention of large page support in the patch description
+and I don't recall this sort of large page batching in previous
+iterations.
 
-(The real solution would probably to have a printk format for this kind
-of thing.)
+This seems like new functionality to me, not directly related to
+the initial ->readahead API change? What have I missed?
 
-Thanks,
+Cheers,
 
-Lukas
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
