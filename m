@@ -7,44 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6A7C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F055C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6178B20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528ED20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgBKMtg (ORCPT
+        id S1729183AbgBKMtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:49:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46008 "EHLO
+        Tue, 11 Feb 2020 07:49:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45994 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727723AbgBKMrz (ORCPT
+        with ESMTP id S1728541AbgBKMry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:47:55 -0500
+        Tue, 11 Feb 2020 07:47:54 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j1UxD-0007cl-0M; Tue, 11 Feb 2020 13:47:51 +0100
+        id 1j1UxB-0007bl-2i; Tue, 11 Feb 2020 13:47:49 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 72B081C201A;
-        Tue, 11 Feb 2020 13:47:49 +0100 (CET)
-Date:   Tue, 11 Feb 2020 12:47:49 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B1AF61C201A;
+        Tue, 11 Feb 2020 13:47:48 +0100 (CET)
+Date:   Tue, 11 Feb 2020 12:47:48 -0000
 From:   "tip-bot2 for Morten Rasmussen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/topology: Remove SD_BALANCE_WAKE on
- asymmetric capacity systems
+Subject: [tip: sched/core] sched/fair: Remove wake_cap()
 Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Quentin Perret <qperret@google.com>, x86 <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200206191957.12325-3-valentin.schneider@arm.com>
-References: <20200206191957.12325-3-valentin.schneider@arm.com>
+In-Reply-To: <20200206191957.12325-5-valentin.schneider@arm.com>
+References: <20200206191957.12325-5-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Message-ID: <158142526917.411.14392005872156192791.tip-bot2@tip-bot2>
+Message-ID: <158142526837.411.5720078180177527135.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,63 +58,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     38c6e4963b509c47c33539534b84195558c0376d
-Gitweb:        https://git.kernel.org/tip/38c6e4963b509c47c33539534b84195558c0376d
+Commit-ID:     25ac227a25ac946e0356772012398cd1710a8bab
+Gitweb:        https://git.kernel.org/tip/25ac227a25ac946e0356772012398cd1710a8bab
 Author:        Morten Rasmussen <morten.rasmussen@arm.com>
-AuthorDate:    Thu, 06 Feb 2020 19:19:55 
+AuthorDate:    Thu, 06 Feb 2020 19:19:57 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 11 Feb 2020 13:02:50 +01:00
+CommitterDate: Tue, 11 Feb 2020 13:04:16 +01:00
 
-sched/topology: Remove SD_BALANCE_WAKE on asymmetric capacity systems
+sched/fair: Remove wake_cap()
 
-SD_BALANCE_WAKE was previously added to lower sched_domain levels on
-asymmetric CPU capacity systems by commit:
+Capacity-awareness in the wake-up path previously involved disabling
+wake_affine in certain scenarios. We have just made select_idle_sibling()
+capacity-aware, so this isn't needed anymore.
 
-  9ee1cda5ee25 ("sched/core: Enable SD_BALANCE_WAKE for asymmetric capacity systems")
-
-to enable the use of find_idlest_cpu() and friends to find an appropriate
-CPU for tasks.
-
-That responsibility has now been shifted to select_idle_sibling() and
-friends, and hence the flag can be removed. Note that this causes
-asymmetric CPU capacity systems to no longer enter the slow wakeup path
-(find_idlest_cpu()) on wakeups - only on execs and forks (which is aligned
-with all other mainline topologies).
+Remove wake_cap() entirely.
 
 Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
 [Changelog tweaks]
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+[Changelog tweaks]
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Quentin Perret <qperret@google.com>
-Link: https://lkml.kernel.org/r/20200206191957.12325-3-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20200206191957.12325-5-valentin.schneider@arm.com
 ---
- kernel/sched/topology.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+ kernel/sched/fair.c | 30 +-----------------------------
+ 1 file changed, 1 insertion(+), 29 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index dfb64c0..0091188 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1374,18 +1374,9 @@ sd_init(struct sched_domain_topology_level *tl,
- 	 * Convert topological properties into behaviour.
- 	 */
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 6fb47a2..a7e11b1 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6146,33 +6146,6 @@ static unsigned long cpu_util_without(int cpu, struct task_struct *p)
+ }
  
--	if (sd->flags & SD_ASYM_CPUCAPACITY) {
--		struct sched_domain *t = sd;
+ /*
+- * Disable WAKE_AFFINE in the case where task @p doesn't fit in the
+- * capacity of either the waking CPU @cpu or the previous CPU @prev_cpu.
+- *
+- * In that case WAKE_AFFINE doesn't make sense and we'll let
+- * BALANCE_WAKE sort things out.
+- */
+-static int wake_cap(struct task_struct *p, int cpu, int prev_cpu)
+-{
+-	long min_cap, max_cap;
 -
--		/*
--		 * Don't attempt to spread across CPUs of different capacities.
--		 */
--		if (sd->child)
--			sd->child->flags &= ~SD_PREFER_SIBLING;
+-	if (!static_branch_unlikely(&sched_asym_cpucapacity))
+-		return 0;
 -
--		for_each_lower_domain(t)
--			t->flags |= SD_BALANCE_WAKE;
--	}
-+	/* Don't attempt to spread across CPUs of different capacities. */
-+	if ((sd->flags & SD_ASYM_CPUCAPACITY) && sd->child)
-+		sd->child->flags &= ~SD_PREFER_SIBLING;
+-	min_cap = min(capacity_orig_of(prev_cpu), capacity_orig_of(cpu));
+-	max_cap = cpu_rq(cpu)->rd->max_cpu_capacity;
+-
+-	/* Minimum capacity is close to max, no need to abort wake_affine */
+-	if (max_cap - min_cap < max_cap >> 3)
+-		return 0;
+-
+-	/* Bring task utilization in sync with prev_cpu */
+-	sync_entity_load_avg(&p->se);
+-
+-	return !task_fits_capacity(p, min_cap);
+-}
+-
+-/*
+  * Predicts what cpu_util(@cpu) would return if @p was migrated (and enqueued)
+  * to @dst_cpu.
+  */
+@@ -6436,8 +6409,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
+ 			new_cpu = prev_cpu;
+ 		}
  
- 	if (sd->flags & SD_SHARE_CPUCAPACITY) {
- 		sd->imbalance_pct = 110;
+-		want_affine = !wake_wide(p) && !wake_cap(p, cpu, prev_cpu) &&
+-			      cpumask_test_cpu(cpu, p->cpus_ptr);
++		want_affine = !wake_wide(p) && cpumask_test_cpu(cpu, p->cpus_ptr);
+ 	}
+ 
+ 	rcu_read_lock();
