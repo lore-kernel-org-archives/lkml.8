@@ -2,134 +2,148 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AC9C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0B0C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4139E206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581395143;
-	bh=3QMBxcD7fDbKTeP+bFi3ghcNsyrvYeoitAhcCrdVhL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wmewKuqFPt4DtGtfyySvfylCAKmrC2vB42MOetYWjXzNu0kRJdLkV1i3njOmwJgY5
-	 g2aLCYko5H7wEHO5X0qrnF+QpsOEFBQLKgXGB3Sz4Tna5qNQ9cfeyd+AisDIfSIqgS
-	 z6VL2y7+MDK0cWlMRquMUGtGRcZWLBkX8H9jZdVM=
+	by mail.kernel.org (Postfix) with ESMTP id 8A68020661
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 04:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgBKEZm (ORCPT
+        id S1728158AbgBKE3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 23:25:42 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36515 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbgBKEZl (ORCPT
+        Mon, 10 Feb 2020 23:29:21 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727079AbgBKE3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 23:25:41 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so3718947plm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 20:25:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V9KO1k9P8J3nM1/EjQwGBTH9H+54xdTL4UiNZzfIiIA=;
-        b=LDfCTC/a9lACRyt/I8wPrZgYqbnFBRGBC5bGiEZv10ocg2VsnYAr/7t/zbq+YwiAle
-         xPrpWdEcKjufQEEVPSNMwdgqXPCt9h3S1gFC7Rcjs7rT68Fi+uv1XwuowH2lTQPWQX3J
-         bCSOpoaxOwtvKXSTQ51u526lKJIK0yxRPnduJzb+SlZX0dbLQCVyn7SXXdlmnxeDetLK
-         9tiDXrKwPxX2gA2VGfnTQfNLupM7uerPtbOQePIlF6d+S1XnL9aV3U6K4iDC5Yz1Hawu
-         NRc+GoPxqFIndLVJe5E9HuoYCphp7G/N8Vyfd4lGitbbf5V4u6X1nsFzCavInLlp2irW
-         fI8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V9KO1k9P8J3nM1/EjQwGBTH9H+54xdTL4UiNZzfIiIA=;
-        b=CLC2DERIVvR2XHLvmVGMSoYDv8JJnpvqs0hxV1t0jCuF9WEzhyoD/EYP/0rTdUb4xU
-         VoKY+mBELsPUE65GUcQ496Cut7hrV2gFshhZPcRKoxi5Z6LhusN/py5GTYCXpKj0Tasg
-         YQ+tHJdb+CBCr+M+RwFmu5Z9hORjcoxzy9xqb/9N1QcitfQP+MKBdfXVSGpXDU/8Kykm
-         M7wX8bppLcN6qgAeuCeCTwEMNMzyrX5PcOxcIyTNYWWbqQQVI50bx84svRUQfuoMTndf
-         pCqKdaK8wYGTC32fLM6x1dorZwEYOkx7YZlBQ0QMOL7vXMLnj4Eam2fNCHYL8eY2tg7u
-         WLbw==
-X-Gm-Message-State: APjAAAXqsRoub2SIBparc+mSm7PlewbXgNNiaXDFS2g6jKZHxHAv5srK
-        xBaMtaYO3Rf6BJOrWREiiifgBHmG
-X-Google-Smtp-Source: APXvYqxJp2Ga/NJR5Trp9Ws/QTu3Tgarvy4sJ1sGXdurS3XAnPql3Ks1sGNlySgCG+34o82mwQ7xcg==
-X-Received: by 2002:a17:902:61:: with SMTP id 88mr1341669pla.17.1581395139532;
-        Mon, 10 Feb 2020 20:25:39 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id z10sm1639684pgz.88.2020.02.10.20.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 20:25:38 -0800 (PST)
-Date:   Mon, 10 Feb 2020 20:25:36 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: fix long time stall from mm_populate
-Message-ID: <20200211042536.GB242563@google.com>
-References: <20200211001958.170261-1-minchan@kernel.org>
- <20200211011021.GP8731@bombadil.infradead.org>
- <20200211035004.GA242563@google.com>
- <20200211035412.GR8731@bombadil.infradead.org>
+        Mon, 10 Feb 2020 23:29:21 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01B4SeWA085221;
+        Mon, 10 Feb 2020 23:28:54 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1tndsjtw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 23:28:54 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01B4QUH4014697;
+        Tue, 11 Feb 2020 04:28:53 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma01dal.us.ibm.com with ESMTP id 2y1mm6yuh7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Feb 2020 04:28:53 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01B4SqE550397458
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Feb 2020 04:28:52 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E2B6AE05C;
+        Tue, 11 Feb 2020 04:28:52 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 673A1AE060;
+        Tue, 11 Feb 2020 04:28:49 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.155.18])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Feb 2020 04:28:49 +0000 (GMT)
+Message-ID: <1cd9c970771ba9f08621ae8357340c93f386bc24.camel@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/8xx: Fix clearing of bits 20-23 in ITLB miss
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     christophe.leroy@c-s.fr, benh@kernel.crashing.org,
+        paulus@samba.org, mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Tue, 11 Feb 2020 01:28:44 -0300
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-xDAOyXIsHMs0j4R39yqj"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211035412.GR8731@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_08:2020-02-10,2020-02-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002110030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 07:54:12PM -0800, Matthew Wilcox wrote:
-> On Mon, Feb 10, 2020 at 07:50:04PM -0800, Minchan Kim wrote:
-> > On Mon, Feb 10, 2020 at 05:10:21PM -0800, Matthew Wilcox wrote:
-> > > On Mon, Feb 10, 2020 at 04:19:58PM -0800, Minchan Kim wrote:
-> > > >       filemap_fault
-> > > >         find a page form page(PG_uptodate|PG_readahead|PG_writeback)
-> > > 
-> > > Uh ... That shouldn't be possible.
-> > 
-> > Please see shrink_page_list. Vmscan uses PG_reclaim to accelerate
-> > page reclaim when the writeback is done so the page will have both
-> > flags at the same time and the PG reclaim could be regarded as
-> > PG_readahead in fault conext.
-> 
-> What part of fault context can make that mistake?  The snippet I quoted
-> below is from page_cache_async_readahead() where it will clearly not
-> make that mistake.  There's a lot of code here; please don't presume I
-> know all the areas you're talking about.
 
-Sorry about being not clear. I am saying  filemap_fault ->
-do_async_mmap_readahead
+--=-xDAOyXIsHMs0j4R39yqj
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Let's assume the page is hit in page cache and vmf->flags is !FAULT_FLAG
-TRIED so it calls do_async_mmap_readahead. Since the page has PG_reclaim
-and PG_writeback by shrink_page_list, it goes to 
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-do_async_mmap_readahead
-  if (PageReadahead(page))
-    fpin = maybe_unlock_mmap_for_io();
-    page_cache_async_readahead
-      if (PageWriteback(page))
-        return;
-      ClearPageReadahead(page); <- doesn't reach here until the writeback is clear
-      
-So, mm_populate will repeat the loop until the writeback is done.
-It's my just theory but didn't comfirm it by the testing.
-If I miss something clear, let me know it.
+> In ITLB miss handled the line supposed to clear bits 20-23 on the
+> L2 ITLB entry is buggy and does indeed nothing, leading to undefined
+> value which could allow execution when it shouldn't.
+>
+> Properly do the clearing with the relevant instruction.
+>
+> Fixes: 74fabcadfd43 ("powerpc/8xx: don't use r12/SPRN_SPRG_SCRATCH2 in TL=
+B Miss handlers")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/kernel/head_8xx.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8x=
+x.S
+> index 9922306ae512..073a651787df 100644
+> --- a/arch/powerpc/kernel/head_8xx.S
+> +++ b/arch/powerpc/kernel/head_8xx.S
+> @@ -256,7 +256,7 @@ InstructionTLBMiss:
+>  	 * set.  All other Linux PTE bits control the behavior
+>  	 * of the MMU.
+>  	 */
+> -	rlwimi	r10, r10, 0, 0x0f00	/* Clear bits 20-23 */
+> +	rlwinm	r10, r10, 0, ~0x0f00	/* Clear bits 20-23 */
+>  	rlwimi	r10, r10, 4, 0x0400	/* Copy _PAGE_EXEC into bit 21 */
+>  	ori	r10, r10, RPN_PATTERN | 0x200 /* Set 22 and 24-27 */
+>  	mtspr	SPRN_MI_RPN, r10	/* Update TLB entry */
+> --=20
+> 2.25.0
 
-Thanks!
+Looks a valid change.
+rlwimi  r10, r10, 0, 0x0f00 means:=20
+r10 =3D ((r10 << 0) & 0x0f00) | (r10 & ~0x0f00) which ends up being
+r10 =3D r10=20
 
-> 
-> > > 
-> > >         /*
-> > >          * Same bit is used for PG_readahead and PG_reclaim.
-> > >          */
-> > >         if (PageWriteback(page))
-> > >                 return;
-> > > 
-> > >         ClearPageReadahead(page);
+On ISA, rlwinm is recommended for clearing high order bits.
+rlwinm  r10, r10, 0, ~0x0f00 means:
+r10 =3D (r10 << 0) & ~0x0f00
+
+Which does exactly what the comments suggests.
+
+FWIW:
+Reviwed-by: Leonardo Bras <leonardo@linux.ibm.com>
+
+--=-xDAOyXIsHMs0j4R39yqj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5CLXwACgkQlQYWtz9S
+ttTvxg/+P4NqENWap51cZFh1Umvzrmqhy+i/SX1us+WFPUoW7paLgqSPZDz5G1iq
+4NotVXJCw1ZC5hf7bYBzIsFjfB5pLPSjUExie/P5O9yNvOjon3BOdrcwdx5p8sfS
+5Xca8szD9e6Om/YVrTmvY3aIhorGTtVboyCZ/xZIZjdcSh5wC7fyGQE0+eK2Cu5w
+6tIHwdvwO0/Z/ovOo/hQlprh8Zz24R7qJVOae8LAUMENSeNN5tNUW5YCTYJOsuR8
+RQ/4NzFw5DBRhZtPcJxBh7wZ/GDvRr5s1eIGgft1L4IWqUap73GI34VaeClVKRZD
+/EW5JThmcbmN2DlyOw1BRs4yrrJD5jXbMQlj6TXeSXrzGLs4azyGHS2K3/XbGBYv
+C+x/+PsDx5/otJe2OWWjuypyy9GI/LQiTCQUZfrUaDafNP1EiP/UiyKLbhsMacAB
+hB/mRHoTXvIMK/qa7+QYoAqPIlVTQXKTZmOwGXPQtSvi7NNFpX55DjU28SWguJsi
+eRXdo0/imfSJUCz9HPzg5DjfVK94BuZtSX2+w8P99Ic6mEbIN/BBW1vffoT1vT1B
+a8LXCpXdbZwyiuKAwiwDDqX0s0XjYLDo/7L3qCmgKPkYBrY3etAfr/eohV6UlxAF
+8k6d/nDfltv3B2G0DxlzfBgFR1RUlYfJIVQYe0DPdgxNUohwn4A=
+=LkZr
+-----END PGP SIGNATURE-----
+
+--=-xDAOyXIsHMs0j4R39yqj--
+
