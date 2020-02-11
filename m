@@ -2,81 +2,197 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E00C3B188
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFA3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37AAB20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F10420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581425825;
+	bh=DoZwkXpi/2D9yx996XJ8ce1s5ncn9GFWNjxut6Ifr7o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=EDRAxkMNkrmQH5fjYQ87nN91vRKWdytE2D1pXe1sa0aYc6Opl15keLsotoqhYImH/
+	 3zJTJszc7gentPyXnL82OHgdjoxvuOwKpwZAq6SWO4GUmrVcIYvU4dYvbh2tBm789D
+	 sDw5PilaXSeSpzvTF1OVu7kVBZ4Y7NWDFhmJhLxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgBKMyh (ORCPT
+        id S1728579AbgBKM5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:54:37 -0500
-Received: from mga03.intel.com ([134.134.136.65]:39917 "EHLO mga03.intel.com"
+        Tue, 11 Feb 2020 07:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbgBKMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:54:34 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 04:54:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="226494130"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Feb 2020 04:54:31 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j1V3h-000kFh-9o; Tue, 11 Feb 2020 14:54:33 +0200
-Date:   Tue, 11 Feb 2020 14:54:33 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v5 1/7] console: Don't perform test for CON_BRL flag
-Message-ID: <20200211125433.GB10400@smile.fi.intel.com>
-References: <20200203133130.11591-1-andriy.shevchenko@linux.intel.com>
- <20200204013426.GB41358@google.com>
- <20200211113213.eaftwrq3tbt3rjwo@pathway.suse.cz>
+        id S1727567AbgBKM5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:57:04 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC842082F;
+        Tue, 11 Feb 2020 12:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581425822;
+        bh=DoZwkXpi/2D9yx996XJ8ce1s5ncn9GFWNjxut6Ifr7o=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=1qmmckEuNFffmetSwQbN5k1DW8SZ/2dYpDp2oSEkbeJeJdaEDoN1V+Ip/50VPL/un
+         3AEKZY/t0ZrA6unBAfSnMDYSThUTP3bOh5+4k7aLt9PBbw+IjGNYCwm1iH7/XiEHxS
+         5Jqq6YHjRzq4vpJ3ExwU85smarLPgzHt/suJWC2Q=
+Message-ID: <538b41c956c3b69900c9166464d9621b2537d877.camel@kernel.org>
+Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
+ writeback errors
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>,
+        Andres Freund <andres@anarazel.de>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        willy@infradead.org, dhowells@redhat.com, hch@infradead.org,
+        jack@suse.cz, akpm@linux-foundation.org
+Date:   Tue, 11 Feb 2020 07:57:00 -0500
+In-Reply-To: <20200210214657.GA10776@dread.disaster.area>
+References: <20200207170423.377931-1-jlayton@kernel.org>
+         <20200207205243.GP20628@dread.disaster.area>
+         <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
+         <20200210214657.GA10776@dread.disaster.area>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211113213.eaftwrq3tbt3rjwo@pathway.suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 12:32:13PM +0100, Petr Mladek wrote:
-> On Tue 2020-02-04 10:34:26, Sergey Senozhatsky wrote:
-> > On (20/02/03 15:31), Andy Shevchenko wrote:
-> > > 
-> > > We don't call braille_register_console() without CON_BRL flag set.
-> > > And the _braille_unregister_console() already tests for console to have
-> > > CON_BRL flag. No need to repeat this in braille_unregister_console().
-> > > 
-> > > Drop the repetitive checks from Braille console driver.
-> > > 
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Reviewed-by: Petr Mladek <pmladek@suse.com>
+On Tue, 2020-02-11 at 08:46 +1100, Dave Chinner wrote:
+> On Fri, Feb 07, 2020 at 01:20:12PM -0800, Andres Freund wrote:
+> > Hi,
 > > 
-> > Looks good to me overall
+> > On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
+> > > On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
+> > > > You're probably wondering -- Where are v1 and v2 sets?
+> > > > The basic idea is to track writeback errors at the superblock level,
+> > > > so that we can quickly and easily check whether something bad happened
+> > > > without having to fsync each file individually. syncfs is then changed
+> > > > to reliably report writeback errors, and a new ioctl is added to allow
+> > > > userland to get at the current errseq_t value w/o having to sync out
+> > > > anything.
+> > > 
+> > > So what, exactly, can userspace do with this error? It has no idea
+> > > at all what file the writeback failure occurred on or even
+> > > what files syncfs() even acted on so there's no obvious error
+> > > recovery that it could perform on reception of such an error.
 > > 
-> > Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> > Depends on the application.  For e.g. postgres it'd to be to reset
+> > in-memory contents and perform WAL replay from the last checkpoint.
 > 
-> The entire patchset has been commited into printk.git,
-> branch for-5.7-console-exit
+> What happens if a user runs 'sync -f /path/to/postgres/data' instead
+> of postgres? All the writeback errors are consumed at that point by
+> reporting them to the process that ran syncfs()...
+> 
 
-Thank you, Petr!
+Well, no. If you keep a fd open, then you can be sure that you'll see
+any errors that occurred since that open at syncfs time, regardless of
+who else is issuing syncfs calls(). That's basically how errseq_t works.
+
+I guess I figured that part was obvious and didn't point it out here --
+mea culpa.
+
+> > Due
+> > to various reasons* it's very hard for us (without major performance
+> > and/or reliability impact) to fully guarantee that by the time we fsync
+> > specific files we do so on an old enough fd to guarantee that we'd see
+> > the an error triggered by background writeback.  But keeping track of
+> > all potential filesystems data resides on (with one fd open permanently
+> > for each) and then syncfs()ing them at checkpoint time is quite doable.
+> 
+> Oh, you have to keep an fd permanently open to every superblock that
+> application holds data on so that errors detected by other users of
+> that filesystem are also reported to the application?
+> 
+> This seems like a fairly important requirement for applications to
+> ensure this error reporting is "reliable" and that certainly wasn't
+> apparent from the patches or their description.  i.e. the API has an
+> explicit userspace application behaviour requirement for reliable
+> functioning, and that was not documented.  "we suck at APIs" and all
+> that..
+> 
+> It also seems to me as useful only to applications that have a
+> "rollback and replay" error recovery mechanism. If the application
+> doesn't have the ability to go back in time to before the
+> "unfindable" writeback error occurred, then this error is largely
+> useless to those applications because they can't do anything with
+> it, and so....
+> 
+
+Just knowing that an error occurred is still a better situation than
+letting the application obliviously chug along.
+
+In a sense I see the above argument as circular. Our error reporting
+mechanisms have historically sucked, and applications have been written
+accordingly. Unless we improve how errors are reported then applications
+will never improve.
+
+It is true that we can't reasonably report which inodes failed writeback
+with this interface, but syncfs only returns int. That's really the best
+we can do with it.
+
+> > > > - This adds a new generic fs ioctl to allow userland to scrape
+> > > > the current superblock's errseq_t value. It may be best to
+> > > > present this to userland via fsinfo() instead (once that's
+> > > > merged). I'm fine with dropping the last patch for now and
+> > > > reworking it for fsinfo if so.
+> > > 
+> > > What, exactly, is this useful for? Why would we consider
+> > > exposing an internal implementation detail to userspace like
+> > > this?
+> > 
+> > There is, as far as I can tell, so far no way but scraping the
+> > kernel log to figure out if there have been data loss errors on a
+> > machine/fs.
+> 
+> .... most applications will still require users to scrape their
+> logs to find out what error actually occurred. IOWs, we haven't
+> really changed the status quo with this new mechanism.
+> 
+> FWIW, explicit userspace error notifications for data loss events is
+> one of the features that David Howell's generic filesystem
+> notification mechanism is intended to provide.  Hence I'm not sure
+> that there's a huge amount of value in providing a partial solution
+> that only certain applications can use when there's a fully generic
+> mechanism for error notification just around the corner.
+> 
+
+David's notification work is great, but it's quite a bit more
+heavyweight than just allowing syncfs to return better errors. The
+application would need to register to be notified and watch a pipe. Not
+all application are going to want or need to do that.
+
+> > Even besides app specific reactions like outlined above,
+> > just generally being able to alert whenever there error count
+> > increases seems extremely useful.
+> 
+> Yup, a generic filesystem notification mechanism is perfect for
+> that, plus it can provide more explicit details of where the error
+> actually occurred rather than jsut a handwavy "some error occurred
+> some where" report....
+> 
+> > I'm not sure it makes sense to
+> > expose the errseq_t bits straight though - seems like it'd
+> > enshrine them in userspace ABI too much?
+> 
+> Even a little is way too much. Userspace ABI needs to be completely
+> independent of the kernel internal structures and implementation.
+> This is basic "we suck at APIs 101" stuff...
+> 
+
+Yeah, I've already self-NAK'ed that patch.
+
+If we are going to expose that info, we'll probably do it via fsinfo(),
+and put it in a struct with two fields: last reported error code, and an
+opaque token that you can use to see whether new errors have been
+recorded since you last checked. I think that should be enough to ensure
+that we don't tie this too closely to the internal kernel mplementation.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Jeff Layton <jlayton@kernel.org>
 
