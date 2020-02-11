@@ -2,119 +2,108 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E658CC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D3EC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE16420842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4361C20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:49:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M1SwIRt1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CYQ9LsW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgBKDlh (ORCPT
+        id S1727720AbgBKDtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 22:41:37 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:56650 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728107AbgBKDlc (ORCPT
+        Mon, 10 Feb 2020 22:49:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56026 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbgBKDtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 22:41:32 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581392492; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=c6+KThHyJTaUW7p9HtxxGeAiZNKSUAk916YtKObcJ8w=; b=M1SwIRt1/d/7fjxz72j9kQrW0VV4Ckwbh6cHs9lwydkOX/ss+rwIpeDI/frnXDJd87E7tig2
- QKDYoJGNOiPYy3TVDm8MGSAjo812boOUjqxC5oa7c4yQ1QQXq6EKfUUIPkW0GTY3WgpKTEb4
- N+AMeJBypP8LmcKuf3YxmjJdiaQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e42226b.7fa0ed5bad50-smtp-out-n02;
- Tue, 11 Feb 2020 03:41:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A16B1C447B9; Tue, 11 Feb 2020 03:41:29 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94629C447A5;
-        Tue, 11 Feb 2020 03:41:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94629C447A5
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v10 7/7] scsi: ufs-qcom: Delay specific time before gate ref clk
-Date:   Mon, 10 Feb 2020 19:40:50 -0800
-Message-Id: <1581392451-28743-8-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581392451-28743-1-git-send-email-cang@codeaurora.org>
-References: <1581392451-28743-1-git-send-email-cang@codeaurora.org>
+        Mon, 10 Feb 2020 22:49:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=a7NvNilpUl5bhc9T/eXq6L5I1GFPcDpbrAQedowqMwY=; b=CYQ9LsW7rkCgbKw2z+J2rI0Ma0
+        Va6fm0irz2nQg6MMMbI8eRTHUzmutpvZiw/YaOuIUFMH0+tAPVU1YkDwJn61UBTqRaadOdRCdn8qb
+        qDi/Y9mUUYaQ8sj7247kA7yYazGNRnY0xrFOKHq+udYn1zDqgtQSpbPRWuwk3ttUCXIjtDPOLcuWv
+        U2WvvYmGkeDqKHQJmZfUuM/pPdQJ6OiW67uFcFvDPtExaLicCdMnLdc1YEK3Fz5i6wjNanH6/ZMFf
+        RoxhuQuyyI7UXfwKp4erVrmnWy9ZHc82s+r68BAGK3fxrSpCb+EGC8tqUKIbCpgnDyNR3kcKLxdLD
+        i1opX2/Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1MXl-0004eR-1f; Tue, 11 Feb 2020 03:49:01 +0000
+Date:   Mon, 10 Feb 2020 19:49:00 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH v2] mm/filemap: fix a data race in filemap_fault()
+Message-ID: <20200211034900.GQ8731@bombadil.infradead.org>
+References: <20200211030134.1847-1-cai@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211030134.1847-1-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After enter hibern8, as UFS JEDEC ver 3.0 requires, a specific gating wait
-time is required before disable the device reference clock. If it is not
-specified, use the old delay.
+On Mon, Feb 10, 2020 at 10:01:34PM -0500, Qian Cai wrote:
+> struct file_ra_state ra.mmap_miss could be accessed concurrently during
+> page faults as noticed by KCSAN,
+> 
+>  BUG: KCSAN: data-race in filemap_fault / filemap_map_pages
+> 
+>  write to 0xffff9b1700a2c1b4 of 4 bytes by task 3292 on cpu 30:
+>   filemap_fault+0x920/0xfc0
+>   do_sync_mmap_readahead at mm/filemap.c:2384
+>   (inlined by) filemap_fault at mm/filemap.c:2486
+>   __xfs_filemap_fault+0x112/0x3e0 [xfs]
+>   xfs_filemap_fault+0x74/0x90 [xfs]
+>   __do_fault+0x9e/0x220
+>   do_fault+0x4a0/0x920
+>   __handle_mm_fault+0xc69/0xd00
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
+> 
+>  read to 0xffff9b1700a2c1b4 of 4 bytes by task 3313 on cpu 32:
+>   filemap_map_pages+0xc2e/0xd80
+>   filemap_map_pages at mm/filemap.c:2625
+>   do_fault+0x3da/0x920
+>   __handle_mm_fault+0xc69/0xd00
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
+> 
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 32 PID: 3313 Comm: systemd-udevd Tainted: G        W    L 5.5.0-next-20200210+ #1
+>  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+> 
+> ra.mmap_miss is used to contribute the readahead decisions, a data race
+> could be undesirable. Both the read and write is only under
+> non-exclusive mmap_sem, two concurrent writers could even overflow the
+> counter. Fixing the underflow by writing to a local variable before
+> committing a final store to ra.mmap_miss given a small inaccuracy of the
+> counter should be acceptable.
+> 
+> Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
----
- drivers/scsi/ufs/ufs-qcom.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+That's more than Suggested-by.  The correct way to submit this patch is:
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 4ce293f..d593523 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -845,11 +845,27 @@ static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, bool enable)
- 		/*
- 		 * If we are here to disable this clock it might be immediately
- 		 * after entering into hibern8 in which case we need to make
--		 * sure that device ref_clk is active at least 1us after the
-+		 * sure that device ref_clk is active for specific time after
- 		 * hibern8 enter.
- 		 */
--		if (!enable)
--			udelay(1);
-+		if (!enable) {
-+			unsigned long gating_wait;
-+
-+			gating_wait = host->hba->dev_info.clk_gating_wait_us;
-+			if (!gating_wait) {
-+				udelay(1);
-+			} else {
-+				/*
-+				 * bRefClkGatingWaitTime defines the minimum
-+				 * time for which the reference clock is
-+				 * required by device during transition from
-+				 * HS-MODE to LS-MODE or HIBERN8 state. Give it
-+				 * more delay to be on the safe side.
-+				 */
-+				gating_wait += 10;
-+				usleep_range(gating_wait, gating_wait + 10);
-+			}
-+		}
- 
- 		writel_relaxed(temp, host->dev_ref_clk_ctrl_mmio);
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+From: Kirill A. Shutemov <kirill@shutemov.name>
+(at the top of the patch, so it gets credited to Kirill)
+
+then in this section:
+
+Signed-off-by: Kirill A. Shutemov <kirill@shutemov.name>
+Tested-by: Qian Cai <cai@lca.pw>
+
+And now you can add:
+
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
