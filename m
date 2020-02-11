@@ -2,124 +2,128 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA46CC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1904CC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E2720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbyDuRd+"
+	by mail.kernel.org (Postfix) with ESMTP id EEC1120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgBKGPE (ORCPT
+        id S1728174AbgBKGQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 01:15:04 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33309 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727430AbgBKGPE (ORCPT
+        Tue, 11 Feb 2020 01:16:46 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:34885 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727430AbgBKGQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 01:15:04 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b18so9021560otp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 22:15:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ovFJATVDu6V+ADjunhZvdZKdFIc/4GBOO/Os9uePfYE=;
-        b=PbyDuRd+bCjjDsWIYXPfjGpOMhwlwj1boUYk7oUx4sd8wMvaphOrmwfdxQF+t2SrPS
-         qZ1WtNsYHmLo0wpgRifBvJ4YNgGVS2WlYzS2dBNY9YfInjY1GoiJQwuakKh6CsbGARaW
-         FzyM1oyOo8xjSuNRRJ6QVZXLxIE+dfAXYwatcaN0L5frjxHxlZmPB0tg4OjpvIqFS3WH
-         46I5Ynu3GB7c2B1op2PivbxJRXVA2nzfnMBKBLZEKn4agAEKx9NvaQiBqmA5CXUvMYNN
-         tewRS4Za5sOIXp9YOWFcIlkM/Yhgjs492lT3pDRPyOVUySM0lQqyNsyPbeiC6M2Bq0ml
-         wzTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ovFJATVDu6V+ADjunhZvdZKdFIc/4GBOO/Os9uePfYE=;
-        b=qs3BvzHWExTexOlRmbDsmoPs/Vaks6WTDITQR+13u+rhtFgcE9oPF/vK7PCxA0nY7I
-         b98nhnH/nqlMrI7N9t5xLQM5bgbMXB4JNxLHMCix2kv7g6jwj/7IV3J6kMbIR97X28rV
-         ADVLZLR4qBpw4/HjdurabOsz95fIxDaL5xCRfaHhMilA66MUbzUVgpdjT+LRzCTGeK+Z
-         REFyBRcHF3xxQC7SI/KRLrf/Tp5/heHGbS/OUzITOvilBm7z2E5opPjz4bn+o1dc+vNB
-         ZCA/R7+AljV0NNDrtVyPmxSwwlBKaF2AElzkjt8eAngf86VmsSF/b+r9zeLoZ8eKPJyn
-         bxfA==
-X-Gm-Message-State: APjAAAUupTHF71ZzwEWuLJbMnLqeN3V+baVVx5oeOroHn8zEaDPnQMHN
-        DrF6kSG7oW2D9KNsnQQGu0k=
-X-Google-Smtp-Source: APXvYqw6tIh0QT0u93GUbrmFqsmB/GO9LEZw1RYgpBEfmSVnsb6DSCeHR24r8sic5wRHHarUPoTgFQ==
-X-Received: by 2002:a05:6830:1042:: with SMTP id b2mr4001160otp.306.1581401703244;
-        Mon, 10 Feb 2020 22:15:03 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id v23sm898122otj.61.2020.02.10.22.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 22:15:02 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v2] drm/i915: Disable -Wtautological-constant-out-of-range-compare
-Date:   Mon, 10 Feb 2020 23:13:39 -0700
-Message-Id: <20200211061338.23666-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200211050808.29463-1-natechancellor@gmail.com>
-References: <20200211050808.29463-1-natechancellor@gmail.com>
+        Tue, 11 Feb 2020 01:16:45 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 75D9F820676;
+        Tue, 11 Feb 2020 17:16:40 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j1Oqd-0006AU-2i; Tue, 11 Feb 2020 17:16:39 +1100
+Date:   Tue, 11 Feb 2020 17:16:39 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 06/12] fs/xfs: Check if the inode supports DAX under
+ lock
+Message-ID: <20200211061639.GH10776@dread.disaster.area>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <20200208193445.27421-7-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208193445.27421-7-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=R3CSNY5uwQTHXUhv2_4A:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent commit in clang added -Wtautological-compare to -Wall, which is
-enabled for i915 so we see the following warning:
+On Sat, Feb 08, 2020 at 11:34:39AM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> One of the checks for an inode supporting DAX is if the inode is
+> reflinked.  During a non-DAX to DAX state change we could race with
+> the file being reflinked and end up with a reflinked file being in DAX
+> state.
+> 
+> Prevent this race by checking for DAX support under the MMAP_LOCK.
 
-../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
-result of comparison of constant 576460752303423487 with expression of
-type 'unsigned int' is always false
-[-Wtautological-constant-out-of-range-compare]
-        if (unlikely(remain > N_RELOC(ULONG_MAX)))
-            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+The on disk inode flags are protected by the XFS_ILOCK, not the
+MMAP_LOCK. i.e. the MMAPLOCK provides data access serialisation, not
+metadata modification serialisation.
 
-This warning only happens on x86_64 but that check is relevant for
-32-bit x86 so we cannot remove it. -Wtautological-compare on a whole has
-good warnings but this one is not really relevant for the kernel because
-of all of the different configurations that are used to build the
-kernel. When -Wtautological-compare is enabled for the kernel, this
-option will remain disabled so do that for i915 now.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/xfs/xfs_ioctl.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index da1eb2bdb386..4ff402fd6636 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1194,10 +1194,6 @@ xfs_ioctl_setattr_dax_invalidate(
+>  
+>  	*join_flags = 0;
+>  
+> -	if ((fa->fsx_xflags & FS_XFLAG_DAX) == FS_XFLAG_DAX &&
+> -	    !xfs_inode_supports_dax(ip))
+> -		return -EINVAL;
+> -
+>  	/* If the DAX state is not changing, we have nothing to do here. */
+>  	if ((fa->fsx_xflags & FS_XFLAG_DAX) &&
+>  	    (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+> @@ -1211,6 +1207,13 @@ xfs_ioctl_setattr_dax_invalidate(
+>  
+>  	/* lock, flush and invalidate mapping in preparation for flag change */
+>  	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> +
+> +	if ((fa->fsx_xflags & FS_XFLAG_DAX) == FS_XFLAG_DAX &&
+> +	    !xfs_inode_supports_dax(ip)) {
+> +		error = -EINVAL;
+> +		goto out_unlock;
+> +	}
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/778
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+Yes, you might be able to get away with reflink vs dax flag
+serialisation on the inode flag modification, but it is not correct and
+leaves a landmine for future inode flag modifications that are done
+without holding either the MMAP or IOLOCK.
 
-v1 -> v2: https://lore.kernel.org/lkml/20200211050808.29463-1-natechancellor@gmail.com/
+e.g. concurrent calls to xfs_ioctl_setattr() setting/clearing flags
+other than the on disk DAX flag are all serialised by the ILOCK_EXCL
+and will no be serialised against this DAX check. Hence if there are
+other flags that we add in future that affect the result of
+xfs_inode_supports_dax(), this code will not be correctly
+serialised.
 
-* Fix patch application due to basing on a local tree that had
-  -Wuninitialized turned on. Can confirm that patch applies on
-  latest -next now.
+This raciness in checking the DAX flags is the reason that
+xfs_ioctl_setattr_xflags() redoes all the reflink vs dax checks once
+it's called under the XFS_ILOCK_EXCL during the actual change
+transaction....
 
- drivers/gpu/drm/i915/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+Cheers,
 
-diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-index b8c5f8934dbd..159355eb43a9 100644
---- a/drivers/gpu/drm/i915/Makefile
-+++ b/drivers/gpu/drm/i915/Makefile
-@@ -22,6 +22,7 @@ subdir-ccflags-y += $(call cc-disable-warning, sign-compare)
- subdir-ccflags-y += $(call cc-disable-warning, sometimes-uninitialized)
- subdir-ccflags-y += $(call cc-disable-warning, initializer-overrides)
- subdir-ccflags-y += $(call cc-disable-warning, uninitialized)
-+subdir-ccflags-y += $(call cc-disable-warning, tautological-constant-out-of-range-compare)
- subdir-ccflags-$(CONFIG_DRM_I915_WERROR) += -Werror
- 
- # Fine grained warnings disable
+Dave.
 -- 
-2.25.0
-
+Dave Chinner
+david@fromorbit.com
