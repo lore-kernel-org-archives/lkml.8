@@ -2,339 +2,184 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849CBC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DBAC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59CD820708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46BD20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 20:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBPWwTaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgBKUJc (ORCPT
+        id S1731024AbgBKUKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 15:09:32 -0500
-Received: from mga06.intel.com ([134.134.136.31]:14520 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgBKUJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:09:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 12:09:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="222051011"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 11 Feb 2020 12:09:31 -0800
-Received: from [10.251.4.129] (kliang2-mobl.ccr.corp.intel.com [10.251.4.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id EF237580696;
-        Tue, 11 Feb 2020 12:09:29 -0800 (PST)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v5_3/3=5d_perf_x86=3a_Exposing_an_Uncore_u?=
- =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
-To:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, ak@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com
-References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
- <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <45504018-6a4c-0ec0-9637-2eb79a4be36b@linux.intel.com>
-Date:   Tue, 11 Feb 2020 15:09:28 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 11 Feb 2020 15:10:45 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46353 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728040AbgBKUKo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 15:10:44 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so4690998pll.13;
+        Tue, 11 Feb 2020 12:10:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1oEvbdFtLufiZz4t/nbIM1lANTm4jXV+SpoFUW68lYI=;
+        b=SBPWwTaE80nhJiDXQ29A5acyY2ngiIVTaLi9MbuLKsZekU3hnHjRJ4Hej+HqdQOin4
+         fURStl1i0c9a18eE2Mhv+qeGU5aNvo8Hdc87Z5K3ONwFEusQ1POJ9FPB5V+y4wDEkQex
+         vBpXGqvcRc+ybJs3wMaq0ayvUcmSCjcLPZKp+wfh8YBNe2mbsx0Hg2XpCRwliBA0azmX
+         Eh5KrV12pUN+tQI1dK37BoS2rhp9+R020CishRLe8x2nthh7WXiDMTjkCatkcvxezC+9
+         hjGCTC5/BgF0NdYj8WLbi3gk3DfgvXEnH74EpkOaMhw8aFl4s7/K1WxUUaEpzkqvmKr8
+         Eqdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1oEvbdFtLufiZz4t/nbIM1lANTm4jXV+SpoFUW68lYI=;
+        b=j3AXJRLzg7B+OYuKPSqXG/iGYicTi5rqpJ66h5G+7NdsybZw4+sPF3nkWE6HjNi/IL
+         bTmcJlurIUd4gU+ywxVPG4BO4H976kYjzFoDqqgbaPPkgNC7hX30vAEdlB02bo1cqUbF
+         IHYp3KWANq2PM52y64dy44OsBZu0nNjAr20U/xNo430bm9/jvmGY74yTPh2SJTn2xFYa
+         AP6RAT0a/sreOsQOUnAsYLvC2NhOAfodZ2B7pIo3nsKsoi3V4M+spv/11W8optpFCkKU
+         Ukt7RAl6FQ1KmiDLdXUIq5I66oqKMB4Ofs2ZVCs2ihla/Ch80i07OWS1+spbDh71Eqhw
+         R/Rw==
+X-Gm-Message-State: APjAAAWt4oszM0ef4/orUzjVTglUSg1XOF1NuH0j0D4yj5GyVJYPcSJe
+        KU8On9+rEy7m4G8HCryK1RQ=
+X-Google-Smtp-Source: APXvYqxPW4yttOEQAI9jATnCc+pSiM5iFBUOnm92337gW+mY7muunUfEN8SGmNFBqr5HLxl7J5PzxQ==
+X-Received: by 2002:a17:902:8d91:: with SMTP id v17mr18874782plo.53.1581451843582;
+        Tue, 11 Feb 2020 12:10:43 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::1:aeb4])
+        by smtp.gmail.com with ESMTPSA id v7sm5204431pfn.61.2020.02.11.12.10.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 12:10:42 -0800 (PST)
+Date:   Tue, 11 Feb 2020 12:10:40 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
+ mutable hooks list for the BPF LSM]
+Message-ID: <20200211201039.om6xqoscfle7bguz@ast-mbp>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-5-kpsingh@chromium.org>
+ <20200211031208.e6osrcathampoog7@ast-mbp>
+ <20200211124334.GA96694@google.com>
+ <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
+ <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+ <20200211190943.sysdbz2zuz5666nq@ast-mbp>
+ <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 11, 2020 at 08:36:18PM +0100, Jann Horn wrote:
+> On Tue, Feb 11, 2020 at 8:09 PM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> > On Tue, Feb 11, 2020 at 07:44:05PM +0100, Jann Horn wrote:
+> > > On Tue, Feb 11, 2020 at 6:58 PM Alexei Starovoitov
+> > > <alexei.starovoitov@gmail.com> wrote:
+> > > > On Tue, Feb 11, 2020 at 01:43:34PM +0100, KP Singh wrote:
+> > > [...]
+> > > > > * When using the semantic provided by fexit, the BPF LSM program will
+> > > > >   always be executed and will be able to override / clobber the
+> > > > >   decision of LSMs which appear before it in the ordered list. This
+> > > > >   semantic is very different from what we currently have (i.e. the BPF
+> > > > >   LSM hook is only called if all the other LSMs allow the action) and
+> > > > >   seems to be bypassing the LSM framework.
+> > > >
+> > > > It that's a concern it's trivial to add 'if (RC == 0)' check to fexit
+> > > > trampoline generator specific to lsm progs.
+> > > [...]
+> > > > Using fexit mechanism and bpf_sk_storage generalization is
+> > > > all that is needed. None of it should touch security/*.
+> > >
+> > > If I understand your suggestion correctly, that seems like a terrible
+> > > idea to me from the perspective of inspectability and debuggability.
+> > > If at runtime, a function can branch off elsewhere to modify its
+> > > decision, I want to see that in the source code. If someone e.g.
+> > > changes the parameters or the locking rules around a security hook,
+> > > how are they supposed to understand the implications if that happens
+> > > through some magic fexit trampoline that is injected at runtime?
+> >
+> > I'm not following the concern. There is error injection facility that is
+> > heavily used with and without bpf. In this case there is really no difference
+> > whether trampoline is used with direct call or indirect callback via function
+> > pointer. Both will jump to bpf prog. The _source code_ of bpf program will
+> > _always_ be available for humans to examine via "bpftool prog dump" since BTF
+> > is required. So from inspectability and debuggability point of view lsm+bpf
+> > stuff is way more visible than any builtin LSM. At any time people will be able
+> > to see what exactly is running on the system. Assuming folks can read C code.
+> 
+> You said that you want to use fexit without touching security/, which
+> AFAIU means that the branch from security_*() to the BPF LSM will be
+> invisible in the *kernel's* source code unless the reader already
+> knows about the BPF LSM. But maybe I'm just misunderstanding your
+> idea.
+> 
+> If a random developer is trying to change the locking rules around
+> security_blah(), and wants to e.g. figure out whether it's okay to
+> call that thing with a spinlock held, or whether one of the arguments
+> is actually used, or stuff like that, the obvious way to verify that
+> is to follow all the direct and indirect calls made from
+> security_blah(). It's tedious, but it works, unless something is
+> hooked up to it in a way that is visible in no way in the source code.
+> 
+> I agree that the way in which the call happens behind the scenes
+> doesn't matter all that much - I don't really care all that much
+> whether it's an indirect call, a runtime-patched direct call in inline
+> assembly, or an fexit hook. What I do care about is that someone
+> reading through any affected function can immediately see that the
+> branch exists - in other words, ideally, I'd like it to be something
+> happening in the method body, but if you think that's unacceptable, I
+> think there should at least be a function attribute that makes it very
+> clear what's going on.
 
+Got it. Then let's whitelist them ?
+All error injection points are marked with ALLOW_ERROR_INJECTION().
+We can do something similar here, but let's do it via BTF and avoid
+abusing yet another elf section for this mark.
+I think BTF_TYPE_EMIT() should work. Just need to pick explicit enough
+name and extensive comment about what is going on.
+Locking rules and cleanup around security_blah() shouldn't change though.
+Like security_task_alloc() should be paired with security_task_free().
+And so on. With bpf_sk_storage like logic the alloc/free of scratch
+space will be similar to the way socket and bpf progs deal with it.
 
-On 2/11/2020 11:15 AM, roman.sudarikov@linux.intel.com wrote:
-> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-> 
-> Current version supports a server line starting Intel® Xeon® Processor
-> Scalable Family and introduces mapping for IIO Uncore units only.
-> Other units can be added on demand.
-> 
-> IIO stack to PMON mapping is exposed through:
->      /sys/devices/uncore_iio_<pmu_idx>/nodeX
->      where nodeX is file which holds PCIe root bus.
-
-I think the mapping information is from die to BUS#.
-Can we change the name nodeX to dieX?
-
-
-Thanks,
-Kan
-> 
-> Details are explained in Documentation/ABI/testing/sysfs-devices-mapping
-> 
-> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-> ---
->   .../ABI/testing/sysfs-devices-mapping         |  32 +++
->   arch/x86/events/intel/uncore_snbep.c          | 183 ++++++++++++++++++
->   2 files changed, 215 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-devices-mapping b/Documentation/ABI/testing/sysfs-devices-mapping
-> new file mode 100644
-> index 000000000000..c26e4e0b6ca8
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-devices-mapping
-> @@ -0,0 +1,32 @@
-> +What:           /sys/devices/uncore_iio_x/nodeX
-> +Date:           February 2020
-> +Contact:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
-> +Description:
-> +                Each IIO stack (PCIe root port) has its own IIO PMON block, so
-> +                each nodeX file (where X node number) holds PCIe root port,
-> +                which can be monitored by that IIO PMON block.
-> +                For example, on 4-node Xeon platform with up to 6 IIO stacks per
-> +                node and, therefore, 6 IIO PMON blocks per node, the mapping of
-> +                IIO PMON block 0 exposes as the following:
-> +
-> +                $ ls /sys/devices/uncore_iio_0/node*
-> +                -r--r--r-- /sys/devices/uncore_iio_0/node0
-> +                -r--r--r-- /sys/devices/uncore_iio_0/node1
-> +                -r--r--r-- /sys/devices/uncore_iio_0/node2
-> +                -r--r--r-- /sys/devices/uncore_iio_0/node3
-> +
-> +                $ tail /sys/devices/uncore_iio_0/node*
-> +                ==> /sys/devices/uncore_iio_0/node0 <==
-> +                0000:00
-> +                ==> /sys/devices/uncore_iio_0/node1 <==
-> +                0000:40
-> +                ==> /sys/devices/uncore_iio_0/node2 <==
-> +                0000:80
-> +                ==> /sys/devices/uncore_iio_0/node3 <==
-> +                0000:c0
-> +
-> +                Which means:
-> +                IIO PMU 0 on node 0 belongs to PCI RP on bus 0x00, domain 0x0000
-> +                IIO PMU 0 on node 1 belongs to PCI RP on bus 0x40, domain 0x0000
-> +                IIO PMU 0 on node 2 belongs to PCI RP on bus 0x80, domain 0x0000
-> +                IIO PMU 0 on node 3 belongs to PCI RP on bus 0xc0, domain 0x0000
-> \ No newline at end of file
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index ad20220af303..96fca1ac22a4 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -273,6 +273,30 @@
->   #define SKX_CPUNODEID			0xc0
->   #define SKX_GIDNIDMAP			0xd4
->   
-> +/*
-> + * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
-> + * that BIOS programmed. MSR has package scope.
-> + * |  Bit  |  Default  |  Description
-> + * | [63]  |    00h    | VALID - When set, indicates the CPU bus
-> + *                       numbers have been initialized. (RO)
-> + * |[62:48]|    ---    | Reserved
-> + * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
-> + *                       CPUBUSNO(5). (RO)
-> + * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
-> + *                       CPUBUSNO(4). (RO)
-> + * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
-> + *                       CPUBUSNO(3). (RO)
-> + * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
-> + *                       CPUBUSNO(2). (RO)
-> + * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
-> + *                       CPUBUSNO(1). (RO)
-> + * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
-> + *                       CPUBUSNO(0). (RO)
-> + */
-> +#define SKX_MSR_CPU_BUS_NUMBER		0x300
-> +#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
-> +#define BUS_NUM_STRIDE			8
-> +
->   /* SKX CHA */
->   #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
->   #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
-> @@ -3575,6 +3599,163 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
->   	.read_counter		= uncore_msr_read_counter,
->   };
->   
-> +static inline u8 skx_iio_stack(struct intel_uncore_pmu *pmu, int die)
-> +{
-> +	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
-> +}
-> +
-> +static umode_t
-> +skx_iio_mapping_visible(struct kobject *kobj, struct attribute *attr, int die)
-> +{
-> +	struct intel_uncore_pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
-> +
-> +	//Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
-> +	return (!skx_iio_stack(pmu, die) && pmu->pmu_idx) ? 0 : attr->mode;
-> +}
-> +
-> +static ssize_t skx_iio_mapping_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct pmu *pmu = dev_get_drvdata(dev);
-> +	struct intel_uncore_pmu *uncore_pmu =
-> +		container_of(pmu, struct intel_uncore_pmu, pmu);
-> +
-> +	struct dev_ext_attribute *ea =
-> +		container_of(attr, struct dev_ext_attribute, attr);
-> +	long die = (long)ea->var;
-> +
-> +	return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
-> +}
-> +
-> +static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-> +{
-> +	u64 msr_value;
-> +
-> +	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
-> +			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
-> +		return -ENXIO;
-> +
-> +	*topology = msr_value;
-> +
-> +	return 0;
-> +}
-> +
-> +static int die_to_cpu(int die)
-> +{
-> +	int res = 0, cpu, current_die;
-> +	/*
-> +	 * Using cpus_read_lock() to ensure cpu is not going down between
-> +	 * looking at cpu_online_mask.
-> +	 */
-> +	cpus_read_lock();
-> +	for_each_online_cpu(cpu) {
-> +		current_die = topology_logical_die_id(cpu);
-> +		if (current_die == die) {
-> +			res = cpu;
-> +			break;
-> +		}
-> +	}
-> +	cpus_read_unlock();
-> +	return res;
-> +}
-> +
-> +static int skx_iio_get_topology(struct intel_uncore_type *type)
-> +{
-> +	int i, ret;
-> +	struct pci_bus *bus = NULL;
-> +
-> +	/*
-> +	 * Verified single-segment environments only; disabled for multiple
-> +	 * segment topologies for now except VMD domains.
-> +	 * VMD domains start at 0x10000 to not clash with ACPI _SEG domains.
-> +	 */
-> +	while ((bus = pci_find_next_bus(bus))
-> +		&& (!pci_domain_nr(bus) || pci_domain_nr(bus) > 0xffff))
-> +		;
-> +	if (bus)
-> +		return -EPERM;
-> +
-> +	type->topology = kcalloc(uncore_max_dies(), sizeof(u64), GFP_KERNEL);
-> +	if (!type->topology)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < uncore_max_dies(); i++) {
-> +		ret = skx_msr_cpu_bus_read(die_to_cpu(i), &type->topology[i]);
-> +		if (ret) {
-> +			kfree(type->topology);
-> +			type->topology = NULL;
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct attribute *uncore_empry_attr;
-> +
-> +static struct attribute_group skx_iio_mapping_group = {
-> +	.attrs		= &uncore_empry_attr,
-> +	.is_visible	= skx_iio_mapping_visible,
-> +};
-> +
-> +const static struct attribute_group *skx_iio_attr_update[] = {
-> +	&skx_iio_mapping_group,
-> +	NULL,
-> +};
-> +
-> +static int skx_iio_set_mapping(struct intel_uncore_type *type)
-> +{
-> +	char buf[64];
-> +	int ret = 0;
-> +	long die;
-> +	struct attribute **attrs;
-> +	struct dev_ext_attribute *eas;
-> +
-> +	ret = skx_iio_get_topology(type);
-> +	if (ret)
-> +		return ret;
-> +
-> +	// One more for NULL.
-> +	attrs = kzalloc((uncore_max_dies() + 1) * sizeof(*attrs), GFP_KERNEL);
-> +	if (!attrs) {
-> +		kfree(type->topology);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	eas = kzalloc(sizeof(*eas) * uncore_max_dies(), GFP_KERNEL);
-> +	if (!eas) {
-> +		kfree(attrs);
-> +		kfree(type->topology);
-> +		return -ENOMEM;
-> +	}
-> +	for (die = 0; die < uncore_max_dies(); die++) {
-> +		sprintf(buf, "node%ld", die);
-> +		eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
-> +		if (!eas[die].attr.attr.name) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
-> +		eas[die].attr.attr.mode = 0444;
-> +		eas[die].attr.show = skx_iio_mapping_show;
-> +		eas[die].attr.store = NULL;
-> +		eas[die].var = (void *)die;
-> +		attrs[die] = &eas[die].attr.attr;
-> +	}
-> +
-> +	skx_iio_mapping_group.attrs = attrs;
-> +
-> +	return 0;
-> +
-> +err:
-> +	for (; die >= 0; die--)
-> +		kfree(eas[die].attr.attr.name);
-> +	kfree(eas);
-> +	kfree(attrs);
-> +	kfree(type->topology);
-> +
-> +	return ret;
-> +}
-> +
->   static struct intel_uncore_type skx_uncore_iio = {
->   	.name			= "iio",
->   	.num_counters		= 4,
-> @@ -3589,6 +3770,8 @@ static struct intel_uncore_type skx_uncore_iio = {
->   	.constraints		= skx_uncore_iio_constraints,
->   	.ops			= &skx_uncore_iio_ops,
->   	.format_group		= &skx_uncore_iio_format_group,
-> +	.attr_update		= skx_iio_attr_update,
-> +	.set_mapping		= skx_iio_set_mapping,
->   };
->   
->   enum perf_uncore_iio_freerunning_type_id {
-> 
+Some of the lsm hooks are in critical path. Like security_socket_sendmsg().
+retpoline hurts. If we go with indirect calls right now it will be harder to
+optimize later. It took us long time to come up with bpf trampoline and build
+bpf dispatcher on top of it to remove single indirect call from XDP runtime.
+For bpf+lsm would be good to avoid it from the start.
