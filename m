@@ -2,48 +2,47 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ACFC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286BFC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524C7214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053DB208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgBKOKQ (ORCPT
+        id S1729899AbgBKOKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:10:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 09:10:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbgBKOKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:10:16 -0500
+        id S1729506AbgBKOKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 09:10:43 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA16620675;
-        Tue, 11 Feb 2020 14:10:14 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 09:10:13 -0500
+        by mail.kernel.org (Postfix) with ESMTPSA id 68EC020675;
+        Tue, 11 Feb 2020 14:10:42 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 09:10:40 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>
 Subject: Re: [PATCH] tracing/perf: Move rcu_irq_enter/exit_irqson() to perf
  trace point hook
-Message-ID: <20200211091013.0eec4cda@gandalf.local.home>
-In-Reply-To: <20200211120015.GL14914@hirez.programming.kicks-ass.net>
+Message-ID: <20200211091040.25d92244@gandalf.local.home>
+In-Reply-To: <20200211122120.GM14914@hirez.programming.kicks-ass.net>
 References: <20200210170643.3544795d@gandalf.local.home>
-        <576504045.617212.1581381032132.JavaMail.zimbra@efficios.com>
-        <20200211120015.GL14914@hirez.programming.kicks-ass.net>
+        <20200211122120.GM14914@hirez.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,25 +52,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 13:00:15 +0100
+On Tue, 11 Feb 2020 13:21:20 +0100
 Peter Zijlstra <peterz@infradead.org> wrote:
 
-> As per nmi_enter() calling rcu_nmi_enter() I've always assumed that NMIs
-> are fully covered by RCU.
+> > @@ -68,6 +78,9 @@ perf_trace_##call(void *__data, proto)					\
+> >  	perf_trace_run_bpf_submit(entry, __entry_size, rctx,		\
+> >  				  event_call, __count, __regs,		\
+> >  				  head, __task);			\
+> > +out:									\
+> > +	if (!rcu_watching)						\
+> > +		rcu_irq_exit_irqson();					\
+> >  }  
 > 
-> If this isn't so, RCU it terminally broken :-)
+> It is probably okay to move that into perf_tp_event(), then this:
+> 
+> >  /*
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 1694a6b57ad8..3e6f07b62515 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -719,6 +719,7 @@ void rcu_irq_exit_irqson(void)
+> >  	rcu_irq_exit();
+> >  	local_irq_restore(flags);
+> >  }
+> > +EXPORT_SYMBOL_GPL(rcu_irq_exit_irqson);
+> >  
+> >  /*
+> >   * Exit an RCU extended quiescent state, which can be either the
+> > @@ -890,6 +891,7 @@ void rcu_irq_enter_irqson(void)
+> >  	rcu_irq_enter();
+> >  	local_irq_restore(flags);
+> >  }
+> > +EXPORT_SYMBOL_GPL(rcu_irq_enter_irqson);
+> >  
+> >  /*
+> >   * If any sort of urgency was applied to the current CPU (for example,  
+> 
+> can go too. Those things really should not be exported.
 
-Most of the time it is. But for tracing that injects callbacks at
-arbitrary points of code, it can break. I've always said that tracing
-is a more sensitive context than NMI itself. The reason NMIs are
-sensitive is because they can happen pretty much anywhere. But tracing
-can happen also in the context switch that enters NMI.
-
-This is why function tracing does the "rude" RCU flavor (yes Paul, I'd
-love you to add that flavor!), that performs a schedule_on_each_cpu()
-before freeing anything. Because it traces when RCU is not watching.
-
-But RCU really shouldn't have to bend over backward for tracing, as
-tracing is the exception and not the norm.
+Thanks, I'll send an updated patch.
 
 -- Steve
