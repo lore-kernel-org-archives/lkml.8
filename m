@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F7DC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F57C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7795A206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D42206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NckG9P0+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NVUjzx89"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgBKVBz (ORCPT
+        id S1730750AbgBKVDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:01:55 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.155]:12210 "EHLO
+        Tue, 11 Feb 2020 16:03:47 -0500
+Received: from gateway21.websitewelcome.com ([192.185.45.155]:21661 "EHLO
         gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727785AbgBKVBz (ORCPT
+        by vger.kernel.org with ESMTP id S1729450AbgBKVDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:01:55 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 009B7400D73F2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:01:54 -0600 (CST)
+        Tue, 11 Feb 2020 16:03:46 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id A7A7B400D83FF
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:03:45 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 1cfJj7R0kEfyq1cfJjHPJM; Tue, 11 Feb 2020 15:01:53 -0600
+        id 1ch7jETM6Sl8q1ch7jxa0U; Tue, 11 Feb 2020 15:03:45 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,27 +36,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ljMqRoFvDt0cvQi9PMh9cAqYCAMvtHVlBbjz5BB0km8=; b=NckG9P0+8Z9/rmG3tEeQ3buUQ9
-        q4OOlbCmZWYJi9YYVOdARn//3viHJSlswfY0eTwBnAYhc95EIDY+PTYSK7kXT6gu9V4HiepK1mdha
-        QSTfyW1fyFw4VkH+Ox2a94oi/jklzBVMaJOeu81hrpszx9wOFEbpAW8HitnKkpjL7iVGDm5p3F5f4
-        1pNwIqOxknrrjoNeWspLnrquQxsXPZVndDwIdrSK5c1iDN4C2YmgstZaVlbkN2GvbTQub+5dgUMgT
-        nFKr5GWwM1FctusT3HDbIlh7aB88fmMWn8iyTJtTZgLlZfKVb49MRpzjv/QGz8oip3TC18Jq8E2HA
-        kFJYSYEw==;
-Received: from [200.68.140.36] (port=31327 helo=embeddedor)
+        bh=Y7FMQ3aFcSbTB8cXSN/10Y25Q6I9Sqxro0ixjLvyexk=; b=NVUjzx89ff02Y0550Cc9HR4fAV
+        y8xgLLMBqHAJcRuoYH/4vdjQlwmneVydHsfxguYwcJemWBAIPTaH5ACThZNw/j9YPPszQTd3icsx7
+        U+v8QkoMqssJf+0DLG7bz90E+KHjnEEjbCAcF7/fMJV0CS+I9YjRTsjTeSau8ZIvWL0QO5RZmkBH5
+        Mo9HA971WK+zi4licGrT47AWMX8GavgfO5a7EaL3XONr0IgFVBS2Fx+Bnk5oVh9pOOh52jbY5YMpW
+        bY4JaEdAmrd6n3YBDyb0tJMBYkMJS4rHr6EFQLvL5BVmnVdN9WDD5iCxqHzkn+aXLokWXCTaEqr5U
+        VKHDlH5A==;
+Received: from [200.68.140.36] (port=15247 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j1cfI-0025UI-7K; Tue, 11 Feb 2020 15:01:52 -0600
-Date:   Tue, 11 Feb 2020 15:04:27 -0600
+        id 1j1ch5-0026gU-VR; Tue, 11 Feb 2020 15:03:44 -0600
+Date:   Tue, 11 Feb 2020 15:06:18 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-security-module@vger.kernel.org,
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] apparmor: Replace zero-length array with flexible-array
- member
-Message-ID: <20200211210427.GA28952@embeddedor>
+Subject: [PATCH] gpio: uniphier: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200211210618.GA29823@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -69,13 +69,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.140.36
 X-Source-L: No
-X-Exim-ID: 1j1cfI-0025UI-7K
+X-Exim-ID: 1j1ch5-0026gU-VR
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:31327
+X-Source-Sender: (embeddedor) [200.68.140.36]:15247
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
+X-Email-Count: 11
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -106,22 +106,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- security/apparmor/apparmorfs.c | 2 +-
+ drivers/gpio/gpio-uniphier.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index fefee040bf79..cc81080efb63 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -804,7 +804,7 @@ static ssize_t query_label(char *buf, size_t buf_len,
- struct multi_transaction {
- 	struct kref count;
- 	ssize_t size;
--	char data[0];
-+	char data[];
+diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
+index 0f662b297a95..9843638d99d0 100644
+--- a/drivers/gpio/gpio-uniphier.c
++++ b/drivers/gpio/gpio-uniphier.c
+@@ -33,7 +33,7 @@ struct uniphier_gpio_priv {
+ 	struct irq_domain *domain;
+ 	void __iomem *regs;
+ 	spinlock_t lock;
+-	u32 saved_vals[0];
++	u32 saved_vals[];
  };
  
- #define MULTI_TRANSACTION_LIMIT (PAGE_SIZE - sizeof(struct multi_transaction))
+ static unsigned int uniphier_gpio_bank_to_reg(unsigned int bank)
 -- 
 2.25.0
 
