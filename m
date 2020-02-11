@@ -2,108 +2,159 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619E2C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F33EC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD7E206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02364206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="LTR0BrkY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kp+kvUFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBKViD (ORCPT
+        id S1727960AbgBKVi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:38:03 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38237 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgBKViD (ORCPT
+        Tue, 11 Feb 2020 16:38:26 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38012 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgBKViZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:38:03 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2796683645;
-        Wed, 12 Feb 2020 10:38:00 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1581457080;
-        bh=BWZ3XnsKQFnPu8ywhW1/XL2Lfk2SJOoZsOxmckSWviw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=LTR0BrkYbqoqfzr1pZ/Ce9YtZHhnc994WINaM8XjablsOtIDc8RikSeujSJrowEu8
-         Mwg0zI0n4IJOCRYIKHHljwA7qhl3fAuzuONam9DNHrdr8y+e8nY+izJw7lOajIbc9K
-         +U6QPRnmEvCwkDEKSf8MLOfhktxFppIv1WBIQPJThy6a14ne3m1yee0OEG6tssVqtc
-         SrG/AJfVuxDNIkZXX6gSYlS3YKhInGWve/NW39vOwGqRGStJ/Ai/hbqoIXbrgnIcJD
-         gMC1j+xQvuiL+mtxMl4nAQU+ZC4zK6MGnwXrnAMeII07H8wzirhPeTn94CQifc8A7N
-         KkUzK9UK99D9Q==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e431eb80001>; Wed, 12 Feb 2020 10:38:00 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Feb 2020 10:38:00 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Wed, 12 Feb 2020 10:38:00 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
-        "paulburton@kernel.org" <paulburton@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
-Thread-Topic: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
-Thread-Index: AQHV4SHSo52AlyiF50aUibwtU28qqagVqt2A
-Date:   Tue, 11 Feb 2020 21:37:59 +0000
-Message-ID: <6fc1ab12ed330ffb35d4eb100e3b35c91d3d2d18.camel@alliedtelesis.co.nz>
-References: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
-In-Reply-To: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:816b:1e68:7f19:f27f]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A45D7E6472A10F4180B5FD19C77AB0D5@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Tue, 11 Feb 2020 16:38:25 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so92291pfc.5;
+        Tue, 11 Feb 2020 13:38:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oJSY3+unP7njMIVK4X94hP/7d/d2A7Dqq9Ad7uaQNuM=;
+        b=Kp+kvUFE8QBS06WMeMrPfDHf6XHJBSFjBNdpWZoNQEFuDXpQNvDlKsacoJXbKp/F0z
+         7mjYdwKOaTU+l/BbI0M35AbxA4Bk+zW+knm5/w/vdR+3T1qXdCJkIIWDy0dwlbgz8NxY
+         3cu40q8BNwsRHaAh+O5VbTV5B7QzT5e7tKwELBIAbIJAwytkfzTVvEKVVK86NXy4k0NS
+         REEU+ySD34LlI7ixGYsC9mQzCTXJO/9Hoovi73SZQLq6iNnA2NqlEeMr+rggUykmNwU6
+         3na9+7zREZUQHoLyBc88JraQMoPZNVka+XeZCODMhZqcujAlao92ta4IcvKoPzLbp0mP
+         vfpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oJSY3+unP7njMIVK4X94hP/7d/d2A7Dqq9Ad7uaQNuM=;
+        b=HXihRdvmOARFnYqFhbp3wgqcNg64kjntwnj2SyCAISENS/QhdICPBQPrSlN0QLLuCc
+         F+xJUoBaZAjQCf11Lusl63x6IWc2Vef4dX0Wvz6s2dVyUTAc2aYeVv3Hk0SicgwOxeR6
+         soCpl31HYvKnjjPnmG3rzMUxSPw/2cSdvKFx2qMmFOxNlDB7Cl93NWGwy20yUHntck3o
+         nSLhPPMNn5JVcSMypaB6TbQTBMk50gFrb1jfX+PwIumX7FMETOR5xBF6XmIssWxbV2Mf
+         RdTw95ibC/3SRkXebLGzJ2LgnNCfmbYKh9Qgd1+M6GZVXkMPwqVerHssPs3/N19xP0id
+         jZ1Q==
+X-Gm-Message-State: APjAAAX2Ht5HDPzhYWDlmff9wiO3JmJI7HX0T++xfXdZX+z90d62AdTU
+        aT1hXOQ11dySP8BQUuV/Nro=
+X-Google-Smtp-Source: APXvYqzPQNC73PGSmEbOYih8cQaHC5eGDgjAfZNnep7lcccZ066rjEwUFgQM6K61/xXQOktcYcoP3g==
+X-Received: by 2002:aa7:8ad9:: with SMTP id b25mr5108673pfd.70.1581457103385;
+        Tue, 11 Feb 2020 13:38:23 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::1:aeb4])
+        by smtp.gmail.com with ESMTPSA id d14sm4447685pjz.12.2020.02.11.13.38.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 13:38:22 -0800 (PST)
+Date:   Tue, 11 Feb 2020 13:38:20 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
+ mutable hooks list for the BPF LSM]
+Message-ID: <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-5-kpsingh@chromium.org>
+ <20200211031208.e6osrcathampoog7@ast-mbp>
+ <20200211124334.GA96694@google.com>
+ <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
+ <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+ <20200211190943.sysdbz2zuz5666nq@ast-mbp>
+ <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
+ <20200211201039.om6xqoscfle7bguz@ast-mbp>
+ <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAyLTEyIGF0IDEwOjI0ICsxMzAwLCBNYXJrIFRvbWxpbnNvbiB3cm90ZToN
-Cj4gVGhlIENhdml1bSBPY3Rlb24gQ1BVIHVzZXMgYSBzcGVjaWFsIHN5bmMgaW5zdHJ1Y3Rpb24g
-Zm9yIGltcGxlbWVudGluZw0KPiB3bWIsIGFuZCBkdWUgdG8gYSBDUFUgYnVnLCB0aGUgaW5zdHJ1
-Y3Rpb24gbXVzdCBhcHBlYXIgdHdpY2UuIEEgbWFjcm8NCj4gaGFkIGJlZW4gZGVmaW5lZCB0byBo
-aWRlIHRoaXM6DQo+IA0KPiAgI2RlZmluZSBfX1NZTkNfcnB0KHR5cGUpICAgICAoMSArICh0eXBl
-ID09IF9fU1lOQ193bWIpKQ0KPiANCj4gd2hpY2ggd2FzIGludGVuZGVkIHRvIGV2YWx1YXRlIHRv
-IDIgZm9yIF9fU1lOQ193bWIsIGFuZCAxIGZvciBhbnkgb3RoZXINCj4gdHlwZSBvZiBzeW5jLiBI
-b3dldmVyLCB0aGlzIGV4cHJlc3Npb24gaXMgZXZhbHVhdGVkIGJ5IHRoZSBhc3NlbWJsZXIsDQo+
-IGFuZCBub3QgdGhlIGNvbXBpbGVyLCBhbmQgdGhlIHJlc3VsdCBvZiAnPT0nIGluIHRoZSBhc3Nl
-bWJsZXIgaXMgMCBvcg0KPiAtMSwgbm90IDAgb3IgMSBhcyBpdCBpcyBpbiBDLiBUaGUgbmV0IHJl
-c3VsdCB3YXMgd21iKCkgcHJvZHVjaW5nIG5vIGNvZGUNCj4gYXQgYWxsLiBUaGUgc2ltcGxlIGZp
-eCBpbiB0aGlzIHBhdGNoIGlzIHRvIGNoYW5nZSB0aGUgJysnIHRvICctJy4NCj4gDQo+IEZpeGVz
-OiBiZjkyOTI3MjUxYjMgKCJNSVBTOiBiYXJyaWVyOiBBZGQgX19TWU5DKCkgaW5mcmFzdHJ1Y3R1
-cmUiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBNYXJrIFRvbWxpbnNvbiA8bWFyay50b21saW5zb25AYWxs
-aWVkdGVsZXNpcy5jby5uej4NCg0KRm9yIHdoYXQgaXQncyB3b3J0aA0KDQpUZXN0ZWQtYnk6IENo
-cmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4NCg0KPiAtLS0N
-Cj4gIGFyY2gvbWlwcy9pbmNsdWRlL2FzbS9zeW5jLmggfCA0ICsrKy0NCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9h
-cmNoL21pcHMvaW5jbHVkZS9hc20vc3luYy5oIGIvYXJjaC9taXBzL2luY2x1ZGUvYXNtL3N5bmMu
-aA0KPiBpbmRleCA3YzZhMTA5NWY1Li5hYWJkMDk3OTMzIDEwMDY0NA0KPiAtLS0gYS9hcmNoL21p
-cHMvaW5jbHVkZS9hc20vc3luYy5oDQo+ICsrKyBiL2FyY2gvbWlwcy9pbmNsdWRlL2FzbS9zeW5j
-LmgNCj4gQEAgLTE1NSw5ICsxNTUsMTEgQEANCj4gICAqIGVmZmVjdGl2ZSBiYXJyaWVyIGFzIG5v
-dGVkIGJ5IGNvbW1pdCA2YjA3ZDM4YWFhNTIgKCJNSVBTOiBPY3Rlb246IFVzZQ0KPiAgICogb3B0
-aW1pemVkIG1lbW9yeSBiYXJyaWVyIHByaW1pdGl2ZXMuIikuIEhlcmUgd2Ugc3BlY2lmeSB0aGF0
-IHRoZSBhZmZlY3RlZA0KPiAgICogc3luYyBpbnN0cnVjdGlvbnMgc2hvdWxkIGJlIGVtaXR0ZWQg
-dHdpY2UuDQo+ICsgKiBOb3RlIHRoYXQgdGhpcyBleHByZXNzaW9uIGlzIGV2YWx1YXRlZCBieSB0
-aGUgYXNzZW1ibGVyIChub3QgdGhlIGNvbXBpbGVyKSwNCj4gKyAqIGFuZCB0aGF0IHRoZSBhc3Nl
-bWJsZXIgZXZhbHVhdGVzICc9PScgYXMgMCBvciAtMSwgbm90IDAgb3IgMS4NCj4gICAqLw0KPiAg
-I2lmZGVmIENPTkZJR19DUFVfQ0FWSVVNX09DVEVPTg0KPiAtIyBkZWZpbmUgX19TWU5DX3JwdCh0
-eXBlKQkoMSArICh0eXBlID09IF9fU1lOQ193bWIpKQ0KPiArIyBkZWZpbmUgX19TWU5DX3JwdCh0
-eXBlKQkoMSAtICh0eXBlID09IF9fU1lOQ193bWIpKQ0KPiAgI2Vsc2UNCj4gICMgZGVmaW5lIF9f
-U1lOQ19ycHQodHlwZSkJMQ0KPiAgI2VuZGlmDQo=
+On Tue, Feb 11, 2020 at 09:33:49PM +0100, Jann Horn wrote:
+> >
+> > Got it. Then let's whitelist them ?
+> > All error injection points are marked with ALLOW_ERROR_INJECTION().
+> > We can do something similar here, but let's do it via BTF and avoid
+> > abusing yet another elf section for this mark.
+> > I think BTF_TYPE_EMIT() should work. Just need to pick explicit enough
+> > name and extensive comment about what is going on.
+> 
+> Sounds reasonable to me. :)
+
+awesome :)
+
+> > Locking rules and cleanup around security_blah() shouldn't change though.
+> > Like security_task_alloc() should be paired with security_task_free().
+> > And so on. With bpf_sk_storage like logic the alloc/free of scratch
+> > space will be similar to the way socket and bpf progs deal with it.
+> >
+> > Some of the lsm hooks are in critical path. Like security_socket_sendmsg().
+> > retpoline hurts. If we go with indirect calls right now it will be harder to
+> > optimize later. It took us long time to come up with bpf trampoline and build
+> > bpf dispatcher on top of it to remove single indirect call from XDP runtime.
+> > For bpf+lsm would be good to avoid it from the start.
+> 
+> Just out of curiosity: Are fexit hooks really much cheaper than indirect calls?
+> 
+> AFAIK ftrace on x86-64 replaces the return pointer for fexit
+> instrumentation (see prepare_ftrace_return()). So when the function
+> returns, there is one return misprediction for branching into
+> return_to_handler(), and then the processor's internal return stack
+> will probably be misaligned so that after ftrace_return_to_handler()
+> is done running, all the following returns will also be mispredicted.
+> 
+> So I would've thought that fexit hooks would have at least roughly the
+> same impact as indirect calls - indirect calls via retpoline do one
+> mispredicted branch, fexit hooks do at least two AFAICS. But I guess
+> indirect calls could still be slower if fexit benefits from having all
+> the mispredicted pointers stored on the cache-hot stack while the
+> indirect branch target is too infrequently accessed to be in L1D, or
+> something like that?
+
+For fexit I've tried ftrace style of overwriting return address in the stack,
+but it was slower than "leave; add rsp, 8; ret". So I went with that.
+Looks like skipping one frame makes intel return stack prediction work better
+than overwriting. I tested on broadwell only though. Later I realized that I
+can do "jmp bpf_trampoline" instead of "call bpf_trampoline", so this extra
+'add rsp, 8' can be removed and both direct jump and return stack predictors
+will be happy. Will be posting this patch soon.
+
+Old perf numbers of fexit vs original vs kprobe:
+https://lore.kernel.org/bpf/20191122011515.255371-1-ast@kernel.org/
