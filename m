@@ -2,135 +2,208 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6B5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6879C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57752073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:54:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XB7DUxrO"
+	by mail.kernel.org (Postfix) with ESMTP id B7D8E206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgBKXyK (ORCPT
+        id S1728069AbgBKXzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:54:10 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55262 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgBKXyJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:54:09 -0500
-Received: by mail-pj1-f68.google.com with SMTP id dw13so46273pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:54:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BDlxFx20QE0gAgkEMA+u4mAwlJYSDizranolCfN6FSU=;
-        b=XB7DUxrOlRWKCxIVzsmwUiozIyPNm+XipqRy+ojNQXQ4il5NSGcySle4DA3copkxR0
-         txpPB/fPke36xIv/qe2phszSj0yMMBhZ7SSIKgC8wlYAX/nwLnydJ9528PktuoKka0Xo
-         FIQk6kwnmb94p+mMQF56OxOJi3mG8ahbOTuU8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BDlxFx20QE0gAgkEMA+u4mAwlJYSDizranolCfN6FSU=;
-        b=rTza/O1v905qRlOGwAmGXuROcs+W/iYSUPp0GvOs0MzoRkjpdRPX0p/0Fuog3K8p+v
-         6sRhr+JRaGs2sf+C25StxmR22yVc8yPeqpEBt8jirgJubivS9jGC/AgBllRWmRTfIARW
-         0V0NP2N1+AwDwJNnudGA/KHDj7Nu9FXGjSNy63rJgfIQI1n/EAUqVxPDWdgIYgAmvQOk
-         maama5OL6ZrEYglTm3XBIRkSOrewv/cuDnmRQ8No0f3Jy47Fav6mjSAqeKoSr+iXJ9cQ
-         9e/gjgFX5W7rvkEm16OJy/8nLCaAnjJZP/eaIGvASTZl0rdn5CClmubYeoJViIS+FtZ2
-         YCmg==
-X-Gm-Message-State: APjAAAVaugeIXrWnsCV/FNKP8T763FCV76FoZEvgB0gw/6Pphsa4U9/i
-        7+trZk8i4YmlJG2W++emBtdzzA==
-X-Google-Smtp-Source: APXvYqwqQSXGq4Fmc5d6MiCNIFPhP1UefR6VzsmHhkS/fi/pcrd5lNid2Jli/7N0q+/799PEFAxbdw==
-X-Received: by 2002:a17:902:708b:: with SMTP id z11mr5645748plk.121.1581465248817;
-        Tue, 11 Feb 2020 15:54:08 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l13sm4513339pjq.23.2020.02.11.15.54.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 15:54:08 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:54:06 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     shuah <shuah@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jann Horn <jannh@google.com>,
-        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] selftests/exec: Add READ_IMPLIES_EXEC tests
-Message-ID: <202002111549.CF18B7B3B@keescook>
-References: <20200210193049.64362-1-keescook@chromium.org>
- <20200210193049.64362-8-keescook@chromium.org>
- <4f8a5036-dc2a-90ad-5fc8-69560a5dd78e@kernel.org>
- <202002111124.0A334167@keescook>
- <c09c345a-786f-25d2-1ee5-65f9cb23db6d@kernel.org>
+        Tue, 11 Feb 2020 18:55:32 -0500
+Received: from mga06.intel.com ([134.134.136.31]:29633 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbgBKXzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:55:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 15:55:31 -0800
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="226679926"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 15:55:31 -0800
+Message-ID: <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com>
+Subject: Re: [PATCH v17 0/9] mm / virtio: Provide support for free page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mgorman@techsingularity.net, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, konrad.wilk@oracle.com, nitesh@redhat.com,
+        riel@surriel.com, willy@infradead.org, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
+        vbabka@suse.cz, osalvador@suse.de
+Date:   Tue, 11 Feb 2020 15:55:31 -0800
+In-Reply-To: <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+         <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c09c345a-786f-25d2-1ee5-65f9cb23db6d@kernel.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:06:53PM -0700, shuah wrote:
-> On 2/11/20 12:25 PM, Kees Cook wrote:
-> > On Tue, Feb 11, 2020 at 11:11:21AM -0700, shuah wrote:
-> > > On 2/10/20 12:30 PM, Kees Cook wrote:
-> > > > In order to check the matrix of possible states for handling
-> > > > READ_IMPLIES_EXEC across native, compat, and the state of PT_GNU_STACK,
-> > > > add tests for these execution conditions.
-> > > > 
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > 
-> > > No issues for this to go through tip.
-> > > 
-> > > A few problems to fix first. This fails to compile when 32-bit libraries
-> > > aren't installed. It should fail the 32-bit part and run other checks.
+On Tue, 2020-02-11 at 15:05 -0800, Andrew Morton wrote:
+> On Tue, 11 Feb 2020 14:45:51 -0800 Alexander Duyck <alexander.duyck@gmail.com> wrote:
+> 
+> > This series provides an asynchronous means of reporting free guest pages
+> > to a hypervisor so that the memory associated with those pages can be
+> > dropped and reused by other processes and/or guests on the host. Using
+> > this it is possible to avoid unnecessary I/O to disk and greatly improve
+> > performance in the case of memory overcommit on the host.
+> 
+> "greatly improve" sounds nice.
+> 
+> > When enabled we will be performing a scan of free memory every 2 seconds
+> > while pages of sufficiently high order are being freed. In each pass at
+> > least one sixteenth of each free list will be reported. By doing this we
+> > avoid racing against other threads that may be causing a high amount of
+> > memory churn.
 > > 
-> > Do you mean the Makefile should detect the missing compat build deps and
-> > avoid building them? Testing compat is pretty important to this test, so
-> > it seems like missing the build deps causing the build to fail is the
-> > correct action here. This is likely true for the x86/ selftests too.
+> > The lowest page order currently scanned when reporting pages is
+> > pageblock_order so that this feature will not interfere with the use of
+> > Transparent Huge Pages in the case of virtualization.
 > > 
-> > What would you like this to do?
+> > Currently this is only in use by virtio-balloon however there is the hope
+> > that at some point in the future other hypervisors might be able to make
+> > use of it. In the virtio-balloon/QEMU implementation the hypervisor is
+> > currently using MADV_DONTNEED to indicate to the host kernel that the page
+> > is currently free. It will be zeroed and faulted back into the guest the
+> > next time the page is accessed.
 > > 
+> > To track if a page is reported or not the Uptodate flag was repurposed and
+> > used as a Reported flag for Buddy pages. We walk though the free list
+> > isolating pages and adding them to the scatterlist until we either
+> > encounter the end of the list or have processed at least one sixteenth of
+> > the pages that were listed in nr_free prior to us starting. If we fill the
+> > scatterlist before we reach the end of the list we rotate the list so that
+> > the first unreported page we encounter is moved to the head of the list as
+> > that is where we will resume after we have freed the reported pages back
+> > into the tail of the list.
+> > 
+> > Below are the results from various benchmarks. I primarily focused on two
+> > tests. The first is the will-it-scale/page_fault2 test, and the other is
+> > a modified version of will-it-scale/page_fault1 that was enabled to use
+> > THP. I did this as it allows for better visibility into different parts
+> > of the memory subsystem. The guest is running with 32G for RAM on one
+> > node of a E5-2630 v3. The host has had some features such as CPU turbo
+> > disabled in the BIOS.
+> > 
+> > Test                   page_fault1 (THP)    page_fault2
+> > Name            tasks  Process Iter  STDEV  Process Iter  STDEV
+> > Baseline            1    1012402.50  0.14%     361855.25  0.81%
+> >                    16    8827457.25  0.09%    3282347.00  0.34%
+> > 
+> > Patches Applied     1    1007897.00  0.23%     361887.00  0.26%
+> >                    16    8784741.75  0.39%    3240669.25  0.48%
+> > 
+> > Patches Enabled     1    1010227.50  0.39%     359749.25  0.56%
+> >                    16    8756219.00  0.24%    3226608.75  0.97%
+> > 
+> > Patches Enabled     1    1050982.00  4.26%     357966.25  0.14%
+> >  page shuffle      16    8672601.25  0.49%    3223177.75  0.40%
+> > 
+> > Patches enabled     1    1003238.00  0.22%     360211.00  0.22%
+> >  shuffle w/ RFC    16    8767010.50  0.32%    3199874.00  0.71%
 > 
-> selftests/x86 does this already and runs the dependency check in
-> x86/Makefile.
-> 
-> 
-> check_cc.sh:# check_cc.sh - Helper to test userspace compilation support
-> Makefile:CAN_BUILD_I386 := $(shell ./check_cc.sh $(CC)
-> trivial_32bit_program.c -m32)
-> Makefile:CAN_BUILD_X86_64 := $(shell ./check_cc.sh $(CC)
-> trivial_64bit_program.c)
-> Makefile:CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh $(CC)
-> trivial_program.c -no-pie)
-> 
-> Take a look and see if you can leverage this.
+> But these differences seem really small - around 1%?  I think we're
+> just showing not much harm was caused?
 
-I did before, and it can certainly be done, but their stuff is somewhat
-specific to x86_64/ia32. I'm looking at supporting _all_ compat for any
-64-bit architecture. I can certainly write some similar build tooling,
-but the question I have for you is one of coverage:
+Yes. Basically I am just showing the iterations are not negatively
+impacted. The big difference between the cases where it is enabled versus
+the cases where it is not is that the guest memory footprint is much
+smaller in the enabled cases than in the baseline or "Applied" cases.
 
-If a builder is 64-bit, it needs to be able to produce 32-bit compat
-binaries for testing, otherwise the test is incomplete. (i.e. the tests
-will only be able to test native behavior and not compat). This doesn't
-seem like an "XFAIL" situation to me, and it doesn't seem right to
-silently pass. It seems like the build should explicitly fail because
-the needed prerequisites are missing. Do you instead want me to just
-have it skip building the compat binaries if it can't build them?
+> > The results above are for a baseline with a linux-next-20191219 kernel,
+> > that kernel with this patch set applied but page reporting disabled in
+> > virtio-balloon, the patches applied and page reporting fully enabled, the
+> > patches enabled with page shuffling enabled, and the patches applied with
+> > page shuffling enabled and an RFC patch that makes used of MADV_FREE in
+> > QEMU. These results include the deviation seen between the average value
+> > reported here versus the high and/or low value. I observed that during the
+> > test memory usage for the first three tests never dropped whereas with the
+> > patches fully enabled the VM would drop to using only a few GB of the
+> > host's memory when switching from memhog to page fault tests.
+> 
+> And this is the "great improvement", yes?
 
--- 
-Kees Cook
+Yes, this is the great improvement. Basically what we get is effectively
+auto-ballooning so the guests aren't having to go to swap when they start
+to get loaded up since they are returning the memory to the host when they
+are done with it.
+
+> Is it possible to measure the end-user-visible benefits of this?
+
+If I clear the page cache on my host via drop_caches, fire up my 32G VM,
+and run the following commands:
+  memhog 32g
+  echo 3 > /proc/sys/vm/drop_caches
+
+On the host I just have to monitor /proc/meminfo and I can see the
+difference. I get the following results on the host, in the enabled case
+it takes about 30 seconds for it to settle into the final state since I
+only report page a bit at a time:
+Baseline/Applied
+  MemTotal:    131963012 kB
+  MemFree:      95189740 kB
+
+Enabled:
+  MemTotal:    131963012 kB
+  MemFree:     126459472 kB
+
+This is what I was referring to with the comment above. I had a test I was
+running back around the first RFC that consisted of bringing up enough VMs
+so that there was a bit of memory overcommit and then having the VMs in
+turn run memhog. As I recall the difference between the two was  something
+like a couple minutes to run through all the VMs as the memhog would take
+up to 40+ seconds for one that was having to pull from swap while it took
+only 5 to 7 seconds for the VMs that were all running the page hinting.
+
+I had referenced it here in the RFC:
+https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
+
+I have been verifying the memory has been getting freed but didn't feel
+like the test added much value so I haven't added it to the cover page for
+a while since the time could vary widely and is dependent on things like
+the disk type used for the host swap since my SSD is likely faster than
+spinning rust, but may not be as fast as other SSDs on the market. Since
+the disk speed can play such a huge role I wasn't comfortable posting
+numbers since the benefits could vary so widely.
+
+> > Any of the overhead visible with this patch set enabled seems due to page
+> > faults caused by accessing the reported pages and the host zeroing the page
+> > before giving it back to the guest. This overhead is much more visible when
+> > using THP than with standard 4K pages. In addition page shuffling seemed to
+> > increase the amount of faults generated due to an increase in memory churn.
+> > The overehad is reduced when using MADV_FREE as we can avoid the extra
+> > zeroing of the pages when they are reintroduced to the host, as can be seen
+> > when the RFC is applied with shuffling enabled.
+> > 
+> > The overall guest size is kept fairly small to only a few GB while the test
+> > is running. If the host memory were oversubscribed this patch set should
+> > result in a performance improvement as swapping memory in the host can be
+> > avoided.
+> 
+> "should result".  Can we firm this up a lot?
+
+I said "should result" here because if the guests are using all of their
+memory then the free page reporting won't make a difference since you have
+to have free pages before they can be reported. Also we cannot use free
+page reporting in the cases such as when a device is direct assigned into
+the guest as that currently prevents us from disassociating a page from
+the guest.
+
+
+
+
