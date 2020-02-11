@@ -6,87 +6,106 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D5AC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DC7C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A2E2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFC62082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgBKXiA (ORCPT
+        id S1728034AbgBKXim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:38:00 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46557 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgBKXiA (ORCPT
+        Tue, 11 Feb 2020 18:38:42 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:64962 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgBKXil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:38:00 -0500
-X-Originating-IP: 172.58.43.13
-Received: from localhost (unknown [172.58.43.13])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 993A3240002;
-        Tue, 11 Feb 2020 23:37:48 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 15:37:22 -0800
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org
-Cc:     Arjan van de Ven <arjan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ACPI: button: move HIDs to acpi/button.h
-Message-ID: <35cb43e08ac1b69d4e2faabf8788083bdd399fd4.1581463668.git.josh@joshtriplett.org>
-References: <cover.1581463668.git.josh@joshtriplett.org>
+        Tue, 11 Feb 2020 18:38:41 -0500
+Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 58cecbe0eccce4dc; Wed, 12 Feb 2020 00:38:39 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 28/28] PM: QoS: Make CPU latency QoS depend on CONFIG_CPU_IDLE
+Date:   Wed, 12 Feb 2020 00:37:11 +0100
+Message-ID: <3915146.cHaPKLg5L1@kreacher>
+In-Reply-To: <1654227.8mz0SueHsU@kreacher>
+References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1581463668.git.josh@joshtriplett.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it possible to use ACPI_BUTTON_HID_POWER in another driver.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Because cpuidle is the only user of the effective constraint coming
+from the CPU latency QoS, add #ifdef CONFIG_CPU_IDLE around that code
+to avoid building it unnecessarily.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/button.c | 3 ---
- include/acpi/button.h | 4 ++++
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ include/linux/pm_qos.h | 13 +++++++++++++
+ kernel/power/qos.c     |  2 ++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index f6925f16c4a2..00112cf15322 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -30,17 +30,14 @@
- #define ACPI_BUTTON_NOTIFY_STATUS	0x80
+diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
+index df065db3f57a..4a69d4af3ff8 100644
+--- a/include/linux/pm_qos.h
++++ b/include/linux/pm_qos.h
+@@ -143,11 +143,24 @@ bool pm_qos_update_flags(struct pm_qos_flags *pqf,
+ 			 struct pm_qos_flags_request *req,
+ 			 enum pm_qos_req_action action, s32 val);
  
- #define ACPI_BUTTON_SUBCLASS_POWER	"power"
--#define ACPI_BUTTON_HID_POWER		"PNP0C0C"
- #define ACPI_BUTTON_DEVICE_NAME_POWER	"Power Button"
- #define ACPI_BUTTON_TYPE_POWER		0x01
++#ifdef CONFIG_CPU_IDLE
+ s32 cpu_latency_qos_limit(void);
+ bool cpu_latency_qos_request_active(struct pm_qos_request *req);
+ void cpu_latency_qos_add_request(struct pm_qos_request *req, s32 value);
+ void cpu_latency_qos_update_request(struct pm_qos_request *req, s32 new_value);
+ void cpu_latency_qos_remove_request(struct pm_qos_request *req);
++#else
++static inline s32 cpu_latency_qos_limit(void) { return INT_MAX; }
++static inline bool cpu_latency_qos_request_active(struct pm_qos_request *req)
++{
++	return false;
++}
++static inline void cpu_latency_qos_add_request(struct pm_qos_request *req,
++					       s32 value) {}
++static inline void cpu_latency_qos_update_request(struct pm_qos_request *req,
++						  s32 new_value) {}
++static inline void cpu_latency_qos_remove_request(struct pm_qos_request *req) {}
++#endif
  
- #define ACPI_BUTTON_SUBCLASS_SLEEP	"sleep"
--#define ACPI_BUTTON_HID_SLEEP		"PNP0C0E"
- #define ACPI_BUTTON_DEVICE_NAME_SLEEP	"Sleep Button"
- #define ACPI_BUTTON_TYPE_SLEEP		0x03
+ #ifdef CONFIG_PM
+ enum pm_qos_flags_status __dev_pm_qos_flags(struct device *dev, s32 mask);
+diff --git a/kernel/power/qos.c b/kernel/power/qos.c
+index ef73573db43d..32927682bcc4 100644
+--- a/kernel/power/qos.c
++++ b/kernel/power/qos.c
+@@ -209,6 +209,7 @@ bool pm_qos_update_flags(struct pm_qos_flags *pqf,
+ 	return prev_value != curr_value;
+ }
  
- #define ACPI_BUTTON_SUBCLASS_LID	"lid"
--#define ACPI_BUTTON_HID_LID		"PNP0C0D"
- #define ACPI_BUTTON_DEVICE_NAME_LID	"Lid Switch"
- #define ACPI_BUTTON_TYPE_LID		0x05
++#ifdef CONFIG_CPU_IDLE
+ /* Definitions related to the CPU latency QoS. */
  
-diff --git a/include/acpi/button.h b/include/acpi/button.h
-index 340da7784cc8..af2fce5d2ee3 100644
---- a/include/acpi/button.h
-+++ b/include/acpi/button.h
-@@ -2,6 +2,10 @@
- #ifndef ACPI_BUTTON_H
- #define ACPI_BUTTON_H
+ static struct pm_qos_constraints cpu_latency_constraints = {
+@@ -421,6 +422,7 @@ static int __init cpu_latency_qos_init(void)
+ 	return ret;
+ }
+ late_initcall(cpu_latency_qos_init);
++#endif /* CONFIG_CPU_IDLE */
  
-+#define ACPI_BUTTON_HID_POWER	"PNP0C0C"
-+#define ACPI_BUTTON_HID_LID	"PNP0C0D"
-+#define ACPI_BUTTON_HID_SLEEP	"PNP0C0E"
-+
- #if IS_ENABLED(CONFIG_ACPI_BUTTON)
- extern int acpi_lid_open(void);
- #else
+ /* Definitions related to the frequency QoS below. */
+ 
 -- 
-2.25.0
+2.16.4
+
+
+
+
 
