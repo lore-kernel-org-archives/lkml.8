@@ -2,126 +2,104 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F57C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD5DC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D42206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:03:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NVUjzx89"
+	by mail.kernel.org (Postfix) with ESMTP id 4666720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbgBKVDr (ORCPT
+        id S1731923AbgBKVEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:03:47 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.155]:21661 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729450AbgBKVDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:03:46 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id A7A7B400D83FF
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:03:45 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1ch7jETM6Sl8q1ch7jxa0U; Tue, 11 Feb 2020 15:03:45 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Y7FMQ3aFcSbTB8cXSN/10Y25Q6I9Sqxro0ixjLvyexk=; b=NVUjzx89ff02Y0550Cc9HR4fAV
-        y8xgLLMBqHAJcRuoYH/4vdjQlwmneVydHsfxguYwcJemWBAIPTaH5ACThZNw/j9YPPszQTd3icsx7
-        U+v8QkoMqssJf+0DLG7bz90E+KHjnEEjbCAcF7/fMJV0CS+I9YjRTsjTeSau8ZIvWL0QO5RZmkBH5
-        Mo9HA971WK+zi4licGrT47AWMX8GavgfO5a7EaL3XONr0IgFVBS2Fx+Bnk5oVh9pOOh52jbY5YMpW
-        bY4JaEdAmrd6n3YBDyb0tJMBYkMJS4rHr6EFQLvL5BVmnVdN9WDD5iCxqHzkn+aXLokWXCTaEqr5U
-        VKHDlH5A==;
-Received: from [200.68.140.36] (port=15247 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1ch5-0026gU-VR; Tue, 11 Feb 2020 15:03:44 -0600
-Date:   Tue, 11 Feb 2020 15:06:18 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] gpio: uniphier: Replace zero-length array with
- flexible-array member
-Message-ID: <20200211210618.GA29823@embeddedor>
+        Tue, 11 Feb 2020 16:04:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41372 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729582AbgBKVEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 16:04:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DB55DAB7F;
+        Tue, 11 Feb 2020 21:04:42 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 21:04:39 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        linux-kernel@vger.kernel.org, pauld@redhat.com,
+        parth@linux.ibm.com, valentin.schneider@arm.com
+Subject: Re: [PATCH 0/4] remove runnable_load_avg and improve group_classify
+Message-ID: <20200211210439.GS3420@suse.de>
+References: <20200211174651.10330-1-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1ch5-0026gU-VR
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:15247
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200211174651.10330-1-vincent.guittot@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, Feb 11, 2020 at 06:46:47PM +0100, Vincent Guittot wrote:
+> NUMA load balancing is the last remaining piece of code that uses the 
+> runnable_load_avg of PELT to balance tasks between nodes. The normal
+> load_balance has replaced it by a better description of the current state
+> of the group of cpus.  The same policy can be applied to the numa
+> balancing.
+> 
+> Once unused, runnable_load_avg can be replaced by a simpler runnable_avg
+> signal that tracks the waiting time of tasks on rq. Currently, the state
+> of a group of CPUs is defined thanks to the number of running task and the
+> level of utilization of rq. But the utilization can be temporarly low
+> after the migration of a task whereas the rq is still overloaded with
+> tasks. In such case where tasks were competing for the rq, the
+> runnable_avg will stay high after the migration.
+> 
+> Some hackbench results:
+> 
+> - small arm64 dual quad cores system
+> hackbench -l (2560/#grp) -g #grp
+> 
+> grp    tip/sched/core         +patchset              improvement
+> 1       1,327(+/-10,06 %)     1,247(+/-5,45 %)       5,97 %
+> 4       1,250(+/- 2,55 %)     1,207(+/-2,12 %)       3,42 %
+> 8       1,189(+/- 1,47 %)     1,179(+/-1,93 %)       0,90 %
+> 16      1,221(+/- 3,25 %)     1,219(+/-2,44 %)       0,16 %						
+> 
+> - large arm64 2 nodes / 224 cores system
+> hackbench -l (256000/#grp) -g #grp
+> 
+> grp    tip/sched/core         +patchset              improvement
+> 1      14,197(+/- 2,73 %)     13,917(+/- 2,19 %)     1,98 %
+> 4       6,817(+/- 1,27 %)      6,523(+/-11,96 %)     4,31 %
+> 16      2,930(+/- 1,07 %)      2,911(+/- 1,08 %)     0,66 %
+> 32      2,735(+/- 1,71 %)      2,725(+/- 1,53 %)     0,37 %
+> 64      2,702(+/- 0,32 %)      2,717(+/- 1,07 %)    -0,53 %
+> 128     3,533(+/-14,66 %)     3,123(+/-12,47 %)     11,59 %
+> 256     3,918(+/-19,93 %)     3,390(+/- 5,93 %)     13,47 %
+> 
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+I haven't reviewed this yet because by co-incidence I'm finalising a
+series that tries to reconcile the load balancer with the NUMA balancer
+and it has been very tricky to get right.  One aspect though is that
+hackbench is generally not long-running enough to detect any performance
+regressions in NUMA balancing. At least I've never observed it to be a
+good evaluation for NUMA balancing.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+> Without the patchset, there is a significant number of time that a CPU has
+> spare capacity with more than 1 running task. Although this is a valid
+> case, this is not a state that should often happen when 160 tasks are
+> competing on 8 cores like for this test. The patchset fixes the situation
+> by taking into account the runnable_avg, which stays high after the
+> migration of a task on another CPU.
+> 
 
-This issue was found with the help of Coccinelle.
+FWIW, during the rewrite, I ended up moving away from runnable_load to
+get the load balancer and NUMA balancer to use the same metrics.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/gpio/gpio-uniphier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
-index 0f662b297a95..9843638d99d0 100644
---- a/drivers/gpio/gpio-uniphier.c
-+++ b/drivers/gpio/gpio-uniphier.c
-@@ -33,7 +33,7 @@ struct uniphier_gpio_priv {
- 	struct irq_domain *domain;
- 	void __iomem *regs;
- 	spinlock_t lock;
--	u32 saved_vals[0];
-+	u32 saved_vals[];
- };
- 
- static unsigned int uniphier_gpio_bank_to_reg(unsigned int bank)
 -- 
-2.25.0
-
+Mel Gorman
+SUSE Labs
