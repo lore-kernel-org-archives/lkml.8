@@ -2,198 +2,224 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D0FC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C76C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27138206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF52206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 07:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="YkVpS+MW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K0PeafbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgBKHkf (ORCPT
+        id S1727704AbgBKHkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 02:40:35 -0500
-Received: from mail1.perex.cz ([77.48.224.245]:55612 "EHLO mail1.perex.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbgBKHkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 02:40:35 -0500
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 0B3F1A0040;
-        Tue, 11 Feb 2020 08:40:32 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 0B3F1A0040
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-        t=1581406832; bh=REuN32AszY9i63pAP7wyB0Bevs0Di3fTL0d0VlG4R+8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YkVpS+MWC0LjjHaa1no+jx6K9PwzwYMFwWqQFHeLq58Elbailo9PdMeJjpX5yn/BB
-         v+bcqMDe/oEJkYJf0vY8DWKCUYs69iVVV2PgjdxPRrznFbS1R5ECQVm1CENKNCi//0
-         dPLD1aLSaYEiFKRTD+8hECYKB1k8MAiNcjke7w9k=
-Received: from p50.perex-int.cz (unknown [192.168.100.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 11 Feb 2020 02:40:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36287 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727561AbgBKHkj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 02:40:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581406838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZjFU7GeDDGN0fIv5jKH93uf0oKdJEGFk6UYVtVN2y38=;
+        b=K0PeafbE2RyuQYyqUbyNSZHUxcSyvteDiMjGcUwknfhogfrNZ88BUaIVTn05BOftNAD1DF
+        FKUJA6Jj41BtpncRWqMAxhbVvImQlyYDsf6mV1eX5/lQg9QJ7oiXaFnYph/n3svn46eXm/
+        iQSRJHNZev6kDElymOmArKwuAQ+bqCc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-431-lfzle8XOMY-D_qcFc9LDBg-1; Tue, 11 Feb 2020 02:40:37 -0500
+X-MC-Unique: lfzle8XOMY-D_qcFc9LDBg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: perex)
-        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-        Tue, 11 Feb 2020 08:40:26 +0100 (CET)
-Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th
- quirk value
-To:     Benjamin Poirier <benjamin.poirier@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4B6A800D4E;
+        Tue, 11 Feb 2020 07:40:35 +0000 (UTC)
+Received: from [10.72.13.150] (ovpn-13-150.pek2.redhat.com [10.72.13.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72C8B5D9CA;
+        Tue, 11 Feb 2020 07:40:25 +0000 (UTC)
+Subject: Re: [virtio-dev] Re: [PATCH v2 4/5] virtio-mmio: add MSI interrupt
+ feature support
+To:     "Liu, Jing2" <jing2.liu@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
         linux-kernel@vger.kernel.org
-References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
- <20200211055651.4405-2-benjamin.poirier@gmail.com>
-From:   Jaroslav Kysela <perex@perex.cz>
-Message-ID: <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz>
-Date:   Tue, 11 Feb 2020 08:40:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com, mst@redhat.com,
+        qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
+        gerry@linux.alibaba.com
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <4c3d13be5a391b1fc50416838de57d903cbf8038.1581305609.git.zhabin@linux.alibaba.com>
+ <0c71ff9d-1a7f-cfd2-e682-71b181bdeae4@redhat.com>
+ <c42c8b49-5357-f341-2942-ba84afc25437@linux.intel.com>
+ <ad96269f-753d-54b8-a4ae-59d1595dd3b2@redhat.com>
+ <5522f205-207b-b012-6631-3cc77dde3bfe@linux.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <45e22435-08d3-08fe-8843-d8db02fcb8e3@redhat.com>
+Date:   Tue, 11 Feb 2020 15:40:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200211055651.4405-2-benjamin.poirier@gmail.com>
+In-Reply-To: <5522f205-207b-b012-6631-3cc77dde3bfe@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne 11. 02. 20 v 6:56 Benjamin Poirier napsal(a):
-> As a result of commit d2cd795c4ece ("ALSA: hda - fixup for the bass speaker
-> on Lenovo Carbon X1 7th gen"), the maximum sound output level on my
-> machine, an X1 Carbon, was reduced to ~60% of its previous level.
-> 
-> This laptop model has two sets of stereo speakers: Front and Bass (aka Rear
-> in some contexts).
-> Before commit d2cd795c4ece, volume control was commonly ineffective (using
-> the Master slider in alsa or pulseaudio apparently had little effect or
-> alternated between mute or max with nothing in between - more details
-> below)
-> commit d2cd795c4ece added quirk ALC285_FIXUP_SPEAKER2_TO_DAC1 which
-> resulted in assigning both sets of speakers to the same DAC, bringing
-> the two sets of speakers under one effective volume control but also
-> lowering the max output volume noticeably.
-> 
-> Fix this by changing the quirk so that each set of speakers can be
-> controlled individually and the max output volume is restored to what it
-> was before commit d2cd795c4ece.
-> 
-> Since there is no documentation about the audio codec, here is some
-> detailed information about the result of applying different quirks.
-> DAC connection (which is what's affected by the quirk) is reported as found
-> in /proc/asound/card0/codec#0, Node 0x17.
-> pavucontrol controls are reported with the device configured with the
-> "Analog Surround 4.0 Output" profile.
-> 
-> no quirk
-> 	Loud max output volume
-> 	DAC connection
-> 	  Connection: 3
-> 	     0x02 0x03 0x06*
-> 	Controls in alsamixer
-> 		Master controls front speakers only.
-> 		Speaker controls front speakers only.
-> 		Bass Speaker is a toggle that mutes everything.
-> 		PCM controls all speakers.
-> 		There is no "Front" mixer.
-> 	Controls in pavucontrol
-> 		"Front Left"/"Front Right" sliders work as expected.
-> 		"Rear Left"/"Rear Right" sliders seem to operate in a
-> 		non-linear fashion such that most values above 0% result in
-> 		max volume output.
-> 		-> Because the bass speakers (Rear) are more powerful, the
-> 		net effect is that when the channels are linked into a
-> 		single slider, it seems like it has just two modes: mute or
-> 		max.
-> ALC285_FIXUP_SPEAKER2_TO_DAC1
-> 	Weak (~60%) max output volume
-> 	DAC connection
-> 	  Connection: 3
-> 	     0x02* 0x03 0x06
-> 	  In-driver Connection: 1
-> 	     0x02
-> 	Controls in alsamixer
-> 		Master controls all four speakers.
-> 		Speaker controls all four speakers.
-> 		Bass Speaker is a toggle that mutes everything.
-> 		PCM controls all four speakers.
-> 		There is no "Front" mixer.
-> 	Controls in pavucontrol
-> 		"Front Left"/"Front Right" sliders have no effect.
-> 		"Rear Left"/"Rear Right" sliders control both front and
-> 		bass speakers.
-> 		-> Volume control is effective but it's not possible to
-> 		control front and bass speakers individually.
-> ALC295_FIXUP_DISABLE_DAC3
-> 	Loud max output volume
-> 	DAC connection
-> 	  Connection: 3
-> 	     0x02 0x03* 0x06
-> 	  In-driver Connection: 2
-> 	     0x02 0x03
-> 	Controls in alsamixer
-> 		Master controls all speakers.
-> 		Speaker is a toggle that mutes everything.
-> 		Bass Speaker controls bass speakers only.
-> 		PCM controls all speakers.
-> 		Front controls front speakers only.
-> 	Controls in pavucontrol
-> 		"Front Left"/"Front Right" sliders control front speakers
-> 		only.
-> 		"Rear Left"/"Rear Right" sliders control bass speakers
-> 		only.
-> 		-> Volume control is effective and it's possible to control
-> 		each of the four speakers individually.
-> 
-> In summary, Node 0x17 DAC connection 0x3 offers the loudest max volume and
-> the most detailed mixer controls. That connection is obtained with quirk
-> ALC295_FIXUP_DISABLE_DAC3. Therefore, change the ThinkPad X1 Carbon 7th to
-> use ALC295_FIXUP_DISABLE_DAC3.
 
-The volume split (individual volume control) will cause trouble for the UCM 
-volume control at the moment which is the target for this device to get the 
-digital microphone working. If there is no possibility to share DAC, it would 
-be probably more nice to join the volume control in the driver.
+On 2020/2/11 =E4=B8=8B=E5=8D=882:02, Liu, Jing2 wrote:
+>
+>
+> On 2/11/2020 12:02 PM, Jason Wang wrote:
+>>
+>> On 2020/2/11 =E4=B8=8A=E5=8D=8811:35, Liu, Jing2 wrote:
+>>>
+>>> On 2/11/2020 11:17 AM, Jason Wang wrote:
+>>>>
+>>>> On 2020/2/10 =E4=B8=8B=E5=8D=885:05, Zha Bin wrote:
+>>>>> From: Liu Jiang<gerry@linux.alibaba.com>
+>>>>>
+>>>>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of=20
+>>>>> using
+>>>>> virtio over mmio devices as a lightweight machine model for modern
+>>>>> cloud. The standard virtio over MMIO transport layer only supports=20
+>>>>> one
+>>>>> legacy interrupt, which is much heavier than virtio over PCI=20
+>>>>> transport
+>>>>> layer using MSI. Legacy interrupt has long work path and causes=20
+>>>>> specific
+>>>>> VMExits in following cases, which would considerably slow down the
+>>>>> performance:
+>>>>>
+>>>>> 1) read interrupt status register
+>>>>> 2) update interrupt status register
+>>>>> 3) write IOAPIC EOI register
+>>>>>
+>>>>> We proposed to add MSI support for virtio over MMIO via new feature
+>>>>> bit VIRTIO_F_MMIO_MSI[1] which increases the interrupt performance.
+>>>>>
+>>>>> With the VIRTIO_F_MMIO_MSI feature bit supported, the virtio-mmio M=
+SI
+>>>>> uses msi_sharing[1] to indicate the event and vector mapping.
+>>>>> Bit 1 is 0: device uses non-sharing and fixed vector per event=20
+>>>>> mapping.
+>>>>> Bit 1 is 1: device uses sharing mode and dynamic mapping.
+>>>>
+>>>>
+>>>> I believe dynamic mapping should cover the case of fixed vector?
+>>>>
+>>> Actually this bit *aims* for msi sharing or msi non-sharing.
+>>>
+>>> It means, when msi sharing bit is 1, device doesn't want vector per=20
+>>> queue
+>>>
+>>> (it wants msi vector sharing as name) and doesn't want a high=20
+>>> interrupt rate.
+>>>
+>>> So driver turns to !per_vq_vectors and has to do dynamical mapping.
+>>>
+>>> So they are opposite not superset.
+>>>
+>>> Thanks!
+>>>
+>>> Jing
+>>
+>>
+>> I think you need add more comments on the command.
+>>
+>> E.g if I want to map vector 0 to queue 1, how do I need to do?
+>>
+>> write(1, queue_sel);
+>> write(0, vector_sel);
+>
+> That's true. Besides, two commands are used for msi sharing mode,
+>
+> VIRTIO_MMIO_MSI_CMD_MAP_CONFIG and VIRTIO_MMIO_MSI_CMD_MAP_QUEUE.
+>
+> "To set up the event and vector mapping for MSI sharing mode, driver=20
+> SHOULD write a valid MsiVecSel followed by=20
+> VIRTIO_MMIO_MSI_CMD_MAP_CONFIG/VIRTIO_MMIO_MSI_CMD_MAP_QUEUE command=20
+> to map the configuration change/selected queue events respectively.=C2=A0=
+ "=20
+> (See spec patch 5/5)
+>
+> So if driver detects the msi sharing mode, when it does setup vq,=20
+> writes the queue_sel (this already exists in setup vq), vector sel and=20
+> then MAP_QUEUE command to do the queue event mapping.
+>
 
-Have you tried to use 0x03 as source for all four speakers?
+So actually the per vq msix could be done through this. I don't get why=20
+you need to introduce MSI_SHARING_MASK which is the charge of driver=20
+instead of device. The interrupt rate should have no direct relationship=20
+with whether it has been shared or not.
 
-Why PA handles the rear volume control with the current driver code in the 
-legacy ALSA driver? It should be handled like standard stereo device. I'll check.
-
-You should also test PA with UCM.
-
-				Thanks,
-					Jaroslav
-
-> 
-> Fixes: d2cd795c4ece ("ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen")
-> Link: https://lore.kernel.org/alsa-devel/20200210025249.GA2700@f3/
-> Cc: Jaroslav Kysela <perex@perex.cz>
-> Cc: Kailang Yang <kailang@realtek.com>
-> Signed-off-by: Benjamin Poirier <benjamin.poirier@gmail.com>
-> ---
->   sound/pci/hda/patch_realtek.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-> index 05d44df2008e..3171da10123e 100644
-> --- a/sound/pci/hda/patch_realtek.c
-> +++ b/sound/pci/hda/patch_realtek.c
-> @@ -7268,7 +7268,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
->   	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
->   	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
->   	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
-> -	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
-> +	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Carbon 7th", ALC295_FIXUP_DISABLE_DAC3),
->   	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
->   	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
->   	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
-> 
+Btw, you introduce mask/unmask without pending, how to deal with the=20
+lost interrupt during the masking then?
 
 
--- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+> For msi non-sharing mode, no special action is needed because we make=20
+> the rule of per_vq_vector and fixed relationship.
+>
+> Correct me if this is not that clear for spec/code comments.
+>
+
+The ABI is not as straightforward as PCI did. Why not just reuse the PCI=20
+layout?
+
+E.g having
+
+queue_sel
+queue_msix_vector
+msix_config
+
+for configuring map between msi vector and queues/config
+
+Then
+
+vector_sel
+address
+data
+pending
+mask
+unmask
+
+for configuring msi table?
+
+Thanks
+
+
+> Thanks!
+>
+> Jing
+>
+>
+>>
+>> ?
+>>
+>> Thanks
+>>
+>>
+>>>
+>>>
+>>>> Thanks
+>>>>
+>>>>
+>>>>
+>>>> --------------------------------------------------------------------=
+-
+>>>> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+>>>> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.or=
+g
+>>>>
+>>>
+>>
+
