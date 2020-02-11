@@ -2,100 +2,207 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F0C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC45C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F28206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B82C206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F6kcxw2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBKMnU (ORCPT
+        id S1728176AbgBKMnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:43:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54410 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbgBKMnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:43:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 84F0FBC13;
-        Tue, 11 Feb 2020 12:43:18 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 13:43:17 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v1] printk: Declare log_wait as external variable
-Message-ID: <20200211124317.x5erhl7kvxj2nq6a@pathway.suse.cz>
-References: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
+        Tue, 11 Feb 2020 07:43:40 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38674 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728073AbgBKMnj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:43:39 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so12193415wrh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 04:43:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qScZ2OQGzUYXuR6kAH88f9B9FETX7y4KOyCPzNNd570=;
+        b=F6kcxw2aIpOCljO93d1/LT58wt42RsUWIhyechuyPoYaZYHnDGhT/t1x0l3els26iO
+         xa2zSEN/RFIqGzLp/Qm73F/kCkab1SWK7xAMM0u1vZuw9ThZeIdHgnK/fkL6pKLDbaqz
+         uzbQq9otoYSlNfqquoXNQJgNgx+cy1Jk7s2ts=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qScZ2OQGzUYXuR6kAH88f9B9FETX7y4KOyCPzNNd570=;
+        b=VL6ljWaR/AdAdrnFME0H79LxnukQgkE7L6nh1+ZrXxcR3qJnisXg5Yw+JEV2ms21Ut
+         51Uwp0vDKikTwQDjYFuMLGCtisb+il+WMDdwmN2HLte8ByofO19T0B7p2W2bVhdSSYCS
+         g6JIyyj4ze4ttDneOejZotSG3qvJmj2v+CS82Cgiy4hg1EDdMV+iP3qnwUFAsvp7Jx3z
+         /IMVBDZ78QDO81X6L04P15sWzEvQ2djyOSqDuw1sCBhOb8PZ+fQ9HgHKGl1OdfMbcGvP
+         ZcPait4Huu9nFqY/33zF/MY9Tg035VSMqu5bj74iiGikAfPimyesSSFpN10Mb9YcH5/H
+         RgBQ==
+X-Gm-Message-State: APjAAAUXk3vQL6zx474nVLaRRJCYOP08Pgy+Q/Qa0YuGl+juCKpckW/1
+        af7agfPZ+gGbc+0rjD/YeqioTA==
+X-Google-Smtp-Source: APXvYqwuTAbA4laJrO9pymMZOyFSIlGy7FFR+JJ08nww0DqckH8bzRCFXGZWNtaq6pCXQYJWjW0lsg==
+X-Received: by 2002:adf:b193:: with SMTP id q19mr8365117wra.78.1581425016848;
+        Tue, 11 Feb 2020 04:43:36 -0800 (PST)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id b13sm5269864wrq.48.2020.02.11.04.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 04:43:36 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 11 Feb 2020 13:43:34 +0100
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@fb.com
+Subject: Re: [PATCH bpf-next v3 04/10] bpf: lsm: Add mutable hooks list for
+ the BPF LSM
+Message-ID: <20200211124334.GA96694@google.com>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-5-kpsingh@chromium.org>
+ <20200211031208.e6osrcathampoog7@ast-mbp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20200211031208.e6osrcathampoog7@ast-mbp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-02-03 15:15:28, Andy Shevchenko wrote:
-> Static analyzer is not happy:
+On 10-Feb 19:12, Alexei Starovoitov wrote:
+> On Thu, Jan 23, 2020 at 07:24:34AM -0800, KP Singh wrote:
+> > +#define CALL_BPF_LSM_INT_HOOKS(FUNC, ...) ({			\
+> > +	int _ret = 0;						\
+> > +	do {							\
+> > +		struct security_hook_list *P;			\
+> > +		int _idx;					\
+> > +								\
+> > +		if (hlist_empty(&bpf_lsm_hook_heads.FUNC))	\
+> > +			break;					\
+> > +								\
+> > +		_idx = bpf_lsm_srcu_read_lock();		\
+> > +								\
+> > +		hlist_for_each_entry(P,				\
+> > +			&bpf_lsm_hook_heads.FUNC, list) {	\
+> > +			_ret = P->hook.FUNC(__VA_ARGS__);		\
+> > +			if (_ret && IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE)) \
+> > +				break;				\
+> > +		}						\
+> > +		bpf_lsm_srcu_read_unlock(_idx);			\
+> > +	} while (0);						\
+> > +	IS_ENABLED(CONFIG_SECURITY_BPF_ENFORCE) ? _ret : 0;	\
+> > +})
 > 
-> kernel/printk/printk.c:421:1: warning: symbol 'log_wait' was not declared. Should it be static?
+> This extra CONFIG_SECURITY_BPF_ENFORCE doesn't make sense to me.
+
+We found it easier to debug the programs if enforcement is disabled.
+But we can remove this option if you feel strongly about it.
+
+> Why do all the work for bpf-lsm and ignore return code? Such framework already
+> exists. For audit only case the user could have kprobed security_*() in
+> security/security.c and had access to exactly the same data. There is no need
+> in any of these patches if audit the only use case.
+> Obviously bpf-lsm has to be capable of making go/no-go decision, so
+> my preference is to drop this extra kconfig knob.
+> I think the agreement seen in earlier comments in this thread that the prefered
+> choice is to always have bpf-based lsm to be equivalent to LSM_ORDER_LAST. In
+> such case how about using bpf-trampoline fexit logic instead?
+
+Even if the BPF LSM is LSM_ORDER_LAST this is still different from
+adding a trampoline to the exit of the security hooks for a few other
+reasons.
+
+> Pros:
+> - no changes to security/ directory
+
+* We do need to initialize the BPF LSM as a proper LSM (i.e. in
+  security/bpf) because it needs access to security blobs. This is
+  only possible statically for now as they should be set after boot
+  time to provide guarantees to any helper that uses information in
+  security blobs. I have proposed how we could make this dynamic as a
+  discussion topic for the BPF conference:
+
+    https://lore.kernel.org/bpf/20200127171516.GA2710@chromium.org
+
+  As you can see from some of the prototype use cases e.g:
+
+    https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
+
+  that they do rely on security blobs and that they are key in doing
+  meaningful security analysis.
+
+* When using the semantic provided by fexit, the BPF LSM program will
+  always be executed and will be able to override / clobber the
+  decision of LSMs which appear before it in the ordered list. This
+  semantic is very different from what we currently have (i.e. the BPF
+  LSM hook is only called if all the other LSMs allow the action) and
+  seems to be bypassing the LSM framework.
+
+* Not all security_* wrappers simply call the attached hooks and return
+  their exit code and not all of them pass the same arguments to the
+  hook e.g. security_bprm_check, security_file_open,
+  security_task_alloc to just name a few. Illustrating this further
+  using security_task_alloc as an example:
+
+	rc = call_int_hook(task_alloc, 0, task, clone_flags);
+	if (unlikely(rc))
+		security_task_free(task);
+	return rc;
+
+Which means we would leak task_structs in this case. While
+call_int_hook is sort of equivalent to the fexit trampoline for most
+hooks, it's not really the case for some (quite important) LSM hooks.
+
+- KP
+
+> - no changes to call_int_hook() macro
+> - patches 4, 5, 6 no longer necessary
+> - when security is off all security_*() hooks do single
+>   if (hlist_empty(&bpf_lsm_hook_heads.FUNC)) check.
+>   With patch 4 there will two such checks. Tiny perf penalty.
+>   With fexit approach there will be no extra check.
+> - fexit approach is fast even on kernels compiled with retpoline, since
+>   its using direct calls
+> Cons:
+> - bpf trampoline so far is x86 only and arm64 support is wip
 > 
-> This is due to usage of log_wait in the other module without announcing
-> its declaration to the world. I wasn't able to dug into deep history of
-> reasons why it is so, and thus decide to make less invasive change, i.e.
-> declaring log_wait as external variable to make static analyzer happy.
-> 
-> Note the above is done if and only if the CONFIG_PROC_FS is enabled,
-> otherwise we fallback to static variable.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  kernel/printk/printk.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 633f41a11d75..43b5cb88c607 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -418,7 +418,14 @@ DEFINE_RAW_SPINLOCK(logbuf_lock);
->  	} while (0)
->  
->  #ifdef CONFIG_PRINTK
-> +
-> +#ifdef CONFIG_PROC_FS
-> +extern wait_queue_head_t log_wait;	/* Used in fs/proc/kmsg.c */
->  DECLARE_WAIT_QUEUE_HEAD(log_wait);
-> +#else
-> +static DECLARE_WAIT_QUEUE_HEAD(log_wait);
-> +#endif /* CONFIG_PROC_FS */
-
-This looks too complicated as a workaround for a warning.
-
-I got really confused. Probably also because the macro DECLARE_*()
-does a definition instead of a declaration.
-
-As a minimal fix, I suggest to rename log_wait -> printk_log_wait
-and declare it in include/linux/printk.h.
-
-Even better solution might be to move fs/proc/kmsg.c to
-kernel/printk/proc_kmsg.c and declare printk_log_wait only
-in kernel/printk/internal.h. I think that this is what
-Sergey suggested.
-
-Another great thing would be to extract devkmsg stuff from
-kernel/printk/printk.c and put it into kernel/printk/dev_kmsg.c.
-
-I am not sure but it might help people to realize that there
-are actually two different interfaces (old in /proc dmesg-like,
-and in /dev new for systemd). Sigh.
-
-I am not sure how deep and far you would like to go ;-)
-
-Best Regards,
-Petr
+> By plugging into fexit I'm proposing to let bpf-lsm prog type modify return
+> value. Currently bpf-fexit prog type has read-only access to it. Adding write
+> access is a straightforward verifier change. The bpf progs from patch 9 will
+> still look exactly the same way:
+> SEC("lsm/file_mprotect")
+> int BPF_PROG(mprotect_audit, struct vm_area_struct *vma,
+>             unsigned long reqprot, unsigned long prot) { ... }
+> The difference that libbpf will be finding btf_id of security_file_mprotect()
+> function and adding fexit trampoline to it instead of going via
+> security_list_options and its own lsm_hook_idx uapi. I think reusing existing
+> tracing facilities to attach and multiplex multiple programs is cleaner. More
+> code reuse. Unified testing of lsm and tracing, etc.
