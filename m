@@ -2,137 +2,160 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEFBC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E764C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA2220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1422A20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 08:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+2NdbO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgBKIPP (ORCPT
+        id S1727912AbgBKIQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 03:15:15 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38902 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727688AbgBKIPO (ORCPT
+        Tue, 11 Feb 2020 03:16:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21727 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727613AbgBKIQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 03:15:14 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z9so9232613oth.5;
-        Tue, 11 Feb 2020 00:15:14 -0800 (PST)
+        Tue, 11 Feb 2020 03:16:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581408968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JYZUJREDEE9g54q7OqZkjYWU4pIAXyPMj6QVRJEVGV8=;
+        b=E+2NdbO7OSBaimDln9BdPyHviIZFHCrWA32wJnkqgS2OStD3uoZ00l7CssjN0MyCp+JJIO
+        1p1iUimTRY+d8OpcGsXahTgR8NYpzI341HKDoHbt9zW+LxPYpbk+QT7lcruDHxAFVn+dgl
+        C5yymjL6kc1vI6cjlz8B9nZGYNrBea8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-EE9Lv7rsOYqhD0rJq2PhyA-1; Tue, 11 Feb 2020 03:16:05 -0500
+X-MC-Unique: EE9Lv7rsOYqhD0rJq2PhyA-1
+Received: by mail-wm1-f70.google.com with SMTP id p2so732207wma.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 00:16:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KmW0O3LnLsxSEx5mSsn3yBdnjLfYpE0MC8ooH4ZjjKw=;
-        b=L8Et7rpBPKlE8yhxdqUNJNgm41Kz2j5U49UXgA4ooWFrH0e4reqfa4mIxQOl8Wyy/j
-         NJhfC6TxM7aUO8gCQCoQNNdg9wrgYIa4IAfxFHdGm0DXcVWQfDK9d64IOeqjZCScVsBL
-         HDsrvR2IxCA0kalACn4x9ISGvSFyGv+COG/fS8WJhm2J81bze5Be43asCGKnWw4bcj51
-         XiNez53G/ArftMEDlxXvX5uCmiybWAs9FhG742e2ztZTXUJpMb0YOCruhVpnEUJeT0RW
-         CSS9Ob+kCr45BB82kWx7bXQBRpysHGJs1mXd2gLPE4+uLwGUQI0ncpFTCrjtszJERH6x
-         rnNg==
-X-Gm-Message-State: APjAAAXEdEmktm41ecgO2QsXiimDFLFnt+crmfYridHhKDzRGfiJIOKK
-        muyFlrED9q5X7/aB6y2liDmYszLSOz9F7JhYgDQ=
-X-Google-Smtp-Source: APXvYqwEcmEoNoNDBhoPpH3rDf95d6TYZ5IMsE/ydiUKbXXZLt6L0DPS+W4L0t7jNT1AbdX/CoQwZFbMvimTLVDaeII=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr4357532otm.297.1581408913600;
- Tue, 11 Feb 2020 00:15:13 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JYZUJREDEE9g54q7OqZkjYWU4pIAXyPMj6QVRJEVGV8=;
+        b=HhtTlpilTuIoE0FDDwCU6qi6RCCUIP4VQIRnn/wxQ9115fPkLFdwVeuDSDvRf2jEUN
+         kmeiJCVMQh7L0mQpTDVZlxTNSE/uqBhjMqBFQV8zZmSnI513zTeY2PQjeR4yumnffQ3a
+         izKwldcm20Fqcb19N1dKJ5y6rGK8P+2uK9aHlx3NIYixHPDyjhsD5ICaZmeFvQ/nhzUK
+         IMuKO8Ff+tFoj8RFmJIF6B7zgwhEXyl4cllo6v7dOELh0ktTw07HnSGMY8cdJS8+JGCU
+         ZDYvuozFxjpgbYjMPPY8vTbf7Cp0M60OJA/axi/GDhBeCQV/bVgIw8DcvPnC8PK5Kuyu
+         AI3Q==
+X-Gm-Message-State: APjAAAUNBPnzNR56qdUY43CK3BYS5xThLaKSinLxXd64yOcsMf7rZQnp
+        fKoVLTBn3Zx4eLbBUnnNeV32lAitWyXLrEOVV3DlGkasdBvKM7a7ewkuxNjvNnsHJNHCW5UzoiY
+        sgbByK04jJEPuzibNFKZ6Kz8q
+X-Received: by 2002:a1c:f009:: with SMTP id a9mr4124569wmb.73.1581408963953;
+        Tue, 11 Feb 2020 00:16:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqybO1BAnZIfA6i+udGEmbdw/CtdNNXCXgZQP+WLzSM4lROyM82z9DFdZQwCzQRWKF7khXaZ6A==
+X-Received: by 2002:a1c:f009:: with SMTP id a9mr4124530wmb.73.1581408963664;
+        Tue, 11 Feb 2020 00:16:03 -0800 (PST)
+Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
+        by smtp.gmail.com with ESMTPSA id y8sm2681250wma.10.2020.02.11.00.16.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2020 00:16:02 -0800 (PST)
+Subject: Re: [PATCH 3/3] objtool: Add relocation check for alternative
+ sections
+To:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <cover.1581359535.git.jpoimboe@redhat.com>
+ <7b90b68d093311e4e8f6b504a9e1c758fd7e0002.1581359535.git.jpoimboe@redhat.com>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <1bc9dfd5-0652-c5e1-7ab2-cdd025edc01b@redhat.com>
+Date:   Tue, 11 Feb 2020 08:16:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200129161955.30562-1-erosca@de.adit-jv.com> <CAMuHMdWV0kkKq6sKOHsdz+FFGNHphzq_q7rvmYAL=U4fH2H3wQ@mail.gmail.com>
- <20200210205735.GB1347752@kroah.com>
-In-Reply-To: <20200210205735.GB1347752@kroah.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 11 Feb 2020 09:15:02 +0100
-Message-ID: <CAMuHMdUa0fUHZF03QCLsgvS8LSN_rGUQ1gPtotQ3uNGEHkCm6g@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Support custom speed setting
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        linux-man@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7b90b68d093311e4e8f6b504a9e1c758fd7e0002.1581359535.git.jpoimboe@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-CC man
 
-On Mon, Feb 10, 2020 at 9:57 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Thu, Jan 30, 2020 at 01:32:50PM +0100, Geert Uytterhoeven wrote:
-> > On Wed, Jan 29, 2020 at 5:20 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > > From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> > >
-> > > This patch is necessary to use BT module and XM module with DENSO TEN
-> > > development board.
-> > >
-> > > This patch supports ASYNC_SPD_CUST flag by ioctl(TIOCSSERIAL), enables
-> > > custom speed setting with setserial(1).
-> > >
-> > > The custom speed is calculated from uartclk and custom_divisor.
-> > > If custom_divisor is zero, custom speed setting is invalid.
-> > >
-> > > Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> > > [erosca: rebase against v5.5]
-> > > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> >
-> > Thanks for your patch!
-> >
-> > While this seems to work fine[*], I have a few comments/questions:
-> >   1. This feature seems to be deprecated:
-> >
-> >          sh-sci e6e68000.serial: setserial sets custom speed on
-> > ttySC1. This is deprecated.
-> >
-> >   2. As the wanted speed is specified as a divider, the resulting speed
-> >      may be off, cfr. the example for 57600 below.
-> >      Note that the SCIF device has multiple clock inputs, and can do
-> >      57600 perfectly if the right crystal has been fitted.
-> >
-> >  3. What to do with "[PATCH/RFC] serial: sh-sci: Update uartclk based
-> >      on selected clock" (https://patchwork.kernel.org/patch/11103703/)?
-> >      Combined with this, things become pretty complicated and
-> >      unpredictable, as uartclk now always reflect the frequency of the
-> >      last used base clock, which was the optimal one for the previously
-> >      used speed....
-> >
-> > I think it would be easier if we just had an API to specify a raw speed.
-> > Perhaps that already exists?
->
-> Yes, see:
->         http://www.panix.com/~grante/arbitrary-baud.c
+On 2/10/20 6:32 PM, Josh Poimboeuf wrote:
+> Relocations in alternative code can be dangerous, because the code is
+> copy/pasted to the text section after relocations have been resolved,
+> which can corrupt PC-relative addresses.
+> 
+> However, relocations might be acceptable in some cases, depending on the
+> architecture.  For example, the x86 alternatives code manually fixes up
+> the target addresses for PC-relative jumps and calls.
+> 
+> So disallow relocations in alternative code, except where the x86 arch
+> code allows it.
+> 
+> This code may need to be tweaked for other arches when objtool gets
+> support for them.
+> 
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>   tools/objtool/check.c | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 5ea2ce7ed8a3..2d52a40e6cb9 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -786,6 +786,27 @@ static int handle_group_alt(struct objtool_file *file,
+>   		insn->ignore = orig_insn->ignore_alts;
+>   		insn->func = orig_insn->func;
+>   
+> +		/*
+> +		 * Since alternative replacement code is copy/pasted by the
+> +		 * kernel after applying relocations, generally such code can't
+> +		 * have relative-address relocation references to outside the
+> +		 * .altinstr_replacement section, unless the arch's
+> +		 * alternatives code can adjust the relative offsets
+> +		 * accordingly.
+> +		 *
+> +		 * The x86 alternatives code adjusts the offsets only when it
+> +		 * encounters a branch instruction at the very beginning of the
+> +		 * replacement group.
 
-Thanks a lot!!
-This must be one of the most guarded secrets of serial port programming ;-)
+Yes, arm64 is a bit more permissive regarding this although it does 
+disallow some patterns.
 
-Implemented since 2006, commit edc6afc5496875a6 ("[PATCH] tty: switch to
-ktermios and new framework"), not documented in today's man-pages.
+I guess once we introduce other archs there should be some function:
 
-Gr{oetje,eeting}s,
+bool arch_validate_alt_insn(struct instruction *new, struct instruction 
+*new, struct special_alt *alt);
 
-                        Geert
+> +		 */
+> +		if ((insn->offset != special_alt->new_off ||
+> +		    (insn->type != INSN_CALL && !is_static_jump(insn))) &&
+> +		    find_rela_by_dest_range(insn->sec, insn->offset, insn->len)) {
+> +
+> +			WARN_FUNC("unsupported relocation in alternatives section",
+> +				  insn->sec, insn->offset);
+> +			return -1;
+> +		}
+> +
+>   		if (!is_static_jump(insn))
+>   			continue;
+>   
+> 
+
+Reviewed-by: Julien Thierry <jthierry@redhat.com>
+
+Cheers,
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Julien Thierry
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
