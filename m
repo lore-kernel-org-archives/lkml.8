@@ -2,163 +2,134 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A811C352A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82185C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D802080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581391177;
-	bh=0ZZlJcK8McjXh01uz81yZISTYzV8JaT6PQSW2nSfIRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MRGFO4Zbk63ywwtNFavT6MW+O44AfdTMSunMnyhmeU8rSuJez+MzqCALtuNRTFxGq
-	 oas7V2oJSORWsR2MAxE9P7XfXn8434RCzZMDZAstXa2VEzjY49xvBnQ5227wuZh510
-	 V7cjrURYiyUiRag6WRJHkfxlydc59TounCY/qqX4=
+	by mail.kernel.org (Postfix) with ESMTP id 576C720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 03:19:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KoYe1MpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgBKDTg (ORCPT
+        id S1727898AbgBKDTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 22:19:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbgBKDTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 22:19:35 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 10 Feb 2020 22:19:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22099 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727509AbgBKDTr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 22:19:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581391185;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LVGmAaQelGG2wmtr8ypBYNb9UdLgn2L2ZnfBdIYaqns=;
+        b=KoYe1MpG73Vb0IQLe4U7riB0GwTXYCeTc33Nq2AZeK1wK2MuzYHaVK3MmkCZXfOotOuiCu
+        wthkRh1Qd+N213ZOhU+xWk968tfczBy7AYQTi+5zNvMIZYHgNj/KBr7kwpuQ43gIpMggfl
+        4OzXhZuco9NhD+k1lJFxMSCLeEy5J0g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-396-IMnbuXGMNLOCkryZsl8Ayg-1; Mon, 10 Feb 2020 22:19:43 -0500
+X-MC-Unique: IMnbuXGMNLOCkryZsl8Ayg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF5D020714;
-        Tue, 11 Feb 2020 03:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581391173;
-        bh=0ZZlJcK8McjXh01uz81yZISTYzV8JaT6PQSW2nSfIRg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g0yjulO0gpAn3JrqNTcILV2aa0BdwPiiPtg13Gwk+GZjqSbP7Lg4hZfcfz4H1pfZF
-         lo1tBdrp5GQ3T0pnkstQjBlHj0M4IVd4x7Eg3F5R3NExW89k3ywsnOwTpM48x81tdX
-         PmQeMDqOY+TfvSN9IrWwiSC9g3F7jo44up3zmNBY=
-Date:   Mon, 10 Feb 2020 19:19:33 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jing Xia <jing.xia.mail@gmail.com>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, rppt@linux.ibm.com,
-        allison@lohutok.net, tglx@linutronix.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yuming.han@unisoc.com,
-        chunyang.zhang@unisoc.com, Jing Xia <jing.xia@unisoc.com>
-Subject: Re: [RFC] lib/show_mem.c: extend show_mem() to support showing
- drivers' memory consumption
-Message-ID: <20200211031933.GA1835339@kroah.com>
-References: <1579249445-27429-1-git-send-email-jing.xia.mail@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7F498017CC;
+        Tue, 11 Feb 2020 03:19:42 +0000 (UTC)
+Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 56F335C1D4;
+        Tue, 11 Feb 2020 03:19:39 +0000 (UTC)
+Subject: Re: [PATCH v2] tools/virtio: option to build an out of tree module
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org
+References: <20200207073327.1205669-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e361e68d-e7c8-1fe0-45c1-21e6be8333d1@redhat.com>
+Date:   Tue, 11 Feb 2020 11:19:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579249445-27429-1-git-send-email-jing.xia.mail@gmail.com>
+In-Reply-To: <20200207073327.1205669-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:24:05PM +0800, Jing Xia wrote:
-> From: Jing Xia <jing.xia@unisoc.com>
-> 
-> In low memory situations, sometimes we need to check how much memory
-> a driver using.This patch add a notifer chain to show_mem.So a driver
-> can show their memory usage when show_mem_extend() is called.
-> 
-> Co-developed-by: Yuming Han <yuming.han@unisoc.com>
-> Signed-off-by: Yuming Han <yuming.han@unisoc.com>
-> Signed-off-by: Jing Xia <jing.xia@unisoc.com>
+
+On 2020/2/7 =E4=B8=8B=E5=8D=883:35, Michael S. Tsirkin wrote:
+> Handy for testing with distro kernels.
+> Warn that the resulting module is completely unsupported,
+> and isn't intended for production use.
+>
+> Usage:
+>          make oot # builds vhost_test.ko, vhost.ko
+>          make oot-clean # cleans out files created
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 > ---
->  include/linux/mm.h |  9 +++++++++
->  lib/show_mem.c     | 36 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index cfaa8fe..a37274a 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2201,6 +2201,15 @@ extern void memmap_init_zone(unsigned long, int, unsigned long, unsigned long,
->  #ifdef __HAVE_ARCH_RESERVED_KERNEL_PAGES
->  extern unsigned long arch_reserved_kernel_pages(void);
->  #endif
-> +enum show_mem_extend_type {
-> +	SHOW_MEM_EXTEND_BASIC,
-> +	SHOW_MEM_EXTEND_CLASSIC,
-> +	SHOW_MEM_EXTEND_ALL
-> +};
-> +extern int register_show_mem_notifier(struct notifier_block *nb);
-> +extern int unregister_show_mem_notifier(struct notifier_block *nb);
-> +extern void show_mem_extend(unsigned int flags, nodemask_t *nodemask,
-> +			    enum show_mem_extend_type type);
->  
->  extern __printf(3, 4)
->  void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...);
-> diff --git a/lib/show_mem.c b/lib/show_mem.c
-> index 1c26c14..6b013cb 100644
-> --- a/lib/show_mem.c
-> +++ b/lib/show_mem.c
-> @@ -7,6 +7,8 @@
->  
->  #include <linux/mm.h>
->  #include <linux/cma.h>
-> +#include <linux/notifier.h>
-> +#include <linux/swap.h>
->  
->  void show_mem(unsigned int filter, nodemask_t *nodemask)
->  {
-> @@ -42,3 +44,37 @@ void show_mem(unsigned int filter, nodemask_t *nodemask)
->  	printk("%lu pages hwpoisoned\n", atomic_long_read(&num_poisoned_pages));
->  #endif
->  }
+>
+> changes from v1:
+> 	lots of refactoring
+> 	disable all modules except vhost by default (more of a chance
+> 						     it'll build)
+> 	oot-clean target
+>
+>   tools/virtio/Makefile | 27 ++++++++++++++++++++++++++-
+>   1 file changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
+> index 8e2a908115c2..f33f32f1d208 100644
+> --- a/tools/virtio/Makefile
+> +++ b/tools/virtio/Makefile
+> @@ -8,7 +8,32 @@ CFLAGS +=3D -g -O2 -Werror -Wall -I. -I../include/ -I =
+../../usr/include/ -Wno-poin
+>   vpath %.c ../../drivers/virtio ../../drivers/vhost
+>   mod:
+>   	${MAKE} -C `pwd`/../.. M=3D`pwd`/vhost_test V=3D${V}
+> -.PHONY: all test mod clean
 > +
-> +static BLOCKING_NOTIFIER_HEAD(show_mem_notify_list);
+> +#oot: build vhost as an out of tree module for a distro kernel
+> +#no effort is taken to make it actually build or work, but tends to mo=
+stly work
+> +#if the distro kernel is very close to upstream
+> +#unsupported! this is a development tool only, don't use the
+> +#resulting modules in production!
+> +OOT_KSRC=3D/lib/modules/$$(uname -r)/build
+> +OOT_VHOST=3D`pwd`/../../drivers/vhost
+> +#Everyone depends on vhost
+> +#Tweak the below to enable more modules
+> +OOT_CONFIGS=3D\
+> +	CONFIG_VHOST=3Dm \
+> +	CONFIG_VHOST_NET=3Dn \
+> +	CONFIG_VHOST_SCSI=3Dn \
+> +	CONFIG_VHOST_VSOCK=3Dn
+> +OOT_BUILD=3DKCFLAGS=3D"-I "${OOT_VHOST} ${MAKE} -C ${OOT_KSRC} V=3D${V=
+}
+> +oot-build:
+> +	echo "UNSUPPORTED! Don't use the resulting modules in production!"
+> +	${OOT_BUILD} M=3D`pwd`/vhost_test
+> +	${OOT_BUILD} M=3D${OOT_VHOST} ${OOT_CONFIGS}
 > +
-> +int register_show_mem_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&show_mem_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(register_show_mem_notifier);
+> +oot-clean: oot-build
+> +oot: oot-build
+> +oot-clean: OOT_BUILD+=3Dclean
 > +
-> +int unregister_show_mem_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_unregister(&show_mem_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(unregister_show_mem_notifier);
-
-You are exporting functions that are never used at all.  We can't do
-that.
+> +.PHONY: all test mod clean vhost oot oot-clean oot-build
+>   clean:
+>   	${RM} *.o vringh_test virtio_test vhost_test/*.o vhost_test/.*.cmd \
+>                 vhost_test/Module.symvers vhost_test/modules.order *.d
 
 
-> +
-> +void show_mem_extend(unsigned int filter, nodemask_t *nodemask,
-> +		     enum show_mem_extend_type type)
-> +{
-> +	unsigned long used = 0;
-> +	struct sysinfo si;
-> +
-> +	pr_info("Mem-Info-Extend:\n");
-> +	show_mem(filter, NULL);
-> +	si_meminfo(&si);
-> +	pr_info("MemTotal:	%8lu KB\n"
-> +		"Buffers:	%8lu KB\n"
-> +		"SwapCached:	%8lu KB\n",
-> +		(si.totalram) << (PAGE_SHIFT - 10),
-> +		(si.bufferram) << (PAGE_SHIFT - 10),
-> +		total_swapcache_pages() << (PAGE_SHIFT - 10));
-> +
-> +	blocking_notifier_call_chain(&show_mem_notify_list,
-> +				     (unsigned long)type, &used);
-> +}
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-Who calls this function?
 
-As a stand-alone patch, this makes no sense as it doesn't seem to do
-anything, so there's no way it can be accepted.
-
-Please submit this as a patch series, with actual users of these
-functions, if you wish to have it properly considered.
-
-thanks,
-
-greg k-h
