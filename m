@@ -2,142 +2,179 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A2DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D7CC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B8120848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E46A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="C7xXwWup"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njInSJ1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgBKLBr (ORCPT
+        id S1728430AbgBKLEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:01:47 -0500
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:42640 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727561AbgBKLBq (ORCPT
+        Tue, 11 Feb 2020 06:04:00 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46006 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgBKLEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:01:46 -0500
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 1CA8C2E1509;
-        Tue, 11 Feb 2020 14:01:43 +0300 (MSK)
-Received: from vla1-5a8b76e65344.qloud-c.yandex.net (vla1-5a8b76e65344.qloud-c.yandex.net [2a02:6b8:c0d:3183:0:640:5a8b:76e6])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id uuNmbJRWHZ-1fwah6J4;
-        Tue, 11 Feb 2020 14:01:43 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1581418903; bh=2Xbc/G4HLuNS66czzvGe9shTtQ4Wgx5bZ9iyl5Ggh7E=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=C7xXwWupWc/juaQwdGehGusghyJxCb1/TQFkVxvl8ZiHKdk7lfVLeXyQqny7PLoOB
-         Ux3pCZG89KuHkOOQWW8JzdpWRStVBqBWOIvCAXMGDiDnoWka8gFyBKgT0wcFZy2mu5
-         5HWG1CYSP+gYR8NhWVjxJ/aBpp0MaqQMz3TeLxFM=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
-        by vla1-5a8b76e65344.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id S3AaTnpdnZ-1fXebOWm;
-        Tue, 11 Feb 2020 14:01:41 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] kernel/watchdog: flush all printk nmi buffers when
- hardlockup detected
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-References: <158132813726.1980.17382047082627699898.stgit@buzz>
- <20200210145118.1d80e248c9206aeafd5baae6@linux-foundation.org>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <d1edeed5-9247-4ec7-d4b8-a6b5bea354d8@yandex-team.ru>
-Date:   Tue, 11 Feb 2020 14:01:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 11 Feb 2020 06:04:00 -0500
+Received: by mail-il1-f193.google.com with SMTP id p8so3042747iln.12;
+        Tue, 11 Feb 2020 03:03:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R3y8ZmiEYtDezKD63+l4DczridZuvwHW36ri3A/Fxdk=;
+        b=njInSJ1LF/+jt83rq+wKFldX5QtA6salRCBIGztkvhRx7XVRmAWcdivsjlA+w/FjYr
+         qtbyGVSaXaY0DtWR5UEbpWVxsdSHJlr6agtKRlkUkXDxWOTU4M1aqAF1NsbpFu2iiC3p
+         WGGVPDnqWrKf6ausGnQmp+UoQzcx7RLB4hjkcQIOSDC03QN/kpVgi44CQO9voAG38qP4
+         mN4GKzGAu/GYpjk3PxCr1JFB2OPYz4N0rU2+SSEGZee0sQ1pGPbdgY75SRln8W6v7jh8
+         UTppcNXm8KA/isIxFwMK+qWwmAjRMXoLw6N9Dn6anTr6RbgV/Yn/gYETUDoN7q6fxr8O
+         azhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R3y8ZmiEYtDezKD63+l4DczridZuvwHW36ri3A/Fxdk=;
+        b=q7vSiYwgyYfJQhc53mJNLNB6IT4Zua9PzwiUjcHnQaabbFv7BS/M/trGzF0miSqfV3
+         Q10APOGP8Hu0Fa1ItlieR3O1jiIl1AiHxNd5a74/Bt+jaxdQbiZCuV5nyLBV3CLQePLS
+         E0XFwCC6qW0dyEtH36CGYeDaKJaqc6yWPt2lWgyIN0PxOaTt3rNUsvjpPt36Jc3w7WCH
+         prFL1vbZjxc3bUW7aCVhN5LgMdmziSA6CUC9GKxKOpVN+2+YacApEMyAIdh+wKjeT4jI
+         CIIXivMWZ2pXU5xqKNuNCrrEujAGtmERG/2E6DB1IiIGsE7DZfwv8tqM+hsrL+Gm4yxp
+         tvbA==
+X-Gm-Message-State: APjAAAUfMwNnKyAoO6ZS2zBZpYvYzbw50F+y+ngl3vcQR4aqhQGNhnaK
+        UvE881hSa7XWHvbw+azxk4tAaV+ocmL5Bk6uAes=
+X-Google-Smtp-Source: APXvYqyuvpzR+ZN2wr/ewVANPmPxe3sHkVHc08Bg88hKPLmKJRiu23jWbdQ7zf4uZuzo+VDB8BlGT4qAlklofmJE09I=
+X-Received: by 2002:a92:3a8d:: with SMTP id i13mr6123726ilf.112.1581419039079;
+ Tue, 11 Feb 2020 03:03:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200210145118.1d80e248c9206aeafd5baae6@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+References: <20200205192414.GA27345@suse.com> <20200206103842.14936-1-lhenriques@suse.com>
+ <CAOi1vP_fTwCnUtN6GfpF0ATBSEygzd+waH8qJ1H3ioWmc-xS6A@mail.gmail.com> <20200211103239.GA21723@suse.com>
+In-Reply-To: <20200211103239.GA21723@suse.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 11 Feb 2020 12:04:18 +0100
+Message-ID: <CAOi1vP--thAYaV_iXU0UX_crTs4yDB2oSxrVZY8ChcoxFQ-AMA@mail.gmail.com>
+Subject: Re: [PATCH v2] ceph: fix copy_file_range error path in short copies
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 01.51, Andrew Morton wrote:
-> On Mon, 10 Feb 2020 12:48:57 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
-> 
->> In NMI context printk() could save messages into per-cpu buffers and
->> schedule flush by irq_work when IRQ are unblocked. This means message
->> about hardlockup appears in kernel log only when/if lockup is gone.
-> 
-> I think I understand what this means.  The hard lockup detector runs at
-> NMI time but if it detects a lockup within IRQ context it cannot call
-> printk, because it's within NMI context, where synchronous printk
-> doesn't work.  Yes?
+On Tue, Feb 11, 2020 at 11:32 AM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> On Mon, Feb 10, 2020 at 07:38:10PM +0100, Ilya Dryomov wrote:
+> > On Thu, Feb 6, 2020 at 11:38 AM Luis Henriques <lhenriques@suse.com> wrote:
+> > >
+> > > When there's an error in the copying loop but some bytes have already been
+> > > copied into the destination file, it is necessary to dirty the caps and
+> > > eventually update the MDS with the file metadata (timestamps, size).  This
+> > > patch fixes this error path.
+> > >
+> > > Another issue this patch fixes is the destination file size being reported
+> > > to the MDS.  If we're on the error path but the amount of bytes written
+> > > has already changed the destination file size, the offset to use is
+> > > dst_off and not endoff.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > ---
+> > >  fs/ceph/file.c | 18 +++++++++++++-----
+> > >  1 file changed, 13 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > index 11929d2bb594..f7f8cb6c243f 100644
+> > > --- a/fs/ceph/file.c
+> > > +++ b/fs/ceph/file.c
+> > > @@ -2104,9 +2104,16 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
+> > >                 if (err) {
+> > >                         dout("ceph_osdc_copy_from returned %d\n", err);
+> > > -                       if (!ret)
+> > > +                       /*
+> > > +                        * If we haven't done any copy yet, just exit with the
+> > > +                        * error code; otherwise, return the number of bytes
+> > > +                        * already copied, update metadata and dirty caps.
+> > > +                        */
+> > > +                       if (!ret) {
+> > >                                 ret = err;
+> > > -                       goto out_caps;
+> > > +                               goto out_caps;
+> > > +                       }
+> > > +                       goto update_dst_inode;
+> > >                 }
+> > >                 len -= object_size;
+> > >                 src_off += object_size;
+> > > @@ -2118,16 +2125,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >                 /* We still need one final local copy */
+> > >                 do_final_copy = true;
+> > >
+> > > +update_dst_inode:
+> > >         file_update_time(dst_file);
+> > >         inode_inc_iversion_raw(dst_inode);
+> > >
+> > > -       if (endoff > size) {
+> > > +       if (dst_off > size) {
+> > >                 int caps_flags = 0;
+> > >
+> > >                 /* Let the MDS know about dst file size change */
+> > > -               if (ceph_quota_is_max_bytes_approaching(dst_inode, endoff))
+> > > +               if (ceph_quota_is_max_bytes_approaching(dst_inode, dst_off))
+> > >                         caps_flags |= CHECK_CAPS_NODELAY;
+> > > -               if (ceph_inode_set_size(dst_inode, endoff))
+> > > +               if (ceph_inode_set_size(dst_inode, dst_off))
+> > >                         caps_flags |= CHECK_CAPS_AUTHONLY;
+> > >                 if (caps_flags)
+> > >                         ceph_check_caps(dst_ci, caps_flags, NULL);
+> >
+> > Hi Luis,
+> >
+> > I think this function still has short copy and file size issues:
+> >
+> > - do_splice_direct() may write fewer bytes than requested, including
+> >   nothing at all (i.e. return 0).  While we don't care about the second
+> >   call much, handling the first call is crucial because proceeding to
+> >   the copy-from loop with src/dst_off not at the object boundary will
+> >   corrupt the destination file.
+> >
+> > - size is set after caps are acquired for the first time and never
+> >   updated.  But caps are dropped before do_splice_direct(), so by the
+> >   time we get to dst_off > size check, it may be stale.  Again, data
+> >   loss if e.g. old-size < dst_off < new-size because the destination
+> >   file will get truncated...
+> >
+> > Also, src/dst_oloc need to be freed with ceph_oloc_destroy() to avoid
+> > leaking memory on namespace layouts.
+> >
+> > It seems clear that this function needs to be split, with the new
+> > loop around do_splice_direct() and the copy-from loop each going into
+> > a separate functions with clear pre- and post-conditions.
+>
+> Right, it makes sense to refactor this function and fix all these issues
+> you're pointing.  It'll be a pain because a lot of parameters will need to
+> be handed over into these new functions (maybe a new 'struct copy_desc'
+> can help making it a bit less messy).  Anyway, I'll try to spend some time
+> working on that and see what I can come up with.
 
-Yes. Printing from hardlockup watchdog is only special case.
-Without it irq-work will flush per-cpu buffer right after enabling irq.
+Yeah, this code really needs more work and extensive verification.
 
-> 
->> Comment in irq_work_queue_on() states that remote IPI aren't NMI safe
->> thus printk() cannot schedule flush work to another cpu.
->>
->> This patch adds simple atomic counter of detected hardlockups and
->> flushes all per-cpu printk buffers in context softlockup watchdog
->> at any other cpu when it sees changes of this counter.
-> 
-> And I think this works because the softlockup detector runs within irq
-> context?
+I'm dropping this patch because it's only a partial fix.  Backporting
+it alone, with known data corruption issues remaining (and without the
+copy-from2 patch that fixes another data corruption issue that is much
+easier to hit), doesn't make sense.
 
-Yes. Softlockuo watchdog is a timer. It could use normal printk and
-flush per-cpu buffers. Any periodically executed code could do that
-but softlockup is most logical place for that.
+Thanks,
 
-There is forward signal from softlockup to hardlockup wathdogs in
-per-cpu counter hrtimer_interrupts (increment means cpu in't in
-hardlockup). This patch adds backward signal from hardlockup to
-softlocup detector that some cpus are in hardlockup.
-
-> 
->>
->> ...
->>
->> --- a/kernel/watchdog.c
->> +++ b/kernel/watchdog.c
->> @@ -92,6 +92,26 @@ static int __init hardlockup_all_cpu_backtrace_setup(char *str)
->>   }
->>   __setup("hardlockup_all_cpu_backtrace=", hardlockup_all_cpu_backtrace_setup);
->>   # endif /* CONFIG_SMP */
->> +
->> +atomic_t hardlockup_detected = ATOMIC_INIT(0);
->> +
->> +static inline void flush_hardlockup_messages(void)
-> 
-> I don't think this needs to be inlined?
-> 
->> +{
->> +	static atomic_t flushed = ATOMIC_INIT(0);
->> +
->> +	/* flush messages from hard lockup detector */
->> +	if (atomic_read(&hardlockup_detected) != atomic_read(&flushed)) {
->> +		atomic_set(&flushed, atomic_read(&hardlockup_detected));
->> +		printk_safe_flush();
->> +	}
->> +}
-> 
-> Could we add some explanatory comments here?  Explain to the reader why
-> this code exists, what purpose it serves?  Basically a micro version of
-> the above changelog.
-
-Hmm. This seems obvious from names of variables and called function.
-Both watchdogs use same patterns: monotonic counter and side variable
-with snapshot to detect changes or stalls.
-
-> 
->>
->> ...
->>
+                Ilya
