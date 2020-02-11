@@ -2,394 +2,374 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792E4C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49793C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5112086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 128C620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oJA397X9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vezmg+e2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgBKPMo (ORCPT
+        id S1730210AbgBKPNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:12:44 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:46276 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728643AbgBKPMo (ORCPT
+        Tue, 11 Feb 2020 10:13:44 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:38255 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgBKPNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:12:44 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200211151242euoutp02a6d3b9c032f94db0f337198bd57caa38~yYc9QgxCN0973409734euoutp02_
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 15:12:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200211151242euoutp02a6d3b9c032f94db0f337198bd57caa38~yYc9QgxCN0973409734euoutp02_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581433962;
-        bh=XOqiAj+KxXTOiFdPG5aON9T8QQbbeYYHqs5pA0A7o0w=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=oJA397X9cS2KOwfklhPfnrXyX9KiLbCzgrgJSFcfJkXspcTeN7pOSPpJVKFScSjG6
-         UNU5wU4hc/VIvJ4C+5/3lExk/YTDM/8NJ17Ux2KYt5h2ZrAGeMul2t63Q1IZ4+5fxb
-         dBi5rxymOSyqc9CKrPVcVLoJs13Qn53KETGLF8NM=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200211151242eucas1p29d0b4ae6d04b51b0619dd28e91a14189~yYc9GOkis3000230002eucas1p2s;
-        Tue, 11 Feb 2020 15:12:42 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 34.BB.60679.964C24E5; Tue, 11
-        Feb 2020 15:12:42 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200211151241eucas1p1a6afe8c8330f532f3d4115a4b61165c3~yYc83Qo681163111631eucas1p1e;
-        Tue, 11 Feb 2020 15:12:41 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200211151241eusmtrp29199c38ffbc064cbd0617ed28f3a5f83~yYc82lCcd1658116581eusmtrp2U;
-        Tue, 11 Feb 2020 15:12:41 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-54-5e42c469de25
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 0F.B1.07950.964C24E5; Tue, 11
-        Feb 2020 15:12:41 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200211151241eusmtip2457e2ca943f8db33e3c514d99c06acba~yYc8dQ8DE2983129831eusmtip2X;
-        Tue, 11 Feb 2020 15:12:41 +0000 (GMT)
-Subject: Re: [RFT PATCH v2] xhci: Fix memory leak when caching protocol
- extended capability PSI tables
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        gregkh@linuxfoundation.org
-Cc:     pmenzel@molgen.mpg.de, mika.westerberg@linux.intel.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, krzk@kernel.org,
-        stable <stable@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <da2d0387-47f8-e047-0ff8-d971072f9f89@samsung.com>
-Date:   Tue, 11 Feb 2020 16:12:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.4.2
+        Tue, 11 Feb 2020 10:13:44 -0500
+Received: by mail-ua1-f66.google.com with SMTP id c7so4071925uaf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 07:13:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GUARnD6k50jzUsw10kMIXjV4VmujixpGyNZoQ1+vFIw=;
+        b=vezmg+e2zVcCqvOz1QNUIhR6b4psUJ7GBjXUl/w5u3TKKW5m2at+Dkenjv6Z4DUTFI
+         Tk0wTGDgR75xfdMkdy0hvZZojCjOVrXPeyjV/zwyKx+3mGrbq9y2tRX9+HwnygydMFO/
+         95NDXx1CjgmBO9SLKD/eIx0AzfTj81rp4frsf+iGJYx3sH5Y/yJXRL7UxmdiFGMEddYx
+         S4EhjTxhAEKrLig/K5wUNsDw902thoBRCv9xdoV7euC7E/BlQrPQn6BpDHxeHNf8YAJE
+         EZ3gSfrwgeri4HLwd9vjx75vhLrxHqm/bJ0m5JfdhE0FMIHxPc2Qdd1eAVbTja/NN4dX
+         wONA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GUARnD6k50jzUsw10kMIXjV4VmujixpGyNZoQ1+vFIw=;
+        b=RXu3tGtpHYjqKwe5zXS7v5VX+g1z0KiOSRMC4Btr1rS7U83pG0m6Cbc9RFWWqqw1c/
+         hyxLOJN2pqdh2Y/F1BjL0Au+j9ubmIuiY0YWOd+ZjdCAGg3G+rrpamndBIcYds8lvE0t
+         tBDrFSZG9oIlEpAhrl1V5acJIGWESJKk3NFkFypO/QYoMfN39A2Kz/ZsNLU5+UMSIW6P
+         Oc3VY692X9akSnGwQsljKIRQPczv4t0hVLr9+wdbTM70buf6+E6/bltIK6clDIQwddpS
+         izaDc80+hZd3zOGA1B4lGZyQQzNDRc0iiW4u0AkySYZyNlASnTnL3OSlfkaWyQIonWkI
+         tYIQ==
+X-Gm-Message-State: APjAAAVYd8RH2g2mhShyKqded2zMdkzyfpbcXLPiIrOMI5Aq9MKjiHRP
+        CFv8OEePrM/96/IavZlKfrIr+aCpJQwcYeyCH8M50A==
+X-Google-Smtp-Source: APXvYqzE310oyVlFxDykq0yJMv5V52vUJ/aZlRdz88ytg55ClBK5PqlR6olX6sPJIZQLvU4FVZaHf/beaLIbPl6zeIY=
+X-Received: by 2002:ab0:e16:: with SMTP id g22mr1849367uak.129.1581434022257;
+ Tue, 11 Feb 2020 07:13:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211150158.14475-1-mathias.nyman@linux.intel.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7djPc7pZR5ziDM4LWjQvXs9mcf78BnaL
-        y7vmsFnMOL+PyWLRslZmi9cfmlgspmw/wm7xclaaxYKNjxgdOD02repk85h3MtBj/9w17B5P
-        zk1g9vi8SS6ANYrLJiU1J7MstUjfLoEr48/hCywFbwMrbrS0MzYwPrDvYuTkkBAwkVi06iMj
-        iC0ksIJR4tP/9C5GLiD7C6PEsWn/mCESnxkl7t/n7WLkAGu4dkoVomY5o8TtVyvZIJy3jBJ3
-        125iBWkQFsiQmP1lNjuILSLgL9H0YQcrSBGzwDlGicmdZ1hAEmwChhJdb7vYQKbyCthJXHqU
-        DRJmEVCV+HvrEFiJqECsxJlj38Fm8goISpyc+QQszingLPGp+TxYnFlAXqJ562xmCFtc4taT
-        +UwguyQEDrFLPDw5kwXiTReJ1WdvskLYwhKvjm9hh7BlJP7vhGloZpR4eG4tO4TTwyhxuWkG
-        I0SVtcSdc7/ALmUW0JRYv0sfIuwosfvqWlZIsPBJ3HgrCHEEn8SkbdOZIcK8Eh1tQhDVahKz
-        jq+DW3vwwiXmCYxKs5C8NgvJO7OQvDMLYe8CRpZVjOKppcW56anFRnmp5XrFibnFpXnpesn5
-        uZsYgeno9L/jX3Yw7vqTdIhRgINRiYfXYbpTnBBrYllxZe4hRgkOZiURXktpxzgh3pTEyqrU
-        ovz4otKc1OJDjNIcLErivMaLXsYKCaQnlqRmp6YWpBbBZJk4OKUaGJedSDd7kzHxpe9OOfWa
-        pY+dJ55s/39oygs9ca782bevPo6oWPDPTWGtktN9OZ6GS4VsFY/OXpho0nNFWUo64lFEm5rH
-        Ua38LaV2kl7cx3UtDBe/ThFJnLr3jwBL14Ksq70Prn9d3LDVb9FFv3Rua5az7Ymz3pkusWLi
-        CdefM80vIlH07EruaiWW4oxEQy3mouJEAAmSs75DAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsVy+t/xe7qZR5ziDE7s07FoXryezeL8+Q3s
-        Fpd3zWGzmHF+H5PFomWtzBavPzSxWEzZfoTd4uWsNIsFGx8xOnB6bFrVyeYx72Sgx/65a9g9
-        npybwOzxeZNcAGuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5m
-        WWqRvl2CXsafwxdYCt4GVtxoaWdsYHxg38XIwSEhYCJx7ZRqFyMXh5DAUkaJ1n332boYOYHi
-        MhInpzWwQtjCEn+udbFBFL1mlHj7qRusSFggQ2L2l9nsILaIgK/EhXlfmECKmAXOMUo8v7iK
-        BaLjPKPE5UfHWECq2AQMJbregozi4OAVsJO49CgbJMwioCrx99YhsBJRgViJY9vbwIbyCghK
-        nJz5BCzOKeAs8an5PNhFzAJmEvM2P2SGsOUlmrfOhrLFJW49mc80gVFoFpL2WUhaZiFpmYWk
-        ZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAKNx27OeWHYxd74IPMQpwMCrx8DpMd4oT
-        Yk0sK67MPcQowcGsJMJrKe0YJ8SbklhZlVqUH19UmpNafIjRFOi5icxSosn5wASRVxJvaGpo
-        bmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qBcVv2txONklWcr9g4NyzSZ33c
-        4lsvqbJg2YKESYdrLt2XsPru9OJv7oqw3dz/9dtkD3dPuOhi8PiKb3XMG3WXXa88MrInqtbw
-        ZnkbzlAN93zAsqFIw6hg+oWXP14YP7aZFMQnf9C1bbGWx9cdH7mepW2YPt/0EpdDXs79u1yv
-        c6eyLtquxWM3TYmlOCPRUIu5qDgRAFOrmX3YAgAA
-X-CMS-MailID: 20200211151241eucas1p1a6afe8c8330f532f3d4115a4b61165c3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200211150022eucas1p1774275707908e4ee455291a793da308a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200211150022eucas1p1774275707908e4ee455291a793da308a
-References: <20d0559f-8d0f-42f5-5ebf-7f658a172161@linux.intel.com>
-        <CGME20200211150022eucas1p1774275707908e4ee455291a793da308a@eucas1p1.samsung.com>
-        <20200211150158.14475-1-mathias.nyman@linux.intel.com>
+References: <1578495250-10672-1-git-send-email-sbhanu@codeaurora.org> <25a96f3f-c4cd-4ff1-3ce6-d894fb1c20fe@codeaurora.org>
+In-Reply-To: <25a96f3f-c4cd-4ff1-3ce6-d894fb1c20fe@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 11 Feb 2020 16:13:05 +0100
+Message-ID: <CAPDyKFqxDWhPAxo56D1LCCCxNTgwfCmjLd=6_5jNiDGJx==EYg@mail.gmail.com>
+Subject: Re: [PATCH V3] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD card
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathias,
+On Tue, 11 Feb 2020 at 15:30, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> ping!
+>
 
-On 11.02.2020 16:01, Mathias Nyman wrote:
-> xhci driver assumed that xHC controllers have at most one custom
-> supported speed table (PSI) for all usb 3.x ports.
-> Memory was allocated for one PSI table under the xhci hub structure.
->
-> Turns out this is not the case, some controllers have a separate
-> "supported protocol capability" entry with a PSI table for each port.
-> This means each usb3 roothub port can in theory support different custom
-> speeds.
->
-> To solve this, cache all supported protocol capabilities with their PSI
-> tables in an array, and add pointers to the xhci port structure so that
-> every port points to its capability entry in the array.
->
-> When creating the SuperSpeedPlus USB Device Capability BOS descriptor
-> for the xhci USB 3.1 roothub we for now will use only data from the
-> first USB 3.1 capable protocol capability entry in the array.
-> This could be improved later, this patch focuses resolving
-> the memory leak.
->
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Reported-by: Sajja Venkateswara Rao <VenkateswaraRao.Sajja@amd.com>
-> Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
-> Cc: stable <stable@vger.kernel.org> # v4.4+
-> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+I think you need to ping the SoC maintainers, this isn't something
+that I normally pick up via the mmc subsystem.
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Kind regards
+Uffe
 
-> ---
->
-> Changes since v1:
->
-> - Clear xhci->num_port_caps in xhci_mem_cleanup()
->    Otherwise we fail to add new ports and cause NULL pointer dereference at
->    manual xhci re-initialization. This can happen at resume if host lost power
->    during suspend.
-> ---
->   drivers/usb/host/xhci-hub.c | 25 +++++++++++-----
->   drivers/usb/host/xhci-mem.c | 59 +++++++++++++++++++++++--------------
->   drivers/usb/host/xhci.h     | 14 +++++++--
->   3 files changed, 65 insertions(+), 33 deletions(-)
->
-> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> index 7a3a29e5e9d2..af92b2576fe9 100644
-> --- a/drivers/usb/host/xhci-hub.c
-> +++ b/drivers/usb/host/xhci-hub.c
-> @@ -55,6 +55,7 @@ static u8 usb_bos_descriptor [] = {
->   static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
->   				     u16 wLength)
->   {
-> +	struct xhci_port_cap *port_cap = NULL;
->   	int i, ssa_count;
->   	u32 temp;
->   	u16 desc_size, ssp_cap_size, ssa_size = 0;
-> @@ -64,16 +65,24 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
->   	ssp_cap_size = sizeof(usb_bos_descriptor) - desc_size;
->   
->   	/* does xhci support USB 3.1 Enhanced SuperSpeed */
-> -	if (xhci->usb3_rhub.min_rev >= 0x01) {
-> +	for (i = 0; i < xhci->num_port_caps; i++) {
-> +		if (xhci->port_caps[i].maj_rev == 0x03 &&
-> +		    xhci->port_caps[i].min_rev >= 0x01) {
-> +			usb3_1 = true;
-> +			port_cap = &xhci->port_caps[i];
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (usb3_1) {
->   		/* does xhci provide a PSI table for SSA speed attributes? */
-> -		if (xhci->usb3_rhub.psi_count) {
-> +		if (port_cap->psi_count) {
->   			/* two SSA entries for each unique PSI ID, RX and TX */
-> -			ssa_count = xhci->usb3_rhub.psi_uid_count * 2;
-> +			ssa_count = port_cap->psi_uid_count * 2;
->   			ssa_size = ssa_count * sizeof(u32);
->   			ssp_cap_size -= 16; /* skip copying the default SSA */
->   		}
->   		desc_size += ssp_cap_size;
-> -		usb3_1 = true;
->   	}
->   	memcpy(buf, &usb_bos_descriptor, min(desc_size, wLength));
->   
-> @@ -99,7 +108,7 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
->   	}
->   
->   	/* If PSI table exists, add the custom speed attributes from it */
-> -	if (usb3_1 && xhci->usb3_rhub.psi_count) {
-> +	if (usb3_1 && port_cap->psi_count) {
->   		u32 ssp_cap_base, bm_attrib, psi, psi_mant, psi_exp;
->   		int offset;
->   
-> @@ -111,7 +120,7 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
->   
->   		/* attribute count SSAC bits 4:0 and ID count SSIC bits 8:5 */
->   		bm_attrib = (ssa_count - 1) & 0x1f;
-> -		bm_attrib |= (xhci->usb3_rhub.psi_uid_count - 1) << 5;
-> +		bm_attrib |= (port_cap->psi_uid_count - 1) << 5;
->   		put_unaligned_le32(bm_attrib, &buf[ssp_cap_base + 4]);
->   
->   		if (wLength < desc_size + ssa_size)
-> @@ -124,8 +133,8 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
->   		 * USB 3.1 requires two SSA entries (RX and TX) for every link
->   		 */
->   		offset = desc_size;
-> -		for (i = 0; i < xhci->usb3_rhub.psi_count; i++) {
-> -			psi = xhci->usb3_rhub.psi[i];
-> +		for (i = 0; i < port_cap->psi_count; i++) {
-> +			psi = port_cap->psi[i];
->   			psi &= ~USB_SSP_SUBLINK_SPEED_RSVD;
->   			psi_exp = XHCI_EXT_PORT_PSIE(psi);
->   			psi_mant = XHCI_EXT_PORT_PSIM(psi);
-> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-> index 0e2701649369..884c601bfa15 100644
-> --- a/drivers/usb/host/xhci-mem.c
-> +++ b/drivers/usb/host/xhci-mem.c
-> @@ -1915,17 +1915,17 @@ void xhci_mem_cleanup(struct xhci_hcd *xhci)
->   	xhci->usb3_rhub.num_ports = 0;
->   	xhci->num_active_eps = 0;
->   	kfree(xhci->usb2_rhub.ports);
-> -	kfree(xhci->usb2_rhub.psi);
->   	kfree(xhci->usb3_rhub.ports);
-> -	kfree(xhci->usb3_rhub.psi);
->   	kfree(xhci->hw_ports);
->   	kfree(xhci->rh_bw);
->   	kfree(xhci->ext_caps);
-> +	for (i = 0; i < xhci->num_port_caps; i++)
-> +		kfree(xhci->port_caps[i].psi);
-> +	kfree(xhci->port_caps);
-> +	xhci->num_port_caps = 0;
->   
->   	xhci->usb2_rhub.ports = NULL;
-> -	xhci->usb2_rhub.psi = NULL;
->   	xhci->usb3_rhub.ports = NULL;
-> -	xhci->usb3_rhub.psi = NULL;
->   	xhci->hw_ports = NULL;
->   	xhci->rh_bw = NULL;
->   	xhci->ext_caps = NULL;
-> @@ -2126,6 +2126,7 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
->   	u8 major_revision, minor_revision;
->   	struct xhci_hub *rhub;
->   	struct device *dev = xhci_to_hcd(xhci)->self.sysdev;
-> +	struct xhci_port_cap *port_cap;
->   
->   	temp = readl(addr);
->   	major_revision = XHCI_EXT_PORT_MAJOR(temp);
-> @@ -2160,31 +2161,39 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
->   		/* WTF? "Valid values are ‘1’ to MaxPorts" */
->   		return;
->   
-> -	rhub->psi_count = XHCI_EXT_PORT_PSIC(temp);
-> -	if (rhub->psi_count) {
-> -		rhub->psi = kcalloc_node(rhub->psi_count, sizeof(*rhub->psi),
-> -				    GFP_KERNEL, dev_to_node(dev));
-> -		if (!rhub->psi)
-> -			rhub->psi_count = 0;
-> +	port_cap = &xhci->port_caps[xhci->num_port_caps++];
-> +	if (xhci->num_port_caps > max_caps)
-> +		return;
-> +
-> +	port_cap->maj_rev = major_revision;
-> +	port_cap->min_rev = minor_revision;
-> +	port_cap->psi_count = XHCI_EXT_PORT_PSIC(temp);
-> +
-> +	if (port_cap->psi_count) {
-> +		port_cap->psi = kcalloc_node(port_cap->psi_count,
-> +					     sizeof(*port_cap->psi),
-> +					     GFP_KERNEL, dev_to_node(dev));
-> +		if (!port_cap->psi)
-> +			port_cap->psi_count = 0;
->   
-> -		rhub->psi_uid_count++;
-> -		for (i = 0; i < rhub->psi_count; i++) {
-> -			rhub->psi[i] = readl(addr + 4 + i);
-> +		port_cap->psi_uid_count++;
-> +		for (i = 0; i < port_cap->psi_count; i++) {
-> +			port_cap->psi[i] = readl(addr + 4 + i);
->   
->   			/* count unique ID values, two consecutive entries can
->   			 * have the same ID if link is assymetric
->   			 */
-> -			if (i && (XHCI_EXT_PORT_PSIV(rhub->psi[i]) !=
-> -				  XHCI_EXT_PORT_PSIV(rhub->psi[i - 1])))
-> -				rhub->psi_uid_count++;
-> +			if (i && (XHCI_EXT_PORT_PSIV(port_cap->psi[i]) !=
-> +				  XHCI_EXT_PORT_PSIV(port_cap->psi[i - 1])))
-> +				port_cap->psi_uid_count++;
->   
->   			xhci_dbg(xhci, "PSIV:%d PSIE:%d PLT:%d PFD:%d LP:%d PSIM:%d\n",
-> -				  XHCI_EXT_PORT_PSIV(rhub->psi[i]),
-> -				  XHCI_EXT_PORT_PSIE(rhub->psi[i]),
-> -				  XHCI_EXT_PORT_PLT(rhub->psi[i]),
-> -				  XHCI_EXT_PORT_PFD(rhub->psi[i]),
-> -				  XHCI_EXT_PORT_LP(rhub->psi[i]),
-> -				  XHCI_EXT_PORT_PSIM(rhub->psi[i]));
-> +				  XHCI_EXT_PORT_PSIV(port_cap->psi[i]),
-> +				  XHCI_EXT_PORT_PSIE(port_cap->psi[i]),
-> +				  XHCI_EXT_PORT_PLT(port_cap->psi[i]),
-> +				  XHCI_EXT_PORT_PFD(port_cap->psi[i]),
-> +				  XHCI_EXT_PORT_LP(port_cap->psi[i]),
-> +				  XHCI_EXT_PORT_PSIM(port_cap->psi[i]));
->   		}
->   	}
->   	/* cache usb2 port capabilities */
-> @@ -2219,6 +2228,7 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
->   			continue;
->   		}
->   		hw_port->rhub = rhub;
-> +		hw_port->port_cap = port_cap;
->   		rhub->num_ports++;
->   	}
->   	/* FIXME: Should we disable ports not in the Extended Capabilities? */
-> @@ -2309,6 +2319,11 @@ static int xhci_setup_port_arrays(struct xhci_hcd *xhci, gfp_t flags)
->   	if (!xhci->ext_caps)
->   		return -ENOMEM;
->   
-> +	xhci->port_caps = kcalloc_node(cap_count, sizeof(*xhci->port_caps),
-> +				flags, dev_to_node(dev));
-> +	if (!xhci->port_caps)
-> +		return -ENOMEM;
-> +
->   	offset = cap_start;
->   
->   	while (offset) {
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index 13d8838cd552..3ecee10fdcdc 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1702,12 +1702,20 @@ struct xhci_bus_state {
->    * Intel Lynx Point LP xHCI host.
->    */
->   #define	XHCI_MAX_REXIT_TIMEOUT_MS	20
-> +struct xhci_port_cap {
-> +	u32			*psi;	/* array of protocol speed ID entries */
-> +	u8			psi_count;
-> +	u8			psi_uid_count;
-> +	u8			maj_rev;
-> +	u8			min_rev;
-> +};
->   
->   struct xhci_port {
->   	__le32 __iomem		*addr;
->   	int			hw_portnum;
->   	int			hcd_portnum;
->   	struct xhci_hub		*rhub;
-> +	struct xhci_port_cap	*port_cap;
->   };
->   
->   struct xhci_hub {
-> @@ -1719,9 +1727,6 @@ struct xhci_hub {
->   	/* supported prococol extended capabiliy values */
->   	u8			maj_rev;
->   	u8			min_rev;
-> -	u32			*psi;	/* array of protocol speed ID entries */
-> -	u8			psi_count;
-> -	u8			psi_uid_count;
->   };
->   
->   /* There is one xhci_hcd structure per controller */
-> @@ -1880,6 +1885,9 @@ struct xhci_hcd {
->   	/* cached usb2 extened protocol capabilites */
->   	u32                     *ext_caps;
->   	unsigned int            num_ext_caps;
-> +	/* cached extended protocol port capabilities */
-> +	struct xhci_port_cap	*port_caps;
-> +	unsigned int		num_port_caps;
->   	/* Compliance Mode Recovery Data */
->   	struct timer_list	comp_mode_recovery_timer;
->   	u32			port_status_u0;
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+> On 1/8/2020 8:24 PM, Shaik Sajida Bhanu wrote:
+> > From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> >
+> > Add sdhc instances for supporting eMMC and SD-card on sc7180.
+> > The regulators should be in HPM state for proper functionality of
+> > eMMC and SD-card. Updating corresponding regulators accordingly.
+> >
+> > Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> > ---
+> > Changes since V2:
+> >       - Added cmdq register space and support-cqe flag.
+> >       - Incorporated review comments by Matthias Kaehlcke.
+> >
+> > Changes since V1:
+> >       - Updated the regulator min, max voltages as per
+> >         eMMC/SD-card voltage requirements
+> >       - Enabled IOMMU for eMMC and SD-card.
+> >       - Added pull and drive strength to SD-card cd-gpio.
+> >       - Incorporated review comments by Matthias Kaehlcke.
+> > ---
+> >   arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
+> >   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
+> >   2 files changed, 183 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 388f50a..a790d82 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -7,6 +7,7 @@
+> >
+> >   /dts-v1/;
+> >
+> > +#include <dt-bindings/gpio/gpio.h>
+> >   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> >   #include "sc7180.dtsi"
+> >   #include "pm6150.dtsi"
+> > @@ -101,9 +102,9 @@
+> >               };
+> >
+> >               vreg_l12a_1p8: ldo12 {
+> > -                     regulator-min-microvolt = <1696000>;
+> > -                     regulator-max-microvolt = <1952000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <1800000>;
+> > +                     regulator-max-microvolt = <1800000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >
+> >               vreg_l13a_1p8: ldo13 {
+> > @@ -143,9 +144,9 @@
+> >               };
+> >
+> >               vreg_l19a_2p9: ldo19 {
+> > -                     regulator-min-microvolt = <2696000>;
+> > -                     regulator-max-microvolt = <3304000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <2960000>;
+> > +                     regulator-max-microvolt = <2960000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >       };
+> >
+> > @@ -189,9 +190,9 @@
+> >               };
+> >
+> >               vreg_l6c_2p9: ldo6 {
+> > -                     regulator-min-microvolt = <2696000>;
+> > -                     regulator-max-microvolt = <3304000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <1800000>;
+> > +                     regulator-max-microvolt = <2950000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >
+> >               vreg_l7c_3p0: ldo7 {
+> > @@ -207,9 +208,9 @@
+> >               };
+> >
+> >               vreg_l9c_2p9: ldo9 {
+> > -                     regulator-min-microvolt = <2952000>;
+> > -                     regulator-max-microvolt = <3304000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <2960000>;
+> > +                     regulator-max-microvolt = <2960000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >
+> >               vreg_l10c_3p3: ldo10 {
+> > @@ -254,6 +255,28 @@
+> >       status = "okay";
+> >   };
+> >
+> > +&sdhc_1 {
+> > +     status = "okay";
+> > +
+> > +     pinctrl-names = "default", "sleep";
+> > +     pinctrl-0 = <&sdc1_on>;
+> > +     pinctrl-1 = <&sdc1_off>;
+> > +     vmmc-supply = <&vreg_l19a_2p9>;
+> > +     vqmmc-supply = <&vreg_l12a_1p8>;
+> > +};
+> > +
+> > +&sdhc_2 {
+> > +     status = "okay";
+> > +
+> > +     pinctrl-names = "default","sleep";
+> > +     pinctrl-0 = <&sdc2_on>;
+> > +     pinctrl-1 = <&sdc2_off>;
+> > +     vmmc-supply  = <&vreg_l9c_2p9>;
+> > +     vqmmc-supply = <&vreg_l6c_2p9>;
+> > +
+> > +     cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
+> > +};
+> > +
+> >   &uart3 {
+> >       status = "okay";
+> >   };
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 3676bfd..525bc02 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -226,6 +226,33 @@
+> >                       };
+> >               };
+> >
+> > +             sdhc_1: sdhci@7c4000 {
+> > +                     compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> > +                     reg = <0 0x7c4000 0 0x1000>,
+> > +                             <0 0x07c5000 0 0x1000>;
+> > +                     reg-names = "hc_mem", "cqhci_mem";
+> > +
+> > +                     iommus = <&apps_smmu 0x60 0x0>;
+> > +                     interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                     <GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     interrupt-names = "hc_irq", "pwr_irq";
+> > +
+> > +                     clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+> > +                                     <&gcc GCC_SDCC1_AHB_CLK>;
+> > +                     clock-names = "core", "iface";
+> > +
+> > +                     bus-width = <8>;
+> > +                     non-removable;
+> > +                     supports-cqe;
+> > +
+> > +                     mmc-ddr-1_8v;
+> > +                     mmc-hs200-1_8v;
+> > +                     mmc-hs400-1_8v;
+> > +                     mmc-hs400-enhanced-strobe;
+> > +
+> > +                     status = "disabled";
+> > +             };
+> > +
+> >               qupv3_id_0: geniqup@8c0000 {
+> >                       compatible = "qcom,geni-se-qup";
+> >                       reg = <0 0x008c0000 0 0x6000>;
+> > @@ -929,6 +956,127 @@
+> >                                       function = "qup15";
+> >                               };
+> >                       };
+> > +
+> > +                     sdc1_on: sdc1-on {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc1_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <16>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc1_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc1_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-rclk {
+> > +                                     pins = "sdc1_rclk";
+> > +                                     bias-pull-down;
+> > +                             };
+> > +                     };
+> > +
+> > +                     sdc1_off: sdc1-off {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc1_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc1_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc1_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-rclk {
+> > +                                     pins = "sdc1_rclk";
+> > +                                     bias-pull-down;
+> > +                             };
+> > +                     };
+> > +
+> > +                     sdc2_on: sdc2-on {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc2_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <16>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc2_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc2_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-sd-cd {
+> > +                                     pins = "gpio69";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +                     };
+> > +
+> > +                     sdc2_off: sdc2-off {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc2_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc2_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc2_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-sd-cd {
+> > +                                     pins = "gpio69";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             sdhc_2: sdhci@8804000 {
+> > +                     compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> > +                     reg = <0 0x08804000 0 0x1000>;
+> > +                     reg-names = "hc_mem";
+> > +
+> > +                     iommus = <&apps_smmu 0x80 0>;
+> > +                     interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     interrupt-names = "hc_irq", "pwr_irq";
+> > +
+> > +                     clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+> > +                                     <&gcc GCC_SDCC2_AHB_CLK>;
+> > +                     clock-names = "core", "iface";
+> > +
+> > +                     bus-width = <4>;
+> > +
+> > +                     status = "disabled";
+> >               };
+> >
+> >               qspi: spi@88dc000 {
