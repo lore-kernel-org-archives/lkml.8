@@ -2,93 +2,117 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92401C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDA2C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6547E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:08:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfQHUn1l"
+	by mail.kernel.org (Postfix) with ESMTP id 199D020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgBKPIk (ORCPT
+        id S1730146AbgBKPIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:08:40 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45979 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727668AbgBKPIk (ORCPT
+        Tue, 11 Feb 2020 10:08:45 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49440 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727668AbgBKPIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:08:40 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 203so7228100lfa.12;
-        Tue, 11 Feb 2020 07:08:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pO2EbLRpdWYcM5YTgS+KCUX0UTL+PsCuajujyYa2TIY=;
-        b=nfQHUn1lCiGCfYkllmpp5Bw2fQeKVVfM6Uu3gMt9naAJljFzFrelduXS0upOE4w+mg
-         qbzQutZTfzzD7VyrUgufso7yxg0OCPrkKdP5E/InvxV7nh3Nj7V7y7LAcWfGQxzqTmOZ
-         V28VnH6yuKLyvhhNr1zxRwrKvo3yd2cZjZCCzoXkDgjjPpcaGR7MWOIST1VnBgnAm218
-         0AKy/LY2AX1b1YzsMIL+dGpiviyoo1E7bOVm3E15BAp6T1+UVgWcrhZJMxl/yqZAAQnc
-         H5E8O+sn/QqrHkMr4wHDtwEQSrKwzcG7jTUumkF2DD51L4CLYo0NoPgQ0USo4vAy1UaF
-         lcKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pO2EbLRpdWYcM5YTgS+KCUX0UTL+PsCuajujyYa2TIY=;
-        b=FLalwLSHgc98FHM/ifeZuGtZVXeOKT6X5ezDdSTNX9FAp/0NHkwsmUwdAs7KsUFtVJ
-         DiKk2m6XeL4XVTtROyBXqC9GO1uN8iPKwcnEb8EQtIAUa0slj0cPRPcTT+KuNoZPlsTp
-         tdA/AB5ZMhQ+Y+/1tiKIckz5slGB+GA4ENIs1UMupSUorf+CXdS+ROrKYaM3fbYbC5Wo
-         6yVS1Oh4U6qZjizsjA6CKsGD05zztLrJudnCCOVGzHDzpw/z8oTZfFnL3T3wWZbELX4h
-         IFYAzH/m7cG9on2m7cStrMVgt4e7cL2i9Nkx6j4aHnCfBRp+Wgp/nukLu6MqhDUc5k6o
-         OimQ==
-X-Gm-Message-State: APjAAAWM9fBbJpKBQSKDcXFpSZ7yIibd6C24jGReY8rvW0cw8vhgDgXo
-        QHEb5zPyMj5qWtycOZkibMYRT1tn/yMaIsY4PQMkV7c0
-X-Google-Smtp-Source: APXvYqyD2p3SLGz0YbeyKsoXp8UNzT9RvMpuGjs/jGd0JYtvUPSizq6j6dhpFlLw5Sm7wsYjCFHZ5J9CJFpKgxNxt3c=
-X-Received: by 2002:ac2:515b:: with SMTP id q27mr3668980lfd.119.1581433717965;
- Tue, 11 Feb 2020 07:08:37 -0800 (PST)
+        Tue, 11 Feb 2020 10:08:44 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-101.corp.google.com [104.133.0.101] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01BF7pYW001934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Feb 2020 10:07:52 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id D3E46420324; Tue, 11 Feb 2020 10:07:50 -0500 (EST)
+Date:   Tue, 11 Feb 2020 10:07:50 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Mark Salyzyn <salyzyn@android.com>, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH] random: add rng-seed= command line option
+Message-ID: <20200211150750.GA3630@mit.edu>
+References: <20200207150809.19329-1-salyzyn@android.com>
+ <20200207155828.GB122530@mit.edu>
+ <d35bacd4-ba3f-335d-85c4-57e87abd8e9a@android.com>
+ <20200208004922.GE122530@mit.edu>
+ <20200210121325.GA7685@sirena.org.uk>
 MIME-Version: 1.0
-References: <20200211113257.451781-1-isaac.young5@gmail.com>
-In-Reply-To: <20200211113257.451781-1-isaac.young5@gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 11 Feb 2020 07:08:26 -0800
-Message-ID: <CAADnVQ+0WNHWR9P4062gjP7Ow0aPaccMzP=AK3-DjQ9FDf9UfA@mail.gmail.com>
-Subject: Re: [PATCH] Removing a duplicate condition.
-To:     Isaac Young <isaac.young5@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210121325.GA7685@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:26 AM Isaac Young <isaac.young5@gmail.com> wrote:
->
-> Signed-off-by: Isaac Young <isaac.young5@gmail.com>
-> ---
->  tools/testing/selftests/bpf/prog_tests/select_reuseport.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-> index 098bcae5f827..0954c7a8aa08 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-> @@ -823,7 +823,7 @@ void test_select_reuseport(void)
->
->         saved_tcp_fo = read_int_sysctl(TCP_FO_SYSCTL);
->         saved_tcp_syncookie = read_int_sysctl(TCP_SYNCOOKIE_SYSCTL);
-> -       if (saved_tcp_syncookie < 0 || saved_tcp_syncookie < 0)
-> +       if (saved_tcp_syncookie < 0)
->                 goto out;
+On Mon, Feb 10, 2020 at 12:13:25PM +0000, Mark Brown wrote:
+> > The second is that we're treating rng_seed as being magic, and if
+> > someone tries to pass in something like rng_seed=0x7932dca76b51
+> > because they didn't understand how rng_seed was going to work, it
+> > would be surprising.
+> 
+> We already have a kaslr-seed property on arm64 since we need a seed for
+> KASLR *super* early, we could generalize that I guess but it's not clear
+> to me that it's a good idea.  One fun thing here is that the kernel
+> command line is visible to userspace so we go and erase the seed from
+> the command line after reading it.
 
-please resend this patch to bpf@vger and cc maintainers.
-Also see bpf_devel_QA.rst
-Thanks
+This is exactly what this patch is doing, in fact (it is erasing the
+seed from the command line).
+
+> > My preference would be to pass in the random seed *not* on the
+> > command-line at all, but as a separate parameter which is passed to
+> > the bootloader, just as we pass in the device-tree, the initrd and the
+> > command-line as separate things.  The problem is that how we pass in
+> > extra boot parameters is architecture specific, and how we might do it
+> > for x86 is different than for arm64.  So yeah, it's a bit more
+> > inconvenient to do things that way; but I think it's also much
+> > cleaner.
+> 
+> Anything that requires boot protocol updates is going to be rather
+> difficult to deploy for the use it'll likely get - as far as I can see
+> we're basically just talking about the cases where there's some entropy
+> source available to the bootloader that the kernel can't get at
+> directly.  With the arm64 kaslr-seed it's not clear that people are
+> feeding actual entropy in there, they could be using something like the
+> device serial number to give different layouts on different devices even
+> if they can't get any useful entropy for boot to boot variation.
+
+So here's one thing we could do; we could require something like:
+
+rng_seed=<nr_bits>,<base-64 encoded string of 32 bytes>
+
+... where the kernel parses rng_seed, and errors out if nr_bits is
+greater than 256, and errors out if the base-64 encoded string is not
+valid, and then replaces it with the SHA-256 hash of the rng seed,
+base-64 encoded.
+
+That way if there is a crappy handset which is just encoding the
+device serial number, it becomes painfully obvious that someone is
+cheating.
+
+Is that overkill?  Well, from my perspective, we're talking about an
+industry that was willing to turn the CPU thermal safety limits when
+certain benchmark applications were detected to be running, just to
+gain a commercial advantage.  So trust doesn't come easily to me, when
+it comes to corporate desires of expediency.  :-)
+
+	       	     	     	  	    - Ted
