@@ -2,123 +2,179 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93353C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48439C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62BCA20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1385620842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W20jeNcD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZv6TO2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgBKNq2 (ORCPT
+        id S1728779AbgBKNrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:46:28 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46483 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgBKNq2 (ORCPT
+        Tue, 11 Feb 2020 08:47:19 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:39783 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbgBKNrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:46:28 -0500
-Received: by mail-qt1-f193.google.com with SMTP id e21so3925025qtp.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 05:46:27 -0800 (PST)
+        Tue, 11 Feb 2020 08:47:18 -0500
+Received: by mail-qv1-f67.google.com with SMTP id y8so4982626qvk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 05:47:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TQjrRYBQgNu22Yu5TuB1IALhpcVLswinVmpWMZoh7QI=;
-        b=W20jeNcDFxXtwP90Aq4vDRmKH82/qSMzW/Hq0xGnX5KBBnJhTx1bMSwwzp/HilQQ2R
-         vndfW6jy55/+tS+Cx7/sfWSDKVVuYbN+DCt12yW8/iBH6RoMMyeibZ+AchR8asNL/dRs
-         iJ77BEZXdFVgDuR6WBovNZDGhlYQBvhanZujz/uamK94F3lcayltXlVvH04hQ+zL9Cnk
-         lUXhv81z1Fp8XqSxsIALjkA3a8y9wEv9qUNNjucPO87nksR+7Qmi8hXOUaCV2pPjAPRK
-         +3o8gwR/d8oj/l3PhqnjspquYT3Fa4WYz/sDmUtQXy2iUrrROLYOAmAS2NjHARAMJEYr
-         SPYA==
+        bh=tb7L5BLU1T+t13WEosQ02IwryZN78SHxXhTL4NA7JBQ=;
+        b=dZv6TO2/7XFSQsrz43LGtFaV6HtMyTUllj8+VR9t1Fx/4nmtAg42zQhgVGuVo8eEtc
+         mOkWrbj/JPq6cCNnlsSsan3thzt3OHR2DwHDYrVPU5RzhGWTPkw464JOq6fLX003U6FR
+         YYzW623c27Oxk/MLn2HV9YIMJYzPNXXcrgVSp20SI8m9T5f7/YAZlS5Q0Kbo0U8ykTTp
+         q615mnaa3vpXuuy1uhgp0BJ9WXGiF1gDUXDWC9PKbpdT6XVv4FCD4h9244sIbR9D6We9
+         69y9zkWbZ59j1WNd4SnU1TsIKrglpCXXGA0M4S+Noy77EfA3H3cIOqYxdwHQ8MI33ai6
+         b9oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TQjrRYBQgNu22Yu5TuB1IALhpcVLswinVmpWMZoh7QI=;
-        b=bjim1HrIcR04JZCrKV7lluP1Umsq6uvqyDrFUqqtBFYAKqZU7kKkFoPE5WgDd1hreH
-         DtTnzmDTBPqxPur9n7DWWlrLdab/NwM/BaP0MjcQRz0IP+ms3joezXPDmcHSEnom/hAl
-         AMeKktMBHWqaE1QJSknf+97rWMUyhBW1r9u40+XPtAO7SYj1z4aQRzhexaCsl5b2QTTR
-         SriNQcUb6MCmynimM4w1IbpylXv+j5YI/kGLtf+347vat6d6qt+zT71a/MpxKBjfHGPy
-         RKNMhS+WP/ePdRXcAWo7W6cdJJQ0epG8r7Kzq0ZLASQZxt8fdd9fNBWiZW3Eobq4he7u
-         f+nQ==
-X-Gm-Message-State: APjAAAUkoyXKs0tnXjjDL09BoscXqqc6lNVD0SZqSDKDWeW0axzxTDHX
-        /8pgj/ejA88X15lcio0GGFU=
-X-Google-Smtp-Source: APXvYqymE7hVmjKA4y9KEECJWuSfRA1BEusXP0BD+tG/76sK9Ogw1v4G/kR9pzNtzRz3nwNzVComKw==
-X-Received: by 2002:ac8:7217:: with SMTP id a23mr2511705qtp.241.1581428787324;
-        Tue, 11 Feb 2020 05:46:27 -0800 (PST)
+        bh=tb7L5BLU1T+t13WEosQ02IwryZN78SHxXhTL4NA7JBQ=;
+        b=JkZrkqopGt4oTYZbr+Rf5gAngNshKjMyCdpNhoTqxUgHs2UptckbdFJ6zPOiAQRmjM
+         bHGN+8JZcjtHMyBaZ6cdmnbQZ6vHH8MrIbs5GE31zeQpIi/NE6cCV4J/7hnvviC0g9Ws
+         s8EQ19kRivX1vNcYEq40s5XdiyX4QwjCf4XII/Q2n+kDTR8DWOh+bDFA4leGPx4xoYy5
+         9fUgYvt6BbeaimDedUoqAuNm7T6KXN0mBV14C0O7qEPmk/XYyXKpHQtAHQHORpG/Iiik
+         bEsFu4wO/edpNjNhgVi6RV6lKIzOfiV1TJlclFLfjZeviA9HEKol2+arCt55BwFlVl6a
+         XBJw==
+X-Gm-Message-State: APjAAAWyz9jBULPAZHwJNXsUQ8NBdSJS29TZ+gBwtaXZM2XBg8K9dedk
+        eNJbA7l/D0MbObOs3kxJxNHl3XxZsdI=
+X-Google-Smtp-Source: APXvYqyPEAUmIYGDQBA5y3m7H6TKRbGaYZ5LxlUZlBjLzIQImWX36L1TbLmB+CyI2o6he0QytlaxLQ==
+X-Received: by 2002:a05:6214:4f0:: with SMTP id cl16mr2927817qvb.213.1581428836344;
+        Tue, 11 Feb 2020 05:47:16 -0800 (PST)
 Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id v55sm2269572qtc.1.2020.02.11.05.46.26
+        by smtp.gmail.com with ESMTPSA id z27sm1948053qkz.89.2020.02.11.05.47.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 05:46:26 -0800 (PST)
+        Tue, 11 Feb 2020 05:47:15 -0800 (PST)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6523E40A7D; Tue, 11 Feb 2020 10:46:24 -0300 (-03)
-Date:   Tue, 11 Feb 2020 10:46:24 -0300
-To:     Marek Majkowski <marek@cloudflare.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Ivan Babrou <ivan@cloudflare.com>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        id E342540A7D; Tue, 11 Feb 2020 10:47:13 -0300 (-03)
+Date:   Tue, 11 Feb 2020 10:47:13 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, sashal@kernel.org,
-        Kenton Varda <kenton@cloudflare.com>
-Subject: Re: perf not picking up symbols for namespaced processes
-Message-ID: <20200211134624.GA32066@kernel.org>
-References: <CABWYdi1ZKR=jmKnjoJTik08Q9uJBvyZ4W0C29iPiUJ5ef1obvw@mail.gmail.com>
- <20191205123302.GA25750@kernel.org>
- <CABWYdi1+E7MQD8mC2xQfSP0m9_WFdx9mbLkw-36tJ8EtLaw2Jg@mail.gmail.com>
- <CAJPywTKC8=O0zmNm-W4OUENpoZfrbr1Ts38gQw2ZA608_u5wpw@mail.gmail.com>
- <20200204192657.GB1554679@krava>
- <CAJPywTKuu+RPsspAT4Z_243KvtchTe7p7c4DpvG07Nv5A67fnw@mail.gmail.com>
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCHv2 2/4] perf tools: Mark ksymbol dsos with kernel type
+Message-ID: <20200211134713.GB32066@kernel.org>
+References: <20200210143218.24948-1-jolsa@kernel.org>
+ <20200210143218.24948-3-jolsa@kernel.org>
+ <20200210151759.GB25639@kernel.org>
+ <20200210152537.GA28110@krava>
+ <20200210200847.GA36715@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJPywTKuu+RPsspAT4Z_243KvtchTe7p7c4DpvG07Nv5A67fnw@mail.gmail.com>
+In-Reply-To: <20200210200847.GA36715@krava>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Feb 11, 2020 at 10:06:35AM +0000, Marek Majkowski escreveu:
-> Jirka,
+Em Mon, Feb 10, 2020 at 09:08:47PM +0100, Jiri Olsa escreveu:
+> On Mon, Feb 10, 2020 at 04:25:37PM +0100, Jiri Olsa wrote:
+> > On Mon, Feb 10, 2020 at 12:17:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > Em Mon, Feb 10, 2020 at 03:32:16PM +0100, Jiri Olsa escreveu:
+> > > > We add ksymbol map into machine->kmaps, so it needs to be
+> > > > created as 'struct kmap', which is dependent on its dso
+> > > > having kernel type.
+> > > > 
+> > > > Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> > > > Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > > ---
+> > > >  tools/perf/util/machine.c | 10 ++++++++--
+> > > >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > > index e3e5490f6de5..0a43dc83d7b2 100644
+> > > > --- a/tools/perf/util/machine.c
+> > > > +++ b/tools/perf/util/machine.c
+> > > > @@ -727,8 +727,14 @@ static int machine__process_ksymbol_register(struct machine *machine,
+> > > >  	struct map *map = maps__find(&machine->kmaps, event->ksymbol.addr);
+> > > >  
+> > > >  	if (!map) {
+> > > > -		map = dso__new_map(event->ksymbol.name);
+> > > > -		if (!map)
+> > > > +		struct dso *dso = dso__new(event->ksymbol.name);
+> > > > +
+> > > > +		if (dso) {
+> > > > +			dso->kernel = DSO_TYPE_KERNEL;
+> > > > +			map = map__new2(0, dso);
+> > > > +		}
+> > > > +
+> > > > +		if (!dso || !map)
+> > > 
+> > > We leak dso if map creation fails?
+> > 
+> > yep :-\ will post v2
 > 
-> On Tue, Feb 4, 2020 at 7:27 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> > > 11913 openat(AT_FDCWD, "/proc/9512/ns/mnt", O_RDONLY) = 197
-> > > 11913 setns(197, CLONE_NEWNS) = 0
-> > > 11913 stat("/home/marek/bin/runsc-debug", 0x7fffffff8480) = -1 ENOENT
-> > > (No such file or directory)
-> > > 11913 setns(196, CLONE_NEWNS) = 0
-> >
-> > hi,
-> > could you guys please share more details on what you run exactly,
-> > and perhaps that change you mentioned?
-> 
-> I was debugging gvisor (runsc), which does execve(/proc/self/exe), and
-> then messes up with its mount namespace. The effect is that the binary
-> running doesn't exist in the mount namespace. This confuses perf,
-> which fails to load symbols for that process.
-> 
-> To my understanding, by default, perf looks for the binary in the
-> process mount namespace. In this case clearly the binary wasn't there.
-> Ivan wrote a rough patch [1], which I just confirmed works. The patch
-> attempts, after a failure to load binary from pids mount namespace, to
-> load binary from the default mount namespace (the one running perf).
-> 
-> [1] https://lkml.org/lkml/2019/12/5/878
+> v2 attached, it's also all in my perf/top branch
 
-That is a fallback that works in this specific case, and, with a warning
-or some explicitely specified option makes perf work with this specific
-usecase, but either a warning ("fallback to root namespace binary
-/foo/bar") or the explicit option, please, is that what that patch does?
+Thanks for fixing it, will process it into my perf/urgent branch.
+
+- Arnaldo
+ 
+> thanks,
+> jirka
+> 
+> 
+> ---
+> We add ksymbol map into machine->kmaps, so it needs to be
+> created as 'struct kmap', which is dependent on its dso
+> having kernel type.
+> 
+> Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/machine.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index e3e5490f6de5..0ad026561c7f 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -727,9 +727,17 @@ static int machine__process_ksymbol_register(struct machine *machine,
+>  	struct map *map = maps__find(&machine->kmaps, event->ksymbol.addr);
+>  
+>  	if (!map) {
+> -		map = dso__new_map(event->ksymbol.name);
+> -		if (!map)
+> +		struct dso *dso = dso__new(event->ksymbol.name);
+> +
+> +		if (dso) {
+> +			dso->kernel = DSO_TYPE_KERNEL;
+> +			map = map__new2(0, dso);
+> +		}
+> +
+> +		if (!dso || !map) {
+> +			dso__put(dso);
+>  			return -ENOMEM;
+> +		}
+>  
+>  		map->start = event->ksymbol.addr;
+>  		map->end = map->start + event->ksymbol.len;
+> -- 
+> 2.24.1
+> 
+
+-- 
 
 - Arnaldo
