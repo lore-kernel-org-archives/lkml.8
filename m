@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C67FC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7DCC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAD820848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB982086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbgBKQ7e (ORCPT
+        id S1731012AbgBKQ7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:59:34 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53373 "EHLO
+        Tue, 11 Feb 2020 11:59:43 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53461 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728633AbgBKQ7d (ORCPT
+        with ESMTP id S1730986AbgBKQ7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:59:33 -0500
+        Tue, 11 Feb 2020 11:59:40 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j1YsS-00014T-BS; Tue, 11 Feb 2020 16:59:12 +0000
+        id 1j1YsZ-00014T-03; Tue, 11 Feb 2020 16:59:19 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -40,9 +39,9 @@ Cc:     smbarber@chromium.org, Alexander Viro <viro@zeniv.linux.org.uk>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 06/24] fs: add is_userns_visible() helper
-Date:   Tue, 11 Feb 2020 17:57:35 +0100
-Message-Id: <20200211165753.356508-7-christian.brauner@ubuntu.com>
+Subject: [PATCH 13/24] attr: notify_change(): handle fsid mappings
+Date:   Tue, 11 Feb 2020 17:57:42 +0100
+Message-Id: <20200211165753.356508-14-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200211165753.356508-1-christian.brauner@ubuntu.com>
 References: <20200211165753.356508-1-christian.brauner@ubuntu.com>
@@ -53,30 +52,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a helper which makes it possible to detect fileystems whose
-superblock is visible in multiple user namespace. This currently only
-means proc and sys. Such filesystems usually have special semantics so their
-behavior will not be changed with the introduction of fsid mappings.
+Switch notify_change() to lookup fsids in the fsid mappings. If no fsid
+mappings are setup the behavior is unchanged, i.e. fsids are looked up in the
+id mappings.
+
+Filesystems that share a superblock in all user namespaces they are mounted in
+will retain their old semantics even with the introduction of fsidmappings.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- include/linux/fs.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/attr.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 98e0349adb52..1449cd363fb6 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3627,4 +3627,9 @@ static inline int inode_drain_writes(struct inode *inode)
- 	return filemap_write_and_wait(inode->i_mapping);
- }
+diff --git a/fs/attr.c b/fs/attr.c
+index df28035aa23e..3aa65165fb06 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -17,6 +17,8 @@
+ #include <linux/security.h>
+ #include <linux/evm.h>
+ #include <linux/ima.h>
++#include <linux/fsuidgid.h>
++#include <linux/fs.h>
  
-+static inline bool is_userns_visible(unsigned long iflags)
-+{
-+	return (iflags & SB_I_USERNS_VISIBLE);
-+}
-+
- #endif /* _LINUX_FS_H */
+ static bool chown_ok(const struct inode *inode, kuid_t uid)
+ {
+@@ -311,12 +313,21 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
+ 	 * Verify that uid/gid changes are valid in the target
+ 	 * namespace of the superblock.
+ 	 */
+-	if (ia_valid & ATTR_UID &&
+-	    !kuid_has_mapping(inode->i_sb->s_user_ns, attr->ia_uid))
+-		return -EOVERFLOW;
+-	if (ia_valid & ATTR_GID &&
+-	    !kgid_has_mapping(inode->i_sb->s_user_ns, attr->ia_gid))
+-		return -EOVERFLOW;
++	if (is_userns_visible(inode->i_sb->s_iflags)) {
++		if (ia_valid & ATTR_UID &&
++		    !kuid_has_mapping(inode->i_sb->s_user_ns, attr->ia_uid))
++			return -EOVERFLOW;
++		if (ia_valid & ATTR_GID &&
++		    !kgid_has_mapping(inode->i_sb->s_user_ns, attr->ia_gid))
++			return -EOVERFLOW;
++	} else {
++		if (ia_valid & ATTR_UID &&
++		    !kfsuid_has_mapping(inode->i_sb->s_user_ns, attr->ia_uid))
++			return -EOVERFLOW;
++		if (ia_valid & ATTR_GID &&
++		    !kfsgid_has_mapping(inode->i_sb->s_user_ns, attr->ia_gid))
++			return -EOVERFLOW;
++	}
+ 
+ 	/* Don't allow modifications of files with invalid uids or
+ 	 * gids unless those uids & gids are being made valid.
 -- 
 2.25.0
 
