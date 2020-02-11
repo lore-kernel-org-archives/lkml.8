@@ -2,97 +2,88 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69BFC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93B4C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C421220842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73AE20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgBKLpB convert rfc822-to-8bit (ORCPT
+        id S1728614AbgBKLpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:45:01 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55301 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727887AbgBKLpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:45:00 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-251-tq3gBPkLNuGQBoRjzQM1HQ-1; Tue, 11 Feb 2020 11:44:55 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 11 Feb 2020 11:44:55 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 11 Feb 2020 11:44:55 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Gustavo A. R. Silva'" <gustavo@embeddedor.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] i2c: altera: Use 64-bit arithmetic instead of 32-bit
-Thread-Topic: [PATCH] i2c: altera: Use 64-bit arithmetic instead of 32-bit
-Thread-Index: AQHV4L9fxboVqkeMN0ihu69bh4WHLagV3sgQ
-Date:   Tue, 11 Feb 2020 11:44:55 +0000
-Message-ID: <03166245b78c4d85b004dcf746e4e6ee@AcuMS.aculab.com>
-References: <20200210192656.GA8412@embeddedor>
-In-Reply-To: <20200210192656.GA8412@embeddedor>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 11 Feb 2020 06:45:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33482 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727662AbgBKLpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 06:45:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 95712B384;
+        Tue, 11 Feb 2020 11:45:09 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 12:45:08 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v1] MAINTAINERS: Sort entries in database for VSPRINTF
+Message-ID: <20200211114508.zfvwpqgu5w2gzhwa@pathway.suse.cz>
+References: <20200128143425.47283-1-andriy.shevchenko@linux.intel.com>
+ <20200210142154.x2azckvduvh3xuea@pathway.suse.cz>
+ <20200210145129.GV10400@smile.fi.intel.com>
 MIME-Version: 1.0
-X-MC-Unique: tq3gBPkLNuGQBoRjzQM1HQ-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210145129.GV10400@smile.fi.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva
-> Sent: 10 February 2020 19:27
+On Mon 2020-02-10 16:51:29, Andy Shevchenko wrote:
+> On Mon, Feb 10, 2020 at 03:21:55PM +0100, Petr Mladek wrote:
+> > Hi Andy,
+> > 
+> > On Tue 2020-01-28 16:34:25, Andy Shevchenko wrote:
+> > > Run parse-maintainers.pl and choose VSPRINTF record. Fix it accordingly.
+> > 
+> > Also the order does not look defined in the file. When I run
+> > parse-maintainers.pl on the entire MAINTAINERS file:
 > 
-> Add suffix ULL to constant 300 in order to avoid a potential integer
-> overflow and give the compiler complete information about the proper
-> arithmetic to use. Notice that this constant is being used in a context
-> that expects an expression of type u64, but it's currently evaluated
-> using 32-bit arithmetic.
+> See [2] for the details.
 > 
-> Addresses-Coverity: 1458369 ("Unintentional integer overflow")
-> Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/i2c/busses/i2c-altera.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> >  MAINTAINERS | 5584 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------------
+> >  1 file changed, 2787 insertions(+), 2797 deletions(-)
+> > 
+> > The file has 18545 lines. It means that huge amount of entries
+> > do not follow the order.
 > 
-> diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-> index 5255d3755411..526f453f0ff7 100644
-> --- a/drivers/i2c/busses/i2c-altera.c
-> +++ b/drivers/i2c/busses/i2c-altera.c
-> @@ -171,7 +171,8 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
->  	/* SCL Low Time */
->  	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
->  	/* SDA Hold Time, 300ns */
-> -	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
-> +	writel(div_u64(300ULL * clk_mhz, 1000),
-> +	       idev->base + ALTR_I2C_SDA_HOLD);
+> Yes, but it's getting better.
+> 
+> [1]: 7683e9e52925 ("Properly alphabetize MAINTAINERS file")
+> [2]: https://lore.kernel.org/lkml/CA+55aFy3naVgbRubhjfq7k4CcSiFOEdQNkNwHTLDLmepECu9yA@mail.gmail.com/
 
-Why not factor out the 100?
-It may then be you can do 32bit arithmetic (3 * clk_mhz / 10).
-If clk_mhz is MHz (not mHz) then the sum will never wrap 32 bits.
+Ok, the message [2] is Linus' reaction on a similar patch.
+He complained that
 
-	David
+ (a) the ordering wasn't complete
+ (b) this wasn't scripted.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+In fact, parse-maintainers.pl was created to automatize such clean ups
+and allow to fix all entries at once.
 
+Fixing only VSPRITF record is a tiny-piece-by-piece approach.
+It is an approach that will create a lot of work for many people.
+
+If you want to do a clean up then please ask Linus to do it by the
+script.
+
+Also please add a check into checkpatch.pl to reduce regressions.
+
+Best Regards,
+Petr
