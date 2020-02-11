@@ -2,97 +2,104 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81661C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222F7C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CC420842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C34208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:48:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ikWx2cpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgBKMsA (ORCPT
+        id S1728732AbgBKMsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:48:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46029 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbgBKMr6 (ORCPT
+        Tue, 11 Feb 2020 07:48:04 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48282 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728680AbgBKMsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:47:58 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j1UxF-0007bT-Jl; Tue, 11 Feb 2020 13:47:53 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F2D91C2018;
-        Tue, 11 Feb 2020 13:47:48 +0100 (CET)
-Date:   Tue, 11 Feb 2020 12:47:47 -0000
-From:   "tip-bot2 for Suren Baghdasaryan" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/psi: Fix OOB write when writing 0 bytes to
- PSI files
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, x86 <x86@kernel.org>,
+        Tue, 11 Feb 2020 07:48:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Wow2V2wSrgauWzev0Bhb5YG00cQ+K8D0/cORVHfU1r4=; b=ikWx2cpmEg0yhJFXb5yTZsVeJU
+        tyYI7ynFJTAnWCgARyB0PPf9VAsrO1JtIBaRJMRRH87+WJC/EFv9epxiHvwnqC3qRvzdcrlQaZSt4
+        6GKABv/WOPWo658JTIIpHGiwXtwcjDp+42lMyAm86hb+eJctv1Sye87AxwXSxMY+KRghzYI5ND6jh
+        /NVyTeKTl3+Iutif4D9yGjArftJkWoTpKijX3AcddkrjZUX+u6Ro8wpsnMhEFnAeMRQrvsjuL5qCZ
+        9svaqcTh58JpfJH3PRLx6XmGyxia4BR9qZs6AyPDngtuy6wqD13q8p9w8MK7HtT0xmDbCTRtimPjJ
+        eB9KMy+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1UxH-0004ft-ID; Tue, 11 Feb 2020 12:47:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 447A030793E;
+        Tue, 11 Feb 2020 13:46:05 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EE53A2B88D75F; Tue, 11 Feb 2020 13:47:53 +0100 (CET)
+Date:   Tue, 11 Feb 2020 13:47:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200203212216.7076-1-surenb@google.com>
-References: <20200203212216.7076-1-surenb@google.com>
+Subject: Re: [PATCH -next] locking/osq_lock: annotate a data race in osq_lock
+Message-ID: <20200211124753.GP14914@hirez.programming.kicks-ass.net>
+References: <20200211040651.1993-1-cai@lca.pw>
+ <CANpmjNPWCu+w3O8cg++X4=viVFsWNehTXzTuqbwV8-DcXXpFng@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <158142526792.411.11655053168783625036.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPWCu+w3O8cg++X4=viVFsWNehTXzTuqbwV8-DcXXpFng@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+On Tue, Feb 11, 2020 at 11:16:05AM +0100, Marco Elver wrote:
+> On Tue, 11 Feb 2020 at 05:07, Qian Cai <cai@lca.pw> wrote:
+> >
+> > prev->next could be accessed concurrently as noticed by KCSAN,
+> >
+> >  write (marked) to 0xffff9d3370dbbe40 of 8 bytes by task 3294 on cpu 107:
+> >   osq_lock+0x25f/0x350
+> >   osq_wait_next at kernel/locking/osq_lock.c:79
+> >   (inlined by) osq_lock at kernel/locking/osq_lock.c:185
+> >   rwsem_optimistic_spin
+> >   <snip>
+> >
+> >  read to 0xffff9d3370dbbe40 of 8 bytes by task 3398 on cpu 100:
+> >   osq_lock+0x196/0x350
+> >   osq_lock at kernel/locking/osq_lock.c:157
+> >   rwsem_optimistic_spin
+> >   <snip>
+> >
+> > Since the write only stores NULL to prev->next and the read tests if
+> > prev->next equals to this_cpu_ptr(&osq_node). Even if the value is
+> > shattered, the code is still working correctly. Thus, mark it as an
+> > intentional data race using the data_race() macro.
+> 
+> I have said this before: we're not just guarding against load/store
+> tearing, although on their own, they make it deceptively easy to
+> reason about data races.
+> 
+> The case here seems to be another instance of a C-CAS, to avoid
+> unnecessarily dirtying a cacheline.
+> 
+> Here, the loop would make me suspicious, because a compiler could
+> optimize out re-loading the value. Due to the smp_load_acquire,
+> however, at the least we have 1 implied compiler barrier in this loop
+> which means that will likely not happen.
 
-Commit-ID:     6fcca0fa48118e6d63733eb4644c6cd880c15b8f
-Gitweb:        https://git.kernel.org/tip/6fcca0fa48118e6d63733eb4644c6cd880c15b8f
-Author:        Suren Baghdasaryan <surenb@google.com>
-AuthorDate:    Mon, 03 Feb 2020 13:22:16 -08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 11 Feb 2020 13:00:02 +01:00
+The loop has cpu_relax() (as any spin loop should have), that implies a
+compiler barrier() and should disallow the compiler from being funny.
 
-sched/psi: Fix OOB write when writing 0 bytes to PSI files
-
-Issuing write() with count parameter set to 0 on any file under
-/proc/pressure/ will cause an OOB write because of the access to
-buf[buf_size-1] when NUL-termination is performed. Fix this by checking
-for buf_size to be non-zero.
-
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Link: https://lkml.kernel.org/r/20200203212216.7076-1-surenb@google.com
----
- kernel/sched/psi.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index db7b50b..38ccd49 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1199,6 +1199,9 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
- 	if (static_branch_likely(&psi_disabled))
- 		return -EOPNOTSUPP;
- 
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	buf_size = min(nbytes, sizeof(buf));
- 	if (copy_from_user(buf, user_buf, buf_size))
- 		return -EFAULT;
+That said; I feel it would be very good to mandate a comment with every
+use of data_race(), just like we mandate a comment with memory barriers.
+This comment can then explain why the data_race() annotation is correct.
