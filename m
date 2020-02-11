@@ -2,124 +2,102 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82195C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5F3C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562E42082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9192082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="z9aOCVC2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SC4VRpq+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgBKXFk (ORCPT
+        id S1727916AbgBKXFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:05:40 -0500
-Received: from gateway33.websitewelcome.com ([192.185.145.190]:38695 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727804AbgBKXFi (ORCPT
+        Tue, 11 Feb 2020 18:05:45 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27247 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727799AbgBKXFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:05:38 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 6863D815860
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:05:37 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1eb3jGmIlSl8q1eb3jzrDj; Tue, 11 Feb 2020 17:05:37 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=r6W7e99wqSxpJufs0pmZ8FH4EPi49mq2sFzO815awQ4=; b=z9aOCVC2uJ4Xr1XmZn01NiP+GV
-        Q0R2flt6t9U23h95xgj7Yombr8L7FIcJ5DtOXkFjaY0/5hj6eRIrqdq4UznkQWE0q5BJNS7HLGkTG
-        lVP2GLTZ+BlvyIbP5N6McBQajtsnX5axvz+uEoHHibx353ZCCDvailIDtb3HcgM7xxZv45CKCsbsV
-        2V3/dMK+Vh/Twg0NPJ7MLFA2UqLsqRDoAAN+pf6qRI7spN549Bl5Fdq16mT1THe/fzWa/sh+sAu9e
-        sipPrHp8E3REOjkFAjvh2dw6rikqKEyZOlw2hFSG3mHhesKJhtiJAdZ3QF17g8L/CuHQ88Baxwjks
-        c7uaWtsA==;
-Received: from [200.68.140.36] (port=4449 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1eb1-003SYa-Ll; Tue, 11 Feb 2020 17:05:35 -0600
-Date:   Tue, 11 Feb 2020 17:08:10 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] firewire: ohci: Replace zero-length array with
- flexible-array member
-Message-ID: <20200211230810.GA12211@embeddedor>
+        Tue, 11 Feb 2020 18:05:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581462343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=egySVQn95d75jOeqVctft40gVEWO2D/Q7wNGOIZKyvo=;
+        b=SC4VRpq+jbSyokbJtns/gZcAGpHxJiq4RjkjMt0hN0EBincum/11dxtjaFz4gddt0sdoGI
+        0TAYbIHpXWK3vPAr2FHfKzw5yYtcLo8rUDQX9ZsmYaylfSXbM4JaCb9HKuyT3pEJy0Dwb/
+        UtsHV+oajzos2yZVCag+NwdB6r04zTI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-JMS2qA9-Nkez43ezurFWCA-1; Tue, 11 Feb 2020 18:05:39 -0500
+X-MC-Unique: JMS2qA9-Nkez43ezurFWCA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A559B107ACC4;
+        Tue, 11 Feb 2020 23:05:37 +0000 (UTC)
+Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DDCD5C1B2;
+        Tue, 11 Feb 2020 23:05:34 +0000 (UTC)
+Subject: [PATCH 2/7] vfio/pci: Implement match ops
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
+        bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, cohuck@redhat.com
+Date:   Tue, 11 Feb 2020 16:05:34 -0700
+Message-ID: <158146233422.16827.5520548241096752615.stgit@gimli.home>
+In-Reply-To: <158145472604.16827.15751375540102298130.stgit@gimli.home>
+References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1eb1-003SYa-Ll
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:4449
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+This currently serves the same purpose as the default implementation
+but will be expanded for additional functionality.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- drivers/firewire/ohci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/pci/vfio_pci.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 45c048751f3b..afc022b4246f 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -124,7 +124,7 @@ struct descriptor_buffer {
- 	dma_addr_t buffer_bus;
- 	size_t buffer_size;
- 	size_t used;
--	struct descriptor buffer[0];
-+	struct descriptor buffer[];
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 379a02c36e37..2ec6c31d0ab0 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -1278,6 +1278,13 @@ static void vfio_pci_request(void *device_data, unsigned int count)
+ 	mutex_unlock(&vdev->igate);
+ }
+ 
++static int vfio_pci_match(void *device_data, char *buf)
++{
++	struct vfio_pci_device *vdev = device_data;
++
++	return !strcmp(pci_name(vdev->pdev), buf);
++}
++
+ static const struct vfio_device_ops vfio_pci_ops = {
+ 	.name		= "vfio-pci",
+ 	.open		= vfio_pci_open,
+@@ -1287,6 +1294,7 @@ static const struct vfio_device_ops vfio_pci_ops = {
+ 	.write		= vfio_pci_write,
+ 	.mmap		= vfio_pci_mmap,
+ 	.request	= vfio_pci_request,
++	.match		= vfio_pci_match,
  };
  
- struct context {
--- 
-2.25.0
+ static int vfio_pci_reflck_attach(struct vfio_pci_device *vdev);
 
