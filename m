@@ -2,137 +2,204 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30859C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FBCC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0467E20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0DD20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H7ryttcS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gHvGrgPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgBKKQS (ORCPT
+        id S1728236AbgBKKQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:16:18 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43165 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbgBKKQS (ORCPT
+        Tue, 11 Feb 2020 05:16:31 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48504 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727937AbgBKKQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:16:18 -0500
-Received: by mail-oi1-f195.google.com with SMTP id p125so12243641oif.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 02:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vsA40FNHXnwLHh7IKmzOeNQWBgQCJUOT8ocz3FCyoBA=;
-        b=H7ryttcSvSi2c/NOyUxx2HNIADaLVIIiHGrsf3P7Kn2+W5EkpMUgTJu7CkRD22Rv21
-         +GYrszbQPgsAP+gPTQsD0LnwSneb5Xb2Qd7dpUSy6qcFF3Nhi4tW8p18lFO35l7B45/1
-         /JEptDTHdevfE9O5k/AAdPwF9CMS71pMWVHJvufWEI1P6MmWg/gERLChPEW9PK7kM63q
-         6KgsbLyyWT4UBJArNFc35q4J6748QMwOqz5nNkN5Epz1i2fHrDirawIiRZod08cbhLEZ
-         O+dSxR3N7ngFieDWORjCFQS3VEZgx3mryuvsTNJZWDmkxORwoyNNlN/8keMjist73zG+
-         /0ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vsA40FNHXnwLHh7IKmzOeNQWBgQCJUOT8ocz3FCyoBA=;
-        b=nydTbT+WukriZMUZcDdu+OhFT8bldGlhCBDahUAnD1q5OrUnT5dl56Q4PJUY/fP7A2
-         WvC4YBE04MKUkLVWVgKx4AAu7ACsVzkqukzrWyi3PiMR5XbQd5uT73s8XQJB3au+AL9I
-         vg7BRiHhNqCV+EZiOFOXc7KOPuOTdlVFPGwUwxfkQOs2fZWxXK3WWtHJmz4elRzC/38Q
-         aQZ+lh3p3Vk02B2VsqVLQH5YgnX+kFuAChoyodeDs71rYkO10pGkFx3nHYHQbKTccnT3
-         8QNe2L9RlHOcaVgS5MD1Zms0MfeW+P/Mzx8x9vjdO+TX0zzeWlGf20mYy9q7uT5dgcgQ
-         N5QQ==
-X-Gm-Message-State: APjAAAVIqVHczDaAZFNSGC92KjAQz/PZ2ztTbQPyLDXG5PUigaYW8UYC
-        7fxQTsKUsqYyByX7KYjSxK/t0TM8fIVqMX+TWSuTgLSTomc=
-X-Google-Smtp-Source: APXvYqw2B3pRY9MF1dFTffoobcC6Y+kYzR8zLeIW330fSpUi4VWItgwKGGgo8RxmjgVW4FqCTplSsAZ8sj+d1AsFemM=
-X-Received: by 2002:aca:d4c1:: with SMTP id l184mr2430494oig.172.1581416176894;
- Tue, 11 Feb 2020 02:16:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211040651.1993-1-cai@lca.pw>
-In-Reply-To: <20200211040651.1993-1-cai@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 11 Feb 2020 11:16:05 +0100
-Message-ID: <CANpmjNPWCu+w3O8cg++X4=viVFsWNehTXzTuqbwV8-DcXXpFng@mail.gmail.com>
-Subject: Re: [PATCH -next] locking/osq_lock: annotate a data race in osq_lock
-To:     Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 11 Feb 2020 05:16:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581416189;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=sda4jswTQqDClp+1BqO3sE4MRSxFm9X8kK4k52jxa60=;
+        b=gHvGrgPYKHgOcXqfovrTPK4V336bChdSrTxTdr+V+z6bvALdTdymQDhA9NuVJ0R3lMlROE
+        LOAERCxxwTOrQ+AGww52zhqLgjmGbBaxrtHrXbLWlatRakljt9E4y2P1IIASwZFNKXSPgR
+        X6MMpfx8OyAIjK1fvrylHYYS4PtAZVY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-54-CXHpP1NgOpKuenAxC4JNAA-1; Tue, 11 Feb 2020 05:16:21 -0500
+X-MC-Unique: CXHpP1NgOpKuenAxC4JNAA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8357E107ACC7;
+        Tue, 11 Feb 2020 10:16:20 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12B6D10016DA;
+        Tue, 11 Feb 2020 10:16:17 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 0EFBE16E15; Tue, 11 Feb 2020 11:16:16 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
+        QEMU'S CIRRUS DEVICE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3] drm/cirrus: add drm_driver.release callback.
+Date:   Tue, 11 Feb 2020 11:16:15 +0100
+Message-Id: <20200211101616.16065-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 at 05:07, Qian Cai <cai@lca.pw> wrote:
->
-> prev->next could be accessed concurrently as noticed by KCSAN,
->
->  write (marked) to 0xffff9d3370dbbe40 of 8 bytes by task 3294 on cpu 107:
->   osq_lock+0x25f/0x350
->   osq_wait_next at kernel/locking/osq_lock.c:79
->   (inlined by) osq_lock at kernel/locking/osq_lock.c:185
->   rwsem_optimistic_spin
->   <snip>
->
->  read to 0xffff9d3370dbbe40 of 8 bytes by task 3398 on cpu 100:
->   osq_lock+0x196/0x350
->   osq_lock at kernel/locking/osq_lock.c:157
->   rwsem_optimistic_spin
->   <snip>
->
-> Since the write only stores NULL to prev->next and the read tests if
-> prev->next equals to this_cpu_ptr(&osq_node). Even if the value is
-> shattered, the code is still working correctly. Thus, mark it as an
-> intentional data race using the data_race() macro.
+Move final cleanups from cirrus_pci_remove() to the new callback.
+Add drm_atomic_helper_shutdown() call to cirrus_pci_remove().
 
-I have said this before: we're not just guarding against load/store
-tearing, although on their own, they make it deceptively easy to
-reason about data races.
+Use drm_dev_{enter,exit,unplug} to avoid touching hardware after
+device removal.
 
-The case here seems to be another instance of a C-CAS, to avoid
-unnecessarily dirtying a cacheline.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/cirrus/cirrus.c | 43 ++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 6 deletions(-)
 
-Here, the loop would make me suspicious, because a compiler could
-optimize out re-loading the value. Due to the smp_load_acquire,
-however, at the least we have 1 implied compiler barrier in this loop
-which means that will likely not happen.
+diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/cirrus.c
+index a91fb0d7282c..d2ff63ce8eaf 100644
+--- a/drivers/gpu/drm/cirrus/cirrus.c
++++ b/drivers/gpu/drm/cirrus/cirrus.c
+@@ -151,9 +151,13 @@ static int cirrus_pitch(struct drm_framebuffer *fb)
+ 
+ static void cirrus_set_start_address(struct cirrus_device *cirrus, u32 offset)
+ {
++	int idx;
+ 	u32 addr;
+ 	u8 tmp;
+ 
++	if (!drm_dev_enter(&cirrus->dev, &idx))
++		return;
++
+ 	addr = offset >> 2;
+ 	wreg_crt(cirrus, 0x0c, (u8)((addr >> 8) & 0xff));
+ 	wreg_crt(cirrus, 0x0d, (u8)(addr & 0xff));
+@@ -168,6 +172,8 @@ static void cirrus_set_start_address(struct cirrus_device *cirrus, u32 offset)
+ 	tmp &= 0x7f;
+ 	tmp |= (addr >> 12) & 0x80;
+ 	wreg_crt(cirrus, 0x1d, tmp);
++
++	drm_dev_exit(idx);
+ }
+ 
+ static int cirrus_mode_set(struct cirrus_device *cirrus,
+@@ -176,9 +182,12 @@ static int cirrus_mode_set(struct cirrus_device *cirrus,
+ {
+ 	int hsyncstart, hsyncend, htotal, hdispend;
+ 	int vtotal, vdispend;
+-	int tmp;
++	int tmp, idx;
+ 	int sr07 = 0, hdr = 0;
+ 
++	if (!drm_dev_enter(&cirrus->dev, &idx))
++		return -1;
++
+ 	htotal = mode->htotal / 8;
+ 	hsyncend = mode->hsync_end / 8;
+ 	hsyncstart = mode->hsync_start / 8;
+@@ -264,6 +273,7 @@ static int cirrus_mode_set(struct cirrus_device *cirrus,
+ 		hdr = 0xc5;
+ 		break;
+ 	default:
++		drm_dev_exit(idx);
+ 		return -1;
+ 	}
+ 
+@@ -292,6 +302,8 @@ static int cirrus_mode_set(struct cirrus_device *cirrus,
+ 
+ 	/* Unblank (needed on S3 resume, vgabios doesn't do it then) */
+ 	outb(0x20, 0x3c0);
++
++	drm_dev_exit(idx);
+ 	return 0;
+ }
+ 
+@@ -300,10 +312,16 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
+ {
+ 	struct cirrus_device *cirrus = fb->dev->dev_private;
+ 	void *vmap;
++	int idx, ret;
+ 
++	ret = -ENODEV;
++	if (!drm_dev_enter(&cirrus->dev, &idx))
++		goto out;
++
++	ret = -ENOMEM;
+ 	vmap = drm_gem_shmem_vmap(fb->obj[0]);
+ 	if (!vmap)
+-		return -ENOMEM;
++		goto out_dev_exit;
+ 
+ 	if (cirrus->cpp == fb->format->cpp[0])
+ 		drm_fb_memcpy_dstclip(cirrus->vram,
+@@ -323,7 +341,12 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
+ 		WARN_ON_ONCE("cpp mismatch");
+ 
+ 	drm_gem_shmem_vunmap(fb->obj[0], vmap);
+-	return 0;
++	ret = 0;
++
++out_dev_exit:
++	drm_dev_exit(idx);
++out:
++	return ret;
+ }
+ 
+ static int cirrus_fb_blit_fullscreen(struct drm_framebuffer *fb)
+@@ -502,6 +525,14 @@ static void cirrus_mode_config_init(struct cirrus_device *cirrus)
+ 
+ /* ------------------------------------------------------------------ */
+ 
++static void cirrus_release(struct drm_device *dev)
++{
++	struct cirrus_device *cirrus = dev->dev_private;
++
++	drm_mode_config_cleanup(dev);
++	kfree(cirrus);
++}
++
+ DEFINE_DRM_GEM_FOPS(cirrus_fops);
+ 
+ static struct drm_driver cirrus_driver = {
+@@ -515,6 +546,7 @@ static struct drm_driver cirrus_driver = {
+ 
+ 	.fops		 = &cirrus_fops,
+ 	DRM_GEM_SHMEM_DRIVER_OPS,
++	.release         = cirrus_release,
+ };
+ 
+ static int cirrus_pci_probe(struct pci_dev *pdev,
+@@ -598,12 +630,11 @@ static void cirrus_pci_remove(struct pci_dev *pdev)
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 	struct cirrus_device *cirrus = dev->dev_private;
+ 
+-	drm_dev_unregister(dev);
+-	drm_mode_config_cleanup(dev);
++	drm_dev_unplug(dev);
++	drm_atomic_helper_shutdown(dev);
+ 	iounmap(cirrus->mmio);
+ 	iounmap(cirrus->vram);
+ 	drm_dev_put(dev);
+-	kfree(cirrus);
+ 	pci_release_regions(pdev);
+ }
+ 
+-- 
+2.18.2
 
-Before jumping to 'data_race()', I would ask again: how bad is the
-READ_ONCE? Is the generated code the same? If so, just use the
-READ_ONCE. Do you want to reason about all compiler optimizations? For
-this code here, I certainly don't want to.
-
-But in the end it's up to what maintainers prefer, and maybe there is
-a very compelling argument that I missed that makes the fact this is a
-data race always safe.
-
-Thanks,
--- Marco
-
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  kernel/locking/osq_lock.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-> index 1f7734949ac8..3c44ddbc11ce 100644
-> --- a/kernel/locking/osq_lock.c
-> +++ b/kernel/locking/osq_lock.c
-> @@ -154,7 +154,7 @@ bool osq_lock(struct optimistic_spin_queue *lock)
->          */
->
->         for (;;) {
-> -               if (prev->next == node &&
-> +               if (data_race(prev->next == node) &&
->                     cmpxchg(&prev->next, node, NULL) == node)
->                         break;
->
-> --
-> 2.21.0 (Apple Git-122.2)
->
