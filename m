@@ -2,106 +2,182 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0C4C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20ACC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8A2206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fd0wyKyx"
+	by mail.kernel.org (Postfix) with ESMTP id BB7A4206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581423649;
+	bh=9MQTtIlD4MIDKhQisnnow0DKeJ2MXGMRx580MlaZaIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UuCzxTVS3kitYPQeY/xiNvvdfQPRZltckBU9UD7bOBCg3aRvrG91DzJjryFXjzKnz
+	 7pe4BluGMDDaM/GLvsyjU1Cokqx2l4XZz1mI1p/XCUUKKJrlZeGG6AI9xYVRxyfNaL
+	 V2i98c7/CeOrxpsYTsxDMyyBO6gaY0cJrohsafQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgBKMUp (ORCPT
+        id S1728754AbgBKMUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:20:45 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51623 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727723AbgBKMUp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:20:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581423643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7YKK5qbTJbzv97NbN+A209f4bfVu66ItLSv9H/GvglE=;
-        b=fd0wyKyxlAoUNs3lDu6I+zzMfVdiyEMzPe5aECSjyvnGMk4Ogf+roqiorYhMTkOlgcWXUB
-        Twr/IfnSOTzy8RxO62CPvvNPt5gfFlgJkdFjW0O3VRX7jnGI4B326SUKVgC78njICpFS9L
-        FuXI2rJVjZggTBQWO1kJ8yi/S3HrluM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-Ncv58HfqOZKpbfuzZjFfuQ-1; Tue, 11 Feb 2020 07:20:42 -0500
-X-MC-Unique: Ncv58HfqOZKpbfuzZjFfuQ-1
-Received: by mail-wr1-f70.google.com with SMTP id r1so2726493wrc.15
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 04:20:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7YKK5qbTJbzv97NbN+A209f4bfVu66ItLSv9H/GvglE=;
-        b=kZz74HJYzmJjGL36MEmEfAl7SSTY7uqNYwNUph+cptBT1jSMcwQZ1PZ6pGM2OWRepn
-         MKlSytTPTcJ7s16XDBc8P1Mywd9vm2qpBNbL7jw65scPh0b2qxBs7fKOg6ijcIbYoKaE
-         xD4k8Nu1KEzbk4+TcVwAUd3U14GaB27ZQOsJD4pBekrCuhR8CrlnorJAPAbIa5DyIQmh
-         Fl+hjQfdd/qJMdnxUiXhtlSsw8nT814CIgBAOnrD/7ff0tobDz3S4gGSy8Hs6JB9exWC
-         EAdE+WhPSmWwuBHI/2r3L8z5xFAUDxP53oyEabUJ5jjJWY2DDcTgaB8eHCBsHFW5tF8O
-         eg0Q==
-X-Gm-Message-State: APjAAAVjrp0lx734uQ1tNvT0MsbQEQI1kRJhTfxjfyfrwxLHvc7UYpIy
-        eKqDTSJxCQBSm6icY4/eOv7SHVzd7A9G0Q9JiCwRwxWVvPOJOltFym9Wy85gJJNW+HVA6C/5p8H
-        vk6JFW30FPP5PfHwbNzMFpAzz
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr7962942wrp.238.1581423641077;
-        Tue, 11 Feb 2020 04:20:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzYmEhFeabc16XxIDsU9tj29ediGktcdItP3SRO0jeU74xVa2TtLyGXriu2B1irqx6mHAIwzA==
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr7962927wrp.238.1581423640836;
-        Tue, 11 Feb 2020 04:20:40 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:bd91:9700:295f:3b1e? ([2001:b07:6468:f312:bd91:9700:295f:3b1e])
-        by smtp.gmail.com with ESMTPSA id g17sm5123721wru.13.2020.02.11.04.20.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 04:20:40 -0800 (PST)
-Subject: Re: [PATCH v2 3/6] kvm: x86: Emulate split-lock access as a write
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Laight <David.Laight@aculab.com>
-References: <20200203151608.28053-1-xiaoyao.li@intel.com>
- <20200203151608.28053-4-xiaoyao.li@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <95d29a81-62d5-f5b6-0eb6-9d002c0bba23@redhat.com>
-Date:   Tue, 11 Feb 2020 13:20:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 11 Feb 2020 07:20:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728740AbgBKMUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:20:47 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A6620842;
+        Tue, 11 Feb 2020 12:20:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581423646;
+        bh=9MQTtIlD4MIDKhQisnnow0DKeJ2MXGMRx580MlaZaIg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BF7RRqQik5KJN+K8KXG2DuHNLQDE1XEYtgXgqssdDG1EjFhReLYHCYhEJIXLTrmUQ
+         nHs0HSHSrGJE2r9CIRcoYMW9wBKqCBEI242Taz7XSpkG52BA9Im+QE//gxX9KWlTH1
+         qWWwuZunfe9R3doIQ1WNN8hdGF0Rq+IZoU0tkiKY=
+Date:   Tue, 11 Feb 2020 04:20:46 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Gaurav Kohli <gkohli@codeaurora.org>
+Cc:     akpm@linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
+        linux-arm-msm@vger.kernel.org, neeraju@codeaurora.org
+Subject: Re: Query: Regarding Notifier chain callback debugging or profiling
+Message-ID: <20200211122046.GE1856500@kroah.com>
+References: <82d5b63e-4ae6-fb5f-8a1c-2d5755db2638@codeaurora.org>
+ <6e077b43-6c9e-3f4e-e079-db438e36a4eb@codeaurora.org>
+ <20200210210626.GA1373304@kroah.com>
+ <9d3206f9-5554-1f1d-7ee0-61fdcdf3070e@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200203151608.28053-4-xiaoyao.li@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9d3206f9-5554-1f1d-7ee0-61fdcdf3070e@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/02/20 16:16, Xiaoyao Li wrote:
-> A sane guest should never tigger emulation on a split-lock access, but
-> it cannot prevent malicous guest from doing this. So just emulating the
-> access as a write if it's a split-lock access to avoid malicous guest
-> polluting the kernel log.
+On Tue, Feb 11, 2020 at 10:16:03AM +0530, Gaurav Kohli wrote:
+> 
+> 
+> On 2/11/2020 2:36 AM, Greg KH wrote:
+> > On Mon, Feb 10, 2020 at 05:26:16PM +0530, Gaurav Kohli wrote:
+> > > Hi,
+> > > 
+> > > In Linux kernel, everywhere we are using notification chains to notify for
+> > > any kernel events, But we don't have any debugging or profiling mechanism to
+> > > know which callback is taking time or currently we are stuck on which call
+> > > back(without dumps it is difficult to say for last problem)
+> > 
+> > Callbacks are a mess, I agree.
+> > 
+> > > Below are the few ways, which we can implement to profile callback on need
+> > > basis:
+> > > 
+> > > 1) Use trace event before and after callback:
+> > > 
+> > > static int notifier_call_chain(struct notifier_block **nl,
+> > >                                 unsigned long val, void *v,
+> > >                                 int nr_to_call, int *nr_calls)
+> > > {
+> > >          int ret = NOTIFY_DONE;
+> > >          struct notifier_block *nb, *next_nb;
+> > > 
+> > > 
+> > > +		trace_event for entry of callback
+> > >                  ret = nb->notifier_call(nb, val, v);
+> > > +		trace_event for exit of callback
+> > 
+> > Ick.
+> > 
+> > >          }
+> > >          return ret;
+> > > }
+> > > 
+> > > 2) Or use pr_debug instead of trace_event
+> > > 
+> > > 3) Both of the above approach has certain problems, like it will dump
+> > > callback for each notifier chain, which might flood trace buffer or dmesg.
+> > > 
+> > > So we can use bool variable to control that and dump the required
+> > > notification chain only.
+> > > 
+> > > Some thing like below we can use:
+> > > 
+> > >   struct srcu_notifier_head {
+> > >          struct mutex mutex;
+> > >          struct srcu_struct srcu;
+> > >          struct notifier_block __rcu *head;
+> > > +       bool debug_callback;
+> > >   };
+> > > 
+> > > 
+> > >   static int notifier_call_chain(struct notifier_block **nl,
+> > >                                 unsigned long val, void *v,
+> > > -                              int nr_to_call, int *nr_calls)
+> > > +                              int nr_to_call, int *nr_calls, bool
+> > > debug_callback)
+> > >   {
+> > >          int ret = NOTIFY_DONE;
+> > >          struct notifier_block *nb, *next_nb;
+> > > @@ -526,6 +526,7 @@ void srcu_init_notifier_head(struct srcu_notifier_head
+> > > *nh)
+> > >          if (init_srcu_struct(&nh->srcu) < 0)
+> > >                  BUG();
+> > >          nh->head = NULL;
+> > > +       nh->debug_callback = false; -> by default it would be false for
+> > > every notifier chain.
+> > > 
+> > > 4) we can also think of something pre and post function, before and after
+> > > each callback, And we can enable only for those who wants to profile.
+> > > 
+> > > Please let us what approach we can use, or please suggest some debugging
+> > > mechanism for the same.
+> > 
+> > Why not just pay attention to the specific notifier you want?  Trace
+> > when the specific blocking_notifier_call_chain() is called.
+> > 
+> > What specific notifier call chain is causing you problems that you need
+> > to debug?
+> 
+> Thanks Greg for the reply.
+> I agree, we can trace specific notifier chain, but that is very hacky(we
+> have to add debug code here and there when problems comes)
+> 
+> We are using lot of SRCU notifier callchain to notify clients for events,
+> And if we have something generic debugging mechanism, we just have to switch
+> on for that particular client for initial testing phase.
 
-Saying that anything doing a split lock access is malicious makes little
-sense.
+Why are you using SRCU notifier chains for events?
 
-Split lock detection is essentially a debugging feature, there's a
-reason why the MSR is called "TEST_CTL".  So you don't want to make the
-corresponding behavior wrong.  Just kill the guest with a
-KVM_INTERNAL_ERROR userspace exit so people will notice quickly and
-either disable the feature or see if they can fix the guest.
+What are you using them for like this, what in-kernel code is this so
+that I can see what you are doing?
 
-Paolo
+That feels like a very slow way of doing things, especially given the
+recent changes in compilers due to Spectre issues.
 
+> As mentioned above, if we can come up with something like below then only
+> client has to switch on who wants to debug:
+> >>   struct srcu_notifier_head {
+> >>          struct mutex mutex;
+> >>          struct srcu_struct srcu;
+> >>          struct notifier_block __rcu *head;
+> >> +       bool debug_callback; -> this we can turn on for particular
+> client.
+> >>   };
+> 
+> Right now we don't have any generic way to debug notifier chains, please
+> suggest some approach. On live target, it is difficult to say where
+> notification chain got stuck.
+
+I suggest not using notifier chains for events :)
+
+Seriously, try something local for your specific notifiers first.  It
+should be easy to just add tracing for all of them using ftrace or bpf,
+right?
+
+thanks,
+
+greg k-h
