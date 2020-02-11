@@ -6,61 +6,73 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB4AC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3359C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5648420842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958A220842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 09:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbgBKJLU convert rfc822-to-8bit (ORCPT
+        id S1727704AbgBKJNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 04:11:20 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:37036 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgBKJLU (ORCPT
+        Tue, 11 Feb 2020 04:13:37 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34840 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgBKJNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 04:11:20 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01B9AopS011566, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01B9AopS011566
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 17:10:50 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 11 Feb 2020 17:10:50 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 11 Feb 2020 17:10:50 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f]) by
- RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f%6]) with mapi id
- 15.01.1779.005; Tue, 11 Feb 2020 17:10:50 +0800
-From:   Kailang <kailang@realtek.com>
-To:     Benjamin Poirier <benjamin.poirier@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>
-CC:     Takashi Iwai <tiwai@suse.de>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk value
-Thread-Topic: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
- 7th quirk value
-Thread-Index: AQHV4KAyVK0d0c4RkUCatRD1s4Jmc6gVFbAAgAAJ9ACAAJRvkA==
-Date:   Tue, 11 Feb 2020 09:10:50 +0000
-Message-ID: <ab7a0abd24df485d8f8cc3723403a44f@realtek.com>
-References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
- <20200211055651.4405-2-benjamin.poirier@gmail.com>
- <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz> <20200211081604.GA8286@f3>
-In-Reply-To: <20200211081604.GA8286@f3>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.105.169]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 11 Feb 2020 04:13:37 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w12so11294568wrt.2;
+        Tue, 11 Feb 2020 01:13:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=fnUMu4pdrqNFX9oeIZUUQ6fYDE2B/+8LMm/uQL//PeM=;
+        b=J/ivblj7Xt7bKQ79U3H5Y8gAPzVDs/Ebce3JfZfLNKMPQEv/fCIzYTpHiwrlv+z+qp
+         B2wMqYg6qJTxOAOAMXXMcnLp12gihul5BV4OEg42FG7xWYA3lQZIeL5NFaDI3AUSjXGc
+         t2/cpIVFd1wwtz2XJNEvcMCr3e19EFll5S5RN/mHxbfeQ0vUf64slJh9hdrfpORrGuDN
+         r+5jCDYTzKaXr7r1vq0qKpAopOiv4jzFVh8ncfvRid2WMJI4qEK3NgDHFbc6A1kJUL2I
+         dqh5mqeIEi6fkEeOVuYo1UYmRRz4gkzrBknmmBJ6mAwuUfamzBOxPVMAw+GHSgaPiuXM
+         TVUA==
+X-Gm-Message-State: APjAAAVV9kj63EOa1cT08YlXZVE5zFx0YgFLkyXxfOM3mdT/pM1cxcRz
+        IRADY6UbKHyQDSkcnOKLyKM=
+X-Google-Smtp-Source: APXvYqw3OEyZRXzNlPFGVjPNLa8lT78loWRGL97Y3UrYi5z5pxUOWW2UgrZGBEy10MFKGjqTASbAsg==
+X-Received: by 2002:a5d:6b90:: with SMTP id n16mr7783917wrx.410.1581412415300;
+        Tue, 11 Feb 2020 01:13:35 -0800 (PST)
+Received: from tfsielt31850 ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id y185sm3063112wmg.2.2020.02.11.01.13.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 01:13:34 -0800 (PST)
+Message-ID: <7c3a08e97281a54105225fa4f212f5279d3fac30.camel@andred.net>
+Subject: Re: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+From:   =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Date:   Tue, 11 Feb 2020 09:13:33 +0000
+In-Reply-To: <VE1PR04MB6638761F5F8549C6528FE6B989180@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200130204516.4760-1-git@andred.net>
+         <20200130204516.4760-2-git@andred.net>
+         <VI1PR0402MB3485EC2F82DDE52DC5CA0795981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+         <20200209223836.GA199269@dtor-ws>
+         <VE1PR04MB6638A4F4E3BABE0ED0CD4A5189190@VE1PR04MB6638.eurprd04.prod.outlook.com>
+         <VI1PR0402MB34851857F012286250BF3BBE98190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+         <20200210175554.GB199269@dtor-ws>
+         <VE1PR04MB6638761F5F8549C6528FE6B989180@VE1PR04MB6638.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,56 +80,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-Speaker 2 connect to DAC 0x2 was Lenovo requested.
-This was tune for EQ setting.
-I didn't know more for this.
+On Tue, 2020-02-11 at 01:54 +0000, Robin Gong wrote:
+> On 2020/02/11 Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote: 
+> > On Mon, Feb 10, 2020 at 06:33:30AM +0000, Horia Geanta wrote:
+> > > On 2/10/2020 4:03 AM, Robin Gong wrote:
+> > > > On 2020/02/10 Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> > > > > On Fri, Feb 07, 2020 at 08:10:22AM +0000, Horia Geanta wrote:
+> > > > > > On 1/30/2020 10:45 PM, André Draszik wrote:
+> > > > > > > @@ -140,6 +148,25 @@ static int imx_snvs_pwrkey_probe(struct
+> > > > > platform_device *pdev)
+> > > > > > >  	if (pdata->irq < 0)
+> > > > > > >  		return -EINVAL;
+> > > > > > > 
+> > > > > > > +	pdata->clk = devm_clk_get(&pdev->dev, "snvs-pwrkey");
+> > > > > > > +	if (IS_ERR(pdata->clk)) {
+> > > > > > > +		pdata->clk = NULL;
+> > > > > > Using devm_clk_get_optional() would simplify error handling.
+> > > > > 
+> > > > > It sounds to me that this clock is not at all optional and the
+> > > > > driver currently "works" only by accident and therefore optional is not
+> > suitable here.
+> > > > Yes, then we need to add all snvs clk in dts for on legacy i.MX
+> > > > chips in this patchset to avoid any potential function broken.
+> > 
+> > How many are there? I am not too terribly opposed of having the driver handle
+> > missing clk if there are very many legacy DTSes out there. But then we need to
+> > handle it properly (i.e. current iteration does not handle referral properly for
+> > example).
+> There are four dtsi which have clock support in snvs-rtc  including i.mx7s/i.mx8mq/8mm/8mn. So for this patch set,
+> it's better update
+> i.mx8mX dtsi except i.mx7s.
+> > > In that case the DT binding should be updated too, to make the clock
+> > > mandatory.
+> > 
+> > I think this should be done in either case, as as far I understand the part can not
+> > function without the clock and it worked purely by chance on some systems as
+> > something else was turning the clock on.
+> Yes, for all chips snvs clk management added, snvs clock also has to been add
+> in snvs_pwrkey dts, but for others legacy chips like i.mx6X which have no snvs
+> clk management, snvs clock is always on, so no need such clk in snvs_pwrkey
+> dts either, optional is better.
+> > Thanks.
 
-BR,
-Kailang
+It seems to me though that the clock should really be moved into the (parent) SNVS
+node itself, rather than duplicating
+the clock in the the power key node and in
+the RTC node. Is that possible? (I don't know)...
 
-> -----Original Message-----
-> From: Benjamin Poirier <benjamin.poirier@gmail.com>
-> Sent: Tuesday, February 11, 2020 4:16 PM
-> To: Jaroslav Kysela <perex@perex.cz>
-> Cc: Takashi Iwai <tiwai@suse.de>; Kailang <kailang@realtek.com>;
-> alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
-> 7th quirk value
-> 
-> On 2020/02/11 08:40 +0100, Jaroslav Kysela wrote:
-> [...]
-> > >
-> > > In summary, Node 0x17 DAC connection 0x3 offers the loudest max
-> > > volume and the most detailed mixer controls. That connection is
-> > > obtained with quirk ALC295_FIXUP_DISABLE_DAC3. Therefore, change the
-> > > ThinkPad X1 Carbon 7th to use ALC295_FIXUP_DISABLE_DAC3.
-> >
-> > The volume split (individual volume control) will cause trouble for
-> > the UCM volume control at the moment which is the target for this
-> > device to get the digital microphone working. If there is no
-> > possibility to share DAC, it would be probably more nice to join the volume
-> control in the driver.
-> >
-> > Have you tried to use 0x03 as source for all four speakers?
-> 
-> Front speakers are fixed to 0x02. Node 0x14
->   Connection: 1
->      0x02
-> 
-> >
-> > Why PA handles the rear volume control with the current driver code in
-> > the legacy ALSA driver? It should be handled like standard stereo
-> > device. I'll check.
-> 
-> The device comes up with "Analog Stereo Output" profile by default. I changed
-> it to "Analog Surround 4.0 Output" to test controlling each channel individually:
-> 
-> > > pavucontrol controls are reported with the device configured with
-> > > the "Analog Surround 4.0 Output" profile.
-> 
-> >
-> > You should also test PA with UCM.
-> 
-> Please let me know what do I need to test exactly? I'm not familiar with UCM.
-> 
-> ------Please consider the environment before printing this e-mail.
+To summarise, I'll post an updated patchset within the next couple days so to:
+
+* keep the clock optional (for i.MX6 platforms)
+* convert to devm_clk_get_optional()
+* only enable the clock in interrupt handler and imx_imx_snvs_check_for_events()
+  but not during driver loading
+* update all four DTSIs: imx8mm.dtsi imx8mn.dtsi imx8mq.dtsi imx7s.dtsi
+  Note that I'll only be able to test onn the i.MX7
+
+
+Cheers,
+Andre'
+
+
