@@ -2,87 +2,202 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15691C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A520EC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE98B206ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:47:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581461240;
-	bh=8846fUtTtG1u5dbmx7PL9BsCMN38k37aj9KG0jpXB20=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GM9cgtbMDOkWcscPathNwRAMl9FKbR3DanhRZdWyN9lw7erYtFZo7OK7JPRNMyhWj
-	 3ueGNenY81z06LsdMEXna1cBAUXUoo25h/n7dwmDNagaiqZh/T7N4YKEHSrO9odphk
-	 jTXCUEe+e8Nj1zFjGwG+I7APG9vKJjgA7O5NeGHs=
+	by mail.kernel.org (Postfix) with ESMTP id 726CC206ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:47:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/ZZ+lfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgBKWrU (ORCPT
+        id S1727777AbgBKWr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:47:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgBKWrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:47:18 -0500
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFF6F21739
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581461238;
-        bh=8846fUtTtG1u5dbmx7PL9BsCMN38k37aj9KG0jpXB20=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GdwV6pGjP1QMeQ9Q+I0Qe8Mkkt024wfIE1N1G7WKC38gYA+19B9en7ircBqB3Qp2z
-         aTsU9i5zrWlfJ8kqZFxfKVJUIAmx7Pg3EQOCVPBYGv/sJ6X9dDOWNp6t9yy1e3HEV3
-         WirIIuFUK4W1YI+iIr6C5Y+vFyNAdx4AoCF1r1HA=
-Received: by mail-wm1-f51.google.com with SMTP id a9so5762729wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:47:17 -0800 (PST)
-X-Gm-Message-State: APjAAAVbrOp2Lo1aGGBgCWC376Ows8q6ArYp5imVVK36QjL202gapSSo
-        zV08L3H1/Dm3sZ/PtLBfIG0auPeu1hekJaj5H3v0nw==
-X-Google-Smtp-Source: APXvYqwLMFfykA+lJO+JrGtvf5tixGtL0MJifVbP6ZDH2lGW5WHYfqpx8LjEVH0nOFYUqKIXHF9G/pYzuXtkAs32brE=
-X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr8161092wmi.21.1581461236365;
- Tue, 11 Feb 2020 14:47:16 -0800 (PST)
+        Tue, 11 Feb 2020 17:47:28 -0500
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:38943 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727697AbgBKWr1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:47:27 -0500
+Received: by mail-wr1-f49.google.com with SMTP id y11so14613746wrt.6;
+        Tue, 11 Feb 2020 14:47:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=yW1O0jjXB9z8bWi4RkuBpy5DqO+Vy5mEgFaRwUh2ELE=;
+        b=k/ZZ+lfpzEGfg+UQhvPpShfpEaurARkpcqAqNcLNcvwHtPzAnGLuMxKYr3XGyL76qC
+         q5ww+uyhV3ub/LeCdlUbXkUqx1Ur4neRgdMLm8sl9oVy5N4gZLpAtBQK4IYIMaVQxTZ4
+         qnpX1fpZoxjv7lDwWEA4pO8dewQBCze7tDs0eTyaJUl8SMQ3zEVm9zCrPDBkUa+W/7wX
+         A82kNhRKc4rqYF4wi1on/CZPacT42Xuzm/ZPH7DN+Q+b3+2E1ySpNljpXXqp5Rmqd/7H
+         cfJ5KY5vTtjk8owwjzSjyA4Wjt6VuCRVdadJl+602Lj8m9L6QtpqFfIj7MgOE4wvfg6Q
+         De2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=yW1O0jjXB9z8bWi4RkuBpy5DqO+Vy5mEgFaRwUh2ELE=;
+        b=UysH9Z8rXpO6fVrIMFN6DFkKrH2LCeDV7FLbQRdDwZDQUQcGACiZHwx21U9xb+oo0I
+         RiLIP5dRcaf0cy5lpge/HIgiB5ZIv1J8QmtAKEnpOVN2MmV68TcWfIi5CjrH8lz//09m
+         UF9bp0BEqkHi7vGMAUta/Q+cb96k821Jzje7yLsa8jIye5cAp/24NurPrgqU5aTv3RLA
+         9+KuOK077I0ihKheAwtMs+c1OCXV5HsCSXP1pv13z9jJ92DSUpX42Qz+CxStb3flMjPT
+         4ZEcGXDzhriJCpYuYirF6y8SdlqvL71CpoFY/QlB7PijVR3qF5z6wZCNxTPI1hYlcJed
+         R6Tg==
+X-Gm-Message-State: APjAAAUdXCiLAUvqXon8boH9UrvFQE/SCTPCHnwE+dCa+CKt5c5tVRVa
+        r/eLupWHsz3rt9AxCapgeDY=
+X-Google-Smtp-Source: APXvYqyBICHCkeHDpm6RD3uyh8bdwL0rVnBjkmhC3o2O8S+6ELPC2u1XcjZqBe1aU4GpnrQ+8IDiAw==
+X-Received: by 2002:adf:fe83:: with SMTP id l3mr11515445wrr.41.1581461245256;
+        Tue, 11 Feb 2020 14:47:25 -0800 (PST)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id r6sm7225892wrq.92.2020.02.11.14.47.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 14:47:24 -0800 (PST)
+Subject: [PATCH v17 8/9] mm/page_reporting: Add budget limit on how many
+ pages can be reported per pass
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, mhocko@kernel.org,
+        alexander.h.duyck@linux.intel.com, vbabka@suse.cz,
+        osalvador@suse.de
+Date:   Tue, 11 Feb 2020 14:47:19 -0800
+Message-ID: <20200211224719.29318.72113.stgit@localhost.localdomain>
+In-Reply-To: <20200211224416.29318.44077.stgit@localhost.localdomain>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-40-joro@8bytes.org>
-In-Reply-To: <20200211135256.24617-40-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 11 Feb 2020 14:47:05 -0800
-X-Gmail-Original-Message-ID: <CALCETrXnFr47OEDk8OYrHHW=1XNAQMUB=wPevhLM6ROnO6_Rog@mail.gmail.com>
-Message-ID: <CALCETrXnFr47OEDk8OYrHHW=1XNAQMUB=wPevhLM6ROnO6_Rog@mail.gmail.com>
-Subject: Re: [PATCH 39/62] x86/sev-es: Harden runtime #VC handler for
- exceptions from user-space
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> From: Joerg Roedel <jroedel@suse.de>
->
-> Send SIGBUS to the user-space process that caused the #VC exception
-> instead of killing the machine. Also ratelimit the error messages so
-> that user-space can't flood the kernel log.
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-What would cause this?  CPUID?  Something else?
+In order to keep ourselves from reporting pages that are just going to be
+reused again in the case of heavy churn we can put a limit on how many
+total pages we will process per pass. Doing this will allow the worker
+thread to go into idle much more quickly so that we avoid competing with
+other threads that might be allocating or freeing pages.
 
---Andy
+The logic added here will limit the worker thread to no more than one
+sixteenth of the total free pages in a given area per list. Once that limit
+is reached it will update the state so that at the end of the pass we will
+reschedule the worker to try again in 2 seconds when the memory churn has
+hopefully settled down.
+
+Again this optimization doesn't show much of a benefit in the standard case
+as the memory churn is minmal. However with page allocator shuffling
+enabled the gain is quite noticeable. Below are the results with a THP
+enabled version of the will-it-scale page_fault1 test showing the
+improvement in iterations for 16 processes or threads.
+
+Without:
+tasks   processes       processes_idle  threads         threads_idle
+16      8283274.75      0.17            5594261.00      38.15
+
+With:
+tasks   processes       processes_idle  threads         threads_idle
+16      8767010.50      0.21            5791312.75      36.98
+
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ include/linux/page_reporting.h |    1 +
+ mm/page_reporting.c            |   33 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/page_reporting.h b/include/linux/page_reporting.h
+index 32355486f572..3b99e0ec24f2 100644
+--- a/include/linux/page_reporting.h
++++ b/include/linux/page_reporting.h
+@@ -5,6 +5,7 @@
+ #include <linux/mmzone.h>
+ #include <linux/scatterlist.h>
+ 
++/* This value should always be a power of 2, see page_reporting_cycle() */
+ #define PAGE_REPORTING_CAPACITY		32
+ 
+ struct page_reporting_dev_info {
+diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+index 6885e74c2367..3bbd471cfc81 100644
+--- a/mm/page_reporting.c
++++ b/mm/page_reporting.c
+@@ -114,6 +114,7 @@ void __page_reporting_notify(void)
+ 	struct list_head *list = &area->free_list[mt];
+ 	unsigned int page_len = PAGE_SIZE << order;
+ 	struct page *page, *next;
++	long budget;
+ 	int err = 0;
+ 
+ 	/*
+@@ -125,12 +126,39 @@ void __page_reporting_notify(void)
+ 
+ 	spin_lock_irq(&zone->lock);
+ 
++	/*
++	 * Limit how many calls we will be making to the page reporting
++	 * device for this list. By doing this we avoid processing any
++	 * given list for too long.
++	 *
++	 * The current value used allows us enough calls to process over a
++	 * sixteenth of the current list plus one additional call to handle
++	 * any pages that may have already been present from the previous
++	 * list processed. This should result in us reporting all pages on
++	 * an idle system in about 30 seconds.
++	 *
++	 * The division here should be cheap since PAGE_REPORTING_CAPACITY
++	 * should always be a power of 2.
++	 */
++	budget = DIV_ROUND_UP(area->nr_free, PAGE_REPORTING_CAPACITY * 16);
++
+ 	/* loop through free list adding unreported pages to sg list */
+ 	list_for_each_entry_safe(page, next, list, lru) {
+ 		/* We are going to skip over the reported pages. */
+ 		if (PageReported(page))
+ 			continue;
+ 
++		/*
++		 * If we fully consumed our budget then update our
++		 * state to indicate that we are requesting additional
++		 * processing and exit this list.
++		 */
++		if (budget < 0) {
++			atomic_set(&prdev->state, PAGE_REPORTING_REQUESTED);
++			next = page;
++			break;
++		}
++
+ 		/* Attempt to pull page from list and place in scatterlist */
+ 		if (*offset) {
+ 			if (!__isolate_free_page(page, order)) {
+@@ -146,7 +174,7 @@ void __page_reporting_notify(void)
+ 		}
+ 
+ 		/*
+-		 * Make the first non-processed page in the free list
++		 * Make the first non-reported page in the free list
+ 		 * the new head of the free list before we release the
+ 		 * zone lock.
+ 		 */
+@@ -162,6 +190,9 @@ void __page_reporting_notify(void)
+ 		/* reset offset since the full list was reported */
+ 		*offset = PAGE_REPORTING_CAPACITY;
+ 
++		/* update budget to reflect call to report function */
++		budget--;
++
+ 		/* reacquire zone lock and resume processing */
+ 		spin_lock_irq(&zone->lock);
+ 
+
