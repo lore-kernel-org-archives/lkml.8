@@ -2,120 +2,105 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50893C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5D0C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A2820848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WWE2UP0b"
+	by mail.kernel.org (Postfix) with ESMTP id D47D320848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581445952;
+	bh=l9B+V0tjpsUXumO8m1fXx8yAwXOYw55xHJWpqlZZu64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kLuK3yo/fPjaAKriZ/WuebvSjw9NBTxgFZqnPOE6WIofzV8eBikoiwv70js7OmSB7
+	 KoUASSk1y/+3vrRT6WXywGJsmo11Zcfb3Grl9OlyrQt/TMYv/h17xcwdyAEx4g3ZBU
+	 3I0i0qGAkuloM2NRfuOEYFOZsBoq5KJtCLMsB4Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbgBKSaQ (ORCPT
+        id S1731361AbgBKScc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:30:16 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34595 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgBKSaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:30:16 -0500
-Received: by mail-yb1-f193.google.com with SMTP id w17so5860816ybm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:30:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r/j2vvVFfb2pvvewnOqGFeHcx4HUzbo3PkGetmF0ApA=;
-        b=WWE2UP0bVzNzxjdQPMAadNNL/kOWI0y9xAyMB3zoasEPuHuYVjeKiiLaMoyOkG4/9Y
-         ajCQvRQ4+syc0704ykkaWttG9f+RS4dt+4d4HbqZJ+P83/wspnHWvqhRV20KpxhIDvku
-         fSbMqVVQ9wBxFBlPS8PXsFkUX3v1GzbGyTGYahpS3nz8mctna7ksGnBA4vLfWREDkCwO
-         0hIF4c8oNA2TNKuN7FdxOzLZTkQeeYlqPBrrpjYlnQgJf4i1irQDLdAEqIn2MRzengid
-         02rn1zi6XW1d6SqhOIm11slkcDefx9P2xEMPqoXS3ZF81MTAe0X4L+EgAo8+rpWxn4Jx
-         9WEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r/j2vvVFfb2pvvewnOqGFeHcx4HUzbo3PkGetmF0ApA=;
-        b=n7yaQIG78DwtYSBRW10O3lxmQ2EcEWqhgEyX6+zr5QdqFHJXTDHDNAlYZYTXFI/uDh
-         nfTpbiVpBVnpRh1mgXx3LJSo5J83AEc2cRGHbkGAt6Uj55MhZwgPPUENnwi2xaB3faGy
-         U1EJloOXUXgQ8UksUUsQ0NPuvXSeLnHB2WPYh4pWUaDZQLtrWZVE1G4mEivEg2ByKlFl
-         xskudiArbBd8+vAqSp9kHf5cjRZEBGbp0fWeeEcNPHA6ylMPLKD44mtSlTbxFsSA4ZwO
-         Fe9EVE92gF6RtWBvzxsLjlpeqHBH64WhWSFWhF7tSrRUHRkB0DmQ1duCfEMfxF53ACWN
-         tGRw==
-X-Gm-Message-State: APjAAAUBcuuXEkJIBtZFvSNws6Ao1epZBQUx5yrQhJMnihbSmLZGR4vN
-        Yru88RQciDv+TFUommoH0v18LA==
-X-Google-Smtp-Source: APXvYqxv0PnETTPgk+VJLufuYzlw0zLVjWrKfCT95T70l/M+tfCVDewpTF2LGd/XpEf5QFkkdD6tVA==
-X-Received: by 2002:a25:640e:: with SMTP id y14mr6925518ybb.380.1581445814190;
-        Tue, 11 Feb 2020 10:30:14 -0800 (PST)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id a202sm2100827ywe.8.2020.02.11.10.30.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 10:30:13 -0800 (PST)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: msm8916: Properly deal with ETMv4 power management
-Date:   Tue, 11 Feb 2020 11:30:11 -0700
-Message-Id: <20200211183011.24720-1-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 11 Feb 2020 13:32:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730447AbgBKScb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:32:31 -0500
+Received: from localhost (unknown [104.133.9.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE78206D6;
+        Tue, 11 Feb 2020 18:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581445950;
+        bh=l9B+V0tjpsUXumO8m1fXx8yAwXOYw55xHJWpqlZZu64=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AljyERKVtVZzKWL/35kIi13azAOhEClGA0qIBfrqRNHizL+bxD4i8TJRDkRr3K/ft
+         hHk8rib5cwIff+tzmovuP09YVBlREmmcnpoDgkjn6NGkzmel0nhx3kXjTkbXhu7vSQ
+         bppECNBYnPWY2F7QTqkErI0ga8CUb9sK8z7SLLWE=
+Date:   Tue, 11 Feb 2020 10:32:29 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] treewide: Replace zero-length arrays with flexible-array
+ member
+Message-ID: <20200211183229.GA1938663@kroah.com>
+References: <20200211174126.GA29960@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211174126.GA29960@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Properly deal with ETMv4 power management by adding the
-"coresight-loses-context-with-cpu" property.  Otherwise tracer
-configuration is lost when CPUs enter deep idle states, resulting
-in the failure of the trace session.
+On Tue, Feb 11, 2020 at 11:41:26AM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> unadvertenly introduced[3] to the codebase from now on.
+> 
+> All these instances of code were found with the help of the following
+> Coccinelle script:
+> 
+> @@
+> identifier S, member, array;
+> type T1, T2;
+> @@
+> 
+> struct S {
+>   ...
+>   T1 member;
+>   T2 array[
+> - 0
+>   ];
+> };
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> NOTE: I'll carry this in my -next tree for the v5.6 merge window.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Why not carve this up into per-subsystem patches so that we can apply
+them to our 5.7-rc1 trees and then you submit the "remaining" that don't
+somehow get merged at that timeframe for 5.7-rc2?
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 8686e101905c..846c5b4a53e8 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -1363,6 +1363,7 @@
- 
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-+			arm,coresight-loses-context-with-cpu;
- 
- 			cpu = <&CPU0>;
- 
-@@ -1381,6 +1382,7 @@
- 
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-+			arm,coresight-loses-context-with-cpu;
- 
- 			cpu = <&CPU1>;
- 
-@@ -1399,6 +1401,7 @@
- 
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-+			arm,coresight-loses-context-with-cpu;
- 
- 			cpu = <&CPU2>;
- 
-@@ -1417,6 +1420,7 @@
- 
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-+			arm,coresight-loses-context-with-cpu;
- 
- 			cpu = <&CPU3>;
- 
--- 
-2.20.1
+thanks,
 
+greg k-h
