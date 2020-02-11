@@ -2,149 +2,98 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B2BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF499C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2086420848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E61220842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QvD20COf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbgBKTVZ (ORCPT
+        id S1731638AbgBKTVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:21:25 -0500
-Received: from mga14.intel.com ([192.55.52.115]:52862 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729800AbgBKTVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:21:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 11:21:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="433791170"
-Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
-  by fmsmga006.fm.intel.com with ESMTP; 11 Feb 2020 11:21:21 -0800
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Murali Karicheri <m-karicheri2@ti.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-Cc:     Po Liu <po.liu@nxp.com>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "hauke.mehrtens\@intel.com" <hauke.mehrtens@intel.com>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "allison\@lohutok.net" <allison@lohutok.net>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "hkallweit1\@gmail.com" <hkallweit1@gmail.com>,
-        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
-        "andrew\@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli\@gmail.com" <f.fainelli@gmail.com>,
-        "alexandru.ardelean\@analog.com" <alexandru.ardelean@analog.com>,
-        "jiri\@mellanox.com" <jiri@mellanox.com>,
-        "ayal\@mellanox.com" <ayal@mellanox.com>,
-        "pablo\@netfilter.org" <pablo@netfilter.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "simon.horman\@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
-In-Reply-To: <70deb628-d7bc-d2a3-486d-d3e53854c06e@ti.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com> <87v9p93a2s.fsf@linux.intel.com> <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com> <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com> <87d0bajc3l.fsf@linux.intel.com> <70deb628-d7bc-d2a3-486d-d3e53854c06e@ti.com>
-Date:   Tue, 11 Feb 2020 11:22:56 -0800
-Message-ID: <877e0tx71r.fsf@linux.intel.com>
+        Tue, 11 Feb 2020 14:21:33 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53425 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729800AbgBKTVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:21:33 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so1763425pjc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:21:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LWdO903JlL7mrIroJ1DR4H0Lf0OnGW3IvW4RvhYAFg0=;
+        b=QvD20COfVzxuay6xGJSzAAWXcjptzM8MyBsKCfYGfkNUpP3ZsfpRCnB1a9xLwfnTHB
+         wKNeAxR0CVstaTCqWBMgJCLOT41JKo13HUck+vjHHNU6vzraPrnd3cDFUvgFWIPAtFMt
+         nAsJb50vycy90MUlcKEG44K3kaE7ytB6v2oE8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LWdO903JlL7mrIroJ1DR4H0Lf0OnGW3IvW4RvhYAFg0=;
+        b=VyJTZodQZ3eEjfmmMEvY0yXYwO6B85KjITY4ml4GGXTt8Hn/j80tA8NHP04HvPOWqv
+         n5x6toHK5PFiUsluI1jsyHhRtSvJaqRMJ9f0PRbG1pRf54R5Y78ZYxoylQNbEujxSFNJ
+         jQdtBwaJSfF2IBZRvyL4WfZpv9L8bw8bAd15o4WSz0IEnVXlm4erJlyUXZEmIx9ewGSi
+         vGq1TV+7W5xL0FV/22IMfUXY/MWKL9WDfIYMj/1qMjhSsBCWiuNC3ehtLYhHBGkkEJXi
+         hKQnojBLonjgkJoxl9iHhA1bfXiSoJuHFEJZRfQ/FcvCgopNpMStIWaQrkgFL+AyesMU
+         gdSw==
+X-Gm-Message-State: APjAAAU5F9uhe5YgdV6npHz/h7e9kerbbDvPA94h5y5sa+oCMeQqyxnQ
+        SvH7vWn7JyR4IbGXY37fxuQ9LQ==
+X-Google-Smtp-Source: APXvYqw1YwEZ93PZj55gFovRIY7+WfkCv4LbdL59T6UWNYBnl5teLRUx7UPTsrLJB/UZSKSu0YhImQ==
+X-Received: by 2002:a17:90a:9311:: with SMTP id p17mr5315663pjo.140.1581448892021;
+        Tue, 11 Feb 2020 11:21:32 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f43sm4267444pje.23.2020.02.11.11.21.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 11:21:31 -0800 (PST)
+Date:   Tue, 11 Feb 2020 11:21:29 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Subject: Re: [PATCH] lib/test_lockup: test module to generate lockups
+Message-ID: <202002111120.91782E0686@keescook>
+References: <158132859146.2797.525923171323227836.stgit@buzz>
+ <202002101725.EE6D5A6@keescook>
+ <5e5ee6b7-68a9-1bcc-66c5-814e40a627be@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e5ee6b7-68a9-1bcc-66c5-814e40a627be@yandex-team.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Murali Karicheri <m-karicheri2@ti.com> writes:
+On Tue, Feb 11, 2020 at 03:57:42PM +0300, Konstantin Khlebnikov wrote:
+> On 11/02/2020 04.26, Kees Cook wrote:
+> > On Mon, Feb 10, 2020 at 12:56:31PM +0300, Konstantin Khlebnikov wrote:
+> > > CONFIG_TEST_LOCKUP=m adds module "test_lockup" that helps to make sure
+> > > that watchdogs and lockup detectors are working properly.
+> > 
+> > Isn't this all already possible with CONFIG_LKDTM ?
+> 
+> Yep, LKDTM covers some cases. But they are unrecoverable.
+> 
+> It seems LKDTM is more like a fixed set of unit tests while
+> test_lockup is a flexible tool for stress load.
 
-> We are still working to send a patch for taprio offload on our hardware
-> and it may take a while to get to this. So if someone can help to add
-> the required kernel/driver interface for this, that will be great!
+Okay, cool. I just wanted to make sure you'd seen LKDTM and there wasn't
+too much wheel-reinvention happening. :) Thanks for checking!
 
-Will add this to my todo list. But if anyone else has the spare cycles
-feel free to have a go at it.
-
->
->>>>       - ConfigChangeError - Error in configuration (AdminBaseTime <
->>>>         CurrentTime)
->>>
->>> This can be exported similarly.
->> 
->> In my view, having this as a "runtime" error is not useful, as we can
->> verify this at configuration time.
->
-> Looks like this is not an error per 802.1Q standard if I understood it
-> correctly.
->
-> This is what I see.
-> =======================================================================
->  From 802.1Q 2018, 8.6.9.1.1 SetCycleStartTime()
->
-> If AdminBaseTime is set to the same time in the past in all bridges and
-> end stations, OperBaseTime is always in the past, and all cycles start
-> synchronized. Using AdminBaseTime in the past is appropriate when you
-> can start schedules prior to starting the application that uses the
-> schedules. Use of AdminBaseTime in the future is intended to change a
-> currently running schedule in all bridges and end stations to a new
-> schedule at a future time. Using AdminBaseTime in the future is
-> appropriate when schedules must be changed without stopping the
-> application
-> ========================================================================
->
-
-What I meant here is the case that I already have an "oper" schedule
-running, so my "oper->base_time" is in the past, and I try to add an
-"admin" schedule with a "base_time" also in the past. What's the
-expected behavior in this case? The text about stopping/starting
-applications doesn't seem to apply to the way the tc subsystem interacts
-with the applications.
-
->> 
->>>
->>>>       - SupportedListMax - Maximum supported Admin/Open shed list.
->>>>
->>>> Is there a plan to export these from driver through tc show or such
->>>> command? The reason being, there would be applications developed to
->>>> manage configuration/schedule of TSN nodes that would requires these
->>>> information from the node. So would need a support either in tc or
->>>> some other means to retrieve them from hardware or driver. That is my
->>>> understanding...
->>>>
->> 
->> Hm, now I understamd what you meant here...
->> 
->>>
->>> Not sure what answer you expect to receive for "is there any plan".
->>> You can go ahead and propose something, as long as it is reasonably
->>> useful to have.
->> 
->> ... if this is indeed useful, perhaps one way to do is to add a subcommand
->> to TC_SETUP_QDISC_TAPRIO, so we can retrieve the stats/information we want
->> from the driver. Similar to what cls_flower does.
->> 
->
-> What I understand is that there will be some work done to allow auto
-> configuration of TSN nodes from user space and that would need access to
-> all or some of the above parameters along with tc command to configure
-> the same. May be a open source project for this or some custom
-> application? Any such projects existing??
-
-Yeah, this is a big missing piece for TSN. I've heard 'netopeer2' and
-'sysrepo' mentioned when similar questions were asked, but I have still
-to take a look at them and see what's missing. (Or if they are the right
-tool for the job)
-
+-Kees
 
 -- 
-Vinicius
+Kees Cook
