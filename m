@@ -2,157 +2,132 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945D0C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7176EC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D222082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52768206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgBKOuv (ORCPT
+        id S1730098AbgBKOvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:50:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37002 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 09:51:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:47298 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgBKOuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:50:51 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CFDB20708;
-        Tue, 11 Feb 2020 14:50:49 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 09:50:47 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH v2] tracing/perf: Move rcu_irq_enter/exit_irqson() to perf
- trace point hook
-Message-ID: <20200211095047.58ddf750@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727762AbgBKOvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 09:51:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8588030E;
+        Tue, 11 Feb 2020 06:51:09 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7B6F3F68E;
+        Tue, 11 Feb 2020 06:51:03 -0800 (PST)
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Olof Johansson <olof@lixom.net>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+ <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+ <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com>
+ <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
+ <27e0acfc-0782-bd97-a80e-1143f1315891@nxp.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <60272422-b4c8-a86a-fa73-c158f723acb4@arm.com>
+Date:   Tue, 11 Feb 2020 14:51:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <27e0acfc-0782-bd97-a80e-1143f1315891@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/02/2020 1:55 pm, Laurentiu Tudor wrote:
+> 
+> 
+> On 11.02.2020 15:04, Robin Murphy wrote:
+>> On 2020-02-11 12:13 pm, Laurentiu Tudor wrote:
+>> [...]
+>>>> This is a known issue about DPAA2 MC bus not working well with SMMU
+>>>> based IO mapping.  Adding Laurentiu to the chain who has been looking
+>>>> into this issue.
+>>>
+>>> Yes, I'm closely following the issue. I actually have a workaround 
+>>> (attached) but haven't submitted as it will probably raise a lot of 
+>>> eyebrows. In the mean time I'm following some discussions [1][2][3] 
+>>> on the iommu list which seem to try to tackle what appears to be a 
+>>> similar issue but with framebuffers. My hope is that we will be able 
+>>> to leverage whatever turns out.
+>>
+>> Indeed it's more general than framebuffers - in fact there was a 
+>> specific requirement from the IORT side to accommodate network/storage 
+>> controllers with in-memory firmware/configuration data/whatever set up 
+>> by the bootloader that want to be handed off 'live' to Linux because 
+>> the overhead of stopping and restarting them is impractical. Thus this 
+>> DPAA2 setup is very much within scope of the desired solution, so 
+>> please feel free to join in (particularly on the DT parts) :)
+> 
+> Will sure do. Seems that the 2nd approach (the one with list of 
+> compatibles in arm-smmu) fits really well with our scenario. Will this 
+> be the way to go forward?
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+I'm hoping that Thierry's proposal can be made to work out, since it's 
+closer to how the ACPI version should work, which means we would be able 
+to do a lot more in shared common code rather than baking magic 
+knowledge and duplicated functionality into individual IOMMU drivers.
 
-Commit e6753f23d961d ("tracepoint: Make rcuidle tracepoint callers use
-SRCU") removed the calls to rcu_irq_enter/exit_irqson() and replaced it with
-srcu callbacks as that much faster for the rcuidle cases. But this caused an
-issue with perf, because perf only uses rcu to synchronize its trace point
-callback routines.
+>> As for right now, note that your patch would only be a partial 
+>> mitigation to slightly reduce the fault window but not remove it 
+>> entirely. To be robust the SMMU driver *has* to know about live 
+>> streams before the first arm_smmu_reset() - hence the need for generic 
+>> firmware bindings - so doing anything from the MC driver is already 
+>> too late (and indeed the current iommu_request_dm_for_dev() mechanism 
+>> is itself a microcosm of the same problem).
+> 
+> I think you might have missed in the patch that it pauses the firmware 
+> at early boot, in its driver init and it resumes it only after 
+> iommu_request_dm_for_dev() has completed. :)
 
-The issue was that if perf traced one of the "rcuidle" paths, that path no
-longer enabled RCU if it was not watching, and this caused lockdep to
-complain when the perf code used rcu_read_lock() and RCU was not "watching".
+Ah, from the context I missed that that was non-modular and relying on 
+initcall trickery... fair enough, in that case I'll downgrade my "it's 
+insufficient" to "it's ugly and somewhat fragile" :P
 
-Commit 865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for
-rcuidle tracepoints") added back the rcu_irq_enter/exit_irqson() code, but
-this made the srcu changes no longer applicable.
-
-As perf is the only callback that needs the heavier weight
-"rcu_irq_enter/exit_irqson()" calls, move it to the perf specific code and
-not bog down those that do not require it.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-Changes since v1:
-
-  - Moved the rcu_is_watching logic to perf_tp_event() and remove the
-    exporting of rcu_irq_enter/exit_irqson().
-
- include/linux/tracepoint.h |  8 ++------
- kernel/events/core.c       | 17 ++++++++++++++++-
- 2 files changed, 18 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 1fb11daa5c53..a83fd076a312 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -179,10 +179,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		 * For rcuidle callers, use srcu since sched-rcu	\
- 		 * doesn't work from the idle path.			\
- 		 */							\
--		if (rcuidle) {						\
-+		if (rcuidle)						\
- 			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
--			rcu_irq_enter_irqson();				\
--		}							\
- 									\
- 		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
- 									\
-@@ -194,10 +192,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 			} while ((++it_func_ptr)->func);		\
- 		}							\
- 									\
--		if (rcuidle) {						\
--			rcu_irq_exit_irqson();				\
-+		if (rcuidle)						\
- 			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
--		}							\
- 									\
- 		preempt_enable_notrace();				\
- 	} while (0)
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 455451d24b4a..0abbf5e2ee62 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8941,6 +8941,7 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
- {
- 	struct perf_sample_data data;
- 	struct perf_event *event;
-+	bool rcu_watching = rcu_is_watching();
- 
- 	struct perf_raw_record raw = {
- 		.frag = {
-@@ -8949,6 +8950,17 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
- 		},
- 	};
- 
-+	if (!rcu_watching) {
-+		/*
-+		 * If nmi_enter() is traced, it is possible that
-+		 * RCU may not be watching "yet", and this is called.
-+		 * We can not call rcu_irq_enter_irqson() in this case.
-+		 */
-+		if (unlikely(in_nmi()))
-+			goto out;
-+		rcu_irq_enter_irqson();
-+	}
-+
- 	perf_sample_data_init(&data, 0, 0);
- 	data.raw = &raw;
- 
-@@ -8985,8 +8997,11 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
- unlock:
- 		rcu_read_unlock();
- 	}
--
-+	if (!rcu_watching)
-+		rcu_irq_exit_irqson();
-+out:
- 	perf_swevent_put_recursion_context(rctx);
-+
- }
- EXPORT_SYMBOL_GPL(perf_tp_event);
- 
--- 
-2.20.1
-
-
+Thanks,
+Robin.
