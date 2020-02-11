@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D71DC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2971C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2B920870
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97CD20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgBKMrt (ORCPT
+        id S1728608AbgBKMry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:47:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45926 "EHLO
+        Tue, 11 Feb 2020 07:47:54 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45979 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgBKMrp (ORCPT
+        with ESMTP id S1728023AbgBKMrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:47:45 -0500
+        Tue, 11 Feb 2020 07:47:51 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j1Ux0-0007Wz-AS; Tue, 11 Feb 2020 13:47:38 +0100
+        id 1j1Ux9-0007b5-Qy; Tue, 11 Feb 2020 13:47:47 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C86A01C2017;
-        Tue, 11 Feb 2020 13:47:37 +0100 (CET)
-Date:   Tue, 11 Feb 2020 12:47:37 -0000
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7455D1C2018;
+        Tue, 11 Feb 2020 13:47:47 +0100 (CET)
+Date:   Tue, 11 Feb 2020 12:47:47 -0000
+From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] objtool: Add relocation check for alternative sections
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Julien Thierry <jthierry@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <7b90b68d093311e4e8f6b504a9e1c758fd7e0002.1581359535.git.jpoimboe@redhat.com>
-References: <7b90b68d093311e4e8f6b504a9e1c758fd7e0002.1581359535.git.jpoimboe@redhat.com>
+Subject: [tip: sched/urgent] sched/fair: Fix kernel-doc warning in
+ attach_entity_load_avg()
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <cbe964e4-6879-fd08-41c9-ef1917414af4@infradead.org>
+References: <cbe964e4-6879-fd08-41c9-ef1917414af4@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158142525750.411.6760839149757331330.tip-bot2@tip-bot2>
+Message-ID: <158142526720.411.14848051383270906553.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,69 +57,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/objtool branch of tip:
+The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     dc4197236c20e761f2007c641afd193f81a00a74
-Gitweb:        https://git.kernel.org/tip/dc4197236c20e761f2007c641afd193f81a00a74
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Mon, 10 Feb 2020 12:32:40 -06:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 11 Feb 2020 13:39:52 +01:00
+Commit-ID:     e9f5490c3574b435ce7fe7a71724aa3866babc7f
+Gitweb:        https://git.kernel.org/tip/e9f5490c3574b435ce7fe7a71724aa3866babc7f
+Author:        Randy Dunlap <rdunlap@infradead.org>
+AuthorDate:    Sun, 09 Feb 2020 19:29:12 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 11 Feb 2020 13:05:10 +01:00
 
-objtool: Add relocation check for alternative sections
+sched/fair: Fix kernel-doc warning in attach_entity_load_avg()
 
-Relocations in alternative code can be dangerous, because the code is
-copy/pasted to the text section after relocations have been resolved,
-which can corrupt PC-relative addresses.
+Fix kernel-doc warning in kernel/sched/fair.c, caused by a recent
+function parameter removal:
 
-However, relocations might be acceptable in some cases, depending on the
-architecture.  For example, the x86 alternatives code manually fixes up
-the target addresses for PC-relative jumps and calls.
+  ../kernel/sched/fair.c:3526: warning: Excess function parameter 'flags' description in 'attach_entity_load_avg'
 
-So disallow relocations in alternative code, except where the x86 arch
-code allows it.
-
-This code may need to be tweaked for other arches when objtool gets
-support for them.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Julien Thierry <jthierry@redhat.com>
-Link: https://lkml.kernel.org/r/7b90b68d093311e4e8f6b504a9e1c758fd7e0002.1581359535.git.jpoimboe@redhat.com
+Fixes: a4f9a0e51bbf ("sched/fair: Remove redundant call to cpufreq_update_util()")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/cbe964e4-6879-fd08-41c9-ef1917414af4@infradead.org
 ---
- tools/objtool/check.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ kernel/sched/fair.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 9016ae1..b038de2 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -768,6 +768,27 @@ static int handle_group_alt(struct objtool_file *file,
- 		insn->ignore = orig_insn->ignore_alts;
- 		insn->func = orig_insn->func;
- 
-+		/*
-+		 * Since alternative replacement code is copy/pasted by the
-+		 * kernel after applying relocations, generally such code can't
-+		 * have relative-address relocation references to outside the
-+		 * .altinstr_replacement section, unless the arch's
-+		 * alternatives code can adjust the relative offsets
-+		 * accordingly.
-+		 *
-+		 * The x86 alternatives code adjusts the offsets only when it
-+		 * encounters a branch instruction at the very beginning of the
-+		 * replacement group.
-+		 */
-+		if ((insn->offset != special_alt->new_off ||
-+		    (insn->type != INSN_CALL && !is_static_jump(insn))) &&
-+		    find_rela_by_dest_range(insn->sec, insn->offset, insn->len)) {
-+
-+			WARN_FUNC("unsupported relocation in alternatives section",
-+				  insn->sec, insn->offset);
-+			return -1;
-+		}
-+
- 		if (!is_static_jump(insn))
- 			continue;
- 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 94c3b84..3c8a379 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3516,7 +3516,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+  * attach_entity_load_avg - attach this entity to its cfs_rq load avg
+  * @cfs_rq: cfs_rq to attach to
+  * @se: sched_entity to attach
+- * @flags: migration hints
+  *
+  * Must call update_cfs_rq_load_avg() before this, since we rely on
+  * cfs_rq->avg.last_update_time being current.
