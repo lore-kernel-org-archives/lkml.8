@@ -2,81 +2,81 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D242BC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DFDC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9958120848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5304E20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 17:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yRb8+/31"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aebLhhBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgBKRcD (ORCPT
+        id S1729573AbgBKRcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:32:03 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:52116 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729132AbgBKRcD (ORCPT
+        Tue, 11 Feb 2020 12:32:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49076 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbgBKRcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 12:32:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581442322; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=repdNbTnvNyihZR5giRVucEDG3b0naplUOtLwuModh0=;
-        b=yRb8+/31bMmrAPPCBKhT/7KIotyo4Yux58c2CBcNkxcaluCL9F4YJy5Ge1EiwRKpF7HpGf
-        +gNsrIMrii+X2GYnJ1jDSgfIksGrHRQJ4cM8/hmDg1oJYOuCBsJLMUqA6ej+C8SnR/mWCb
-        vZy37oEaIjmi7JkA94PxjWimZx8/6Lc=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc:     od@zcrc.me, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] mtd: rawnand: ingenic: Use devm_platform_ioremap_resource()
-Date:   Tue, 11 Feb 2020 14:31:51 -0300
-Message-Id: <20200211173151.27587-1-paul@crapouillou.net>
+        Tue, 11 Feb 2020 12:32:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xEZn7flkyukRhdtqoKsfHjJ5Uqm8IWBX07W95P9+qgo=; b=aebLhhByFaUgdZm87khGrgzFgE
+        +M4fflT3Jowlwq9xYPDPnLXnbzTVAI9YBmhjVZFFo1Rw2T0oTj+2xiSuKJI/aND8bgqCCe3iJQ8/Q
+        L2MH8hqBg39qyhMcNcp7Y9mc5v/yxyC/31uuzAITeXkwB7m7yG6j0AdHd9D3uMfvoo3DnIv+8SeaF
+        wt7qWBaG+RAe/xTfY91ZIWQrHW0NsabHFY7hvoRIWDoqyQolXip2jRA58snyjhR2UbProrPvB/bSl
+        vMZS6AkpVco25Jx9K9yVgfm1YArYCuBIlVgQuujHNv6QDstklr5D7T8MpQTE4aw3WtrQBGqiax28p
+        rJxtm3Gg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1ZOR-0001pz-T0; Tue, 11 Feb 2020 17:32:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C13F7305803;
+        Tue, 11 Feb 2020 18:30:24 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7B71B2B920215; Tue, 11 Feb 2020 18:32:13 +0100 (CET)
+Date:   Tue, 11 Feb 2020 18:32:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [PATCH v2] tracing/perf: Move rcu_irq_enter/exit_irqson() to
+ perf trace point hook
+Message-ID: <20200211173213.GX14946@hirez.programming.kicks-ass.net>
+References: <20200211095047.58ddf750@gandalf.local.home>
+ <20200211153452.GW14914@hirez.programming.kicks-ass.net>
+ <20200211111828.48058768@gandalf.local.home>
+ <20200211172952.GY14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211172952.GY14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() instead of platform_get_resource()
-+ devm_ioremap_resource().
+On Tue, Feb 11, 2020 at 06:29:52PM +0100, Peter Zijlstra wrote:
+> +#define trace_rcu_enter()					\
+> +({								\
+> +	unsigned long state = 0;				\
+> +	if (!rcu_is_watching())	{				\
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/mtd/nand/raw/ingenic/ingenic_ecc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-index c954189606f6..8e22cd6ec71f 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-@@ -124,7 +124,6 @@ int ingenic_ecc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct ingenic_ecc *ecc;
--	struct resource *res;
- 
- 	ecc = devm_kzalloc(dev, sizeof(*ecc), GFP_KERNEL);
- 	if (!ecc)
-@@ -134,8 +133,7 @@ int ingenic_ecc_probe(struct platform_device *pdev)
- 	if (!ecc->ops)
- 		return -EINVAL;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ecc->base = devm_ioremap_resource(dev, res);
-+	ecc->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ecc->base))
- 		return PTR_ERR(ecc->base);
- 
--- 
-2.25.0
-
+Also, afaict rcu_is_watching() itself needs more love, the functio has
+notrace, but calls other stuff that does not have notrace or inline.
