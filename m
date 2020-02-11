@@ -2,84 +2,143 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5290EC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450A8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EF02086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA6220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PKySJ8G8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgBKP5J (ORCPT
+        id S1730033AbgBKP5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:57:09 -0500
-Received: from mga17.intel.com ([192.55.52.151]:21681 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbgBKP5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:57:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 07:57:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="347300948"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Feb 2020 07:57:04 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j1XuM-000lwv-1b; Tue, 11 Feb 2020 17:57:06 +0200
-Date:   Tue, 11 Feb 2020 17:57:06 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 09/18] mfd: intel_soc_pmic: Add SCU IPC member to
- struct intel_soc_pmic
-Message-ID: <20200211155706.GH10400@smile.fi.intel.com>
-References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
- <20200211132603.73509-10-mika.westerberg@linux.intel.com>
+        Tue, 11 Feb 2020 10:57:41 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:19470 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728389AbgBKP5l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:57:41 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BFgiWh005066;
+        Tue, 11 Feb 2020 16:57:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=bbFYX6l2oHqcB37HwIrG102ruoCSat6PEqciFlehfTo=;
+ b=PKySJ8G8AbrJ4k583iDjQs5mLCntymoL0h/H00hNilX+pwgwuQ2Y3AM2dzjvJS4kEKof
+ wBxUShCEKlPOAdYvT0452DmMw1ng8n4h3Ey9HKxwVYVoHS7i0vq5YJjaGQM29EzKMfSe
+ otegXhwK+aJeZ5YCKBCW0OlkS94QYtBbrNzBEk9IAqCC0znPOihKq2852TEwpMu3UxO0
+ 09yiRVJk7CfMny2D48ELea1BddTYrDxvAfSp+56dgCNXgxmhqC78b5AqSgUA3WIZ8Y0v
+ mVnb2rdOAdOXi77/pkSBhz7PZTqFBFMl5NvtUiIgB+RzLYWOE+NnzeJnPTw8cupkUu0a zw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1urh6kvb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Feb 2020 16:57:24 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9A09910003B;
+        Tue, 11 Feb 2020 16:57:19 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7B11D2C2801;
+        Tue, 11 Feb 2020 16:57:19 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Feb
+ 2020 16:57:18 +0100
+Subject: Re: [PATCH v4 0/5] remoteproc: Add elf64 support
+To:     Clement Leger <cleger@kalray.eu>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <527785289.2852303.1581062223707.JavaMail.zimbra@kalray.eu>
+ <20200210162209.23149-1-cleger@kalray.eu>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <5b8045be-0942-2ecf-5dba-dad58071f6af@st.com>
+Date:   Tue, 11 Feb 2020 16:57:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211132603.73509-10-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200210162209.23149-1-cleger@kalray.eu>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_04:2020-02-10,2020-02-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:25:54PM +0300, Mika Westerberg wrote:
-> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
-> be using this field going forward to access the SCU IPC instance.
+Hi Clement,
+
+I tested the series on the stm32 platform for remote proc firmwre load: no regression found.
+I do not test the da_to_va feature as not implemented on stm32 platform.
+
+Regards,
+Arnaud
+
+
+
+On 2/10/20 5:22 PM, Clement Leger wrote:
+> This serie add support for elf64 in remoteproc (elf loader, coredump). 
+> First two patches modifies the type of len argument (in da_to_va) and
+> boot_addr in order to allow loading elf64 segment with a u64 size
+> and a u64 entry point.
+> Next patch introduce a set of macros to access elf64 and elf32
+> transparently.
+> Last two patches are the actual modification in the elf loader and
+> remoteproc coredump support to add elf64 support.
 > 
-> While there add kernel-doc for the intel_soc_pmic structure.
-
-> + * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
-> + * @irq_chip_data_tmu: Chained IRQ chip data for the time management unit
-> + * @irq_chip_data_bcu: Chained IRQ chip data for the burst control unit
-> + * @irq_chip_data_adc: Chained IRQ chip data for the general purpose ADC
-> + * @irq_chip_data_chgr: Chained IRQ chip data for the external charger
-> + * @irq_chip_data_crit: Chained IRQ chip data for the critical event handler
-
-Perhaps capitalize the decoded abbreviation, e.g.
-general purpose ADC -> General Purpose ADC ?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Changes from V3:
+>  - Adapt coredump to elf64 file format
+>  - Rename remoteproc_elf_loader.h to remoteproc_elf_helpers.h
+>  - Update copyright year in remoteproc_elf_helpers.h
+>  - Rename macros elf_hdr_* to elf_get_hdr_* for coherency with elf_hdr_set_*
+>  - Split elf64 loader patch in 3:
+>    - boot_addr u64 change
+>    - remoteproc_elf_helpers.h creation
+>    - elf64 loading
+> 
+> Clement Leger (5):
+>   remoteproc: Use u64 len for da_to_va
+>   remoteproc: Use u64 type for boot_addr
+>   remoteproc: Add elf helpers to access elf64 and elf32 fields
+>   remoteproc: Add elf64 support in elf loader
+>   remoteproc: Adapt coredump to generate correct elf type
+> 
+>  Documentation/remoteproc.txt                |   2 +-
+>  drivers/remoteproc/imx_rproc.c              |  11 +-
+>  drivers/remoteproc/keystone_remoteproc.c    |   4 +-
+>  drivers/remoteproc/qcom_q6v5_adsp.c         |   2 +-
+>  drivers/remoteproc/qcom_q6v5_mss.c          |   2 +-
+>  drivers/remoteproc/qcom_q6v5_pas.c          |   2 +-
+>  drivers/remoteproc/qcom_q6v5_wcss.c         |   2 +-
+>  drivers/remoteproc/qcom_wcnss.c             |   2 +-
+>  drivers/remoteproc/remoteproc_core.c        |  69 +++++++------
+>  drivers/remoteproc/remoteproc_elf_helpers.h |  95 ++++++++++++++++++
+>  drivers/remoteproc/remoteproc_elf_loader.c  | 150 ++++++++++++++++++----------
+>  drivers/remoteproc/remoteproc_internal.h    |   4 +-
+>  drivers/remoteproc/st_remoteproc.c          |   2 +-
+>  drivers/remoteproc/st_slim_rproc.c          |   4 +-
+>  drivers/remoteproc/wkup_m3_rproc.c          |   4 +-
+>  include/linux/remoteproc.h                  |   7 +-
+>  16 files changed, 252 insertions(+), 110 deletions(-)
+>  create mode 100644 drivers/remoteproc/remoteproc_elf_helpers.h
+> 
