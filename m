@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18466C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A1BC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E38212086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E442467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgBKN5Y (ORCPT
+        id S1729966AbgBKN5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:57:24 -0500
-Received: from 8bytes.org ([81.169.241.247]:51838 "EHLO theia.8bytes.org"
+        Tue, 11 Feb 2020 08:57:23 -0500
+Received: from 8bytes.org ([81.169.241.247]:52198 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729516AbgBKNxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729517AbgBKNxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 08:53:23 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2ADFDE3A; Tue, 11 Feb 2020 14:53:12 +0100 (CET)
+        id 00E0DE35; Tue, 11 Feb 2020 14:53:11 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 28/62] x86/head/64: Switch to initial stack earlier
-Date:   Tue, 11 Feb 2020 14:52:22 +0100
-Message-Id: <20200211135256.24617-29-joro@8bytes.org>
+Subject: [PATCH 27/62] x86/head/64: Load segment registers earlier
+Date:   Tue, 11 Feb 2020 14:52:21 +0100
+Message-Id: <20200211135256.24617-28-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211135256.24617-1-joro@8bytes.org>
 References: <20200211135256.24617-1-joro@8bytes.org>
@@ -48,46 +48,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make sure there is a stack once the kernel runs from virual addresses.
-At this stage any secondary CPU which boots will have lost its stack
-because the kernel switched to a new page-table which does not map the
-real-mode stack anymore.
-
-This is also needed for handling early #VC exceptions caused by
-instructions like CPUID.
+Make sure segments are properly set up before setting up an IDT and
+doing anything that might cause a #VC exception. This is later needed
+for early exception handling.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kernel/head_64.S | 52 +++++++++++++++++++--------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 36f2f30ad200..eefd6838b895 100644
+index a3a9383e8dd6..36f2f30ad200 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -188,6 +188,12 @@ SYM_CODE_START(secondary_startup_64)
- 	movl	initial_gs+4(%rip),%edx
- 	wrmsr
+@@ -162,6 +162,32 @@ SYM_CODE_START(secondary_startup_64)
+ 	movq	%rax, boot_gdt_base(%rip)
+ 	lgdt	boot_gdt_descr(%rip)
  
++	/* set up data segments */
++	xorl %eax,%eax
++	movl %eax,%ds
++	movl %eax,%ss
++	movl %eax,%es
++
 +	/*
-+	 * Setup a boot time stack - Any secondary CPU will have lost its stack
-+	 * by now because the cr3-switch above unmaps the real-mode stack
++	 * We don't really need to load %fs or %gs, but load them anyway
++	 * to kill any stale realmode selectors.  This allows execution
++	 * under VT hardware.
 +	 */
-+	movq initial_stack(%rip), %rsp
++	movl %eax,%fs
++	movl %eax,%gs
++
++	/* Set up %gs.
++	 *
++	 * The base of %gs always points to fixed_percpu_data. If the
++	 * stack protector canary is enabled, it is located at %gs:40.
++	 * Note that, on SMP, the boot cpu uses init data section until
++	 * the per cpu areas are set up.
++	 */
++	movl	$MSR_GS_BASE,%ecx
++	movl	initial_gs(%rip),%eax
++	movl	initial_gs+4(%rip),%edx
++	wrmsr
 +
  	/* Check if nx is implemented */
  	movl	$0x80000001, %eax
  	cpuid
-@@ -208,9 +214,6 @@ SYM_CODE_START(secondary_startup_64)
- 	/* Make changes effective */
- 	movq	%rax, %cr0
+@@ -197,32 +223,6 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	lgdt	early_gdt_descr(%rip)
  
--	/* Setup a boot time stack */
--	movq initial_stack(%rip), %rsp
+-	/* set up data segments */
+-	xorl %eax,%eax
+-	movl %eax,%ds
+-	movl %eax,%ss
+-	movl %eax,%es
 -
- 	/* zero EFLAGS after setting rsp */
- 	pushq $0
- 	popfq
+-	/*
+-	 * We don't really need to load %fs or %gs, but load them anyway
+-	 * to kill any stale realmode selectors.  This allows execution
+-	 * under VT hardware.
+-	 */
+-	movl %eax,%fs
+-	movl %eax,%gs
+-
+-	/* Set up %gs.
+-	 *
+-	 * The base of %gs always points to fixed_percpu_data. If the
+-	 * stack protector canary is enabled, it is located at %gs:40.
+-	 * Note that, on SMP, the boot cpu uses init data section until
+-	 * the per cpu areas are set up.
+-	 */
+-	movl	$MSR_GS_BASE,%ecx
+-	movl	initial_gs(%rip),%eax
+-	movl	initial_gs+4(%rip),%edx
+-	wrmsr
+-
+ 	/* rsi is pointer to real mode structure with interesting info.
+ 	   pass it to C */
+ 	movq	%rsi, %rdi
 -- 
 2.17.1
 
