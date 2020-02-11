@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1E3C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94690C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE6520848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776F42070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgBKXjf (ORCPT
+        id S1728354AbgBKXjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:39:35 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51023 "EHLO
+        Tue, 11 Feb 2020 18:39:39 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61619 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbgBKXjB (ORCPT
+        with ESMTP id S1728214AbgBKXjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 18:39:01 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id a806f37668c6bdd0; Wed, 12 Feb 2020 00:38:59 +0100
+ id 9bf901beddd75d4f; Wed, 12 Feb 2020 00:39:00 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH 06/28] PM: QoS: Drop iterations over global QoS classes
-Date:   Tue, 11 Feb 2020 23:59:22 +0100
-Message-ID: <2037812.lB3JyXoBhI@kreacher>
+Subject: [PATCH 04/28] PM: QoS: Clean up pm_qos_update_target() and pm_qos_update_flags()
+Date:   Tue, 11 Feb 2020 23:58:33 +0100
+Message-ID: <1746259.hJgS1hQAGi@kreacher>
 In-Reply-To: <1654227.8mz0SueHsU@kreacher>
 References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
@@ -42,118 +42,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-After commit c3082a674f46 ("PM: QoS: Get rid of unused flags") the
-only global PM QoS class in use is PM_QOS_CPU_DMA_LATENCY, so it
-does not really make sense to iterate over global QoS classes
-anywhere, since there is only one.
+Clean up the pm_qos_update_target() function:
+ * Update its kerneldoc comment.
+ * Drop the redundant ret local variable from it.
+ * Reorder definitions of local variables in it.
+ * Update a comment in it.
 
-Remove iterations over global QoS classes from the code and use
-PM_QOS_CPU_DMA_LATENCY as the target class directly where needed.
+Also update the kerneldoc comment of pm_qos_update_flags() (e.g.
+notifiers are not called by it any more) and add one emtpy line
+to its body (for more visual clarity).
 
 No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- kernel/power/qos.c | 52 ++++++++++++++--------------------------------------
- 1 file changed, 14 insertions(+), 38 deletions(-)
+ kernel/power/qos.c | 56 ++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 29 insertions(+), 27 deletions(-)
 
 diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-index f09eca5ffe07..57ff542a4f9d 100644
+index a6be7faa1974..6a36809d6160 100644
 --- a/kernel/power/qos.c
 +++ b/kernel/power/qos.c
-@@ -412,7 +412,8 @@ int pm_qos_remove_notifier(int pm_qos_class, struct notifier_block *notifier)
+@@ -129,24 +129,30 @@ static inline void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
  }
- EXPORT_SYMBOL_GPL(pm_qos_remove_notifier);
  
--/* User space interface to PM QoS classes via misc devices */
-+/* User space interface to global PM QoS via misc device. */
+ /**
+- * pm_qos_update_target - manages the constraints list and calls the notifiers
+- *  if needed
+- * @c: constraints data struct
+- * @node: request to add to the list, to update or to remove
+- * @action: action to take on the constraints list
+- * @value: value of the request to add or update
++ * pm_qos_update_target - Update a list of PM QoS constraint requests.
++ * @c: List of PM QoS requests.
++ * @node: Target list entry.
++ * @action: Action to carry out (add, update or remove).
++ * @value: New request value for the target list entry.
+  *
+- * This function returns 1 if the aggregated constraint value has changed, 0
+- *  otherwise.
++ * Update the given list of PM QoS constraint requests, @c, by carrying an
++ * @action involving the @node list entry and @value on it.
++ *
++ * The recognized values of @action are PM_QOS_ADD_REQ (store @value in @node
++ * and add it to the list), PM_QOS_UPDATE_REQ (remove @node from the list, store
++ * @value in it and add it to the list again), and PM_QOS_REMOVE_REQ (remove
++ * @node from the list, ignore @value).
++ *
++ * Return: 1 if the aggregate constraint value has changed, 0  otherwise.
+  */
+ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
+ 			 enum pm_qos_req_action action, int value)
+ {
+-	unsigned long flags;
+ 	int prev_value, curr_value, new_value;
+-	int ret;
++	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&pm_qos_lock, flags);
 +
- static int register_pm_qos_misc(struct pm_qos_object *qos)
- {
- 	qos->pm_qos_power_miscdev.minor = MISC_DYNAMIC_MINOR;
-@@ -422,35 +423,18 @@ static int register_pm_qos_misc(struct pm_qos_object *qos)
- 	return misc_register(&qos->pm_qos_power_miscdev);
- }
+ 	prev_value = pm_qos_get_value(c);
+ 	if (value == PM_QOS_DEFAULT_VALUE)
+ 		new_value = c->default_value;
+@@ -159,9 +165,8 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
+ 		break;
+ 	case PM_QOS_UPDATE_REQ:
+ 		/*
+-		 * to change the list, we atomically remove, reinit
+-		 * with new value and add, then see if the extremal
+-		 * changed
++		 * To change the list, atomically remove, reinit with new value
++		 * and add, then see if the aggregate has changed.
+ 		 */
+ 		plist_del(node, &c->list);
+ 		/* fall through */
+@@ -180,16 +185,14 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
+ 	spin_unlock_irqrestore(&pm_qos_lock, flags);
  
--static int find_pm_qos_object_by_minor(int minor)
--{
--	int pm_qos_class;
--
--	for (pm_qos_class = PM_QOS_CPU_DMA_LATENCY;
--		pm_qos_class < PM_QOS_NUM_CLASSES; pm_qos_class++) {
--		if (minor ==
--			pm_qos_array[pm_qos_class]->pm_qos_power_miscdev.minor)
--			return pm_qos_class;
+ 	trace_pm_qos_update_target(action, prev_value, curr_value);
+-	if (prev_value != curr_value) {
+-		ret = 1;
+-		if (c->notifiers)
+-			blocking_notifier_call_chain(c->notifiers,
+-						     (unsigned long)curr_value,
+-						     NULL);
+-	} else {
+-		ret = 0;
 -	}
--	return -1;
--}
--
- static int pm_qos_power_open(struct inode *inode, struct file *filp)
- {
--	long pm_qos_class;
-+	struct pm_qos_request *req;
- 
--	pm_qos_class = find_pm_qos_object_by_minor(iminor(inode));
--	if (pm_qos_class >= PM_QOS_CPU_DMA_LATENCY) {
--		struct pm_qos_request *req = kzalloc(sizeof(*req), GFP_KERNEL);
--		if (!req)
--			return -ENOMEM;
-+	req = kzalloc(sizeof(*req), GFP_KERNEL);
-+	if (!req)
-+		return -ENOMEM;
- 
--		pm_qos_add_request(req, pm_qos_class, PM_QOS_DEFAULT_VALUE);
--		filp->private_data = req;
-+	pm_qos_add_request(req, PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
-+	filp->private_data = req;
- 
--		return 0;
--	}
--	return -EPERM;
-+	return 0;
+-	return ret;
++
++	if (prev_value == curr_value)
++		return 0;
++
++	if (c->notifiers)
++		blocking_notifier_call_chain(c->notifiers, curr_value, NULL);
++
++	return 1;
  }
  
- static int pm_qos_power_release(struct inode *inode, struct file *filp)
-@@ -464,7 +448,6 @@ static int pm_qos_power_release(struct inode *inode, struct file *filp)
- 	return 0;
+ /**
+@@ -211,14 +214,12 @@ static void pm_qos_flags_remove_req(struct pm_qos_flags *pqf,
+ 
+ /**
+  * pm_qos_update_flags - Update a set of PM QoS flags.
+- * @pqf: Set of flags to update.
++ * @pqf: Set of PM QoS flags to update.
+  * @req: Request to add to the set, to modify, or to remove from the set.
+  * @action: Action to take on the set.
+  * @val: Value of the request to add or modify.
+  *
+- * Update the given set of PM QoS flags and call notifiers if the aggregate
+- * value has changed.  Returns 1 if the aggregate constraint value has changed,
+- * 0 otherwise.
++ * Return: 1 if the aggregate constraint value has changed, 0 otherwise.
+  */
+ bool pm_qos_update_flags(struct pm_qos_flags *pqf,
+ 			 struct pm_qos_flags_request *req,
+@@ -254,6 +255,7 @@ bool pm_qos_update_flags(struct pm_qos_flags *pqf,
+ 	spin_unlock_irqrestore(&pm_qos_lock, irqflags);
+ 
+ 	trace_pm_qos_update_flags(action, prev_value, curr_value);
++
+ 	return prev_value != curr_value;
  }
  
--
- static ssize_t pm_qos_power_read(struct file *filp, char __user *buf,
- 		size_t count, loff_t *f_pos)
- {
-@@ -507,26 +490,19 @@ static ssize_t pm_qos_power_write(struct file *filp, const char __user *buf,
- 	return count;
- }
- 
--
- static int __init pm_qos_power_init(void)
- {
--	int ret = 0;
--	int i;
-+	int ret;
- 
- 	BUILD_BUG_ON(ARRAY_SIZE(pm_qos_array) != PM_QOS_NUM_CLASSES);
- 
--	for (i = PM_QOS_CPU_DMA_LATENCY; i < PM_QOS_NUM_CLASSES; i++) {
--		ret = register_pm_qos_misc(pm_qos_array[i]);
--		if (ret < 0) {
--			pr_err("%s: %s setup failed\n",
--			       __func__, pm_qos_array[i]->name);
--			return ret;
--		}
--	}
-+	ret = register_pm_qos_misc(pm_qos_array[PM_QOS_CPU_DMA_LATENCY]);
-+	if (ret < 0)
-+		pr_err("%s: %s setup failed\n", __func__,
-+		       pm_qos_array[PM_QOS_CPU_DMA_LATENCY]->name);
- 
- 	return ret;
- }
--
- late_initcall(pm_qos_power_init);
- 
- /* Definitions related to the frequency QoS below. */
 -- 
 2.16.4
 
