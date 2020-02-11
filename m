@@ -4,45 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A026FC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE65C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7701920656
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E764020656
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 15:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436195;
-	bh=8feJEq5AzOwh87WXaggDqQi0VcVbODfOWKpD3rX2DVQ=;
+	s=default; t=1581436204;
+	bh=fKlMzTGzyouSZfoAvaxyt0fMWeE704AH1HnNEqGh3Uk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=iRxpY3/tQ9Wv7Mictzl9PIievjyBD4/iiUvSHSAiLFkSNOIB0OCzzUey1BIt1a5RX
-	 9ghYG5id8eEQzRthLs71Y/O+QNxeHnHozB1pKZGCh/meuXRoDuzGVzFLL8kZfIxVdP
-	 XIVRToTTfMUKW72K7fAKOVg8hwEs2TtLhl+Oieck=
+	b=CzEd7ykybksjiqzU7azjyRJYdDiKxftW20GTLxwLokOnxkuwTSmihHyke3qPBCTlS
+	 Mbl78vpi23NAdEXSP0iYY+7r1Gxaqi/T1U9MYOymujJ4dCILkhqSuStvSLTbx1HajV
+	 r5lv16mmIiyJ16i6GHvO8FpA6bA7Y3hukOGbOapQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbgBKPtx (ORCPT
+        id S1730575AbgBKPuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:49:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:48698 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:50:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:48476 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgBKPtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:49:51 -0500
+        id S1730343AbgBKPtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:49:22 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DA5C143D;
-        Tue, 11 Feb 2020 07:49:50 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C74D31B;
+        Tue, 11 Feb 2020 07:49:22 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01DC13F68E;
-        Tue, 11 Feb 2020 07:49:49 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:49:48 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D63A03F68E;
+        Tue, 11 Feb 2020 07:49:21 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:49:20 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
+To:     Paul Olaru <paul.olaru@nxp.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        devicetree@vger.kernel.org, festevam@gmail.com, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Applied "ASoC: wcd934x: Remove some unnecessary NULL checks" to the asoc tree
-In-Reply-To: <20200204060143.23393-1-natechancellor@gmail.com>
-Message-Id: <applied-20200204060143.23393-1-natechancellor@gmail.com>
+        robh+dt@kernel.org
+Subject: Applied "ASoC: SOF: Rename i.MX8 platform to i.MX8X" to the asoc tree
+In-Reply-To: <20200210095817.13226-2-daniel.baluta@oss.nxp.com>
+Message-Id: <applied-20200210095817.13226-2-daniel.baluta@oss.nxp.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,7 +52,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: wcd934x: Remove some unnecessary NULL checks
+   ASoC: SOF: Rename i.MX8 platform to i.MX8X
 
 has been applied to the asoc tree at
 
@@ -76,68 +77,81 @@ to this mail.
 Thanks,
 Mark
 
-From 918d0aba86ed8c1f4ff7f39e39e5c1b46fff2bc2 Mon Sep 17 00:00:00 2001
-From: Nathan Chancellor <natechancellor@gmail.com>
-Date: Mon, 3 Feb 2020 23:01:44 -0700
-Subject: [PATCH] ASoC: wcd934x: Remove some unnecessary NULL checks
+From 9da9ace29ba556d5a2ae6d044070daba5b7d3638 Mon Sep 17 00:00:00 2001
+From: Paul Olaru <paul.olaru@nxp.com>
+Date: Mon, 10 Feb 2020 11:58:14 +0200
+Subject: [PATCH] ASoC: SOF: Rename i.MX8 platform to i.MX8X
 
-Clang warns:
+i.MX8 and i.MX8X platforms are very similar and were treated the same.
+Anyhow, we need to account for the differences somehow.
 
-../sound/soc/codecs/wcd934x.c:1886:11: warning: address of array
-'wcd->rx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
-        if (wcd->rx_chs) {
-        ~~  ~~~~~^~~~~~
-../sound/soc/codecs/wcd934x.c:1894:11: warning: address of array
-'wcd->tx_chs' will always evaluate to 'true' [-Wpointer-bool-conversion]
-        if (wcd->tx_chs) {
-        ~~  ~~~~~^~~~~~
-2 warnings generated.
+Current supported platform is i.MX8QXP which is from i.MX8X family.
+Rename i.MX8 platform to i.MX8X to prepare for future i.MX8 platforms.
 
-Arrays that are in the middle of a struct are never NULL so they don't
-need a check like this.
-
-Fixes: a61f3b4f476e ("ASoC: wcd934x: add support to wcd9340/wcd9341 codec")
-Link: https://github.com/ClangBuiltLinux/linux/issues/854
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lore.kernel.org/r/20200204060143.23393-1-natechancellor@gmail.com
+Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200210095817.13226-2-daniel.baluta@oss.nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/wcd934x.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ sound/soc/sof/imx/imx8.c   | 10 +++++-----
+ sound/soc/sof/sof-of-dev.c |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
-index 158e878abd6c..e780ecd554d2 100644
---- a/sound/soc/codecs/wcd934x.c
-+++ b/sound/soc/codecs/wcd934x.c
-@@ -1883,20 +1883,16 @@ static int wcd934x_set_channel_map(struct snd_soc_dai *dai,
- 		return -EINVAL;
- 	}
+diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+index b2556f5e2871..9ffc2a955e4f 100644
+--- a/sound/soc/sof/imx/imx8.c
++++ b/sound/soc/sof/imx/imx8.c
+@@ -138,7 +138,7 @@ static int imx8_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
+ /*
+  * DSP control.
+  */
+-static int imx8_run(struct snd_sof_dev *sdev)
++static int imx8x_run(struct snd_sof_dev *sdev)
+ {
+ 	struct imx8_priv *dsp_priv = (struct imx8_priv *)sdev->private;
+ 	int ret;
+@@ -360,13 +360,13 @@ static struct snd_soc_dai_driver imx8_dai[] = {
+ },
+ };
  
--	if (wcd->rx_chs) {
--		wcd->num_rx_port = rx_num;
--		for (i = 0; i < rx_num; i++) {
--			wcd->rx_chs[i].ch_num = rx_slot[i];
--			INIT_LIST_HEAD(&wcd->rx_chs[i].list);
--		}
-+	wcd->num_rx_port = rx_num;
-+	for (i = 0; i < rx_num; i++) {
-+		wcd->rx_chs[i].ch_num = rx_slot[i];
-+		INIT_LIST_HEAD(&wcd->rx_chs[i].list);
- 	}
+-/* i.MX8  ops */
+-struct snd_sof_dsp_ops sof_imx8_ops = {
++/* i.MX8X ops */
++struct snd_sof_dsp_ops sof_imx8x_ops = {
+ 	/* probe and remove */
+ 	.probe		= imx8_probe,
+ 	.remove		= imx8_remove,
+ 	/* DSP core boot */
+-	.run		= imx8_run,
++	.run		= imx8x_run,
  
--	if (wcd->tx_chs) {
--		wcd->num_tx_port = tx_num;
--		for (i = 0; i < tx_num; i++) {
--			wcd->tx_chs[i].ch_num = tx_slot[i];
--			INIT_LIST_HEAD(&wcd->tx_chs[i].list);
--		}
-+	wcd->num_tx_port = tx_num;
-+	for (i = 0; i < tx_num; i++) {
-+		wcd->tx_chs[i].ch_num = tx_slot[i];
-+		INIT_LIST_HEAD(&wcd->tx_chs[i].list);
- 	}
+ 	/* Block IO */
+ 	.block_read	= sof_block_read,
+@@ -398,6 +398,6 @@ struct snd_sof_dsp_ops sof_imx8_ops = {
+ 			SNDRV_PCM_INFO_PAUSE |
+ 			SNDRV_PCM_INFO_NO_PERIOD_WAKEUP
+ };
+-EXPORT_SYMBOL(sof_imx8_ops);
++EXPORT_SYMBOL(sof_imx8x_ops);
  
- 	return 0;
+ MODULE_LICENSE("Dual BSD/GPL");
+diff --git a/sound/soc/sof/sof-of-dev.c b/sound/soc/sof/sof-of-dev.c
+index 39ea8af6213f..2da1bd859d98 100644
+--- a/sound/soc/sof/sof-of-dev.c
++++ b/sound/soc/sof/sof-of-dev.c
+@@ -19,9 +19,9 @@ extern struct snd_sof_dsp_ops sof_imx8_ops;
+ static struct sof_dev_desc sof_of_imx8qxp_desc = {
+ 	.default_fw_path = "imx/sof",
+ 	.default_tplg_path = "imx/sof-tplg",
+-	.default_fw_filename = "sof-imx8.ri",
++	.default_fw_filename = "sof-imx8x.ri",
+ 	.nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
+-	.ops = &sof_imx8_ops,
++	.ops = &sof_imx8x_ops,
+ };
+ #endif
+ 
 -- 
 2.20.1
 
