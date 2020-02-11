@@ -2,218 +2,144 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB338C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BA3C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841D320848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BDA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 11:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ERJaH4Wd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hzf5IVG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgBKLMu (ORCPT
+        id S1728523AbgBKLOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:12:50 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36462 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgBKLMu (ORCPT
+        Tue, 11 Feb 2020 06:14:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33772 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727950AbgBKLOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:12:50 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so3016044wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:12:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O5X47mhFdBLYII+ovipBMRQxOXlboZKFhxKg7XFoN3o=;
-        b=ERJaH4WdRW0ujkxGNpUmtUfj0rViDwqFLC9BL1MevFpQfOGkTANgOPHTSLMrZjO6rs
-         BMayBrXbRGPDa0buloq70PFLyGYcCbrY0i6XcrAshig/nVydh2dMJz3LDv33DgLUjjHx
-         lHW9A4kLs9UpNzmcgEFwcBL5c8Ryv2EWHwwXo=
+        Tue, 11 Feb 2020 06:14:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581419691;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i64HviBme2Pz18uHeGw1tj3lHgv6ae4i2ihKiY1Sg+w=;
+        b=Hzf5IVG6IGm8rP2M9smA/MgaR79MQSzcLIP9DTpT9Z8Z8dEP9blRA4ftc2nGNxnKeVKPnV
+        07N9li4uHQJMPl/jI1sx7tQz8h117PU/DkQaNqaR3AO62PjYjI0EXkHQ9AcWg8ho6SJ+mM
+        13CYGBTmWwHsOwhRIc/ZNP5chR2XPxY=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-BWZL5bJEMaSL1fa_ysnj_Q-1; Tue, 11 Feb 2020 06:14:49 -0500
+X-MC-Unique: BWZL5bJEMaSL1fa_ysnj_Q-1
+Received: by mail-qt1-f198.google.com with SMTP id p12so6346409qtu.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 03:14:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=O5X47mhFdBLYII+ovipBMRQxOXlboZKFhxKg7XFoN3o=;
-        b=M1pV+IO2xL1MLAJOq1OUjS/Huxrjsft7cOFPDD3B8pBuxOZNUU6JcwgtNtmPspw4Ga
-         m5QbDKvTxllChxehTe4jTEa0NhVHfDEc9apsv2wOWMYap+de6eUI8PygzpDueAjh9slr
-         PS2yGGbC7jlepcU1BYcHO70YBkKJEiFtkToustiiVlQ8ctZvYmdl5/386na6YpUYtIK1
-         DSTT1bzdmadyQKNVCafbEa+ii52eNIYC5U4+e0/sW/L3cJ+xJApnnnlGL05tWIMYkwPv
-         3YUyO6K62rUjyPjz4wm+QwZK0ewGMalGGCFZn5tGWctuRG5d1NrABZhyFpqk0JZB7zcG
-         J2Cw==
-X-Gm-Message-State: APjAAAUJDEhJtZAissv8X7bzYNGskRF6Yt+DxKiwWK/KrHCGvmyHwA7j
-        8atgWfY2U9NCsgXeho+Egaza/g==
-X-Google-Smtp-Source: APXvYqwyriEXRgirz1+pAvxW4hFmbaoVms/VDpWOOn1vdmA234bgCJnsmZ4O4rizOcVpaq1uLsrWXw==
-X-Received: by 2002:a7b:c19a:: with SMTP id y26mr5437918wmi.152.1581419566111;
-        Tue, 11 Feb 2020 03:12:46 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 18sm3378797wmf.1.2020.02.11.03.12.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i64HviBme2Pz18uHeGw1tj3lHgv6ae4i2ihKiY1Sg+w=;
+        b=il6JtQbfAZWR9mtYaaFJEQxjAx0BCMu8SLH3A5KJsk3jTuxGTvyO7puEiBInaKolnE
+         4GdGuKZmbmJLbVKj5PPG46UdgGo4cxp8qm5ZAbb129d5MyHQOsdppJnuDeldcs4GtZjX
+         UbPTPyXhGyUWII008REYche8v57JtXoXreFsGrylIFTrs2n0nVPyTzGtxqo6AEFzUU1W
+         ln13KQhFenLm0oxNwjRiW35a8K3g6FOQ7G8jSI7b/Jp4oOBq3WtbnfeH9dQ6akJKhfAt
+         PbTJKCWxkeaoc9/U19qQhxXpt+5Cma16Mtgf9lSYHg6ArdmGqvXY8c9+KDS61lG1aSdC
+         jFwg==
+X-Gm-Message-State: APjAAAX5UuwKfkasE71nxCirL5AG22aMADi+O7QPZRauo8oXekXnuJiF
+        FArBzQ9ap6+DAhmb/HK6sDZ+9dhxIJR/5RE+J/hHWqiy0a3av8zR2JOcrf/JMuE6yFFCnUkkmYW
+        lePfNaN03O7WoluGh08ljMdJ4
+X-Received: by 2002:aed:3109:: with SMTP id 9mr14435456qtg.166.1581419689077;
+        Tue, 11 Feb 2020 03:14:49 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzLxRMntZl/rmTH1PsMTVPwnKKD+vZxzh00c1RAAnvkD1CE3PAe5M25dTlN82sQ46lo8t4E8w==
+X-Received: by 2002:aed:3109:: with SMTP id 9mr14435436qtg.166.1581419688863;
+        Tue, 11 Feb 2020 03:14:48 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id x41sm1996691qtj.52.2020.02.11.03.14.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 03:12:45 -0800 (PST)
-Date:   Tue, 11 Feb 2020 12:12:43 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, daniel@ffwll.ch,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] drm/bochs: add drm_driver.release callback.
-Message-ID: <20200211111243.GX43062@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200211095529.30449-1-kraxel@redhat.com>
+        Tue, 11 Feb 2020 03:14:48 -0800 (PST)
+Date:   Tue, 11 Feb 2020 06:14:43 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Zha Bin <zhabin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, jasowang@redhat.com, slp@redhat.com,
+        virtio-dev@lists.oasis-open.org, qemu-devel@nongnu.org,
+        gerry@linux.alibaba.com, jing2.liu@linux.intel.com,
+        chao.p.peng@linux.intel.com
+Subject: Re: [PATCH v2 5/5] x86: virtio-mmio: support virtio-mmio with MSI
+ for x86
+Message-ID: <20200211061148-mutt-send-email-mst@kernel.org>
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <946b71e77a34666a9b8c419c5a467d1628b50fa0.1581305609.git.zhabin@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211095529.30449-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <946b71e77a34666a9b8c419c5a467d1628b50fa0.1581305609.git.zhabin@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 10:55:29AM +0100, Gerd Hoffmann wrote:
-> Call bochs_unload via drm_driver.release to make sure we release stuff
-> when it is safe to do so.  Use drm_dev_{enter,exit,unplug} to avoid
-> touching hardware after device removal.  Tidy up here and there.
+On Mon, Feb 10, 2020 at 05:05:21PM +0800, Zha Bin wrote:
+> From: Liu Jiang <gerry@linux.alibaba.com>
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-Still no changelog? I mean if we'd have merge request or something I can
-easily check the discussions, but with mailing lists it's all over and I
-have 0 memory, so every time I see a patch without history I get to
-reconstruct the review history again and figure out where we've been. Gets
-old real fast.
--Daniel
-
+> virtio-mmio supports a generic MSI irq domain for all archs. This
+> patch adds the x86 architecture support.
+> 
+> Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
+> Co-developed-by: Zha Bin <zhabin@linux.alibaba.com>
+> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
+> Co-developed-by: Jing Liu <jing2.liu@linux.intel.com>
+> Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+> Co-developed-by: Chao Peng <chao.p.peng@linux.intel.com>
+> Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
 > ---
->  drivers/gpu/drm/bochs/bochs_drv.c |  6 +++---
->  drivers/gpu/drm/bochs/bochs_hw.c  | 24 +++++++++++++++++++++++-
->  2 files changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
-> index 10460878414e..addb0568c1af 100644
-> --- a/drivers/gpu/drm/bochs/bochs_drv.c
-> +++ b/drivers/gpu/drm/bochs/bochs_drv.c
-> @@ -23,7 +23,6 @@ static void bochs_unload(struct drm_device *dev)
->  
->  	bochs_kms_fini(bochs);
->  	bochs_mm_fini(bochs);
-> -	bochs_hw_fini(dev);
->  	kfree(bochs);
->  	dev->dev_private = NULL;
->  }
-> @@ -69,6 +68,7 @@ static struct drm_driver bochs_driver = {
->  	.major			= 1,
->  	.minor			= 0,
->  	DRM_GEM_VRAM_DRIVER,
-> +	.release                = bochs_unload,
->  };
->  
->  /* ---------------------------------------------------------------------- */
-> @@ -148,9 +148,9 @@ static void bochs_pci_remove(struct pci_dev *pdev)
->  {
->  	struct drm_device *dev = pci_get_drvdata(pdev);
->  
-> +	drm_dev_unplug(dev);
->  	drm_atomic_helper_shutdown(dev);
-> -	drm_dev_unregister(dev);
-> -	bochs_unload(dev);
-> +	bochs_hw_fini(dev);
->  	drm_dev_put(dev);
->  }
->  
-> diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-> index b615b7dfdd9d..952199cc0462 100644
-> --- a/drivers/gpu/drm/bochs/bochs_hw.c
-> +++ b/drivers/gpu/drm/bochs/bochs_hw.c
-> @@ -4,6 +4,7 @@
->  
->  #include <linux/pci.h>
->  
-> +#include <drm/drm_drv.h>
->  #include <drm/drm_fourcc.h>
->  
->  #include "bochs.h"
-> @@ -194,6 +195,8 @@ void bochs_hw_fini(struct drm_device *dev)
->  {
->  	struct bochs_device *bochs = dev->dev_private;
->  
-> +	/* TODO: shot down existing vram mappings */
-> +
->  	if (bochs->mmio)
->  		iounmap(bochs->mmio);
->  	if (bochs->ioports)
-> @@ -207,6 +210,11 @@ void bochs_hw_fini(struct drm_device *dev)
->  void bochs_hw_setmode(struct bochs_device *bochs,
->  		      struct drm_display_mode *mode)
->  {
-> +	int idx;
-> +
-> +	if (!drm_dev_enter(bochs->dev, &idx))
-> +		return;
-> +
->  	bochs->xres = mode->hdisplay;
->  	bochs->yres = mode->vdisplay;
->  	bochs->bpp = 32;
-> @@ -232,11 +240,18 @@ void bochs_hw_setmode(struct bochs_device *bochs,
->  
->  	bochs_dispi_write(bochs, VBE_DISPI_INDEX_ENABLE,
->  			  VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
-> +
-> +	drm_dev_exit(idx);
->  }
->  
->  void bochs_hw_setformat(struct bochs_device *bochs,
->  			const struct drm_format_info *format)
->  {
-> +	int idx;
-> +
-> +	if (!drm_dev_enter(bochs->dev, &idx))
-> +		return;
-> +
->  	DRM_DEBUG_DRIVER("format %c%c%c%c\n",
->  			 (format->format >>  0) & 0xff,
->  			 (format->format >>  8) & 0xff,
-> @@ -256,13 +271,18 @@ void bochs_hw_setformat(struct bochs_device *bochs,
->  			  __func__, format->format);
->  		break;
->  	}
-> +
-> +	drm_dev_exit(idx);
->  }
->  
->  void bochs_hw_setbase(struct bochs_device *bochs,
->  		      int x, int y, int stride, u64 addr)
->  {
->  	unsigned long offset;
-> -	unsigned int vx, vy, vwidth;
-> +	unsigned int vx, vy, vwidth, idx;
-> +
-> +	if (!drm_dev_enter(bochs->dev, &idx))
-> +		return;
->  
->  	bochs->stride = stride;
->  	offset = (unsigned long)addr +
-> @@ -277,4 +297,6 @@ void bochs_hw_setbase(struct bochs_device *bochs,
->  	bochs_dispi_write(bochs, VBE_DISPI_INDEX_VIRT_WIDTH, vwidth);
->  	bochs_dispi_write(bochs, VBE_DISPI_INDEX_X_OFFSET, vx);
->  	bochs_dispi_write(bochs, VBE_DISPI_INDEX_Y_OFFSET, vy);
-> +
-> +	drm_dev_exit(idx);
->  }
-> -- 
-> 2.18.2
-> 
+>  arch/x86/kernel/apic/msi.c | 11 ++++++++++-
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Patches like this need to CC x86 maintainers.
+
+
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+> index 159bd0c..2fcd602 100644
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -45,7 +45,11 @@ static void __irq_msi_compose_msg(struct irq_cfg *cfg, struct msi_msg *msg)
+>  		MSI_DATA_VECTOR(cfg->vector);
+>  }
+>  
+> -static void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+> +/*
+> + * x86 PCI-MSI/HPET/DMAR related method.
+> + * Also can be used as arch specific method for virtio-mmio MSI.
+> + */
+> +void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+>  	__irq_msi_compose_msg(irqd_cfg(data), msg);
+>  }
+> @@ -166,6 +170,11 @@ static void irq_msi_update_msg(struct irq_data *irqd, struct irq_cfg *cfg)
+>  	return ret;
+>  }
+>  
+> +struct irq_domain *arch_msi_root_irq_domain(void)
+> +{
+> +	return x86_vector_domain;
+> +}
+> +
+>  /*
+>   * IRQ Chip for MSI PCI/PCI-X/PCI-Express Devices,
+>   * which implement the MSI or MSI-X Capability Structure.
+
+
+So there's a new non-static functions with no callers here,
+and a previously static irq_msi_compose_msg is not longer
+static. No callers so how does this help anyone?
+And how does this achieve the goal of enabling virtio mmio?
+
+
+> -- 
+> 1.8.3.1
+
