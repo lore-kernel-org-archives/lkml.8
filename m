@@ -2,103 +2,149 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E860C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B2BC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7192A2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2TzVFOW"
+	by mail.kernel.org (Postfix) with ESMTP id 2086420848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731613AbgBKTVW (ORCPT
+        id S1731628AbgBKTVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:21:22 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32943 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729800AbgBKTVW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:21:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id u6so13947816wrt.0;
-        Tue, 11 Feb 2020 11:21:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AEGWYfFX9245MukYgsGUL84+IjZfZx4XP83WQpnQkHw=;
-        b=A2TzVFOW6F10JBsePK3zu458Q3Vas14sw10YF6Uo0daSQJAYxApnG0/CppNxgLNFkC
-         62caMBdepV56f3CUUlOGU1KMLPNHRoueumUKE2HrBlFOmST6YIO4peQ2p09gyEwJmj45
-         5blcd8z3oTfYeXi546h4IE/QNiwSLqbjbYFZVKoWrNvWW0WeybSkyQY1qjOuCk6lwS8M
-         146Tc1XPAJNAS2SJg0O/FbFcT2NnuCqFGrRnMU6Bm9SAQOAOsLY81z3wjRg7l0fxhw/P
-         Ag1ghXSk0KrokGHYloHR6z3m78+C13HNldnl1QEKCm6GXf9PpRXqqhzs1e6y0eITbChv
-         jfHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AEGWYfFX9245MukYgsGUL84+IjZfZx4XP83WQpnQkHw=;
-        b=Y5Yz3woum8OPo0SeENOeGLCqv4o3WhKjZaVXWzKnoWrHrKN/6McoDpJTHGYF568QeR
-         7Agl3KK1LfpSIEwKO7EG8cq9C+WBbC3083dWtHLiTVzNF/oCb6FZ9Sl19ylMJ1M7A+wu
-         wMmHJMh5J/gxgMb356WB1Ve0pm/slZiA+qBFnW5qzFy8jDjr1Lmx2lCvZ/CLJzhH/KuS
-         EwPAHokT2zGNN/GFpTmQYHMHNuIPWK2NU9QTyo0wrjNsWA6YZStq3iT1X09nt153VewS
-         dU6pMtJ9WebRFV/AXZnulLMYIzpH3vb3YrYwAIqSzOa1e03xaSxrlYJisx8cvJlU8DHk
-         pg+w==
-X-Gm-Message-State: APjAAAWEFxXD6uWqrZHxCUHAf4N20Yw1B7u7zGbVsSDMK3DhSeuS6Oip
-        2F7KTIAP1QfW++ijoIDohO8=
-X-Google-Smtp-Source: APXvYqwMsryykfh9h+LtceOZt3ZKFIXxSljklwP6UXWA+eNQZ2lUmaSyqT7uS6SmQh98ZjvSee7Rwg==
-X-Received: by 2002:a5d:6082:: with SMTP id w2mr10143766wrt.300.1581448880361;
-        Tue, 11 Feb 2020 11:21:20 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id q10sm4941740wme.16.2020.02.11.11.21.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 11:21:19 -0800 (PST)
-Date:   Tue, 11 Feb 2020 20:21:18 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Eric Biggers <ebiggers@kernel.org>, davem@davemloft.net,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] crypto: export() overran state buffer on test vector
-Message-ID: <20200211192118.GA24059@Red>
-References: <20200206085442.GA5585@Red>
- <20200207065719.GA8284@sol.localdomain>
- <20200207104659.GA10979@Red>
- <20200208085713.ftuqxhatk6iioz7e@gondor.apana.org.au>
+        Tue, 11 Feb 2020 14:21:25 -0500
+Received: from mga14.intel.com ([192.55.52.115]:52862 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729800AbgBKTVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:21:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 11:21:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="433791170"
+Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
+  by fmsmga006.fm.intel.com with ESMTP; 11 Feb 2020 11:21:21 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Murali Karicheri <m-karicheri2@ti.com>,
+        Vladimir Oltean <olteanv@gmail.com>
+Cc:     Po Liu <po.liu@nxp.com>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "hauke.mehrtens\@intel.com" <hauke.mehrtens@intel.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "allison\@lohutok.net" <allison@lohutok.net>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "hkallweit1\@gmail.com" <hkallweit1@gmail.com>,
+        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
+        "andrew\@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli\@gmail.com" <f.fainelli@gmail.com>,
+        "alexandru.ardelean\@analog.com" <alexandru.ardelean@analog.com>,
+        "jiri\@mellanox.com" <jiri@mellanox.com>,
+        "ayal\@mellanox.com" <ayal@mellanox.com>,
+        "pablo\@netfilter.org" <pablo@netfilter.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "simon.horman\@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
+In-Reply-To: <70deb628-d7bc-d2a3-486d-d3e53854c06e@ti.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com> <87v9p93a2s.fsf@linux.intel.com> <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com> <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com> <87d0bajc3l.fsf@linux.intel.com> <70deb628-d7bc-d2a3-486d-d3e53854c06e@ti.com>
+Date:   Tue, 11 Feb 2020 11:22:56 -0800
+Message-ID: <877e0tx71r.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208085713.ftuqxhatk6iioz7e@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 04:57:13PM +0800, Herbert Xu wrote:
-> On Fri, Feb 07, 2020 at 11:46:59AM +0100, Corentin Labbe wrote:
-> >
-> > My goal is to do like n2-crypto/rk3288crypto/etc..., fallback for init/update/final/finup and only do stuff with digest().
-> > So I have just exactly copied what they do.
-> 
-> n2 at least is totally broken wrt import/export.  The other ones
-> would work provided that the fallback have the same statesize as
-> the generic sha implementations.
-> 
+Murali Karicheri <m-karicheri2@ti.com> writes:
 
-This behavour happen only on arm64, so it is why probably nobody (rockchip/n2) found it.
+> We are still working to send a patch for taprio offload on our hardware
+> and it may take a while to get to this. So if someone can help to add
+> the required kernel/driver interface for this, that will be great!
 
-> Are you not using the standard state sizes?
+Will add this to my todo list. But if anyone else has the spare cycles
+feel free to have a go at it.
 
-I use the standard size (statesize = sizeof(struct shaxxx_state))
+>
+>>>>       - ConfigChangeError - Error in configuration (AdminBaseTime <
+>>>>         CurrentTime)
+>>>
+>>> This can be exported similarly.
+>> 
+>> In my view, having this as a "runtime" error is not useful, as we can
+>> verify this at configuration time.
+>
+> Looks like this is not an error per 802.1Q standard if I understood it
+> correctly.
+>
+> This is what I see.
+> =======================================================================
+>  From 802.1Q 2018, 8.6.9.1.1 SetCycleStartTime()
+>
+> If AdminBaseTime is set to the same time in the past in all bridges and
+> end stations, OperBaseTime is always in the past, and all cycles start
+> synchronized. Using AdminBaseTime in the past is appropriate when you
+> can start schedules prior to starting the application that uses the
+> schedules. Use of AdminBaseTime in the future is intended to change a
+> currently running schedule in all bridges and end stations to a new
+> schedule at a future time. Using AdminBaseTime in the future is
+> appropriate when schedules must be changed without stopping the
+> application
+> ========================================================================
+>
 
-As a quick workaround, By simply adding (+ 8), all test pass.
+What I meant here is the case that I already have an "oper" schedule
+running, so my "oper->base_time" is in the past, and I try to add an
+"admin" schedule with a "base_time" also in the past. What's the
+expected behavior in this case? The text about stopping/starting
+applications doesn't seem to apply to the way the tc subsystem interacts
+with the applications.
 
-> 
-> This should probably be switched over to lib/crypto or at least
-> shash.
-> 
+>> 
+>>>
+>>>>       - SupportedListMax - Maximum supported Admin/Open shed list.
+>>>>
+>>>> Is there a plan to export these from driver through tc show or such
+>>>> command? The reason being, there would be applications developed to
+>>>> manage configuration/schedule of TSN nodes that would requires these
+>>>> information from the node. So would need a support either in tc or
+>>>> some other means to retrieve them from hardware or driver. That is my
+>>>> understanding...
+>>>>
+>> 
+>> Hm, now I understamd what you meant here...
+>> 
+>>>
+>>> Not sure what answer you expect to receive for "is there any plan".
+>>> You can go ahead and propose something, as long as it is reasonably
+>>> useful to have.
+>> 
+>> ... if this is indeed useful, perhaps one way to do is to add a subcommand
+>> to TC_SETUP_QDISC_TAPRIO, so we can retrieve the stats/information we want
+>> from the driver. Similar to what cls_flower does.
+>> 
+>
+> What I understand is that there will be some work done to allow auto
+> configuration of TSN nodes from user space and that would need access to
+> all or some of the above parameters along with tc command to configure
+> the same. May be a open source project for this or some custom
+> application? Any such projects existing??
 
-Do you mean that I should abandon ahash as a fallback ?
+Yeah, this is a big missing piece for TSN. I've heard 'netopeer2' and
+'sysrepo' mentioned when similar questions were asked, but I have still
+to take a look at them and see what's missing. (Or if they are the right
+tool for the job)
+
+
+-- 
+Vinicius
