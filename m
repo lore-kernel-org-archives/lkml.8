@@ -2,123 +2,155 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13FEC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B888C3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DFD20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E8520873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 00:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uaAIWqJS"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NFwz3laf";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kr6PyWqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbgBKAb6 (ORCPT
+        id S1727662AbgBKAsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:31:58 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45023 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbgBKAb6 (ORCPT
+        Mon, 10 Feb 2020 19:48:37 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6772 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727538AbgBKAsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 19:31:58 -0500
-Received: by mail-pg1-f194.google.com with SMTP id g3so4762281pgs.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 16:31:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wTD7KLfgNlcO5TldUCo2W66GWZWNBDU2Nh1U6Y8rvDo=;
-        b=uaAIWqJSfi6jxhANMhO9SKzdRBl4fHthnjWBFFYu3OqcCXlHg6vW5P5ib6vXtuAGe6
-         SN/QoxaUKMIuIzydImDfxngn+9IM7BhNHpLF9IShTGKsW/y/CNBmOVvwdeN8lSOpjI3O
-         EETr6cBMC5FY842BDbMARD6y/hQk7qo3cejZZ4yJU9llGfdM5JnVhqjTMTVRlGK8AiCj
-         endtjwPanzcbc2W7vUuVlvr1+twK+7FruGCpxmgNGkYTXLo5ZYqYcFkXyOEmOxnlJl4h
-         puzWKjvrHge400ZoAm4U4N7LM6gaO5IYSbDWmffefI9EbW8xzdtZxyABeGxC5HVCvx2E
-         7BzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wTD7KLfgNlcO5TldUCo2W66GWZWNBDU2Nh1U6Y8rvDo=;
-        b=ZvA86yF0g9vzZDssMbf4h7pPf8QkS/Tx7qJ1S8Yhj8EVnhmfxDO/jaEKfgNAxvTG8B
-         IoxmQh+dKA7SSwjwLLYRh/UkjtFT/eSmWFIYd9drQSDe4J+7nuvhNq5BpzkkzwRvjVnK
-         YOiqIfl7KozExGibFQIHUO2lQeKdx5HecXMYUOVaF7xQ5S9IJM9zZpQLJ3DpBIqEC+KR
-         qxPiwx4hBuTm6uEW/K0fc2WumuFwddTKwKHJK7FlIsQpdEDeNKCVCHj8jXMqa7s6i+w0
-         SFVo4p9ja0rR+8H6XYb7Xht3PoTV0PDNlKCLedyX/6g4JKvOwAbsLzASEl63Zhl6gPD/
-         hzaQ==
-X-Gm-Message-State: APjAAAX9VMg3qYQ/fC4jy4ZxL3vacpG5LxRt5Tq6EL2uMYjf5ev8hIax
-        yjcx7gCuS3B1KYhwGTveNCoZ0njdY80Ng8mWgpj2Lg==
-X-Google-Smtp-Source: APXvYqxCPd6IWyA7i0kDa518+F/G8kcxtU076GQepHtqKvT8oL022G2nN2ShfFGtfUu5HehartnyNC29u/fMc6B4eSw=
-X-Received: by 2002:a63:480f:: with SMTP id v15mr4118291pga.201.1581381116183;
- Mon, 10 Feb 2020 16:31:56 -0800 (PST)
+        Mon, 10 Feb 2020 19:48:36 -0500
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01B0UVru017895;
+        Mon, 10 Feb 2020 16:48:26 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=QLhrZ6L7Tt6R3+ELTUSO6hJpw8yOInDYqbUpbxvsAqI=;
+ b=NFwz3lafiYhuLGUIQSL7vTihPa7kwrRBchAMkUGkWBcpJjNVefTuETknsvjZjA/Epi1G
+ rCzO3hXlMProIt50mWhDI9hvdkYTCIVyiuxBVZUZVXJLpU5DfjCmhNR0NhWJRjoVntlM
+ zQGt1hjmGVra4j5eMw7FLLbQxlp1zpmic0A= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2y1ucuu0j0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 10 Feb 2020 16:48:25 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 10 Feb 2020 16:48:24 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lSQFbVEysPe8JKCRXro4QyNcnzfnNJL640M1PE1y+iL/47lWWjacz4gMQrJJcR16j4J128kHMmdB9cqOgk3sJHAYucctNsN+BWsx+27k48mJlN0/L06x1FVMno0tM2cKZ2uG74WuaaGzixU/sTR1mut8ByM9t/dtxUWdHFqzDGim/FbYqSELCALG7zMqFRsGtMDmSBI99F7Dz8JciJr+h/I2aLbPdfP7a9qzD+Cfga2JfMHQi1vEhp9h4Rzchxh/NBiaVVAMm7I9ShNdsg76CMh+7IGOLxcbvLdq/A6izuOgcXCsI9Dhi1XiOo4ULYWmkGTeHDzTanCaQCB8tNv8Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QLhrZ6L7Tt6R3+ELTUSO6hJpw8yOInDYqbUpbxvsAqI=;
+ b=kzOuWPJ2rMLbVU2luvLoTwk+pB1sSkwHR2gPi8gQLOldpVWB2+LDw0tcPiuQPbnUElV4W0edGuNfi32fXhP6zfa0UPRTjn06nUXiJG7hX5msq3QuOvROQEYzsbR3zB+PYiZSf9jBuy4wZAO9IZAOk1ru/ORBFRYdcWvWoj8W3Kv0+dnhZqfca65NEF/7lWFtCAC/SgxpKS9OyyP97U88vqwhB/+ES+fqk3flTdd1/UTOegtUm6narkxAnmUvbd+7p+s6ti+B3PgvXlyppGCyerB5kT/TfB75FZ9EtVLsGyxxDQnaA5ZWocFHJZEEiaATx4SX0oijMmb/AJ5JFJ9bUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QLhrZ6L7Tt6R3+ELTUSO6hJpw8yOInDYqbUpbxvsAqI=;
+ b=kr6PyWqzdRHYvSleZ3bI54dmPrz/HRrhCijY8sEYTTHlknebVwr5eOxnMg5pNxPlx/HAIO3+cQ/kDRE8s5tK4vjWFMGs7vrseeTJ5xP0b2rnRD/VzO9Me7enbureK2lrTUJXuLorUCixXy1oGRdh5cR+/+45sI5Dw7wNf94Xx6M=
+Received: from MWHPR15MB1597.namprd15.prod.outlook.com (10.173.234.137) by
+ MWHPR15MB1229.namprd15.prod.outlook.com (10.175.7.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.26; Tue, 11 Feb 2020 00:48:22 +0000
+Received: from MWHPR15MB1597.namprd15.prod.outlook.com
+ ([fe80::c863:5ef9:530d:efd2]) by MWHPR15MB1597.namprd15.prod.outlook.com
+ ([fe80::c863:5ef9:530d:efd2%11]) with mapi id 15.20.2707.028; Tue, 11 Feb
+ 2020 00:48:22 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Joel Stanley <joel@jms.id.au>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Eddie James <eajames@linux.ibm.com>
+Subject: Re: linux-next: build failure after merge of the aspeed tree
+Thread-Topic: linux-next: build failure after merge of the aspeed tree
+Thread-Index: AQHV4Fto3qGKenSQ/0+jrIkDB8Ejv6gUoxgA
+Date:   Tue, 11 Feb 2020 00:48:22 +0000
+Message-ID: <46287780-32D0-46D3-9604-D71BA190821E@fb.com>
+References: <20200211084449.05e3b3cb@canb.auug.org.au>
+In-Reply-To: <20200211084449.05e3b3cb@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::9581]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9aea5b4c-a2b0-4836-70ad-08d7ae8c1892
+x-ms-traffictypediagnostic: MWHPR15MB1229:
+x-microsoft-antispam-prvs: <MWHPR15MB12294E2ED81A9ED7F6F7791DDD180@MWHPR15MB1229.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0310C78181
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(366004)(39860400002)(376002)(189003)(199004)(6512007)(66556008)(64756008)(66476007)(76116006)(66946007)(66446008)(6486002)(33656002)(478600001)(5660300002)(71200400001)(36756003)(2616005)(54906003)(6506007)(316002)(8676002)(81166006)(186003)(110136005)(86362001)(4326008)(2906002)(8936002)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1229;H:MWHPR15MB1597.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZPmQ2nxOpnAvwCwy/X5SUNzbt+yIpLMZ7to+wsm9HfuZB2QlOg31VnIz424JCrnhl28HpCz/6/eUj5ZwM3BDEuE5Gk/RsYJomEhVEj1CVSMgrGSeHT0CabJl6h+x4jllLYfvOHFvGl/oR1kD3ZtHaeXbGjlx0pdiLrBZGEJwuiP1MrO0Pr8dgtQG1gl3a5ISVzkVS27u7NVSrwx9Hx0r0OsZ1bGvcIdoOPWEZVaEXVCNykl4zcmGXSlZdbIhSalONbWAsbuFZacQBAk7mHRC98kBcR4/7bQM/NWagYMxT7vgECUYkhK85UBjRStLaSTIGzFeQ5PbsTX5tAfg2zonOA4nCCbTO5IeZeD85zRv2FNAzHDF0Vd3i2+t8zkw6tsIcaq7ypLtkep+qLsGhUQZ3iT6yXCb9Lm6Z0xzQfz2iJ1Np97N6KECEUyisniqYwU5
+x-ms-exchange-antispam-messagedata: i3a9pfAsSgPb3IE9dcZAP3suYoT5WQby3BpVx0G7dOT7jrY6Fj45qIG4OxR9d3c30Bks5xxETbGJl30q3JOEhfHl4Z5l6rQr+i97JvFp4u0xNFFoV5vZc5XAhDlR9eK9/E4EvXtiRu+O3t7DDcTTsd29ybzqadBnhgRRH9bAuXU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9542C36FEB22904086FA66A35DF145A1@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200211002551.147187-1-heidifahim@google.com>
-In-Reply-To: <20200211002551.147187-1-heidifahim@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 10 Feb 2020 16:31:45 -0800
-Message-ID: <CAFd5g47LFvRxHMJ+XHcw2dFe2xU+1GmDnXsm=STvCFAT74rm7g@mail.gmail.com>
-Subject: Re: [PATCH] kunit: run kunit_tool from any directory
-To:     Heidi Fahim <heidifahim@google.com>,
-        David Gow <davidgow@google.com>,
-        Daniel Latypov <dlatypov@google.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9aea5b4c-a2b0-4836-70ad-08d7ae8c1892
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 00:48:22.6069
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FgaSUB+8hrqryt5aKFlsXxdtW5PEA5HWTMqMTURb0HHbWQTox9iHiriQBq3F7jzFtDH0iA/7g0ygiFD/yDjDiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1229
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_08:2020-02-10,2020-02-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1011 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002110001
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 4:26 PM Heidi Fahim <heidifahim@google.com> wrote:
->
-> Implemented small fix so that the script changes work directories to the
-> linux directory where kunit.py is run. This enables the user to run
-> kunit from any working directory. Originally considered using
-> os.path.join but this is more error prone as we would have to find all
-> file path usages and modify them accordingly. Using os.chdir ensures
-> that the entire script is run within /linux.
->
-> Signed-off-by: Heidi Fahim <heidifahim@google.com>
-
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-
-Thanks!
-
-> ---
->  tools/testing/kunit/kunit.py | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> index e59eb9e7f923..3cc7be7b28a0 100755
-> --- a/tools/testing/kunit/kunit.py
-> +++ b/tools/testing/kunit/kunit.py
-> @@ -35,6 +35,13 @@ def create_default_kunitconfig():
->                 shutil.copyfile('arch/um/configs/kunit_defconfig',
->                                 kunit_kernel.kunitconfig_path)
->
-> +def get_kernel_root_path():
-> +       parts = sys.argv[0] if not __file__ else __file__
-> +       parts = os.path.realpath(parts).split('tools/testing/kunit')
-> +       if len(parts) != 2:
-> +               sys.exit(1)
-> +       return parts[0]
-> +
->  def run_tests(linux: kunit_kernel.LinuxSourceTree,
->               request: KunitRequest) -> KunitResult:
->         config_start = time.time()
-> @@ -114,6 +121,9 @@ def main(argv, linux=None):
->         cli_args = parser.parse_args(argv)
->
->         if cli_args.subcommand == 'run':
-> +               if get_kernel_root_path():
-> +                       os.chdir(get_kernel_root_path())
-> +
->                 if cli_args.build_dir:
->                         if not os.path.exists(cli_args.build_dir):
->                                 os.mkdir(cli_args.build_dir)
-> --
-> 2.25.0.341.g760bfbb309-goog
->
+SGkgSm9lbCwNCkkgYW0gbG9va2luZyBpbnRvIGZpeGluZyB3YXJuaW5nIGZvciBteSBwYXRjaC4g
+SWYgeW91IGhhdmUgYW55IGlkZWEgb3Igc3VnZ2VzdGlvbnMsIHBsZWFzZSBhZHZpY2UuDQoNClJl
+Z2FyZHMNCi1WaWpheQ0KDQrvu79PbiAyLzEwLzIwLCAxOjQ1IFBNLCAiU3RlcGhlbiBSb3Rod2Vs
+bCIgPHNmckBjYW5iLmF1dWcub3JnLmF1PiB3cm90ZToNCg0KICAgIEhpIGFsbCwNCiAgICANCiAg
+ICBBZnRlciBtZXJnaW5nIHRoZSBhc3BlZWQgdHJlZSwgdG9kYXkncyBsaW51eC1uZXh0IGJ1aWxk
+IChhcm0NCiAgICBtdWx0aV92N19kZWZjb25maWcpIGZhaWxlZCBsaWtlIHRoaXM6DQogICAgDQog
+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc2LmR0c2k6MzIyLjM1LTMyNy43OiBFUlJPUiAo
+ZHVwbGljYXRlX25vZGVfbmFtZXMpOiAvYWhiL2FwYi9zeXNjb25AMWU2ZTIwMDAvaW50ZXJydXB0
+LWNvbnRyb2xsZXI6IER1cGxpY2F0ZSBub2RlIG5hbWUNCiAgICBFUlJPUjogSW5wdXQgdHJlZSBo
+YXMgZXJyb3JzLCBhYm9ydGluZyAodXNlIC1mIHRvIGZvcmNlIG91dHB1dCkNCiAgICANCiAgICBD
+YXVzZWQgYnkgY29tbWl0DQogICAgDQogICAgICAwOTFmZjUyMDZlZjMgKCJBUk06IGR0czogYXNw
+ZWVkOiBhc3QyNjAwOiBGaXggU0NVIElSUSBjb250cm9sbGVyIG5vZGUgYWRkcmVzc2VzIikNCiAg
+ICANCiAgICBBbHNvIHRoZXNlIHdhcm5pbmdzOg0KICAgIA0KICAgIGFyY2gvYXJtL2Jvb3QvZHRz
+L2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0czo0MzUuMTEtNDM5LjQ6IFdhcm5pbmcg
+KGkyY19idXNfcmVnKTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2kyYy1idXNAMTQwL2lwbWIwQDEw
+OiBJMkMgYnVzIHVuaXQgYWRkcmVzcyBmb3JtYXQgZXJyb3IsIGV4cGVjdGVkICI0MDAwMDAxMCIN
+CiAgICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHM6
+NDM3LjMtMzA6IFdhcm5pbmcgKGkyY19idXNfcmVnKTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2ky
+Yy1idXNAMTQwL2lwbWIwQDEwOnJlZzogSTJDIGFkZHJlc3MgbXVzdCBiZSBsZXNzIHRoYW4gMTAt
+Yml0cywgZ290ICIweDQwMDAwMDEwIg0KICAgIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMt
+ZmFjZWJvb2stdGlvZ2FwYXNzLmR0czo1MjEuMTEtNTI1LjQ6IFdhcm5pbmcgKGkyY19idXNfcmVn
+KTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2kyYy1idXNAMzgwL2lwbWIwQDEwOiBJMkMgYnVzIHVu
+aXQgYWRkcmVzcyBmb3JtYXQgZXJyb3IsIGV4cGVjdGVkICI0MDAwMDAxMCINCiAgICBhcmNoL2Fy
+bS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHM6NTIzLjMtMzA6IFdh
+cm5pbmcgKGkyY19idXNfcmVnKTogL2FoYi9hcGIvYnVzQDFlNzhhMDAwL2kyYy1idXNAMzgwL2lw
+bWIwQDEwOnJlZzogSTJDIGFkZHJlc3MgbXVzdCBiZSBsZXNzIHRoYW4gMTAtYml0cywgZ290ICIw
+eDQwMDAwMDEwIg0KICAgIA0KICAgIENhdXNlZCBieSBjb21taXQNCiAgICANCiAgICAgIGE1OWIx
+NzkyYWRmMSAoIkFSTTogZHRzOiBhc3BlZWQ6IHRpb2dhcGFzczogQWRkIElQTUIgZGV2aWNlIikN
+CiAgICANCiAgICBJIGhhdmUgdXNlZCB0aGUgYXNwZWVkIHRyZWUgZnJvbSBuZXh0LTIwMjAwMjEw
+IGZvciB0b2RheS4NCiAgICANCiAgICAtLSANCiAgICBDaGVlcnMsDQogICAgU3RlcGhlbiBSb3Ro
+d2VsbA0KICAgIA0KDQo=
