@@ -2,154 +2,278 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8808AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BBBC3B186
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A00720873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:33:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="OEXYnf98";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GRjrFqZj"
+	by mail.kernel.org (Postfix) with ESMTP id 77D5320842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgBKBdl (ORCPT
+        id S1727818AbgBKBiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 20:33:41 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45094 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727599AbgBKBdl (ORCPT
+        Mon, 10 Feb 2020 20:38:08 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:36974 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbgBKBiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 20:33:41 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01B1XWuP030326;
-        Mon, 10 Feb 2020 17:33:33 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Vn8I0wevTwSS9Vr/cGHyGQdvmNTLRnNPXBtZEOrkZTg=;
- b=OEXYnf98AcYtI+SEZNsFqLoMwBrU0ylf2N2j5OJDTOOj3AFUI/Sbj8mFZq+C6TeB6BB9
- RNxdVSdWJngqP9C/oAn7ypcGfAxz7LhU9VOoATYAoSRdW3Kstlr2cqnZ+0c1Now2XIqq
- 6BiBWPVvr20gYefC8YroSRqibwDiC3dV9j8= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2y3htn86xh-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 10 Feb 2020 17:33:32 -0800
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 10 Feb 2020 17:33:08 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eJe065ESDm/CJbiYKQDURHm8lP7wQvVw/Chc+VQRc8CuSkTQIiHiDin4z6dfQho3WBNyiZpaTAarpodhArwn1m7TqQiHNhc63ySipgxswmdvHSzgjreHR+vNCUF9Q8M6jYKe8AziPEqEsZBvQradBV7+PEZPzA8vcwmB2MlPl+3C++zL5vzFevxkRL2BT1fOQrZ9vr9I83wyo88Y3OB0K/tL08Ptp5GFVSeKB0SdjVS1oY9o09oUjaSs2xdFqcTKwCRdO9KTL7c04pL3E4VgyK/nzOR0HwlN751nKNzujRa9oXyjId2O9TFBYVf1zD4HlNCeK8uien0mBqjkIpPT1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vn8I0wevTwSS9Vr/cGHyGQdvmNTLRnNPXBtZEOrkZTg=;
- b=is1gRGO2hPbYXTH7PCxRvvyuuhNf6EgxraYU7PStlAnmea8v7A/U8HmTW+aIFCy4eG+wU6lX2nI9yx0mXAgQ8Puzm7hek8HoU5Nf1XYHNB/h5BItRTLSqW2Tb24S6Zux9vFXR/0wVHZurep2ZowUlSIG6xppiWc1iKd3312AUVt5ykZe1/sXuv0WLe/QY5+6H2vt+KfiTH7pBBJx31DetIiB5zFzoCcRkO4mu3DFxYZpgXYncdLxKs+gb6qf4vbAzuDQGZv5z1ZC5ypD/aHf9/MYdgwIPFKMLQCSGcVqdPr9U4bcm84N0WpHF4XNranl2XNDVJwd4z9TDoK8tvkflg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vn8I0wevTwSS9Vr/cGHyGQdvmNTLRnNPXBtZEOrkZTg=;
- b=GRjrFqZjnFuTjBqIHkIzvLWo89t9fhENlb9j40r/yf/jXZCzvULxtWVUeXYBhFVaZrsc1zMwLMSBnLTR1s9rjXn6sO8MeBscBugJ8lIbUykcNOAEKCf+hkR/MQQzRcevC7noauHeBLRFHLCFDxnlRr3a6s2ZlqJsB1EcmFpuAUk=
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com (10.173.234.137) by
- MWHPR15MB1885.namprd15.prod.outlook.com (10.174.254.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Tue, 11 Feb 2020 01:33:07 +0000
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::c863:5ef9:530d:efd2]) by MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::c863:5ef9:530d:efd2%11]) with mapi id 15.20.2707.028; Tue, 11 Feb
- 2020 01:33:07 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Joel Stanley <joel@jms.id.au>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Eddie James <eajames@linux.ibm.com>
-Subject: Re: linux-next: build failure after merge of the aspeed tree
-Thread-Topic: linux-next: build failure after merge of the aspeed tree
-Thread-Index: AQHV4Fto3qGKenSQ/0+jrIkDB8Ejv6gUr5cA
-Date:   Tue, 11 Feb 2020 01:33:07 +0000
-Message-ID: <7554ACAF-928B-4832-AF00-D48186A57C52@fb.com>
-References: <20200211084449.05e3b3cb@canb.auug.org.au>
-In-Reply-To: <20200211084449.05e3b3cb@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::9581]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4601a693-ece8-48da-690e-08d7ae9258df
-x-ms-traffictypediagnostic: MWHPR15MB1885:
-x-microsoft-antispam-prvs: <MWHPR15MB1885E702AC9CD4F65DA2FDE1DD180@MWHPR15MB1885.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:962;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(366004)(39860400002)(396003)(189003)(199004)(6512007)(71200400001)(186003)(86362001)(36756003)(6506007)(5660300002)(2616005)(76116006)(66476007)(33656002)(4326008)(2906002)(66946007)(66556008)(64756008)(66446008)(8936002)(8676002)(110136005)(81166006)(54906003)(81156014)(316002)(6486002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1885;H:MWHPR15MB1597.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8LAKHzUlrOAbK0EM/DvDbHst2OKNM/S+eGEZ5I2oSPDp0jSwz7ifKoGLuo1tXR1FVZAkXItUPEJ+2UCBqEY8ihXRgM6WXksVLWWCeFf9LFv4YL/CxEjeOEJ2rGKoj6yH+DkJtv+ddIH3x3RCaY9JsXHj6JZ6LJfum+0nPRjxxY+jETz/TrspuYPRxaAfw8TRedGI+BnCNOglpOeABcamZuN28kxq/09zSC+YMvvoh5yAu0nv0r69snQ65By68cLuP9QYIGNuKl36FuKqeJJ7tco8RNZZUqZLS6Mh1/o3a9+gsFN0g4+kWmED0qlAYvyLyGRdhcyAFyFvI9+0vviqo9Y/dTEdar2/PCG/yAo+mJVdtwI3DeAbXrO3a3CHmDzX3oL+GmokTY86FpisdSuqlYswqCoJbhLAZ+kolvrRDmi2gj58RaIjKawSyxUWi8H8
-x-ms-exchange-antispam-messagedata: vaIB7avOPapueFpHDyiU0Jyfk2T9KLnkCTUzOMuW9B+aNYyoudsitIi5V+R4YNtxuucU3pxBWuhf32psuChaRc4BqHJbC5N/GYrxB+eRslhHYQKrvKM0W8td44GtPkso9QsLC6aRQAqJMt4m2Q+3m2e2L4D4o6BJABm7BkMChEk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <615AFCDBE3E26A4EB0E2769007A728F2@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 10 Feb 2020 20:38:08 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1KV1-0006Vx-Kj; Mon, 10 Feb 2020 18:38:03 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1KV0-0008DW-MA; Mon, 10 Feb 2020 18:38:03 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+        <20200210150519.538333-8-gladkov.alexey@gmail.com>
+Date:   Mon, 10 Feb 2020 19:36:08 -0600
+In-Reply-To: <20200210150519.538333-8-gladkov.alexey@gmail.com> (Alexey
+        Gladkov's message of "Mon, 10 Feb 2020 16:05:15 +0100")
+Message-ID: <87v9odlxbr.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4601a693-ece8-48da-690e-08d7ae9258df
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 01:33:07.4469
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 51BTYnQTWZZB2aa2WaYXpcHp6pjCg8eSK/beVGV0oCt5UHhX7nTRKCHndSGYnmnmRXDFp9iCrF4DJuyHX6QOPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1885
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_08:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 suspectscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110007
-X-FB-Internal: deliver
+Content-Type: text/plain
+X-XM-SPF: eid=1j1KV0-0008DW-MA;;;mid=<87v9odlxbr.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19U7B4KhHh4/SgwTHfxXMZZMQO4jwEBNUA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDIvMTAvMjAsIDE6NDUgUE0sICJTdGVwaGVuIFJvdGh3ZWxsIiA8c2ZyQGNhbmIu
-YXV1Zy5vcmcuYXU+IHdyb3RlOg0KDQogICAgSGkgYWxsLA0KICAgIA0KICAgIEFmdGVyIG1lcmdp
-bmcgdGhlIGFzcGVlZCB0cmVlLCB0b2RheSdzIGxpbnV4LW5leHQgYnVpbGQgKGFybQ0KICAgIG11
-bHRpX3Y3X2RlZmNvbmZpZykgZmFpbGVkIGxpa2UgdGhpczoNCiAgICANCiAgICBhcmNoL2FybS9i
-b290L2R0cy9hc3BlZWQtZzYuZHRzaTozMjIuMzUtMzI3Ljc6IEVSUk9SIChkdXBsaWNhdGVfbm9k
-ZV9uYW1lcyk6IC9haGIvYXBiL3N5c2NvbkAxZTZlMjAwMC9pbnRlcnJ1cHQtY29udHJvbGxlcjog
-RHVwbGljYXRlIG5vZGUgbmFtZQ0KICAgIEVSUk9SOiBJbnB1dCB0cmVlIGhhcyBlcnJvcnMsIGFi
-b3J0aW5nICh1c2UgLWYgdG8gZm9yY2Ugb3V0cHV0KQ0KICAgIA0KICAgIENhdXNlZCBieSBjb21t
-aXQNCiAgICANCiAgICAgIDA5MWZmNTIwNmVmMyAoIkFSTTogZHRzOiBhc3BlZWQ6IGFzdDI2MDA6
-IEZpeCBTQ1UgSVJRIGNvbnRyb2xsZXIgbm9kZSBhZGRyZXNzZXMiKQ0KICAgIA0KICAgIEFsc28g
-dGhlc2Ugd2FybmluZ3M6DQogICAgDQogICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1m
-YWNlYm9vay10aW9nYXBhc3MuZHRzOjQzNS4xMS00MzkuNDogV2FybmluZyAoaTJjX2J1c19yZWcp
-OiAvYWhiL2FwYi9idXNAMWU3OGEwMDAvaTJjLWJ1c0AxNDAvaXBtYjBAMTA6IEkyQyBidXMgdW5p
-dCBhZGRyZXNzIGZvcm1hdCBlcnJvciwgZXhwZWN0ZWQgIjQwMDAwMDEwIg0KICAgIGFyY2gvYXJt
-L2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0czo0MzcuMy0zMDogV2Fy
-bmluZyAoaTJjX2J1c19yZWcpOiAvYWhiL2FwYi9idXNAMWU3OGEwMDAvaTJjLWJ1c0AxNDAvaXBt
-YjBAMTA6cmVnOiBJMkMgYWRkcmVzcyBtdXN0IGJlIGxlc3MgdGhhbiAxMC1iaXRzLCBnb3QgIjB4
-NDAwMDAwMTAiDQogICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9n
-YXBhc3MuZHRzOjUyMS4xMS01MjUuNDogV2FybmluZyAoaTJjX2J1c19yZWcpOiAvYWhiL2FwYi9i
-dXNAMWU3OGEwMDAvaTJjLWJ1c0AzODAvaXBtYjBAMTA6IEkyQyBidXMgdW5pdCBhZGRyZXNzIGZv
-cm1hdCBlcnJvciwgZXhwZWN0ZWQgIjQwMDAwMDEwIg0KICAgIGFyY2gvYXJtL2Jvb3QvZHRzL2Fz
-cGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0czo1MjMuMy0zMDogV2FybmluZyAoaTJjX2J1
-c19yZWcpOiAvYWhiL2FwYi9idXNAMWU3OGEwMDAvaTJjLWJ1c0AzODAvaXBtYjBAMTA6cmVnOiBJ
-MkMgYWRkcmVzcyBtdXN0IGJlIGxlc3MgdGhhbiAxMC1iaXRzLCBnb3QgIjB4NDAwMDAwMTAiDQoN
-ClRoaXMgaXMgdGhlIGZsYWcgbmVlZGVkIHRvIGJlIGRlZmluZWQgZm9yIGRlY2xhcmluZyBzbGF2
-ZSBtb2RlLiBXZSBtYXkgaGF2ZSB0byBmaXggZHRjL2NoZWNrLmMuDQoNCiAgICANCiAgICBDYXVz
-ZWQgYnkgY29tbWl0DQogICAgDQogICAgICBhNTliMTc5MmFkZjEgKCJBUk06IGR0czogYXNwZWVk
-OiB0aW9nYXBhc3M6IEFkZCBJUE1CIGRldmljZSIpDQogICAgDQogICAgSSBoYXZlIHVzZWQgdGhl
-IGFzcGVlZCB0cmVlIGZyb20gbmV4dC0yMDIwMDIxMCBmb3IgdG9kYXkuDQogICAgDQogICAgLS0g
-DQogICAgQ2hlZXJzLA0KICAgIFN0ZXBoZW4gUm90aHdlbGwNCiAgICANCg0K
+Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+
+> This allows to flush dcache entries of a task on multiple procfs mounts
+> per pid namespace.
+>
+> The RCU lock is used because the number of reads at the task exit time
+> is much larger than the number of procfs mounts.
+
+A couple of quick comments.
+
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+> ---
+>  fs/proc/base.c                | 20 +++++++++++++++-----
+>  fs/proc/root.c                | 27 ++++++++++++++++++++++++++-
+>  include/linux/pid_namespace.h |  2 ++
+>  include/linux/proc_fs.h       |  2 ++
+>  4 files changed, 45 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 4ccb280a3e79..24b7c620ded3 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -3133,7 +3133,7 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
+>  	.permission	= proc_pid_permission,
+>  };
+>  
+> -static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+> +static void proc_flush_task_mnt_root(struct dentry *mnt_root, pid_t pid, pid_t tgid)
+Perhaps just rename things like:
+> +static void proc_flush_task_root(struct dentry *root, pid_t pid, pid_t tgid)
+>  {
+
+I don't think the mnt_ prefix conveys any information, and it certainly
+makes everything longer and more cumbersome.
+
+>  	struct dentry *dentry, *leader, *dir;
+>  	char buf[10 + 1];
+> @@ -3142,7 +3142,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+>  	name.name = buf;
+>  	name.len = snprintf(buf, sizeof(buf), "%u", pid);
+>  	/* no ->d_hash() rejects on procfs */
+> -	dentry = d_hash_and_lookup(mnt->mnt_root, &name);
+> +	dentry = d_hash_and_lookup(mnt_root, &name);
+>  	if (dentry) {
+>  		d_invalidate(dentry);
+>  		dput(dentry);
+> @@ -3153,7 +3153,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+>  
+>  	name.name = buf;
+>  	name.len = snprintf(buf, sizeof(buf), "%u", tgid);
+> -	leader = d_hash_and_lookup(mnt->mnt_root, &name);
+> +	leader = d_hash_and_lookup(mnt_root, &name);
+>  	if (!leader)
+>  		goto out;
+>  
+> @@ -3208,14 +3208,24 @@ void proc_flush_task(struct task_struct *task)
+>  	int i;
+>  	struct pid *pid, *tgid;
+>  	struct upid *upid;
+> +	struct dentry *mnt_root;
+> +	struct proc_fs_info *fs_info;
+>  
+>  	pid = task_pid(task);
+>  	tgid = task_tgid(task);
+>  
+>  	for (i = 0; i <= pid->level; i++) {
+>  		upid = &pid->numbers[i];
+> -		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
+> -					tgid->numbers[i].nr);
+> +
+> +		rcu_read_lock();
+> +		list_for_each_entry_rcu(fs_info, &upid->ns->proc_mounts, pidns_entry) {
+> +			mnt_root = fs_info->m_super->s_root;
+> +			proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
+> +		}
+> +		rcu_read_unlock();
+> +
+> +		mnt_root = upid->ns->proc_mnt->mnt_root;
+> +		proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
+
+I don't think this following of proc_mnt is needed.  It certainly
+shouldn't be.  The loop through all of the super blocks should be
+enough.
+
+Once this change goes through.  UML can be given it's own dedicated
+proc_mnt for the initial pid namespace, and proc_mnt can be removed
+entirely.
+
+Unless something has changed recently UML is the only other user of
+pid_ns->proc_mnt.  That proc_mnt really only exists to make the loop in
+proc_flush_task easy to write.
+
+It also probably makes sense to take the rcu_read_lock() over
+that entire for loop.
+
+
+>  	}
+>  }
+>  
+> diff --git a/fs/proc/root.c b/fs/proc/root.c
+> index 5d5cba4c899b..e2bb015da1a8 100644
+> --- a/fs/proc/root.c
+> +++ b/fs/proc/root.c
+> @@ -149,7 +149,22 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
+>  	if (ret) {
+>  		return ret;
+>  	}
+> -	return proc_setup_thread_self(s);
+> +
+> +	ret = proc_setup_thread_self(s);
+> +	if (ret) {
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * back reference to flush dcache entries at process exit time.
+> +	 */
+> +	ctx->fs_info->m_super = s;
+> +
+> +	spin_lock(&pid_ns->proc_mounts_lock);
+> +	list_add_tail_rcu(&ctx->fs_info->pidns_entry, &pid_ns->proc_mounts);
+> +	spin_unlock(&pid_ns->proc_mounts_lock);
+> +
+> +	return 0;
+>  }
+>  
+>  static int proc_reconfigure(struct fs_context *fc)
+> @@ -211,10 +226,17 @@ static void proc_kill_sb(struct super_block *sb)
+>  {
+>  	struct proc_fs_info *fs_info = proc_sb_info(sb);
+>  
+> +	spin_lock(&fs_info->pid_ns->proc_mounts_lock);
+> +	list_del_rcu(&fs_info->pidns_entry);
+> +	spin_unlock(&fs_info->pid_ns->proc_mounts_lock);
+> +
+> +	synchronize_rcu();
+> +
+
+Rather than a heavyweight synchronize_rcu here,
+it probably makes sense to instead to change
+
+	kfree(fs_info)
+to
+	kfree_rcu(fs_info, some_rcu_head_in_fs_info)
+
+Or possibly doing a full call_rcu.
+
+The problem is that synchronize_rcu takes about 10ms when HZ=100.
+Which makes synchronize_rcu incredibly expensive on any path where
+anything can wait for it.
+
+>  	if (fs_info->proc_self)
+>  		dput(fs_info->proc_self);
+>  	if (fs_info->proc_thread_self)
+>  		dput(fs_info->proc_thread_self);
+> +
+>  	kill_anon_super(sb);
+>  	put_pid_ns(fs_info->pid_ns);
+>  	kfree(fs_info);
+> @@ -336,6 +358,9 @@ int pid_ns_prepare_proc(struct pid_namespace *ns)
+>  		ctx->fs_info->pid_ns = ns;
+>  	}
+>  
+> +	spin_lock_init(&ns->proc_mounts_lock);
+> +	INIT_LIST_HEAD_RCU(&ns->proc_mounts);
+> +
+>  	mnt = fc_mount(fc);
+>  	put_fs_context(fc);
+>  	if (IS_ERR(mnt))
+> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+> index 66f47f1afe0d..c36af1dfd862 100644
+> --- a/include/linux/pid_namespace.h
+> +++ b/include/linux/pid_namespace.h
+> @@ -26,6 +26,8 @@ struct pid_namespace {
+>  	struct pid_namespace *parent;
+>  #ifdef CONFIG_PROC_FS
+>  	struct vfsmount *proc_mnt; /* Internal proc mounted during each new pidns */
+> +	spinlock_t proc_mounts_lock;
+> +	struct list_head proc_mounts; /* list of separated procfs mounts */
+>  #endif
+>  #ifdef CONFIG_BSD_PROCESS_ACCT
+>  	struct fs_pin *bacct;
+> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> index 5f0b1b7e4271..f307940f8311 100644
+> --- a/include/linux/proc_fs.h
+> +++ b/include/linux/proc_fs.h
+> @@ -20,6 +20,8 @@ enum {
+>  };
+>  
+>  struct proc_fs_info {
+> +	struct list_head pidns_entry;    /* Node in procfs_mounts of a pidns */
+> +	struct super_block *m_super;
+>  	struct pid_namespace *pid_ns;
+>  	struct dentry *proc_self;        /* For /proc/self */
+>  	struct dentry *proc_thread_self; /* For /proc/thread-self */
+
+
+Eric
