@@ -2,132 +2,159 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7176EC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E766C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52768206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABD32082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 14:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ICHeqN1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgBKOvK (ORCPT
+        id S1728537AbgBKOxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:51:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:47298 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727762AbgBKOvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:51:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8588030E;
-        Tue, 11 Feb 2020 06:51:09 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7B6F3F68E;
-        Tue, 11 Feb 2020 06:51:03 -0800 (PST)
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Olof Johansson <olof@lixom.net>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
- <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
- <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com>
- <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
- <27e0acfc-0782-bd97-a80e-1143f1315891@nxp.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <60272422-b4c8-a86a-fa73-c158f723acb4@arm.com>
-Date:   Tue, 11 Feb 2020 14:51:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 11 Feb 2020 09:53:49 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:50696 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgBKOxt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 09:53:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581432827; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=V41n7jOHB7QPynsif3J/pnhegI5IrC8I/pI86s+EjUs=;
+        b=ICHeqN1houPtwMeLwhsY2oyaC4llFZddxcnJ6etRDyLXujpFzFQLexpMGzPChWE8eqMi2c
+        PvaVg5Ubu1hY3AHsQpzWbb7AL0U0lsgVRdkBinmVGk7n5W92p2V8/0BWv+loFheEiSSvjW
+        B2Aal3PHKFWeN/TuTX/JxDOT5Jvj5kc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org
+Subject: [PATCH] MIPS: ingenic: DTS: Fix watchdog nodes
+Date:   Tue, 11 Feb 2020 11:53:37 -0300
+Message-Id: <20200211145337.16311-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <27e0acfc-0782-bd97-a80e-1143f1315891@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 1:55 pm, Laurentiu Tudor wrote:
-> 
-> 
-> On 11.02.2020 15:04, Robin Murphy wrote:
->> On 2020-02-11 12:13 pm, Laurentiu Tudor wrote:
->> [...]
->>>> This is a known issue about DPAA2 MC bus not working well with SMMU
->>>> based IO mapping.  Adding Laurentiu to the chain who has been looking
->>>> into this issue.
->>>
->>> Yes, I'm closely following the issue. I actually have a workaround 
->>> (attached) but haven't submitted as it will probably raise a lot of 
->>> eyebrows. In the mean time I'm following some discussions [1][2][3] 
->>> on the iommu list which seem to try to tackle what appears to be a 
->>> similar issue but with framebuffers. My hope is that we will be able 
->>> to leverage whatever turns out.
->>
->> Indeed it's more general than framebuffers - in fact there was a 
->> specific requirement from the IORT side to accommodate network/storage 
->> controllers with in-memory firmware/configuration data/whatever set up 
->> by the bootloader that want to be handed off 'live' to Linux because 
->> the overhead of stopping and restarting them is impractical. Thus this 
->> DPAA2 setup is very much within scope of the desired solution, so 
->> please feel free to join in (particularly on the DT parts) :)
-> 
-> Will sure do. Seems that the 2nd approach (the one with list of 
-> compatibles in arm-smmu) fits really well with our scenario. Will this 
-> be the way to go forward?
+The devicetree ABI was broken on purpose by commit 6d532143c915
+("watchdog: jz4740: Use regmap provided by TCU driver"), and
+commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
+by TCU driver"). The commit message of the latter explains why the ABI
+was broken.
 
-I'm hoping that Thierry's proposal can be made to work out, since it's 
-closer to how the ACPI version should work, which means we would be able 
-to do a lot more in shared common code rather than baking magic 
-knowledge and duplicated functionality into individual IOMMU drivers.
+However, the current devicetree files were not updated to the new ABI
+described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
+so the watchdog driver would not probe.
 
->> As for right now, note that your patch would only be a partial 
->> mitigation to slightly reduce the fault window but not remove it 
->> entirely. To be robust the SMMU driver *has* to know about live 
->> streams before the first arm_smmu_reset() - hence the need for generic 
->> firmware bindings - so doing anything from the MC driver is already 
->> too late (and indeed the current iommu_request_dm_for_dev() mechanism 
->> is itself a microcosm of the same problem).
-> 
-> I think you might have missed in the patch that it pauses the firmware 
-> at early boot, in its driver init and it resumes it only after 
-> iommu_request_dm_for_dev() has completed. :)
+Fix this problem by updating the watchdog nodes to comply with the new
+ABI.
 
-Ah, from the context I missed that that was non-modular and relying on 
-initcall trickery... fair enough, in that case I'll downgrade my "it's 
-insufficient" to "it's ugly and somewhat fragile" :P
+Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU
+driver")
 
-Thanks,
-Robin.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Cc: stable@vger.kernel.org
+---
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 17 +++++++++--------
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 +++++++++--------
+ 2 files changed, 18 insertions(+), 16 deletions(-)
+
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index 5accda2767be..a3301bab9231 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/jz4740-cgu.h>
++#include <dt-bindings/clock/ingenic,tcu.h>
+ 
+ / {
+ 	#address-cells = <1>;
+@@ -45,14 +46,6 @@ cgu: jz4740-cgu@10000000 {
+ 		#clock-cells = <1>;
+ 	};
+ 
+-	watchdog: watchdog@10002000 {
+-		compatible = "ingenic,jz4740-watchdog";
+-		reg = <0x10002000 0x10>;
+-
+-		clocks = <&cgu JZ4740_CLK_RTC>;
+-		clock-names = "rtc";
+-	};
+-
+ 	tcu: timer@10002000 {
+ 		compatible = "ingenic,jz4740-tcu", "simple-mfd";
+ 		reg = <0x10002000 0x1000>;
+@@ -73,6 +66,14 @@ &cgu JZ4740_CLK_PCLK
+ 
+ 		interrupt-parent = <&intc>;
+ 		interrupts = <23 22 21>;
++
++		watchdog: watchdog@0 {
++			compatible = "ingenic,jz4740-watchdog";
++			reg = <0x0 0xc>;
++
++			clocks = <&tcu TCU_CLK_WDT>;
++			clock-names = "wdt";
++		};
+ 	};
+ 
+ 	rtc_dev: rtc@10003000 {
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index f928329b034b..bb89653d16a3 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/jz4780-cgu.h>
++#include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/dma/jz4780-dma.h>
+ 
+ / {
+@@ -67,6 +68,14 @@ &cgu JZ4780_CLK_EXCLK
+ 
+ 		interrupt-parent = <&intc>;
+ 		interrupts = <27 26 25>;
++
++		watchdog: watchdog@0 {
++			compatible = "ingenic,jz4780-watchdog";
++			reg = <0x0 0xc>;
++
++			clocks = <&tcu TCU_CLK_WDT>;
++			clock-names = "wdt";
++		};
+ 	};
+ 
+ 	rtc_dev: rtc@10003000 {
+@@ -348,14 +357,6 @@ i2c4: i2c@10054000 {
+ 		status = "disabled";
+ 	};
+ 
+-	watchdog: watchdog@10002000 {
+-		compatible = "ingenic,jz4780-watchdog";
+-		reg = <0x10002000 0x10>;
+-
+-		clocks = <&cgu JZ4780_CLK_RTCLK>;
+-		clock-names = "rtc";
+-	};
+-
+ 	nemc: nemc@13410000 {
+ 		compatible = "ingenic,jz4780-nemc";
+ 		reg = <0x13410000 0x10000>;
+-- 
+2.25.0
+
