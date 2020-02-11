@@ -2,138 +2,113 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE31AC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2E7C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D241520873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40ED520873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUFg2P2w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zondnlkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgBKTJt (ORCPT
+        id S1731441AbgBKTL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:09:49 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38649 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgBKTJt (ORCPT
+        Tue, 11 Feb 2020 14:11:57 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38872 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730444AbgBKTL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:09:49 -0500
-Received: by mail-pg1-f194.google.com with SMTP id d6so6225723pgn.5;
-        Tue, 11 Feb 2020 11:09:48 -0800 (PST)
+        Tue, 11 Feb 2020 14:11:57 -0500
+Received: by mail-pg1-f195.google.com with SMTP id d6so6229206pgn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:11:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=DdsrzRs5GOQlNR32edutZ6f0+7+c3wenHW9tPk91IXQ=;
-        b=jUFg2P2wPWe5n8gJz2v94k0wIKdVuT2M2HF3uq3iA7aKhI+IkXcLVhjY8zpCZG9SNY
-         9cNfTMW/PveAoPemS2Q/VOoo9/R26xUGAfBgCeUAXxNp7R0RAjsP57uQm2dhZBbNFLLD
-         E5FlwyYdXnPAAOweUrUVacckqkfiuxwg10oTX5F7VN2Zn4bkd906Tv8xeuSFNQAZ08MV
-         hi/3nSZONHkfRrnxoujljl9n6Z0+TdrmZXdkBE08kIu49khw+C3sw8j0fekV8BymxxZj
-         wR/dHEo3QGbHSOhTTEjK6gF1fM4siv+fgj2LimhxzE3E/eHaCbLP8FfQD5cR/B94n2BE
-         +6SA==
+        bh=Tsow3V7Qcg/7TdOBvQfEChXDPTjmm/i/J9UtL8nyGdQ=;
+        b=zondnlkgAJViZhnsfy6H4zqUsOW8TjHRFBApbJIsN0y0H5PHvFZBtsSOT9Dyf41nMe
+         EcNKxiErTEGxr4+pljj1+euUZq2JiO4RMBE0e5jtlkyqkBtF6vNqB8NqQuvqJlpq+DhO
+         TtTo5GEXOEdGRCU/0EASkPR7z2KFC4Pi8Qv5zO0Y+3ago2m5129BIgwmFeW5L3QJGnpe
+         lZDs3OSRPNi5LkPBrwC0NcWsSuv5XOMG7XqtJM+YtZf5PhetIvRU0wtL4V0hWNfwqalI
+         u4rbtVr4HDgiVxjTqAxY7mMLgREOBGlMemylNEP/FR+ZbWASoJvArkUPGpoAcK58PDfz
+         ehBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DdsrzRs5GOQlNR32edutZ6f0+7+c3wenHW9tPk91IXQ=;
-        b=buPmm9/6wvTFdCdY2Ko5zwHbj9Tkho7EMlXmjwKMHRqpQDBTVCli88XqDQYw9g2Oww
-         nxRJyFfUEQCVp38CTfR/1GCAwRjLbskQ9cptamK7iQ2FQENlRanUIwKusPejoYkgb0jg
-         3QSU/zgbZomqDA9jFT86YpxlExFCN5iNBA6sAmuIb5Q0wZX8T1Duro76H+Roj4kvXBbn
-         f2JUI7MZf6FlitrGra3tRDOX9A0SdXH9c8h+dUI0d9TQke8jBbt0tyttmWS3ubSqPqUv
-         sOu8t2IwKTpgciI19gcrKEZpQd39esMhAu0dgex9z/4H/hZzllBbau/JamSNWPSMWsGw
-         JznA==
-X-Gm-Message-State: APjAAAWPZIOl0OIiRXTXVJdIeIjdPEprdaQ7NEMVBxk4NmxNAwIUdf/c
-        h8Jy9yjuRJjFhb6p4ghgIy8=
-X-Google-Smtp-Source: APXvYqzRHkBLhol9enkRUQh0FR/hutR9VwxiVXEvgSOpAc6SqnqoNFvmuuWvGmS6H9lHdEVKdyxi7w==
-X-Received: by 2002:aa7:951c:: with SMTP id b28mr4453233pfp.97.1581448187897;
-        Tue, 11 Feb 2020 11:09:47 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:200::1:aeb4])
-        by smtp.gmail.com with ESMTPSA id v8sm4989689pfn.172.2020.02.11.11.09.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 11:09:47 -0800 (PST)
-Date:   Tue, 11 Feb 2020 11:09:45 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-Message-ID: <20200211190943.sysdbz2zuz5666nq@ast-mbp>
-References: <20200123152440.28956-1-kpsingh@chromium.org>
- <20200123152440.28956-5-kpsingh@chromium.org>
- <20200211031208.e6osrcathampoog7@ast-mbp>
- <20200211124334.GA96694@google.com>
- <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
- <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+        bh=Tsow3V7Qcg/7TdOBvQfEChXDPTjmm/i/J9UtL8nyGdQ=;
+        b=KbA4b08RKt7DYiFrb1IfiEgzLNXRzNfXqtY/Lv3JlR0DUNkNRfXF94UUSOt3cV2nTo
+         38Cx2JY9TR8XwJyJ0lbMxvnteOO5kTQwOGYUqlTus3YXfGi+8v3ECXyyGqRHVBo/Iv1k
+         BUMKwb5KxujqUpT4yuH7CQdGrg/aRGgWu+Y1ApD4ENYvbzdscQE77qmIHHufOWEI4VTY
+         BplUFbRzxnMih7QVRvVImH2Uey3WHiU81RgYZqJb3hvBgUFDW/YfGCMOKqS+fMCg++ul
+         OMB4155jE7kgdev8wS59okPjhoBZF2dGW/IZKsYK82G0t1uQZlgPwtftit9kS3KKiX3e
+         c+1Q==
+X-Gm-Message-State: APjAAAXz1D5kpypzmuxYOKICpcWeuL7tXykMSJkaTHQeWhobVaw8Xwtg
+        djZ8dOWhZB91cHoAabUAb3mY
+X-Google-Smtp-Source: APXvYqzhJB7rfJbmXLIaUCiKe6GXen7+4eeBQ7SZcbGsxfwdiyucbZcgMROkcH+xdR59gIUnOiITTw==
+X-Received: by 2002:a63:f402:: with SMTP id g2mr4174697pgi.405.1581448314841;
+        Tue, 11 Feb 2020 11:11:54 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:638b:7653:754d:196d:c455:1f88])
+        by smtp.gmail.com with ESMTPSA id d24sm5327630pfq.75.2020.02.11.11.11.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Feb 2020 11:11:54 -0800 (PST)
+Date:   Wed, 12 Feb 2020 00:41:47 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200211191147.GB11908@Mani-XPS-13-9360>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+ <20200206165606.GA3894455@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20200206165606.GA3894455@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 07:44:05PM +0100, Jann Horn wrote:
-> On Tue, Feb 11, 2020 at 6:58 PM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> > On Tue, Feb 11, 2020 at 01:43:34PM +0100, KP Singh wrote:
-> [...]
-> > > * When using the semantic provided by fexit, the BPF LSM program will
-> > >   always be executed and will be able to override / clobber the
-> > >   decision of LSMs which appear before it in the ordered list. This
-> > >   semantic is very different from what we currently have (i.e. the BPF
-> > >   LSM hook is only called if all the other LSMs allow the action) and
-> > >   seems to be bypassing the LSM framework.
-> >
-> > It that's a concern it's trivial to add 'if (RC == 0)' check to fexit
-> > trampoline generator specific to lsm progs.
-> [...]
-> > Using fexit mechanism and bpf_sk_storage generalization is
-> > all that is needed. None of it should touch security/*.
-> 
-> If I understand your suggestion correctly, that seems like a terrible
-> idea to me from the perspective of inspectability and debuggability.
-> If at runtime, a function can branch off elsewhere to modify its
-> decision, I want to see that in the source code. If someone e.g.
-> changes the parameters or the locking rules around a security hook,
-> how are they supposed to understand the implications if that happens
-> through some magic fexit trampoline that is injected at runtime?
+Hi Greg,
 
-I'm not following the concern. There is error injection facility that is
-heavily used with and without bpf. In this case there is really no difference
-whether trampoline is used with direct call or indirect callback via function
-pointer. Both will jump to bpf prog. The _source code_ of bpf program will
-_always_ be available for humans to examine via "bpftool prog dump" since BTF
-is required. So from inspectability and debuggability point of view lsm+bpf
-stuff is way more visible than any builtin LSM. At any time people will be able
-to see what exactly is running on the system. Assuming folks can read C code.
+On Thu, Feb 06, 2020 at 05:56:06PM +0100, Greg KH wrote:
+> On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> > +static void mhi_release_device(struct device *dev)
+> > +{
+> > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > +
+> > +	if (mhi_dev->ul_chan)
+> > +		mhi_dev->ul_chan->mhi_dev = NULL;
+> 
+> That looks really odd.  Why didn't you just drop the reference you
+> should have grabbed here for this pointer?  You did properly increment
+> it when you saved it, right?  :)
+> 
+
+Well, there is no reference count (kref) exist for mhi_dev. And we really
+needed to NULL the mhi_dev to avoid any dangling reference to it. The reason for
+not having kref is that, each mhi_dev will be used by maximum of 2 channels
+only. So thought that refcounting is not needed. Please correct me if I'm
+wrong.
+
+Thanks,
+Mani
+
+> > +
+> > +	if (mhi_dev->dl_chan)
+> > +		mhi_dev->dl_chan->mhi_dev = NULL;
+> 
+> Same here.
+> 
+> thanks,
+> 
+> greg k-h
