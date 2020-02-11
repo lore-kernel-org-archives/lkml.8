@@ -2,124 +2,103 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A27C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B35C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6B2206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC12220842
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fKj5Y5hx"
+	dkim=pass (2048-bit key) header.d=dev-mellanox-co-il.20150623.gappssmtp.com header.i=@dev-mellanox-co-il.20150623.gappssmtp.com header.b="q10Zmw35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbgBKVoQ (ORCPT
+        id S1727655AbgBKVof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:44:16 -0500
-Received: from gateway36.websitewelcome.com ([192.185.188.18]:39150 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727043AbgBKVoQ (ORCPT
+        Tue, 11 Feb 2020 16:44:35 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42521 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727199AbgBKVoe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:44:16 -0500
-X-Greylist: delayed 2916 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 16:44:16 EST
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 1BF4D40BC0795
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:09:40 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1cZHjIfMOXVkQ1cZIjgzwJ; Tue, 11 Feb 2020 14:55:40 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Zjc5LElXJ0zIygghxh2TaQQ5QMBnKhOZ9bRBJCzRtXs=; b=fKj5Y5hxtG77C4OrRGtRsmqzFH
-        LmOdqavyDRDgSomroylBrffEtkaEUQlF/iwt2phvzghztPuyMqar6XMggvExMLKHjY9uj184VB4Mf
-        17Q8Ko8/U6QvGAbIGbebs6knEZuUnfu9z8+TGrA9OVskmBEcAbFjJzi1hCZiM9vx5vmaYxidtkLed
-        baps6upgIypNw/lIsT1kq/aErDchueSF04reoDkrhxEQdCfob2PsTZhrLbigDDOp2Naeweh6Y4BcJ
-        nkMbbK9GuLdHBcrYWzoyztdteIRPM/Ilp3Vxm1MTPwoxtcjUMH5XzPVeRiwu+KpqDLu0zUUy/oG1l
-        G3MCiGjw==;
-Received: from [200.68.140.36] (port=27335 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1cZG-001zvC-G4; Tue, 11 Feb 2020 14:55:38 -0600
-Date:   Tue, 11 Feb 2020 14:58:13 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] lib/ts_fsm: Replace zero-length array with flexible-array
- member
-Message-ID: <20200211205813.GA25602@embeddedor>
+        Tue, 11 Feb 2020 16:44:34 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d10so13336752ljl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 13:44:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dev-mellanox-co-il.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FCK0sjqQ6cf0msl3lwipyWtRkRUXU+cty6zPWQtzLQE=;
+        b=q10Zmw35nWzQ+Ks+WJkGDdW8XCtpT85M4eQqywc2ctI6T4G5zUSfHVSVfDXoeczmZ6
+         KqDhcFVNDXgUGxxf685OTB2vgSgSt3s1BDrP4zBza1y29niy1aVn3bTS1wyTDfCztCna
+         tRIJ8taz2VeW7Yvqb7M4iOlKVs+yTH4Zv+lRZ3wVeMnpt8whWRc8S8gdBYKrsFkGl2kM
+         2yau7YRTJU+uhvYM6njqf3WJVZcnsuUpUGq23OMn5RF3Ix91D9KciE0tY/m4U0P0vo6C
+         +YvPT6pQyjD2h7SDl2jwxFvAzKUnFvMGv9+yBU+9dfVyy/VpXxREhblkFFGOebNdMJWw
+         muHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FCK0sjqQ6cf0msl3lwipyWtRkRUXU+cty6zPWQtzLQE=;
+        b=U0ElzwvgEf4h4jQuYpHVXkhYlBhRGa6TWKQRSr9UP0Mdg3pxFCgDuZifMl+bOsQm9E
+         M/pUgiR7mWoyWuw6BHWMcEfWyl5HP+GRL1TBoX5xvh1SAcGgCUJuMv+D9QhZ0wdwiikA
+         Bi5TO/OvVlFtZhwlVt7iAZmHPTN3gAhUkMjjZUFccZuCi/g2W9yLN5bOBcxOgz60K04v
+         5/o5jelvUwnqoRwPJ4J00vU5ul8IzTaSmY6kBFoy94RIBwUzZt3S6zSPLk36qf+o+qJ2
+         qidrcsCAZjPHxfkS1p+cJPTI+zKva63bNo7jByftkUBsqqlHKaH/Cd6pD8cH5WX9BD8y
+         zUzg==
+X-Gm-Message-State: APjAAAUCo7WoPliBtLIeR3xcBMv5z08F5mBj3kvFeW5DDZHMdGtlBD5c
+        yEYUzHD/00wYMbmdkoI3HPpfbSdU5FrHktiS74WekQ==
+X-Google-Smtp-Source: APXvYqzbGwK9xhWlDNmDqBmMndHvGHadA0WVrHPIzqAN+tt/TmeaBdatK4HRV1EWwnNItMxWoK9IsSUjpN3Y4AgupfM=
+X-Received: by 2002:a2e:89cd:: with SMTP id c13mr5429721ljk.139.1581457472754;
+ Tue, 11 Feb 2020 13:44:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1cZG-001zvC-G4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:27335
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 47
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200126175104.17948-1-christophe.jaillet@wanadoo.fr> <f9b066c7-e59a-9106-da57-a7c0ffc36d9b@mellanox.com>
+In-Reply-To: <f9b066c7-e59a-9106-da57-a7c0ffc36d9b@mellanox.com>
+From:   Saeed Mahameed <saeedm@dev.mellanox.co.il>
+Date:   Tue, 11 Feb 2020 13:44:21 -0800
+Message-ID: <CALzJLG_Nyub5YJpP+b=7B128QHOir-vyDs_yrsSoHEPHTfP1bw@mail.gmail.com>
+Subject: Re: [PATCH] net/mlx5: Remove a useless 'drain_workqueue()' call in 'mlx5e_ipsec_cleanup()'
+To:     Boris Pismenny <borisp@mellanox.com>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Mon, Jan 27, 2020 at 12:08 AM Boris Pismenny <borisp@mellanox.com> wrote:
+>
+>
+> On 1/26/2020 7:51 PM, Christophe JAILLET wrote:
+> > 'destroy_workqueue()' already calls 'drain_workqueue()', there is no need
+> > to call it explicitly.
+> >
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > ---
+> >  drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
+> > index cf58c9637904..29626c6c9c25 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
+> > @@ -433,7 +433,6 @@ void mlx5e_ipsec_cleanup(struct mlx5e_priv *priv)
+> >       if (!ipsec)
+> >               return;
+> >
+> > -     drain_workqueue(ipsec->wq);
+> >       destroy_workqueue(ipsec->wq);
+> >
+> >       ida_destroy(&ipsec->halloc);
+> LGTM
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- lib/ts_fsm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/ts_fsm.c b/lib/ts_fsm.c
-index 69557c74ef9f..f7aed7b6f3fe 100644
---- a/lib/ts_fsm.c
-+++ b/lib/ts_fsm.c
-@@ -36,7 +36,7 @@
- struct ts_fsm
- {
- 	unsigned int		ntokens;
--	struct ts_fsm_token	tokens[0];
-+	struct ts_fsm_token	tokens[];
- };
- 
- /* other values derived from ctype.h */
--- 
-2.25.0
-
+applied to net-next-mlx5
+Thanks!
