@@ -2,125 +2,206 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84C1C3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03690C352A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26A120708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDEC2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 01:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Tktp5Tts"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gWHS6CxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbgBKBTl (ORCPT
+        id S1727652AbgBKBW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 20:19:41 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15287 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727120AbgBKBTk (ORCPT
+        Mon, 10 Feb 2020 20:22:56 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35344 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbgBKBWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 20:19:40 -0500
-X-UUID: bb4be0dbcae848f58523fcadeed9470f-20200211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=mxKXHpMsJ5tja8hbUWbIbhD1W2Y9D1qbD+njzeGZeLo=;
-        b=Tktp5Ttsa726dao3RTS7GoXNd3YZYVkBSmBNjTBUHKgRcmtOlWHLtbpvTeZ0H+EMYjJVOfPSXOkbwQX8qcIzttInXfMIfiR9XW6jUSLcpkveZBE6B7qJcZXuFuhFpsrbnepqeSobKjpdZefnXWfoCuKQ1OBPbbkV4FsBfRWGU3s=;
-X-UUID: bb4be0dbcae848f58523fcadeed9470f-20200211
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 772415810; Tue, 11 Feb 2020 09:19:35 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 11 Feb 2020 09:18:52 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 11 Feb 2020 09:20:00 +0800
-Message-ID: <1581383974.3194.1.camel@mtksdaap41>
-Subject: Re: [PATCH] drm/mediatek: Find the cursor plane instead of hard
- coding it
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Sean Paul <sean@poorly.run>
-CC:     Evan Benn <evanbenn@chromium.org>, David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 11 Feb 2020 09:19:34 +0800
-In-Reply-To: <CAMavQKLqr=a=WZKFfC2sEBcskjX+k-82a3V3XVk7LQLzpAMaBg@mail.gmail.com>
-References: <20200206140140.GA18465@art_vandelay>
-         <20200207152348.1.Ie0633018fc787dda6e869cae23df76ae30f2a686@changeid>
-         <1581064499.590.0.camel@mtksdaap41> <1581303187.951.2.camel@mtksdaap41>
-         <CAMavQKLqr=a=WZKFfC2sEBcskjX+k-82a3V3XVk7LQLzpAMaBg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 10 Feb 2020 20:22:55 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z18so5755572lfe.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 17:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V7k4dXV8FoGM6V4cI0YWcq4eSmPiy0AYAzs4mdKTUt8=;
+        b=gWHS6CxGgaf/q86I/rnbaBQNitqG4dPGGM5rzHsJ4hL+10XnGNsF0CPcNTeeuh2X8v
+         wr+mqFY5rA5xin8b31WKS1Cjw5/NuNbY0puioN9yWLcFq1hrH0/3CCxZxRVM5umCp2I2
+         pgx2jrmIZtt/a9RrSQSKNdkUuTRGZwt3pgZGEOtzEjdXBwwNNqdwuUy4DQ8WLu++0l29
+         cE0asRyOe5/IuWhKkcy7yGs6GWTuA05rla5iP5TQLZnKmS4HCr+ym/+6na45H0LSX0/3
+         H4ue9NE98p6h2OEdmcgmxRKrIpz5C4XeddNASwvYJ1Og0fHnoRLvWpqLzCntqG/gkjzq
+         REXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V7k4dXV8FoGM6V4cI0YWcq4eSmPiy0AYAzs4mdKTUt8=;
+        b=BFEXOu1bmMH93VKfgtizfqfaU3CsxUBTK1yklYi7OQ2+v+SFj0HLkhalyIjO/TqKQl
+         WFNyU8qNUfUnMJqf7F3H+4htF4YgPcAh5Gtiu4RqRz9ifA2z1mT78Rd8GdfhE5BRM5eV
+         w9+N4LLrrFunpHATmAjMeJo9epDBSgl9n90uBmq/RpdE5SVZn5bWuAa6Nocq5dLCFyp0
+         itjh3V3mQJm15QIYHTJh9ZclSoCRgXHoOh7QTrO/fgtNGxzJ9uDABTUtzzkV1T1b5jxx
+         QnOiJNL6w2wfbbSFkqKe69mLseZomZ3FOVPYmfWTC5q6gpX8ou0G7vKNekjNUrDhGqq/
+         cVHQ==
+X-Gm-Message-State: APjAAAVs8hXwyADJT0PsRoRmpHcNkAinjj3r7tTQN/yJDmv6ervb9jfS
+        jh2uR0KH6n8H3OOzaBmtuswxqUpWDAU7OreaI0CR
+X-Google-Smtp-Source: APXvYqwI8a/W8H+gQns0aDagkr5JTlgOjC9AmuZ/sfyUWT07ntLmNqCXIfLAE2xpOqxxwhjhmixwFpmAjqIKRykvZOg=
+X-Received: by 2002:ac2:47ec:: with SMTP id b12mr2152855lfp.162.1581384172899;
+ Mon, 10 Feb 2020 17:22:52 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200211011631.7619-1-zzyiwei@google.com> <CAKT=dDm=qdrWCN2TVfZaaMijEX5gn_VpjA+8NaW0x9TNDf+A-A@mail.gmail.com>
+In-Reply-To: <CAKT=dDm=qdrWCN2TVfZaaMijEX5gn_VpjA+8NaW0x9TNDf+A-A@mail.gmail.com>
+From:   Yiwei Zhang <zzyiwei@google.com>
+Date:   Mon, 10 Feb 2020 17:22:41 -0800
+Message-ID: <CAKT=dDnPV2we0LrQ3xfUEtCR3r8wpzy0BRzL_pxh1_Z+DD0Gbw@mail.gmail.com>
+Subject: Re: [PATCH] Add gpu memory tracepoints
+To:     rostedt@goodmis.org, mingo@redhat.com, linux-kernel@vger.kernel.org
+Cc:     Prahlad Kilambi <prahladk@google.com>,
+        android-kernel <android-kernel@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAyLTEwIGF0IDA5OjEwIC0wNTAwLCBTZWFuIFBhdWwgd3JvdGU6DQo+IE9u
-IFN1biwgRmViIDksIDIwMjAgYXQgOTo1MyBQTSBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPiB3
-cm90ZToNCj4gPg0KPiA+IEhpLCBFdmFuOg0KPiA+DQo+ID4gT24gRnJpLCAyMDIwLTAyLTA3IGF0
-IDE2OjM0ICswODAwLCBDSyBIdSB3cm90ZToNCj4gPiA+IEhpLCBFdmFuOg0KPiA+ID4NCj4gPiA+
-IE9uIEZyaSwgMjAyMC0wMi0wNyBhdCAxNToyMyArMTEwMCwgRXZhbiBCZW5uIHdyb3RlOg0KPiA+
-ID4gPiBUaGUgY3Vyc29yIGFuZCBwcmltYXJ5IHBsYW5lcyB3ZXJlIGhhcmQgY29kZWQuDQo+ID4g
-PiA+IE5vdyBzZWFyY2ggZm9yIHRoZW0gZm9yIHBhc3NpbmcgdG8gZHJtX2NydGNfaW5pdF93aXRo
-X3BsYW5lcw0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IFJldmlld2VkLWJ5OiBDSyBIdSA8Y2suaHVA
-bWVkaWF0ZWsuY29tPg0KPiA+DQo+ID4gQXBwbGllZCB0byBtZWRpYXRlay1kcm0tZml4ZXMtNS42
-IFsxXSwgdGhhbmtzLg0KPiA+DQo+IA0KPiBIaSBDSywNCj4gVGhhbmtzIGZvciBwaWNraW5nIHRo
-aXMgdXAuIEJlZm9yZSB5b3Ugc2VuZCB0aGUgcHVsbCwgY291bGQgeW91IHBsZWFzZQ0KPiByZXZl
-cnNlIHRoZSBvcmRlciBvZiB0aGVzZSAyIHBhdGNoZXM/IEV2YW4ncyBzaG91bGQgY29tZSBiZWZv
-cmUgbWluZQ0KPiB0byBwcmV2ZW50IGEgcmVncmVzc2lvbi4NCj4gDQo+IFNlYW4NCj4gDQoNCkhp
-LCBTZWFuOg0KDQpUaGFua3MgZm9yIHlvdXIgbm90aWNlLiBJJ3ZlIHJldmVyc2VkIHRoZSBvcmRl
-ci4NCg0KUmVnYXJkcywNCkNLDQoNCj4gPiBbMV0NCj4gPiBodHRwczovL2dpdGh1Yi5jb20vY2to
-dS1tZWRpYXRlay9saW51eC5naXQtdGFncy9jb21taXRzL21lZGlhdGVrLWRybS1maXhlcy01LjYN
-Cj4gPg0KPiA+IFJlZ2FyZHMsDQo+ID4gQ0sNCj4gPg0KPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogRXZhbiBCZW5uIDxldmFuYmVubkBjaHJvbWl1bS5vcmc+DQo+ID4gPiA+IC0tLQ0KPiA+
-ID4gPg0KPiA+ID4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIHwg
-MTggKysrKysrKysrKysrLS0tLS0tDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0
-aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiA+ID4gPiBpbmRleCA3YjM5MmQ2YzcxY2MuLjkzNTY1
-Mjk5MGFmYSAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fY3J0Yy5jDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2NydGMuYw0KPiA+ID4gPiBAQCAtNjU4LDEwICs2NTgsMTggQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBkcm1fY3J0Y19oZWxwZXJfZnVuY3MgbXRrX2NydGNfaGVscGVyX2Z1bmNzID0gew0KPiA+
-ID4gPg0KPiA+ID4gPiAgc3RhdGljIGludCBtdGtfZHJtX2NydGNfaW5pdChzdHJ1Y3QgZHJtX2Rl
-dmljZSAqZHJtLA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IG10a19k
-cm1fY3J0YyAqbXRrX2NydGMsDQo+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICBzdHJ1
-Y3QgZHJtX3BsYW5lICpwcmltYXJ5LA0KPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICAg
-c3RydWN0IGRybV9wbGFuZSAqY3Vyc29yLCB1bnNpZ25lZCBpbnQgcGlwZSkNCj4gPiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBwaXBlKQ0KPiA+ID4gPiAgew0KPiA+
-ID4gPiAtICAgaW50IHJldDsNCj4gPiA+ID4gKyAgIHN0cnVjdCBkcm1fcGxhbmUgKnByaW1hcnkg
-PSBOVUxMOw0KPiA+ID4gPiArICAgc3RydWN0IGRybV9wbGFuZSAqY3Vyc29yID0gTlVMTDsNCj4g
-PiA+ID4gKyAgIGludCBpLCByZXQ7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgIGZvciAoaSA9IDA7
-IGkgPCBtdGtfY3J0Yy0+bGF5ZXJfbnI7IGkrKykgew0KPiA+ID4gPiArICAgICAgICAgICBpZiAo
-bXRrX2NydGMtPnBsYW5lc1tpXS50eXBlID09IERSTV9QTEFORV9UWVBFX1BSSU1BUlkpDQo+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgcHJpbWFyeSA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ldOw0K
-PiA+ID4gPiArICAgICAgICAgICBlbHNlIGlmIChtdGtfY3J0Yy0+cGxhbmVzW2ldLnR5cGUgPT0g
-RFJNX1BMQU5FX1RZUEVfQ1VSU09SKQ0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgIGN1cnNv
-ciA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ldOw0KPiA+ID4gPiArICAgfQ0KPiA+ID4gPg0KPiA+ID4g
-PiAgICAgcmV0ID0gZHJtX2NydGNfaW5pdF93aXRoX3BsYW5lcyhkcm0sICZtdGtfY3J0Yy0+YmFz
-ZSwgcHJpbWFyeSwgY3Vyc29yLA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAmbXRrX2NydGNfZnVuY3MsIE5VTEwpOw0KPiA+ID4gPiBAQCAtODMwLDkgKzgzOCw3
-IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LA0K
-PiA+ID4gPiAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gPiA+ICAgICB9DQo+
-ID4gPiA+DQo+ID4gPiA+IC0gICByZXQgPSBtdGtfZHJtX2NydGNfaW5pdChkcm1fZGV2LCBtdGtf
-Y3J0YywgJm10a19jcnRjLT5wbGFuZXNbMF0sDQo+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAg
-ICAgICAgICBtdGtfY3J0Yy0+bGF5ZXJfbnIgPiAxID8gJm10a19jcnRjLT5wbGFuZXNbMV0gOg0K
-PiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgTlVMTCwgcGlwZSk7DQo+ID4gPiA+
-ICsgICByZXQgPSBtdGtfZHJtX2NydGNfaW5pdChkcm1fZGV2LCBtdGtfY3J0YywgcGlwZSk7DQo+
-ID4gPiA+ICAgICBpZiAocmV0IDwgMCkNCj4gPiA+ID4gICAgICAgICAgICAgcmV0dXJuIHJldDsN
-Cj4gPiA+ID4NCj4gPiA+DQo+ID4NCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXw0KPiA+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QNCj4gPiBkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+ID4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwNCg0K
-
+On Mon, Feb 10, 2020 at 5:17 PM Yiwei Zhang <zzyiwei@google.com> wrote:
+>
+> On Mon, Feb 10, 2020 at 5:16 PM <zzyiwei@google.com> wrote:
+> >
+> > From: Yiwei Zhang <zzyiwei@google.com>
+> >
+> > This change adds the below gpu memory tracepoint:
+> > gpu_mem/gpu_mem_total: track global or process gpu memory total counters
+> >
+> > Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
+> > ---
+> >  include/trace/events/gpu_mem.h | 64 ++++++++++++++++++++++++++++++++++
+> >  kernel/trace/Kconfig           |  3 ++
+> >  kernel/trace/Makefile          |  1 +
+> >  kernel/trace/trace_gpu_mem.c   | 13 +++++++
+> >  4 files changed, 81 insertions(+)
+> >  create mode 100644 include/trace/events/gpu_mem.h
+> >  create mode 100644 kernel/trace/trace_gpu_mem.c
+> >
+> > diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
+> > new file mode 100644
+> > index 000000000000..3b632a2b5100
+> > --- /dev/null
+> > +++ b/include/trace/events/gpu_mem.h
+> > @@ -0,0 +1,64 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * GPU memory trace points
+> > + *
+> > + * Copyright (C) 2020 Google, Inc.
+> > + */
+> > +
+> > +#undef TRACE_SYSTEM
+> > +#define TRACE_SYSTEM gpu_mem
+> > +
+> > +#if !defined(_TRACE_GPU_MEM_H) || defined(TRACE_HEADER_MULTI_READ)
+> > +#define _TRACE_GPU_MEM_H
+> > +
+> > +#include <linux/tracepoint.h>
+> > +
+> > +/*
+> > + * The gpu_memory_total event indicates that there's an update to either the
+> > + * global or process total gpu memory counters.
+> > + *
+> > + * This event should be emitted whenever the kernel device driver allocates,
+> > + * frees, imports, unimports memory in the GPU addressable space.
+> > + *
+> > + * @gpu_id: This is the gpu id.
+> > + *
+> > + * @pid: Put 0 for global total, while positive pid for process total.
+> > + *
+> > + * @size: Virtual size of the allocation in bytes.
+> > + *
+> > + */
+> > +TRACE_EVENT(gpu_mem_total,
+> > +       TP_PROTO(
+> > +               uint32_t gpu_id,
+> > +               uint32_t pid,
+> > +               uint64_t size
+> > +       ),
+> > +       TP_ARGS(
+> > +               gpu_id,
+> > +               pid,
+> > +               size
+> > +       ),
+> > +       TP_STRUCT__entry(
+> > +               __field(uint32_t, gpu_id)
+> > +               __field(uint32_t, pid)
+> > +               __field(uint64_t, size)
+> > +       ),
+> > +       TP_fast_assign(
+> > +               __entry->gpu_id = gpu_id;
+> > +               __entry->pid = pid;
+> > +               __entry->size = size;
+> > +       ),
+> > +       TP_printk(
+> > +               "gpu_id=%u "
+> > +               "pid=%u "
+> > +               "size=%llu",
+> > +               __entry->gpu_id,
+> > +               __entry->pid,
+> > +               __entry->size
+> > +       )
+> > +);
+> > +
+> > +#endif /* _TRACE_GPU_MEM_H */
+> > +
+> > +/* This part must be outside protection */
+> > +#include <trace/define_trace.h>
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index 91e885194dbc..cb404755b0a6 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -85,6 +85,9 @@ config EVENT_TRACING
+> >  config CONTEXT_SWITCH_TRACER
+> >         bool
+> >
+> > +config TRACE_GPU_MEM
+> > +       bool
+> > +
+> >  config RING_BUFFER_ALLOW_SWAP
+> >         bool
+> >         help
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index f9dcd19165fa..267985313dca 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -47,6 +47,7 @@ obj-$(CONFIG_PREEMPTIRQ_DELAY_TEST) += preemptirq_delay_test.o
+> >  obj-$(CONFIG_SYNTH_EVENT_GEN_TEST) += synth_event_gen_test.o
+> >  obj-$(CONFIG_KPROBE_EVENT_GEN_TEST) += kprobe_event_gen_test.o
+> >  obj-$(CONFIG_CONTEXT_SWITCH_TRACER) += trace_sched_switch.o
+> > +obj-$(CONFIG_TRACE_GPU_MEM) += trace_gpu_mem.o
+> >  obj-$(CONFIG_FUNCTION_TRACER) += trace_functions.o
+> >  obj-$(CONFIG_PREEMPTIRQ_TRACEPOINTS) += trace_preemptirq.o
+> >  obj-$(CONFIG_IRQSOFF_TRACER) += trace_irqsoff.o
+> > diff --git a/kernel/trace/trace_gpu_mem.c b/kernel/trace/trace_gpu_mem.c
+> > new file mode 100644
+> > index 000000000000..01e855897b6d
+> > --- /dev/null
+> > +++ b/kernel/trace/trace_gpu_mem.c
+> > @@ -0,0 +1,13 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * GPU memory trace points
+> > + *
+> > + * Copyright (C) 2020 Google, Inc.
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +
+> > +#define CREATE_TRACE_POINTS
+> > +#include <trace/events/gpu_mem.h>
+> > +
+> > +EXPORT_TRACEPOINT_SYMBOL(gpu_mem_total);
+> > --
+> > 2.25.0.341.g760bfbb309-goog
+> >
