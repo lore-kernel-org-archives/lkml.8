@@ -2,97 +2,139 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0A4C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6C7C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1204206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:24:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CGPUfV41"
+	by mail.kernel.org (Postfix) with ESMTP id 95B40206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581459965;
+	bh=jwOvEweDP3a6frfUBwUsTRLm3KUOaJHDLObO3bfMngQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ck8Tlbtmxnvw4B1ny6nd/MStau+Lyz3LETJprXzlZhUkZCxMLmdkGwn2Ybkz89GSv
+	 LhBaksG3O2yBstXYfk0U7wU+EgjLhlKGHQIEwTHLx34gQIec7ov65ZortErpkGF57X
+	 RJYs8v7MpvK9ckBMTRAcfTvxVLV0tLMzyi5b+Wc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbgBKWYv (ORCPT
+        id S1727602AbgBKW0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:24:51 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10547 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727041AbgBKWYu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:24:50 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581459890; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=bb81B+KmcUpC/VrodZKsA0Bckmi8L+Zj/k27kIOQiOs=; b=CGPUfV410uPIyZPBnHXp3I0NSxAjkKsfAoA26tBPmydgW8KDU5BLwxxsgH2iO3NEaqyjLiJD
- bBaGfXVl451gFvnMZID6mUUD252Nd/kVBaUHhFOa0c9BjvQCskWVGMu/dF4139vGEtbDTJlW
- yTJrJuNJUBqYNnmi4AsXUoAfLVA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4329ae.7f8b99783308-smtp-out-n02;
- Tue, 11 Feb 2020 22:24:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 814A1C433A2; Tue, 11 Feb 2020 22:24:46 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 11 Feb 2020 17:26:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbgBKW0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:26:04 -0500
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2FD19C43383;
-        Tue, 11 Feb 2020 22:24:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2FD19C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
-Date:   Wed, 12 Feb 2020 03:54:28 +0530
-Message-Id: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        by mail.kernel.org (Postfix) with ESMTPSA id F21C52082F
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581459963;
+        bh=jwOvEweDP3a6frfUBwUsTRLm3KUOaJHDLObO3bfMngQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zZYakXND4nSyArsUYniGdrmaKSyq1gknzDCuf0po+GIXwSJFpic9i7FaMFT5+FR+2
+         OgpeNiEc6wN+3KbrRoQWDiWm0QjF4KCTdbL02gOc9XOuU4E8hi2JKG7ZHCh98mPmnM
+         bw7k9TPplzbMJREMCV+2FkmwzoEhDOOarizM7dEo=
+Received: by mail-wr1-f41.google.com with SMTP id t3so14558363wru.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 14:26:02 -0800 (PST)
+X-Gm-Message-State: APjAAAWRiWLXRV9GWEQzILX/S0IjcUMnC2urbQXrlOag7qygQlDjvVEc
+        pWX2Bp2gcid8CBP5DWRcYm1LG4FgYlq7ISG0LdFtgA==
+X-Google-Smtp-Source: APXvYqzhlwE9e/rHSQa1i4zUzoVmEyewXxrV5b2agTpUtz0bDQeneWSxaZrnHZkjhP0nWHhNPn8gEdVFwZOXFNRhQHY=
+X-Received: by 2002:a5d:494b:: with SMTP id r11mr10831273wrs.184.1581459961446;
+ Tue, 11 Feb 2020 14:26:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-19-joro@8bytes.org>
+In-Reply-To: <20200211135256.24617-19-joro@8bytes.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 11 Feb 2020 14:25:49 -0800
+X-Gmail-Original-Message-ID: <CALCETrVWoG7ugfE_FJgNKyyWYCmZh1162kfceJ2bs+O7Qyf-8A@mail.gmail.com>
+Message-ID: <CALCETrVWoG7ugfE_FJgNKyyWYCmZh1162kfceJ2bs+O7Qyf-8A@mail.gmail.com>
+Subject: Re: [PATCH 18/62] x86/boot/compressed/64: Setup GHCB Based VC
+ Exception handler
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series converts QCOM watchdog timer bindings to YAML. Also
-it adds the missing SoC-specific compatible for QCS404, SC7180,
-SDM845 and SM8150 SoCs.
+On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> Install an exception handler for #VC exception that uses a GHCB. Also
+> add the infrastructure for handling different exit-codes by decoding
+> the instruction that caused the exception and error handling.
+>
 
-v1: https://lore.kernel.org/lkml/cover.1576211720.git.saiprakash.ranjan@codeaurora.org/
-v2: https://lore.kernel.org/lkml/cover.1580570160.git.saiprakash.ranjan@codeaurora.org/
+> diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+> index 8d13121a8cf2..02fb6f57128b 100644
+> --- a/arch/x86/boot/compressed/sev-es.c
+> +++ b/arch/x86/boot/compressed/sev-es.c
+> @@ -8,12 +8,16 @@
+>  #include <linux/kernel.h>
+>
+>  #include <asm/sev-es.h>
+> +#include <asm/trap_defs.h>
+>  #include <asm/msr-index.h>
+>  #include <asm/ptrace.h>
+>  #include <asm/svm.h>
+>
+>  #include "misc.h"
+>
+> +struct ghcb boot_ghcb_page __aligned(PAGE_SIZE);
+> +struct ghcb *boot_ghcb;
+> +
+>  static inline u64 read_ghcb_msr(void)
+>  {
+>         unsigned long low, high;
+> @@ -35,8 +39,95 @@ static inline void write_ghcb_msr(u64 val)
+>                         "a"(low), "d" (high) : "memory");
+>  }
+>
+> +static enum es_result es_fetch_insn_byte(struct es_em_ctxt *ctxt,
+> +                                        unsigned int offset,
+> +                                        char *buffer)
+> +{
+> +       char *rip = (char *)ctxt->regs->ip;
+> +
+> +       buffer[offset] = rip[offset];
+> +
+> +       return ES_OK;
+> +}
+> +
+> +static enum es_result es_write_mem(struct es_em_ctxt *ctxt,
+> +                                  void *dst, char *buf, size_t size)
+> +{
+> +       memcpy(dst, buf, size);
+> +
+> +       return ES_OK;
+> +}
+> +
+> +static enum es_result es_read_mem(struct es_em_ctxt *ctxt,
+> +                                 void *src, char *buf, size_t size)
+> +{
+> +       memcpy(buf, src, size);
+> +
+> +       return ES_OK;
+> +}
 
-Changes since v2:
- * Add missing compatibles to enum.
 
-Changes since v1:
- As per Rob's suggestion:
-  * Replaced oneOf+const with enum.
-  * Removed timeout-sec and included watchdog.yaml.
-  * Removed repeated use of const:qcom,kpss-wdt and made use of enum.
-
-Sai Prakash Ranjan (2):
-  dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
-  dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845,
-    SM8150
-
- .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
- .../bindings/watchdog/qcom-wdt.yaml           | 48 +++++++++++++++++++
- 2 files changed, 48 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+What are all these abstractions for?
