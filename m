@@ -2,125 +2,92 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0761DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ED5C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C222086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ReYqpjfP"
+	by mail.kernel.org (Postfix) with ESMTP id CED3B24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581449497;
+	bh=r7k/XMqw3qY2ty8pnv4vptYRuDKiNSxERWglxSVb+RU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=icIm3jTHMl/jea2TBY7us+LKXxbyqQV+Bsv++ZHJc4OX1DKL7yzj+HRXepl9rQNde
+	 KZvQqBC9qK4XtAIXTbAggw5XXh2nkdUUu7VG3FIuSJv54A3tlz/40Bx9ugaUORuMFB
+	 TiXG8/vYQztShHYHu7pGftaYvce5z4iDy2Qr8Qxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbgBKTbE (ORCPT
+        id S1731686AbgBKTbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:31:04 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41871 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731667AbgBKTbD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:31:03 -0500
-Received: by mail-qk1-f193.google.com with SMTP id d11so11288484qko.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:31:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SE2lIQx3P5mwY3EQaRSCUgCct2sPIMvI9iCNgtybvd8=;
-        b=ReYqpjfPtN0mGGjim5Vxe1D7me7yyrMd6UiO9aJzmfLByAaHdNIpNtjB7n9qUXmSFK
-         ugbHGIs7g+cxoaYJKyWMPXVoHRIpfbOJc6bSrffd7tbAPYExseRBxWT8fqYhJRuyEDR/
-         EnaUw8YK9RIQtJs8emRfcYw1FZSNtripVX5NARu5L+oeYeanwYE1TuLzfAkLz06lmhey
-         KYplkiBKiR91Vn6oMybNQNj3JC2O/Zv5Zm0qsP9fsU+yYoTa+wpQkt5GMLaWHWpd/iAY
-         BeCMdehRlvjIbQYeFvnPpTl0bz7+9JMPd5RbW/52X+D2jSSvxfEIWumljFERaAeX8gRX
-         LyKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SE2lIQx3P5mwY3EQaRSCUgCct2sPIMvI9iCNgtybvd8=;
-        b=YOJ51BohuEaqJPVW9LH/CU5xe1bsebZ+JNyTP7FQ/JABFbcNifjovSu3JhCC+7QdBp
-         fbL0jRDmnby5uthZf0eywFliiNtk3ZK1nwbgu0vrpLNI5YW3V6VG2tfHmEAADUZVwvNR
-         /9jP/bbPContgqQUhQn7Gc/Apt6URex84tZv0YoG4rBmL9LY2TdjGtxr06nwLFkknKxE
-         9nOEbaQV9p9Cw3w4mLAY8OyZlQ2jRp5d231jsVmbO2h+QIeA9JSy4Jk2WYQom64CHNQ/
-         KLICuDMAY8wOUHYRJ4Q1kT1tnG/ihxE6R+unvLfFgq1H/SMGUaOToXokNJwjPVXx4PE9
-         lUNA==
-X-Gm-Message-State: APjAAAU7cXvVU6ibrwuQkG+zzLdPVfvW0YMvTZhYkCZgW8iki5ItdzER
-        SZKqcAp+hGD2qks58hdn9dN5Tg==
-X-Google-Smtp-Source: APXvYqwcqY2c2mfW1BVMHT24Xz0JXGOIxC0CzaJ9T0HaNd3CVrTU9BYlUHiRtqnXvP3T7MhdUQBaOg==
-X-Received: by 2002:a05:620a:1010:: with SMTP id z16mr4305510qkj.237.1581449462363;
-        Tue, 11 Feb 2020 11:31:02 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::3:3189])
-        by smtp.gmail.com with ESMTPSA id z21sm2537612qka.122.2020.02.11.11.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 11:31:01 -0800 (PST)
-Date:   Tue, 11 Feb 2020 14:31:01 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200211193101.GA178975@cmpxchg.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
- <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+        Tue, 11 Feb 2020 14:31:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728202AbgBKTbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:31:36 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4DB120708;
+        Tue, 11 Feb 2020 19:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581449496;
+        bh=r7k/XMqw3qY2ty8pnv4vptYRuDKiNSxERWglxSVb+RU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=i/iFTTtAtW7jaP7DtT7TPE82Dal8u5Lwr/KfVJcxzdq4932X4z1POjZk63pSp9os2
+         uQq814+X0GnMHoZtR7xB2mimHftCb3PlprWlt+RpiE/x5O7cqf9vHLKZ6dWJbTu8NG
+         DZyRvOUoPBNWeydeovDHf49HRrfZN+J+V+uio9sY=
+Date:   Tue, 11 Feb 2020 13:31:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>
+Subject: Re: [PATCH v4 0/3] PCI: pciehp: Do not turn off slot if presence
+ comes up after link
+Message-ID: <20200211193132.GA228644@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+In-Reply-To: <20200211143202.2sgryye4m234pymq@wunner.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:05:38PM -0500, Rik van Riel wrote:
-> On Tue, 2020-02-11 at 12:55 -0500, Johannes Weiner wrote:
-> > The VFS inode shrinker is currently allowed to reclaim inodes with
-> > populated page cache. As a result it can drop gigabytes of hot and
-> > active page cache on the floor without consulting the VM (recorded as
-> > "inodesteal" events in /proc/vmstat).
-> > 
-> > This causes real problems in practice. Consider for example how the
-> > VM
-> > would cache a source tree, such as the Linux git tree. As large parts
-> > of the checked out files and the object database are accessed
-> > repeatedly, the page cache holding this data gets moved to the active
-> > list, where it's fully (and indefinitely) insulated from one-off
-> > cache
-> > moving through the inactive list.
+On Tue, Feb 11, 2020 at 03:32:02PM +0100, Lukas Wunner wrote:
+> On Tue, Feb 11, 2020 at 08:14:44AM -0600, Bjorn Helgaas wrote:
+> > I'm a little confused about why pci_hp_initialize()/
+> > __pci_hp_initialize()/pci_hp_register()/__pci_hp_register() is such a
+> > rat's nest with hotplug drivers using a mix of them.
 > 
-> > This behavior of invalidating page cache from the inode shrinker goes
-> > back to even before the git import of the kernel tree. It may have
-> > been less noticeable when the VM itself didn't have real workingset
-> > protection, and floods of one-off cache would push out any active
-> > cache over time anyway. But the VM has come a long way since then and
-> > the inode shrinker is now actively subverting its caching strategy.
+> This is modeled after device registration, which can be done either
+> in two steps (device_initialize() + device_add()) or in 1 step
+> (device_register()).
 > 
-> Two things come to mind when looking at this:
-> - highmem
-> - NUMA
+> So it's either pci_hp_initialize() + pci_hp_add() or pci_hp_register().
 > 
-> IIRC one of the reasons reclaim is done in this way is
-> because a page cache page in one area of memory (highmem,
-> or a NUMA node) can end up pinning inode slab memory in
-> another memory area (normal zone, other NUMA node).
+> The rationale is provided in the commit message of 51bbf9bee34f
+> ("PCI: hotplug: Demidlayer registration with the core").
 
-That's a good point, highmem does ring a bell now that you mention it.
+Thanks for the pointer.  I wrote that down in case I ever try to
+figure that out in the future.  Obviously I haven't looked at this in
+any detail, but it seems like the sort of thing that all the hotplug
+drivers should do the same way regardless of their internal structure,
+and the slot concept seems pretty integral to the bridge leading to
+it.  Maybe this is a somehow a consequence of the hotplug drivers
+being separated from the enumeration path.  Or maybe the slot part
+could be split out from the hotplug drivers and done during
+enumeration.  Just blue sky thinking, I don't pretend to have done
+any actual research here.
 
-If we still care, I think this could be solved by doing something
-similar to what we do with buffer_heads_over_limit: allow a lowmem
-allocation to reclaim page cache inside the highmem zone if the bhs
-(or inodes in this case) have accumulated excessively.
-
-AFAICS, we haven't done anything similar for NUMA, so it might not be
-much of a problem there. I could imagine this is in part because NUMA
-nodes tend to be more balanced in size, and the ratio between cache
-memory and inode/bh memory means that these objects won't turn into a
-significant externality. Whereas with extreme highmem:lowmem ratios,
-they can.
+Bjorn
