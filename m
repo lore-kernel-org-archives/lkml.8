@@ -2,162 +2,115 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5430C47409
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F3FC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEAB20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB2620848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 10:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Wds27R0i"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kkW2qVFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgBKKIs (ORCPT
+        id S1728212AbgBKKJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:08:48 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48254 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727561AbgBKKIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:08:48 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BA4R3C014422;
-        Tue, 11 Feb 2020 11:08:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=TwPRE10MrHGJ+ok36qcGjNbTRRU/wDoMTVxqEqGhrRs=;
- b=Wds27R0iOAr36uRNOdD6PjfMDrZifimR8AmTtIFfXDi/0v/oaYcHM15rH8dzHO4R05AU
- kLW1CADhGoZjhLPAof7EgUN4qmkuhCl88p+hroMyw67yDn+0nafMqj+2hzebmS+Z8YRl
- HbwmAPt3mUWDktEhehyBDgSD0n39WiPyfCKHWhhHF31Ml61OVbTNStXBBnupaTzc0cj1
- YGaEu0Azncc7/7GkTx+2VEqDCM+itH5R2DW6J0vSuLw+PC3E2c2Obj6oS/QRruDc2XPg
- OkY156Mzn29Ik29Y6vONbvhoYo9SB+u8bbKqW33TxHtT76bPClZYPNVJllh2/u6DSw0R hQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9ks63-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 11:08:32 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8EBA010002A;
-        Tue, 11 Feb 2020 11:08:30 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 79B502AD23D;
-        Tue, 11 Feb 2020 11:08:30 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 11 Feb
- 2020 11:08:29 +0100
-Subject: Re: [PATCH 2/2] pinctrl: stm32: Add level interrupt support to gpio
- irq chip
-To:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20200210134901.1939-1-alexandre.torgue@st.com>
- <20200210134901.1939-3-alexandre.torgue@st.com>
- <377b0895-aaeb-b12e-cad7-469332787b4e@denx.de>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <dd6434a7-aff1-94ec-2fdf-51374c695ada@st.com>
-Date:   Tue, 11 Feb 2020 11:08:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <377b0895-aaeb-b12e-cad7-469332787b4e@denx.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Tue, 11 Feb 2020 05:09:20 -0500
+Received: from mail-vi1eur05on2053.outbound.protection.outlook.com ([40.107.21.53]:40417
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727805AbgBKKJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 05:09:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lXpp/KLg72GAUmOjc2jKtVcgrUL0zqXfoNLdUWtvUACOkewC2xvb0sERmhizXkFSjUfP8AR4rfI41MO55heuqn/pId0aePrAJUHHwoJ3oapRoWF0iCW0JRwH1H0cm5Oo3Fe2SLN/ZKZZ3UBdG+wL2MuOANf8pOiS7ATwejvPrU6q/l2dxdavO79Mxm/K/T+BJMCANI4jAHzkIVVyHc0fymuRjMLLg+mecrllPECmOb7zgYxH8uyWS+RyTD43h/tVAkjNKUxqsaNuKRfJwstJXIQLoU1fJi4TOeXeJdTHGTJWcJpQbeDrZczUzgoYtPXpAFQn/I4+jbg/QeGbn/v9aA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PshmXL9ngftwwofQ6Kv+QwZ3/ajeVyGmyhXbq4vQfvA=;
+ b=HVO7tgjTV7FlpaDv4T9cfeVDeFT8/+kUgFjdCpSD2b5QNvdoeYP+Q+vdtWJxBYqDw4JMODPNwX3s29akBc4F44OsLikFbBqltJ6yH63PVkLC0d7VRokYMdKznPWYqn2Av2CxO5fnWd+qc7UrftFeh33ds7NvCkvol/tI2dDtASzYqrq3K+eOq4S19H8K+Bg3sJ2pny1R3sg8KmTF8LoC2A1jHsfoQb6U/tgOnn2UKEts03D3XuVNbEr2/izEUm8SsZO5Hp0PD+fUGBJ4ylI8a5sxgTpZOZQEyuK1Jz82Jy1NKfB59Nd18/6ix4eNfmlU6nD6WlPYjT+nQ210aUpUAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PshmXL9ngftwwofQ6Kv+QwZ3/ajeVyGmyhXbq4vQfvA=;
+ b=kkW2qVFZtmyHjlV3tOm5vCwIkdQOOckfGdAFQdXo4BpXCK4siXLirZ1eioawsacjSlnIgo5EEjb64pzhXRQn5bIO6EsaqprFFtaK8/X1SF1pf9Ib482mgHOfP9R4/tezG6jQG9s8gbFqNi/YO7khuzUelvnFD4j9r80ujYCNE0Q=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3888.eurprd04.prod.outlook.com (52.134.16.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.29; Tue, 11 Feb 2020 10:09:16 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
+ 10:09:16 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v5 7/9] crypto: caam - add crypto_engine support for AEAD
+ algorithms
+Thread-Topic: [PATCH v5 7/9] crypto: caam - add crypto_engine support for AEAD
+ algorithms
+Thread-Index: AQHV1wcsnAjGUApJB0OklRDElRQKxg==
+Date:   Tue, 11 Feb 2020 10:09:16 +0000
+Message-ID: <VI1PR0402MB3485055915C1DBA73B8D23AF98180@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1580345364-7606-1-git-send-email-iuliana.prodan@nxp.com>
+ <1580345364-7606-8-git-send-email-iuliana.prodan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_02:2020-02-10,2020-02-11 signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fb05949f-51fc-4daa-1b28-08d7aeda73bf
+x-ms-traffictypediagnostic: VI1PR0402MB3888:|VI1PR0402MB3888:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB38883F4B3333087E069D53A098180@VI1PR0402MB3888.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1079;
+x-forefront-prvs: 0310C78181
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(346002)(376002)(396003)(199004)(189003)(7696005)(6636002)(316002)(110136005)(54906003)(44832011)(186003)(2906002)(26005)(53546011)(6506007)(52536014)(33656002)(91956017)(5660300002)(76116006)(4744005)(66446008)(66556008)(66476007)(66946007)(86362001)(71200400001)(64756008)(81166006)(81156014)(478600001)(4326008)(8676002)(55016002)(8936002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3888;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8jm7b0dTTx2J/F8XBgvtfzuE0NfqNisJlevDJ77aBYCYdiaUq0Leo+fulKz6Qbuhd2ggOwpESSfQZLVUFSkAHvwO8A+0NR2HeguaLI17grYkRSUWDvvEoSO25afCjIKftMmYn6jeht0V8ZpqmcjA8tqL7ZMcW6G5h2KwTA5yyk+jkf33zQuHXHDo92O/7EovueXaoJ4L+pWLPtf/6QBo5fo4XmnVSHYln4QO8c9UcI/GL+MtmL5yYZ3gd3JmGNSDb658v+cO1lHsP2lWjCs9Lr5Ag5GFwWMEvEZBsi7xfeQIIGrUg+GST17fja0zkihCRINM8RtCkm7W0DVzTwVKaFBefaxZqQmN2ko87/EJzoWrEGhB0YOyUEZP4S+D42NV/OHU5GSScTp66WWWCMuOwVEbEXGva+ASHqgVlIQ8vUqX1DE4N4eBYvaQ7ouH9VOj
+x-ms-exchange-antispam-messagedata: laD/ytVA96uxvSaa62DGNSQd4RUc+u/Y33C582UCO7F1bKVgAHpMF60JRDxjc9tuVVN3KanZIrAmUmPoy2TSQnYqJ3mbsGQaOLNLhbGaryDekC9sFW3Fn9LlZH98zCAN/6xiOIvxyUFeAXXcrnil1g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb05949f-51fc-4daa-1b28-08d7aeda73bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 10:09:16.3682
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: muf9fPrKMS8V2x49Zq0aEvMjuk0SnvqAvcYutSRz/L99EnQwOW8mv/EktreSeWkZ/aWXft/JJsl+x2b0gOmN3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3888
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek
-
-On 2/10/20 7:39 PM, Marek Vasut wrote:
-> On 2/10/20 2:49 PM, Alexandre Torgue wrote:
->> This patch adds level interrupt support to gpio irq chip.
->>
->> GPIO hardware block is directly linked to EXTI block but EXTI handles
->> external interrupts only on edge. To be able to handle GPIO interrupt on
->> level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
->> is retriggered following interrupt type and gpio line value.
->>
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>
->> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
->> index 2d5e0435af0a..04e1b062c20e 100644
->> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
->> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
->> @@ -89,6 +89,7 @@ struct stm32_gpio_bank {
->>   	struct pinctrl_gpio_range range;
->>   	struct fwnode_handle *fwnode;
->>   	struct irq_domain *domain;
->> +	u32 irq_type[STM32_GPIO_PINS_PER_BANK];
-> 
-> You might want reverse xmas tree order here.
-
-I agree
-
-> 
->>   	u32 bank_nr;
->>   	u32 bank_ioport_nr;
->>   	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
->> @@ -303,6 +304,48 @@ static const struct gpio_chip stm32_gpio_template = {
->>   	.get_direction		= stm32_gpio_get_direction,
->>   };
->>   
->> +void stm32_gpio_irq_eoi(struct irq_data *d)
->> +{
->> +	struct stm32_gpio_bank *bank = d->domain->host_data;
->> +	int line;
->> +
->> +	irq_chip_eoi_parent(d);
->> +
->> +	/* If level interrupt type then retrig */
->> +	line = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
->> +	if ((line == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
->> +	    (line == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
->> +		irq_chip_retrigger_hierarchy(d);
->> +};
->> +
->> +static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
->> +{
->> +	struct stm32_gpio_bank *bank = d->domain->host_data;
->> +	u32 parent_type;
->> +
->> +	bank->irq_type[d->hwirq] = type;
->> +
->> +	switch (type) {
->> +	case IRQ_TYPE_EDGE_RISING:
->> +	case IRQ_TYPE_EDGE_FALLING:
->> +	case IRQ_TYPE_EDGE_BOTH:
->> +		parent_type = type;
->> +		break;
->> +	case IRQ_TYPE_LEVEL_HIGH:
->> +		parent_type = IRQ_TYPE_EDGE_RISING;
->> +		break;
->> +	case IRQ_TYPE_LEVEL_LOW:
->> +		parent_type = IRQ_TYPE_EDGE_FALLING;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	irq_chip_set_type_parent(d, parent_type);
-> 
-> irq_chip_set_type_parent() returns error code, shouldn't that be handled?
-
-Yes. It'll be fixed in v2.
-
-> 
-> Otherwise, tested on STM32MP1 with KSZ8851-16MLL NIC.
-
-Thanks
+On 1/30/2020 2:49 AM, Iuliana Prodan wrote:=0A=
+> @@ -1362,6 +1378,10 @@ static struct aead_edesc *aead_edesc_alloc(struct =
+aead_request *req,=0A=
+>  	edesc->mapped_dst_nents =3D mapped_dst_nents;=0A=
+>  	edesc->sec4_sg =3D (void *)edesc + sizeof(struct aead_edesc) +=0A=
+>  			 desc_bytes;=0A=
+> +=0A=
+> +	edesc->bklog =3D false;=0A=
+Nitpick (similar to skcipher): not needed, edesc is allocated using kzalloc=
+().=0A=
+=0A=
+Horia=0A=
