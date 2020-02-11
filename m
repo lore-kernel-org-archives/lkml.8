@@ -2,130 +2,146 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8152CC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE245C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0FB2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC930206ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="s+FRY8H+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbgBKSfm (ORCPT
+        id S1730534AbgBKSjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:35:42 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:37052 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbgBKSfl (ORCPT
+        Tue, 11 Feb 2020 13:39:55 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42755 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbgBKSjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:35:41 -0500
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id A124367A878;
-        Tue, 11 Feb 2020 19:35:39 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 11 Feb
- 2020 19:35:39 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Tue, 11 Feb 2020 19:35:39 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        liaoweixiong <liaoweixiong@allwinnertech.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Peter Pan <peterpandong@micron.com>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "Richard Weinberger" <richard@nod.at>
-Subject: Re: [PATCH 1/3] mtd: spinand: Stop using spinand->oobbuf for
- buffering bad block markers
-Thread-Topic: [PATCH 1/3] mtd: spinand: Stop using spinand->oobbuf for
- buffering bad block markers
-Thread-Index: AQHV4PlH+VPeFWBm8k+U84JJEiFI46gWQWYA
-Date:   Tue, 11 Feb 2020 18:35:39 +0000
-Message-ID: <0f4f2b38-3a5c-fff8-6cd8-e24c94504d9d@kontron.de>
-References: <20200211163452.25442-1-frieder.schrempf@kontron.de>
- <20200211163452.25442-2-frieder.schrempf@kontron.de>
-In-Reply-To: <20200211163452.25442-2-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <94A9D4CBC757454C994556A5FDC6A6D5@snt-world.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: A124367A878.AD9A6
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, git-commits@allycomm.com,
-        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        peterpandong@micron.com, richard@nod.at, stable@vger.kernel.org
+        Tue, 11 Feb 2020 13:39:54 -0500
+Received: by mail-qt1-f195.google.com with SMTP id r5so7391416qtt.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 10:39:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=wUX84XimYmGL58y+DzX6h0BesHs7o3oJk7cCJ/rePag=;
+        b=s+FRY8H+L2o0LYjVYAMze9JUB1QpIvbbm9dd8JTtRTfz6pUYsbH+UoKl9adNfmjLZo
+         lk+4kTrNVUb9QtohaEMoEpRvhtn2LOA9CMScsc+gJuxHkSE8bPltZyuQcO3txz1nfIIL
+         n9ZcieAfupktiGsDlWJvNDAyaSfem//wVjMzC3IPOKj9PrdG2c305wVAzHA7Ly5pOpCN
+         CxAfnnkFwmc72vMMyyxLHZgFL9lPsKxZkMT6s0xiVA80vuTgyX0vATtUAEWduuZyg0ov
+         kHokO9WwQwVWtBz91FOgypXyL8Yq2mm6aJWLUlzgpRNLZyV7+NDo28fLBLOEFRMdRK3X
+         wa6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wUX84XimYmGL58y+DzX6h0BesHs7o3oJk7cCJ/rePag=;
+        b=T8xiImaweoxMzCXDDnApAPjBDi+E7XRHaVR7GIumebKQOBc9A+7tdTDmXN8flgIuov
+         iNiNyYINCa+P1ArpkQQ4AlVglVL+UbA9Gs6K92wbp0i5/mUniNyaGzfzQXrJjze7dE5U
+         XaEYys2pVLBMrwGEOUF5JUEKxLaSPk12U+sdut6N377AnZ7pw8eYPzNdzLQPze5VkGci
+         3ZRc1aGYXWBUDcEBA8lsLnu2fMunU6vgNg5WXgHU/dEQeFUJXsiQyCmSswOOTA3bO409
+         t3YoPHXlx1DU0tK+tkUEsofBSsJ/U5YiInLv/c1sGvmoyZLF3c7ksuuP3pe8XaMQXzOb
+         1ibA==
+X-Gm-Message-State: APjAAAXugSwv2vIuAtjeaEQkHZoJbUssWE4ODMjHzUlNPPagt6iWGG/+
+        ZvfckxdlCoPQjgwWnX0soHmAMA==
+X-Google-Smtp-Source: APXvYqzOwN8G547ApDB+/AxLeAtsW7EosMSlxcEgkj0nUCP29m2bN1xxdRjHlKpJGx2zZ8+GU2IkWg==
+X-Received: by 2002:ac8:2af4:: with SMTP id c49mr3754111qta.367.1581446393834;
+        Tue, 11 Feb 2020 10:39:53 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o10sm2520877qtp.38.2020.02.11.10.39.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 10:39:53 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     elver@google.com, tj@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/mempool: fix a data race in mempool_free()
+Date:   Tue, 11 Feb 2020 13:39:44 -0500
+Message-Id: <1581446384-2131-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTEuMDIuMjAgMTc6MzUsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+IEZyb206IEZyaWVk
-ZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4gDQo+IEZvciByZWFk
-aW5nIGFuZCB3cml0aW5nIHRoZSBiYWQgYmxvY2sgbWFya2Vycywgc3BpbmFuZC0+b29iYnVmIGlz
-DQo+IGN1cnJlbnRseSB1c2VkIGFzIGEgYnVmZmVyIGZvciB0aGUgbWFya2VyIGJ5dGVzLiBEdXJp
-bmcgdGhlDQo+IHVuZGVybHlpbmcgcmVhZCBhbmQgd3JpdGUgb3BlcmF0aW9ucyB0byBhY3R1YWxs
-eSBnZXQvc2V0IHRoZSBjb250ZW50DQo+IG9mIHRoZSBPT0IgYXJlYSwgdGhlIGNvbnRlbnQgb2Yg
-c3BpbmFuZC0+b29iYnVmIGlzIHJldXNlZCBhbmQgY2hhbmdlZA0KPiBieSBhY2Nlc3NpbmcgaXQg
-dGhyb3VnaCBzcGluYW5kLT5vb2JidWYgYW5kL29yIHNwaW5hbmQtPmRhdGFidWYuDQo+IA0KPiBU
-aGlzIGlzIGEgZmxhdyBpbiB0aGUgb3JpZ2luYWwgZGVzaWduIG9mIHRoZSBTUEkgTUVNIGNvcmUg
-YW5kIGF0IHRoZQ0KDQpUaGlzIHNob3VsZCBiZSBTUEkgTkFORCwgb2YgY291cnNlLiAgICAgICAg
-ICAgIF4NCg0KPiBsYXRlc3QgZnJvbSAxM2MxNWUwN2VlZGYgKCJtdGQ6IHNwaW5hbmQ6IEhhbmRs
-ZSB0aGUgY2FzZSB3aGVyZQ0KPiBQUk9HUkFNIExPQUQgZG9lcyBub3QgcmVzZXQgdGhlIGNhY2hl
-Iikgb24sIGl0IHJlc3VsdHMgaW4gbm90IGhhdmluZw0KPiB0aGUgYmFkIGJsb2NrIG1hcmtlciB3
-cml0dGVuIGF0IGFsbCwgYXMgdGhlIHNwaW5hbmQtPm9vYmJ1ZiBpcw0KPiBjbGVhcmVkIHRvIDB4
-ZmYgYWZ0ZXIgc2V0dGluZyB0aGUgbWFya2VyIGJ5dGVzIHRvIHplcm8uDQo+IA0KPiBUbyBmaXgg
-aXQsIHdlIG5vdyBqdXN0IHN0b3JlIHRoZSB0d28gYnl0ZXMgZm9yIHRoZSBtYXJrZXIgb24gdGhl
-DQo+IHN0YWNrIGFuZCBsZXQgdGhlIHJlYWQvd3JpdGUgb3BlcmF0aW9ucyBjb3B5IGl0IGZyb20v
-dG8gdGhlIHBhZ2UNCj4gYnVmZmVyIGxhdGVyLg0KPiANCj4gRml4ZXM6IDc1MjlkZjQ2NTI0OCAo
-Im10ZDogbmFuZDogQWRkIGNvcmUgaW5mcmFzdHJ1Y3R1cmUgdG8gc3VwcG9ydCBTUEkgTkFORHMi
-KQ0KPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBGcmllZGVy
-IFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+DQo+IC0tLQ0KPiAgIGRyaXZl
-cnMvbXRkL25hbmQvc3BpL2NvcmUuYyB8IDEwICsrKysrLS0tLS0NCj4gICAxIGZpbGUgY2hhbmdl
-ZCwgNSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYyBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYw0K
-PiBpbmRleCA4OWY2YmVlZmIwMWMuLjVkMjY3YTY3YTVmNyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9tdGQvbmFuZC9zcGkvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUu
-Yw0KPiBAQCAtNTY4LDE4ICs1NjgsMTggQEAgc3RhdGljIGludCBzcGluYW5kX210ZF93cml0ZShz
-dHJ1Y3QgbXRkX2luZm8gKm10ZCwgbG9mZl90IHRvLA0KPiAgIHN0YXRpYyBib29sIHNwaW5hbmRf
-aXNiYWQoc3RydWN0IG5hbmRfZGV2aWNlICpuYW5kLCBjb25zdCBzdHJ1Y3QgbmFuZF9wb3MgKnBv
-cykNCj4gICB7DQo+ICAgCXN0cnVjdCBzcGluYW5kX2RldmljZSAqc3BpbmFuZCA9IG5hbmRfdG9f
-c3BpbmFuZChuYW5kKTsNCj4gKwl1OCBtYXJrZXJbXSA9IHsgMCwgMCB9Ow0KPiAgIAlzdHJ1Y3Qg
-bmFuZF9wYWdlX2lvX3JlcSByZXEgPSB7DQo+ICAgCQkucG9zID0gKnBvcywNCj4gICAJCS5vb2Js
-ZW4gPSAyLA0KPiAgIAkJLm9vYm9mZnMgPSAwLA0KPiAtCQkub29iYnVmLmluID0gc3BpbmFuZC0+
-b29iYnVmLA0KPiArCQkub29iYnVmLmluID0gbWFya2VyLA0KPiAgIAkJLm1vZGUgPSBNVERfT1BT
-X1JBVywNCj4gICAJfTsNCj4gICANCj4gLQltZW1zZXQoc3BpbmFuZC0+b29iYnVmLCAwLCAyKTsN
-Cj4gICAJc3BpbmFuZF9zZWxlY3RfdGFyZ2V0KHNwaW5hbmQsIHBvcy0+dGFyZ2V0KTsNCj4gICAJ
-c3BpbmFuZF9yZWFkX3BhZ2Uoc3BpbmFuZCwgJnJlcSwgZmFsc2UpOw0KPiAtCWlmIChzcGluYW5k
-LT5vb2JidWZbMF0gIT0gMHhmZiB8fCBzcGluYW5kLT5vb2JidWZbMV0gIT0gMHhmZikNCj4gKwlp
-ZiAobWFya2VyWzBdICE9IDB4ZmYgfHwgbWFya2VyWzFdICE9IDB4ZmYpDQo+ICAgCQlyZXR1cm4g
-dHJ1ZTsNCj4gICANCj4gICAJcmV0dXJuIGZhbHNlOw0KPiBAQCAtNjAzLDExICs2MDMsMTIgQEAg
-c3RhdGljIGludCBzcGluYW5kX210ZF9ibG9ja19pc2JhZChzdHJ1Y3QgbXRkX2luZm8gKm10ZCwg
-bG9mZl90IG9mZnMpDQo+ICAgc3RhdGljIGludCBzcGluYW5kX21hcmtiYWQoc3RydWN0IG5hbmRf
-ZGV2aWNlICpuYW5kLCBjb25zdCBzdHJ1Y3QgbmFuZF9wb3MgKnBvcykNCj4gICB7DQo+ICAgCXN0
-cnVjdCBzcGluYW5kX2RldmljZSAqc3BpbmFuZCA9IG5hbmRfdG9fc3BpbmFuZChuYW5kKTsNCj4g
-Kwl1OCBtYXJrZXJbXSA9IHsgMCwgMCB9Ow0KPiAgIAlzdHJ1Y3QgbmFuZF9wYWdlX2lvX3JlcSBy
-ZXEgPSB7DQo+ICAgCQkucG9zID0gKnBvcywNCj4gICAJCS5vb2JvZmZzID0gMCwNCj4gICAJCS5v
-b2JsZW4gPSAyLA0KPiAtCQkub29iYnVmLm91dCA9IHNwaW5hbmQtPm9vYmJ1ZiwNCj4gKwkJLm9v
-YmJ1Zi5vdXQgPSBtYXJrZXIsDQo+ICAgCX07DQo+ICAgCWludCByZXQ7DQo+ICAgDQo+IEBAIC02
-MjIsNyArNjIzLDYgQEAgc3RhdGljIGludCBzcGluYW5kX21hcmtiYWQoc3RydWN0IG5hbmRfZGV2
-aWNlICpuYW5kLCBjb25zdCBzdHJ1Y3QgbmFuZF9wb3MgKnBvcykNCj4gICANCj4gICAJc3BpbmFu
-ZF9lcmFzZV9vcChzcGluYW5kLCBwb3MpOw0KPiAgIA0KPiAtCW1lbXNldChzcGluYW5kLT5vb2Ji
-dWYsIDAsIDIpOw0KPiAgIAlyZXR1cm4gc3BpbmFuZF93cml0ZV9wYWdlKHNwaW5hbmQsICZyZXEp
-Ow0KPiAgIH0NCj4gICANCj4g
+mempool_t pool.curr_nr could be accessed concurrently as noticed by
+KCSAN,
+
+ BUG: KCSAN: data-race in mempool_free / remove_element
+
+ write to 0xffffffffa937638c of 4 bytes by task 6359 on cpu 113:
+  remove_element+0x4a/0x1c0
+  remove_element at mm/mempool.c:132
+  mempool_alloc+0x102/0x210
+  (inlined by) mempool_alloc at mm/mempool.c:399
+  bio_alloc_bioset+0x106/0x2c0
+  get_swap_bio+0x49/0x230
+  __swap_writepage+0x680/0xc30
+  swap_writepage+0x9c/0xf0
+  pageout+0x33e/0xae0
+  shrink_page_list+0x1f57/0x2870
+  shrink_inactive_list+0x316/0x880
+  shrink_lruvec+0x8dc/0x1380
+  shrink_node+0x317/0xd80
+  do_try_to_free_pages+0x1f7/0xa10
+  try_to_free_pages+0x26c/0x5e0
+  __alloc_pages_slowpath+0x458/0x1290
+  <snip>
+
+ read to 0xffffffffa937638c of 4 bytes by interrupt on cpu 64:
+  mempool_free+0x3e/0x150
+  mempool_free at mm/mempool.c:492
+  bio_free+0x192/0x280
+  bio_put+0x91/0xd0
+  end_swap_bio_write+0x1d8/0x280
+  bio_endio+0x2c2/0x5b0
+  dec_pending+0x22b/0x440 [dm_mod]
+  clone_endio+0xe4/0x2c0 [dm_mod]
+  bio_endio+0x2c2/0x5b0
+  blk_update_request+0x217/0x940
+  scsi_end_request+0x6b/0x4d0
+  scsi_io_completion+0xb7/0x7e0
+  scsi_finish_command+0x223/0x310
+  scsi_softirq_done+0x1d5/0x210
+  blk_mq_complete_request+0x224/0x250
+  scsi_mq_done+0xc2/0x250
+  pqi_raid_io_complete+0x5a/0x70 [smartpqi]
+  pqi_irq_handler+0x150/0x1410 [smartpqi]
+  __handle_irq_event_percpu+0x90/0x540
+  handle_irq_event_percpu+0x49/0xd0
+  handle_irq_event+0x85/0xca
+  handle_edge_irq+0x13f/0x3e0
+  do_IRQ+0x86/0x190
+  <snip>
+
+Since the write is under pool->lock but the read is done as lockless.
+Even though the commit 5b990546e334 ("mempool: fix and document
+synchronization and memory barrier usage") introduced the smp_wmb() and
+smp_rmb() pair to improve the situation, it is adequate to protect it
+from data races which could lead to a logic bug, so fix it by adding
+READ_ONCE() for the read.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/mempool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/mempool.c b/mm/mempool.c
+index 85efab3da720..79bff63ecf27 100644
+--- a/mm/mempool.c
++++ b/mm/mempool.c
+@@ -489,7 +489,7 @@ void mempool_free(void *element, mempool_t *pool)
+ 	 * ensures that there will be frees which return elements to the
+ 	 * pool waking up the waiters.
+ 	 */
+-	if (unlikely(pool->curr_nr < pool->min_nr)) {
++	if (unlikely(READ_ONCE(pool->curr_nr) < pool->min_nr)) {
+ 		spin_lock_irqsave(&pool->lock, flags);
+ 		if (likely(pool->curr_nr < pool->min_nr)) {
+ 			add_element(pool, element);
+-- 
+1.8.3.1
+
