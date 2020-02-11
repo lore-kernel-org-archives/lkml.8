@@ -2,91 +2,123 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6578BC3B186
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2052C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE5E20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8270220637
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N/Wr7nLC"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="tRlCSEkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgBKNLW (ORCPT
+        id S1728973AbgBKNL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:11:22 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:59270 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbgBKNLW (ORCPT
+        Tue, 11 Feb 2020 08:11:56 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54888 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727567AbgBKNL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:11:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=H9mWH9EBWo8G56uksk1V/QpGUCJTJd0A9l8b0DFB9cE=; b=N/Wr7nLCnImSr7kTtQ2oARHaWQ
-        6HExFan63tIT5zpyiosx7xPNq9vFSEWvsWk6v0AoKakRnkZsF4G6mofN2e9NHMYa/2Uo4f+QAi3+L
-        M3sBi5KliVAhc4NykRmn5/d2Q7mWy+Hdnitatoij0J1Qmnz3hXcB3g1L0U19/ix2uditN/CnYyPD+
-        PA+gkb/m5u7gr3UEoqTs9P8PHf5sDMUo18bnxehSN+vWakb5ntzQ4QFlwUpsjr0J7fwTDO7/yPmyt
-        zdUd1cf4RkLyCpeSrMBJYpzV/ZHpjWrCtAH88oVMlnu+Eo1mgpsCnUp6cXkyXPNaC2bRZdIjSZY+v
-        YJKkfP9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1VJQ-0003no-K0; Tue, 11 Feb 2020 13:10:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4FA7330066E;
-        Tue, 11 Feb 2020 14:08:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BF92E20148940; Tue, 11 Feb 2020 14:10:46 +0100 (CET)
-Date:   Tue, 11 Feb 2020 14:10:46 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH] tracing/perf: Move rcu_irq_enter/exit_irqson() to perf
- trace point hook
-Message-ID: <20200211131046.GR14914@hirez.programming.kicks-ass.net>
-References: <20200210170643.3544795d@gandalf.local.home>
- <20200211114954.GK14914@hirez.programming.kicks-ass.net>
- <20200211125929.GG2935@paulmck-ThinkPad-P72>
+        Tue, 11 Feb 2020 08:11:56 -0500
+Received: by mail-wm1-f65.google.com with SMTP id g1so3455848wmh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 05:11:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=UA2beqx54fjO5bKZyYU4NwJP5Rv5VfOGPf4QXCsMCsQ=;
+        b=tRlCSEkTLWVkuZ2x7II5PMHiNXEp+jsbcFS9rtGPRIrvMoJ8CKFXAoQpoirL2AxmHA
+         bTcMlWGPVklAGpDhcozMQad0sbRQDJ57rVrqM0Q6wT5NA7aw31azy0FDSj7uVphSogqH
+         veisg3Z6r7cmHdX0JwUm0aklAnjjsIgsN1Q6zFautoRd2YA4pZirfP3IcRFCJ7hpSzX3
+         sDGPAIeub0+xHJnIar2p16e34t0PpVYqrIg0kewKChJv9Gesqtzn2Ot0qM4GRp8wXFGb
+         tvI/fXqvjQrRSHDnTQAG0n/TPrFZD0IqBbjm2MOSUL+5PVTjXZClEssqG9RDz0SifaWS
+         +MvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=UA2beqx54fjO5bKZyYU4NwJP5Rv5VfOGPf4QXCsMCsQ=;
+        b=EfJpm5qvY8YpFXIiuKcwvsru/sMSdh7VB5wxyAFlbz8bViSRqGh3cTXW1wDBRVEwdL
+         boF/0BHJomDiuPoRadlXmFJ43qvbBmV9c2b4zMKF+waufveDNIj9RxGc+MydfvNs491m
+         ttBEkjLW3osQtrUSKjkgdgUxZLtumiNIaaDyWL54KSrp7CLbGxvx5pCJXpFatBXBZ1Ek
+         miJJAaWTadvm+9cUAiPR6BfJfIfIW+rIFOOF8kSZiiWK5fKywtsUjIN6Gc9kigqNt/j4
+         57y7lj5ez37hLZweyxhj/Hbsk4u2Ejz4/km27YvHA4PUn2MNGT4xP/DSPyiSopuEFVbV
+         4/kw==
+X-Gm-Message-State: APjAAAVxkjP2NFoVmwyv3NxZhsB3w7QDQtFw8B8Fm4bAvY5lsETTNDjR
+        a5ArS6Xevzr4eZYXwAoDD0faqva1BWpJtGNw6LVGrlDGxx4=
+X-Google-Smtp-Source: APXvYqxvM7qrw/QIMcKN3V7aaR4Z2qEAHd99+tqYYcNGmDV8Id7gU7BMQ9V1GXU6KsiBR+rDjFZoQsFDBDa4dYfmrqw=
+X-Received: by 2002:a1c:7919:: with SMTP id l25mr5441871wme.135.1581426713763;
+ Tue, 11 Feb 2020 05:11:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211125929.GG2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <a0f1570686e4cb99025d0c0b571f07a84d6467d9.1579004658.git.michal.simek@xilinx.com>
+In-Reply-To: <a0f1570686e4cb99025d0c0b571f07a84d6467d9.1579004658.git.michal.simek@xilinx.com>
+From:   Michal Simek <monstr@monstr.eu>
+Date:   Tue, 11 Feb 2020 14:11:42 +0100
+Message-ID: <CAHTX3dLd_0G3x-bXYSAcad=9-1f3+ujQt8+Nm=7MZ=KwYY7C_Q@mail.gmail.com>
+Subject: Re: [PATCH] microblaze: Kernel parameters should be parsed earlier
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:59:29AM -0800, Paul E. McKenney wrote:
+=C3=BAt 14. 1. 2020 v 13:24 odes=C3=ADlatel Michal Simek <michal.simek@xili=
+nx.com> napsal:
+>
+> Kernel command line should be parsed before mmu_init is called to be able
+> to get for example cma sizes from command line. That's why call
+> parse_early_param() earlier in machine_early_init().
+>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+>  arch/microblaze/kernel/setup.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setu=
+p.c
+> index effed14eee06..34a082b17a01 100644
+> --- a/arch/microblaze/kernel/setup.c
+> +++ b/arch/microblaze/kernel/setup.c
+> @@ -54,7 +54,6 @@ void __init setup_arch(char **cmdline_p)
+>         *cmdline_p =3D boot_command_line;
+>
+>         setup_memory();
+> -       parse_early_param();
+>
+>         console_verbose();
+>
+> @@ -177,6 +176,8 @@ void __init machine_early_init(const char *cmdline, u=
+nsigned int ram,
+>         /* Initialize global data */
+>         per_cpu(KM, 0) =3D 0x1;   /* We start in kernel mode */
+>         per_cpu(CURRENT_SAVE, 0) =3D (unsigned long)current;
+> +
+> +       parse_early_param();
+>  }
+>
+>  void __init time_init(void)
+> --
+> 2.24.0
+>
 
-> However, a quick grep for NMI_MASK didn't show me the NMI_MASK bit
-> getting set.  Help?
+We found that this breaks earlycon support that's why v2 is necessary.
 
-| #define nmi_enter()						\
-| 	do {							\
-| 		arch_nmi_enter();				\
-| 		printk_nmi_enter();				\
-| 		lockdep_off();					\
-| 		ftrace_nmi_enter();				\
-| 		BUG_ON(in_nmi());				\
-| 		preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
+M
 
-		^^^^ right there
 
-| 		rcu_nmi_enter();				\
-| 		trace_hardirq_enter();				\
-| 	} while (0)
+
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
