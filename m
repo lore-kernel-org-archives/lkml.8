@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2B2C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D3C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8151F20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACA120708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbgBKSVB (ORCPT
+        id S1731345AbgBKSVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:21:01 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:52116 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730076AbgBKSTd (ORCPT
+        Tue, 11 Feb 2020 13:21:07 -0500
+Received: from albert.telenet-ops.be ([195.130.137.90]:60442 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728951AbgBKSTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 13:19:33 -0500
 Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id 1WKV2200M5USYZQ01WKV6z; Tue, 11 Feb 2020 19:19:30 +0100
+        by albert.telenet-ops.be with bizsmtp
+        id 1WKV2200F5USYZQ06WKVNL; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0002nt-Gy; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a89-0002nd-BP; Tue, 11 Feb 2020 19:19:29 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a89-0003yM-Fc; Tue, 11 Feb 2020 19:19:29 +0100
+        id 1j1a89-0003y9-AW; Tue, 11 Feb 2020 19:19:29 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -40,66 +40,85 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 06/34] crypto: ccree - drop duplicated error message on SRAM exhaustion
-Date:   Tue, 11 Feb 2020 19:19:00 +0100
-Message-Id: <20200211181928.15178-7-geert+renesas@glider.be>
+Subject: [PATCH v2 02/34] crypto: ccree - fix debugfs register access while suspended
+Date:   Tue, 11 Feb 2020 19:18:56 +0100
+Message-Id: <20200211181928.15178-3-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
 References: <20200211181928.15178-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When no SRAM can be allocated, cc_sram_alloc() already prints an error
-message.  Hence there is no need to duplicate this in all callers.
+Reading the debugfs files under /sys/kernel/debug/ccree/ can be done by
+the user at any time.  On R-Car SoCs, the CCREE device is power-managed
+using a moduile clock, and if this clock is not running, bogus register
+values may be read.
+
+Fix this by filling in the debugfs_regset32.dev field, so debugfs will
+make sure the device is resumed while its registers are being read.
+
+This fixes the bogus values (0x00000260) in the register dumps on R-Car
+H3 ES1.0:
+
+    -e6601000.crypto/regs:HOST_IRR = 0x00000260
+    -e6601000.crypto/regs:HOST_POWER_DOWN_EN = 0x00000260
+    +e6601000.crypto/regs:HOST_IRR = 0x00000038
+    +e6601000.crypto/regs:HOST_POWER_DOWN_EN = 0x00000038
+     e6601000.crypto/regs:AXIM_MON_ERR = 0x00000000
+     e6601000.crypto/regs:DSCRPTR_QUEUE_CONTENT = 0x000002aa
+    -e6601000.crypto/regs:HOST_IMR = 0x00000260
+    +e6601000.crypto/regs:HOST_IMR = 0x017ffeff
+     e6601000.crypto/regs:AXIM_CFG = 0x001f0007
+     e6601000.crypto/regs:AXIM_CACHE_PARAMS = 0x00000000
+    -e6601000.crypto/regs:GPR_HOST = 0x00000260
+    +e6601000.crypto/regs:GPR_HOST = 0x017ffeff
+     e6601000.crypto/regs:AXIM_MON_COMP = 0x00000000
+    -e6601000.crypto/version:SIGNATURE = 0x00000260
+    -e6601000.crypto/version:VERSION = 0x00000260
+    +e6601000.crypto/version:SIGNATURE = 0xdcc63000
+    +e6601000.crypto/version:VERSION = 0xaf400001
+
+Note that this behavior is system-dependent, and the issue does not show
+up on all R-Car Gen3 SoCs and boards.  Even when the device is
+suspended, the module clock may be left enabled, if configured by the
+firmware for Secure Mode, or when controlled by the Real-Time Core.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
 ---
 v2:
-  - New.
+  - Add Acked-by, Reviewed-by.
+---
+ drivers/crypto/ccree/cc_debugfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/crypto/ccree/cc_aead.c   | 1 -
- drivers/crypto/ccree/cc_driver.c | 1 -
- drivers/crypto/ccree/cc_hash.c   | 1 -
- 3 files changed, 3 deletions(-)
-
-diff --git a/drivers/crypto/ccree/cc_aead.c b/drivers/crypto/ccree/cc_aead.c
-index 7a62fb023d8d3769..db89144ce6c5e974 100644
---- a/drivers/crypto/ccree/cc_aead.c
-+++ b/drivers/crypto/ccree/cc_aead.c
-@@ -2682,7 +2682,6 @@ int cc_aead_alloc(struct cc_drvdata *drvdata)
- 							 MAX_HMAC_DIGEST_SIZE);
+diff --git a/drivers/crypto/ccree/cc_debugfs.c b/drivers/crypto/ccree/cc_debugfs.c
+index 5669997386988055..35f3a2137502bd96 100644
+--- a/drivers/crypto/ccree/cc_debugfs.c
++++ b/drivers/crypto/ccree/cc_debugfs.c
+@@ -81,6 +81,7 @@ int cc_debugfs_init(struct cc_drvdata *drvdata)
+ 	regset->regs = debug_regs;
+ 	regset->nregs = ARRAY_SIZE(debug_regs);
+ 	regset->base = drvdata->cc_base;
++	regset->dev = dev;
  
- 	if (aead_handle->sram_workspace_addr == NULL_SRAM_ADDR) {
--		dev_err(dev, "SRAM pool exhausted\n");
- 		rc = -ENOMEM;
- 		goto fail1;
- 	}
-diff --git a/drivers/crypto/ccree/cc_driver.c b/drivers/crypto/ccree/cc_driver.c
-index fc34d152f42090fc..599936a0b0a2cc63 100644
---- a/drivers/crypto/ccree/cc_driver.c
-+++ b/drivers/crypto/ccree/cc_driver.c
-@@ -477,7 +477,6 @@ static int init_cc_resources(struct platform_device *plat_dev)
- 	new_drvdata->mlli_sram_addr =
- 		cc_sram_alloc(new_drvdata, MAX_MLLI_BUFF_SIZE);
- 	if (new_drvdata->mlli_sram_addr == NULL_SRAM_ADDR) {
--		dev_err(dev, "Failed to alloc MLLI Sram buffer\n");
- 		rc = -ENOMEM;
- 		goto post_sram_mgr_err;
- 	}
-diff --git a/drivers/crypto/ccree/cc_hash.c b/drivers/crypto/ccree/cc_hash.c
-index c3146f550268e7ab..defeb35a16a626ff 100644
---- a/drivers/crypto/ccree/cc_hash.c
-+++ b/drivers/crypto/ccree/cc_hash.c
-@@ -2001,7 +2001,6 @@ int cc_hash_alloc(struct cc_drvdata *drvdata)
+ 	ctx->dir = debugfs_create_dir(drvdata->plat_dev->name, cc_debugfs_dir);
  
- 	sram_buff = cc_sram_alloc(drvdata, sram_size_to_alloc);
- 	if (sram_buff == NULL_SRAM_ADDR) {
--		dev_err(dev, "SRAM pool exhausted\n");
- 		rc = -ENOMEM;
- 		goto fail;
+@@ -102,6 +103,7 @@ int cc_debugfs_init(struct cc_drvdata *drvdata)
+ 		verset->nregs = ARRAY_SIZE(pid_cid_regs);
  	}
+ 	verset->base = drvdata->cc_base;
++	verset->dev = dev;
+ 
+ 	debugfs_create_regset32("version", 0400, ctx->dir, verset);
+ 
 -- 
 2.17.1
 
