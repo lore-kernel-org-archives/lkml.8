@@ -2,134 +2,87 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DBDC352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3B9C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41581208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D8620714
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:50:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EWGNLOd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbgBKNuL (ORCPT
+        id S1729350AbgBKNu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:50:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbgBKNt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:49:59 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 11 Feb 2020 08:50:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38250 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728109AbgBKNu5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:50:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581429057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=RYtn4tQ1vcQdab+7ZQjfltJszRW5DfBRrvX5ub5484k=;
+        b=EWGNLOd99c63Spbf4Ovbc9j/UG7hekjb87s94DkQL9cj5/mZrZlQYNAccFTEkwYLDP+emr
+        zPNUZUSbDS46GXsgbarrgoOACwleoqNyaENKUjr2qCVXt0iFrUQTel8DNIAmkCR4wYLryH
+        0TpkWAs+K8lR+S3dcdWPgM3T7yQjv0Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-OOSHdO7wMaizKs_mZS6p8A-1; Tue, 11 Feb 2020 08:50:53 -0500
+X-MC-Unique: OOSHdO7wMaizKs_mZS6p8A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ABC52465D;
-        Tue, 11 Feb 2020 13:49:59 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1j1VvK-001aqf-EY; Tue, 11 Feb 2020 08:49:58 -0500
-Message-Id: <20200211134958.328823764@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Tue, 11 Feb 2020 08:49:45 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [for-linus][PATCH 4/5] tracing: Dont return -EINVAL when tracing soft disabled synth events
-References: <20200211134941.229027482@goodmis.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDD50800D48;
+        Tue, 11 Feb 2020 13:50:51 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7A1987B34;
+        Tue, 11 Feb 2020 13:50:48 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 202A41744A; Tue, 11 Feb 2020 14:50:48 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] drm/virtio: fix virtio_gpu_cursor_plane_update().
+Date:   Tue, 11 Feb 2020 14:50:47 +0100
+Message-Id: <20200211135047.22261-3-kraxel@redhat.com>
+In-Reply-To: <20200211135047.22261-1-kraxel@redhat.com>
+References: <20200211135047.22261-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+Add missing virtio_gpu_array_lock_resv() call.
 
-There's no reason to return -EINVAL when tracing a synthetic event if
-it's soft disabled - treat it the same as if it were hard disabled and
-return normally.
-
-Have synth_event_trace() and synth_event_trace_array() just return
-normally, and have synth_event_trace_start set the trace state to
-disabled and return.
-
-Link: http://lkml.kernel.org/r/df5d02a1625aff97c9866506c5bada6a069982ba.1581374549.git.zanussi@kernel.org
-
-Fixes: 8dcc53ad956d2 ("tracing: Add synth_event_trace() and related functions")
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- kernel/trace/trace_events_hist.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_plane.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index a546ffa14785..99a02168599b 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1828,7 +1828,8 @@ int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
- 	 * called directly by the user, we don't have that but we
- 	 * still need to honor not logging when disabled.
- 	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED))
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED) ||
-+	    trace_trigger_soft_disabled(file))
- 		return 0;
- 
- 	event = file->event_call->data;
-@@ -1836,9 +1837,6 @@ int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
- 	if (n_vals != event->n_fields)
- 		return -EINVAL;
- 
--	if (trace_trigger_soft_disabled(file))
--		return -EINVAL;
--
- 	fields_size = event->n_u64 * sizeof(u64);
- 
- 	/*
-@@ -1918,7 +1916,8 @@ int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
- 	 * called directly by the user, we don't have that but we
- 	 * still need to honor not logging when disabled.
- 	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED))
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED) ||
-+	    trace_trigger_soft_disabled(file))
- 		return 0;
- 
- 	event = file->event_call->data;
-@@ -1926,9 +1925,6 @@ int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
- 	if (n_vals != event->n_fields)
- 		return -EINVAL;
- 
--	if (trace_trigger_soft_disabled(file))
--		return -EINVAL;
--
- 	fields_size = event->n_u64 * sizeof(u64);
- 
- 	/*
-@@ -2017,7 +2013,8 @@ int synth_event_trace_start(struct trace_event_file *file,
- 	 * trace case, we save the enabed state upon start and just
- 	 * ignore the following data calls.
- 	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED) ||
-+	    trace_trigger_soft_disabled(file)) {
- 		trace_state->enabled = false;
- 		goto out;
- 	}
-@@ -2026,11 +2023,6 @@ int synth_event_trace_start(struct trace_event_file *file,
- 
- 	trace_state->event = file->event_call->data;
- 
--	if (trace_trigger_soft_disabled(file)) {
--		ret = -EINVAL;
--		goto out;
--	}
--
- 	fields_size = trace_state->event->n_u64 * sizeof(u64);
- 
- 	/*
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index ac42c84d2d7f..d1c3f5fbfee4 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -260,6 +260,7 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
+ 		if (!objs)
+ 			return;
+ 		virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
++		virtio_gpu_array_lock_resv(objs);
+ 		virtio_gpu_cmd_transfer_to_host_2d
+ 			(vgdev, 0,
+ 			 plane->state->crtc_w,
 -- 
-2.24.1
-
+2.18.2
 
