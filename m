@@ -2,114 +2,75 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49388C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0019DC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283F220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7582086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581439148;
+	bh=NW/bcpN6ZnsfYRq2jo8jxNsipGcsVCTdc1+KVQ9x/SQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qcfztPUTOhABDc2KmgVsRlY+alJhG3p8KrQN1GwKghRgzI6B5WB0nEnFSHsXYSleh
+	 gXdkyDMeeNPF/MFT1u4jPalT3AP7QVFZKI2gn+BEfX5auexsCOpBCKnpMsG7q7kV+g
+	 UxBwrC34UKjft/buY+bgKkuWp/gFFrF82kcyQ954=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgBKQid (ORCPT
+        id S1730865AbgBKQjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:38:33 -0500
-Received: from mga06.intel.com ([134.134.136.31]:63625 "EHLO mga06.intel.com"
+        Tue, 11 Feb 2020 11:39:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbgBKQid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:38:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 08:38:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="405993172"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga005.jf.intel.com with ESMTP; 11 Feb 2020 08:38:31 -0800
-Date:   Tue, 11 Feb 2020 08:38:31 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 05/12] fs: remove unneeded IS_DAX() check
-Message-ID: <20200211163831.GC12866@iweiny-DESK2.sc.intel.com>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <20200208193445.27421-6-ira.weiny@intel.com>
- <20200211053401.GE10776@dread.disaster.area>
+        id S1728049AbgBKQjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 11:39:07 -0500
+Received: from localhost (unknown [104.133.9.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DAB020714;
+        Tue, 11 Feb 2020 16:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581439147;
+        bh=NW/bcpN6ZnsfYRq2jo8jxNsipGcsVCTdc1+KVQ9x/SQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fv+cyubVgV2EUiQrE8FT7xZhjecXwETyk8BmRhwovgnYUH1YQ0xBznD/lao9Xt/4f
+         jbak4ey7QsVm04i1asbsi2il1654Al7GZ2YbhQOU+RlF9FBrDJCR9C8ip7M40+bolk
+         8WgTvNi7EKoIFTdbaJuv6mtt301o+l1ZoRGVFItI=
+Date:   Tue, 11 Feb 2020 08:39:06 -0800
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Petar Kovacevic <petar.kovacevic@displaylink.com>,
+        Stefan Lugonjic <stefan.lugonjic@displaylink.com>,
+        Nikola Simic <nikola.simic@displaylink.com>,
+        Marko Miljkovic <marko.miljkovic@displaylink.com>
+Subject: Re: [PATCH 1/1] usb: Add MA USB Host driver
+Message-ID: <20200211163906.GA1931506@kroah.com>
+References: <VI1PR10MB1965B4B61D7A9808B2EA095591180@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
+ <61e63056-31f9-9d4b-60c1-8cbf0372d34f@displaylink.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211053401.GE10776@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <61e63056-31f9-9d4b-60c1-8cbf0372d34f@displaylink.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:34:01PM +1100, Dave Chinner wrote:
-> On Sat, Feb 08, 2020 at 11:34:38AM -0800, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > The IS_DAX() check in io_is_direct() causes a race between changing the
-> > DAX state and creating the iocb flags.
-> > 
-> > Remove the check because DAX now emulates the page cache API and
-> > therefore it does not matter if the file state is DAX or not when the
-> > iocb flags are created.
-> 
-> This statement is ... weird.
-> 
-> DAX doesn't "emulate" the page cache API at all
+On Tue, Feb 11, 2020 at 04:21:24PM +0000, Vladimir Stankovic wrote:
+>   39 files changed, 8668 insertions(+)
 
-ah...  yea emulate is a bad word here.
+This is a bit hard, if not impossible, to review all in one huge patch.
 
-> - it has it's own
-> read/write methods that filesystems call based on the iomap
-> infrastructure (dax_iomap_rw()). i.e. there are 3 different IO paths
-> through the filesystems: the DAX IO path, the direct IO path, and
-> the buffered IO path.
-> 
-> Indeed, it seems like this works a bit by luck: Ext4 and XFS always
-> check IS_DAX(inode) in the read/write_iter methods before checking
-> for IOCB_DIRECT, and hence the IOCB_DIRECT flag is ignored by the
-> filesystems. i.e. when we got rid of the O_DIRECT paths from DAX, we
-> forgot to clean up io_is_direct() and it's only due to the ordering
-> of checks that we went down the DAX path correctly....
-> 
-> That said, the code change is good, but the commit message needs a
-> rewrite.
+Can you resend this as a patch series, breaking it down into logical
+chunks, like all other kernel patches have?
 
-How about?
+Also, why so many individual files?  For only 8k lines, 39 files seems
+like a huge number.
 
-<commit msg>
-  fs: Remove unneeded IS_DAX() check
-  
-  The IS_DAX() check in io_is_direct() causes a race between changing the
-  DAX state and creating the iocb flags.
+thanks,
 
-  Remove the check because DAX now has it's own read/write methods and
-  file systems which support DAX check IS_DAX() prior to IOCB_DIRECT.
-  Therefore, it does not matter if the file state is DAX when the iocb
-  flags are created, and we can avoid the race.
-
-  Reviewed-by: Jan Kara <jack@suse.cz>
-  Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-</commit msg>
-
-Ira
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+greg k-h
