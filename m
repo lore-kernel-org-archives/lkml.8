@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F46C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57AFC352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D2D2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF285206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oUp/bIW3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oet+M1Kj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBKVmF (ORCPT
+        id S1728219AbgBKVmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:42:05 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:29479 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgBKVly (ORCPT
+        Tue, 11 Feb 2020 16:42:07 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:30428 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728002AbgBKVly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 16:41:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=TdyjL7fnovA7v90cI49fyycJRI+MxjJc1+DrsqTzedE=;
-        b=oUp/bIW39rInx7cXXy+sj1W/5gOp1Xq/12yM9Q7Lbf34tNsASdymmF7KCzHywfEGeM
-        oRvbegRP6v8E61nGt1mxPjEq3cDU42jUVqgwQWAN3dBvEaIggGmOVFCWdqVb+QfwGg/X
-        H7b6ZCbOiMTaTnavWzyvfe7bElHApQt/NK59tk1W3c7z3sZQcZ6BVGaVP7Z2AzPv8mVm
-        hn3JUIMpeHTSSUz7yzW1lamE/ob3NmEAXmZ9noDqmzFYAWUTQR8/VMBrKRgYlDuNhtcR
-        dj9xy/Q8oxyEckplx5GqKYfr+xMaQnrPN2wZs05s+xNF3gx5Ahs/7Qjr+I15v0bDmh6P
-        AswA==
+        bh=tc4xhvDjnfG1jLVOTwuj+X2pkCzFOljdsKLqfh9DWVg=;
+        b=oet+M1KjDaksTT/lPlYyKQaSCuukANRy1MVbvVaHOK9YJkcwahflWxGcM9/kEBPZEO
+        phXzYKcg1ybKNDlgkq16efSSjV2OKdYdPDT15wl3oxSabzJ8QzGosKHwpML9UctmL/oP
+        eu3a5lY9Dsx8QqVlqlwUPGBZFh8z6WV9E4cuCZkp1f4z5VtPJ0+SKfF5Q6btc9EhDwkt
+        wyQyPvv4G9oHzJj6pr0NLOBOl71bHThVBEtly4EMtH7uPrYJNw+ns4xlNtit0JyRy7rq
+        e+M/e3+dhwPRiVymbEPYHlFn6CJZY5RI+Ig/oo9r7sNa/d+S7oeFkaPsS/x/1u7QMwV3
+        Q+aA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLfX0EH
+        with ESMTPSA id U06217w1BLfb0EM
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:33 +0100 (CET)
+        Tue, 11 Feb 2020 22:41:37 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -69,9 +69,9 @@ Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 01/14] i2c: jz4780: suppress txabrt reports for i2cdetect
-Date:   Tue, 11 Feb 2020 22:41:18 +0100
-Message-Id: <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com>
+Subject: [PATCH 06/14] MIPS: CI20: defconfig: compile leds-gpio driver into the kernel and configure for LED triggers
+Date:   Tue, 11 Feb 2020 22:41:23 +0100
+Message-Id: <235c328ff497b5e14009ad9f4e12d2db9520f4d9.1581457290.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
@@ -82,37 +82,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This suppresses "simple" error reasons
-
-	ABRT_7B_ADDR_NOACK
-	ABRT_10ADDR1_NOACK
-	ABRT_10ADDR2_NOACK
-
-from flooding the console log when running i2cdetect on
-addresses without a responding slave.
-
-Additionally, reading the JZ4780_I2C_TAR in this situation
-seems to harm the controller state.
+DTS has been augmented to add some gpio-leds. We need the leds-gpio driver
+and enable the triggers.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/i2c/busses/i2c-jz4780.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/configs/ci20_defconfig | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-jz4780.c b/drivers/i2c/busses/i2c-jz4780.c
-index 16a67a64284a..55b7518435f1 100644
---- a/drivers/i2c/busses/i2c-jz4780.c
-+++ b/drivers/i2c/busses/i2c-jz4780.c
-@@ -578,6 +578,9 @@ static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
- {
- 	int i;
- 
-+	if (!(src & ~7))
-+		return;
-+
- 	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
- 	dev_err(&i2c->adap.dev, "device addr=%x\n",
- 		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index e0d3c9d4c2ae..30a47a7a2994 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -167,3 +167,16 @@ CONFIG_STACKTRACE=y
+ # CONFIG_FTRACE is not set
+ CONFIG_CMDLINE_BOOL=y
+ CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_MTD=y
++CONFIG_LEDS_TRIGGER_TIMER=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_BACKLIGHT=m
++CONFIG_LEDS_TRIGGER_CPU=y
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
++CONFIG_LEDS_TRIGGER_TRANSIENT=y
++CONFIG_LEDS_TRIGGER_CAMERA=m
 -- 
 2.23.0
 
