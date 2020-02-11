@@ -2,137 +2,109 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59F3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEACC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C656206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:23:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XU25pqpY"
+	by mail.kernel.org (Postfix) with ESMTP id 0D9932073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgBKXXN (ORCPT
+        id S1728004AbgBKXYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:23:13 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44349 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgBKXXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:23:13 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HJjV74lvz9sP7;
-        Wed, 12 Feb 2020 10:23:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581463391;
-        bh=bRFdwr1yIJuc3EcV6OsD8j33boY4/PcXu5Y4KzG6ok4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XU25pqpYaUos07ZmrbUdYJgzuaQgziYVXOvmCBlgYzvnFn1Ojtf4ZRIJitFKSaa9C
-         Kqf3ZGQXRnngittXhqJkJCzpgDRcJZQKS+l3q/gFXETkskk0E7UglthdONFXutpTrr
-         WHDIaho/iIIl+lCdALlkEY/jhqItLQgO1XpXLp4Mole7TRSfGO/R35TfsHjHBP10RS
-         R1RsW2xCCvfL9RMtsQG/Mb9zx2JWOg1IZ1lEU/fmA3pWAdMIC11wd8jaCxVtrs5Yul
-         XGZD4DpsuuCn8k5a9xhjhjglvdr2rYQR68IaZiAlD5K7CFhkqhqBE0HB8Gv2BsKWi5
-         yPXmFEFD6y6Kg==
-Date:   Wed, 12 Feb 2020 10:23:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the keys tree
-Message-ID: <20200212102309.61c3fa7e@canb.auug.org.au>
-In-Reply-To: <20200210100743.7a6a0116@canb.auug.org.au>
-References: <20200210100555.7497d69b@canb.auug.org.au>
-        <20200210100743.7a6a0116@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/E/cTBMWLd7RjEmxLl0rLyEw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 11 Feb 2020 18:24:09 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727880AbgBKXYJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:24:09 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BNKfs7036582
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 18:24:07 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tp32y8y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 18:24:07 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 11 Feb 2020 23:24:05 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Feb 2020 23:24:02 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BNO1Gv57147548
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Feb 2020 23:24:01 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 245B5AE045;
+        Tue, 11 Feb 2020 23:24:01 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC249AE057;
+        Tue, 11 Feb 2020 23:23:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.128.4])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Feb 2020 23:23:59 +0000 (GMT)
+Subject: Re: [PATCH 1/2] crypto: rename sm3-256 to sm3 in hash_algo_name
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        ebiggers@kernel.org
+Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 11 Feb 2020 18:23:59 -0500
+In-Reply-To: <1581457759.5125.18.camel@linux.ibm.com>
+References: <20200210124440.23929-1-tianjia.zhang@linux.alibaba.com>
+         <20200210124440.23929-2-tianjia.zhang@linux.alibaba.com>
+         <1581457759.5125.18.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021123-4275-0000-0000-000003A0404F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021123-4276-0000-0000-000038B47942
+Message-Id: <1581463439.5125.72.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_07:2020-02-11,2020-02-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 clxscore=1015 bulkscore=0 phishscore=0
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002110149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/E/cTBMWLd7RjEmxLl0rLyEw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2020-02-11 at 16:49 -0500, Mimi Zohar wrote:
+> On Mon, 2020-02-10 at 20:44 +0800, Tianjia Zhang wrote:
+> > The name sm3-256 is defined in hash_algo_name in hash_info, but the
+> > algorithm name implemented in sm3_generic.c is sm3, which will cause
+> > the sm3-256 algorithm to be not found in some application scenarios of
+> > the hash algorithm, and an ENOENT error will occur. For example,
+> > IMA, keys, and other subsystems that reference hash_algo_name all use
+> > the hash algorithm of sm3.
+> > 
+> > Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> 
+> The "hash_map" needs to be updated to reflect this change.
+> 
+> static struct tpm2_hash tpm2_hash_map[] = {
+>         {HASH_ALGO_SHA1, TPM_ALG_SHA1},
+>         {HASH_ALGO_SHA256, TPM_ALG_SHA256},
+>         {HASH_ALGO_SHA384, TPM_ALG_SHA384},
+>         {HASH_ALGO_SHA512, TPM_ALG_SHA512},
+>         {HASH_ALGO_SM3_256, TPM_ALG_SM3_256},
+> };
 
-Hi all,
+Never mind, the enum name "HASH_ALGO_SM3_256" didn't change.  Just the
+string changed.
 
-On Mon, 10 Feb 2020 10:07:43 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Mon, 10 Feb 2020 10:05:55 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > After merging the keys tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this: =20
->=20
-> kernel/watch_queue.c: In function 'post_one_notification':
-> kernel/watch_queue.c:89:21: error: 'struct pipe_inode_info' has no member=
- named 'wait'
->    89 |  spin_lock_irq(&pipe->wait.lock);
->       |                     ^~
-> kernel/watch_queue.c:122:24: error: 'struct pipe_inode_info' has no membe=
-r named 'wait'
->   122 |   spin_unlock_irq(&pipe->wait.lock);
->       |                        ^~
-> In file included from include/linux/mmzone.h:10,
->                  from include/linux/gfp.h:6,
->                  from include/linux/umh.h:4,
->                  from include/linux/kmod.h:9,
->                  from include/linux/module.h:16,
->                  from kernel/watch_queue.c:11:
-> kernel/watch_queue.c:125:46: error: 'struct pipe_inode_info' has no membe=
-r named 'wait'
->   125 |  wake_up_interruptible_sync_poll_locked(&pipe->wait, EPOLLIN | EP=
-OLLRDNORM);
->       |                                              ^~
-> include/linux/wait.h:234:29: note: in definition of macro 'wake_up_interr=
-uptible_sync_poll_locked'
->   234 |  __wake_up_locked_sync_key((x), TASK_INTERRUPTIBLE, poll_to_key(m=
-))
->       |                             ^
-> kernel/watch_queue.c:129:23: error: 'struct pipe_inode_info' has no membe=
-r named 'wait'
->   129 |  spin_unlock_irq(&pipe->wait.lock);
->       |                       ^~
->=20
-> > Caused by commit(s) in the keys tree interacting with commit
-> >=20
-> >   0ddad21d3e99 ("pipe: use exclusive waits when reading or writing")
-> >=20
-> > from Linus' tree.
-> >=20
-> > Given that I haven't seen a pull request for the keys tree yet, it seems
-> > that this work will not be in v5.6, so I have just dropped the keys tree
-> > for today. =20
+Mimi
 
-=46rom today, I have just disabled CONFIG_WATCH_QUEUE instead of dropping
-the keys tree completely.  Please let me know when it has been fixed up
-in case I don't notice.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/E/cTBMWLd7RjEmxLl0rLyEw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5DN10ACgkQAVBC80lX
-0GycMwgAgx3N4wiuk/navM0aVqqNQPa1vV00JX25nr4b1TM8QTustgKk3z8miXGP
-xiRd9t940N5uhQxhrJZDHL/sss5gViRfjlZ6g+wWSC7vRJ5R/LCW4glddExZTVmc
-jW6/BdoG15cTaVjAiS/E/0GtSy3toiTMdxtK8y/PTng8m0bXg3MX+nvYPs9Rk4Ba
-kAw3l6BRE83nL9+m4Tk12fsUH+aacl5IMZ4gBMDieoY3o7muTaUqCo8JvRCm11/x
-qpXohFPbF5ejkxslLFtYVYZsrELxS6Wns7HLxIJQKN9F0PYeTv8JUrWLJ2Cd2bk+
-E9JzgGUbvOhmYtCp0CxIt5j1ON5oaQ==
-=9gIq
------END PGP SIGNATURE-----
-
---Sig_/E/cTBMWLd7RjEmxLl0rLyEw--
