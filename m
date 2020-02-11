@@ -2,127 +2,431 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62592C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB9CC3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A2E20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4045620708
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 16:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b40OUcc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgBKQZk (ORCPT
+        id S1730815AbgBKQZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:25:40 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59287 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730020AbgBKQZk (ORCPT
+        Tue, 11 Feb 2020 11:25:41 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49850 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730009AbgBKQZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 11:25:40 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1YLw-0006Fa-Ay; Tue, 11 Feb 2020 17:25:36 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1YLu-0002ou-Uk; Tue, 11 Feb 2020 17:25:34 +0100
-Date:   Tue, 11 Feb 2020 17:25:34 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
-Message-ID: <20200211162534.s2whc3ndfckn6j6i@pengutronix.de>
-References: <20191116173613.72647-1-paul@crapouillou.net>
- <20191116173613.72647-2-paul@crapouillou.net>
- <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
- <1574031523.3.0@crapouillou.net>
- <20191118071538.46egokrswvjxdvfp@pengutronix.de>
- <1574074556.3.0@crapouillou.net>
- <20191118111933.vipfycc2j7j6esb7@pengutronix.de>
- <1574084574.3.1@crapouillou.net>
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BGPbrP048453;
+        Tue, 11 Feb 2020 10:25:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581438337;
+        bh=uPyutyQcwVZgqBZYo8e/CGfyIz1+gBQ6R+oTlJOVyZY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=b40OUcc1+QDOUm5SEOosY1AgOMmene2mnGV+9ignvF/jjECKpSbWpDJRaU2xeFRw+
+         zdByCAQmvVN8yv8QzM9Rc0qnfVakWEUxZPlzRV8LOlTgUQ0I6Cli3FKUankfor6kv3
+         0trfIbT4lXzuTjw1wjqxPfS1oBgO218x0rXVCFhs=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01BGPb86067866
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Feb 2020 10:25:37 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
+ Feb 2020 10:25:37 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 11 Feb 2020 10:25:36 -0600
+Received: from [10.250.73.201] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BGPZqI029716;
+        Tue, 11 Feb 2020 10:25:36 -0600
+Subject: Re: [PATCHv6 RESEND 01/14] dt-bindings: remoteproc: Add OMAP
+ remoteproc bindings
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>
+References: <20200211152125.23819-2-t-kristo@ti.com>
+ <20200211153313.24072-1-t-kristo@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <906a74f9-6728-abb5-f475-ca3ab5c45eff@ti.com>
+Date:   Tue, 11 Feb 2020 11:25:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1574084574.3.1@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200211153313.24072-1-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-On Mon, Nov 18, 2019 at 02:42:54PM +0100, Paul Cercueil wrote:
-> Le lun., nov. 18, 2019 at 12:19, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > On Mon, Nov 18, 2019 at 11:55:56AM +0100, Paul Cercueil wrote:
-> > >  Le lun., nov. 18, 2019 at 08:15, Uwe Kleine-König
-> > >  <u.kleine-koenig@pengutronix.de> a écrit :
-> > >  > On Sun, Nov 17, 2019 at 11:58:43PM +0100, Paul Cercueil wrote:
-> > >  > >  Le dim., nov. 17, 2019 at 21:20, Uwe Kleine-König
-> > >  > >  <u.kleine-koenig@pengutronix.de> a écrit :
-> > >  > >  > On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil wrote:
-> > >  > >  > >   struct jz4740_pwm_chip {
-> > >  > >  > >   	struct pwm_chip chip;
-> > >  > >  > >  -	struct clk *clk;
-> > >  > >  >
-> > >  > >  > What is the motivation to go away from this approach to store the clock?
-> > >  > >
-> > >  > >  It's actually not the same clock. Instead of obtaining "ext" clock from the
-> > >  > >  probe, we obtain "timerX" clocks (X being the PWM channel) from the request
-> > >  > >  callback.
-> > >  >
-> > >  > Before you used driver data and container_of to get it, now you used
-> > >  > pwm_set_chip_data. I wondered why you changed the approach to store
-> > >  > data. That the actual data is different now is another thing (and
-> > >  > obviously ok).
-> > > 
-> > >  Thierry suggested it: https://lkml.org/lkml/2019/3/4/486
-> > 
-> > If you motivate that in the commit log (preferably with a better
-> > rationale than "Thierry suggested it") that's fine for. (Do I claim now
-> > without having read the rationale :-)
+On 2/11/20 10:33 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> I don't really have a better rationale. The alternative was to have a
-> "struct clk[NB_PWMS];" in the struct jz4740_pwm_chip, so this is arguably
-> better. I'm not sure it's worth mentioning in the commit message, is it?
-
-It depends what you want to achieve. An array in the chip data might be
-too big, with per-pwm data your memory fragments. Still worth to mention
-something like:
-
-	The new code now uses a clk pointer per PWM (instead of a clk
-	per pwm-chip before). So the pointer is stored in per-pwm data
-	now.
- 
-> They are actually all in the same register range. Each channel has 4 32-bit
-> registers, the first one is the CTRL (aka. TCSR) register which is written
-> to here. The following two configure the duty/period values, the last one is
-> the counter. The 'timer enable' bit is however in the global TCU registers
-> area.
+> Add the device tree bindings document for the IPU and DSP
+> remote processor devices on OMAP4+ SoCs.
 > 
-> The clock bits of the TCSRs registers (including the TCSR registers of the
-> watchdog and 64-bit OS timer) are controlled by the clocks driver. All
-> register accesses are properly handled thanks to regmap, that we add in
-> patch [2/3].
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo@ti.com: converted to schema]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+> Quick resend. Missed adding Rob+DT list in CC, git is too clever to get rid of
+> CC fields automatically...
+> 
+> v6: made memory-regions property optional
+> 
 
-You reshuffled in v3 which obsoletes some of the statements here I
-think. Will take a look there.
 
-Best regards
-Uwe
+Thanks for that, should make this more future proof. For this and the
+rest of the series:
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Acked-by: Andrew F. Davis <afd@ti.com>
+
+
+>  .../remoteproc/ti,omap-remoteproc.yaml        | 321 ++++++++++++++++++
+>  1 file changed, 321 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> new file mode 100644
+> index 000000000000..6ad5de899911
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> @@ -0,0 +1,321 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: OMAP4+ Remoteproc Devices
+> +
+> +maintainers:
+> +  - Suman Anna <s-anna@ti.com>
+> +
+> +description:
+> +  The OMAP family of SoCs usually have one or more slave processor sub-systems
+> +  that are used to offload some of the processor-intensive tasks, or to manage
+> +  other hardware accelerators, for achieving various system level goals.
+> +
+> +  The processor cores in the sub-system are usually behind an IOMMU, and may
+> +  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+> +  caches, an Interrupt Controller, a Cache Controller etc.
+> +
+> +  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+> +  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+> +  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+> +  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
+> +  Cortex-M4 processors.
+> +
+> +  Each remote processor sub-system is represented as a single DT node. Each node
+> +  has a number of required or optional properties that enable the OS running on
+> +  the host processor (MPU) to perform the device management of the remote
+> +  processor and to communicate with the remote processor. The various properties
+> +  can be classified as constant or variable. The constant properties are
+> +  dictated by the SoC and does not change from one board to another having the
+> +  same SoC. Examples of constant properties include 'iommus', 'reg'. The
+> +  variable properties are dictated by the system integration aspects such as
+> +  memory on the board, or configuration used within the corresponding firmware
+> +  image. Examples of variable properties include 'mboxes', 'memory-region',
+> +  'timers', 'watchdog-timers' etc.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,omap4-dsp
+> +      - ti,omap5-dsp
+> +      - ti,dra7-dsp
+> +      - ti,omap4-ipu
+> +      - ti,omap5-ipu
+> +      - ti,dra7-ipu
+> +
+> +  iommus:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      phandles to OMAP IOMMU nodes, that need to be programmed
+> +      for this remote processor to access any external RAM memory or
+> +      other peripheral device address spaces. This property usually
+> +      has only a single phandle. Multiple phandles are used only in
+> +      cases where the sub-system has different ports for different
+> +      sub-modules within the processor sub-system (eg: DRA7 DSPs),
+> +      and need the same programming in both the MMUs.
+> +
+> +  mboxes:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+> +      communication with the remote processor. The specifier format is
+> +      as per the bindings,
+> +      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+> +      This property should match with the sub-mailbox node used in
+> +      the firmware image.
+> +
+> +  clocks:
+> +    description: |
+> +      Main functional clock for the remote processor
+> +
+> +  resets:
+> +    description: |
+> +      Reset handles for the remote processor
+> +
+> +  firmware-name:
+> +    description: |
+> +      Default name of the firmware to load to the remote processor.
+> +
+> +# Optional properties:
+> +# --------------------
+> +# Some of these properties are mandatory on some SoCs, and some are optional
+> +# depending on the configuration of the firmware image to be executed on the
+> +# remote processor. The conditions are mentioned for each property.
+> +#
+> +# The following are the optional properties:
+> +
+> +  memory-region:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: |
+> +      phandle to the reserved memory node to be associated
+> +      with the remoteproc device. The reserved memory node
+> +      can be a CMA memory node, and should be defined as
+> +      per the bindings,
+> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +
+> +  reg:
+> +    description: |
+> +      Address space for any remoteproc memories present on
+> +      the SoC. Should contain an entry for each value in
+> +      'reg-names'. These are mandatory for all DSP and IPU
+> +      processors that have them (OMAP4/OMAP5 DSPs do not have
+> +      any RAMs)
+> +
+> +  reg-names:
+> +    description: |
+> +      Required names for each of the address spaces defined in
+> +      the 'reg' property. Expects the names from the following
+> +      list, in the specified order, each representing the corresponding
+> +      internal RAM memory region.
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      - const: l2ram
+> +      - const: l1pram
+> +      - const: l1dram
+> +
+> +  ti,bootreg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      Should be a triple of the phandle to the System Control
+> +      Configuration region that contains the boot address
+> +      register, the register offset of the boot address
+> +      register within the System Control module, and the bit
+> +      shift within the register. This property is required for
+> +      all the DSP instances on OMAP4, OMAP5 and DRA7xx SoCs.
+> +
+> +  ti,autosuspend-delay-ms:
+> +    description: |
+> +      Custom autosuspend delay for the remoteproc in milliseconds.
+> +
+> +  ti,timers:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      One or more phandles to OMAP DMTimer nodes, that serve
+> +      as System/Tick timers for the OS running on the remote
+> +      processors. This will usually be a single timer if the
+> +      processor sub-system is running in SMP mode, or one per
+> +      core in the processor sub-system. This can also be used
+> +      to reserve specific timers to be dedicated to the
+> +      remote processors.
+> +
+> +      This property is mandatory on remote processors requiring
+> +      external tick wakeup, and to support Power Management
+> +      features. The timers to be used should match with the
+> +      timers used in the firmware image.
+> +
+> +  ti,watchdog-timers:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      One or more phandles to OMAP DMTimer nodes, used to
+> +      serve as Watchdog timers for the processor cores. This
+> +      will usually be one per executing processor core, even
+> +      if the processor sub-system is running a SMP OS.
+> +
+> +      The timers to be used should match with the watchdog
+> +      timers used in the firmware image.
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      enum:
+> +        - ti,dra7-dsp
+> +then:
+> +  properties:
+> +    reg:
+> +      minItems: 3
+> +      maxItems: 3
+> +  required:
+> +    - reg
+> +    - reg-names
+> +    - ti,bootreg
+> +
+> +else:
+> +  if:
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - ti,omap4-ipu
+> +          - ti,omap5-ipu
+> +          - ti,dra7-ipu
+> +  then:
+> +    properties:
+> +      reg:
+> +        minItems: 1
+> +        maxItems: 1
+> +      ti,bootreg: false
+> +    required:
+> +      - reg
+> +      - reg-names
+> +
+> +  else:
+> +    properties:
+> +      reg: false
+> +    required:
+> +      - ti,bootreg
+> +
+> +required:
+> +  - compatible
+> +  - iommus
+> +  - mboxes
+> +  - clocks
+> +  - resets
+> +  - firmware-name
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    //Example 1: OMAP4 DSP
+> +
+> +    /* DSP Reserved Memory node */
+> +    #include <dt-bindings/clock/omap4.h>
+> +    reserved-memory {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        dsp_memory_region: dsp-memory@98000000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x98000000 0x800000>;
+> +            reusable;
+> +        };
+> +    };
+> +
+> +    /* DSP node */
+> +    ocp {
+> +        dsp: dsp {
+> +            compatible = "ti,omap4-dsp";
+> +            ti,bootreg = <&scm_conf 0x304 0>;
+> +            iommus = <&mmu_dsp>;
+> +            mboxes = <&mailbox &mbox_dsp>;
+> +            memory-region = <&dsp_memory_region>;
+> +            ti,timers = <&timer5>;
+> +            ti,watchdog-timers = <&timer6>;
+> +            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
+> +            resets = <&prm_tesla 0>, <&prm_tesla 1>;
+> +            firmware-name = "omap4-dsp-fw.xe64T";
+> +        };
+> +    };
+> +
+> +  - |+
+> +
+> +    //Example 2: OMAP5 IPU
+> +
+> +    /* IPU Reserved Memory node */
+> +    #include <dt-bindings/clock/omap5.h>
+> +    reserved-memory {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        ipu_memory_region: ipu-memory@95800000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0 0x95800000 0 0x3800000>;
+> +            reusable;
+> +        };
+> +    };
+> +
+> +    /* IPU node */
+> +    ocp {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        ipu: ipu@55020000 {
+> +            compatible = "ti,omap5-ipu";
+> +            reg = <0x55020000 0x10000>;
+> +            reg-names = "l2ram";
+> +            iommus = <&mmu_ipu>;
+> +            mboxes = <&mailbox &mbox_ipu>;
+> +            memory-region = <&ipu_memory_region>;
+> +            ti,timers = <&timer3>, <&timer4>;
+> +            ti,watchdog-timers = <&timer9>, <&timer11>;
+> +            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
+> +            resets = <&prm_core 2>;
+> +            firmware-name = "omap5-ipu-fw.xem";
+> +        };
+> +    };
+> +
+> +  - |+
+> +
+> +    //Example 3: DRA7xx/AM57xx DSP
+> +
+> +    /* DSP1 Reserved Memory node */
+> +    #include <dt-bindings/clock/dra7.h>
+> +    reserved-memory {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        dsp1_memory_region: dsp1-memory@99000000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x0 0x99000000 0x0 0x4000000>;
+> +            reusable;
+> +        };
+> +    };
+> +
+> +    /* DSP1 node */
+> +    ocp {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        dsp1: dsp@40800000 {
+> +            compatible = "ti,dra7-dsp";
+> +            reg = <0x40800000 0x48000>,
+> +                  <0x40e00000 0x8000>,
+> +                  <0x40f00000 0x8000>;
+> +            reg-names = "l2ram", "l1pram", "l1dram";
+> +            ti,bootreg = <&scm_conf 0x55c 0>;
+> +            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
+> +            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
+> +            memory-region = <&dsp1_memory_region>;
+> +            ti,timers = <&timer5>;
+> +            ti,watchdog-timers = <&timer10>;
+> +            resets = <&prm_dsp1 0>;
+> +            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
+> +            firmware-name = "dra7-dsp1-fw.xe66";
+> +        };
+> +    };
+> 
