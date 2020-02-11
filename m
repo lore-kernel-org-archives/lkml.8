@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917C9C35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41800C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D8820842
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD0C20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 21:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="lmYYeZOK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Tg/zA16G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgBKVmD (ORCPT
+        id S1728146AbgBKVl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:42:03 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:14617 "EHLO
+        Tue, 11 Feb 2020 16:41:58 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:28862 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbgBKVly (ORCPT
+        with ESMTP id S1728004AbgBKVly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 16:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457311;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457310;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=dZbZVnixfoO3ZI6/71WGGwComZxww6jvUSKhufZA4ck=;
-        b=lmYYeZOKCXcp9AGXX0rPgiRiTmE03IdacrC+kN9MoVlRInMvXSLMrfYpa2XuTFna7B
-        gE56mh/mpY2HMJWga9SSkkaBiIuAuxdvD3LG2by5St75ykc+izl0oQyOrJHuZubr4QIe
-        cnWGZrqZF+j09Tr+5lksDftuA5ox0f2GgBzLS8USOaZ3U1Xd4r1yqM8vF6HEVnvI80mZ
-        7mX1PddBW+YA1uflsNwKkGDZEaK/kj142vs/mSO/rrIFLy5/b8Io7eii8uhAB8jLGwkw
-        ojO14ouu01j86rzAjZp615EPAjEG/AyOXidhSm+mKiaN+sZtMMBvzorLnpjSXkVSmi7c
-        CYsg==
+        bh=R6XWZKI0Jv5BBqy+e+tuVA81iAkMhtX+RXM2onbHsho=;
+        b=Tg/zA16GVAvBW53C2Kl0UIW5DCIP3Ars3Vum3WtXfxI+t2tSumWhclujVsijqSA2lP
+        JlS2cZy/PWDxuvYk/pqBN7BDw8DXkmgHVNn1smcw8kjUW7zoe9EVi81jzPn3kPz1+wvb
+        NpLHhY6JYOHsYJtEFkyKO2rwY3QTOpvKqLvK4gQdpQe+jfOCH+MfVPnWMFm+VRfG/GkO
+        3rBP/bfDnfbcWPFILiYQx2A+7TQnzaltWBfEZPQtSWKa9heXA4DexqCTG31ytDvDsgKh
+        /QG97sTElPY6wjwiXzebbsfQoAIqagquCZv1CXc1VdRdIvraVWP3fu7VxajXzkxqZtq7
+        oNWw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLff0ET
+        with ESMTPSA id U06217w1BLfd0EP
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:41 +0100 (CET)
+        Tue, 11 Feb 2020 22:41:39 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -69,9 +69,9 @@ Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 12/14] MIPS: DTS: CI20: add DT node for SW1 as Enter button
-Date:   Tue, 11 Feb 2020 22:41:29 +0100
-Message-Id: <be2a188b8f36db4c9e21dfd73fef89d25dc5299e.1581457290.git.hns@goldelico.com>
+Subject: [PATCH 09/14] MIPS: DTS: CI20: give eth0_power a defined voltage.
+Date:   Tue, 11 Feb 2020 22:41:26 +0100
+Message-Id: <c6697a2551e7ef8e4de4a92f2602b47ba1d52ee4.1581457290.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
@@ -82,47 +82,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SW1 button can be used as a simple one-button keyboard
-and is connected to PD17.
-
-Note: SW1 has a second meaning to change the boot sequence
-when pressed while powering on.
+This is a 3.3V regulator.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index b4a820313992..8f9d182566db 100644
+index e02a19db7ef1..e1364f941c7d 100644
 --- a/arch/mips/boot/dts/ingenic/ci20.dts
 +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -4,6 +4,7 @@
- #include "jz4780.dtsi"
- #include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	compatible = "img,ci20", "ingenic,jz4780";
-@@ -25,6 +26,17 @@
- 		       0x30000000 0x30000000>;
+@@ -56,6 +56,8 @@
+ 	eth0_power: fixedregulator@0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "eth0_power";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
+ 		enable-active-high;
  	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		sw1 {
-+			label = "ci20:sw1";
-+			linux,code = <KEY_ENTER>;
-+			gpios = <&gpd 17 GPIO_ACTIVE_HIGH>;
-+			wakeup-source;
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
 -- 
 2.23.0
 
