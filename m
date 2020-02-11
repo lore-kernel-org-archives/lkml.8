@@ -2,92 +2,137 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ED5C3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B56C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED3B24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581449497;
-	bh=r7k/XMqw3qY2ty8pnv4vptYRuDKiNSxERWglxSVb+RU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=icIm3jTHMl/jea2TBY7us+LKXxbyqQV+Bsv++ZHJc4OX1DKL7yzj+HRXepl9rQNde
-	 KZvQqBC9qK4XtAIXTbAggw5XXh2nkdUUu7VG3FIuSJv54A3tlz/40Bx9ugaUORuMFB
-	 TiXG8/vYQztShHYHu7pGftaYvce5z4iDy2Qr8Qxs=
+	by mail.kernel.org (Postfix) with ESMTP id 65D842086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 19:32:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eQIlwDpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbgBKTbh (ORCPT
+        id S1731706AbgBKTcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:31:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgBKTbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 14:31:36 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4DB120708;
-        Tue, 11 Feb 2020 19:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581449496;
-        bh=r7k/XMqw3qY2ty8pnv4vptYRuDKiNSxERWglxSVb+RU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i/iFTTtAtW7jaP7DtT7TPE82Dal8u5Lwr/KfVJcxzdq4932X4z1POjZk63pSp9os2
-         uQq814+X0GnMHoZtR7xB2mimHftCb3PlprWlt+RpiE/x5O7cqf9vHLKZ6dWJbTu8NG
-         DZyRvOUoPBNWeydeovDHf49HRrfZN+J+V+uio9sY=
-Date:   Tue, 11 Feb 2020 13:31:32 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>
-Subject: Re: [PATCH v4 0/3] PCI: pciehp: Do not turn off slot if presence
- comes up after link
-Message-ID: <20200211193132.GA228644@google.com>
+        Tue, 11 Feb 2020 14:32:10 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45202 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgBKTcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:32:08 -0500
+Received: by mail-pl1-f195.google.com with SMTP id b22so4654151pls.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 11:32:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bKC/+INk7BBaA88bOwTNnbtW23n0LE6x5PuhmJzM5kY=;
+        b=eQIlwDpRIi9KcpJVM+JZ3qGN7yArwrjpKRyJl3fghWHE3D5u4/NFcJ+ij/9ezER0MV
+         FcCaOWKKWF2OS4FjhrC6ZBjGmjgM4+YKGu96dYZ3OybKv3p8e7FHJwA0DChGU663e8Ap
+         SHPWHapeJnEnfDUvRE39q1GsEP9MxpUkl/YEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bKC/+INk7BBaA88bOwTNnbtW23n0LE6x5PuhmJzM5kY=;
+        b=YeKSrVTJXlZnHO10BFkutpC54ZUlfAcxurUhbIrkMpMFf2qZr48KENwC2KFZXVk62K
+         feWgzsJvA82nGjU2xroP4zLt7hGthWA9/awyPtTkbSf72EdgCJRjCgWeSBm7nOskHnqd
+         f18BDc0p0CRfWZavO5S9A/M5F8OAxvR2wEVb7sQYqYVqdkBXrEqCkRaGmoCKwxLX9Xjn
+         dNNPMOmvGOH0J8VvIWU1AcSZRwy6jnvZjc/OO3btHztpWoxQKqyAisGAnNq34fJFanOn
+         1IT5QCcUBxYiHtQxdEhOZKJ9962FQFmO8XoZwW7rgaXMI8vkP0mC+xipWoglzNCOrEu2
+         jFGg==
+X-Gm-Message-State: APjAAAUmRCJA1cYv8wkBU8ZaQZGRYYnXeWQGj/TqGkCGw6A14yxPZRyX
+        u8McnzIM7+2q8woLwTVdPuWxgA==
+X-Google-Smtp-Source: APXvYqzMlIzIUhu7YvDxV6j0XKIWzMpG7d+7n8kKgXm21z7Q7i6+twmsKhUHg4Vtv4sMTLeD6qBWyQ==
+X-Received: by 2002:a17:90a:f013:: with SMTP id bt19mr5350862pjb.47.1581449526662;
+        Tue, 11 Feb 2020 11:32:06 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o6sm4685775pgg.37.2020.02.11.11.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 11:32:05 -0800 (PST)
+Date:   Tue, 11 Feb 2020 11:32:04 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] treewide: Replace zero-length arrays with flexible-array
+ member
+Message-ID: <202002111129.77DB1CCC7B@keescook>
+References: <20200211174126.GA29960@embeddedor>
+ <20200211183229.GA1938663@kroah.com>
+ <3fdbb16a-897c-aa5b-d45d-f824f6810412@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211143202.2sgryye4m234pymq@wunner.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3fdbb16a-897c-aa5b-d45d-f824f6810412@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 03:32:02PM +0100, Lukas Wunner wrote:
-> On Tue, Feb 11, 2020 at 08:14:44AM -0600, Bjorn Helgaas wrote:
-> > I'm a little confused about why pci_hp_initialize()/
-> > __pci_hp_initialize()/pci_hp_register()/__pci_hp_register() is such a
-> > rat's nest with hotplug drivers using a mix of them.
+On Tue, Feb 11, 2020 at 01:20:36PM -0600, Gustavo A. R. Silva wrote:
 > 
-> This is modeled after device registration, which can be done either
-> in two steps (device_initialize() + device_add()) or in 1 step
-> (device_register()).
 > 
-> So it's either pci_hp_initialize() + pci_hp_add() or pci_hp_register().
+> On 2/11/20 12:32, Greg KH wrote:
+> > On Tue, Feb 11, 2020 at 11:41:26AM -0600, Gustavo A. R. Silva wrote:
+> >> The current codebase makes use of the zero-length array language
+> >> extension to the C90 standard, but the preferred mechanism to declare
+> >> variable-length types such as these ones is a flexible array member[1][2],
+> >> introduced in C99:
+> >>
+> >> struct foo {
+> >>         int stuff;
+> >>         struct boo array[];
+> >> };
+> >>
+> >> By making use of the mechanism above, we will get a compiler warning
+> >> in case the flexible array does not occur last in the structure, which
+> >> will help us prevent some kind of undefined behavior bugs from being
+> >> unadvertenly introduced[3] to the codebase from now on.
+> >>
+> >> All these instances of code were found with the help of the following
+> >> Coccinelle script:
+> >>
+> >> @@
+> >> identifier S, member, array;
+> >> type T1, T2;
+> >> @@
+> >>
+> >> struct S {
+> >>   ...
+> >>   T1 member;
+> >>   T2 array[
+> >> - 0
+> >>   ];
+> >> };
+> >>
+> >> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> >> [2] https://github.com/KSPP/linux/issues/21
+> >> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> >>
+> >> NOTE: I'll carry this in my -next tree for the v5.6 merge window.
+> > 
+> > Why not carve this up into per-subsystem patches so that we can apply
+> > them to our 5.7-rc1 trees and then you submit the "remaining" that don't
+> > somehow get merged at that timeframe for 5.7-rc2?
+> > 
 > 
-> The rationale is provided in the commit message of 51bbf9bee34f
-> ("PCI: hotplug: Demidlayer registration with the core").
+> Yep, sounds good. I'll do that.
 
-Thanks for the pointer.  I wrote that down in case I ever try to
-figure that out in the future.  Obviously I haven't looked at this in
-any detail, but it seems like the sort of thing that all the hotplug
-drivers should do the same way regardless of their internal structure,
-and the slot concept seems pretty integral to the bridge leading to
-it.  Maybe this is a somehow a consequence of the hotplug drivers
-being separated from the enumeration path.  Or maybe the slot part
-could be split out from the hotplug drivers and done during
-enumeration.  Just blue sky thinking, I don't pretend to have done
-any actual research here.
+FWIW, I'd just like to point out that since this is a mechanical change
+with no code generation differences (unlike the pre-C90 1-byte array
+conversions), it's a way better use of everyone's time to just splat
+this in all at once.
 
-Bjorn
+That said, it looks like Gustavo is up for it, but I'd like us to
+generally consider these kinds of mechanical changes as being easier to
+manage in a single patch. (Though getting Acks tends to be a bit
+harder...)
+
+-- 
+Kees Cook
