@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B94C3B188
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DE0C35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767192168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E9E20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731220AbgBKSTx (ORCPT
+        id S1731226AbgBKSUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:19:53 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:45478 "EHLO
+        Tue, 11 Feb 2020 13:20:00 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:45404 "EHLO
         xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730025AbgBKSTe (ORCPT
+        with ESMTP id S1730526AbgBKSTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 13:19:34 -0500
 Received: from ramsan ([84.195.182.253])
         by xavier.telenet-ops.be with bizsmtp
-        id 1WKV2200a5USYZQ01WKWwU; Tue, 11 Feb 2020 19:19:31 +0100
+        id 1WKV2200a5USYZQ01WKVvx; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a8A-0002of-3F; Tue, 11 Feb 2020 19:19:30 +0100
+        id 1j1a89-0002oI-Qq; Tue, 11 Feb 2020 19:19:29 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a8A-0003z5-1I; Tue, 11 Feb 2020 19:19:30 +0100
+        id 1j1a89-0003yk-PG; Tue, 11 Feb 2020 19:19:29 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -39,9 +40,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 21/34] crypto: ccree - remove struct cc_cipher_handle
-Date:   Tue, 11 Feb 2020 19:19:15 +0100
-Message-Id: <20200211181928.15178-22-geert+renesas@glider.be>
+Subject: [PATCH v2 14/34] crypto: ccree - simplify Runtime PM handling
+Date:   Tue, 11 Feb 2020 19:19:08 +0100
+Message-Id: <20200211181928.15178-15-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
 References: <20200211181928.15178-1-geert+renesas@glider.be>
@@ -50,101 +51,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cc_cipher_handle structure contains only a single member, and only
-one instance exists.  Simplify the code and reduce memory consumption by
-moving this member to struct cc_drvdata.
+Currently, a large part of the probe function runs before Runtime PM is
+enabled.  As the driver manages the device's clock manually, this may
+work fine on some systems, but may break on platforms with a more
+complex power hierarchy.
+
+Fix this by moving the initialization of Runtime PM before the first
+register access (in cc_wait_for_reset_completion()), and putting the
+device to sleep only after the last access (in cc_set_ree_fips_status()).
+
+This allows to remove the pm_on flag, which was used to track manually
+if Runtime PM had been enabled or not.
+Remove the cc_pm_{init,go,fini}() wrappers, as they are called only
+once, and obscure operation.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
   - New.
 
- drivers/crypto/ccree/cc_cipher.c | 33 ++++++++------------------------
- drivers/crypto/ccree/cc_driver.h |  2 +-
- 2 files changed, 9 insertions(+), 26 deletions(-)
+ drivers/crypto/ccree/cc_driver.c | 43 +++++++++++++++++++-------------
+ drivers/crypto/ccree/cc_driver.h |  1 -
+ drivers/crypto/ccree/cc_pm.c     | 38 +++-------------------------
+ drivers/crypto/ccree/cc_pm.h     | 12 ---------
+ 4 files changed, 29 insertions(+), 65 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
-index 1c7ced65008bc311..a1430d669a584a85 100644
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -20,10 +20,6 @@
+diff --git a/drivers/crypto/ccree/cc_driver.c b/drivers/crypto/ccree/cc_driver.c
+index a7b7f65939e2f620..c7e44f212d4b0ac5 100644
+--- a/drivers/crypto/ccree/cc_driver.c
++++ b/drivers/crypto/ccree/cc_driver.c
+@@ -14,6 +14,7 @@
+ #include <linux/of.h>
+ #include <linux/clk.h>
+ #include <linux/of_address.h>
++#include <linux/pm_runtime.h>
  
- #define template_skcipher	template_u.skcipher
+ #include "cc_driver.h"
+ #include "cc_request_mgr.h"
+@@ -360,6 +361,16 @@ static int init_cc_resources(struct platform_device *plat_dev)
  
--struct cc_cipher_handle {
--	struct list_head alg_list;
--};
--
- struct cc_user_key_info {
- 	u8 *key;
- 	dma_addr_t key_dma_addr;
-@@ -1669,36 +1665,24 @@ static struct cc_crypto_alg *cc_create_alg(const struct cc_alg_template *tmpl,
- int cc_cipher_free(struct cc_drvdata *drvdata)
- {
- 	struct cc_crypto_alg *t_alg, *n;
--	struct cc_cipher_handle *cipher_handle = drvdata->cipher_handle;
--
--	if (cipher_handle) {
--		/* Remove registered algs */
--		list_for_each_entry_safe(t_alg, n, &cipher_handle->alg_list,
--					 entry) {
--			crypto_unregister_skcipher(&t_alg->skcipher_alg);
--			list_del(&t_alg->entry);
--			kfree(t_alg);
--		}
--		kfree(cipher_handle);
--		drvdata->cipher_handle = NULL;
+ 	new_drvdata->sec_disabled = cc_sec_disable;
+ 
++	pm_runtime_set_autosuspend_delay(dev, CC_SUSPEND_TIMEOUT);
++	pm_runtime_use_autosuspend(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++	rc = pm_runtime_get_sync(dev);
++	if (rc < 0) {
++		dev_err(dev, "pm_runtime_get_sync() failed: %d\n", rc);
++		goto post_pm_err;
++	}
 +
-+	/* Remove registered algs */
-+	list_for_each_entry_safe(t_alg, n, &drvdata->alg_list, entry) {
-+		crypto_unregister_skcipher(&t_alg->skcipher_alg);
-+		list_del(&t_alg->entry);
-+		kfree(t_alg);
+ 	/* wait for Crytpcell reset completion */
+ 	if (!cc_wait_for_reset_completion(new_drvdata)) {
+ 		dev_err(dev, "Cryptocell reset not completed");
+@@ -372,7 +383,7 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 			dev_err(dev, "Invalid CC signature: SIGNATURE=0x%08X != expected=0x%08X\n",
+ 				val, hw_rev->sig);
+ 			rc = -EINVAL;
+-			goto post_clk_err;
++			goto post_pm_err;
+ 		}
+ 		sig_cidr = val;
+ 		hw_rev_pidr = cc_ioread(new_drvdata, new_drvdata->ver_offset);
+@@ -383,7 +394,7 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 			dev_err(dev, "Invalid CC PIDR: PIDR0124=0x%08X != expected=0x%08X\n",
+ 				val,  hw_rev->pidr_0124);
+ 			rc = -EINVAL;
+-			goto post_clk_err;
++			goto post_pm_err;
+ 		}
+ 		hw_rev_pidr = val;
+ 
+@@ -392,7 +403,7 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 			dev_err(dev, "Invalid CC CIDR: CIDR0123=0x%08X != expected=0x%08X\n",
+ 			val,  hw_rev->cidr_0123);
+ 			rc = -EINVAL;
+-			goto post_clk_err;
++			goto post_pm_err;
+ 		}
+ 		sig_cidr = val;
+ 
+@@ -411,7 +422,7 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 		default:
+ 			dev_err(dev, "Unsupported engines configuration.\n");
+ 			rc = -EINVAL;
+-			goto post_clk_err;
++			goto post_pm_err;
+ 		}
+ 
+ 		/* Check security disable state */
+@@ -437,14 +448,14 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 			      new_drvdata);
+ 	if (rc) {
+ 		dev_err(dev, "Could not register to interrupt %d\n", irq);
+-		goto post_clk_err;
++		goto post_pm_err;
  	}
+ 	dev_dbg(dev, "Registered to IRQ: %d\n", irq);
+ 
+ 	rc = init_cc_regs(new_drvdata, true);
+ 	if (rc) {
+ 		dev_err(dev, "init_cc_regs failed\n");
+-		goto post_clk_err;
++		goto post_pm_err;
+ 	}
+ 
+ 	rc = cc_debugfs_init(new_drvdata);
+@@ -483,12 +494,6 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 		goto post_req_mgr_err;
+ 	}
+ 
+-	rc = cc_pm_init(new_drvdata);
+-	if (rc) {
+-		dev_err(dev, "cc_pm_init failed\n");
+-		goto post_buf_mgr_err;
+-	}
+-
+ 	/* Allocate crypto algs */
+ 	rc = cc_cipher_alloc(new_drvdata);
+ 	if (rc) {
+@@ -509,15 +514,13 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 		goto post_hash_err;
+ 	}
+ 
+-	/* All set, we can allow autosuspend */
+-	cc_pm_go(new_drvdata);
+-
+ 	/* If we got here and FIPS mode is enabled
+ 	 * it means all FIPS test passed, so let TEE
+ 	 * know we're good.
+ 	 */
+ 	cc_set_ree_fips_status(new_drvdata, true);
+ 
++	pm_runtime_put(dev);
  	return 0;
+ 
+ post_hash_err:
+@@ -534,7 +537,10 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 	cc_debugfs_fini(new_drvdata);
+ post_regs_err:
+ 	fini_cc_regs(new_drvdata);
+-post_clk_err:
++post_pm_err:
++	pm_runtime_put_noidle(dev);
++	pm_runtime_disable(dev);
++	pm_runtime_set_suspended(dev);
+ 	clk_disable_unprepare(new_drvdata->clk);
+ 	return rc;
+ }
+@@ -547,18 +553,21 @@ void fini_cc_regs(struct cc_drvdata *drvdata)
+ 
+ static void cleanup_cc_resources(struct platform_device *plat_dev)
+ {
++	struct device *dev = &plat_dev->dev;
+ 	struct cc_drvdata *drvdata =
+ 		(struct cc_drvdata *)platform_get_drvdata(plat_dev);
+ 
+ 	cc_aead_free(drvdata);
+ 	cc_hash_free(drvdata);
+ 	cc_cipher_free(drvdata);
+-	cc_pm_fini(drvdata);
+ 	cc_buffer_mgr_fini(drvdata);
+ 	cc_req_mgr_fini(drvdata);
+ 	cc_fips_fini(drvdata);
+ 	cc_debugfs_fini(drvdata);
+ 	fini_cc_regs(drvdata);
++	pm_runtime_put_noidle(dev);
++	pm_runtime_disable(dev);
++	pm_runtime_set_suspended(dev);
+ 	clk_disable_unprepare(drvdata->clk);
  }
  
- int cc_cipher_alloc(struct cc_drvdata *drvdata)
- {
--	struct cc_cipher_handle *cipher_handle;
- 	struct cc_crypto_alg *t_alg;
- 	struct device *dev = drvdata_to_dev(drvdata);
- 	int rc = -ENOMEM;
- 	int alg;
- 
--	cipher_handle = kmalloc(sizeof(*cipher_handle), GFP_KERNEL);
--	if (!cipher_handle)
--		return -ENOMEM;
--
--	INIT_LIST_HEAD(&cipher_handle->alg_list);
--	drvdata->cipher_handle = cipher_handle;
-+	INIT_LIST_HEAD(&drvdata->alg_list);
- 
- 	/* Linux crypto */
- 	dev_dbg(dev, "Number of algorithms = %zu\n",
-@@ -1730,8 +1714,7 @@ int cc_cipher_alloc(struct cc_drvdata *drvdata)
- 			kfree(t_alg);
- 			goto fail0;
- 		} else {
--			list_add_tail(&t_alg->entry,
--				      &cipher_handle->alg_list);
-+			list_add_tail(&t_alg->entry, &drvdata->alg_list);
- 			dev_dbg(dev, "Registered %s\n",
- 				t_alg->skcipher_alg.base.cra_driver_name);
- 		}
 diff --git a/drivers/crypto/ccree/cc_driver.h b/drivers/crypto/ccree/cc_driver.h
-index 4895f124d2b83fb1..4790eb5cb8bdac3c 100644
+index d7928b164a3b57e5..9e94a29d84ae61f1 100644
 --- a/drivers/crypto/ccree/cc_driver.h
 +++ b/drivers/crypto/ccree/cc_driver.h
-@@ -141,7 +141,7 @@ struct cc_drvdata {
- 	struct platform_device *plat_dev;
- 	u32 mlli_sram_addr;
- 	struct dma_pool *mlli_buffs_pool;
--	void *cipher_handle;
-+	struct list_head alg_list;
- 	void *hash_handle;
- 	void *aead_handle;
- 	void *request_mgr_handle;
+@@ -158,7 +158,6 @@ struct cc_drvdata {
+ 	int std_bodies;
+ 	bool sec_disabled;
+ 	u32 comp_mask;
+-	bool pm_on;
+ };
+ 
+ struct cc_crypto_alg {
+diff --git a/drivers/crypto/ccree/cc_pm.c b/drivers/crypto/ccree/cc_pm.c
+index 81376173c3ecf48f..f7729fc1ee597e9a 100644
+--- a/drivers/crypto/ccree/cc_pm.c
++++ b/drivers/crypto/ccree/cc_pm.c
+@@ -64,23 +64,15 @@ int cc_pm_resume(struct device *dev)
+ 
+ int cc_pm_get(struct device *dev)
+ {
+-	int rc = 0;
+-	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+-
+-	if (drvdata->pm_on)
+-		rc = pm_runtime_get_sync(dev);
++	int rc = pm_runtime_get_sync(dev);
+ 
+ 	return (rc == 1 ? 0 : rc);
+ }
+ 
+ void cc_pm_put_suspend(struct device *dev)
+ {
+-	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+-
+-	if (drvdata->pm_on) {
+-		pm_runtime_mark_last_busy(dev);
+-		pm_runtime_put_autosuspend(dev);
+-	}
++	pm_runtime_mark_last_busy(dev);
++	pm_runtime_put_autosuspend(dev);
+ }
+ 
+ bool cc_pm_is_dev_suspended(struct device *dev)
+@@ -88,27 +80,3 @@ bool cc_pm_is_dev_suspended(struct device *dev)
+ 	/* check device state using runtime api */
+ 	return pm_runtime_suspended(dev);
+ }
+-
+-int cc_pm_init(struct cc_drvdata *drvdata)
+-{
+-	struct device *dev = drvdata_to_dev(drvdata);
+-
+-	/* must be before the enabling to avoid redundant suspending */
+-	pm_runtime_set_autosuspend_delay(dev, CC_SUSPEND_TIMEOUT);
+-	pm_runtime_use_autosuspend(dev);
+-	/* set us as active - note we won't do PM ops until cc_pm_go()! */
+-	return pm_runtime_set_active(dev);
+-}
+-
+-/* enable the PM module*/
+-void cc_pm_go(struct cc_drvdata *drvdata)
+-{
+-	pm_runtime_enable(drvdata_to_dev(drvdata));
+-	drvdata->pm_on = true;
+-}
+-
+-void cc_pm_fini(struct cc_drvdata *drvdata)
+-{
+-	pm_runtime_disable(drvdata_to_dev(drvdata));
+-	drvdata->pm_on = false;
+-}
+diff --git a/drivers/crypto/ccree/cc_pm.h b/drivers/crypto/ccree/cc_pm.h
+index 80a18e11cae43f3d..2dcf53fa108e77a6 100644
+--- a/drivers/crypto/ccree/cc_pm.h
++++ b/drivers/crypto/ccree/cc_pm.h
+@@ -15,9 +15,6 @@
+ 
+ extern const struct dev_pm_ops ccree_pm;
+ 
+-int cc_pm_init(struct cc_drvdata *drvdata);
+-void cc_pm_go(struct cc_drvdata *drvdata);
+-void cc_pm_fini(struct cc_drvdata *drvdata);
+ int cc_pm_suspend(struct device *dev);
+ int cc_pm_resume(struct device *dev);
+ int cc_pm_get(struct device *dev);
+@@ -26,15 +23,6 @@ bool cc_pm_is_dev_suspended(struct device *dev);
+ 
+ #else
+ 
+-static inline int cc_pm_init(struct cc_drvdata *drvdata)
+-{
+-	return 0;
+-}
+-
+-static inline void cc_pm_go(struct cc_drvdata *drvdata) {}
+-
+-static inline void cc_pm_fini(struct cc_drvdata *drvdata) {}
+-
+ static inline int cc_pm_get(struct device *dev)
+ {
+ 	return 0;
 -- 
 2.17.1
 
