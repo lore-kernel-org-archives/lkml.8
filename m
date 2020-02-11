@@ -2,112 +2,91 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695CCC3B187
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6AAC3B188
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4180F20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C9B206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 12:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="kh8uvMnN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aZb5l5Jn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgBKMNi (ORCPT
+        id S1728696AbgBKMOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:13:38 -0500
-Received: from onstation.org ([52.200.56.107]:58256 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbgBKMNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:13:30 -0500
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 11 Feb 2020 07:14:16 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:61819 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727916AbgBKMOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:14:16 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581423255; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=oRKfcwP++zy8LjliDmJ593dnq9AHGwth3BPAylfi5co=; b=aZb5l5Jn7Ghfm1UKF0oWkaeZvh1uScnSMrcHb1d/9UWGy22u4rBEaS6n3Y2z7nrUBTcov3E/
+ 1huIq/HjA/D7Fq+c9m9TQngT5yHjVdgGHpayW7wqMTFKfr2jLWtTvRcs7mXhbvyHlxIdhKiC
+ CcoGtrYQRvR/gpwRsSU5s8/1acA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e429a90.7f39cbc3ec70-smtp-out-n01;
+ Tue, 11 Feb 2020 12:14:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA515C4479D; Tue, 11 Feb 2020 12:14:08 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id A50943EA2C;
-        Tue, 11 Feb 2020 12:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1581423209;
-        bh=9vYr0veDNGoPaF0yS5MgwbJtvztKvRkU36Niw0Jf0FQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kh8uvMnNUSXxFCihiHSRwOnBVdMbm8XJHSngNXlL/AOB9lOWcvAiyiPBL8ns3OX6D
-         0zRubd/bSaJGyCDBaUk16Xae3t9PDSj08gqY1oEK8UWWQB42jFMv3zSTWuWEqdohRj
-         P1A3Rylm+FqczfpzlCvaiMcwyAeAsRXv8jdNfZQ0=
-From:   Brian Masney <masneyb@onstation.org>
-To:     dmitry.torokhov@gmail.com
-Cc:     linux-input@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: Input: remove msm-vibrator
-Date:   Tue, 11 Feb 2020 07:13:17 -0500
-Message-Id: <20200211121318.144067-2-masneyb@onstation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200211121318.144067-1-masneyb@onstation.org>
-References: <20200211121318.144067-1-masneyb@onstation.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A6A3C43383;
+        Tue, 11 Feb 2020 12:14:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A6A3C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>,
+        robh@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 1/2] clk: qcom: videocc: Update the clock flag for video_cc_vcodec0_core_clk
+Date:   Tue, 11 Feb 2020 17:43:55 +0530
+Message-Id: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The address referenced in this binding is within the Qualcomm Clock
-namespace so let's drop the msm-vibrator bindings so that a more
-generic solution can be used instead.  No one is currently using these
-bindings so this won't affect any users.
+The clock disable signal for video_cc_vcodec0_core_clk is tied to
+vcodec0_gdsc which is supported in the HW control mode. Thus turning off
+the clock would be taken care automatically when the GDSC turns OFF by
+hardware and clock driver does not require to poll on the CLK_OFF bit.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
- .../bindings/input/msm-vibrator.txt           | 36 -------------------
- 1 file changed, 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
+ drivers/clk/qcom/videocc-sc7180.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/input/msm-vibrator.txt b/Documentation/devicetree/bindings/input/msm-vibrator.txt
-deleted file mode 100644
-index 8dcf014ef2e5..000000000000
---- a/Documentation/devicetree/bindings/input/msm-vibrator.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--* Device tree bindings for the Qualcomm MSM vibrator
--
--Required properties:
--
--  - compatible: Should be one of
--		"qcom,msm8226-vibrator"
--		"qcom,msm8974-vibrator"
--  - reg: the base address and length of the IO memory for the registers.
--  - pinctrl-names: set to default.
--  - pinctrl-0: phandles pointing to pin configuration nodes. See
--               Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--  - clock-names: set to pwm
--  - clocks: phandle of the clock. See
--            Documentation/devicetree/bindings/clock/clock-bindings.txt
--  - enable-gpios: GPIO that enables the vibrator.
--
--Optional properties:
--
--  - vcc-supply: phandle to the regulator that provides power to the sensor.
--
--Example from a LG Nexus 5 (hammerhead) phone:
--
--vibrator@fd8c3450 {
--	reg = <0xfd8c3450 0x400>;
--	compatible = "qcom,msm8974-vibrator";
--
--	vcc-supply = <&pm8941_l19>;
--
--	clocks = <&mmcc CAMSS_GP1_CLK>;
--	clock-names = "pwm";
--
--	enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
--
--	pinctrl-names = "default";
--	pinctrl-0 = <&vibrator_pin>;
--};
--- 
-2.24.1
+diff --git a/drivers/clk/qcom/videocc-sc7180.c b/drivers/clk/qcom/videocc-sc7180.c
+index c363c3c..276e5ec 100644
+--- a/drivers/clk/qcom/videocc-sc7180.c
++++ b/drivers/clk/qcom/videocc-sc7180.c
+@@ -97,7 +97,7 @@ static struct clk_branch video_cc_vcodec0_axi_clk = {
 
+ static struct clk_branch video_cc_vcodec0_core_clk = {
+ 	.halt_reg = 0x890,
+-	.halt_check = BRANCH_HALT,
++	.halt_check = BRANCH_HALT_VOTED,
+ 	.clkr = {
+ 		.enable_reg = 0x890,
+ 		.enable_mask = BIT(0),
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
