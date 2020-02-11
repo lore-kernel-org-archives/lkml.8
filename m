@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBB0C352A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF221C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3592D20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B3C20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 13:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgBKN1B (ORCPT
+        id S1729282AbgBKN1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:27:01 -0500
-Received: from mga01.intel.com ([192.55.52.88]:35201 "EHLO mga01.intel.com"
+        Tue, 11 Feb 2020 08:27:03 -0500
+Received: from mga12.intel.com ([192.55.52.136]:3593 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbgBKN0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729143AbgBKN0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 08:26:15 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 05:26:14 -0800
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 05:26:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="405937300"
+   d="scan'208";a="233448558"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 11 Feb 2020 05:26:10 -0800
+  by orsmga003.jf.intel.com with ESMTP; 11 Feb 2020 05:26:09 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 564E6590; Tue, 11 Feb 2020 15:26:04 +0200 (EET)
+        id 449984E0; Tue, 11 Feb 2020 15:26:04 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -45,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 11/18] mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
-Date:   Tue, 11 Feb 2020 16:25:56 +0300
-Message-Id: <20200211132603.73509-12-mika.westerberg@linux.intel.com>
+Subject: [PATCH v5 09/18] mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
+Date:   Tue, 11 Feb 2020 16:25:54 +0300
+Message-Id: <20200211132603.73509-10-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
 References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
@@ -58,56 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the Intel Merrifield PMIC driver over the new SCU IPC API
-where the SCU IPC instance is passed to the functions.
+Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+be using this field going forward to access the SCU IPC instance.
+
+While there add kernel-doc for the intel_soc_pmic structure.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
-index 26a1551c5faf..bd94c989d232 100644
---- a/drivers/mfd/intel_soc_pmic_mrfld.c
-+++ b/drivers/mfd/intel_soc_pmic_mrfld.c
-@@ -74,10 +74,11 @@ static const struct mfd_cell bcove_dev[] = {
- static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
- 				    unsigned int *val)
- {
-+	struct intel_soc_pmic *pmic = context;
- 	u8 ipc_out;
- 	int ret;
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index bfecd6bd4990..1e462549f5f1 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -13,6 +13,20 @@
  
--	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
-+	ret = intel_scu_ipc_dev_ioread8(pmic->scu, reg, &ipc_out);
- 	if (ret)
- 		return ret;
+ #include <linux/regmap.h>
  
-@@ -88,10 +89,11 @@ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
- static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
- 				     unsigned int val)
- {
-+	struct intel_soc_pmic *pmic = context;
- 	u8 ipc_in = val;
- 	int ret;
++/**
++ * struct intel_soc_pmic - Intel SoC PMIC data
++ * @irq: Master interrupt number of the parent PMIC device
++ * @regmap: Pointer to the parent PMIC device regmap structure
++ * @irq_chip_data: IRQ chip data for the PMIC itself
++ * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
++ * @irq_chip_data_tmu: Chained IRQ chip data for the time management unit
++ * @irq_chip_data_bcu: Chained IRQ chip data for the burst control unit
++ * @irq_chip_data_adc: Chained IRQ chip data for the general purpose ADC
++ * @irq_chip_data_chgr: Chained IRQ chip data for the external charger
++ * @irq_chip_data_crit: Chained IRQ chip data for the critical event handler
++ * @dev: Pointer to the parent PMIC device
++ * @scu: Pointer to the SCU IPC device data structure
++ */
+ struct intel_soc_pmic {
+ 	int irq;
+ 	struct regmap *regmap;
+@@ -24,6 +38,7 @@ struct intel_soc_pmic {
+ 	struct regmap_irq_chip_data *irq_chip_data_chgr;
+ 	struct regmap_irq_chip_data *irq_chip_data_crit;
+ 	struct device *dev;
++	struct intel_scu_ipc_dev *scu;
+ };
  
--	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
-+	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
- 	if (ret)
- 		return ret;
- 
-@@ -117,6 +119,10 @@ static int bcove_probe(struct platform_device *pdev)
- 	if (!pmic)
- 		return -ENOMEM;
- 
-+	pmic->scu = devm_intel_scu_ipc_dev_get(dev);
-+	if (!pmic->scu)
-+		return -ENOMEM;
-+
- 	platform_set_drvdata(pdev, pmic);
- 	pmic->dev = &pdev->dev;
- 
+ int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 -- 
 2.25.0
 
