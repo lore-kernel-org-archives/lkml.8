@@ -4,34 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CA6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F67C352A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A292F2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CB12070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 23:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgBKXiu (ORCPT
+        id S1728371AbgBKXkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:38:50 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55486 "EHLO
+        Tue, 11 Feb 2020 18:40:05 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46019 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbgBKXiq (ORCPT
+        with ESMTP id S1728117AbgBKXiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:38:46 -0500
+        Tue, 11 Feb 2020 18:38:51 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 2edb94c55edb4572; Wed, 12 Feb 2020 00:38:43 +0100
+ id 7e947757f6db853b; Wed, 12 Feb 2020 00:38:48 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Amit Kucheria <amit.kucheria@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org
-Subject: [PATCH 22/28] drivers: tty: Call cpu_latency_qos_*() instead of pm_qos_*()
-Date:   Wed, 12 Feb 2020 00:27:04 +0100
-Message-ID: <2339403.frKpfgBVMR@kreacher>
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 14/28] cpuidle: Call cpu_latency_qos_limit() instead of pm_qos_request()
+Date:   Wed, 12 Feb 2020 00:08:42 +0100
+Message-ID: <3830254.4za0FlGIKD@kreacher>
 In-Reply-To: <1654227.8mz0SueHsU@kreacher>
 References: <1654227.8mz0SueHsU@kreacher>
 MIME-Version: 1.0
@@ -44,91 +43,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Call cpu_latency_qos_add/update/remove_request() instead of
-pm_qos_add/update/remove_request(), respectively, because the
-latter are going to be dropped.
+Call cpu_latency_qos_limit() instead of pm_qos_request(), because the
+latter is going to be dropped.
 
 No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/tty/serial/8250/8250_omap.c | 7 +++----
- drivers/tty/serial/omap-serial.c    | 9 ++++-----
- 2 files changed, 7 insertions(+), 9 deletions(-)
+ drivers/cpuidle/governor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index 19f8d2f9e7ba..76fe72bfb8bb 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -569,7 +569,7 @@ static void omap8250_uart_qos_work(struct work_struct *work)
- 	struct omap8250_priv *priv;
+diff --git a/drivers/cpuidle/governor.c b/drivers/cpuidle/governor.c
+index e48271e117a3..29acaf48e575 100644
+--- a/drivers/cpuidle/governor.c
++++ b/drivers/cpuidle/governor.c
+@@ -109,9 +109,9 @@ int cpuidle_register_governor(struct cpuidle_governor *gov)
+  */
+ s64 cpuidle_governor_latency_req(unsigned int cpu)
+ {
+-	int global_req = pm_qos_request(PM_QOS_CPU_DMA_LATENCY);
+ 	struct device *device = get_cpu_device(cpu);
+ 	int device_req = dev_pm_qos_raw_resume_latency(device);
++	int global_req = cpu_latency_qos_limit();
  
- 	priv = container_of(work, struct omap8250_priv, qos_work);
--	pm_qos_update_request(&priv->pm_qos_request, priv->latency);
-+	cpu_latency_qos_update_request(&priv->pm_qos_request, priv->latency);
- }
- 
- #ifdef CONFIG_SERIAL_8250_DMA
-@@ -1224,8 +1224,7 @@ static int omap8250_probe(struct platform_device *pdev)
- 
- 	priv->latency = PM_QOS_CPU_LATENCY_DEFAULT_VALUE;
- 	priv->calc_latency = PM_QOS_CPU_LATENCY_DEFAULT_VALUE;
--	pm_qos_add_request(&priv->pm_qos_request, PM_QOS_CPU_DMA_LATENCY,
--			   priv->latency);
-+	cpu_latency_qos_add_request(&priv->pm_qos_request, priv->latency);
- 	INIT_WORK(&priv->qos_work, omap8250_uart_qos_work);
- 
- 	spin_lock_init(&priv->rx_dma_lock);
-@@ -1295,7 +1294,7 @@ static int omap8250_remove(struct platform_device *pdev)
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 	serial8250_unregister_port(priv->line);
--	pm_qos_remove_request(&priv->pm_qos_request);
-+	cpu_latency_qos_remove_request(&priv->pm_qos_request);
- 	device_init_wakeup(&pdev->dev, false);
- 	return 0;
- }
-diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-index ce2558767eee..e0b720ac754b 100644
---- a/drivers/tty/serial/omap-serial.c
-+++ b/drivers/tty/serial/omap-serial.c
-@@ -831,7 +831,7 @@ static void serial_omap_uart_qos_work(struct work_struct *work)
- 	struct uart_omap_port *up = container_of(work, struct uart_omap_port,
- 						qos_work);
- 
--	pm_qos_update_request(&up->pm_qos_request, up->latency);
-+	cpu_latency_qos_update_request(&up->pm_qos_request, up->latency);
- }
- 
- static void
-@@ -1724,8 +1724,7 @@ static int serial_omap_probe(struct platform_device *pdev)
- 
- 	up->latency = PM_QOS_CPU_LATENCY_DEFAULT_VALUE;
- 	up->calc_latency = PM_QOS_CPU_LATENCY_DEFAULT_VALUE;
--	pm_qos_add_request(&up->pm_qos_request,
--		PM_QOS_CPU_DMA_LATENCY, up->latency);
-+	cpu_latency_qos_add_request(&up->pm_qos_request, up->latency);
- 	INIT_WORK(&up->qos_work, serial_omap_uart_qos_work);
- 
- 	platform_set_drvdata(pdev, up);
-@@ -1759,7 +1758,7 @@ static int serial_omap_probe(struct platform_device *pdev)
- 	pm_runtime_dont_use_autosuspend(&pdev->dev);
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--	pm_qos_remove_request(&up->pm_qos_request);
-+	cpu_latency_qos_remove_request(&up->pm_qos_request);
- 	device_init_wakeup(up->dev, false);
- err_rs485:
- err_port_line:
-@@ -1777,7 +1776,7 @@ static int serial_omap_remove(struct platform_device *dev)
- 	pm_runtime_dont_use_autosuspend(up->dev);
- 	pm_runtime_put_sync(up->dev);
- 	pm_runtime_disable(up->dev);
--	pm_qos_remove_request(&up->pm_qos_request);
-+	cpu_latency_qos_remove_request(&up->pm_qos_request);
- 	device_init_wakeup(&dev->dev, false);
- 
- 	return 0;
+ 	if (device_req > global_req)
+ 		device_req = global_req;
 -- 
 2.16.4
 
