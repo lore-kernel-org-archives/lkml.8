@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F0BC35242
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4CFC35242
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3119820708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B60120848
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 18:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731286AbgBKSUh (ORCPT
+        id S1731307AbgBKSUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:20:37 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:45442 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731001AbgBKSTd (ORCPT
+        Tue, 11 Feb 2020 13:20:48 -0500
+Received: from albert.telenet-ops.be ([195.130.137.90]:60430 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730251AbgBKSTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 13:19:33 -0500
 Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id 1WKW220055USYZQ01WKWwQ; Tue, 11 Feb 2020 19:19:31 +0100
+        by albert.telenet-ops.be with bizsmtp
+        id 1WKV2200K5USYZQ06WKVNN; Tue, 11 Feb 2020 19:19:30 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a8A-0002pS-J0; Tue, 11 Feb 2020 19:19:30 +0100
+        id 1j1a89-0002o8-Mc; Tue, 11 Feb 2020 19:19:29 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1a8A-0003zi-He; Tue, 11 Feb 2020 19:19:30 +0100
+        id 1j1a89-0003yb-LQ; Tue, 11 Feb 2020 19:19:29 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -40,9 +40,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 34/34] crypto: ccree - use devm_kzalloc() for hash data
-Date:   Tue, 11 Feb 2020 19:19:28 +0100
-Message-Id: <20200211181928.15178-35-geert+renesas@glider.be>
+Subject: [PATCH v2 11/34] crypto: ccree - defer larval_digest_addr init until needed
+Date:   Tue, 11 Feb 2020 19:19:05 +0100
+Message-Id: <20200211181928.15178-12-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200211181928.15178-1-geert+renesas@glider.be>
 References: <20200211181928.15178-1-geert+renesas@glider.be>
@@ -51,90 +51,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the lifetime of the hash data matches the lifetime of the driver,
-hash data can be allocated using the managed allocators.
-While at it, simplify cc_hash_free() by removing an unneeded check
-(hash_handle is always valid here).
+While the larval digest addresses are not always used in
+cc_get_plain_hmac_key() and cc_hash_digest(), they are always
+calculated.
+
+Defer their calculations to the points where needed.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
   - New.
 
- drivers/crypto/ccree/cc_hash.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ drivers/crypto/ccree/cc_aead.c | 4 +++-
+ drivers/crypto/ccree/cc_hash.c | 5 +++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/crypto/ccree/cc_aead.c b/drivers/crypto/ccree/cc_aead.c
+index db89144ce6c5e974..d1e7e82b9a40f8ff 100644
+--- a/drivers/crypto/ccree/cc_aead.c
++++ b/drivers/crypto/ccree/cc_aead.c
+@@ -417,7 +417,7 @@ static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *authkey,
+ 	dma_addr_t key_dma_addr = 0;
+ 	struct cc_aead_ctx *ctx = crypto_aead_ctx(tfm);
+ 	struct device *dev = drvdata_to_dev(ctx->drvdata);
+-	u32 larval_addr = cc_larval_digest_addr(ctx->drvdata, ctx->auth_mode);
++	u32 larval_addr;
+ 	struct cc_crypto_req cc_req = {};
+ 	unsigned int blocksize;
+ 	unsigned int digestsize;
+@@ -459,6 +459,8 @@ static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *authkey,
+ 			/* Load hash initial state */
+ 			hw_desc_init(&desc[idx]);
+ 			set_cipher_mode(&desc[idx], hashmode);
++			larval_addr = cc_larval_digest_addr(ctx->drvdata,
++							    ctx->auth_mode);
+ 			set_din_sram(&desc[idx], larval_addr, digestsize);
+ 			set_flow_mode(&desc[idx], S_DIN_to_HASH);
+ 			set_setup_mode(&desc[idx], SETUP_LOAD_STATE0);
 diff --git a/drivers/crypto/ccree/cc_hash.c b/drivers/crypto/ccree/cc_hash.c
-index 2ca5532c07a2e2f4..0c32aa2e6801ed7f 100644
+index defeb35a16a626ff..cebbe2f08f606bf3 100644
 --- a/drivers/crypto/ccree/cc_hash.c
 +++ b/drivers/crypto/ccree/cc_hash.c
-@@ -1828,7 +1828,7 @@ static struct cc_hash_alg *cc_alloc_hash_alg(struct cc_hash_template *template,
- 	struct crypto_alg *alg;
- 	struct ahash_alg *halg;
- 
--	t_crypto_alg = kzalloc(sizeof(*t_crypto_alg), GFP_KERNEL);
-+	t_crypto_alg = devm_kzalloc(dev, sizeof(*t_crypto_alg), GFP_KERNEL);
- 	if (!t_crypto_alg)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -1961,7 +1961,7 @@ int cc_hash_alloc(struct cc_drvdata *drvdata)
+@@ -429,8 +429,7 @@ static int cc_hash_digest(struct ahash_request *req)
+ 	bool is_hmac = ctx->is_hmac;
+ 	struct cc_crypto_req cc_req = {};
+ 	struct cc_hw_desc desc[CC_MAX_HASH_SEQ_LEN];
+-	cc_sram_addr_t larval_digest_addr =
+-		cc_larval_digest_addr(ctx->drvdata, ctx->hash_mode);
++	cc_sram_addr_t larval_digest_addr;
+ 	int idx = 0;
  	int rc = 0;
- 	int alg;
- 
--	hash_handle = kzalloc(sizeof(*hash_handle), GFP_KERNEL);
-+	hash_handle = devm_kzalloc(dev, sizeof(*hash_handle), GFP_KERNEL);
- 	if (!hash_handle)
- 		return -ENOMEM;
- 
-@@ -2022,7 +2022,6 @@ int cc_hash_alloc(struct cc_drvdata *drvdata)
- 			if (rc) {
- 				dev_err(dev, "%s alg registration failed\n",
- 					driver_hash[alg].driver_name);
--				kfree(t_alg);
- 				goto fail;
- 			}
- 
-@@ -2046,7 +2045,6 @@ int cc_hash_alloc(struct cc_drvdata *drvdata)
- 		if (rc) {
- 			dev_err(dev, "%s alg registration failed\n",
- 				driver_hash[alg].driver_name);
--			kfree(t_alg);
- 			goto fail;
- 		}
- 
-@@ -2056,8 +2054,7 @@ int cc_hash_alloc(struct cc_drvdata *drvdata)
- 	return 0;
- 
- fail:
--	kfree(drvdata->hash_handle);
--	drvdata->hash_handle = NULL;
-+	cc_hash_free(drvdata);
- 	return rc;
- }
- 
-@@ -2066,17 +2063,12 @@ int cc_hash_free(struct cc_drvdata *drvdata)
- 	struct cc_hash_alg *t_hash_alg, *hash_n;
- 	struct cc_hash_handle *hash_handle = drvdata->hash_handle;
- 
--	if (hash_handle) {
--		list_for_each_entry_safe(t_hash_alg, hash_n,
--					 &hash_handle->hash_list, entry) {
--			crypto_unregister_ahash(&t_hash_alg->ahash_alg);
--			list_del(&t_hash_alg->entry);
--			kfree(t_hash_alg);
--		}
--
--		kfree(hash_handle);
--		drvdata->hash_handle = NULL;
-+	list_for_each_entry_safe(t_hash_alg, hash_n, &hash_handle->hash_list,
-+				 entry) {
-+		crypto_unregister_ahash(&t_hash_alg->ahash_alg);
-+		list_del(&t_hash_alg->entry);
+ 	gfp_t flags = cc_gfp_flags(&req->base);
+@@ -472,6 +471,8 @@ static int cc_hash_digest(struct ahash_request *req)
+ 		set_din_type(&desc[idx], DMA_DLLI, state->digest_buff_dma_addr,
+ 			     ctx->inter_digestsize, NS_BIT);
+ 	} else {
++		larval_digest_addr = cc_larval_digest_addr(ctx->drvdata,
++							   ctx->hash_mode);
+ 		set_din_sram(&desc[idx], larval_digest_addr,
+ 			     ctx->inter_digestsize);
  	}
-+
- 	return 0;
- }
- 
 -- 
 2.17.1
 
