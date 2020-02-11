@@ -2,178 +2,111 @@ Return-Path: <SRS0=PxPh=37=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C844C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D08C3B187
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8116320708
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1184208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Feb 2020 06:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gFq6btPz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X1enKO5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgBKGkh (ORCPT
+        id S1727784AbgBKGtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 01:40:37 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39889 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbgBKGkg (ORCPT
+        Tue, 11 Feb 2020 01:49:32 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54009 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727481AbgBKGtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 01:40:36 -0500
-Received: by mail-ed1-f67.google.com with SMTP id m13so3382561edb.6;
-        Mon, 10 Feb 2020 22:40:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fv/t2lPvzd/c6evGoFWSGvw45Jr9b11uQzUTPkD838A=;
-        b=RRzzjkO/C29FTF/Q8WPbI00QO1rZPXzgTYiE3/7oandYtsneBihu48cBXSEB7A3uHU
-         wiXvKbaJEHGXmfJGdy4EkgNVBnh9TpSPu5vxvMfU1DglWUVQEbEKpm9qvmZCgRLDo6lm
-         FnL382n0MyR5T+9xW1v1+rc6c+n41xkbccXjeiEvahDCGywB4FR1I3dnch3iS3brHtgJ
-         DV+sy9xEYngthwxQfUyZwyS28GGAI8c5cC1hsgJTqJInWWBcJIepIcVUUsYfI/oKiHzH
-         y5XfN4JBIiJ4F9r0VVmIELDEpPcZi4oA0f+/NshpVIWKR4sA5/PV1Q6d3JZ5x0p7unQA
-         ++ng==
-X-Gm-Message-State: APjAAAUOZBUryZiu4BZq1mPZ1pW79osqzOYdIzF5RcxvwjV0VZqwPtmR
-        aC+46glxiIr6/HynCi1FBpRL161ANgM=
-X-Google-Smtp-Source: APXvYqxUVcgiaYVbXFggyoLcst+lBYXmgHMnitvc+9lgq9orN9mfbjSqtKR5YLfal/Tr2woClqcG6w==
-X-Received: by 2002:a17:906:7f02:: with SMTP id d2mr4460011ejr.261.1581403233883;
-        Mon, 10 Feb 2020 22:40:33 -0800 (PST)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id n10sm265402ejc.58.2020.02.10.22.40.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2020 22:40:33 -0800 (PST)
-Received: by mail-wr1-f42.google.com with SMTP id t3so10773046wru.7;
-        Mon, 10 Feb 2020 22:40:33 -0800 (PST)
-X-Received: by 2002:a5d:6805:: with SMTP id w5mr6896277wru.64.1581403233013;
- Mon, 10 Feb 2020 22:40:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20200210222807.206426-1-jernej.skrabec@siol.net> <20200210222807.206426-2-jernej.skrabec@siol.net>
-In-Reply-To: <20200210222807.206426-2-jernej.skrabec@siol.net>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 11 Feb 2020 14:40:22 +0800
-X-Gmail-Original-Message-ID: <CAGb2v659Znu1E74Ph8w4Un_cC8qovWmmLfOEDW0ax4jrLVs7GQ@mail.gmail.com>
-Message-ID: <CAGb2v659Znu1E74Ph8w4Un_cC8qovWmmLfOEDW0ax4jrLVs7GQ@mail.gmail.com>
-Subject: Re: [PATCH 1/7] clk: sunxi-ng: sun8i-de2: Sort structures
+        Tue, 11 Feb 2020 01:49:31 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 32CC221FC6;
+        Tue, 11 Feb 2020 01:49:30 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 11 Feb 2020 01:49:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=XdztXMV9iyXzMFlJWwifunfdijp
+        ZRx0c+G9mn+c5wW4=; b=gFq6btPzW+RpRULrPtwkrOzprABO+88TuN7FjK6PjiH
+        cuZDuxURE2jMWvg3+zXYfbf/za4X06QjtSbnWYgGeWN0RszLy7jXbz3wDI8g2y+Y
+        A39qbWuCOiwp00cVxNqYXBXQCDqeCiyERsvuXRGF2MWEtD3C9aQkAOD0+hceOuY4
+        j7oVjR2xUPp2u4OTrL5RCb3IyCbd9IaGuQQUPI9JdV0TDJifDBNcHE5Y3D+/0zUo
+        GsxSi1jQjopXopwAtfgWx9RpSiWC9gt1gOjzNDaJm1cL+UhjiHBNnFLdrlWFN5oB
+        OpqfpaFS+GGZl3u+45p2ZEbVvCmQZ/NQ4GHbtB+lu/w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=XdztXM
+        V9iyXzMFlJWwifunfdijpZRx0c+G9mn+c5wW4=; b=X1enKO5gTifLFa1Tyq39P9
+        IZomnM1+PMGLA6dOvBmOrZmJrAySBoNu4wYwDa9w9vq8Tz1Oxv5VR0C2c+A6uPR3
+        SnMfFFWBKnGO9tBRcMAENzappH5aE0Dt5x0x9rJvGQo+tT0D+GZ4ZWzOUexCw/qv
+        qX2ArAqCqF6GVWMDEq0fWogXSjmZ3Lvwry0hqVCK/eEV4V48lMFy/2Ms8ni6CPV7
+        6SC8sob0bYo9p74F3e46OgBGt8SDrcjP82gxRe/iQWxNeBwOMyRsCnkLu880wJ0w
+        IGsEPfxTyYrfOxK2SUv3cCKtn8xahZvKZvDuCPq4JCTbhayPKUMdkVE97mf8tIeQ
+        ==
+X-ME-Sender: <xms:eE5CXsffZtlZVleiv-xYIOb7dSUU1tXVbmXaqhLacrcVX6rLcc3bkA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedvgdellecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:eE5CXizdT_P2cmtLz9-0qpl2aw-5W7Jrx13LktK0vfB6p5hQE5pWZA>
+    <xmx:eE5CXi8394U4vLUXdnborBVnucisXG-X3X23NwonmszUeDGO2WXt6w>
+    <xmx:eE5CXkkhGSrQzszh99htJax3bgSvKJc5p0ydGn0nDzdTs1hHC0woug>
+    <xmx:ek5CXna2lWWhM6KBrYlE2fM7k798qQytAwxLRhg2a5cS6V1jJm1ipA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 491B3328005D;
+        Tue, 11 Feb 2020 01:49:28 -0500 (EST)
+Date:   Tue, 11 Feb 2020 07:49:26 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
 To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     wens@csie.org, mchehab@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 0/5] arm64: dts: allwinner: a64: Enable deinterlace
+ core
+Message-ID: <20200211064926.muxnaphoq4nbrs72@gilmour.lan>
+References: <20200210170656.82265-1-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwr2mhgisf5go3ox"
+Content-Disposition: inline
+In-Reply-To: <20200210170656.82265-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 6:28 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
->
-> Current structures are not sorted by family first and then
-> alphabetically. Let's do that now.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-I would do this at the end of the patch series for a couple of reasons.
-First of all, moving code around before the fixes make the fixes less
-likely to directly apply to stable kernels, and second, the H6 clks
-and resets lists disappear after all the changes.
+--rwr2mhgisf5go3ox
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-ChenYu
+On Mon, Feb 10, 2020 at 06:06:51PM +0100, Jernej Skrabec wrote:
+> Allwinner A64 contains deinterlace core, compatible to the one found in
+> H3. It can be used in combination with VPU to playback interlaced videos.
+>
+> Please take a look.
 
-> ---
->  drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 56 ++++++++++++++--------------
->  1 file changed, 28 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-> index d9668493c3f9..a928e0c32222 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-> @@ -51,24 +51,6 @@ static SUNXI_CCU_M(mixer1_div_a83_clk, "mixer1-div", "pll-de", 0x0c, 4, 4,
->  static SUNXI_CCU_M(wb_div_a83_clk, "wb-div", "pll-de", 0x0c, 8, 4,
->                    CLK_SET_RATE_PARENT);
->
-> -static struct ccu_common *sun50i_h6_de3_clks[] = {
-> -       &mixer0_clk.common,
-> -       &mixer1_clk.common,
-> -       &wb_clk.common,
-> -
-> -       &bus_mixer0_clk.common,
-> -       &bus_mixer1_clk.common,
-> -       &bus_wb_clk.common,
-> -
-> -       &mixer0_div_clk.common,
-> -       &mixer1_div_clk.common,
-> -       &wb_div_clk.common,
-> -
-> -       &bus_rot_clk.common,
-> -       &rot_clk.common,
-> -       &rot_div_clk.common,
-> -};
-> -
->  static struct ccu_common *sun8i_a83t_de2_clks[] = {
->         &mixer0_clk.common,
->         &mixer1_clk.common,
-> @@ -108,6 +90,24 @@ static struct ccu_common *sun8i_v3s_de2_clks[] = {
->         &wb_div_clk.common,
->  };
->
-> +static struct ccu_common *sun50i_h6_de3_clks[] = {
-> +       &mixer0_clk.common,
-> +       &mixer1_clk.common,
-> +       &wb_clk.common,
-> +
-> +       &bus_mixer0_clk.common,
-> +       &bus_mixer1_clk.common,
-> +       &bus_wb_clk.common,
-> +
-> +       &mixer0_div_clk.common,
-> +       &mixer1_div_clk.common,
-> +       &wb_div_clk.common,
-> +
-> +       &bus_rot_clk.common,
-> +       &rot_clk.common,
-> +       &rot_div_clk.common,
-> +};
-> +
->  static struct clk_hw_onecell_data sun8i_a83t_de2_hw_clks = {
->         .hws    = {
->                 [CLK_MIXER0]            = &mixer0_clk.common.hw,
-> @@ -219,6 +219,16 @@ static const struct sunxi_ccu_desc sun8i_h3_de2_clk_desc = {
->         .num_resets     = ARRAY_SIZE(sun8i_a83t_de2_resets),
->  };
->
-> +static const struct sunxi_ccu_desc sun8i_v3s_de2_clk_desc = {
-> +       .ccu_clks       = sun8i_v3s_de2_clks,
-> +       .num_ccu_clks   = ARRAY_SIZE(sun8i_v3s_de2_clks),
-> +
-> +       .hw_clks        = &sun8i_v3s_de2_hw_clks,
-> +
-> +       .resets         = sun8i_a83t_de2_resets,
-> +       .num_resets     = ARRAY_SIZE(sun8i_a83t_de2_resets),
-> +};
-> +
->  static const struct sunxi_ccu_desc sun50i_a64_de2_clk_desc = {
->         .ccu_clks       = sun8i_h3_de2_clks,
->         .num_ccu_clks   = ARRAY_SIZE(sun8i_h3_de2_clks),
-> @@ -239,16 +249,6 @@ static const struct sunxi_ccu_desc sun50i_h6_de3_clk_desc = {
->         .num_resets     = ARRAY_SIZE(sun50i_h6_de3_resets),
->  };
->
-> -static const struct sunxi_ccu_desc sun8i_v3s_de2_clk_desc = {
-> -       .ccu_clks       = sun8i_v3s_de2_clks,
-> -       .num_ccu_clks   = ARRAY_SIZE(sun8i_v3s_de2_clks),
-> -
-> -       .hw_clks        = &sun8i_v3s_de2_hw_clks,
-> -
-> -       .resets         = sun8i_a83t_de2_resets,
-> -       .num_resets     = ARRAY_SIZE(sun8i_a83t_de2_resets),
-> -};
-> -
->  static int sunxi_de2_clk_probe(struct platform_device *pdev)
->  {
->         struct resource *res;
-> --
-> 2.25.0
->
+Applied, thanks!
+Maxime
+
+--rwr2mhgisf5go3ox
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkJOdgAKCRDj7w1vZxhR
+xU35AQD3LjdGbe0ijT1ImTTyhYz9dseJPfQ+YsQLd+m3QBvTEwD8DJEmtNRM/8AC
+3IZoFJmm5wKb4si4CoYWpoVwsaHnnwk=
+=dTRv
+-----END PGP SIGNATURE-----
+
+--rwr2mhgisf5go3ox--
