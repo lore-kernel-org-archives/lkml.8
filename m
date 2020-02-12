@@ -2,46 +2,49 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714FDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40F6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CDC2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CBF20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gpfAype3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="si99YFEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgBLEU2 (ORCPT
+        id S1728135AbgBLEU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:20:28 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53874 "EHLO
+        Tue, 11 Feb 2020 23:20:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53876 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbgBLESq (ORCPT
+        with ESMTP id S1727960AbgBLESq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 23:18:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=sck9dfI+dXScVPBWaYwW3jbiuxvqUXtQqMv4jzviG9g=; b=gpfAype3Necc2KDV9z7TZtCn3l
-        lakh8t9W5r3L5nSf9lwDius+Zr15DFh8+ItvwIazI/b2jWLpbrsJJ0HGy1zxYLBBQWnHGXl7csYip
-        2YJklSvyCXwgSwpEb+kBFV2nfP7nyYkDxHlMhd5bDqUr9nmKDI525fu2We0lxx16Xd2DEc/WX8rA2
-        RTJ/XH+PnVrVsHl0ZRyOElG4go51Avsu2xSs5BUaosZ+pmy3GwCXxLaFNVuedmOV31b9mHOGzBPX5
-        7Cghy9bJMQ8YJrt8+Ikumu79Ei3Cwop2ISZvSLr8OnJG5/2SF0bRJ4k33uQvlqgzKteGDBzPrWO9l
-        C7JaPcbw==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=G02P3NwoSCoisXgQ/IS2rHa3w6ThGczr5ALv3SgsGPE=; b=si99YFEQ0elcNaPbG1Sa7xumtX
+        V7eGl8RRqn/ROGpPEuHPSmuTWjQIm5vo7lQlpOZyNr13m5VvzeRnukA8bO75KMxjKUMkqCvVFh9RC
+        bAGhuFS7oXGvdVwJlWCSFVy2qtN1ME4nHd27PKLOLRcFpRUQbNZhMNAwiN2REv3fDHGKextlNerDD
+        AakK2U6Jo2OqyZdebCrhKzIsfldMP9qoKNsSszalDBnlEhAMnq5Knq12SDN/Xf2sQKEbysUiSHdRV
+        Xn/xPbEVn5qH1t/ema2JlwYjN6p69/bDPnkIZG02tw99eCasVDKlwm2YRsUoTroeE1jDg5M3G8Pfg
+        rq46tHlQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU6-0006mJ-FR; Wed, 12 Feb 2020 04:18:46 +0000
+        id 1j1jU6-0006mQ-Hd; Wed, 12 Feb 2020 04:18:46 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/25] Large pages in the page cache
-Date:   Tue, 11 Feb 2020 20:18:20 -0800
-Message-Id: <20200212041845.25879-1-willy@infradead.org>
+Subject: [PATCH v2 02/25] mm: Optimise find_subpage for !THP
+Date:   Tue, 11 Feb 2020 20:18:22 -0800
+Message-Id: <20200212041845.25879-3-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,84 +54,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-This patch set does not pass xfstests.  Test at your own risk.  It is
-based on the readahead patchset which I posted yesterday.
+If THP is disabled, find_subpage can become a no-op.
 
-The principal idea here is that a large part of the overhead in dealing
-with individual pages is that there's just so darned many of them.  We
-would be better off dealing with fewer, larger pages, even if they don't
-get to be the size necessary for the CPU to use a larger TLB entry.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ include/linux/pagemap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The first five patches are more or less random cleanups which I came
-across while working on this patchset ... Andrew, if you want to just
-take those into your tree, it'd probably be a good thing.
-
-hpage_nr_pages() is adapted to handle arbitrary order pages.  I also
-add thp_order() and thp_size() for legibility.  Then the patches tear
-through the page cache fixing the places which assume pages are either
-PMD_SIZE or PAGE_SIZE.  After that, I tackle the iomap buffered I/O path,
-removing the assumptions of PAGE_SIZE there.
-
-Finally, we get to actually allocating large pages in the readahead code.
-We gradually grow the page size that is allocated, so we don't just
-jump straight from order-0 to order-9 pages, but gradually get there
-through order-2, order-4, order-6, order-8 and order-9 (on x86; other
-architectures will have a different PMD_ORDER).
-
-In some testing, I've seen the code go as far as order-6.  Right now it
-falls over on an earlier xfstest when it discovers a delayed allocation
-extent in an inode which is being removed at unmount.
-
-Matthew Wilcox (Oracle) (24):
-  mm: Use vm_fault error code directly
-  mm: Optimise find_subpage for !THP
-  mm: Use VM_BUG_ON_PAGE in clear_page_dirty_for_io
-  mm: Unexport find_get_entry
-  mm: Fix documentation of FGP flags
-  mm: Allow hpages to be arbitrary order
-  mm: Introduce thp_size
-  mm: Introduce thp_order
-  fs: Add a filesystem flag for large pages
-  fs: Introduce i_blocks_per_page
-  fs: Make page_mkwrite_check_truncate thp-aware
-  mm: Add file_offset_of_ helpers
-  fs: Add zero_user_large
-  iomap: Support arbitrarily many blocks per page
-  iomap: Support large pages in iomap_adjust_read_range
-  iomap: Support large pages in read paths
-  iomap: Support large pages in write paths
-  iomap: Inline data shouldn't see large pages
-  xfs: Support large pages
-  mm: Make prep_transhuge_page return its argument
-  mm: Add __page_cache_alloc_order
-  mm: Allow large pages to be added to the page cache
-  mm: Allow large pages to be removed from the page cache
-  mm: Add large page readahead
-
-William Kucharski (1):
-  mm: Align THP mappings for non-DAX
-
- drivers/net/ethernet/ibm/ibmveth.c |   2 -
- drivers/nvdimm/btt.c               |   4 +-
- drivers/nvdimm/pmem.c              |   3 +-
- fs/iomap/buffered-io.c             | 111 ++++++++++++++++-------------
- fs/jfs/jfs_metapage.c              |   2 +-
- fs/xfs/xfs_aops.c                  |   4 +-
- fs/xfs/xfs_super.c                 |   2 +-
- include/linux/fs.h                 |   1 +
- include/linux/highmem.h            |  22 ++++++
- include/linux/huge_mm.h            |  21 +++---
- include/linux/mm.h                 |   2 +
- include/linux/pagemap.h            |  78 ++++++++++++++++----
- mm/filemap.c                       |  67 +++++++++++------
- mm/huge_memory.c                   |  14 ++--
- mm/internal.h                      |   2 +-
- mm/page-writeback.c                |   2 +-
- mm/page_io.c                       |   2 +-
- mm/page_vma_mapped.c               |   4 +-
- mm/readahead.c                     |  98 +++++++++++++++++++++++--
- 19 files changed, 322 insertions(+), 119 deletions(-)
-
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 75bdfec49710..0842622cca90 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -340,7 +340,7 @@ static inline struct page *find_subpage(struct page *page, pgoff_t offset)
+ 
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
+ 
+-	return page + (offset & (compound_nr(page) - 1));
++	return page + (offset & (hpage_nr_pages(page) - 1));
+ }
+ 
+ struct page *find_get_entry(struct address_space *mapping, pgoff_t offset);
 -- 
 2.25.0
 
