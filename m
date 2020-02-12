@@ -2,150 +2,94 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F8DC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F41C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CA42173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6IULQpe"
+	by mail.kernel.org (Postfix) with ESMTP id F1C9A2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581550082;
+	bh=+9cAmBytFDRq8v6DYSm8WyN2UcW1McuocntwVo6iKUg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=HLD+iesW6z+M1hPAT2qEPCK/WUkajLzAlHXjr0uGHxIgo7STiZjFnDMVIUFbsGXKY
+	 eRPVGeYNdvoBONunU9MDUshMX4Et6/Dqdrvh1GpM8YcuTrsGWMnLFtrRzBJ+mZbJBl
+	 e3i2GJzPn/i4IdOjPlkz26KipxKZrYqoX75P81u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgBLX1Y (ORCPT
+        id S1729286AbgBLX2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:27:24 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50649 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgBLX1Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:27:24 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so4226140wmb.0;
-        Wed, 12 Feb 2020 15:27:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qWWr8Tj/x5Uxzxfr4XDatmqFLDK9WTySpZSm5Bv0Ekw=;
-        b=L6IULQpe2FXdlwNT2BiPLqWq4HKawYV5jKJh49o0/jP5CDMlvCqZK22kL7aN1LDv1f
-         hKnKN29sw2xQ9cpKhAhNHODtLuSVrxF98GiCI8yuByWFJkHjVo8NQDoxUaoIaNnywUTr
-         u7COFa6iqbCTJrkneJKEzzJW+vHp1Aujis9A6v+zMDKgP1FG19mzCGkUMjaez9si8j/G
-         C0+L63IO28L9orTsObc2mFInroI3Ebit6T+cgK6I1LnPHpdj+BzG9+6DRW4CB8uSKpEV
-         Y2xAzXbYQ83NSp123ZJnRj3Fek0lPZywolgT1jcuINgkJIddUKRpWeCNESRM29F01VRs
-         geGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qWWr8Tj/x5Uxzxfr4XDatmqFLDK9WTySpZSm5Bv0Ekw=;
-        b=IK9v180tWku7cx6K3CmNipqiLnKSe8FR76MxyTEnwzbTrtF33DGahvLDYWtGun1NCL
-         uHMYib67r2bZWLuOAfENhOuBR5CHoO4fMXn0nGkRTUagCbpwDp+bY1Cbp18oDUVMgzam
-         fA2+bnE7ruORyD4mEWV47Y7b0PZGsCZ7FtR7ozyLOQtpgOv8548eCz3dFHo0Lb9xYkl+
-         6XNgo14eEeFRphitJqIeCDcT7e7HaIJd3n06SU8yyHj/R6l4iEQiL7lb9cryqryY8+Fo
-         vWJFZZFpPc+eiwz7mz47joXzLOn/Vtpszbsl5NR+FpDGIetQCmeriYQj2iMhRGT1UFkf
-         nU5Q==
-X-Gm-Message-State: APjAAAXNHbSn4ta53XlqxXN1O5Z3OExKfJBjFnv26/IKeCFfkIXcVdm3
-        P4tCv9nMgAXXMpAfaUo1dus=
-X-Google-Smtp-Source: APXvYqzXjjXmlvG1lFGKwcAfviSyTGoEOxWVrTe8hKiSJsLeartclcgGBa+dNMyFSFP9DmQFyIBtxw==
-X-Received: by 2002:a05:600c:242:: with SMTP id 2mr1463304wmj.2.1581550038818;
-        Wed, 12 Feb 2020 15:27:18 -0800 (PST)
-Received: from giga-mm ([62.68.27.198])
-        by smtp.gmail.com with ESMTPSA id l6sm423504wmg.42.2020.02.12.15.27.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:27:17 -0800 (PST)
-Date:   Thu, 13 Feb 2020 00:27:16 +0100
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Krzysztof Halasa <khalasa@piap.pl>,
-        Russell King <linux@armlinux.org.uk>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Kevin Hilman <khilman@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>
-Subject: Re: [PATCH 02/18] ARM: replace setup_irq() by request_irq()
-Message-Id: <20200213002716.99258cfd73002fdd4bbd17d9@gmail.com>
-In-Reply-To: <da7d11b6cf808ea95e2d852a2e8cbca3fde28b6f.1581478324.git.afzal.mohd.ma@gmail.com>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
-        <da7d11b6cf808ea95e2d852a2e8cbca3fde28b6f.1581478324.git.afzal.mohd.ma@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Feb 2020 18:28:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727117AbgBLX2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:28:01 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FFED20848;
+        Wed, 12 Feb 2020 23:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581550080;
+        bh=+9cAmBytFDRq8v6DYSm8WyN2UcW1McuocntwVo6iKUg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=r+POCyTBoKgcIxvtq7ycJ+KCMoaMiduzaZZ3xQ1SduU7sjMokzzjOtPw6wqwZS3io
+         eU2lNzojqF0xej67TAjee758E6QUFOLcPBr/IOOQFkAu/ieFSPcEww5snQX4wqChXy
+         MY6fMSsDNmdFYDbCy7CC7F6cyPJGTOR59Nf+kmb8=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1jv9okazq9.fsf@starbuckisacylon.baylibre.com>
+References: <20200205232802.29184-1-sboyd@kernel.org> <20200205232802.29184-2-sboyd@kernel.org> <1jv9okazq9.fsf@starbuckisacylon.baylibre.com>
+Subject: Re: [PATCH v2 1/4] clk: Don't cache errors from clk_ops::get_phase()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>
+Date:   Wed, 12 Feb 2020 15:27:59 -0800
+Message-ID: <158155007950.184098.15676908208357845365@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Quoting Jerome Brunet (2020-02-06 00:26:06)
+>=20
+> On Thu 06 Feb 2020 at 00:27, Stephen Boyd <sboyd@kernel.org> wrote:
+>=20
+> > We don't check for errors from clk_ops::get_phase() before storing away
+> > the result into the clk_core::phase member. This can lead to some fairly
+> > confusing debugfs information if these ops do return an error. Let's
+> > skip the store when this op fails to fix this. While we're here, move
+> > the locking outside of clk_core_get_phase() to simplify callers from
+> > the debugfs side.
+> >
+> > Cc: Douglas Anderson <dianders@chromium.org>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > ---
+> >  drivers/clk/clk.c | 48 +++++++++++++++++++++++++++++++----------------
+> >  1 file changed, 32 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index d529ad67805c..26213e82f5f9 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -2660,12 +2660,14 @@ static int clk_core_get_phase(struct clk_core *=
+core)
+> >  {
+> >       int ret;
+> > =20
+> > -     clk_prepare_lock();
+>=20
+> Should the function name get the "_nolock" suffix then ?
+>=20
 
-On Wed, 12 Feb 2020 13:32:43 +0530
-afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
-
-> request_irq() is preferred over setup_irq(). Existing callers of
-> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
-> memory allocators are ready by 'mm_init()'.
-> 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
-> 
-> Hence replace setup_irq() by request_irq().
-> 
-> Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> wherever that has been found, it too has been replaced by free_irq().
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-
-For the EP93xx part:
-Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-
-> diff --git a/arch/arm/mach-ep93xx/timer-ep93xx.c b/arch/arm/mach-ep93xx/timer-ep93xx.c
-> index de998830f534..0335f3b93340 100644
-> --- a/arch/arm/mach-ep93xx/timer-ep93xx.c
-> +++ b/arch/arm/mach-ep93xx/timer-ep93xx.c
-> @@ -117,13 +117,6 @@ static irqreturn_t ep93xx_timer_interrupt(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> -static struct irqaction ep93xx_timer_irq = {
-> -	.name		= "ep93xx timer",
-> -	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
-> -	.handler	= ep93xx_timer_interrupt,
-> -	.dev_id		= &ep93xx_clockevent,
-> -};
-> -
->  void __init ep93xx_timer_init(void)
->  {
->  	/* Enable and register clocksource and sched_clock on timer 4 */
-> @@ -136,7 +129,10 @@ void __init ep93xx_timer_init(void)
->  			     EP93XX_TIMER4_RATE);
->  
->  	/* Set up clockevent on timer 3 */
-> -	setup_irq(IRQ_EP93XX_TIMER3, &ep93xx_timer_irq);
-> +	if (request_irq(IRQ_EP93XX_TIMER3, ep93xx_timer_interrupt,
-> +			IRQF_TIMER | IRQF_IRQPOLL, "ep93xx timer",
-> +			&ep93xx_clockevent))
-> +		pr_err("request_irq() on %s failed\n", "ep93xx timer");
->  	clockevents_config_and_register(&ep93xx_clockevent,
->  					EP93XX_TIMER123_RATE,
->  					1,
-
--- 
-Alexander Sverdlin.
+I figure we can add such a one if clk_core_ prefix isn't enough to
+differentiate.
