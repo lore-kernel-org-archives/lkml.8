@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A11DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5755EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AE92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2795B2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dkvEEjgL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p3kVKCqF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgBLET7 (ORCPT
+        id S1728360AbgBLEUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:19:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53938 "EHLO
+        Tue, 11 Feb 2020 23:20:03 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53898 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgBLESr (ORCPT
+        with ESMTP id S1727897AbgBLESr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 23:18:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=NvMfSbwCSPQiuZsVqZ+gREFLXJWQ8lHxQALsTybal28=; b=dkvEEjgLlJHt5AUjH/hWPpXsBM
-        lvuxoe/UOq8JMvoe4+4d2BIvo6eOU/p/MgXsXq4YB7gYbXgFFo0Mu5apYDAh2dsrW5vd4BgV6XZJE
-        YAFMVpJO0SUtPSCPR1Ykw3uoryiy98Elgl14DBpGG6bYlMS6ug+xx/vw5p4m8wSxkDae6nxACaB50
-        JyFVlMdaM6MyG1iN+HegUPoASXD8Q2wsxrpX0158WABia1lrxdNI7Zpo0FAGwy6cRUJgzoU5k4yox
-        Br/r/CtwEdK8t6TEE56VC4g60V3GKDvaqMOHo24Eom5/5TB54IhcZiwEx+OLv0zJDjDwU+OoEiizA
-        j5WW+MTw==;
+        bh=A6iWVb3zlDQS/VntSVu1LOGr/OubbxQggSx3CMqmkcA=; b=p3kVKCqFG4KTxDyrYl8WC4YcFv
+        qK5fjiTePUliVUHjNkZH53pxDwgPYIqz+I3SCVqRs+iHUjDDCy5aZlZKdDEDkxkSWDO4TlqW02/7X
+        csIWdkr/o/VRP7po+sjfQtIF6xCGwmVc8RNJY04BFKvpDlICjbC8KVYCOkimMuQczJ4Ka/Ne04an0
+        GnL++QUEk+Rg8WeH0MA8DAWFLWUf0NuH53Mo0tt0CSs1iLkGSvmfuEktXIBvDI2/XzIOV29ElsvO4
+        sQXtBNBiDLPz8AhTCmIQwT/RufUke68Wgmk9qmJRxgpIufXKO8XuN7BWSbz62ZtSBXbqiTyf6o2Tq
+        k1G+cqEQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU7-0006nq-13; Wed, 12 Feb 2020 04:18:47 +0000
+        id 1j1jU6-0006mv-NF; Wed, 12 Feb 2020 04:18:46 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/25] fs: Add zero_user_large
-Date:   Tue, 11 Feb 2020 20:18:33 -0800
-Message-Id: <20200212041845.25879-14-willy@infradead.org>
+Subject: [PATCH v2 06/25] mm: Allow hpages to be arbitrary order
+Date:   Tue, 11 Feb 2020 20:18:26 -0800
+Message-Id: <20200212041845.25879-7-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
 References: <20200212041845.25879-1-willy@infradead.org>
@@ -54,47 +54,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-We can't kmap() a THP, so add a wrapper around zero_user() for large
-pages.
+Remove the assumption in hpage_nr_pages() that compound pages are
+necessarily PMD sized.  The return type needs to be signed as we need
+to use the negative value, eg when calling update_lru_size().
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/highmem.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ include/linux/huge_mm.h | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index ea5cdbd8c2c3..4465b8784353 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -245,6 +245,28 @@ static inline void zero_user(struct page *page,
- 	zero_user_segments(page, start, start + size, 0, 0);
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 5aca3d1bdb32..16367e2f771e 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -230,12 +230,8 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
+ 	else
+ 		return NULL;
  }
+-static inline int hpage_nr_pages(struct page *page)
+-{
+-	if (unlikely(PageTransHuge(page)))
+-		return HPAGE_PMD_NR;
+-	return 1;
+-}
++
++#define hpage_nr_pages(page)	(long)compound_nr(page)
  
-+static inline void zero_user_large(struct page *page,
-+		unsigned start, unsigned size)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < thp_order(page); i++) {
-+		if (start > PAGE_SIZE) {
-+			start -= PAGE_SIZE;
-+		} else {
-+			unsigned this_size = size;
-+
-+			if (size > (PAGE_SIZE - start))
-+				this_size = PAGE_SIZE - start;
-+			zero_user(page + i, start, this_size);
-+			start = 0;
-+			size -= this_size;
-+			if (!size)
-+				break;
-+		}
-+	}
-+}
-+
- #ifndef __HAVE_ARCH_COPY_USER_HIGHPAGE
+ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
+@@ -289,7 +285,7 @@ static inline struct list_head *page_deferred_list(struct page *page)
+ #define HPAGE_PUD_MASK ({ BUILD_BUG(); 0; })
+ #define HPAGE_PUD_SIZE ({ BUILD_BUG(); 0; })
  
- static inline void copy_user_highpage(struct page *to, struct page *from,
+-#define hpage_nr_pages(x) 1
++#define hpage_nr_pages(x) 1L
+ 
+ static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+ {
 -- 
 2.25.0
 
