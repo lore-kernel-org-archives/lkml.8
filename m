@@ -2,96 +2,143 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2383C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4508EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12042073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274282082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgBLQKn (ORCPT
+        id S1728572AbgBLQKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:10:43 -0500
-Received: from mga01.intel.com ([192.55.52.88]:30528 "EHLO mga01.intel.com"
+        Wed, 12 Feb 2020 11:10:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:34666 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbgBLQKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:10:43 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 08:10:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
-   d="scan'208";a="266718994"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Feb 2020 08:10:41 -0800
-Date:   Wed, 12 Feb 2020 08:10:42 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 06/12] fs/xfs: Check if the inode supports DAX under
- lock
-Message-ID: <20200212161041.GE20214@iweiny-DESK2.sc.intel.com>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <20200208193445.27421-7-ira.weiny@intel.com>
- <20200211061639.GH10776@dread.disaster.area>
- <20200211175509.GD12866@iweiny-DESK2.sc.intel.com>
- <20200211204220.GN10776@dread.disaster.area>
+        id S1726351AbgBLQKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:10:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4AC8328;
+        Wed, 12 Feb 2020 08:10:47 -0800 (PST)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 501EA3F68F;
+        Wed, 12 Feb 2020 08:10:47 -0800 (PST)
+Date:   Wed, 12 Feb 2020 16:10:45 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, sudeep.holla@arm.com, lukasz.luba@arm.com,
+        valentin.schneider@arm.com, rjw@rjwysocki.net,
+        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] arm64: add support for the AMU extension v1
+Message-ID: <20200212161045.GA7475@arm.com>
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-2-ionela.voinescu@arm.com>
+ <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211204220.GN10776@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 07:42:20AM +1100, Dave Chinner wrote:
-> On Tue, Feb 11, 2020 at 09:55:09AM -0800, Ira Weiny wrote:
-> > On Tue, Feb 11, 2020 at 05:16:39PM +1100, Dave Chinner wrote:
-> > > On Sat, Feb 08, 2020 at 11:34:39AM -0800, ira.weiny@intel.com wrote:
-> > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > 
+Hi Suzuki,
 
-[snip]
-
-> > > 
-> > > This raciness in checking the DAX flags is the reason that
-> > > xfs_ioctl_setattr_xflags() redoes all the reflink vs dax checks once
-> > > it's called under the XFS_ILOCK_EXCL during the actual change
-> > > transaction....
-> > 
-> > Ok I found this by trying to make sure that the xfs_inode_supports_dax() call
-> > was always returning valid data.  So I don't have a specific test which was
-> > failing.
-> > 
-> > Looking at the code again, it sounds like I was wrong about which locks protect
-> > what and with your explanation above it looks like there is nothing to be done
-> > here and I can drop the patch.
-> > 
-> > Would you agree?
+On Wednesday 12 Feb 2020 at 11:30:44 (+0000), Suzuki Kuruppassery Poulose wrote:
+> > +static int __init set_disable_amu(char *str)
+> > +{
+> > +	int value = 0;
+> > +
+> > +	disable_amu = get_option(&str, &value) ? !!value : true;
 > 
-> *nod*
+> minor nit: You could simply use strtobool(str) here, which accepts:
+> 
+> disable_amu= [0/1/on/off/y/n]
+>
 
-Thanks! done.
-Ira
+Yes, this was intentional as I wanted "disable_amu" to be a valid option
+as well, not only "disable_amu=<option>".
+
+If you don't mind I'd like to keep it like this. Currently the use of
+AMU is enabled by default, and the most common kernel parameter to
+disable it would be "disable_amu". Allowing "disable_amu=0" is just in
+case we change the default in the kernel to not support AMU and we'd
+like platforms to be able to enable it. 
 
 > 
-> Cheers,
+> > +
+> > +	return 0;
+> > +}
+> > +early_param("disable_amu", set_disable_amu);
+> > +
+> > +static bool has_amu(const struct arm64_cpu_capabilities *cap,
+> > +		       int __unused)
+> > +{
+> > +	/*
+> > +	 * The AMU extension is a non-conflicting feature: the kernel can
+> > +	 * safely run a mix of CPUs with and without support for the
+> > +	 * activity monitors extension. Therefore, if not disabled through
+> > +	 * the kernel command line early parameter, enable the capability
+> > +	 * to allow any late CPU to use the feature.
+> > +	 *
+> > +	 * With this feature enabled, the cpu_enable function will be called
+> > +	 * for all CPUs that match the criteria, including secondary and
+> > +	 * hotplugged, marking this feature as present on that respective CPU.
+> > +	 * The enable function will also print a detection message.
+> > +	 */
+> > +
+> > +	if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
 > 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> This looks problematic. Don't we end up in allocating the memory during
+> "each CPU" check and thus leaking memory ? Do we really need to allocate
+> this dynamically ?
+> 
+
+Yes, it does make some assumptions. Given that the AMU capability is
+a WEAK_LOCAL_CPU_FEATURE I relied on the match function being called
+only once, when the return value is true. If the return value is false,
+which will result in it being called multiple times, it's either because
+disable_amu == false, or it has become false due to a previous failed
+allocation, in which case a new allocation will not be attempted.
+
+For better handling I could have a cpumask_available check before the
+allocation just in case the capability type changes in the future, or to
+at least not rely on assumptions based on the type of the capability.
+
+The reason this is dynamic is that I wanted to avoid the memory being
+allocated when disable_amu is true - as Valentin mentioned in a comment
+in the meantime "the static allocation is done against NR_CPUS whereas
+the dynamic one is done against nr_cpu_ids".
+
+Would this be alright?
+
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 182e05ca3410..4cee6b147ddd 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1222,7 +1222,11 @@ static bool has_amu(const struct arm64_cpu_capabilities *cap,
+         * The enable function will also print a detection message.
+         */
+ 
+-       if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
++       if (disable_amu)
++               return false;
++
++       if (!cpumask_available(amu_cpus) &&
++           !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
+                pr_err("Activity Monitors Unit (AMU): fail to allocate memory");
+                disable_amu = true;
+        }
+
+Otherwise I can go for static allocation.
+
+Thank you,
+Ionela.
