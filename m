@@ -2,139 +2,135 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A829C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2ACC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C7A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:18:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iyt0kwiq"
+	by mail.kernel.org (Postfix) with ESMTP id 8052F2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgBLTSP (ORCPT
+        id S1729002AbgBLTSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:18:15 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43326 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLTSP (ORCPT
+        Wed, 12 Feb 2020 14:18:39 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:49190 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgBLTSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:18:15 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CJI2nt129769;
-        Wed, 12 Feb 2020 13:18:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581535082;
-        bh=RddroMl+8V9fWReNg0unj/DoPpgOqUAGzQHwwWEjayM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=iyt0kwiq+Zq9gc61whMBKHqQL+1AHSFr0zlCgr2krxL8AEBt0WMnafVGBgcTZRAln
-         sUPOlXS6XQeoKNMR+92LDJ/Uy6jX+TNZL3hZma9YBqfn3V0LeXHQR0Qedl1n8Jo+rW
-         Xyc9RZbHtIEFz2UAKmeNTj7RjcDWQLHZrCGBCfoI=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01CJI2OO121270
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Feb 2020 13:18:02 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
- Feb 2020 13:18:01 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 12 Feb 2020 13:18:01 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CJHxFU129951;
-        Wed, 12 Feb 2020 13:18:00 -0600
-Subject: Re: Question about kthread_mod_delayed_work() allowed context
-To:     Petr Mladek <pmladek@suse.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-rt-users@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-References: <cfa886ad-e3b7-c0d2-3ff8-58d94170eab5@ti.com>
- <20200212154116.hh2vdyi7e2xflxr5@pathway.suse.cz>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <59802c56-1013-3042-167d-89f288f51b58@ti.com>
-Date:   Wed, 12 Feb 2020 21:17:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 12 Feb 2020 14:18:38 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1xWr-0003Xk-B0; Wed, 12 Feb 2020 12:18:33 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1xWq-0000bg-Ky; Wed, 12 Feb 2020 12:18:33 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+        <20200210150519.538333-8-gladkov.alexey@gmail.com>
+        <87v9odlxbr.fsf@x220.int.ebiederm.org>
+        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
+        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+Date:   Wed, 12 Feb 2020 13:16:38 -0600
+In-Reply-To: <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+        (Linus Torvalds's message of "Wed, 12 Feb 2020 10:45:06 -0800")
+Message-ID: <87v9obipk9.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200212154116.hh2vdyi7e2xflxr5@pathway.suse.cz>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-XM-SPF: eid=1j1xWq-0000bg-Ky;;;mid=<87v9obipk9.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+FpT+28WqNfECAgpxZXu0sEMmAMmxCfO0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-
-On 12/02/2020 17:41, Petr Mladek wrote:
-> On Tue 2020-02-11 12:23:59, Grygorii Strashko wrote:
->> Hi All,
+> On Wed, Feb 12, 2020 at 7:01 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
 >>
->> I'd like to ask question about allowed calling context for kthread_mod_delayed_work().
->>
->> The comment to kthread_mod_delayed_work() says:
->>
->>   * This function is safe to call from any context including IRQ handler.
->>   * See __kthread_cancel_work() and kthread_delayed_work_timer_fn()
->>   * for details.
->>   */
->>
->> But it has del_timer_sync() inside which seems can't be called from hard_irq context:
->> kthread_mod_delayed_work()
->>    |-__kthread_cancel_work()
->>       |- del_timer_sync()
->> 	|- WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
-> 
-> It is safe because kthread_delayed_work_timer_fn() is IRQ safe.
-> Note that it uses raw_spin_lock_irqsave(). It is the reason why
-> the timer could have set TIMER_IRQSAFE flag, see
-> KTHREAD_DELAYED_WORK_INIT().
-> 
-> In more details. The timer is either canceled before the callback
-> is called. Or it waits for the callback but the callback is safe
-> because it can't sleep.
+>> Fundamentally proc_flush_task is an optimization.  Just getting rid of
+>> dentries earlier.  At least at one point it was an important
+>> optimization because the old process dentries would just sit around
+>> doing nothing for anyone.
+>
+> I'm pretty sure it's still important. It's very easy to generate a
+> _ton_ of dentries with /proc.
+>
+>> I wonder if instead of invalidating specific dentries we could instead
+>> fire wake up a shrinker and point it at one or more instances of proc.
+>
+> It shouldn't be the dentries themselves that are a freeing problem.
+> They're being RCU-free'd anyway because of lookup. It's the
+> proc_mounts list that is the problem, isn't it?
+>
+> So it's just fs_info that needs to be rcu-delayed because it contains
+> that list. Or is there something else?
 
-I think, my issue (warning) could be related to the fact that kthread_init_delayed_work()
-is used, which seems doesn't set TIMER_IRQSAFE flag.
+The fundamental dcache thing we are playing with is:
 
-> 
-> 
->> My use case is related to PTP processing using PTP auxiliary worker:
->> (commit d9535cb7b760 ("ptp: introduce ptp auxiliary worker")):
->>   - periodic work A is started and res-schedules itself for every dtX
->>   - on IRQ - the work A need to be scheduled immediately
-> 
-> This is exactly where kthread_mod_delayed_work() need to be used
-> in the IRQ context with 0 delay.
-> 
-> 
->> Any advice on how to proceed?
->> Can kthread_queue_work() be used even if there is delayed work is
->> scheduled already (in general, don't care if work A will be executed one
->> more time after timer expiration)?
-> 
-> Yes, it can be used this way. It should behave the same way as
-> the workqueue API.
-> 
-> I am happy that there are more users for this API. I wanted to
-> convert more kthreads but it was just falling down in my TODO.
-> 
-> I hope that I answered all questions. Feel free to ask more
-> when in doubts.
-> 
-> Best Regards,
-> Petr
-> 
+	dentry = d_hash_and_lookup(proc_root, &name);
+	if (dentry) {
+		d_invalidate(dentry);
+		dput(dentry);
+	}
 
--- 
-Best regards,
-grygorii
+As Al pointed out upthread dput and d_invalidate can both sleep.
+
+The dput can potentially go away if we use __d_lookup_rcu instead of
+d_lookup.
+
+The challenge is d_invalidate.
+
+It has the fundamentally sleeping detach_mounts loop.  Even
+shrink_dcache_parent has a cond_sched() in there to ensure it doesn't
+live lock the system.
+
+We could and arguabley should set DCACHE_CANT_MOUNT on the proc pid
+dentries.  Which will prevent having to deal with mounts.
+
+But I don't see an easy way of getting shrink_dcache_parent to run
+without sleeping.  Ideas?
+
+
+Eric
+
+
+
+
+
+
+
