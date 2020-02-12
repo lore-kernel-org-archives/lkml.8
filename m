@@ -6,67 +6,111 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D588C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ECDC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C4B20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887722168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MuERL3Od"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="n429HJfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgBLO7B (ORCPT
+        id S1728493AbgBLPAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:59:01 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43082 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLO7B (ORCPT
+        Wed, 12 Feb 2020 10:00:10 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:27493 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgBLPAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:59:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FgFLJTvBuzlIrLf1DK1nejj+RgbkbMvjMUWGEtVxYBg=; b=MuERL3OdmrQeEWKpBpT5VAehhz
-        E+6+xkiw+s2UiGXu4mgWVmfRQUEEx0E+R2LkMpxjsWrcgNO272pjwNAilmDIs6pRP7LpIOIVSrppB
-        +cJxC/+5C92Ltp45Y44BZREyDIcmQA/0q2W9yM1CVfLzV47+uuvXamcQZiE5X5iMtsaPhzK09IFDp
-        VvG5tlIqNJVKdy+Xia1dyAEdco37dyFinfTUo7ppecnZ2DFYWqzKTUss7QKuBW5Mgh4Vvtdp7ZmPy
-        ZNbfBuZ4qnIKBWqAOucnmyaBhHnqPAohxYyPsvE3dB+LsqqmKfX6vvyHw5tlVMkhsKXS+n/YlJX+r
-        zogXuURQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1tTg-0004Q9-RN; Wed, 12 Feb 2020 14:59:00 +0000
-Date:   Wed, 12 Feb 2020 06:59:00 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/25] fs: Add a filesystem flag for large pages
-Message-ID: <20200212145900.GD7778@bombadil.infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-10-willy@infradead.org>
- <20200212074318.GG7068@infradead.org>
-MIME-Version: 1.0
+        Wed, 12 Feb 2020 10:00:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581519607;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3yrlgbwpWQZTwSSfMKPtb8XHqELW1Q2VHBhevB4Ahuo=;
+        b=n429HJfv3UUpI05fIeMj5pZySRovNjCWs/mlTHPY+2+mACKh0bhGjfxbGJrfUAshNP
+        9bR6+nSvSeKKjaLtITuNv/9MnO0ssUXjkmrHv2umT4GRSLLNvZeHudT7H4V5c+z6N6EL
+        zgMBehjnm4A9DyQ40ciyNiO86Z2ga3HJiv6siiI7WFVggOo0gWCoLBhDRnBXsrDRcjPe
+        j1vvF8xgtYRJx9oEvrjFeqCde/2rsitarfdvVILBiwNaUWmpQTYU0jtBjKuXr5XB+zvU
+        BV4CJjcngBim0w6cHTw9yxthudI2coByo3DVCOatFrz+dM+xWKM1gTbEucs67OCYn8ro
+        T80A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1CExt59j
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 12 Feb 2020 15:59:55 +0100 (CET)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212074318.GG7068@infradead.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: i2c: jz4780: silence log flood on txabrt
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200212145356.GB2492@ninjato>
+Date:   Wed, 12 Feb 2020 15:59:55 +0100
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <0C9F4243-159B-418C-B481-4B45B210F9F6@goldelico.com>
+References: <cover.1581457290.git.hns@goldelico.com> <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com> <20200212094628.GB1143@ninjato> <213C52CC-E5DC-4641-BE68-3D5C4FEA1FB5@goldelico.com> <20200212145356.GB2492@ninjato>
+To:     Wolfram Sang <wsa@the-dreams.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:43:18PM -0800, Christoph Hellwig wrote:
-> On Tue, Feb 11, 2020 at 08:18:29PM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > The page cache needs to know whether the filesystem supports pages >
-> > PAGE_SIZE.
-> 
-> Does it make sense to set this flag on the file_system_type, which
-> is rather broad scope, or a specific superblock or even inode?
-> 
-> For some file systems we might require on-disk flags that aren't set
-> for all instances.
 
-I don't see why we'd need on-disk flags or need to control this on a
-per-inode or per-sb basis.  My intent for this flag is to represent
-whether the filesystem understands large pages; how the file is cached
-should make no difference to the on-disk layout.
+> Am 12.02.2020 um 15:53 schrieb Wolfram Sang <wsa@the-dreams.de>:
+> 
+> Hi,
+> 
+>>> Sorry, normally I don't do counter patches. Yet, this time I realized
+>>> that it would be faster to actually do what I envisioned than to
+>>> describe it in words. I hope you don't feel offended.
+>> 
+>> No problem. I had thought a little about that myself, but did not
+>> dare to solve more than my problem...
+> 
+> Glad you like it. Well, it still kinda solves your problem only, because
+> there are still too many dev_err in there, but I think this is good
+> enough for now.
+> 
+>>> Obviously, I can't test, does it work for you?
+>> 
+>> Yes,it works.
+> 
+> Good!
+> 
+>> Do you want to push your patch yourself, or should I add it to my
+>> patch series and resubmit in a v2?
+> 
+> I'll apply the patch to my tree directly as a bugfix for 5.6. You can
+> drop the I2C list from V2 then.
+
+Ok, fine.
+
+BR and thanks,
+Nikolaus
+
