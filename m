@@ -2,100 +2,98 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79336C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6149FC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48AC421739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7BF2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581537481;
-	bh=hDBPuQJs4qv8LaQDcqEYUh0ns59INLi4LN/R5iIzvRE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mNs0a75ZDD4EVoBJqo3wVrAXv/xG4taHi14ox6hcE7Rn2yjbEWvaLgf+xYHmLbwxU
-	 oJn7Jrhd+nFewbKJZBhk5tKQzlTsH/UEdd9hbkGs/kzuPkFbovMuP+eaBfRE8zRkK/
-	 PnkVUDEzddL1d3+FIEKKZP/obpMmSmzcNXdVYJug=
+	s=default; t=1581537551;
+	bh=tvK+Gituvhn3DVzQ8aoIo4fnc5H+XzTeQOtZjep35Fc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rbghDkrtFeFb2OLJDWuKHuL7inwU4/c+rkiI4nsVFBROi+1Zj3OtSPsT/JflJRjZ+
+	 cnUnW9OMHnX1KeFb48M0fUGBB57p/XeyPrI+fFx19Y3efVpTmPzsJSyjMNrlRPi2Fq
+	 cN5NY4i5w59Frmq7fWJ/S9f+IDckSKBRbG5iWTA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgBLT6A (ORCPT
+        id S1729018AbgBLT7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:58:00 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41924 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgBLT6A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:58:00 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so2480037lfp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:57:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NRxcPbZlBU1OfoVhDxO+pK182w0JxdOcMu6TqmSPFkg=;
-        b=YIbsOvX279zgq2GNeD3QTxy7DFi/fsk2dXh7EwDz4DKlq1WnaGL1O6aJNZc6Kkg+FW
-         podzQGkA8Ywe7kEXUGeKV1w18qVFoa08RedAdK0W0BtUxK39vbkSBLTC2BRmPXXFU2xI
-         rH0QxKFIcHCt0njslvx9uzY6RvM1922Kz9QvA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NRxcPbZlBU1OfoVhDxO+pK182w0JxdOcMu6TqmSPFkg=;
-        b=O0/duNOwK18h/u2kd2lSVy6tuSnR9DuoMGygV+B6+kXCtmFVeheVmcEcUYo8ykbAHp
-         ZfvLl3uDApbQZHkbm2w8m56jiPPjK8rmjCyukjpau9prCdZUYf4qJzpIWQyC5Ld+nxS8
-         ucSv+m2vB1rY9tQNUe+TPpxaK3pJ50BL1ecrBC1QwxUVtrroNngWi3C0/GEHK1SEmWyE
-         HLnraS4p1oCRRU8C34z339eGifG+EFp0PX9KEo42ZwIMkZpS4EkVx4obB3zJZkKhoEkz
-         kSMj4AV6uCq6mnBrVpm7hp0gwOVO9AmyYW4WKIeUvgTASDrZZxxjPwUoEzRZwlPVLD/z
-         lmQA==
-X-Gm-Message-State: APjAAAX2ZM441tamropaR2rUvaV/3qXHBJ+BH3t9BR8d9YwrsR9MT2y1
-        2bg9eJocklH3tGkq7d/vak4eCNeRB/8=
-X-Google-Smtp-Source: APXvYqwAcNY2sLM3D6llzcHfxC5mf9gTVsACs+3l600K3iMAw2u6idDaHLjrz2e1ZlAYmnS4Uv7J5Q==
-X-Received: by 2002:a19:f514:: with SMTP id j20mr7522634lfb.31.1581537476504;
-        Wed, 12 Feb 2020 11:57:56 -0800 (PST)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id k4sm72046lfo.48.2020.02.12.11.57.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 11:57:55 -0800 (PST)
-Received: by mail-lf1-f46.google.com with SMTP id z18so2504793lfe.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:57:55 -0800 (PST)
-X-Received: by 2002:a19:c82:: with SMTP id 124mr7345985lfm.152.1581537475126;
- Wed, 12 Feb 2020 11:57:55 -0800 (PST)
+        Wed, 12 Feb 2020 14:59:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727361AbgBLT7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 14:59:10 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 923CD21739;
+        Wed, 12 Feb 2020 19:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581537549;
+        bh=tvK+Gituvhn3DVzQ8aoIo4fnc5H+XzTeQOtZjep35Fc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qZfH0P+thgjWGU3eVHKCGofWOZKJ0Rxlltt/aS+rjuNfK2bfTq6R9oy/zYkp9GAjQ
+         1KDqx3DHcflKr22Nnf3wNw1seq1AuNfOzQMqPCOv+1oLsEmy0neQeakA4XAcYPWFyw
+         ge2EvGpldjmYiNwR7VjbflX65gfWyu9260FgK8hc=
+Date:   Wed, 12 Feb 2020 11:59:09 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Subject: Re: [PATCH 2/2] vt: selection, close sel_buffer race
+Message-ID: <20200212195909.GA2081344@kroah.com>
+References: <20200210081131.23572-1-jslaby@suse.cz>
+ <20200210081131.23572-2-jslaby@suse.cz>
 MIME-Version: 1.0
-References: <0956ab21-9b9a-4d1e-fe43-b853d1602781@infradead.org>
-In-Reply-To: <0956ab21-9b9a-4d1e-fe43-b853d1602781@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 12 Feb 2020 11:57:39 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjU6YdzhdhevAJ8od96RWvvqtV+h3TWvJ3QcSNrQJbMMg@mail.gmail.com>
-Message-ID: <CAHk-=wjU6YdzhdhevAJ8od96RWvvqtV+h3TWvJ3QcSNrQJbMMg@mail.gmail.com>
-Subject: Re: [PATCH] linux/pipe_fs_i.h: fix kernel-doc warnings after @wait
- was split
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210081131.23572-2-jslaby@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 7:36 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Fix kernel-doc warnings in struct pipe_inode_info after @wait was
-> split into @rd_wait and @wr_wait.
+On Mon, Feb 10, 2020 at 09:11:31AM +0100, Jiri Slaby wrote:
+> syzkaller reported this UAF:
+> BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+> Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
+> 
+> CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> Call Trace:
+> ...
+>  kasan_report+0xe/0x20 mm/kasan/common.c:634
+>  n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+>  tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
+>  paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
+>  tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
+>  vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
+>  tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+> 
+> It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
+> and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
+> while the other frees it and reallocates a new one for another
+> selection. Add a mutex to close this race.
+> 
+> The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
+> other selection global variables (like sel_start, sel_end, and sel_cons)
+> are protected only in set_selection_user. The other functions need quite
+> some more work to close the races of the variables there. This is going
+> to happen later.
+> 
+> This likely fixes (I am unsure as there is no reproducer provided) bug
+> 206361 too. It was marked as CVE-2020-8648.
+> 
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+> References: https://bugzilla.kernel.org/show_bug.cgi?id=206361
 
-Thanks, applied.
+This needs patch 1 in order to work properly, right?
 
-I've considered adding some doc building to my basic tests, but it is
-(a) somewhat slow and (b) has always been very noisy.
+thanks,
 
-And that (b) is why I really don't do it. The reason I require the
-basic build to be warning-free is that because that way any new
-warnings stand out. But that's just not the case for docs.
-
-What do you use to notice new errors? Or is there some trick to make
-it less noisy?
-
-               Linus
+greg k-h
