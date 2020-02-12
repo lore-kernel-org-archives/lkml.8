@@ -6,83 +6,63 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1D2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2894DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF372082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1932082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgBLQDy (ORCPT
+        id S1728652AbgBLQD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:03:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:17620 "EHLO mga02.intel.com"
+        Wed, 12 Feb 2020 11:03:59 -0500
+Received: from mx2.suse.de ([195.135.220.15]:32922 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgBLQDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:03:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 08:03:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
-   d="scan'208";a="313442360"
-Received: from gmoralez-mobl.amr.corp.intel.com (HELO [10.252.135.232]) ([10.252.135.232])
-  by orsmga001.jf.intel.com with ESMTP; 12 Feb 2020 08:03:41 -0800
-Subject: Re: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
- callback
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
-Cc:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "Lu, Brent" <brent.lu@intel.com>,
-        "cychiang@google.com" <cychiang@google.com>
-References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
- <AM6PR10MB2263F302A86B17C95B16361280190@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
- <855c88fb-4438-aefb-ac9b-a9a5a2dc8caa@linux.intel.com>
- <CAFQqKeWHDyyd_YBBaD6P2sCL5OCNEsiUU6B7eUwtiLv8GZU0yg@mail.gmail.com>
- <2eeca7fe-aec9-c680-5d61-930de18b952b@linux.intel.com>
- <CAFQqKeXK3OG7KXaHGUuC75sxWrdf11xJooC7XsDCOyd6KUgPTQ@mail.gmail.com>
- <c9dbcdd8-b943-94a6-581f-7bbebe8c6d25@linux.intel.com>
- <AM6PR10MB22630C79D08CE74878A6A096801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <043c8384-6ce2-c78e-f52c-6a37a4bab3a0@linux.intel.com>
-Date:   Wed, 12 Feb 2020 09:48:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726728AbgBLQD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:03:58 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9E478AF3E;
+        Wed, 12 Feb 2020 16:03:56 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 204E8DA8DB; Wed, 12 Feb 2020 17:03:42 +0100 (CET)
+Date:   Wed, 12 Feb 2020 17:03:41 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: Re: linux-next: build warning after merge of the btrfs tree
+Message-ID: <20200212160341.GL2902@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+References: <20200212091028.718ca6dc@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <AM6PR10MB22630C79D08CE74878A6A096801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212091028.718ca6dc@canb.auug.org.au>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->> Thanks Ranjani. That information closes the door on the idea of playing
->> with the trigger order suggested earlier in the thread, so my guess is
->> that we really need to expose the MCLK/BCLK with the clk API and turn
->> them on/off from the machine driver as needed. I hope is that we don't
->> need the FSYNC as well, that would be rather painful to implement.
+On Wed, Feb 12, 2020 at 09:10:28AM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Am not going to make myself popular here. It's MCLK and FSYNC (or WCLK as it's
-> termed for our device) that is required for SRM to lock in the PLL.
+> After merging the btrfs tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
 > 
-> So far I've not found a way in the codec driver to be able to get around this.
-> I spent a very long time with Sathya in the early days (Apollo Lake) looking at
-> options but nothing would fit which is why I have the solution that's in place
-> right now. We could probably reduce the number of rechecks before timeout in the
-> driver but that's really just papering over the crack and there's still the
-> possibility of noise later when SRM finally does lock.
+> fs/btrfs/volumes.c: In function 'btrfs_scratch_superblocks':
+> fs/btrfs/volumes.c:7338:3: warning: ignoring return value of 'write_one_page', declared with attribute warn_unused_result [-Wunused-result]
+>  7338 |   write_one_page(page);
+>       |   ^~~~~~~~~~~~~~~~~~~~
+> 
+> Introduced by commit
+> 
+>   d19ec014a46b ("btrfs: use the page-cache for super block reading")
 
-Sorry, you lost me at "the solution that's in place right now". There is 
-nothing in the bxt_da7219_max98357a.c code that deals with clocks or 
-defines a trigger order?
+Known and fix is in the patchset revision that will be in the next
+for-next branch update. Thanks.
