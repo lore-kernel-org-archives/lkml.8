@@ -2,159 +2,131 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBA4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C6AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D2A20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D97E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Njhl2GcV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WVvzM/FA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBLMC4 (ORCPT
+        id S1728098AbgBLMDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:02:56 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43848 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgBLMCz (ORCPT
+        Wed, 12 Feb 2020 07:03:04 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39812 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725874AbgBLMDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:02:55 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p11so882776plq.10;
-        Wed, 12 Feb 2020 04:02:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+lhmtQt1MVJK9xZ3yWPAuyRhB8dwTQ3KGnqmxzt5Q64=;
-        b=Njhl2GcVJc85MuxAsuYnc/S2wze/BWKiMAvdqffntHs1o6/InzecM9NGs5pCU9Rhcu
-         1DD11eCLN7L3R4KppLqpxlRSVoJ2h9C1dhYEnO4IQJMpQUCUQyhLNpyzPmOWV6uFEBtH
-         KuV320ccttcx1BmuFJAchRLFgwH3MPagNR2QD2fE7b2kWYUOq6SJb6JEnpiEkJL7idDJ
-         2ml2WoZE0x3rIyGX/iV8GVFe5g8nBHfszUvjMhrbSczzBDE4NLbnDLNMpSNhC9TtC3y6
-         hKWQRG4uvr6GUl9Y5+x8/sOGESLZp8RLziKUcZEuRXclRPYY7mYnRAj9dFFLb6GiYIMg
-         CqSA==
+        Wed, 12 Feb 2020 07:03:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581508982;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k5zs83apuRL6HAt6DNxSJuwbz4meI2rzv8ad7JsjUkQ=;
+        b=WVvzM/FAtyKRRclBJpUteZTimCShwrfRKPo3uA3rQKNhpUhxkKqaAYeIgvczk8MHBbAgzO
+        GimnbaxD6a7KwKz3Ru+nM0xHFLINdKpBB8K9HZThE3pLHg7d8O/EywxCAaptqUFmzkBx50
+        m7hs1LBfsigd/LSffFtwWemnHozqUbQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-2tYOPylONRK6KVNe0YSQeg-1; Wed, 12 Feb 2020 07:03:01 -0500
+X-MC-Unique: 2tYOPylONRK6KVNe0YSQeg-1
+Received: by mail-wr1-f69.google.com with SMTP id s13so712552wrb.21
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 04:03:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+lhmtQt1MVJK9xZ3yWPAuyRhB8dwTQ3KGnqmxzt5Q64=;
-        b=WKx5ZKniE/c1XrVDhf8rU1u+e/bPsrpeua0E0SRVVzRYS6FlIgxOJpwpMTg4xuf9Tj
-         wr5P8vdd/6O6LkUzG+yb8kZ/8uqOtxRH0NcD9+xCt6ZPiphAGvrN5Uiq7+NTvagCnUUO
-         40Um5LAhto2BxLWKv4O74YUnQavI4b22eEn2o9wnRFcuY5Dce96inirikKJLFsZpq9Xe
-         xJo9ZE60nb+NgZBBp2c2T4gv5fm312GSk+KHcicAGc/RZ9WmwxcvWH1iQrJxL1rE7Tw/
-         pyXV36JGZtiX+hB5m6oSW3ELkWmKCewOTINSSxrkVr8gPCKMgV8vOLALHfPRSysXN7l/
-         UlOw==
-X-Gm-Message-State: APjAAAVaHSCDgs27CZFui/w3l1vqfFqxHoJZ4LCwZ9wc/khKhf2I+RXJ
-        +Io7xYnySWIB+/ImTGkNy68=
-X-Google-Smtp-Source: APXvYqz3C0yH5yZi/l7Q3ooh8TD32j/hTW5czgjHDD02KEGHyP31uaTXQZ7QFwE6beVDPezR+R95WQ==
-X-Received: by 2002:a17:902:8a91:: with SMTP id p17mr7548772plo.75.1581508974861;
-        Wed, 12 Feb 2020 04:02:54 -0800 (PST)
-Received: from localhost.localdomain ([45.114.62.33])
-        by smtp.gmail.com with ESMTPSA id b24sm682448pfo.84.2020.02.12.04.02.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 04:02:53 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCHv1 2/2] clk: samsung: exynos542x: Move FSYS2 subsystem clocks to its sub-CMU
-Date:   Wed, 12 Feb 2020 12:02:37 +0000
-Message-Id: <20200212120237.1332-3-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200212120237.1332-1-linux.amoon@gmail.com>
-References: <20200212120237.1332-1-linux.amoon@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k5zs83apuRL6HAt6DNxSJuwbz4meI2rzv8ad7JsjUkQ=;
+        b=fsMkauOCwIKdb2tbNmlS0rGSvBpFsPt0PRhTq/wZZhvGnXM5OQpbs/A4tIi3411wF8
+         cU2bEowr35wWv9dzpnjPHF3oVDOLbG1YfEeaB0OJTy5KPsMIP/S/JaYy1XGDgz+MkQVk
+         7rSbW6cWMXTWZZwiTfN2EKvrPVIQtU0+IXEAR0w4OiVPgzP2YNgBZTy52x6TJoAc4imT
+         7iFxaZlY5kPP5omPWLaYTzmewoP5FnvxyZSmDVr269Jbz2LPSqBqk53hBf74T5H+UxBr
+         LelFvMLipgRG7tAXNu/gWv7j+CVwwPPGpBLX2FTuy/j5sJyDCZp72ZKfj5VGRPpHv2+G
+         58GA==
+X-Gm-Message-State: APjAAAX13YKEpU69Cd+EU22TaTW8vIML8wVdtPMTFnjuhK5C9hi3ahiu
+        dyYjfM0ocdBVdwkBUBokLiQHuqP+4qMsxZ1ncdlvivagsbeH0Be/QE36Ghcg0cKa6NoMpetW2rj
+        nhiOE/j3s4V25bHT7ClL7gA6Z
+X-Received: by 2002:a05:600c:2190:: with SMTP id e16mr12474049wme.84.1581508979957;
+        Wed, 12 Feb 2020 04:02:59 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzkIv46akQrCda26rlO+E5SmKedUSHb3K89g/Qq7NOJVb0l558n0tRXJYn+nI0vQShjUJMrxA==
+X-Received: by 2002:a05:600c:2190:: with SMTP id e16mr12474026wme.84.1581508979720;
+        Wed, 12 Feb 2020 04:02:59 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
+        by smtp.gmail.com with ESMTPSA id 59sm427906wre.29.2020.02.12.04.02.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 04:02:57 -0800 (PST)
+Subject: Re: [PATCH v2 0/7] KVM: x86/mmu: nVMX: 5-level paging fixes and
+ enabling
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200207173747.6243-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e3ade6f7-071a-3825-9097-4c0f1a3f4676@redhat.com>
+Date:   Wed, 12 Feb 2020 13:03:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200207173747.6243-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move FSYS2 clk setting to sub-CMU block to support power domain on/off
-sequences for mmc driver.
+On 07/02/20 18:37, Sean Christopherson wrote:
+> Two fixes for 5-level paging bugs with a 100% fatality rate, a patch to
+> enable 5-level EPT in L1, and additional clean up on top (mostly renames
+> of functions/variables that caused me no end of confusion when trying to
+> figure out what was broken).
+> 
+> Tested fixed kernels at L0, L1 and L2, with most combinations of EPT,
+> shadow paging, 4-level and 5-level.  EPT kvm-unit-tests runs clean in L0.
+> Patches for kvm-unit-tests incoming to play nice with 5-level nested EPT.
+> 
+> Ideally patches 1 and 2 would get into 5.6, 5-level paging is quite
+> broken without them.
+> 
+> v2:
+>   - Increase the nested EPT array sizes to accomodate 5-level paging in
+>     the patch that adds support for 5-level nested EPT, not in the bug
+>     fix for 5-level shadow paging.
+> 
+> Sean Christopherson (7):
+>   KVM: nVMX: Use correct root level for nested EPT shadow page tables
+>   KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+>   KVM: nVMX: Allow L1 to use 5-level page walks for nested EPT
+>   KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
+>   KVM: nVMX: Rename EPTP validity helper and associated variables
+>   KVM: x86/mmu: Rename kvm_mmu->get_cr3() to ->get_guest_cr3_or_eptp()
+>   KVM: nVMX: Drop unnecessary check on ept caps for execute-only
+> 
+>  arch/x86/include/asm/kvm_host.h |  2 +-
+>  arch/x86/include/asm/vmx.h      | 12 +++++++
+>  arch/x86/kvm/mmu/mmu.c          | 35 ++++++++++----------
+>  arch/x86/kvm/mmu/paging_tmpl.h  |  6 ++--
+>  arch/x86/kvm/svm.c              | 10 +++---
+>  arch/x86/kvm/vmx/nested.c       | 58 ++++++++++++++++++++-------------
+>  arch/x86/kvm/vmx/nested.h       |  4 +--
+>  arch/x86/kvm/vmx/vmx.c          |  2 ++
+>  arch/x86/kvm/x86.c              |  2 +-
+>  9 files changed, 79 insertions(+), 52 deletions(-)
+> 
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Note: This patch might be missing some more setting
-as suspend/resume feature is broken.
-I could not resolve this issue at my end, any input or
-suggetion to improve this code.
----
- drivers/clk/samsung/clk-exynos5420.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+Queued 1-2-4-5-7 (for 5.6), thanks!
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index c9e5a1fb6653..3597e8d62445 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -1035,9 +1035,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
- 	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
- 	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
--	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
--	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_IP_FSYS, 13, 0, 0),
--	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
- 	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
- 			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
-@@ -1258,6 +1255,17 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
- 	{ DIV2_RATIO0, 0, 0x30 },	/* DIV dout_gscl_blk_300 */
- };
- 
-+static const struct samsung_gate_clock exynos5x_fsys2_gate_clks[] __initconst = {
-+	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
-+	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_IP_FSYS, 13, 0, 0),
-+	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
-+};
-+
-+static struct exynos5_subcmu_reg_dump exynos5x_fsys2_suspend_regs[] = {
-+	{ GATE_IP_FSYS, 0xff, 0xff },   /* FSYS gates */
-+	{ SRC_TOP3, 0, BIT(12) },       /* MUX_ACLK_200_FSYS2_SEL */
-+};
-+
- static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
- 	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9,
- 	     CLK_SET_RATE_PARENT, 0),
-@@ -1376,12 +1384,21 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
- 	.pd_name	= "MAU",
- };
- 
-+static const struct exynos5_subcmu_info exynos5x_fsys2_subcmu = {
-+	.gate_clks	= exynos5x_fsys2_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_fsys2_gate_clks),
-+	.suspend_regs	= exynos5x_fsys2_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_fsys2_suspend_regs),
-+	.pd_name	= "FSYS2",
-+};
-+
- static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
- 	&exynos5x_g3d_subcmu,
- 	&exynos5x_mfc_subcmu,
- 	&exynos5x_mscl_subcmu,
-+	&exynos5x_fsys2_subcmu,
- };
- 
- static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
-@@ -1391,6 +1408,7 @@ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
- 	&exynos5x_mfc_subcmu,
- 	&exynos5x_mscl_subcmu,
- 	&exynos5800_mau_subcmu,
-+	&exynos5x_fsys2_subcmu,
- };
- 
- static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
--- 
-2.25.0
+Paolo
 
