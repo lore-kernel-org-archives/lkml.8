@@ -2,85 +2,173 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4E7C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6DCC352A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A159920842
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518EA206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:45:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7Q3Gvd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgBLCkV (ORCPT
+        id S1727641AbgBLCps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:40:21 -0500
-Received: from mga11.intel.com ([192.55.52.93]:42221 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727609AbgBLCkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:40:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 18:40:20 -0800
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="226717311"
-Received: from unknown (HELO seokyung-mobl1) ([10.227.15.153])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 18:40:19 -0800
-Date:   Wed, 12 Feb 2020 11:42:20 +0900
-From:   Kyungmin Seo <kyungmin.seo@intel.com>
-To:     ulf.hansson@linaro.org, kyungmin.seo@intel.com
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
-Message-ID: <20200212024220.GA32111@seokyung-mobl1>
+        Tue, 11 Feb 2020 21:45:48 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46838 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbgBLCps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 21:45:48 -0500
+Received: by mail-pf1-f194.google.com with SMTP id k29so432490pfp.13;
+        Tue, 11 Feb 2020 18:45:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4XsJvZXSh2poOw0ny0DD0U8QzL/E8gANM6N3f870hLw=;
+        b=R7Q3Gvd2nDYBCLMXNS1vwZ0+M9mzlo3zCghlPUswvarbQvL30kk6zl6inWgVLGyASy
+         eVE3HnI/MR/yKUvTyIqbpIOXDNFZpzmDOsXsaraq46Y0ecARv15XKiYROhmCVf38+kbU
+         FqaCxMb6unzp+gUAcoTWEfXdhUWey/OHj7oHwZAEn5fyH3PJzuCT+va3rZJCQAk70XJk
+         H90ouN0z8TEFkBICvIVZDA8O6Szz9IYyzSECSzq0aWShDdMcQ+/7BWlS8SGwkULYjSvu
+         LMKAThnpVFBe5nBAqPejEM0WvRq8Rx2wGL1PslOQtJ6MBeeHQt2Y+kaWPQvRNqRJH2Z0
+         KSzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4XsJvZXSh2poOw0ny0DD0U8QzL/E8gANM6N3f870hLw=;
+        b=gqT7VBKWeygWIsPiNB9zMW7Xj5cdqP+vKkAJYtBOsb17aaLHlBTw2jbTa6EGPPZiMR
+         QG4k7BX/89VgIXFlllvAXeBoq2sqCjEPmoLBZVSqSwCIag/dAhvU2Q7r2DqC62Kz87eV
+         L0e/HnWTeESZnS+ifgpsIjVEmnjAnzLOSiP0sQakF88+rRoG2VHwzKaftWCEzAIScFKX
+         Z36tfuM968ddfy7ItlfzHudDbmCow3rwpdGXKnrYZZfrqakZKCbmfIqrdjZkwMPhaH2A
+         bj19bT6yYsORRsJyCExbzfQW8HhRG10X74lKZ87OgHRytgAg+p6AB/iFzQoSVl0aCIK4
+         T5mg==
+X-Gm-Message-State: APjAAAUPNALH/tggHKw04v7PD/sqqtjlFrZ52j9wCTwzs5obpCckoi7n
+        nU4ck7wm52eUcJex4168yYY=
+X-Google-Smtp-Source: APXvYqzqpZ6Ew8o6WvQIBZA0g9+/hsicYC2YDFE69RecwXpDRWIymv7bvw6BB65CPLE2HrNCYaDdcQ==
+X-Received: by 2002:a63:74b:: with SMTP id 72mr9804384pgh.162.1581475547125;
+        Tue, 11 Feb 2020 18:45:47 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::1:aeb4])
+        by smtp.gmail.com with ESMTPSA id c10sm5449516pgj.49.2020.02.11.18.45.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Feb 2020 18:45:46 -0800 (PST)
+Date:   Tue, 11 Feb 2020 18:45:44 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Jann Horn <jannh@google.com>, KP Singh <kpsingh@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
+ mutable hooks list for the BPF LSM]
+Message-ID: <20200212024542.gdsafhvqykucdp4h@ast-mbp>
+References: <20200211124334.GA96694@google.com>
+ <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
+ <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+ <20200211190943.sysdbz2zuz5666nq@ast-mbp>
+ <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
+ <20200211201039.om6xqoscfle7bguz@ast-mbp>
+ <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
+ <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
+ <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
+ <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clock has to be changed after sending CMD6 for HS mode selection in
-mmc_hs400_to_hs200() function.
+On Wed, Feb 12, 2020 at 01:09:07AM +0100, Daniel Borkmann wrote:
+> 
+> Another approach could be to have a special nop inside call_int_hook()
+> macro which would then get patched to avoid these situations. Somewhat
+> similar like static keys where it could be defined anywhere in text but
+> with updating of call_int_hook()'s RC for the verdict.
 
-The JEDEC 5.0 and 5.1 said that "High-speed" mode selection has to
-enable the the high speed mode timing in the Device, before chaning the
-clock frequency to a frequency between 26MHz and 52MHz.
+Sounds nice in theory. I couldn't quite picture how that would look
+in the code, so I hacked:
+diff --git a/security/security.c b/security/security.c
+index 565bc9b67276..ce4bc1e5e26c 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -28,6 +28,7 @@
+ #include <linux/string.h>
+ #include <linux/msg.h>
+ #include <net/flow.h>
++#include <linux/jump_label.h>
 
-Signed-off-by: Kyungmin Seo <kyungmin.seo@intel.com>
----
- drivers/mmc/core/mmc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ #define MAX_LSM_EVM_XATTR      2
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index 3486bc7fbb64..98640b51c73e 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -1196,10 +1196,6 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
- 	int err;
- 	u8 val;
- 
--	/* Reduce frequency to HS */
--	max_dtr = card->ext_csd.hs_max_dtr;
--	mmc_set_clock(host, max_dtr);
--
- 	/* Switch HS400 to HS DDR */
- 	val = EXT_CSD_TIMING_HS;
- 	err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL, EXT_CSD_HS_TIMING,
-@@ -1210,6 +1206,10 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
- 
- 	mmc_set_timing(host, MMC_TIMING_MMC_DDR52);
- 
-+	/* Reduce frequency to HS */
-+	max_dtr = card->ext_csd.hs_max_dtr;
-+	mmc_set_clock(host, max_dtr);
+@@ -678,12 +679,26 @@ static void __init lsm_early_task(struct task_struct *task)
+  *     This is a hook that returns a value.
+  */
+
++#define LSM_HOOK_NAME(FUNC) \
++       DEFINE_STATIC_KEY_FALSE(bpf_lsm_key_##FUNC);
++#include <linux/lsm_hook_names.h>
++#undef LSM_HOOK_NAME
++__diag_push();
++__diag_ignore(GCC, 8, "-Wstrict-prototypes", "");
++#define LSM_HOOK_NAME(FUNC) \
++       int bpf_lsm_call_##FUNC() {return 0;}
++#include <linux/lsm_hook_names.h>
++#undef LSM_HOOK_NAME
++__diag_pop();
 +
- 	err = mmc_switch_status(card);
- 	if (err)
- 		goto out_err;
--- 
-2.17.1
+ #define call_void_hook(FUNC, ...)                              \
+        do {                                                    \
+                struct security_hook_list *P;                   \
+                                                                \
+                hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
+                        P->hook.FUNC(__VA_ARGS__);              \
++               if (static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
++                      (void)bpf_lsm_call_##FUNC(__VA_ARGS__); \
+        } while (0)
 
+ #define call_int_hook(FUNC, IRC, ...) ({                       \
+@@ -696,6 +711,8 @@ static void __init lsm_early_task(struct task_struct *task)
+                        if (RC != 0)                            \
+                                break;                          \
+                }                                               \
++               if (RC == IRC && static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
++                      RC = bpf_lsm_call_##FUNC(__VA_ARGS__); \
+        } while (0);                                            \
+        RC;                                                     \
+ })
+
+The assembly looks good from correctness and performance points.
+union security_list_options can be split into lsm_hook_names.h too
+to avoid __diag_ignore. Is that what you have in mind?
+I don't see how one can improve call_int_hook() macro without
+full refactoring of linux/lsm_hooks.h
+imo static_key doesn't have to be there in the first set. We can add this
+optimization later.
