@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212BDC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681F5C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4966206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C85206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:45:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wSKpavxf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="T56fYrou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgBLTnb (ORCPT
+        id S1729005AbgBLTpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:43:31 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:35642 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727372AbgBLTna (ORCPT
+        Wed, 12 Feb 2020 14:45:32 -0500
+Received: from gateway36.websitewelcome.com ([192.185.188.18]:48656 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727548AbgBLTpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:43:30 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 8A3EEB0AFE
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:43:29 -0600 (CST)
+        Wed, 12 Feb 2020 14:45:32 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 30BFD4187AC69
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:59:34 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 1xuzjv4JS8vkB1xuzjt2Ds; Wed, 12 Feb 2020 13:43:29 -0600
+        id 1xwxjWXZDEfyq1xwxjgF9T; Wed, 12 Feb 2020 13:45:31 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8FWXDkVW2wDjkeRVhdg2pGdPCjOZiCetHczI8jearAI=; b=wSKpavxf1MKDOkewMMDptIziQj
-        DKEcF0hjxEfd0gk75Qp79sxH8dhY+hhDeWpcCIx9QAFYbqFP3+R7bFE+iVYGPE5y9Pwhw19A/7WhE
-        wPYL/clnYeUdUCxyP/VgOMCW63JJulyeaEJUVyBYcyD8ZHMzXVFcvs00OyjQz5PUpnGAdfm5vE1SA
-        mJ4ThVrzbKA0dEo3MwZsh2ma+OPwToVT3lxS683aHSHTZR4fWcpJ+H9vwCOXbQjD0M9LZHiQiCfk7
-        tkxXgukA5hR4/0ev8m4yQqJNm+YkBEUWeb9VpWiNkkkWdSMYtzl0EHwdxxx6UKc7p58e6P7HOJViY
-        CCH6iSmQ==;
-Received: from [201.144.174.25] (port=23782 helo=embeddedor)
+        bh=WSKm1d077AvAXaEBiUrlapEupgWope2Z9XcI6eZbL+o=; b=T56fYrouPktiPdC9NM1B8RxpY3
+        OdCTEOJuVt2qJg9AVv1aM+zPOjeMje3g8PbAq1YQuyc4eBSyMLjORt5XRaStYY7C8XpMBgADSOKaV
+        b3pPvL1ASn1j0xPUQc/G0uJHJmp3FY/FjtIvbyW677RuAPrlqnv9DchLb2PsfJXXT2XNOxnCgoACt
+        OO8bZg8qmgFyyuqi6k8Q135+KHBchnZqcQwUNCtBgBTbyOrZVWpW4GSyaGDbcv/o26DdriusL/mIH
+        dMeNM3F7isHOhD8A/YTyt7KkV7ET3QkbPLEK2wQb1NANU9seSp2N4EsHqPUX+hOA8NVpaVFZHoXdz
+        VmzaOOKg==;
+Received: from [201.144.174.25] (port=27814 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j1xux-001DLa-VL; Wed, 12 Feb 2020 13:43:28 -0600
-Date:   Wed, 12 Feb 2020 13:46:02 -0600
+        id 1j1xwv-001EQ3-IC; Wed, 12 Feb 2020 13:45:29 -0600
+Date:   Wed, 12 Feb 2020 13:48:04 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Benjamin LaHaise <bcrl@kvack.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] rsxx: Replace zero-length array with flexible-array member
-Message-ID: <20200212194602.GA31712@embeddedor>
+Subject: [PATCH] aio: Replace zero-length array with flexible-array member
+Message-ID: <20200212194804.GA1594@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +67,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.144.174.25
 X-Source-L: No
-X-Exim-ID: 1j1xux-001DLa-VL
+X-Exim-ID: 1j1xwv-001EQ3-IC
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.144.174.25]:23782
+X-Source-Sender: (embeddedor) [201.144.174.25]:27814
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 41
+X-Email-Count: 46
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,22 +111,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/block/rsxx/dma.c | 2 +-
+ fs/aio.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/rsxx/dma.c b/drivers/block/rsxx/dma.c
-index 111eb659e66d..1914f5488b22 100644
---- a/drivers/block/rsxx/dma.c
-+++ b/drivers/block/rsxx/dma.c
-@@ -80,7 +80,7 @@ struct dma_tracker {
- struct dma_tracker_list {
- 	spinlock_t		lock;
- 	int			head;
--	struct dma_tracker	list[0];
-+	struct dma_tracker	list[];
- };
+diff --git a/fs/aio.c b/fs/aio.c
+index 94f2b9256c0c..13c4be7f00f0 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -68,7 +68,7 @@ struct aio_ring {
+ 	unsigned	header_length;	/* size of aio_ring */
  
  
+-	struct io_event		io_events[0];
++	struct io_event		io_events[];
+ }; /* 128 bytes + ring size */
+ 
+ /*
 -- 
 2.25.0
 
