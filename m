@@ -2,296 +2,155 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807AAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AFAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595D024671
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D4520714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgBLR4F (ORCPT
+        id S1729055AbgBLR4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Feb 2020 12:56:08 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729027AbgBLR4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Feb 2020 12:56:05 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:45420 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbgBLR4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:56:04 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D0245207697;
-        Wed, 12 Feb 2020 18:56:01 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C336A207661;
-        Wed, 12 Feb 2020 18:56:01 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 50DC820567;
-        Wed, 12 Feb 2020 18:56:01 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v6 7/9] crypto: caam - add crypto_engine support for AEAD algorithms
-Date:   Wed, 12 Feb 2020 19:55:22 +0200
-Message-Id: <1581530124-9135-8-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1581530124-9135-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1581530124-9135-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CHomt0085586
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:56:04 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1ubt4g9b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:56:04 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Wed, 12 Feb 2020 17:56:01 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Feb 2020 17:55:51 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01CHtoBV51576916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Feb 2020 17:55:50 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E98CA4055;
+        Wed, 12 Feb 2020 17:55:50 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B2C5A4057;
+        Wed, 12 Feb 2020 17:55:49 +0000 (GMT)
+Received: from thinkpad (unknown [9.152.96.168])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Feb 2020 17:55:49 +0000 (GMT)
+Date:   Wed, 12 Feb 2020 18:55:48 +0100
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+In-Reply-To: <b169ff9d-7b87-91f4-b3d0-e97f86680d0c@arm.com>
+References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
+        <20200210153716.GB9283@E121110.arm.com>
+        <b169ff9d-7b87-91f4-b3d0-e97f86680d0c@arm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021217-0020-0000-0000-000003A98A3E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021217-0021-0000-0000-00002201718D
+Message-Id: <20200212185548.3274ec2e@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-12_08:2020-02-12,2020-02-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002120131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add crypto_engine support for AEAD algorithms, to make use of
-the engine queue.
-The requests, with backlog flag, will be listed into crypto-engine
-queue and processed by CAAM when free.
-If sending just the backlog request to crypto-engine, and non-blocking
-directly to CAAM, the latter requests have a better chance to be
-executed since JR has up to 1024 entries, more than the 10 entries
-from crypto-engine.
+On Wed, 12 Feb 2020 15:12:54 +0530
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- drivers/crypto/caam/caamalg.c | 107 ++++++++++++++++++++++++++++++------------
- 1 file changed, 77 insertions(+), 30 deletions(-)
+> >> +/*
+> >> + * On s390 platform, the lower 12 bits are used to identify given page table
+> >> + * entry type and for other arch specific requirements. But these bits might
+> >> + * affect the ability to clear entries with pxx_clear(). So while loading up
+> >> + * the entries skip all lower 12 bits in order to accommodate s390 platform.
+> >> + * It does not have affect any other platform.
+> >> + */
+> >> +#define RANDOM_ORVALUE	(0xfffffffffffff000UL)  
+> > 
+> > I'd suggest you generate this mask with something like
+> > GENMASK(BITS_PER_LONG, PAGE_SHIFT).  
+> 
+> IIRC the lower 12 bits constrains on s390 platform might not be really related
+> to it's PAGE_SHIFT which can be a variable, but instead just a constant number.
+> But can definitely use GENMASK or it's variants here.
+> 
+> https://lkml.org/lkml/2019/9/5/862
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index 5aa01e3..03797f9 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -120,6 +120,10 @@ struct caam_skcipher_req_ctx {
- 	struct skcipher_edesc *edesc;
- };
- 
-+struct caam_aead_req_ctx {
-+	struct aead_edesc *edesc;
-+};
-+
- static int aead_null_set_sh_desc(struct crypto_aead *aead)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
-@@ -864,6 +868,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
-  * @mapped_src_nents: number of segments in input h/w link table
-  * @mapped_dst_nents: number of segments in output h/w link table
-  * @sec4_sg_bytes: length of dma mapped sec4_sg space
-+ * @bklog: stored to determine if the request needs backlog
-  * @sec4_sg_dma: bus physical mapped address of h/w link table
-  * @sec4_sg: pointer to h/w link table
-  * @hw_desc: the h/w job descriptor followed by any referenced link tables
-@@ -874,6 +879,7 @@ struct aead_edesc {
- 	int mapped_src_nents;
- 	int mapped_dst_nents;
- 	int sec4_sg_bytes;
-+	bool bklog;
- 	dma_addr_t sec4_sg_dma;
- 	struct sec4_sg_entry *sec4_sg;
- 	u32 hw_desc[];
-@@ -953,12 +959,14 @@ static void aead_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 			    void *context)
- {
- 	struct aead_request *req = context;
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	struct caam_drv_private_jr *jrp = dev_get_drvdata(jrdev);
- 	struct aead_edesc *edesc;
- 	int ecode = 0;
- 
- 	dev_dbg(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
- 
--	edesc = container_of(desc, struct aead_edesc, hw_desc[0]);
-+	edesc = rctx->edesc;
- 
- 	if (err)
- 		ecode = caam_jr_strstatus(jrdev, err);
-@@ -967,7 +975,14 @@ static void aead_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 
- 	kfree(edesc);
- 
--	aead_request_complete(req, ecode);
-+	/*
-+	 * If no backlog flag, the completion of the request is done
-+	 * by CAAM, not crypto engine.
-+	 */
-+	if (!edesc->bklog)
-+		aead_request_complete(req, ecode);
-+	else
-+		crypto_finalize_aead_request(jrp->engine, req, ecode);
- }
- 
- static void skcipher_crypt_done(struct device *jrdev, u32 *desc, u32 err,
-@@ -1262,6 +1277,7 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	struct crypto_aead *aead = crypto_aead_reqtfm(req);
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
- 	struct device *jrdev = ctx->jrdev;
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
- 	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
- 		       GFP_KERNEL : GFP_ATOMIC;
- 	int src_nents, mapped_src_nents, dst_nents = 0, mapped_dst_nents = 0;
-@@ -1362,6 +1378,9 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	edesc->mapped_dst_nents = mapped_dst_nents;
- 	edesc->sec4_sg = (void *)edesc + sizeof(struct aead_edesc) +
- 			 desc_bytes;
-+
-+	rctx->edesc = edesc;
-+
- 	*all_contig_ptr = !(mapped_src_nents > 1);
- 
- 	sec4_sg_index = 0;
-@@ -1392,6 +1411,33 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	return edesc;
- }
- 
-+static int aead_enqueue_req(struct device *jrdev, struct aead_request *req)
-+{
-+	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	struct aead_edesc *edesc = rctx->edesc;
-+	u32 *desc = edesc->hw_desc;
-+	int ret;
-+
-+	/*
-+	 * Only the backlog request are sent to crypto-engine since the others
-+	 * can be handled by CAAM, if free, especially since JR has up to 1024
-+	 * entries (more than the 10 entries from crypto-engine).
-+	 */
-+	if (req->base.flags & CRYPTO_TFM_REQ_MAY_BACKLOG)
-+		ret = crypto_transfer_aead_request_to_engine(jrpriv->engine,
-+							     req);
-+	else
-+		ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
-+
-+	if ((ret != -EINPROGRESS) && (ret != -EBUSY)) {
-+		aead_unmap(jrdev, edesc, req);
-+		kfree(rctx->edesc);
-+	}
-+
-+	return ret;
-+}
-+
- static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- {
- 	struct aead_edesc *edesc;
-@@ -1400,7 +1446,6 @@ static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- 	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
- 	u32 *desc;
--	int ret;
- 
- 	edesc = aead_edesc_alloc(req, CHACHAPOLY_DESC_JOB_IO_LEN, &all_contig,
- 				 encrypt);
-@@ -1414,13 +1459,7 @@ static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, desc, desc_bytes(desc),
- 			     1);
- 
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int chachapoly_encrypt(struct aead_request *req)
-@@ -1440,8 +1479,6 @@ static inline int aead_crypt(struct aead_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
- 	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
--	u32 *desc;
--	int ret = 0;
- 
- 	/* allocate extended descriptor */
- 	edesc = aead_edesc_alloc(req, AUTHENC_DESC_JOB_IO_LEN,
-@@ -1456,14 +1493,7 @@ static inline int aead_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
- 			     desc_bytes(edesc->hw_desc), 1);
- 
--	desc = edesc->hw_desc;
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int aead_encrypt(struct aead_request *req)
-@@ -1476,6 +1506,28 @@ static int aead_decrypt(struct aead_request *req)
- 	return aead_crypt(req, false);
- }
- 
-+static int aead_do_one_req(struct crypto_engine *engine, void *areq)
-+{
-+	struct aead_request *req = aead_request_cast(areq);
-+	struct caam_ctx *ctx = crypto_aead_ctx(crypto_aead_reqtfm(req));
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	u32 *desc = rctx->edesc->hw_desc;
-+	int ret;
-+
-+	rctx->edesc->bklog = true;
-+
-+	ret = caam_jr_enqueue(ctx->jrdev, desc, aead_crypt_done, req);
-+
-+	if (ret != -EINPROGRESS) {
-+		aead_unmap(ctx->jrdev, rctx->edesc, req);
-+		kfree(rctx->edesc);
-+	} else {
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
- static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- {
- 	struct aead_edesc *edesc;
-@@ -1483,8 +1535,6 @@ static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
- 	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
--	u32 *desc;
--	int ret = 0;
- 
- 	/* allocate extended descriptor */
- 	edesc = aead_edesc_alloc(req, GCM_DESC_JOB_IO_LEN, &all_contig,
-@@ -1499,14 +1549,7 @@ static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
- 			     desc_bytes(edesc->hw_desc), 1);
- 
--	desc = edesc->hw_desc;
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int gcm_encrypt(struct aead_request *req)
-@@ -3334,6 +3377,10 @@ static int caam_aead_init(struct crypto_aead *tfm)
- 		 container_of(alg, struct caam_aead_alg, aead);
- 	struct caam_ctx *ctx = crypto_aead_ctx(tfm);
- 
-+	crypto_aead_set_reqsize(tfm, sizeof(struct caam_aead_req_ctx));
-+
-+	ctx->enginectx.op.do_one_request = aead_do_one_req;
-+
- 	return caam_init_common(ctx, &caam_alg->caam, !caam_alg->caam.nodkp);
- }
- 
--- 
-2.1.0
+PAGE_SHIFT would be fine, it is 12 on s390. However, in order to be
+more precise, we do not really need all 12 bits, only the last 4 bits.
+So, something like this would work:
+
+#define RANDOM_ORVALUE GENMASK(BITS_PER_LONG - 1, 4)
+
+The text in the comment could then also be changed from 12 to 4, and
+be a bit more specific on the fact that the impact on pxx_clear()
+results from the dynamic page table folding logic on s390:
+
+/*
+ * On s390 platform, the lower 4 bits are used to identify given page table
+ * entry type. But these bits might affect the ability to clear entries with
+ * pxx_clear() because of how dynamic page table folding works on s390. So
+ * while loading up the entries do not change the lower 4 bits.
+ * It does not have affect any other platform.
+ */
 
