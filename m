@@ -2,124 +2,101 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3946DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDEDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF3D20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581478686;
-	bh=QFEFG/81Rfdx+DhaJa330Iy0plXtvuXYAYlLrbnAw4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VIDeaZUZs0y31/ztLlMJ7Q6JU0KioGnKJss6danTBw7IpwMmKrwej9C+Yo8KHUwGx
-	 AoZXhZoMFrvk9HfR1cjTHksfFf3BefYMW5ZRzhf6oCdZLmCc1NhF/x1KPyEKMJYmJh
-	 vpefRZ14vFbqJcWZkmn/imWO+yGLQvpGhmG9U4MA=
+	by mail.kernel.org (Postfix) with ESMTP id DC1CD2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QiZXcQk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBLDiF (ORCPT
+        id S1727936AbgBLDkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 22:38:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbgBLDiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 22:38:05 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 11 Feb 2020 22:40:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54155 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727602AbgBLDkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 22:40:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581478813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=S1E0Z0wase8qOv1Belxsp5ny7Z5FV1upA2C64aN98yQ=;
+        b=QiZXcQk8KQqFpS9K79aVdYfmyMyQ3kDb/zjJapiTElPD0h+hcqpTwCFYR7ELaEmvG1TXKN
+        Fax1VffugEcO9Kv82DB94Oy/xmGW9zBe14X8fDl5jqwN0lIpnrstT6/4GfEe+0QNZMq0os
+        epfc1Ja49kNPF4GF5YmBLqW9Ulb13OQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-keUBMm_SOAKZuWyVQWB5tA-1; Tue, 11 Feb 2020 22:40:08 -0500
+X-MC-Unique: keUBMm_SOAKZuWyVQWB5tA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8E112073C;
-        Wed, 12 Feb 2020 03:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581478684;
-        bh=QFEFG/81Rfdx+DhaJa330Iy0plXtvuXYAYlLrbnAw4s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kgLuYeSFpKxnDdxa83uM8r7H8S2iSSVhydJQbgl1WskDbn0S35JXuXY6oYMb6AFqU
-         HxO5QSmEbAmJQYLuF8FimrMwI0rN+5dYv0mjVwfxsOCEj+bKApbx/sRGflnZL6TTxF
-         hsjxh+dI86q2CbBRmKMiAXqhZqvYy14nr51t/CqE=
-Date:   Tue, 11 Feb 2020 19:38:00 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v7 1/8] unicode: Add utf8_casefold_iter
-Message-ID: <20200212033800.GC870@sol.localdomain>
-References: <20200208013552.241832-1-drosen@google.com>
- <20200208013552.241832-2-drosen@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 481CC1005502;
+        Wed, 12 Feb 2020 03:40:07 +0000 (UTC)
+Received: from [10.72.13.111] (ovpn-13-111.pek2.redhat.com [10.72.13.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8C0F8ED1B;
+        Wed, 12 Feb 2020 03:39:56 +0000 (UTC)
+Subject: Re: [PATCH v2 1/5] virtio-mmio: add notify feature for per-queue
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Zha Bin <zhabin@linux.alibaba.com>
+Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com,
+        jing2.liu@linux.intel.com, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
+        gerry@linux.alibaba.com
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <8a4ea95d6d77a2814aaf6897b5517353289a098e.1581305609.git.zhabin@linux.alibaba.com>
+ <20200211062205-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ef613d3a-0372-64f3-7644-2e88cc9d4355@redhat.com>
+Date:   Wed, 12 Feb 2020 11:39:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208013552.241832-2-drosen@google.com>
+In-Reply-To: <20200211062205-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 05:35:45PM -0800, Daniel Rosenberg wrote:
-> This function will allow other uses of unicode to act upon a casefolded
-> string without needing to allocate their own copy of one.
-> 
-> The actor function can return an nonzero value to exit early.
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
-> ---
->  fs/unicode/utf8-core.c  | 25 ++++++++++++++++++++++++-
->  include/linux/unicode.h | 10 ++++++++++
->  2 files changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/unicode/utf8-core.c b/fs/unicode/utf8-core.c
-> index 2a878b739115d..db050bf59a32b 100644
-> --- a/fs/unicode/utf8-core.c
-> +++ b/fs/unicode/utf8-core.c
-> @@ -122,9 +122,32 @@ int utf8_casefold(const struct unicode_map *um, const struct qstr *str,
->  	}
->  	return -EINVAL;
->  }
-> -
->  EXPORT_SYMBOL(utf8_casefold);
->  
-> +int utf8_casefold_iter(const struct unicode_map *um, const struct qstr *str,
-> +		    struct utf8_itr_context *ctx)
-> +{
-> +	const struct utf8data *data = utf8nfdicf(um->version);
-> +	struct utf8cursor cur;
-> +	int c;
-> +	int res = 0;
-> +	int pos = 0;
-> +
-> +	if (utf8ncursor(&cur, data, str->name, str->len) < 0)
-> +		return -EINVAL;
-> +
-> +	while ((c = utf8byte(&cur))) {
-> +		if (c < 0)
-> +			return c;
-> +		res = ctx->actor(ctx, c, pos);
-> +		pos++;
-> +		if (res)
-> +			return res;
-> +	}
-> +	return res;
-> +}
-> +EXPORT_SYMBOL(utf8_casefold_iter);
 
-Indirect function calls are expensive these days for various reasons, including
-Spectre mitigations and CFI.  Are you sure it's okay from a performance
-perspective to make an indirect call for every byte of the pathname?
+On 2020/2/11 =E4=B8=8B=E5=8D=887:33, Michael S. Tsirkin wrote:
+> On Mon, Feb 10, 2020 at 05:05:17PM +0800, Zha Bin wrote:
+>> From: Liu Jiang<gerry@linux.alibaba.com>
+>>
+>> The standard virtio-mmio devices use notification register to signal
+>> backend. This will cause vmexits and slow down the performance when we
+>> passthrough the virtio-mmio devices to guest virtual machines.
+>> We proposed to update virtio over MMIO spec to add the per-queue
+>> notify feature VIRTIO_F_MMIO_NOTIFICATION[1]. It can allow the VMM to
+>> configure notify location for each queue.
+>>
+>> [1]https://lkml.org/lkml/2020/1/21/31
+>>
+>> Signed-off-by: Liu Jiang<gerry@linux.alibaba.com>
+>> Co-developed-by: Zha Bin<zhabin@linux.alibaba.com>
+>> Signed-off-by: Zha Bin<zhabin@linux.alibaba.com>
+>> Co-developed-by: Jing Liu<jing2.liu@linux.intel.com>
+>> Signed-off-by: Jing Liu<jing2.liu@linux.intel.com>
+>> Co-developed-by: Chao Peng<chao.p.peng@linux.intel.com>
+>> Signed-off-by: Chao Peng<chao.p.peng@linux.intel.com>
+> Hmm. Any way to make this static so we don't need
+> base and multiplier?
 
-> +typedef int (*utf8_itr_actor_t)(struct utf8_itr_context *, int byte, int pos);
 
-The byte argument probably should be 'u8', to avoid confusion about whether it's
-a byte or a Unicode codepoint.
+E.g page per vq?
 
-- Eric
+Thanks
+
