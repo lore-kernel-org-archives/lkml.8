@@ -2,165 +2,144 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C35C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF4FC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7FC2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523C4206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="NoVYdBzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgBLPHv (ORCPT
+        id S1728534AbgBLPHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:07:51 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59897 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbgBLPHu (ORCPT
+        Wed, 12 Feb 2020 10:07:55 -0500
+Received: from mail.efficios.com ([167.114.26.124]:32888 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgBLPHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:07:50 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j1tcB-0006F3-Aq; Wed, 12 Feb 2020 15:07:47 +0000
-Date:   Wed, 12 Feb 2020 16:07:43 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH net-next 05/10] sysfs: add sysfs_change_owner()
-Message-ID: <20200212150743.zyubvz53unyevbkx@wittgenstein>
-References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
- <20200212104321.43570-6-christian.brauner@ubuntu.com>
- <20200212131808.GA1789899@kroah.com>
+        Wed, 12 Feb 2020 10:07:54 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id EA699256630;
+        Wed, 12 Feb 2020 10:07:52 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id jbDkN1MOyTZm; Wed, 12 Feb 2020 10:07:52 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 864FB2565C9;
+        Wed, 12 Feb 2020 10:07:52 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 864FB2565C9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1581520072;
+        bh=XqwTStxhGy9NhMPxxcBJbdJMRdCChNgVrogMKyJSuj0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=NoVYdBzGwtawBLyB8iYWvKl2MvHCNV+C1HDF/muRlw889COo8WmLwUyJ+Po5GMi0D
+         DL4HaGukbHTAw4W5V3CCEdxBzQbULaeuMw1PjP6IVFbGYWrwqVo27I3PZEcKOow/ex
+         KTgMYHKBNjxO14/aF6LQuNMoFYC66vT7gUa5DZZcJfDvPVmt3a/Js+Z8KSHZKs4E54
+         56LwMTpnWguc6JsLTZE5llzvmVUHDsAnjgZZtMs5gvLCsrOksew/vHyFqHwZm7QI+P
+         ZE/h7j/wAGJ2zIMzVhQuSxsEH3qihcMbmFCfE+5m7lKcBO18SE62qnks6RRvUpWJie
+         Q1XFV/ezOfNBQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id tX3YLiAZHgPy; Wed, 12 Feb 2020 10:07:52 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 6428E25653F;
+        Wed, 12 Feb 2020 10:07:52 -0500 (EST)
+Date:   Wed, 12 Feb 2020 10:07:51 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Message-ID: <736090577.117.1581520071732.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200212092655.4ba6cd79@gandalf.local.home>
+References: <20200212093210.468391728@infradead.org> <20200212094107.951346701@infradead.org> <20200212092655.4ba6cd79@gandalf.local.home>
+Subject: Re: [PATCH 6/8] perf,tracing: Prepare the perf-trace interface for
+ RCU changes
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200212131808.GA1789899@kroah.com>
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3899 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: perf,tracing: Prepare the perf-trace interface for RCU changes
+Thread-Index: VvottGhSyh8E2rHXp+3mD6dLT1bn1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 05:18:08AM -0800, Greg Kroah-Hartman wrote:
-> On Wed, Feb 12, 2020 at 11:43:16AM +0100, Christian Brauner wrote:
-> > Add a helper to change the owner of sysfs objects.
-> 
-> Seems sane, but:
-> 
-> > The ownership of a sysfs object is determined based on the ownership of
-> > the corresponding kobject, i.e. only if the ownership of a kobject is
-> > changed will this function change the ownership of the corresponding
-> > sysfs entry.
-> 
-> A "sysfs object" is a kobject.  So I don't understand this sentance,
-> sorry.
+----- On Feb 12, 2020, at 9:26 AM, rostedt rostedt@goodmis.org wrote:
 
-I meant that only if you change the uid/gid the underlying kobject is
-associated with will this function do anything, meaning that you can't
-pass in uids/gids directly. I'll explain why I did this down below [1].
-Sorry if that was confusing.
-
+> On Wed, 12 Feb 2020 10:32:16 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> > This function will be used to correctly account for kobject ownership
-> > changes, e.g. when moving network devices between network namespaces.
-> > 
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> >  fs/sysfs/file.c       | 35 +++++++++++++++++++++++++++++++++++
-> >  include/linux/sysfs.h |  6 ++++++
-> >  2 files changed, 41 insertions(+)
-> > 
-> > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> > index 6239d9584f0b..6a0fe88061fd 100644
-> > --- a/fs/sysfs/file.c
-> > +++ b/fs/sysfs/file.c
-> > @@ -642,3 +642,38 @@ int sysfs_file_change_owner(struct kobject *kobj, const char *name)
-> >  	return error;
-> >  }
-> >  EXPORT_SYMBOL_GPL(sysfs_file_change_owner);
-> > +
-> > +/**
-> > + *	sysfs_change_owner - change owner of the given object.
-> > + *	@kobj:	object.
-> > + */
-> > +int sysfs_change_owner(struct kobject *kobj)
+>> The tracepoint interface will stop providing regular RCU context; make
+>> sure we do it ourselves, since perf makes use of regular RCU protected
+>> data.
+>> 
 > 
-> What does this change the owner of the given object _to_?
+> Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
 
-[1]:
-So ownership only changes if the kobject's uid/gid have been changed.
-So when to stick with the networking example, when a network device is
-moved into a new network namespace, the uid/gid of the kobject will be
-changed to the root user of the owning user namespace of that network
-namespace. So when the move of the network device has completed and
-kobject_get_ownership() is called it will now return a different
-uid/gid.
-So my reasoning was that ownership is determined dynamically that way. I
-guess what you're hinting at is that we could simply add uid_t uid,
-gid_t gid arguments to these sysfs helpers. That's fine with me too. It
-means that callers are responsible to either retrieve the ownership from
-the kobject (in case it was changed through another call) or the call to
-syfs_change_owner(kobj, uid, gid) sets the new owner of the kobject. I
-don't know what the best approach is. Maybe a hybrid whereby we allow
-passing in uid/gid but also allow passing in ({g,u}id_t - 1) to indicate
-that we want the ownership to be taken from the kobject itself (e.g.
-when a network device has been updated by dev_change_net_namespace()).
+and
+
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+Thanks :)
+
+Mathieu
 
 > 
-> > +{
-> > +	int error;
-> > +	const struct kobj_type *ktype;
-> > +
-> > +	if (!kobj->state_in_sysfs)
-> > +		return -EINVAL;
-> > +
-> > +	error = sysfs_file_change_owner(kobj, NULL);
+>  ;-)
 > 
-> It passes NULL?
+> -- Steve
+> 
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> ---
+>>  kernel/events/core.c |    5 +++++
+>>  1 file changed, 5 insertions(+)
+>> 
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -8950,6 +8950,7 @@ void perf_tp_event(u16 event_type, u64 c
+>>  {
+>>  	struct perf_sample_data data;
+>>  	struct perf_event *event;
+>> +	unsigned long rcu_flags;
+>>  
+>>  	struct perf_raw_record raw = {
+>>  		.frag = {
+>> @@ -8961,6 +8962,8 @@ void perf_tp_event(u16 event_type, u64 c
+>>  	perf_sample_data_init(&data, 0, 0);
+>>  	data.raw = &raw;
+>>  
+>> +	rcu_flags = trace_rcu_enter();
+>> +
+>>  	perf_trace_buf_update(record, event_type);
+>>  
+>>  	hlist_for_each_entry_rcu(event, head, hlist_entry) {
+>> @@ -8996,6 +8999,8 @@ void perf_tp_event(u16 event_type, u64 c
+>>  	}
+>>  
+>>  	perf_swevent_put_recursion_context(rctx);
+>> +
+>> +	trace_rcu_exit(rcu_flags);
+>>  }
+>>  EXPORT_SYMBOL_GPL(perf_tp_event);
+>>  
 
-Which means, change the ownership of "kobj" itself and not lookup a file
-relative to "kobj".
-
-> 
-> 
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	ktype = get_ktype(kobj);
-> > +	if (ktype) {
-> > +		struct attribute **kattr;
-> > +
-> > +		for (kattr = ktype->default_attrs; kattr && *kattr; kattr++) {
-> > +			error = sysfs_file_change_owner(kobj, (*kattr)->name);
-> > +			if (error)
-> > +				return error;
-> > +		}
-> > +
-> > +		error = sysfs_groups_change_owner(kobj, ktype->default_groups);
-> > +		if (error)
-> > +			return error;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(sysfs_change_owner);
-> 
-> I can understand wanting to change owners/groups/whatever of existing
-> sysfs objects and their files, but I can't figure out how to call this
-> function to set the attribute I want to change.
-> 
-> With only one parameter, how does this work?  It guesses?  :)
-
-See [1]. :)
-And sorry if that wasn't clear!
-
-Thanks!
-Christian
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
