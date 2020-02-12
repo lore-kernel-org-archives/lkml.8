@@ -2,252 +2,194 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4441AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D173DC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CDB21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A05206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:36:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0FY3OSQj"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="QujyKR1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgBLQfo (ORCPT
+        id S1728687AbgBLQgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:35:44 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44365 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgBLQfn (ORCPT
+        Wed, 12 Feb 2020 11:36:31 -0500
+Received: from USFB19PA36.eemsg.mail.mil ([214.24.26.199]:4165 "EHLO
+        USFB19PA36.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbgBLQga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:35:43 -0500
-Received: by mail-qv1-f66.google.com with SMTP id n8so1182520qvg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:35:43 -0800 (PST)
+        Wed, 12 Feb 2020 11:36:30 -0500
+X-EEMSG-check-017: 55389972|USFB19PA36_ESA_OUT06.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="55389972"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by USFB19PA36.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Feb 2020 16:36:26 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ErEqPgupRH9qwXigutRb5nRU2tSqdRNtaUNrXot3qOY=;
-        b=0FY3OSQjod8BNoUEE6WvqGkSCWhPWM3K8BmwU/xQaGFTN8p9yFt2mHhxAOX75eeZyk
-         DVMjTyvPE8pvY2ZqP64Brq457RoQ6jYk1pKorcRKj8GJJD4sHvICh9n1uJUGRnV3Vr5V
-         sdn784FgS9mZtHy5hvfaIwQJDVfTOIW7bbCmJNTVPmRvAICfTREbDWXf59G0ZS6x4XhA
-         Nsks2kBCro1QtPJaPIAuk3GR4iKPqaX6AJyEWTYDqXAP4MJbuMBYWExSjtJj00capEQR
-         1/gvmrdfzH2Jxgq9V98XVBX8JND00CcKBROg6UOCiB7q62uZdSEL9KTIsMjoEIyT6TTD
-         YQ3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ErEqPgupRH9qwXigutRb5nRU2tSqdRNtaUNrXot3qOY=;
-        b=AOglLcGYQ9baEyAb+LVMs9Y9F7ew8hwAI23LWpkN9fNjNm7qq8i+X5CnEJ45u6P6aJ
-         TUeGH8AwDPnTk9VQi92AkrcMnIWR4yTTe6BNgtahefSUMQzR0MmOupoc6LZBoqs4MKjr
-         RlWfbjua5zDpAl9q8WlA8tz6xOiGVVRyQm47B1f7+3dhsZwS/AI/slxwqi9LCEbiTzJs
-         +YasG/kspKbiMlt3sRRf9Y4RCqI5WLkiPoKQAOTVqyNcgxOfH/eCxDJAMY10pIPgdpth
-         tDmntl6GToXLyhgKn2bGSciJB8kJt9mWqkKysfhMTSrQi63rc5y1/N+G31Jd4iIzYbY+
-         bh4Q==
-X-Gm-Message-State: APjAAAXZJfkgStgmGQdVRpFG/q1FHmAzEfqUN2rkri5GOr1VSndYtTTZ
-        6RLMhoOiwhyWKoLdKx7S8fPDqQ==
-X-Google-Smtp-Source: APXvYqwUxExxKSsaixRm6IofspdH+NUspdRSMq4om9NxqPMEW40z/llLitVs6aIvlb+AwVfAPgGiKg==
-X-Received: by 2002:a05:6214:108a:: with SMTP id o10mr7757297qvr.246.1581525342222;
-        Wed, 12 Feb 2020 08:35:42 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:26be])
-        by smtp.gmail.com with ESMTPSA id v78sm469947qkb.48.2020.02.12.08.35.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 08:35:41 -0800 (PST)
-Date:   Wed, 12 Feb 2020 11:35:40 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Rik van Riel <riel@surriel.com>, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200212163540.GA180867@cmpxchg.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
- <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
- <20200211193101.GA178975@cmpxchg.org>
- <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1581525386; x=1613061386;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=dGCMDfsKmGrlFlNJBg2rwo75WopPAbuNo6kwiTDcoLM=;
+  b=QujyKR1RD14xM+SW94xoq+aeSHvnUwkre8pCMnFuPHS/9FKVgIoyj4Zi
+   SMo676P/dn1q7mB6kTj78Vlfe1PHfaZFed48zoflTIhedvVwtppr3hfjy
+   KSsDR49Pf3rB8YF0HfoCJtGf3dExOhD6pxq2YRCr954/cQJU4Q+Mx7TED
+   MI5pMVKRrok4ZPbiiKh8kkLVGj6TtK6KH7UxgTJh4O6qMNCMD4C8IsfRg
+   jC2kGckZdtDGR6dgGCukKf+AH++rmeG5cHUTK543LLlJlQaPizAGdQ1dc
+   nLVkhbD9G88AZyxDLXpECJFBy2AhYBj01WAvX7LVrQaznXJtMBbaoJdu6
+   A==;
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="39019811"
+IronPort-PHdr: =?us-ascii?q?9a23=3A/thMbxJTgyoff2skGtmcpTZWNBhigK39O0sv0r?=
+ =?us-ascii?q?FitYgXKfT8rarrMEGX3/hxlliBBdydt6sYzbSL+PG4EUU7or+/81k6OKRWUB?=
+ =?us-ascii?q?EEjchE1ycBO+WiTXPBEfjxciYhF95DXlI2t1uyMExSBdqsLwaK+i764jEdAA?=
+ =?us-ascii?q?jwOhRoLerpBIHSk9631+ev8JHPfglEnjWwba59IRmsrAjctsYajI9+Jq0s1h?=
+ =?us-ascii?q?bHv3xEdvhZym9vOV+dhQv36N2q/J5k/SRQuvYh+NBFXK7nYak2TqFWASo/PW?=
+ =?us-ascii?q?wt68LlqRfMTQ2U5nsBSWoWiQZHAxLE7B7hQJj8tDbxu/dn1ymbOc32Sq00WS?=
+ =?us-ascii?q?in4qx2RhLklDsLOjgk+2zMlMd+kLxUrw6gpxxnwo7bfoeVNOZlfqjAed8WXH?=
+ =?us-ascii?q?dNUtpNWyBEBI6zYZEPD+4cNuhGqYfzqUYFoR+nCQSiAO7jzzlFjWL006Inye?=
+ =?us-ascii?q?QsCRzI0hIuH9wOs3raotv6O6gQXu+pw6fF1inDYvFM1Dvh9ITFfBIsrPeRVr?=
+ =?us-ascii?q?xwa8rRzkwvGhvYgFWMt4PlJzOV2foLs2OG8uRgUPigi2ojqw5vojmk28Ahip?=
+ =?us-ascii?q?LUiYIO0V3E6SV4z5o1Jd2/UkJ7Z8WkH4FKuyGVMIt2XNovTmd1syg50r0LoY?=
+ =?us-ascii?q?O3cScFxZg9xxPTduaLf5aH7x79TuqdPDF1j29/dr2lnRa9602gx/X5VsmzzV?=
+ =?us-ascii?q?lFsDJIksLJtnARzxzT7dWHSudl8kehxzmP0wfT5/lYIU8uj6rbKoMhwqUqmp?=
+ =?us-ascii?q?oSt0TDECj2mF7og6CKbEkk5uip5PjnYrXhvJOcMZN7ihriPag0n8y/AOA4Ph?=
+ =?us-ascii?q?APX2id5+u8yKXu8VD2TbhFlPE7krTVvIrEKckUuKK1GRJZ3p4m6xmlDjem1N?=
+ =?us-ascii?q?oYnWMALFJAYB+HlJXmO0rVLfDkDfawn1SskDBxy/DAJb3uGI/BLnfEkLf/Zb?=
+ =?us-ascii?q?p98VJTyBIvzdBD4JJZEqwOL+j1WkDts9zYCgQ0MwOzw+bgB9V90p0RVXiTDa?=
+ =?us-ascii?q?+eNaPYqUWI6f43I+mQeI8Vvy7wK+Qk5/7riH85hEUdfbOz0poXc324EfNmI0?=
+ =?us-ascii?q?KWYXronNgNC3sFvg07TObykl2NTSZTZ2quX6I7/jw7DoWmDZzDRo22j7yB2y?=
+ =?us-ascii?q?C7HpJSZm9YEFyDDXDod4CcUfcWdC2SOtNhkiADVbW5TY8h0xKuuRT1y7pgKe?=
+ =?us-ascii?q?rU9SkYuoz52Ndp4O3TkAk49SZoAMSFz2GNU2Z0k3sMRz8x36Bwv1d9yleM0a?=
+ =?us-ascii?q?h5nvNYD8Zc6uhGUgc9Mp7cwOh6BM7oVg3dedeJTU6sQs+6DjEpUtIx39gObl?=
+ =?us-ascii?q?55G9WjiBDDwiWrD6YWl7OVHpw09LzT33zqKsZjxHbJyrMhg0MlQsRRL22mgL?=
+ =?us-ascii?q?Bw9wzJC47OiUWZmL6gdb4A0y7V6GeD0W2OsVlcUA5xV6XFQH8ealLMotTh50?=
+ =?us-ascii?q?PPVKGuCbs5PQtb08KCKbVFasfvjVpYQPfvItPeY3i+m22oHxaH2quMbJb2e2?=
+ =?us-ascii?q?UaxCjdE1YLkwQS/XaAKAg/CTyso3zRDDNwD1LjeUDs/vdkqHO9UEA0yxuGb0?=
+ =?us-ascii?q?p717q6qVYpgqmwQvUS07ZMkyAloi5/HVG70pqCB9OGrA1lVKpbZtw57RFM0m?=
+ =?us-ascii?q?eP80RhP5mlMrp4j082fANwsEfjkR5wD8EIl88xrFslyw19La/e21REM3ue25?=
+ =?us-ascii?q?PYNbrQJW3/uhuobuqe3lbd3c2W9aYD8v0QpFLkswWkUEEl9jEv19hTzmvZ5Z?=
+ =?us-ascii?q?jQCgcWeYz+X1xx9BVgobzeJC4n6Mec0XxqLLnxuyfD88wmCfFjyRu6edpbdq?=
+ =?us-ascii?q?SeG0u6CMAeBs6zOMQ0lFWzKBEJJuZf8OgzJcz1WeGB3fuQIOt4nD+gxV9C6Y?=
+ =?us-ascii?q?R531PEozFwUcbUzp0FxLeexQLBWDDi2gTy+vvrkJxJMGlBVlG0zjLpUcsIPf?=
+ =?us-ascii?q?x/?=
+X-IPAS-Result: =?us-ascii?q?A2DEBABoKERe/wHyM5BlHAEBAQEBBwEBEQEEBAEBgXsCg?=
+ =?us-ascii?q?XuBbSASKoQUiQOGZAEBAQEBAQaBN4lwkHMDVAkBAQEBAQEBAQE3BAEBhEACg?=
+ =?us-ascii?q?m04EwIQAQEBBQEBAQEBBQMBAWyFQ0IWAYFiKQGDAgEFIwQRUQsOCgICJgICV?=
+ =?us-ascii?q?wYBDAYCAQGCYz+CVyWsAn8zg0yBfoNAgT6BDioBjD15gQeBOA+CKDU+h1uCX?=
+ =?us-ascii?q?gSNYoh/ZEaXa4JEgk+KRok2BhyCSIgSBZA2jmidPiI3gSErCAIYCCEPgydQG?=
+ =?us-ascii?q?A2OKReOQSMDMI4Ig1kBAQ?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Feb 2020 16:36:23 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01CGZRS0109004;
+        Wed, 12 Feb 2020 11:35:27 -0500
+Subject: Re: [PATCH v2 1/6] Add a new flags-accepting interface for anonymous
+ inodes
+To:     Daniel Colascione <dancol@google.com>, timmurray@google.com,
+        nosh@google.com, nnk@google.com, lokeshgidra@google.com,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        selinux@vger.kernel.org
+References: <20200211225547.235083-1-dancol@google.com>
+ <20200211225547.235083-2-dancol@google.com>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <88ea16bd-38be-b4f9-dfb3-e0626f5b6aaf@tycho.nsa.gov>
+Date:   Wed, 12 Feb 2020 11:37:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+In-Reply-To: <20200211225547.235083-2-dancol@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 03:44:38PM -0800, Andrew Morton wrote:
-> On Tue, 11 Feb 2020 14:31:01 -0500 Johannes Weiner <hannes@cmpxchg.org> wrote:
+On 2/11/20 5:55 PM, Daniel Colascione wrote:
+> Add functions forwarding from the old names to the new ones so we
+> don't need to change any callers.
 > 
-> > On Tue, Feb 11, 2020 at 02:05:38PM -0500, Rik van Riel wrote:
-> > > On Tue, 2020-02-11 at 12:55 -0500, Johannes Weiner wrote:
-> > > > The VFS inode shrinker is currently allowed to reclaim inodes with
-> > > > populated page cache. As a result it can drop gigabytes of hot and
-> > > > active page cache on the floor without consulting the VM (recorded as
-> > > > "inodesteal" events in /proc/vmstat).
-> > > > 
-> > > > This causes real problems in practice. Consider for example how the
-> > > > VM
-> > > > would cache a source tree, such as the Linux git tree. As large parts
-> > > > of the checked out files and the object database are accessed
-> > > > repeatedly, the page cache holding this data gets moved to the active
-> > > > list, where it's fully (and indefinitely) insulated from one-off
-> > > > cache
-> > > > moving through the inactive list.
-> > > 
-> > > > This behavior of invalidating page cache from the inode shrinker goes
-> > > > back to even before the git import of the kernel tree. It may have
-> > > > been less noticeable when the VM itself didn't have real workingset
-> > > > protection, and floods of one-off cache would push out any active
-> > > > cache over time anyway. But the VM has come a long way since then and
-> > > > the inode shrinker is now actively subverting its caching strategy.
-> > > 
-> > > Two things come to mind when looking at this:
-> > > - highmem
-> > > - NUMA
-> > > 
-> > > IIRC one of the reasons reclaim is done in this way is
-> > > because a page cache page in one area of memory (highmem,
-> > > or a NUMA node) can end up pinning inode slab memory in
-> > > another memory area (normal zone, other NUMA node).
-> > 
-> > That's a good point, highmem does ring a bell now that you mention it.
+> Signed-off-by: Daniel Colascione <dancol@google.com>
+
+(please add linux-fsdevel, viro to cc on future versions of this patch 
+since this is a VFS change)
+
+> ---
+>   fs/anon_inodes.c            | 62 ++++++++++++++++++++++---------------
+>   include/linux/anon_inodes.h | 27 +++++++++++++---
+>   2 files changed, 59 insertions(+), 30 deletions(-)
 > 
-> Yup, that's why this mechanism exists.  Here:
-> 
-> https://marc.info/?l=git-commits-head&m=103646757213266&w=2
+> diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+> index 89714308c25b..caa36019afca 100644
+> --- a/fs/anon_inodes.c
+> +++ b/fs/anon_inodes.c
+> @@ -56,60 +56,71 @@ static struct file_system_type anon_inode_fs_type = {
+>   };
+>   
+>   /**
+> - * anon_inode_getfile - creates a new file instance by hooking it up to an
+> - *                      anonymous inode, and a dentry that describe the "class"
+> - *                      of the file
+> + * anon_inode_getfile2 - creates a new file instance by hooking it up to
+> + *                       an anonymous inode, and a dentry that describe
+> + *                       the "class" of the file
 
-Ah, thanks for digging that up, I did not know that.
+Not going to bikeshed on names but anon_inode_getfile_flags or _secure 
+or something would be more descriptive.
 
-> > If we still care, I think this could be solved by doing something
-> > similar to what we do with buffer_heads_over_limit: allow a lowmem
-> > allocation to reclaim page cache inside the highmem zone if the bhs
-> > (or inodes in this case) have accumulated excessively.
-> 
-> Well, reclaiming highmem pagecache at random would be a painful way to
-> reclaim lowmem inodes.  Better to pick an inode then shoot down all its
-> pagecache.  Perhaps we could take its pagecache's aging into account.
+>    *
+>    * @name:    [in]    name of the "class" of the new file
+>    * @fops:    [in]    file operations for the new file
+>    * @priv:    [in]    private data for the new file (will be file's private_data)
+> - * @flags:   [in]    flags
+> + * @flags:   [in]    flags for the file
+> + * @anon_inode_flags: [in] flags for anon_inode*
 
-That reminds me of trying to correlate inode pages in reclaim to batch
-the cache tree lock, slab page objects in the shrinker to free whole
-pages etc. We never managed to actually do that. :-)
+Do we really envision ever needing more than one new flag here?  If not, 
+then making it a bool secure parameter or encoding it as an 
+unused/ignored flag bit in the existing flags argument would seem 
+preferable.
 
-> Testing this will be a challenge, but the issue was real - a 7GB
-> highmem machine isn't crazy and I expect the inode has become larger
-> since those days.
+In some cases, we actually want the "anon inode" to inherit the security 
+context of a related inode (e.g. ioctls on /dev/kvm can create anon 
+inodes representing VMs, vCPUs, etc and further ioctls are performed on 
+those inodes), in which case we may need the caller to pass in the 
+related inode as well.
 
-Since the cache purging code was written for highmem scenarios, how
-about making it specific to CONFIG_HIGHMEM at least?
+>    *
+> - * Creates a new file by hooking it on a single inode. This is useful for files
+> + * Creates a new file by hooking it on an unspecified inode. This is useful for files
+>    * that do not need to have a full-fledged inode in order to operate correctly.
+>    * All the files created with anon_inode_getfile() will share a single inode,
+>    * hence saving memory and avoiding code duplication for the file/inode/dentry
+>    * setup.  Returns the newly created file* or an error pointer.
+> + *
+> + * anon_inode_flags must be zero.
+>    */
+> -struct file *anon_inode_getfile(const char *name,
+> -				const struct file_operations *fops,
+> -				void *priv, int flags)
+> +struct file *anon_inode_getfile2(const char *name,
+> +				 const struct file_operations *fops,
+> +				 void *priv, int flags, int anon_inode_flags)
+>   {
+> +	struct inode *inode;
+>   	struct file *file;
+>   
+> -	if (IS_ERR(anon_inode_inode))
+> -		return ERR_PTR(-ENODEV);
+> -
+> -	if (fops->owner && !try_module_get(fops->owner))
+> -		return ERR_PTR(-ENOENT);
+> +	if (anon_inode_flags)
+> +		return ERR_PTR(-EINVAL);
 
-That way we improve the situation for the more common setups, without
-regressing highmem configurations. And if somebody wanted to improve
-the CONFIG_HIGHMEM behavior as well, they could still do so.
-
-Somethig like the below delta on top of my patch?
-
----
- fs/inode.c         | 44 ++++++++++++++++++++++++++++++++++++++++----
- include/linux/fs.h |  5 +++++
- 2 files changed, 45 insertions(+), 4 deletions(-)
-
-diff --git a/fs/inode.c b/fs/inode.c
-index 575b780fa9bb..45b2abd4fef6 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -454,6 +454,18 @@ bool inode_add_lru(struct inode *inode)
- 	return true;
- }
- 
-+/*
-+ * Usually, inodes become reclaimable when they are no longer
-+ * referenced and their page cache has been reclaimed. The following
-+ * API allows the VM to communicate cache population state to the VFS.
-+ *
-+ * However, on CONFIG_HIGHMEM we can't wait for the page cache to go
-+ * away: cache pages allocated in a large highmem zone could pin
-+ * struct inode memory allocated in relatively small lowmem zones. So
-+ * when CONFIG_HIGHMEM is enabled, we tie cache to the inode lifetime.
-+ */
-+
-+#ifndef CONFIG_HIGHMEM
- /**
-  * inode_pages_set - mark the inode as holding page cache
-  * @inode: the inode whose first cache page was just added
-@@ -512,6 +524,7 @@ void inode_pages_clear(struct inode *inode)
- 
- 	spin_unlock(&inode->i_lock);
- }
-+#endif /* !CONFIG_HIGHMEM */
- 
- /**
-  * inode_sb_list_add - add inode to the superblock list of inodes
-@@ -826,16 +839,39 @@ static enum lru_status inode_lru_isolate(struct list_head *item,
- 	}
- 
- 	/*
--	 * Populated inodes shouldn't be on the shrinker LRU, but they
--	 * can be briefly visible when a new page is added to an inode
--	 * that was already linked but inode_pages_set() hasn't run
--	 * yet to move them off.
-+	 * Usually, populated inodes shouldn't be on the shrinker LRU,
-+	 * but they can be briefly visible when a new page is added to
-+	 * an inode that was already linked but inode_pages_set()
-+	 * hasn't run yet to move them off.
-+	 *
-+	 * The other exception is on HIGHMEM systems: highmem cache
-+	 * can pin lowmem struct inodes, and we might be in dire
-+	 * straits in the lower zones. Purge cache to free the inode.
- 	 */
- 	if (inode_has_buffers(inode) || !mapping_empty(&inode->i_data)) {
-+#ifdef CONFIG_HIGHMEM
-+		__iget(inode);
-+		spin_unlock(&inode->i_lock);
-+		spin_unlock(lru_lock);
-+		if (remove_inode_buffers(inode)) {
-+			unsigned long reap;
-+			reap = invalidate_mapping_pages(&inode->i_data, 0, -1);
-+			if (current_is_kswapd())
-+				__count_vm_events(KSWAPD_INODESTEAL, reap);
-+			else
-+				__count_vm_events(PGINODESTEAL, reap);
-+			if (current->reclaim_state)
-+				current->reclaim_state->reclaimed_slab += reap;
-+		}
-+		iput(inode);
-+		spin_lock(lru_lock);
-+		return LRU_RETRY;
-+#else
- 		list_lru_isolate(lru, &inode->i_lru);
- 		spin_unlock(&inode->i_lock);
- 		this_cpu_dec(nr_unused);
- 		return LRU_REMOVED;
-+#endif
- 	}
- 
- 	WARN_ON(inode->i_state & I_NEW);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index a98d9dee39f4..abdb3fd3432f 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3106,8 +3106,13 @@ static inline void remove_inode_hash(struct inode *inode)
- 		__remove_inode_hash(inode);
- }
- 
-+#ifndef CONFIG_HIGHMEM
- extern void inode_pages_set(struct inode *inode);
- extern void inode_pages_clear(struct inode *inode);
-+#else
-+static inline void inode_pages_set(struct inode *inode) {}
-+static inline void inode_pages_clear(struct inode *inode) {}
-+#endif
- 
- extern void inode_sb_list_add(struct inode *inode);
- 
--- 
-2.24.1
-
+Not sure this is how it is normally done (i.e. one patch to just 
+introduce an extended interface but disallow all use of it, then a 
+separate patch to introduce the first use).  Would recommend combining; 
+otherwise reviewers can't see how it will be used without looking at both.
