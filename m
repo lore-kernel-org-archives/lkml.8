@@ -2,89 +2,87 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA129C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D5FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A0621739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="worStesu"
+	by mail.kernel.org (Postfix) with ESMTP id F1B662082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581486865;
+	bh=ZrjcmZM12h0EldXJ8Giqwii9I5qf6RI9hpKRyNmH38c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AGmLO203nOGtvIXDPfqs8Xna8LVFPN07el1z88sbOTpcFiW6Ry1/g/OYsgBJBRypg
+	 aoEkr3lZVv2cDOG0YVSsUByzWWRplDaBWN2OmZltEwWTYNQQ60LtfQwoaK9oHe650I
+	 L/7ZSAVUMi/qu4j4kz42F4Qrx/7nAzpadUoC1C5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgBLFtv (ORCPT
+        id S1728149AbgBLFyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 00:49:51 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44119 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727163AbgBLFtu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 00:49:50 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581486589; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=4nXRF41DUnBVNFoYDb54+pPJeN0bz4OPCsG/eKuBNxs=; b=worStesu9Y6gL2zKtG61iMsPhD+LhkWpevMlQJ25GkEGs01jvOmY+g7xOSDG5T8C3ImuXdaA
- CX57JimCD838qr2Yf+1eTR6zVIghN60oY9pUsuwJulIDtaM3RTj0Dd6KP1lQJZSJF7xliPmS
- 9SgPl455UlVbEB4PvLTAA6PaFLo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4391fd.7f8ef9be0ae8-smtp-out-n03;
- Wed, 12 Feb 2020 05:49:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 59F93C4479F; Wed, 12 Feb 2020 05:49:48 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Wed, 12 Feb 2020 00:54:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727163AbgBLFyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 00:54:23 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01C66C43383;
-        Wed, 12 Feb 2020 05:49:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01C66C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan@lists.osuosl.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH 20/28] drivers: net: Call cpu_latency_qos_*() instead of pm_qos_*()
-References: <1654227.8mz0SueHsU@kreacher> <10624145.o336LLEsho@kreacher>
-Date:   Wed, 12 Feb 2020 07:49:43 +0200
-In-Reply-To: <10624145.o336LLEsho@kreacher> (Rafael J. Wysocki's message of
-        "Wed, 12 Feb 2020 00:24:36 +0100")
-Message-ID: <87v9ocwe14.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB642073C;
+        Wed, 12 Feb 2020 05:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581486863;
+        bh=ZrjcmZM12h0EldXJ8Giqwii9I5qf6RI9hpKRyNmH38c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wAcKbsEWkDj0E5NJtwA78tMBkG+1OLa+YNG7fY/00SBwbIyHXVJSQFAe+HKihrXsp
+         JwX+6QyW5N5aH+24AfRh4lx+C+qYTe2KK8vQ6CWGYWl2wt674ghTWY44eTtj/jqo2I
+         qImC+7bjwHY32BNBEpJIx4U/eybys6k19YZjpR4g=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        artem.bityutskiy@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: [PATCH] tracing: Skip software disabled event at __synth_event_trace_end()
+Date:   Wed, 12 Feb 2020 14:54:19 +0900
+Message-Id: <158148685911.20407.3538292497442671878.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+When the synthetic event is software disabled,
+__synth_event_trace_start() does not allocate an event buffer.
+In this case __synth_event_trace_end() also should not commit
+the buffer.
 
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->
-> Call cpu_latency_qos_add/update/remove_request() instead of
-> pm_qos_add/update/remove_request(), respectively, because the
-> latter are going to be dropped.
->
-> No intentional functional impact.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/net/ethernet/intel/e1000e/netdev.c   | 13 ++++++-------
->  drivers/net/wireless/ath/ath10k/core.c       |  4 ++--
->  drivers/net/wireless/intel/ipw2x00/ipw2100.c | 10 +++++-----
->  3 files changed, 13 insertions(+), 14 deletions(-)
+Check the trace_state->disabled at __synth_event_trace_end()
+and if it is disabled, skip it.
 
-For the wireless stuff:
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/trace/trace_events_hist.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 483b3fd1094f..781e4b55e117 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1847,6 +1847,9 @@ __synth_event_trace_start(struct trace_event_file *file,
+ static inline void
+ __synth_event_trace_end(struct synth_event_trace_state *trace_state)
+ {
++	if (trace_state->disabled)
++		return;
++
+ 	trace_event_buffer_commit(&trace_state->fbuffer);
+ 
+ 	ring_buffer_nest_end(trace_state->buffer);
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
