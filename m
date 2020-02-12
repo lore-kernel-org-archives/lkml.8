@@ -2,138 +2,152 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FB8C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2259C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9177206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CwIhvi2I"
+	by mail.kernel.org (Postfix) with ESMTP id C4B0A206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgBLIxp (ORCPT
+        id S1728685AbgBLIxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:53:45 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30745 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728550AbgBLIxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:53:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581497623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vshz33cqoNP3Li2ybcZyFRa//SX9LgHvVg3Rke7RkbA=;
-        b=CwIhvi2IQ8Ym9OMf+sgmPDpINRK875iGR1j2yDcQAAUyxDM8hPi3+zCDqRCSnC2Gwahc8u
-        TgO1ditWMGXS5fyI+yac97xk7I7KbOqe/4sQZxXdSkQgTye3TrasOrLmPPWHhitefIpJyf
-        Z+8qf/Bo3Ljfyz0WT++0RtDXps4UTr4=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-372-mofTZqHSNSWIi3vh4bPJzQ-1; Wed, 12 Feb 2020 03:53:37 -0500
-X-MC-Unique: mofTZqHSNSWIi3vh4bPJzQ-1
-Received: by mail-qk1-f197.google.com with SMTP id d134so918932qkc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:53:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vshz33cqoNP3Li2ybcZyFRa//SX9LgHvVg3Rke7RkbA=;
-        b=BQYtSgGJj4hwjvg4Usz14V26ItUw87qIsko7RuIsVc2IP5Uoz6NiQMzPRUYssVn6XF
-         BI+V8Xj7aCfqCiPpgOh+Xp4xRk4d5bLUXbv94/edPQqGXmDjXsRH6TXyCAnGBo3d5GHd
-         Wvo+jq6LoCY1bYRXcJjepUc9siL3omdBvpiPumPSQ+BANgimfoTVtcrDIcHuYzgCUIQA
-         MBaq5IZ0WG0pmGCTbWkknlAWxlEnvg4mRQ8b06/4MMm3abA+2rcFgOYtOMLn8PwfwJNZ
-         Pb5X52S2b3kzW4nk/dR8erwvANtbJma3agyPAzIXkAzI7TB/LmkRKJp5++dEuLFJ9v4M
-         +Y6g==
-X-Gm-Message-State: APjAAAVNBd5KY7KpS8OLvlTjr8I95U3NOyY5TN2Fgb+s7UwXXEfuT7rn
-        auo7lPzwFKb7NM24Jb7cuvUbB60nHCAIeZsoPpiBnth4CQnSZWKyxkPeT7R93e91f22D0FevzUu
-        Xe1/vxwFi3c1EOyrytcpuc5oc9/goVM5SiPrBr1lZ
-X-Received: by 2002:ac8:10d:: with SMTP id e13mr6079464qtg.294.1581497616957;
-        Wed, 12 Feb 2020 00:53:36 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxmMGArYvhgWNDNAwE1GwUJY+IlVr92d10p1kRog4ng3A8DySIzQCPSvVKRLVvA9b9SvyFdV02EB/CuUEC5n38=
-X-Received: by 2002:ac8:10d:: with SMTP id e13mr6079455qtg.294.1581497616693;
- Wed, 12 Feb 2020 00:53:36 -0800 (PST)
+        Wed, 12 Feb 2020 03:53:52 -0500
+Received: from mga12.intel.com ([192.55.52.136]:5613 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728550AbgBLIxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 03:53:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 00:53:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="226740960"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Feb 2020 00:53:37 -0800
+Received: from [10.125.252.164] (abudanko-mobl.ccr.corp.intel.com [10.125.252.164])
+        by linux.intel.com (Postfix) with ESMTP id 25BB9580409;
+        Wed, 12 Feb 2020 00:53:28 -0800 (PST)
+Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
+ and user space
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        oprofile-list@lists.sf.net, Andy Lutomirski <luto@amacapital.net>
+References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+ <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
+ <64cab472-806e-38c4-fb26-0ffbee485367@tycho.nsa.gov>
+ <05297eff-8e14-ccdf-55a4-870c64516de8@linux.intel.com>
+ <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
+ <537bdb28-c9e4-f44f-d665-25250065a6bb@linux.intel.com>
+ <63d9700f-231d-7973-5307-3e56a48c54cb@linux.intel.com>
+ <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <2e38c33d-f085-1320-8cc2-45f74b6ad86d@linux.intel.com>
+Date:   Wed, 12 Feb 2020 11:53:27 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200115013023.9710-1-benjamin.tissoires@redhat.com>
-In-Reply-To: <20200115013023.9710-1-benjamin.tissoires@redhat.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 12 Feb 2020 09:53:25 +0100
-Message-ID: <CAO-hwJK38mpMp0yL1v+4KAhhuUuwAPrTm7kSTGhXPL2JC1F-6w@mail.gmail.com>
-Subject: Re: [PATCH] Input: synaptics - remove the LEN0049 dmi id from
- topbuttonpad list
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 2:30 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> The Yoga 11e is using LEN0049, but it doesn't have a trackstick.
->
-> Thus, there is no need to create a software top buttons row.
->
-> However, it seems that the device works under SMBus, so keep it as part
-> of the smbus_pnp_ids.
->
->
-> Link: https://gitlab.freedesktop.org/libinput/libinput/issues/414
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> --
->
-> Hi Dmitry,
->
-> Sending the patch to the list untested (sanity only), and I'll ask
-> for the reporter to provide a little bit more testing.
->
-> I will keep you updated when you can merge the patch.
+Hi Stephen,
 
-Hi Dmitry,
+On 22.01.2020 17:07, Stephen Smalley wrote:
+> On 1/22/20 5:45 AM, Alexey Budankov wrote:
+>>
+>> On 21.01.2020 21:27, Alexey Budankov wrote:
+>>>
+>>> On 21.01.2020 20:55, Alexei Starovoitov wrote:
+>>>> On Tue, Jan 21, 2020 at 9:31 AM Alexey Budankov
+>>>> <alexey.budankov@linux.intel.com> wrote:
+>>>>>
+>>>>>
+>>>>> On 21.01.2020 17:43, Stephen Smalley wrote:
+>>>>>> On 1/20/20 6:23 AM, Alexey Budankov wrote:
+>>>>>>>
+<SNIP>
+>>>>>>> Introduce CAP_PERFMON capability designed to secure system performance
+>>>>>>
+>>>>>> Why _noaudit()?  Normally only used when a permission failure is non-fatal to the operation.  Otherwise, we want the audit message.
+>>
+>> So far so good, I suggest using the simplest version for v6:
+>>
+>> static inline bool perfmon_capable(void)
+>> {
+>>     return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
+>> }
+>>
+>> It keeps the implementation simple and readable. The implementation is more
+>> performant in the sense of calling the API - one capable() call for CAP_PERFMON
+>> privileged process.
+>>
+>> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and unprivileged processes,
+>> but this bloating also advertises and leverages using more secure CAP_PERFMON
+>> based approach to use perf_event_open system call.
+> 
+> I can live with that.  We just need to document that when you see both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process, try only allowing CAP_PERFMON first and see if that resolves the issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus CAP_DAC_OVERRIDE.
 
-Sergej tested the patch last week and it works well. So I think we can
-merge it now.
-Maybe we should also add a stable@ tag here...
+I am trying to reproduce this double logging with CAP_PERFMON.
+I am using the refpolicy version with enabled perf_event tclass [1], in permissive mode.
+When running perf stat -a I am observing this AVC audit messages:
 
-Cheers,
-Benjamin
+type=AVC msg=audit(1581496695.666:8691): avc:  denied  { open } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+type=AVC msg=audit(1581496695.666:8691): avc:  denied  { kernel } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+type=AVC msg=audit(1581496695.666:8691): avc:  denied  { cpu } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+type=AVC msg=audit(1581496695.666:8692): avc:  denied  { write } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
 
->
-> Cheers,
-> Benjamin
-> ---
->  drivers/input/mouse/synaptics.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-> index 1ae6f8bba9ae..7aa84f743c48 100644
-> --- a/drivers/input/mouse/synaptics.c
-> +++ b/drivers/input/mouse/synaptics.c
-> @@ -146,7 +146,6 @@ static const char * const topbuttonpad_pnp_ids[] = {
->         "LEN0042", /* Yoga */
->         "LEN0045",
->         "LEN0047",
-> -       "LEN0049",
->         "LEN2000", /* S540 */
->         "LEN2001", /* Edge E431 */
->         "LEN2002", /* Edge E531 */
-> @@ -166,6 +165,7 @@ static const char * const smbus_pnp_ids[] = {
->         /* all of the topbuttonpad_pnp_ids are valid, we just add some extras */
->         "LEN0048", /* X1 Carbon 3 */
->         "LEN0046", /* X250 */
-> +       "LEN0049", /* Yoga 11e */
->         "LEN004a", /* W541 */
->         "LEN005b", /* P50 */
->         "LEN005e", /* T560 */
-> --
-> 2.24.1
->
+However there is no capability related messages around. I suppose my refpolicy should 
+be modified somehow to observe capability related AVCs.
 
+Could you please comment or clarify on how to enable caps related AVCs in order
+to test the concerned logging.
+
+Thanks,
+Alexey
+
+---
+[1] https://github.com/SELinuxProject/refpolicy.git
