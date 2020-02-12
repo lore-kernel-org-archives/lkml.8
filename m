@@ -2,230 +2,117 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D43DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE8AC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2836720675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2738D20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="cfEHKyCz"
+	dkim=pass (2048-bit key) header.d=scylladb-com.20150623.gappssmtp.com header.i=@scylladb-com.20150623.gappssmtp.com header.b="uEMcigeg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgBLKxg (ORCPT
+        id S1727779AbgBLKyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:53:36 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32828 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgBLKxg (ORCPT
+        Wed, 12 Feb 2020 05:54:37 -0500
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:51380 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgBLKyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:53:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id u6so1680423wrt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 02:53:33 -0800 (PST)
+        Wed, 12 Feb 2020 05:54:37 -0500
+Received: by mail-wm1-f54.google.com with SMTP id t23so1631961wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 02:54:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iCxaKYylUaTagw0CiACoN5PmGBZhgyb9phU3hhP0tOU=;
-        b=cfEHKyCzPVV+G0Ct3fk+e76eZPGNTeImhNiFGDVimPzL4uYn8zjyFG9WyB0koRR2qN
-         EwMnN8vjUGQ2wbhjgaIjph2vjfhe8yjFmu9ClTKqCx2OtRi5VsZHinaDNjSlIBmgdAxy
-         wxZcB8m80XRXcoyEYhnoHyLx5c4HUKj1j5ketT2WaaEFRPaldEWGCoEuAfq2/3tjkHap
-         8wX1V3Fo/iwSy3etqyDyJk14F8tfP9OcXDnIFVgeOxj2H0AcSvMFus1GiH7Bo5SBr38M
-         +OGCJMD8zbYUhdsAjqZ8LRFVbVVV0cBL4zfH47rlbg/l3/sDFnDyyciz4KUYMzOvm7Ic
-         iHHg==
+        d=scylladb-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=u0hbtEe40WtjYd4Z3cF7cNzYLzfg1k4LAZeLlhEhqPc=;
+        b=uEMcigegIefRrGr+eDX7uy0nV0LzCM5v2XSBfBZS60IkGfAg+JqGCP3rP15GsFBN6z
+         MU0ABFdW877uVg1il17ntz+OhuLlWoevBQV2K7LFOEM7T7w4p8Qi+uHob7okQxAmHbNm
+         hgRx8WKev5+DGFUT0kmeErmLPVF84rDsi6fyRHjDb7p/mTIBsLNaB3mJgF+46HfXPx71
+         SdWHbStfhb2v9U09D34BBuDFRWvoot5kD/7gkFO+vtjXfwcCuIrz9PAEhQ+MCOmzTrSY
+         Z9iUNfR8rVyJhfx619Wmir+mMd7kveGe1OL47f2SjMtNbx7dkplbITUg8jUeEa4cwhkL
+         FEdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=iCxaKYylUaTagw0CiACoN5PmGBZhgyb9phU3hhP0tOU=;
-        b=hACIm928ODw4SRoHB7+gW8wEYAtafb641P1Lth+YysnPOXkjjKmtM84Uj25MRRCS9/
-         i3O72bzqAQP78FKqNlWcePrPdoAaj+RkUsQbYY+43rwWzKOXWCi9miitcKwdyC+8w1BN
-         p6hz1lX5/XnaNQKIRawjJSdyrJ2al+Sp+LuHoSB27+nsyAsWCBtBE5lXokj4hOjlPVZJ
-         kWmNEiNDx7LMgCPFT2VHrt58KO2A40xRyilvlZIXSFSOdYa1bs1cbLV0TKzZoTNnEYIs
-         /FHi/AmkBdedzPd7di3huZnqkAeWHwfKF6QjBqzskf4fIRq7GiUNUaxiGPa1jy9Mg7uX
-         ND4g==
-X-Gm-Message-State: APjAAAX+Ocs4ufuSpm8JDCfEbfbzxIVqme3ibv33Ue9z6EVZYfOga8g6
-        HOZ5o1SszV9yLjx+sDHkvO7TpNg9HZ4IGgwi
-X-Google-Smtp-Source: APXvYqxgTVJqQTyquzXfMccEeyNdAmwRbsVgVjP0iCL7Yk3Bd8yKTybDkb7CTMq7CHnJcPN3jls9ZA==
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr15503626wrc.175.1581504812588;
-        Wed, 12 Feb 2020 02:53:32 -0800 (PST)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id b10sm123284wrw.61.2020.02.12.02.53.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Feb 2020 02:53:30 -0800 (PST)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com, arnd@arndb.de,
-        akpm@linux-foundation.org
-Cc:     Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chris Zankel <chris@zankel.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Helge Deller <deller@gmx.de>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Burton <paulburton@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rich Felker <dalias@libc.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Tony Luck <tony.luck@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH v3] asm-generic: Fix unistd_32.h generation format
-Date:   Wed, 12 Feb 2020 11:53:29 +0100
-Message-Id: <4d32ab4e1fb2edb691d2e1687e8fb303c09fd023.1581504803.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=u0hbtEe40WtjYd4Z3cF7cNzYLzfg1k4LAZeLlhEhqPc=;
+        b=WXOy3BC/eIPHyWuEBRKOw+jrZZsyk8/i09prC1QXHOCm4j4WRNIQbVCoR5nPvwC/Wr
+         MKkWP8N1hlBCVJikux7NJ3S+CwKb5ly8chVDguCFTUw73TV/D/0nrJ4tbBbdAA7mTfzt
+         hNUR/tsTqcCMgsSkB+Isnya+7gPzgujqSRX9/0XBp2pBnqxLYP6+Ktrep8J5SyyGfwkv
+         sfIkWTJMiFC5yTcnVCQuyVOfE5NsdCAig3gnva9LBwdlIlrYrEwM93cQMB46/2emnHzT
+         y0fPwGPMWjyAi/JrJkyDKaiCCqk3SGZ1byzRr/WG+MIfWpi8XoGLRzi9AZT0myIdD+oW
+         nT0Q==
+X-Gm-Message-State: APjAAAUzXfG0jcPMmdYaaaSlnJ6VPIzW7szj845utM92458EclGQOo5A
+        bA4FfYsPIeX03Oc2/sipNeXnXA==
+X-Google-Smtp-Source: APXvYqzYXtkZvCRJnNbFl2gXB2hBpm//tPq+iQ3d9s3L2TXBxnpsoSkLEFvY0Sp+AYMiw6a8HLYDrg==
+X-Received: by 2002:a1c:7712:: with SMTP id t18mr3942812wmi.32.1581504873707;
+        Wed, 12 Feb 2020 02:54:33 -0800 (PST)
+Received: from [10.0.0.1] (system.cloudius-systems.com. [199.203.229.89])
+        by smtp.gmail.com with ESMTPSA id f11sm242610wml.3.2020.02.12.02.54.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 02:54:32 -0800 (PST)
+Subject: Re: [RFC] eventfd: add EFD_AUTORESET flag
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200129172010.162215-1-stefanha@redhat.com>
+ <66566792-58a4-bf65-6723-7d2887c84160@redhat.com>
+ <20200212102912.GA464050@stefanha-x1.localdomain>
+ <156cb709-282a-ddb6-6f34-82b4bb211f73@redhat.com>
+From:   Avi Kivity <avi@scylladb.com>
+Organization: ScyllaDB
+Message-ID: <cadb4320-4717-1a41-dfb5-bb782fd0a5da@scylladb.com>
+Date:   Wed, 12 Feb 2020 12:54:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <156cb709-282a-ddb6-6f34-82b4bb211f73@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generated files are also checked by sparse that's why add newline
-to remove sparse (C=1) warning.
 
-The issue was found on Microblaze and reported like this:
-./arch/microblaze/include/generated/uapi/asm/unistd_32.h:438:45:
-warning: no newline at end of file
+On 12/02/2020 12.47, Paolo Bonzini wrote:
+> On 12/02/20 11:29, Stefan Hajnoczi wrote:
+>> On Wed, Feb 12, 2020 at 09:31:32AM +0100, Paolo Bonzini wrote:
+>>> On 29/01/20 18:20, Stefan Hajnoczi wrote:
+>>>> +	/* Semaphore semantics don't make sense when autoreset is enabled */
+>>>> +	if ((flags & EFD_SEMAPHORE) && (flags & EFD_AUTORESET))
+>>>> +		return -EINVAL;
+>>>> +
+>>> I think they do, you just want to subtract 1 instead of setting the
+>>> count to 0.  This way, writing 1 would be the post operation on the
+>>> semaphore, while poll() would be the wait operation.
+>> True!  Then EFD_AUTORESET is not a fitting name.  EFD_AUTOREAD or
+>> EFD_POLL_READS?
+> Avi's suggestion also makes sense.  Switching the event loop from poll()
+> to IORING_OP_POLL_ADD would be good on its own, and then you could make
+> it use IORING_OP_READV for eventfds.
+>
+> In QEMU parlance, perhaps you need a different abstraction than
+> EventNotifier (let's call it WakeupNotifier) which would also use
+> eventfd but it would provide a smaller API.  Thanks to the smaller API,
+> it would not need EFD_NONBLOCK, unlike the regular EventNotifier, and it
+> could either set up a poll() handler calling read(), or use
+> IORING_OP_READV when io_uring is in use.
+>
 
-Mips and PowerPC have it already but let's align with style used by m68k.
+Just to be clear, for best performance don't use IORING_OP_POLL_ADD, 
+just IORING_OP_READ. That's what you say in the second paragraph but the 
+first can be misleading.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
-Acked-by: Max Filippov <jcmvbkbc@gmail.com> (xtensa)
----
-
-Changes in v3:
-- Add notes about mips/ppc and m68 - Max/Geert
-
-Changes in v2:
-- Update also others archs not just microblaze - Arnd
-- Align subject and description to match multiarch change
-
- arch/alpha/kernel/syscalls/syscallhdr.sh      | 2 +-
- arch/ia64/kernel/syscalls/syscallhdr.sh       | 2 +-
- arch/microblaze/kernel/syscalls/syscallhdr.sh | 2 +-
- arch/mips/kernel/syscalls/syscallhdr.sh       | 3 +--
- arch/parisc/kernel/syscalls/syscallhdr.sh     | 2 +-
- arch/powerpc/kernel/syscalls/syscallhdr.sh    | 3 +--
- arch/sh/kernel/syscalls/syscallhdr.sh         | 2 +-
- arch/sparc/kernel/syscalls/syscallhdr.sh      | 2 +-
- arch/xtensa/kernel/syscalls/syscallhdr.sh     | 2 +-
- 9 files changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/arch/alpha/kernel/syscalls/syscallhdr.sh b/arch/alpha/kernel/syscalls/syscallhdr.sh
-index e5b99bd2e5e7..1780e861492a 100644
---- a/arch/alpha/kernel/syscalls/syscallhdr.sh
-+++ b/arch/alpha/kernel/syscalls/syscallhdr.sh
-@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/ia64/kernel/syscalls/syscallhdr.sh b/arch/ia64/kernel/syscalls/syscallhdr.sh
-index 0c2d2c748565..f407b6e53283 100644
---- a/arch/ia64/kernel/syscalls/syscallhdr.sh
-+++ b/arch/ia64/kernel/syscalls/syscallhdr.sh
-@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/microblaze/kernel/syscalls/syscallhdr.sh b/arch/microblaze/kernel/syscalls/syscallhdr.sh
-index 2e9062a926a3..a914854f8d9f 100644
---- a/arch/microblaze/kernel/syscalls/syscallhdr.sh
-+++ b/arch/microblaze/kernel/syscalls/syscallhdr.sh
-@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/mips/kernel/syscalls/syscallhdr.sh b/arch/mips/kernel/syscalls/syscallhdr.sh
-index d2bcfa8f4d1a..2e241e713a7d 100644
---- a/arch/mips/kernel/syscalls/syscallhdr.sh
-+++ b/arch/mips/kernel/syscalls/syscallhdr.sh
-@@ -32,6 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
--	printf "\n"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/parisc/kernel/syscalls/syscallhdr.sh b/arch/parisc/kernel/syscalls/syscallhdr.sh
-index 50242b747d7c..730db288fe54 100644
---- a/arch/parisc/kernel/syscalls/syscallhdr.sh
-+++ b/arch/parisc/kernel/syscalls/syscallhdr.sh
-@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/powerpc/kernel/syscalls/syscallhdr.sh b/arch/powerpc/kernel/syscalls/syscallhdr.sh
-index c0a9a32937f1..02d6751f3be3 100644
---- a/arch/powerpc/kernel/syscalls/syscallhdr.sh
-+++ b/arch/powerpc/kernel/syscalls/syscallhdr.sh
-@@ -32,6 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
--	printf "\n"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/sh/kernel/syscalls/syscallhdr.sh b/arch/sh/kernel/syscalls/syscallhdr.sh
-index 1de0334e577f..4c0519861e97 100644
---- a/arch/sh/kernel/syscalls/syscallhdr.sh
-+++ b/arch/sh/kernel/syscalls/syscallhdr.sh
-@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/sparc/kernel/syscalls/syscallhdr.sh b/arch/sparc/kernel/syscalls/syscallhdr.sh
-index 626b5740a9f1..cf50a75cc0bb 100644
---- a/arch/sparc/kernel/syscalls/syscallhdr.sh
-+++ b/arch/sparc/kernel/syscalls/syscallhdr.sh
-@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
-diff --git a/arch/xtensa/kernel/syscalls/syscallhdr.sh b/arch/xtensa/kernel/syscalls/syscallhdr.sh
-index d37db641ca31..eebfb8a8ace6 100644
---- a/arch/xtensa/kernel/syscalls/syscallhdr.sh
-+++ b/arch/xtensa/kernel/syscalls/syscallhdr.sh
-@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
- 	printf "#endif\n"
- 	printf "\n"
--	printf "#endif /* %s */" "${fileguard}"
-+	printf "#endif /* %s */\n" "${fileguard}"
- ) > "$out"
--- 
-2.25.0
 
