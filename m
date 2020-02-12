@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F93C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA63C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C73B21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F1E9206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbM0xqpc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxqydUiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgBLXwy (ORCPT
+        id S1729563AbgBLXxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:52:54 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40954 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbgBLXwX (ORCPT
+        Wed, 12 Feb 2020 18:53:02 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39140 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729370AbgBLXwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:52:23 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n18so4428281ljo.7;
-        Wed, 12 Feb 2020 15:52:21 -0800 (PST)
+        Wed, 12 Feb 2020 18:52:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id o15so4437206ljg.6;
+        Wed, 12 Feb 2020 15:52:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0sLX75wuAzd6+MMz3Hu9LnmvekmEH4xItVN4J4n6aik=;
-        b=lbM0xqpcsuUE2KPCHz7Ns9UiE49LiAjMu2waKekvSELjm7B7oSgNab/qOKV5IgOHji
-         70mD6nk+0GOtN+I5KtGfVEuqmDuDzdtRdZw62MgPzIjTwdko2z+ayI2XrLryUE1I5YV2
-         4rDIL3LAxliytyDqGN4+6PFsZtkNYTQ7jdAEtCDMQ97TmoDzDwMLmSfJwoG8j6lGxGB2
-         HsSWQmlxxru7PVVy4hbF5G7AbHiACD8avoEVbQGOQK5PmfuDQTL6Wx2eAYrw4mxUZZWZ
-         WMc/hpJPiNE1d3m2OVaRwAJ9KeTYrHIooH1C8FNc6XSQnslaxW1f8MSqZZ3QwNre1nPd
-         sP4A==
+        bh=fS4gtNJrSYUjQQXOqqY/Oa93RASY09H9Tmcfh+YVDHY=;
+        b=lxqydUiPnuXLChUwnee3i+KTHQwL+gubcerAHl5rh65Fzon23/BCEBKHAtoW2/clVR
+         EwFx+n+eM0aj/UwPjhuj77J/gOwEn20HKTSwTUXvGApG8ciViGailWbVQAsmFSssToOz
+         8KcLhOuRpq3rxQQMxbHyjRBbVKdtBDtqWEREE8VqTXueKvp/d0imqQU35ZFdkP/ED+eF
+         7nL2WWoyICbj4b9PSQWDNnwEjY2wSh4810RgyfD/5OAvVC/x705DgTPCkKM5m9aqGvph
+         FiJ6UcxSZ7FbgPi0rNOcUT6luSOwMVdPMLTcYlciTprqfIKjmugNP+UL/nGPLNiTHElt
+         VseA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0sLX75wuAzd6+MMz3Hu9LnmvekmEH4xItVN4J4n6aik=;
-        b=hWO5+mAwZp5aIOH8CIhhaG0FUmYoyPdGjXJHPa7rD2d/jPgUcxrkK0qs5YJfzEVEoS
-         oerUp/Se23GSOIARWqkPgZUaoGP58rAElozGJE3CY5ZMOSOAYUogw1BBueYBlycrsRIM
-         0gSfo7t00HNWotm19vLT/8H/lKSbKi4xhMc9JNHevytoqyX7OLgGTElMv/uv8U5orDTh
-         16rOla5CDbZGllbS3ArdVdCvWxbIMgUCRxNuBzVPX6nNYLO8c9jYoEBJgCq/XTb6YOIw
-         Ot56iPMckk/RQ3/Bs+4aMwLt4DxfzKK8CY2rQ6Py3cUDeJl5G/00rB000EsFcgdouk46
-         1L8w==
-X-Gm-Message-State: APjAAAUa2PEcIy0fPtd0ucYtO5a6Gd2gwLICQYfXAllyH4/MEjk6a6f6
-        ilML8ZnlA/USz+pklapINu4=
-X-Google-Smtp-Source: APXvYqyyvNchlbrlwSt+ADuQS9jaIbzHQ/OYWfHnBk18q1l60mPKIz222c45FzndN2chq91/OKRsNg==
-X-Received: by 2002:a2e:8016:: with SMTP id j22mr8732133ljg.24.1581551540814;
-        Wed, 12 Feb 2020 15:52:20 -0800 (PST)
+        bh=fS4gtNJrSYUjQQXOqqY/Oa93RASY09H9Tmcfh+YVDHY=;
+        b=Odj0K6NJHxjS9G9BXI9FWSEdeny0lnMh4V11d+YLugVwCT2JdReVJbHFvpKQQn0neZ
+         /gGonjwsG4JNU1wddLFxgJVF4pHCYZe/gZzpmzzJ9NhCDWghF3YZMlVHeUgoflVhQO6a
+         zOiRIEV6X3gCN+Of2Pd8v0LDfV2j3Y1q8m+QC/c9PKISg+iwwzgC3QXfGti/kL9i2qWD
+         QbTRVQi+UvdlPFemJMkjiQd5/Xntit3zzJxGYFvcg9buajgNyDCDDCzZj8VhepDkmOnj
+         F1lTsbzrIOE0IJ3bOKTqcGNhTJmaH/mocmBDK1M8Orj9AciCSvRKb+UQ6tEyugdtPpSz
+         IOgQ==
+X-Gm-Message-State: APjAAAUxEt3KuCfDMhOcf2IOvhB81s20Xd7FXFiQmq1rB5N7WGmrZzXD
+        jsuHLNPSO5eLqf2y0c30iho=
+X-Google-Smtp-Source: APXvYqyrlY6DZo0Cd476tLwaHEZumaspt5hBJRv94qqezEburO4GEYyMUH4Ohjm0dZHpnq4qUwo7KQ==
+X-Received: by 2002:a2e:8015:: with SMTP id j21mr9099962ljg.172.1581551537702;
+        Wed, 12 Feb 2020 15:52:17 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id d5sm251686lfb.20.2020.02.12.15.52.19
+        by smtp.gmail.com with ESMTPSA id d5sm251686lfb.20.2020.02.12.15.52.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:52:20 -0800 (PST)
+        Wed, 12 Feb 2020 15:52:17 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Geis <pgwipeout@gmail.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 11/17] arm: tegra20/30: cpuidle: Remove unnecessary memory barrier
-Date:   Thu, 13 Feb 2020 02:51:28 +0300
-Message-Id: <20200212235134.12638-12-digetx@gmail.com>
+Subject: [PATCH v9 08/17] ARM: tegra: Make outer_disable() open-coded
+Date:   Thu, 13 Feb 2020 02:51:25 +0300
+Message-Id: <20200212235134.12638-9-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200212235134.12638-1-digetx@gmail.com>
 References: <20200212235134.12638-1-digetx@gmail.com>
@@ -82,9 +82,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no good justification for smp_rmb() after returning from LP2
-because there are no memory operations that require SMP synchronization.
-Thus remove the confusing barrier.
+The outer_disable() of Tegra's suspend code is open-coded now since
+that helper produces spurious warning message about secondary CPUs being
+online when CPU enters into LP2 from cpuidle. The secondaries are actually
+halted by the cpuidle driver on entering into LP2 idle-state, but the
+online status is not touched by the cpuidle. This fixes a storm of
+warnings once LP2 idling state is enabled on Tegra30. The outer_disable()
+helper has sanity checks for interrupts and secondary CPUs being disabled
+and we are pretty confident about the interrupts state during of CPU
+idling / system suspend. The rail-off status check is added in this patch
+as equivalent for the "num_online_cpus() > 1".
 
 Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Tested-by: Peter Geis <pgwipeout@gmail.com>
@@ -92,36 +99,38 @@ Tested-by: Jasper Korten <jja2000@gmail.com>
 Tested-by: David Heidelberg <david@ixit.cz>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/cpuidle-tegra20.c | 2 --
- arch/arm/mach-tegra/cpuidle-tegra30.c | 2 --
- 2 files changed, 4 deletions(-)
+ arch/arm/mach-tegra/pm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
-index ccb8b0aa6c46..f8f14c0b79ff 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra20.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
-@@ -194,8 +194,6 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
+index 7d9ef26e52a7..d1e1a61b12cf 100644
+--- a/arch/arm/mach-tegra/pm.c
++++ b/arch/arm/mach-tegra/pm.c
+@@ -138,6 +138,10 @@ void tegra_pm_set_cpu_in_lp2(void)
  
- 	local_fiq_enable();
- 
--	smp_rmb();
+ static int tegra_sleep_cpu(unsigned long v2p)
+ {
++	if (tegra_cpu_car_ops->rail_off_ready &&
++	    WARN_ON(!tegra_cpu_rail_off_ready()))
++		return -EBUSY;
++
+ 	/*
+ 	 * L2 cache disabling using kernel API only allowed when all
+ 	 * secondary CPU's are offline. Cache have to be disabled with
+@@ -146,9 +150,10 @@ static int tegra_sleep_cpu(unsigned long v2p)
+ 	 * if any of secondary CPU's is online and this is the LP2-idle
+ 	 * code-path only for Tegra20/30.
+ 	 */
+-	if (trusted_foundations_registered())
+-		outer_disable();
 -
- 	return entered_lp2 ? index : 0;
- }
- #endif
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index a4f0add46a27..80ae64bcdf50 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -113,8 +113,6 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
- 
- 	local_fiq_enable();
- 
--	smp_rmb();
--
- 	return (entered_lp2) ? index : 0;
- }
- #endif
++#ifdef CONFIG_OUTER_CACHE
++	if (trusted_foundations_registered() && outer_cache.disable)
++		outer_cache.disable();
++#endif
+ 	/*
+ 	 * Note that besides of setting up CPU reset vector this firmware
+ 	 * call may also do the following, depending on the FW version:
 -- 
 2.24.0
 
