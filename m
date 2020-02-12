@@ -2,85 +2,119 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB5EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C59C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EE120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A97E20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:02:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z2qfFEHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgBLNBN (ORCPT
+        id S1727963AbgBLNCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:01:13 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:43757 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLNBN (ORCPT
+        Wed, 12 Feb 2020 08:02:01 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49366 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgBLNCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:01:13 -0500
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MzQwa-1jNdkF3YYa-00vQES for <linux-kernel@vger.kernel.org>; Wed, 12 Feb
- 2020 14:01:12 +0100
-Received: by mail-qk1-f172.google.com with SMTP id v195so1890123qkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 05:01:11 -0800 (PST)
-X-Gm-Message-State: APjAAAWYxoAgVe4EGlWCBafRiXrFmkjO4+vPF0Y1861O4+IghEAAjVao
-        sZw7X7w+mgUdXhzN+cX37ZXRd6UGdbvO09a6hKM=
-X-Google-Smtp-Source: APXvYqxHByksB/OA5CrKOk5X5B26sI8QE/r7mocG3I25JeBMPT+bIxUWncQXHdG5LiJDK03k8ShdLVkQl9lKxlxzfIA=
-X-Received: by 2002:a05:620a:1530:: with SMTP id n16mr7359064qkk.394.1581512470542;
- Wed, 12 Feb 2020 05:01:10 -0800 (PST)
+        Wed, 12 Feb 2020 08:02:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PrfoQn8vKuGaB8AXEbs3Tnqd85k9K0jENuwUtYeXIDU=; b=Z2qfFEHHXtaKNTkfUtjuyEM5XP
+        76QMG0G9GzhovCTT1l2WNUgEiJFOLqTL5jzXnupqhGJl0hrRU4jU3WIOCLU/q8kaYKrQkDvr5uQNI
+        cKMrR32TTh6oGz3HgksXyTA2phG+DFkw5xHrBKBY26dkxgvmYdyGgIrteqPqqim++uFBJ0AFt1hC2
+        /j4XOOjeicMD+AN1QCV0bGUMFF3ZrwE2VFiECftcMBR6F1GKELeiVhi79mBCoYDy6uglQOk0q93Bg
+        MC7YElTajOssrz3E2owrRwel/GNP7wwjrbtJIXFZf7vuUZ7vfeKU8CTqoVcFtmKJwWxkIYh6Pflwk
+        tYxYn51w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1reS-0000bf-TX; Wed, 12 Feb 2020 13:02:00 +0000
+Date:   Wed, 12 Feb 2020 05:02:00 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/25] mm: Optimise find_subpage for !THP
+Message-ID: <20200212130200.GC7778@bombadil.infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-3-willy@infradead.org>
+ <20200212074105.GE7068@infradead.org>
 MIME-Version: 1.0
-References: <cover.1581497860.git.michal.simek@xilinx.com> <c3d70f467907944e2680678f8aacb6d04def3f20.1581497860.git.michal.simek@xilinx.com>
-In-Reply-To: <c3d70f467907944e2680678f8aacb6d04def3f20.1581497860.git.michal.simek@xilinx.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 12 Feb 2020 14:00:54 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1r5SCc_Gi=ymN4ToRU08nx9omkJU3Xy9B2GoJF941vmg@mail.gmail.com>
-Message-ID: <CAK8P3a1r5SCc_Gi=ymN4ToRU08nx9omkJU3Xy9B2GoJF941vmg@mail.gmail.com>
-Subject: Re: [PATCH 06/10] microblaze: Add sync to tlb operations
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Oq6jga6yV9ysvhhVFtaBwPyTvW0Jf5zqbzK4EL55D7utvbUU6p7
- TNqAtybuBCDY5K3O3yQtTYUOORrRJAtbr8RkWFLZ8fX5cV9SUSSqzs//Dp72ZH+GKsAqgW+
- iEpyBfT+SP11UV/UDf7HYgfbN5RpJU6Ur6wZaImitAmiVIhjoJikS6+7qQ3y0g5PicKaA8T
- bEDXM2JJvgGL31rWEXISw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F8u9BxQtmAo=:+4gkJ1F9EzTERp/fExiasm
- KZGig6+CInlI7Rm+9BK6TnF7rIxsOoYooHp/tlVsCG+xFqtkge5ny1hxTmiiNwubz2YgsWx3d
- iq4FrXNtiOkSpy1DXgqis9RAqfAQh/fO4Bjaw3T8SDr+twlxQdRKgsCKKGssXuXWvxn/z2Dx5
- 5ec99IPJjTKNoOnHHoPlJdH+kexSmJAw+3W897qKyzGZQQKHBQYvFq1MZ5Un4DfbJkUvYlXb3
- Vn3QdAspEb+pmr20O18k3T5M6Iy1cOOkNvPDXyEzEHUsxvWqlXMLJ0EblROIQTq5o8HgrqqJ2
- xPW2kiXXGfOFhJ4CvlNACCIVZ89qutsMAdQbTm10n/TPfd41T8KjIiaOPJVGu+mhtYwemQn1u
- 8c5KR7OtIlEKVAvXhyxDNu64xHOMOTO00xpDzoNzmH/Y661lIty/n3MO4wkiEqfm5LnKpt83N
- IvzkkyEfyPRqVJ3sVOALifwfQZhpDbCfEps5B1bGrgR5dN9oqw2326U9ADRPZ6Opi6othvWZ+
- clNcm3EkATBIgIQWUOoKaAZ+LdZ9f84dqyGGFdqShr38RHNyiVA/Litz5RMbISUNrHBRLoxfv
- B6aBEf8bJo3J0q1+fL0Q5KL4+bn83SOACeUir9IkycBn9afCk1ekA9VWsOivfHlKLzmUkIizu
- 94ExUHMKAfcvtGlWgXM97xYjKM50dz0JPgnAw6Q6NKOQNhvaMm0COQ+5/pVQy7Z6QsTopVr/S
- I1n5oUvygyaOMYDa4yvwZKCfiEvDQIefd1jC+bK66rknqsfkcEAoGIcqETngB2nXzbR5IGuS+
- PwbXRFgIEA7szK5k97P3mYVWWPq9dYYqWfY8aBNMY8nEE2fqpc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212074105.GE7068@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 9:58 AM Michal Simek <michal.simek@xilinx.com> wrote:
-> diff --git a/arch/microblaze/kernel/misc.S b/arch/microblaze/kernel/misc.S
-> index 6759af688451..1228a09d8109 100644
-> --- a/arch/microblaze/kernel/misc.S
-> +++ b/arch/microblaze/kernel/misc.S
-> @@ -39,7 +39,7 @@ _tlbia_1:
->         rsubi   r11, r12, MICROBLAZE_TLB_SIZE - 1
->         bneid   r11, _tlbia_1 /* loop for all entries */
->         addik   r12, r12, 1
-> -       /* sync */
-> +       mbar    1 /* sync */
->         rtsd    r15, 8
->         nop
->         .size  _tlbia, . - _tlbia
+On Tue, Feb 11, 2020 at 11:41:05PM -0800, Christoph Hellwig wrote:
+> On Tue, Feb 11, 2020 at 08:18:22PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > If THP is disabled, find_subpage can become a no-op.
+> > 
+> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > ---
+> >  include/linux/pagemap.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> > index 75bdfec49710..0842622cca90 100644
+> > --- a/include/linux/pagemap.h
+> > +++ b/include/linux/pagemap.h
+> > @@ -340,7 +340,7 @@ static inline struct page *find_subpage(struct page *page, pgoff_t offset)
+> >  
+> >  	VM_BUG_ON_PAGE(PageTail(page), page);
+> >  
+> > -	return page + (offset & (compound_nr(page) - 1));
+> > +	return page + (offset & (hpage_nr_pages(page) - 1));
+> >  }
+> 
+> So just above the quoted code is a
+> 
+> 	if (PageHuge(page))
+> 		return page;
+> 
+> So how can we get into a compound page that is not a huge page, but
+> only if THP is enabled?  (Yes, maybe I'm a little rusty on VM
+> internals).
 
-Is there any effect on non-SMP systems?
+That's for hugetlbfs:
 
-     Arnd
+        if (!PageCompound(page))
+                return 0;
+
+        page = compound_head(page);
+        return page[1].compound_dtor == HUGETLB_PAGE_DTOR;
+
+> Can you add comments describing the use case of this function and why
+> it does all these checks?  It looks like black magic to me.
+
+Would this help?
+
+-static inline struct page *find_subpage(struct page *page, pgoff_t offset)
++/*
++ * Given the page we found in the page cache, return the page corresponding
++ * to this offset in the file
++ */
++static inline struct page *find_subpage(struct page *head, pgoff_t offset)
+ {
+-       if (PageHuge(page))
+-               return page;
++       /* HugeTLBfs wants the head page regardless */
++       if (PageHuge(head))
++               return head;
+ 
+-       VM_BUG_ON_PAGE(PageTail(page), page);
++       VM_BUG_ON_PAGE(PageTail(head), head);
+ 
+-       return page + (offset & (hpage_nr_pages(page) - 1));
++       return head + (offset & (hpage_nr_pages(head) - 1));
+ }
+
