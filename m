@@ -2,147 +2,189 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337B2C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DBCC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF755218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:02:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EaXusB6f"
+	by mail.kernel.org (Postfix) with ESMTP id 5DB25218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581537741;
+	bh=QYX8ibf0AXGLzT1RdbhTP1ma4R2d/2xVyVlPC4y383c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NQJY0nhlyIpAqyN/mHMvhWBu4hPj3BjgfprunzFMdX5T7jB+xtWVxt6IiN5EtwHLM
+	 plguxuYTU+q6mpG10q9ZjJOWKXiIYh5xlXPgvCEoESv2z4nghK03w+jFfkQePFd9kY
+	 iRGG5Lg7b/T1N7smHyoK9QxAKSGu7wbyupQ90SG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgBLUCG (ORCPT
+        id S1729082AbgBLUCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:02:06 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60165 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727600AbgBLUCF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:02:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581537724;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xACQJzdDDlbOWzGGCryoyeWskqYfJq+P7a8dbWxnMZg=;
-        b=EaXusB6fxxGR0qZaqZr8nVMssqse3H0+S1yYgDuim2BZfomOvQPQ5adUouehb7O9xf4IS3
-        eC6vlqo7Fsddv0mC4gwuYQtXK5FWEVUL+Pz+ThzewEILmzzAINDytZWMJpiUeqzNxLyVV4
-        Ak5MwmRrHo03jv33LCTnAamEFK3sH6s=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-RmmUsNWMNiyLqUdBOgPXhQ-1; Wed, 12 Feb 2020 15:02:02 -0500
-X-MC-Unique: RmmUsNWMNiyLqUdBOgPXhQ-1
-Received: by mail-wm1-f70.google.com with SMTP id a189so1184599wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:02:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xACQJzdDDlbOWzGGCryoyeWskqYfJq+P7a8dbWxnMZg=;
-        b=Q9HBFZ65c80lTTJYjGCxlh7LuC1bIM69Hm5cSywxq5Ffepg2EIhE59lKivGlIV5nbF
-         04DrZUBGs5vVw8QdTTRLC6+rw2F5aaOYR1mhTk9x1vxToWWqgvll8cd04w0FpbSebz1O
-         AKU8ypdi3S91OlBmTPjXyz5A6w4hnpZIxDkBfYGnPDpmYcawUG3+/fT/+LXCUBV5rbkg
-         u6EqaEeVBWu+K6hdErfFxcTHv6/NTctgKr096/rSn3Y4wIgwzhXNc/o9uYh+29QjnX/9
-         klySl7Vr/q6qRG7PqcngYK6EcHlJ5yvUqdkkmkoZ5ya0M/Jv+bVpdVpRBac/Yksbklmk
-         tB6w==
-X-Gm-Message-State: APjAAAW+Yr8Fs/siq6WoZeVLl5tfLX/aPvlBKqGocBGkHXpFmar5krKY
-        EVqEF8i28t9E23TxrYQ35vmoUrCtShuk1rEdGqah2jPxTPpcViMehTUI7piB3f+1//o6KgZ6/ye
-        dIox836lTt3E76hbrwXJI9W36
-X-Received: by 2002:adf:e2c5:: with SMTP id d5mr16732615wrj.165.1581537720864;
-        Wed, 12 Feb 2020 12:02:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwmfvhQhntZ0xl323TsLbJsGJRLD3EnRwc6SDjJpS5+J/aqGrVF/uNojcfTxi8DzEt/rbz3dA==
-X-Received: by 2002:adf:e2c5:: with SMTP id d5mr16732593wrj.165.1581537720554;
-        Wed, 12 Feb 2020 12:02:00 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
-        by smtp.gmail.com with ESMTPSA id e16sm1954758wrs.73.2020.02.12.12.01.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 12:02:00 -0800 (PST)
-Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>
-References: <20200212164714.7733-1-pbonzini@redhat.com>
- <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
- <b90a886e-b320-43d3-b2b6-7032aac57abe@redhat.com>
- <CAHk-=wh8eYt9b8SrP0+L=obHWKU0=vXj8BxBNZ3DYd=6wZTKqw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <23585515-73a9-596e-21f1-cbbcc9d7e7f9@redhat.com>
-Date:   Wed, 12 Feb 2020 21:01:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 12 Feb 2020 15:02:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729017AbgBLUCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:02:20 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1767D21739;
+        Wed, 12 Feb 2020 20:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581537739;
+        bh=QYX8ibf0AXGLzT1RdbhTP1ma4R2d/2xVyVlPC4y383c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oWxrb4iuibmarQYTGtaqUYNe3ZMlM7tKFJcxezJeAOzf05ail3SIAt05bBcW68pN/
+         asyqdMa2tCQ7PouXOrfLg6laRbbjD2HwMyuA9P/tXGoDeR+4cjN24NzvhVfKbR6Nly
+         vxww9mum38HLVEyRt8RRoXJKIr6Pmtt4Efprr1/o=
+Date:   Wed, 12 Feb 2020 12:02:18 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     rishi gupta <gupt21@gmail.com>
+Cc:     robh+dt@kernel.org, jslaby@suse.com, linux-serial@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/3] tty/serial: ttvys: add null modem driver
+ emulating serial port
+Message-ID: <20200212200218.GA2081271@kroah.com>
+References: <cover.1578235515.git.gupt21@gmail.com>
+ <9fcb02fafd5fc9b31f3fe358b8e62b8a40ae132a.1578235515.git.gupt21@gmail.com>
+ <20200106193500.GC754821@kroah.com>
+ <CALUj-gsaecfZ9HN_JVAnvJijYCHK-A5qeztDLbDOSOAjTVfTeg@mail.gmail.com>
+ <20200110072051.GA124387@kroah.com>
+ <CALUj-gvf5vcwdj=-8Sh9BjecKwGYFJciZ7caHxbzve3XNmE-xg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wh8eYt9b8SrP0+L=obHWKU0=vXj8BxBNZ3DYd=6wZTKqw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALUj-gvf5vcwdj=-8Sh9BjecKwGYFJciZ7caHxbzve3XNmE-xg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/20 20:38, Linus Torvalds wrote:
-> On Wed, Feb 12, 2020 at 11:19 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->>> So this clearly never even got a _whiff_ of build-testing.
->>
->> Oh come on.
+On Mon, Feb 10, 2020 at 08:44:31PM +0530, rishi gupta wrote:
+> Tried dev_groups approach, doesn't fit here. Please see inline.
 > 
-> Seriously - if you don't even _look_ at the warnings the build
-> generates, then it hasn't been build-tested.
->
-> I don't want to hear "Oh come on". I'm 100% serious.
-
-I know, but still I consider it.  There is no reason why the "build
-test" should be anything more than "make && echo yes i am build-tested".
- It shouldn't involve any grep or script magic, it's already hard enough
-to script all the functional part of the testing.
-
-My "Oh come on" was because "it never got a whiff of build-testing"
-hides how "the default build testing configuration is crap".  Of course
-I don't want warnings either, but unless there is -Werror somewhere
-mistakes _will_ happen.  Get new commits from you, or make mrproper to
-build another architecture? Everything gets rebuilt and the warnings
-scroll by.  During next-release development I will catch it of course,
-but for rc I usually don't even need to build more than once before
-applying a pull request.  I am surprised it took a few years for the
-wrong set of factors to occur at the same time.
-
-Did I screw up?  Yes.  Could we do better to avoid someone else doing
-the same mistake?  Hell yes.
-
-I'm not making excuses.  I'm just saying that the *root* cause is not my
-mistake or even Oliver's.  The root cause is that our (shared!)
-definition of "good" does not match the exit code of "make".  We all
-want zero warnings, but we don't enable -Werror.  Let's add at least a
-Kconfig to enable it for every architecture you build-test (is it only
-x86 or anything else?).
-
-Paolo
-
-> Build-testing is not just "building". It's the "testing" of the build
-> too. You clearly never did _any_ testing of the build, since the build
-> had huge warnings.
+> On Fri, Jan 10, 2020 at 12:50 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Jan 09, 2020 at 02:59:59PM +0530, rishi gupta wrote:
+> > > > > +/* UART frame structure definitions */
+> > > > > +#define VS_CRTSCTS       0x0001
+> > > > > +#define VS_XON           0x0002
+> > > > > +#define VS_NONE          0X0004
+> > > > > +#define VS_DATA_5        0X0008
+> > > > > +#define VS_DATA_6        0X0010
+> > > > > +#define VS_DATA_7        0X0020
+> > > > > +#define VS_DATA_8        0X0040
+> > > >
+> > > > Why the "X"?
+> > > Sorry I did not understand, do you mean why VS_XON.
+> >
+> > No, I mean why the "0X0040" instead of "0x0040" like all other hex
+> > digits in your list of defines.
+> >
+> > > > > +static int vs_alloc_reg_one_dev(int oidx, int pidx, int rtsmap,
+> > > > > +                     int dtrmap, int dtropn)
+> > > > > +{
+> > > > > +     int ret;
+> > > > > +     struct vs_dev *vsdev;
+> > > > > +     struct device *dev;
+> > > > > +
+> > > > > +     /* Allocate and init virtual tty device private data */
+> > > > > +     vsdev = kcalloc(1, sizeof(struct vs_dev), GFP_KERNEL);
+> > > > > +     if (!vsdev)
+> > > > > +             return -ENOMEM;
+> > > > > +
+> > > > > +     vsdev->own_tty = NULL;
+> > > > > +     vsdev->peer_tty = NULL;
+> > > > > +     vsdev->own_index = oidx;
+> > > > > +     vsdev->peer_index =  pidx;
+> > > > > +     vsdev->rts_mappings = rtsmap;
+> > > > > +     vsdev->dtr_mappings = dtrmap;
+> > > > > +     vsdev->set_odtr_at_open = dtropn;
+> > > > > +     vsdev->msr_reg = 0;
+> > > > > +     vsdev->mcr_reg = 0;
+> > > > > +     vsdev->waiting_msr_chg = 0;
+> > > > > +     vsdev->tx_paused = 0;
+> > > > > +     vsdev->faulty_cable = 0;
+> > > > > +     mutex_init(&vsdev->lock);
+> > > > > +
+> > > > > +     /* Register with tty core with specific minor number */
+> > > > > +     dev = tty_register_device(ttyvs_driver, oidx, NULL);
+> > > > > +     if (!dev) {
+> > > > > +             ret = -ENOMEM;
+> > > > > +             goto fail;
+> > > > > +     }
+> > > > > +
+> > > > > +     vsdev->device = dev;
+> > > > > +     dev_set_drvdata(dev, vsdev);
+> > > > > +
+> > > > > +     /* Create custom sysfs files for this device for events */
+> > > > > +     ret = sysfs_create_group(&dev->kobj, &vs_info_attr_grp);
+> > > >
+> > > > Please no.  You just raced with userspace and lost (i.e. userspace has
+> > > > no idea these files are present.)
+> > > >
+> > > > Please use the correct apis for this, if you _REALLY_ want special sysfs
+> > > > files for a tty device.
+> > > Any specific API would you like to suggest. I am unable to progress on
+> > > how to address this one.
+> >
+> > Now that you have moved things to configfs, maybe you do not need the
+> > sysfs files anymore?
+> >
+> > Ah your "control" sysfs files, ok, you need to set the driver's
+> > dev_groups variable to point to your sysfs attributes, and then the
+> > driver core will properly set up these files.
+> >
+> > hope this helps,
+> >
+> > greg k-h
 > 
-> Without the checking of the result, "build-testing" is just
-> "building", and completely irrelevant.
+> Everything done except using dev_groups approach (full driver after
+> all changes https://github.com/test209/t/blob/master/ttyvs.c#L1957).
 > 
-> If you have problems seeing the warnings, add a "-Werror" to your scripts.
->
-> I do not want to see a _single_ warning in the kernel build. Yes, we
-> have one in the samples code, and even that annoys the hell out of me.
+> Currently to emulate parity error (or any event), user writes to a
+> device specific node (0 is device number):
+> echo "2" > /sys/devices/virtual/tty/ttyvs0/event
 > 
-> And exactly because we don't have any warnings in the default build,
-> it should be really really easy to check for new ones - it's not like
-> you have to wade through pages of warnings to see if any of them are
-> your new ones.
-> 
-> So no "Oh come on". You did *zero* testing of this crap, and you need
-> to own that fact instead of making excuses about it.
+> With dev_groups, sysfs is created (1) for driver not for devices
 
+Huh?  It's there for devices.
+
+> (2) for platform devices only
+
+No, should work for any device type, as the logic is in the driver core.
+
+> Due to (1), parsing based approach will be needed, for ex (0 is device number);
+> echo "0-2" > /sys/devices/platform/ttyvs-card@0/event
+> or
+> echo "0-parity" > /sys/devices/platform/ttyvs-card@0/event
+
+No, the 0- should not be needed, it should be a device-specific file.
+
+> Due to (2), event file will not exist on desktop systems as there will
+> be no device tree node; no platform device.
+
+I don't understand, this file belongs in the tty device that you have
+created, not in any other device.
+
+> Original problem was user space doesn't know when
+> "/sys/devices/virtual/tty/ttyvs0/event" will exist.
+
+And if you set the devices group up properly, the sysfs file will be
+created when the device is created.
+
+> User space gets a uevent when a device is registered with tty core.
+> Application must access only after this.
+
+Yes, but you will race in creation of your file with userspace unless
+you tell the core to do this properly.
+
+> Is this okay in case of this particular driver.
+
+No.
+
+thanks,
+
+greg k-h
