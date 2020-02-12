@@ -2,189 +2,217 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68064C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39286C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF392073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F091320659
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RNLiZpnl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBLMzd (ORCPT
+        id S1727994AbgBLMzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:55:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50994 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgBLMzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:55:33 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A3944AEA8;
-        Wed, 12 Feb 2020 12:55:28 +0000 (UTC)
-Message-ID: <99f7237895054dd55ac8a9c8dab24bf36c9cb035.camel@suse.de>
-Subject: Re: [PATCH v2] irqchip/bcm2835: Quiesce IRQs left enabled by
- bootloader
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Lukas Wunner <lukas@wunner.de>, Marc Zyngier <maz@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Serge Schneider <serge@raspberrypi.org>,
-        Kristina Brooks <notstina@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Phil Elwell <phil@raspberrypi.org>
-Date:   Wed, 12 Feb 2020 13:55:23 +0100
-In-Reply-To: <20200212123651.apio6kno2cqhcskb@wunner.de>
-References: <20200212123651.apio6kno2cqhcskb@wunner.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-4pyIkNRgC0DyWCZW7hzB"
-User-Agent: Evolution 3.34.3 
+        Wed, 12 Feb 2020 07:55:48 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55988 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727904AbgBLMzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:55:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581512146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5nBB3lzEfstwXsYYkBQqN7WF108MZc59ii9S4CBgfy4=;
+        b=RNLiZpnlqTzaeA9EmzJhvxsH8kfgCaNX3WCWBSfT/6EISZFo4efru1RMIV6h+OmCzRT40j
+        9XcOSogHf/YxekmER2baWDNLYkUBhugJ/mUdgafbiDDijhSQf7KRYiuzgrIXPghxlITXsh
+        W+iiHy9U6myhT5IQd1lKgcA6nDMxo+I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-v_rUMz7pOBidnvttxnYNRQ-1; Wed, 12 Feb 2020 07:55:38 -0500
+X-MC-Unique: v_rUMz7pOBidnvttxnYNRQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4621FDB25;
+        Wed, 12 Feb 2020 12:55:36 +0000 (UTC)
+Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F016D27061;
+        Wed, 12 Feb 2020 12:55:27 +0000 (UTC)
+Subject: Re: [PATCH V9 05/10] iommu/vt-d: Support flushing more translation
+ cache types
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1580277713-66934-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1580277713-66934-6-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <11add211-dec0-1932-c29c-22cbbf145bd4@redhat.com>
+Date:   Wed, 12 Feb 2020 13:55:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <1580277713-66934-6-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
---=-4pyIkNRgC0DyWCZW7hzB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2020-02-12 at 13:36 +0100, Lukas Wunner wrote:
-> On Tue, Feb 11, 2020 at 08:47:05PM -0800, Florian Fainelli wrote:
-> > The commit message is a bit long and starts
-> > going into details that I am not sure add anything
->=20
-> I adhere to the school of thought which holds that commit messages
-> shall provide complete context, including numbers to back up claims,
-> user-visible impact, affected versions, genesis of the fix and so on.
-> By that logic there's no such a thing as a too long commit message.
->=20
-> Nevertheless please find a shortened version below, complete with
-> the Fixes tag you requested as well as your R-b.
->=20
->=20
-> On Wed, Feb 12, 2020 at 08:13:29AM +0000, Marc Zyngier wrote:
-> > It otherwise looks good. You can either resend it with a fixed commit
-> > message,
-> > or provide me with a commit message that I can stick there while applyi=
-ng
-> > it.
->=20
-> The below also contains the patch itself, so can be applied directly
-> with git am --scissors.  Feel free to tweak as you see fit.
-> Shout if I've missed anything.  Thanks.
->=20
-> -- >8 --
-> From: Lukas Wunner <lukas@wunner.de>
-> Subject: [PATCH] irqchip/bcm2835: Quiesce IRQs left enabled by bootloader
->=20
-> Per the spec, the BCM2835's IRQs are all disabled when coming out of
-> power-on reset.  Its IRQ driver assumes that's still the case when the
-> kernel boots and does not perform any initialization of the registers.
-> However the Raspberry Pi Foundation's bootloader leaves the USB
-> interrupt enabled when handing over control to the kernel.
->=20
-> Quiesce IRQs and the FIQ if they were left enabled and log a message to
-> let users know that they should update the bootloader once a fixed
-> version is released.
->=20
-> If the USB interrupt is not quiesced and the USB driver later on claims
-> the FIQ (as it does on the Raspberry Pi Foundation's downstream kernel),
-> interrupt latency for all other peripherals increases and occasional
-> lockups occur.  That's because both the FIQ and the normal USB interrupt
-> fire simultaneously.
->=20
-> On a multicore Raspberry Pi, if normal interrupts are routed to CPU 0
-> and the FIQ to CPU 1 (hardcoded in the Foundation's kernel), then a USB
-> interrupt causes CPU 0 to spin in bcm2836_chained_handle_irq() until the
-> FIQ on CPU 1 has cleared it.  Other peripherals' interrupts are starved
-> as long.  I've seen CPU 0 blocked for up to 2.9 msec.  eMMC throughput
-> on a Compute Module 3 irregularly dips to 23.0 MB/s without this commit
-> but remains relatively constant at 23.5 MB/s with this commit.
->=20
-> The lockups occur when CPU 0 receives a USB interrupt while holding a
-> lock which CPU 1 is trying to acquire while the FIQ is temporarily
-> disabled on CPU 1.  At best users get RCU CPU stall warnings, but most
-> of the time the system just freezes.
->=20
-> Fixes: 89214f009c1d ("ARM: bcm2835: add interrupt controller driver")
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: stable@vger.kernel.org # v3.7+
-> Cc: Serge Schneider <serge@raspberrypi.org>
-> Cc: Kristina Brooks <notstina@gmail.com>
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Thanks!
-
+On 1/29/20 7:01 AM, Jacob Pan wrote:
+> When Shared Virtual Memory is exposed to a guest via vIOMMU, scalable
+> IOTLB invalidation may be passed down from outside IOMMU subsystems.
+> This patch adds invalidation functions that can be used for additional
+> translation cache types.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  drivers/irqchip/irq-bcm2835.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/drivers/irqchip/irq-bcm2835.c b/drivers/irqchip/irq-bcm2835.=
-c
-> index 418245d..eca9ac7 100644
-> --- a/drivers/irqchip/irq-bcm2835.c
-> +++ b/drivers/irqchip/irq-bcm2835.c
-> @@ -135,6 +135,7 @@ static int __init armctrl_of_init(struct device_node
-> *node,
->  {
->  	void __iomem *base;
->  	int irq, b, i;
-> +	u32 reg;
-> =20
->  	base =3D of_iomap(node, 0);
->  	if (!base)
-> @@ -157,6 +158,19 @@ static int __init armctrl_of_init(struct device_node
-> *node,
->  				handle_level_irq);
->  			irq_set_probe(irq);
->  		}
+>  drivers/iommu/dmar.c        | 33 +++++++++++++++++++++++++++++++++
+>  drivers/iommu/intel-pasid.c |  3 ++-
+>  include/linux/intel-iommu.h | 20 ++++++++++++++++----
+>  3 files changed, 51 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> index 071bb42bbbc5..206733ec8140 100644
+> --- a/drivers/iommu/dmar.c
+> +++ b/drivers/iommu/dmar.c
+> @@ -1411,6 +1411,39 @@ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
+>  	qi_submit_sync(&desc, iommu);
+>  }
+>  
+> +/* PASID-based device IOTLB Invalidate */
+> +void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+> +		u32 pasid,  u16 qdep, u64 addr, unsigned size_order, u64 granu)
+> +{
+> +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
 > +
-> +		reg =3D readl_relaxed(intc.enable[b]);
-> +		if (reg) {
-> +			writel_relaxed(reg, intc.disable[b]);
-> +			pr_err(FW_BUG "Bootloader left irq enabled: "
-> +			       "bank %d irq %*pbl\n", b, IRQS_PER_BANK, &reg);
-> +		}
+> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) | QI_DEV_EIOTLB_SID(sid) |
+> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
+> +		QI_DEV_IOTLB_PFSID(pfsid);
+> +	desc.qw1 = QI_DEV_EIOTLB_GLOB(granu);
+> +
+> +	/* If S bit is 0, we only flush a single page. If S bit is set,
+> +	 * The least significant zero bit indicates the invalidation address
+> +	 * range. VT-d spec 6.5.2.6.
+> +	 * e.g. address bit 12[0] indicates 8KB, 13[0] indicates 16KB.
+> +	 */
+> +	if (!size_order) {
+> +		desc.qw0 |= QI_DEV_EIOTLB_ADDR(addr) & ~QI_DEV_EIOTLB_SIZE;
+> +	} else {
+> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size_order);
+> +		desc.qw1 |= QI_DEV_EIOTLB_ADDR(addr & ~mask) | QI_DEV_EIOTLB_SIZE;
 > +	}
+> +	qi_submit_sync(&desc, iommu);
+I made some comments in
+https://lkml.org/lkml/2019/8/14/1311
+that do not seem to have been taken into account. Or do I miss something?
+
+More generally having an individual history log would be useful and
+speed up the review.
+
+Thanks
+
+Eric
+> +}
 > +
-> +	reg =3D readl_relaxed(base + REG_FIQ_CONTROL);
-> +	if (reg & REG_FIQ_ENABLE) {
-> +		writel_relaxed(0, base + REG_FIQ_CONTROL);
-> +		pr_err(FW_BUG "Bootloader left fiq enabled\n");
->  	}
-> =20
->  	if (is_2836) {
-
-
---=-4pyIkNRgC0DyWCZW7hzB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5D9bsACgkQlfZmHno8
-x/6JvwgAjF0lgwGkDLzNHbL6ctrZ6WikqYyRPEJ5WcwqCtqiGQtvs4QRF/FSoSOy
-NHX/FJkM5uUDUytjusv5njqeKxzZVRmwFRdA+KRIiHRsi86bewGOluXG65xYl4G2
-tA93LYAEL9C/7tmgeJhNOXjYhhM6aEkEe2ou8zUnMVeJT3z0dmur04L2imqDjSM1
-Mg/sigcZdt+Pzdlj3AnI/eXwzT+3WuIA6BVd0MhKs9lGU8xKGTR4dgDSmAWO+FHi
-rrishM5LJ3eEuAXlUWqIKgCvnIvdQELDb1bq+6+M/U1k8j5w0QOeu9yHBZhFkEXv
-rfXZ3IlEk/vxRajBVaVzkkvB0KhufA==
-=Mq7O
------END PGP SIGNATURE-----
-
---=-4pyIkNRgC0DyWCZW7hzB--
+> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid)
+> +{
+> +	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
+> +
+> +	desc.qw0 = QI_PC_PASID(pasid) | QI_PC_DID(did) | QI_PC_GRAN(granu) | QI_PC_TYPE;
+> +	qi_submit_sync(&desc, iommu);
+> +}
+> +
+>  /*
+>   * Disable Queued Invalidation interface.
+>   */
+> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+> index bd067af4d20b..b100f51407f9 100644
+> --- a/drivers/iommu/intel-pasid.c
+> +++ b/drivers/iommu/intel-pasid.c
+> @@ -435,7 +435,8 @@ pasid_cache_invalidation_with_pasid(struct intel_iommu *iommu,
+>  {
+>  	struct qi_desc desc;
+>  
+> -	desc.qw0 = QI_PC_DID(did) | QI_PC_PASID_SEL | QI_PC_PASID(pasid);
+> +	desc.qw0 = QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
+> +		QI_PC_PASID(pasid) | QI_PC_TYPE;
+>  	desc.qw1 = 0;
+>  	desc.qw2 = 0;
+>  	desc.qw3 = 0;
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index b0ffecbc0dfc..dd9fa61689bc 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -332,7 +332,7 @@ enum {
+>  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >> (DMA_TLB_FLUSH_GRANU_OFFSET-4))
+>  #define QI_IOTLB_ADDR(addr)	(((u64)addr) & VTD_PAGE_MASK)
+>  #define QI_IOTLB_IH(ih)		(((u64)ih) << 6)
+> -#define QI_IOTLB_AM(am)		(((u8)am))
+> +#define QI_IOTLB_AM(am)		(((u8)am) & 0x3f)
+>  
+>  #define QI_CC_FM(fm)		(((u64)fm) << 48)
+>  #define QI_CC_SID(sid)		(((u64)sid) << 32)
+> @@ -351,16 +351,21 @@ enum {
+>  #define QI_PC_DID(did)		(((u64)did) << 16)
+>  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
+>  
+> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
+> -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
+> +/* PASID cache invalidation granu */
+> +#define QI_PC_ALL_PASIDS	0
+> +#define QI_PC_PASID_SEL		1
+>  
+>  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
+>  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
+> -#define QI_EIOTLB_AM(am)	(((u64)am))
+> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
+>  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
+>  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
+>  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
+>  
+> +/* QI Dev-IOTLB inv granu */
+> +#define QI_DEV_IOTLB_GRAN_ALL		1
+> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
+> +
+>  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+>  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+>  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+> @@ -660,8 +665,15 @@ extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+>  			  unsigned int size_order, u64 type);
+>  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  			u16 qdep, u64 addr, unsigned mask);
+> +
+>  void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
+>  		     unsigned long npages, bool ih);
+> +
+> +extern void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+> +			u32 pasid, u16 qdep, u64 addr, unsigned size_order, u64 granu);
+> +
+> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid);
+> +
+>  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iommu);
+>  
+>  extern int dmar_ir_support(void);
+> 
 
