@@ -2,98 +2,135 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E94C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C6BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2141206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B250206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:42:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="iiHDHGle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgBLPlT (ORCPT
+        id S1728401AbgBLPmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:41:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53848 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727458AbgBLPlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:41:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AD517B004;
-        Wed, 12 Feb 2020 15:41:16 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 16:41:16 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: Question about kthread_mod_delayed_work() allowed context
-Message-ID: <20200212154116.hh2vdyi7e2xflxr5@pathway.suse.cz>
-References: <cfa886ad-e3b7-c0d2-3ff8-58d94170eab5@ti.com>
+        Wed, 12 Feb 2020 10:42:33 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39504 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgBLPmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:42:33 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so3035692wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 07:42:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Px26pf7EXM1W2V2xAjAh/vP9L1myxsWPT5mia8fyb6o=;
+        b=iiHDHGleyiMEEbRFVTO5T0+iJy+NzduG/SZ3j/LsaT438a+ah2ZOpk6xVU54KoLTVu
+         PX4Usu716O2rm0+bwNmlQpomsZGvjIwrYi1yYv5s5auhwMlcp4qtw0JsZT27tGROf6Xx
+         1uCAinSeSG68QXsVsFp03rduLqSZ0dyIrupBKPw3EAHQkmtMTNsD5seR1JK2pWDB2/oy
+         IreOw4Fea6Yts3IAM3WHzixkcaBpyAEmAFm8qXvhU5spd/vLH9I0ETXuDDHXAHUfaEwH
+         tejNju+7uU3hAFgVhZY924LDQhTpiswmwDb65NVzf6pIlxwbGHfmirJrRgywgsfzWOel
+         PkUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Px26pf7EXM1W2V2xAjAh/vP9L1myxsWPT5mia8fyb6o=;
+        b=m5EGS4H+ebp2mHQ0O+rJ95p3om/zfl6LcrylNQqbhogkbQ46CIGE/mKjjIgVuGsyk8
+         vYJtZjAvTtyJRfTZEICPz7ErCRq3ENWN4aiXi2Egy0nI0hdSzvW3E//a5bQAL8qUabcl
+         wMPCD1ForMlQ6TUT5MxLCDYYOVyOsGMksk96KNgNdUhZnLuZCfBnGHkj1Dgh4gQLcfrx
+         OPSZaGjeoa4KupHWoM1cKoi3ES0LDfFouzv3aRz3TzyvsPhFOsKp9LnfQqQxfiPcEJRG
+         U0u16g91naxgA7CaBvOQUQq+hMgLeXkYRtAnFWAPOf1X9lbURlJSUgOMjFY/NBQQGd36
+         A/xQ==
+X-Gm-Message-State: APjAAAUAlp8rqicc/UnUA6FD13BD30A1flHjip/nTcyaBEO10LzF4BcB
+        +GKL0L/bgWMtF7v4uU5vYeyyiRlNt0EvUbNA
+X-Google-Smtp-Source: APXvYqzooVJGC1YQxNy5tLKmbGFb3uxwSR328xav52qW4lNyZzFuzUwh5ZDo6+gW1ESNTOY+cC3ffQ==
+X-Received: by 2002:a05:600c:294:: with SMTP id 20mr13765397wmk.135.1581522150880;
+        Wed, 12 Feb 2020 07:42:30 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id g2sm1000605wrw.76.2020.02.12.07.42.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 07:42:30 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com, arnd@arndb.de
+Cc:     Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 0/7] microblaze: Define SMP safe operations
+Date:   Wed, 12 Feb 2020 16:42:22 +0100
+Message-Id: <cover.1581522136.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfa886ad-e3b7-c0d2-3ff8-58d94170eab5@ti.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-02-11 12:23:59, Grygorii Strashko wrote:
-> Hi All,
-> 
-> I'd like to ask question about allowed calling context for kthread_mod_delayed_work().
-> 
-> The comment to kthread_mod_delayed_work() says:
-> 
->  * This function is safe to call from any context including IRQ handler.
->  * See __kthread_cancel_work() and kthread_delayed_work_timer_fn()
->  * for details.
->  */
-> 
-> But it has del_timer_sync() inside which seems can't be called from hard_irq context:
-> kthread_mod_delayed_work()
->   |-__kthread_cancel_work()
->      |- del_timer_sync()
-> 	|- WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
+Hi,
 
-It is safe because kthread_delayed_work_timer_fn() is IRQ safe.
-Note that it uses raw_spin_lock_irqsave(). It is the reason why
-the timer could have set TIMER_IRQSAFE flag, see
-KTHREAD_DELAYED_WORK_INIT().
+This is follow up series on the top of cleanup series available here.
+https://lkml.org/lkml/2020/2/12/215
+There are two things together.
+1. Changes in cpuinfo structure in patches 1 and 2
+2. Defining SMP safe operations instead of IRQ disabling
 
-In more details. The timer is either canceled before the callback
-is called. Or it waits for the callback but the callback is safe
-because it can't sleep.
+Microblaze has 32bit exclusive load/store instructions which should be used
+instead of irq enable/disable. For more information take a look at
+https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug984-vivado-microblaze-ref.pdf
+starting from page 25.
+
+Thanks,
+Michal
 
 
-> My use case is related to PTP processing using PTP auxiliary worker:
-> (commit d9535cb7b760 ("ptp: introduce ptp auxiliary worker")):
->  - periodic work A is started and res-schedules itself for every dtX
->  - on IRQ - the work A need to be scheduled immediately
+Michal Simek (1):
+  microblaze: timer: Don't use cpu timer setting
 
-This is exactly where kthread_mod_delayed_work() need to be used
-in the IRQ context with 0 delay.
+Stefan Asserhall (5):
+  microblaze: Make cpuinfo structure SMP aware
+  microblaze: Define SMP safe bit operations
+  microblaze: Add SMP implementation of xchg and cmpxchg
+  microblaze: Remove disabling IRQ while pte_update() run
+  microblaze: Implement architecture spinlock
 
+Stefan Asserhall load and store (1):
+  microblaze: Do atomic operations by using exclusive ops
 
-> Any advice on how to proceed?
-> Can kthread_queue_work() be used even if there is delayed work is
-> scheduled already (in general, don't care if work A will be executed one
-> more time after timer expiration)?
+ arch/microblaze/include/asm/Kbuild           |   1 -
+ arch/microblaze/include/asm/atomic.h         | 265 ++++++++++++++++++-
+ arch/microblaze/include/asm/bitops.h         | 189 +++++++++++++
+ arch/microblaze/include/asm/cmpxchg.h        |  87 ++++++
+ arch/microblaze/include/asm/cpuinfo.h        |   2 +-
+ arch/microblaze/include/asm/pgtable.h        |  19 +-
+ arch/microblaze/include/asm/spinlock.h       | 240 +++++++++++++++++
+ arch/microblaze/include/asm/spinlock_types.h |  25 ++
+ arch/microblaze/kernel/cpu/cache.c           | 154 ++++++-----
+ arch/microblaze/kernel/cpu/cpuinfo.c         |  38 ++-
+ arch/microblaze/kernel/cpu/mb.c              | 207 ++++++++-------
+ arch/microblaze/kernel/timer.c               |   2 +-
+ arch/microblaze/mm/consistent.c              |   8 +-
+ 13 files changed, 1040 insertions(+), 197 deletions(-)
+ create mode 100644 arch/microblaze/include/asm/bitops.h
+ create mode 100644 arch/microblaze/include/asm/spinlock.h
+ create mode 100644 arch/microblaze/include/asm/spinlock_types.h
 
-Yes, it can be used this way. It should behave the same way as
-the workqueue API.
+-- 
+2.25.0
 
-I am happy that there are more users for this API. I wanted to
-convert more kthreads but it was just falling down in my TODO.
-
-I hope that I answered all questions. Feel free to ask more
-when in doubts.
-
-Best Regards,
-Petr
