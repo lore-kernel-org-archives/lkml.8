@@ -2,90 +2,126 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3490C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC2BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8452082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581505014;
-	bh=4pZYCUBDsbqAJS8ZCZ6TjAOwz6/YRSffWxenSOtB50U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zGvxdOcDRi/U2qdTSq1RuqUXdCNUl/ciwstwlq/82eT2vcVk80OlpBh5eSqLPj4VJ
-	 +I9wyFlHHwL/TJT8vLvS0VfxdcWTTHGxzDI2q9gstCY0VKKIObwd+65Atzo9ai48p7
-	 9XU0oZOcrpPyk3hKDXFm5UZBOwup2jJUvmOmITnk=
+	by mail.kernel.org (Postfix) with ESMTP id 895E22082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgBLK4y (ORCPT
+        id S1728059AbgBLK44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:56:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59450 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 05:56:56 -0500
+Received: from mga01.intel.com ([192.55.52.88]:6261 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727594AbgBLK4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:56:52 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD1D620675;
-        Wed, 12 Feb 2020 10:56:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581505012;
-        bh=4pZYCUBDsbqAJS8ZCZ6TjAOwz6/YRSffWxenSOtB50U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QRgU7x7TZli8ZVmDnLJzwtnNVmdWfAHB0Q/qll4v64rUTI4fE8Dojv/BMAco567EH
-         jgUYQ8+QHsY1GFzOLk7bhC8SELeIyM765FUHJr+guMH4xXt2YZUleDsnsYhJNVl5e2
-         2sLuwCG2V2jkGnmXd4wcDg3I1kLckzO67mW9qQQU=
-Date:   Wed, 12 Feb 2020 10:56:46 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, james.morse@arm.com, catalin.marinas@arm.com,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH 0/8] tracing vs rcu vs nmi
-Message-ID: <20200212105646.GA4017@willie-the-truck>
-References: <20200212093210.468391728@infradead.org>
- <20200212100106.GA14914@hirez.programming.kicks-ass.net>
+        id S1727594AbgBLK4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:56:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 02:56:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="432283931"
+Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.249.193.108]) ([10.249.193.108])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Feb 2020 02:56:51 -0800
+Subject: Re: [LKP] Re: [perf x86] b77491648e: will-it-scale.per_process_ops
+ -2.1% regression
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Roman Sudarikov <roman.sudarikov@linux.intel.com>,
+        0day robot <lkp@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Alexander Antonov <alexander.antonov@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200205123110.GN12867@shao2-debian>
+ <87tv44danp.fsf@linux.intel.com>
+From:   "Chen, Rong A" <rong.a.chen@intel.com>
+Message-ID: <782f409a-ff90-831c-56a0-abb3c31ab8d8@intel.com>
+Date:   Wed, 12 Feb 2020 18:56:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212100106.GA14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87tv44danp.fsf@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 11:01:06AM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 12, 2020 at 10:32:10AM +0100, Peter Zijlstra wrote:
-> > Hi all,
-> > 
-> > These here patches are the result of Mathieu and Steve trying to get commit
-> > 865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
-> > tracepoints") reverted again.
-> > 
-> > One of the things discovered is that tracing MUST NOT happen before nmi_enter()
-> > or after nmi_exit(). I've only fixed x86, but quickly gone through other
-> > architectures and there is definitely more stuff to be fixed (simply grep for
-> > nmi_enter in your arch).
-> 
-> For ARM64:
-> 
->  - apei_claim_sea()
->  - __sdei_handler()
->  - do_serror()
->  - debug_exception_enter() / do_debug_exception()
-> 
-> all look dodgy.
 
-Hmm, so looks like we need to spinkle some 'notrace' annotations around
-these. Are there are scenarios where you would want NOKPROBE_SYMBOL() but
-*not* 'notrace'? We've already got the former for the debug exception
-handlers and we probably (?) want it for the SDEI stuff too...
 
-Will
+On 2/6/2020 4:47 AM, Andi Kleen wrote:
+> kernel test robot <rong.a.chen@intel.com> writes:
+>
+>> Greeting,
+>>
+>> FYI, we noticed a -2.1% regression of will-it-scale.per_process_ops due to commit:
+>>
+>>
+>> commit: b77491648e6eb2f26b6edf5eaea859adc17f4dcc ("perf x86: Infrastructure for exposing an Uncore unit to PMON mapping")
+>> https://github.com/0day-ci/linux/commits/roman-sudarikov-linux-intel-com/perf-x86-Exposing-IO-stack-to-IO-PMON-mapping-through-sysfs/20200118-075508
+> Seems to be spurious bisect. I don't think that commit could change
+> anything performance related.
+
+Hi Andi,
+
+I commented out some lines in arch/x86/events/intel/uncore.c and 
+will-it-scale.per_process_ops increased.
+
+commit:
+   v5.4
+   b77491648e ("perf x86: Infrastructure for exposing an Uncore unit to PMON mapping")
+   f33fe1b258 ("test")
+
+
+             v5.4  b77491648e6eb2f26b6edf5eae 
+f33fe1b258b2a4b2fc97600b2b  testcase/testparams/testbox
+----------------  -------------------------- --------------------------  
+---------------------------
+          %stddev      change         %stddev      change %stddev
+              \          |                \          | \
+      47983                       47004 47647 
+will-it-scale/performance-process-100%-signal1-ucode=0xb000038/lkp-bdw-ep6
+      47983                       47004 47647        GEO-MEAN 
+will-it-scale.per_process_ops
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 55201bfde2c84c..0dc9c455423d99 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -887,7 +887,7 @@ static int uncore_pmu_register(struct 
+intel_uncore_pmu *pmu)
+                 pmu->pmu.attr_groups = pmu->type->attr_groups;
+         }
+
+-       pmu->pmu.attr_update = attr_update;
++       // pmu->pmu.attr_update = attr_update;
+
+         if (pmu->type->num_boxes == 1) {
+                 if (strlen(pmu->type->name) > 0)
+@@ -903,7 +903,7 @@ static int uncore_pmu_register(struct 
+intel_uncore_pmu *pmu)
+          * Exposing mapping of Uncore units to corresponding Uncore PMUs
+          * through /sys/devices/uncore_<type>_<idx>/mapping
+          */
+-       uncore_platform_mapping(pmu->type);
++       // uncore_platform_mapping(pmu->type);
+
+         ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
+         if (!ret)
+
+Best Regards,
+Rong Chen
+
+>
+> -Andi
+> _______________________________________________
+> LKP mailing list -- lkp@lists.01.org
+> To unsubscribe send an email to lkp-leave@lists.01.org
+
