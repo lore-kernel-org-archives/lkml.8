@@ -2,61 +2,142 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26459C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA5BC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0E020848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796BE24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGbF+u6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgBLSi3 (ORCPT
+        id S1728911AbgBLSlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:38:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbgBLSi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:38:29 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6087F20661;
-        Wed, 12 Feb 2020 18:38:28 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 10:38:27 -0800
-From:   Greg KH <greg@kroah.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Peter Chen <Peter.Chen@nxp.com>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 23/28] drivers: usb: Call cpu_latency_qos_*() instead of
- pm_qos_*()
-Message-ID: <20200212183827.GA1900941@kroah.com>
-References: <1654227.8mz0SueHsU@kreacher>
- <19064076.ICumzjfW0v@kreacher>
+        Wed, 12 Feb 2020 13:41:12 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45351 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLSlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:41:12 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g3so3625567wrs.12;
+        Wed, 12 Feb 2020 10:41:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bK9qzUlWnpg+0hBwF5lzoTmox1kfj2Ll8ygXpLpFOJc=;
+        b=GGbF+u6a4AWrUdJ/Qkh3apMbxerKlUc5ngMYtIQaG8bUtqy4KQGBPL9NWiMSVNKzSg
+         Roxppk3OMN0skJ/V6CtwE7Zqjr7MSoSpM1Ti0uwV/PFyzQ8NZBLQU9rhhPvvOsMQbd72
+         Hy9ESksArFeQKfAE7jFjfc3XhnGn1r0TrKb6bL1EsdYAWVvWlhnQH31Yi+oZ03Oc7XZJ
+         EaMWuqm+HIdpq3F0278+xrSFg0zIF92k1V7s0pnJqhn51sdAujxWDDldUx/ywPp7N32u
+         UIeYXfweNVpCTe7FBEeHQEWIOTPQlOGp2ljUcGqj6VNHIQmDE3pN4uIqI0pDCyvl2UpF
+         hnmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=bK9qzUlWnpg+0hBwF5lzoTmox1kfj2Ll8ygXpLpFOJc=;
+        b=jkpda/8UlZbXde8ggdGpr86Mq6ZGxoF4QB5xgoneyVvGXuKO9n2zx7M12aUCgyPhzv
+         yD5NuFqlTESZ4nmmHwWJU+k+8u9NHemOhmQUW+A94PaHZJRLF66+ZGrby7P7N8rpga+H
+         SqEVy86IF0XUCw0i8iWBk9wPkCRAD7W8gfVzhNZQh1Bf98jMW+c0GI5uY86S+TYDYDWR
+         V3BrggJ4JYhH9VsMgJ1FomGEbSwcprsM1Y2uFW9XE1mTiG5J1a5bCPl+cC/YJbtNdkk9
+         NUAFdy3gyJnVFkkJ1dALPbGFEziMeXuboHrrAF4745hpoQAQlMeC3rh0JBkP5pSuwsEw
+         9CIQ==
+X-Gm-Message-State: APjAAAVYlB9QrR1Xc1XDSV4CGpqKGWky/gLBZw0PHOjz6cAcq1Cnr8Mq
+        Xw0oLbhdVHmgA/nHUi5eNOUIC0/1A2c=
+X-Google-Smtp-Source: APXvYqzeeiOXbNyFH2B+WsaUHqdmFLaqkjb64ZLwpug040wXSYBZPeWxwp45uYgYsFg8mNzqIE4OTg==
+X-Received: by 2002:a5d:6886:: with SMTP id h6mr16643789wru.154.1581532869861;
+        Wed, 12 Feb 2020 10:41:09 -0800 (PST)
+Received: from [192.168.1.35] (78.red-88-21-202.staticip.rima-tde.net. [88.21.202.78])
+        by smtp.gmail.com with ESMTPSA id d16sm1740712wrg.27.2020.02.12.10.41.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 10:41:09 -0800 (PST)
+Subject: Re: [PATCH 0/7] MIPS: Replace <linux/clk-provider.h> by
+ <linux/of_clk.h>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        James Hartley <james.hartley@sondrel.com>,
+        John Crispin <john@phrozen.org>
+Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212101544.8793-1-geert+renesas@glider.be>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+Autocrypt: addr=f4bug@amsat.org; keydata=
+ mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
+ u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
+ HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
+ YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
+ ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
+ dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
+ ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
+ Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
+ HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
+ Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
+ YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
+ CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
+ klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
+ jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
+ 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
+ loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
+ sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
+ JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
+ 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
+ K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
+ n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
+ CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
+Message-ID: <5119fa3c-713b-cfe0-4261-c91ccb01abe9@amsat.org>
+Date:   Wed, 12 Feb 2020 19:41:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19064076.ICumzjfW0v@kreacher>
+In-Reply-To: <20200212101544.8793-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 12:28:44AM +0100, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On 2/12/20 11:15 AM, Geert Uytterhoeven wrote:
+> 	Hi all,
 > 
-> Call cpu_latency_qos_add/remove_request() instead of
-> pm_qos_add/remove_request(), respectively, because the
-> latter are going to be dropped.
+> The OF clock helpers were moved to <linux/of_clk.h> a while ago.
+> Hence code that is not a clock provider, but just needs to call
+> of_clk_init(), can (and should) include <linux/of_clk.h> instead of
+> <linux/clk-provider.h>.
 > 
-> No intentional functional impact.
+> All these patches are independent of each others, and thus can be
+> applied by the corresponding subsystem maintainers.
 > 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/usb/chipidea/ci_hdrc_imx.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
+> Thanks!
+> 
+> Geert Uytterhoeven (7):
+>   MIPS: ath79: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: jz4740: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: Pistachio: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+> 
+>  arch/mips/ath79/setup.c          | 2 +-
+>  arch/mips/bmips/setup.c          | 2 +-
+>  arch/mips/generic/init.c         | 2 +-
+>  arch/mips/jz4740/time.c          | 2 +-
+>  arch/mips/pic32/pic32mzda/time.c | 2 +-
+>  arch/mips/pistachio/time.c       | 2 +-
+>  arch/mips/ralink/timer-gic.c     | 2 +-
+>  7 files changed, 7 insertions(+), 7 deletions(-)
+> 
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Series:
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
