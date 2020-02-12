@@ -2,192 +2,224 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4386CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC05C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F582073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAFB21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n73nQHFj"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="AxIDPaJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgBLFI4 (ORCPT
+        id S1727893AbgBLFKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 00:08:56 -0500
-Received: from mail-pf1-f173.google.com ([209.85.210.173]:37562 "EHLO
-        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgBLFI4 (ORCPT
+        Wed, 12 Feb 2020 00:10:15 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42311 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgBLFKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 00:08:56 -0500
-Received: by mail-pf1-f173.google.com with SMTP id p14so620091pfn.4;
-        Tue, 11 Feb 2020 21:08:55 -0800 (PST)
+        Wed, 12 Feb 2020 00:10:14 -0500
+Received: by mail-wr1-f68.google.com with SMTP id k11so550581wrd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 21:10:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i6oz4Em/YwD3zMXErB3gfnjjpevME7SwZCfI7Bvtm8I=;
-        b=n73nQHFjhy+TiG3McdOtcWdpXmLqd3TJ/QJXJliiwFcRDQXzZD9TCGt3XkOlhz8cwH
-         3lheFgTW7pjZ3IWM/kYBsY4Kxie3OwJGLu4hW/45WqIE7wWyJ0WKm9jq7RZU71Qh851o
-         +oI7f8Or8ABx6bn9mSAlmN9EbBBubGoGLyGOxzxCccXurub9tOOg8pMqlXq8zodcqhZQ
-         8tMm/m7a04fvLvRRyGOP4p1J0TKqa9K7sakeHh29hbC0qBRrPEcsryZVtK5nNkZexxov
-         le4PZoj/9do7rIz/16nb7coONIntjJGSBxpBHF/tN6A5x9hFD8whorppnUvrTvVvg7eR
-         pFBQ==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wF5Xa3xZXNzgn21SJKWAvWiwP+pxClkAhr89+lwhg6k=;
+        b=AxIDPaJ60LIWZnzVnREbiTaxymYYk8wssYrGNUN+6GfYGAc1ZQLVaPxpZlf8vm3qu5
+         REdelHOMVmlNv6jvRHk26iwxeVf7amCIUYuTjHfCpOdavb1ldQO7+T3xfZAAXrcELsQl
+         egl6C5AoQCHXALkzwSKUt6pUMNUav4cUC6DOh5xVyxzSI5TZMKn0u4qzETfJZQeJkpHj
+         RnGd/1HT8pUDdWx5f3V+zEuYVrXP+zhq0kAS/OLc/YMalvYQePL52Tzwqz/NUNNlsJcW
+         f3/2mTSniXS3ZbMiBiZBkwBHhsLbh7Hez7JPWIgWJvRvho8zBQIuinSuhcK3vKRP61N2
+         xUPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i6oz4Em/YwD3zMXErB3gfnjjpevME7SwZCfI7Bvtm8I=;
-        b=tLJlt15Y0xivbGaoUKaaiDS7GP0lksOciOvi1ubMwshEUBzHmdU4ccYRQKojGFsPmo
-         UMA6EHg3yXbO8K//whnpy/CmaDzeRH88Qyb8XUhZgJaF3cUx4dTyYkUj3O0N0m4h7GRV
-         VdWI6PLf8LGkVEipU5ARyjUimUkWKY45JzXodOIu26yalFJGeIehaW/4PRVj95Jd2B1p
-         cKfMtKlHzCvY4KGDJ0OUpjNdL8TqD8ntiAWpGE1CO93BglQ6K0uIzJ5jiO7FnWGB62ux
-         6bBlN3FtAQCeVvbKzHolxRhuBYIkI5xEQOL8poGH9cyu294HLFqYMqZP2kImFxPbrinL
-         axnw==
-X-Gm-Message-State: APjAAAU7muFiyefPfDBNya7bRPUdGAyXCuow/gMaeN+wvzOeBXqN8KxR
-        AdhqzcGQZnHf6IzMUzMMSS0t1j/Q
-X-Google-Smtp-Source: APXvYqz5FqsvQRv0b2GKjMQgW95qAHtiaIEADGGBRLwPeXIw3RL56UOM15zhS61eAIH5iXWH+0H9RQ==
-X-Received: by 2002:a63:cd43:: with SMTP id a3mr10817674pgj.247.1581484135202;
-        Tue, 11 Feb 2020 21:08:55 -0800 (PST)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id n15sm6330225pfq.168.2020.02.11.21.08.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 21:08:54 -0800 (PST)
-Subject: Re: Deadlock in cleanup_net and addrconf_verify_work locks up
- workqueue
-To:     Sargun Dhillon <sargun@sargun.me>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Gabriel Hartmann <ghartmann@netflix.com>,
-        Rob Gulewich <rgulewich@netflix.com>,
-        Bruce Curtis <brucec@netflix.com>,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>
-References: <20200211192330.GA9862@ircssh-2.c.rugged-nimbus-611.internal>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <8924a0a5-9179-f6a9-91d8-1163b425ec35@gmail.com>
-Date:   Tue, 11 Feb 2020 21:08:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wF5Xa3xZXNzgn21SJKWAvWiwP+pxClkAhr89+lwhg6k=;
+        b=rCNzF4qldDagdWPgbsQOW1BvDGkQqjtJ1yS88mCVRri/GvP/RI83I5r/Rn7QpkeDJt
+         9xDfpZ3jHAiSQ5mWJclOoPIXwXJC1jAQ8N+hnJXzXezn/+t/43yxOhW0rRcj0xwtF+HV
+         OAD46ohI6JZZ7PFfeGJybvo8wZ1r9oRdL7azSEUQg3/vcHvBLxgUANMX+3QkUe9HfLQc
+         Mb6XoKWMgUiYVZtpqxnqSZEgLj6nCH4UABqtqEboOKHUm40cJXbmz8uY1c1I+tbhrdMU
+         9i3Pk2uN/5Ebx4ZG8EfXwMZCzwwm2gmpLx7ke+o0cMcdH2GSHMlBOHtkIbVqYblkN32U
+         QfWQ==
+X-Gm-Message-State: APjAAAU+C10bky8V4DzEmpkckfuo7c44GjhNDKqvx6zZFPEZSYKSsau4
+        ngRgjKJ+k+774JxAzdB75XTvhHAHCDLY68kiUtOdxg==
+X-Google-Smtp-Source: APXvYqwd6UAjI2x7FRjOvOMVy286Xf7J5JUhekZ9tzx7ZzSgqBmWgbcFbg7mpYNZX6Ukik4GfvUBn94tOi73gvJLGPM=
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr13404204wrv.358.1581484211357;
+ Tue, 11 Feb 2020 21:10:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211192330.GA9862@ircssh-2.c.rugged-nimbus-611.internal>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200212014822.28684-1-atish.patra@wdc.com> <20200212014822.28684-11-atish.patra@wdc.com>
+In-Reply-To: <20200212014822.28684-11-atish.patra@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 12 Feb 2020 10:40:00 +0530
+Message-ID: <CAAhSdy2kMgB4esz0atf92teR9j3x9a_aJcsjBB6ExcA-C78Fng@mail.gmail.com>
+Subject: Re: [PATCH v8 10/11] irqchip/sifive-plic: Initialize the plic handler
+ when cpu comes online
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Borislav Petkov <bp@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kees Cook <keescook@chromium.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mao Han <han_mao@c-sky.com>, Marc Zyngier <maz@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <vincent.chen@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 12, 2020 at 7:21 AM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Currently, plic threshold and priority are only initialized once in the
+> beginning. However, threshold can be set to disabled if cpu is marked
+> offline with cpu hotplug feature. This will not allow to change the
+> irq affinity to a cpu that just came online.
+>
+> Add plic specific cpu hotplug callback and initialize the per cpu handler
+> when cpu comes online.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 34 ++++++++++++++++++++++++-------
+>  include/linux/cpuhotplug.h        |  1 +
+>  2 files changed, 28 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index 0aca5807a119..9b564b19f4bf 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2018 Christoph Hellwig
+>   */
+>  #define pr_fmt(fmt) "plic: " fmt
+> +#include <linux/cpu.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/irq.h>
+> @@ -55,6 +56,8 @@
+>  #define     CONTEXT_THRESHOLD          0x00
+>  #define     CONTEXT_CLAIM              0x04
+>
+> +#define        PLIC_DISABLE_THRESHOLD          0xffffffff
+> +
+>  static void __iomem *plic_regs;
+>
+>  struct plic_handler {
+> @@ -208,6 +211,26 @@ static int plic_find_hart_id(struct device_node *node)
+>         return -1;
+>  }
+>
+> +static void plic_handler_init(struct plic_handler *handler, u32 threshold)
+> +{
+> +       irq_hw_number_t hwirq;
+> +
+> +       /* priority must be > threshold to trigger an interrupt */
+> +       writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+> +       for (hwirq = 1; hwirq < plic_irqdomain->hwirq_max; hwirq++)
+> +               plic_toggle(handler, hwirq, 0);
+
+Ensuring that all IRQs are disabled is only required at boot-time. For run-time,
+CPU hotplug, I am sure Linux irq subsystem will migrate-and-disable IRQs
+routed to given CPU when the CPU does down.
+
+Further, we should also ensure that all IRQs are disabled for PLIC contexts
+not used by S-mode Linux kernel.
+
+Based on the above rationale, the loop to disable all IRQs should still be
+part of plic_init().
+
+> +}
+> +
+> +static int plic_starting_cpu(unsigned int cpu)
+> +{
+> +       u32 threshold = 0;
+> +       struct plic_handler *handler = per_cpu_ptr(&plic_handlers, cpu);
+> +
+> +       plic_handler_init(handler, threshold);
+> +
+> +       return 0;
+> +}
+> +
+
+Addition to PLIC context threshold programming, the plic_starting_cpu()
+should also set IE_EIE bit in CSR_IE instead of doing it in trap_init()
+function of arch/riscv/kernel.trap.c
+
+You can also define plic_stoping_cpu() which does the reverse of what
+plic_starting_cpu() is doing.
 
 
-On 2/11/20 11:23 AM, Sargun Dhillon wrote:
-> We've found a workqueue stall / deadlock. Our workload is a container-oriented
-> workload in which we utilize IPv6. Our container (namespace) churn is quite
-> frequent, and containers can be terminated before their networking is
-> even setup.
-> 
-> We're running 4.19.73 in production, and in investigation of the underlying
-> causes, I don't think that future versions of 4.19 fix it.
-> 
-> We've narrowed it down to a lockup between ipv6_addrconf, and cleanup_net.
+>  static int __init plic_init(struct device_node *node,
+>                 struct device_node *parent)
+>  {
+> @@ -243,9 +266,7 @@ static int __init plic_init(struct device_node *node,
+>         for (i = 0; i < nr_contexts; i++) {
+>                 struct of_phandle_args parent;
+>                 struct plic_handler *handler;
+> -               irq_hw_number_t hwirq;
+>                 int cpu, hartid;
+> -               u32 threshold = 0;
+>
+>                 if (of_irq_parse_one(node, i, &parent)) {
+>                         pr_err("failed to parse parent for context %d.\n", i);
+> @@ -279,7 +300,7 @@ static int __init plic_init(struct device_node *node,
+>                 handler = per_cpu_ptr(&plic_handlers, cpu);
+>                 if (handler->present) {
+>                         pr_warn("handler already present for context %d.\n", i);
+> -                       threshold = 0xffffffff;
+> +                       plic_handler_init(handler, PLIC_DISABLE_THRESHOLD);
+>                         goto done;
+>                 }
+>
+> @@ -291,13 +312,12 @@ static int __init plic_init(struct device_node *node,
+>                         plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
+>
+>  done:
+> -               /* priority must be > threshold to trigger an interrupt */
+> -               writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+> -               for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
+> -                       plic_toggle(handler, hwirq, 0);
+>                 nr_handlers++;
+>         }
+>
+> +       cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
+> +                                 "irqchip/sifive/plic:starting",
+> +                                 plic_starting_cpu, NULL);
+>         pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
+>                 nr_irqs, nr_handlers, nr_contexts);
+>         set_handle_irq(plic_handle_irq);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index e51ee772b9f5..5360e03db08c 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -100,6 +100,7 @@ enum cpuhp_state {
+>         CPUHP_AP_IRQ_ARMADA_XP_STARTING,
+>         CPUHP_AP_IRQ_BCM2836_STARTING,
+>         CPUHP_AP_IRQ_MIPS_GIC_STARTING,
+> +       CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
+>         CPUHP_AP_ARM_MVEBU_COHERENCY,
+>         CPUHP_AP_MICROCODE_LOADER,
+>         CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
+> --
+> 2.24.0
+>
 
-Sure, PID 1369493 addrconf_verify_work() is waiting for RTNL.
-
-But PID 8  ?
-
-__flush_work() is being called.
-
-But from where ? Stacks seem not complete.
-
-
-> 
-> crash> bt 8
-> PID: 8      TASK: ffff9a1072b50000  CPU: 24  COMMAND: "kworker/u192:0"
->  #0 [ffffbfe2c00fbb70] __schedule at ffffffffa7f02bf7
->  #1 [ffffbfe2c00fbc10] schedule at ffffffffa7f031e8
->  #2 [ffffbfe2c00fbc18] schedule_timeout at ffffffffa7f0700e
->  #3 [ffffbfe2c00fbc90] wait_for_completion at ffffffffa7f03b50
->  #4 [ffffbfe2c00fbce0] __flush_work at ffffffffa76a2532
->  #5 [ffffbfe2c00fbd58] rollback_registered_many at ffffffffa7dbcdf4
->  #6 [ffffbfe2c00fbdc0] unregister_netdevice_many at ffffffffa7dbd31e
->  #7 [ffffbfe2c00fbdd0] default_device_exit_batch at ffffffffa7dbd512
->  #8 [ffffbfe2c00fbe40] cleanup_net at ffffffffa7dab970
->  #9 [ffffbfe2c00fbe98] process_one_work at ffffffffa76a17c4
-> #10 [ffffbfe2c00fbed8] worker_thread at ffffffffa76a19dd
-> #11 [ffffbfe2c00fbf10] kthread at ffffffffa76a7fd3
-> #12 [ffffbfe2c00fbf50] ret_from_fork at ffffffffa80001ff
-> 
-> crash> bt 1369493
-> PID: 1369493  TASK: ffff9a03684d9600  CPU: 58  COMMAND: "kworker/58:1"
->  #0 [ffffbfe30d68fd48] __schedule at ffffffffa7f02bf7
->  #1 [ffffbfe30d68fde8] schedule at ffffffffa7f031e8
->  #2 [ffffbfe30d68fdf0] schedule_preempt_disabled at ffffffffa7f0349a
->  #3 [ffffbfe30d68fdf8] __mutex_lock at ffffffffa7f04aed
->  #4 [ffffbfe30d68fe90] addrconf_verify_work at ffffffffa7e8d1aa
->  #5 [ffffbfe30d68fe98] process_one_work at ffffffffa76a17c4
->  #6 [ffffbfe30d68fed8] worker_thread at ffffffffa76a19dd
->  #7 [ffffbfe30d68ff10] kthread at ffffffffa76a7fd3
->  #8 [ffffbfe30d68ff50] ret_from_fork at ffffffffa80001ff
-> 
-> 
-> 
->  struct -x mutex.owner.counter rtnl_mutex
->   owner.counter = 0xffff9a1072b50001
-> 
-> 0xffff9a1072b50001 & (~0x07) = 0xffff9a1072b50000
-> 
-> This points back to PID 8 / CPU 24. It is working on cleanup_net, and a part
-> of cleanup net involves calling ops_exit_list, and as part of that it calls
-> default_device_exit_batch. default_device_exit_batch takes the rtnl lock before
-> calling into unregister_netdevice_many, and rollback_registered_many.
-> rollback_registered_many calls flush_all_backlogs. This will never complete
-> because it is holding the rtnl lock, and PID 1369493 / CPU 58 is waiting
-> for rtnl_lock.
-
-But PID 1369493 is waiting on a mutex, thus properly yielding the cpu.
-(schedule() is clearly shown)
-
-This should not prevent other threads
-from making progress so that flush_all_backlogs() completes eventually.
-
-flush_all_backlogs() does not care of how many threads are currently blocked
-because they can not grab rtnl while flush_all_backlogs() is running.
-
-> 
-> If relevant, the workqueue stalls themselves look something like:
-> BUG: workqueue lockup - pool cpus=70 node=0 flags=0x0 nice=0 stuck for 3720s!
-> BUG: workqueue lockup - pool cpus=70 node=0 flags=0x0 nice=-20 stuck for 3719s!
-> Showing busy workqueues and worker pools:
-> workqueue events: flags=0x0
->   pwq 32: cpus=16 node=0 flags=0x0 nice=0 active=2/256
->     in-flight: 1274779:slab_caches_to_rcu_destroy_workfn slab_caches_to_rcu_destroy_workfn
-> workqueue events_highpri: flags=0x10
->   pwq 141: cpus=70 node=0 flags=0x0 nice=-20 active=1/256
->     pending: flush_backlog BAR(8)
-> workqueue events_power_efficient: flags=0x82
->   pwq 193: cpus=0-23,48-71 node=0 flags=0x4 nice=0 active=1/256
->     in-flight: 1396446:check_lifetime
-> workqueue mm_percpu_wq: flags=0x8
->   pwq 140: cpus=70 node=0 flags=0x0 nice=0 active=1/256
->     pending: vmstat_update
-> workqueue netns: flags=0xe000a
->   pwq 192: cpus=0-95 flags=0x4 nice=0 active=1/1
->     in-flight: 8:cleanup_net
->     delayed: cleanup_net
-> workqueue writeback: flags=0x4e
->   pwq 193: cpus=0-23,48-71 node=0 flags=0x4 nice=0 active=1/256
->     in-flight: 1334335:wb_workfn
-> workqueue kblockd: flags=0x18
->   pwq 141: cpus=70 node=0 flags=0x0 nice=-20 active=1/256
->     pending: blk_mq_run_work_fn
-> workqueue ipv6_addrconf: flags=0x40008
->   pwq 116: cpus=58 node=0 flags=0x0 nice=0 active=1/1
->     in-flight: 1369493:addrconf_verify_work
-> workqueue ena: flags=0xe000a
->   pwq 192: cpus=0-95 flags=0x4 nice=0 active=1/1
->     in-flight: 7505:ena_fw_reset_device [ena]
-> 
+Regards,
+Anup
