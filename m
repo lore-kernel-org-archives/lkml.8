@@ -2,185 +2,110 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D6EC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C7CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E6024649
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027262082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBLLTt convert rfc822-to-8bit (ORCPT
+        id S1728036AbgBLLTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:19:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48303 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBLLTs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:19:48 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j1q3T-0002hT-0l; Wed, 12 Feb 2020 12:19:43 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D4D42100F5A; Wed, 12 Feb 2020 12:19:41 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Evan Green <evgreen@chromium.org>, Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: "Plug non-maskable MSI affinity race" triggers a warning with CPU hotplugs
-In-Reply-To: <FE2AA412-40A7-4FA2-A9E8-C7FA2919BD1D@lca.pw>
-References: <FE2AA412-40A7-4FA2-A9E8-C7FA2919BD1D@lca.pw>
-Date:   Wed, 12 Feb 2020 12:19:41 +0100
-Message-ID: <878sl8xdbm.fsf@nanos.tec.linutronix.de>
+        Wed, 12 Feb 2020 06:19:52 -0500
+Received: from 8bytes.org ([81.169.241.247]:53636 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727947AbgBLLTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:19:51 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 50C2B4A6; Wed, 12 Feb 2020 12:19:49 +0100 (CET)
+Date:   Wed, 12 Feb 2020 12:19:24 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 08/62] x86/boot/compressed/64: Add IDT Infrastructure
+Message-ID: <20200212111923.GA20066@8bytes.org>
+References: <20200211135256.24617-1-joro@8bytes.org>
+ <20200211135256.24617-9-joro@8bytes.org>
+ <CALCETrWznWHQNfd80G95G_CB-yCw8Botqee8bsLz3OcC4-SS=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWznWHQNfd80G95G_CB-yCw8Botqee8bsLz3OcC4-SS=w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian,
+Hi Andy,
 
-Qian Cai <cai@lca.pw> writes:
+thanks a lot for your valuable reviews!
 
-> The linux-next commit 6f1a4891a592 (“x86/apic/msi: Plug non-maskable
-> MSI affinity race”) Introduced a bug which is always triggered during
-> the CPU hotplugs on this server. See the trace and line numbers below.
+On Tue, Feb 11, 2020 at 02:18:52PM -0800, Andy Lutomirski wrote:
+> On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
+> > +       entry.offset_low    = (u16)(address & 0xffff);
+> > +       entry.segment       = __KERNEL_CS;
+> > +       entry.bits.type     = GATE_TRAP;
+> 
+> ^^^
+> 
+> I realize we're not running a real kernel here, but GATE_TRAP is
+> madness.  Please use GATE_INTERRUPT.
 
-Thanks for the report.
+Changed that.
 
-> WARNING: CPU: 0 PID: 2794 at arch/x86/kernel/apic/msi.c:103 msi_set_affinity+0x278/0x330 
-> CPU: 0 PID: 2794 Comm: irqbalance Tainted: G             L    5.6.0-rc1-next-20200211 #1 
-> irq_do_set_affinity at kernel/irq/manage.c:259
-> irq_setup_affinity at kernel/irq/manage.c:474
-> irq_select_affinity_usr at kernel/irq/manage.c:496
-> write_irq_affinity.isra.0+0x137/0x1e0 
-> irq_affinity_proc_write+0x19/0x20
-...
+> > +       /* Build pt_regs */
+> > +       .if \error_code == 0
+> > +       pushq   $0
+> > +       .endif
+> 
+> cld
 
-I'm glad I added this WARN_ON(). This unearthed another long standing
-bug. If user space writes a bogus affinity mask, i.e. no online CPUs
-then it calls irq_select_affinity_usr().
+Added.
 
-This was introduced for ALPHA in
+> > +       popq    %rdi
+> 
+> if error_code?
 
-  eee45269b0f5 ("[PATCH] Alpha: convert to generic irq framework (generic part)")
+The code above pushes a $0 for exceptions without an error code, so it
+needs to be removed unconditionally.
 
-and subsequently made available for all architectures in
+> > +
+> > +       /* Remove error code and return */
+> > +       addq    $8, %rsp
+> > +
+> > +       /*
+> > +        * Make sure we return to __KERNEL_CS - the CS selector on
+> > +        * the IRET frame might still be from an old BIOS GDT
+> > +        */
+> > +       movq    $__KERNEL_CS, 8(%rsp)
+> > +
+> 
+> If this actually happens, you have a major bug.  Please sanitize all
+> the segment registers after installing the GDT rather than hacking
+> around it here.
 
-  18404756765c ("genirq: Expose default irq affinity mask (take 3)")
+Okay, will change that. I thought I could safe some instructions in the
+head_64.S code, but you are right that its better to setup a defined
+environment first.
 
-which already introduced the circumvention of the affinity setting
-restrictions for interrupts which cannot be moved in process context.
-
-The whole exercise is bogus in various aspects:
-
-    1) If the interrupt is already started up then there is absolutely
-       no point to honour a bogus interrupt affinity setting from user
-       space. The interrupt is already assigned to an online CPU and it
-       does not make any sense to reassign it to some other randomly
-       chosen online CPU.
-
-    2) If the interupt is not yet started up then there is no point
-       either. A subsequent startup of the interrupt will invoke
-       irq_setup_affinity() anyway which will chose a valid target CPU.
-
-So the right thing to do is to just return -EINVAL in case user space
-wrote an affinity mask which does not contain any online CPUs, except for
-ALPHA which has it's own magic sauce for this.
-
-Can you please test the patch below?
 
 Thanks,
 
-        tglx
+	Joerg
 
-8<---------------
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 3924fbe829d4..c9d8eb7f5c02 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -128,8 +128,6 @@ static inline void unregister_handler_proc(unsigned int irq,
- 
- extern bool irq_can_set_affinity_usr(unsigned int irq);
- 
--extern int irq_select_affinity_usr(unsigned int irq);
--
- extern void irq_set_thread_affinity(struct irq_desc *desc);
- 
- extern int irq_do_set_affinity(struct irq_data *data,
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 3089a60ea8f9..7eee98c38f25 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -481,23 +481,9 @@ int irq_setup_affinity(struct irq_desc *desc)
- {
- 	return irq_select_affinity(irq_desc_get_irq(desc));
- }
--#endif
-+#endif /* CONFIG_AUTO_IRQ_AFFINITY */
-+#endif /* CONFIG_SMP */
- 
--/*
-- * Called when a bogus affinity is set via /proc/irq
-- */
--int irq_select_affinity_usr(unsigned int irq)
--{
--	struct irq_desc *desc = irq_to_desc(irq);
--	unsigned long flags;
--	int ret;
--
--	raw_spin_lock_irqsave(&desc->lock, flags);
--	ret = irq_setup_affinity(desc);
--	raw_spin_unlock_irqrestore(&desc->lock, flags);
--	return ret;
--}
--#endif
- 
- /**
-  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
-diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
-index 9e5783d98033..af488b037808 100644
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -111,6 +111,28 @@ static int irq_affinity_list_proc_show(struct seq_file *m, void *v)
- 	return show_irq_affinity(AFFINITY_LIST, m);
- }
- 
-+#ifndef CONFIG_AUTO_IRQ_AFFINITY
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	/*
-+	 * If the interrupt is started up already then this fails. The
-+	 * interrupt is assigned to an online CPU already. There is no
-+	 * point to move it around randomly. Tell user space that the
-+	 * selected mask is bogus.
-+	 *
-+	 * If not then any change to the affinity is pointless because the
-+	 * startup code invokes irq_setup_affinity() which will select
-+	 * a online CPU anyway.
-+	 */
-+	return -EINVAL;
-+}
-+#else
-+/* ALPHA magic affinity auto selector. Keep it for historical reasons. */
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	return irq_select_affinity(irq);
-+}
-+#endif
- 
- static ssize_t write_irq_affinity(int type, struct file *file,
- 		const char __user *buffer, size_t count, loff_t *pos)
