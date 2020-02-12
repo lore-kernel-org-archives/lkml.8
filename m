@@ -2,177 +2,69 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31C3C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0443FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF0C2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="y2gv+7sT"
+	by mail.kernel.org (Postfix) with ESMTP id D9A5C2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgBLSSj (ORCPT
+        id S1728929AbgBLSUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:18:39 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41400 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLSSj (ORCPT
+        Wed, 12 Feb 2020 13:20:10 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:37850 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLSUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:18:39 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l21so2299917qtr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:18:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OWGcBq+RmtovTTracPqR5yMhReLnPEQNRqBqlsGYoqQ=;
-        b=y2gv+7sTsHniWkrRXHbMycwPBOZkSVEUBxS0FbQa9VB6OPJaYJ1Ny9M6xr/G2DVX+A
-         2y3zu+4t8K+YEOEZiGZ16SmwaFBkHE7wfdPJ73oAGMEcRLyA7SdYtUq2rlqAIOJ7AlQ+
-         UybJYIDz3qsZGxZfUM1AtJQB0pELtShzFC9k3aLs7g4W9U5IbFUlcjQfKEHGvhzfclm+
-         JveHX0RcnHpMZXSqGvlbSX7VBuxQcKiVaV6YvUnzx7SOAGPdgFUsRDnB4h3byEIPdOR4
-         Deg6SO3d+i3NoTjYxf140EY5fK1CDhyhjBV3mFZrOFF2taWoChENIoAjBrb9azCLuXXz
-         mScA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OWGcBq+RmtovTTracPqR5yMhReLnPEQNRqBqlsGYoqQ=;
-        b=FHQQcmz0YpoL4FHnWoOjig9H3PNeyfdJwf4Q0WM5q5x+AtLpDvF10IwaWnAeqUX1sG
-         xLsmMcKFyeCiWSd2cG7jK1zeZev/ljOzUiJC7pGqR2BYzkYKA9SKEExwKwqXtCbdG9bd
-         NTWLnuakhy7Dvz1iyzMincvMfGqIe30ytL+zOgJg98k1GPcZ58YcVzNf+mZUXc2V9tOP
-         A74WOzLITTaDya7X+dVvYgCSpi/II0VSL35xQalUOjWsSSenUF/XBu4VGgYYkqHPw/CX
-         poY4Y2PlrYQk+f3SRS2x11qTHRByXFr9bZP9e/xJ1hTYQQvE5Eh2+fv2f8wNXlVa0tDF
-         YV0Q==
-X-Gm-Message-State: APjAAAVVRllNNpZUoUhiaiZyLnUX2APTbP6sJlX5eoZXWeAs7f6CL1sq
-        h2elsmtM3mh3OZAmUTC1o1QTKQ==
-X-Google-Smtp-Source: APXvYqwp6yb7UZLL9gr229Rnz2uuFRz38SvQqwJmNe7+ZVm7dUDCROR1mDfi5DonZ9jY0+5tL1WvCA==
-X-Received: by 2002:ac8:6f27:: with SMTP id i7mr8195494qtv.253.1581531516578;
-        Wed, 12 Feb 2020 10:18:36 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::5a94])
-        by smtp.gmail.com with ESMTPSA id b84sm619400qkc.73.2020.02.12.10.18.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 10:18:35 -0800 (PST)
-Date:   Wed, 12 Feb 2020 13:18:34 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
-Message-ID: <20200212181834.GD180867@cmpxchg.org>
-References: <20191107205334.158354-1-hannes@cmpxchg.org>
- <20191107205334.158354-3-hannes@cmpxchg.org>
- <20200212102817.GA18107@js1304-desktop>
+        Wed, 12 Feb 2020 13:20:08 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j1wcI-0002jx-Jl; Wed, 12 Feb 2020 18:20:06 +0000
+Date:   Wed, 12 Feb 2020 19:20:05 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rafael@kernel.org, pavel@ucw.cz,
+        kuba@kernel.org, edumazet@google.com, stephen@networkplumber.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH net-next 00/10] net: fix sysfs permssions when device
+ changes network
+Message-ID: <20200212182005.rdxtfjjdow2zbzsg@wittgenstein>
+References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
+ <20200212.095318.414327505774757849.davem@davemloft.net>
+ <20200212180044.uhxwthf5ljxrrnpe@wittgenstein>
+ <20200212.101647.1964597534877583063.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200212102817.GA18107@js1304-desktop>
+In-Reply-To: <20200212.101647.1964597534877583063.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 07:28:19PM +0900, Joonsoo Kim wrote:
-> Hello, Johannes.
+On Wed, Feb 12, 2020 at 10:16:47AM -0800, David Miller wrote:
+> From: Christian Brauner <christian.brauner@ubuntu.com>
+> Date: Wed, 12 Feb 2020 19:00:44 +0100
 > 
-> When I tested my patchset on v5.5, I found that my patchset doesn't
-> work as intended. I tracked down the issue and this patch would be the
-> reason of unintended work. I don't fully understand the patchset so I
-> could be wrong. Please let me ask some questions.
+> > On Wed, Feb 12, 2020 at 09:53:18AM -0800, David Miller wrote:
+> >> 
+> >> net-next is closed
+> > 
+> > I just assumed it was open since rc1 has been out for a few days now.
 > 
-> On Thu, Nov 07, 2019 at 12:53:33PM -0800, Johannes Weiner wrote:
-> ...snip...
-> > -static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data_t *pgdat)
-> > +static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t *pgdat)
-> >  {
-> > -	struct mem_cgroup *memcg;
-> > -
-> > -	memcg = mem_cgroup_iter(root_memcg, NULL, NULL);
-> > -	do {
-> > -		unsigned long refaults;
-> > -		struct lruvec *lruvec;
-> > +	struct lruvec *target_lruvec;
-> > +	unsigned long refaults;
-> >  
-> > -		lruvec = mem_cgroup_lruvec(memcg, pgdat);
-> > -		refaults = lruvec_page_state_local(lruvec, WORKINGSET_ACTIVATE);
-> > -		lruvec->refaults = refaults;
-> > -	} while ((memcg = mem_cgroup_iter(root_memcg, memcg, NULL)));
-> > +	target_lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
-> > +	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
-> > +	target_lruvec->refaults = refaults;
+> Then why do I bother maintaining:
 > 
-> Is it correct to just snapshot the refault for the target memcg? I
-> think that we need to snapshot the refault for all the child memcgs
-> since we have traversed all the child memcgs with the refault count
-> that is aggregration of all the child memcgs. If next reclaim happens
-> from the child memcg, workingset transition that is already considered
-> could be considered again.
-
-Good catch, you're right! We have to update all cgroups in the tree,
-like we used to. However, we need to use lruvec_page_state() instead
-of _local, because we do recursive comparisons in shrink_node()! So
-it's not a clean revert of that hunk.
-
-Does this patch here fix the problem you are seeing?
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c82e9831003f..e7431518db13 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2993,12 +2993,17 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
- 
- static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t *pgdat)
- {
--	struct lruvec *target_lruvec;
--	unsigned long refaults;
-+	struct mem_cgroup *memcg;
- 
--	target_lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
--	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
--	target_lruvec->refaults = refaults;
-+	memcg = mem_cgroup_iter(target_memcg, NULL, NULL);
-+	do {
-+		unsigned long refaults;
-+		struct lruvec *lruvec;
-+
-+		lruvec = mem_cgroup_lruvec(memcg, pgdat);
-+		refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
-+		lruvec->refaults = refaults;
-+	} while ((memcg = mem_cgroup_iter(target_memcg, memcg, NULL)));
- }
- 
- /*
-
-> > @@ -277,12 +305,12 @@ void workingset_refault(struct page *page, void *shadow)
-> >  	 * would be better if the root_mem_cgroup existed in all
-> >  	 * configurations instead.
-> >  	 */
-> > -	memcg = mem_cgroup_from_id(memcgid);
-> > -	if (!mem_cgroup_disabled() && !memcg)
-> > +	eviction_memcg = mem_cgroup_from_id(memcgid);
-> > +	if (!mem_cgroup_disabled() && !eviction_memcg)
-> >  		goto out;
-> > -	lruvec = mem_cgroup_lruvec(memcg, pgdat);
-> > -	refault = atomic_long_read(&lruvec->inactive_age);
-> > -	active_file = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES);
-> > +	eviction_lruvec = mem_cgroup_lruvec(eviction_memcg, pgdat);
-> > +	refault = atomic_long_read(&eviction_lruvec->inactive_age);
-> > +	active_file = lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE);
+> 	http://vger.kernel.org/~davem/net-next.html
 > 
-> Do we need to use the aggregation LRU count of all the child memcgs?
-> AFAIU, refault here is the aggregation counter of all the related
-> memcgs. Without using the aggregation count for LRU, active_file could
-> be so small than the refault distance and refault cannot happen
-> correctly.
+> which is also mentioned in the netdev FAQ
+> Documentation/networking/netdev-FAQ.rst:
 
-lruvec_page_state() *is* aggregated for all child memcgs (as opposed
-to lruvec_page_state_local()), so that comparison looks correct to me.
+Yeah, I know. I honestly missed looking at that this time around. As I
+said, I'll resend once net-next reopens. Thanks for taking the time to
+respond though.
