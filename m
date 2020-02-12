@@ -2,115 +2,131 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648CC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F707C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F49521734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7004420714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmT6dKzI"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Ju6xzVVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgBLQko (ORCPT
+        id S1728575AbgBLQmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:40:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47206 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727548AbgBLQko (ORCPT
+        Wed, 12 Feb 2020 11:42:37 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45650 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgBLQmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:40:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581525642;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NrzhUur53Q4Y2ZEl1kiuBFTu/KwLXcTXVoqRdvHJiBI=;
-        b=MmT6dKzIFED2xhfqhOBjly+jhYXiP1wFlnVwK+4da6z35cIqLUZEyrDvnfQqFh8nH2rw9O
-        8hHQPz48rA3YiLWxNpia0pGSfrRJ1K/z+eps2lM4jCNEDHIQiyWJxwo0/xeJ7rxkM5w1CF
-        YNFbI1rPmbILrpTIJfmyhLz5ENm1eGQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-Mdftop4CNUWSWA7jm5_pNw-1; Wed, 12 Feb 2020 11:40:40 -0500
-X-MC-Unique: Mdftop4CNUWSWA7jm5_pNw-1
-Received: by mail-wr1-f69.google.com with SMTP id c6so1026144wrm.18
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:40:40 -0800 (PST)
+        Wed, 12 Feb 2020 11:42:37 -0500
+Received: by mail-qk1-f195.google.com with SMTP id a2so2630232qko.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:42:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lC+Mj++3/YMXsXdmajO0Uv+d9BNYm/4DozkgCzMx0BQ=;
+        b=Ju6xzVVYJuf1V04IsW43lvJOoF0zm1mTaMQ/PSiBynZq6VxAQTaoI3riOkEyS4wYj5
+         gh5Ky9uPnY3nC77nxWhWbxQic03Y6rTivuXjxT+HHMhOZ7uaMDRHzkCxWsYlNoNOYo+8
+         R7GvNf8bZSx7zxJVp5YSGq6iFVr09xiXA9jywKHwnqRVB30qmvGW+tRMI0MkyV3kL8VL
+         phfinaVmeAAbzvJWFrOgl6MFfjkH4Lu39AkI6zDv3t+F/9Hjuffz3i1t0fCyPeAGXUds
+         gXYQ6cfasR0c9iDHo+DTD6lbhf4qTFZWsbhW4XKnMOprjGKkrHP2D6dhSVnK35OXS4V7
+         pWFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NrzhUur53Q4Y2ZEl1kiuBFTu/KwLXcTXVoqRdvHJiBI=;
-        b=uSlkbqLo0g8QU7Nmd54+o2OHGzYeHdmE+ZWgEHXFaRrzqJYiGrrEWKitGKc89lyn6M
-         iiF3taOKjJrx6QdqE72T6FRLuUciILHnKoMZs9zM4wX3dYAiruS1WRYX/1FzTCWCQYs5
-         2CtlN3dDTgz4tU1wsS8SDP/1tUT/5TDEgdcj61taUotFAJKm270zWLiQVq7/dITsjFcr
-         6CWwowPyxe/LNg+5VXUsXw5JxhbiuiVwvZdxAsA3B3ESEwWwY4joGTbJcdcRyRfey3wh
-         Zh/cm+8ITapfTUP6h3eSjkaYBUvgLbfIpGAZMOiAOyg0oN2N2JIVC4zac/OF51VsglYT
-         Fyvw==
-X-Gm-Message-State: APjAAAUA5m+zLM42EM1VEqjynqbLk/gnm+gw1e5pI2f5i1LuWD840v1n
-        l+XZ5WPy3UBr8WLQC9qbsfoEsJIdwAvNFOmmTD5gPsuWG/v8g7sJUpYSvIND+/hHviWZgdsjVw/
-        exn7YMUDGYZy4+Aw1KXhKCJi6
-X-Received: by 2002:adf:f288:: with SMTP id k8mr17060151wro.301.1581525639840;
-        Wed, 12 Feb 2020 08:40:39 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzXp2B+0mO+xq5e6mZFerIe0v8m3gwrAdj/HKSYiJvdfgdAfcAjS2vwUxPN1hDCGYWFBWWsgQ==
-X-Received: by 2002:adf:f288:: with SMTP id k8mr17060137wro.301.1581525639611;
-        Wed, 12 Feb 2020 08:40:39 -0800 (PST)
-Received: from [192.168.178.40] ([151.30.86.140])
-        by smtp.gmail.com with ESMTPSA id n8sm1179999wrx.42.2020.02.12.08.40.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 08:40:39 -0800 (PST)
-Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
- kvm_flush_remote_tlbs()
-To:     Paul Burton <paulburton@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20200207223520.735523-1-peterx@redhat.com>
- <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
- <20200212163004.cpd33ux4zslfc3es@lantea.localdomain>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <66e0a38c-a7f5-dcd1-d06b-b317588fad7a@redhat.com>
-Date:   Wed, 12 Feb 2020 17:40:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lC+Mj++3/YMXsXdmajO0Uv+d9BNYm/4DozkgCzMx0BQ=;
+        b=rYbRIAZNqYYpxpu69t9VO9Z1Xch0Fj7X/UOmeojnz5T9KVHHmVwYfR0q86zqYDvhnv
+         hsieMW+jrHBzF5HfhqEaKx1YKmVz2bVrcidXQvo4NNskIQx57jvo3dWLt3p5tMJyztTV
+         36FryUV3zlHafIvIGw9C3kGPKiyp3kConNr/6uCgjB0/ClUS6PP83MpZd1/QgiCRGCj+
+         tbJDxDxm08bmP1McYInN7/Mz1NKYzEi2yGmHVfhIvrBEqa9gaa0fwKmcintKMUgr+unX
+         gSklWZZ52vtzeygs76TCHPeScL8BQ0QDgXGVMBSw96B/j9zjK/GMiNb4eEd3zXZrUf+f
+         MA8g==
+X-Gm-Message-State: APjAAAWGbLnKDvY+4MrP8hBJVCbxc3z2YWpTfGm8NAGkCBtt+b7IX2Lp
+        srf3nWtw5zCgrjyxTryBCMiUgQ==
+X-Google-Smtp-Source: APXvYqz7V5yTkuSB9pl1fNnJzdUoKrXHVZQvM+wS9anG9Lq+6SvM0jdgqYqGHETcydHb23ay3CgY1A==
+X-Received: by 2002:a05:620a:c91:: with SMTP id q17mr11958572qki.168.1581525756526;
+        Wed, 12 Feb 2020 08:42:36 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:26be])
+        by smtp.gmail.com with ESMTPSA id v55sm517848qtc.1.2020.02.12.08.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 08:42:35 -0800 (PST)
+Date:   Wed, 12 Feb 2020 11:42:35 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200212164235.GB180867@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <CALOAHbC3Bx3E7fwt35zuiHfuC8YyhVWA1tDh2KP+gQJoMtED3w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200212163004.cpd33ux4zslfc3es@lantea.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALOAHbC3Bx3E7fwt35zuiHfuC8YyhVWA1tDh2KP+gQJoMtED3w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/20 17:30, Paul Burton wrote:
-> Hi Paolo,
+On Wed, Feb 12, 2020 at 08:25:45PM +0800, Yafang Shao wrote:
+> On Wed, Feb 12, 2020 at 1:55 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > Another variant of this problem was recently observed, where the
+> > kernel violates cgroups' memory.low protection settings and reclaims
+> > page cache way beyond the configured thresholds. It was followed by a
+> > proposal of a modified form of the reverted commit above, that
+> > implements memory.low-sensitive shrinker skipping over populated
+> > inodes on the LRU [1]. However, this proposal continues to run the
+> > risk of attracting disproportionate reclaim pressure to a pool of
+> > still-used inodes,
 > 
-> On Wed, Feb 12, 2020 at 01:25:30PM +0100, Paolo Bonzini wrote:
->> MIPS folks, I see that arch/mips/kvm/mmu.c uses pud_index, so it's not
->> clear to me if it's meant to only work if CONFIG_PGTABLE_LEVELS=4 or
->> it's just bit rot.  Should I add a "depends on PGTABLE_LEVEL=4" to
->> arch/mips/Kconfig?
+> Hi Johannes,
 > 
-> I'm no expert on this bit of code, but I'm pretty sure the systems
-> KVM/VZ has been used on the most internally had PGTABLE_LEVEL=3.
+> If you really think that is a risk, what about bellow additional patch
+> to fix this risk ?
 > 
-> I suspect this is actually a regression from commit 31168f033e37 ("mips:
-> drop __pXd_offset() macros that duplicate pXd_index() ones"). Whilst
-> that commit is correct that pud_index() & __pud_offset() are the same
-> when pud_index() is actually provided, it doesn't take into account the
-> __PAGETABLE_PUD_FOLDED case. There __pud_offset() was available but
-> would always evaluate to zero, whereas pud_index() isn't defined...
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 80dddbc..61862d9 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -760,7 +760,7 @@ static bool memcg_can_reclaim_inode(struct inode *inode,
+>                 goto out;
+> 
+>         cgroup_size = mem_cgroup_size(memcg);
+> -       if (inode->i_data.nrpages + protection >= cgroup_size)
+> +       if (inode->i_data.nrpages)
+>                 reclaimable = false;
+> 
+>  out:
+> 
+> With this additional patch, we skip all inodes in this memcg until all
+> its page cache pages are reclaimed.
 
-Ok, I'll try to whip out a patch that handles __PAGETABLE_PUD_FOLDED.
-On the other hand this makes me worry about how much KVM is being tested
-by people that care about MIPS (even just compile-tested).
+Well that's something we've tried and had to revert because it caused
+issues in slab reclaim. See the History part of my changelog.
 
-Paolo
+> > while not addressing the more generic reclaim
+> > inversion problem outside of a very specific cgroup application.
+> >
+> 
+> But I have a different understanding.  This method works like a
+> knob. If you really care about your workingset (data), you should
+> turn it on (i.e. by using memcg protection to protect them), while
+> if you don't care about your workingset (data) then you'd better
+> turn it off. That would be more flexible.  Regaring your case in the
+> commit log, why not protect your linux git tree with memcg
+> protection ?
 
+I can't imagine a scenario where I *wouldn't* care about my
+workingset, though. Why should it be opt-in, not the default?
