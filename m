@@ -2,70 +2,55 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFCDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B8AC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDF92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D66421569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:22:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WkUUywFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgBLWTx convert rfc822-to-8bit (ORCPT
+        id S1729125AbgBLWWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:19:53 -0500
-Received: from mga14.intel.com ([192.55.52.115]:28120 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728603AbgBLWTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:19:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 14:19:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,434,1574150400"; 
-   d="scan'208";a="237849203"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga006.jf.intel.com with ESMTP; 12 Feb 2020 14:19:51 -0800
-Received: from lcsmsx602.ger.corp.intel.com (10.109.210.11) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 12 Feb 2020 14:19:51 -0800
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- LCSMSX602.ger.corp.intel.com (10.109.210.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 13 Feb 2020 00:19:49 +0200
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Thu, 13 Feb 2020 00:19:48 +0200
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Usyskin, Alexander" <alexander.usyskin@intel.com>,
-        "Lubart, Vitaly" <vitaly.lubart@intel.com>
-Subject: RE: [PATCH] mei: bus: replace zero-length array with flexible-array
- member
-Thread-Topic: [PATCH] mei: bus: replace zero-length array with flexible-array
- member
-Thread-Index: AQHV4R8PZ6+DToj5cUCD4Y1TT5B8IKgYIqMQ
-Date:   Wed, 12 Feb 2020 22:19:48 +0000
-Message-ID: <71cd2c9eba7f4ac68de55148edb08e19@intel.com>
-References: <20200211210822.GA31368@embeddedor>
-In-Reply-To: <20200211210822.GA31368@embeddedor>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 12 Feb 2020 17:22:41 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:45106 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgBLWWl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 17:22:41 -0500
+Received: from [10.137.112.97] (unknown [131.107.147.225])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 336432010ADE;
+        Wed, 12 Feb 2020 14:22:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 336432010ADE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1581546160;
+        bh=Gfu4834khvWd5NyU28yO95P+YwjE64NeIVO9DnT21f8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WkUUywFKYC7RryjuGd40mQ/FV4j+fINQ+zFxsDHVh79zh5hEnQHdvjb3ybijJLW/d
+         1JrSenIX6wU6tE+cbz5RBrdGJ7wiKCNOT2DqgsUOgKO3yXO/Blz5w5MoGc3KgDxC57
+         xbYN8LDWOrpTi+8iVI8B73fAHEEyk1XpPjgTDOts=
+Subject: Re: [PATCH v3 0/3] IMA: improve log messages in IMA
+To:     Mimi Zohar <zohar@linux.ibm.com>, joe@perches.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+ <1581521009.8515.72.camel@linux.ibm.com>
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Message-ID: <3a2b7a5e-5759-2f29-80bb-e71dda8e5cec@linux.microsoft.com>
+Date:   Wed, 12 Feb 2020 14:22:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <1581521009.8515.72.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,63 +58,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Sent: Tuesday, February 11, 2020 23:08
-> To: Winkler, Tomas <tomas.winkler@intel.com>; Arnd Bergmann
-> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-kernel@vger.kernel.org; Gustavo A. R. Silva
-> <gustavo@embeddedor.com>
-> Subject: [PATCH] mei: bus: replace zero-length array with flexible-array member
+On 2020-02-12 7:23 a.m., Mimi Zohar wrote:
+> Hi Tushar,
 > 
-> The current codebase makes use of the zero-length array language extension to
-> the C90 standard, but the preferred mechanism to declare variable-length types
-> such as these ones is a flexible array member[1][2], introduced in C99:
+> "in IMA" is redundant in the above Subject line.
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning in case
-> the flexible array does not occur last in the structure, which will help us prevent
-> some kind of undefined behavior bugs from being inadvertenly introduced[3] to
-> the codebase from now on.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Ack.
+Thanks Mimi. I will fix it in the next iteration.
 
-> ---
->  drivers/misc/mei/bus-fixup.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
+>> Some files under IMA prefix the log statement with the respective file
+>> names and not with the string "ima". This is not consistent with the rest
+>> of the IMA files.
+>>
+>> The function process_buffer_measurement() does not have log messages for
+>> failure conditions.
+>>
+>> The #define for formatting log messages, pr_fmt, is duplicated in the
+>> files under security/integrity.
+>>
+>> This patchset addresses the above issues.
 > 
-> diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c index
-> 5fcac02233af..aa3648d59a8a 100644
-> --- a/drivers/misc/mei/bus-fixup.c
-> +++ b/drivers/misc/mei/bus-fixup.c
-> @@ -107,7 +107,7 @@ struct mkhi_rule_id {  struct mkhi_fwcaps {
->  	struct mkhi_rule_id id;
->  	u8 len;
-> -	u8 data[0];
-> +	u8 data[];
->  } __packed;
+> The cover letter should provide a summary of the problem(s) being
+> addressed by the individual patches, not a repetition of the
+> individual patch descriptions.
 > 
->  struct mkhi_fw_ver_block {
-> @@ -135,7 +135,7 @@ struct mkhi_msg_hdr {
-> 
->  struct mkhi_msg {
->  	struct mkhi_msg_hdr hdr;
-> -	u8 data[0];
-> +	u8 data[];
->  } __packed;
-> 
->  #define MKHI_OSVER_BUF_LEN (sizeof(struct mkhi_msg_hdr) + \
-> --
-> 2.25.0
+Thanks. I will fix the cover letter description in the next iteration.
 
+> Mimi
+> 
+>>
+>> Tushar Sugandhi (3):
+>>    add log prefix to ima_mok.c, ima_asymmetric_keys.c, ima_queue_keys.c
+>>    add log message to process_buffer_measurement failure conditions
+>>    add module name and base name prefix to log statements
+>>
+>>   security/integrity/digsig.c                  | 2 --
+>>   security/integrity/digsig_asymmetric.c       | 2 --
+>>   security/integrity/evm/evm_crypto.c          | 2 --
+>>   security/integrity/evm/evm_main.c            | 2 --
+>>   security/integrity/evm/evm_secfs.c           | 2 --
+>>   security/integrity/ima/Makefile              | 6 +++---
+>>   security/integrity/ima/ima_asymmetric_keys.c | 2 --
+>>   security/integrity/ima/ima_crypto.c          | 2 --
+>>   security/integrity/ima/ima_fs.c              | 2 --
+>>   security/integrity/ima/ima_init.c            | 2 --
+>>   security/integrity/ima/ima_kexec.c           | 1 -
+>>   security/integrity/ima/ima_main.c            | 5 +++--
+>>   security/integrity/ima/ima_policy.c          | 2 --
+>>   security/integrity/ima/ima_queue.c           | 2 --
+>>   security/integrity/ima/ima_queue_keys.c      | 2 --
+>>   security/integrity/ima/ima_template.c        | 2 --
+>>   security/integrity/ima/ima_template_lib.c    | 2 --
+>>   security/integrity/integrity.h               | 6 ++++++
+>>   18 files changed, 12 insertions(+), 34 deletions(-)
+>>
