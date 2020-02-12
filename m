@@ -2,104 +2,112 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D258C3B186
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A72C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B282173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:02:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tid00NV9"
+	by mail.kernel.org (Postfix) with ESMTP id 8146921739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgBMACs (ORCPT
+        id S1729410AbgBMADV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:02:48 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:49381 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729190AbgBMACs (ORCPT
+        Wed, 12 Feb 2020 19:03:21 -0500
+Received: from ishtar.tlinx.org ([173.164.175.65]:53526 "EHLO
+        Ishtar.sc.tlinx.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgBMADU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:02:48 -0500
-Received: by mail-pg1-f202.google.com with SMTP id u14so2473219pgq.16
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:02:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5sejEhwZ2l45t4qqweTv/TeKAPA6gGJt5bGMAHC09l0=;
-        b=Tid00NV9UbKop+yR0Rx7qVMTr/h4L39t83pZjaUJu84RLnBTKMch+9VcMZ6m0qeKjF
-         60D1PptlQPn0s8Hs6GND6AZ2U2Jr5MC3DTC/Bl7zBXIxtYa9R7fnZ+1hKo3vYqXmrUyB
-         vt12pClRebXdaxCxy+7vmi1rPm4/UcgLGz6ig3WduGtFy9ianJLhRPezoE+2TUOup1Pr
-         A+/mQINrJjpFm6FD0ovnhwTk11FkmYGP4oY6F3RwC7hL3A7IVsgP3n/hIYcX/zEu44zL
-         sgKqtIJYMoozh9UgZOLjky1IfE+mtB0+fdBXmIjA6qR8kO1IU804rVSNIAYiDuhCQqes
-         zGig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5sejEhwZ2l45t4qqweTv/TeKAPA6gGJt5bGMAHC09l0=;
-        b=UzIZ7nASU1Ei4s9cQIOKQZg/jeDlJiE2BkDHRwXA0MJ/2LBPjZXWrpL2zHhjgzX9Xs
-         l6HRMveShCit1Ok4qJO0bpkZ011eqhZ+McCr0Lp5JEeR4N7hxi3qzLn9BpVuSqkGMPvo
-         ueupPAP5fLAE07vB3jhqpSWZyuoalGjev/sXdjKA1B3VCK7c+/+eyFmfCy2l+6cz7FRM
-         yDXxmDCtHYSROt9SJiNmAQ6jkYhQSCNz7qBLjGDiGFhThRtRvtBoz/SJETuckYHZFN1o
-         0Ul4zrtZEixWICDrmC78c5LZggQWTi9fl3E3P126u2q95s+HrdE3NAn7f4nutkv3+sPc
-         0xeA==
-X-Gm-Message-State: APjAAAWU18Y3BIcOa5+M43VsMTmXr8bqto7xGNkQ1YR4nu0903DVFTfW
-        4a6CEe8Ntgt6VKRZEKSnPWrptBYWanaWf8sQ
-X-Google-Smtp-Source: APXvYqyQdAUlX785CT1PjEzV5Ehbjvh7EyH6Fliu2ZgqUyzQFgUXEmB1xuRjIi4OxgsEWZmdQNv7NhvPfHZVbDJl
-X-Received: by 2002:a65:5a48:: with SMTP id z8mr14547104pgs.157.1581552167135;
- Wed, 12 Feb 2020 16:02:47 -0800 (PST)
-Date:   Wed, 12 Feb 2020 16:02:42 -0800
-Message-Id: <20200213000242.26245-1-rammuthiah@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
-Subject: [PATCH] virtio: virtio_pci_legacy: Remove default y from Kconfig
-From:   Ram Muthiah <rammuthiah@google.com>
-To:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Ram Muthiah <rammuthiah@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 12 Feb 2020 19:03:20 -0500
+X-Greylist: delayed 1819 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 19:03:20 EST
+Received: from [192.168.3.12] (Athenae [192.168.3.12])
+        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 01CNWvUV014523;
+        Wed, 12 Feb 2020 15:33:00 -0800
+Message-ID: <5E448B29.1080705@tlinx.org>
+Date:   Wed, 12 Feb 2020 15:32:57 -0800
+From:   L Walsh <cifs@tlinx.org>
+User-Agent: Thunderbird
+MIME-Version: 1.0
+To:     Steve French <smfrench@gmail.com>
+CC:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux-Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [CIFS][PATCH] Add SMB3/Win10-only  Change Notify
+References: <CAH2r5mtQRVX3_-_sVjvigRSv2LpSoUBQo7YeY5v0nXm7BGaDig@mail.gmail.com> <5E413F22.3070101@tlinx.org> <CAH2r5mst9FjdPrBQdjt1HGkf73VoNzDUxPSEQNZwyi=9W9XGhA@mail.gmail.com>
+In-Reply-To: <CAH2r5mst9FjdPrBQdjt1HGkf73VoNzDUxPSEQNZwyi=9W9XGhA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The legacy pci driver should no longer be default enabled. QEMU has
-implemented support for Virtio 1 for virtio-pci since June 2015
-on SHA dfb8e184db75.
+On 2020/02/10 06:30, Steve French wrote:
+>
+>>     By calling it a SMB3 feature, does that mean you are removing
+>> it from SMB2?
+>>     
+>
+> That is a good question.  I should have made more clear that although
+> many servers support Change Notify prior to SMB3 dialect, we chose
+> to implement it in SMB3 (late 2012 and later dialect) to minimize testing
+> risks and since we want to encourage users to use SMB3 or later (or
+> at least SMB2.1 or later since security is significantly better for later
+> dialects than for SMB1 and even SMB2)
+>   
+----
+    SMB2.1 would be fine for my purposes, I find it a bit odd though that
+my linux server running these changes won't be as capable of detecting
+directory changes as an outdated Win7 machine. 
 
-Signed-off-by: Ram Muthiah <rammuthiah@google.com>
----
- drivers/virtio/Kconfig | 6 ------
- 1 file changed, 6 deletions(-)
+    There are many below-SMB3 speaking devices out in the world right now. 
+Probably many below 2.1. 
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 078615cf2afc..eacd0b90d32b 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -26,7 +26,6 @@ config VIRTIO_PCI
- 
- config VIRTIO_PCI_LEGACY
- 	bool "Support for legacy virtio draft 0.9.X and older devices"
--	default y
- 	depends on VIRTIO_PCI
- 	---help---
-           Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
-@@ -36,11 +35,6 @@ config VIRTIO_PCI_LEGACY
- 	  If disabled, you get a slightly smaller, non-transitional driver,
- 	  with no legacy compatibility.
- 
--          So look out into your driveway.  Do you have a flying car?  If
--          so, you can happily disable this option and virtio will not
--          break.  Otherwise, leave it set.  Unless you're testing what
--          life will be like in The Future.
--
- 	  If unsure, say Y.
- 
- config VIRTIO_PMEM
--- 
-2.25.0.225.g125e21ebc7-goog
+    You say you want to "encourage users to use SMB3 or later (or at least
+SMB2.1)", how does adding SMB3-only support allow users to use SMB2.1?
+Say your encouragement of users is taken to heart, and they want to use 
+SMB3.
+How would those users upgrade the dialect of SMB used in their
+machine or device?  I don't know of any easy way to upgrade existing 
+devices -
+even existing OS's, if a user ran Win7, how would they upgrade the CIFS
+drivers to 3.0?
+
+    If it is not possible to upgrade existing devices, then wouldn't that
+encouragement boil down to junking the device and buying a new one?
+> Change Notify is available in all dialects (SMB2, SMB2.1, SMB3, SMB3.1.1)
+> for many servers but for the client we just implemented it for SMB3 and later.
+>   
+    Doesn't that mean that the linux client won't be able to access 
+existing
+NAS servers or Win-Client machine running anything other than Win10?  Does
+the current version of samba provide full SMB3 support?  If not, doesn't 
+that
+imply that the client for CIFS won't be able to access or use these features
+from another linux server?
+> If you have a server that you want to support that requires
+> SMB2 or SMB2.1 mounts, I wouldn't mind a patch to add notify support
+> for those older dialects but I would like to encourage use of SMB3 or later (or
+> at least SMB2.1 or later) where possible.
+>   
+    Again, how does implementing SMB3-only, only support SMB2.1 or later?
+
+    If you feel it would be trivial to add such a patch, wouldn't you be in
+the position of, probably, having the most knowledge about the subject 
+and be
+likely to do the best job without breaking anything else?  Certainly doesn't
+mean someone else couldn't but seems riskier than offering a Linux 
+client that
+would be able to access the widest range of existing devices and 
+computers from
+the start.
+
+Thanks!
+Linda
+
+
+
+
+
+
 
