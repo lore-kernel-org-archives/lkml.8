@@ -2,143 +2,104 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1200DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642E2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E221B2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DE22086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581513649;
+	bh=2dOsmB0o98+qf56HpgUqHTo4+gRYS1ahpt6eAMncra4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k9WzLBOK3HHcyqEaue8d6c2Tvy0ZW//+KoyjTraYV5yr3RU8UNLnsleVhOQcp86uP
+	 5dlTXMUO4T6XunNQCrICUK+aUa1mkwuE3nIl/h+C5s4TGXu9ECrL7ZxZt0v216jfDT
+	 htfjOgr56pinTixSqdROHSUX9bNJG608nMBsAyas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgBLNUo (ORCPT
+        id S1728080AbgBLNUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:20:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58646 "EHLO mx2.suse.de"
+        Wed, 12 Feb 2020 08:20:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgBLNUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:20:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7986CAEEE;
-        Wed, 12 Feb 2020 13:20:39 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 13:20:36 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        linux-kernel@vger.kernel.org, pauld@redhat.com,
-        parth@linux.ibm.com, valentin.schneider@arm.com
-Subject: Re: [PATCH 1/4] sched/fair: reorder enqueue/dequeue_task_fair path
-Message-ID: <20200212132036.GT3420@suse.de>
-References: <20200211174651.10330-1-vincent.guittot@linaro.org>
- <20200211174651.10330-2-vincent.guittot@linaro.org>
+        id S1727962AbgBLNUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 08:20:46 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8CD2086A;
+        Wed, 12 Feb 2020 13:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581513645;
+        bh=2dOsmB0o98+qf56HpgUqHTo4+gRYS1ahpt6eAMncra4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lYbU7znJzBmUWV5YMM6MB1suNCzjbbi9Z7lTuEBYM22xy3LGxKs7oCc39Ab16ThNh
+         /iOw34z7VSNXP27IaEEVmYGtDumjL8kfq4MBHshQKaLoxEY+PSK089KW3MwLpH7OHs
+         gDITsQ+Sq2dK+yMDygicQ3N4TY65hMhBtsmtXwKM=
+Date:   Wed, 12 Feb 2020 05:20:45 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Will Deacon <will@kernel.org>, mdf@kernel.org,
+        mark.rutland@arm.com, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        atull@kernel.org, yilun.xu@intel.com,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH v7 2/2] fpga: dfl: fme: add performance reporting support
+Message-ID: <20200212132045.GC1789899@kroah.com>
+References: <1581306469-22629-1-git-send-email-hao.wu@intel.com>
+ <1581306469-22629-3-git-send-email-hao.wu@intel.com>
+ <20200210163400.GA21900@willie-the-truck>
+ <20200212031929.GB5645@hao-dev>
+ <20200212053035.GA382718@kroah.com>
+ <20200212100211.GA10436@hao-dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211174651.10330-2-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200212100211.GA10436@hao-dev>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 06:46:48PM +0100, Vincent Guittot wrote:
-> The walk through the cgroup hierarchy during the enqueue/dequeue of a task
-> is split in 2 distinct parts for throttled cfs_rq without any added value
-> but making code less readable.
+On Wed, Feb 12, 2020 at 06:02:11PM +0800, Wu Hao wrote:
+> On Tue, Feb 11, 2020 at 09:30:35PM -0800, Greg KH wrote:
+> > On Wed, Feb 12, 2020 at 11:19:29AM +0800, Wu Hao wrote:
+> > > On Mon, Feb 10, 2020 at 04:34:01PM +0000, Will Deacon wrote:
+> > > > Hi,
+> > > > 
+> > > > On Mon, Feb 10, 2020 at 11:47:49AM +0800, Wu Hao wrote:
+> > > > > This patch adds support for performance reporting private feature
+> > > > > for FPGA Management Engine (FME). Now it supports several different
+> > > > > performance counters, including 'basic', 'cache', 'fabric', 'vtd'
+> > > > > and 'vtd_sip'. It allows user to use standard linux tools to access
+> > > > > these performance counters.
+> > > > 
+> > > > I had a quick look at this, and it mostly looks alright to me. Just a few
+> > > > high-level comments/questions:
+> > > 
+> > > Hi Will
+> > > 
+> > > Thanks a lot for the review! :)
+> > > 
+> > > > 
+> > > >   - I would still prefer for the PMU drivers to live under drivers/perf/
+> > > 
+> > > Hm.. one possible way is to create a platform device, and introduce a new
+> > > platform device driver under drivers/perf/.
+> > 
+> > No, do not abuse platform drivers, you have a real device, use it.
 > 
-> Change the code ordering such that everything related to a cfs_rq
-> (throttled or not) will be done in the same loop.
-> 
-> In addition, the same steps ordering is used when updating a cfs_rq:
-> - update_load_avg
-> - update_cfs_group
-> - update *h_nr_running
-> 
-> No functional and performance changes are expected and have been noticed
-> during tests.
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->  kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
->  1 file changed, 20 insertions(+), 22 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1a0ce83e835a..a1ea02b5362e 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5259,32 +5259,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->  		cfs_rq = cfs_rq_of(se);
->  		enqueue_entity(cfs_rq, se, flags);
->  
-> -		/*
-> -		 * end evaluation on encountering a throttled cfs_rq
-> -		 *
-> -		 * note: in the case of encountering a throttled cfs_rq we will
-> -		 * post the final h_nr_running increment below.
-> -		 */
-> -		if (cfs_rq_throttled(cfs_rq))
-> -			break;
->  		cfs_rq->h_nr_running++;
->  		cfs_rq->idle_h_nr_running += idle_h_nr_running;
->  
-> +		/* end evaluation on encountering a throttled cfs_rq */
-> +		if (cfs_rq_throttled(cfs_rq))
-> +			goto enqueue_throttle;
-> +
->  		flags = ENQUEUE_WAKEUP;
->  	}
->  
->  	for_each_sched_entity(se) {
->  		cfs_rq = cfs_rq_of(se);
-> -		cfs_rq->h_nr_running++;
-> -		cfs_rq->idle_h_nr_running += idle_h_nr_running;
->  
-> +		/* end evaluation on encountering a throttled cfs_rq */
->  		if (cfs_rq_throttled(cfs_rq))
-> -			break;
-> +			goto enqueue_throttle;
->  
->  		update_load_avg(cfs_rq, se, UPDATE_TG);
->  		update_cfs_group(se);
-> +
-> +		cfs_rq->h_nr_running++;
-> +		cfs_rq->idle_h_nr_running += idle_h_nr_running;
->  	}
->  
-> +enqueue_throttle:
->  	if (!se) {
->  		add_nr_running(rq, 1);
->  		/*
+> Sure, thanks for the comments. Then I don't have any other idea to move code to
+> drivers/perf/ directory, so probably only can live with current code.
 
-I'm having trouble reconciling the patch with the description and the
-comments explaining the intent behind the code are unhelpful.
+The location of the file in the kernel tree has no bearing on if you use
+a platform device, a USB device, or a PCI device.  It is just a location
+of a file.
 
-There are two loops before and after your patch -- the first dealing with
-sched entities that are not on a runqueue and the second for the remaining
-entities that are. The intent appears to be to update the load averages
-once the entity is active on a runqueue.
+You are interacting with the perf api as the driver's primary userspace
+api, so put the driver into the drivers/perf/ directory.  That's all
+that Will is asking you to do here.
 
-I'm not getting why the changelog says everything related to cfs is
-now done in one loop because there are still two. But even if you do
-get throttled, it's not clear why you jump to the !se check given that
-for_each_sched_entity did not complete. What it *does* appear to do is
-have all the h_nr_running related to entities being enqueued updated in
-one loop and all remaining entities stats updated in the other.
-
-Following the accounting is tricky. Before the patch, if throttling
-happened then h_nr_running was updated without updating the corresponding
-nr_running counter in rq. They are out of sync until unthrottle_cfs_rq
-is called at the very least. After your patch, the same is true and while
-the accounting appears to be equivalent, it's not clear it's correct and
-I do not find the code any easier to understand after the patch or how
-it's connected to runnable_load_avg which this series is about :(
-
-I think the patch is functionally ok but I am having trouble figuring
-out the motive. Maybe it'll be obvious after I read the rest of the series.
-
--- 
-Mel Gorman
-SUSE Labs
+greg k-h
