@@ -2,207 +2,68 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF96AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BB8C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9C8206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D6A2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgBLPtE (ORCPT
+        id S1728648AbgBLPtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:49:04 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2416 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727458AbgBLPtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:49:04 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 57CD0E97AC3E97CA8733;
-        Wed, 12 Feb 2020 15:49:02 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 12 Feb 2020 15:49:01 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 12 Feb
- 2020 15:49:01 +0000
-Subject: Re: [PATCH] perf tools: Add arm64 version of get_cpuid()
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linuxarm@huawei.com>
-References: <1576245255-210926-1-git-send-email-john.garry@huawei.com>
- <1005f572-e32a-a90e-1572-c85a2f202fdf@huawei.com>
- <20200212134024.GC22501@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ae11aac0-0edf-633c-cafd-6db39faef6b1@huawei.com>
-Date:   Wed, 12 Feb 2020 15:49:01 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 12 Feb 2020 10:49:10 -0500
+Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:49478 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727458AbgBLPtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:49:09 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 35642180A68D7;
+        Wed, 12 Feb 2020 15:49:07 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: play61_4f690e963e011
+X-Filterd-Recvd-Size: 1651
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 12 Feb 2020 15:49:05 +0000 (UTC)
+Message-ID: <b9acb7868a1e225db09830d859bfd4cc6ac6330d.camel@perches.com>
+Subject: Re: [PATCH v3 3/3] IMA: Add module name and base name prefix to log.
+From:   Joe Perches <joe@perches.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 12 Feb 2020 07:47:49 -0800
+In-Reply-To: <1581521161.3494.7.camel@HansenPartnership.com>
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+         <20200211231414.6640-4-tusharsu@linux.microsoft.com>
+         <1581517770.8515.35.camel@linux.ibm.com>
+         <1581521161.3494.7.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200212134024.GC22501@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/2020 13:40, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jan 07, 2020 at 09:13:43AM +0000, John Garry escreveu:
->> On 13/12/2019 13:54, John Garry wrote:
->>
->> Hi Arnaldo,
->>
->> Do we need some reviews on this? Or was it missed/still catching up?
+On Wed, 2020-02-12 at 10:26 -0500, James Bottomley wrote:
+> Log messages are often consumed by log monitors, which mostly use
+> pattern matching to find messages they're interested in, so you have to
+> take some care when changing the messages the kernel spits out and you
+> have to make sure any change gets well notified so the distributions
+> can warn about it.
 > 
-> Got lost in the holidays, devconf.cz, vacations, sorry, picking it up
-> now, together with a Tested-by by Shaokun Zhang, some issues with the
-> formatting of the patch:
-> 
-> - Avoid starting lines with '#' as those will vanish when I use 'git am'
+> For this one, can we see a "before" and "after" message so we know
+> what's happening?
 
-ah, so this must be why people use, for example, '/include "..."' in 
-commit logs
+https://patchwork.kernel.org/patch/11357335/#23134147
 
-> 
-> - Separate the commit log message from the diff using a '---' at the
->    begining of the line, otherwise 'git am' fails
-
-apologizes, I must have cut that by mistake
-
-> 
-> I fixed those up now, will test with my build containers, thanks.
-> 
-
-Thanks
-
-> - Arnaldo
->   
->> Cheers,
->> John
->>
->>> Add an arm64 version of get_cpuid(), which is used for various annotation
->>> and headers - for example, I now get the CPUID in "perf report --header",
->>> as shown in this snippet:
->>>
->>> # hostname : ubuntu
->>> # os release : 5.5.0-rc1-dirty
->>> # perf version : 5.5.rc1.gbf8a13dc9851
->>> # arch : aarch64
->>> # nrcpus online : 96
->>> # nrcpus avail : 96
->>> # cpuid : 0x00000000480fd010
->>>
->>> Since much of the code to read the MIDR is already in get_cpuid_str(),
->>> factor out this code.
->>>
->>> Signed-off-by: John Garry <john.garry@huawei.com>
->>>
->>> diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
->>> index a32e4b72a98f..d730666ab95d 100644
->>> --- a/tools/perf/arch/arm64/util/header.c
->>> +++ b/tools/perf/arch/arm64/util/header.c
->>> @@ -1,8 +1,10 @@
->>>    #include <stdio.h>
->>>    #include <stdlib.h>
->>>    #include <perf/cpumap.h>
->>> +#include <util/cpumap.h>
->>>    #include <internal/cpumap.h>
->>>    #include <api/fs/fs.h>
->>> +#include <errno.h>
->>>    #include "debug.h"
->>>    #include "header.h"
->>> @@ -12,26 +14,21 @@
->>>    #define MIDR_VARIANT_SHIFT      20
->>>    #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
->>> -char *get_cpuid_str(struct perf_pmu *pmu)
->>> +static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
->>>    {
->>> -	char *buf = NULL;
->>> -	char path[PATH_MAX];
->>>    	const char *sysfs = sysfs__mountpoint();
->>> -	int cpu;
->>>    	u64 midr = 0;
->>> -	struct perf_cpu_map *cpus;
->>> -	FILE *file;
->>> +	int cpu;
->>> -	if (!sysfs || !pmu || !pmu->cpus)
->>> -		return NULL;
->>> +	if (!sysfs || sz < MIDR_SIZE)
->>> +		return EINVAL;
->>> -	buf = malloc(MIDR_SIZE);
->>> -	if (!buf)
->>> -		return NULL;
->>> +	cpus = perf_cpu_map__get(cpus);
->>> -	/* read midr from list of cpus mapped to this pmu */
->>> -	cpus = perf_cpu_map__get(pmu->cpus);
->>>    	for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
->>> +		char path[PATH_MAX];
->>> +		FILE *file;
->>> +
->>>    		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
->>>    				sysfs, cpus->map[cpu]);
->>> @@ -57,12 +54,48 @@ char *get_cpuid_str(struct perf_pmu *pmu)
->>>    		break;
->>>    	}
->>> -	if (!midr) {
->>> +	perf_cpu_map__put(cpus);
->>> +
->>> +	if (!midr)
->>> +		return EINVAL;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +int get_cpuid(char *buf, size_t sz)
->>> +{
->>> +	struct perf_cpu_map *cpus = perf_cpu_map__new(NULL);
->>> +	int ret;
->>> +
->>> +	if (!cpus)
->>> +		return EINVAL;
->>> +
->>> +	ret = _get_cpuid(buf, sz, cpus);
->>> +
->>> +	perf_cpu_map__put(cpus);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +char *get_cpuid_str(struct perf_pmu *pmu)
->>> +{
->>> +	char *buf = NULL;
->>> +	int res;
->>> +
->>> +	if (!pmu || !pmu->cpus)
->>> +		return NULL;
->>> +
->>> +	buf = malloc(MIDR_SIZE);
->>> +	if (!buf)
->>> +		return NULL;
->>> +
->>> +	/* read midr from list of cpus mapped to this pmu */
->>> +	res = _get_cpuid(buf, MIDR_SIZE, pmu->cpus);
->>> +	if (res) {
->>>    		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
->>>    		free(buf);
->>>    		buf = NULL;
->>>    	}
->>> -	perf_cpu_map__put(cpus);
->>>    	return buf;
->>>    }
->>>
->>
-> 
 
