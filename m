@@ -2,115 +2,74 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A30C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B08AC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829A8218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:50:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEAWMqhk"
+	by mail.kernel.org (Postfix) with ESMTP id DC7A4218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581540748;
+	bh=IyBLJs7u+s1RqfuILL8EHYI9KQ31ezat17YVqp0mnJE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=eCSvFz8fazHvPMc/CujDvwAETICt6GdckJkIlndNn2ag8CAa2zWOuRAdiEZSJTr22
+	 1VITvAFUQLw2zGA9TyhqIMayHkfA/9XDsyAjTycHYq950Z642QVWmXRI0abY3UibL/
+	 Mg+4l+RvEsXjVxO3w+3HHEGQe17PcHRSyPyes/i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgBLUuB (ORCPT
+        id S1728776AbgBLUw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:50:01 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38845 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgBLUuA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:50:00 -0500
-Received: by mail-lj1-f195.google.com with SMTP id w1so3958602ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:49:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lV7hvjNmswlLvWeK5lw61miY9L53LZTaOCTXifOja2E=;
-        b=dEAWMqhkvKRQ2NLUxoF2wQS5EvmJBsSSQ5lj3v1zKZfcpaWEew8A03ii1GUv0Rzyb4
-         li60+Iho5s/vJRVdYPiov613XgUf2+HHqZbQPUanhs0Y5tbFmi5BkYyjl+LOlO/l5l/G
-         ybjpyGNVmWEJMZ/AyNUF22OGpDxnhRybIAzDNUEI1lhLZQxUBC4NCsRKKOiPET0b26jW
-         2HijBLo7SKgtfJe1v07bFOii0CIjiuFknYNjZZOhfToitf3MBUv9wLdLQ3L5/FdbOKlU
-         1vdoGXWmB2uaCpyadlAxNTfqqeChTjzPkIEOXDYWkNgVUDRBVL/NKL0eOKPzH8e8c4wv
-         mfkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lV7hvjNmswlLvWeK5lw61miY9L53LZTaOCTXifOja2E=;
-        b=DVihTG9p084gYrBByWd1GjA3LBSL7coTu5nNDx/dXrikQ4GRP5YOgYo8oC7fZ1dYhF
-         zFX0Dgf8CQ9i7Ei0Od3GTD9LXtop2MplqLdZoSI+kZqP4rkmfSqZwCalnjMhidD7Ja5a
-         Nq1ZOPeDhTRdN2BQhGmx8jlAObj+WvVYBRnLdxyMdNL+8rja2ZPBhhL7IvdSMb+vMKh+
-         MirtZH9kU5RMjPKFmNTXL6coUxnhQo+B6wLohug0QOKq7YSRlmvlCoAiwjViWRtTwlpU
-         i1sMd/I329rMkex6FWR8/o5OkkzBbfP7vsBTBqNfpOc1Vi8FlLdAlGXzh1pyMSfUFAGz
-         RRfg==
-X-Gm-Message-State: APjAAAUTqMC41a4dNNyv8x+qQIq7OrtghjnyYKBbDEyDp2sAAAjdBukZ
-        1WxHk5GCWrXTaCVW1XGO8mp/DFoBUU+cbikbBsyGkABM
-X-Google-Smtp-Source: APXvYqymY/lQ1elEp2Ss9xlTL+56MB8I4hRX+1ShsPJ8o/QTu8wjBIKXeGwPdHIzZn/xSBuyGol0riXyg7okTiO32nQ=
-X-Received: by 2002:a05:651c:2046:: with SMTP id t6mr9097388ljo.180.1581540598513;
- Wed, 12 Feb 2020 12:49:58 -0800 (PST)
+        Wed, 12 Feb 2020 15:52:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbgBLUw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:52:26 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 244FD2173E;
+        Wed, 12 Feb 2020 20:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581540746;
+        bh=IyBLJs7u+s1RqfuILL8EHYI9KQ31ezat17YVqp0mnJE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=yHHoK4jnA1pMtbfXvN+Rd+0Dhpmtdd6EEmDrQ2FiBdkmc5ouIZJfcTMj+mwiEdSze
+         pM4jRSSzpiVGRKbzKkWp6l1k7st5Tl3iypLw1zODU3c+sLmN9Bp4+/obQ9rwWft+BQ
+         N5m40RGAGq1Oi6+Jc2qY+YxccQvXHY5l13MYvN5U=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200212195231.GA2867@embeddedor>
-In-Reply-To: <20200212195231.GA2867@embeddedor>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 12 Feb 2020 21:49:47 +0100
-Message-ID: <CANiq72nt19x2Z6ErT8a1_2c0sKfjkv_yUFMZS2mf3HWp3RvnDQ@mail.gmail.com>
-Subject: Re: [PATCH] auxdisplay: charlcd: replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200212101544.8793-4-geert+renesas@glider.be>
+References: <20200212101544.8793-1-geert+renesas@glider.be> <20200212101544.8793-4-geert+renesas@glider.be>
+Subject: Re: [PATCH 3/7] MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        James Hartley <james.hartley@sondrel.com>,
+        John Crispin <john@phrozen.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>
+Date:   Wed, 12 Feb 2020 12:52:25 -0800
+Message-ID: <158154074529.184098.8557310539914705485@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+Quoting Geert Uytterhoeven (2020-02-12 02:15:40)
+> The generic MIPS platform code is not a clock provider, and just needs
+> to call of_clk_init().
+>=20
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
 
-On Wed, Feb 12, 2020 at 8:49 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
-
-s:inadvertenly:inadvertently:
-
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-I saw the discussion regarding this -- thanks! Do you want me to
-handle this or will you push everything centrally? If the latter, have
-my
-
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-
-Cheers,
-Miguel
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
