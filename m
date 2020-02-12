@@ -2,157 +2,163 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628DFC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF1BC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CA2206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E45206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M8jzit6j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a65sjySZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgBLHze (ORCPT
+        id S1728417AbgBLHzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:55:34 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39047 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbgBLHze (ORCPT
+        Wed, 12 Feb 2020 02:55:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55650 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728381AbgBLHzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:55:34 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so645454plp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 23:55:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VF571MMcb1F1isbPRkdGPyOV5FtumBnPxlJ+7Ql/2kk=;
-        b=M8jzit6j9QXHldQW1vziSBuVrDgF9wRu9w6NmWC+sZyaJWtUZhgeLAMF0x14pFwBw5
-         5oa/2v1y+DHBalrUVcSKiPaFQ84SEcBZsZTek9oGPffflAIEjDSjPW48ml5l6ZL/YIh4
-         +EovNwMX9O57bPiJv5hzJijmEHFPoa24QMq0E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VF571MMcb1F1isbPRkdGPyOV5FtumBnPxlJ+7Ql/2kk=;
-        b=dXz49zwuokOAvAMLHokd/dPCKHv0uvlRtSzOe6KwrG1zcCp7LajieeaO3BfmaCLNXf
-         8ki1YppXwZOnpxqMVYfvgD4MuLSL0YzOsyMLijUu037aknq4T1jxRneQV33jAp1gQoxg
-         fNZFAtwJ1VClDpVEjFsBr35nnGAvY78F0nZHGtgLKd0CN3w0ei9v5zBVoMmHqKAMB82t
-         J1uetXP8dslb/5eumiPe6ATAUtxBm4Gf3zsgSIa4nWNe3qFBhxnJqXL4GnpnWaMT+4zQ
-         HwwNK9CCjxUGol6fBjWUhusqUj4JABO2iqR1z/0mJF3Ij4rk8FYL3P5dwaUTqM3OLxxP
-         ao+A==
-X-Gm-Message-State: APjAAAViXTnQq1YwFk82VnZByJodEImhtCK3OjcLp0YniBSrZ5v6hO/D
-        KiEzCC6ZvrnBn1zoiQy9CfJiOw==
-X-Google-Smtp-Source: APXvYqyq4WY8bw9Txax+nA+0rPTTt8AqEwN517kv3Z9JDxtZ0o94aydwMwtjJghKRwSJ7soeTjt94g==
-X-Received: by 2002:a17:90a:950b:: with SMTP id t11mr8410462pjo.79.1581494133278;
-        Tue, 11 Feb 2020 23:55:33 -0800 (PST)
-Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id u126sm7049918pfu.182.2020.02.11.23.55.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 23:55:32 -0800 (PST)
-From:   Nicolas Boichat <drinkcat@chromium.org>
-To:     Viresh Kumar <vireshk@kernel.org>
-Cc:     Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PM / OPP: Add support for multiple regulators
-Date:   Wed, 12 Feb 2020 15:55:29 +0800
-Message-Id: <20200212075529.156756-1-drinkcat@chromium.org>
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
+        Wed, 12 Feb 2020 02:55:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581494153;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6lJXyrbl6ehIPLDhdvGx94ceUYOxEq2wFztlRa5WwwQ=;
+        b=a65sjySZfWE+uFTgwGTt3UWRH2xxIujiFDkmxzFSJzifUokUXoRzDODK7IaBqwxoOK76UU
+        u8cMXcAaIkgK9l36CJ2VtsyIxobwpk604y5E8a6RpSshdS70UNGcE6nNGC09XClbOn5Lfy
+        Fu50NaZfmgyrS6/7hZ8cn8V58eDW0FE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-Ai4LYDoyOY2q3q5g_r5Iww-1; Wed, 12 Feb 2020 02:55:51 -0500
+X-MC-Unique: Ai4LYDoyOY2q3q5g_r5Iww-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CB10107ACC9;
+        Wed, 12 Feb 2020 07:55:49 +0000 (UTC)
+Received: from [10.72.13.111] (ovpn-13-111.pek2.redhat.com [10.72.13.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 29C5960BF1;
+        Wed, 12 Feb 2020 07:55:32 +0000 (UTC)
+Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
+References: <20200210035608.10002-1-jasowang@redhat.com>
+ <20200210035608.10002-4-jasowang@redhat.com>
+ <20200211134746.GI4271@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
+Date:   Wed, 12 Feb 2020 15:55:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200211134746.GI4271@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OPP table can contain multiple voltages and regulators, and
-implementing that logic does not add a lot of code or complexity,
-so let's modify _generic_set_opp_regulator to support that use
-case.
 
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+On 2020/2/11 =E4=B8=8B=E5=8D=889:47, Jason Gunthorpe wrote:
+> On Mon, Feb 10, 2020 at 11:56:06AM +0800, Jason Wang wrote:
+>> +/**
+>> + * vdpa_register_device - register a vDPA device
+>> + * Callers must have a succeed call of vdpa_init_device() before.
+>> + * @vdev: the vdpa device to be registered to vDPA bus
+>> + *
+>> + * Returns an error when fail to add to vDPA bus
+>> + */
+>> +int vdpa_register_device(struct vdpa_device *vdev)
+>> +{
+>> +	int err =3D device_add(&vdev->dev);
+>> +
+>> +	if (err) {
+>> +		put_device(&vdev->dev);
+>> +		ida_simple_remove(&vdpa_index_ida, vdev->index);
+>> +	}
+> This is a very dangerous construction, I've seen it lead to driver
+> bugs. Better to require the driver to always do the put_device on
+> error unwind
 
----
 
-This is required to add panfrost support for the Bifrost GPU
-in MT8183, see this patch:
-https://patchwork.kernel.org/patch/11369821/
+Ok.
 
- drivers/opp/core.c | 33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index ba43e6a3dc0aeed..ea4a12a8932014f 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -650,6 +650,24 @@ static int _set_opp_voltage(struct device *dev, struct regulator *reg,
- 	return ret;
- }
- 
-+/*
-+ * Set multiple voltages. The caller is responsible for restoring all the
-+ * voltages if the function fails.
-+ */
-+static int _set_opp_voltages(struct device *dev, struct regulator **regs,
-+			struct dev_pm_opp_supply *supplies, int count)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < count; i++) {
-+		ret = _set_opp_voltage(dev, regs[i], &supplies[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static inline int _generic_set_opp_clk_only(struct device *dev, struct clk *clk,
- 					    unsigned long freq)
- {
-@@ -671,18 +689,13 @@ static int _generic_set_opp_regulator(const struct opp_table *opp_table,
- 				      struct dev_pm_opp_supply *old_supply,
- 				      struct dev_pm_opp_supply *new_supply)
- {
--	struct regulator *reg = opp_table->regulators[0];
-+	struct regulator **regs = opp_table->regulators;
-+	int count = opp_table->regulator_count;
- 	int ret;
- 
--	/* This function only supports single regulator per device */
--	if (WARN_ON(opp_table->regulator_count > 1)) {
--		dev_err(dev, "multiple regulators are not supported\n");
--		return -EINVAL;
--	}
--
- 	/* Scaling up? Scale voltage before frequency */
- 	if (freq >= old_freq) {
--		ret = _set_opp_voltage(dev, reg, new_supply);
-+		ret = _set_opp_voltages(dev, regs, new_supply, count);
- 		if (ret)
- 			goto restore_voltage;
- 	}
-@@ -694,7 +707,7 @@ static int _generic_set_opp_regulator(const struct opp_table *opp_table,
- 
- 	/* Scaling down? Scale voltage after frequency */
- 	if (freq < old_freq) {
--		ret = _set_opp_voltage(dev, reg, new_supply);
-+		ret = _set_opp_voltages(dev, regs, new_supply, count);
- 		if (ret)
- 			goto restore_freq;
- 	}
-@@ -708,7 +721,7 @@ static int _generic_set_opp_regulator(const struct opp_table *opp_table,
- restore_voltage:
- 	/* This shouldn't harm even if the voltages weren't updated earlier */
- 	if (old_supply)
--		_set_opp_voltage(dev, reg, old_supply);
-+		_set_opp_voltages(dev, regs, old_supply, count);
- 
- 	return ret;
- }
--- 
-2.25.0.225.g125e21ebc7-goog
+>
+> The ida_simple_remove should probably be part of the class release
+> function to make everything work right
+
+
+It looks to me bus instead of class is the correct abstraction here=20
+since the devices share a set of programming interface but not the=20
+semantics.
+
+Or do you actually mean type here?
+
+
+>
+>> +/**
+>> + * vdpa_unregister_driver - unregister a vDPA device driver
+>> + * @drv: the vdpa device driver to be unregistered
+>> + */
+>> +void vdpa_unregister_driver(struct vdpa_driver *drv)
+>> +{
+>> +	driver_unregister(&drv->driver);
+>> +}
+>> +EXPORT_SYMBOL_GPL(vdpa_unregister_driver);
+>> +
+>> +static int vdpa_init(void)
+>> +{
+>> +	if (bus_register(&vdpa_bus) !=3D 0)
+>> +		panic("virtio bus registration failed");
+>> +	return 0;
+>> +}
+> Linus will tell you not to kill the kernel - return the error code and
+> propagate it up to the module init function.
+
+
+Yes, will fix.
+
+
+>
+>> +/**
+>> + * vDPA device - representation of a vDPA device
+>> + * @dev: underlying device
+>> + * @dma_dev: the actual device that is performing DMA
+>> + * @config: the configuration ops for this device.
+>> + * @index: device index
+>> + */
+>> +struct vdpa_device {
+>> +	struct device dev;
+>> +	struct device *dma_dev;
+>> +	const struct vdpa_config_ops *config;
+>> +	int index;
+> unsigned values shuld be unsigned int
+>
+> Jason
+
+
+Will fix.
+
+Thanks
+
+>
 
