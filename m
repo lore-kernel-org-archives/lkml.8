@@ -2,127 +2,304 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76133C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F285C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B38D2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3842073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="ehjoQFFj"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="e7IXQSAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgBLPnw (ORCPT
+        id S1728617AbgBLPoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:43:52 -0500
-Received: from mail-eopbgr770133.outbound.protection.outlook.com ([40.107.77.133]:5505
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727026AbgBLPnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:43:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UMwKe8eh2r0DtCGZhDOK8/2kYJyIfE9zFeuZD6G/M/41WMgomXBizmS4pOWjldW/z8nBXkkrOORWY7pm/ye/32ixA0L2PYkkYDwbt8yGtTLJCZhTUki3GeDKCFaZ3z4q7iBo9/X+cZud/SXKfZbxXBTNONGd2ckOcifcSzKhtEV+qtocBiTFAQ3KaMWAeK880TYoDFil6IQ1bFIZ2wqlDs4gnbtswkOcfiNvwd9f0Fd7vcL1jNyTnmoSA2ptmgkTZfMUTH4kDTgxlAPF2dNVSfjpPb85p7kK/Ixma+8u5DQooWbOUfL2ZOoR6yN1ESqyi4H7vg5gz7t0h3JewzNarg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MdACdbUyUzv7/HKrkFgUvgyXHqCzNqAs7/9+e0Gmy6E=;
- b=kbRqj8L6AYpRI4rRhZYAtc7L9CN58YfaR0ZaFv1q93a2X4zSYyMQ6PWLZbec/sQmT+qUQum40kgwFmDkCLkz1Kc8IHzFXtBsRw2MRwYNsHD4Op3oB9vGHCrbSprmHo+KSnHmFDjcMD7v8mryQBv77eiihlOvO2vvxGhiLQrngnE1oi+PCB7Ox3Q7z9AbCICBfcbbmmd/vfcLKOOWQUUeVLa2rsSmwyaMkVMzM0Q8zLCkV7DdxExXlU2jhAu40KrGJ6PfMZxcVn/X8+cvxYOfI5oS5atWy61lbrEqydTL0JGssr0f43kp9FVL4xFBle3Twh9V0vFhk4xTGh++vI9csw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fortanix.com; dmarc=pass action=none header.from=fortanix.com;
- dkim=pass header.d=fortanix.com; arc=none
+        Wed, 12 Feb 2020 10:44:25 -0500
+Received: from UPDC19PA23.eemsg.mail.mil ([214.24.27.198]:17007 "EHLO
+        UPDC19PA23.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgBLPoY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:44:24 -0500
+X-EEMSG-check-017: 58433205|UPDC19PA23_ESA_OUT05.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="58433205"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by UPDC19PA23.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Feb 2020 15:44:19 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector2-fortanix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MdACdbUyUzv7/HKrkFgUvgyXHqCzNqAs7/9+e0Gmy6E=;
- b=ehjoQFFjnBrBjx/4Dc7KdUVlDwMxCL8VTJQ2pILCmgjs7iJUPMLO6ZnGdW7KiOw3whgVAgv2it6Zbib72KtXaglMpKD1QVkbV/Vm/R66PoeBvKblK1//DsGPUgaT0LT+SlsdF18VC/vM0RMIl+zLSp6uRuuE5Y4oRKlOnbud+Po=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jethro@fortanix.com; 
-Received: from BYAPR11MB3734.namprd11.prod.outlook.com (20.178.239.29) by
- BYAPR11MB3846.namprd11.prod.outlook.com (20.178.236.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Wed, 12 Feb 2020 15:43:48 +0000
-Received: from BYAPR11MB3734.namprd11.prod.outlook.com
- ([fe80::180:d484:4d3f:fd99]) by BYAPR11MB3734.namprd11.prod.outlook.com
- ([fe80::180:d484:4d3f:fd99%7]) with mapi id 15.20.2729.021; Wed, 12 Feb 2020
- 15:43:48 +0000
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1581522260; x=1613058260;
+  h=subject:from:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Nr7dM1SRxxK3wZoWZ5jzQnpKE/lg6bUGC83oPiR+z0E=;
+  b=e7IXQSAHUxqJhsubOYcqGBoAQ5PB+ace+Sn6wDvRlIkC7xEKIJQvXT1S
+   FlVJlKj1n5sVNHC7XitF1y2VbJ79rjSmeamEEBx3LSaQFuLXVedghR6Lg
+   clmD5YIT/LhqBZTIfpQyQxhuIuyXAZboSuEM5kH4t+dP7BrG5K9+M1NSO
+   GpYxyiSGCsmBkYtQyQcR7vqaTDOJ+n2kg67tq2LI1Gxso3B5mPzxUTPxK
+   mxxDPhDpKS8u8Q9WlRhpko+4J9fqcvAEq5p+iZk+y0hDuv4Q52fXKsAc2
+   ABsocPCwO4ziJFTrk7AErJdbXBkZ/gdzoONbAARxqcvsRBtwPc7rgxY25
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="39015106"
+IronPort-PHdr: =?us-ascii?q?9a23=3A52qiURBQllbcRbsweQO0UyQJP3N1i/DPJgcQr6?=
+ =?us-ascii?q?AfoPdwSP/6p8SwAkXT6L1XgUPTWs2DsrQY0raQ7f2rCTRIyK3CmU5BWaQEbw?=
+ =?us-ascii?q?UCh8QSkl5oK+++Imq/EsTXaTcnFt9JTl5v8iLzG0FUHMHjew+a+SXqvnYdFR?=
+ =?us-ascii?q?rlKAV6OPn+FJLMgMSrzeCy/IDYbxlViDanbr5+MRq7oR/Qu8QWjodvKbo9wQ?=
+ =?us-ascii?q?bVr3VVfOhb2WxnKVWPkhjm+8y+5oRj8yNeu/Ig885PT6D3dLkmQLJbETorLX?=
+ =?us-ascii?q?k76NXkuhffQwSP4GAcUngNnRpTHwfF9hD6UYzvvSb8q+FwxTOVPczyTbAzRD?=
+ =?us-ascii?q?Si86JmQwLmhSsbKzI09nzch9duh6xHvh2uux1/w5bVYI6LMvp+Yrjdds4eSW?=
+ =?us-ascii?q?ZYQ8pdSzBNDoa6YoQBFeoBOftToZf7qVUAsBCyARCgCe3rxzNNgHL9wK803P?=
+ =?us-ascii?q?k7EQzewQIuH8wAsHrXotv7OqgdXuK6w7XHwzjYc/Nb2i3w5JTUfh0vo/yBW6?=
+ =?us-ascii?q?97f8rLyUkoEgPIlkieqZD7MDON1uQCrW6b5Pd9W+KqkWEnrwVxrSavx8wxjY?=
+ =?us-ascii?q?TJnZ8aykvf+CVlwIc6Od24SElhbd6iC5tfrTuWN4RxQsM8WmxlvjsxxL4euZ?=
+ =?us-ascii?q?OjYSQHx5sqywTfZvCaaYSE/B3uWPiLLTtlgn9uZaixiAyo8Ue6z+3xTsy00F?=
+ =?us-ascii?q?FXoSVbitTMrXUN1wDL6siAV/t94l+t2TaR2ADX7eFJOVw0mrDBK54g374wjY?=
+ =?us-ascii?q?AfsUXFHi/4n0X2l7GZeVk+9ui06+XofrXmppiGO49ylg7+Kbghlta6AeQ5Ng?=
+ =?us-ascii?q?gCR2mb+eKi273/5UD1XbpHg/IsnqTZrZzWP9oXq6GnDwNPz4ov8xO/AC2n0N?=
+ =?us-ascii?q?Qck3kHNlVFeBefgojyJl7OO+v1Deu/gluwkDdrwOrKPrv6AprXNHTDn7Dhfa?=
+ =?us-ascii?q?hl505G1AUz1cxf545TCrwZOv3zXlH+tdPGAR45KQC72PvnB8hn2YMYWmKPBb?=
+ =?us-ascii?q?GZPbjWsV+J4OIvPuaNaJUUuDb7N/gq+frugWUlll8aeKmjxYEXZ2ygHvR6P0?=
+ =?us-ascii?q?WZZmLhjc0FEWgUsQsxUu3qhEeZUT5PfXmyRaU85i88CIKnEYfDQZ6tjaeO3C?=
+ =?us-ascii?q?e+BJJWZ2RGBkqQHnfvcoWOQ+0MZz6KIs99jjwEUqCsS5c/2hGyqgD60btmI/?=
+ =?us-ascii?q?HV+i0eu5LjzsJ66PDNmh4o6DN4FcOd03uCT2tshGMHWyc23LxjoUx60lqMy7?=
+ =?us-ascii?q?R3g/lGGtFI5PNGTB06NZjCwOx+EdzyXRjBftiRQla8XtqmGS0xTs42w9IWZk?=
+ =?us-ascii?q?Z9GtOijh/E3yexGb8aiaGEBJwu/aLAxXT+O8F9y3Pe3qk7k1YmWtdPNXGhhq?=
+ =?us-ascii?q?Nn9QjcHYjJk0SDm6asdKQc3zPN9GOZwmeVuEFYUQhwUbjKXHwFZ0vWq8j56V?=
+ =?us-ascii?q?3GT7O0FbsnNQ5Bw9aYKqRWct3pkUlGRPD7NdTcZGKxnGGwCgyTxr+WaIrlYW?=
+ =?us-ascii?q?Ud3DncCEgCjQ8T+22LNQw/BienvmLfAyZiFVPpY0Pw7+Z+rGm3QVMzzwGPd0?=
+ =?us-ascii?q?dhzaa6+gYJhfyATPMexqgEuCA8pDVuHVa90NXWB8CepwpgYqVcYMgw4FZB1W?=
+ =?us-ascii?q?LFqQN9OoasILxlhl4baw53pV/h1w1rCoVclsgntGglwxR0KaKYy15BdC2X3Y?=
+ =?us-ascii?q?r2OrLJLmn+5gyga7TM1VHF0NaW+6EP6Psip1XkpgGpGVIo82973NlNz3uc+p?=
+ =?us-ascii?q?LKARIKUZ3rT0Y38wV6p6rBbykm/YzU0GZjPrOuvj/FwdIpC/Mvygy8cNdHLK?=
+ =?us-ascii?q?OECAjyHtUfB8i2NuMngEambhYAPO9M7q40Otmpd/2c1K6qIelshiipjXlf6o?=
+ =?us-ascii?q?Bnzk2M7zZ8SvLP35sdwfGXxA6HWCnnjFu7qc/3npxEZS0VHmq6zSjrGo5Qa7?=
+ =?us-ascii?q?ZyfYkRD2euONO4xtNmh5H3QX5Y6FijCE0c2M+yeRqSbkT90RdM2kQQpHytgT?=
+ =?us-ascii?q?G4wCBskzE1sqqf2zTDw//8exodNW5EWnJvjVf2Loiwi9AbXE6oYxI1mxui4E?=
+ =?us-ascii?q?bw37Jbq7hnL2nPXUdIeDD7L2NnUqu3rLqCec9P6IgzvCVRSuu8ZE6VSr/nrx?=
+ =?us-ascii?q?sdySPjEHNUxConeDGyppX5gxt6hXqTLXZyqHrZfdt8ygrB69PGWfFR2TwGST?=
+ =?us-ascii?q?JihjnNA1iwJcWm/dKRl53bqOCxS3qhVoFPcSns1Y6AsTG05XdpARGlhfCzh8?=
+ =?us-ascii?q?HnEQwg3i/9ytZnTj/HrAz5YoXxy6u6NudndFFyBFDg88p6Bp1+kowoiZEKw3?=
+ =?us-ascii?q?gah4ma8GEEkWjtK9Vb37zxbH4XST4M2d7V7xDv2Fd/IXKR24L5SnKdz9N7aN?=
+ =?us-ascii?q?mhfmMbwSE94N5QCKeS8rNEmTF5ol2irQLeefJ9hCsSyeMy6H4GhOEEoAgtzi?=
+ =?us-ascii?q?KZArAJB0ZVJjbsmAqV4NC+tqpXeHyjfqS31Ep7hdqhFq2NohlAWHblfZcvBT?=
+ =?us-ascii?q?V/7sZkPVLI0X3z7JzkedbKYdISsB2UjwnPj+xPJJ0tkfoKgDJtOXjhsn091+?=
+ =?us-ascii?q?47kRtu0Imks4idMWpt+qO5DQReNjDuaMMT/TbtjalansmIxYygApJhGjATVp?=
+ =?us-ascii?q?vyUf2oCC4StejgNwuWET08rmqbFqHFEg+E6EdpsWnCHIqoN36NIXkW19RiSA?=
+ =?us-ascii?q?OBK0xYhQAeRC86kYIhFgC22Mzhd1906SoV5lHmpRpD0ORoOAThXWfFvguocT?=
+ =?us-ascii?q?c0SJmELBpW7QFC5kHVPNea7uJyGSFY45KgoBaMKmydewRHE2UJVlaYCFDkO7?=
+ =?us-ascii?q?mk/cPA/PSABuqiM/vOZq2DqepEWPeNxZKu0pZm/zCDNsiUPXltEec72kxdUn?=
+ =?us-ascii?q?B9AcjZnC8PSyMPnSLXc8GbvAu8+jFwrs2n6/TrXwTv5YSLC7tTLNVg4Aq2jr?=
+ =?us-ascii?q?2dN+6RgiZ5Ji1V1p0XynPS1Lcf21sSgTl0dzaxCbQAqTLNTKXIl69TDh4bbC?=
+ =?us-ascii?q?VzO9VM764m0QlBI8rbhcnz1rFlgP86FU1FVVjgmsGvfsEKIme9NE/ZC0aPLr?=
+ =?us-ascii?q?iJOTrLw8Tva6OmVbJQlPlUtwG3uTuDD0/jMTCDljbyWhCrMOFMijybPABEuI?=
+ =?us-ascii?q?G6dBZtCGfiQMj7ZRKlKNV3lyE5waUohnPWMm4RKTx8c0JLrr2N4iJUm/Z/FH?=
+ =?us-ascii?q?Jb7npjM+aEnz2U7/fXKpkIq/tnGCd0mPxA4HQ81bRV6DtIRPtvmCvdttRuuU?=
+ =?us-ascii?q?2pkvGTyjp7VxpDsjJLhIONvUV/NqTV74JAVmjY8xIQ92WQCggKptt8Bt3qvK?=
+ =?us-ascii?q?Bf18XPlKbtJzpZ7dLU8tUTB9LOJMKELnUhKxzpFyDQDAcfSj6rL27fjVRHkP?=
+ =?us-ascii?q?6O7n2VsoQ6qp/0lZoVVLBbUF01FvUHCkVqB9ECPph3US0+kbKBj84H+2C+rB?=
+ =?us-ascii?q?/PS8VepJzHUeiSAfr3IjaDkbZEfwcIwa//LYkLN4373VBiZUd+nIjTFErQU9?=
+ =?us-ascii?q?9MrzZlbg81u0VN7GN+Qnc920L/dAyi/mIcGuCvnh41lgt+Zvwt+C3r41ctKV?=
+ =?us-ascii?q?rAvDEwn1UpmdX5nTCRdyb8LKOxXYFQFir1uFE9MovhTAZvbA2yhlBrOSzaR7?=
+ =?us-ascii?q?JekbRgb3pniAzCtptVH/5TU6lEbAUXxfGNaPUiyU5cpTm/xU9b+evFDoNvlA?=
+ =?us-ascii?q?8rcZ6qsnJB1BpjbMYpKqDJOaVG0EZQi7mKvi+pzeAx3BQeK1wK8GKTfC4Hol?=
+ =?us-ascii?q?cHNqI8Kyqv5Oxs5hSImyFfd2gUS/oqvvVq+1s5O+SBySLgzrFCJlmrOOyFKq?=
+ =?us-ascii?q?OVomvAmtCSQlM2yEwIk1JI/bx30cc4b0qUTFojzLqXFxQHL8rNMxxaYNRI+3?=
+ =?us-ascii?q?fOZyqOtv/NwZ1tNYWnCu/oVfOOtLoTgk+8GAYpHoIM7tkOH5W1yEHXM93nLL?=
+ =?us-ascii?q?AcxRUw/wTkOk+FDO9SdRKVnzcIvdu/wIV03YZDPDEdB3tyMSGt6rbQvA8qj+?=
+ =?us-ascii?q?KJXM0qbXcCQosEKnU2VdW9my5BpXRACze30uMdyAec9jP8oiXQDCLgb9d4YP?=
+ =?us-ascii?q?eUZAhsCM2t+Tkl6Ki2h0Tb8pPAKGHmLd5ioMPA6fsGp5abDPNZVb19s1rAm4?=
+ =?us-ascii?q?lfXHGlSWvPHsSpKJfqc4ksbMD0BWy+UlCljTI6Udvxb56RKf2hhQz4SJccmp?=
+ =?us-ascii?q?SX1TYgMtH1QjgaFgd9tqcJ+a51Yw4EfbI/YBj1p0I/MbCyJEGT1dD4EEi3Lj?=
+ =?us-ascii?q?4DdOVS1eW3YfRsyiMoauKrgC87QooS0/i88UlLQooDyB7Z26DwNMFlTSHvFy?=
+ =?us-ascii?q?kFKE30ri0jmj0kb71jzw=3D=3D?=
+X-IPAS-Result: =?us-ascii?q?A2CWAwCVHERe/wHyM5BlHQEBAQkBEQUFAYF7gX2BbAEgE?=
+ =?us-ascii?q?iqEFIkDhmQBAQEBAQEGgTeJcJFJCQEBAQEBAQEBATcBAYRAAoJtOBMCEAEBA?=
+ =?us-ascii?q?QQBAQEBAQUDAQFshUOCOykBgwEBAQEBAgEjBAsBBUEQCQIYAgImAgJXBg0GA?=
+ =?us-ascii?q?gEBgmM/glcFII9umwR1fzOJDIE+gQ4qjD55gQeBEScPgl0+h1uCXgSNTYJPh?=
+ =?us-ascii?q?298lm+CRIJOikaJNQYcgkiIEpA7Lat0IoFYKwgCGAghD4MnUBgNjikXFY4sI?=
+ =?us-ascii?q?wMwApFfAQE?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Feb 2020 15:44:13 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01CFhBBb080468;
+        Wed, 12 Feb 2020 10:43:11 -0500
+Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
+ and user space
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Jethro Beekman <jethro@fortanix.com>
-Subject: [PATCH] net: fib_rules: Correctly set table field when table number
- exceeds 8 bits
-Message-ID: <ec5c8c2f-34c6-bd70-7f61-7ed14b358d9d@fortanix.com>
-Date:   Wed, 12 Feb 2020 16:43:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-Content-Type: text/plain; charset=utf-8
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        oprofile-list@lists.sf.net, Andy Lutomirski <luto@amacapital.net>
+References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+ <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
+ <64cab472-806e-38c4-fb26-0ffbee485367@tycho.nsa.gov>
+ <05297eff-8e14-ccdf-55a4-870c64516de8@linux.intel.com>
+ <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
+ <537bdb28-c9e4-f44f-d665-25250065a6bb@linux.intel.com>
+ <63d9700f-231d-7973-5307-3e56a48c54cb@linux.intel.com>
+ <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
+ <2e38c33d-f085-1320-8cc2-45f74b6ad86d@linux.intel.com>
+ <dd6a1382-7b2f-a6e6-a1ac-009566d7f556@tycho.nsa.gov>
+ <8141da2e-49cf-c02d-69e9-8a7cbdc91431@linux.intel.com>
+ <7c367905-e8c9-7665-d923-c850e05c757a@tycho.nsa.gov>
+Message-ID: <280e6644-c129-15f6-ea5c-0f66bf764e0f@tycho.nsa.gov>
+Date:   Wed, 12 Feb 2020 10:45:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <7c367905-e8c9-7665-d923-c850e05c757a@tycho.nsa.gov>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO2P265CA0436.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:e::16) To BYAPR11MB3734.namprd11.prod.outlook.com
- (2603:10b6:a03:fe::29)
-MIME-Version: 1.0
-Received: from [10.195.0.226] (212.61.132.179) by LO2P265CA0436.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:e::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Wed, 12 Feb 2020 15:43:45 +0000
-X-Originating-IP: [212.61.132.179]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 60bc2b2c-89d6-4ade-836e-08d7afd259b1
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3846:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR11MB38462F6D038C489FCBB51573AA1B0@BYAPR11MB3846.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-Forefront-PRVS: 0311124FA9
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(39840400004)(366004)(376002)(189003)(199004)(52116002)(6666004)(81166006)(8936002)(8676002)(81156014)(4744005)(316002)(508600001)(16576012)(110136005)(6486002)(26005)(2906002)(186003)(66946007)(66556008)(86362001)(31696002)(16526019)(36756003)(956004)(5660300002)(2616005)(31686004)(66476007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB3846;H:BYAPR11MB3734.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: fortanix.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6wU8OrUxQKXWyZJWyF0vqpHXVY9nyojUFtVRivVDP2iJBOzUMI66SbNt2zzYfJSlyjNMET/zThRSEJNn5TpNCSPXseilh7pzaSfxzTMFmDrLbNSgrJFJdkLHMluxel87rzH3X6q63eRLBZ0VyzCS/YXKaPM7GPK2Yj2Mzsbcd5hMfVI6XlmtH/gD2qvzWxGJTcyKVwsZNl+RDXQsQLaQVYJgzPHwIhFI1stEe8TyJCCHmfcjEXZ2t12w8IC+jqhR42DTQDV9g9cMvftYqNpuf9P/RqgPjQpHnXdeoQf9KgH2SJLVXzO3d86uUj5OmRvX4+gD00bllj2heXyQ7iOUQwrT+XtAs2+lbK0yuq4ezXBVWBZXlkp2i4rr1Sq4OqbJf37y1bzku7q3WUBcd4e4fH5sA/505gsMddCL5yaQMXalmXyXWaz2uo4MsVB6F1zTvYX2oaq2gztinS+EwdX7W4q5C+lnZnlA+fxpRt0BC8anZ5NPPiU+5qG+7z5/5ekO
-X-MS-Exchange-AntiSpam-MessageData: P2wajyEvZo7OmnCbo6mDcwQlDbtZJ1fWCAh54DBit8sPxRIisldg6x7FxpE4wCkPct9svgo7SEGNLQZrVXdm1B/eV2w2qFdpGKSgrETUFS7HB8eVVJB8croxDBVUugPpqEBqIHJxKFXvxpMTZc4XAg==
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60bc2b2c-89d6-4ade-836e-08d7afd259b1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 15:43:48.3810
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MRzolq/z8R/eDFCpru7unWUr7MZ3L5AmcAvx2xb8/jCwPdT3igiJeOCkks7Ug02NhNWBB/MY8RpkFtoMJQMNcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3846
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In 709772e6e06564ed94ba740de70185ac3d792773, RT_TABLE_COMPAT was added to
-allow legacy software to deal with routing table numbers >= 256, but the
-same change to FIB rule queries was overlooked.
+On 2/12/20 10:21 AM, Stephen Smalley wrote:
+> On 2/12/20 8:53 AM, Alexey Budankov wrote:
+>> On 12.02.2020 16:32, Stephen Smalley wrote:
+>>> On 2/12/20 3:53 AM, Alexey Budankov wrote:
+>>>> Hi Stephen,
+>>>>
+>>>> On 22.01.2020 17:07, Stephen Smalley wrote:
+>>>>> On 1/22/20 5:45 AM, Alexey Budankov wrote:
+>>>>>>
+>>>>>> On 21.01.2020 21:27, Alexey Budankov wrote:
+>>>>>>>
+>>>>>>> On 21.01.2020 20:55, Alexei Starovoitov wrote:
+>>>>>>>> On Tue, Jan 21, 2020 at 9:31 AM Alexey Budankov
+>>>>>>>> <alexey.budankov@linux.intel.com> wrote:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> On 21.01.2020 17:43, Stephen Smalley wrote:
+>>>>>>>>>> On 1/20/20 6:23 AM, Alexey Budankov wrote:
+>>>>>>>>>>>
+>>>> <SNIP>
+>>>>>>>>>>> Introduce CAP_PERFMON capability designed to secure system 
+>>>>>>>>>>> performance
+>>>>>>>>>>
+>>>>>>>>>> Why _noaudit()?  Normally only used when a permission failure 
+>>>>>>>>>> is non-fatal to the operation.  Otherwise, we want the audit 
+>>>>>>>>>> message.
+>>>>>>
+>>>>>> So far so good, I suggest using the simplest version for v6:
+>>>>>>
+>>>>>> static inline bool perfmon_capable(void)
+>>>>>> {
+>>>>>>       return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
+>>>>>> }
+>>>>>>
+>>>>>> It keeps the implementation simple and readable. The 
+>>>>>> implementation is more
+>>>>>> performant in the sense of calling the API - one capable() call 
+>>>>>> for CAP_PERFMON
+>>>>>> privileged process.
+>>>>>>
+>>>>>> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and 
+>>>>>> unprivileged processes,
+>>>>>> but this bloating also advertises and leverages using more secure 
+>>>>>> CAP_PERFMON
+>>>>>> based approach to use perf_event_open system call.
+>>>>>
+>>>>> I can live with that.  We just need to document that when you see 
+>>>>> both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process, 
+>>>>> try only allowing CAP_PERFMON first and see if that resolves the 
+>>>>> issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus 
+>>>>> CAP_DAC_OVERRIDE.
+>>>>
+>>>> I am trying to reproduce this double logging with CAP_PERFMON.
+>>>> I am using the refpolicy version with enabled perf_event tclass [1], 
+>>>> in permissive mode.
+>>>> When running perf stat -a I am observing this AVC audit messages:
+>>>>
+>>>> type=AVC msg=audit(1581496695.666:8691): avc:  denied  { open } for  
+>>>> pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t 
+>>>> tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+>>>> type=AVC msg=audit(1581496695.666:8691): avc:  denied  { kernel } 
+>>>> for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t 
+>>>> tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+>>>> type=AVC msg=audit(1581496695.666:8691): avc:  denied  { cpu } for  
+>>>> pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t 
+>>>> tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+>>>> type=AVC msg=audit(1581496695.666:8692): avc:  denied  { write } 
+>>>> for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t 
+>>>> tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+>>>>
+>>>> However there is no capability related messages around. I suppose my 
+>>>> refpolicy should
+>>>> be modified somehow to observe capability related AVCs.
+>>>>
+>>>> Could you please comment or clarify on how to enable caps related 
+>>>> AVCs in order
+>>>> to test the concerned logging.
+>>>
+>>> The new perfmon permission has to be defined in your policy; you'll 
+>>> have a message in dmesg about "Permission perfmon in class 
+>>> capability2 not defined in policy.".  You can either add it to the 
+>>> common cap2 definition in refpolicy/policy/flask/access_vectors and 
+>>> rebuild your policy or extract your base module as CIL, add it there, 
+>>> and insert the updated module.
+>>
+>> Yes, I already have it like this:
+>> common cap2
+>> {
+>> <------>mac_override<--># unused by SELinux
+>> <------>mac_admin
+>> <------>syslog
+>> <------>wake_alarm
+>> <------>block_suspend
+>> <------>audit_read
+>> <------>perfmon
+>> }
+>>
+>> dmesg stopped reporting perfmon as not defined but audit.log still 
+>> doesn't report CAP_PERFMON denials.
+>> BTW, audit even doesn't report CAP_SYS_ADMIN denials, however 
+>> perfmon_capable() does check for it.
+> 
+> Some denials may be silenced by dontaudit rules; semodule -DB will strip 
+> those and semodule -B will restore them.  Other possibility is that the 
+> process doesn't have CAP_PERFMON in its effective set and therefore 
+> never reaches SELinux at all; denied first by the capability module.
 
-Signed-off-by: Jethro Beekman <jethro@fortanix.com>
----
- net/core/fib_rules.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index 3e7e152..bd7eba9 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -974,7 +974,7 @@ static int fib_nl_fill_rule(struct sk_buff *skb, struct fib_rule *rule,
- 
- 	frh = nlmsg_data(nlh);
- 	frh->family = ops->family;
--	frh->table = rule->table;
-+	frh->table = rule->table < 256 ? rule->table : RT_TABLE_COMPAT;
- 	if (nla_put_u32(skb, FRA_TABLE, rule->table))
- 		goto nla_put_failure;
- 	if (nla_put_u32(skb, FRA_SUPPRESS_PREFIXLEN, rule->suppress_prefixlen))
--- 
-2.7.4
-
+Also, the fact that your denials are showing up in user_systemd_t 
+suggests that something is off in your policy or userspace/distro; I 
+assume that is a domain type for the systemd --user instance, but your 
+shell and commands shouldn't be running in that domain (user_t would be 
+more appropriate for that).
