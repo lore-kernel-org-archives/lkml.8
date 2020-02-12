@@ -2,896 +2,146 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89367C3B188
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B697C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4C821569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E793620675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WK9v66FZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NUzC2Jwb";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="zDDbfQdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbgBLM00 (ORCPT
+        id S1727994AbgBLM0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:26:26 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46501 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLM0Z (ORCPT
+        Wed, 12 Feb 2020 07:26:38 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:46075 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgBLM0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:26:25 -0500
-Received: by mail-il1-f196.google.com with SMTP id t17so1528694ilm.13;
-        Wed, 12 Feb 2020 04:26:23 -0800 (PST)
+        Wed, 12 Feb 2020 07:26:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1581510417; x=1613046417;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=edZB7X97/QDoU/x8PWct6XHMJKIt938rIjPWy4fCKZg=;
+  b=NUzC2Jwbuh6oO/y3e+tk7ehKGQJaJRHeYPtaebamGM+/RFdgI6aNQSlU
+   w+ohKqvu3OA9Yd1jYbv23nnOQZ1iSTy43R6X3gE9tDZQ59KQaukxzrHKD
+   ELX4OaTgjF+kD0KPsO+kL1G55WosEPN0QeKjwSQ1xNwT8Jta0yE/+349v
+   BPy2TwMzcaXHog39KBBnNIj+PXc6xSCeHDXAgKKN7xBxaIF/KC9Xxya93
+   EiVIC+1PAiq65KJF1EoAgg+Ub7/wRDc5XSD3jFVBf/vFJtWUGtlMrzlg/
+   P1cJWgqdlJcMydOZkWkYlkulbi03auRy0b6w+HK3cdxMxZQkk7lWK1tw6
+   g==;
+IronPort-SDR: IIl+Tp6vrysKn/S3cKgfDJ0jSNrwPLgedjawRY+HH29hL/+m8ReqcV+T7ArCfnSbRQwNq1ddve
+ KaJFqA9pv7nbJ4MiWjun4xmyny5xz+7XspCh47/ONk/N/MS37D0RWNcDGI9YfZlExnm/1rxj8T
+ 0KCVrxC7hOXhw01KqrS3uyAPvtA1vSUvKYK2Ux6+SjpAZQjcmrlSjr40USP7MgxXTanhUJPJkI
+ PKZhBX9JMhUkvcuBKSo4rxYDIgsta19b7JiuZOdQLMe/kgGV3wQ7wS45BpnBPd+36HzCYHpilh
+ s00=
+X-IronPort-AV: E=Sophos;i="5.70,428,1574092800"; 
+   d="scan'208";a="231465233"
+Received: from mail-bn7nam10lp2104.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.104])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Feb 2020 20:26:53 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CpDVFsenLBtbZCmW2cD223u0LkDTGd7Agw3xgBFrUChWOrsKYdwZAzgI9PtzSJ2f1q+nPzv1WFAk4ZyhxDr5Ortn6d6Mrx5X1KcTvG1tDAsgXrrE3n6o2eTle2fEHLwxFJdp1MrNsAUnrI+U3QfbLlltY1hUYiM3w4mxYLbPInQKsKJso04ZEfgva7UiurgTMFrwjXOXEmVDZjZ+n9av2eQmOFhNIdfUITXa7bwjzWEi+ofTDry6APOO9+0ni6I08fEXM/uwH1xw3XXiGSaSLynZD2o20RLnyhIL9lO4YYB/zG6ZWUMlYcF+HsHQpATCBw8//wp2UROu5X7gKUmcqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=edZB7X97/QDoU/x8PWct6XHMJKIt938rIjPWy4fCKZg=;
+ b=f8qPSAViFG13W6phycZTthrZDsn2DiHx1QXwCs83R9wkP8DTkAfn52p0YT7UKeahUlaX6yQTpUGGc1nyJt+dFXZu29uOnM80D3NYs+pm33nNbxv32KH0Lhdocy6u4rhxmkaUueh7Q+BFLi4ZtVf/FxBkW8SJuJqMPt0Z5QdS0asLxVwXJZeFNB7Mfyps0QkOkhVkO7jp5dakhWxgGKNe1D+dnRdGUozZijgV/Ejpe3lQsVdH3rDSmWzNwYpKqjCnwqMEpJ4e0SYoNtY1PDjV7HCTdaAMCdqGGbdsOaKOdm00HLifK3oRQ+6SKlSofv0Fq89cCgk4szdTmMbYxqzIDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+qIFouVcSMBiTVUZ/EqdAZWpBRiXTV6AfqfQU0/fVNA=;
-        b=WK9v66FZkQJbzaf8MtdSXeeBZbRrYnussBZpzrQmHKCz8Vf+3soaXIpKJaQpf4yhJ8
-         TWAkN9htpRJJb306oFE8CcZHFziiqbJj+CAJtO7k+YyniuROLoT3ZhocTQR0oZoL2azV
-         bFy11PO/+YvOCbC49iEOtCyfsuaemCT6uVYBXp8jkuaos+joFzdawrEIBAUmzy6P/WrR
-         61TvzEUmvgXKB96jqcK6An3QGYGEb/TSunqPmCGF5QXsGh7bI1wPy5y3K9hkGLemnNuO
-         VkYuz41eTwm3XvovqEVJtkCHOyNaPgI0kakcOYKU8NWr5Pmcji5op0l6ik8m12fKmlWc
-         /TVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+qIFouVcSMBiTVUZ/EqdAZWpBRiXTV6AfqfQU0/fVNA=;
-        b=bK38husMM2hrtWgmCS2eHL9mYhgtTljdCbyIEaLz4CK/h3m2IVXmsSxL2rC/prpKx8
-         H4Ap95iJmKRUNysrHHdVos5V4Cn9NWKLmWc6ZwkZooY8YCPsAdqpTAwl4nu/MdKeFZ6g
-         iqbpKWckvYf7FDBTSSPF7YZulb25OdYPH7g8EvPqBRv89o3cQqZkTP0bJffVFiGXTfIx
-         yUZbzblHpVZty32/x3qPFTROjyyDgaX63fGd+q6GmauOUfYQCp0ZoiBU3RP0W8SjkzeS
-         yvhD61lXvBmX/L1+ktaLGA2g/ymtDPfFolxhJBD/TDANPZrf0rBHmf20Vg+lzF988R6t
-         szpA==
-X-Gm-Message-State: APjAAAUdTh/MSBES1p2P6i+jxN/hjnHebBdkGIIP4lig1g2R0zYksQQ1
-        YAgyhTvNppZ5B2qvgClXMTaJn1ZqBR02brO5NdU=
-X-Google-Smtp-Source: APXvYqyF0StSHD1IUioNwu8Rl5eKBuSOCUBfE1ktJuSc3xNXRplO7b1kEyYlPV9U+1iDvj+tk13ZXU7n8gjMLGUjvh4=
-X-Received: by 2002:a92:911b:: with SMTP id t27mr10741535ild.142.1581510382678;
- Wed, 12 Feb 2020 04:26:22 -0800 (PST)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=edZB7X97/QDoU/x8PWct6XHMJKIt938rIjPWy4fCKZg=;
+ b=zDDbfQdmZ/LoLyGdYQPspgRBVA7E3SC53OCiYpmN9D6kEaMWnJSVoIQtLFtYHp6V6jJT8Dz282W7f0lSVQE3NzH5sM+OBYBfUgO+bn/KlYexn1pdSay/IcUdOf92BQI1sOUWR7HC3oKGL1AspFUYPeoKX4zrBVzJTsvjeROKipc=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB6430.namprd04.prod.outlook.com (52.132.170.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Wed, 12 Feb 2020 12:26:34 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
+ 12:26:34 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pedro Sousa <sousa@synopsys.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 2/2] scsi: ufs: Select INITIAL ADAPT type for HS Gear4
+Thread-Topic: [PATCH v1 2/2] scsi: ufs: Select INITIAL ADAPT type for HS Gear4
+Thread-Index: AQHV4WdtEUG2fhkxEky/U6KeRj9UX6gXfB2g
+Date:   Wed, 12 Feb 2020 12:26:34 +0000
+Message-ID: <MN2PR04MB699176BCCB6B900617C96303FC1B0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1581485910-8307-1-git-send-email-cang@codeaurora.org>
+ <1581485910-8307-3-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1581485910-8307-3-git-send-email-cang@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b9dd74df-1e31-4ac3-a3d9-08d7afb6cc4f
+x-ms-traffictypediagnostic: MN2PR04MB6430:
+x-microsoft-antispam-prvs: <MN2PR04MB6430BEF0508A933235E16358FC1B0@MN2PR04MB6430.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 0311124FA9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(199004)(189003)(86362001)(66446008)(76116006)(316002)(66476007)(8936002)(81166006)(66946007)(64756008)(6506007)(81156014)(186003)(26005)(8676002)(110136005)(52536014)(4326008)(5660300002)(54906003)(478600001)(66556008)(558084003)(2906002)(55016002)(71200400001)(7696005)(33656002)(9686003)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6430;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HTZfjWIjuUyktmzTTjhAguknLVcOGueCHserBJeuLVoMc8Mksy0O3Aie0yWlxKw2PEMeV39ls/hbac+ybiyUzHPjgAvQBLq46odaadelqm6djncWiPTsRFXqJ6NJWzLcHUjHMkZWOz89Ff7nFzA8tY+fahtqc8b7QVeeSYD/tegqGjtq3ucsifl/Ex9dibSovrFraMKRCsovxVAy4En+rwO9Se7LIp7SHSKUHvatChETPXVQ4GGYqzekfi0BnI12KqouhtMOa4cDpofljozMx3BjxViLRb5R8YrMl553+o9hcfk/RSdGcuFFAD8K/uBHq4IL8E87i+8r+LFLQqsxj3OdEO2NYQcAKX/8resmP6CtAPOAWJkj6RiNHiOgQBC13UEAwKx1hcsoTVqoOm7OLzmidmMetK63CVpqiwI+9w60f7TBlirLMS0LFHUSEs2S
+x-ms-exchange-antispam-messagedata: mHxkg6fJkEDYYwzdiZUbLIaS3ywMBPEJpkMezsOkZNAaIWPRv6Zg2CLaOPP54aTvPKk7kJF3/yospoY1lCzkE7FITxcgxOsIByir7IDDyDv2YSaVT8pp0hERgJSU+NW5b0PHcdtGlIF45X3tWwIEcQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
-In-Reply-To: <20200211175507.178100-1-hannes@cmpxchg.org>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 12 Feb 2020 20:25:45 +0800
-Message-ID: <CALOAHbC3Bx3E7fwt35zuiHfuC8YyhVWA1tDh2KP+gQJoMtED3w@mail.gmail.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9dd74df-1e31-4ac3-a3d9-08d7afb6cc4f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 12:26:34.1799
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: N9Fg4x5CL/Q+jR6h9IwW6EEPx6/TZLrNXrcMBETQxbaZuza9CduTsrTVav8U2dsmpb3uymqhA4pl1Ow0xnG8Ew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6430
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 1:55 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> The VFS inode shrinker is currently allowed to reclaim inodes with
-> populated page cache. As a result it can drop gigabytes of hot and
-> active page cache on the floor without consulting the VM (recorded as
-> "inodesteal" events in /proc/vmstat).
->
-> This causes real problems in practice. Consider for example how the VM
-> would cache a source tree, such as the Linux git tree. As large parts
-> of the checked out files and the object database are accessed
-> repeatedly, the page cache holding this data gets moved to the active
-> list, where it's fully (and indefinitely) insulated from one-off cache
-> moving through the inactive list.
->
-> However, due to the way users interact with the tree, no ongoing open
-> file descriptors into the source tree are maintained, and the inodes
-> end up on the "unused inode" shrinker LRU. A larger burst of one-off
-> cache (find, updatedb, etc.) can now drive the VFS shrinkers to drop
-> first the dentries and then the inodes - inodes that contain the most
-> valuable data currently held by the page cache - while there is plenty
-> of one-off cache that could be reclaimed instead.
->
-> This doesn't make sense. The inodes aren't really "unused" as long as
-> the VM deems it worthwhile to hold on to their page cache. And the
-> shrinker can't possibly guess what is and isn't valuable to the VM
-> based on recent inode reference information alone (we could delete
-> several thousand lines of reclaim code if it could).
->
-> History
->
-> This behavior of invalidating page cache from the inode shrinker goes
-> back to even before the git import of the kernel tree. It may have
-> been less noticeable when the VM itself didn't have real workingset
-> protection, and floods of one-off cache would push out any active
-> cache over time anyway. But the VM has come a long way since then and
-> the inode shrinker is now actively subverting its caching strategy.
->
-> As this keeps causing problems for people, there have been several
-> attempts to address this.
->
-> One recent attempt was to make the inode shrinker simply skip over
-> inodes that still contain pages: a76cf1a474d7 ("mm: don't reclaim
-> inodes with many attached pages").
->
-> However, this change had to be reverted in 69056ee6a8a3 ("Revert "mm:
-> don't reclaim inodes with many attached pages"") because it caused
-> severe reclaim performance problems: Inodes that sit on the shrinker
-> LRU are attracting reclaim pressure away from the page cache and
-> toward the VFS. If we then permanently exempt sizable portions of this
-> pool from actually getting reclaimed when looked at, this pressure
-> accumulates as deferred shrinker work (a mechanism for *temporarily*
-> unreclaimable objects) until it causes mayhem in the VFS cache pools.
->
-> In the bug quoted in 69056ee6a8a3 in particular, the excessive
-> pressure drove the XFS shrinker into dirty objects, where it caused
-> synchronous, IO-bound stalls, even as there was plenty of clean page
-> cache that should have been reclaimed instead.
->
-> Another variant of this problem was recently observed, where the
-> kernel violates cgroups' memory.low protection settings and reclaims
-> page cache way beyond the configured thresholds. It was followed by a
-> proposal of a modified form of the reverted commit above, that
-> implements memory.low-sensitive shrinker skipping over populated
-> inodes on the LRU [1]. However, this proposal continues to run the
-> risk of attracting disproportionate reclaim pressure to a pool of
-> still-used inodes,
+>=20
+> ADAPT is added specifically for HS Gear4 mode only, select INITIAL ADAPT
+> before do power mode change to G4 and select NO ADAPT before switch to
+> non-G4 modes.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
 
-Hi Johannes,
+Thanks,
+Avri
 
-If you really think that is a risk, what about bellow additional patch
-to fix this risk ?
-
-diff --git a/fs/inode.c b/fs/inode.c
-index 80dddbc..61862d9 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -760,7 +760,7 @@ static bool memcg_can_reclaim_inode(struct inode *inode,
-                goto out;
-
-        cgroup_size = mem_cgroup_size(memcg);
--       if (inode->i_data.nrpages + protection >= cgroup_size)
-+       if (inode->i_data.nrpages)
-                reclaimable = false;
-
- out:
-
-With this additional patch, we skip all inodes in this memcg until all
-its page cache pages are reclaimed.
-
-> while not addressing the more generic reclaim
-> inversion problem outside of a very specific cgroup application.
->
-
-But I have a different understanding.
-This method works like a knob. If you really care about your
-workingset (data), you should turn it on (i.e. by using memcg
-protection to protect them), while if you don't care about your
-workingset (data) then you'd better turn it off. That would be more
-flexible.
-Regaring your case in the commit log, why not protect your linux git
-tree with memcg protection ?
-
-> [1] https://lore.kernel.org/linux-mm/1578499437-1664-1-git-send-email-laoar.shao@gmail.com/
->
-> Solution
->
-> To fix the reclaim inversion described in the beginning, without
-> reintroducing the problems associated with shrinker LRU rotations,
-> this patch keeps populated inodes off the LRUs entirely.
->
-> Currently, inodes are kept off the shrinker LRU as long as they have
-> an elevated i_count, indicating an active user. Unfortunately, the
-> page cache cannot simply hold an i_count reference, because unlink()
-> *should* result in the inode being dropped and its cache invalidated.
->
-> Instead, this patch makes iput_final() consult the state of the page
-> cache and punt the LRU linking to the VM if the inode is still
-> populated; the VM in turn checks the inode state when it depopulates
-> the page cache, and adds the inode to the LRU if necessary.
->
-> This is not unlike what we do for dirty inodes, which are moved off
-> the LRU permanently until writeback completion puts them back on (iff
-> still unused). We can reuse the same code -- inode_add_lru() - here.
->
-> This is also not unlike page reclaim, where the lower VM layer has to
-> negotiate state with the higher VFS layer. Follow existing precedence
-> and handle the inversion as much as possible on the VM side:
->
-> - introduce an I_PAGES flag that the VM maintains under the i_lock, so
->   that any inode code holding that lock can check the page cache state
->   without having to lock and inspect the struct address_space
->
-> - introduce inode_pages_set() and inode_pages_clear() to maintain the
->   inode LRU state from the VM side, then update all cache mutators to
->   use them when populating the first cache entry or clearing the last
->
-> With this, the concept of "inodesteal" - where the inode shrinker
-> drops page cache - is a thing of the past. The VM is in charge of the
-> page cache, the inode shrinker is in charge of freeing struct inode.
->
-> Footnotes
->
-> - For debuggability, add vmstat counters that track the number of
->   times a new cache entry pulls a previously unused inode off the LRU
->   (pginoderescue), as well as how many times existing cache deferred
->   an LRU addition. Keep the pginodesteal/kswapd_inodesteal counters
->   for backwards compatibility, but they'll just show 0 now.
->
-> - Fix /proc/sys/vm/drop_caches to drop shadow entries from the page
->   cache. Not doing so has always been a bit strange, but since most
->   people drop cache and metadata cache together, the inode shrinker
->   would have taken care of them before - no more, so do it VM-side.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  fs/block_dev.c                |   2 +-
->  fs/dax.c                      |  14 +++++
->  fs/drop_caches.c              |   2 +-
->  fs/inode.c                    | 106 ++++++++++++++++++++++++++--------
->  fs/internal.h                 |   2 +-
->  include/linux/fs.h            |  12 ++++
->  include/linux/pagemap.h       |   2 +-
->  include/linux/vm_event_item.h |   3 +-
->  mm/filemap.c                  |  39 ++++++++++---
->  mm/huge_memory.c              |   3 +-
->  mm/truncate.c                 |  34 ++++++++---
->  mm/vmscan.c                   |   6 +-
->  mm/vmstat.c                   |   4 +-
->  mm/workingset.c               |   4 ++
->  14 files changed, 183 insertions(+), 50 deletions(-)
->
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 69bf2fb6f7cd..46f67147ad20 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -79,7 +79,7 @@ void kill_bdev(struct block_device *bdev)
->  {
->         struct address_space *mapping = bdev->bd_inode->i_mapping;
->
-> -       if (mapping->nrpages == 0 && mapping->nrexceptional == 0)
-> +       if (mapping_empty(mapping))
->                 return;
->
->         invalidate_bh_lrus();
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 35da144375a0..7f3ce4612272 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -478,9 +478,11 @@ static void *grab_mapping_entry(struct xa_state *xas,
->  {
->         unsigned long index = xas->xa_index;
->         bool pmd_downgrade = false; /* splitting PMD entry into PTE entries? */
-> +       int populated;
->         void *entry;
->
->  retry:
-> +       populated = 0;
->         xas_lock_irq(xas);
->         entry = get_unlocked_entry(xas, order);
->
-> @@ -526,6 +528,8 @@ static void *grab_mapping_entry(struct xa_state *xas,
->                 xas_store(xas, NULL);   /* undo the PMD join */
->                 dax_wake_entry(xas, entry, true);
->                 mapping->nrexceptional--;
-> +               if (mapping_empty(mapping))
-> +                       populated = -1;
->                 entry = NULL;
->                 xas_set(xas, index);
->         }
-> @@ -541,11 +545,17 @@ static void *grab_mapping_entry(struct xa_state *xas,
->                 dax_lock_entry(xas, entry);
->                 if (xas_error(xas))
->                         goto out_unlock;
-> +               if (mapping_empty(mapping))
-> +                       populated++;
->                 mapping->nrexceptional++;
->         }
->
->  out_unlock:
->         xas_unlock_irq(xas);
-> +       if (populated == -1)
-> +               inode_pages_clear(mapping->inode);
-> +       else if (populated == 1)
-> +               inode_pages_set(mapping->inode);
->         if (xas_nomem(xas, mapping_gfp_mask(mapping) & ~__GFP_HIGHMEM))
->                 goto retry;
->         if (xas->xa_node == XA_ERROR(-ENOMEM))
-> @@ -631,6 +641,7 @@ static int __dax_invalidate_entry(struct address_space *mapping,
->                                           pgoff_t index, bool trunc)
->  {
->         XA_STATE(xas, &mapping->i_pages, index);
-> +       bool empty = false;
->         int ret = 0;
->         void *entry;
->
-> @@ -645,10 +656,13 @@ static int __dax_invalidate_entry(struct address_space *mapping,
->         dax_disassociate_entry(entry, mapping, trunc);
->         xas_store(&xas, NULL);
->         mapping->nrexceptional--;
-> +       empty = mapping_empty(mapping);
->         ret = 1;
->  out:
->         put_unlocked_entry(&xas, entry);
->         xas_unlock_irq(&xas);
-> +       if (empty)
-> +               inode_pages_clear(mapping->host);
->         return ret;
->  }
->
-> diff --git a/fs/drop_caches.c b/fs/drop_caches.c
-> index dc1a1d5d825b..a5e9e9053474 100644
-> --- a/fs/drop_caches.c
-> +++ b/fs/drop_caches.c
-> @@ -27,7 +27,7 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
->                  * we need to reschedule to avoid softlockups.
->                  */
->                 if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
-> -                   (inode->i_mapping->nrpages == 0 && !need_resched())) {
-> +                   (mapping_empty(inode->i_mapping) && !need_resched())) {
->                         spin_unlock(&inode->i_lock);
->                         continue;
->                 }
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 7d57068b6b7a..575b780fa9bb 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -430,25 +430,87 @@ static void inode_lru_list_add(struct inode *inode)
->                 inode->i_state |= I_REFERENCED;
->  }
->
-> +static void inode_lru_list_del(struct inode *inode)
-> +{
-> +       if (list_lru_del(&inode->i_sb->s_inode_lru, &inode->i_lru))
-> +               this_cpu_dec(nr_unused);
-> +}
-> +
->  /*
->   * Add inode to LRU if needed (inode is unused and clean).
->   *
->   * Needs inode->i_lock held.
->   */
-> -void inode_add_lru(struct inode *inode)
-> +bool inode_add_lru(struct inode *inode)
->  {
-> -       if (!(inode->i_state & (I_DIRTY_ALL | I_SYNC |
-> -                               I_FREEING | I_WILL_FREE)) &&
-> -           !atomic_read(&inode->i_count) && inode->i_sb->s_flags & SB_ACTIVE)
-> -               inode_lru_list_add(inode);
-> +       if (inode->i_state &
-> +           (I_DIRTY_ALL | I_SYNC | I_FREEING | I_WILL_FREE | I_PAGES))
-> +               return false;
-> +       if (atomic_read(&inode->i_count))
-> +               return false;
-> +       if (!(inode->i_sb->s_flags & SB_ACTIVE))
-> +               return false;
-> +       inode_lru_list_add(inode);
-> +       return true;
->  }
->
-> +/**
-> + * inode_pages_set - mark the inode as holding page cache
-> + * @inode: the inode whose first cache page was just added
-> + *
-> + * Tell the VFS that this inode has populated page cache and must not
-> + * be reclaimed by the inode shrinker.
-> + *
-> + * The caller must hold the page lock of the just-added page: by
-> + * pinning the page, the page cache cannot become depopulated, and we
-> + * can safely set I_PAGES without a race check under the i_pages lock.
-> + *
-> + * This function acquires the i_lock.
-> + */
-> +void inode_pages_set(struct inode *inode)
-> +{
-> +       spin_lock(&inode->i_lock);
-> +       if (!(inode->i_state & I_PAGES)) {
-> +               inode->i_state |= I_PAGES;
-> +               if (!list_empty(&inode->i_lru)) {
-> +                       count_vm_event(PGINODERESCUE);
-> +                       inode_lru_list_del(inode);
-> +               }
-> +       }
-> +       spin_unlock(&inode->i_lock);
-> +}
->
-> -static void inode_lru_list_del(struct inode *inode)
-> +/**
-> + * inode_pages_clear - mark the inode as not holding page cache
-> + * @inode: the inode whose last cache page was just removed
-> + *
-> + * Tell the VFS that the inode no longer holds page cache and that its
-> + * lifetime is to be handed over to the inode shrinker LRU.
-> + *
-> + * This function acquires the i_lock and the i_pages lock.
-> + */
-> +void inode_pages_clear(struct inode *inode)
->  {
-> +       struct address_space *mapping = &inode->i_data;
-> +       bool add_to_lru = false;
-> +       unsigned long flags;
->
-> -       if (list_lru_del(&inode->i_sb->s_inode_lru, &inode->i_lru))
-> -               this_cpu_dec(nr_unused);
-> +       spin_lock(&inode->i_lock);
-> +
-> +       xa_lock_irqsave(&mapping->i_pages, flags);
-> +       if ((inode->i_state & I_PAGES) && mapping_empty(mapping)) {
-> +               inode->i_state &= ~I_PAGES;
-> +               add_to_lru = true;
-> +       }
-> +       xa_unlock_irqrestore(&mapping->i_pages, flags);
-> +
-> +       if (add_to_lru) {
-> +               WARN_ON_ONCE(!list_empty(&inode->i_lru));
-> +               if (inode_add_lru(inode))
-> +                       __count_vm_event(PGINODEDELAYED);
-> +       }
-> +
-> +       spin_unlock(&inode->i_lock);
->  }
->
->  /**
-> @@ -742,6 +804,8 @@ static enum lru_status inode_lru_isolate(struct list_head *item,
->         if (!spin_trylock(&inode->i_lock))
->                 return LRU_SKIP;
->
-> +       WARN_ON_ONCE(inode->i_state & I_PAGES);
-> +
->         /*
->          * Referenced or dirty inodes are still in use. Give them another pass
->          * through the LRU as we canot reclaim them now.
-> @@ -761,23 +825,17 @@ static enum lru_status inode_lru_isolate(struct list_head *item,
->                 return LRU_ROTATE;
->         }
->
-> -       if (inode_has_buffers(inode) || inode->i_data.nrpages) {
-> -               __iget(inode);
-> +       /*
-> +        * Populated inodes shouldn't be on the shrinker LRU, but they
-> +        * can be briefly visible when a new page is added to an inode
-> +        * that was already linked but inode_pages_set() hasn't run
-> +        * yet to move them off.
-> +        */
-> +       if (inode_has_buffers(inode) || !mapping_empty(&inode->i_data)) {
-> +               list_lru_isolate(lru, &inode->i_lru);
->                 spin_unlock(&inode->i_lock);
-> -               spin_unlock(lru_lock);
-> -               if (remove_inode_buffers(inode)) {
-> -                       unsigned long reap;
-> -                       reap = invalidate_mapping_pages(&inode->i_data, 0, -1);
-> -                       if (current_is_kswapd())
-> -                               __count_vm_events(KSWAPD_INODESTEAL, reap);
-> -                       else
-> -                               __count_vm_events(PGINODESTEAL, reap);
-> -                       if (current->reclaim_state)
-> -                               current->reclaim_state->reclaimed_slab += reap;
-> -               }
-> -               iput(inode);
-> -               spin_lock(lru_lock);
-> -               return LRU_RETRY;
-> +               this_cpu_dec(nr_unused);
-> +               return LRU_REMOVED;
->         }
->
->         WARN_ON(inode->i_state & I_NEW);
-> diff --git a/fs/internal.h b/fs/internal.h
-> index f3f280b952a3..4a9dc77e817b 100644
-> --- a/fs/internal.h
-> +++ b/fs/internal.h
-> @@ -139,7 +139,7 @@ extern int vfs_open(const struct path *, struct file *);
->   * inode.c
->   */
->  extern long prune_icache_sb(struct super_block *sb, struct shrink_control *sc);
-> -extern void inode_add_lru(struct inode *inode);
-> +extern bool inode_add_lru(struct inode *inode);
->  extern int dentry_needs_remove_privs(struct dentry *dentry);
->
->  /*
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 3cd4fe6b845e..a98d9dee39f4 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -585,6 +585,11 @@ static inline void mapping_allow_writable(struct address_space *mapping)
->         atomic_inc(&mapping->i_mmap_writable);
->  }
->
-> +static inline bool mapping_empty(struct address_space *mapping)
-> +{
-> +       return mapping->nrpages + mapping->nrexceptional == 0;
-> +}
-> +
->  /*
->   * Use sequence counter to get consistent i_size on 32-bit processors.
->   */
-> @@ -2150,6 +2155,9 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
->   *
->   * I_CREATING          New object's inode in the middle of setting up.
->   *
-> + * I_PAGES             Inode is holding page cache that needs to get reclaimed
-> + *                     first before the inode can go onto the shrinker LRU.
-> + *
->   * Q: What is the difference between I_WILL_FREE and I_FREEING?
->   */
->  #define I_DIRTY_SYNC           (1 << 0)
-> @@ -2172,6 +2180,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
->  #define I_WB_SWITCH            (1 << 13)
->  #define I_OVL_INUSE            (1 << 14)
->  #define I_CREATING             (1 << 15)
-> +#define I_PAGES                        (1 << 16)
->
->  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
->  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
-> @@ -3097,6 +3106,9 @@ static inline void remove_inode_hash(struct inode *inode)
->                 __remove_inode_hash(inode);
->  }
->
-> +extern void inode_pages_set(struct inode *inode);
-> +extern void inode_pages_clear(struct inode *inode);
-> +
->  extern void inode_sb_list_add(struct inode *inode);
->
->  #ifdef CONFIG_BLOCK
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index ccb14b6a16b5..ae4d90bd0873 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -609,7 +609,7 @@ int add_to_page_cache_locked(struct page *page, struct address_space *mapping,
->  int add_to_page_cache_lru(struct page *page, struct address_space *mapping,
->                                 pgoff_t index, gfp_t gfp_mask);
->  extern void delete_from_page_cache(struct page *page);
-> -extern void __delete_from_page_cache(struct page *page, void *shadow);
-> +extern bool __delete_from_page_cache(struct page *page, void *shadow);
->  int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask);
->  void delete_from_page_cache_batch(struct address_space *mapping,
->                                   struct pagevec *pvec);
-> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-> index 47a3441cf4c4..f31026ccf590 100644
-> --- a/include/linux/vm_event_item.h
-> +++ b/include/linux/vm_event_item.h
-> @@ -38,7 +38,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
->  #ifdef CONFIG_NUMA
->                 PGSCAN_ZONE_RECLAIM_FAILED,
->  #endif
-> -               PGINODESTEAL, SLABS_SCANNED, KSWAPD_INODESTEAL,
-> +               SLABS_SCANNED,
-> +               PGINODESTEAL, KSWAPD_INODESTEAL, PGINODERESCUE, PGINODEDELAYED,
->                 KSWAPD_LOW_WMARK_HIT_QUICKLY, KSWAPD_HIGH_WMARK_HIT_QUICKLY,
->                 PAGEOUTRUN, PGROTATED,
->                 DROP_PAGECACHE, DROP_SLAB,
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 1784478270e1..fcc24b3b3540 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -116,8 +116,8 @@
->   *   ->tasklist_lock            (memory_failure, collect_procs_ao)
->   */
->
-> -static void page_cache_delete(struct address_space *mapping,
-> -                                  struct page *page, void *shadow)
-> +static bool __must_check page_cache_delete(struct address_space *mapping,
-> +                                          struct page *page, void *shadow)
->  {
->         XA_STATE(xas, &mapping->i_pages, page->index);
->         unsigned int nr = 1;
-> @@ -151,6 +151,8 @@ static void page_cache_delete(struct address_space *mapping,
->                 smp_wmb();
->         }
->         mapping->nrpages -= nr;
-> +
-> +       return mapping_empty(mapping);
->  }
->
->  static void unaccount_page_cache_page(struct address_space *mapping,
-> @@ -227,15 +229,18 @@ static void unaccount_page_cache_page(struct address_space *mapping,
->   * Delete a page from the page cache and free it. Caller has to make
->   * sure the page is locked and that nobody else uses it - or that usage
->   * is safe.  The caller must hold the i_pages lock.
-> + *
-> + * If this returns true, the caller must call inode_pages_clear()
-> + * after dropping the i_pages lock.
->   */
-> -void __delete_from_page_cache(struct page *page, void *shadow)
-> +bool __must_check __delete_from_page_cache(struct page *page, void *shadow)
->  {
->         struct address_space *mapping = page->mapping;
->
->         trace_mm_filemap_delete_from_page_cache(page);
->
->         unaccount_page_cache_page(mapping, page);
-> -       page_cache_delete(mapping, page, shadow);
-> +       return page_cache_delete(mapping, page, shadow);
->  }
->
->  static void page_cache_free_page(struct address_space *mapping,
-> @@ -267,12 +272,16 @@ void delete_from_page_cache(struct page *page)
->  {
->         struct address_space *mapping = page_mapping(page);
->         unsigned long flags;
-> +       bool empty;
->
->         BUG_ON(!PageLocked(page));
->         xa_lock_irqsave(&mapping->i_pages, flags);
-> -       __delete_from_page_cache(page, NULL);
-> +       empty = __delete_from_page_cache(page, NULL);
->         xa_unlock_irqrestore(&mapping->i_pages, flags);
->
-> +       if (empty)
-> +               inode_pages_clear(mapping->host);
-> +
->         page_cache_free_page(mapping, page);
->  }
->  EXPORT_SYMBOL(delete_from_page_cache);
-> @@ -291,8 +300,8 @@ EXPORT_SYMBOL(delete_from_page_cache);
->   *
->   * The function expects the i_pages lock to be held.
->   */
-> -static void page_cache_delete_batch(struct address_space *mapping,
-> -                            struct pagevec *pvec)
-> +static bool __must_check page_cache_delete_batch(struct address_space *mapping,
-> +                                                struct pagevec *pvec)
->  {
->         XA_STATE(xas, &mapping->i_pages, pvec->pages[0]->index);
->         int total_pages = 0;
-> @@ -337,12 +346,15 @@ static void page_cache_delete_batch(struct address_space *mapping,
->                 total_pages++;
->         }
->         mapping->nrpages -= total_pages;
-> +
-> +       return mapping_empty(mapping);
->  }
->
->  void delete_from_page_cache_batch(struct address_space *mapping,
->                                   struct pagevec *pvec)
->  {
->         int i;
-> +       bool empty;
->         unsigned long flags;
->
->         if (!pagevec_count(pvec))
-> @@ -354,9 +366,12 @@ void delete_from_page_cache_batch(struct address_space *mapping,
->
->                 unaccount_page_cache_page(mapping, pvec->pages[i]);
->         }
-> -       page_cache_delete_batch(mapping, pvec);
-> +       empty = page_cache_delete_batch(mapping, pvec);
->         xa_unlock_irqrestore(&mapping->i_pages, flags);
->
-> +       if (empty)
-> +               inode_pages_clear(mapping->host);
-> +
->         for (i = 0; i < pagevec_count(pvec); i++)
->                 page_cache_free_page(mapping, pvec->pages[i]);
->  }
-> @@ -831,9 +846,10 @@ static int __add_to_page_cache_locked(struct page *page,
->                                       void **shadowp)
->  {
->         XA_STATE(xas, &mapping->i_pages, offset);
-> +       int error;
->         int huge = PageHuge(page);
->         struct mem_cgroup *memcg;
-> -       int error;
-> +       bool populated = false;
->         void *old;
->
->         VM_BUG_ON_PAGE(!PageLocked(page), page);
-> @@ -860,6 +876,7 @@ static int __add_to_page_cache_locked(struct page *page,
->                 if (xas_error(&xas))
->                         goto unlock;
->
-> +               populated = mapping_empty(mapping);
->                 if (xa_is_value(old)) {
->                         mapping->nrexceptional--;
->                         if (shadowp)
-> @@ -880,6 +897,10 @@ static int __add_to_page_cache_locked(struct page *page,
->         if (!huge)
->                 mem_cgroup_commit_charge(page, memcg, false, false);
->         trace_mm_filemap_add_to_page_cache(page);
-> +
-> +       if (populated)
-> +               inode_pages_set(mapping->host);
-> +
->         return 0;
->  error:
->         page->mapping = NULL;
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index b08b199f9a11..8b3e33a52d93 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2535,7 +2535,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->                 /* Some pages can be beyond i_size: drop them from page cache */
->                 if (head[i].index >= end) {
->                         ClearPageDirty(head + i);
-> -                       __delete_from_page_cache(head + i, NULL);
-> +                       /* We know we're not removing the last page */
-> +                       (void)__delete_from_page_cache(head + i, NULL);
->                         if (IS_ENABLED(CONFIG_SHMEM) && PageSwapBacked(head))
->                                 shmem_uncharge(head->mapping->host, 1);
->                         put_page(head + i);
-> diff --git a/mm/truncate.c b/mm/truncate.c
-> index dd9ebc1da356..8fb6c2f762bc 100644
-> --- a/mm/truncate.c
-> +++ b/mm/truncate.c
-> @@ -31,24 +31,31 @@
->   * itself locked.  These unlocked entries need verification under the tree
->   * lock.
->   */
-> -static inline void __clear_shadow_entry(struct address_space *mapping,
-> -                               pgoff_t index, void *entry)
-> +static bool __must_check __clear_shadow_entry(struct address_space *mapping,
-> +                                             pgoff_t index, void *entry)
->  {
->         XA_STATE(xas, &mapping->i_pages, index);
->
->         xas_set_update(&xas, workingset_update_node);
->         if (xas_load(&xas) != entry)
-> -               return;
-> +               return 0;
->         xas_store(&xas, NULL);
->         mapping->nrexceptional--;
-> +
-> +       return mapping_empty(mapping);
->  }
->
->  static void clear_shadow_entry(struct address_space *mapping, pgoff_t index,
->                                void *entry)
->  {
-> +       bool empty;
-> +
->         xa_lock_irq(&mapping->i_pages);
-> -       __clear_shadow_entry(mapping, index, entry);
-> +       empty = __clear_shadow_entry(mapping, index, entry);
->         xa_unlock_irq(&mapping->i_pages);
-> +
-> +       if (empty)
-> +               inode_pages_clear(mapping->host);
->  }
->
->  /*
-> @@ -61,7 +68,7 @@ static void truncate_exceptional_pvec_entries(struct address_space *mapping,
->                                 pgoff_t end)
->  {
->         int i, j;
-> -       bool dax, lock;
-> +       bool dax, lock, empty = false;
->
->         /* Handled by shmem itself */
->         if (shmem_mapping(mapping))
-> @@ -96,11 +103,16 @@ static void truncate_exceptional_pvec_entries(struct address_space *mapping,
->                         continue;
->                 }
->
-> -               __clear_shadow_entry(mapping, index, page);
-> +               if (__clear_shadow_entry(mapping, index, page))
-> +                       empty = true;
->         }
->
->         if (lock)
->                 xa_unlock_irq(&mapping->i_pages);
-> +
-> +       if (empty)
-> +               inode_pages_clear(mapping->host);
-> +
->         pvec->nr = j;
->  }
->
-> @@ -300,7 +312,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
->         pgoff_t         index;
->         int             i;
->
-> -       if (mapping->nrpages == 0 && mapping->nrexceptional == 0)
-> +       if (mapping_empty(mapping))
->                 goto out;
->
->         /* Offsets within partial pages */
-> @@ -636,6 +648,7 @@ static int
->  invalidate_complete_page2(struct address_space *mapping, struct page *page)
->  {
->         unsigned long flags;
-> +       bool empty;
->
->         if (page->mapping != mapping)
->                 return 0;
-> @@ -648,9 +661,12 @@ invalidate_complete_page2(struct address_space *mapping, struct page *page)
->                 goto failed;
->
->         BUG_ON(page_has_private(page));
-> -       __delete_from_page_cache(page, NULL);
-> +       empty = __delete_from_page_cache(page, NULL);
->         xa_unlock_irqrestore(&mapping->i_pages, flags);
->
-> +       if (empty)
-> +               inode_pages_clear(mapping->host);
-> +
->         if (mapping->a_ops->freepage)
->                 mapping->a_ops->freepage(page);
->
-> @@ -692,7 +708,7 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
->         int ret2 = 0;
->         int did_range_unmap = 0;
->
-> -       if (mapping->nrpages == 0 && mapping->nrexceptional == 0)
-> +       if (mapping_empty(mapping))
->                 goto out;
->
->         pagevec_init(&pvec);
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index c05eb9efec07..c82e9831003f 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -901,6 +901,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
->         } else {
->                 void (*freepage)(struct page *);
->                 void *shadow = NULL;
-> +               int empty;
->
->                 freepage = mapping->a_ops->freepage;
->                 /*
-> @@ -922,9 +923,12 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
->                 if (reclaimed && page_is_file_cache(page) &&
->                     !mapping_exiting(mapping) && !dax_mapping(mapping))
->                         shadow = workingset_eviction(page, target_memcg);
-> -               __delete_from_page_cache(page, shadow);
-> +               empty = __delete_from_page_cache(page, shadow);
->                 xa_unlock_irqrestore(&mapping->i_pages, flags);
->
-> +               if (empty)
-> +                       inode_pages_clear(mapping->host);
-> +
->                 if (freepage != NULL)
->                         freepage(page);
->         }
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 78d53378db99..ae802253f71c 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1203,9 +1203,11 @@ const char * const vmstat_text[] = {
->  #ifdef CONFIG_NUMA
->         "zone_reclaim_failed",
->  #endif
-> -       "pginodesteal",
->         "slabs_scanned",
-> +       "pginodesteal",
->         "kswapd_inodesteal",
-> +       "pginoderescue",
-> +       "pginodedelayed",
->         "kswapd_low_wmark_hit_quickly",
->         "kswapd_high_wmark_hit_quickly",
->         "pageoutrun",
-> diff --git a/mm/workingset.c b/mm/workingset.c
-> index 474186b76ced..7ce9c74ebfdb 100644
-> --- a/mm/workingset.c
-> +++ b/mm/workingset.c
-> @@ -491,6 +491,7 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
->         struct xa_node *node = container_of(item, struct xa_node, private_list);
->         XA_STATE(xas, node->array, 0);
->         struct address_space *mapping;
-> +       bool empty = false;
->         int ret;
->
->         /*
-> @@ -529,6 +530,7 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
->         if (WARN_ON_ONCE(node->count != node->nr_values))
->                 goto out_invalid;
->         mapping->nrexceptional -= node->nr_values;
-> +       empty = mapping_empty(mapping);
->         xas.xa_node = xa_parent_locked(&mapping->i_pages, node);
->         xas.xa_offset = node->offset;
->         xas.xa_shift = node->shift + XA_CHUNK_SHIFT;
-> @@ -542,6 +544,8 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
->
->  out_invalid:
->         xa_unlock_irq(&mapping->i_pages);
-> +       if (empty)
-> +               inode_pages_clear(mapping->host);
->         ret = LRU_REMOVED_RETRY;
->  out:
->         cond_resched();
-> --
-> 2.24.1
->
->
