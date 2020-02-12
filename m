@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E71C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477DAC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BB02168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E05B2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581550816;
-	bh=G8nKjlt3Ou6LY/GpxhORuAUMiCjfveL0tSWaPTB2jyg=;
+	s=default; t=1581550821;
+	bh=7rtKp1nAIPNq1/DeUQBuI6a+V1z8fJWvIKhRDxXa80w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NGirYaybywj43FZcTXxPmjb25VC4raM+OMtLPaiCrvC8gaaBAuHxtjV6+Gz7vBpuI
-	 Q0E4CPwmQqgt5y7nY6w22eZYNZvYI2n2sKOUsl2F2XfjuZ8CfGbiwY2ggWNk0qkzjG
-	 29v/KIhh6fqSrH+wFUn6ByYoIWhAHpJ51+i8sep8=
+	b=VzwW59L74gYc3Ce0Jw12XByKiW6fUlPHXUFiN4uiZwS+ATr8ChYxflP0Ndq7w/iF5
+	 5pT0MdU6IF/DI0vKxJOHq7gzQcsZvtMibP37nzECVn+VPY0echTt6MsEc4iJKsstHi
+	 k37RSXVFKPo5TVhNzZZtdJ2BPYVhfibhvpGr5AMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgBLXkJ (ORCPT
+        id S1729374AbgBLXkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:40:09 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44064 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgBLXkC (ORCPT
+        Wed, 12 Feb 2020 18:40:06 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40500 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729358AbgBLXkD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:40:02 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d9so1543515plo.11;
-        Wed, 12 Feb 2020 15:40:00 -0800 (PST)
+        Wed, 12 Feb 2020 18:40:03 -0500
+Received: by mail-pj1-f66.google.com with SMTP id 12so1551966pjb.5;
+        Wed, 12 Feb 2020 15:40:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tK/qyDb2GX3eOsQv+8LykkGI1WZNv+AWZfoVVRiylFw=;
-        b=ugnk4mbCpyLdbSnvSLG+4LE+l7uQjSspFTFdoXumnT9VtWq0fApfN4PwLFAP90qoof
-         my+fCb7um1UNKkVcQdS2Fy2CxJIvpngIkgvSrCwcCeP+rS9OAZOpRZjv+YLq/FZj+YU6
-         p3hj4WL+PtezT3ZPgcOlwn9B3TR3+L4h0YclrXkhWtBMF46MqTSO7Nwuji88u0C9Ys9I
-         Victfq0Q7S8GZ3z/WzMRtXU0sMlhPBiNmTzTa96CahdBEIyJw/QeiUCPOtn1bxydOGgY
-         TBqqxdcWMBLx95yG//Tr7q3kXPK7/xDqjdZ7j+UaU3pTyktPWgY6/MvqDY5EfO60bb3s
-         Bx9w==
+        bh=AXU0e7YyFS/VUMYPbADn6DLwQaySKSAu7t+ONiQoTpg=;
+        b=Vzb3l8tkR4YbxU66SZ9n9nBxwBBBt3Hb7W8USVfds/HSLFN5fliwziScWU/0DUU5u7
+         P1akVLwV7GzSWcQ6oucwCOZhQaJljjR5vveLA/FERFd3Dr6X8i0OyADhtbvtXCrOUIXC
+         G3mHqB80cTp79sAh0e+KI56k+GeAp2Ruixvd52hxGSas6+WO67LnF/e9VmYldCqDAv1D
+         kNTDeNcgTqr4P+NkFB052cowzeBEWuR0GcccOrR0IoK5Osec1hs4sQZLnhrnUhu+mZUi
+         C+coPGSDtJaW3TYnkOzl6mmlVLkonabbog7rKg6Hw5C6Lk9UAC6RBUVyKZG3GHBFnpWn
+         Gn4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=tK/qyDb2GX3eOsQv+8LykkGI1WZNv+AWZfoVVRiylFw=;
-        b=sWVeSmLXg5CaIoHzitNDCOzzN+Nu3u4ekeVag35uibdzdDI5IE5vD31FjEbo9E3MqB
-         JomfNHVnljJ12pnnfisX1wvfw6m5zSvQBd+tMpon4K1twB0x/reK7u/M29jZBvacuoYP
-         pPx/nCfnpxIF5OPamAoq+kMPa2C5WaOr0OWsGRY7TLMtp1cqGVSA6+zzSStN2Yn7bTAN
-         MLRuznga+xUciFI1X7+Z9cyTc9s7gmOlaV5bSzeOHcwcmS0DelmjwcZIkGPSSMwX6OjP
-         9DGnmAJRmQ52crXrgU5Is37T6s0sYRCNG1x11/LT7Ibe9u6s+2CDhCQcrcgKcm0kJ9oC
-         0qLA==
-X-Gm-Message-State: APjAAAXXmWB41Cj6mh9WLvpt80JJ155s41GkKgRBj1bT7FIstY447fh7
-        NrL+Y9g6E3hUoup4sh2A4O0fkDEB
-X-Google-Smtp-Source: APXvYqzEB9/J7b1QjW8h1fUyP6Qmptb0s33s1keuBeCMZm1l7u56kP5ukjXfiNoaeQnUfZEkSg508w==
-X-Received: by 2002:a17:902:8bc1:: with SMTP id r1mr10844147plo.279.1581550799359;
-        Wed, 12 Feb 2020 15:39:59 -0800 (PST)
+        bh=AXU0e7YyFS/VUMYPbADn6DLwQaySKSAu7t+ONiQoTpg=;
+        b=T7Rz6PbLSQrMhvyssZtr7yN9C4lDDPEAxx+knlMVswOtFc40j/cb3mtCMnyyDtiY4d
+         eXIVVy8xt9PhlPZIfdXwhn+MGvIBxK4DvL2afxjP/+1tumUeyQ0ObJWIaTwL3ZQPUBgD
+         xzoKw8l0HkyOoDJ7BkwSGjOAgQt9ov+ESBvtEaEH8OqwKLDOX6iVieCqwjWHDaMVp1Fo
+         GVL5JurFa70QYaiCFB7En9a8yOCaGe9oMb56SXq/P8nk6iKhwcJ10uqMQdBVC2VRCBw5
+         VybfoqBBeQi3s1lBaRQAdhI90aoHaoC0xv1R27/+xJ6MalcS3Mabpd7hYSv6dd7LMSgW
+         7juA==
+X-Gm-Message-State: APjAAAULArzZIfzKu9Wx+0zMm+/ZOJxPCFBfN15L9uwVdGrI26D7mrBp
+        5NyYShKG+t1EULXe4c2RLJQ=
+X-Google-Smtp-Source: APXvYqwD/pMWtWK6l2LA9FEXSKZnFfQWBoMzwuldcspK6qD6assD8dbx8pK1RFbqi/vyXacz06EMUw==
+X-Received: by 2002:a17:902:8341:: with SMTP id z1mr24836376pln.178.1581550803112;
+        Wed, 12 Feb 2020 15:40:03 -0800 (PST)
 Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id k5sm296664pju.29.2020.02.12.15.39.57
+        by smtp.gmail.com with ESMTPSA id k5sm296664pju.29.2020.02.12.15.40.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:39:58 -0800 (PST)
+        Wed, 12 Feb 2020 15:40:02 -0800 (PST)
 From:   Minchan Kim <minchan@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
@@ -78,9 +78,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Minchan Kim <minchan@kernel.org>
-Subject: [PATCH v4 4/8] mm: check fatal signal pending of target process
-Date:   Wed, 12 Feb 2020 15:39:42 -0800
-Message-Id: <20200212233946.246210-5-minchan@kernel.org>
+Subject: [PATCH v4 6/8] mm/madvise: allow KSM hints for remote API
+Date:   Wed, 12 Feb 2020 15:39:44 -0800
+Message-Id: <20200212233946.246210-7-minchan@kernel.org>
 X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
 In-Reply-To: <20200212233946.246210-1-minchan@kernel.org>
 References: <20200212233946.246210-1-minchan@kernel.org>
@@ -91,134 +91,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bail out to prevent unnecessary CPU overhead if target process ha
-pending fatal signal during MADV_COLD| MADV_PAGEOUT operation.
+From: Oleksandr Natalenko <oleksandr@redhat.com>
 
+It all began with the fact that KSM works only on memory that is marked
+by madvise(). And the only way to get around that is to either:
+
+  * use LD_PRELOAD; or
+  * patch the kernel with something like UKSM or PKSM.
+
+(i skip ptrace can of worms here intentionally)
+
+To overcome this restriction, lets employ a new remote madvise API. This
+can be used by some small userspace helper daemon that will do auto-KSM
+job for us.
+
+I think of two major consumers of remote KSM hints:
+
+  * hosts, that run containers, especially similar ones and especially in
+    a trusted environment, sharing the same runtime like Node.js;
+
+  * heavy applications, that can be run in multiple instances, not
+    limited to opensource ones like Firefox, but also those that cannot be
+    modified since they are binary-only and, maybe, statically linked.
+
+Speaking of statistics, more numbers can be found in the very first
+submission, that is related to this one [1]. For my current setup with
+two Firefox instances I get 100 to 200 MiB saved for the second instance
+depending on the amount of tabs.
+
+1 FF instance with 15 tabs:
+
+   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+   410
+
+2 FF instances, second one has 12 tabs (all the tabs are different):
+
+   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+   592
+
+At the very moment I do not have specific numbers for containerised
+workload, but those should be comparable in case the containers share
+similar/same runtime.
+
+[1] https://lore.kernel.org/patchwork/patch/1012142/
+
+Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
 Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- mm/madvise.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ mm/madvise.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/mm/madvise.c b/mm/madvise.c
-index bb04c7897eb9..276b9d81c1dd 100644
+index 71f0ba199ae8..b1237466657e 100644
 --- a/mm/madvise.c
 +++ b/mm/madvise.c
-@@ -36,6 +36,7 @@
- struct madvise_walk_private {
- 	struct mmu_gather *tlb;
- 	bool pageout;
-+	struct task_struct *task;
- };
- 
- /*
-@@ -316,6 +317,9 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 	if (fatal_signal_pending(current))
- 		return -EINTR;
- 
-+	if (fatal_signal_pending(private->task))
-+		return -EINTR;
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	if (pmd_trans_huge(*pmd)) {
- 		pmd_t orig_pmd;
-@@ -471,12 +475,14 @@ static const struct mm_walk_ops cold_walk_ops = {
- };
- 
- static void madvise_cold_page_range(struct mmu_gather *tlb,
-+			     struct task_struct *task,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
- 	struct madvise_walk_private walk_private = {
- 		.pageout = false,
- 		.tlb = tlb,
-+		.task = task,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -484,7 +490,8 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
- 	tlb_end_vma(tlb, vma);
- }
- 
--static long madvise_cold(struct vm_area_struct *vma,
-+static long madvise_cold(struct task_struct *task,
-+			struct vm_area_struct *vma,
- 			struct vm_area_struct **prev,
- 			unsigned long start_addr, unsigned long end_addr)
- {
-@@ -497,19 +504,21 @@ static long madvise_cold(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_cold_page_range(&tlb, task, vma, start_addr, end_addr);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
- }
- 
- static void madvise_pageout_page_range(struct mmu_gather *tlb,
-+			     struct task_struct *task,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
- 	struct madvise_walk_private walk_private = {
- 		.pageout = true,
- 		.tlb = tlb,
-+		.task = task,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -533,7 +542,8 @@ static inline bool can_do_pageout(struct vm_area_struct *vma)
- 		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
- }
- 
--static long madvise_pageout(struct vm_area_struct *vma,
-+static long madvise_pageout(struct task_struct *task,
-+			struct vm_area_struct *vma,
- 			struct vm_area_struct **prev,
- 			unsigned long start_addr, unsigned long end_addr)
- {
-@@ -549,7 +559,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
-@@ -927,7 +937,8 @@ static int madvise_inject_error(int behavior,
- #endif
- 
- static long
--madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
-+madvise_vma(struct task_struct *task, struct vm_area_struct *vma,
-+		struct vm_area_struct **prev,
- 		unsigned long start, unsigned long end, int behavior)
- {
+@@ -1002,6 +1002,10 @@ process_madvise_behavior_valid(int behavior)
  	switch (behavior) {
-@@ -936,9 +947,9 @@ madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
- 	case MADV_WILLNEED:
- 		return madvise_willneed(vma, prev, start, end);
  	case MADV_COLD:
--		return madvise_cold(vma, prev, start, end);
-+		return madvise_cold(task, vma, prev, start, end);
  	case MADV_PAGEOUT:
--		return madvise_pageout(vma, prev, start, end);
-+		return madvise_pageout(task, vma, prev, start, end);
- 	case MADV_FREE:
- 	case MADV_DONTNEED:
- 		return madvise_dontneed_free(vma, prev, start, end, behavior);
-@@ -1143,7 +1154,7 @@ int do_madvise(struct task_struct *task, unsigned long start,
- 			tmp = end;
- 
- 		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
--		error = madvise_vma(vma, &prev, start, tmp, behavior);
-+		error = madvise_vma(task, vma, &prev, start, tmp, behavior);
- 		if (error)
- 			goto out;
- 		start = tmp;
++#ifdef CONFIG_KSM
++	case MADV_MERGEABLE:
++	case MADV_UNMERGEABLE:
++#endif
+ 		return true;
+ 	default:
+ 		return false;
 -- 
 2.25.0.225.g125e21ebc7-goog
 
