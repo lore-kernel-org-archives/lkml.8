@@ -2,256 +2,353 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8973EC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F1F2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42A8021739
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="qpJLBj7t"
+	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="YUiQw1hm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgBLS7F (ORCPT
+        id S1729000AbgBLS7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:59:05 -0500
-Received: from UCOL19PA35.eemsg.mail.mil ([214.24.24.195]:61207 "EHLO
-        UCOL19PA35.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLS7E (ORCPT
+        Wed, 12 Feb 2020 13:59:09 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37282 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLS7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:59:04 -0500
-X-EEMSG-check-017: 70998748|UCOL19PA35_ESA_OUT02.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
-   d="scan'208";a="70998748"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UCOL19PA35.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Feb 2020 18:58:42 +0000
+        Wed, 12 Feb 2020 13:59:08 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so3711198wru.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1581533922; x=1613069922;
-  h=subject:from:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=43MVO/510jhOyan+SGnwcFXKAXlzAUm+RrV08a9G7Q0=;
-  b=qpJLBj7tzkjmoFtcMlhe7MMJ6/MzRhSFnv6bxUhRpaB7fTLF7OZ3EOl/
-   GrN9kPzPFG1MLKatxB+bLPxPW0p05cmgPik5dF55GY387j8OkdvVD+DIN
-   xROXyUmqz8r/Qyt+Q3+BaSicnZvE/BJpkPVK7BV8Rfc2DVA7Z30PnB+QB
-   rC+BLGTL0dYFqbPeNn0gadUnFOfMaJtk9qaQZxks8dUCcoQldiTKP8AQV
-   ClRvrurcCUiVbb0pPk0BDfic/bJ2hH5yOWA1SNQRyiq2nFAuRCBL1pPK9
-   +uLkcI2GnSwv/w6QJDG73vvFJLvsGhu/SGT8lxZLqw1tu5vaDk1Ey/4Ao
-   g==;
-X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
-   d="scan'208";a="39033152"
-IronPort-PHdr: =?us-ascii?q?9a23=3Ax3SjNRQDn8JHqiTu9aM+W5L1I9psv+yvbD5Q0Y?=
- =?us-ascii?q?Iujvd0So/mwa67ZhaOt8tkgFKBZ4jH8fUM07OQ7/m8HzJdqs/b6TgrS99laV?=
- =?us-ascii?q?wssY0uhQsuAcqIWwXQDcXBSGgEJvlET0Jv5HqhMEJYS47UblzWpWCuv3ZJQk?=
- =?us-ascii?q?2sfQV6Kf7oFYHMks+5y/69+4HJYwVPmTGxfa5+IA+5oAnMucQam4pvJ6Y+xh?=
- =?us-ascii?q?fUvHdEZvldyH91K16Ugxvz6cC88YJ5/S9Nofwh7clAUav7f6Q8U7NVCSktPn?=
- =?us-ascii?q?426sP2qxTNVBOD6XQAXGoYlBpIGBXF4wrhXpjtqCv6t/Fy1zecMMbrUL07Qz?=
- =?us-ascii?q?Wi76NsSB/1lCcKMiMy/W/LhsBsiq9QvQmsrAJjzYHKfI6VNeJ+fqLDctMcWW?=
- =?us-ascii?q?pBRdtaWyhYDo+hc4cDE+8NMOBWoInno1sFsAWwCw+iCujyzjNEn3H70Kk/3+?=
- =?us-ascii?q?knDArI3hEvH8gWvXrJrNv7KqkSX+O7wqbGwjrMbe9Z1zjm5YjUcR0su+2AUa?=
- =?us-ascii?q?5+fMfTz0QkCgPLjk+XqYzgJz6by/gNvHaD7+pgS+2vjXMspRx0oje1wscsjp?=
- =?us-ascii?q?fGh4IIwV3D7iV23Z01KMakSE97fdGkEJxQuzucN4ttWMwuWW5ouCEkyrAfv5?=
- =?us-ascii?q?OwYSsEyIw/yhLCZPGKfJKE7xL+WOqLPzt1i2xpdKiiixu07EOu0PfzVtOu31?=
- =?us-ascii?q?ZPtidFl97MuW0T2BHL8ciHT+d9/l+m2TaSywDf8uFELl4wlarcM5Mh3qQ/lo?=
- =?us-ascii?q?ASsUTeBS/6gkT2jKmYdkUj4ein9fjobq/6pp6cK4B0igb+Pr4omsOjGuQ3Lh?=
- =?us-ascii?q?ICX22a+eS4zLHj/Ev5T6tWjvAuj6XUv5/XKd4bq6KkGQNZzIku5wilAzu7yN?=
- =?us-ascii?q?gYmGMILFNBeBKJlYjpPFTOLejjDfiimFShiytrxvDaMb3hBZXBNH7DkKz7cr?=
- =?us-ascii?q?pn5E5czxQzwchF551IErEBPO7zWkjpudPFFBA5NRC7w+HjCNhm2YMeXmWPAq?=
- =?us-ascii?q?CdMKzMq1OH+uUvI+yUbo8PpDn9M+Ql5+LpjXIhhV8dfKyp3Z4KaHCiBPRpOU?=
- =?us-ascii?q?WYbGHjgtcGFmcKsQ4+Q/LwhFKeVj5TYm64X7gg6TEjFIKmEYDDS5irgLyGxy?=
- =?us-ascii?q?e7HoZbZm9BClCLHnfoc5uLV+0QZyKVJ89riiYEWqS5S489yRGusxf3y7xhLu?=
- =?us-ascii?q?rX4SAYupXj1N965+3Xix4+7yB7D8OY02uVVWF7gnsIRyMq3KB4uUF9zlCD0a?=
- =?us-ascii?q?tmjPxDFdxT6PJJXRogNZHG1OF6BNfyWgXOfteNVlmqWMmpATY0Ttgp2d8Bf1?=
- =?us-ascii?q?59G8m+jhDExyeqB74Vl7qWBJ07667c3Gb+J9x7y3nY0KkslEcmQsRROm28nK?=
- =?us-ascii?q?J/9BbcB5TPk0qHk6amb6Mc3DTC9G2b12qBoFlYUBJsUaXCRX0fYkrWrdLk5k?=
- =?us-ascii?q?LNVrOhE6wnMgpaxM6cJatFdMfpgU9FRPj9ItTeZXy+m2OqCRaP3LOMY5Lge3?=
- =?us-ascii?q?8B0yXFFEgEjwcT8G6dNQcgAiehomTeDCFhFF/0fUPs/vdxqGmhQk830Q6KdU?=
- =?us-ascii?q?th2KSx+hIPgvycUfwTjfo4v3INojN1EVL19NXSAsGLpg1nce0Ibdo761BD/W?=
- =?us-ascii?q?3esAN5M9qrKKU01XAEdAEihF/jzxV6DM17lMEuqH47hF5pJbmwzEJKdzTe24?=
- =?us-ascii?q?v5fLLQND+hr1iUd6fK1wSGg56t8aAV5aF98g6ysQ=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BwBABeSkRe/wHyM5BmHQEBAQkBEQUFAYF7gXgFgWgFI?=
- =?us-ascii?q?BIqhBSJA4ZlAQEBAQEBBoE3iXCQcwNUCQEBAQEBAQEBATcEAQGEQAKCbTgTA?=
- =?us-ascii?q?hABAQEFAQEBAQEFAwEBbIULAQUygjspAYMCAQUjBAsBBUEQCQIOCgICJgICV?=
- =?us-ascii?q?wYKAwYCAQGCYz+CVyWQdpt5fzOJFIE+gQ4qjD55gQeBEScPgV9QLj6HW4JeB?=
- =?us-ascii?q?JAchkWBKogyjzmCRIJPk3wGHIJIiBIFhEWLcawmIjeBISsIAhgIIQ+DJ1AYD?=
- =?us-ascii?q?YRXAYlRF45BIwMwkWEBAQ?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Feb 2020 18:58:41 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01CIvj96175718;
-        Wed, 12 Feb 2020 13:57:45 -0500
-Subject: Re: [PATCH v2 3/6] Teach SELinux about a new userfaultfd class
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Tim Murray <timmurray@google.com>, Nosh Minwalla <nosh@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>, selinux@vger.kernel.org
-References: <20200211225547.235083-1-dancol@google.com>
- <20200211225547.235083-4-dancol@google.com>
- <ef13d728-9f1e-5e38-28a1-7ed7134840e4@tycho.nsa.gov>
- <CAKOZuesUVSYJ6EjHFL3QyiWKVmyhm1fLp5Bm_SHjB3_s1gn08A@mail.gmail.com>
- <ae8adb92-9c6e-2318-a3b9-903ead3848b5@tycho.nsa.gov>
-Message-ID: <69f4ccce-18b2-42c1-71ac-3fe9caf2dfb6@tycho.nsa.gov>
-Date:   Wed, 12 Feb 2020 13:59:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4iWpjS84iXuZKMy6ZUtTecttvvwiEglLKnXkpaETIX4=;
+        b=YUiQw1hmb0MdD9htXyE7jU5pynWAVmivpNXH4tuPdrqeisAZUhAKzcEgZiBMfUOBiE
+         91EKvU5ZYR5yY98VUkYUmylI5porAO83ZhoNvh3ZD7X+z0NLzm+QIcizro8jdkpY+qj8
+         UO7a3Q9RRKUpoCNzKzZOp5HxNZ3hTUmOgARcuDGMK6esrF+io8cRjMeDMHtvPkhymmpn
+         4Cz4RtLXcpAIHwhsRBMsYrNcIbsb1G3sYADnadb/qMGnAiJPYQH4yiJ6+QFcOCRS5xDl
+         woLTOWSyDvDZr9nwP4h0K+5ZiUTf6EIT7D1/0UBeiWWIEwz6funXEfZvJ/8h7nGQEIK8
+         6PZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4iWpjS84iXuZKMy6ZUtTecttvvwiEglLKnXkpaETIX4=;
+        b=E7bw2jiF5OX/EeIySjg85MxLfScJj4qD591oQPnErY1MRP3cQcoYuCEv9ZHY03W/za
+         AK5+5uOexPaNvNXgcqi3lZ+QC+WzWwEfNHReyZ//0Kvd1l5AnkS/1LCd6QvrcA4cdXiO
+         83R02/OUSs+znjVWy2wIRFuXQiAPlho0Pljvwp8GIPf2paCnzgnaa/ds88qI3qzSlJYn
+         eBOKfVxmV6DBGgG6+3HOjJ6Azf8Y9C9jyuPv8vl2gXGQ9ep25wiOJzNRURG5dq9OAZFA
+         YyC77+ceeV8OZdByXwcaA3N0+Z70JJ3kqWP+49J1mH2coceGuWA1SfRW9ig2sp9ctJTg
+         64GA==
+X-Gm-Message-State: APjAAAVero3Mp+/2I5lLub1AIa/IvozIL1hQMt22wI/Zl2rG87mtmvdb
+        nIUL+2zs1yLUEXli5KsqChAt+LxYI6Q81mC2J/3q
+X-Google-Smtp-Source: APXvYqw4PbZ5JrNpOUH7XCkVriDHuZ28rg8GWkMouNDbsdGI/2lP+oarZ2Yg1FNoUyCpQWDgQ3Reb/5bW+SxuLPIYts=
+X-Received: by 2002:adf:f507:: with SMTP id q7mr16342704wro.384.1581533945683;
+ Wed, 12 Feb 2020 10:59:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ae8adb92-9c6e-2318-a3b9-903ead3848b5@tycho.nsa.gov>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200212014822.28684-1-atish.patra@wdc.com> <20200212014822.28684-7-atish.patra@wdc.com>
+ <CAAhSdy2YRnmdxYu7zSYOUxMvFDbEz1Cwg69FgnYz3Rd8wEwQfw@mail.gmail.com>
+In-Reply-To: <CAAhSdy2YRnmdxYu7zSYOUxMvFDbEz1Cwg69FgnYz3Rd8wEwQfw@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Wed, 12 Feb 2020 10:58:54 -0800
+Message-ID: <CAOnJCULR1AwC=4sf5WZJN77OHymdbfn75R-EGnJyBw_DeJacgg@mail.gmail.com>
+Subject: Re: [PATCH v8 06/11] RISC-V: Move relocate and few other functions
+ out of __init
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Mao Han <han_mao@c-sky.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 1:04 PM, Stephen Smalley wrote:
-> On 2/12/20 12:19 PM, Daniel Colascione wrote:
->> Thanks for taking a look.
->>
->> On Wed, Feb 12, 2020 at 9:04 AM Stephen Smalley <sds@tycho.nsa.gov> 
->> wrote:
->>>
->>> On 2/11/20 5:55 PM, Daniel Colascione wrote:
->>>> Use the secure anonymous inode LSM hook we just added to let SELinux
->>>> policy place restrictions on userfaultfd use. The create operation
->>>> applies to processes creating new instances of these file objects;
->>>> transfer between processes is covered by restrictions on read, write,
->>>> and ioctl access already checked inside selinux_file_receive.
->>>>
->>>> Signed-off-by: Daniel Colascione <dancol@google.com>
->>>
->>> (please add linux-fsdevel and viro to the cc for future versions of this
->>> patch since it changes the VFS)
->>>
->>>> ---
->>>> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
->>>> index 1659b59fb5d7..e178f6f40e93 100644
->>>> --- a/security/selinux/hooks.c
->>>> +++ b/security/selinux/hooks.c
->>>> @@ -2915,6 +2919,69 @@ static int selinux_inode_init_security(struct 
->>>> inode *inode, struct inode *dir,
->>>> +
->>>> +     /*
->>>> +      * We shouldn't be creating secure anonymous inodes before LSM
->>>> +      * initialization completes.
->>>> +      */
->>>> +     if (unlikely(!selinux_state.initialized))
->>>> +             return -EBUSY;
->>>
->>> I don't think this is viable; any arbitrary actions are possible before
->>> policy is loaded, and a Linux distro can be brought up fully with
->>> SELinux enabled and no policy loaded.  You'll just need to have a
->>> default behavior prior to initialization.
->>
->> We'd have to fail open then, I think, and return an S_PRIVATE inode
->> (the regular anon inode).
-> 
-> Not sure why.  You aren't doing anything in the hook that actually 
-> relies on selinux_state.initialized being set (i.e. nothing requires a 
-> policy).  The avc_has_perm() call will just succeed until a policy is 
-> loaded.  So if these inodes are created prior to policy load, they will 
-> get assigned the task SID (which would be the kernel SID prior to policy 
-> load or first exec or write to /proc/self/attr/current afterward) and 
-> UFFD class (in your current code), be permitted, and then once policy is 
-> loaded any further access will get checked against the kernel SID.
-> 
->>>> +     /*
->>>> +      * We only get here once per ephemeral inode.  The inode has
->>>> +      * been initialized via inode_alloc_security but is otherwise
->>>> +      * untouched, so check that the state is as
->>>> +      * inode_alloc_security left it.
->>>> +      */
->>>> +     BUG_ON(isec->initialized != LABEL_INVALID);
->>>> +     BUG_ON(isec->sclass != SECCLASS_FILE);
->>>
->>> I think the kernel discourages overuse of BUG_ON/BUG/...
->>
->> I'm not sure what counts as overuse.
-> 
-> Me either (not my rule) but I'm pretty sure this counts or you'd see a 
-> lot more of these kinds of BUG_ON() checks throughout.  Try to reserve 
-> them for really critical cases.
-> 
->>>> +
->>>> +#ifdef CONFIG_USERFAULTFD
->>>> +     if (fops == &userfaultfd_fops)
->>>> +             isec->sclass = SECCLASS_UFFD;
->>>> +#endif
->>>
->>> Not sure we want or need to introduce a new security class for each user
->>> of anonymous inodes since the permissions should be the same as for
->>> file.
->>
->> The purpose of this change is to apply special policy to userfaultfd
->> FDs in particular. Isn't having a UFFD security class the best way to
->> go about that? (There's no path.) Am I missing something?
-> 
-> It is probably the simplest approach; it just doesn't generalize to all 
-> users of anonymous inodes. We can distinguish them in one of two ways: 
-> use a different class like you did (requires a code change every time we 
-> add a new one and yet another duplicate of the file class) or use a 
-> different SID/context/type. The latter could be achieved by calling 
-> security_transition_sid() with the provided name wrapped in a qstr and 
-> specifying type_transition rules on the name.  Then policy could define 
-> derived types for each domain, ala
-> type_transition init self:file "[userfaultfd]" init_userfaultfd;
-> type_transition untrusted_app self:file "[userfaultfd]" 
-> untrusted_app_userfaultfd;
-> ...
-> 
->>> Also not sure we want to be testing fops for each such case.
->>
->> I was also thinking of just providing some kind of context string
->> (maybe the name), which might be friendlier to modules, but the loose
->> coupling kind of scares me, and for this particular application, since
->> UFFD is always in the core and never in a module, checking the fops
->> seems a bit more robust and doesn't hurt anything.
-> 
-> Yes, not sure how the vfs folks feel about either coupling (the 
-> name-based one or the fops-based one).  Neither seems great.
-> 
->>> We
->>> were looking at possibly leveraging the name as a key and using
->>> security_transition_sid() to generate a distinct SID/context/type for
->>> the inode via type_transition rules in policy.  We have some WIP along
->>> those lines.
->>
->> Where? Any chance it would be ready soon? I'd rather not hold up this
->> work for a more general mechanism.
-> 
-> Hopefully will have a patch available soon.  But not saying this 
-> necessarily has to wait either.
-> 
->>>> +     /*
->>>> +      * Always give secure anonymous inodes the sid of the
->>>> +      * creating task.
->>>> +      */
->>>> +
->>>> +     isec->sid = tsec->sid;
->>>
->>> This doesn't generalize for other users of anonymous inodes, e.g. the
->>> /dev/kvm case where we'd rather inherit the SID and class from the
->>> original /dev/kvm inode itself.
->>
->> I think someone mentioned on the first version of this patch that we
->> could make it more flexible if the need arose. If we do want to do it
->> now, we could have the anon_inode security hook accept a "parent" or
->> "context" inode that modules could inspect for the purposes of forming
->> the new inode's SID. Does that make sense to you?
-> 
-> Yes, that's the approach in our current WIP, except we call it a 
-> "related" inode since it isn't necessarily connected to the anon inode 
-> in any vfs sense.
+On Tue, Feb 11, 2020 at 8:18 PM Anup Patel <anup@brainfault.org> wrote:
+>
+> On Wed, Feb 12, 2020 at 7:21 AM Atish Patra <atish.patra@wdc.com> wrote:
+> >
+> > The secondary hart booting and relocation code are under .init section.
+> > As a result, it will be freed once kernel booting is done. However,
+> > ordered booting protocol and CPU hotplug always requires these sections
+>
+> I think you meant "... require these functions" here.
+>
+> > to be present to bringup harts after initial kernel boot.
+> >
+> > Move the required sections to a different section and make sure that
+>
+> Same here, I think you meant "... the required functions to a
+> different section ..."
+>
 
-The other key difference in our WIP approach is that we assumed that we 
-couldn't mandate allocating a separate anon inode for each of these fds 
-and we wanted to cover all anonymous inodes (not opt-in), so we are 
-storing the SID/class pair as additional fields in the 
-file_security_struct and have modified file_has_perm() and others to 
-look there for anonymous inodes.
+My bad. Thanks for pointing out. Fixed.
+
+> > they are in memory within first 2MB offset as trampoline page directory
+> > only maps first 2MB.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  arch/riscv/kernel/head.S        | 153 +++++++++++++++++---------------
+> >  arch/riscv/kernel/vmlinux.lds.S |   5 +-
+> >  2 files changed, 86 insertions(+), 72 deletions(-)
+> >
+> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> > index a4242be66966..c1be597d22a1 100644
+> > --- a/arch/riscv/kernel/head.S
+> > +++ b/arch/riscv/kernel/head.S
+> > @@ -14,7 +14,7 @@
+> >  #include <asm/hwcap.h>
+> >  #include <asm/image.h>
+> >
+> > -__INIT
+> > +__HEAD
+> >  ENTRY(_start)
+> >         /*
+> >          * Image header expected by Linux boot-loaders. The image header data
+> > @@ -45,8 +45,85 @@ ENTRY(_start)
+> >         .ascii RISCV_IMAGE_MAGIC2
+> >         .word 0
+> >
+> > -.global _start_kernel
+> > -_start_kernel:
+> > +.align 2
+> > +#ifdef CONFIG_MMU
+> > +relocate:
+> > +       /* Relocate return address */
+> > +       li a1, PAGE_OFFSET
+> > +       la a2, _start
+> > +       sub a1, a1, a2
+> > +       add ra, ra, a1
+> > +
+> > +       /* Point stvec to virtual address of intruction after satp write */
+> > +       la a2, 1f
+> > +       add a2, a2, a1
+> > +       csrw CSR_TVEC, a2
+> > +
+> > +       /* Compute satp for kernel page tables, but don't load it yet */
+> > +       srl a2, a0, PAGE_SHIFT
+> > +       li a1, SATP_MODE
+> > +       or a2, a2, a1
+> > +
+> > +       /*
+> > +        * Load trampoline page directory, which will cause us to trap to
+> > +        * stvec if VA != PA, or simply fall through if VA == PA.  We need a
+> > +        * full fence here because setup_vm() just wrote these PTEs and we need
+> > +        * to ensure the new translations are in use.
+> > +        */
+> > +       la a0, trampoline_pg_dir
+> > +       srl a0, a0, PAGE_SHIFT
+> > +       or a0, a0, a1
+> > +       sfence.vma
+> > +       csrw CSR_SATP, a0
+> > +.align 2
+> > +1:
+> > +       /* Set trap vector to spin forever to help debug */
+> > +       la a0, .Lsecondary_park
+> > +       csrw CSR_TVEC, a0
+> > +
+> > +       /* Reload the global pointer */
+> > +.option push
+> > +.option norelax
+> > +       la gp, __global_pointer$
+> > +.option pop
+> > +
+> > +       /*
+> > +        * Switch to kernel page tables.  A full fence is necessary in order to
+> > +        * avoid using the trampoline translations, which are only correct for
+> > +        * the first superpage.  Fetching the fence is guarnteed to work
+> > +        * because that first superpage is translated the same way.
+> > +        */
+> > +       csrw CSR_SATP, a2
+> > +       sfence.vma
+> > +
+> > +       ret
+> > +#endif /* CONFIG_MMU */
+> > +#ifdef CONFIG_SMP
+> > +       /* Set trap vector to spin forever to help debug */
+> > +       la a3, .Lsecondary_park
+> > +       csrw CSR_TVEC, a3
+> > +
+> > +       slli a3, a0, LGREG
+> > +       .global secondary_start_common
+> > +secondary_start_common:
+> > +
+> > +#ifdef CONFIG_MMU
+> > +       /* Enable virtual memory and relocate to virtual address */
+> > +       la a0, swapper_pg_dir
+> > +       call relocate
+> > +#endif
+> > +       tail smp_callin
+> > +#endif /* CONFIG_SMP */
+> > +
+> > +.Lsecondary_park:
+> > +       /* We lack SMP support or have too many harts, so park this hart */
+> > +       wfi
+> > +       j .Lsecondary_park
+> > +
+> > +END(_start)
+> > +
+> > +       __INIT
+> > +ENTRY(_start_kernel)
+> >         /* Mask all interrupts */
+> >         csrw CSR_IE, zero
+> >         csrw CSR_IP, zero
+> > @@ -125,59 +202,6 @@ clear_bss_done:
+> >         call parse_dtb
+> >         tail start_kernel
+> >
+> > -#ifdef CONFIG_MMU
+> > -relocate:
+> > -       /* Relocate return address */
+> > -       li a1, PAGE_OFFSET
+> > -       la a2, _start
+> > -       sub a1, a1, a2
+> > -       add ra, ra, a1
+> > -
+> > -       /* Point stvec to virtual address of intruction after satp write */
+> > -       la a2, 1f
+> > -       add a2, a2, a1
+> > -       csrw CSR_TVEC, a2
+> > -
+> > -       /* Compute satp for kernel page tables, but don't load it yet */
+> > -       srl a2, a0, PAGE_SHIFT
+> > -       li a1, SATP_MODE
+> > -       or a2, a2, a1
+> > -
+> > -       /*
+> > -        * Load trampoline page directory, which will cause us to trap to
+> > -        * stvec if VA != PA, or simply fall through if VA == PA.  We need a
+> > -        * full fence here because setup_vm() just wrote these PTEs and we need
+> > -        * to ensure the new translations are in use.
+> > -        */
+> > -       la a0, trampoline_pg_dir
+> > -       srl a0, a0, PAGE_SHIFT
+> > -       or a0, a0, a1
+> > -       sfence.vma
+> > -       csrw CSR_SATP, a0
+> > -.align 2
+> > -1:
+> > -       /* Set trap vector to spin forever to help debug */
+> > -       la a0, .Lsecondary_park
+> > -       csrw CSR_TVEC, a0
+> > -
+> > -       /* Reload the global pointer */
+> > -.option push
+> > -.option norelax
+> > -       la gp, __global_pointer$
+> > -.option pop
+> > -
+> > -       /*
+> > -        * Switch to kernel page tables.  A full fence is necessary in order to
+> > -        * avoid using the trampoline translations, which are only correct for
+> > -        * the first superpage.  Fetching the fence is guarnteed to work
+> > -        * because that first superpage is translated the same way.
+> > -        */
+> > -       csrw CSR_SATP, a2
+> > -       sfence.vma
+> > -
+> > -       ret
+> > -#endif /* CONFIG_MMU */
+> > -
+> >  .Lsecondary_start:
+> >  #ifdef CONFIG_SMP
+> >         /* Set trap vector to spin forever to help debug */
+> > @@ -202,16 +226,10 @@ relocate:
+> >         beqz tp, .Lwait_for_cpu_up
+> >         fence
+> >
+> > -#ifdef CONFIG_MMU
+> > -       /* Enable virtual memory and relocate to virtual address */
+> > -       la a0, swapper_pg_dir
+> > -       call relocate
+> > +       tail secondary_start_common
+> >  #endif
+> >
+> > -       tail smp_callin
+> > -#endif
+> > -
+> > -END(_start)
+> > +END(_start_kernel)
+> >
+> >  #ifdef CONFIG_RISCV_M_MODE
+> >  ENTRY(reset_regs)
+> > @@ -292,13 +310,6 @@ ENTRY(reset_regs)
+> >  END(reset_regs)
+> >  #endif /* CONFIG_RISCV_M_MODE */
+> >
+> > -.section ".text", "ax",@progbits
+> > -.align 2
+> > -.Lsecondary_park:
+> > -       /* We lack SMP support or have too many harts, so park this hart */
+> > -       wfi
+> > -       j .Lsecondary_park
+> > -
+> >  __PAGE_ALIGNED_BSS
+> >         /* Empty zero page */
+> >         .balign PAGE_SIZE
+> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> > index 12f42f96d46e..18c397953bfc 100644
+> > --- a/arch/riscv/kernel/vmlinux.lds.S
+> > +++ b/arch/riscv/kernel/vmlinux.lds.S
+> > @@ -10,6 +10,7 @@
+> >  #include <asm/cache.h>
+> >  #include <asm/thread_info.h>
+> >
+> > +#include <linux/sizes.h>
+> >  OUTPUT_ARCH(riscv)
+> >  ENTRY(_start)
+> >
+> > @@ -20,8 +21,10 @@ SECTIONS
+> >         /* Beginning of code and text segment */
+> >         . = LOAD_OFFSET;
+> >         _start = .;
+> > -       __init_begin = .;
+> >         HEAD_TEXT_SECTION
+> > +       . = ALIGN(PAGE_SIZE);
+> > +
+> > +       __init_begin = .;
+> >         INIT_TEXT_SECTION(PAGE_SIZE)
+> >         INIT_DATA_SECTION(16)
+> >         /* we have to discard exit text and such at runtime, not link time */
+> > --
+> > 2.24.0
+> >
+>
+> Apart from above nit in commit description, looks good to me.
+>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+>
+> Regards,
+> Anup
+>
+
+
+-- 
+Regards,
+Atish
