@@ -2,151 +2,99 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB3C352A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BF0C352A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074C52082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3D320848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581472947;
+	bh=htIylF4jROFJ6riEwNwA7KvXmOZ52qqEUUlhJZlLEoc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=H65wbFVx3EZj+FlAOc/ma59Yz2goyctZ2i7J4EWRAVInWs53ex8gbC0aWOGa5AXRs
+	 TUdgZNcKCzQnecPnKKA01dWN3h9YNTXr0UZmUoxHA+3svCmv42Bn1XD5lVTIHkNrqX
+	 oUND+zyU6yoMRc/Y3Z5siVXgGyYQ2lUryCQg+SJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbgBLCAm (ORCPT
+        id S1727595AbgBLCC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:00:42 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9724 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726968AbgBLCAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:00:42 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CC7B9611207F6164D34C;
-        Wed, 12 Feb 2020 10:00:39 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.66) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Feb 2020
- 10:00:38 +0800
-Subject: Re: [v3] nbd: fix potential NULL pointer fault in nbd_genl_disconnect
-To:     Mike Christie <mchristi@redhat.com>, <josef@toxicpanda.com>,
-        <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200210073241.41813-1-sunke32@huawei.com>
- <5E418D62.8090102@redhat.com>
- <c3531fc5-73b3-6ef4-816e-97f491f45c18@huawei.com> <5E42D8B1.406@redhat.com>
-From:   "sunke (E)" <sunke32@huawei.com>
-Message-ID: <1b1110b2-1db6-9781-89cf-82b1403b1641@huawei.com>
-Date:   Wed, 12 Feb 2020 10:00:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 11 Feb 2020 21:02:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726968AbgBLCC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 21:02:26 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAF5E2082F;
+        Wed, 12 Feb 2020 02:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581472945;
+        bh=htIylF4jROFJ6riEwNwA7KvXmOZ52qqEUUlhJZlLEoc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iCYPiTPYdnB2OI0v+huzasLYRjeRjhcTHmkhFmVrrmovvxZa6iqwp+hdE/5APs6Qq
+         jBu77bwScSQIx3wgiVcysNX+EYw9eqDJNGd2H+xZUfFiv09v2HHMzkvYylf5QYmA1M
+         a/bH3tJijMqMV4d8Ca8xN+gGXgXAyesWY/m8o6WY=
+Received: by mail-qv1-f44.google.com with SMTP id g6so243218qvy.5;
+        Tue, 11 Feb 2020 18:02:25 -0800 (PST)
+X-Gm-Message-State: APjAAAUAA8dkeAnjGBfnurkPVxxFEcZELkDGmUqIHD9G8o13Fh/NOhzA
+        X28u9Svlk5QBMTKzrYu5VYiRqatMtsVn+PpHaQ==
+X-Google-Smtp-Source: APXvYqyZK3Vkicu73sUU5sruUOApIl6NuW57qMDLHWUYWwewOnHbEyttYZ0F4fQksB2kDUYtiSYWzYbNkVpIpCNsWz8=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr5582693qvv.85.1581472944822;
+ Tue, 11 Feb 2020 18:02:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5E42D8B1.406@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.66]
-X-CFilter-Loop: Reflected
+References: <20200210123507.9491-1-kishon@ti.com> <20200210123507.9491-3-kishon@ti.com>
+ <20200212015900.GA14509@bogus>
+In-Reply-To: <20200212015900.GA14509@bogus>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 11 Feb 2020 20:02:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKozWNJqQOoyMRZzRBsjY9_Y2NkMwRbWP=DPXC7ZYViNg@mail.gmail.com>
+Message-ID: <CAL_JsqKozWNJqQOoyMRZzRBsjY9_Y2NkMwRbWP=DPXC7ZYViNg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
+ Cadence platform to DT schema
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 11, 2020 at 7:59 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, 10 Feb 2020 18:05:07 +0530, Kishon Vijay Abraham I wrote:
+> > Include Cadence core DT schema and define the Cadence platform DT schema
+> > for both Host and Endpoint mode. Note: The Cadence core DT schema could
+> > be included for other platforms using Cadence PCIe core.
+> >
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > ---
+> >  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+> >  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
+> >  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+> >  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
+> >  MAINTAINERS                                   |  2 +-
+> >  5 files changed, 125 insertions(+), 94 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: 'device_type' is a required property
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: 'ranges' is a required property
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: '#address-cells' is a required property
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: '#size-cells' is a required property
 
-
-在 2020/2/12 0:39, Mike Christie 写道:
-> On 02/10/2020 10:12 PM, sunke (E) wrote:
->>
->>
->> 在 2020/2/11 1:05, Mike Christie 写道:
->>> On 02/10/2020 01:32 AM, Sun Ke wrote:
->>>> Open /dev/nbdX first, the config_refs will be 1 and
->>>> the pointers in nbd_device are still null. Disconnect
->>>> /dev/nbdX, then reference a null recv_workq. The
->>>> protection by config_refs in nbd_genl_disconnect is useless.
->>>>
->>>> To fix it, just add a check for a non null task_recv in
->>>> nbd_genl_disconnect.
->>>>
->>>> Signed-off-by: Sun Ke <sunke32@huawei.com>
->>>> ---
->>>> v1 -> v2:
->>>> Add an omitted mutex_unlock.
->>>>
->>>> v2 -> v3:
->>>> Add nbd->config_lock, suggested by Josef.
->>>> ---
->>>>    drivers/block/nbd.c | 8 ++++++++
->>>>    1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
->>>> index b4607dd96185..870b3fd0c101 100644
->>>> --- a/drivers/block/nbd.c
->>>> +++ b/drivers/block/nbd.c
->>>> @@ -2008,12 +2008,20 @@ static int nbd_genl_disconnect(struct sk_buff
->>>> *skb, struct genl_info *info)
->>>>                   index);
->>>>            return -EINVAL;
->>>>        }
->>>> +    mutex_lock(&nbd->config_lock);
->>>>        if (!refcount_inc_not_zero(&nbd->refs)) {
->>>> +        mutex_unlock(&nbd->config_lock);
->>>>            mutex_unlock(&nbd_index_mutex);
->>>>            printk(KERN_ERR "nbd: device at index %d is going down\n",
->>>>                   index);
->>>>            return -EINVAL;
->>>>        }
->>>> +    if (!nbd->recv_workq) {
->>>> +        mutex_unlock(&nbd->config_lock);
->>>> +        mutex_unlock(&nbd_index_mutex);
->>>> +        return -EINVAL;
->>>> +    }
->>>> +    mutex_unlock(&nbd->config_lock);
->>>>        mutex_unlock(&nbd_index_mutex);
->>>>        if (!refcount_inc_not_zero(&nbd->config_refs)) {
->>>>            nbd_put(nbd);
->>>>
->>>
->>> With my other patch then we will not need this right? It handles your
->>> case by just being integrated with the existing checks in:
->>>
->>> nbd_disconnect_and_put->nbd_clear_sock->sock_shutdown
->>>
->>> ...
->>>
->>> static void sock_shutdown(struct nbd_device *nbd)
->>> {
->>>
->>> ....
->>>
->>>           if (config->num_connections == 0)
->>>                   return;
->>>
->>>
->>> num_connections is zero for your case since we never did a
->>> nbd_genl_disconnect so we would return here.
->>>
->>>
->>> .
->>>
->> Hi Mike
->>
->> Your point is not right totally.
->>
->> Yes, config->num_connections is 0 and will return in sock_shutdown. Then
->> it will back to nbd_disconnect_and_put and do flush_workqueue
->> (nbd->recv_workq).
->>
->> nbd_disconnect_and_put
->>      ->nbd_clear_sock
->>          ->sock_shutdown
->>      ->flush_workqueue
->>
-> 
-> My patch removed that extra flush_workqueue in nbd_disconnect_and_put.
-> 
-> The idea of the patch was to move the flush calls to when we do
-> sock_shutdown in the config (connect, disconnect, clear sock) code
-> paths, because that is the time we know we will need to kill the recv
-> workers and wait for them to complete so we know they are not still
-> running when userspace does a new config operation.
-> 
-Yes, I see.
-
+Node name needs to be pcie-ep@...
