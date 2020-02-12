@@ -2,128 +2,91 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1255C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17310C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD815206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EB2206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERx0Q2v2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQTsaJJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgBLPiA (ORCPT
+        id S1728544AbgBLPi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:38:00 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42894 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbgBLPh7 (ORCPT
+        Wed, 12 Feb 2020 10:38:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40940 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727026AbgBLPiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:37:59 -0500
-Received: by mail-pl1-f195.google.com with SMTP id e8so1089961plt.9;
-        Wed, 12 Feb 2020 07:37:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+D92sQbIQX9b/mYM74RryufGT0Oe3W4lj/eAkEZQ33o=;
-        b=ERx0Q2v2e6DsNOGzzk7jGKHe9GVGWQubrkyTzlxcGm87Lbm/Ipp20rE/d0kHP3Qrx5
-         BaBVCu+4+407P27vgDl38QV6WzlmUGTu+FibnnKjkKYb2FaXb7NMIAB0y6zUQeYk5NR4
-         w6Tw0Vd0iGEv5YdMVrUxDPtfzcTdB8afpTI4j3ardAtEqBpGtLhPKaQSDgWA73iN/FME
-         LZbfbhMahfU6UIQ9vxElZCb9KkmB6azZKCvFunero33gpIIqwy6UxzPw4heZhgBJtYmT
-         FW7iAtVU5nbBfjXfdMEHp6m0iHB1sRA2MfVXRYMAPQUz92onMJyTVqM07mhGDFG1c6lB
-         98Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+D92sQbIQX9b/mYM74RryufGT0Oe3W4lj/eAkEZQ33o=;
-        b=buckQbwSFbic8K97BGMjL6fHL2wOR46RJGGURAAM1cyqhM+tVPYIr6QSb0TMt/4zLx
-         iNgsytsAIT9gbV/sgGXz8opCsSz+miyLwu6mBdt751aa8JTTb40QGboPxsBfnyiKinhe
-         8XHT0QweXNk5mrfHqmDY/hFTGwAqT9WkxzUbnpIlndhVVsO/Izph2v9Ng5YTsZRZU824
-         j2cUQiMdc9V+uOKD2Sp3+DOTalDvXa7uSQn+uMRhQUmElSMvOxItVOYo8ntRC9cWF4p3
-         O5UvMUchaFBKChL+Snafr3qqQf9rUBw6n/gES81hr0ofefAbHYFORVG8t1wk5yZSRFMA
-         Jx/w==
-X-Gm-Message-State: APjAAAW8dFpbIhqwvmr/gSWz4QIogFfie/uCE2cC9zghOiCeK6vqyB+4
-        92XXYlcy5GRXibdiyUxWORU=
-X-Google-Smtp-Source: APXvYqzIXChqTVHEHaHlQ9k0LaQMeJkdk7TONDJIcTAVx8iIrqPXCCXuvIOMJ5TNDFOJM+PzmWjDTA==
-X-Received: by 2002:a17:902:9f86:: with SMTP id g6mr8225939plq.299.1581521879059;
-        Wed, 12 Feb 2020 07:37:59 -0800 (PST)
-Received: from fkuchars-mobl1.ger.corp.intel.com ([192.55.55.43])
-        by smtp.gmail.com with ESMTPSA id p17sm1295106pfn.31.2020.02.12.07.37.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Feb 2020 07:37:58 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [Bluez PATCH v3] bluetooth: secure bluetooth stack from bluedump
- attack
-From:   Johan Hedberg <johan.hedberg@gmail.com>
-In-Reply-To: <89D0B633-381D-4700-AB33-5F803BCB6E94@holtmann.org>
-Date:   Wed, 12 Feb 2020 17:37:53 +0200
-Cc:     Howard Chung <howardchung@google.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <86D0ACD5-BEF7-45B3-B621-BA2E457AB57B@gmail.com>
-References: <20200212212316.Bluez.v3.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
- <89D0B633-381D-4700-AB33-5F803BCB6E94@holtmann.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Wed, 12 Feb 2020 10:38:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581521934;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=MbW2YnMhHrnti05AbCnniicq1RE8qb1tYRSDIpwlVSk=;
+        b=BQTsaJJZW24ZvdY8Y/DI/S9gsWAoEgcE76XQ/7RzsEBDCARZQG99nkjGXpdGdsvwhCm35B
+        gOdspzIhMbudO5MW6woG3K4ssDe2awpXMZ6JOz0Bkhy/aYjluhTzJUmkOpDVs8gZy95ycT
+        4krGRV/drSewV1HSemwILQ04sth098g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-HsmF2q9MO2e1lQKQGhcnmA-1; Wed, 12 Feb 2020 10:38:51 -0500
+X-MC-Unique: HsmF2q9MO2e1lQKQGhcnmA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E32048017DF;
+        Wed, 12 Feb 2020 15:38:49 +0000 (UTC)
+Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBE7D6E40A;
+        Wed, 12 Feb 2020 15:38:46 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH-tip 0/3] locking/lockdep: Cleaning up lockdep code
+Date:   Wed, 12 Feb 2020 10:38:25 -0500
+Message-Id: <20200212153828.346-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
+The following conditional compilation macros are used throughout the
+lockdep code making it hard to understand.
+ - CONFIG_PROVE_LOCKING
+ - CONFIG_LOCK_STAT
+ - CONFIG_DEBUG_LOCKDEP
+ - CONFIG_LOCKDEP_SMALL
+ - CONFIG_TRACE_IRQFLAGS
 
-On 12. Feb 2020, at 17.19, Marcel Holtmann <marcel@holtmann.org> wrote:
->> +		key =3D hci_find_ltk(hcon->hdev, &hcon->dst, =
-hcon->dst_type,
->> +				   hcon->role);
->> +
->> +		/* If there already exists link key in local host, leave =
-the
->> +		 * decision to user space since the remote device could =
-be
->> +		 * legitimate or malicious.
->> +		 */
->> +		if (smp->method =3D=3D JUST_WORKS && key) {
->> +			err =3D mgmt_user_confirm_request(hcon->hdev, =
-&hcon->dst,
->> +							hcon->type,
->> +							hcon->dst_type, =
-passkey,
->> +							1);
->> +			if (err)
->> +				return SMP_UNSPECIFIED;
->> +			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
->> +		}
->> 	}
->=20
-> while this looks good, I like to optimize this to only look up the LTK =
-when needed.
->=20
-> 	/* comment here */
-> 	if (smp->method !=3D JUST_WORKS)
-> 		goto mackey_and_ltk;
->=20
->=20
-> 	/* and command here */
-> 	if (hci_find_ltk()) {
-> 		mgmt_user_confirm_request()
-> 		..
-> 	}
->=20
-> And my preference that we also get an Ack from Johan or Luiz that =
-double checked that this is fine.
+In particular, almost half of the code is for CONFIG_PROVE_LOCKING and
+there are several blocks of them in lockdep.c. It is very hard to see if
+a function is for CONFIG_PROVE_LOCKING or not.
 
-Acked-by: Johan Hedberg <johan.hedberg@intel.com>
+This patchset cleans up this mess by putting all the CONFIG_PROVE_LOCKING
+functions into a separate lockdep_prove.c file making it easier to know
+what they are for. It also consolidates the CONFIG_DEBUG_LOCKDEP code
+to a certain extend.
 
-Johan=
+This is a code relocation patchset. There is no functional change.
+
+Waiman Long (3):
+  locking/lockdep: Make remove_class_from_lock_chains() depend on
+    CONFIG_PROVE_LOCKING
+  locking/lockdep: Extract CONFIG_PROVE_LOCKING code out to
+    lockdep_prove.c
+  locking/lockdep: Consolidate CONFIG_DEBUG_LOCKDEP code
+
+ kernel/locking/lockdep.c       | 3300 +++-----------------------------
+ kernel/locking/lockdep_prove.c | 2820 +++++++++++++++++++++++++++
+ 2 files changed, 3066 insertions(+), 3054 deletions(-)
+ create mode 100644 kernel/locking/lockdep_prove.c
+
+-- 
+2.18.1
+
