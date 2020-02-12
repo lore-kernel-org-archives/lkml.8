@@ -2,176 +2,130 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40929C3B187
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BFFC352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE532465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581553017;
-	bh=cz9ttsVjU8m/LUGWb6revf9wsiZy8lZxCe80BQeClTQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E1ULcs12rSIOJFQQFwvcqZFgM8lZM6shc/MTba07lifDTY+w7dya+bXQoziQU2Wav
-	 9bIe6s/0OvoqtJVEKxaAlIncfdCU1iTSejz0QbzFst4uZ66xSV9swm9iNTQUiqQ44u
-	 nMcsaJD+kphVCxWkmST42ffvZtfjor9HpD4ORWRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 711C320873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="f39zQB0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgBMAQ4 (ORCPT
+        id S1729300AbgBMARI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:16:56 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39600 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgBMAQz (ORCPT
+        Wed, 12 Feb 2020 19:17:08 -0500
+Received: from gateway20.websitewelcome.com ([192.185.55.25]:48861 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729256AbgBMARI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:16:55 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so3856944oty.6;
-        Wed, 12 Feb 2020 16:16:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6XI34I6WG5cLO+IgVIv5RydOAiN6nIiwYbnYoCUKFLk=;
-        b=dAPiFd+zJYHknfheTFxz769Gfrs5LDUqufR50NKXumQR4tneo5tmA7bpkGou/hp5j5
-         ppGgD8LAXPQBswgNT3PgkmAvkU391h+z9rw3itMva2ZgmhD9/kTerruAsIfJNj3tSWv9
-         34wHU/tKoS/I3KpWuKzZAyn6X/Rh7xMsnvVcVDDeCL9RsmtzDWp1IypsSDD32GK65gFG
-         eEDvFiwMscPppWcKsA0cMVBqTgqO3KPvpzjnLY3Dh6dd2UvtT+2p8Fmbe7HR6Pa/6uee
-         6bhxcd7JnyBXoeKWBntSBZ9MmhZSMmpwmY0jjNGsSLsSqhyPunU0uLSc0xMTXTEdmA5+
-         HABw==
-X-Gm-Message-State: APjAAAWpNVBk2aWBHVdJ/Ajwwpq9KujwwSg74M+PQesZgkgmcsvzl8ut
-        6q45Of4jjo47ilA4Lg30njsDlxpKkeL5Yr3pAIg=
-X-Google-Smtp-Source: APXvYqzCjosDGyoF+GSyhDK4xJdLQQpA5vtY7pWUxrUuPlSlWLSCbL0WCZhsfzBrvkujPWkg8kndIBiPkjrIrmSGzaU=
-X-Received: by 2002:a9d:67d7:: with SMTP id c23mr11454498otn.262.1581553014559;
- Wed, 12 Feb 2020 16:16:54 -0800 (PST)
+        Wed, 12 Feb 2020 19:17:08 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id BAA67400C6921
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:43:08 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 21s6j5sQURP4z21s6jXTKl; Wed, 12 Feb 2020 17:56:46 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/EEuWjIs24zKWMIqBOvxcb5j49JwVhYdPasyL1DoPcI=; b=f39zQB0NnhSRj5vhaap+92XVNE
+        xeAw/tYgbka4ARFX6aMzPd1+63LR4h0GXQEV/haTWYmf1y5s0m9UYd/cTLRreqzjlnTxQ+OvQvziw
+        7KMZWzHzONfscu6Go9KdVoSK1UfBbcqQnGn+WV28xlsbPaadi5TZ9fySDFUrPfOeTRHQ2agR34XP4
+        ZggByW/Y34dLChIkjXbUme/OtWzjghVZF/iBCnkl89iN1j9g4j5RDc1+6A7mMWPRkgNg9t/F0wGWg
+        9nlf8zluM7fsPEiCy9NFqGcENnN6NHg4a7oiq8z/Ms2CGnyAb2Gawgl9gHA05pob3jPCT5Q9V31NI
+        iRmDeNFw==;
+Received: from [200.68.141.42] (port=22005 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j21s4-003LCB-B0; Wed, 12 Feb 2020 17:56:44 -0600
+Date:   Wed, 12 Feb 2020 17:56:42 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>
+Cc:     linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] mfd: omap-usb-tll: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200212235642.GA19206@embeddedor.com>
 MIME-Version: 1.0
-References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net>
-In-Reply-To: <87wo8rjsa4.fsf@riseup.net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 13 Feb 2020 01:16:43 +0100
-Message-ID: <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
-Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
- latency QoS interface
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.42
+X-Source-L: No
+X-Exim-ID: 1j21s4-003LCB-B0
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.42]:22005
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
->
-> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
->
-> > Hi All,
-> >
-> > This series of patches is based on the observation that after commit
-> > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
-> > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
-> > code dedicated to the handling of global PM QoS classes in general.  That code
-> > takes up space and adds overhead in vain, so it is better to get rid of it.
-> >
-> > Moreover, with that unuseful code removed, the interface for adding QoS
-> > requests for CPU latency becomes inelegant and confusing, so it is better to
-> > clean it up.
-> >
-> > Patches [01/28-12/28] do the first part described above, which also includes
-> > some assorted cleanups of the core PM QoS code that doesn't go away.
-> >
-> > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
-> > "define stubs, migrate users, change the API proper" manner), patches
-> > [26-27/28] update the general comments and documentation to match the code
-> > after the previous changes and the last one makes the CPU latency QoS depend
-> > on CPU_IDLE (because cpuidle is the only user of its target value today).
-> >
-> > The majority of the patches in this series don't change the functionality of
-> > the code at all (at least not intentionally).
-> >
-> > Please refer to the changelogs of individual patches for details.
-> >
-> > Thanks!
->
-> Hi Rafael,
->
-> I believe some of the interfaces removed here could be useful in the
-> near future.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-I disagree.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
->  It goes back to the energy efficiency- (and IGP graphics
-> performance-)improving series I submitted a while ago [1].  It relies on
-> some mechanism for the graphics driver to report an I/O bottleneck to
-> CPUFREQ, allowing it to make a more conservative trade-off between
-> energy efficiency and latency, which can greatly reduce the CPU package
-> energy usage of IO-bound applications (in some graphics benchmarks I've
-> seen it reduced by over 40% on my ICL laptop), and therefore also allows
-> TDP-bound applications to obtain a reciprocal improvement in throughput.
->
-> I'm not particularly fond of the global PM QoS interfaces TBH, it seems
-> like an excessively blunt hammer to me, so I can very much relate to the
-> purpose of this series.  However the finer-grained solution I've
-> implemented has seen some push-back from i915 and CPUFREQ devs due to
-> its complexity, since it relies on task scheduler changes in order to
-> track IO bottlenecks per-process (roughly as suggested by Peter Zijlstra
-> during our previous discussions), pretty much in the spirit of PELT but
-> applied to IO utilization.
->
-> With that in mind I was hoping we could take advantage of PM QoS as a
-> temporary solution [2], by introducing a global PM QoS class similar but
-> with roughly converse semantics to PM_QOS_CPU_DMA_LATENCY, allowing
-> device drivers to report a *lower* bound on CPU latency beyond which PM
-> shall not bother to reduce latency if doing so would have negative
-> consequences on the energy efficiency and/or parallelism of the system.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-So I really don't quite see how that could be responded to, by cpuidle
-say.  What exactly do you mean by "reducing latency" in particular?
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-> Of course one would expect the current PM_QOS_CPU_DMA_LATENCY upper
-> bound to take precedence over the new lower bound in cases where the
-> former is in conflict with the latter.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-So that needs to be done on top of this series.
+This issue was found with the help of Coccinelle.
 
-> I can think of several alternatives to that which don't involve
-> temporarily holding off your clean-up,
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-The cleanup goes in.  Please work on top of it.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/mfd/omap-usb-tll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> but none of them sound particularly exciting:
->
->  1/ Use an interface specific to CPUFREQ, pretty much like the one
->     introduced in my original submission [1].
+diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
+index 265f5e350e1c..1cf259a48966 100644
+--- a/drivers/mfd/omap-usb-tll.c
++++ b/drivers/mfd/omap-usb-tll.c
+@@ -99,7 +99,7 @@
+ struct usbtll_omap {
+ 	void __iomem	*base;
+ 	int		nch;		/* num. of channels */
+-	struct clk	*ch_clk[0];	/* must be the last member */
++	struct clk	*ch_clk[];	/* must be the last member */
+ };
+ 
+ /*-------------------------------------------------------------------------*/
+-- 
+2.23.0
 
-It uses frequency QoS already today, do you really need something else?
-
->  2/ Use per-CPU PM QoS, which AFAICT would require the graphics driver
->     to either place a request on every CPU of the system (which would
->     cause a frequent operation to have O(N) complexity on the number of
->     CPUs on the system), or play a cat-and-mouse game with the task
->     scheduler.
-
-That's in place already too in the form of device PM QoS; see
-drivers/base/power/qos.c.
-
->  3/ Add a new global PM QoS mechanism roughly duplicating the
->     cpu_latency_qos_* interfaces introduced in this series.  Drop your
->     change making this available to CPU IDLE only.
-
-It sounds like you really want performance for energy efficiency and
-CPU latency has a little to do with that.
-
->  3/ Go straight to a scheduling-based approach, which is likely to
->     greatly increase the review effort required to upstream this
->     feature.  (Peter might disagree though?)
-
-Are you familiar with the utilization clamps mechanism?
-
-Thanks!
