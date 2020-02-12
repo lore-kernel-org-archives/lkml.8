@@ -2,72 +2,125 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E27C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51377C3B188
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5999E2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DBA2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581516278;
+	bh=o9BHn+9tET4BD0g8kAYLMhwyFEa94It7nBIG65XyVow=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=rlXhOL9yNzWQ+EbpBNrc8dfO7V46NN1bAkuTjb6qRk4AwRg6la/GONofBLw9s7PTS
+	 CNBCPL49Zn4d32v/TW7sqFKb+qoBNunrgEOncBXsNsfp2xzu3gYmr4TnonjJSDWoXx
+	 0Xhlh6rQ0LUBVarHbx9MLrWhD/eh8I5ZFLcBVppI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgBLOEg (ORCPT
+        id S1728331AbgBLOEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:04:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:33286 "EHLO foss.arm.com"
+        Wed, 12 Feb 2020 09:04:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgBLOEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727781AbgBLOEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Feb 2020 09:04:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B43328;
-        Wed, 12 Feb 2020 06:04:35 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 241AA3F6CF;
-        Wed, 12 Feb 2020 06:04:33 -0800 (PST)
-Subject: Re: dma_mask limited to 32-bits with OF platform device
-To:     Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>
-Cc:     stefan.wahren@i2se.com, afaerber@suse.de, hverkuil@xs4all.nl,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>
-References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
- <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
- <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
-Date:   Wed, 12 Feb 2020 14:04:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7839A20724;
+        Wed, 12 Feb 2020 14:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581516275;
+        bh=o9BHn+9tET4BD0g8kAYLMhwyFEa94It7nBIG65XyVow=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ybhA5sw1XC0h+W6Zeya0JSyVEIzLi+xMgWYE+Dwss2uAZuddrdzio//rz6eimr3jf
+         5fLzed0lzlgiW1e3gJzM4JGdbsZRLPLhAOBWjt9aGVTFpyj7hLZk6qW6Tax2jy+LJS
+         zVOS8XI3s1D5+v5kCab07CmDWyahtMIe3CLy9eEY=
+Date:   Wed, 12 Feb 2020 08:04:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v4 2/6] PCI: rcar: Fix calculating mask for PCIEPAMR
+ register
+Message-ID: <20200212140434.GA129189@google.com>
 MIME-Version: 1.0
-In-Reply-To: <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208183641.6674-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/2020 12:33 pm, Roger Quadros wrote:
-[...]
-> For now, let's say that we limit dma-ranges to 4GB size. with 
-> "dma-ranges = <0x00000000 0x00000000 0x1 0x00000000>;"
-> Then, dma_bus_limit is set correctly to 0xffffffff, SATA driver sets 
-> masks to 64-bit as IP supports that.
-> 
-> [   13.306847] ahci 4a140000.sata: dma_mask 0xffffffffffffffff, 
-> coherent_mask 0xffffffffffffffff, dma_bus_limit 0xffffffff
-> 
-> However, the SATA controller still tries to do DMA above 32-bits.
-> dma_alloc() doesn't seem to be taking dma_bus_limit into account?
+On Sat, Feb 08, 2020 at 06:36:37PM +0000, Lad Prabhakar wrote:
+> The mask value was calculated incorrectly for PCIEPAMR register if the
+> size was less the 128bytes, this patch fixes the above by adding a check
+> on size.
 
-Yay ARM LPAE... Peter and Christoph have already been playing 
-whack-a-mole with other bugs under that config - is this with or without 
-SWIOTLB? (and whichever way, does the other work any better?)
+s/less the/less than/
+s/128bytes,/128 bytes./
+s/this patch fixes the above/Fix this issue/
 
-Robin.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/pci/controller/pcie-rcar.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+> index d5568db..c76a92a 100644
+> --- a/drivers/pci/controller/pcie-rcar.c
+> +++ b/drivers/pci/controller/pcie-rcar.c
+> @@ -71,7 +71,7 @@ void rcar_pcie_set_outbound(int win, void __iomem *base,
+>  	/* Setup PCIe address space mappings for each resource */
+>  	resource_size_t res_start;
+>  	resource_size_t size;
+> -	u32 mask;
+> +	u32 mask = 0x0;
+>  
+>  	rcar_pci_write_reg(base, 0x00000000, PCIEPTCTLR(win));
+>  
+> @@ -80,7 +80,8 @@ void rcar_pcie_set_outbound(int win, void __iomem *base,
+>  	 * keeps things pretty simple.
+>  	 */
+>  	size = resource_size(res);
+> -	mask = (roundup_pow_of_two(size) / SZ_128) - 1;
+> +	if (size > 128)
+> +		mask = (roundup_pow_of_two(size) / SZ_128) - 1;
+
+I would put the "mask = 0x0" right here so it's all in one place,
+i.e.,
+
+  if (size > 128)
+    mask = (roundup_pow_of_two(size) / SZ_128) - 1;
+  else
+    mask = 0x0;
+
+>  	rcar_pci_write_reg(base, mask << 7, PCIEPAMR(win));
+>  
+>  	if (!host) {
+> -- 
+> 2.7.4
+> 
