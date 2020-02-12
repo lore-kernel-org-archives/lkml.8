@@ -2,99 +2,95 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535CBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0101C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD5120714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:09:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ckVzScOd"
+	by mail.kernel.org (Postfix) with ESMTP id B17CC20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbgBLMJh (ORCPT
+        id S1727887AbgBLMJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:09:37 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48792 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727041AbgBLMJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:09:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581509376;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xd/aWZzMFcT2m+1AWV4ND535kCy+Z0OTFOLbnwiLlgs=;
-        b=ckVzScOdUnDCqVLWNIo3CmvWReOg9OqqxdDahL5pXmDQQAG/pBfc5pJBFQRPdORRVGRNu9
-        jNpg45Ne4UFTp1BzUZzDTUr7Vt5fx8d+TGfT4E6LMZnRnBq9iWXK+01NTC2vuScxo3eEyY
-        k8TH+h2NpdxicqvLgizP+Z2sdazI/8M=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-oSPDT2-AN-WaS1fMYuu5Lg-1; Wed, 12 Feb 2020 07:09:32 -0500
-X-MC-Unique: oSPDT2-AN-WaS1fMYuu5Lg-1
-Received: by mail-wr1-f70.google.com with SMTP id c6so716038wrm.18
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 04:09:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xd/aWZzMFcT2m+1AWV4ND535kCy+Z0OTFOLbnwiLlgs=;
-        b=ou6gAHI2zD6KDh333BScBj79Fd/D5c3q1PPvwKQh1Eig1hDLbSyygm+foO0waKYltd
-         7yVrkcTgI8hYn1bTHQMXbFnb5ovrNBDTS4ivHac4e/d3YBDxwsxf3TvK74jjMzSnebIs
-         c+N3USsSpsnObfnbtstJexuhxK5evgdZcp2oha2NMz+nRTKorswoH2RoLvGxm9KH3lZJ
-         bcsB3Js3Y4fJQWA0pNl+2z7/Ed74B99cl8PO9V692+kM7BbgJrL2wY3HAYHuA3XKhbS/
-         u6F7c1xow/pw45awkj5gMUYNeX1AelYevBNUB5xJ2ez5yCvv1G0rw6XLwL7z20WOpcAU
-         6NrA==
-X-Gm-Message-State: APjAAAWtr63Kd6iVB0BibMHUuGkYxFXNzcAKeiW37KdObQ1QVK/xtEy7
-        7MGqIOE4Y2E7Uzp1ePktGEOyodvQzRDmFuEuuzKud6m+6QpcmqHG7N8aPAceDHD27oHmImjnxFK
-        /bOtAyG9kfHizIUSzo1ZuBHp3
-X-Received: by 2002:adf:fa50:: with SMTP id y16mr14208929wrr.183.1581509371261;
-        Wed, 12 Feb 2020 04:09:31 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx6TYfL9d2yFQecMXw4gyRiHYC5y321fzdvM79+ALHl/QjW1BQHVMfN+wEmFYOAi7Yh7hfiRg==
-X-Received: by 2002:adf:fa50:: with SMTP id y16mr14208902wrr.183.1581509370981;
-        Wed, 12 Feb 2020 04:09:30 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
-        by smtp.gmail.com with ESMTPSA id a198sm501253wme.12.2020.02.12.04.09.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 04:09:29 -0800 (PST)
-Subject: Re: [PATCH v5 0/4] selftests: KVM: AMD Nested SVM test infrastructure
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com,
-        krish.sadhukhan@oracle.com
-References: <20200207142715.6166-1-eric.auger@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <25441007-2b1a-f98a-3ca8-ffe9849d7031@redhat.com>
-Date:   Wed, 12 Feb 2020 13:09:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 12 Feb 2020 07:09:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:60372 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbgBLMJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:09:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 271F930E;
+        Wed, 12 Feb 2020 04:09:50 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44B4C3F6CF;
+        Wed, 12 Feb 2020 04:09:48 -0800 (PST)
+Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Roger Quadros <rogerq@ti.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+Cc:     "vigneshr@ti.com" <vigneshr@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
+References: <20200206111728.6703-1-rogerq@ti.com>
+ <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
+ <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
+ <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
+ <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
+ <2a527d21087b4f959c7f95895d70b669@AcuMS.aculab.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2f82cd89-a1c2-cf47-97df-3acac0798c85@arm.com>
+Date:   Wed, 12 Feb 2020 12:09:49 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200207142715.6166-1-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <2a527d21087b4f959c7f95895d70b669@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/20 15:27, Eric Auger wrote:
+On 2020-02-12 11:56 am, David Laight wrote:
+> From: Robin Murphy
+>> Sent: 12 February 2020 11:43
+> ...
+>> If the device *is* inherently 64-bit capable, then setting 64-bit masks
+>> in the driver is correct - if a 64-bit IP block happens to have been
+>> integrated with only 32 address bits wired up, but the system has memory
+>> above the 32-bit boundary, then that should be described via
+>> "dma-ranges", which should then end up being used to further constrain
+>> the device masks internally to the DMA API.
 > 
-> History:
-> v4 -> v5:
-> - Added "selftests: KVM: Remove unused x86_register enum"
-> - reorder GPRs within gpr64_regs
-> - removed vmcb_hva and save_area_hva from svm_test_data
-> - remove the naming for vmcb_gpa in run_guest
+> Given how often this happens (please can I shoot some more
+> hardware engineers - he says while compiling some VHDL)
+> is it possible to allocate some memory pages that are
+> aliases if the address bits over 31 are ignored?
+> 
+> Then (at least some) drivers could to a run-time probe
+> reading to the high address and checking the data didn't
+> appear in the low address.
+> 
+> Only one such set of pages is needed - access can be locked.
+> But they'd need to be reserved early on.
 
-I preferred v4. :)  I queued the patch to remove the unused enum though.
+(Oh, for that much control over page allocation!)
 
-Paolo
+It's a fun idea, but there's no guarantee that the platform memory map 
+is actually suitable (AMD Seattle is the go-to counterexample), and 
+having an opt-in test that every driver has to implement individually 
+sounds like a maintenance nightmare. I think it's far better all round 
+to just expect the firmware-provided machine description - be it 
+devicetree, ACPI, or whatever - to correctly describe the integration.
 
+Robin.
