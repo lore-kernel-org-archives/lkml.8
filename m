@@ -8,66 +8,63 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFC4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA89BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8614620661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A2520661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1n6T4kJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axKFYFpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgBLIDX (ORCPT
+        id S1728523AbgBLIDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:03:23 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34247 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgBLIDW (ORCPT
+        Wed, 12 Feb 2020 03:03:34 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34021 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbgBLIDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:03:22 -0500
-Received: by mail-pg1-f195.google.com with SMTP id j4so800351pgi.1;
-        Wed, 12 Feb 2020 00:03:22 -0800 (PST)
+        Wed, 12 Feb 2020 03:03:34 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i6so850089pfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:03:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=mh5ve1clOQdwoBlgvdFQOY/xr1cX6ZXuLGLTs9NtboA=;
-        b=n1n6T4kJFtsezqzjNTIJbiRdniLbBs7C7ifuY43SPeXCeKrPCBcJIpIojykSSlc74F
-         6X31qwVyjoQpkgGL7Ss984xf9nq0ejM97+9gH4ERYkslfwcdeDW9Xtrbv2OG1tO9Ocy5
-         Z9dTEYxJbLgFbn8fZ2xm1LsUChLhjeNAMju3xYYIoCGY3WxN7R/J6d/9elf1jJvUXrZb
-         anG+hdr1w695BArD+Zs46e9/kqdwF8t9OVPcH/hTx54BwWhI4o3rwl+wHUDURvdXS1Bf
-         4BOB/Z7NZX2tIGA3AKhmiLolDsw7OiJ5BwiSRDec/vagWEjz4RPfCQ57wxnW6PfnW0Ks
-         8OMA==
+        bh=wEZlgFm4FNfzz/lXt6jpAfiPKuyVHar0QeF+K8/f4Pg=;
+        b=axKFYFpugWMCeCSbnL9lxqZCEt6U5PV2TyJ5/Gb2FFMk2gQw8aZoGAC53qBXNxPc+9
+         f0p5I8y10USvjuH/P3aUXX0TjgvM4vfN+fL22IGpLhPZi1dzavndMM5KwNqBHADcrq9u
+         OSN24xNN806OmOwdY0r1q65IW96+GqiJ1ntJTxWIegT6tk1h/1IJwviDB0MC+178xKt0
+         aVUZEe+hYHACM+Qgjx/udYYdfgP9gEHS9jx3V3c2YMbo2oeBP0qWb/3yf98mwLOgBaM9
+         dfUQn8E0rJMhNyf/iW8L6xS+Jp1KTjiVz1+8WyStA48waiF0eSAK7dTpvGckxGLwflOG
+         LUWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mh5ve1clOQdwoBlgvdFQOY/xr1cX6ZXuLGLTs9NtboA=;
-        b=BnJvJ1N8BB3pA7zPD9LG6Ndgpw5K3F/xraOeyrdLtFPF5sO5T+Vz1EEvyV7bJk3t1X
-         t6Br7i2GQYIp6ctr8g9U5UXdXjzmAuxIs31YRBoMRNG1XRDGZY4yNHhenLfnH6YvFv5L
-         Mrx4DOxsmvzv5xoGoAN+f7KKIPwiQYsPMzVyc2uZNok9TsVDFhj5usDntw/7EYK4e3bW
-         RW3WDqhg2I/iVdHb0eFAw6Ieq8sOOEe/yQwXmJ3lLbNoi0kU0MGb08DuuIn2TS/SrcFZ
-         FYCuVyjebmPwNTdaTymp6WIUkuhZMw8AStmWIxV8kUSE3+Ev2C5dnVeV6kpew0U39rYK
-         3LHA==
-X-Gm-Message-State: APjAAAXAUv6qElHY7WSX0miYa354yFiz6pzngl/j2NCHLZWOrRfISJxi
-        3xCotWx15D3BJy832ruDMxQmWare+0k=
-X-Google-Smtp-Source: APXvYqztRdA51Z5cTO1fj9v1qIKorccJrstXzYWk4VTQxZ/dZfUMeYPgz4nwPxP2vZq5zB+r7JmEhg==
-X-Received: by 2002:a63:ed01:: with SMTP id d1mr10151600pgi.95.1581494601503;
-        Wed, 12 Feb 2020 00:03:21 -0800 (PST)
+        bh=wEZlgFm4FNfzz/lXt6jpAfiPKuyVHar0QeF+K8/f4Pg=;
+        b=hyCpgwH724pUuUhGafKnpCucQVgCEJEbBsoIm8IjikY4jA5utltqOrPe6OKlzS89dP
+         c1jpuxKBmordCYjLN5V8Qv0u3GubQvk5Qjq6VyvWNDcB5TnAJEQHQIewShlDTdoxs/tz
+         z6wybQE+lAS2Mn+oc2fIOQhJUOkFeCsU3H1QJbLSL5tV8zhjqGsqBq7noNmcSwlmixM1
+         Hko/CY6t+mq0bFvkjJSTmF5CGjs6adILZgZAhpvw2UOhdg+tJFbqKL542lXeBQADdZDe
+         VJuk5bqi0V1/3wnmDEZaEgh1PcRxEWUtxstvcv0CT9yy9LV+tq5hcF0qCmFeuwKNVdVi
+         lA5w==
+X-Gm-Message-State: APjAAAXMnpB9iBWx8yKq6BiFm3Kam15PZm3wpDl0bG3+F5jpGrsmyn8F
+        OJEn7YfxQUfHKhw0eSai/v0=
+X-Google-Smtp-Source: APXvYqxbgQBfm2Wxs4LZzJSvAgO6gppgc4vxA4JaRT+DbMdiQwqWI8Y9z4Gssuy2bWR7wmKRt0zLaA==
+X-Received: by 2002:a65:43cb:: with SMTP id n11mr10874713pgp.65.1581494612586;
+        Wed, 12 Feb 2020 00:03:32 -0800 (PST)
 Received: from localhost ([106.51.21.91])
-        by smtp.gmail.com with ESMTPSA id g7sm7056749pfq.33.2020.02.12.00.03.20
+        by smtp.gmail.com with ESMTPSA id v25sm6870937pfe.147.2020.02.12.00.03.31
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Feb 2020 00:03:21 -0800 (PST)
-Date:   Wed, 12 Feb 2020 13:33:19 +0530
+        Wed, 12 Feb 2020 00:03:32 -0800 (PST)
+Date:   Wed, 12 Feb 2020 13:33:30 +0530
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        Tom Vaden <tom.vaden@hpe.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+To:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Cc:     Greg Ungerer <gerg@linux-m68k.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 05/18] ia64: replace setup_irq() by request_irq()
-Message-ID: <14bfa52a434351ea6612d514b033e9dbb73a9727.1581478324.git.afzal.mohd.ma@gmail.com>
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 06/18] m68k: Replace setup_irq() by request_irq()
+Message-ID: <1941c51a3237c4e9df6d9a5b87615cd1bba572dc.1581478324.git.afzal.mohd.ma@gmail.com>
 References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -100,182 +97,166 @@ Since cc'ing cover letter to all maintainers/reviewers would be too
 many, refer for cover letter,
  https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
 
- arch/ia64/kernel/irq_ia64.c | 42 ++++++++++--------------------
- arch/ia64/kernel/mca.c      | 51 +++++++++++--------------------------
- 2 files changed, 29 insertions(+), 64 deletions(-)
+ arch/m68k/68000/timers.c      |  9 ++-------
+ arch/m68k/coldfire/pit.c      |  9 ++-------
+ arch/m68k/coldfire/sltimers.c | 19 +++++--------------
+ arch/m68k/coldfire/timers.c   | 19 +++++--------------
+ 4 files changed, 14 insertions(+), 42 deletions(-)
 
-diff --git a/arch/ia64/kernel/irq_ia64.c b/arch/ia64/kernel/irq_ia64.c
-index 8e91c86e8072..166a38dae663 100644
---- a/arch/ia64/kernel/irq_ia64.c
-+++ b/arch/ia64/kernel/irq_ia64.c
-@@ -351,11 +351,6 @@ static irqreturn_t smp_irq_move_cleanup_interrupt(int irq, void *dev_id)
+diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
+index 71ddb4c98726..7a55d664592e 100644
+--- a/arch/m68k/68000/timers.c
++++ b/arch/m68k/68000/timers.c
+@@ -68,12 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
+ 
+ /***************************************************************************/
+ 
+-static struct irqaction m68328_timer_irq = {
+-	.name	 = "timer",
+-	.flags	 = IRQF_TIMER,
+-	.handler = hw_tick,
+-};
+-
+ /***************************************************************************/
+ 
+ static u64 m68328_read_clk(struct clocksource *cs)
+@@ -106,7 +100,8 @@ void hw_timer_init(irq_handler_t handler)
+ 	TCTL = 0;
+ 
+ 	/* set ISR */
+-	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
++	if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
++		pr_err("request_irq() on %s failed\n", "timer");
+ 
+ 	/* Restart mode, Enable int, Set clock source */
+ 	TCTL = TCTL_OM | TCTL_IRQEN | CLOCK_SOURCE;
+diff --git a/arch/m68k/coldfire/pit.c b/arch/m68k/coldfire/pit.c
+index eb6f16b0e2e6..d09e253abe5a 100644
+--- a/arch/m68k/coldfire/pit.c
++++ b/arch/m68k/coldfire/pit.c
+@@ -111,12 +111,6 @@ static irqreturn_t pit_tick(int irq, void *dummy)
+ 
+ /***************************************************************************/
+ 
+-static struct irqaction pit_irq = {
+-	.name	 = "timer",
+-	.flags	 = IRQF_TIMER,
+-	.handler = pit_tick,
+-};
+-
+ /***************************************************************************/
+ 
+ static u64 pit_read_clk(struct clocksource *cs)
+@@ -156,7 +150,8 @@ void hw_timer_init(irq_handler_t handler)
+ 	cf_pit_clockevent.min_delta_ticks = 0x3f;
+ 	clockevents_register_device(&cf_pit_clockevent);
+ 
+-	setup_irq(MCF_IRQ_PIT1, &pit_irq);
++	if (request_irq(MCF_IRQ_PIT1, pit_tick, IRQF_TIMER, "timer", NULL))
++		pr_err("request_irq() on %s failed\n", "timer");
+ 
+ 	clocksource_register_hz(&pit_clk, FREQ);
+ }
+diff --git a/arch/m68k/coldfire/sltimers.c b/arch/m68k/coldfire/sltimers.c
+index 1b11e7bacab3..2188a21e5413 100644
+--- a/arch/m68k/coldfire/sltimers.c
++++ b/arch/m68k/coldfire/sltimers.c
+@@ -50,18 +50,14 @@ irqreturn_t mcfslt_profile_tick(int irq, void *dummy)
  	return IRQ_HANDLED;
  }
  
--static struct irqaction irq_move_irqaction = {
--	.handler =	smp_irq_move_cleanup_interrupt,
--	.name =		"irq_move"
+-static struct irqaction mcfslt_profile_irq = {
+-	.name	 = "profile timer",
+-	.flags	 = IRQF_TIMER,
+-	.handler = mcfslt_profile_tick,
 -};
 -
- static int __init parse_vector_domain(char *arg)
+ void mcfslt_profile_init(void)
  {
- 	if (!arg)
-@@ -586,28 +581,15 @@ static irqreturn_t dummy_handler (int irq, void *dev_id)
- 	return IRQ_NONE;
+ 	printk(KERN_INFO "PROFILE: lodging TIMER 1 @ %dHz as profile timer\n",
+ 	       PROFILEHZ);
+ 
+-	setup_irq(MCF_IRQ_PROFILER, &mcfslt_profile_irq);
++	if (request_irq(MCF_IRQ_PROFILER, mcfslt_profile_tick, IRQF_TIMER,
++			"profile timer", NULL))
++		pr_err("request_irq() on %s failed\n", "profile timer");
+ 
+ 	/* Set up TIMER 2 as high speed profile clock */
+ 	__raw_writel(MCF_BUSCLK / PROFILEHZ - 1, PA(MCFSLT_STCNT));
+@@ -92,12 +88,6 @@ static irqreturn_t mcfslt_tick(int irq, void *dummy)
+ 	return timer_interrupt(irq, dummy);
  }
  
--static struct irqaction ipi_irqaction = {
--	.handler =	handle_IPI,
--	.name =		"IPI"
+-static struct irqaction mcfslt_timer_irq = {
+-	.name	 = "timer",
+-	.flags	 = IRQF_TIMER,
+-	.handler = mcfslt_tick,
 -};
 -
- /*
-  * KVM uses this interrupt to force a cpu out of guest mode
-  */
--static struct irqaction resched_irqaction = {
--	.handler =	dummy_handler,
--	.name =		"resched"
--};
--
--static struct irqaction tlb_irqaction = {
--	.handler =	dummy_handler,
--	.name =		"tlb_flush"
--};
- 
- #endif
- 
- void
--ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
-+ia64_native_register_percpu_irq(ia64_vector vec, const char *name,
-+				irq_handler_t handler)
+ static u64 mcfslt_read_clk(struct clocksource *cs)
  {
- 	unsigned int irq;
+ 	unsigned long flags;
+@@ -140,7 +130,8 @@ void hw_timer_init(irq_handler_t handler)
+ 	mcfslt_cnt = mcfslt_cycles_per_jiffy;
  
-@@ -615,8 +597,9 @@ ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
- 	BUG_ON(bind_irq_vector(irq, vec, CPU_MASK_ALL));
- 	irq_set_status_flags(irq, IRQ_PER_CPU);
- 	irq_set_chip(irq, &irq_type_ia64_lsapic);
--	if (action)
--		setup_irq(irq, action);
-+	if (handler)
-+		if (request_irq(irq, handler, 0, name, NULL))
-+			pr_err("request_irq() for %s failed", name);
- 	irq_set_handler(irq, handle_percpu_irq);
+ 	timer_interrupt = handler;
+-	setup_irq(MCF_IRQ_TIMER, &mcfslt_timer_irq);
++	if (request_irq(MCF_IRQ_TIMER, mcfslt_tick, IRQF_TIMER, "timer", NULL))
++		pr_err("request_irq() on %s failed\n", "timer");
+ 
+ 	clocksource_register_hz(&mcfslt_clk, MCF_BUSCLK);
+ 
+diff --git a/arch/m68k/coldfire/timers.c b/arch/m68k/coldfire/timers.c
+index 227aa5d13709..f384e92d8b1c 100644
+--- a/arch/m68k/coldfire/timers.c
++++ b/arch/m68k/coldfire/timers.c
+@@ -82,12 +82,6 @@ static irqreturn_t mcftmr_tick(int irq, void *dummy)
+ 
+ /***************************************************************************/
+ 
+-static struct irqaction mcftmr_timer_irq = {
+-	.name	 = "timer",
+-	.flags	 = IRQF_TIMER,
+-	.handler = mcftmr_tick,
+-};
+-
+ /***************************************************************************/
+ 
+ static u64 mcftmr_read_clk(struct clocksource *cs)
+@@ -134,7 +128,8 @@ void hw_timer_init(irq_handler_t handler)
+ 
+ 	timer_interrupt = handler;
+ 	init_timer_irq();
+-	setup_irq(MCF_IRQ_TIMER, &mcftmr_timer_irq);
++	if (request_irq(MCF_IRQ_TIMER, mcftmr_tick, IRQF_TIMER, "timer", NULL))
++		pr_err("request_irq() on %s failed\n", "timer");
+ 
+ #ifdef CONFIG_HIGHPROFILE
+ 	coldfire_profile_init();
+@@ -170,12 +165,6 @@ irqreturn_t coldfire_profile_tick(int irq, void *dummy)
+ 
+ /***************************************************************************/
+ 
+-static struct irqaction coldfire_profile_irq = {
+-	.name	 = "profile timer",
+-	.flags	 = IRQF_TIMER,
+-	.handler = coldfire_profile_tick,
+-};
+-
+ void coldfire_profile_init(void)
+ {
+ 	printk(KERN_INFO "PROFILE: lodging TIMER2 @ %dHz as profile timer\n",
+@@ -188,7 +177,9 @@ void coldfire_profile_init(void)
+ 	__raw_writew(MCFTIMER_TMR_ENORI | MCFTIMER_TMR_CLK16 |
+ 		MCFTIMER_TMR_RESTART | MCFTIMER_TMR_ENABLE, PA(MCFTIMER_TMR));
+ 
+-	setup_irq(MCF_IRQ_PROFILER, &coldfire_profile_irq);
++	if (request_irq(MCF_IRQ_PROFILER, coldfire_profile_tick, IRQF_TIMER,
++			"profile timer", NULL))
++		pr_err("request_irq() on %s failed\n", "profile timer");
  }
  
-@@ -624,9 +607,10 @@ void __init
- ia64_native_register_ipi(void)
- {
- #ifdef CONFIG_SMP
--	register_percpu_irq(IA64_IPI_VECTOR, &ipi_irqaction);
--	register_percpu_irq(IA64_IPI_RESCHEDULE, &resched_irqaction);
--	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, &tlb_irqaction);
-+	register_percpu_irq(IA64_IPI_VECTOR, "IPI", handle_IPI);
-+	register_percpu_irq(IA64_IPI_RESCHEDULE, "resched", dummy_handler);
-+	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, "tlb_flush",
-+			    dummy_handler);
- #endif
- }
- 
-@@ -635,10 +619,12 @@ init_IRQ (void)
- {
- 	acpi_boot_init();
- 	ia64_register_ipi();
--	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL);
-+	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL, NULL);
- #ifdef CONFIG_SMP
--	if (vector_domain_type != VECTOR_DOMAIN_NONE)
--		register_percpu_irq(IA64_IRQ_MOVE_VECTOR, &irq_move_irqaction);
-+	if (vector_domain_type != VECTOR_DOMAIN_NONE) {
-+		register_percpu_irq(IA64_IRQ_MOVE_VECTOR, "irq_move",
-+				    smp_irq_move_cleanup_interrupt);
-+	}
- #endif
- #ifdef CONFIG_PERFMON
- 	pfm_init_percpu();
-diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
-index bf2cb9294795..f4be4ad7bf0d 100644
---- a/arch/ia64/kernel/mca.c
-+++ b/arch/ia64/kernel/mca.c
-@@ -1766,36 +1766,6 @@ ia64_mca_disable_cpe_polling(char *str)
- 
- __setup("disable_cpe_poll", ia64_mca_disable_cpe_polling);
- 
--static struct irqaction cmci_irqaction = {
--	.handler =	ia64_mca_cmc_int_handler,
--	.name =		"cmc_hndlr"
--};
--
--static struct irqaction cmcp_irqaction = {
--	.handler =	ia64_mca_cmc_int_caller,
--	.name =		"cmc_poll"
--};
--
--static struct irqaction mca_rdzv_irqaction = {
--	.handler =	ia64_mca_rendez_int_handler,
--	.name =		"mca_rdzv"
--};
--
--static struct irqaction mca_wkup_irqaction = {
--	.handler =	ia64_mca_wakeup_int_handler,
--	.name =		"mca_wkup"
--};
--
--static struct irqaction mca_cpe_irqaction = {
--	.handler =	ia64_mca_cpe_int_handler,
--	.name =		"cpe_hndlr"
--};
--
--static struct irqaction mca_cpep_irqaction = {
--	.handler =	ia64_mca_cpe_int_caller,
--	.name =		"cpe_poll"
--};
--
- /* Minimal format of the MCA/INIT stacks.  The pseudo processes that run on
-  * these stacks can never sleep, they cannot return from the kernel to user
-  * space, they do not appear in a normal ps listing.  So there is no need to
-@@ -2056,18 +2026,23 @@ void __init ia64_mca_irq_init(void)
- 	 *  Configure the CMCI/P vector and handler. Interrupts for CMC are
- 	 *  per-processor, so AP CMC interrupts are setup in smp_callin() (smpboot.c).
- 	 */
--	register_percpu_irq(IA64_CMC_VECTOR, &cmci_irqaction);
--	register_percpu_irq(IA64_CMCP_VECTOR, &cmcp_irqaction);
-+	register_percpu_irq(IA64_CMC_VECTOR, "cmc_hndlr",
-+			    ia64_mca_cmc_int_handler);
-+	register_percpu_irq(IA64_CMCP_VECTOR, "cmc_poll",
-+			    ia64_mca_cmc_int_caller);
- 	ia64_mca_cmc_vector_setup();       /* Setup vector on BSP */
- 
- 	/* Setup the MCA rendezvous interrupt vector */
--	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, &mca_rdzv_irqaction);
-+	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, "mca_rdzv",
-+			    ia64_mca_rendez_int_handler);
- 
- 	/* Setup the MCA wakeup interrupt vector */
--	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, &mca_wkup_irqaction);
-+	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, "mca_wkup",
-+			    ia64_mca_wakeup_int_handler);
- 
- 	/* Setup the CPEI/P handler */
--	register_percpu_irq(IA64_CPEP_VECTOR, &mca_cpep_irqaction);
-+	register_percpu_irq(IA64_CPEP_VECTOR, "cpe_poll",
-+			    ia64_mca_cpe_int_caller);
- }
- 
- /*
-@@ -2108,7 +2083,11 @@ ia64_mca_late_init(void)
- 			if (irq > 0) {
- 				cpe_poll_enabled = 0;
- 				irq_set_status_flags(irq, IRQ_PER_CPU);
--				setup_irq(irq, &mca_cpe_irqaction);
-+				if (request_irq(irq, ia64_mca_cpe_int_handler,
-+						0, "cpe_hndlr", NULL)) {
-+					pr_err("request_irq() on %s failed\n",
-+					       "cpe_hndlr");
-+				}
- 				ia64_cpe_irq = irq;
- 				ia64_mca_register_cpev(cpe_vector);
- 				IA64_MCA_DEBUG("%s: CPEI/P setup and enabled.\n",
+ /***************************************************************************/
 -- 
 2.24.1
 
