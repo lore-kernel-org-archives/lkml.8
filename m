@@ -2,126 +2,201 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC2BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E76C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895E22082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E2420848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:57:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thrksr6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgBLK44 (ORCPT
+        id S1728069AbgBLK5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:56:56 -0500
-Received: from mga01.intel.com ([192.55.52.88]:6261 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727594AbgBLK4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:56:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 02:56:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="432283931"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.249.193.108]) ([10.249.193.108])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Feb 2020 02:56:51 -0800
-Subject: Re: [LKP] Re: [perf x86] b77491648e: will-it-scale.per_process_ops
- -2.1% regression
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Roman Sudarikov <roman.sudarikov@linux.intel.com>,
-        0day robot <lkp@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200205123110.GN12867@shao2-debian>
- <87tv44danp.fsf@linux.intel.com>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <782f409a-ff90-831c-56a0-abb3c31ab8d8@intel.com>
-Date:   Wed, 12 Feb 2020 18:56:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 05:57:30 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:38955 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbgBLK53 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:57:29 -0500
+Received: by mail-vs1-f65.google.com with SMTP id p14so853756vsq.6;
+        Wed, 12 Feb 2020 02:57:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sQAYmYWXHoQ/XJO0IhYrZodteSENqIZeB0+t/OPU7g4=;
+        b=thrksr6Ind35TFRexPrLQ1FhNnDe/HUjzRqldvqnXRS8AsIAem5wZy17LlB09M6/b/
+         RkE57xlXrQOxw6CFJSKDZTBDIEvNbsk/APYaYVGMgEP7w5kag4vPgd7iaLCKMx5Uf7tn
+         SUjHLWcAI/9osscwurri37Uia9Rsg6cdT5RAf3fSzP0IAMAH0599QOW12I83RwywX2HP
+         DDgql9W81PHfS3sXL8h4OJVsDp37hIQP/5p6CnzoH0H2NfslWNnn59u2Fs9I3xFpsXPR
+         i9UxxAiO1SeALjApAp6map780nLjdaZW9BjOdLzIAJnaxka/6oMLUsefadyfpmDCOLMN
+         7EoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sQAYmYWXHoQ/XJO0IhYrZodteSENqIZeB0+t/OPU7g4=;
+        b=oT3iiyd54TWjbfyGSCCSqqOle1ZZ5rYqIwUsEcUPxC1sfuwjELyMgOIioFDU7Q4ZcQ
+         FbnR69WdOnbn4Xn0Fht5PDnR/oh3LBBdI1ungI8JW+IQm0j7Rv6fwH0dP0Onc7NmXu0K
+         njgvnys3QPL2KKdppjAL2sb1/cI/jUI85HglypFJoss+wIpXESApz4cHBS/hgr9lxJWs
+         +IXE9Xq/CScY1HUHyBwmvK5Jeib5BvErKccBt32sdRCtCTI9GY9rGoyaTr7ptkANCDo0
+         bs5Kd7gSqLPdqWjLOPI1KXaTMjKseVFYnLD2wU+iZ+IWzeRoddM8Okyc0V/kIl4pPmW8
+         dHPQ==
+X-Gm-Message-State: APjAAAV3/Tavdpq9/WTT49RKmIGIYmZIiZuU7/5qX6GOIYdcIB6sLDZN
+        Y5ikmusPPcN+r8TQcLSe7UI5trt1C7RsHfpOtFY=
+X-Google-Smtp-Source: APXvYqyp6c21Ni0kb56Qwb6uTMOr6939dOaOsN12CFIM82oglNutoowZ2P0fKXSA1a6LfrDW7L3D9FwaZuzk1025KHE=
+X-Received: by 2002:a67:edd2:: with SMTP id e18mr11208855vsp.211.1581505048414;
+ Wed, 12 Feb 2020 02:57:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87tv44danp.fsf@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200205002121.30941-1-djunho@padtec.com.br> <b808cd095dd290ce3cf8ec6934f92edb2f94954e.camel@analog.com>
+In-Reply-To: <b808cd095dd290ce3cf8ec6934f92edb2f94954e.camel@analog.com>
+From:   Daniel Junho <djunho@gmail.com>
+Date:   Wed, 12 Feb 2020 07:57:16 -0300
+Message-ID: <CAKxs2cAb=zX9RvBYMQPy_rqcgoAU4dPbgB3JLVWbB-Ro9R2rHA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: iio: adc: ad7923: Add dt-bindings for AD7928
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "patrick.vasseur@c-s.fr" <patrick.vasseur@c-s.fr>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        Michael Hennerich <michael.hennerich@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi.
 
+Thank you for your review. I will make these changes and send a v2.
 
-On 2/6/2020 4:47 AM, Andi Kleen wrote:
-> kernel test robot <rong.a.chen@intel.com> writes:
+On Wed, Feb 5, 2020 at 5:24 AM Ardelean, Alexandru
+<alexandru.Ardelean@analog.com> wrote:
 >
->> Greeting,
->>
->> FYI, we noticed a -2.1% regression of will-it-scale.per_process_ops due to commit:
->>
->>
->> commit: b77491648e6eb2f26b6edf5eaea859adc17f4dcc ("perf x86: Infrastructure for exposing an Uncore unit to PMON mapping")
->> https://github.com/0day-ci/linux/commits/roman-sudarikov-linux-intel-com/perf-x86-Exposing-IO-stack-to-IO-PMON-mapping-through-sysfs/20200118-075508
-> Seems to be spurious bisect. I don't think that commit could change
-> anything performance related.
-
-Hi Andi,
-
-I commented out some lines in arch/x86/events/intel/uncore.c and 
-will-it-scale.per_process_ops increased.
-
-commit:
-   v5.4
-   b77491648e ("perf x86: Infrastructure for exposing an Uncore unit to PMON mapping")
-   f33fe1b258 ("test")
-
-
-             v5.4  b77491648e6eb2f26b6edf5eae 
-f33fe1b258b2a4b2fc97600b2b  testcase/testparams/testbox
-----------------  -------------------------- --------------------------  
----------------------------
-          %stddev      change         %stddev      change %stddev
-              \          |                \          | \
-      47983                       47004 47647 
-will-it-scale/performance-process-100%-signal1-ucode=0xb000038/lkp-bdw-ep6
-      47983                       47004 47647        GEO-MEAN 
-will-it-scale.per_process_ops
-
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 55201bfde2c84c..0dc9c455423d99 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -887,7 +887,7 @@ static int uncore_pmu_register(struct 
-intel_uncore_pmu *pmu)
-                 pmu->pmu.attr_groups = pmu->type->attr_groups;
-         }
-
--       pmu->pmu.attr_update = attr_update;
-+       // pmu->pmu.attr_update = attr_update;
-
-         if (pmu->type->num_boxes == 1) {
-                 if (strlen(pmu->type->name) > 0)
-@@ -903,7 +903,7 @@ static int uncore_pmu_register(struct 
-intel_uncore_pmu *pmu)
-          * Exposing mapping of Uncore units to corresponding Uncore PMUs
-          * through /sys/devices/uncore_<type>_<idx>/mapping
-          */
--       uncore_platform_mapping(pmu->type);
-+       // uncore_platform_mapping(pmu->type);
-
-         ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
-         if (!ret)
-
-Best Regards,
-Rong Chen
-
+> On Tue, 2020-02-04 at 21:21 -0300, Daniel Junho wrote:
+> > From: Daniel Junho <djunho@gmail.com>
+> >
+> > Add device tree bindings documentation for AD7923 adc in YAML format.
+> >
+> > Tested with:
+> > make ARCH=arm dt_binding_check
+> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> > make ARCH=arm dtbs_check
+> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> >
 >
-> -Andi
-> _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
-
+> Hey,
+>
+> Some comments inline.
+>
+>
+> > Signed-off-by: Daniel Junho <djunho@gmail.com>
+> > ---
+> >
+> > Hi,
+> >
+> > I got maintainers from the driver authors list. Let me know if this is
+> > fine.
+> >
+> > Thanks.
+> >
+> >  .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> > b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> > new file mode 100644
+> > index 000000000000..8097441c97be
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> > @@ -0,0 +1,65 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+>
+> License header should be:
+> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>
+>
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7923.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices AD7923 and similars with 4 and 8 Channel ADCs.
+> > +
+> > +maintainers:
+> > +  - Michael Hennerich <hennerich@blackfin.uclinux.org>"
+>
+> For Michael, email now is:  michael.hennerich@analog.com
+> That email may still work, but for new stuff, it should be updated.
+>
+> > +  - Patrick Vasseur <patrick.vasseur@c-s.fr>"
+> > +
+> > +description: |
+> > +  Analog Devices AD7904, AD7914, AD7923, AD7924 4 Channel ADCs, and AD7908,
+> > +   AD7918, AD7928 8 Channels ADCs.
+> > +
+> > +  Specifications about the part can be found at:
+> > +
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7923.pdf
+> > +
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7904_7914_7924.pdf
+> > +
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7908_7918_7928.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,ad7904
+> > +      - adi,ad7914
+> > +      - adi,ad7923
+> > +      - adi,ad7924
+> > +      - adi,ad7908
+> > +      - adi,ad7918
+> > +      - adi,ad7928
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  refin-supply:
+> > +    description: |
+> > +      The regulator supply for ADC reference voltage.
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 0
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    spi {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +
+> > +      ad7928: adc@0 {
+> > +        compatible = "adi,ad7928";
+> > +        reg = <0>;
+> > +        spi-max-frequency = <25000000>;
+> > +        refin-supply = <&adc_vref>;
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +      };
+> > +    };
