@@ -2,83 +2,73 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5ABC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FC1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3702082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AC72073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgBLKJC (ORCPT
+        id S1729150AbgBLKJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:09:02 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:42454 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729031AbgBLKIk (ORCPT
+        Wed, 12 Feb 2020 05:09:37 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:56296 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbgBLKJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:08:40 -0500
+        Wed, 12 Feb 2020 05:09:36 -0500
 Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id 1m8Y2200M5USYZQ01m8Yjw; Wed, 12 Feb 2020 11:08:38 +0100
+        by andre.telenet-ops.be with bizsmtp
+        id 1m9b220065USYZQ01m9bLh; Wed, 12 Feb 2020 11:09:35 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1owa-0001ES-Ju; Wed, 12 Feb 2020 11:08:32 +0100
+        id 1j1oxb-0001Fb-58; Wed, 12 Feb 2020 11:09:35 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j1owa-0000Ln-I2; Wed, 12 Feb 2020 11:08:32 +0100
+        id 1j1oxb-0005OR-3K; Wed, 12 Feb 2020 11:09:35 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Russell King <linux@armlinux.org.uk>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/7] ARM: mediatek: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-Date:   Wed, 12 Feb 2020 11:08:25 +0100
-Message-Id: <20200212100830.446-3-geert+renesas@glider.be>
+Subject: [PATCH] arm64: time: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+Date:   Wed, 12 Feb 2020 11:09:34 +0100
+Message-Id: <20200212100934.20322-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212100830.446-1-geert+renesas@glider.be>
-References: <20200212100830.446-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Mediatek platform code is not a clock provider, and just needs to
-call of_clk_init().
+The arm64 time code is not a clock provider, and just needs to call
+of_clk_init().
 
 Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/mach-mediatek/mediatek.c | 2 +-
+ arch/arm64/kernel/time.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-index f6f102fa9e23a0f8..e6e9f93a1f01c7d0 100644
---- a/arch/arm/mach-mediatek/mediatek.c
-+++ b/arch/arm/mach-mediatek/mediatek.c
-@@ -9,7 +9,7 @@
- #include <linux/io.h>
- #include <asm/mach/arch.h>
- #include <linux/of.h>
+diff --git a/arch/arm64/kernel/time.c b/arch/arm64/kernel/time.c
+index 73f06d4b3aae5317..eebbc8d7123e08f1 100644
+--- a/arch/arm64/kernel/time.c
++++ b/arch/arm64/kernel/time.c
+@@ -23,7 +23,7 @@
+ #include <linux/irq.h>
+ #include <linux/delay.h>
+ #include <linux/clocksource.h>
 -#include <linux/clk-provider.h>
 +#include <linux/of_clk.h>
- #include <linux/clocksource.h>
+ #include <linux/acpi.h>
  
- 
+ #include <clocksource/arm_arch_timer.h>
 -- 
 2.17.1
 
