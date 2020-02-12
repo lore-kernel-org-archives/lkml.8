@@ -2,131 +2,93 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681F5C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1E8C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C85206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:45:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="T56fYrou"
+	by mail.kernel.org (Postfix) with ESMTP id 0443F24672
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgBLTpc (ORCPT
+        id S1729014AbgBLTri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:45:32 -0500
-Received: from gateway36.websitewelcome.com ([192.185.188.18]:48656 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727548AbgBLTpc (ORCPT
+        Wed, 12 Feb 2020 14:47:38 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:42782 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgBLTri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:45:32 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 30BFD4187AC69
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:59:34 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1xwxjWXZDEfyq1xwxjgF9T; Wed, 12 Feb 2020 13:45:31 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WSKm1d077AvAXaEBiUrlapEupgWope2Z9XcI6eZbL+o=; b=T56fYrouPktiPdC9NM1B8RxpY3
-        OdCTEOJuVt2qJg9AVv1aM+zPOjeMje3g8PbAq1YQuyc4eBSyMLjORt5XRaStYY7C8XpMBgADSOKaV
-        b3pPvL1ASn1j0xPUQc/G0uJHJmp3FY/FjtIvbyW677RuAPrlqnv9DchLb2PsfJXXT2XNOxnCgoACt
-        OO8bZg8qmgFyyuqi6k8Q135+KHBchnZqcQwUNCtBgBTbyOrZVWpW4GSyaGDbcv/o26DdriusL/mIH
-        dMeNM3F7isHOhD8A/YTyt7KkV7ET3QkbPLEK2wQb1NANU9seSp2N4EsHqPUX+hOA8NVpaVFZHoXdz
-        VmzaOOKg==;
-Received: from [201.144.174.25] (port=27814 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1xwv-001EQ3-IC; Wed, 12 Feb 2020 13:45:29 -0600
-Date:   Wed, 12 Feb 2020 13:48:04 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Benjamin LaHaise <bcrl@kvack.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] aio: Replace zero-length array with flexible-array member
-Message-ID: <20200212194804.GA1594@embeddedor>
+        Wed, 12 Feb 2020 14:47:38 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1xyq-00BZ9b-9X; Wed, 12 Feb 2020 19:47:28 +0000
+Date:   Wed, 12 Feb 2020 19:47:28 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs
+ instances
+Message-ID: <20200212194728.GM23230@ZenIV.linux.org.uk>
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+ <20200210150519.538333-8-gladkov.alexey@gmail.com>
+ <87v9odlxbr.fsf@x220.int.ebiederm.org>
+ <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+ <87tv3vkg1a.fsf@x220.int.ebiederm.org>
+ <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.144.174.25
-X-Source-L: No
-X-Exim-ID: 1j1xwv-001EQ3-IC
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.144.174.25]:27814
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 46
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Wed, Feb 12, 2020 at 10:45:06AM -0800, Linus Torvalds wrote:
+> On Wed, Feb 12, 2020 at 7:01 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> >
+> > Fundamentally proc_flush_task is an optimization.  Just getting rid of
+> > dentries earlier.  At least at one point it was an important
+> > optimization because the old process dentries would just sit around
+> > doing nothing for anyone.
+> 
+> I'm pretty sure it's still important. It's very easy to generate a
+> _ton_ of dentries with /proc.
+> 
+> > I wonder if instead of invalidating specific dentries we could instead
+> > fire wake up a shrinker and point it at one or more instances of proc.
+> 
+> It shouldn't be the dentries themselves that are a freeing problem.
+> They're being RCU-free'd anyway because of lookup. It's the
+> proc_mounts list that is the problem, isn't it?
+> 
+> So it's just fs_info that needs to be rcu-delayed because it contains
+> that list. Or is there something else?
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Large part of the headache is the possibility that some joker has
+done something like mounting tmpfs on /proc/<pid>/map_files, or
+binding /dev/null on top of /proc/<pid>/syscall, etc.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/aio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/aio.c b/fs/aio.c
-index 94f2b9256c0c..13c4be7f00f0 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -68,7 +68,7 @@ struct aio_ring {
- 	unsigned	header_length;	/* size of aio_ring */
- 
- 
--	struct io_event		io_events[0];
-+	struct io_event		io_events[];
- }; /* 128 bytes + ring size */
- 
- /*
--- 
-2.25.0
-
+IOW, that d_invalidate() can very well have to grab namespace_sem.
+And possibly do a full-blown fs shutdown of something NFS-mounted,
+etc...
