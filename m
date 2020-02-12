@@ -6,178 +6,155 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31319C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6D6C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166672073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524822073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgBLSyP (ORCPT
+        id S1729083AbgBLSyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:54:15 -0500
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:60451 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729034AbgBLSyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:54:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:36504 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729037AbgBLSyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Feb 2020 13:54:13 -0500
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 12 Feb 2020 10:54:12 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 12 Feb 2020 10:54:12 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 86D804A51; Wed, 12 Feb 2020 10:54:12 -0800 (PST)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [RESEND v5 2/2] pwm: core: Convert period and duty cycle to u64
-Date:   Wed, 12 Feb 2020 10:54:08 -0800
-Message-Id: <f7986df5d54b2bb84ee14e80d0c1225444608f32.1581533161.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1581533161.git.gurus@codeaurora.org>
-References: <cover.1581533161.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1581533161.git.gurus@codeaurora.org>
-References: <cover.1581533161.git.gurus@codeaurora.org>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E826F30E;
+        Wed, 12 Feb 2020 10:54:12 -0800 (PST)
+Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1A1D3F68E;
+        Wed, 12 Feb 2020 10:54:11 -0800 (PST)
+From:   James Morse <james.morse@arm.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH] x86/resctrl: Preserve CDP enable over cpuhp
+Date:   Wed, 12 Feb 2020 18:53:59 +0000
+Message-Id: <20200212185359.163111-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+Resctrl assumes that all cpus are online when the filesystem is
+mounted, and that cpus remember their CDP-enabled state over cpu
+hotplug.
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+This goes wrong when resctrl's CDP-enabled state changes while all
+the cpus in a domain are offline.
+
+When a domain comes online, enable (or disable!) CDP to match resctrl's
+current setting.
+
+Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
+Signed-off-by: James Morse <james.morse@arm.com>
+
 ---
- drivers/pwm/core.c  |  4 ++--
- drivers/pwm/sysfs.c | 10 +++++-----
- include/linux/pwm.h | 16 ++++++++--------
- 3 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5a7f659..81aa3c2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1163,8 +1163,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..3fb1610 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
+Seen on a 'Intel(R) Xeon(R) Gold 5120T CPU @ 2.20GHz' from lenovo, taking
+all the cores in one package offline, umount/mount to toggle CDP then
+bringing them back: the first core to come online still has the old
+CDP state.
+
+This will get called more often than is desirable (worst:3/domain)
+but this is better than on every cpu in the domain. Unless someone
+can spot a better place to hook it in?
+---
+ arch/x86/kernel/cpu/resctrl/core.c     | 21 +++++++++++++++++++++
+ arch/x86/kernel/cpu/resctrl/internal.h |  3 +++
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |  7 +++++--
+ 3 files changed, 29 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 89049b343c7a..1210cb65e6d3 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -541,6 +541,25 @@ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_domain *d)
+ 	return 0;
  }
  
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
++/* resctrl's use of CDP may have changed while this domain slept */
++static void domain_reconfigure_cdp(void)
++{
++	bool cdp_enable;
++	struct rdt_resource *r;
++
++	lockdep_assert_held(&rdtgroup_mutex);
++
++	r = &rdt_resources_all[RDT_RESOURCE_L2];
++	cdp_enable = !r->alloc_enabled;
++	if (r->alloc_capable)
++		l2_qos_cfg_update(&cdp_enable);
++
++	r = &rdt_resources_all[RDT_RESOURCE_L3];
++	cdp_enable = !r->alloc_enabled;
++	if (r->alloc_capable)
++		l3_qos_cfg_update(&cdp_enable);
++}
++
+ /*
+  * domain_add_cpu - Add a cpu to a resource's domain list.
+  *
+@@ -578,6 +597,8 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ 	d->id = id;
+ 	cpumask_set_cpu(cpu, &d->cpu_mask);
  
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
++	domain_reconfigure_cdp();
++
+ 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
+ 		kfree(d);
+ 		return;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 181c992f448c..29c92d3e93f5 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -602,4 +602,7 @@ void __check_limbo(struct rdt_domain *d, bool force_free);
+ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+ bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
  
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
++void l3_qos_cfg_update(void *arg);
++void l2_qos_cfg_update(void *arg);
++
+ #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 064e9ef44cd6..e11356011a4a 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1804,14 +1804,14 @@ mongroup_create_dir(struct kernfs_node *parent_kn, struct rdtgroup *prgrp,
+ 	return ret;
  }
  
- static ssize_t duty_cycle_store(struct device *child,
-@@ -212,7 +212,7 @@ static ssize_t capture_show(struct device *child,
- 	if (ret)
- 		return ret;
- 
--	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
-+	return sprintf(buf, "%llu %llu\n", result.period, result.duty_cycle);
- }
- 
- static DEVICE_ATTR_RW(period);
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 0ef808d..df83440 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
+-static void l3_qos_cfg_update(void *arg)
++void l3_qos_cfg_update(void *arg)
  {
- 	if (pwm)
- 		pwm->state.period = period;
+ 	bool *enable = arg;
+ 
+ 	wrmsrl(MSR_IA32_L3_QOS_CFG, *enable ? L3_QOS_CDP_ENABLE : 0ULL);
  }
  
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
+-static void l2_qos_cfg_update(void *arg)
++void l2_qos_cfg_update(void *arg)
  {
- 	struct pwm_state state;
+ 	bool *enable = arg;
  
-@@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
+@@ -1831,6 +1831,9 @@ static int set_cache_qos_cfg(int level, bool enable)
+ 	struct rdt_domain *d;
+ 	int cpu;
  
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -305,8 +305,8 @@ struct pwm_chip {
-  * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
-  */
- struct pwm_capture {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- };
- 
- #if IS_ENABLED(CONFIG_PWM)
++	/* CDP state is restored during cpuhp, which takes this lock */
++	lockdep_assert_held(&rdtgroup_mutex);
++
+ 	if (level == RDT_RESOURCE_L3)
+ 		update = l3_qos_cfg_update;
+ 	else if (level == RDT_RESOURCE_L2)
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.1
 
