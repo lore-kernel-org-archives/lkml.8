@@ -2,116 +2,94 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5E4C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADCFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA92221569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85052168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U76D1PMA"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bTWz1jpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgBLWZv (ORCPT
+        id S1729277AbgBLW0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:25:51 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46465 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbgBLWZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:25:51 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so4290588wrl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:25:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kqLUL5r8C+tgnaPYz9HWPNgipcce1YW5/q3ifbXu5oA=;
-        b=U76D1PMAXPdzH4McXJdNoTnfNeoSGktudQQ1kymC7k9nvj7Zk4vDoele3b2Lrz9Oya
-         b54jfgEa7JSp061Us5huRzQQ5F0Rf103vwiM9otTrX5KJkmvmB+ApZE69JEXFEQBoL/r
-         Ri7tNBp3bMiN2qRsHUnImekTPzSVfGWQuZP72HZRVmoGTCc2nbisVgVlRWhGaGs/2s2z
-         F5hNx4EYeFNXVYM5nRZ2osI6aPGVkQkewa2ylVFo5X9XhIYeweuSSCrX2tVbQ3uHuL0Q
-         ViDDI3K0pcWiwdwbVbAPW/uV51nAsJ5iL4W8K6azD3Y3DcdbDk6jopUjiCj21iVG9bQX
-         q+Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kqLUL5r8C+tgnaPYz9HWPNgipcce1YW5/q3ifbXu5oA=;
-        b=mNLSsHEHoeuPyB3wWPrKIdrsKamyoRa1FkzlO03iA7Xg4e0046We47fpiw1yurI3NG
-         DV51nz2LrfoPYF+QbTRYWx/CfDdBwYzSc/8Z7M/oVN6cI569YnZZWn+eqokL4xiEALlR
-         v1xJCUCdWCAzmah2ydJdC4mAa/aa1+yfs0M3NCYewQM1frP+WJLxnV6nkKXiROLBHAYL
-         fOu9YegJ5IDEFglH/+Q+1b/TMH0PWLS0WlCePhSQoprZg1OOHzjihdREGn3VJBOv+a5N
-         Y/JOeFXtNT8qboiMzk1z1PKSBIPMzv9tLfBBo4ktRDluYwKm7eeiixeByNbjTQltQ6tC
-         odAw==
-X-Gm-Message-State: APjAAAU11FYPNUySDK+Xr5OcWTeFfA0VoGyEWfW2cJ7LEPotMnhbTCmS
-        rExiUq7BF76bAwJRb1B8rXc4Uc7C3QVJD+y+IMqdwQ==
-X-Google-Smtp-Source: APXvYqyKikEA7Oc5ye0Hcm8hVCfh8p99mW4CCfUw/3zz4/Aw4Wf+K1jVzp8VtANBdH3QvrdqXsRTpZE+8a0lgaOsAV4=
-X-Received: by 2002:adf:81e3:: with SMTP id 90mr16580061wra.23.1581546349050;
- Wed, 12 Feb 2020 14:25:49 -0800 (PST)
+        Wed, 12 Feb 2020 17:26:17 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43361 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727947AbgBLW0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 17:26:17 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HvPL3Mldz9sRN;
+        Thu, 13 Feb 2020 09:26:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581546374;
+        bh=VQS6IgmpnsYuX7ESvvv6ugBYoowEfWcXmjtDhWcgdKU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bTWz1jpSGYdiJ6wS3JtcQZNjTH3dDWYD1AHpqBXt8C2GoyyV6TMRd3MPUmKllIMhP
+         c7k4sZmiICvEYVPAJU7qlSg2DlrrpF8kuyEk8woTjU+p744stwDPRaPZwezoEJIyL1
+         dRmNDLd2KVOVvUanZ/UbDo/BqiwC6+wEqj6e886sxyet2qk5PzizdLbFbadjshoyWl
+         Un6sDRHmvfRe+CZFj7rW2knlQEpDytcSxba/ZQ5jb+QfAkdsTEV9UHUSb9dJmgpeEi
+         cEQfAP5M+tq9/0eEulIg7COzcpolKw9wcm1mnQUx8y+BoXB93DBuj9MnL/p569paOA
+         eF2xsboIMnqVQ==
+Date:   Thu, 13 Feb 2020 09:26:13 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the rcu tree
+Message-ID: <20200213092613.1b66d1f5@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200115182816.33892-1-trishalfonso@google.com>
- <CACT4Y+b4+5PQvUeeHi=3g0my0WbaRaNEWY3P-MOVJXYSO7U5aA@mail.gmail.com>
- <CAKFsvU+zaY6B_+g=UTpOddKXXgVaKWxH3c8nw6GSLceb1Mg2qA@mail.gmail.com> <CACT4Y+aHRiR_7hiRE0DmaCQV2NzaqL0-kbMoVPJU=5-pcOBxJA@mail.gmail.com>
-In-Reply-To: <CACT4Y+aHRiR_7hiRE0DmaCQV2NzaqL0-kbMoVPJU=5-pcOBxJA@mail.gmail.com>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Wed, 12 Feb 2020 14:25:37 -0800
-Message-ID: <CAKFsvUJ2w=re_-q5PTV8c30aVwot8zMOipRvhD9cCx-9cc-Ksw@mail.gmail.com>
-Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-um@lists.infradead.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Aq+J/5bOAUdVlTecKNkDIXx";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 10:24 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, Feb 12, 2020 at 1:19 AM Patricia Alfonso
-> <trishalfonso@google.com> wrote:
-> >
-> > On Thu, Jan 16, 2020 at 12:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > > +void kasan_init(void)
-> > > > +{
-> > > > +       kasan_map_memory((void *)KASAN_SHADOW_START, KASAN_SHADOW_SIZE);
-> > > > +
-> > > > +       // unpoison the kernel text which is form uml_physmem -> uml_reserved
-> > > > +       kasan_unpoison_shadow((void *)uml_physmem, physmem_size);
-> > > > +
-> > > > +       // unpoison the vmalloc region, which is start_vm -> end_vm
-> > > > +       kasan_unpoison_shadow((void *)start_vm, (end_vm - start_vm + 1));
-> > > > +
-> > > > +       init_task.kasan_depth = 0;
-> > > > +       pr_info("KernelAddressSanitizer initialized\n");
-> > > > +}
-> > >
-> > > Was this tested with stack instrumentation? Stack instrumentation
-> > > changes what shadow is being read/written and when. We don't need to
-> > > get it working right now, but if it does not work it would be nice to
-> > > restrict the setting and leave some comment traces for future
-> > > generations.
-> > If you are referring to KASAN_STACK_ENABLE, I just tested it and it
-> > seems to work fine.
->
->
-> I mean stack instrumentation which is enabled with CONFIG_KASAN_STACK.
+--Sig_/Aq+J/5bOAUdVlTecKNkDIXx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I believe I was testing with CONFIG_KASAN_STACK set to 1 since that is
-the default value when compiling with GCC.The syscall_stub_data error
-disappears when the value of CONFIG_KASAN_STACK is 0, though.
+Hi all,
 
+In commit
 
--- 
-Patricia Alfonso
+  71901ffaf70d ("locktorture: Print ratio of acquisitions, not failures")
+
+Fixes tag
+
+  Fixes: 0af3fe1e ("locktorture: Add a lock-torture kernel module")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Aq+J/5bOAUdVlTecKNkDIXx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Ee4UACgkQAVBC80lX
+0GzxqAgAjHFKel11Yz28su+ejldC1Cq07a0RruqqrzqAZ94Dq6QkP7fWk1SlW4sf
+gFNd3af0cMr7iayygPp2d1gzeluFrP0LRlAqlOyqbT9r+t9Lntn8GVWbIw4ChudX
+lIgNtKUTpKP8iAvP1q1IbuB/FU2rR7PS4KUufwmkh06IIt8U8TMums4H4alVQpLj
+f/Q0L7/OdoPEIDLI3SmYQoqaGG3pETGd02OXgYrAPcGcjPSjV+LYgBTDgvgKmdgg
+FufWqcWuLgUhMW2p22ZsS7bWDxKRYyR0WkIjVMwx1jz2RtVoDUSePG46gPxN5vW0
+1azxWFNak9r7HZiJ7BiTuGdA87Anig==
+=zquh
+-----END PGP SIGNATURE-----
+
+--Sig_/Aq+J/5bOAUdVlTecKNkDIXx--
