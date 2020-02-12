@@ -2,152 +2,94 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5C8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591A7C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B9D2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IkkwUNsZ"
+	by mail.kernel.org (Postfix) with ESMTP id 20C6120848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581504536;
+	bh=N1tkP7F+IlbxHuqVwHuZJZlGwpiLxK/pweFWiNUDUtQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=A98uTqEhuTwawauUwHzIH5Y7Sg2Eas7VhI08nU7PmbprT585/TUDqtWwv+x0ll8O6
+	 OsyJQL6Z1N00F2N+6Ojho69QcYvwoTAqNxUZdvWGOWe8HZO1lTAHjScx2Ggw+z9OCu
+	 eckBQOvtIu2ITxItxcN5xNHX41aQr6OPFZYgMIYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgBLKsn (ORCPT
+        id S1727978AbgBLKsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:48:43 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:12272 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727429AbgBLKsn (ORCPT
+        Wed, 12 Feb 2020 05:48:55 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38191 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBLKsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:48:43 -0500
-X-UUID: 0c7c1e2b068f4f719bae6fd77af1253c-20200212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ssEEVXg39Akuq7xiDnhxIk0C5G9biOCSA4wS5rOD9IE=;
-        b=IkkwUNsZqgNJJv+KYTxW1JovHrISvU4OJAeGFWmGM58HAMYyIbkhjtD91riwoYR6RfdpiT6MACDADHZNugqbzfEVpYUIOhg1FKCJMADiGJVXK7K2KT6FGaGqqJofRVcYDvLkOFQiOdI1AjXo1afKS2xjK7lo2orLzUDyZUBqQfs=;
-X-UUID: 0c7c1e2b068f4f719bae6fd77af1253c-20200212
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2035690431; Wed, 12 Feb 2020 18:48:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Feb 2020 18:47:44 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Feb 2020 18:47:34 +0800
-Message-ID: <1581504514.26347.4.camel@mtksdaap41>
-Subject: Re: [PATCH 1/2] arm64: dts: mt8183: Add gce setting in display node
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Date:   Wed, 12 Feb 2020 18:48:34 +0800
-In-Reply-To: <20200212095501.12124-1-bibby.hsieh@mediatek.com>
-References: <20200212095501.12124-1-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 12 Feb 2020 05:48:55 -0500
+Received: by mail-lf1-f65.google.com with SMTP id r14so1258536lfm.5;
+        Wed, 12 Feb 2020 02:48:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cOkNp66IGoQbIflyXRDkdZ3dKJJtmUFr8g6WgxcLYs8=;
+        b=CAJoA1ztI3mTqhtCEk7Ln0b4YXl3JY42cv4U0/4VblhA8/W2Li8u0WWnH2jDbhPp+Y
+         Zb2PJVuejhaSwRex8yopmuJc7AFPY0D6+y4wOJQQDenizfCakdlwEEdzCzLDodAIoBDV
+         nUI19lSLfCN5f5k6uAFNqEyynG/c4IaNNFcETaXSq1vcCLFHopnHnXWxMHdcauuwEwVS
+         HX0Je0LMWrcNW9P2JpJlT7JgP4xxbpMP74jVZe8tMT6wnLIWM1zK5n+hDyQrYDrwWM+r
+         aU5sTNjW5f96SvHAjyFsIfJ3wBr6ml6/gOLeySifx/cKjAvCQOKyW/PqPaHcnAuaubMQ
+         hrJg==
+X-Gm-Message-State: APjAAAUe+J9oJj2L0TXVkEfnOYJox+eU6jsMkT5l7l1XnyCPWCuRk4yn
+        mArlTRamYoj5dSOsM8UwrDE=
+X-Google-Smtp-Source: APXvYqxluaCgDZHx5bFLBMtgb6LfHNDKKEinjQYRPkvz+HQ6X2hXcu02cJCOk2LtsrSTKZbrVPLwSA==
+X-Received: by 2002:a19:c82:: with SMTP id 124mr6277588lfm.152.1581504533060;
+        Wed, 12 Feb 2020 02:48:53 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id 138sm80214lfa.76.2020.02.12.02.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 02:48:52 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1j1pZb-0005Ji-J9; Wed, 12 Feb 2020 11:48:51 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH] dt-bindings: dma: ti-edma: fix example compatible property
+Date:   Wed, 12 Feb 2020 11:48:40 +0100
+Message-Id: <20200212104840.20393-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAyLTEyIGF0IDE3OjU1ICswODAwLCBCaWJieSBIc2llaCB3cm90ZToNCj4g
-SW4gb3JkZXIgdG8gdXNlIEdDRSBmdW5jdGlvbiwgd2UgbmVlZCBhZGQgc29tZSBpbmZvcm1hdGlv
-bg0KPiBpbnRvIGRpc3BsYXkgbm9kZSAobWJveGVzLCBtZWRpYXRlayxnY2UtY2xpZW50LXJlZywg
-bWVkaWF0ZWssZ2NlLWV2ZW50cykuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaWJieSBIc2llaCA8
-YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1
-IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL21lZGlhdGVrL210ODE4My5kdHNpIHwgMTYgKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0
-L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
-YXRlay9tdDgxODMuZHRzaQ0KPiBpbmRleCBiZTQ0MjhjOTJmMzUuLjFmMGZjMjgxYmMyZCAxMDA2
-NDQNCj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0KPiAr
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpDQo+IEBAIC05LDYg
-KzksNyBAQA0KPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2Fy
-bS1naWMuaD4NCj4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9p
-cnEuaD4NCj4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9wb3dlci9tdDgxODMtcG93ZXIuaD4NCj4g
-KyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9nY2UvbXQ4MTgzLWdjZS5oPg0KPiAgI2luY2x1ZGUgIm10
-ODE4My1waW5mdW5jLmgiDQo+ICANCj4gIC8gew0KPiBAQCAtNjY0LDYgKzY2NSw5IEBADQo+ICAJ
-CQlyZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAwPjsNCj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8
-JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiAgCQkJI2Nsb2NrLWNlbGxzID0g
-PDE+Ow0KPiArCQkJbWJveGVzID0gPCZnY2UgMCBDTURRX1RIUl9QUklPX0hJR0hFU1QgMT4sDQoN
-Ckkgd291bGQgbGlrZSB0byByZW1vdmUgYXRvbWljIHBhcmFtZXRlciwgc28gcGxlYXNlIGZvbGxv
-dyBbMV0gdG8gcmVtb3ZlDQppdC4NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
-cGF0Y2gvMTA3NjU0MTkvDQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsJCQkJIDwmZ2NlIDEgQ01EUV9U
-SFJfUFJJT19ISUdIRVNUIDE+Ow0KPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8Jmdj
-ZSBTVUJTWVNfMTQwMFhYWFggMCAweDEwMDA+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCW92bDA6IG92
-bEAxNDAwODAwMCB7DQo+IEBAIC02NzIsNiArNjc2LDcgQEANCj4gIAkJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSAyMjUgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8
-JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiAgCQkJY2xvY2tzID0gPCZtbXN5
-cyBDTEtfTU1fRElTUF9PVkwwPjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZn
-Y2UgU1VCU1lTXzE0MDBYWFhYIDB4ODAwMCAweDEwMDA+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCW92
-bF8ybDA6IG92bEAxNDAwOTAwMCB7DQo+IEBAIC02ODAsNiArNjg1LDcgQEANCj4gIAkJCWludGVy
-cnVwdHMgPSA8R0lDX1NQSSAyMjYgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gIAkJCXBvd2VyLWRv
-bWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiAgCQkJY2xvY2tz
-ID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PVkwwXzJMPjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGll
-bnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhYIDB4OTAwMCAweDEwMDA+Ow0KPiAgCQl9Ow0K
-PiAgDQo+ICAJCW92bF8ybDE6IG92bEAxNDAwYTAwMCB7DQo+IEBAIC02ODgsNiArNjk0LDcgQEAN
-Cj4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMjcgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4g
-IAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0K
-PiAgCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PVkwxXzJMPjsNCj4gKwkJCW1lZGlh
-dGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhYIDB4YTAwMCAweDEwMDA+
-Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCXJkbWEwOiByZG1hQDE0MDBiMDAwIHsNCj4gQEAgLTY5Nyw2
-ICs3MDQsNyBAQA0KPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9E
-T01BSU5fRElTUD47DQo+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX1JETUEwPjsN
-Cj4gIAkJCW1lZGlhdGVrLHJkbWFfZmlmb19zaXplID0gPDUxMjA+Ow0KPiArCQkJbWVkaWF0ZWss
-Z2NlLWNsaWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHhiMDAwIDB4MTAwMD47DQo+
-ICAJCX07DQo+ICANCj4gIAkJcmRtYTE6IHJkbWFAMTQwMGMwMDAgew0KPiBAQCAtNzA2LDYgKzcx
-NCw3IEBADQo+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJ
-Tl9ESVNQPjsNCj4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfUkRNQTE+Ow0KPiAg
-CQkJbWVkaWF0ZWsscmRtYV9maWZvX3NpemUgPSA8MjA0OD47DQo+ICsJCQltZWRpYXRlayxnY2Ut
-Y2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAwWFhYWCAweGMwMDAgMHgxMDAwPjsNCj4gIAkJ
-fTsNCj4gIA0KPiAgCQljb2xvcjA6IGNvbG9yQDE0MDBlMDAwIHsNCj4gQEAgLTcxNSw2ICs3MjQs
-NyBAQA0KPiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIzMSBJUlFfVFlQRV9MRVZFTF9MT1c+
-Ow0KPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElT
-UD47DQo+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX0NPTE9SMD47DQo+ICsJCQlt
-ZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAwWFhYWCAweGUwMDAgMHgx
-MDAwPjsNCj4gIAkJfTsNCj4gIA0KPiAgCQljY29ycjA6IGNjb3JyQDE0MDBmMDAwIHsNCj4gQEAg
-LTcyMyw2ICs3MzMsNyBAQA0KPiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIzMiBJUlFfVFlQ
-RV9MRVZFTF9MT1c+Ow0KPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dF
-Ul9ET01BSU5fRElTUD47DQo+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX0NDT1JS
-MD47DQo+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAwWFhY
-WCAweGYwMDAgMHgxMDAwPjsNCj4gIAkJfTsNCj4gIA0KPiAgCQlhYWwwOiBhYWxAMTQwMTAwMDAg
-ew0KPiBAQCAtNzMyLDYgKzc0Myw3IEBADQo+ICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjMz
-IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4
-MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCj4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJ
-U1BfQUFMMD47DQo+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18x
-NDAxWFhYWCAwIDB4MTAwMD47DQo+ICAJCX07DQo+ICANCj4gIAkJZ2FtbWEwOiBnYW1tYUAxNDAx
-MTAwMCB7DQo+IEBAIC03NDEsNiArNzUzLDcgQEANCj4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQ
-SSAyMzQgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5
-cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiAgCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtf
-TU1fRElTUF9HQU1NQTA+Ow0KPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBT
-VUJTWVNfMTQwMVhYWFggMHgxMDAwIDB4MTAwMD47DQo+ICAJCX07DQo+ICANCj4gIAkJZGl0aGVy
-MDogZGl0aGVyQDE0MDEyMDAwIHsNCj4gQEAgLTc0OSw2ICs3NjIsNyBAQA0KPiAgCQkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDIzNSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiAgCQkJcG93ZXItZG9t
-YWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+ICAJCQljbG9ja3Mg
-PSA8Jm1tc3lzIENMS19NTV9ESVNQX0RJVEhFUjA+Ow0KPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVu
-dC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMVhYWFggMHgyMDAwIDB4MTAwMD47DQo+ICAJCX07DQo+
-ICANCj4gIAkJbXV0ZXg6IG11dGV4QDE0MDE2MDAwIHsNCj4gQEAgLTc1Niw2ICs3NzAsOCBAQA0K
-PiAgCQkJcmVnID0gPDAgMHgxNDAxNjAwMCAwIDB4MTAwMD47DQo+ICAJCQlpbnRlcnJ1cHRzID0g
-PEdJQ19TUEkgMjE3IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ICAJCQlwb3dlci1kb21haW5zID0g
-PCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1l
-dmVudHMgPSA8Q01EUV9FVkVOVF9NVVRFWF9TVFJFQU1fRE9ORTA+LA0KPiArCQkJCQkgICAgICA8
-Q01EUV9FVkVOVF9NVVRFWF9TVFJFQU1fRE9ORTE+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCXNtaV9j
-b21tb246IHNtaUAxNDAxOTAwMCB7DQoNCg==
+Make sure that the compatible string in the edma1_tptc1 example node
+matches the binding by removing the space between the manufacturer and
+model.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ Documentation/devicetree/bindings/dma/ti-edma.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+index 0e1398f93aa2..29fcd37082e8 100644
+--- a/Documentation/devicetree/bindings/dma/ti-edma.txt
++++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+@@ -180,7 +180,7 @@ edma1_tptc0: tptc@27b0000 {
+ };
+ 
+ edma1_tptc1: tptc@27b8000 {
+-	compatible = "ti, k2g-edma3-tptc", "ti,edma3-tptc";
++	compatible = "ti,k2g-edma3-tptc", "ti,edma3-tptc";
+ 	reg =	<0x027b8000 0x400>;
+ 	power-domains = <&k2g_pds 0x4f>;
+ };
+-- 
+2.24.1
 
