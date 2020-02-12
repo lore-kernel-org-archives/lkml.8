@@ -2,167 +2,95 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED29C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D2CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E0C21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7561921569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgBLQDo (ORCPT
+        id S1728544AbgBLQDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:03:44 -0500
-Received: from monster.unsafe.ru ([5.9.28.80]:58634 "EHLO mail.unsafe.ru"
+        Wed, 12 Feb 2020 11:03:50 -0500
+Received: from mga02.intel.com ([134.134.136.20]:17620 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgBLQDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:03:43 -0500
-Received: from comp-core-i7-2640m-0182e6 (nat-pool-brq-t.redhat.com [213.175.37.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.unsafe.ru (Postfix) with ESMTPSA id DC5BFC61AB0;
-        Wed, 12 Feb 2020 16:03:40 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 17:03:39 +0100
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-Subject: Re: [PATCH v8 10/11] docs: proc: add documentation for "hidepid=4"
- and "subset=pidfs" options and new mount behavior
-Message-ID: <20200212160339.q6pm5zmjy5mfnvcr@comp-core-i7-2640m-0182e6>
-Mail-Followup-To: Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
- <20200210150519.538333-11-gladkov.alexey@gmail.com>
- <CALCETrWOXXYy5fo+D0wVBEviyk38ACqvO5Fep_oTEY6+UrS=4g@mail.gmail.com>
+        id S1726728AbgBLQDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:03:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 08:03:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="313442343"
+Received: from gmoralez-mobl.amr.corp.intel.com (HELO [10.252.135.232]) ([10.252.135.232])
+  by orsmga001.jf.intel.com with ESMTP; 12 Feb 2020 08:03:38 -0800
+Subject: Re: [alsa-devel] [PATCH v2 5/5] soundwire: intel: free all resources
+ on hw_free()
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20200114234257.14336-1-pierre-louis.bossart@linux.intel.com>
+ <20200114234257.14336-6-pierre-louis.bossart@linux.intel.com>
+ <20200212101554.GB2618@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <c8219635-30be-9695-a3f5-cd649aa6fab7@linux.intel.com>
+Date:   Wed, 12 Feb 2020 09:37:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWOXXYy5fo+D0wVBEviyk38ACqvO5Fep_oTEY6+UrS=4g@mail.gmail.com>
+In-Reply-To: <20200212101554.GB2618@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:29:23AM -0800, Andy Lutomirski wrote:
-> On Mon, Feb 10, 2020 at 7:06 AM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
-> >
-> > Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-> > ---
-> >  Documentation/filesystems/proc.txt | 53 ++++++++++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >
-> > diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-> > index 99ca040e3f90..4741fd092f36 100644
-> > --- a/Documentation/filesystems/proc.txt
-> > +++ b/Documentation/filesystems/proc.txt
-> > @@ -50,6 +50,8 @@ Table of Contents
-> >    4    Configuring procfs
-> >    4.1  Mount options
-> >
-> > +  5    Filesystem behavior
-> > +
-> >  ------------------------------------------------------------------------------
-> >  Preface
-> >  ------------------------------------------------------------------------------
-> > @@ -2021,6 +2023,7 @@ The following mount options are supported:
-> >
-> >         hidepid=        Set /proc/<pid>/ access mode.
-> >         gid=            Set the group authorized to learn processes information.
-> > +       subset=         Show only the specified subset of procfs.
-> >
-> >  hidepid=0 means classic mode - everybody may access all /proc/<pid>/ directories
-> >  (default).
-> > @@ -2042,6 +2045,56 @@ information about running processes, whether some daemon runs with elevated
-> >  privileges, whether other user runs some sensitive program, whether other users
-> >  run any program at all, etc.
-> >
-> > +hidepid=4 means that procfs should only contain /proc/<pid>/ directories
-> > +that the caller can ptrace.
+Hi Vinod,
+
+>> +static int intel_free_stream(struct sdw_intel *sdw,
+>> +			     struct snd_pcm_substream *substream,
+>> +			     struct snd_soc_dai *dai,
+>> +			     int link_id)
+>> +{
+>> +	struct sdw_intel_link_res *res = sdw->link_res;
+>> +	struct sdw_intel_stream_free_data free_data;
 > 
-> I have a couple of minor nits here.
+> where is this struct sdw_intel_stream_free_data defined. I dont see it
+> in this patch or this series..
+
+the definition is already upstream :-)
+
+It was added in December with
+
+4b206d34b92224 ('soundwire: intel: update stream callbacks for 
+hwparams/free stream operations')
+
+>> -	return ret;
+>> +	ret = intel_free_stream(sdw, substream, dai, sdw->instance);
+>> +	if (ret < 0) {
+>> +		dev_err(dai->dev, "intel_free_stream: failed %d", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	sdw_release_stream(dma->stream);
 > 
-> First, perhaps we could stop using magic numbers and use words.
-> hidepid=ptraceable is actually comprehensible, whereas hidepid=4
-> requires looking up what '4' means.
+> I think, free the 'name' here would be apt
 
-Do you mean to add string aliases for the values?
+Right, this is something we discussed with Rander shortly before Chinese 
+New Year and we wanted to handle this with a follow-up patch, would that 
+work for you? if not I can send a v3, your choice.
 
-hidepid=0 == hidepid=default
-hidepid=1 == hidepid=restrict
-hidepid=2 == hidepid=ownonly
-hidepid=4 == hidepid=ptraceable
-
-Something like that ?
-
-> Second, there is PTRACE_MODE_ATTACH and PTRACE_MODE_READ.  Which is it?
-
-This is PTRACE_MODE_READ.
-
-> > +
-> >  gid= defines a group authorized to learn processes information otherwise
-> >  prohibited by hidepid=.  If you use some daemon like identd which needs to learn
-> >  information about processes information, just add identd to this group.
-> 
-> How is this better than just creating an entirely separate mount a
-> different hidepid and a different gid owning it?
-
-I'm not sure I understand the question. Now you cannot have two proc with
-different hidepid in the same pid_namespace. 
-
-> In any event,
-> usually gid= means that this gid is the group owner of inodes.  Let's
-> call it something different.  gid_override_hidepid might be credible.
-> But it's also really weird -- do different groups really see different
-> contents when they read a directory?
-
-If you use hidepid=2,gid=wheel options then the user is not in the wheel
-group will see only their processes and the user in the wheel group will
-see whole tree. The gid= is a kind of whitelist for hidepid=1|2.
-
--- 
-Rgrds, legion
-
+Thanks
+-Pierre
