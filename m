@@ -2,131 +2,135 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E66FC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE12CC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4142621734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:06:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJiaddZT"
+	by mail.kernel.org (Postfix) with ESMTP id C625521734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgBLUG2 (ORCPT
+        id S1729074AbgBLUHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:06:28 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46305 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgBLUG2 (ORCPT
+        Wed, 12 Feb 2020 15:07:11 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:52151 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728226AbgBLUHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:06:28 -0500
-Received: by mail-pf1-f193.google.com with SMTP id k29so1748369pfp.13;
-        Wed, 12 Feb 2020 12:06:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=B5E+DB4+vknXt88petGEGI+dIA4MgxXGZFZRi0jSQkc=;
-        b=aJiaddZTO7Hg7BNimGLLTGUBqNLBZOj0cNtWV/YmN+qhdYCfTQ52ZCVoKC7w0h23ny
-         UqNGD3iJo7AysaIjnH4YPQdN0f62CG+i/yZCF1/Zs54Px4vvNZ3hUzZKQass1O0RX6Oh
-         MQMFiux29AAgrp9Yacl0GLeEFXJ6uPDXkIUPLT3QxYzeqgOYLkF0yeNFeFWrCaMX0yyb
-         alcUP7IfbwiAEyEAnnncoM4TosiULvfev5y6nzvF71Ux9da6yT9Pt2PrE5xtejcPxKAp
-         K90piSZN1VlwX57Q3mOU7/AtYWsS29z5hMsZ8hfJVZxPkOskgfZx+r8Lj9a6sgkd6FyS
-         d6UA==
+        Wed, 12 Feb 2020 15:07:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id c12so2598056ilr.18
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:07:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=B5E+DB4+vknXt88petGEGI+dIA4MgxXGZFZRi0jSQkc=;
-        b=f2zhLTwWOUhbQOpPYIv8xlQ444I+l7hJLHosnytsF9sqD78N+H6ZOfeaae76U5xJgi
-         5Fn8TdPSaHQU+9CdJXC0u4W8+5VOc5FTnMlQcjnEErFWsaL1yYTRNf4t2ztm55BhA7wz
-         jF/Fx+NhpGxg6j1F2yDtTM4sS9k9leT0wrioCenMKh12qDpYtY1p2cyj7UX08GfO7hZd
-         faMyf9WxUHuy85nF0fPkRh1GAp85KlmWjDCxfXdEnCX6B9xRgvxhBRv1PQ5eN+FrKvi8
-         Z0sxRdM0Xdgt2M9NpS2mJScFIChdxxYZm/Kh77hGYzV4sBIy3hD8QbfiqMjIVzRkIjSY
-         at6w==
-X-Gm-Message-State: APjAAAX9l8M7FuNRCMjw8Pj0n+g9n+pwl2EslPg0fAAcNxzp7mGu0BG9
-        Ds9GtH9AptEF5sIN6aI7UXguDFNU
-X-Google-Smtp-Source: APXvYqwdieK8nyzLx+4nfdeVsv0hkcfU+KuNygTwMkohZq4AersD7fPV0sqJtCIiuyJYlBAe34n1Cg==
-X-Received: by 2002:a63:2a13:: with SMTP id q19mr13455341pgq.82.1581537987047;
-        Wed, 12 Feb 2020 12:06:27 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x7sm77557pfp.93.2020.02.12.12.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 12:06:26 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     olteanv@gmail.com, hkallweit1@gmail.com, michal.vokac@ysoft.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] net: dsa: Treat VLAN ID 0 as PVID untagged
-Date:   Wed, 12 Feb 2020 12:05:55 -0800
-Message-Id: <20200212200555.2393-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Co8lYCnMNWbIOoFwBwNevLnEaupm4wQuaFmfZ70UHoc=;
+        b=CxOJJnDL2ekQugj63qA9xZ0eQvfZMlnDU6vEHlIMEzPuk8Z1+xkzRgzq8dx8m0qhOy
+         Ca1zA6uTUMldHOhiPEwdGt6HLY974K1NocmCg0vpMTcinDzcwWcnZMf8VTvdFmCpEtB2
+         cFgCpqRN8E6O1coKXj3x3ziqAN9JJCkSslTRuDu7Gq7WUoiKXuYi2xYopQrbiFv/UMTo
+         L/WGoclapbmAmG7yp36Bxskt7rKCXcGPxJWQ65KDLKfORfI+ffmTAQMHns5aTE76QR2i
+         b6Up9VrPIwbjjof/2xOPplyPKZz5WZbjUctzFJ46VCwJg8bqrPQggNHKNnfVIDybtWhF
+         IbwA==
+X-Gm-Message-State: APjAAAUEIU/6ULMNdsNhKkReY+gJsXVMlj/faErkAxx/JkrqSZoL9tLb
+        WdjYWXKY7+ny187zy4pYpYDzwBOW0pL8ttjhgPZfxOUTkPpK
+X-Google-Smtp-Source: APXvYqxN1xgoOdBqreIIiflzMcbePxougWNMY9WnyU+8s6P4MynybcE32RWCk4rH9/dCpZ3j8H7J85xtN/KmYzaiVQpGDbbFjVk/
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:34e:: with SMTP id x14mr20904842jap.38.1581538029931;
+ Wed, 12 Feb 2020 12:07:09 -0800 (PST)
+Date:   Wed, 12 Feb 2020 12:07:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000791270059e668493@google.com>
+Subject: general protection fault in redraw_screen
+From:   syzbot <syzbot+4a5a3604a566ede699b9@syzkaller.appspotmail.com>
+To:     daniel.vetter@ffwll.ch, ghalat@redhat.com,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        maarten.lankhorst@linux.intel.com, nico@fluxnic.net,
+        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VLAN ID 0 is special by all kinds and is really meant to be the default
-ingress and egress untagged VLAN. We were not configuring it that way
-and so we would be ingress untagged but egress tagged.
+Hello,
 
-When our devices are interfaced with other link partners such as switch
-devices, the results would be entirely equipment dependent. Some
-switches are completely fine with accepting an egress tagged frame with
-VLAN ID 0 and would send their responses untagged, so everything works,
-but other devices are not so tolerant and would typically reject a VLAN
-ID 0 tagged frame.
+syzbot found the following crash on:
 
-Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+HEAD commit:    359c92c0 Merge tag 'dax-fixes-5.6-rc1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15a432a1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6780df5a5f208964
+dashboard link: https://syzkaller.appspot.com/bug?extid=4a5a3604a566ede699b9
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d2e2a1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ff82e6e00000
+
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1701cfa5e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1481cfa5e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1081cfa5e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4a5a3604a566ede699b9@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0020000001: 0000 [#1] PREEMPT SMP KASAN
+KASAN: probably user-memory-access in range [0x0000000100000008-0x000000010000000f]
+CPU: 1 PID: 2936 Comm: kworker/1:49 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events console_callback
+RIP: 0010:add_softcursor drivers/tty/vt/vt.c:865 [inline]
+RIP: 0010:set_cursor drivers/tty/vt/vt.c:906 [inline]
+RIP: 0010:redraw_screen+0xf1c/0x1830 drivers/tty/vt/vt.c:1013
+Code: 00 00 00 00 00 fc ff df 80 3c 10 00 74 12 48 89 df e8 68 2f b5 fd 48 ba 00 00 00 00 00 fc ff df 4c 8b 2b 4d 89 ec 49 c1 ec 03 <41> 8a 04 14 84 c0 0f 85 ef 07 00 00 45 0f b7 75 00 48 8b 45 a0 48
+RSP: 0018:ffffc900085b7b38 EFLAGS: 00010203
+RAX: 1ffff110127e0c74 RBX: ffff888093f063a0 RCX: ffff88809e516640
+RDX: dffffc0000000000 RSI: 00000000000000c0 RDI: 0000000000000000
+RBP: ffffc900085b7bc0 R08: ffffffff83fef5be R09: ffffed10431c9484
+R10: ffffed10431c9484 R11: 0000000000000000 R12: 0000000020000001
+R13: 000000010000000c R14: 000000000000001f R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000455300 CR3: 000000008c51f000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ complete_change_console+0xb9/0x750 drivers/tty/vt/vt_ioctl.c:1264
+ change_console+0x2d8/0x450 drivers/tty/vt/vt_ioctl.c:1389
+ console_callback+0x104/0x330 drivers/tty/vt/vt.c:2824
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace f61ede7c24462fc9 ]---
+RIP: 0010:add_softcursor drivers/tty/vt/vt.c:865 [inline]
+RIP: 0010:set_cursor drivers/tty/vt/vt.c:906 [inline]
+RIP: 0010:redraw_screen+0xf1c/0x1830 drivers/tty/vt/vt.c:1013
+Code: 00 00 00 00 00 fc ff df 80 3c 10 00 74 12 48 89 df e8 68 2f b5 fd 48 ba 00 00 00 00 00 fc ff df 4c 8b 2b 4d 89 ec 49 c1 ec 03 <41> 8a 04 14 84 c0 0f 85 ef 07 00 00 45 0f b7 75 00 48 8b 45 a0 48
+RSP: 0018:ffffc900085b7b38 EFLAGS: 00010203
+RAX: 1ffff110127e0c74 RBX: ffff888093f063a0 RCX: ffff88809e516640
+RDX: dffffc0000000000 RSI: 00000000000000c0 RDI: 0000000000000000
+RBP: ffffc900085b7bc0 R08: ffffffff83fef5be R09: ffffed10431c9484
+R10: ffffed10431c9484 R11: 0000000000000000 R12: 0000000020000001
+R13: 000000010000000c R14: 000000000000001f R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000455300 CR3: 000000008c51f000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
-Hi all,
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-After looking at all DSA drivers and how they implement port_vlan_add()
-I think this is the right change to do, but would appreciate if you
-could test this on your respective platforms to ensure this is not
-problematic.
-
-Thank you
-
-
- net/dsa/slave.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 088c886e609e..d3a2782eb94d 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1100,6 +1100,7 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- {
- 	struct dsa_port *dp = dsa_slave_to_port(dev);
- 	struct bridge_vlan_info info;
-+	u16 flags = 0;
- 	int ret;
- 
- 	/* Check for a possible bridge VLAN entry now since there is no
-@@ -1118,7 +1119,13 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 			return -EBUSY;
- 	}
- 
--	ret = dsa_port_vid_add(dp, vid, 0);
-+	/* VLAN ID 0 is special and should be the default egress and ingress
-+	 * untagged VLAN, make sure it gets programmed as such.
-+	 */
-+	if (vid == 0)
-+		flags = BRIDGE_VLAN_INFO_PVID | BRIDGE_VLAN_INFO_UNTAGGED;
-+
-+	ret = dsa_port_vid_add(dp, vid, flags);
- 	if (ret)
- 		return ret;
- 
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
