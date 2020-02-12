@@ -2,338 +2,193 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9270C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0061BC3B189
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D96C20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CACA72168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="yq7kEkwR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JmBotVia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgBLESm (ORCPT
+        id S1728129AbgBLESt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:18:42 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39207 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbgBLESl (ORCPT
+        Tue, 11 Feb 2020 23:18:49 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53958 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbgBLESr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 23:18:41 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c84so497235wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 20:18:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ArsqRBwFCDQFmJjaAOG0lbeuON4s+vxOWLsIsCpXzF0=;
-        b=yq7kEkwR6yY/A2mPTK/4zRGYThBBXDWZg/iJGRToSHTKqdAufRzywXK14/y36SzTrv
-         1DpaVzzpHdTK+mb5VG/P8a7FEYUAWWF+ydzUfOl3LoAIS71WuyJvoiry78POty+r9hTK
-         icBPnB5vfdZ0QC88DGUNOjK94JkpswUBn+aLY4XPpiLo4wZhQyELFSskVu9iNv2toorY
-         Cme25ynBkxlYdUCl75FT2dOgL2Ep91xryKykdmCsjfNhkBbXpGYZAGE41WqXkU3YwvnR
-         zXmoZoIbYhvCsLitQAQdahsUC+s/7V0lfD6wWJlTtB5rFikllQZvpYTtxG+8arZFhMCm
-         M4qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ArsqRBwFCDQFmJjaAOG0lbeuON4s+vxOWLsIsCpXzF0=;
-        b=oPDpJDLDv2+tYxKZCXW1Sv44PX9RCciWL1SPcUNp00kxhydpuAaUIySu5SnYM44CI0
-         eA8ZeL3K2uPPMP5mEOpPSNIRuo/aTJLQ661bZCcuLl397gIGDFataGutd0z1aUVTMCh2
-         UXMkmwzRlnCCml9xGQc+E3UrnPKZ57k37hzLvVZRZP3ZG9FW6e1ZeSg3hs16NPO5vzIw
-         IQUFEn6r3LAkMcDb60jkCYkWAaCtwj8/ylfLXpy2SH3D3GljVpo2g8NupF62rchZWrkw
-         cl6jpEiM7JMTk4yXeSJ0wb7bTroMmtd/i8oT95H1hH4gWlKjXXvwdas4I+BgIi+wqPI3
-         RDYg==
-X-Gm-Message-State: APjAAAVBk69Eic6zrr2ym5GywRJbc80H7yH2EVzBjUE9zY1VbFTc9XWO
-        VV4brqMJ99lxhgO1AM0nLfZ0tAB3n61Wkh7LOz3jCg==
-X-Google-Smtp-Source: APXvYqwpUiS2Lp1rXar8NZkoeRDlVYsmEIzb/nDeNhHXRHRIEhoz9uavRNS4rW+lM4L0mSmDnuWdqhb6m+s/ADOD/gw=
-X-Received: by 2002:a1c:6246:: with SMTP id w67mr9682916wmb.141.1581481118704;
- Tue, 11 Feb 2020 20:18:38 -0800 (PST)
+        Tue, 11 Feb 2020 23:18:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=Akb0WAOF7QXNlcGV5Jo3slrj0DWeTKrSDHLBEAFZyQo=; b=JmBotViaw17Fpv0rX8r920ud8v
+        gvwB06iH1yebAwT05IgWsF35N8L/z3MfTRwcbA/+edkCt5PDtRRvyJKgX1Zs1xyjKXrgoQ3/F7wtm
+        ClUFOlYoly8K5XVu4kihVGcq6CUd7NvtQILRNTP6QsiUvvynXlJ46xVlgeQhzcjY1fuBtH/tDm9z5
+        Jl6laf1T4z3RGi8SXvH2Sq6PNhsQb4w+o53oYwsZf2z52oko7ArM0zDh/dYlKzgFBxaucQ8gU1YWs
+        awYt2DS8lkSJQcODtOu89pHporVkbPNTgIWslA25H3eCLiT3GdPBpKVuDxv/4gk0//WUuxD/wAxNl
+        gtvYFBPw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1jU7-0006oK-65; Wed, 12 Feb 2020 04:18:47 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 17/25] iomap: Support large pages in write paths
+Date:   Tue, 11 Feb 2020 20:18:37 -0800
+Message-Id: <20200212041845.25879-18-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200212014822.28684-1-atish.patra@wdc.com> <20200212014822.28684-7-atish.patra@wdc.com>
-In-Reply-To: <20200212014822.28684-7-atish.patra@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 12 Feb 2020 09:48:27 +0530
-Message-ID: <CAAhSdy2YRnmdxYu7zSYOUxMvFDbEz1Cwg69FgnYz3Rd8wEwQfw@mail.gmail.com>
-Subject: Re: [PATCH v8 06/11] RISC-V: Move relocate and few other functions
- out of __init
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Borislav Petkov <bp@suse.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kees Cook <keescook@chromium.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Mao Han <han_mao@c-sky.com>, Marc Zyngier <maz@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <vincent.chen@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 7:21 AM Atish Patra <atish.patra@wdc.com> wrote:
->
-> The secondary hart booting and relocation code are under .init section.
-> As a result, it will be freed once kernel booting is done. However,
-> ordered booting protocol and CPU hotplug always requires these sections
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-I think you meant "... require these functions" here.
+Use thp_size() instead of PAGE_SIZE, offset_in_this_page().
+Also simplify the logic in iomap_do_writepage() for determining end of
+file.
 
-> to be present to bringup harts after initial kernel boot.
->
-> Move the required sections to a different section and make sure that
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/iomap/buffered-io.c | 36 +++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-Same here, I think you meant "... the required functions to a
-different section ..."
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 68f8903ecd6d..af1f56408fcd 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -445,7 +445,7 @@ iomap_is_partially_uptodate(struct page *page, unsigned long from,
+ 	unsigned i;
+ 
+ 	/* Limit range to one page */
+-	len = min_t(unsigned, PAGE_SIZE - from, count);
++	len = min_t(unsigned, thp_size(page) - from, count);
+ 
+ 	/* First and last blocks in range within page */
+ 	first = from >> inode->i_blkbits;
+@@ -488,7 +488,7 @@ iomap_invalidatepage(struct page *page, unsigned int offset, unsigned int len)
+ 	 * If we are invalidating the entire page, clear the dirty state from it
+ 	 * and release it to avoid unnecessary buildup of the LRU.
+ 	 */
+-	if (offset == 0 && len == PAGE_SIZE) {
++	if (offset == 0 && len == thp_size(page)) {
+ 		WARN_ON_ONCE(PageWriteback(page));
+ 		cancel_dirty_page(page);
+ 		iomap_page_release(page);
+@@ -564,7 +564,9 @@ __iomap_write_begin(struct inode *inode, loff_t pos, unsigned len, int flags,
+ 	loff_t block_size = i_blocksize(inode);
+ 	loff_t block_start = pos & ~(block_size - 1);
+ 	loff_t block_end = (pos + len + block_size - 1) & ~(block_size - 1);
+-	unsigned from = offset_in_page(pos), to = from + len, poff, plen;
++	unsigned from = offset_in_this_page(page, pos);
++	unsigned to = from + len;
++	unsigned poff, plen;
+ 	int status;
+ 
+ 	if (PageUptodate(page))
+@@ -696,7 +698,7 @@ __iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+ 	 */
+ 	if (unlikely(copied < len && !PageUptodate(page)))
+ 		return 0;
+-	iomap_set_range_uptodate(page, offset_in_page(pos), len);
++	iomap_set_range_uptodate(page, offset_in_this_page(page, pos), len);
+ 	iomap_set_page_dirty(page);
+ 	return copied;
+ }
+@@ -771,6 +773,10 @@ iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 		unsigned long bytes;	/* Bytes to write to page */
+ 		size_t copied;		/* Bytes copied from user */
+ 
++		/*
++		 * XXX: We don't know what size page we'll find in the
++		 * page cache, so only copy up to a regular page boundary.
++		 */
+ 		offset = offset_in_page(pos);
+ 		bytes = min_t(unsigned long, PAGE_SIZE - offset,
+ 						iov_iter_count(i));
+@@ -1320,7 +1326,7 @@ iomap_add_to_ioend(struct inode *inode, loff_t offset, struct page *page,
+ {
+ 	sector_t sector = iomap_sector(&wpc->iomap, offset);
+ 	unsigned len = i_blocksize(inode);
+-	unsigned poff = offset & (PAGE_SIZE - 1);
++	unsigned poff = offset & (thp_size(page) - 1);
+ 	bool merged, same_page = false;
+ 
+ 	if (!wpc->ioend || !iomap_can_add_to_ioend(wpc, offset, sector)) {
+@@ -1372,9 +1378,10 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+ 	unsigned len = i_blocksize(inode);
+ 	u64 file_offset; /* file offset of page */
+ 	int error = 0, count = 0, i;
++	int nr_blocks = i_blocks_per_page(inode, page);
+ 	LIST_HEAD(submit_list);
+ 
+-	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
++	WARN_ON_ONCE(nr_blocks > 1 && !iop);
+ 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) != 0);
+ 
+ 	/*
+@@ -1382,8 +1389,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+ 	 * end of the current map or find the current map invalid, grab a new
+ 	 * one.
+ 	 */
+-	for (i = 0, file_offset = page_offset(page);
+-	     i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
++	for (i = 0, file_offset = file_offset_of_page(page);
++	     i < nr_blocks && file_offset < end_offset;
+ 	     i++, file_offset += len) {
+ 		if (iop && !test_bit(i, iop->uptodate))
+ 			continue;
+@@ -1477,7 +1484,6 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+ {
+ 	struct iomap_writepage_ctx *wpc = data;
+ 	struct inode *inode = page->mapping->host;
+-	pgoff_t end_index;
+ 	u64 end_offset;
+ 	loff_t offset;
+ 
+@@ -1518,10 +1524,9 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+ 	 * ---------------------------------^------------------|
+ 	 */
+ 	offset = i_size_read(inode);
+-	end_index = offset >> PAGE_SHIFT;
+-	if (page->index < end_index)
+-		end_offset = (loff_t)(page->index + 1) << PAGE_SHIFT;
+-	else {
++	end_offset = file_offset_of_next_page(page);
++
++	if (end_offset > offset) {
+ 		/*
+ 		 * Check whether the page to write out is beyond or straddles
+ 		 * i_size or not.
+@@ -1533,7 +1538,8 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+ 		 * |				    |      Straddles     |
+ 		 * ---------------------------------^-----------|--------|
+ 		 */
+-		unsigned offset_into_page = offset & (PAGE_SIZE - 1);
++		unsigned offset_into_page = offset_in_this_page(page, offset);
++		pgoff_t end_index = offset >> PAGE_SHIFT;
+ 
+ 		/*
+ 		 * Skip the page if it is fully outside i_size, e.g. due to a
+@@ -1564,7 +1570,7 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+ 		 * memory is zeroed when mapped, and writes to that region are
+ 		 * not written out to the file."
+ 		 */
+-		zero_user_segment(page, offset_into_page, PAGE_SIZE);
++		zero_user_segment(page, offset_into_page, thp_size(page));
+ 
+ 		/* Adjust the end_offset to the end of file */
+ 		end_offset = offset;
+-- 
+2.25.0
 
-> they are in memory within first 2MB offset as trampoline page directory
-> only maps first 2MB.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/kernel/head.S        | 153 +++++++++++++++++---------------
->  arch/riscv/kernel/vmlinux.lds.S |   5 +-
->  2 files changed, 86 insertions(+), 72 deletions(-)
->
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index a4242be66966..c1be597d22a1 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -14,7 +14,7 @@
->  #include <asm/hwcap.h>
->  #include <asm/image.h>
->
-> -__INIT
-> +__HEAD
->  ENTRY(_start)
->         /*
->          * Image header expected by Linux boot-loaders. The image header data
-> @@ -45,8 +45,85 @@ ENTRY(_start)
->         .ascii RISCV_IMAGE_MAGIC2
->         .word 0
->
-> -.global _start_kernel
-> -_start_kernel:
-> +.align 2
-> +#ifdef CONFIG_MMU
-> +relocate:
-> +       /* Relocate return address */
-> +       li a1, PAGE_OFFSET
-> +       la a2, _start
-> +       sub a1, a1, a2
-> +       add ra, ra, a1
-> +
-> +       /* Point stvec to virtual address of intruction after satp write */
-> +       la a2, 1f
-> +       add a2, a2, a1
-> +       csrw CSR_TVEC, a2
-> +
-> +       /* Compute satp for kernel page tables, but don't load it yet */
-> +       srl a2, a0, PAGE_SHIFT
-> +       li a1, SATP_MODE
-> +       or a2, a2, a1
-> +
-> +       /*
-> +        * Load trampoline page directory, which will cause us to trap to
-> +        * stvec if VA != PA, or simply fall through if VA == PA.  We need a
-> +        * full fence here because setup_vm() just wrote these PTEs and we need
-> +        * to ensure the new translations are in use.
-> +        */
-> +       la a0, trampoline_pg_dir
-> +       srl a0, a0, PAGE_SHIFT
-> +       or a0, a0, a1
-> +       sfence.vma
-> +       csrw CSR_SATP, a0
-> +.align 2
-> +1:
-> +       /* Set trap vector to spin forever to help debug */
-> +       la a0, .Lsecondary_park
-> +       csrw CSR_TVEC, a0
-> +
-> +       /* Reload the global pointer */
-> +.option push
-> +.option norelax
-> +       la gp, __global_pointer$
-> +.option pop
-> +
-> +       /*
-> +        * Switch to kernel page tables.  A full fence is necessary in order to
-> +        * avoid using the trampoline translations, which are only correct for
-> +        * the first superpage.  Fetching the fence is guarnteed to work
-> +        * because that first superpage is translated the same way.
-> +        */
-> +       csrw CSR_SATP, a2
-> +       sfence.vma
-> +
-> +       ret
-> +#endif /* CONFIG_MMU */
-> +#ifdef CONFIG_SMP
-> +       /* Set trap vector to spin forever to help debug */
-> +       la a3, .Lsecondary_park
-> +       csrw CSR_TVEC, a3
-> +
-> +       slli a3, a0, LGREG
-> +       .global secondary_start_common
-> +secondary_start_common:
-> +
-> +#ifdef CONFIG_MMU
-> +       /* Enable virtual memory and relocate to virtual address */
-> +       la a0, swapper_pg_dir
-> +       call relocate
-> +#endif
-> +       tail smp_callin
-> +#endif /* CONFIG_SMP */
-> +
-> +.Lsecondary_park:
-> +       /* We lack SMP support or have too many harts, so park this hart */
-> +       wfi
-> +       j .Lsecondary_park
-> +
-> +END(_start)
-> +
-> +       __INIT
-> +ENTRY(_start_kernel)
->         /* Mask all interrupts */
->         csrw CSR_IE, zero
->         csrw CSR_IP, zero
-> @@ -125,59 +202,6 @@ clear_bss_done:
->         call parse_dtb
->         tail start_kernel
->
-> -#ifdef CONFIG_MMU
-> -relocate:
-> -       /* Relocate return address */
-> -       li a1, PAGE_OFFSET
-> -       la a2, _start
-> -       sub a1, a1, a2
-> -       add ra, ra, a1
-> -
-> -       /* Point stvec to virtual address of intruction after satp write */
-> -       la a2, 1f
-> -       add a2, a2, a1
-> -       csrw CSR_TVEC, a2
-> -
-> -       /* Compute satp for kernel page tables, but don't load it yet */
-> -       srl a2, a0, PAGE_SHIFT
-> -       li a1, SATP_MODE
-> -       or a2, a2, a1
-> -
-> -       /*
-> -        * Load trampoline page directory, which will cause us to trap to
-> -        * stvec if VA != PA, or simply fall through if VA == PA.  We need a
-> -        * full fence here because setup_vm() just wrote these PTEs and we need
-> -        * to ensure the new translations are in use.
-> -        */
-> -       la a0, trampoline_pg_dir
-> -       srl a0, a0, PAGE_SHIFT
-> -       or a0, a0, a1
-> -       sfence.vma
-> -       csrw CSR_SATP, a0
-> -.align 2
-> -1:
-> -       /* Set trap vector to spin forever to help debug */
-> -       la a0, .Lsecondary_park
-> -       csrw CSR_TVEC, a0
-> -
-> -       /* Reload the global pointer */
-> -.option push
-> -.option norelax
-> -       la gp, __global_pointer$
-> -.option pop
-> -
-> -       /*
-> -        * Switch to kernel page tables.  A full fence is necessary in order to
-> -        * avoid using the trampoline translations, which are only correct for
-> -        * the first superpage.  Fetching the fence is guarnteed to work
-> -        * because that first superpage is translated the same way.
-> -        */
-> -       csrw CSR_SATP, a2
-> -       sfence.vma
-> -
-> -       ret
-> -#endif /* CONFIG_MMU */
-> -
->  .Lsecondary_start:
->  #ifdef CONFIG_SMP
->         /* Set trap vector to spin forever to help debug */
-> @@ -202,16 +226,10 @@ relocate:
->         beqz tp, .Lwait_for_cpu_up
->         fence
->
-> -#ifdef CONFIG_MMU
-> -       /* Enable virtual memory and relocate to virtual address */
-> -       la a0, swapper_pg_dir
-> -       call relocate
-> +       tail secondary_start_common
->  #endif
->
-> -       tail smp_callin
-> -#endif
-> -
-> -END(_start)
-> +END(_start_kernel)
->
->  #ifdef CONFIG_RISCV_M_MODE
->  ENTRY(reset_regs)
-> @@ -292,13 +310,6 @@ ENTRY(reset_regs)
->  END(reset_regs)
->  #endif /* CONFIG_RISCV_M_MODE */
->
-> -.section ".text", "ax",@progbits
-> -.align 2
-> -.Lsecondary_park:
-> -       /* We lack SMP support or have too many harts, so park this hart */
-> -       wfi
-> -       j .Lsecondary_park
-> -
->  __PAGE_ALIGNED_BSS
->         /* Empty zero page */
->         .balign PAGE_SIZE
-> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> index 12f42f96d46e..18c397953bfc 100644
-> --- a/arch/riscv/kernel/vmlinux.lds.S
-> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> @@ -10,6 +10,7 @@
->  #include <asm/cache.h>
->  #include <asm/thread_info.h>
->
-> +#include <linux/sizes.h>
->  OUTPUT_ARCH(riscv)
->  ENTRY(_start)
->
-> @@ -20,8 +21,10 @@ SECTIONS
->         /* Beginning of code and text segment */
->         . = LOAD_OFFSET;
->         _start = .;
-> -       __init_begin = .;
->         HEAD_TEXT_SECTION
-> +       . = ALIGN(PAGE_SIZE);
-> +
-> +       __init_begin = .;
->         INIT_TEXT_SECTION(PAGE_SIZE)
->         INIT_DATA_SECTION(16)
->         /* we have to discard exit text and such at runtime, not link time */
-> --
-> 2.24.0
->
-
-Apart from above nit in commit description, looks good to me.
-
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
