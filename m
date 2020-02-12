@@ -2,76 +2,162 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A296C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A2AC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECD921739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581549791;
-	bh=TvICLvO9Snk4i7FuNgUQI0ItU+qw1IAxuj3QcAxRPM0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=nEqxcbN4cWlkNkknyBqUWjQ5CCGyhEJOVASsjQUgGILmQDB9f2EC6NlmKZCxShWQS
-	 2huNfjuBTk40typSbT1TtPkeiugBXxodPJGscivbSdwzcSF96gT80DCOmdKJHw6f9P
-	 4I++wG7OuNGT2wk9y5RsQswXPF0IwP8AbEesTc9I=
+	by mail.kernel.org (Postfix) with ESMTP id ACE5220848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="u9psciCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgBLXXK (ORCPT
+        id S1729215AbgBLX1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:23:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbgBLXXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:23:10 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB3020848;
-        Wed, 12 Feb 2020 23:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581549789;
-        bh=TvICLvO9Snk4i7FuNgUQI0ItU+qw1IAxuj3QcAxRPM0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=1gdDaDj409R0nHzjEurNMPfxA0HIjFQdV+yJnpk9xhebX21Rx1UiXKxEDc0lZqi4R
-         7+1eZWfMS8M9vBOcMx4DAEKhSVkx1q5kdu0u9N22Exka94D4KVIaHMfuCFLsmmNB64
-         Xfm3fIbHaB3L3ljZcdTMkLViqSHmkjXd9GLNaAhE=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 12 Feb 2020 18:27:04 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:41149 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgBLX1D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:27:03 -0500
+Received: by mail-qv1-f65.google.com with SMTP id s7so1773702qvn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 15:27:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kTNWibF5tbkLobqhHD4V+kFeYgR//KAz2RdK40R6a+4=;
+        b=u9psciCNbDsT6qUbD5ro/cVfFEVW2xyWmVMVMqId/QwrQkrT+KrRh17aDBGPsccKoO
+         zaZKFdBejZJATq6jepTQMoGa41JY57r7F7/HW0ogqkdUwc1prWmv5MFA+scuYp4Nw6Gd
+         vBZ51+AyfLN8Mxdd60G/KDaGGqpT1ZvRRKlOs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kTNWibF5tbkLobqhHD4V+kFeYgR//KAz2RdK40R6a+4=;
+        b=dULeK6MtFzHSVWVG8o5i96Th0anim0i4UuKF0z8Pga58msX0igcgZnO6sNb80KJCXa
+         f4F6fgYAofEm0kZeQMVz6vLgWUsjOLJp6T6DAa7jei28MWYiN3vTHGIwG8U+JzJqkdF+
+         hbNGn0rVkvvbYsxeBm7cqV2XC9LxE/WJhI9YQvnWMEPu7ICLpfXyhplpZr1Xxup3N9aK
+         29obSCysnOr3BLKE+xDGRixEZCDhSGQEjIi5J9tkp6xqmDLJpxLOFSSLwD6fun1RMADy
+         ZKiMqIEe4Ic7Ng8XXnS9ZgftLmqJ2jVahS9wS+GxsMPD9EOiElvoOdh/femcNW9gg+Wu
+         WTvg==
+X-Gm-Message-State: APjAAAWYBwHyIqw9m6Isn18VVoNqE0PY02gQucr9IalDVrJF3+mDI2pv
+        DJqWTCM9gK9Re4JwDyuEhrLIlA==
+X-Google-Smtp-Source: APXvYqyeP6AQshumUNOlf+Y3b/66Lbbev3nq+A2SD1fAG9TX0YJOSCK6ZNzZtmmvlE6IG+G15uDN7Q==
+X-Received: by 2002:a0c:fe0d:: with SMTP id x13mr9506026qvr.88.1581550022806;
+        Wed, 12 Feb 2020 15:27:02 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d18sm255530qke.75.2020.02.12.15.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 15:27:02 -0800 (PST)
+Date:   Wed, 12 Feb 2020 18:27:02 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200212232702.GA170680@google.com>
+References: <20200212210139.382424693@infradead.org>
+ <20200212210749.971717428@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <0101016eee224b83-b0577d24-8f51-4e1a-9afb-b3f518e5ba77-000000@us-west-2.amazonses.com>
-References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-2-masneyb@onstation.org> <0101016eee224b83-b0577d24-8f51-4e1a-9afb-b3f518e5ba77-000000@us-west-2.amazonses.com>
-Subject: Re: [PATCH 1/7] clk: qcom: add support for setting the duty cycle
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-To:     Brian Masney <masneyb@onstation.org>,
-        Taniya Das <tdas@codeaurora.org>, dmitry.torokhov@gmail.com,
-        robh+dt@kernel.org
-Date:   Wed, 12 Feb 2020 15:23:08 -0800
-Message-ID: <158154978850.184098.12366153456613977692@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212210749.971717428@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-12-09 20:47:35)
-> Hi Brian,
->=20
-> On 12/5/2019 5:54 AM, Brian Masney wrote:
-> > +     d_reg_val =3D mask - (((mask - 17) * duty->num) / duty->den);
-> > +     ret =3D __clk_rcg2_configure_with_duty_cycle(rcg, rcg->freq_tbl,
-> > +                                                d_reg_val, duty->num,
-> > +                                                duty->den);
->=20
-> The duty-cycle calculation is not accurate.
-> There is already a plan to submit the duty-cycle changes from my side.
+On Wed, Feb 12, 2020 at 10:01:42PM +0100, Peter Zijlstra wrote:
+> To facilitate tracers that need RCU, add some helpers to wrap the
+> magic required.
+> 
+> The problem is that we can call into tracers (trace events and
+> function tracing) while RCU isn't watching and this can happen from
+> any context, including NMI.
+> 
+> It is this latter that is causing most of the trouble; we must make
+> sure in_nmi() returns true before we land in anything tracing,
+> otherwise we cannot recover.
+> 
+> These helpers are macros because of header-hell; they're placed here
+> because of the proximity to nmi_{enter,exit{().
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/hardirq.h |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> --- a/include/linux/hardirq.h
+> +++ b/include/linux/hardirq.h
+> @@ -89,4 +89,52 @@ extern void irq_exit(void);
+>  		arch_nmi_exit();				\
+>  	} while (0)
+>  
+> +/*
+> + * Tracing vs RCU
+> + * --------------
+> + *
+> + * tracepoints and function-tracing can happen when RCU isn't watching (idle,
+> + * or early IRQ/NMI entry).
+> + *
+> + * When it happens during idle or early during IRQ entry, tracing will have
+> + * to inform RCU that it ought to pay attention, this is done by calling
+> + * rcu_irq_enter_irqsave().
+> + *
+> + * On NMI entry, we must be very careful that tracing only happens after we've
+> + * incremented preempt_count(), otherwise we cannot tell we're in NMI and take
+> + * the special path.
+> + */
+> +
+> +#define __TR_IRQ	1
+> +#define __TR_NMI	2
+> +
+> +#define trace_rcu_enter()					\
+> +({								\
+> +	unsigned long state = 0;				\
+> +	if (!rcu_is_watching())	{				\
+> +		if (in_nmi()) {					\
+> +			state = __TR_NMI;			\
+> +			rcu_nmi_enter();			\
+> +		} else {					\
+> +			state = __TR_IRQ;			\
+> +			rcu_irq_enter_irqsave();		\
 
-What are the plans to submit this? Should we expect to see this support
-in the next week? Month?
+Since rcu_irq_enter_irqsave can be called from a tracer context, should those
+be marked with notrace as well? AFAICS, there's no notrace marking on them.
+
+thanks,
+
+ - Joel
+
+
+> +		}						\
+> +	}							\
+> +	state;							\
+> +})
+> +
+> +#define trace_rcu_exit(state)					\
+> +do {								\
+> +	switch (state) {					\
+> +	case __TR_IRQ:						\
+> +		rcu_irq_exit_irqsave();				\
+> +		break;						\
+> +	case __TR_NMI:						\
+> +		rcu_nmi_exit();					\
+> +		break;						\
+> +	default:						\
+> +		break;						\
+> +	}							\
+> +} while (0)
+> +
+>  #endif /* LINUX_HARDIRQ_H */
+> 
+> 
