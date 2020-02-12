@@ -2,92 +2,77 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19E6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4494AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C047920714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581525014;
-	bh=A8RDXs1hBLAKZAE4c8YvW2A4O1anyMfe6ZpofU8lH+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mbXywTppTubQymI0CAMt+apkz/djS2jlK/fTcyPmxeByqfAaWFn/5vv45tYYGsKV5
-	 gv0lFooxikL8D6vVQ9cTL1mozce+fGRLYIAYyzjoyM80fOt0KHpUV5eCvn/sakQ9/j
-	 uNpZEVuHaNi192ASvewCixZ/ku8XhbegdOIFxYRA=
+	by mail.kernel.org (Postfix) with ESMTP id 1318820714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgBLQaO (ORCPT
+        id S1728460AbgBLQdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:30:14 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38628 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgBLQaN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:30:13 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t6so1150603plj.5;
-        Wed, 12 Feb 2020 08:30:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1IlVs+PoyqskVeOryq4nWg0BV3ImUVF+jcq3kxeboTk=;
-        b=jgjqfu+MGvVk/djwqmpMh+YXZSNvoqlNm7J1vPLx6BjvwWiupsIax8Rfuj01WRBSzE
-         Q5bnRMRZzTulTZifiRb66wgYUbJEEBT7KxbE9uS5mbfVA0lwRmr7aUXUPLn39jtRGcCH
-         6ZjxCftEQI09ldAaWF9X9htWJIZBAZGpC5ytkHexgDUbW2NXcGYLKXElRKLAg5HRGCth
-         lu+0F7c/7USoLo6uylTzLIl+Czj/lT2iPI7WvfrWtuhAfy5UdC4U3Amp8co/EmgsIXaj
-         8TxYmGPkWr+P+khIhzBEPepji1QakrW/U7Lb93qJNRTP3OVZaxddoltw2z/uu1iHYSc5
-         ceVg==
-X-Gm-Message-State: APjAAAXA++fLwSJVg0QVMTSe+4G95EhkJQc0PtsW+ErVO0RUgey2zZSp
-        GO2MK7+gAqNNWUQqXtg5Mb0=
-X-Google-Smtp-Source: APXvYqx5Wx6WVU8t/C3lzNyGG1nBbFeYXoZreqRsnGRq3J0F0tUSVkJseGopg+0FRqyzGnmuRBdpPg==
-X-Received: by 2002:a17:902:d692:: with SMTP id v18mr9369625ply.9.1581525011511;
-        Wed, 12 Feb 2020 08:30:11 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id j14sm968499pgs.57.2020.02.12.08.30.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 08:30:10 -0800 (PST)
-Date:   Wed, 12 Feb 2020 08:30:04 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
- kvm_flush_remote_tlbs()
-Message-ID: <20200212163004.cpd33ux4zslfc3es@lantea.localdomain>
-References: <20200207223520.735523-1-peterx@redhat.com>
- <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
+        Wed, 12 Feb 2020 11:33:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:35018 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727264AbgBLQdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:33:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCE12328;
+        Wed, 12 Feb 2020 08:33:22 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C9333F68F;
+        Wed, 12 Feb 2020 08:33:20 -0800 (PST)
+Subject: Re: [PATCH v3 3/7] arm64/kvm: disable access to AMU registers from
+ kvm guests
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        sudeep.holla@arm.com, lukasz.luba@arm.com,
+        valentin.schneider@arm.com, rjw@rjwysocki.net
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-4-ionela.voinescu@arm.com>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <f4f2b3a7-b8fe-e724-8a57-f6e8991760b4@arm.com>
+Date:   Wed, 12 Feb 2020 16:33:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
+In-Reply-To: <20200211184542.29585-4-ionela.voinescu@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+On 11/02/2020 18:45, Ionela Voinescu wrote:
+> Access to the AMU counters should be disabled by default in kvm guests,
+> as information from the counters might reveal activity in other guests
+> or activity on the host.
+> 
+> Therefore, disable access to AMU registers from EL0 and EL1 in kvm
+> guests by:
+>   - Hiding the presence of the extension in the feature register
+>     (SYS_ID_AA64PFR0_EL1) on the VCPU.
+>   - Disabling access to the AMU registers before switching to the guest.
+>   - Trapping accesses and injecting an undefined instruction into the
+>     guest.
+> 
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> ---
 
-On Wed, Feb 12, 2020 at 01:25:30PM +0100, Paolo Bonzini wrote:
-> MIPS folks, I see that arch/mips/kvm/mmu.c uses pud_index, so it's not
-> clear to me if it's meant to only work if CONFIG_PGTABLE_LEVELS=4 or
-> it's just bit rot.  Should I add a "depends on PGTABLE_LEVEL=4" to
-> arch/mips/Kconfig?
-
-I'm no expert on this bit of code, but I'm pretty sure the systems
-KVM/VZ has been used on the most internally had PGTABLE_LEVEL=3.
-
-I suspect this is actually a regression from commit 31168f033e37 ("mips:
-drop __pXd_offset() macros that duplicate pXd_index() ones"). Whilst
-that commit is correct that pud_index() & __pud_offset() are the same
-when pud_index() is actually provided, it doesn't take into account the
-__PAGETABLE_PUD_FOLDED case. There __pud_offset() was available but
-would always evaluate to zero, whereas pud_index() isn't defined...
-
-Thanks,
-    Paul
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
