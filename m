@@ -2,131 +2,205 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD6FC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDC8C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026482468F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C17A020659
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GZh4vK2Y"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="b7QdyvPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgBLTe2 (ORCPT
+        id S1728984AbgBLTgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:34:28 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.31]:33685 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727361AbgBLTe1 (ORCPT
+        Wed, 12 Feb 2020 14:36:09 -0500
+Received: from alln-iport-8.cisco.com ([173.37.142.95]:48852 "EHLO
+        alln-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgBLTgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:34:27 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id E94D2FAD2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:34:26 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1xmEj1KxzvBMd1xmEjzzil; Wed, 12 Feb 2020 13:34:26 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/5cTc1bnDtLphwMGLTrc9oRqEi7JqRDbW5101T1Ubzc=; b=GZh4vK2Y5emxWmG2/SSV7TwSIN
-        bbNA4mBdNFK/C21zVEA6hXyDC9KGkprYGs3qd7TWKRw/GKza8uRZc7n7etTUb4DhLuM7fAo0EaDZ7
-        IVQywzcF5NYiXDrdD/2OZIkn98y4XQpAFdWFV3ccnLLtVDsd2yYT5kcbD+uaNPRTOozQbqBpdjpM6
-        3rT5biIOYqVVYYEKH/HuXa6je69bdFogP+zK9mxyJazYIEWfWch/BFfHvP/MnhU0RmVhBaXB2K9VV
-        pYnba4laVm0XBCI+7QD5SPl6uE+OAY1YCXye9ZWVJNSvHRl2whW1Dr/6KpVWGm0mmxGkTBiodkFcz
-        FBxEvRpg==;
-Received: from [201.144.174.25] (port=2984 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1xmD-0019PG-0u; Wed, 12 Feb 2020 13:34:25 -0600
-Date:   Wed, 12 Feb 2020 13:37:00 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] tty/serial: 8250_exar: Replace zero-length array with
- flexible-array member
-Message-ID: <20200212193700.GA29715@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.144.174.25
-X-Source-L: No
-X-Exim-ID: 1j1xmD-0019PG-0u
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.144.174.25]:2984
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 31
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Wed, 12 Feb 2020 14:36:09 -0500
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 14:36:08 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=4752; q=dns/txt; s=iport;
+  t=1581536168; x=1582745768;
+  h=from:to:cc:subject:date:message-id;
+  bh=9zcQWBaPNM6CcS8hmrmnBCPaodg8GgYBKqA4jri8k5E=;
+  b=b7QdyvPAtMJGJPQpWCG5p4XYYP2mVoXC8yQXvvVHYU1T49zX4JdYuPjG
+   0etczV/rtitz1hM+eB4ISSKMMS/gRBFSUcRtEeKKxNYo2Haj9DkxasKr5
+   BoVt6yzqyDFak+3N1s0fYUgk+GBJwtjp3ktaAuwZ44ogj/RUJ/B2GWquC
+   s=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0B9AACoUERe/5ldJa1mHAEBAQEBBwE?=
+ =?us-ascii?q?BEQEEBAEBgWcHAQELAYIogUEyKow3nSyFGoF7CQEBAQ4vBAEBhECCSyQ0CQ4?=
+ =?us-ascii?q?CAw0BAQUBAQECAQUEbYVDhmYpgRUTgyaCfKwdgieFSoNFgT6BOAGHRYReGoF?=
+ =?us-ascii?q?BP4RihCOGFgSWYYEql2uCRHyVSQwcmxQBLYpXnzmBUjmBWDMaCBsVgydQGA2?=
+ =?us-ascii?q?OJAUXjkQgAzCPH4JCAQE?=
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="438477709"
+Received: from rcdn-core-2.cisco.com ([173.37.93.153])
+  by alln-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 12 Feb 2020 19:29:02 +0000
+Received: from zorba.cisco.com ([10.154.200.25])
+        by rcdn-core-2.cisco.com (8.15.2/8.15.2) with ESMTP id 01CJT10q011732;
+        Wed, 12 Feb 2020 19:29:02 GMT
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Evgeniy Polyakov <zbr@ioremap.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers: connector: cn_proc: allow limiting certain messages
+Date:   Wed, 12 Feb 2020 11:29:01 -0800
+Message-Id: <20200212192901.6402-1-danielwa@cisco.com>
+X-Mailer: git-send-email 2.17.1
+X-Outbound-SMTP-Client: 10.154.200.25, [10.154.200.25]
+X-Outbound-Node: rcdn-core-2.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+This adds a way for system administrators to limit which messages can be
+seen on the interface. Currently cn_proc is rather noisy, and it sends a
+lot of different messages which may not be needed.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+At Cisco we need to receive the coredump messages, and no others. This
+interface currently has no way to allow this. This patch provides a set
+of bool module parameters to enable or disable each message type. The
+parameters end up looking like this,
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+$ ls -al /sys/module/cn_proc/parameters/
+total 0
+drwxr-xr-x 2 root root    0 Feb 10 16:51 .
+drwxr-xr-x 3 root root    0 Feb 10 16:50 ..
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_comm
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_coredump
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_exec
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_exit
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_fork
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_gid
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_none
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_ptrace
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_sid
+-rw-r--r-- 1 root root 4096 Feb 10 16:51 enabled_uid
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+All messages are enabled by default. To disable one you can run the following,
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+echo N > /sys/module/cn_proc/parameters/enabled_comm
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Daniel Walker <danielwa@cisco.com>
 ---
- drivers/tty/serial/8250/8250_exar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/connector/cn_proc.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index 91e9b070d36d..65898ef90801 100644
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -127,7 +127,7 @@ struct exar8250 {
- 	unsigned int		nr;
- 	struct exar8250_board	*board;
- 	void __iomem		*virt;
--	int			line[0];
-+	int			line[];
- };
+diff --git a/drivers/connector/cn_proc.c b/drivers/connector/cn_proc.c
+index d58ce664da84..23b934ee9862 100644
+--- a/drivers/connector/cn_proc.c
++++ b/drivers/connector/cn_proc.c
+@@ -38,6 +38,22 @@ static inline struct cn_msg *buffer_to_cn_msg(__u8 *buffer)
+ static atomic_t proc_event_num_listeners = ATOMIC_INIT(0);
+ static struct cb_id cn_proc_event_id = { CN_IDX_PROC, CN_VAL_PROC };
  
- static void exar_pm(struct uart_port *port, unsigned int state, unsigned int old)
++#define CN_PROC_MSG_PARAM(name) \
++	static bool enabled_##name = true; \
++	module_param(enabled_##name, bool, 0644); \
++	MODULE_PARM_DESC(enabled_##name, "Enable message #name");
++
++CN_PROC_MSG_PARAM(none)
++CN_PROC_MSG_PARAM(fork)
++CN_PROC_MSG_PARAM(exec)
++CN_PROC_MSG_PARAM(uid)
++CN_PROC_MSG_PARAM(gid)
++CN_PROC_MSG_PARAM(sid)
++CN_PROC_MSG_PARAM(ptrace)
++CN_PROC_MSG_PARAM(comm)
++CN_PROC_MSG_PARAM(coredump)
++CN_PROC_MSG_PARAM(exit)
++
+ /* proc_event_counts is used as the sequence number of the netlink message */
+ static DEFINE_PER_CPU(__u32, proc_event_counts) = { 0 };
+ 
+@@ -66,6 +82,8 @@ void proc_fork_connector(struct task_struct *task)
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 	struct task_struct *parent;
+ 
++	if (!enabled_fork)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -95,6 +113,8 @@ void proc_exec_connector(struct task_struct *task)
+ 	struct proc_event *ev;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
++	if (!enabled_exec)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -120,6 +140,8 @@ void proc_id_connector(struct task_struct *task, int which_id)
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 	const struct cred *cred;
+ 
++	if (!enabled_uid)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -157,6 +179,8 @@ void proc_sid_connector(struct task_struct *task)
+ 	struct proc_event *ev;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
++	if (!enabled_sid)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -181,6 +205,8 @@ void proc_ptrace_connector(struct task_struct *task, int ptrace_id)
+ 	struct proc_event *ev;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
++	if (!enabled_ptrace)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -213,6 +239,8 @@ void proc_comm_connector(struct task_struct *task)
+ 	struct proc_event *ev;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
++	if (!enabled_comm)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -239,6 +267,8 @@ void proc_coredump_connector(struct task_struct *task)
+ 	struct task_struct *parent;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
++	if (!enabled_coredump)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -272,6 +302,8 @@ void proc_exit_connector(struct task_struct *task)
+ 	struct task_struct *parent;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
++	if (!enabled_exit)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
+@@ -314,6 +346,8 @@ static void cn_proc_ack(int err, int rcvd_seq, int rcvd_ack)
+ 	struct proc_event *ev;
+ 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
+ 
++	if (!enabled_none)
++		return;
+ 	if (atomic_read(&proc_event_num_listeners) < 1)
+ 		return;
+ 
 -- 
-2.25.0
+2.17.1
 
