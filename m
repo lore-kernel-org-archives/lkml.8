@@ -2,162 +2,183 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE13C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D02C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442E220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651F020659
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHYm9cVG"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="QGtYjTjy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1pcWMOR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgBLMxQ (ORCPT
+        id S1727954AbgBLMxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:53:16 -0500
-Received: from mail-io1-f54.google.com ([209.85.166.54]:32989 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLMxQ (ORCPT
+        Wed, 12 Feb 2020 07:53:53 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:48665 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726728AbgBLMxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:53:16 -0500
-Received: by mail-io1-f54.google.com with SMTP id z8so2116132ioh.0;
-        Wed, 12 Feb 2020 04:53:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8uUbtIUDOW9ebVPssPKku+drjcOUJo/uTJ9SaDOnJuw=;
-        b=lHYm9cVGTtyA8EiT1D0sqLSb/jKtkCxagH9ASKv9owFIoKOYqhwIWFFOTeEeC8uBVy
-         46hUmqQq+PkyS/mU/NByGdrVF9AFXzjiP0hWR2h1B1K2eASskBK587/8MMKVcLJGPcSA
-         tsbJ7Ll2fMVmKkwxkifsb0uyWU7MvL+7fOEuz9t7w09ht+c1jCJ6+tk3sTBZWUttVe7X
-         2sn2nTuSMetpweeqhPSMNF9eMmF3mvAF29dZcXa3O+TPZUXvvRu3AObjEpfZAy/kjOKa
-         U+ORlpik+ZuI5VYmeps5yTXx0PWjNTSnwod/KQU9UIdyjxikqILCeP+UVFcrwlnIaVSz
-         ++Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8uUbtIUDOW9ebVPssPKku+drjcOUJo/uTJ9SaDOnJuw=;
-        b=CskD1aAmMAqfhE7AUlqLjXKryUrogUgdHHXKzj6Q4xqoYz8h0L/y/8Ly/TkoT/Lxe1
-         mHj9fRoU9Wnbr1vbhon1/RPym1HGFxtXMMpW3ns1swI/UzlzpY32eYeyDl8XBZmxYsu3
-         fABB9UM0uuSSxLdHdFq/MsrAkgfmy1+zlfE+v7l8qpoLn19S/YKURu+IG0qR6zEwUCMN
-         s4cGhPIVMFIFjbaBlNw+gZMOORg2c0RavqqsWReWHi5NYUT4LY9e996aDKxp+ZbICKHI
-         hseomwn70QNCyXDzeHADQnz+Ex3iKOPsmUvD+zAVf8/s8PbkVSDYBVQwp73okpMgQevc
-         XHfg==
-X-Gm-Message-State: APjAAAXOj0ZhKIvc6ruGJBhAe0oqtJezgmdvI6zuodTOyoSmULDqyBVT
-        hKGS6sDd+6LOPo/wIULonsVUuJustzdOOlr4evQ=
-X-Google-Smtp-Source: APXvYqwenciTJqmwlFW6J+SzmV88Taxk40rh0SJ/KvqEvhgKlj/Xxm/QR6ynx3a5PYe6nSlUw1F3G3nRefDQUE1y3/U=
-X-Received: by 2002:a6b:8e51:: with SMTP id q78mr16467343iod.179.1581511995705;
- Wed, 12 Feb 2020 04:53:15 -0800 (PST)
+        Wed, 12 Feb 2020 07:53:53 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id B1CD9CB8;
+        Wed, 12 Feb 2020 07:53:51 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 12 Feb 2020 07:53:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=FYMgNW1AABvOrAFmHBwSTNBjY0U
+        QZ9+M+hZkuY1Xbi0=; b=QGtYjTjyb/d/6+hyPNWS9QgzrAZ8FRTBYoYt3mFEniY
+        ZZZXsR9at9vwnKcGtFSfU3csQZATWV1I7rXgbQyAYpjsA8hMGHK9OimsmPQYYea5
+        UepXMHz4/A+vu7yeIXYCvujD/XP8+3wCnTUFcKiWBahjlq3lPRnNL4HVVcT1ckeF
+        iK4aMdqUA4gZwuQnT3iDQxQhKONL8QQT2hKhVa1nRB0U/LhvMpr+8sKTm9a++gUH
+        Ve7OfkBAkMKJ2ZdplD0gS0vsdjxcTwkD/qfuhI5tXy37JNJYiJpjDZe/qUTD/v0B
+        IUpNb2mMpID+lHpK/JaudS+n5+rA/+NE1HYv+6RCdXA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=FYMgNW
+        1AABvOrAFmHBwSTNBjY0UQZ9+M+hZkuY1Xbi0=; b=1pcWMOR7GX/4RrAmeXkRAS
+        NjY5pGCmmtDNFpvdb5xce3Hge8EyUrvdTo/cwAIThrtvTdKyppVK3nbefCF+cx0x
+        zFwPD89xsSDcnAT092cbNoXHVbb4OyDGQSIzLdsOy7zRRJVvRJ9Q10lBlal2oNWs
+        aq+6uiJb6+kOtV9PgrhjZlQb0gmXQ+8uOhaq765PB55wfk5WXNyek5L7dkBAc8+A
+        7S7vVl0WgGaUICNwo0F3nZO+2ZeyYzUowTzBhhyrxeP2ZEKohymj/82mabpPcyg+
+        IZahoOv0uzzyUDe+Rr8Jsdz6gbsi9ptRDQc8V4zWsL3m1Ka/1ffqwrje/OMwKjrw
+        ==
+X-ME-Sender: <xms:WvVDXlAJe-I_Ty-M9L3IwSBtpvB52akNRSslI7bzkmPojn-V1I4LkQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieehgdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
+    hordhtvggthh
+X-ME-Proxy: <xmx:WvVDXnzMpY8RacejKxQJeEhp0OBGgrJVrRceoR27Vv2pKjCvsPIhEQ>
+    <xmx:WvVDXrllSutR1NatOir2li2gQHSiDp0J7AX1wC1-KRvMWIIFomOnAw>
+    <xmx:WvVDXkGPnElIH2s8uy3FwmkI2Btv6BcZoOJp5hUQ2q9n_rsgunGF9g>
+    <xmx:X_VDXsoXO7sHrtGKEhPJKoZjJZZHZq_CASuU8gWkkzm7mf_NHlgUDg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9D8363280065;
+        Wed, 12 Feb 2020 07:53:46 -0500 (EST)
+Date:   Wed, 12 Feb 2020 13:53:45 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Support LVDS output on Allwinner A20
+Message-ID: <20200212125345.j6e3txfjqekuxh2s@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200211072004.46tbqixn5ftilxae@gilmour.lan>
+ <20200211204828.GA4361@kedthinkpad>
 MIME-Version: 1.0
-References: <CABXGCsMfzj+mpjvuZifzWEKbX7X36v7iMVPampSS6kOc2Hzoow@mail.gmail.com>
- <2405a741abf0d5fe8f55b5d3de8488e3054cc5e1.camel@archlinux.org>
-In-Reply-To: <2405a741abf0d5fe8f55b5d3de8488e3054cc5e1.camel@archlinux.org>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Wed, 12 Feb 2020 17:53:04 +0500
-Message-ID: <CABXGCsPYaXYFqQfnYWeeOKYq-SCjBvixo-Mme-fGLSB8Kw5H+g@mail.gmail.com>
-Subject: Re: [BUG] Kernel log flooded by message "logitech-djreceiver
- 0003:046D:C53A.000C: logi_dj_hidpp_event: invalid device index:7"
-To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pu5japc265ilzlxp"
+Content-Disposition: inline
+In-Reply-To: <20200211204828.GA4361@kedthinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 at 17:38, Filipe La=C3=ADns <lains@archlinux.org> wrote=
-:
+
+--pu5japc265ilzlxp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Andrey,
+
+On Tue, Feb 11, 2020 at 10:48:28PM +0200, Andrey Lebedev wrote:
+> Maxime, thanks for your comments. I'll update the patch, but meanwhile,
+> I have some remarks/questions, see below.
 >
-> On Mon, 2020-02-10 at 13:21 +0500, Mikhail Gavrilov wrote:
-> > Kernel log flooded by message
-> > logitech-djreceiver 0003:046D:C53A.000C: logi_dj_hidpp_event: invalid
-> > device index:7
-> > This happens when the mouse is idle.
-> > And it started since I begin using the mouse pad with Power Play
-> > technology.
+> On Tue, Feb 11, 2020 at 08:20:04AM +0100, Maxime Ripard wrote:
+> > > +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
+> > > +			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
+> > > +			   SUN4I_TCON0_LVDS_ANA1_UPDATE);
 > >
+> > You refer to U-Boot in your commit log, but the sequence is not quite
+> > the same, why did you change it?
+>
+> I actually had two reference implementations at my hand. One was u-boot
+> and another - an old (abandoned) branch of Priit Laes [1] (I took the
+> split-up of u-boot SUNXI_LCDC_LVDS_ANA0 constant from there).
+>
+> This is an attempt to simplify the sequence, since I noticed that the
+> same bit was being set to the same register twice [2] and removing that
+> duplication didn't produce any observable regression. Priit
+> implementation didn't have that bit set in the end of the sequence
+> either, so I omitted it. That said, I agree that it could've been a bit
+> naive on my side, and I can get it back to match u-boot version, if you
+> feel that might be important.
+>
+> For the reference the U-Boot code is here: [3]
+>
+> [1] https://github.com/plaes/linux/commit/cc8c8bab2f2f2752ba6b11632dcd0f41bac249bc#diff-014a76a5007005a7a240825a972b8c7fR127
+> [2] setbits_le32(&lcdc->lvds_ana0, SUNXI_LCDC_LVDS_ANA0_UPDATE);
+> [3] https://github.com/ARM-software/u-boot/blob/master/drivers/video/sunxi/lcdc.c#L60
+
+The U-Boot code has been here for a while and we know it's robust by
+now, so I'd prefer to be conservative and use it here.
+
+> > > +#define SUN4I_TCON0_LVDS_ANA1_REG		0x224
+> > > +#define SUN4I_TCON0_LVDS_ANA1_INIT			(0x1f << 26 | 0x1f << 10)
+> > > +#define SUN4I_TCON0_LVDS_ANA1_UPDATE			(0x1f << 16 | 0x1f << 00)
 > >
-> > Kernel ver: 5.6 pre RC
-> > --
-> > Best Regards,
-> > Mike Gavrilov.
+> > Having proper defines for those fields would be great too.
 >
-> Hello Mike,
+> If by "proper" you mean "split them up to individual bits", I would
+> agree, but I can't find any actual hardware reference documentation that
+> would mention the meaning of these registers.
+
+Of course we don't.. :)
+
+It's fine to leave them as is then
+
+> In both places (u-boot and Priit) these constants are defined the same way.
 >
-> Yes, the Powerplay mat exports a static HID++ 2.0 device with index 7
-> to configure the led on the mat. The current code expects devices to
-> have a maximum index of 6, which is the maximum index of pairable
-> devices.
+> I took the liberty to rename ANA1_INIT1 to ANA1_INIT and ANA1_INIT2 to
+> ANA1_UPDATE to match Priit naming rather than u-boot, as I felt it was
+> more descriptive. I have no strong opinion here though.
 >
-> I already submitted a patch adding support for the Logitech G Powerplay
-> mat but it wasn't been upstreamed it. I will attach it in case you want
-> to try it.
+> > Side question, this will need some DT changes too, right?
 >
+> Hm, I agree. I think it would be reasonable to include LVDS0/1 pins
 
+That, but most importantly, the reset and clocks for the LVDS
+block. Also from looking at it, I'm not entirely sure that the TCON1
+has a LVDS output, do you have a board when you have been able to test
+it?
 
-Thanks, I tested the patch for a day and "logitech-djreceiver"
-messages was not appear anymore and no other regressions are noted.
-Why this patch wasn't been upstreamed?
+> and sample (but disabled) lvds panel,
 
-Also would be good if "logitech-djreceiver" provides information for
-upower daemon as how did it happening with unifying receiver and my
-previous mouse Logitech Zone Touch Mouse T400.
+That's good for the sake of the example, but it shouldn't be in the
+same patch, it won't be merged.
 
-For example:
+> connected to tcon to arch/arm/boot/dts/sun7i-a20.dtsi. Does that
+> make sense to you? Would you expect dts changes in the same patch or
+> separate?
+>
+> P.S. This is my first patch to the linux kernel, please forgive me my
+> inexperience.
 
-$ upower --dump
-Device: /org/freedesktop/UPower/devices/mouse_hidpp_battery_0
-  native-path:          hidpp_battery_0
-  model:                Zone Touch Mouse T400
-  serial:               4026-cf-15-61-0d
-  power supply:         no
-  updated:              Sun 22 Dec 2019 02:41:30 PM +05 (89 seconds ago)
-  has history:          yes
-  has statistics:       yes
-  mouse
-    present:             yes
-    rechargeable:        yes
-    state:               discharging
-    warning-level:       none
-    battery-level:       normal
-    percentage:          55% (should be ignored)
-    icon-name:          'battery-low-symbolic'
+You're doing fine so far :)
+Maxime
 
-Device: /org/freedesktop/UPower/devices/DisplayDevice
-  power supply:         no
-  updated:              Sun 22 Dec 2019 10:58:54 AM +05 (13445 seconds ago)
-  has history:          no
-  has statistics:       no
-  unknown
-    warning-level:       none
-    icon-name:          'battery-missing-symbolic'
+--pu5japc265ilzlxp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Daemon:
-  daemon-version:  0.99.11
-  on-battery:      no
-  lid-is-closed:   no
-  lid-is-present:  no
-  critical-action: HybridSleep
+-----BEGIN PGP SIGNATURE-----
 
-https://user-images.githubusercontent.com/200750/71320201-d8a5ea80-24c9-11e=
-a-9ea9-97100545d294.png
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkP1WQAKCRDj7w1vZxhR
+xZNVAQDk7kYMe1KzSTh9h8gVCxcVbKhxx1W/v2MVlCfHsy8/BQEAtsTcaVX0N/k6
+q5+dn9ebIf4B0VB50BvQrFkvCbmxZA4=
+=VUQU
+-----END PGP SIGNATURE-----
 
-Currently, only sensors show the power charge level, but without
-"upower" daemon user-friendly indication not available in DE.
-
-$ sensors
-hidpp_battery_0-hid-3-9
-Adapter: HID adapter
-in0:           4.08 V
-
-
-
---
-Best Regards,
-Mike Gavrilov.
+--pu5japc265ilzlxp--
