@@ -2,74 +2,125 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B2CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B79C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F6F24682
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F782073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581533595;
-	bh=qulGDcSFXIXPtvMLS1puaLhzyw8yfWDDD6VX2IAF/rY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=OUlr4cGMEZFpq22jpZqcJa85dfog1g9Uh/srLvWTooyqa/0aiWLDAVMoEmIIFIgqi
-	 7xtkAjWqTRffAb/v3NcRUTH+N0cMxNCUqB7weKz4PCyZpUvH4uLDsRVCysloD7rAyh
-	 8Cjik+QxP0UNvnUlAKiPYEjReCJwKY1ohFu1z7wc=
+	s=default; t=1581533646;
+	bh=L+M6z33rA9HiyjsAZ5H181uUxeX4PlOyBi/kMKaf26I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0TRwYxzjY/mGKLf+Sr3XcXee3/+oZlG8R6nr4maiXbXmdrg+i4TgshC4nTHd9OZbu
+	 2zNRJiwTWIEnBYPURTgSg+C1qaDDHEwuybwxYHp1JcN+MfQ9GPm75sBQgMJVZI0FM9
+	 Z/0aSBYVjMNDA9xrPC8dTvlwjWjIC2ylpQotF6Ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgBLSxO (ORCPT
+        id S1729025AbgBLSyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:53:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbgBLSxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:53:13 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45BC72073C;
-        Wed, 12 Feb 2020 18:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581533593;
-        bh=qulGDcSFXIXPtvMLS1puaLhzyw8yfWDDD6VX2IAF/rY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=nCMacrb6MnKohoyr6dd7M0J2VAM9q9+DLQUswJ8XLrrd7q0oAgrSUfIkRy66qx/CM
-         vzInJ43cu+xqtQZT7AN8EQ21ICt/Rd85Y4RNyXDZ+OUUAlT9tuuMn/H2bBxllcoFrM
-         s407efozJ0+srMwtiDihBQ0XOFQmD4IBdWL01v/I=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 12 Feb 2020 13:54:06 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34295 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728815AbgBLSyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:54:05 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x7so3582027ljc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:54:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XOSZhIPmTiYpkSLY4moOIVyEjS918RWzM6qDX6XR91k=;
+        b=MoT1DNRhdzigKA5c1i9hMlF17+RjZiB01pnephKyvwGUPJIs6VcAlwEKstziybjxM1
+         z+UxuOPU8JIZnnz6Ckd+afAIevrdOPks12BwsCco/phTBbXPq432S/itPUBYO3hP9Mln
+         3kihLTHPnFUYbiWWHaAgWErVzneXWJfReE4a4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XOSZhIPmTiYpkSLY4moOIVyEjS918RWzM6qDX6XR91k=;
+        b=jEA8ojxpptxA5dGQkjm0hDnmaZBOC7jG6BXn/4fsL+qu6eYqHTuSRxrZh6B7fzwYiL
+         Pdx1zvYCmoXrZ5b91LPFFl1uIU5vk8MLEOGYzMCnJEYlWfFIztNga/VuQNrGh01MCiXf
+         0KCAcbgzrXyqu/9y3z8mHNmg+9Ml3/eTjMQHb0sVwfRXkrFS4bIz22kwtHBiWW47Xqkq
+         QRnfgVLEOFUyFsbX12nGuyKXHrviMw3FnOuDJBH1CtNA+IQ9MKnYfg/3TPAJydSwDtrf
+         OcIXpbwkVj7FvlnHYOSyU0y0DLpj9weklgPnX0+DB6E69OXiF3AZpioB4SFtaGBb7AZ2
+         Ti1Q==
+X-Gm-Message-State: APjAAAUQBJZ7n36jt4Yne4VPcTB1EkjlIz9N2jnUAfdCF2FmpCiI9KWm
+        G4j+O3xd/FGvOlcQaat66GFPoWzw+A4=
+X-Google-Smtp-Source: APXvYqw6an/1UeI/vlYv85Xjx6TZ3Byoh74wfkEunr+uFb7xRVDad056bhN8RUIOMY7N8Cdr/+1xzg==
+X-Received: by 2002:a2e:9ad0:: with SMTP id p16mr9046335ljj.111.1581533643072;
+        Wed, 12 Feb 2020 10:54:03 -0800 (PST)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id t21sm24492ljh.14.2020.02.12.10.54.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 10:54:02 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id 9so2352955lfq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:54:02 -0800 (PST)
+X-Received: by 2002:a05:6512:78:: with SMTP id i24mr7551507lfo.10.1581533641799;
+ Wed, 12 Feb 2020 10:54:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200212101544.8793-3-geert+renesas@glider.be>
-References: <20200212101544.8793-1-geert+renesas@glider.be> <20200212101544.8793-3-geert+renesas@glider.be>
-Subject: Re: [PATCH 2/7] MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        James Hartley <james.hartley@sondrel.com>,
-        John Crispin <john@phrozen.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>
-Date:   Wed, 12 Feb 2020 10:53:12 -0800
-Message-ID: <158153359260.184098.3689690844270795336@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200212164714.7733-1-pbonzini@redhat.com>
+In-Reply-To: <20200212164714.7733-1-pbonzini@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 12 Feb 2020 10:53:46 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
+Message-ID: <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
+Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc2
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, rkrcmar@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2020-02-12 02:15:39)
-> The Broadcom BMIPS platform code is not a clock provider, and just needs
-> to call of_clk_init().
->=20
-> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
+On Wed, Feb 12, 2020 at 8:47 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> A mix of cleanups and bugfixes, some of them slightly more invasive than usual
+> but still not worth waiting for 5.7.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+What? No.
+
+> Oliver Upton (4):
+>       KVM: nVMX: Emulate MTF when performing instruction emulation
+
+This was committed today, and it's complete and utter garbage:
+
+   CommitDate: 7 hours ago
+
+It doesn't even compile. Just in the patch itself - so this is not a
+merge issue, I see this:
+
+          int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+  ..
+  @@ -1599,6 +1599,40 @@ static int skip_emulated_instruction(struct
+kvm_vcpu *vcpu)
+  ..
+  +static void vmx_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+  +       return skip_emulated_instruction(vcpu);
+  ..
+  -       .skip_emulated_instruction = skip_emulated_instruction,
+  +       .skip_emulated_instruction = vmx_skip_emulated_instruction,
+
+ie note how that vmx_skip_emulated_instruction() is a void function,
+and then you have
+
+         return skip_emulated_instruction(vcpu);
+
+in it, and you assign that garbage to ".skip_emulated_instruction"
+which is supposed to be returning 'int'.
+
+So this clearly never even got a _whiff_ of build-testing. The thing
+is completely broken.
+
+Stop sending me garbage.
+
+You're now on my shit-list, which means that I want to see only (a)
+pure fixes and (b) well-tested such. Nothing else will be pulled.
+
+                    Linus
