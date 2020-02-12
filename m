@@ -2,77 +2,165 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546DAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C35C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D73D2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:05:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hz/3Aibq"
+	by mail.kernel.org (Postfix) with ESMTP id DE7FC2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgBLPFl (ORCPT
+        id S1728488AbgBLPHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:05:41 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbgBLPFl (ORCPT
+        Wed, 12 Feb 2020 10:07:51 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:59897 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbgBLPHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:05:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=R27uEzmvp31adlnkqQRzsQ6H2g7fBN8gFQSD+LxBf6E=; b=Hz/3Aibqu2QROGvLCaHh06rM8E
-        Yfb6NbCsXryt/BFtAU9rfe0bem9ABTYfLoj6lbuCJw63ozFBFbWDItsSARxoIlDqsLdmhEOMgAAIQ
-        qMiHHLAHg06nuQ8EvntsoYMO3ck9OwEBrhsZkglC9A2Kp2i+girvA4S6vF/FVH0OalUbyJhCvV4hc
-        PM/6+R+g9sla1QNFkp3Obqlzokt5hcFu1aZKpcz3AqpxsTpuc5FCRaYZPsLrHc4jZIdBEJOwopD5X
-        tS/jirDX6LwfWBfqHYJkFqdh+y1ERUCFp9Q/9qrwLv5BVxTwA1KWQtaH59zin/o5uZXT9DjAs8zAb
-        Opd2LwwA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1ta8-0007QS-Qc; Wed, 12 Feb 2020 15:05:40 +0000
-Date:   Wed, 12 Feb 2020 07:05:40 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/25] fs: Introduce i_blocks_per_page
-Message-ID: <20200212150540.GE7778@bombadil.infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-11-willy@infradead.org>
- <20200212074453.GH7068@infradead.org>
+        Wed, 12 Feb 2020 10:07:50 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j1tcB-0006F3-Aq; Wed, 12 Feb 2020 15:07:47 +0000
+Date:   Wed, 12 Feb 2020 16:07:43 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH net-next 05/10] sysfs: add sysfs_change_owner()
+Message-ID: <20200212150743.zyubvz53unyevbkx@wittgenstein>
+References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
+ <20200212104321.43570-6-christian.brauner@ubuntu.com>
+ <20200212131808.GA1789899@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200212074453.GH7068@infradead.org>
+In-Reply-To: <20200212131808.GA1789899@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:44:53PM -0800, Christoph Hellwig wrote:
-> Looks good modulo some nitpicks below:
+On Wed, Feb 12, 2020 at 05:18:08AM -0800, Greg Kroah-Hartman wrote:
+> On Wed, Feb 12, 2020 at 11:43:16AM +0100, Christian Brauner wrote:
+> > Add a helper to change the owner of sysfs objects.
 > 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Seems sane, but:
 > 
-> > + * Context: Any context.
+> > The ownership of a sysfs object is determined based on the ownership of
+> > the corresponding kobject, i.e. only if the ownership of a kobject is
+> > changed will this function change the ownership of the corresponding
+> > sysfs entry.
 > 
-> Does this add any value for a trivial helper like this?
+> A "sysfs object" is a kobject.  So I don't understand this sentance,
+> sorry.
 
-I think it's good to put them in to remind people they should be putting
-them in for more complex functions.  Just like the Return: section.
+I meant that only if you change the uid/gid the underlying kobject is
+associated with will this function do anything, meaning that you can't
+pass in uids/gids directly. I'll explain why I did this down below [1].
+Sorry if that was confusing.
 
-> > + * Return: The number of filesystem blocks covered by this page.
+> 
+> > This function will be used to correctly account for kobject ownership
+> > changes, e.g. when moving network devices between network namespaces.
+> > 
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > ---
+> >  fs/sysfs/file.c       | 35 +++++++++++++++++++++++++++++++++++
+> >  include/linux/sysfs.h |  6 ++++++
+> >  2 files changed, 41 insertions(+)
+> > 
+> > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> > index 6239d9584f0b..6a0fe88061fd 100644
+> > --- a/fs/sysfs/file.c
+> > +++ b/fs/sysfs/file.c
+> > @@ -642,3 +642,38 @@ int sysfs_file_change_owner(struct kobject *kobj, const char *name)
+> >  	return error;
+> >  }
+> >  EXPORT_SYMBOL_GPL(sysfs_file_change_owner);
+> > +
+> > +/**
+> > + *	sysfs_change_owner - change owner of the given object.
+> > + *	@kobj:	object.
 > > + */
-> > +static inline
-> > +unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
+> > +int sysfs_change_owner(struct kobject *kobj)
 > 
-> static inline unisnged int
-> i_blocks_per_page(struct inode *inode, struct page *page)
+> What does this change the owner of the given object _to_?
 
-That's XFS coding style.  Linus has specifically forbidden that:
+[1]:
+So ownership only changes if the kobject's uid/gid have been changed.
+So when to stick with the networking example, when a network device is
+moved into a new network namespace, the uid/gid of the kobject will be
+changed to the root user of the owning user namespace of that network
+namespace. So when the move of the network device has completed and
+kobject_get_ownership() is called it will now return a different
+uid/gid.
+So my reasoning was that ownership is determined dynamically that way. I
+guess what you're hinting at is that we could simply add uid_t uid,
+gid_t gid arguments to these sysfs helpers. That's fine with me too. It
+means that callers are responsible to either retrieve the ownership from
+the kobject (in case it was changed through another call) or the call to
+syfs_change_owner(kobj, uid, gid) sets the new owner of the kobject. I
+don't know what the best approach is. Maybe a hybrid whereby we allow
+passing in uid/gid but also allow passing in ({g,u}id_t - 1) to indicate
+that we want the ownership to be taken from the kobject itself (e.g.
+when a network device has been updated by dev_change_net_namespace()).
 
-https://lore.kernel.org/lkml/1054519757.161606@palladium.transmeta.com/
+> 
+> > +{
+> > +	int error;
+> > +	const struct kobj_type *ktype;
+> > +
+> > +	if (!kobj->state_in_sysfs)
+> > +		return -EINVAL;
+> > +
+> > +	error = sysfs_file_change_owner(kobj, NULL);
+> 
+> It passes NULL?
+
+Which means, change the ownership of "kobj" itself and not lookup a file
+relative to "kobj".
+
+> 
+> 
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	ktype = get_ktype(kobj);
+> > +	if (ktype) {
+> > +		struct attribute **kattr;
+> > +
+> > +		for (kattr = ktype->default_attrs; kattr && *kattr; kattr++) {
+> > +			error = sysfs_file_change_owner(kobj, (*kattr)->name);
+> > +			if (error)
+> > +				return error;
+> > +		}
+> > +
+> > +		error = sysfs_groups_change_owner(kobj, ktype->default_groups);
+> > +		if (error)
+> > +			return error;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(sysfs_change_owner);
+> 
+> I can understand wanting to change owners/groups/whatever of existing
+> sysfs objects and their files, but I can't figure out how to call this
+> function to set the attribute I want to change.
+> 
+> With only one parameter, how does this work?  It guesses?  :)
+
+See [1]. :)
+And sorry if that wasn't clear!
+
+Thanks!
+Christian
