@@ -6,32 +6,34 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0E8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BBDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB55206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1548206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgBLHPq (ORCPT
+        id S1728291AbgBLHP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:15:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56878 "EHLO mx2.suse.de"
+        Wed, 12 Feb 2020 02:15:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56972 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbgBLHPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:15:46 -0500
+        id S1728264AbgBLHP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 02:15:57 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C757CAF69;
-        Wed, 12 Feb 2020 07:15:44 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 08:15:43 +0100
-Message-ID: <s5hh7zw1dk0.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 4BF47AEF6;
+        Wed, 12 Feb 2020 07:15:56 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 08:15:56 +0100
+Message-ID: <s5hftfg1djn.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: core: Replace zero-length array with flexible-array member
-In-Reply-To: <20200211193910.GA4596@embeddedor>
-References: <20200211193910.GA4596@embeddedor>
+Cc:     Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: usb-midi: Replace zero-length array with flexible-array member
+In-Reply-To: <20200211194224.GA9383@embeddedor>
+References: <20200211194224.GA9383@embeddedor>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -42,7 +44,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 20:39:10 +0100,
+On Tue, 11 Feb 2020 20:42:24 +0100,
 Gustavo A. R. Silva wrote:
 > 
 > The current codebase makes use of the zero-length array language
