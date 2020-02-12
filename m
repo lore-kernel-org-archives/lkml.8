@@ -2,245 +2,312 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC97C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD32C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6699420714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E3E20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="JhpqZmuw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ENKupNr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgBLSD2 (ORCPT
+        id S1728871AbgBLSEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:03:28 -0500
-Received: from USFB19PA34.eemsg.mail.mil ([214.24.26.197]:56048 "EHLO
-        USFB19PA34.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLSD2 (ORCPT
+        Wed, 12 Feb 2020 13:04:23 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55562 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLSEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:03:28 -0500
-X-EEMSG-check-017: 55572644|USFB19PA34_ESA_OUT04.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
-   d="scan'208";a="55572644"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by USFB19PA34.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Feb 2020 18:03:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1581530605; x=1613066605;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=CPSK5uvwAHL9zLU/mCOyKXBRi4gAZlReLRVsng8C0z8=;
-  b=JhpqZmuw60h3nUuxI9q2hNnv0PlsjTTXkHROtP5MUPQdh/v4buFjCymM
-   /6Snzd3S80snoSyotF4gMawH1/I0RiWAkCxBojiIEr+XdtoNPKgFkhBGr
-   H4ieWmWHxFmruSksBRmtEQ9s8wDm5eCKeTIkfhZVYeSwOZHb+yT/gC08r
-   9kKvHJUBxmz4Vv4o07ewRm3BIZl7DA5MTuKrE6X00i6VGHyeDb88Vshi8
-   vaXTMfB7d4FqCUE4+8MlwwIT9Ypteg8kIm2AoNSd9zXMWiefjhLNUBgDd
-   1ILi0TZegimNAT/WuvGpTKCYxLAlte7wlM7Tx1bJrK6pi1BkHP2pPzVNW
-   g==;
-X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
-   d="scan'208";a="39029087"
-IronPort-PHdr: =?us-ascii?q?9a23=3AFiMrCRXhMruNGAVV9IYnwdsBPlbV8LGtZVwlr6?=
- =?us-ascii?q?E/grcLSJyIuqrYZRaFtKdThVPEFb/W9+hDw7KP9fy5BSpevN3Y6CBKWacPfi?=
- =?us-ascii?q?FGoP1epxYnDs+BBB+zB9/RRAt+Iv5/UkR49WqwK0lfFZW2TVTTpnqv8WxaQU?=
- =?us-ascii?q?2nZkJ6KevvB4Hdkdm82fys9J3PeQVIgye2ba9vIBmsogjdq8YbjZFjJ6sxxR?=
- =?us-ascii?q?fFv2dEdudLzm50OFyfmArx6ci38JN/6Spbpugv99RHUaX0fqQ4SaJXATE7OG?=
- =?us-ascii?q?0r58PlqAfOQxKX6nQTTmsZnBxIAxPY7B7hRZf+rjH6tutm1yaEO8D9UK05Vi?=
- =?us-ascii?q?6j76dvTx/olTsHOjsk+2zZlsB8kKRWqw+6qhdh34Dbfp2aNPtmfqPcY9waQ3?=
- =?us-ascii?q?ZBXt1MXCBFG4+wcpcDA/YEMeteoYb9vV8OpgagCweqCu3k1ztEimb40KA+1u?=
- =?us-ascii?q?gsFxzN0g49ENIUqHnascv7NKkSX+62wqfHwzrMYPFK1jny84XIbhIsrOuQUb?=
- =?us-ascii?q?5sf8fcy08iHB7FgFWKrozlOiuY2PkRs2eF9+pgVfygi2g6oA9spzig3MMsio?=
- =?us-ascii?q?3XiYMV11vJ8j55z5suJdCjVE56YcKrEJtXty2AMYt2WdktT3tnuCY91L0LoJ?=
- =?us-ascii?q?i2dzUJxpQ/3xPTdvOKfoeS7h/jSeqdOyl0iX17dL6lmhq/91WrxPfmWcmuyl?=
- =?us-ascii?q?lKqzJIktzLtn8QyRPe8tOHSv5h/ke53jaPyhzT5vlEIU8qkarbLIYswqIqmZ?=
- =?us-ascii?q?oJsETDAzT2lF/3jK+QeEUk/fOo5Pr7bbn8up+dN5N7igH5Mqg0nMywHf84PR?=
- =?us-ascii?q?QUU2ie+OS80KXv/Uz/QLpUkv07irTVvZ/VKMgBpqO1HhVZ3pgs5hqhFTuqzc?=
- =?us-ascii?q?wUnXwdI1JEfBKHgZLpO1bLIP3gFvewnk+snSx3x/HGIrLhApLNImLFkLf6Z7?=
- =?us-ascii?q?lx8UFcyA0tzdxH/ZJbFqkBIO7vWk/2rNHXEwU2MwqozObgDNVwzYweWWWIAq?=
- =?us-ascii?q?+WNKPdr0WE6f4oI+mJfIUVoiryK+A55/7yin80gUMdfais3ZsSdXC4BO5mLF?=
- =?us-ascii?q?+ZYHf3jdcBFmAKvgU6TOP0klGNTTlTZ3OqVaIm+j47EJ6mDZvERo21hryB2z?=
- =?us-ascii?q?y7Hp1Na2BJDVCMFnjod4GaVPsWdC2SJcphmCQeVbe9U48hyQ2utAjixrphKO?=
- =?us-ascii?q?rU+TYVtZ3k1Nhy6O3TkQ89+SZoAMSa1mGHV3t0kX8QRz8qwKB/plRwylOE0a?=
- =?us-ascii?q?h7nfNYDtxT5/xIUggnL57T1fd3C9/1WgLGcdeJTEipTs+6DjE2S9I728UObF?=
- =?us-ascii?q?plG9W+khDD2DKnA7sUl7yNGZw1/bvQ33vvKMZnzXbJyq0hgkI4QstAK2KmnL?=
- =?us-ascii?q?Rz9wvNCI7TlUWWiaKqeb4b3C7X+2eJ1XCOs11AUA5sTaXFWmgSZk/XrdT/+0?=
- =?us-ascii?q?PDQKaiBq4/MgtA0sOCNKRKZcPzjVlcR/fsJs7eY2SvlGe0HxqIwamMbIXycW?=
- =?us-ascii?q?UHwCrdEFQEkxwU/XueLggxGCOho2PYDDxzGlPieF3s8eZgp3OhVEM0zB+Fb1?=
- =?us-ascii?q?dn17Wr/h4Zn/ucS+kc3uFMhCB0hzxyHVu5l/nRD9ObrAtmeqgUNd805lxA0U?=
- =?us-ascii?q?rWsAtyOpHmJKdn0A0waQNy6njy2g13B4MIqs0jqHcn3UImMq6D+E9QfDOfm5?=
- =?us-ascii?q?brM/vYLXekr0PnULLfxlyLiIXewawI8vlt7gy47Qw=3D?=
-X-IPAS-Result: =?us-ascii?q?A2CmAwB3PURe/wHyM5BmHAEBAQEBBwEBEQEEBAEBgXuBf?=
- =?us-ascii?q?YFoBSASKoQUiQOGZAEBAQEBAQaBEiWJcJBzA1QJAQEBAQEBAQEBNwQBAYRAA?=
- =?us-ascii?q?oJtOBMCEAEBAQUBAQEBAQUDAQFshQsBBTKCOykBgwEBAQEBAgEjBBFBEAsOC?=
- =?us-ascii?q?gICJgICVwYKAwYCAQGCYz+CVwUgq091fzOFSoNGgT6BDiqMPnmBB4ERJwwDg?=
- =?us-ascii?q?V9QLj6HW4JeBJAchkVkRpdrgkSCT5N8BhyCSIgSBYRFi3GsJiI3gSErCAIYC?=
- =?us-ascii?q?CEPgydQGA2EVwGJUReOQSMDMJFhAQE?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Feb 2020 18:03:21 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01CI2P4J152921;
-        Wed, 12 Feb 2020 13:02:25 -0500
-Subject: Re: [PATCH v2 3/6] Teach SELinux about a new userfaultfd class
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Tim Murray <timmurray@google.com>, Nosh Minwalla <nosh@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>, selinux@vger.kernel.org
-References: <20200211225547.235083-1-dancol@google.com>
- <20200211225547.235083-4-dancol@google.com>
- <ef13d728-9f1e-5e38-28a1-7ed7134840e4@tycho.nsa.gov>
- <CAKOZuesUVSYJ6EjHFL3QyiWKVmyhm1fLp5Bm_SHjB3_s1gn08A@mail.gmail.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <ae8adb92-9c6e-2318-a3b9-903ead3848b5@tycho.nsa.gov>
-Date:   Wed, 12 Feb 2020 13:04:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 13:04:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581530660; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=scA1WOIhiNQUeDOO5mLotG7uFqAUr6QFX19gy5bzx74=;
+        b=ENKupNr1in2mbm7jeNljlhTxyY7EkvdcgjTtKNdip4oGqYR+tLVW4kOx0Me6EYf6ja92Qu
+        SGFd+Z+NZppRk1tvrYqh3HalwgIQnHIrJAhFytxwCrxLi0rz/lQJCs4DcUSPiqWQYdJs+N
+        dUL0jaLhLkuww/OIdXh7G5uZfa2so3M=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
+        Zhou Yanjie <zhouyanjie@wanyeetech.com>,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v5] clocksource: Add driver for the Ingenic JZ47xx OST
+Date:   Wed, 12 Feb 2020 15:04:08 -0300
+Message-Id: <20200212180408.30872-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <CAKOZuesUVSYJ6EjHFL3QyiWKVmyhm1fLp5Bm_SHjB3_s1gn08A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 12:19 PM, Daniel Colascione wrote:
-> Thanks for taking a look.
-> 
-> On Wed, Feb 12, 2020 at 9:04 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
->>
->> On 2/11/20 5:55 PM, Daniel Colascione wrote:
->>> Use the secure anonymous inode LSM hook we just added to let SELinux
->>> policy place restrictions on userfaultfd use. The create operation
->>> applies to processes creating new instances of these file objects;
->>> transfer between processes is covered by restrictions on read, write,
->>> and ioctl access already checked inside selinux_file_receive.
->>>
->>> Signed-off-by: Daniel Colascione <dancol@google.com>
->>
->> (please add linux-fsdevel and viro to the cc for future versions of this
->> patch since it changes the VFS)
->>
->>> ---
->>> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
->>> index 1659b59fb5d7..e178f6f40e93 100644
->>> --- a/security/selinux/hooks.c
->>> +++ b/security/selinux/hooks.c
->>> @@ -2915,6 +2919,69 @@ static int selinux_inode_init_security(struct inode *inode, struct inode *dir,
->>> +
->>> +     /*
->>> +      * We shouldn't be creating secure anonymous inodes before LSM
->>> +      * initialization completes.
->>> +      */
->>> +     if (unlikely(!selinux_state.initialized))
->>> +             return -EBUSY;
->>
->> I don't think this is viable; any arbitrary actions are possible before
->> policy is loaded, and a Linux distro can be brought up fully with
->> SELinux enabled and no policy loaded.  You'll just need to have a
->> default behavior prior to initialization.
-> 
-> We'd have to fail open then, I think, and return an S_PRIVATE inode
-> (the regular anon inode).
+From: Maarten ter Huurne <maarten@treewalker.org>
 
-Not sure why.  You aren't doing anything in the hook that actually 
-relies on selinux_state.initialized being set (i.e. nothing requires a 
-policy).  The avc_has_perm() call will just succeed until a policy is 
-loaded.  So if these inodes are created prior to policy load, they will 
-get assigned the task SID (which would be the kernel SID prior to policy 
-load or first exec or write to /proc/self/attr/current afterward) and 
-UFFD class (in your current code), be permitted, and then once policy is 
-loaded any further access will get checked against the kernel SID.
+OST is the OS Timer, a 64-bit timer/counter with buffered reading.
 
->>> +     /*
->>> +      * We only get here once per ephemeral inode.  The inode has
->>> +      * been initialized via inode_alloc_security but is otherwise
->>> +      * untouched, so check that the state is as
->>> +      * inode_alloc_security left it.
->>> +      */
->>> +     BUG_ON(isec->initialized != LABEL_INVALID);
->>> +     BUG_ON(isec->sclass != SECCLASS_FILE);
->>
->> I think the kernel discourages overuse of BUG_ON/BUG/...
-> 
-> I'm not sure what counts as overuse.
+SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
+JZ4780 have a 64-bit OST.
 
-Me either (not my rule) but I'm pretty sure this counts or you'd see a 
-lot more of these kinds of BUG_ON() checks throughout.  Try to reserve 
-them for really critical cases.
+This driver will register both a clocksource and a sched_clock to the
+system.
 
->>> +
->>> +#ifdef CONFIG_USERFAULTFD
->>> +     if (fops == &userfaultfd_fops)
->>> +             isec->sclass = SECCLASS_UFFD;
->>> +#endif
->>
->> Not sure we want or need to introduce a new security class for each user
->> of anonymous inodes since the permissions should be the same as for
->> file.
-> 
-> The purpose of this change is to apply special policy to userfaultfd
-> FDs in particular. Isn't having a UFFD security class the best way to
-> go about that? (There's no path.) Am I missing something?
+Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+---
 
-It is probably the simplest approach; it just doesn't generalize to all 
-users of anonymous inodes. We can distinguish them in one of two ways: 
-use a different class like you did (requires a code change every time we 
-add a new one and yet another duplicate of the file class) or use a 
-different SID/context/type. The latter could be achieved by calling 
-security_transition_sid() with the provided name wrapped in a qstr and 
-specifying type_transition rules on the name.  Then policy could define 
-derived types for each domain, ala
-type_transition init self:file "[userfaultfd]" init_userfaultfd;
-type_transition untrusted_app self:file "[userfaultfd]" 
-untrusted_app_userfaultfd;
-...
+Notes:
+    v2: local_irq_save/restore were moved within sched_clock_register
+    v3: Only register as 32-bit clocksource to simplify things
+    v4: - Bypass regmap to read counters.
+        - Use sched_clock_register_new() to avoid having a global pointer to
+    	  the ingenic_ost.
+    	- Don't print error codes in probe, since they will be printed anyway
+    	  if the probe function fails.
+    	- Rebased on 5.6-rc1.
+    v5: Restored global pointer to the ingenic_ost
 
->> Also not sure we want to be testing fops for each such case.
-> 
-> I was also thinking of just providing some kind of context string
-> (maybe the name), which might be friendlier to modules, but the loose
-> coupling kind of scares me, and for this particular application, since
-> UFFD is always in the core and never in a module, checking the fops
-> seems a bit more robust and doesn't hurt anything.
+ drivers/clocksource/Kconfig       |   8 ++
+ drivers/clocksource/Makefile      |   1 +
+ drivers/clocksource/ingenic-ost.c | 189 ++++++++++++++++++++++++++++++
+ 3 files changed, 198 insertions(+)
+ create mode 100644 drivers/clocksource/ingenic-ost.c
 
-Yes, not sure how the vfs folks feel about either coupling (the 
-name-based one or the fops-based one).  Neither seems great.
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index cc909e465823..f2142e6bbea3 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -697,6 +697,14 @@ config INGENIC_TIMER
+ 	help
+ 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
+ 
++config INGENIC_OST
++	bool "Clocksource for Ingenic OS Timer"
++	depends on MIPS || COMPILE_TEST
++	depends on COMMON_CLK
++	select MFD_SYSCON
++	help
++	  Support for the Operating System Timer of the Ingenic JZ SoCs.
++
+ config MICROCHIP_PIT64B
+ 	bool "Microchip PIT64B support"
+ 	depends on OF || COMPILE_TEST
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 713686faa549..641ba5383ab5 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -80,6 +80,7 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
+ obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
+ obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
++obj-$(CONFIG_INGENIC_OST)		+= ingenic-ost.o
+ obj-$(CONFIG_INGENIC_TIMER)		+= ingenic-timer.o
+ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+ obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+diff --git a/drivers/clocksource/ingenic-ost.c b/drivers/clocksource/ingenic-ost.c
+new file mode 100644
+index 000000000000..029efc2731b4
+--- /dev/null
++++ b/drivers/clocksource/ingenic-ost.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * JZ47xx SoCs TCU Operating System Timer driver
++ *
++ * Copyright (C) 2016 Maarten ter Huurne <maarten@treewalker.org>
++ * Copyright (C) 2020 Paul Cercueil <paul@crapouillou.net>
++ */
++
++#include <linux/clk.h>
++#include <linux/clocksource.h>
++#include <linux/mfd/ingenic-tcu.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/regmap.h>
++#include <linux/sched_clock.h>
++
++#define TCU_OST_TCSR_MASK	0xffc0
++#define TCU_OST_TCSR_CNT_MD	BIT(15)
++
++#define TCU_OST_CHANNEL		15
++
++/*
++ * The TCU_REG_OST_CNT{L,R} from <linux/mfd/ingenic-tcu.h> are only for the
++ * regmap; these are for use with the __iomem pointer.
++ */
++#define OST_REG_CNTL		0x4
++#define OST_REG_CNTH		0x8
++
++struct ingenic_ost_soc_info {
++	bool is64bit;
++};
++
++struct ingenic_ost {
++	void __iomem *regs;
++	struct clk *clk;
++
++	struct clocksource cs;
++};
++
++static struct ingenic_ost *ingenic_ost;
++
++static u64 notrace ingenic_ost_read_cntl(void)
++{
++	/* Read using __iomem pointer instead of regmap to avoid locking */
++	return readl(ingenic_ost->regs + OST_REG_CNTL);
++}
++
++static u64 notrace ingenic_ost_read_cnth(void)
++{
++	/* Read using __iomem pointer instead of regmap to avoid locking */
++	return readl(ingenic_ost->regs + OST_REG_CNTH);
++}
++
++static u64 notrace ingenic_ost_clocksource_readl(struct clocksource *cs)
++{
++	return ingenic_ost_read_cntl();
++}
++
++static u64 notrace ingenic_ost_clocksource_readh(struct clocksource *cs)
++{
++	return ingenic_ost_read_cnth();
++}
++
++static int __init ingenic_ost_probe(struct platform_device *pdev)
++{
++	const struct ingenic_ost_soc_info *soc_info;
++	struct device *dev = &pdev->dev;
++	struct ingenic_ost *ost;
++	struct clocksource *cs;
++	struct regmap *map;
++	unsigned long rate;
++	int err;
++
++	soc_info = device_get_match_data(dev);
++	if (!soc_info)
++		return -EINVAL;
++
++	ost = devm_kzalloc(dev, sizeof(*ost), GFP_KERNEL);
++	if (!ost)
++		return -ENOMEM;
++
++	ingenic_ost = ost;
++
++	ost->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(ost->regs))
++		return PTR_ERR(ost->regs);
++
++	map = device_node_to_regmap(dev->parent->of_node);
++	if (!map) {
++		dev_err(dev, "regmap not found");
++		return -EINVAL;
++	}
++
++	ost->clk = devm_clk_get(dev, "ost");
++	if (IS_ERR(ost->clk))
++		return PTR_ERR(ost->clk);
++
++	err = clk_prepare_enable(ost->clk);
++	if (err)
++		return err;
++
++	/* Clear counter high/low registers */
++	if (soc_info->is64bit)
++		regmap_write(map, TCU_REG_OST_CNTL, 0);
++	regmap_write(map, TCU_REG_OST_CNTH, 0);
++
++	/* Don't reset counter at compare value. */
++	regmap_update_bits(map, TCU_REG_OST_TCSR,
++			   TCU_OST_TCSR_MASK, TCU_OST_TCSR_CNT_MD);
++
++	rate = clk_get_rate(ost->clk);
++
++	/* Enable OST TCU channel */
++	regmap_write(map, TCU_REG_TESR, BIT(TCU_OST_CHANNEL));
++
++	cs = &ost->cs;
++	cs->name	= "ingenic-ost";
++	cs->rating	= 320;
++	cs->flags	= CLOCK_SOURCE_IS_CONTINUOUS;
++	cs->mask	= CLOCKSOURCE_MASK(32);
++
++	if (soc_info->is64bit)
++		cs->read = ingenic_ost_clocksource_readl;
++	else
++		cs->read = ingenic_ost_clocksource_readh;
++
++	err = clocksource_register_hz(cs, rate);
++	if (err) {
++		dev_err(dev, "clocksource registration failed");
++		clk_disable_unprepare(ost->clk);
++		return err;
++	}
++
++	if (soc_info->is64bit)
++		sched_clock_register(ingenic_ost_read_cntl, 32, rate);
++	else
++		sched_clock_register(ingenic_ost_read_cnth, 32, rate);
++
++	return 0;
++}
++
++static int __maybe_unused ingenic_ost_suspend(struct device *dev)
++{
++	struct ingenic_ost *ost = dev_get_drvdata(dev);
++
++	clk_disable(ost->clk);
++
++	return 0;
++}
++
++static int __maybe_unused ingenic_ost_resume(struct device *dev)
++{
++	struct ingenic_ost *ost = dev_get_drvdata(dev);
++
++	return clk_enable(ost->clk);
++}
++
++static const struct dev_pm_ops __maybe_unused ingenic_ost_pm_ops = {
++	/* _noirq: We want the OST clock to be gated last / ungated first */
++	.suspend_noirq = ingenic_ost_suspend,
++	.resume_noirq  = ingenic_ost_resume,
++};
++
++static const struct ingenic_ost_soc_info jz4725b_ost_soc_info = {
++	.is64bit = false,
++};
++
++static const struct ingenic_ost_soc_info jz4770_ost_soc_info = {
++	.is64bit = true,
++};
++
++static const struct of_device_id ingenic_ost_of_match[] = {
++	{ .compatible = "ingenic,jz4725b-ost", .data = &jz4725b_ost_soc_info, },
++	{ .compatible = "ingenic,jz4770-ost", .data = &jz4770_ost_soc_info, },
++	{ }
++};
++
++static struct platform_driver ingenic_ost_driver = {
++	.driver = {
++		.name = "ingenic-ost",
++#ifdef CONFIG_PM_SUSPEND
++		.pm = &ingenic_ost_pm_ops,
++#endif
++		.of_match_table = ingenic_ost_of_match,
++	},
++};
++builtin_platform_driver_probe(ingenic_ost_driver, ingenic_ost_probe);
+-- 
+2.25.0
 
->> We
->> were looking at possibly leveraging the name as a key and using
->> security_transition_sid() to generate a distinct SID/context/type for
->> the inode via type_transition rules in policy.  We have some WIP along
->> those lines.
-> 
-> Where? Any chance it would be ready soon? I'd rather not hold up this
-> work for a more general mechanism.
-
-Hopefully will have a patch available soon.  But not saying this 
-necessarily has to wait either.
-
->>> +     /*
->>> +      * Always give secure anonymous inodes the sid of the
->>> +      * creating task.
->>> +      */
->>> +
->>> +     isec->sid = tsec->sid;
->>
->> This doesn't generalize for other users of anonymous inodes, e.g. the
->> /dev/kvm case where we'd rather inherit the SID and class from the
->> original /dev/kvm inode itself.
-> 
-> I think someone mentioned on the first version of this patch that we
-> could make it more flexible if the need arose. If we do want to do it
-> now, we could have the anon_inode security hook accept a "parent" or
-> "context" inode that modules could inspect for the purposes of forming
-> the new inode's SID. Does that make sense to you?
-
-Yes, that's the approach in our current WIP, except we call it a 
-"related" inode since it isn't necessarily connected to the anon inode 
-in any vfs sense.
