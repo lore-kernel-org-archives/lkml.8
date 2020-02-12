@@ -2,122 +2,92 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7572C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19E6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABBF20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:29:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="fJBoaSI0"
+	by mail.kernel.org (Postfix) with ESMTP id C047920714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581525014;
+	bh=A8RDXs1hBLAKZAE4c8YvW2A4O1anyMfe6ZpofU8lH+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mbXywTppTubQymI0CAMt+apkz/djS2jlK/fTcyPmxeByqfAaWFn/5vv45tYYGsKV5
+	 gv0lFooxikL8D6vVQ9cTL1mozce+fGRLYIAYyzjoyM80fOt0KHpUV5eCvn/sakQ9/j
+	 uNpZEVuHaNi192ASvewCixZ/ku8XhbegdOIFxYRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgBLQ3c (ORCPT
+        id S1728674AbgBLQaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:29:32 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37379 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgBLQ3b (ORCPT
+        Wed, 12 Feb 2020 11:30:14 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38628 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgBLQaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:29:31 -0500
-Received: by mail-ot1-f67.google.com with SMTP id d3so2516868otp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:29:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=647g8a8Lt3ytHPQLGC+Zkvcfptz2Smcfs4FoMFLjKRU=;
-        b=fJBoaSI0tDyGiB+SX2LJTQPvgdQN85ITMAUE7AB+w3z3H6fCsgY2DX4U6x+xEkNyxy
-         lgTCrIPKF0eXqy2YBT5fSM4l3H9+XIbZH8GEGfjuQKlPxZ5p8JXCZb8r+klFRI3t7Qf2
-         ESoCpMXzUxLU55bKVBpYYh7c6he8IBVIu0qiUgLNeL4CY0S8tVpLquHkAQoVUTHBg9wW
-         TGgtF4DpVnYQQ3Aio3SGwS4QcMwq4T/md1bG2ZKFBe4iNy9b1iV7B3DfkGQo/4jg40KV
-         vK9oUrVWlKpOfIVGuwXEggTZJvRsIrOQ0wjVoIFsMT6hK608eokjdjGoBbuDF1flSnGK
-         tA1g==
+        Wed, 12 Feb 2020 11:30:13 -0500
+Received: by mail-pl1-f195.google.com with SMTP id t6so1150603plj.5;
+        Wed, 12 Feb 2020 08:30:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=647g8a8Lt3ytHPQLGC+Zkvcfptz2Smcfs4FoMFLjKRU=;
-        b=q7lU0h/BjhM/2DXxAx0uFUAu5YADdsRp6aWmSUNLArRJPmO0pVU6XKdSvuhTQOLCUL
-         g0Zy/ozbQwrrhq5TNvAYF/pvO2diG/K9Xg2PUn6NLuX3L/Fcvl40moJF4+doafrM36cu
-         S1pxuPos84G4n4WHi07mc+ktDCTcUQqWiiu70M2tSKrDJJZIrJGxzmF4iyiALC8kXB1m
-         yRm0Es7HQHPF5e/fMlFVTqSAM7fdwPdIj4TOtNWANyG4jeIQFE1Gki0N2c2PzCR8KfKq
-         0uEoY2rSlvei6h7A6uzzpAZZidaFFDk9N0L/LjQ3yriBO1Tiw/pyqD2zKE0n/DLWNBQ+
-         8nNw==
-X-Gm-Message-State: APjAAAX5vvAu89rCVnzf38wimvG6ugkuJuv4xszFXfrI+YdUy9VgGtL6
-        TdhQdwvBavbzo1/N4RdeuDVMHnnmd0NjM9wGpMAqGg==
-X-Google-Smtp-Source: APXvYqwmJT3w1mf5raAkgQf5NTWMOsCpSoJRY4gg8xdeBS+4tymIkSp4wQ2G+gjIfltmRN4Tv4ku+uJQNUoLQX0avwY=
-X-Received: by 2002:a9d:7852:: with SMTP id c18mr9463684otm.247.1581524971031;
- Wed, 12 Feb 2020 08:29:31 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1IlVs+PoyqskVeOryq4nWg0BV3ImUVF+jcq3kxeboTk=;
+        b=jgjqfu+MGvVk/djwqmpMh+YXZSNvoqlNm7J1vPLx6BjvwWiupsIax8Rfuj01WRBSzE
+         Q5bnRMRZzTulTZifiRb66wgYUbJEEBT7KxbE9uS5mbfVA0lwRmr7aUXUPLn39jtRGcCH
+         6ZjxCftEQI09ldAaWF9X9htWJIZBAZGpC5ytkHexgDUbW2NXcGYLKXElRKLAg5HRGCth
+         lu+0F7c/7USoLo6uylTzLIl+Czj/lT2iPI7WvfrWtuhAfy5UdC4U3Amp8co/EmgsIXaj
+         8TxYmGPkWr+P+khIhzBEPepji1QakrW/U7Lb93qJNRTP3OVZaxddoltw2z/uu1iHYSc5
+         ceVg==
+X-Gm-Message-State: APjAAAXA++fLwSJVg0QVMTSe+4G95EhkJQc0PtsW+ErVO0RUgey2zZSp
+        GO2MK7+gAqNNWUQqXtg5Mb0=
+X-Google-Smtp-Source: APXvYqx5Wx6WVU8t/C3lzNyGG1nBbFeYXoZreqRsnGRq3J0F0tUSVkJseGopg+0FRqyzGnmuRBdpPg==
+X-Received: by 2002:a17:902:d692:: with SMTP id v18mr9369625ply.9.1581525011511;
+        Wed, 12 Feb 2020 08:30:11 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id j14sm968499pgs.57.2020.02.12.08.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 08:30:10 -0800 (PST)
+Date:   Wed, 12 Feb 2020 08:30:04 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
+ kvm_flush_remote_tlbs()
+Message-ID: <20200212163004.cpd33ux4zslfc3es@lantea.localdomain>
+References: <20200207223520.735523-1-peterx@redhat.com>
+ <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
 MIME-Version: 1.0
-References: <20190805142706.22520-1-keith.busch@intel.com> <20190805142706.22520-4-keith.busch@intel.com>
- <CAJZ5v0hCkibcbiYdPmBXdnDHZbGP2q0uNRi01oU0NMz5o3WwGA@mail.gmail.com> <1922204.kTHyOg1r71@kreacher>
-In-Reply-To: <1922204.kTHyOg1r71@kreacher>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 12 Feb 2020 08:29:20 -0800
-Message-ID: <CAPcyv4iLyHLqRD4E9HHx+pcRVHkF8zYKjCBE9YDQOiZTQVyo0g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] acpi/hmat: Skip publishing target info for nodes with
- no online memory
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 2:05 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Monday, August 12, 2019 10:59:58 AM CEST Rafael J. Wysocki wrote:
-> > On Mon, Aug 5, 2019 at 4:30 PM Keith Busch <keith.busch@intel.com> wrote:
-> > >
-> > > From: Dan Williams <dan.j.williams@intel.com>
-> > >
-> > > There are multiple scenarios where the HMAT may contain information
-> > > about proximity domains that are not currently online. Rather than fail
-> > > to report any HMAT data just elide those offline domains.
-> > >
-> > > If and when those domains are later onlined they can be added to the
-> > > HMEM reporting at that point.
-> > >
-> > > This was found while testing EFI_MEMORY_SP support which reserves
-> > > "specific purpose" memory from the general allocation pool. If that
-> > > reservation results in an empty numa-node then the node is not marked
-> > > online leading a spurious:
-> > >
-> > >     "acpi/hmat: Ignoring HMAT: Invalid table"
-> > >
-> > > ...result for HMAT parsing.
-> > >
-> > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > > Reviewed-by: Keith Busch <keith.busch@intel.com>
-> > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >
-> > When you send somebody else's patches, you should sign them off as a
-> > rule, but since you sent this one with your own R-by, I converted that
-> > to a S-o-b.
-> >
->
-> And all patches in the series have been applied.
+Hi Paolo,
 
-I want to flag this patch (commit 5c7ed4385424 "HMAT: Skip publishing
-target info for nodes with no online memory")
-for -stable to cleanup a spurious WARN_ON:
+On Wed, Feb 12, 2020 at 01:25:30PM +0100, Paolo Bonzini wrote:
+> MIPS folks, I see that arch/mips/kvm/mmu.c uses pud_index, so it's not
+> clear to me if it's meant to only work if CONFIG_PGTABLE_LEVELS=4 or
+> it's just bit rot.  Should I add a "depends on PGTABLE_LEVEL=4" to
+> arch/mips/Kconfig?
 
-WARNING: CPU: 7 PID: 1 at drivers/base/node.c:191 node_set_perf_attrs+0x90/0xa0
-CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.3.6-100.fc29.x86_64 #1
-RIP: 0010:node_set_perf_attrs+0x90/0xa0
-Call Trace:
- ? do_early_param+0x8e/0x8e
- hmat_init+0x2ff/0x443
- ? hmat_parse_subtable+0x55a/0x55a
- ? do_early_param+0x8e/0x8e
- do_one_initcall+0x46/0x1f4
+I'm no expert on this bit of code, but I'm pretty sure the systems
+KVM/VZ has been used on the most internally had PGTABLE_LEVEL=3.
 
-Do you mind if I forward to stable@, or do you collect ACPI patches to
-send to stable@?
+I suspect this is actually a regression from commit 31168f033e37 ("mips:
+drop __pXd_offset() macros that duplicate pXd_index() ones"). Whilst
+that commit is correct that pud_index() & __pud_offset() are the same
+when pud_index() is actually provided, it doesn't take into account the
+__PAGETABLE_PUD_FOLDED case. There __pud_offset() was available but
+would always evaluate to zero, whereas pud_index() isn't defined...
+
+Thanks,
+    Paul
