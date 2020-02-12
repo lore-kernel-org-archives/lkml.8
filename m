@@ -6,149 +6,180 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D088C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4405AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF44620848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240A22073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgBLJa4 (ORCPT
+        id S1728861AbgBLJbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:30:56 -0500
-Received: from mga18.intel.com ([134.134.136.126]:30171 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728530AbgBLJa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:30:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 01:30:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="233735616"
-Received: from mylly.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga003.jf.intel.com with ESMTP; 12 Feb 2020 01:30:52 -0800
-Subject: Re:
-To:     Rajat Jain <rajatja@google.com>, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Evan Green <evgreen@chromium.org>, rajatxjain@gmail.com,
-        evgreen@google.com, shobhit.srivastava@intel.com,
-        porselvan.muthukrishnan@intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20200211223400.107604-1-rajatja@google.com>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <b3397374-0cb8-cf6c-0555-34541a1c108c@linux.intel.com>
-Date:   Wed, 12 Feb 2020 11:30:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 04:31:10 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50904 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728530AbgBLJbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 04:31:10 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7BA28551258B46250CA0;
+        Wed, 12 Feb 2020 17:31:07 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Feb 2020
+ 17:30:56 +0800
+Subject: Re: [PATCH] perf tools: Add arm64 version of get_cpuid()
+To:     John Garry <john.garry@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>
+References: <1576245255-210926-1-git-send-email-john.garry@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <4ccf4455-b33d-441b-50ed-28211dd87c7c@hisilicon.com>
+Date:   Wed, 12 Feb 2020 17:30:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-In-Reply-To: <20200211223400.107604-1-rajatja@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <1576245255-210926-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hi John,
 
-+ Andy
+I tested this patch on my new ARM64 Kunpeng 920 server.
+[root@node1 zsk]# ./perf --version
+perf version 5.6.rc1.g2cdb955b7252
 
-On 2/12/20 12:34 AM, Rajat Jain wrote:
-> From: Evan Green <evgreen@chromium.org>
-> 
-> Date: Wed, 29 Jan 2020 13:54:16 -0800
-> Subject: [PATCH] spi: pxa2xx: Add CS control clock quirk
-> 
-This patch subject is missing from mail subject.
+Both perf list and perf stat can work.
 
-> In some circumstances on Intel LPSS controllers, toggling the LPSS
-> CS control register doesn't actually cause the CS line to toggle.
-> This seems to be failure of dynamic clock gating that occurs after
-> going through a suspend/resume transition, where the controller
-> is sent through a reset transition. This ruins SPI transactions
-> that either rely on delay_usecs, or toggle the CS line without
-> sending data.
-> 
-> Whenever CS is toggled, momentarily set the clock gating register
-> to "Force On" to poke the controller into acting on CS.
-> 
-Could you share the test case how to trigger this? What's the platform 
-here? I'd like to check does this reproduce on other Intel LPSS 
-platforms so is there need to add quirk for them too.
+Tested-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
->   drivers/spi/spi-pxa2xx.c | 23 +++++++++++++++++++++++
->   1 file changed, 23 insertions(+)
+Thanks,
+Shaokun
+
+On 2019/12/13 21:54, John Garry wrote:
+> Add an arm64 version of get_cpuid(), which is used for various annotation
+> and headers - for example, I now get the CPUID in "perf report --header",
+> as shown in this snippet:
 > 
-> diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-> index 4c7a71f0fb3e..2e318158fca9 100644
-> --- a/drivers/spi/spi-pxa2xx.c
-> +++ b/drivers/spi/spi-pxa2xx.c
-> @@ -70,6 +70,10 @@ MODULE_ALIAS("platform:pxa2xx-spi");
->   #define LPSS_CAPS_CS_EN_SHIFT			9
->   #define LPSS_CAPS_CS_EN_MASK			(0xf << LPSS_CAPS_CS_EN_SHIFT)
->   
-> +#define LPSS_PRIV_CLOCK_GATE 0x38
-> +#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK 0x3
-> +#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON 0x3
+> # hostname : ubuntu
+> # os release : 5.5.0-rc1-dirty
+> # perf version : 5.5.rc1.gbf8a13dc9851
+> # arch : aarch64
+> # nrcpus online : 96
+> # nrcpus avail : 96
+> # cpuid : 0x00000000480fd010
+> 
+> Since much of the code to read the MIDR is already in get_cpuid_str(),
+> factor out this code.
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> 
+> diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
+> index a32e4b72a98f..d730666ab95d 100644
+> --- a/tools/perf/arch/arm64/util/header.c
+> +++ b/tools/perf/arch/arm64/util/header.c
+> @@ -1,8 +1,10 @@
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <perf/cpumap.h>
+> +#include <util/cpumap.h>
+>  #include <internal/cpumap.h>
+>  #include <api/fs/fs.h>
+> +#include <errno.h>
+>  #include "debug.h"
+>  #include "header.h"
+>  
+> @@ -12,26 +14,21 @@
+>  #define MIDR_VARIANT_SHIFT      20
+>  #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
+>  
+> -char *get_cpuid_str(struct perf_pmu *pmu)
+> +static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
+>  {
+> -	char *buf = NULL;
+> -	char path[PATH_MAX];
+>  	const char *sysfs = sysfs__mountpoint();
+> -	int cpu;
+>  	u64 midr = 0;
+> -	struct perf_cpu_map *cpus;
+> -	FILE *file;
+> +	int cpu;
+>  
+> -	if (!sysfs || !pmu || !pmu->cpus)
+> -		return NULL;
+> +	if (!sysfs || sz < MIDR_SIZE)
+> +		return EINVAL;
+>  
+> -	buf = malloc(MIDR_SIZE);
+> -	if (!buf)
+> -		return NULL;
+> +	cpus = perf_cpu_map__get(cpus);
+>  
+> -	/* read midr from list of cpus mapped to this pmu */
+> -	cpus = perf_cpu_map__get(pmu->cpus);
+>  	for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
+> +		char path[PATH_MAX];
+> +		FILE *file;
 > +
->   struct lpss_config {
->   	/* LPSS offset from drv_data->ioaddr */
->   	unsigned offset;
-> @@ -86,6 +90,8 @@ struct lpss_config {
->   	unsigned cs_sel_shift;
->   	unsigned cs_sel_mask;
->   	unsigned cs_num;
-> +	/* Quirks */
-> +	unsigned cs_clk_stays_gated : 1;
->   };
->   
->   /* Keep these sorted with enum pxa_ssp_type */
-> @@ -156,6 +162,7 @@ static const struct lpss_config lpss_platforms[] = {
->   		.tx_threshold_hi = 56,
->   		.cs_sel_shift = 8,
->   		.cs_sel_mask = 3 << 8,
-> +		.cs_clk_stays_gated = true,
->   	},
->   };
->   
-> @@ -383,6 +390,22 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
->   	else
->   		value |= LPSS_CS_CONTROL_CS_HIGH;
->   	__lpss_ssp_write_priv(drv_data, config->reg_cs_ctrl, value);
-> +	if (config->cs_clk_stays_gated) {
-> +		u32 clkgate;
+>  		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
+>  				sysfs, cpus->map[cpu]);
+>  
+> @@ -57,12 +54,48 @@ char *get_cpuid_str(struct perf_pmu *pmu)
+>  		break;
+>  	}
+>  
+> -	if (!midr) {
+> +	perf_cpu_map__put(cpus);
 > +
-> +		/*
-> +		 * Changing CS alone when dynamic clock gating is on won't
-> +		 * actually flip CS at that time. This ruins SPI transfers
-> +		 * that specify delays, or have no data. Toggle the clock mode
-> +		 * to force on briefly to poke the CS pin to move.
-> +		 */
-> +		clkgate = __lpss_ssp_read_priv(drv_data, LPSS_PRIV_CLOCK_GATE);
-> +		value = (clkgate & ~LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK) |
-> +			LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON;
+> +	if (!midr)
+> +		return EINVAL;
 > +
-> +		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, value);
-> +		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, clkgate);
-> +	}
->   }
->   
-I wonder is it enough to have this quick toggling only or is time or 
-actually number of clock cycles dependent? Now there is no delay between 
-but I'm thinking if it needs certain number cycles does this still work 
-when using low ssp_clk rates similar than in commit d0283eb2dbc1 ("spi: 
-pxa2xx: Add output control for multiple Intel LPSS chip selects").
+> +	return 0;
+> +}
+> +
+> +int get_cpuid(char *buf, size_t sz)
+> +{
+> +	struct perf_cpu_map *cpus = perf_cpu_map__new(NULL);
+> +	int ret;
+> +
+> +	if (!cpus)
+> +		return EINVAL;
+> +
+> +	ret = _get_cpuid(buf, sz, cpus);
+> +
+> +	perf_cpu_map__put(cpus);
+> +
+> +	return ret;
+> +}
+> +
+> +char *get_cpuid_str(struct perf_pmu *pmu)
+> +{
+> +	char *buf = NULL;
+> +	int res;
+> +
+> +	if (!pmu || !pmu->cpus)
+> +		return NULL;
+> +
+> +	buf = malloc(MIDR_SIZE);
+> +	if (!buf)
+> +		return NULL;
+> +
+> +	/* read midr from list of cpus mapped to this pmu */
+> +	res = _get_cpuid(buf, MIDR_SIZE, pmu->cpus);
+> +	if (res) {
+>  		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
+>  		free(buf);
+>  		buf = NULL;
+>  	}
+>  
+> -	perf_cpu_map__put(cpus);
+>  	return buf;
+>  }
+> 
 
-I'm thinking can this be done only once after resume and may other LPSS 
-blocks need the same? I.e. should this be done in drivers/mfd/intel-lpss.c?
-
-Jarkko
