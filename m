@@ -2,82 +2,52 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C5C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C82C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4082168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:19:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dYl0w06g"
+	by mail.kernel.org (Postfix) with ESMTP id 8ED492082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbgBLTTc (ORCPT
+        id S1729090AbgBLTT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:19:32 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27810 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728930AbgBLTTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:19:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581535170;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ALtsPsHoJJ/yr/NY82gjbpHubR4mBebZy4GAbdTJqzM=;
-        b=dYl0w06gTBlDDuT/cwWaN8yaKoSNW/BKDCotNM1A4GQlMXjT5omgzcVMP735cpxaRGILsU
-        Mdb7zKn3rGpVoGjSmK2sKAOjyrxAAJD1288G0yem2c01VsW1W8dYHmrOCQblur2wBUbfP+
-        I/a7E+7JWVDqkP8q69ykX16/LXIkilw=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-lkLT1y3OPRWFrdghI_P21g-1; Wed, 12 Feb 2020 14:19:28 -0500
-X-MC-Unique: lkLT1y3OPRWFrdghI_P21g-1
-Received: by mail-wm1-f70.google.com with SMTP id f66so1349057wmf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:19:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ALtsPsHoJJ/yr/NY82gjbpHubR4mBebZy4GAbdTJqzM=;
-        b=kzyIhGeBCiigoHxnNU2YwMZp5/Bgj3rgP+LrSyLr/T8uW601uxfG/IKnOnslCldYeq
-         AXniIdM+ZA/Cdz7s0UDyQZ9gsQLQtzwLlYeFhyePK210pQl18FeZc6V5TmlPbojSS6d3
-         fkWj+07jeF/MSRJOMMwLYpCXUugpm/d8EeZDZeDQRpOJNfe9O+xXIAKNlNc8BqlekJQ5
-         YS/UA/bXAAm30wbtCx4iIEDJoT3no9snyM7rRW+rg2Wr7bPTd7b5X0ygzuT0cTCVXdFO
-         tpZmpMJsxtzOJ9kS81mw3FvVedwqE37mOpxkcbZYKh2TvbLAhcQMGSFI9/C3zYWBzL/r
-         Ibqg==
-X-Gm-Message-State: APjAAAX9DMWPB2JFmqmXwpfCZfs5RJ67AiucBjtTx8vL3urmj/N5yfTM
-        GeIQaiSbpY1EZmwupqnsg/bpPa0k+D9+EDYFOh23Lt1Hi7N9mag1Lpa7rvkHpqPyy+Hygv9bF1/
-        pMs+ZN6r0bejkLcCE6Xj1vc8V
-X-Received: by 2002:a1c:3b09:: with SMTP id i9mr560742wma.31.1581535167688;
-        Wed, 12 Feb 2020 11:19:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyeyaA14PxiDCO4uOSF5JvBIm+xF1sF2jVONkZ/53zgfRVuwKC20eBEA1OtGwEYi/yLlQpFbg==
-X-Received: by 2002:a1c:3b09:: with SMTP id i9mr560716wma.31.1581535167364;
-        Wed, 12 Feb 2020 11:19:27 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
-        by smtp.gmail.com with ESMTPSA id d204sm1919873wmd.30.2020.02.12.11.19.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 11:19:26 -0800 (PST)
-Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>
-References: <20200212164714.7733-1-pbonzini@redhat.com>
- <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b90a886e-b320-43d3-b2b6-7032aac57abe@redhat.com>
-Date:   Wed, 12 Feb 2020 20:19:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 12 Feb 2020 14:19:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:36782 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728816AbgBLTT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 14:19:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5ADE30E;
+        Wed, 12 Feb 2020 11:19:56 -0800 (PST)
+Received: from [192.168.0.21] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 597093F68E;
+        Wed, 12 Feb 2020 11:19:53 -0800 (PST)
+Subject: Re: [PATCH v3 1/7] arm64: add support for the AMU extension v1
+To:     Ionela.Voinescu@arm.com
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, sudeep.holla@arm.com, lukasz.luba@arm.com,
+        valentin.schneider@arm.com, rjw@rjwysocki.net,
+        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-2-ionela.voinescu@arm.com>
+ <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
+ <20200212161045.GA7475@arm.com>
+ <133890f7-59bb-63b9-0ca8-2294e3596058@arm.com>
+ <20200212182008.GA25421@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f35dc0e3-c85e-30da-6119-fcf398b4b428@arm.com>
+Date:   Wed, 12 Feb 2020 19:24:13 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200212182008.GA25421@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,58 +55,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/20 19:53, Linus Torvalds wrote:
-> It doesn't even compile. Just in the patch itself - so this is not a
-> merge issue, I see this:
+Hi Ionela,
+
+On 02/12/2020 06:20 PM, Ionela Voinescu wrote:
+> Hi Suzuki,
 > 
->           int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
->   ..
->   @@ -1599,6 +1599,40 @@ static int skip_emulated_instruction(struct
-> kvm_vcpu *vcpu)
->   ..
->   +static void vmx_skip_emulated_instruction(struct kvm_vcpu *vcpu)
->   +       return skip_emulated_instruction(vcpu);
->   ..
->   -       .skip_emulated_instruction = skip_emulated_instruction,
->   +       .skip_emulated_instruction = vmx_skip_emulated_instruction,
+> On Wednesday 12 Feb 2020 at 16:20:56 (+0000), Suzuki Kuruppassery Poulose wrote:
+>>>>> +static bool has_amu(const struct arm64_cpu_capabilities *cap,
+>>>>> +		       int __unused)
+>>>>> +{
+>>>>> +	/*
+>>>>> +	 * The AMU extension is a non-conflicting feature: the kernel can
+>>>>> +	 * safely run a mix of CPUs with and without support for the
+>>>>> +	 * activity monitors extension. Therefore, if not disabled through
+>>>>> +	 * the kernel command line early parameter, enable the capability
+>>>>> +	 * to allow any late CPU to use the feature.
+>>>>> +	 *
+>>>>> +	 * With this feature enabled, the cpu_enable function will be called
+>>>>> +	 * for all CPUs that match the criteria, including secondary and
+>>>>> +	 * hotplugged, marking this feature as present on that respective CPU.
+>>>>> +	 * The enable function will also print a detection message.
+>>>>> +	 */
+>>>>> +
+>>>>> +	if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
+>>>>
+>>>> This looks problematic. Don't we end up in allocating the memory during
+>>>> "each CPU" check and thus leaking memory ? Do we really need to allocate
+>>>> this dynamically ?
+>>>>
+>>>
+>>> Yes, it does make some assumptions. Given that the AMU capability is
+>>> a WEAK_LOCAL_CPU_FEATURE I relied on the match function being called
+>>> only once, when the return value is true. If the return value is false,
+>>
+>> That is not correct. A WEAK_LOCAL_CPU_FEATURE is still SCOPE_LOCAL_CPU,
+>> implies it is run on all the booting CPUs (including the hotplugged
+>> ones). The WEAK is there to imply that its "permitted" or "optional"
+>> for a hotplugged CPU. So, eventually you will re-allocate this variable
+>> every single time a CPU turns up, where you could also loose the current
+>> state.
+>>
 > 
-> ie note how that vmx_skip_emulated_instruction() is a void function,
-> and then you have
+>>> which will result in it being called multiple times, it's either because
+>>> disable_amu == false, or it has become false due to a previous failed
+>>> allocation, in which case a new allocation will not be attempted.
 > 
->          return skip_emulated_instruction(vcpu);
+> First of all, I agree with you that this should be corrected.
 > 
-> in it, and you assign that garbage to ".skip_emulated_instruction"
-> which is supposed to be returning 'int'.
+> But for completion (and my education) I retraced my steps in regards
+> to my assumption above. While cpu_enable is called for all CPUs - boot,
+> secondary, hotplugged, the matches function (in this case has_amu) is
+> not always called for all CPUs, and that's where the confusion came
+> from.
+> 
+> Looking over the update_cpu_capabilities function, that's called from
+> both setup_boot_cpu_capabilities and check_local_cpu_capabilities
+> (secondary CPUs) for SCOPE_LOCAL_CPU:
+> 
+> -----
+> static void update_cpu_capabilities(u16 scope_mask)
+> {
+>          int i;
+>          const struct arm64_cpu_capabilities *caps;
+> 
+>          scope_mask &= ARM64_CPUCAP_SCOPE_MASK;
+>          for (i = 0; i < ARM64_NCAPS; i++) {
+>                  caps = cpu_hwcaps_ptrs[i];
+>                  if (!caps || !(caps->type & scope_mask) ||
+>                      cpus_have_cap(caps->capability) ||
+>                      !caps->matches(caps, cpucap_default_scope(caps)))
+>                          continue;
+> 
+> --> The matches function is only called if !cpus_have_cap
 
-Indeed I missed the warning.  Of course the return value is in %rax so,
-despite the patch being shitty (it is), it is also true that it
-*happens* to pass the corresponding unit test.
+Agreed. Your analysis is correct. This was done as a micro
+optimization(!) as it is pointless to check if something should be set, 
+when it is already set.
 
-Not a particularly high bar to clear I admit, but enough to explain the
-mistake and ensure it doesn't happen again; I have now added "ccflags-y
-+= -Werror" to the KVM makefile.
+> 
+> 
+>                  if (caps->desc)
+>                          pr_info("detected: %s\n", caps->desc);
+>                  cpus_set_cap(caps->capability);
+> 
+> --> If matches returns true we mark it as present in cpu_hwcaps.
+> 
+>                  if ((scope_mask & SCOPE_BOOT_CPU) && (caps->type & SCOPE_BOOT_CPU))
+>                          set_bit(caps->capability, boot_capabilities);
+>          }
+> }
+> ---
+> 
+> Therefore caps->matches (in this case has_amu) will only be called as
+> long as it returns false. This is where my assumption above came from.
+> Also, this is the reason it was working nicely in my testing, as I did
+> not test hotplug this time.
+> 
+> Where the has_amu code breaks is when we end up calling
+> verify_local_cpu_capabilities instead of update_cpu_capabilities after
+> sys_caps_initialised, which will happen for hotplugged CPUs.
+> In that case we call caps->matches for all CPUs. Also, if anyone in the
+> future ends up calling this_cpu_has_cap for the AMU capability.
 
-> So this clearly never even got a _whiff_ of build-testing.
+True.
 
-Oh come on.
+> 
+> I will fix this.
 
-> You're now on my shit-list, which means that I want to see only (a)
-> pure fixes and (b) well-tested such. Nothing else will be pulled.
-
-Fair enough, I removed the following patches from the pull request and
-will resend:
-
- KVM: nVMX: Emulate MTF when performing instruction emulation
- KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
- KVM: nVMX: Rename EPTP validity helper and associated variables
- KVM: nVMX: Drop unnecessary check on ept caps for execute-only
- KVM: Provide kvm_flush_remote_tlbs_common()
- KVM: MIPS: Drop flush_shadow_memslot() callback
- KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
- KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
-
-The first one is a bug fix, but since it's the one that caused all the
-mess I guess it's not really a good idea to argue about it.
-
-Paolo
-
+Cheers
+Suzuki
