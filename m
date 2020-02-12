@@ -2,155 +2,141 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F518C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF42C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734852082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581545789;
-	bh=xWKxGR9jZZLM8Fi96N9f70zttlqIrIjWLntWGvtmqaA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DWtfWiCbSGTZQIbu7ho4u1ME6huieC4nP3giZCZlw0uRTL45N3uMTxO7Kuo9oXH8R
-	 y5OSkjPLD2S+yHuMibkBnvzkTkjzZ69LfhH5cIXBAZgu7gen3vqcZVwj6GBPHxlOhk
-	 MRbXDIX+IPXv1ZD1trhw3XKpS5ojsDvRbzBB9qCQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1CD702082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:18:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sondrel.com header.i=@sondrel.com header.b="p8T1L2kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgBLWQ2 (ORCPT
+        id S1729119AbgBLWSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:16:28 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39006 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgBLWQ0 (ORCPT
+        Wed, 12 Feb 2020 17:18:42 -0500
+Received: from dispatch1-eu1.ppe-hosted.com ([185.132.181.6]:9856 "EHLO
+        dispatch1-eu1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727564AbgBLWSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:16:26 -0500
-Received: by mail-pg1-f195.google.com with SMTP id j15so1934888pgm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:16:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D/5iSeGXxDP+lyJUNU19NRvUdswxslkbz5wrgabobm4=;
-        b=RgghztW93FIsObaDVTciRjZtfHpXEir8OzbNJN4SLfBEcm0ZxYvARrdoRfoXg+LwMe
-         jwiPMshiVt5Onf2q1iAfqMGoHt/WNe9/ARKxkJHYkx8V4VZQ/dzVrs3R+y43UPMVH6Gd
-         rkB8L7CTQkylxONFx0N68n5Yt4bLQPcZj9G0Dg2dw1d9ksO8J5Gha2Ci5J2LEMK30HQO
-         AzHycbYzANEqFI7IuT4k4eUWczU6MiwGLtqSos2qS+eaEfioQMTKAXhXKWFO4ifupbG3
-         E6/7183vg2hJ+yeMpUJh+q9TdtbUJbf+s9+wi9ObLW3GaWrcAfrc9g/LKACZVKX6dNzH
-         g0kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=D/5iSeGXxDP+lyJUNU19NRvUdswxslkbz5wrgabobm4=;
-        b=oGsfzc/MKpkw+sL01j6LZp9696fMhiJQvmq7ZrRR6/qwdLZF/gqW9fno1BUqyZlshM
-         rZ8YZIJuatCZZ3urnGXYPTwOMYeDYRAmtSHdmSG0hg6BoJyOgJzMNMf579C36bv680i9
-         QDNEQECWsiCHVNaqm8+ioiKj2EpEOXAXNnDzqgr9t/hlU6CV0hJ3sJAMJySZGq7FkZrH
-         MXycJzQMF4MtuS6frwGby4u3vE0SSNNcDlsAWS3mqhBKzYWrv4+bsWgIZjcLqDQHL6Ua
-         wFhLk69fj3SplyI2c253N3QfT4XngLX800qINlfXkUw4XmubtvDEIckjSwsJNll1l8vF
-         VVxA==
-X-Gm-Message-State: APjAAAW68v0q510KzeWKUjSRcTfKMIBaypl9uGPHj8zdrugESxwNphUX
-        x3uPNHx2/AjoKOVQ1V83bTI=
-X-Google-Smtp-Source: APXvYqz1nem2XDQSzeUCQA8Znbwsf82xp456uPoXIqYlQNqSSDiN2zIXgfgWRsDJA3ckF8qu9qTo7w==
-X-Received: by 2002:a63:42c4:: with SMTP id p187mr14713432pga.57.1581545785766;
-        Wed, 12 Feb 2020 14:16:25 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id o10sm117683pgq.68.2020.02.12.14.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 14:16:24 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>, Robert Stupp <snazy@gmx.de>
-Subject: [PATCH 3/3] mm: make PageReadahead more strict
-Date:   Wed, 12 Feb 2020 14:16:14 -0800
-Message-Id: <20200212221614.215302-3-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
-In-Reply-To: <20200212221614.215302-1-minchan@kernel.org>
-References: <20200212221614.215302-1-minchan@kernel.org>
+        Wed, 12 Feb 2020 17:18:42 -0500
+X-Greylist: delayed 595 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 17:18:39 EST
+Received: from dispatch1-eu1.ppe-hosted.com (localhost.localdomain [127.0.0.1])
+        by dispatch1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 4FEC030118D;
+        Wed, 12 Feb 2020 22:08:45 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-am5eur03lp2059.outbound.protection.outlook.com [104.47.8.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id E338AB80069;
+        Wed, 12 Feb 2020 22:08:42 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z1IX59ZphssSUkQp6ycYiSBI5Mf9sZusDDw2q5w2rBu+T7VLeM9mm4pPmHTreJ31lbCU/c8+71VypQb/2ImlimkZMKM8aptubEF3oCQyEB777tHsO71S2O+taoRF3wW3Jf7LXVk9/Q5eFyvUvvfuenO5NhV6/mwq7n9TifLh/3KOXfKBrpEWr3dRenNRId1hmEf5m31ccLQ1BdqIMpHlV8/jgaBDZ7x08sBc9tABuqxZ6u6VQtuHLee088imQGXg/RN+2wBGD1njfl/3jV8cJSFtD9Gj1gdQgbtw5n8hNs7QvexW7Ut5cIa/eoLNk30v/OuQ6+H69xchu7TN4Bfn0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3rSz+9QlnaRArNoTDgvcLcoC5V9xm+ygVI6Zjx0Ct7o=;
+ b=fHM4/c/C5REhC4GqEJqPmADdO3Ig+sn7AVgaevtHm+AHoePEUc3AsYmF3MGwiNfQzN/E9nbypaJgZpfYAkCI8XEPM+FqL2Ud6sxwDCjoTPg8RD0lGxikA2Y/nchw1n+RePrc1LTRLsBctzRUPYXRSOinevBFaasiHE1hgy9QgSwk8eT1aiP6HLfNBe/pQxjBcXgIRRhO29ZCKBq6H677Nf8Ng1s+615dhisjGI68zHyM1nQHHudSnlI+NddnfQzYJkaXNi/Z51KU7S7kddoBsrdOgXpVgeaGjpKO99tULGXXmCu2xFLlUlroD8ArRLksdBnK3D7QLYGpXipPFtaUgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sondrel.com; dmarc=pass action=none header.from=sondrel.com;
+ dkim=pass header.d=sondrel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sondrel.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3rSz+9QlnaRArNoTDgvcLcoC5V9xm+ygVI6Zjx0Ct7o=;
+ b=p8T1L2kRi7+nnudEds6g2nu5CvsjJTVZGJJkZUkoQFteto8wGyyPJRo9wNcAG+bp8iL+Paw8p6kE+UBtyj7Ia/KqAKSVId+kRDGnX3/9GeNYl3tZmRMzbNkZpAt4xlg9xVxxJmWqaeKjfecn27QiYDnLEFgxHJAsT+Gim55Ixxo=
+Received: from DB7P191MB0314.EURP191.PROD.OUTLOOK.COM (52.134.99.151) by
+ DB7P191MB0347.EURP191.PROD.OUTLOOK.COM (52.134.100.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Wed, 12 Feb 2020 22:08:41 +0000
+Received: from DB7P191MB0314.EURP191.PROD.OUTLOOK.COM
+ ([fe80::f926:962:4e32:d5d]) by DB7P191MB0314.EURP191.PROD.OUTLOOK.COM
+ ([fe80::f926:962:4e32:d5d%3]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
+ 22:08:41 +0000
+Received: from [192.168.0.46] (82.14.193.49) by LO2P265CA0327.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a4::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Wed, 12 Feb 2020 22:08:40 +0000
+From:   James Hartley <james.hartley@sondrel.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        John Crispin <john@phrozen.org>
+CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/7] MIPS: Pistachio: Replace <linux/clk-provider.h> by
+ <linux/of_clk.h>
+Thread-Topic: [PATCH 6/7] MIPS: Pistachio: Replace <linux/clk-provider.h> by
+ <linux/of_clk.h>
+Thread-Index: AQHV4Y1n9SswgBWnjEe2OhWviFMu3qgYHrGA
+Date:   Wed, 12 Feb 2020 22:08:41 +0000
+Message-ID: <98747d93-dd49-a121-e68d-24bcf4477373@sondrel.com>
+References: <20200212101544.8793-1-geert+renesas@glider.be>
+ <20200212101544.8793-7-geert+renesas@glider.be>
+In-Reply-To: <20200212101544.8793-7-geert+renesas@glider.be>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [82.14.193.49]
+x-clientproxiedby: LO2P265CA0327.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::27) To DB7P191MB0314.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:5:7::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.hartley@sondrel.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7455b3a8-4181-4994-86b5-08d7b0081e36
+x-ms-traffictypediagnostic: DB7P191MB0347:
+x-microsoft-antispam-prvs: <DB7P191MB0347D0B5EB9B5432D625EB8CF91B0@DB7P191MB0347.EURP191.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0311124FA9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(396003)(39840400004)(189003)(199004)(5660300002)(66476007)(66946007)(64756008)(66556008)(52116002)(66446008)(4744005)(316002)(16576012)(54906003)(110136005)(81156014)(81166006)(956004)(186003)(478600001)(8676002)(44832011)(8936002)(16526019)(53546011)(2616005)(26005)(6486002)(31696002)(7416002)(86362001)(31686004)(4326008)(71200400001)(2906002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7P191MB0347;H:DB7P191MB0314.EURP191.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sondrel.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w8KpzaD27tsX4/d5BDqmFONGAEf6NLF2WmGGYrNVdbz2sBzmFWoi79PCeRn5ut1by0MGLxDLSXq6exeVdwuGbL6lIkqo2oqzZyck9MePtCBvj5571BnTSwL1g5FTA8EJJsqcxKoIL/e51Bqyps0zHDkc/bJemXKmDI7HuI62GV/MBImIVhmpHfkEjGNPp+6HjR+rg8gW6apPMfT/p66bG65B5rGyCBwE5LRUtA8u+Fe8mRP74lveDC0/RIALxwH510HDvoY5uGWr85IJLVmMY5EaGe0S9phH4rUlDeohzSX6fVRnCKC19AcnAR6FbEiYoCvBnMKeVbvt//MXX/l+A7NL8+jiQAbVcLBYIZAb65AU+T3YIMht/7IoCyRqnOEGCyZDI0McROXH/kgUbckHN5eObKeyumclXl8nFusEN8flkMl630cdJ6DofnPpFkVq
+x-ms-exchange-antispam-messagedata: On5zCajUTVRU99SZjQQ5WH0bqyjng56y6LWMyqUF6Hub48ZCsRqFTT7fE1KECbxn8fSrQ26SLDxIHy1HTBD9KUG27/UZYX/wkS7vWpeM0+UAFI4UPXXYWWchx4KmmDu1BDOlLFBgnVH6chjZTvXzFg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C67F26EA4497E04081197EAA7ADF0E5C@EURP191.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: sondrel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7455b3a8-4181-4994-86b5-08d7b0081e36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 22:08:41.0690
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4faa3872-698e-4896-80ec-148b916cb1ba
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M5K+c8BQO2OEQhEXOxspPHp2bUxYq8KlK8FrwePSA/E8//lIuE+vbvOu8+9v5dQQZ+xt324Gzl/N2V8Q184WUHlauunl3uDXzCMQBT6uDMg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7P191MB0347
+X-MDID: 1581545323-QLBE0A7A8d2Y
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PG_readahead flag is shared with PG_reclaim but PG_reclaim is only
-used in write context while PG_readahead is used for read context.
-
-To make it clear, let's introduce PageReadahead wrapper with
-!PageWriteback so it could make code clear and we could drop
-PageWriteback check in page_cache_async_readahead, which removes
-pointless dropping mmap_sem.
-
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- include/linux/page-flags.h | 28 ++++++++++++++++++++++++++--
- mm/readahead.c             |  6 ------
- 2 files changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 1bf83c8fcaa7..f91a9b2a49bd 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -363,8 +363,32 @@ PAGEFLAG(MappedToDisk, mappedtodisk, PF_NO_TAIL)
- /* PG_readahead is only used for reads; PG_reclaim is only for writes */
- PAGEFLAG(Reclaim, reclaim, PF_NO_TAIL)
- 	TESTCLEARFLAG(Reclaim, reclaim, PF_NO_TAIL)
--PAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
--	TESTCLEARFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-+
-+SETPAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-+CLEARPAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-+
-+/*
-+ * Since PG_readahead is shared with PG_reclaim of the page flags,
-+ * PageReadahead should double check whether it's readahead marker
-+ * or PG_reclaim. It could be done by PageWriteback check because
-+ * PG_reclaim is always with PG_writeback.
-+ */
-+static inline int PageReadahead(struct page *page)
-+{
-+	VM_BUG_ON_PGFLAGS(PageCompound(page), page);
-+
-+	return (page->flags & (1UL << PG_reclaim | 1UL << PG_writeback)) ==
-+		(1UL << PG_reclaim);
-+}
-+
-+/* Clear PG_readahead only if it's PG_readahead, not PG_reclaim */
-+static inline int TestClearPageReadahead(struct page *page)
-+{
-+	VM_BUG_ON_PGFLAGS(PageCompound(page), page);
-+
-+	return !PageWriteback(page) ||
-+			test_and_clear_bit(PG_reclaim, &page->flags);
-+}
- 
- #ifdef CONFIG_HIGHMEM
- /*
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 2fe72cd29b47..85b15e5a1d7b 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -553,12 +553,6 @@ page_cache_async_readahead(struct address_space *mapping,
- 	if (!ra->ra_pages)
- 		return;
- 
--	/*
--	 * Same bit is used for PG_readahead and PG_reclaim.
--	 */
--	if (PageWriteback(page))
--		return;
--
- 	ClearPageReadahead(page);
- 
- 	/*
--- 
-2.25.0.225.g125e21ebc7-goog
-
+DQpPbiAxMi8wMi8yMDIwIDEwOjE1LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+IFRoZSBQ
+aXN0YWNoaW8gcGxhdGZvcm0gY29kZSBpcyBub3QgYSBjbG9jayBwcm92aWRlciwgYW5kIGp1c3Qg
+bmVlZHMgdG8NCj4gY2FsbCBvZl9jbGtfaW5pdCgpLg0KPg0KPiBIZW5jZSBpdCBjYW4gaW5jbHVk
+ZSA8bGludXgvb2ZfY2xrLmg+IGluc3RlYWQgb2YgPGxpbnV4L2Nsay1wcm92aWRlci5oPi4NCj4N
+Cj4gU2lnbmVkLW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRl
+ci5iZT4NCj4gLS0tDQo+ICAgYXJjaC9taXBzL3Bpc3RhY2hpby90aW1lLmMgfCAyICstDQo+ICAg
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+DQo+IGRpZmYg
+LS1naXQgYS9hcmNoL21pcHMvcGlzdGFjaGlvL3RpbWUuYyBiL2FyY2gvbWlwcy9waXN0YWNoaW8v
+dGltZS5jDQo+IGluZGV4IDNjOTIzNWM3NzEwYTYwOGYuLmRlNjQ3NTFkZWM0MDE5OTAgMTAwNjQ0
+DQo+IC0tLSBhL2FyY2gvbWlwcy9waXN0YWNoaW8vdGltZS5jDQo+ICsrKyBiL2FyY2gvbWlwcy9w
+aXN0YWNoaW8vdGltZS5jDQo+IEBAIC02LDEwICs2LDEwIEBADQo+ICAgICovDQo+ICAgDQo+ICAg
+I2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KPiAtI2luY2x1ZGUgPGxpbnV4L2Nsay1wcm92aWRlci5o
+Pg0KPiAgICNpbmNsdWRlIDxsaW51eC9jbG9ja3NvdXJjZS5oPg0KPiAgICNpbmNsdWRlIDxsaW51
+eC9pbml0Lmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+ICsjaW5jbHVkZSA8bGludXgv
+b2ZfY2xrLmg+DQo+ICAgDQo+ICAgI2luY2x1ZGUgPGFzbS9taXBzLWNwcy5oPg0KPiAgICNpbmNs
+dWRlIDxhc20vdGltZS5oPg0KDQpUaGFua3MgZm9yIHRoZSB1cGRhdGUgR2VlcnQuDQoNCkFja2Vk
+LWJ5OiBKYW1lcyBIYXJ0bGV5IDxqYW1lcy5oYXJ0bGV5QHNvbmRyZWwuY29tPg0KDQo=
