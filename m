@@ -2,171 +2,189 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96A6C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EECC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78BE521569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92682168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="GfOAIlmN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AemS5zWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgBLXUH (ORCPT
+        id S1729237AbgBLXVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:20:07 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44635 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbgBLXUH (ORCPT
+        Wed, 12 Feb 2020 18:21:24 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:34732 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgBLXVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:20:07 -0500
-Received: by mail-qk1-f193.google.com with SMTP id v195so3849397qkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 15:20:06 -0800 (PST)
+        Wed, 12 Feb 2020 18:21:24 -0500
+Received: by mail-vs1-f66.google.com with SMTP id g15so2731439vsf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 15:21:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Kj4wAENiFAyk/ksaomW43f74+pAzdzX97670e6813g4=;
-        b=GfOAIlmNStttHMGlzt0UneZ8tf9pgLrxytukwlUmueS54q+x1mE/xMz3zdtNtH6K6f
-         mpSUawXfAtlBnCv93JHCT/3QXMVcL7I8BeWFpwPcmePMWVJ7Av7stI1qC7aB+qdFICYf
-         zkRY5Gdmf1xUsPc1oNtdGaFP5gj653tUK86lo=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jlwJqZlmg2Pq8Yopr2kegkbYDEQUzThKQ0YhKQN2ALg=;
+        b=AemS5zWdhTduXMrNYr/OFdwikKA7Ff5sD01XNEAGdP7TT/DQcFDAED+SNbXyob/w0K
+         ppbYsWNy9vNt+ToBU5peypNJ3KldRC/pt3mktLlJpFIMriLdauH5WojsuGRqh9LtlGGR
+         3372K7fHo8QKg3X+te3pYd/ul9ZKU3ip1YyDye6F5AIm9mXx+WT0mYPFofW9FAPbV5c/
+         HPvDA3GAKHAP4C8xm6uROrPlNFwxZ0tSE7YB7yue6Zj38gyWzpoC9RHZ/DxNfzDylJqc
+         fe7KU8ugjP1/Pu9EzW0IpMr5InjEwpIAOmajVOPHoXsdh5irsAYwAWKdg6zE+1e5hfPf
+         7qGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kj4wAENiFAyk/ksaomW43f74+pAzdzX97670e6813g4=;
-        b=ACeKVQWU2hvNtXbh8Zsqlsta4sonUzZX61MEe9WX2NxnAOsch/JlJM08O6Z8Rd5UtJ
-         W7/ziymHotPMxrn+1ica7OiRlLclEzOCz6nTuf/LXPZDnNY3pRSJ9kNvmXMOK9T4klPv
-         0cPUP1lLbO5Thu5Jw+ulX9QQZx07CjOTC2XImQmRtJnR9cVCMoXQAG7eTG7FRA0ZEe5L
-         TEm9jNZjBwigBDnf/LanlO4opJk3m0ggum2NPeFUmba9pE6gJDwvus97fmEflTocHdMq
-         tRnBJws4rBNTtwfQKLNbud9EmrLDiE8aDMn61SyHnt8AvfzpGtvbiZfR2xg5jWo6ucbr
-         1h2g==
-X-Gm-Message-State: APjAAAWqCYtVjZnAe3Z+DYYUgn0HROLgaasJimTSJeKcTzjnqfZlk2Pw
-        lxOkjQ24kZOouGEmNuRlBDuFaw==
-X-Google-Smtp-Source: APXvYqzPPQXVG4awXAR6njrqOxPItwhg/7JhzN0bFRKXI6kJPXgfLcjyOVoDq69x4nhnn/QOSU8zww==
-X-Received: by 2002:a37:4894:: with SMTP id v142mr9265899qka.220.1581549606252;
-        Wed, 12 Feb 2020 15:20:06 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q130sm227784qka.114.2020.02.12.15.20.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:20:05 -0800 (PST)
-Date:   Wed, 12 Feb 2020 18:20:05 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200212232005.GC115917@google.com>
-References: <20200212210139.382424693@infradead.org>
- <20200212210749.971717428@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jlwJqZlmg2Pq8Yopr2kegkbYDEQUzThKQ0YhKQN2ALg=;
+        b=rKiLSZ3UJ3y9neD4o5XaC/W2HG3tqnhEGD1GbLGuKkPw/wCgFFHO9fgytKUvdxWDTx
+         CmkhDC6egqqo8daAvhLz73B2f4S4TqXjB8Sfotx36f/qaG+WYzCQdzTgeV7+5n396ZHk
+         bNeuTd1yr2gVwBN86RFHc1v/wUArr3th+u7ePEB4C8CDQbNvcN1zj85FWNflfXLEgfzr
+         1YJz0zs216UeF1gz75pB7A/DkfTtMaFnG+Turnp+IKV3+t9nq2sp4aP0wn9+/AtwMbK8
+         7tz0U20Dsd/bbAcypj95QdclmcSiFPqjk2DpUO8kkWHgQYBEMOA8YFtfbL3TmySC78hA
+         oUAA==
+X-Gm-Message-State: APjAAAVFVOoe+hN8R4b3SBgirq4P/UY678zqbDox7McbGTXT1JCszf/f
+        AaBv3OOHC0creWjMqxllkeOOrGxHUharreqpwjN1dw==
+X-Google-Smtp-Source: APXvYqwPNT7zmnFi7TS5yBiNSU7K3aVRYzuwT0FE6NfsT0SqwNwrBT2rX0bv333crkAsq9RJICKFtj5NoxsLtQFRozg=
+X-Received: by 2002:a67:e342:: with SMTP id s2mr623210vsm.198.1581549682671;
+ Wed, 12 Feb 2020 15:21:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212210749.971717428@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+ <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com> <1e3f8fc3-dde9-5aaf-12a9-0eb0bc5ceb83@codeaurora.org>
+In-Reply-To: <1e3f8fc3-dde9-5aaf-12a9-0eb0bc5ceb83@codeaurora.org>
+From:   Doug Anderson <dianders@google.com>
+Date:   Wed, 12 Feb 2020 15:21:10 -0800
+Message-ID: <CAD=FV=XO=xd-BRaXrJ4-L2gaMX6=njV35CSnMV153-DLN8dwvA@mail.gmail.com>
+Subject: Re: [PATCH V1] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:01:42PM +0100, Peter Zijlstra wrote:
-> To facilitate tracers that need RCU, add some helpers to wrap the
-> magic required.
-> 
-> The problem is that we can call into tracers (trace events and
-> function tracing) while RCU isn't watching and this can happen from
-> any context, including NMI.
-> 
-> It is this latter that is causing most of the trouble; we must make
-> sure in_nmi() returns true before we land in anything tracing,
-> otherwise we cannot recover.
-> 
-> These helpers are macros because of header-hell; they're placed here
-> because of the proximity to nmi_{enter,exit{().
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/hardirq.h |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> --- a/include/linux/hardirq.h
-> +++ b/include/linux/hardirq.h
-> @@ -89,4 +89,52 @@ extern void irq_exit(void);
->  		arch_nmi_exit();				\
->  	} while (0)
->  
-> +/*
-> + * Tracing vs RCU
-> + * --------------
-> + *
-> + * tracepoints and function-tracing can happen when RCU isn't watching (idle,
-> + * or early IRQ/NMI entry).
-> + *
-> + * When it happens during idle or early during IRQ entry, tracing will have
-> + * to inform RCU that it ought to pay attention, this is done by calling
-> + * rcu_irq_enter_irqsave().
-> + *
-> + * On NMI entry, we must be very careful that tracing only happens after we've
-> + * incremented preempt_count(), otherwise we cannot tell we're in NMI and take
-> + * the special path.
-> + */
-> +
-> +#define __TR_IRQ	1
-> +#define __TR_NMI	2
-> +
-> +#define trace_rcu_enter()					\
-> +({								\
-> +	unsigned long state = 0;				\
-> +	if (!rcu_is_watching())	{				\
-> +		if (in_nmi()) {					\
-> +			state = __TR_NMI;			\
-> +			rcu_nmi_enter();			\
-> +		} else {					\
-> +			state = __TR_IRQ;			\
-> +			rcu_irq_enter_irqsave();		\
+Hi,
 
-I think this can be simplified. You don't need to rely on in_nmi() here. I
-believe for NMI's, you can just call rcu_irq_enter_irqsave() and that should
-be sufficient to get RCU watching. Paul can correct me if I'm wrong, but I am
-pretty sure that would work.
+On Wed, Feb 12, 2020 at 4:00 AM Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+>
+> On 2/11/2020 10:12 PM, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Tue, Feb 11, 2020 at 7:29 AM Veerabhadrarao Badiganti
+> > <vbadigan@codeaurora.org> wrote:
+> >> CQE feature has been enabled on sdhci-msm. Add CQE reg map
+> >> that needs to be supplied for supporting CQE feature.
+> >>
+> >> Change-Id: I788c4bd5b7cbca16bc1030a410cc5550ed7204e1
+> >> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> >> ---
+> >>   Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 5 +++++
+> >>   1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> >> index 7ee639b..eaa0998 100644
+> >> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> >> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> >> @@ -27,6 +27,11 @@ Required properties:
+> >>   - reg: Base address and length of the register in the following order:
+> >>          - Host controller register map (required)
+> >>          - SD Core register map (required for msm-v4 and below)
+> >> +       - CQE register map (Optional, needed only for eMMC and msm-v4.2 above)
+> > I did a quick search and it appears that SD cards implementing 6.0 of
+> > the spec can also use CQE.  Is that correct?  If so, maybe remove the
+> > part about "eMMC"?
+> On qcom platforms, only SDHC instance meant for eMMC has the CQE support.
+> So mentioned that its needed only for eMMC.
 
-In fact, I think a better naming for rcu_irq_enter_irqsave() pair could be
-(in the first patch):
-
-rcu_ensure_watching_begin();
-rcu_ensure_watching_end();
-
-thanks,
-
- - Joel
+Ah, got it.  Maybe mention this in the bindings?  Like "Optional, CQE
+is only implemented on controllers meant for eMMC and version v4.2 and
+above"
 
 
+> > Maybe also change "needed" to "useful" to make it clear that this
+> > entry isn't actually required for all msm-v4.2 controllers?
+> sure.
+> >
+> >> +- reg-names: When CQE register map is supplied, below reg-names are required
+> >> +       - "hc_mem" for Host controller register map
+> >> +       - "core_mem" for SD cpre regoster map
+> > s/regoster/register
 
-> +		}						\
-> +	}							\
-> +	state;							\
-> +})
-> +
-> +#define trace_rcu_exit(state)					\
-> +do {								\
-> +	switch (state) {					\
-> +	case __TR_IRQ:						\
-> +		rcu_irq_exit_irqsave();				\
-> +		break;						\
-> +	case __TR_NMI:						\
-> +		rcu_nmi_exit();					\
-> +		break;						\
-> +	default:						\
-> +		break;						\
-> +	}							\
-> +} while (0)
-> +
->  #endif /* LINUX_HARDIRQ_H */
-> 
-> 
+Oh, also s/cpre/core
+
+
+> >> +       - "cqhci_mem" for CQE register map
+> > I'm at least slightly confused.  You say that reg-names are there only
+> > if CQE register map is supplied.  ...and that requires 4.2 and above.
+> > ...but "core_mem" is only there on 4.0 and below.  So there should
+> > never be a "core_mem" entry?
+> core_mem is present till <v5.0
+> cqhci_mem is present on >=v4.2
+> Say, for version v4.2 both are present; .... and for v5.0 only cqhci_mem
+> is present.
+>
+> Both hc reg-map and core reg-map are being accessed through index.
+> So no need to list the reg names 'hc_mem' & 'core_mem' in general.
+>
+> But coming to cqhci reg-map we can't access it with fixed index, since
+> its index varies between 1/2
+> based on controller version.
+>
+> So we are accessing it through reg-names. Since reg-names has to be
+> associated with corresponding
+> reg maps, other two reg-names (hc_mem & core_mem) also need to br listed
+> when cqhci_mem is listed.
+>
+> That is the reason, I mentioned it like these are needed only cqe reg
+> map is supplied.
+> If it is creating confusion, i will remove that statement.
+
+Ah.  I think I got confused!  When I saw "msm-v4 and below" in the
+description of "SD Core register map", I assumed that means that
+"v4.2" didn't have it.  Maybe would be less confusing to change to:
+
+- SD Core register map (required for controllers earlier than msm-v5)
+
+Then I think what you have can be fine.
+
+
+
+> > Trying to specify that sanely in free-form text seems like it's gonna
+> > be hard and not worth it.  You should probably transition to yaml
+> > first?
+> >
+> >
+> > I will also note that Rob isn't a huge fan of "reg-names".  In a
+> > different conversation I think you mentioned you had a reason for
+> > having it.  I guess just be prepared to defend yourself against Rob if
+> > you feel strongly about keeping reg-names.
+> Sure. Its the same reason mentioned in above comment.
+
+OK.  You've convinced me.  It's still up to Rob but it seems like you
+have a good justification now that I understand it better..  ;-)
+
+I think you could send out a v2 with the small wording changes and
+maybe it would be landable, but you'd want to follow up rather soon
+with the yaml conversion.
+
+
+-Doug
