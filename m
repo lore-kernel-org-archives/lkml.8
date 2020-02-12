@@ -2,113 +2,118 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EA1C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E3FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D6320848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F4A20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFFtJaHK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SjLXJ7pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgBLWq6 (ORCPT
+        id S1729190AbgBLWsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:46:58 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42052 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727692AbgBLWq6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:46:58 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d10so4277509ljl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:46:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jrYNxcmAESHKexGAddHOv9wtAKXJzgWh89e239PGRQo=;
-        b=PFFtJaHKIrNlUKS6NsRZWetgbbjhBlkI0g7tnl2WGU5kaUqi+zNun/iNdoK/DEDDiS
-         HNkQw6hvXdwZihxbQefigPoLmceiAnmLwudOExlfolrXpKRtXYlySM+UthcT1qsmvcW/
-         zbuCIaL+5o+Ap8LUBQHJ5+Xp+LEU2psM35r/B68UVaY+CMkXphIpRo3a3FgszEnO2dsf
-         yWVpHOk5hKgOE+XnVzmh4Bv26YqiKa6cn6T0wDFLu6ZUnh5lg9aVjSNs/Ic7RI4Mpj9I
-         Izlj168dzT7UUt+SpupM16uiM260AIE494w59HZJZTa6fTgWRVmatKFAYvMqLwd/2GKr
-         duBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jrYNxcmAESHKexGAddHOv9wtAKXJzgWh89e239PGRQo=;
-        b=skLPBi6Bho1ucwtwXUgdZ5/a2MR8xFd26DjUaoeTMDOHZB0lLbsr4z1Oz07ZrcMPwX
-         BMckSiVKxvboV7DoHeMb+PT1lnyoo8L4LbKWyyxAFDcPOvlPuNGG0bIcGrqPY95jysoT
-         tLWolY6ENN2ziv+j6g13oEiMWOsOLm4/AA5rkfKIR3EJaltqVuQ+Bnt7N+pgLYvsSSeT
-         2mYkBvYfsxrFVaXeeFR5IL8A2PGXf3ISx635Fxg3pR6L5h2iQReyLRzfQJRhd6Eq2bix
-         d+rFmITtAPKwDuZQJYwXn7TKjFthdA3hmo5dlQThAt1omnBVQyO6IMqp9dZvmNsfALK2
-         MkEQ==
-X-Gm-Message-State: APjAAAWnPRuDXQoxtlS0o+mxw1tLLEuMGVjll2mu9esxE9nCUy+mMAg/
-        225S7sxXmcAVOusyyI3O0KM=
-X-Google-Smtp-Source: APXvYqybqDLRJg2IrAK1fX24sksSPwXxUp90d3598YjdvkPi0K1jiArVzSr4wzrM3vq8gpEnprObzw==
-X-Received: by 2002:a2e:7818:: with SMTP id t24mr8865749ljc.195.1581547615958;
-        Wed, 12 Feb 2020 14:46:55 -0800 (PST)
-Received: from kedthinkpad ([5.20.204.163])
-        by smtp.gmail.com with ESMTPSA id v7sm257086ljd.12.2020.02.12.14.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 14:46:55 -0800 (PST)
-Date:   Thu, 13 Feb 2020 00:46:53 +0200
-From:   Andrey Lebedev <andrey.lebedev@gmail.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] Support LVDS output on Allwinner A20
-Message-ID: <20200212224653.GA19494@kedthinkpad>
-References: <20200210195633.GA21832@kedthinkpad>
- <20200211072004.46tbqixn5ftilxae@gilmour.lan>
- <20200211204828.GA4361@kedthinkpad>
- <20200212125345.j6e3txfjqekuxh2s@gilmour.lan>
+        Wed, 12 Feb 2020 17:48:47 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49387 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728603AbgBLWsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 17:48:47 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HvvK0qmSz9s1x;
+        Thu, 13 Feb 2020 09:48:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581547725;
+        bh=7MTWO8ALLh5y8cP63+tLZI7W7tp7MQmmOxjTpe7xR0g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SjLXJ7pz8/Nw5+xF6FxqIZ2pz4/k1iZb4aYDmEbXiC2I9KooYmyuHr1nTlmVjP3K8
+         XyFHF2BMUipcKXq7mF2gOatlcyGPypFXBW5F1WjXJnc3ncNwZgEn4Ds+adRvVXWPg1
+         w2Ijpbs0xYq6UNPqs3pzwFb+qPfTiTsw85aq8+ZqE3H0QIqzACRTaiKStfgG26kfIN
+         L0geQ9S3zJi5ax3sJWslxiJQlnsqVSKIS7pk79+bIxMUuN8BUoGdAF+OaTtvB++fxi
+         JLaRZmI4uM0oj8vgyPKe3zO2KWuU/vq5TH3ZbULjXJ8vy+R+yHRbIRxbIS8CAry3Ex
+         x/Gw/jZLZvw/g==
+Date:   Thu, 13 Feb 2020 09:48:44 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Connor O'Brien <connoro@google.com>
+Subject: linux-next: manual merge of the selinux tree with Linus' tree
+Message-ID: <20200213094844.6bafd9e1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212125345.j6e3txfjqekuxh2s@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_//+TgZ+HvOmgRa9/AjaIXjhj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 01:53:45PM +0100, Maxime Ripard wrote:
-> > > Side question, this will need some DT changes too, right?
-> >
-> > Hm, I agree. I think it would be reasonable to include LVDS0/1 pins
-> 
-> That, but most importantly, the reset and clocks for the LVDS
-> block. Also from looking at it, I'm not entirely sure that the TCON1
-> has a LVDS output
+--Sig_//+TgZ+HvOmgRa9/AjaIXjhj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I also have impression that LVDS is only supported on TCON0, but that's
-mostly from this comment in sun4i_lvds.c:
+Hi all,
 
-	/* The LVDS encoder can only work with the TCON channel 0 */
+Today's linux-next merge of the selinux tree got a conflict in:
 
-> do you have a board when you have been able to test it?
+  security/selinux/hooks.c
 
-Yes, I have the hardware (Cubieboard 2) at hand, but I cannot change the
-any physical connections on it. FWIW, it is https://openvario.org, the
-device we are (painfully) trying to upgrade from old kernel-3.4 with
-proprietary mali drivers to contemporary software.
+between commit:
 
-> > and sample (but disabled) lvds panel,
-> 
-> That's good for the sake of the example, but it shouldn't be in the
-> same patch, it won't be merged.
+  a20456aef80f ("selinux: fix typo in filesystem name")
 
-I jave just submitted version 2 of the patches - set of 2 patches this
-time. Addressed your comments, please take a look.
+from Linus' tree and commit:
 
+  4ca54d3d3022 ("security: selinux: allow per-file labeling for bpffs")
 
--- 
-Andrey Lebedev aka -.- . -.. -.. . .-.
-Software engineer
-Homepage: http://lebedev.lt/
+from the selinux tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc security/selinux/hooks.c
+index ae891d712800,44f6f4e20cba..000000000000
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@@ -698,7 -701,8 +701,8 @@@ static int selinux_set_mnt_opts(struct=20
+ =20
+  	if (!strcmp(sb->s_type->name, "debugfs") ||
+  	    !strcmp(sb->s_type->name, "tracefs") ||
+ -	    !strcmp(sb->s_type->name, "binderfs") ||
+ +	    !strcmp(sb->s_type->name, "binder") ||
++ 	    !strcmp(sb->s_type->name, "bpf") ||
+  	    !strcmp(sb->s_type->name, "pstore"))
+  		sbsec->flags |=3D SE_SBGENFS;
+ =20
+
+--Sig_//+TgZ+HvOmgRa9/AjaIXjhj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5EgMwACgkQAVBC80lX
+0Gx69Af/dhdVp6t5LRp4/xZFS0/el+Mn5fKJK9YUfJkBANCOqMkdfm2Bh+FHaWzH
+k06M/rsAMAt3LzA6ceT2seOO/hA31z5trnQT/Vdh/tOdviSTXHM8w4aYE26aYWDk
+QVS/TdpKgDDIVLtHvC9D0YH9rBsGQQFxkNjeV8NsNbY12yu3JSTeBdk3i2E1Hs30
+0t0fzvXt3r+4QyCCXX/5i/aJKhr84WQWtGbpeLdBfCu+hciSBxW10LbGqMAJizk4
+cquK83PpZ0I19w16DowU/eAlBQu0a3qdPdkce9OAfqZEjqMcZ0fxpur/BgLNnSMd
+lwTrxRM5JML/9JesetLtuufhp7F70Q==
+=PEHO
+-----END PGP SIGNATURE-----
+
+--Sig_//+TgZ+HvOmgRa9/AjaIXjhj--
