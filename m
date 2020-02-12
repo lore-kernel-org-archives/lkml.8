@@ -2,136 +2,145 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A04C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E27AC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E133D20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769EF20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cP7Dc2Vt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YpL67d8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgBLQZD (ORCPT
+        id S1728567AbgBLQ0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:25:03 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37238 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLQZC (ORCPT
+        Wed, 12 Feb 2020 11:26:19 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55684 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgBLQ0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:25:02 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z12so1479072pgl.4;
-        Wed, 12 Feb 2020 08:25:02 -0800 (PST)
+        Wed, 12 Feb 2020 11:26:18 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so3004966wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:26:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zweDaFEU0USsV+JX/LUuDeDmSUEHYWtL+9GANBjwgS4=;
-        b=cP7Dc2VtOxGDgxZ6JHdE2q9Lyhmqv0k2cCO7w6iMWAwBuUc4X1hTFNxnXVCptDXT5x
-         NkTwJ4HwJDTYlXQ/5Q7HYPa3LjvpoW91An4WuKSfHiHl1cCp/idPPX1hDnIWFfwgILph
-         QW9+RaPIhjuK1G7zJ38FF3O6vqRsLjyTFD1u6DPY3hwHwnUAu83W+GE02P7wMvEy32l3
-         eXIX+9iUpxb5H7wLek1JA/nyj2rTQruJVFD7L9dgv3URdIlaLvOkvra0G4uAdd98IqUt
-         FLJTU0BiinQI0yNZwHtYRV5wtxUSO5kAqzg2SG6UUvGIfNaKdm2lxG4iEEO/0uByivN6
-         2ENg==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+Oq1AdUw8m9+Ejebod5uLNgdGrkCleSq0Jc+gdcY2Xc=;
+        b=YpL67d8OFfQLpn88KHHeHpPU9M5tKjVFTcgq5WB9ADXua8Vw9eM8D2prp/DJjWvw5x
+         IUn9CPoWMY9ErauDjliaZ0oyal2LyauacKjUhMC9MEyWAKMtuwKlz5y5xltvAr5Xm+4a
+         LxQdRjGor2YzOi0pqFDJ9uvpsP70D/2xy3qaY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zweDaFEU0USsV+JX/LUuDeDmSUEHYWtL+9GANBjwgS4=;
-        b=IVjO0a134bw4yJMmWAJVond4xkwVesau28rgyMA5uNt9aiRwgd5B1wBNO8w3YTcB/f
-         UF/DwqdTuutW/dd/TWsz+Lo0gVDjDDyVCwKUzzWibX6tFnAWYjQSTMNaXueFCRonNJuO
-         ynrakaJe8thJuOYQ8EmJc7seFIDYo/PWmSQrHvXJSsmS9Pl8g9+SmUm4REC9nKYHHrBf
-         mJxL2Lf++Lc0JOySCvLhXZtSc0nuQr2Gn5tcMDNbFBmStRbxiUyja+BL4Nlq2wMnTDAB
-         n+Zn9RXW03gtrws7hCYfN2VQG2jYhQxaXdjju+jLaiUv66Vt3Rlo/Wt9bSYFLudjQa/m
-         JAlQ==
-X-Gm-Message-State: APjAAAUIk15enj7dsG5CJ7HXmnpjy2W4ZQZbDis2LC/I6kOQ3W+E3MlR
-        BY8c+f70PCE+yGkT+dqrNmxiPdNO9j6DGfAqrsw=
-X-Google-Smtp-Source: APXvYqxdvvvgkWHaTR3wCKLim8YYFZ3Gilg23ZQv1CNAsUnE4dlwsUOhdWPRIYUJ8aFymPSp2AKT9wOK4ZMF4Mx3X+0=
-X-Received: by 2002:a63:306:: with SMTP id 6mr9363242pgd.337.1581524702320;
- Wed, 12 Feb 2020 08:25:02 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+Oq1AdUw8m9+Ejebod5uLNgdGrkCleSq0Jc+gdcY2Xc=;
+        b=toaCCmNzq0TazxIrX913bvEI33KsYvXGpIgduyXjuoiwFxILzb4xrQENPuFHClBaT6
+         T4APdQA2DprxmpgwjufFpfJ7ruXlWNHtIR/hkv073izJHcSnTXfkLuNJmC/N4YyIBpVe
+         HGcEaMVJY8UZ/xIwgROGLuMLJkQQZZ7how9i+Bpcp/Zc6D/S/mHk/ERVNaC0ewYCIGD5
+         O5h40w6cdZXfxbjIlKZH71cnWlOVHvmIFCqwb0L2VHfL3iZ7KnsFN531YLoSm/zcoLZx
+         WMhj0YOgy/2CzI/Dodpc2ydhXjzhIbUOYGRct4GFOP/d3AqAmCG1Jf4/A8TL0u99ZtYA
+         DNDg==
+X-Gm-Message-State: APjAAAUxwa3lpRl3tc+FkSbtuU9ryFOMIqfB4fHGvxTAW/Z/OWB1/6L8
+        Y0xt6dL5jWi0WBUBQ+xcriFvUg==
+X-Google-Smtp-Source: APXvYqz35eTpzE3tOLY8FLLO74LVWtEJvvI50Wec8849cwajczF2fVsNZaWwaW+IbhiJCYa0NkM9Lg==
+X-Received: by 2002:a7b:cab1:: with SMTP id r17mr13425209wml.116.1581524775975;
+        Wed, 12 Feb 2020 08:26:15 -0800 (PST)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id s8sm1267535wrt.57.2020.02.12.08.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 08:26:15 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Wed, 12 Feb 2020 17:26:13 +0100
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jann Horn <jannh@google.com>, KP Singh <kpsingh@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
+ mutable hooks list for the BPF LSM]
+Message-ID: <20200212162613.GB259057@google.com>
+References: <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+ <20200211190943.sysdbz2zuz5666nq@ast-mbp>
+ <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
+ <20200211201039.om6xqoscfle7bguz@ast-mbp>
+ <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
+ <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
+ <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
+ <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
+ <20200212024542.gdsafhvqykucdp4h@ast-mbp>
+ <bee0fd08-b9f2-83e4-2882-475b81c74303@schaufler-ca.com>
 MIME-Version: 1.0
-References: <20200128110102.11522-1-martin@kaiser.cx> <20200128110102.11522-3-martin@kaiser.cx>
-In-Reply-To: <20200128110102.11522-3-martin@kaiser.cx>
-From:   PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Date:   Wed, 12 Feb 2020 21:54:51 +0530
-Message-ID: <CANc+2y60cCtDwBi1jaV=eMtTwoihRf2WiKW7Zo3iC9ALv2OVSw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] hwrng: imx-rngc - use automatic seeding
-To:     Martin Kaiser <martin@kaiser.cx>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bee0fd08-b9f2-83e4-2882-475b81c74303@schaufler-ca.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020 at 16:31, Martin Kaiser <martin@kaiser.cx> wrote:
->
-> The rngc requires a new seed for its prng after generating 2^20 160-bit
-> words of random data. At the moment, we seed the prng only once during
-> initalisation.
->
-> Set the rngc to auto seed mode so that it kicks off the internal
-> reseeding operation when a new seed is required.
->
-> Keep the manual calculation of the initial seed when the device is
-> probed and switch to automatic seeding afterwards.
->
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  drivers/char/hw_random/imx-rngc.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-> index 0576801944fd..903894518c8d 100644
-> --- a/drivers/char/hw_random/imx-rngc.c
-> +++ b/drivers/char/hw_random/imx-rngc.c
-> @@ -31,6 +31,7 @@
->
->  #define RNGC_CTRL_MASK_ERROR           0x00000040
->  #define RNGC_CTRL_MASK_DONE            0x00000020
-> +#define RNGC_CTRL_AUTO_SEED            0x00000010
->
->  #define RNGC_STATUS_ERROR              0x00010000
->  #define RNGC_STATUS_FIFO_LEVEL_MASK    0x00000f00
-> @@ -167,7 +168,7 @@ static irqreturn_t imx_rngc_irq(int irq, void *priv)
->  static int imx_rngc_init(struct hwrng *rng)
->  {
->         struct imx_rngc *rngc = container_of(rng, struct imx_rngc, rng);
-> -       u32 cmd;
-> +       u32 cmd, ctrl;
->         int ret;
->
->         /* clear error */
-> @@ -192,7 +193,18 @@ static int imx_rngc_init(struct hwrng *rng)
->
->         } while (rngc->err_reg == RNGC_ERROR_STATUS_STAT_ERR);
->
-> -       return rngc->err_reg ? -EIO : 0;
-> +       if (rngc->err_reg)
-> +               return -EIO;
-> +
-> +       /*
-> +        * enable automatic seeding, the rngc creates a new seed automatically
-> +        * after serving 2^20 random 160-bit words
-> +        */
-> +       ctrl = readl(rngc->base + RNGC_CONTROL);
-> +       ctrl |= RNGC_CTRL_AUTO_SEED;
-> +       writel(ctrl, rngc->base + RNGC_CONTROL);
-> +
-> +       return 0;
->  }
->
->  static int imx_rngc_probe(struct platform_device *pdev)
-> --
-> 2.20.1
->
+On 12-Feb 07:52, Casey Schaufler wrote:
+> On 2/11/2020 6:45 PM, Alexei Starovoitov wrote:
+> > On Wed, Feb 12, 2020 at 01:09:07AM +0100, Daniel Borkmann wrote:
+> >> Another approach could be to have a special nop inside call_int_hook()
+> >> macro which would then get patched to avoid these situations. Somewhat
+> >> similar like static keys where it could be defined anywhere in text but
+> >> with updating of call_int_hook()'s RC for the verdict.
+> 
+> Tell me again why you can't register your BPF hooks like all the
+> other security modules do? You keep reintroducing BPF as a special
+> case, and I don't see why.
 
-Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+I think we tried to answer this in the discussion we had:
+
+ https://lore.kernel.org/bpf/20200123152440.28956-1-kpsingh@chromium.org/T/#meb1eea982e63be0806f9bba58e91160871803752
+
+BPF should not allocate a wrapper (to be statically regsitered at
+init) for each LSM hook and run the programs from within that as this
+implies adding overhead across the board for every hook even if
+it's never used (i.e. no BPF program is attached to the hook).
+
+We can, with the suggestions discussed here, avoid adding unncessary
+overhead for unused hooks. And, as Alexei mentioned, adding overhead
+when not really needed is especially bad for LSM hooks like
+sock_sendmsg.
+
+The other LSMs do not provide dynamic / mutable hooks, so it makes
+sense for them to register the hooks once at load time.
+
+- KP
+
+> > Sounds nice in theory. I couldn't quite picture how that would look
+> > in the code, so I hacked:
+> > diff --git a/security/security.c b/security/security.c
+> > index 565bc9b67276..ce4bc1e5e26c 100644
+> > --- a/security/security.c
+
+[...]
