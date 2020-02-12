@@ -2,45 +2,65 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EA9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC53CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423772082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E062082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581504245;
+	bh=3WmScTJz4euc1fE6/Vis4Trrr8L3e+POIZjWyczQr90=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zaNeMq2SLcYUGSn3jAemh2biUa9ku/Mpk8/Ajo8YyiMTFWB+A4cHY9Q3lbZw5W5sd
+	 iYI069tKMgZCMp36rsh52F6ivBlirqPx3w07hF67vUR8Ul9KX5g1C5kt1K2kPPnS4m
+	 6b/FSYudVsY+539Ka+ECz+afT8Uho7x5japhzcQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgBLKnx (ORCPT
+        id S1728141AbgBLKoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:43:53 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52574 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgBLKno (ORCPT
+        Wed, 12 Feb 2020 05:44:04 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43401 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgBLKoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:43:44 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j1pUc-0005aC-KQ; Wed, 12 Feb 2020 10:43:42 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH net-next 10/10] net: fix sysfs permssions when device changes network namespace
-Date:   Wed, 12 Feb 2020 11:43:21 +0100
-Message-Id: <20200212104321.43570-11-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200212104321.43570-1-christian.brauner@ubuntu.com>
-References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
+        Wed, 12 Feb 2020 05:44:02 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so1718962ljm.10;
+        Wed, 12 Feb 2020 02:44:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xSMdDt84jzVon3FDMXee+uRWwXiN2FB36JLOXBaNo4w=;
+        b=QTa6msXX2SnavS2Cn2/NRdkse4GdWbVAwDUkacif1aGEc5cg36jfxb8JXhgkaIbekh
+         s0zqdz+uGRzl9IJmucVEJ0pT42di64SUzh5Ql7WT94/T1f9X/dNlrXCerfj9Kvq7QMB5
+         LZ2JOTUo/J5GLWNFxLdOpq6uyUHXlae/SferaBk65ZgQrHkrijIPLsXwByybzSMleGX5
+         TFfpEBj08h3zJc/cByN8TtxGly1HsOn6SU6RVug3n15k8nAz9dCgItBqWKxAsc54qVoH
+         hKTxIBi900ItrfBXVaeoaFOtKmm9GFoVGwsfWQAUyTAi4mdv1QBv4jw8I0sclDCj2Zgw
+         WLJQ==
+X-Gm-Message-State: APjAAAWMMkmglnsixXqvMqlQ3hpBFtvCTXxqJcpplNjLuV96DD9sXmlU
+        OyJa2XsQLnzlzPA7VbXSLoyHIFSK
+X-Google-Smtp-Source: APXvYqz0m90S7S3vc/bZc65CJPxi9oF38n9ilCWGT0Pxsc7Hwb+hUwkjC2+zBKXnvZA39KyHwTI/XQ==
+X-Received: by 2002:a2e:7818:: with SMTP id t24mr7180342ljc.195.1581504239548;
+        Wed, 12 Feb 2020 02:43:59 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id 3sm17542lja.65.2020.02.12.02.43.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 02:43:58 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1j1pUr-0005CO-VW; Wed, 12 Feb 2020 11:43:58 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Barry Song <Baohua.Song@csr.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/3] ARM: dts: atlas7: fix spaces in compatible strings
+Date:   Wed, 12 Feb 2020 11:43:45 +0100
+Message-Id: <20200212104348.19940-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,49 +68,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we moved all the helpers in place and make use netdev_change_owner()
-to fixup the permissions when moving network devices between network
-namespaces.
+I stumbled over a new driver in 5.6 whose compatible strings did not
+match the corresponding binding due to spaces in the driver compatible
+strings:
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- net/core/dev.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+	https://lkml.kernel.org/r/20200212092426.24012-1-johan@kernel.org
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index a69e8bd7ed74..e463539f0b1d 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10017,6 +10017,7 @@ EXPORT_SYMBOL(unregister_netdev);
- int dev_change_net_namespace(struct net_device *dev, struct net *net, const char *pat)
- {
- 	int err, new_nsid, new_ifindex;
-+	struct net *net_old = dev_net(dev);
- 
- 	ASSERT_RTNL();
- 
-@@ -10031,7 +10032,7 @@ int dev_change_net_namespace(struct net_device *dev, struct net *net, const char
- 
- 	/* Get out if there is nothing todo */
- 	err = 0;
--	if (net_eq(dev_net(dev), net))
-+	if (net_eq(net_old, net))
- 		goto out;
- 
- 	/* Pick the destination device name, and ensure
-@@ -10107,6 +10108,12 @@ int dev_change_net_namespace(struct net_device *dev, struct net *net, const char
- 	err = device_rename(&dev->dev, dev->name);
- 	WARN_ON(err);
- 
-+	/* Adapt owner in case owning user namespace of target network
-+	 * namespace is different from the original one.
-+	 */
-+	err = netdev_change_owner(dev, net_old, net);
-+	WARN_ON(err);
-+
- 	/* Add the device back in the hashes */
- 	list_netdevice(dev);
- 
+A quick grep revealed that we a couple of devicetrees in mainline with
+similarly malformed compatible strings.
+
+Note that there are no in-kernel drivers or bindings that use the
+strings question, so I think simply dropping the spaces would be
+acceptable. This is especially true for the flexnox nodes that also
+specify "simple-bus" so therefore I split the fixes in three patches.
+
+Johan
+
+
+Johan Hovold (3):
+  ARM: dts: atlas7: fix space in flexnoc compatible strings
+  ARM: dts: atlas7: fix space in gmac compatible string
+  ARM: dts: atlas7: fix space in g2d compatible string
+
+ arch/arm/boot/dts/atlas7.dtsi | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
 -- 
-2.25.0
+2.24.1
 
