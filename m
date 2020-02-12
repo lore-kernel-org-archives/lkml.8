@@ -2,141 +2,117 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2FCC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF360C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C672921569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581531262;
-	bh=XPutHtfrd9L6DCjKR/i4gzTwtBJqO9VVCF2dsQMhOT0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QCu+QS024W72Nf/IGGGyG0e1gch61m+ZbgjkkYMmQcEhdFiHwzL5RWwAKpFbkWTOr
-	 nGCGvWUEpaXHGzjxOq3qrcsISMXY9rZVOJTL+3fquLm/OSMwzmfiCjD0KSekcgHg3m
-	 K/aSh66Af4kybRpC7HyHp+r0tQJffnOCd+b9K7P0=
+	by mail.kernel.org (Postfix) with ESMTP id 98EE521734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZR+9YgBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgBLSOW (ORCPT
+        id S1728926AbgBLSOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:14:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbgBLSOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:14:22 -0500
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1351E21569;
-        Wed, 12 Feb 2020 18:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581531261;
-        bh=XPutHtfrd9L6DCjKR/i4gzTwtBJqO9VVCF2dsQMhOT0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=H0t1S9X9r5QrGUd7DvAOuSUSqqXDsgdC1XTVAcFbzj4EY2h/S8r/mWZNvB10mdCQa
-         38EaQisKKJidSQ7TOlCXmLvne+3QnPgrSM7v03v8XngdUW7peGivsjAvtTOAtfr4CA
-         wewf/BxAmAKE916HXnBmP76nvVhL3jH9qCPQp3LY=
-Received: by mail-qv1-f42.google.com with SMTP id l14so1341710qvu.12;
-        Wed, 12 Feb 2020 10:14:21 -0800 (PST)
-X-Gm-Message-State: APjAAAWvizwDu3Pmzojt+E/r5DutlCrkK5eWqajftF25OTp/uyq+nl5z
-        fHi7yZtE0E6xw7ny0jjl+8lmTeSSFfqJcYtUFQ==
-X-Google-Smtp-Source: APXvYqwYf7OiqvLmE/STxKkwBxfQm+rxJyw5z6FFooFuohKsTmQUlxLvZAqUvV1R4jPQEGjoiAS5DvHkVqtRkL1b//c=
-X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr8482894qvv.85.1581531260167;
- Wed, 12 Feb 2020 10:14:20 -0800 (PST)
+        Wed, 12 Feb 2020 13:14:32 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:37452 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBLSOc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:14:32 -0500
+Received: by mail-vk1-f195.google.com with SMTP id b2so791102vkk.4;
+        Wed, 12 Feb 2020 10:14:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CnO+YjEhAA1fR16vRtKkqQ6IaKqDgHiXesjpy2PtN38=;
+        b=ZR+9YgBakxEstBEDPenyc6ChESRa252lsrlSKvqnb3RdE17Tknmw3nDprL82eXvsAT
+         NNgGEdeiP+K41L1y/+LbPA+oqmywkUiWEmw/uKFkoy4FGzBtr5VUzn4aNdDtC2RYFg1W
+         i4ZGB1foaZ+ESxAkGyNrdlTcePmocNnnSmaHZ57iRvEBrolpknswOdsJC0EX7BgP8hUz
+         Kp8iHxZ1bpY314pJ6NCT5NBpuaXnfrNzrDdsDsMcdqKbirrpTk+WFQlntM4QJO+KSZrL
+         4q8HhyQqDzLTs8xH02u0jE/99x3FRK9K7zgtB+1aZoDm8pvn7qb/KqRkH1Jis0sJWwQm
+         z8uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CnO+YjEhAA1fR16vRtKkqQ6IaKqDgHiXesjpy2PtN38=;
+        b=c/rtaCWyPxtqzkjs+Y8+Bc+di4MfUOulz5+sPD7+PBoLakZ7TcA1lOWVLxx0wJs4DW
+         S6r0wzCTJGORHUC+90sPOCaBG1vxTfzI2BAWUgLNIu4kXaCXeIkYFyx5hBcJfHRbEscS
+         zxtmoMxgV0eRUtRHHA8u+cH/GogssfHWaUlikXhdLjB8mT4gglCyvZtJSAD++ESkPTgH
+         fFs27YcYlOgxb2SCxtfB/jHCkjzsXnUFsOh5FEHDW/l1taynD74R+ezy/jYcirdJw/O9
+         1Z6ZP3iJ2nsCi6Anq8AHyNFKCAWvqbvKEV9vkL95dC1IUxaIEPT5AnL0m5RVq2yLZjlx
+         jQVg==
+X-Gm-Message-State: APjAAAXVanQpYuevZH+mTWI3ATa8W7qaBN5ziFZtP4sfyAd9M5JkTKg1
+        DqisqQgwmwTgj51TVhulqo9Dj8Pkqe7IjS3ueb8=
+X-Google-Smtp-Source: APXvYqwo//dw2Lz6KTEw7WfIO4RNGL+6Go6fPHggeMQ4aTz85IGc9hcU42s1bKUl8TDwUZspWcItcXYkgakCnjAu/Gg=
+X-Received: by 2002:a1f:9d16:: with SMTP id g22mr8454036vke.22.1581531270966;
+ Wed, 12 Feb 2020 10:14:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-8-drinkcat@chromium.org> <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
-In-Reply-To: <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 12 Feb 2020 12:14:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLuo+2G2MjiwS9cwNhMV2pGBojXFGNqEfLv3fP-Y04mfA@mail.gmail.com>
-Message-ID: <CAL_JsqLuo+2G2MjiwS9cwNhMV2pGBojXFGNqEfLv3fP-Y04mfA@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] RFC: drm/panfrost: devfreq: Add support for 2 regulators
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
+References: <20190816083246.169312-1-arul.jeniston@gmail.com>
+ <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
+ <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
+ <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com>
+ <alpine.DEB.2.21.1908191752580.2147@nanos.tec.linutronix.de>
+ <CACAVd4iRN7=eq_B1+Yb-xcspU-Sg1dmMo_=VtLXXVPkjN1hY5Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908191943280.1796@nanos.tec.linutronix.de>
+ <CACAVd4jAJ5QcOH=q=Q9kAz20X4_nAc7=vVU_gPWTS1UuiGK-fg@mail.gmail.com>
+ <alpine.DEB.2.21.1908201036200.2223@nanos.tec.linutronix.de>
+ <CACAVd4jT4Ke7giPmKSzt+Wo3Ro-g9zWDRz_GHaRcs0Nb3_rkBw@mail.gmail.com>
+ <CACAVd4gRoQih6f_K7kMzr=AwA_DvP0OksxBKj1bGPsP2F_9sFg@mail.gmail.com>
+ <alpine.DEB.2.21.1909051707150.1902@nanos.tec.linutronix.de>
+ <CACAVd4hS1i--fxWaarXP2psagW-JmBoLAJRrfu9gkRc49Ja4pg@mail.gmail.com>
+ <alpine.DEB.2.21.1909071630000.1902@nanos.tec.linutronix.de>
+ <CACAVd4grhGVVSYpwjof5YiS1duZ2_SFjvXtctP+cmR5Actkjyg@mail.gmail.com>
+ <alpine.DEB.2.21.1911051100471.17054@nanos.tec.linutronix.de> <CACAVd4geU0aFqvFhNQ4YGHDtLPwcqhubh8hcu4CT7CN+G2zpdA@mail.gmail.com>
+In-Reply-To: <CACAVd4geU0aFqvFhNQ4YGHDtLPwcqhubh8hcu4CT7CN+G2zpdA@mail.gmail.com>
+From:   Arul Jeniston <arul.jeniston@gmail.com>
+Date:   Wed, 12 Feb 2020 23:44:20 +0530
+Message-ID: <CACAVd4iH3e+V3VTJhEOabn46mosL-ntOgjJm_mMjnnwKtcpAjw@mail.gmail.com>
+Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arul_mc@dell.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 2:49 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> +Viresh Kumar +Stephen Boyd for clock advice.
->
-> On Fri, Feb 7, 2020 at 1:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
-> >
-> > The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
-> > devfreq, and provides OPP table with 2 sets of voltages.
-> >
-> > TODO: This is incomplete as we'll need add support for setting
-> > a pair of voltages as well.
->
-> So all we need for this to work (at least apparently, that is, I can
-> change frequency) is this:
-> https://lore.kernel.org/patchwork/patch/1192945/
-> (ah well, Viresh just replied, so, probably not, I'll check that out
-> and use the correct API)
->
-> But then there's a slight problem: panfrost_devfreq uses a bunch of
-> clk_get_rate calls, and the clock PLLs (at least on MTK platform) are
-> never fully precise, so we get back 299999955 for 300 Mhz and
-> 799999878 for 800 Mhz. That means that the kernel is unable to keep
-> devfreq stats as neither of these values are in the table:
-> [ 4802.470952] devfreq devfreq1: Couldn't update frequency transition
-> information.
-> The kbase driver fixes this by remembering the last set frequency, and
-> reporting that to devfreq. Should we do that as well or is there a
-> better fix?
->
-> Another thing that I'm not implementing is the dance that Mediatek
-> does in their kbase driver when changing the clock (described in patch
-> 2/7):
-> ""
-> The binding we use with out-of-tree Mali drivers includes more
-> clocks, this is used for devfreq: the out-of-tree driver switches
-> clk_mux to clk_sub_parent (26Mhz), adjusts clk_main_parent, then
-> switches clk_mux back to clk_main_parent:
-> (see https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#423)
-> clocks =
->         <&topckgen CLK_TOP_MFGPLL_CK>,
->         <&topckgen CLK_TOP_MUX_MFG>,
->         <&clk26m>,
->         <&mfgcfg CLK_MFG_BG3D>;
-> clock-names =
->         "clk_main_parent",
->         "clk_mux",
->         "clk_sub_parent",
->         "subsys_mfg_cg";
-> ""
-> Is there a clean/simple way to implement this in the clock
-> framework/device tree? Or should we implement something in the
-> panfrost driver?
+hi Tglx,
 
-Putting parent clocks into 'clocks' for a device is a pretty common
-abuse. The 'assigned-clocks' binding is what's used for parent clock
-setup. Not sure that's going to help here though. Is this dance
-because the parent clock frequency can't be changed cleanly? If up to
-me, I'd put that dance in the clock driver. The GPU shouldn't have to
-care.
+Did you get a chance to update the timerfd man page?
+Our customers are expecting these changes to happen asap.
 
-Rob
+Regards,
+Arul
+
+On Wed, Nov 6, 2019 at 9:08 AM Arul Jeniston <arul.jeniston@gmail.com> wrote:
+>
+> hi Tglx,
+>
+> Thank you for the update. We have few customers who are waiting for
+> this patch. Please prioritize it.
+>
+> Regards,
+> Arul
+>
+> On Tue, Nov 5, 2019 at 3:31 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > Arul,
+> >
+> > On Tue, 5 Nov 2019, Arul Jeniston wrote:
+> > > >  So I'm going to send a patch to document that in the manpage.
+> > >
+> > > Did you get a chance to make the manpage patch? if yes, please help us
+> > > by sharing the link where we can find the patch.
+> >
+> > No. I would have Cc'ed you when posting. It's somewhere on my todo list.
+> >
+> > Thanks,
+> >
+> >         tglx
