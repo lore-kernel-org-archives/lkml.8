@@ -2,104 +2,114 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AE1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30A5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4056C20661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931492073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwP0fhVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBLNDE (ORCPT
+        id S1727946AbgBLNJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:03:04 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:58959 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgBLNDE (ORCPT
+        Wed, 12 Feb 2020 08:09:03 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42777 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgBLNJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:03:04 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MgRYd-1jhmbB30Rj-00hwqJ; Wed, 12 Feb 2020 14:03:02 +0100
-Received: by mail-qt1-f171.google.com with SMTP id c5so1465166qtj.6;
-        Wed, 12 Feb 2020 05:03:02 -0800 (PST)
-X-Gm-Message-State: APjAAAWRWtdXZfUQUTC8wFCdhHAnjmvxzzn00eJYoFtelnYyjnmzaduT
-        ZLOf6hkCtvd/0EvTZGmWkJTBWKck5aI4ueOj6ic=
-X-Google-Smtp-Source: APXvYqy06iM4mphE8iImJ5H3xGHM0E61H0W3gl72SDsnuQ8ERp4zy8pETyfnDlE0AXLBVDG71JEvVqBMlcGftON602Q=
-X-Received: by 2002:ac8:1977:: with SMTP id g52mr18800788qtk.18.1581512581526;
- Wed, 12 Feb 2020 05:03:01 -0800 (PST)
+        Wed, 12 Feb 2020 08:09:02 -0500
+Received: by mail-il1-f193.google.com with SMTP id x2so1651020ila.9;
+        Wed, 12 Feb 2020 05:09:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lwgzXOkICXCQfXrNHWXrCftoLfH9Scd8moCWKuZ8A7c=;
+        b=uwP0fhVrX+cKaPrA9gZuzCsKp0yddAX94jEyXD+oxpoLTWMMqVteKVFhQIfbax7itw
+         LTgnQhEBPH1h/TZFReuXAGeaSeQs3IeZGCBz9HlL5RRSoErDbx/VHPZz1N9s6W4tavzm
+         tRI7PsSWpP61qEZOKSCUIjyPXdiR1pfk5omo4L+DP4BGIMk76I6FO9jnbIsamlo43As1
+         vE6g7V0GDiRYWnLArr4NKRwoaRkGq92lsMI7sj8ISNP5sQit0d+XhUhDDSwyBqtr8A82
+         nPjSpLQlG48uHNHO8yaTHauwI0bT2iFl7Ih0ObcSXH56oeHLWsj+0PBQvlsD3p8ywO9E
+         l4Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lwgzXOkICXCQfXrNHWXrCftoLfH9Scd8moCWKuZ8A7c=;
+        b=gMSxSAJlcotjlHnEVv4knvm6hBWseH2/ENnizaX0ZtI8nl/eWsHUcAz/OgU9o6igbs
+         BNnsb75X6D0XVW/8ZgCSuNvj0ioGf9tZ9Mek7jVaUsJlUIhT76Fb81YYK8YcRnia7xHl
+         ZS73qHt4U9lJDOZZM5Cvk7pa64DWSkvGmumRaPlyk5UpDtrWZeJE7CC7Q2d4dgtU6EwM
+         XETdltm9CTVNNV6i7WZUIw4d2c+qKNeG0QVCTMG6W2xO7oC9qPm338XfHkpI3Zhr5D68
+         9l0XleyQWrwnzGs8I0GA/GXOfvF3LfEo0IcWLGS9gHp0Tar62FoQHwxnW5Wg0XOA8fZ9
+         H2+w==
+X-Gm-Message-State: APjAAAUr15ZKzOWB+AiyYZpD5asE3nME4W2qHbhruuBef3EBBDkRngd5
+        IshdkEympbD/3S1v1VKaf+E+fK+y1ZGgwkf6gnM=
+X-Google-Smtp-Source: APXvYqzwGZCfLCucPj5npcA6pFh/Daw5mAO0fUTiKusa4iACLpoLiJs+a3YdEul7VJ0Sa7qkhI7BVMm1OAQ3UfESN3g=
+X-Received: by 2002:a92:350d:: with SMTP id c13mr11345711ila.205.1581512940477;
+ Wed, 12 Feb 2020 05:09:00 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1581497860.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1581497860.git.michal.simek@xilinx.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 12 Feb 2020 14:02:45 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1NymovoUxYBF8Ok8Rfke7ECW49bmc+K-=vtH_Bz8_7jQ@mail.gmail.com>
-Message-ID: <CAK8P3a1NymovoUxYBF8Ok8Rfke7ECW49bmc+K-=vtH_Bz8_7jQ@mail.gmail.com>
-Subject: Re: [PATCH 00/10] Hi,
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mubin Sayyed <mubinusm@xilinx.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
+References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-2-aford173@gmail.com>
+ <CAOMZO5D3emrAk84wDS04qJC-3AyvFnqodhoMsXO-ukHnYsU+PQ@mail.gmail.com>
+ <CAHCN7xJyZRwJhnWW2mAbOeGyrMsB7Au_e6AvwiNmNS8gFUfSyw@mail.gmail.com> <20200212120753.GF4028@sirena.org.uk>
+In-Reply-To: <20200212120753.GF4028@sirena.org.uk>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 12 Feb 2020 07:08:49 -0600
+Message-ID: <CAHCN7x+5bACfYVX49Lib+fmNq-dEOkcyi0gXt7rtYxrGaYbH1Q@mail.gmail.com>
+Subject: Re: [PATCH V2 2/5] spi: fspi: dynamically alloc AHB memory
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        linux-spi <linux-spi@vger.kernel.org>, Han Xu <han.xu@nxp.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dYBbjfk8Z7SogIlHkWnFJ6gFDKjQUD1ts7iX5TjNDEwv+GB/QB2
- xjMGy7pc5+Dzq0zrrM6MYBYXjJSCkIEQpiKomeNMc8LsD2PjcHNWJfhH0iPTdTsWtdeeFJI
- kVig434j7RwFrzXVuQ+y1s8yuO/NV4MNy7MtE8D+NlkaN2bxdsF08GaNkgjcMZmQ9Q+IlJJ
- d0qWW2kRHSujsPIuW41Uw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:efXOSkONAIg=:aEwYcKVo+l66r/Gv02BnMG
- yYo0mAAEwCxHIdeu6JbZ+rmeydcpnORwtksxJN/t7ROs8TegQp8KSUvlrgb2x4lx5zjT5wRVP
- 6ylDZTPegC+1u+ULugfAzLXVJCrqe6dWn6+10X2V0Wt1HkgwLMW7EUto+/w7IqcMhiOJV5QRR
- u9OR3/bta09DyOhqQfCMrjebk3VliSGad0ZgAYVmgZgUc4V+O7bAvlqZH5vSYtk8wD+4W94kp
- QXj/eFXNP9pVYGNwJFTwmvwgDD0yYZG8GMxx4DsMS54h1edK8K1AZgC5qmruFY4RG4Dtec+TE
- OJICgMmlmja/T6UUOiNB4RjGrfHcjW8bwHEzfDMdCYRFPQVZTklQzcp6Bej14TMDN0dHvwD7T
- Vtn5sebb2uVb3og/6V1KeLBcHbGbZcnAhsNgmlvovDgpDHwkAkni8QG3hOYQl9euQxYykZ3Vs
- AyutUPdqBLny335336I/cruO+eYYjWeL8Yk1AnhKuaNTAMKodRV1aPysAum4EhQupgMTUiKrD
- h6l9zxgNdT0sSpSJj7ocG+cRlnrcN8K84ewcYLQ07T4kk2rBI476W3RjA1p4hlhdyVPIBRXfq
- Iiy7A/QJu9dYJR5HpmFJoBGNJf/88Bs1/gWzgzMkDo6nEw+9xOPe2bWgXUQnguvZIi9fJtkdP
- qfVgoJm8XF2gNvaOFpeBcWbJnS7r43pgjGK+A5BY9UAHQhUQJqxTozXsUicQFDLFEAPvxuHF9
- +YVVHG6mm5qFLdfUH3SiYkw7HQQFntMgcABQGcw/yqHhPzc0LpUkEJ+R8FjhT/iMNt2FdNrwq
- cBHQdb9uHX12sxg+7OMqlhUtYaMuurNUUp2NPB8wizou3gQr4A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 9:58 AM Michal Simek <michal.simek@xilinx.com> wrote:
+On Wed, Feb 12, 2020 at 6:07 AM Mark Brown <broonie@kernel.org> wrote:
 >
+> On Mon, Feb 03, 2020 at 04:53:34AM -0600, Adam Ford wrote:
 >
-> I am sending this series as before SMP support.
-> Most of these patches are clean ups and should be easy to review them. I
-> expect there will be more discussions about SMP support.
+> > My motivation is to get the flexspi on the i.MX8MM to work, and I did
+> > a list of the patches applied on the NXP branch to see what was
+> > applied on top of their 4.19 kernel and this patch series generated
+> > from that list.  Most of the NXP commits are one-line commits, and I
+> > don't know the motivation for what's happening.  NXP did it, and I
+> > know it works on the Flexspi driver.
+>
+> Adding new compatibles and so on seems fine but the patches making
+> random changes without explanation like the one for octal mode I just
+> replied to are more worrying, do they work with older versions of the IP
+> or in all use cases for example?  I'd suggest cutting the initial patch
+> series down to the bare minimum needed to get things working and then
+> building on top of that if that's not already been done.
 
-Agreed.
+The original author was copied on the initial commit.  I literally
+generated the patch from NXP's branch,  added my notes, and pushed
+them to the mailing lists after testing them on the  the Linux master
+branch.   I am a bit disappointed that NXP's author hasn't responded
+to any of the comments or feedback.  NXP knows their hardware and
+better understands the details as to what is happening and why.  In
+any case,  I'll try to scale the patch series back to just enough to
+get it working on the i.MX8M Mini.  I'll expand a bit on the commit
+message based on what I've learned about the various in-implemented
+quirks and send a V2 series.
 
-I had one question about a detail, other than that:
-
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+adam
