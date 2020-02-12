@@ -2,160 +2,165 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477DAC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EF5C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E05B2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581550821;
-	bh=7rtKp1nAIPNq1/DeUQBuI6a+V1z8fJWvIKhRDxXa80w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzwW59L74gYc3Ce0Jw12XByKiW6fUlPHXUFiN4uiZwS+ATr8ChYxflP0Ndq7w/iF5
-	 5pT0MdU6IF/DI0vKxJOHq7gzQcsZvtMibP37nzECVn+VPY0echTt6MsEc4iJKsstHi
-	 k37RSXVFKPo5TVhNzZZtdJ2BPYVhfibhvpGr5AMA=
+	by mail.kernel.org (Postfix) with ESMTP id 54385206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:41:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eMdIVKSn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgBLXkG (ORCPT
+        id S1729307AbgBLXlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:40:06 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40500 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbgBLXkD (ORCPT
+        Wed, 12 Feb 2020 18:41:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56585 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729152AbgBLXlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:40:03 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so1551966pjb.5;
-        Wed, 12 Feb 2020 15:40:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AXU0e7YyFS/VUMYPbADn6DLwQaySKSAu7t+ONiQoTpg=;
-        b=Vzb3l8tkR4YbxU66SZ9n9nBxwBBBt3Hb7W8USVfds/HSLFN5fliwziScWU/0DUU5u7
-         P1akVLwV7GzSWcQ6oucwCOZhQaJljjR5vveLA/FERFd3Dr6X8i0OyADhtbvtXCrOUIXC
-         G3mHqB80cTp79sAh0e+KI56k+GeAp2Ruixvd52hxGSas6+WO67LnF/e9VmYldCqDAv1D
-         kNTDeNcgTqr4P+NkFB052cowzeBEWuR0GcccOrR0IoK5Osec1hs4sQZLnhrnUhu+mZUi
-         C+coPGSDtJaW3TYnkOzl6mmlVLkonabbog7rKg6Hw5C6Lk9UAC6RBUVyKZG3GHBFnpWn
-         Gn4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=AXU0e7YyFS/VUMYPbADn6DLwQaySKSAu7t+ONiQoTpg=;
-        b=T7Rz6PbLSQrMhvyssZtr7yN9C4lDDPEAxx+knlMVswOtFc40j/cb3mtCMnyyDtiY4d
-         eXIVVy8xt9PhlPZIfdXwhn+MGvIBxK4DvL2afxjP/+1tumUeyQ0ObJWIaTwL3ZQPUBgD
-         xzoKw8l0HkyOoDJ7BkwSGjOAgQt9ov+ESBvtEaEH8OqwKLDOX6iVieCqwjWHDaMVp1Fo
-         GVL5JurFa70QYaiCFB7En9a8yOCaGe9oMb56SXq/P8nk6iKhwcJ10uqMQdBVC2VRCBw5
-         VybfoqBBeQi3s1lBaRQAdhI90aoHaoC0xv1R27/+xJ6MalcS3Mabpd7hYSv6dd7LMSgW
-         7juA==
-X-Gm-Message-State: APjAAAULArzZIfzKu9Wx+0zMm+/ZOJxPCFBfN15L9uwVdGrI26D7mrBp
-        5NyYShKG+t1EULXe4c2RLJQ=
-X-Google-Smtp-Source: APXvYqwD/pMWtWK6l2LA9FEXSKZnFfQWBoMzwuldcspK6qD6assD8dbx8pK1RFbqi/vyXacz06EMUw==
-X-Received: by 2002:a17:902:8341:: with SMTP id z1mr24836376pln.178.1581550803112;
-        Wed, 12 Feb 2020 15:40:03 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id k5sm296664pju.29.2020.02.12.15.40.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:40:02 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
+        Wed, 12 Feb 2020 18:41:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581550891;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OQDr5ebf155fcZ1EU9k3LjSOmIORyHdnxl3xLxcFMjY=;
+        b=eMdIVKSnfwBpGzSGT4vlqXKTSBicg/9yEtLUke74+Kt/HzKJbwzTZJmNE6LOOn2/Vqb2MJ
+        1eZ0fi9AAAfW3DaeAQfyGr+EjlvTnEyiSEE0s4x4L+pHh8RU/iNoI8NNm2TBUpucHItE+/
+        OyAj/6XyE+cY1z0LbeTzM9hI2nfoz4w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-wq3_P8QhNASyMq3xTcID_Q-1; Wed, 12 Feb 2020 18:41:25 -0500
+X-MC-Unique: wq3_P8QhNASyMq3xTcID_Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56A62107ACC5;
+        Wed, 12 Feb 2020 23:41:23 +0000 (UTC)
+Received: from mail (ovpn-122-89.rdu2.redhat.com [10.10.122.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 83EA91001281;
+        Wed, 12 Feb 2020 23:41:20 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 18:41:19 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
         Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH v4 6/8] mm/madvise: allow KSM hints for remote API
-Date:   Wed, 12 Feb 2020 15:39:44 -0800
-Message-Id: <20200212233946.246210-7-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
-In-Reply-To: <20200212233946.246210-1-minchan@kernel.org>
-References: <20200212233946.246210-1-minchan@kernel.org>
+        Nosh Minwalla <nosh@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] Harden userfaultfd
+Message-ID: <20200212234119.GB29809@redhat.com>
+References: <20200211225547.235083-1-dancol@google.com>
+ <202002112332.BE71455@keescook>
+ <CAG48ez0ogRxvCK1aCnviN+nBqp6gmbUD7NjaMKvA7bF=esAc1A@mail.gmail.com>
+ <20200212171416.GD1083891@xz-x1>
+ <20200212194100.GA29809@redhat.com>
+ <CAKOZuevusieaKCt5r-jnQ5ArGfw5Otszq2CAcrqFi6MYxkKwtA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZuevusieaKCt5r-jnQ5ArGfw5Otszq2CAcrqFi6MYxkKwtA@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Natalenko <oleksandr@redhat.com>
+Hi Daniel,
 
-It all began with the fact that KSM works only on memory that is marked
-by madvise(). And the only way to get around that is to either:
+On Wed, Feb 12, 2020 at 12:04:39PM -0800, Daniel Colascione wrote:
+> We don't pass pointers to the heap into system calls. (Big primitive
+> arrays, ByteBuffer, etc. are allocated off the regular heap.)
 
-  * use LD_PRELOAD; or
-  * patch the kernel with something like UKSM or PKSM.
+That sounds pretty restrictive, I wonder what you gain by enforcing
+that invariant or if it just happened incidentally for some other
+reason?  Do you need to copy that memory every time if you need to do
+I/O on it? Are you sure this won't need to change any time soon to
+increase performance?
 
-(i skip ptrace can of worms here intentionally)
+> I don't understand what you mean. The purpose of preventing UFFD from
+> handling kernel faults is exploit mitigation.
 
-To overcome this restriction, lets employ a new remote madvise API. This
-can be used by some small userspace helper daemon that will do auto-KSM
-job for us.
+That part was clear. What wasn't clear is what the new feature
+does exactly and what it blocks, because it's all about blocking or
+how does it make things more secure?
 
-I think of two major consumers of remote KSM hints:
+> The key requirement here is the ability to prevent unprivileged
+> processes from using UFFD to widen kernel exploit windows by
+> preventing UFFD from taking kernel faults. Forcing unprivileged
+> processes to use UFFD only with UFFD_FEATURE_SIGBUS would satisfy this
+> requirement, but it's much less flexible and unnecessarily couples two
+> features.
 
-  * hosts, that run containers, especially similar ones and especially in
-    a trusted environment, sharing the same runtime like Node.js;
+I mentioned it in case you could use something like that model.
 
-  * heavy applications, that can be run in multiple instances, not
-    limited to opensource ones like Firefox, but also those that cannot be
-    modified since they are binary-only and, maybe, statically linked.
+> > On the other end I'm also planning a mremap_vma_merge userland syscall
+> > that will merge fragmented vmas.
+> 
+> This is probably a separate discussion, but does that operation really
+> need to be a system call? Historically, userspace has operated mostly
 
-Speaking of statistics, more numbers can be found in the very first
-submission, that is related to this one [1]. For my current setup with
-two Firefox instances I get 100 to 200 MiB saved for the second instance
-depending on the amount of tabs.
+mremap_vma_merge was not intended as a system call, if implemented as
+a system call it wouldn't use uffd.
 
-1 FF instance with 15 tabs:
+> on page ranges and not VMAs per se, and the kernel has been free to
 
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   410
+Userland doesn't need to know anything.. unless it wants to optimize.
 
-2 FF instances, second one has 12 tabs (all the tabs are different):
+The userland can know full well if it does certain mremap operations
+and puts its ranges virtually contiguous in a non linear way, so that
+the kernel cannot merge the vmas.
 
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   592
+> merge and split VMAs as needed for its internal purposes. This
+> approach has serious negative side effects (like making munmap
+> fallible: see [1]), but it is what it is.
+> 
+> [1] https://lore.kernel.org/linux-mm/CAKOZuetOD6MkGPVvYFLj5RXh200FaDyu3sQqZviVRhTFFS3fjA@mail.gmail.com/
 
-At the very moment I do not have specific numbers for containerised
-workload, but those should be comparable in case the containers share
-similar/same runtime.
+The fact it's fallible is a secondary concern here. Even if you make
+it unlimited, if it grows it slowdown everything and also prevents THP
+to be collapsed. Even the scalability of the mmap_sem worsens.
 
-[1] https://lore.kernel.org/patchwork/patch/1012142/
+> > Currently once you have a nice heap all contiguous but with small
+> > objects and you free the fragments you can't build THP anymore even if
+> > you make the memory virtually contiguous again by calling mremap. That
+> > just build up a ton of vmas slowing down the app forever and also
+> > preventing THP collapsing ever again.
+> 
+> Shouldn't the THP background kthread take care of merging VMAs?
 
-Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- mm/madvise.c | 4 ++++
- 1 file changed, 4 insertions(+)
+The solution can't depend on any THP feature, because the buildup of
+vmas is a scalability issue and a performance regression over time
+even if THP is not configured in the kernel. However once that's
+solved THP also gets naturally optimized.
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 71f0ba199ae8..b1237466657e 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1002,6 +1002,10 @@ process_madvise_behavior_valid(int behavior)
- 	switch (behavior) {
- 	case MADV_COLD:
- 	case MADV_PAGEOUT:
-+#ifdef CONFIG_KSM
-+	case MADV_MERGEABLE:
-+	case MADV_UNMERGEABLE:
-+#endif
- 		return true;
- 	default:
- 		return false;
--- 
-2.25.0.225.g125e21ebc7-goog
+What should happen (in my view) is just the simplest solution that can
+defrag and forcefully merge the vmas without having to stop or restart
+the app.
+
+> Presumably, those apps wouldn't issue the system call on address
+> ranges managed with a non-kernel-fault UFFD.
+
+So the new security feature won't have to block kernel faults on those
+apps and they can run side by side with the blocked app?
+
+> We shouldn't be fragmenting at all, either at the memory level or the
+> VMA level. The GC is a moving collector, and we don't punch holes in
+> the heap.
+
+That sounds good.
+
+Thanks,
+Andrea
 
