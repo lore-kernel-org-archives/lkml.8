@@ -2,90 +2,75 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6613C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396ACC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C70206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:58:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qQb1eqz1"
+	by mail.kernel.org (Postfix) with ESMTP id 023C820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581480305;
+	bh=cT6+dtC55BJaR5cUKfCHoEPq+Ej5UCJLskJcDP2ADh4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=crfqJ+KHzLC8HfHPVjxVuS4r0zcdJdv3bWfyKRor5u44o16QCCRvklH4yhnG3eazh
+	 IEnJiBtedECrZALswlwLIHvWlmQDAzIapEIVqVLdwwEbnEqUWIN9uhiwBb5fibIwfX
+	 GozniCRuqdEKRA+hPuLAp3e9bpUYn5CQUIbH8utQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgBLD6R (ORCPT
+        id S1727973AbgBLEFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 22:58:17 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46666 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgBLD6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 22:58:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=83fhIJoXHGyKFWR0u7GybPdUeA+T811CmfH2NEzMBKs=; b=qQb1eqz1vnxMwy5irhYz9tECh5
-        H1c/xd8lbLfnFVuL0y5zQoQEGaW1KcYvkjvwtZR7TnE2Mod+7IFSEjbpmcWTUQ2ZWGCtU789JNBVv
-        BckOqsWP9F/S2Q/E3otdfd8pp5Ng2vxwkHxXpcTr84EDxSrfskHK/Rj3BqlWMWYFVwUGn+qUuiHuo
-        Zvw3CIG10BrMfVVTdjMbRr7O4XNYQAPDTl3EQW6dnXmF+erO8yFnsRAQZ164bdr5DaWuqqAA+tMin
-        nY8MULH8b3gpX49NSgYLQQW065vTn0UZYKzeJvlNAnAr3OmdfnOvYCxo2pQ4182h6SfshHGPk/BkG
-        zJ59Pprg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jAC-0007pr-BC; Wed, 12 Feb 2020 03:58:12 +0000
-Date:   Tue, 11 Feb 2020 19:58:12 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Rik van Riel <riel@surriel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200212035812.GB7778@bombadil.infradead.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
- <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
- <20200211193101.GA178975@cmpxchg.org>
- <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
- <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+        Tue, 11 Feb 2020 23:05:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727602AbgBLEFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 23:05:04 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3889E20842;
+        Wed, 12 Feb 2020 04:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581480303;
+        bh=cT6+dtC55BJaR5cUKfCHoEPq+Ej5UCJLskJcDP2ADh4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X4NpwaUNd25oASQc7FweEativ5f0k8QbzmjAnT2nCZPm7kEDGoDkViY0cDpU0Utmy
+         lOV+Y9H9DdVgafYwZDuYPEKlR32dwqaleUWm8RS9DFU7SEEHJYLJXK/qNl0LFOP9m/
+         ipU6NFNXfqsUvCwTNI+BpnC4iigbHbgiuRaoU4iE=
+Date:   Tue, 11 Feb 2020 20:05:01 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v7 3/8] f2fs: Use generic casefolding support
+Message-ID: <20200212040501.GE870@sol.localdomain>
+References: <20200208013552.241832-1-drosen@google.com>
+ <20200208013552.241832-4-drosen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+In-Reply-To: <20200208013552.241832-4-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:28:39PM -0800, Linus Torvalds wrote:
-> On Tue, Feb 11, 2020 at 3:44 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > Testing this will be a challenge, but the issue was real - a 7GB
-> > highmem machine isn't crazy and I expect the inode has become larger
-> > since those days.
-> 
-> Hmm. I would say that in the intening years a 7GB highmem machine has
-> indeed become crazy.
-> 
-> It used to be something we kind of supported.
-> 
-> But we really should consider HIGHMEM to be something that is on the
-> deprecation list. In this day and age, there is no excuse for running
-> a 32-bit kernel with lots of physical memory.
-> 
-> And if you really want to do that, and have some legacy hardware with
-> a legacy use case, maybe you should be using a legacy kernel.
-> 
-> I'd personally be perfectly happy to start removing HIGHMEM support again.
+On Fri, Feb 07, 2020 at 05:35:47PM -0800, Daniel Rosenberg wrote:
+> This switches f2fs over to the generic support provided in
+> commit 65832afbeaaf ("fs: Add standard casefolding support")
 
-Do we have a use case where people want to run modern 32-bit guest kernels
-with more than 896MB of memory to support some horrendous legacy app?
-Or is our 32-bit compat story good enough that nobody actually does this?
-(Contrariwise, maybe those people are also fine with running a ten year
-old kernel because a `uname -r` starting with '3' breaks said app)
+Referring to earlier patches in a series by commit ID isn't a good idea because
+the commit ID is unknown until the patch is applied.
+
+- Eric
