@@ -2,72 +2,97 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D8BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3626CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5192073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045252082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:59:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gfuS8CH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgBLL5Y (ORCPT
+        id S1728245AbgBLL7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:57:24 -0500
-Received: from mga07.intel.com ([134.134.136.100]:52644 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbgBLL5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:57:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 03:57:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="347501773"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 12 Feb 2020 03:57:17 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 12 Feb 2020 13:57:17 +0200
-Date:   Wed, 12 Feb 2020 13:57:17 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/18] platform/x86: intel_scu_ipc: Log more
- information if SCU IPC command fails
-Message-ID: <20200212115717.GA2667@lahna.fi.intel.com>
-References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
- <20200211132603.73509-3-mika.westerberg@linux.intel.com>
- <20200211154138.GE10400@smile.fi.intel.com>
- <20200212113649.GV2667@lahna.fi.intel.com>
- <20200212115442.GS10400@smile.fi.intel.com>
+        Wed, 12 Feb 2020 06:59:01 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:42966 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgBLL7B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:59:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UtN8+ZGSwaPi4q3QVj9G5VCoQ9BSx691y8FRqSthTXE=; b=gfuS8CH6o/kkTpvRENuT4/WSp6
+        Y1BM52nqcvQS6tgzL2xqmbDAkKG7Jr6sk9ZDzBWzdwXp7Iy9EJoUlEwTS/4xCj7vncjj0n3vSkoV9
+        nahwIJUwMVAeXMgzUH0Oewx0QZU9xdoM6/MhGfPYhIIv7oALnyNi4aJT19l1/9n//M0qqDnMvnfT0
+        fkbLe46TnBDnbrgTdk7xPQzJR7xs7O6UK2mcDbNLKYhuGt/08Zi7obelcfwVNU4DOZ/CkabnfSNIr
+        6X5HPVho9NcDDmB9ABXR5kdCxjg4qcbeloJ3tfQVY275abz/7mAVKP50cbqNeEXgYtppW7MbCfbzo
+        HJJBZbeA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1qet-0000HP-OM; Wed, 12 Feb 2020 11:58:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C224300235;
+        Wed, 12 Feb 2020 12:56:30 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1683120148932; Wed, 12 Feb 2020 12:58:20 +0100 (CET)
+Date:   Wed, 12 Feb 2020 12:58:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, james.morse@arm.com, catalin.marinas@arm.com,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH 0/8] tracing vs rcu vs nmi
+Message-ID: <20200212115820.GQ14897@hirez.programming.kicks-ass.net>
+References: <20200212093210.468391728@infradead.org>
+ <20200212100106.GA14914@hirez.programming.kicks-ass.net>
+ <20200212105646.GA4017@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212115442.GS10400@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200212105646.GA4017@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 01:54:42PM +0200, Andy Shevchenko wrote:
-> > You mean move outside of the lock? This one calls ipc_data_readl()
-> > which should be under the lock.
+On Wed, Feb 12, 2020 at 10:56:46AM +0000, Will Deacon wrote:
+> On Wed, Feb 12, 2020 at 11:01:06AM +0100, Peter Zijlstra wrote:
+> > On Wed, Feb 12, 2020 at 10:32:10AM +0100, Peter Zijlstra wrote:
+> > > Hi all,
+> > > 
+> > > These here patches are the result of Mathieu and Steve trying to get commit
+> > > 865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
+> > > tracepoints") reverted again.
+> > > 
+> > > One of the things discovered is that tracing MUST NOT happen before nmi_enter()
+> > > or after nmi_exit(). I've only fixed x86, but quickly gone through other
+> > > architectures and there is definitely more stuff to be fixed (simply grep for
+> > > nmi_enter in your arch).
+> > 
+> > For ARM64:
+> > 
+> >  - apei_claim_sea()
+> >  - __sdei_handler()
+> >  - do_serror()
+> >  - debug_exception_enter() / do_debug_exception()
+> > 
+> > all look dodgy.
 > 
-> I meant to move dev_err() out of the lock. The rest of course requires to stay
-> under it.
+> Hmm, so looks like we need to spinkle some 'notrace' annotations around
+> these. Are there are scenarios where you would want NOKPROBE_SYMBOL() but
+> *not* 'notrace'? We've already got the former for the debug exception
+> handlers and we probably (?) want it for the SDEI stuff too...
 
-OK, got it :)
+I'm not sure. In fact, I asked Steve on IRC if we'd want to teach
+objtool to report such inconsitencies.
