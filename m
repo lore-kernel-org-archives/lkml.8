@@ -2,175 +2,166 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08356C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE7FC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D0620661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CSRbTp0c"
+	by mail.kernel.org (Postfix) with ESMTP id EF88F20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgBLNXc (ORCPT
+        id S1727954AbgBLN11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:23:32 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:57302 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbgBLNXb (ORCPT
+        Wed, 12 Feb 2020 08:27:27 -0500
+Received: from www62.your-server.de ([213.133.104.62]:57368 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgBLN11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:23:31 -0500
-Received: by mail-pf1-f202.google.com with SMTP id r29so1430027pfl.23
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 05:23:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=w10epyxLvI1AMDusIOewZ9Hw+W4QXY5j4khGzCFE/qU=;
-        b=CSRbTp0cgmvvYED86UShjM6ebVFBVWmoUEIeo7pq2N59MZTYbk+bADSbZt33gVePGq
-         dphTBNLWIxyja9ri+3b1r98pQnYg/8UpvMhP+xiOBweai1HRwiziWao2g2GZivD+iW6n
-         swP+Kr511KN0bQbdAH5H/t0NT1Cwp83IYTNQBJ7E9hGIqvoqFEa1KAyur0IxjadrQnaW
-         RvzFWsbu0AHdSM8TF51meWPdH76N2QWOTjknXzJ7Lz2KMgrePb25g3IG6+btvzEtfiMc
-         6kr5YOvTb81FA7625/4YvW1/UarZctyDBxz9w76Fiz6AbXuzATd4bRmJxPPlOrgugZWF
-         697A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=w10epyxLvI1AMDusIOewZ9Hw+W4QXY5j4khGzCFE/qU=;
-        b=JU8Gto0qsuMslL52wWBpDJJe6vhE8x1Ko/3B3lgPZInKO3DL5gb/3MiwbipQ2Wwd+f
-         v2dZleL/RB1Ddwc/ZVW5tmddEfyGCwFWqnpkaJ3x8U+iOECgevj/8oV9b30l2DOboJaE
-         VNgIMpe313OliAzudDpMn5NlXP1eRb6AR5tPuNt/JvCCLl99f6HDkHigzbSWPL5nE6ly
-         wxBolfUuBPPjP0LKIAawN1UmkeYOWRDwtRRrHCTXPkVytkOIdsMcVPFIOMYBmxoH/lB/
-         DMEEpq2/dEeDV4FW0QNkgs/PTvog0nM9DpGp8nmYEZspphdpf7V/O2G/KcjpDryKmuRx
-         u4WQ==
-X-Gm-Message-State: APjAAAUdzs+bMMaKCiGA6eO2E4PSulu0V7YoGpSll2ptP4TS2VWuB8k6
-        St1/aBXtFqHYFpkaM3bF3y/wOTKgV4Einzn2mw==
-X-Google-Smtp-Source: APXvYqweIa+s3oYripbme3DsFRlxtH2ALwUEkVJB/JEHC77sTiqqrkzOYJqa4fBbraA0805Q2Wx0aFP/FapyKstnIA==
-X-Received: by 2002:a63:7412:: with SMTP id p18mr8348417pgc.361.1581513809481;
- Wed, 12 Feb 2020 05:23:29 -0800 (PST)
-Date:   Wed, 12 Feb 2020 21:23:23 +0800
-Message-Id: <20200212212316.Bluez.v3.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
-Subject: [Bluez PATCH v3] bluetooth: secure bluetooth stack from bluedump attack
-From:   Howard Chung <howardchung@google.com>
-To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        Howard Chung <howardchung@google.com>,
+        Wed, 12 Feb 2020 08:27:27 -0500
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j1s2v-0004et-Je; Wed, 12 Feb 2020 14:27:18 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j1s2u-000X31-Sa; Wed, 12 Feb 2020 14:27:16 +0100
+Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
+ mutable hooks list for the BPF LSM]
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Jann Horn <jannh@google.com>, KP Singh <kpsingh@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
+References: <20200211124334.GA96694@google.com>
+ <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
+ <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+ <20200211190943.sysdbz2zuz5666nq@ast-mbp>
+ <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
+ <20200211201039.om6xqoscfle7bguz@ast-mbp>
+ <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
+ <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
+ <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
+ <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
+ <20200212024542.gdsafhvqykucdp4h@ast-mbp>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <ff6dec98-5e33-4603-1b90-e4bff23695cc@iogearbox.net>
+Date:   Wed, 12 Feb 2020 14:27:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200212024542.gdsafhvqykucdp4h@ast-mbp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.1/25721/Wed Feb 12 06:24:38 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attack scenario:
-1. A Chromebook (let's call this device A) is paired to a legitimate
-   Bluetooth classic device (e.g. a speaker) (let's call this device
-   B).
-2. A malicious device (let's call this device C) pretends to be the
-   Bluetooth speaker by using the same BT address.
-3. If device A is not currently connected to device B, device A will
-   be ready to accept connection from device B in the background
-   (technically, doing Page Scan).
-4. Therefore, device C can initiate connection to device A
-   (because device A is doing Page Scan) and device A will accept the
-   connection because device A trusts device C's address which is the
-   same as device B's address.
-5. Device C won't be able to communicate at any high level Bluetooth
-   profile with device A because device A enforces that device C is
-   encrypted with their common Link Key, which device C doesn't have.
-   But device C can initiate pairing with device A with just-works
-   model without requiring user interaction (there is only pairing
-   notification). After pairing, device A now trusts device C with a
-   new different link key, common between device A and C.
-6. From now on, device A trusts device C, so device C can at anytime
-   connect to device A to do any kind of high-level hijacking, e.g.
-   speaker hijack or mouse/keyboard hijack.
+On 2/12/20 3:45 AM, Alexei Starovoitov wrote:
+> On Wed, Feb 12, 2020 at 01:09:07AM +0100, Daniel Borkmann wrote:
+>>
+>> Another approach could be to have a special nop inside call_int_hook()
+>> macro which would then get patched to avoid these situations. Somewhat
+>> similar like static keys where it could be defined anywhere in text but
+>> with updating of call_int_hook()'s RC for the verdict.
+> 
+> Sounds nice in theory. I couldn't quite picture how that would look
+> in the code, so I hacked:
+> diff --git a/security/security.c b/security/security.c
+> index 565bc9b67276..ce4bc1e5e26c 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -28,6 +28,7 @@
+>   #include <linux/string.h>
+>   #include <linux/msg.h>
+>   #include <net/flow.h>
+> +#include <linux/jump_label.h>
+> 
+>   #define MAX_LSM_EVM_XATTR      2
+> 
+> @@ -678,12 +679,26 @@ static void __init lsm_early_task(struct task_struct *task)
+>    *     This is a hook that returns a value.
+>    */
+> 
+> +#define LSM_HOOK_NAME(FUNC) \
+> +       DEFINE_STATIC_KEY_FALSE(bpf_lsm_key_##FUNC);
+> +#include <linux/lsm_hook_names.h>
+> +#undef LSM_HOOK_NAME
+> +__diag_push();
+> +__diag_ignore(GCC, 8, "-Wstrict-prototypes", "");
+> +#define LSM_HOOK_NAME(FUNC) \
+> +       int bpf_lsm_call_##FUNC() {return 0;}
+> +#include <linux/lsm_hook_names.h>
+> +#undef LSM_HOOK_NAME
+> +__diag_pop();
+> +
+>   #define call_void_hook(FUNC, ...)                              \
+>          do {                                                    \
+>                  struct security_hook_list *P;                   \
+>                                                                  \
+>                  hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
+>                          P->hook.FUNC(__VA_ARGS__);              \
+> +               if (static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
+> +                      (void)bpf_lsm_call_##FUNC(__VA_ARGS__); \
+>          } while (0)
+> 
+>   #define call_int_hook(FUNC, IRC, ...) ({                       \
+> @@ -696,6 +711,8 @@ static void __init lsm_early_task(struct task_struct *task)
+>                          if (RC != 0)                            \
+>                                  break;                          \
+>                  }                                               \
+> +               if (RC == IRC && static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
+> +                      RC = bpf_lsm_call_##FUNC(__VA_ARGS__); \
 
-Since we don't know whether the repairing is legitimate or not,
-leave the decision to user space if all the conditions below are met.
-- the pairing is initialized by peer
-- the authorization method is just-work
-- host already had the link key to the peer
+Nit: the `RC == IRC` test could be moved behind the static_branch_unlikely() so
+that it would be bypassed when not enabled.
 
-Signed-off-by: Howard Chung <howardchung@google.com>
----
+>          } while (0);                                            \
+>          RC;                                                     \
+>   })
+> 
+> The assembly looks good from correctness and performance points.
+> union security_list_options can be split into lsm_hook_names.h too
+> to avoid __diag_ignore. Is that what you have in mind?
+> I don't see how one can improve call_int_hook() macro without
+> full refactoring of linux/lsm_hooks.h
+> imo static_key doesn't have to be there in the first set. We can add this
+> optimization later.
 
-Changes in v3:
-- Change confirm_hint from 2 to 1
-- Fix coding style (declaration order)
+Yes, like the above diff looks good, and then we'd dynamically attach the program
+at bpf_lsm_call_##FUNC()'s fexit hook for a direct jump, so all the security_blah()
+internals could stay as-is which then might also address Jann's concerns wrt
+concrete annotation as well as potential locking changes inside security_blah().
+Agree that patching out via static key could be optional but since you were talking
+about avoiding indirect jumps..
 
-Changes in v2:
-- Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
-- Fix the added code in classic
-- Add a similar fix for LE
-
- net/bluetooth/hci_event.c | 10 ++++++++++
- net/bluetooth/smp.c       | 18 ++++++++++++++++++
- 2 files changed, 28 insertions(+)
-
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 2c833dae9366..e6982f4f51ea 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4571,6 +4571,16 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
- 			goto confirm;
- 		}
- 
-+		/* If there already exists link key in local host, leave the
-+		 * decision to user space since the remote device could be
-+		 * legitimate or malicious.
-+		 */
-+		if (hci_find_link_key(hdev, &ev->bdaddr)) {
-+			bt_dev_warn(hdev, "Local host already has link key");
-+			confirm_hint = 1;
-+			goto confirm;
-+		}
-+
- 		BT_DBG("Auto-accept of user confirmation with %ums delay",
- 		       hdev->auto_accept_delay);
- 
-diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-index 2cba6e07c02b..1483ceea3bab 100644
---- a/net/bluetooth/smp.c
-+++ b/net/bluetooth/smp.c
-@@ -2139,6 +2139,7 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
- 	struct l2cap_chan *chan = conn->smp;
- 	struct smp_chan *smp = chan->data;
- 	struct hci_conn *hcon = conn->hcon;
-+	struct smp_ltk *key;
- 	u8 *pkax, *pkbx, *na, *nb;
- 	u32 passkey;
- 	int err;
-@@ -2192,6 +2193,23 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
- 		smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
- 			     smp->prnd);
- 		SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
-+
-+		key = hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-+				   hcon->role);
-+
-+		/* If there already exists link key in local host, leave the
-+		 * decision to user space since the remote device could be
-+		 * legitimate or malicious.
-+		 */
-+		if (smp->method == JUST_WORKS && key) {
-+			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
-+							hcon->type,
-+							hcon->dst_type, passkey,
-+							1);
-+			if (err)
-+				return SMP_UNSPECIFIED;
-+			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
-+		}
- 	}
- 
- mackey_and_ltk:
--- 
-2.25.0.225.g125e21ebc7-goog
-
+Thanks,
+Daniel
