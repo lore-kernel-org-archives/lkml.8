@@ -2,45 +2,72 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F543C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3004C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22CD2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8873C2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581504403;
+	bh=xOU7PQkgW4q9YMHWoFq9bb7nNnTDoGpTbdZfbr70KEY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oIz0poxYIhasEctzBRX/4qvsyHCY5XoPX568Eh0w+2JqjZcK10fJ5N+8hDu1r0EsY
+	 2/lQuIN+uAYEnlmCt36o3715rsHyyfVeceEtJJ9kyXQkLWlifyAFGst3BoF8yxAtpu
+	 SnLo1Fie3a6nwlamGVgLe7By2DTyQHs+oonvU3MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgBLKow (ORCPT
+        id S1727891AbgBLKqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:44:52 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52524 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbgBLKnl (ORCPT
+        Wed, 12 Feb 2020 05:46:42 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38295 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbgBLKqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:43:41 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j1pUY-0005aC-EF; Wed, 12 Feb 2020 10:43:38 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH net-next 03/10] sysfs: add sysfs_group_change_owner()
-Date:   Wed, 12 Feb 2020 11:43:14 +0100
-Message-Id: <20200212104321.43570-4-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200212104321.43570-1-christian.brauner@ubuntu.com>
-References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
+        Wed, 12 Feb 2020 05:46:42 -0500
+Received: by mail-lj1-f193.google.com with SMTP id w1so1746568ljh.5;
+        Wed, 12 Feb 2020 02:46:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vy/8LlDz/KObVyLZSWteSlNQfy03Ob41JwklHt6HAa8=;
+        b=s6WyuQ68jAoEWy3fnzI+cGcNhrP9ESXoooeXtf4FzJZEcPEOT2zQquzcu6TIpr+2Mw
+         XxL3YGoVI9NzFDwhLR0JMQwKF4BZaIF1nRtBneBk9q/jqjJbVF4ZLdpJKDUxKOWiAmCI
+         Bdjula21mItCuu9AAE1/9UNCIT/sgdvha92ZZUJQUF2lJhU4izDj+VE8xBbl+EQwGNn7
+         jRN3fveWHVLYO4jli9fm2H+A6lCmymOm0F+y3uKdKDso6tfcuSj6ajEAYlW9mTUR4prk
+         SZRJc8sJBuj518/GEO460CoK2oYMFRjTmMWKTvFtTPANvZOijvasFF1Zbu8m8jDam/Bm
+         FK+A==
+X-Gm-Message-State: APjAAAUsRsBAxz8qlwhsHogokgVW8SplMfEIsnWivBhyc//Dr4S0TJvL
+        K5F6agwyfSsvdsKAVqLEF7w=
+X-Google-Smtp-Source: APXvYqyPcIz3R22UQSDl/z8PePXUGeJFtGavWO9nR4gTSGiD2x1BrksDbc0O7BxHh6ChHZgQ8mhxlQ==
+X-Received: by 2002:a2e:a490:: with SMTP id h16mr18671lji.115.1581504400351;
+        Wed, 12 Feb 2020 02:46:40 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id g15sm40369ljl.10.2020.02.12.02.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 02:46:39 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1j1pXS-0005Hh-Q9; Wed, 12 Feb 2020 11:46:38 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: [PATCH] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
+Date:   Wed, 12 Feb 2020 11:46:29 +0100
+Message-Id: <20200212104629.20272-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,146 +75,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to change the owner of a sysfs group.
-The ownership of a sysfs object is determined based on the ownership of
-the corresponding kobject, i.e. only if the ownership of a kobject is
-changed will this function change the ownership of the corresponding
-sysfs entry.
-This function will be used to correctly account for kobject ownership
-changes, e.g. when moving network devices between network namespaces.
+The sram-node compatible properties have mistakingly combined the
+model-specific string with the generic "mtd-ram" string.
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+"cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+not present in any binding.
+
+The physmap driver will however bind to platform devices that specify
+"mtd-ram".
+
+Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- fs/sysfs/group.c      | 85 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/sysfs.h |  8 ++++
- 2 files changed, 93 insertions(+)
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-index c4ab045926b7..34b702ec9782 100644
---- a/fs/sysfs/group.c
-+++ b/fs/sysfs/group.c
-@@ -13,6 +13,7 @@
- #include <linux/dcache.h>
- #include <linux/namei.h>
- #include <linux/err.h>
-+#include <linux/fs.h>
- #include "sysfs.h"
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+index cd075621de52..84fcc203a2e4 100644
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -275,7 +275,7 @@ &weim {
  
+ 	/* SRAM on Colibri nEXT_CS0 */
+ 	sram@0,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <0 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -286,7 +286,7 @@ sram@0,0 {
  
-@@ -457,3 +458,87 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
- 	return PTR_ERR_OR_ZERO(link);
- }
- EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
-+
-+static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
-+					  const struct attribute_group *grp,
-+					  struct iattr *newattrs)
-+{
-+	struct kernfs_node *kn;
-+	int error;
-+
-+	if (grp->attrs) {
-+		struct attribute *const *attr;
-+
-+		for (attr = grp->attrs; *attr; attr++) {
-+			kn = kernfs_find_and_get(grp_kn, (*attr)->name);
-+			if (!kn)
-+				return -ENOENT;
-+
-+			error = kernfs_setattr(kn, newattrs);
-+			kernfs_put(kn);
-+			if (error)
-+				return error;
-+		}
-+	}
-+
-+	if (grp->bin_attrs) {
-+		struct bin_attribute *const *bin_attr;
-+
-+		for (bin_attr = grp->bin_attrs; *bin_attr; bin_attr++) {
-+			kn = kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
-+			if (!kn)
-+				return -ENOENT;
-+
-+			error = kernfs_setattr(kn, newattrs);
-+			kernfs_put(kn);
-+			if (error)
-+				return error;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * sysfs_group_change_owner - change owner of an attribute group.
-+ * @kobj:	The kobject containing the group.
-+ * @grp:	The attribute group.
-+ *
-+ * Returns 0 on success or error code on failure.
-+ */
-+int sysfs_group_change_owner(struct kobject *kobj,
-+			     const struct attribute_group *grp)
-+{
-+	struct kernfs_node *grp_kn;
-+	kuid_t uid;
-+	kgid_t gid;
-+	int error;
-+	struct iattr newattrs = {
-+		.ia_valid = ATTR_UID | ATTR_GID,
-+	};
-+
-+	if (!kobj->state_in_sysfs)
-+		return -EINVAL;
-+
-+	if (grp->name) {
-+		grp_kn = kernfs_find_and_get(kobj->sd, grp->name);
-+	} else {
-+		kernfs_get(kobj->sd);
-+		grp_kn = kobj->sd;
-+	}
-+	if (!grp_kn)
-+		return -ENOENT;
-+
-+	kobject_get_ownership(kobj, &uid, &gid);
-+	newattrs.ia_uid = uid;
-+	newattrs.ia_gid = gid;
-+
-+	error = kernfs_setattr(grp_kn, &newattrs);
-+	if (!error)
-+		error = sysfs_group_attrs_change_owner(grp_kn, grp, &newattrs);
-+
-+	kernfs_put(grp_kn);
-+
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(sysfs_group_change_owner);
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 4e10085739b7..9363c61b9349 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -313,6 +313,8 @@ static inline void sysfs_enable_ns(struct kernfs_node *kn)
- int sysfs_file_change_owner(struct kobject *kobj, const char *name);
- int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
- 			    const char *name);
-+int sysfs_group_change_owner(struct kobject *kobj,
-+			     const struct attribute_group *groups);
- 
- #else /* CONFIG_SYSFS */
- 
-@@ -538,6 +540,12 @@ static inline int sysfs_link_change_owner(struct kobject *kobj,
- 	return 0;
- }
- 
-+static inline int sysfs_group_change_owner(struct kobject *kobj,
-+			 const struct attribute_group **groups)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_SYSFS */
- 
- static inline int __must_check sysfs_create_file(struct kobject *kobj,
+ 	/* SRAM on Colibri nEXT_CS1 */
+ 	sram@1,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <1 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
-2.25.0
+2.24.1
 
