@@ -6,87 +6,80 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0BBC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5C8C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081312467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA3982467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgBLUlb (ORCPT
+        id S1728674AbgBLUm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:41:31 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43908 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgBLUla (ORCPT
+        Wed, 12 Feb 2020 15:42:56 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:52203 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgBLUmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:41:30 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1yp3-00Bb9p-0J; Wed, 12 Feb 2020 20:41:25 +0000
-Date:   Wed, 12 Feb 2020 20:41:24 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs
- instances
-Message-ID: <20200212204124.GR23230@ZenIV.linux.org.uk>
-References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
- <87v9odlxbr.fsf@x220.int.ebiederm.org>
- <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
- <87tv3vkg1a.fsf@x220.int.ebiederm.org>
- <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
- <87v9obipk9.fsf@x220.int.ebiederm.org>
- <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
- <20200212200335.GO23230@ZenIV.linux.org.uk>
- <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
- <20200212203833.GQ23230@ZenIV.linux.org.uk>
+        Wed, 12 Feb 2020 15:42:55 -0500
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MryKp-1jng0h1Ror-00nyhj for <linux-kernel@vger.kernel.org>; Wed, 12 Feb
+ 2020 21:42:54 +0100
+Received: by mail-qt1-f181.google.com with SMTP id d5so2719660qto.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:42:54 -0800 (PST)
+X-Gm-Message-State: APjAAAV1U1giEwzzmbU1B7gyyBtRVBMCLMDrx4mfk97wJ7AXHEaqf0nB
+        HQP6yUcGRl1znMlHT1vsRy9/rrEl6QK9RfhYwdc=
+X-Google-Smtp-Source: APXvYqzbFFnehBBOdl6ZY9lePTyzs7xgHK+/WmKG0jLKpf92Ycgjhz0xkwyxD7PXcWaWveHda52HAv6MenIdAfvH15k=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr20979826qte.204.1581540173275;
+ Wed, 12 Feb 2020 12:42:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212203833.GQ23230@ZenIV.linux.org.uk>
+References: <cover.1581522136.git.michal.simek@xilinx.com> <f6bca66fa1c0c4f7321bbac3906fdf87652285d1.1581522136.git.michal.simek@xilinx.com>
+In-Reply-To: <f6bca66fa1c0c4f7321bbac3906fdf87652285d1.1581522136.git.michal.simek@xilinx.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 12 Feb 2020 21:42:37 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0xH_ao_zpFV+sn1vB3Gai0RDXMfn7KgCB0fJh3oV06PQ@mail.gmail.com>
+Message-ID: <CAK8P3a0xH_ao_zpFV+sn1vB3Gai0RDXMfn7KgCB0fJh3oV06PQ@mail.gmail.com>
+Subject: Re: [PATCH 2/7] microblaze: Make cpuinfo structure SMP aware
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:EeepXst0+fc/JOzNh92gXY7nm4TgG7y6vUTId9yyaNrX7qybVPr
+ pVOInvXiOoTFyyKXWj1olNL9t0dHIhiLyn0oelzFjTPmFBumZHeWvNcT6T0W53QA+sHUsym
+ GRlRU/s1r9JZilxMvnskxjq0+IohqhutbKv2u1k/qBpYX2S4aPlIR9N7jmt1Zbme7iixPCq
+ US9IbIEYOOPvei2yqOldA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Q4BiVOqfuY8=:bGWpvUa+1qjKX2j0N90l9o
+ KmZftTqbJCuNgJNXYDZeL+sK9yAnES+Ww2pmgLfm/A4LhUyowkMjlyRE6Jxi/+UJgS8kvaGgZ
+ M7CQAfgFmmEbsHCky8icbUpy144YeCDAV8r2mlmLcC9SzWCHZf90YVdg7NbMgz+MFR654MQnd
+ ZpBexjqxHpv9+jskMCKoI0Uv68suK4518twxBeOiSC/NiX4lzSG5Uixi5DOK54x7Xd8GitRGr
+ gYVl2htYC8yF/esDPk++STU8bGkWxrUwedbiInhrvlRXXnzEm825wjEt0+yHzwyvZCwRXKgfX
+ dtzJgpx6YmtSJO5bVy7kTpZRw5aqv5hPQDpj0hPh2TBEmGtpSHHgIskwec2fdEFqunLe1OoYW
+ Y19i7rH0F9AyQrfspqoMF4I2hv1F2qGFCQaHpWFzK4+/HDhInd+EhkeZlR32stmWolbV2Uk6K
+ UbKCduFVnRcgjLKUQoPq7cligkbmQ0H2MR0GK317PCEqdQdzsKhCQ1eCoU9hcLiSPpn9N99hD
+ VXuDBjrTEoZ+E2nWnU0qm4nPIiBpXXCqf/zpZdyydAToEeJ+clhEjEdtgdgS8io/d2ras9YIS
+ mllcPQNJfoWoFPWIqWRkQzRZVurTtvSE4PMUAnabjrlgDptkPjSBKjWJlIDHUmHEyWJyScWZh
+ V4fAZp98ZX78S4WqW3C268JURNcOtl7YdqnwEqOfvjxNrySG0YoeVLLBPTz3TGmb9nbBQAtq3
+ 27BeiZ/SR3uoVE6BtIsNfr8JDC42naWl6+TFlJT96eXkCjVWEvEnD4IqzBv8qzCM6T8fDaf8L
+ xO42C7qpNI3DcaHuaK7NQB4ywHLyRcdjU2PK61yJU1pg+b0IZc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 08:38:33PM +0000, Al Viro wrote:
-> On Wed, Feb 12, 2020 at 12:35:04PM -0800, Linus Torvalds wrote:
-> > On Wed, Feb 12, 2020 at 12:03 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > >
-> > > What's to prevent racing with fs shutdown while you are doing the second part?
-> > 
-> > I was thinking that only the proc_flush_task() code would do this.
-> > 
-> > And that holds a ref to the vfsmount through upid->ns.
-> > 
-> > So I wasn't suggesting doing this in general - just splitting up the
-> > implementation of d_invalidate() so that proc_flush_task_mnt() could
-> > delay the complex part to after having traversed the RCU-protected
-> > list.
-> > 
-> > But hey - I missed this part of the problem originally, so maybe I'm
-> > just missing something else this time. Wouldn't be the first time.
-> 
-> Wait, I thought the whole point of that had been to allow multiple
-> procfs instances for the same userns?  Confused...
+On Wed, Feb 12, 2020 at 4:42 PM Michal Simek <michal.simek@xilinx.com> wrote:
 
-s/userns/pidns/, sorry
+>  static void __flush_icache_range_msr_irq(unsigned long start, unsigned long end)
+>  {
+> +       unsigned int cpu = smp_processor_id();
+> +       struct cpuinfo *cpuinfo = per_cpu_ptr(&cpu_info, cpu);
+
+I think all the instances of smp_processor_id()/per_cpu_ptr() should
+be replaced with get_cpu_ptr()/put_cpu_ptr(). Same for per_cpu_var()
+ -> get_cpu_var().
+
+       Arnd
