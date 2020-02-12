@@ -2,144 +2,101 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF4FC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1179C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523C4206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:07:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="NoVYdBzG"
+	by mail.kernel.org (Postfix) with ESMTP id 7AE44206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgBLPHz (ORCPT
+        id S1728553AbgBLPIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:07:55 -0500
-Received: from mail.efficios.com ([167.114.26.124]:32888 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgBLPHy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:07:54 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id EA699256630;
-        Wed, 12 Feb 2020 10:07:52 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id jbDkN1MOyTZm; Wed, 12 Feb 2020 10:07:52 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 864FB2565C9;
-        Wed, 12 Feb 2020 10:07:52 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 864FB2565C9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1581520072;
-        bh=XqwTStxhGy9NhMPxxcBJbdJMRdCChNgVrogMKyJSuj0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=NoVYdBzGwtawBLyB8iYWvKl2MvHCNV+C1HDF/muRlw889COo8WmLwUyJ+Po5GMi0D
-         DL4HaGukbHTAw4W5V3CCEdxBzQbULaeuMw1PjP6IVFbGYWrwqVo27I3PZEcKOow/ex
-         KTgMYHKBNjxO14/aF6LQuNMoFYC66vT7gUa5DZZcJfDvPVmt3a/Js+Z8KSHZKs4E54
-         56LwMTpnWguc6JsLTZE5llzvmVUHDsAnjgZZtMs5gvLCsrOksew/vHyFqHwZm7QI+P
-         ZE/h7j/wAGJ2zIMzVhQuSxsEH3qihcMbmFCfE+5m7lKcBO18SE62qnks6RRvUpWJie
-         Q1XFV/ezOfNBQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id tX3YLiAZHgPy; Wed, 12 Feb 2020 10:07:52 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 6428E25653F;
-        Wed, 12 Feb 2020 10:07:52 -0500 (EST)
-Date:   Wed, 12 Feb 2020 10:07:51 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Message-ID: <736090577.117.1581520071732.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200212092655.4ba6cd79@gandalf.local.home>
-References: <20200212093210.468391728@infradead.org> <20200212094107.951346701@infradead.org> <20200212092655.4ba6cd79@gandalf.local.home>
-Subject: Re: [PATCH 6/8] perf,tracing: Prepare the perf-trace interface for
- RCU changes
+        Wed, 12 Feb 2020 10:08:16 -0500
+Received: from mga12.intel.com ([192.55.52.136]:33488 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728234AbgBLPIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:08:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 07:07:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="226891155"
+Received: from mlinda-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.9.85])
+  by orsmga008.jf.intel.com with ESMTP; 12 Feb 2020 07:07:44 -0800
+Date:   Wed, 12 Feb 2020 17:07:42 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v3 1/7] char: tpm: Make implementation of read16 read32
+ write32 optional
+Message-ID: <20200212150742.GA13248@linux.intel.com>
+References: <20200210162838.173903-1-amirmizi6@gmail.com>
+ <20200210162838.173903-2-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3899 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: perf,tracing: Prepare the perf-trace interface for RCU changes
-Thread-Index: VvottGhSyh8E2rHXp+3mD6dLT1bn1A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210162838.173903-2-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 12, 2020, at 9:26 AM, rostedt rostedt@goodmis.org wrote:
-
-> On Wed, 12 Feb 2020 10:32:16 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Feb 10, 2020 at 06:28:32PM +0200, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
 > 
->> The tracepoint interface will stop providing regular RCU context; make
->> sure we do it ourselves, since perf makes use of regular RCU protected
->> data.
->> 
+> Only tpm_tis has a faster way to access multiple bytes at once, every other
+> driver will just fall back to read_bytes/write_bytes. Therefore, move this
+
+Describe exactly what you mean instead of "faster way" and "multiple
+bytes".
+
+> common code out of tpm_tis_spi into tpm_tis_core, so that it is
+> automatically used when low-level drivers do not implement the specialized
+> methods.
 > 
-> Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-
-and
-
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-
-Thanks :)
-
-Mathieu
-
+> This commit is based on previous work by Alexander Steffen.
 > 
->  ;-)
-> 
-> -- Steve
-> 
->> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> ---
->>  kernel/events/core.c |    5 +++++
->>  1 file changed, 5 insertions(+)
->> 
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -8950,6 +8950,7 @@ void perf_tp_event(u16 event_type, u64 c
->>  {
->>  	struct perf_sample_data data;
->>  	struct perf_event *event;
->> +	unsigned long rcu_flags;
->>  
->>  	struct perf_raw_record raw = {
->>  		.frag = {
->> @@ -8961,6 +8962,8 @@ void perf_tp_event(u16 event_type, u64 c
->>  	perf_sample_data_init(&data, 0, 0);
->>  	data.raw = &raw;
->>  
->> +	rcu_flags = trace_rcu_enter();
->> +
->>  	perf_trace_buf_update(record, event_type);
->>  
->>  	hlist_for_each_entry_rcu(event, head, hlist_entry) {
->> @@ -8996,6 +8999,8 @@ void perf_tp_event(u16 event_type, u64 c
->>  	}
->>  
->>  	perf_swevent_put_recursion_context(rctx);
->> +
->> +	trace_rcu_exit(rcu_flags);
->>  }
->>  EXPORT_SYMBOL_GPL(perf_tp_event);
->>  
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+You are missing commas in the short summary message when you list bunch
+of things.
+
+We prefer "tpm:" instead of "char: tpm:" as the tag for this subsystem.
+You are also implying that this would be something global for the TPM
+driver whereas it is only scoped to tpm_tis:
+
+Rephrase it something like:
+
+  "tpm: tpm_tis: Make 32-bit reads and writes optional"
+
+Please, first, take this away:
+
+"
+This commit is based on previous work by Alexander Steffen.
+
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+"
+
+Then, replace it with:
+
+Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+
+/Jarkko
