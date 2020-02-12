@@ -2,69 +2,106 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF0CC3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8912C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229E82168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A70A21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581548516;
-	bh=1Dc+b6kANOK+MTUko6hygKOXL+SmgqNxbhJ3tJ96sug=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=xgkflt6Jr2oqqtVUuEZAPg65mcr4oUqYxyp2RG0DW3gZaJfqnPw2gad/LEQuLuRYV
-	 GxB8TdvK3Nkub90tpcYJY/gromAGAS+UIA6H/8MEQpe2QtjK54QWCjGNXvPxYWMmac
-	 H5hT+eu5LKk5lO1jP6yH59DKKuoSJ61ug/nwS27g=
+	s=default; t=1581548590;
+	bh=JjCcddQawU873KLHKTj1u1BYB2GTFM1o4qhU/UZqreg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DJV/2ZaBkndkTVJFgeSbsftRH4P4RX9zpqiKQFvLulRXg4qvFq4goFDgNofBhksIq
+	 lJZ3llimrXK2Rl2vh2n3GNjux5By6m5hvu6e8FlPe8Juzk8OSHI8qeZ/+18NNbcUNl
+	 /1Tv/wU1+Vhx989HWVj2/BrX3dv+/zjuWLuIX/sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgBLXBz (ORCPT
+        id S1729232AbgBLXDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:01:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727692AbgBLXBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:01:55 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D49E521569;
-        Wed, 12 Feb 2020 23:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581548514;
-        bh=1Dc+b6kANOK+MTUko6hygKOXL+SmgqNxbhJ3tJ96sug=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=B02hWz3753ZHM5ekoQQLoas2pIjQX/l6HIjRBD/qLVakEVqrolq2dMisDy2ZrmOBj
-         uI5cD+KoD+MoDWoDB43+lY112neAIEoLEiC5BJTxVB5IW8iC/5G+7Lsn8WV40so9vC
-         1/xXlA7jUoSX70HtV6x5CkGw/S7Q1b00RW+ZO23Y=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 12 Feb 2020 18:03:10 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42377 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbgBLXDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:03:09 -0500
+Received: by mail-qt1-f193.google.com with SMTP id r5so2966214qtt.9;
+        Wed, 12 Feb 2020 15:03:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=h0k/SZhy37SnuN8KJidHabKu5pvAsxYyNUGMmuRSfDg=;
+        b=tftmUFzF0KyV09ppAzS+euVqTcoxJSUxBn+2PzjFhtOrQnhrlkLo7hs/q/cj7aLfKG
+         vHyAYb64po/qFI9SgO7D2JRpddg/qxZleL5GPfdLH8ZHbm1sRMJp92aBI1/dwLNfIKZH
+         kq9qtNIKy8tSXfaYHBpczb0volZ3yx0mgw/5bYX17wqE5qfrc/DXG0c4t5y59BSXWhkT
+         dEgxxKVyXS8PJDhVnw3G5mn6RYVtlbMolwloM0KjLKS36shfX52NeoBdOBvIucejJeLv
+         bPtRu9V5A1wqcsPkrBRlQEIimcLJNa4anWWLPYkTCfCRi2cPvaZqHuoh/moejqJMgK/9
+         MX9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=h0k/SZhy37SnuN8KJidHabKu5pvAsxYyNUGMmuRSfDg=;
+        b=Cd6uDdGfw6XQNow2w+QKz81G2Ck3NFbflLRT6etF8OHVXdxYMVgUYHPALzkJ1vBFJ2
+         4WanhFc+BpAn15vygnAA9+15VIZkw35bxw9OhUEm9bDMtHpSjhey5WVFcXRjK8zDkSg6
+         QiauCcVHHrPM+emsJJz7dxPTA1VUoL7jRpr3iVGs30hxcS64T1KU2MZ5m0dQ7uaFTCtH
+         UWIitHH0+1DoqCsAlu/V9CVslZLJKUajFxR/h1x4/IrSGpS1OhR+uGfeqmUhc5+loOgx
+         reuDCJYv/5a//SIMtBiCG07svE4nub8pG+DH1D6pSmWCheVwuJuREq44p6eKZhdRHHoZ
+         nTSg==
+X-Gm-Message-State: APjAAAUYtmqViCU+ws8B5WP3Hq6xwpdePDsqVd/dTXGcuYG6mP9o5Fqt
+        Xc7dpWdQLxB0mxFdkBT4xJY=
+X-Google-Smtp-Source: APXvYqzVA6cwrSsQLXdS+2xVyZd6jCbA/D9uNrVcefcwOkaOV6OioIWWxreBUnQU/sP8a5CkfdkEIw==
+X-Received: by 2002:ac8:4d0b:: with SMTP id w11mr21270023qtv.385.1581548587963;
+        Wed, 12 Feb 2020 15:03:07 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:985a])
+        by smtp.gmail.com with ESMTPSA id m95sm367585qte.41.2020.02.12.15.03.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 15:03:07 -0800 (PST)
+Date:   Wed, 12 Feb 2020 18:03:07 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     cgroups@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/3] cgroup/pids: Separate semantics of
+ pids.events related to pids.max
+Message-ID: <20200212230307.GB88887@mtj.thefacebook.com>
+References: <20191128172612.10259-1-mkoutny@suse.com>
+ <20200205134426.10570-1-mkoutny@suse.com>
+ <20200205134426.10570-2-mkoutny@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581498180-2652-1-git-send-email-Anson.Huang@nxp.com>
-References: <1581498180-2652-1-git-send-email-Anson.Huang@nxp.com>
-Subject: Re: [PATCH] clk: imx: drop redundant initialization
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Linux-imx@nxp.com
-To:     Anson Huang <Anson.Huang@nxp.com>, abel.vesa@nxp.com,
-        allison@lohutok.net, broonie@kernel.org, festevam@gmail.com,
-        gregkh@linuxfoundation.org, info@metux.net, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        peng.fan@nxp.com, rfontana@redhat.com, s.hauer@pengutronix.de,
-        shawnguo@kernel.org, tglx@linutronix.de
-Date:   Wed, 12 Feb 2020 15:01:54 -0800
-Message-ID: <158154851405.184098.10235896077677896514@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200205134426.10570-2-mkoutny@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Anson Huang (2020-02-12 01:03:00)
-> No need to initialize flags as 0, remove the initialization.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
+On Wed, Feb 05, 2020 at 02:44:24PM +0100, Michal Koutný wrote:
+> Currently, when pids.max limit is breached in the hierarchy, the event
+> is counted and reported in the cgroup where the forking task resides.
+> 
+> This decouples the limit and the notification caused by the limit making
+> it hard to detect when the actual limit was effected.
+> 
+> Let's introduce new events:
+> 	  max
+> 		The number of times the limit of the cgroup was hit.
+> 
+> 	  max.imposed
+> 		The number of times fork failed in the cgroup because of self
+> 		or ancestor limit.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Can you please follow the same convention as memory.events and
+memory.events.local?
+
+Thanks.
+
+-- 
+tejun
