@@ -2,152 +2,114 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEF6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3130C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0892073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AAA2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="DMYLzdmb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NdmMbPvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgBLQII (ORCPT
+        id S1727960AbgBLQJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:08:08 -0500
-Received: from UCOL19PA37.eemsg.mail.mil ([214.24.24.197]:54372 "EHLO
-        UCOL19PA37.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgBLQII (ORCPT
+        Wed, 12 Feb 2020 11:09:19 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:36144 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgBLQJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:08:08 -0500
-X-EEMSG-check-017: 75880296|UCOL19PA37_ESA_OUT04.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
-   d="scan'208";a="75880296"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UCOL19PA37.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Feb 2020 16:08:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1581523684; x=1613059684;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=uN7BWYfFlarg/9dMcbM62w2KFdcNjYRfT5/e+zn2Jl8=;
-  b=DMYLzdmb4HwW0+tBLxDhG7v9zo0D++s9zEllwrcIKQaihpsxdvd5LLMr
-   A8Qt1jNumZ3evwDrQtRv7dItPjCfBhRjZTYqm34MeRIPk2zcwo+mNDuMZ
-   NmFVNmIqfeUf61cbyHfoA2/i1yo3e3/aNRTzhWEMjqgp+3ZlAF326bhLf
-   b9ui0nrDdsnpOUTVv2GD/OhFuMVxU7Y/Gk8eAPZgDLFv77t8Z6f1hTxmU
-   I7uxfyrykiGzzq+ZAf3jXTSYDI6x9po/ujddO0nNcreLc/bM8CyEhaK2k
-   5PgnmJdDDdSNYjoCieKA3JmsgvhjvrtHgU6AxCfFssY4P2zqpnbiyHSqr
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
-   d="scan'208";a="39017286"
-IronPort-PHdr: =?us-ascii?q?9a23=3ABTz/DhFDHCidnRVFgVggw51GYnF86YWxBRYc79?=
- =?us-ascii?q?8ds5kLTJ76o82ybnLW6fgltlLVR4KTs6sC17OK9f69Ejxdqb+681k8M7V0Hy?=
- =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
- =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi5oAnLt8QbgYRuJ6Uxxx?=
- =?us-ascii?q?DUvnZGZuNayH9nKl6Ugxvy/Nq78oR58yRXtfIh9spAXrv/cq8lU7FWDykoPn?=
- =?us-ascii?q?4s6sHzuhbNUQWA5n0HUmULiRVIGBTK7Av7XpjqrCT3sPd21TSAMs33SbA0Xi?=
- =?us-ascii?q?mi77tuRRT1hioLKyI1/WfKgcFrkqlVvAyuqAB+w47MYYGaKvx+fr/GfdgHQW?=
- =?us-ascii?q?ZNR9tdWzBdDo+5aYYAAfABPeJFpIfjoVUAowa1CQ21CO/xzjJEg3n71rA43e?=
- =?us-ascii?q?s8CwHLxBEuEcwAsHrUr9v7OqkdXu+3w6bUwjvOdO9W1DXn5YTUbhwsr/OBUL?=
- =?us-ascii?q?RtesTR00kvEAbFg02Np4z5ITyVzuQNvHad7+F9SOyvjnQoqwV1ojexxsYnl4?=
- =?us-ascii?q?7EhpkIxVDf7ih53IY0KsG4SE58e9KkFoBQuDuAO4t5RcMiXXhltSAnwbMFoZ?=
- =?us-ascii?q?62ZDUGxZsoyhLFa/GLbpKE7gzsWeqPOzt0mXRoc6+liRmo60iv0Oj8W9Gx0F?=
- =?us-ascii?q?ZNsyVKjMHBtmsI1xzP8siHTeZ9/lu51TaPyQ/T7uZELFgolaXBMZ4hw6Mwlo?=
- =?us-ascii?q?EJvUTCGC/2lkL2jLSIeUo44OSo9+Tmbanmpp+bLYN0jB3xMr8ylcClBOQ4Mw?=
- =?us-ascii?q?wOU3Ca+eS6yrLj4VX0TKhFg/A5iKXUsI3WKd4FqqO2HQNZyJsv5w66Dzi80d?=
- =?us-ascii?q?QYmXcHLEhCeBKCl4XpIEzBIOvjAPejg1WjjDdrx/fcMr3nGZXCNGLPkLjmfb?=
- =?us-ascii?q?Zj80Jc0hY8zchD55JIDbEMOO/8VVX3tNPECR85Nxe5w+ngCNV62YMeXXyADr?=
- =?us-ascii?q?WFP6PVtF+C/vgvLPWUZI8JpDb9LOAo6OL0gn8ih1AcfbKk3YALZ3C4BPtmPk?=
- =?us-ascii?q?uZYX7yjdcbCGsFohAxQPb2h12FVD5Zf2yyUL4k5jEnFIKmCp/ORpysgLyE2S?=
- =?us-ascii?q?e7A4dWZnpcBVGMCnroeIKEW/ADaCKWPMBtiCALVb+kS4U5zxGhqBf6y6Z7Lu?=
- =?us-ascii?q?rT4iAYs5Xj1MN15+DImhEy8jt0D8uZ026TVW17gmQIRzou1qBlvUN90kuD0b?=
- =?us-ascii?q?R/g/FAE9xT4fBJXxw1NZ7byOx6BNTyVRzbctiVT1amR82sASstQdIp398Of0?=
- =?us-ascii?q?F9Fs2mjhDE3CqlHaQVl7yEBJw1763cxWL+Kt1yy3bB06khgF0mTdVVOWK6ga?=
- =?us-ascii?q?5/8hDZB5TVnEWBi6aqaaMc0TbJ9GeCy2qOoU5ZXBdzUarbR3AfYFXZrdDi60?=
- =?us-ascii?q?PcQL+hF64nPhFCycGcMKtKbMPmjVFcSPfkItTebHq7m32sChaQ2rOMcI3qdn?=
- =?us-ascii?q?0Z3CXcDkgEjg8S8W+cOggmByesuHzeDDNwGlL1eU/s8vdxqGm9TkAqywGGdU?=
- =?us-ascii?q?ph16C6+hQNn/yTV+sT3q4YuCcmszh0B0iy39bXC9qGugpgc75RYc0y4FhZz2?=
- =?us-ascii?q?LVrQ99MYK6L6BkmFEedx57v0T01xV4Eo9Ai9QlrGs2zApuLqKVyFdBdzKe3Z?=
- =?us-ascii?q?DtNbzbM3Ly8w6zZK7LwFHe0cqW+6cW5PQ9rFXsoRypFk48/Hh8zdlV3GWT5o?=
- =?us-ascii?q?/QAAoRT53xSEA3+AZ+p73AZSk9/YzUhjVQNvyYuznD1tZhL+whww2rftBZPe?=
- =?us-ascii?q?vQGAb0GMoeL8epL+Mulh6iaRdSeKh5/bU5LoudfPuPxaCvMfwoyDmvlmlWyJ?=
- =?us-ascii?q?t20kuR+S5xUKvD1tAOxPTOjSWdUDKpt0usqsD6n8h/YDgWGmeugXz/CJV5er?=
- =?us-ascii?q?x5fYFND3ynZcKw2IMt1NbWR3dE+Qv7VBs908izdE/XNgas0A=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2AmBAB3IkRe/wHyM5BlHAEBAQEBBwEBEQEEBAEBgXsCg?=
- =?us-ascii?q?XuBGFUgEiqEFIkDhmUBAQEBAQEGgRIlgQGIb5FKCQEBAQEBAQEBAScQBAEBh?=
- =?us-ascii?q?EACgm04EwIQAQEBBQEBAQEBBQMBAWyFQ0IBEAGBZykBgwIBBSMVQRALDgoCA?=
- =?us-ascii?q?iYCAlcGAQwGAgEBgmM/AYJWJat6gTKFSoNKgT6BDioBjD15gQeBEScMA4IoN?=
- =?us-ascii?q?T6EI4M4gl4EjWmCM4cpRpdrgkSCT4R+jn4GHJsVjmiXLYYRIoFYKwgCGAghD?=
- =?us-ascii?q?zuCbAlHGA2OJI5dIwMwDYMAjBKCQgEB?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Feb 2020 16:08:03 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01CG75qt091651;
-        Wed, 12 Feb 2020 11:07:05 -0500
-Subject: Re: [PATCH v2 0/6] Harden userfaultfd
-To:     Daniel Colascione <dancol@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Tim Murray <timmurray@google.com>, Nosh Minwalla <nosh@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>, selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>
-References: <20200211225547.235083-1-dancol@google.com>
- <9ae20f6e-c5c0-4fd7-5b61-77218d19480b@schaufler-ca.com>
- <CAKOZueuh2MR4UKi60-GVgPkXjncHx8J=mTTjRquB82CfS7DxBA@mail.gmail.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <245a7c82-93f6-1e1d-9250-499e00972f10@tycho.nsa.gov>
-Date:   Wed, 12 Feb 2020 11:09:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 11:09:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7+ReAluwFBjiuci9d/0VJPyPkG6BwXDsdk8/QiIksNQ=; b=NdmMbPvPTZAb0r59ZYL6ehSwDU
+        7s2p7DrUdrQNkzj1T8dpuAECugykZhQFiijvviMDcuXsDa8QmQTnkfU1vMLrL3eQ/cn9ibqYjftR4
+        TrSD3RZGSRlR9+J7QxVv6gFn+g37cZWAAqY8X1SovyieS6p3PU2ZBh8+tCm9q877ivoSs9w60QEbm
+        BXNSMcy68yqbVM8Q4AkllxEeG8sJxoGQ2fO8PztueGP1/WN9Ov+gI23DfbiEQlxVyJmiHG8lk9npX
+        F5r3Hea0Bku+HJXxjiwWwjjh7PiMmVycPc1VOm4O7lEbyOmzzh0WnGl+xxrh53sTVIe3IcMHdFc1m
+        0oNLpy+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1uZK-0004eB-Pj; Wed, 12 Feb 2020 16:08:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3668F300235;
+        Wed, 12 Feb 2020 17:07:03 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6B7ED2B48FC86; Wed, 12 Feb 2020 17:08:52 +0100 (CET)
+Date:   Wed, 12 Feb 2020 17:08:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        arnd@arndb.de, Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 0/7] microblaze: Define SMP safe operations
+Message-ID: <20200212160852.GC14973@hirez.programming.kicks-ass.net>
+References: <cover.1581522136.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKOZueuh2MR4UKi60-GVgPkXjncHx8J=mTTjRquB82CfS7DxBA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1581522136.git.michal.simek@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 6:27 PM, Daniel Colascione wrote:
-> On Tue, Feb 11, 2020 at 3:13 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
->>
->> On 2/11/2020 2:55 PM, Daniel Colascione wrote:
->>> Userfaultfd in unprivileged contexts could be potentially very
->>> useful. We'd like to harden userfaultfd to make such unprivileged use
->>> less risky. This patch series allows SELinux to manage userfaultfd
->>> file descriptors and allows administrators to limit userfaultfd to
->>> servicing user-mode faults, increasing the difficulty of using
->>> userfaultfd in exploit chains invoking delaying kernel faults.
->>>
->>> A new anon_inodes interface allows callers to opt into SELinux
->>> management of anonymous file objects. In this mode, anon_inodes
->>> creates new ephemeral inodes for anonymous file objects instead of
->>> reusing a singleton dummy inode. A new LSM hook gives security modules
->>> an opportunity to configure and veto these ephemeral inodes.
->>>
->>> Existing anon_inodes users must opt into the new functionality.
->>>
->>> Daniel Colascione (6):
->>>    Add a new flags-accepting interface for anonymous inodes
->>>    Add a concept of a "secure" anonymous file
->>>    Teach SELinux about a new userfaultfd class
->>>    Wire UFFD up to SELinux
->>>    Let userfaultfd opt out of handling kernel-mode faults
->>>    Add a new sysctl for limiting userfaultfd to user mode faults
->>
->> This must be posted to the linux Security Module list
->> <linux-security-module@vger.kernel.org>
-> 
-> Added. I thought selinux@ was sufficient.
+On Wed, Feb 12, 2020 at 04:42:22PM +0100, Michal Simek wrote:
 
-scripts/get_maintainer.pl can be helpful in identifying relevant lists 
-and maintainers for each patch.  I don't use its output blindly as it 
-tends to over-approximate but since your patches span the VFS, LSM 
-framework, and selinux, you do need to include relevant 
-maintainers/lists for each.
+> Microblaze has 32bit exclusive load/store instructions which should be used
+> instead of irq enable/disable. For more information take a look at
+> https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug984-vivado-microblaze-ref.pdf
+> starting from page 25.
+
+>  arch/microblaze/include/asm/Kbuild           |   1 -
+>  arch/microblaze/include/asm/atomic.h         | 265 ++++++++++++++++++-
+>  arch/microblaze/include/asm/bitops.h         | 189 +++++++++++++
+>  arch/microblaze/include/asm/cmpxchg.h        |  87 ++++++
+>  arch/microblaze/include/asm/cpuinfo.h        |   2 +-
+>  arch/microblaze/include/asm/pgtable.h        |  19 +-
+>  arch/microblaze/include/asm/spinlock.h       | 240 +++++++++++++++++
+>  arch/microblaze/include/asm/spinlock_types.h |  25 ++
+>  arch/microblaze/kernel/cpu/cache.c           | 154 ++++++-----
+>  arch/microblaze/kernel/cpu/cpuinfo.c         |  38 ++-
+>  arch/microblaze/kernel/cpu/mb.c              | 207 ++++++++-------
+>  arch/microblaze/kernel/timer.c               |   2 +-
+>  arch/microblaze/mm/consistent.c              |   8 +-
+>  13 files changed, 1040 insertions(+), 197 deletions(-)
+>  create mode 100644 arch/microblaze/include/asm/bitops.h
+>  create mode 100644 arch/microblaze/include/asm/spinlock.h
+>  create mode 100644 arch/microblaze/include/asm/spinlock_types.h
+
+I'm missing asm/barrier.h
+
+Also that PDF (thanks for that!), seems light on memory ordering
+details.
+
+Your comment:
+
++/*
++ * clear_bit doesn't imply a memory barrier
++ */
+
+worries me, because that would imply your ll/sc does not impose order,
+but then you also don't have any explicit barriers in your locking
+primitives or atomics where required.
+
+In the PDF I only find MBAR; is that what smp_mb() ends up being?
