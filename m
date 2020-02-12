@@ -2,104 +2,306 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27603C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2322BC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000512465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79A520873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aA4UJqL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgBLLMi (ORCPT
+        id S1727933AbgBLLNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:12:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:59362 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgBLLMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:12:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D66230E;
-        Wed, 12 Feb 2020 03:12:37 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E90E3F68F;
-        Wed, 12 Feb 2020 03:12:34 -0800 (PST)
-Subject: Re: [PATCH v3 7/7] clocksource/drivers/arm_arch_timer: validate
- arch_timer_rate
-To:     Lukasz Luba <lukasz.luba@arm.com>, Marc Zyngier <maz@kernel.org>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-8-ionela.voinescu@arm.com>
- <89339501-5ee4-e871-3076-c8b02c6fbf6e@arm.com>
- <a24aa6c86e7a565b6269f48d4026bca2@kernel.org>
- <289c6110-b7ea-1d61-d795-551723263803@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <eeafe486-e408-b229-24ef-329649a13f70@arm.com>
-Date:   Wed, 12 Feb 2020 11:12:33 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <289c6110-b7ea-1d61-d795-551723263803@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 12 Feb 2020 06:13:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26468 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725781AbgBLLNB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:13:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581505980;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=HTeHM3isHi2NdxBnwkv3L4ubth9CPI8dafXlxhlJzbI=;
+        b=aA4UJqL72v7EXz2Gv1smML2kZoJJaX4eqT0AiZHBzhlzd9hU7IpV+clYvGgu9xHOzlg4Pv
+        kkJxMfGTfyY3UZ7ptJP7KInRCRk/Km5FVITbq1Qcc+FGMNWkFmWRMMSo0o3wj9tD22ubDg
+        3ZDgNY3FFT6geHp6f6Zf3+IkvvcoSs8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-53-ysPDlIyMNi2gK0_KIxb7Tw-1; Wed, 12 Feb 2020 06:12:53 -0500
+X-MC-Unique: ysPDlIyMNi2gK0_KIxb7Tw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F4B1800EB2;
+        Wed, 12 Feb 2020 11:12:52 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-39.ams2.redhat.com [10.36.117.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 481491001B05;
+        Wed, 12 Feb 2020 11:12:47 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 45CBA9D6B; Wed, 12 Feb 2020 12:12:46 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] drm/virtio: rework batching
+Date:   Wed, 12 Feb 2020 12:12:45 +0100
+Message-Id: <20200212111246.12563-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/2020 10:55, Lukasz Luba wrote:
->> Because, as the commit message outlines it, such a frequency is terribly
->> out of spec?
-> 
-> I don't see in the RM that < 1MHz is terribly out of spec.
-> 'Frequency
-> Increments at a fixed frequency, typically in the range 1-50MHz.
-> Can support one or more alternative operating modes in which it increments by larger amounts at a
-> lower frequency, typically for power-saving.'
-> 
-> There is even an example how to operate at 20kHz and increment by 500.
-> 
-> I don't know the code if it's supported, thought.
-> 
+Drop the virtio_gpu_{disable,enable}_notify().  Add a new
+virtio_gpu_notify() call instead, which must be called whenever
+the driver wants make sure the host is notified needed.
 
-For that one case the value reported by CNTFRQ shouldn't change - it's still
-a timer that looks like is operating at 10MHz, but under the hood is doing
-bigger increments at lower freq.
+Drop notification from command submission.  Add virtio_gpu_notify()
+calls everywhere instead.  This results in more batching because we now
+notify only once for a series of commands.  We already had that for page
+flips, now we also batch resource creation (create + attach-backing),
+display updates (edid + display-info) and device initialization.  With
+this in place it is also possible to make notification optional for
+userspace ioctls.
 
-As I was trying to get to, this patch isn't validating the actual frequency
-the timer operates on, rather that whatever is reported by CNTFRQ is
-somewhat sane (which here means [1, 50]MHz, although we just check the
-lower bound).
+v2:
+ - rebase to latest drm-misc-next.
+ - use "if (!atomic_read())".
+ - add review & test tags.
 
-[...]
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Gurchetan Singh <gurchetansingh@chromium.org>
+Tested-by: Gurchetan Singh <gurchetansingh@chromium.org>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h     |  6 ++---
+ drivers/gpu/drm/virtio/virtgpu_display.c |  2 ++
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c   |  4 ++++
+ drivers/gpu/drm/virtio/virtgpu_kms.c     |  3 +++
+ drivers/gpu/drm/virtio/virtgpu_object.c  |  1 +
+ drivers/gpu/drm/virtio/virtgpu_plane.c   |  5 ++--
+ drivers/gpu/drm/virtio/virtgpu_vq.c      | 30 ++++++++++--------------
+ 7 files changed, 26 insertions(+), 25 deletions(-)
 
->> And? It seems to address a potential issue where the time frequency
->> is out of spec, and makes sure we don't end up with additional problems
->> in the AMU code.
-> 
-> This patch just prints warning, does not change anything in booting or
-> in any code related to AMU.
-> 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index af9403e1cf78..2f6c4ccbfd14 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -179,8 +179,7 @@ struct virtio_gpu_device {
+ 	struct virtio_gpu_queue cursorq;
+ 	struct kmem_cache *vbufs;
+ 
+-	bool disable_notify;
+-	bool pending_notify;
++	atomic_t pending_commands;
+ 
+ 	struct ida	resource_ida;
+ 
+@@ -335,8 +334,7 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work);
+ void virtio_gpu_dequeue_cursor_func(struct work_struct *work);
+ void virtio_gpu_dequeue_fence_func(struct work_struct *work);
+ 
+-void virtio_gpu_disable_notify(struct virtio_gpu_device *vgdev);
+-void virtio_gpu_enable_notify(struct virtio_gpu_device *vgdev);
++void virtio_gpu_notify(struct virtio_gpu_device *vgdev);
+ 
+ /* virtio_gpu_display.c */
+ void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+index af953db4a0c9..2b7e6ae65546 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_display.c
++++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+@@ -90,6 +90,7 @@ static void virtio_gpu_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ 	virtio_gpu_cmd_set_scanout(vgdev, output->index, 0,
+ 				   crtc->mode.hdisplay,
+ 				   crtc->mode.vdisplay, 0, 0);
++	virtio_gpu_notify(vgdev);
+ }
+ 
+ static void virtio_gpu_crtc_atomic_enable(struct drm_crtc *crtc,
+@@ -108,6 +109,7 @@ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
+ 
+ 	virtio_gpu_cmd_set_scanout(vgdev, output->index, 0, 0, 0, 0, 0);
++	virtio_gpu_notify(vgdev);
+ 	output->enabled = false;
+ }
+ 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 205ec4abae2b..75d818d707e6 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -158,6 +158,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+ 
+ 	virtio_gpu_cmd_submit(vgdev, buf, exbuf->size,
+ 			      vfpriv->ctx_id, buflist, out_fence);
++	virtio_gpu_notify(vgdev);
+ 	return 0;
+ 
+ out_memdup:
+@@ -314,6 +315,7 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
+ 		(vgdev, vfpriv->ctx_id, offset, args->level,
+ 		 &args->box, objs, fence);
+ 	dma_fence_put(&fence->f);
++	virtio_gpu_notify(vgdev);
+ 	return 0;
+ 
+ err_unlock:
+@@ -359,6 +361,7 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
+ 			 args->level, &args->box, objs, fence);
+ 		dma_fence_put(&fence->f);
+ 	}
++	virtio_gpu_notify(vgdev);
+ 	return 0;
+ 
+ err_unlock:
+@@ -445,6 +448,7 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+ 	/* not in cache - need to talk to hw */
+ 	virtio_gpu_cmd_get_capset(vgdev, found_valid, args->cap_set_ver,
+ 				  &cache_ent);
++	virtio_gpu_notify(vgdev);
+ 
+ copy_exit:
+ 	ret = wait_event_timeout(vgdev->resp_wq,
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+index 4009c2f97d08..7eabcf1ca424 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -44,6 +44,7 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
+ 		if (vgdev->has_edid)
+ 			virtio_gpu_cmd_get_edids(vgdev);
+ 		virtio_gpu_cmd_get_display_info(vgdev);
++		virtio_gpu_notify(vgdev);
+ 		drm_helper_hpd_irq_event(vgdev->ddev);
+ 		events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
+ 	}
+@@ -92,6 +93,7 @@ static void virtio_gpu_get_capsets(struct virtio_gpu_device *vgdev,
+ 	}
+ 	for (i = 0; i < num_capsets; i++) {
+ 		virtio_gpu_cmd_get_capset_info(vgdev, i);
++		virtio_gpu_notify(vgdev);
+ 		ret = wait_event_timeout(vgdev->resp_wq,
+ 					 vgdev->capsets[i].id > 0, 5 * HZ);
+ 		if (ret == 0) {
+@@ -205,6 +207,7 @@ int virtio_gpu_init(struct drm_device *dev)
+ 	if (vgdev->has_edid)
+ 		virtio_gpu_cmd_get_edids(vgdev);
+ 	virtio_gpu_cmd_get_display_info(vgdev);
++	virtio_gpu_notify(vgdev);
+ 	wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
+ 			   5 * HZ);
+ 	return 0;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index 8870ee23ff2b..65d6834d3c74 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -224,6 +224,7 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+ 		return ret;
+ 	}
+ 
++	virtio_gpu_notify(vgdev);
+ 	*bo_ptr = bo;
+ 	return 0;
+ 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index ac42c84d2d7f..fd6487fb0855 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -154,8 +154,6 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 	if (!drm_atomic_helper_damage_merged(old_state, plane->state, &rect))
+ 		return;
+ 
+-	virtio_gpu_disable_notify(vgdev);
+-
+ 	bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+ 	if (bo->dumb)
+ 		virtio_gpu_update_dumb_bo(vgdev, plane->state, &rect);
+@@ -187,7 +185,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 				      rect.x2 - rect.x1,
+ 				      rect.y2 - rect.y1);
+ 
+-	virtio_gpu_enable_notify(vgdev);
++	virtio_gpu_notify(vgdev);
+ }
+ 
+ static int virtio_gpu_cursor_prepare_fb(struct drm_plane *plane,
+@@ -265,6 +263,7 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
+ 			 plane->state->crtc_w,
+ 			 plane->state->crtc_h,
+ 			 0, 0, objs, vgfb->fence);
++		virtio_gpu_notify(vgdev);
+ 		dma_fence_wait(&vgfb->fence->f, true);
+ 		dma_fence_put(&vgfb->fence->f);
+ 		vgfb->fence = NULL;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index cfe9c54f87a3..357fef8197dc 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -329,7 +329,6 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+ 				      int incnt)
+ {
+ 	struct virtqueue *vq = vgdev->ctrlq.vq;
+-	bool notify = false;
+ 	int ret, idx;
+ 
+ 	if (!drm_dev_enter(vgdev->ddev, &idx)) {
+@@ -368,16 +367,10 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+ 
+ 	trace_virtio_gpu_cmd_queue(vq, virtio_gpu_vbuf_ctrl_hdr(vbuf));
+ 
+-	notify = virtqueue_kick_prepare(vq);
++	atomic_inc(&vgdev->pending_commands);
+ 
+ 	spin_unlock(&vgdev->ctrlq.qlock);
+ 
+-	if (notify) {
+-		if (vgdev->disable_notify)
+-			vgdev->pending_notify = true;
+-		else
+-			virtqueue_notify(vq);
+-	}
+ 	drm_dev_exit(idx);
+ }
+ 
+@@ -434,19 +427,20 @@ static void virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
+ 	}
+ }
+ 
+-void virtio_gpu_disable_notify(struct virtio_gpu_device *vgdev)
++void virtio_gpu_notify(struct virtio_gpu_device *vgdev)
+ {
+-	vgdev->disable_notify = true;
+-}
++	bool notify;
+ 
+-void virtio_gpu_enable_notify(struct virtio_gpu_device *vgdev)
+-{
+-	vgdev->disable_notify = false;
+-
+-	if (!vgdev->pending_notify)
++	if (!atomic_read(&vgdev->pending_commands))
+ 		return;
+-	vgdev->pending_notify = false;
+-	virtqueue_notify(vgdev->ctrlq.vq);
++
++	spin_lock(&vgdev->ctrlq.qlock);
++	atomic_set(&vgdev->pending_commands, 0);
++	notify = virtqueue_kick_prepare(vgdev->ctrlq.vq);
++	spin_unlock(&vgdev->ctrlq.qlock);
++
++	if (notify)
++		virtqueue_notify(vgdev->ctrlq.vq);
+ }
+ 
+ static void virtio_gpu_queue_ctrl_buffer(struct virtio_gpu_device *vgdev,
+-- 
+2.18.2
 
-Right, but it should still be worth having - at least it shows up in
-dmesg, and when someone reports something fishy we get a hint that we can
-blame the hardware.
-
->>
->> On its own, it is perfectly sensible and could be merged as part of this
->> series with my
->>
->> Acked-by: Marc Zyngier <maz@kernel.org>
->>
->>          M.
-> 
-> Regards,
-> Lukasz
