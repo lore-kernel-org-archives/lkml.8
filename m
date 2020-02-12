@@ -2,159 +2,106 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7843C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC854C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931A420675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0D020675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XgqXDyTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgBLLnK (ORCPT
+        id S1728200AbgBLLnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:43:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:59850 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgBLLnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:43:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF3F130E;
+        Wed, 12 Feb 2020 06:43:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28180 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728147AbgBLLnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:43:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581507793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IEsa1BUq0bWPEOZUtW+wdRfon7IBIMbGMK3y3jxH0WI=;
+        b=XgqXDyTci9kc+rOUxebQ3foyNSJg5XWv6WzUhLjx7aMnxOrJhRSm7kkN3GTnYNT8C9wPE/
+        vrO1BrQ2atawpUuQY+f1q0r9gvTdIwt5dEZNpZ9kXI0gxOoYLSnQpraiGOjllOA3VD0069
+        TJdO7x9SIFBg9kb9kzrKqZAiE0SO8WE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-95-r6i-q6JRP8KvGRX-35u-cg-1; Wed, 12 Feb 2020 06:43:11 -0500
+X-MC-Unique: r6i-q6JRP8KvGRX-35u-cg-1
+Received: by mail-wr1-f71.google.com with SMTP id u8so705805wrp.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:43:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IEsa1BUq0bWPEOZUtW+wdRfon7IBIMbGMK3y3jxH0WI=;
+        b=iEQp0hZEctv5Xo1K7ZPRkuNlXW9JwRKzyl+Ercz7Yh+VrFquV9twukubBkeWE/sye7
+         9AmTRoUd9fBGwYdg3PKb9fAOpDfWHYcUTJkH0B8iOya1DeOE57eYH/1T22K7iTeZG0Bi
+         ueGWkgLyH6rS0Dxy1Af9zj4F5nItfeHAT47HrKOWBH9JGaKKNt/TcMHlTG6kudNSUHgE
+         aBkdEpKfEiq1GRzItS+0/QEMM0E9cE0JEE61Mq7PPIAtsXS/nUFYWuHIlS0qP7uqaNCt
+         NzHvEmYfIoeiNZwfcvcw8zKJMDhTK+D/YIdWzaxSNQoQijArTUjTjz990R7b6QRLxCRW
+         R+CA==
+X-Gm-Message-State: APjAAAV8YWEauKzYKv9Tac0P5/V4Juzrb5a6Jrzdujpl7phrTOq4WNzK
+        Lsr0w0SVNo5VjwpC7joQF8milkuxscCkhAA5ictpCrUdGuyd5uO2hoeuRMdyzDGhPzA14fuBD6+
+        TTRpCvnqagJyGTaDiaAtbH1IX
+X-Received: by 2002:a7b:c0c7:: with SMTP id s7mr13029513wmh.129.1581507790624;
+        Wed, 12 Feb 2020 03:43:10 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyvvGB6t9rTwkD5wOcWPzS3g4rf1aL3jnLVeGk4ga2e33TJdyaD2AbO4OgPZgsH90lWZaY+4Q==
+X-Received: by 2002:a7b:c0c7:: with SMTP id s7mr13029498wmh.129.1581507790434;
+        Wed, 12 Feb 2020 03:43:10 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
+        by smtp.gmail.com with ESMTPSA id n3sm389509wmc.27.2020.02.12.03.43.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Wed, 12 Feb 2020 03:43:08 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F26533F68F;
-        Wed, 12 Feb 2020 03:43:06 -0800 (PST)
-Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-To:     Hans de Goede <hdegoede@redhat.com>, Roger Quadros <rogerq@ti.com>,
-        axboe@kernel.dk
-Cc:     vigneshr@ti.com, nsekhar@ti.com, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
-References: <20200206111728.6703-1-rogerq@ti.com>
- <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
- <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
- <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-Date:   Wed, 12 Feb 2020 11:43:06 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+Subject: Re: [PATCH v4 3/3] selftests: KVM: SVM: Add vmcall test
+To:     Auger Eric <eric.auger@redhat.com>, Wei Huang <wei.huang2@amd.com>
+Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, vkuznets@redhat.com, thuth@redhat.com,
+        drjones@redhat.com
+References: <20200206104710.16077-1-eric.auger@redhat.com>
+ <20200206104710.16077-4-eric.auger@redhat.com>
+ <20200206173931.GC2465308@weiserver.amd.com>
+ <130c32bc-7533-1b4e-b913-d9596ed4e94d@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7f9c89b5-c1df-011f-917d-89d2e880049d@redhat.com>
+Date:   Wed, 12 Feb 2020 12:43:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <130c32bc-7533-1b4e-b913-d9596ed4e94d@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-12 11:32 am, Hans de Goede wrote:
-> Hi,
-> 
-> On 2/12/20 12:01 PM, Roger Quadros wrote:
->> Hi,
->>
->> On 06/02/2020 13:50, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 2/6/20 12:17 PM, Roger Quadros wrote:
->>>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
->>>> Restrict it to 32-bit.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>   drivers/ata/ahci_platform.c | 3 +++
->>>>   1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->>>> index 3aab2e3d57f3..b925dc54cfa5 100644
->>>> --- a/drivers/ata/ahci_platform.c
->>>> +++ b/drivers/ata/ahci_platform.c
->>>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
->>>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
->>>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
->>>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
->>>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
->>>> +
->>>
->>> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
->>> is e.g. also used on some exynos devices. So using that to key the
->>> setting of the 32 bit flag seems wrong to me.
->>>
->>> IMHO it would be better to introduce a TI specific compatible
->>> and use that to match on instead (and also adjust the dts files
->>> accordingly).
->>
->> Thinking further on this I think it is a bad idea to add a special
->> binding because the IP is not different. It is just that it is
->> wired differently on the TI SoC so DMA range is limited.
->>
->> IMO the proper solution is to have the right dma-ranges property in the
->> device tree. However, SATA platform driver is doing the wrong thing
->> by overriding the dma masks.
->> i.e. in ahci_platform_init_host() in libahci_platform.c >
->>          if (hpriv->cap & HOST_CAP_64) {
->>                  rc = dma_coerce_mask_and_coherent(dev, 
->> DMA_BIT_MASK(64));
->>                  if (rc) {
->>                          rc = dma_coerce_mask_and_coherent(dev,
->>                                                            
->> DMA_BIT_MASK(32));
->>                          if (rc) {
->>                                  dev_err(dev, "Failed to enable 64-bit 
->> DMA.\n");
->>                                  return rc;
->>                          }
->>                          dev_warn(dev, "Enable 32-bit DMA instead of 
->> 64-bit.\n");
->>                  }
->>          }
->>
->> This should be removed. Do you agree?
-> 
-> I agree with you in principal, but I'm afraid this might cause 
-> regressions for
-> existing hardware. We only do this if the host has set the CAP_64 flag,
-> this code is quite old, it comes from the following commit:
-> 
-> ###
->  From cc7a9e27562cd78a1dc885504086fab24addce40 Mon Sep 17 00:00:00 2001
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Date: Thu, 12 Jun 2014 12:40:23 -0500
-> Subject: [PATCH v3] ahci: Check and set 64-bit DMA mask for platform 
-> AHCI driver
-> 
-> The current platform AHCI driver does not set the dma_mask correctly
-> for 64-bit DMA capable AHCI controller. This patch checks the AHCI
-> capability bit and set the dma_mask and coherent_dma_mask accordingly.
-> 
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Suman Tripathi <stripathi@apm.com>
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> ###
-> 
-> Presumably this was added for a reason, I'm guessing this might come
-> from AMD's ARM server chips adventures, but I'm afraid that AHCI support
-> on other (ARM) SoC's has become to rely on this behavior too.
-> 
-> Maybe we can add a check to see if the mask was not already set and skip
-> setting the mask in that case ?
+On 07/02/20 11:15, Auger Eric wrote:
+>> Probably rename the file to svm_nested_vmcall_test.c. This matches with
+>> the naming convention of VMX's nested tests. Otherwise people might not know
+>> it is a nested one.
+> From what I understand, all the vmx_* (including vmx_tsc_adjust_test for
+> instance) are related to nested. So I'd rather leave svm_ prefix for
+> nested SVM.
 
-If the device *is* inherently 64-bit capable, then setting 64-bit masks 
-in the driver is correct - if a 64-bit IP block happens to have been 
-integrated with only 32 address bits wired up, but the system has memory 
-above the 32-bit boundary, then that should be described via 
-"dma-ranges", which should then end up being used to further constrain 
-the device masks internally to the DMA API.
+That is not strictly necessary, as there could be tests for Intel or
+AMD-specific bugs or features.  But in practice you are right, "vmx_"
+right now means it's testing nested.  We can rename all of them to
+"nvmx_*" and "nsvm_*", but in the meanwhile your patch does not
+introduce any inconsistency.
 
-Robin.
+Queued, thanks!
+
+Paolo
+
