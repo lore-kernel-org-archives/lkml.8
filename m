@@ -2,156 +2,165 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C59FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBF7C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F672168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4D520724
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581518326;
+	bh=lp4tT2A5d7K0UV6Qb0AwY6/DDxCjUy6M9QdT0owJzCM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=uQPXgyjLAfSsHclA6J9IpNIaSDKUguXPV+tBbcPHSlb1wvBgBWXanZ7dwWN1u8Wcu
+	 ZBgOm+2sz9jULJ9iKbQ/JAJ6JUUf4gndKsLHuGPvZ8rK15XP1Adl+XbVD7bH23VqKn
+	 k/Y4h6p3SFOMkjqKTr3XbWzxSuNWG/rxAOhFaSYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgBLOft (ORCPT
+        id S1727680AbgBLOip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:35:49 -0500
-Received: from muru.com ([72.249.23.125]:54862 "EHLO muru.com"
+        Wed, 12 Feb 2020 09:38:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgBLOfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:35:48 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 47DC080F6;
-        Wed, 12 Feb 2020 14:36:30 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 06:35:43 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200212143543.GI64767@atomide.com>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+        id S1727092AbgBLOio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:38:44 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5554420724;
+        Wed, 12 Feb 2020 14:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581518323;
+        bh=lp4tT2A5d7K0UV6Qb0AwY6/DDxCjUy6M9QdT0owJzCM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nep5Zdkj7vA4x39wNseluGA2PnIx5G+Ao2TwZm15ocC3SGPE+TeBNArkuXx4WwL9/
+         4PEqV4120CcVoHgirhxC7Kn/n6O4dSH98vRNkaaSJIQ2zsDWQe/F0j+CiKgQDIAn3J
+         wMs/zE1ViTLxGnZr4RvvvyKgU1/aNX0q/TFJhNJI=
+Date:   Wed, 12 Feb 2020 08:38:42 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v14 0/5] Add Error Disconnect Recover (EDR) support
+Message-ID: <20200212143842.GA133681@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+In-Reply-To: <cover.1581119844.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [200212 08:02]:
+On Fri, Feb 07, 2020 at 04:03:30PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
+> This patchset adds support for following features:
 > 
-> On 11/02/2020 19.16, Tony Lindgren wrote:
-> > We can have multiple connections on a single McBSP instance configured
-> > with audio graph card when using TDM (Time Division Multiplexing). Let's
-> > allow that by configuring dais dynamically.
+> 1. Error Disconnect Recover (EDR) support.
+> 2. _OSC based negotiation support for DPC.
 > 
-> It is still one DAI...
-> If you have multiple codec connected to the same I2S lines, but the
-> codecs communicate within different time slots, you still have one DAI
-> on the CPU side, but multiple codecs (codec DAIs) with different TDM slot.
-
-OK so subject should say "dodec DAIs" then I guess?
-
-> > See Documentation/devicetree/bindings/sound/audio-graph-card.txt and
-> > Documentation/devicetree/bindings/graph.txt for more details for
-> > multiple endpoints.
+> You can find EDR spec in the following link.
 > 
-> See the example for 'Multi DAI with DPCM' in audio-graph-card.txt
-> The PCM3168a have 2 DAIs: playback and capture, but you can have
-> multiple endpoints within a DAI.
+> https://members.pcisig.com/wg/PCI-SIG/document/12614
 
-Yes this should follow the audio-graph-card.txt example. We end up with
-mcbsp3 dts node as below on droid4:
+Hi Sathy,
 
-&mcbsp3 {
-        #sound-dai-cells = <0>;
-        pinctrl-names = "default";
-        pinctrl-0 = <&mcbsp3_pins>;
-        status = "okay";
+Bad timing!  Linus tagged v5.6-rc1 on Feb 9, shortly after you posted
+this.  Would you mind refreshing this so it applies on my "master"
+branch (v5.6-rc1)?
 
-        ports {
-                mcbsp3_port: port@0 {
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-
-                        cpu_dai3: endpoint@0 {
-                                reg = <0>;
-                                dai-format = "dsp_a";
-                                frame-master = <&cpcap_audio_codec1>;
-                                bitclock-master = <&cpcap_audio_codec1>;
-                                remote-endpoint = <&cpcap_audio_codec1>;
-                        };
-
-                        cpu_dai_mdm: endpoint@1 {
-                                reg = <1>;
-                                dai-format = "dsp_a";
-                                frame-master = <&cpcap_audio_codec1>;
-                                bitclock-master = <&cpcap_audio_codec1>;
-                                remote-endpoint = <&mot_mdm6600_audio_codec0>;
-                        };
-                };
-        };
-};
-
-That is pretty much the same as the 'Multi DAI with DPCM' example, with
-dne dai, and multiple endpoints. I think we still have just one port
-for one i2s transport on the mcbsp :)
-
-Does the above look as what you would expect based on the binding?
-
-> > I've tested this with droid4 where cpcap pmic and modem voice are both
-> > both wired to mcbsp3. I've also tested this on droid4 both with and
-> > without the pending modem audio codec driver that is waiting for n_gsm
-> > serdev dependencies to clear.
+> Changes since v13:
+>  * Moved all EDR related code to edr.c
+>  * Addressed Bjorns comments.
 > 
-> What this patch you effectively just creating dummy-dais on top of the
-> real McBSP DAI.
-
-Yes I think this is needed for snd-soc-audio-graph-card, and this allows
-configuring whatever is needed for the i2s slot. But maybe you have some
-better way of doing it in mind?
-
-> You also rename the DAIs, which might break ams-delta.
-
-Oops, that's not good. So should we just keep the old naming if there's
-only one endpoint?
-
-> We still have legacy support in
-> omap-twl4030.c
-> omap3pandora.c
-> osk5912.c
-> rx51.c
+> Changes since v12:
+>  * Addressed Bjorns comments.
+>  * Added check for CONFIG_PCIE_EDR before requesting DPC control from firmware.
+>  * Removed ff_check parameter from AER APIs.
+>  * Used macros for _OST return status values in DPC driver.
 > 
-> which will break with the renamed DAI. On the other hand I think the
-> legacy support can be dropped from them.
-
-I'm not sure what all that would take.
-
-> I know it was discussed, but can not find the mail:
-> Can you brief again on the audio connection?
-
-Below is a link to a mailing list thread where Sebastian describes
-the audio connection:
-
-https://lkml.org/lkml/2018/3/28/881
-
-> Do you have branch with working code?
-
-Yeah I have slightly older set of the patches in my droid4-pending-v5.5
-kernel.org git branch with voice calls working.
-
-Regards,
-
-Tony
+> Changes since v11:
+>  * Allowed error recovery to proceed after successful reset_link().
+>  * Used correct ACPI handle for sending EDR status.
+>  * Rebased on top of v5.5-rc5
+> 
+> Changes since v10:
+>  * Added "edr_enabled" member to dpc priv structure, which is used to cache EDR
+>    enabling status based on status of pcie_ports_dpc_native and FF mode.
+>  * Changed type of _DSM argument from Integer to Package in acpi_enable_dpc_port()
+>    function to fix ACPI related boot warnings.
+>  * Rebased on top of v5.5-rc3
+> 
+> Changes since v9:
+>  * Removed caching of pcie_aer_get_firmware_first() in dpc driver.
+>  * Added proper spec reference in git log for patch 5 & 7.
+>  * Added new function parameter "ff_check" to pci_cleanup_aer_uncorrect_error_status(),
+>    pci_aer_clear_fatal_status() and pci_cleanup_aer_error_status_regs() functions.
+>  * Rebased on top of v5.4-rc5
+> 
+> Changes since v8:
+>  * Rebased on top of v5.4-rc1
+> 
+> Changes since v7:
+>  * Updated DSM version number to match the spec.
+> 
+> Changes since v6:
+>  * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
+>  * Addressed Bjorn comments.
+> 
+> Changes since v5:
+>  * Addressed Keith's comments.
+>  * Added additional check for FF mode in pci_aer_init().
+>  * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
+> 
+> Changes since v4:
+>  * Rebased on top of v5.3-rc1
+>  * Fixed lock/unlock issue in edr_handle_event().
+>  * Merged "Update error status after reset_link()" patch into this patchset.
+> 
+> Changes since v3:
+>  * Moved EDR related ACPI functions/definitions to pci-acpi.c
+>  * Modified commit history in few patches to include spec reference.
+>  * Added support to handle DPC triggered by NON_FATAL errors.
+>  * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+>  * Addressed Bjorn comments.
+> 
+> Changes since v2:
+>  * Split EDR support patch into multiple patches.
+>  * Addressed Bjorn comments.
+> 
+> Changes since v1:
+>  * Rebased on top of v5.1-rc1
+> 
+> Kuppuswamy Sathyanarayanan (5):
+>   PCI/ERR: Update error status after reset_link()
+>   PCI/DPC: Remove pcie_device reference from dpc_dev structure
+>   PCI/EDR: Export AER, DPC and error recovery functions
+>   PCI/DPC: Add Error Disconnect Recover (EDR) support
+>   PCI/ACPI: Enable EDR support
+> 
+>  drivers/acpi/pci_root.c   |  16 +++
+>  drivers/pci/pci-acpi.c    |   3 +
+>  drivers/pci/pci.h         |   8 ++
+>  drivers/pci/pcie/Kconfig  |  10 ++
+>  drivers/pci/pcie/Makefile |   1 +
+>  drivers/pci/pcie/aer.c    |  39 ++++--
+>  drivers/pci/pcie/dpc.c    |  92 ++++++++------
+>  drivers/pci/pcie/dpc.h    |  20 +++
+>  drivers/pci/pcie/edr.c    | 259 ++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pcie/err.c    |  35 ++++--
+>  drivers/pci/probe.c       |   1 +
+>  include/linux/acpi.h      |   6 +-
+>  include/linux/pci-acpi.h  |   8 ++
+>  include/linux/pci.h       |   1 +
+>  14 files changed, 441 insertions(+), 58 deletions(-)
+>  create mode 100644 drivers/pci/pcie/dpc.h
+>  create mode 100644 drivers/pci/pcie/edr.c
+> 
+> -- 
+> 2.21.0
+> 
