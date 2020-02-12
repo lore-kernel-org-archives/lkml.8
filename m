@@ -2,68 +2,128 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58054C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1255C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE3A21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD815206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERx0Q2v2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgBLPge (ORCPT
+        id S1728546AbgBLPiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:36:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:34198 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727531AbgBLPgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:36:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51894328;
-        Wed, 12 Feb 2020 07:36:33 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6B833F68F;
-        Wed, 12 Feb 2020 07:36:30 -0800 (PST)
-Subject: Re: [PATCH v3 4/7] Documentation: arm64: document support for the AMU
- extension
-To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        rjw@rjwysocki.net
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-5-ionela.voinescu@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <66e5b5ad-c714-d81c-7b91-47dd5c14d87c@arm.com>
-Date:   Wed, 12 Feb 2020 15:36:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200211184542.29585-5-ionela.voinescu@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Feb 2020 10:38:00 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42894 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727531AbgBLPh7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:37:59 -0500
+Received: by mail-pl1-f195.google.com with SMTP id e8so1089961plt.9;
+        Wed, 12 Feb 2020 07:37:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=+D92sQbIQX9b/mYM74RryufGT0Oe3W4lj/eAkEZQ33o=;
+        b=ERx0Q2v2e6DsNOGzzk7jGKHe9GVGWQubrkyTzlxcGm87Lbm/Ipp20rE/d0kHP3Qrx5
+         BaBVCu+4+407P27vgDl38QV6WzlmUGTu+FibnnKjkKYb2FaXb7NMIAB0y6zUQeYk5NR4
+         w6Tw0Vd0iGEv5YdMVrUxDPtfzcTdB8afpTI4j3ardAtEqBpGtLhPKaQSDgWA73iN/FME
+         LZbfbhMahfU6UIQ9vxElZCb9KkmB6azZKCvFunero33gpIIqwy6UxzPw4heZhgBJtYmT
+         FW7iAtVU5nbBfjXfdMEHp6m0iHB1sRA2MfVXRYMAPQUz92onMJyTVqM07mhGDFG1c6lB
+         98Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=+D92sQbIQX9b/mYM74RryufGT0Oe3W4lj/eAkEZQ33o=;
+        b=buckQbwSFbic8K97BGMjL6fHL2wOR46RJGGURAAM1cyqhM+tVPYIr6QSb0TMt/4zLx
+         iNgsytsAIT9gbV/sgGXz8opCsSz+miyLwu6mBdt751aa8JTTb40QGboPxsBfnyiKinhe
+         8XHT0QweXNk5mrfHqmDY/hFTGwAqT9WkxzUbnpIlndhVVsO/Izph2v9Ng5YTsZRZU824
+         j2cUQiMdc9V+uOKD2Sp3+DOTalDvXa7uSQn+uMRhQUmElSMvOxItVOYo8ntRC9cWF4p3
+         O5UvMUchaFBKChL+Snafr3qqQf9rUBw6n/gES81hr0ofefAbHYFORVG8t1wk5yZSRFMA
+         Jx/w==
+X-Gm-Message-State: APjAAAW8dFpbIhqwvmr/gSWz4QIogFfie/uCE2cC9zghOiCeK6vqyB+4
+        92XXYlcy5GRXibdiyUxWORU=
+X-Google-Smtp-Source: APXvYqzIXChqTVHEHaHlQ9k0LaQMeJkdk7TONDJIcTAVx8iIrqPXCCXuvIOMJ5TNDFOJM+PzmWjDTA==
+X-Received: by 2002:a17:902:9f86:: with SMTP id g6mr8225939plq.299.1581521879059;
+        Wed, 12 Feb 2020 07:37:59 -0800 (PST)
+Received: from fkuchars-mobl1.ger.corp.intel.com ([192.55.55.43])
+        by smtp.gmail.com with ESMTPSA id p17sm1295106pfn.31.2020.02.12.07.37.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 07:37:58 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [Bluez PATCH v3] bluetooth: secure bluetooth stack from bluedump
+ attack
+From:   Johan Hedberg <johan.hedberg@gmail.com>
+In-Reply-To: <89D0B633-381D-4700-AB33-5F803BCB6E94@holtmann.org>
+Date:   Wed, 12 Feb 2020 17:37:53 +0200
+Cc:     Howard Chung <howardchung@google.com>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <86D0ACD5-BEF7-45B3-B621-BA2E457AB57B@gmail.com>
+References: <20200212212316.Bluez.v3.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+ <89D0B633-381D-4700-AB33-5F803BCB6E94@holtmann.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 18:45, Ionela Voinescu wrote:
-> The activity monitors extension is an optional extension introduced
-> by the ARMv8.4 CPU architecture.
-> 
-> Add initial documentation for the AMUv1 extension:
->  - arm64/amu.txt: AMUv1 documentation
->  - arm64/booting.txt: system registers initialisation
-> 
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
+Hi Marcel,
 
+On 12. Feb 2020, at 17.19, Marcel Holtmann <marcel@holtmann.org> wrote:
+>> +		key =3D hci_find_ltk(hcon->hdev, &hcon->dst, =
+hcon->dst_type,
+>> +				   hcon->role);
+>> +
+>> +		/* If there already exists link key in local host, leave =
+the
+>> +		 * decision to user space since the remote device could =
+be
+>> +		 * legitimate or malicious.
+>> +		 */
+>> +		if (smp->method =3D=3D JUST_WORKS && key) {
+>> +			err =3D mgmt_user_confirm_request(hcon->hdev, =
+&hcon->dst,
+>> +							hcon->type,
+>> +							hcon->dst_type, =
+passkey,
+>> +							1);
+>> +			if (err)
+>> +				return SMP_UNSPECIFIED;
+>> +			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+>> +		}
+>> 	}
+>=20
+> while this looks good, I like to optimize this to only look up the LTK =
+when needed.
+>=20
+> 	/* comment here */
+> 	if (smp->method !=3D JUST_WORKS)
+> 		goto mackey_and_ltk;
+>=20
+>=20
+> 	/* and command here */
+> 	if (hci_find_ltk()) {
+> 		mgmt_user_confirm_request()
+> 		..
+> 	}
+>=20
+> And my preference that we also get an Ack from Johan or Luiz that =
+double checked that this is fine.
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Acked-by: Johan Hedberg <johan.hedberg@intel.com>
+
+Johan=
