@@ -2,118 +2,134 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EE3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE21C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F78020661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581499293;
-	bh=XpRLYaG+WVO7IY9DpdT15Zusp+z4K8bTXJZt6i8Nfcw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xLVcBus5pEXuRZHQtSW9ay1ue/g2No9CaxbZ+BAT6WabDCfSfZd2JCtL0gcP0xFbK
-	 2SsYSrdSRTOhgK0XDkoz0tq4UOKo8DySSZi3/eUlWK6Hz2i2FgU8w/UBtbtRXop22C
-	 Wz6LqTG4bn1yj1tR97C0U2LrYJwYPaJLG/tBcxJs=
+	by mail.kernel.org (Postfix) with ESMTP id 0681120661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgBLJVc (ORCPT
+        id S1728761AbgBLJXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:21:32 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:59506 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728530AbgBLJVb (ORCPT
+        Wed, 12 Feb 2020 04:23:31 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33748 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbgBLJXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:21:31 -0500
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 01C9LI33008124;
-        Wed, 12 Feb 2020 18:21:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01C9LI33008124
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581499279;
-        bh=iYzD7pdsLyiDZ36c5d6tg+M16G3Z0A4Qkle2y21WmO4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MEkMO8qWqvGOB6YbA98tAicKNmVYCmEEF0+jvnZcP9vwWz5Z/XT1+Xds25vCvvshA
-         5zE/p5kLAorYZHqVYD3jmzJ4w1LdUJ19ZmdnBjhI+wpKbN7Bxewt9kHhIeqvk2oXrO
-         csk23G4fdJ9OyKsaInvXj3jS8QpaPywXcU7+J7r6IuUY/0vjSNO86L3UEQPL5+fyO0
-         McohvztsbamEnjn7UDDplfhbzJYR+CcDXCwrjntBrOdcqrs7GGjA50LIRmMtMwfqzN
-         uaV/zXL/Owwfi5xlN8GBD3pk4VFGr3t+TJJ02HiOQsYBWTqIf1HbBpz+bD+r8Fmr66
-         p3qp8l6RgZaIg==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id w15so607239uap.0;
-        Wed, 12 Feb 2020 01:21:19 -0800 (PST)
-X-Gm-Message-State: APjAAAXrZYjw0vBK9T4UBABLZ00khLEbbLJ7rX/aVG4l0NH8cb3RVZjv
-        w8bauO4iyAnt9uq08LyBp1GdEUTGMrZMBPF6PiI=
-X-Google-Smtp-Source: APXvYqy0urxDpzGsbsHT8k8GTdNCXZuHMc0izqqATD6WqiS7hOqQJCh10Wqi+8y2ehLGEvej4sCWBmfUkqTYRP0+RJ8=
-X-Received: by 2002:ab0:2881:: with SMTP id s1mr3947693uap.95.1581499278141;
- Wed, 12 Feb 2020 01:21:18 -0800 (PST)
+        Wed, 12 Feb 2020 04:23:30 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so1256835otp.0;
+        Wed, 12 Feb 2020 01:23:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LUJglwWT4yeZe9Lh+O1oa+CnC/XnwAm/Q6YITICL3Zc=;
+        b=SOHEwdzfaaBBc0PoHoPgoluP35AeVpHiG5cEZjNJqXxrmFgZ1wRVb5QuB82/3ThgPx
+         K0O2AB/BLVmf+r6CDJwUFieNXqlg+4DPowAiwhcXi4n9Yoh+4DOnQdxGZ3sN8TyvTyPi
+         3u7Nvvl30DDhkuG6qzOcsPLUDcVvFg70DzcZd78OuG1+j5pj6tb/pM/FT0Jk5DsZtCJ1
+         Rwhru4WWqi/by+ebt4x8fzIrrwZTWfP+dGdNC/UI0THwv3it6pAbhSE/5ePNMVgV8m+v
+         q+AnW6xkG/1OIxK/KIH+otSduxNJENZTZHrrQFeWRCRbka1Q9iyE5/ahoDyJA0EQJY61
+         8DEw==
+X-Gm-Message-State: APjAAAXZYUqAEYbGSwUH7b66/c7+gzuX/9fbHpLsedYhpe6Z6M29/4cq
+        UAoOY55QGXsZdXxX9kI8J9vMkvbGAc+gq/NlFlk=
+X-Google-Smtp-Source: APXvYqyPBZkgQpSHkxDVA/do02CfDtbtpOB3D8fNkrYLGdPLp7891ZvOrFBlVUt7fT1cYp8iaS4lCTLIPhBSOgKicEY=
+X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr8474526oth.145.1581499409612;
+ Wed, 12 Feb 2020 01:23:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200210161852.842-1-masahiroy@kernel.org>
-In-Reply-To: <20200210161852.842-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 12 Feb 2020 18:20:42 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATLCAnrtqR8vv=jWiDcODGchMekOGMbSNvEQtnb3JqTDQ@mail.gmail.com>
-Message-ID: <CAK7LNATLCAnrtqR8vv=jWiDcODGchMekOGMbSNvEQtnb3JqTDQ@mail.gmail.com>
-Subject: Re: [PATCH] scripts/kallsyms: fix memory corruption caused by write over-run
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     youling257 <youling257@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <dcdd615f77dacf8a98e18950b66fb5a675277f38.1581498987.git.michal.simek@xilinx.com>
+In-Reply-To: <dcdd615f77dacf8a98e18950b66fb5a675277f38.1581498987.git.michal.simek@xilinx.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 12 Feb 2020 10:23:07 +0100
+Message-ID: <CAMuHMdXt1CUqRjOyz9i0uVzQUJJU3UsFGzDaoTBcWVF=qTH48g@mail.gmail.com>
+Subject: Re: [PATCH v2] asm-generic: Fix unistd_32.h generation format
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        Chris Zankel <chris@zankel.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Helge Deller <deller@gmx.de>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Rich Felker <dalias@libc.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        sparclinux <sparclinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 1:19 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> scripts/kallsyms crashes because memcpy() writes one more byte than
-> allocated.
->
-> Fixes: 8d60526999aa ("scripts/kallsyms: change table to store (strcut sym_entry *)")
-> Reported-by: youling257 <youling257@gmail.com>
-> Reported-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+Hi Michal,
 
-Applied.
-I will send a pull request shortly
-because many people are tripping over this bug.
-
-
-
-
->  scripts/kallsyms.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, Feb 12, 2020 at 10:16 AM Michal Simek <michal.simek@xilinx.com> wrote:
+> Generated files are also checked by sparse that's why add newline
+> to remove sparse (C=1) warning.
 >
-> diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-> index a566d8201b56..0133dfaaf352 100644
-> --- a/scripts/kallsyms.c
-> +++ b/scripts/kallsyms.c
-> @@ -210,7 +210,7 @@ static struct sym_entry *read_symbol(FILE *in)
+> The issue was found on Microblaze and reported like this:
+> ./arch/microblaze/include/generated/uapi/asm/unistd_32.h:438:45:
+> warning: no newline at end of file
 >
->         len = strlen(name) + 1;
->
-> -       sym = malloc(sizeof(*sym) + len);
-> +       sym = malloc(sizeof(*sym) + len + 1);
->         if (!sym) {
->                 fprintf(stderr, "kallsyms failure: "
->                         "unable to allocate required amount of memory\n");
-> @@ -219,7 +219,7 @@ static struct sym_entry *read_symbol(FILE *in)
->         sym->addr = addr;
->         sym->len = len;
->         sym->sym[0] = type;
-> -       memcpy(sym_name(sym), name, len);
-> +       strcpy(sym_name(sym), name);
->         sym->percpu_absolute = 0;
->
->         return sym;
-> --
-> 2.17.1
->
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
 
+Thanks for your patch!
+
+>  arch/alpha/kernel/syscalls/syscallhdr.sh      | 1 +
+>  arch/ia64/kernel/syscalls/syscallhdr.sh       | 1 +
+>  arch/m68k/kernel/syscalls/syscallhdr.sh       | 1 +
+
+Bummer, I had noticed that before
+https://lore.kernel.org/lkml/CAMuHMdVsBwL9vcqejfc47GN793wMXdQ=SwEsSUP1fbpMt-OoWw@mail.gmail.com/
+and even claimed I fixed it while applying
+https://lore.kernel.org/lkml/CAMuHMdW6JiponxLiGNEXUX4xJk3hK4b8dTOCNvVBr7s2LyfhJw@mail.gmail.com/
+but something must have gone wrong...
+
+>  arch/microblaze/kernel/syscalls/syscallhdr.sh | 1 +
+>  arch/parisc/kernel/syscalls/syscallhdr.sh     | 1 +
+>  arch/sh/kernel/syscalls/syscallhdr.sh         | 1 +
+>  arch/sparc/kernel/syscalls/syscallhdr.sh      | 1 +
+>  arch/xtensa/kernel/syscalls/syscallhdr.sh     | 1 +
+>  8 files changed, 8 insertions(+)
+>
+> diff --git a/arch/alpha/kernel/syscalls/syscallhdr.sh b/arch/alpha/kernel/syscalls/syscallhdr.sh
+> index e5b99bd2e5e7..524c69fbcab7 100644
+> --- a/arch/alpha/kernel/syscalls/syscallhdr.sh
+> +++ b/arch/alpha/kernel/syscalls/syscallhdr.sh
+> @@ -33,4 +33,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+>         printf "#endif\n"
+>         printf "\n"
+>         printf "#endif /* %s */" "${fileguard}"
+> +       printf "\n"
+
+Why not add the "\n" to the end of the previous line?
+
+Anyway,
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Best Regards
-Masahiro Yamada
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
