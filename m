@@ -2,418 +2,126 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0EBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25454C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE0D206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XwJpf1ca"
+	by mail.kernel.org (Postfix) with ESMTP id 083F42073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgBLLV4 (ORCPT
+        id S1728226AbgBLLV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:21:56 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56630 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbgBLLVz (ORCPT
+        Wed, 12 Feb 2020 06:21:59 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:65211 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727347AbgBLLV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:21:55 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLmOD065869;
-        Wed, 12 Feb 2020 05:21:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581506508;
-        bh=YwWboun219hl2JViX7Q/BOoaisYf+ToKJpMH3k4a83U=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=XwJpf1cafM878qBmpgXeEi24u+/wYC8g0n+7Kmf2K9w58gDMYJ+YZjk05c2PKcG6J
-         EdvxlEb+H3p4cIlfTXN6f88HzbaxCzDjTUaEqffqL/xCKxMw2/wekAwuX8g/LkVx1N
-         ACDi6NlA1/0IZZ7Xf/bd41kqtBdEXThwcdKMsj9k=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLmKk078547;
-        Wed, 12 Feb 2020 05:21:48 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
- Feb 2020 05:21:48 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 12 Feb 2020 05:21:48 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLc5Y049841;
-        Wed, 12 Feb 2020 05:21:45 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Athani Nadeem Ladkhan <nadeem@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 2/5] PCI: endpoint: Replace spinlock with mutex
-Date:   Wed, 12 Feb 2020 16:55:11 +0530
-Message-ID: <20200212112514.2000-3-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212112514.2000-1-kishon@ti.com>
-References: <20200212112514.2000-1-kishon@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 12 Feb 2020 06:21:57 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 12 Feb 2020 16:51:55 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 12 Feb 2020 16:51:36 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 416BC24FD; Wed, 12 Feb 2020 16:51:35 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v3 3/4] phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
+Date:   Wed, 12 Feb 2020 16:51:27 +0530
+Message-Id: <1581506488-26881-4-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
+References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pci_epc_ops is not intended to be invoked from interrupt context.
-Hence replace spin_lock_irqsave and spin_unlock_irqrestore with
-mutex_lock and mutex_unlock respectively.
+Adding QMP v3 USB3 phy support for SC7180.
+Adding only usb phy reset in the list to avoid
+reset of DP block.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 82 +++++++++++------------------
- include/linux/pci-epc.h             |  6 +--
- 2 files changed, 34 insertions(+), 54 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 38 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 2f6436599fcb..e51a12ed85bb 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -120,7 +120,6 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
- 						    u8 func_no)
- {
- 	const struct pci_epc_features *epc_features;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
- 		return NULL;
-@@ -128,9 +127,9 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
- 	if (!epc->ops->get_features)
- 		return NULL;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	epc_features = epc->ops->get_features(epc, func_no);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return epc_features;
- }
-@@ -144,14 +143,12 @@ EXPORT_SYMBOL_GPL(pci_epc_get_features);
-  */
- void pci_epc_stop(struct pci_epc *epc)
- {
--	unsigned long flags;
--
- 	if (IS_ERR(epc) || !epc->ops->stop)
- 		return;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	epc->ops->stop(epc);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_stop);
- 
-@@ -164,7 +161,6 @@ EXPORT_SYMBOL_GPL(pci_epc_stop);
- int pci_epc_start(struct pci_epc *epc)
- {
- 	int ret;
--	unsigned long flags;
- 
- 	if (IS_ERR(epc))
- 		return -EINVAL;
-@@ -172,9 +168,9 @@ int pci_epc_start(struct pci_epc *epc)
- 	if (!epc->ops->start)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	ret = epc->ops->start(epc);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return ret;
- }
-@@ -193,7 +189,6 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
- 		      enum pci_epc_irq_type type, u16 interrupt_num)
- {
- 	int ret;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
- 		return -EINVAL;
-@@ -201,9 +196,9 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
- 	if (!epc->ops->raise_irq)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	ret = epc->ops->raise_irq(epc, func_no, type, interrupt_num);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return ret;
- }
-@@ -219,7 +214,6 @@ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
- int pci_epc_get_msi(struct pci_epc *epc, u8 func_no)
- {
- 	int interrupt;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
- 		return 0;
-@@ -227,9 +221,9 @@ int pci_epc_get_msi(struct pci_epc *epc, u8 func_no)
- 	if (!epc->ops->get_msi)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	interrupt = epc->ops->get_msi(epc, func_no);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	if (interrupt < 0)
- 		return 0;
-@@ -252,7 +246,6 @@ int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 interrupts)
- {
- 	int ret;
- 	u8 encode_int;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
- 	    interrupts > 32)
-@@ -263,9 +256,9 @@ int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 interrupts)
- 
- 	encode_int = order_base_2(interrupts);
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	ret = epc->ops->set_msi(epc, func_no, encode_int);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return ret;
- }
-@@ -281,7 +274,6 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msi);
- int pci_epc_get_msix(struct pci_epc *epc, u8 func_no)
- {
- 	int interrupt;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
- 		return 0;
-@@ -289,9 +281,9 @@ int pci_epc_get_msix(struct pci_epc *epc, u8 func_no)
- 	if (!epc->ops->get_msix)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	interrupt = epc->ops->get_msix(epc, func_no);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	if (interrupt < 0)
- 		return 0;
-@@ -311,7 +303,6 @@ EXPORT_SYMBOL_GPL(pci_epc_get_msix);
- int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
- {
- 	int ret;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
- 	    interrupts < 1 || interrupts > 2048)
-@@ -320,9 +311,9 @@ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
- 	if (!epc->ops->set_msix)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	ret = epc->ops->set_msix(epc, func_no, interrupts - 1);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return ret;
- }
-@@ -339,17 +330,15 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
- void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no,
- 			phys_addr_t phys_addr)
- {
--	unsigned long flags;
--
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
- 		return;
- 
- 	if (!epc->ops->unmap_addr)
- 		return;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	epc->ops->unmap_addr(epc, func_no, phys_addr);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
- 
-@@ -367,7 +356,6 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
- 		     phys_addr_t phys_addr, u64 pci_addr, size_t size)
- {
- 	int ret;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
- 		return -EINVAL;
-@@ -375,9 +363,9 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
- 	if (!epc->ops->map_addr)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return ret;
- }
-@@ -394,8 +382,6 @@ EXPORT_SYMBOL_GPL(pci_epc_map_addr);
- void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no,
- 		       struct pci_epf_bar *epf_bar)
- {
--	unsigned long flags;
--
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
- 	    (epf_bar->barno == BAR_5 &&
- 	     epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
-@@ -404,9 +390,9 @@ void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no,
- 	if (!epc->ops->clear_bar)
- 		return;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	epc->ops->clear_bar(epc, func_no, epf_bar);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_clear_bar);
- 
-@@ -422,7 +408,6 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no,
- 		    struct pci_epf_bar *epf_bar)
- {
- 	int ret;
--	unsigned long irq_flags;
- 	int flags = epf_bar->flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
-@@ -437,9 +422,9 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no,
- 	if (!epc->ops->set_bar)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, irq_flags);
-+	mutex_lock(&epc->lock);
- 	ret = epc->ops->set_bar(epc, func_no, epf_bar);
--	spin_unlock_irqrestore(&epc->lock, irq_flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return ret;
- }
-@@ -460,7 +445,6 @@ int pci_epc_write_header(struct pci_epc *epc, u8 func_no,
- 			 struct pci_epf_header *header)
- {
- 	int ret;
--	unsigned long flags;
- 
- 	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
- 		return -EINVAL;
-@@ -468,9 +452,9 @@ int pci_epc_write_header(struct pci_epc *epc, u8 func_no,
- 	if (!epc->ops->write_header)
- 		return 0;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	ret = epc->ops->write_header(epc, func_no, header);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return ret;
- }
-@@ -487,8 +471,6 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
-  */
- int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
- {
--	unsigned long flags;
--
- 	if (epf->epc)
- 		return -EBUSY;
- 
-@@ -500,9 +482,9 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
- 
- 	epf->epc = epc;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	list_add_tail(&epf->list, &epc->pci_epf);
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- 
- 	return 0;
- }
-@@ -517,15 +499,13 @@ EXPORT_SYMBOL_GPL(pci_epc_add_epf);
-  */
- void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
- {
--	unsigned long flags;
--
- 	if (!epc || IS_ERR(epc) || !epf)
- 		return;
- 
--	spin_lock_irqsave(&epc->lock, flags);
-+	mutex_lock(&epc->lock);
- 	list_del(&epf->list);
- 	epf->epc = NULL;
--	spin_unlock_irqrestore(&epc->lock, flags);
-+	mutex_unlock(&epc->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
- 
-@@ -604,7 +584,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 		goto err_ret;
- 	}
- 
--	spin_lock_init(&epc->lock);
-+	mutex_init(&epc->lock);
- 	INIT_LIST_HEAD(&epc->pci_epf);
- 	ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
- 
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 36644ccd32ac..9dd60f2e9705 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -88,7 +88,7 @@ struct pci_epc_mem {
-  * @mem: address space of the endpoint controller
-  * @max_functions: max number of functions that can be configured in this EPC
-  * @group: configfs group representing the PCI EPC device
-- * @lock: spinlock to protect pci_epc ops
-+ * @lock: mutex to protect pci_epc ops
-  * @notifier: used to notify EPF of any EPC events (like linkup)
-  */
- struct pci_epc {
-@@ -98,8 +98,8 @@ struct pci_epc {
- 	struct pci_epc_mem		*mem;
- 	u8				max_functions;
- 	struct config_group		*group;
--	/* spinlock to protect against concurrent access of EP controller */
--	spinlock_t			lock;
-+	/* mutex to protect against concurrent access of EP controller */
-+	struct mutex			lock;
- 	struct atomic_notifier_head	notifier;
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 7db2a94..dc300a9 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1139,6 +1139,10 @@ static const char * const msm8996_usb3phy_reset_l[] = {
+ 	"phy", "common",
  };
  
++static const char * const sc7180_usb3phy_reset_l[] = {
++	"phy",
++};
++
+ /* list of regulators */
+ static const char * const qmp_phy_vreg_l[] = {
+ 	"vdda-phy", "vdda-pll",
+@@ -1265,6 +1269,37 @@ static const struct qmp_phy_cfg qmp_v3_usb3phy_cfg = {
+ 	.is_dual_lane_phy	= true,
+ };
+ 
++static const struct qmp_phy_cfg sc7180_usb3phy_cfg = {
++	.type			= PHY_TYPE_USB3,
++	.nlanes			= 1,
++
++	.serdes_tbl		= qmp_v3_usb3_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_serdes_tbl),
++	.tx_tbl			= qmp_v3_usb3_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_tx_tbl),
++	.rx_tbl			= qmp_v3_usb3_rx_tbl,
++	.rx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_rx_tbl),
++	.pcs_tbl		= qmp_v3_usb3_pcs_tbl,
++	.pcs_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_pcs_tbl),
++	.clk_list		= qmp_v3_phy_clk_l,
++	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
++	.reset_list		= sc7180_usb3phy_reset_l,
++	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.regs			= qmp_v3_usb3phy_regs_layout,
++
++	.start_ctrl		= SERDES_START | PCS_START,
++	.pwrdn_ctrl		= SW_PWRDN,
++
++	.has_pwrdn_delay	= true,
++	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
++	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
++
++	.has_phy_dp_com_ctrl	= true,
++	.is_dual_lane_phy	= true,
++};
++
+ static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
+ 	.type			= PHY_TYPE_USB3,
+ 	.nlanes			= 1,
+@@ -2103,6 +2138,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ 		.compatible = "qcom,ipq8074-qmp-pcie-phy",
+ 		.data = &ipq8074_pciephy_cfg,
+ 	}, {
++		.compatible = "qcom,sc7180-qmp-usb3-phy",
++		.data = &sc7180_usb3phy_cfg,
++	}, {
+ 		.compatible = "qcom,sdm845-qmp-usb3-phy",
+ 		.data = &qmp_v3_usb3phy_cfg,
+ 	}, {
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
