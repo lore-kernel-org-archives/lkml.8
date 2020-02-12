@@ -2,74 +2,74 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB57C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5C8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8846620714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D43F20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgBLMjN (ORCPT
+        id S1727779AbgBLMkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:39:13 -0500
-Received: from 8bytes.org ([81.169.241.247]:53812 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgBLMjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:39:13 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 783E820E; Wed, 12 Feb 2020 13:39:11 +0100 (CET)
-Date:   Wed, 12 Feb 2020 13:39:02 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 30/62] x86/head/64: Move early exception dispatch to C
- code
-Message-ID: <20200212123902.GG20066@8bytes.org>
-References: <20200211135256.24617-1-joro@8bytes.org>
- <20200211135256.24617-31-joro@8bytes.org>
- <CALCETrVLhTkZ2MMUD+WMWXnhmSvwVhinUtMJey2M6sx_iUREcg@mail.gmail.com>
+        Wed, 12 Feb 2020 07:40:42 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:59772 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726728AbgBLMkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:40:42 -0500
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id EDE6AC5CC2F82D471DD7;
+        Wed, 12 Feb 2020 20:40:36 +0800 (CST)
+Received: from dggeme716-chm.china.huawei.com (10.1.199.112) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 12 Feb 2020 20:40:36 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme716-chm.china.huawei.com (10.1.199.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 12 Feb 2020 20:40:36 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Wed, 12 Feb 2020 20:40:36 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: x86: remove duplicated KVM_REQ_EVENT request
+Thread-Topic: [PATCH] KVM: x86: remove duplicated KVM_REQ_EVENT request
+Thread-Index: AdXhn4JGl8Q5ROUkR4Km9wNMCbNdGQ==
+Date:   Wed, 12 Feb 2020 12:40:36 +0000
+Message-ID: <cd32d5cf40094a239d79a1dbca6a45b4@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVLhTkZ2MMUD+WMWXnhmSvwVhinUtMJey2M6sx_iUREcg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:44:45PM -0800, Andy Lutomirski wrote:
-> How about int (or bool) handled;  Or just if (!early_make_pgtable)
-> return;  This would also be nicer if you inverted the return value so
-> that true means "I handled it".
-
-Okay, makes sense. Changed the return value of early_make_pgtable() to bool and
-this function to:
-
-	void __init early_exception(struct pt_regs *regs, int trapnr)
-	{
-		if (trapnr == X86_TRAP_PF &&
-		    early_make_pgtable(native_read_cr2()))
-				return;
-
-		early_fixup_exception(regs, trapnr);
-	}
-
-Regards,
-
-	Joerg
+UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4gd3JpdGU6DQo+IE9uIDA3LzAyLzIw
+IDEwOjA1LCBWaXRhbHkgS3V6bmV0c292IHdyb3RlOg0KPj4ga3ZtX21ha2VfcmVxdWVzdCgpIGZy
+b20ga3ZtX3NldF9yZmxhZ3MoKSBhcyBpdCBpcyBub3QgYW4gb2J2aW91cyANCj4+IGJlaGF2aW9y
+IChlLmcuIHdoeSBrdm1fcmlwX3dyaXRlKCkgZG9lbnMndCBkbyB0aGF0IGFuZA0KPj4ga3ZtX3Nl
+dF9yZmxhZ3MoKSBkb2VzID8pDQo+DQo+QmVjYXVzZSB3cml0aW5nIFJGTEFHUyBjYW4gY2hhbmdl
+IElGIGFuZCB0aGVyZWZvcmUgY2F1c2UgYW4gaW50ZXJydXB0IHRvIGJlIGluamVjdGVkLg0KPg0K
+DQpNYW55IHRoYW5rcyBmb3IgeW91ciBleHBsYW5hdGlvbi4gOikgSSB0aG91Z2h0IGl0IHdhcyBi
+ZWNhdXNlIG9mIFRyYXAgRmxhZy4NCg0K
