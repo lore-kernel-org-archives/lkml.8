@@ -2,220 +2,132 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784EDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5826C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E0D21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mhTbWlqB"
+	by mail.kernel.org (Postfix) with ESMTP id B2BA820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgBLOrp (ORCPT
+        id S1728301AbgBLOsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:47:45 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40384 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgBLOro (ORCPT
+        Wed, 12 Feb 2020 09:48:35 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3328 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727092AbgBLOsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:47:44 -0500
-Received: by mail-lf1-f67.google.com with SMTP id c23so1796739lfi.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 06:47:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R9iMxDXlfk87YsgzDeP791j5DHdY7d352oDqG74g8oE=;
-        b=mhTbWlqB4B/YnOIkDMFmGC6d/h8lPpOoSODi42Nd5NoLs/r7sztqO9brEUNE2SfevL
-         VLvHLu+aQ+cHhJPmtMx2XNyV1KGiWarcffK538VyXy6UCht7aKyoPnVd6QDZe00qVbJt
-         1r71KDsGfB+s/JjT8iHMJvovEbTBC9ANzQZYIIFL7dD6VGtBhMdFkbifTbyVXhYU887+
-         5jcCBwVhEPMto1tbExEGjM+tAbnBKJRjwlUY0KZ0Cpc6pdNAj3qMdJI43rV8FXCTST42
-         HadSVppithhIn/MJ9hiLPajTcWMctR70R3Mlc8y+APcOLegiK5WQfdU6KzKhTGXtFG14
-         ltWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R9iMxDXlfk87YsgzDeP791j5DHdY7d352oDqG74g8oE=;
-        b=jpCIMlE7nXhhiF6iPiaMPfR+8kWyGLvA9rZGOsrVqHRhH9z76CkN+r/r72sOqydqv3
-         BcEHwko2qSiOB/9l5v9OucULkJkauH0oULvTkgx2lYt5sa0KpntG4JUOictAPR1689tw
-         Jb/jkHSjhkWnvZqDPNZ+BezIff0Hm9EI2E38f8OsDva1jFhAZv5XScrbMHA56gOfHuui
-         FZrelsi5TlChnmnKmtBO9T8J7KVNb3TtOIabnyXbVx4fYxYD0ybmU61rp9ZYqR8ZkGtb
-         smCje+mRsAhc7tUPIXfftqwi+THxkxxL1WfYTXFEeFhHfBsT1lZPMX/yrXAp8urSuoJC
-         2PgA==
-X-Gm-Message-State: APjAAAXtdDI9jyNEZlIzg6U3AQM6kdeFM5lrpZu6i8iWRFBn8bBAz5+j
-        BGSbbjI7JlMS+Mw+uZ7Q4U/VMeAnOl7YncnEhJzbzg==
-X-Google-Smtp-Source: APXvYqxka93P9g6KFjVSoTaMOubCrne0KDBr3L5bwLfQyBl/LLgHmBKzN0ckBLfufjR6il1qbAtVVFuZsCJHTAqBk70=
-X-Received: by 2002:ac2:4add:: with SMTP id m29mr6880686lfp.190.1581518862177;
- Wed, 12 Feb 2020 06:47:42 -0800 (PST)
+        Wed, 12 Feb 2020 09:48:35 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CEippN008085;
+        Wed, 12 Feb 2020 09:47:31 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2y1tyqfds4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Feb 2020 09:47:30 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01CElTic063058
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 12 Feb 2020 09:47:29 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 12 Feb 2020 06:47:28 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 12 Feb 2020 06:47:27 -0800
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01CElOsm028254;
+        Wed, 12 Feb 2020 09:47:25 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <akpm@linux-foundation.org>, <keescook@chromium.org>,
+        <andriy.shevchenko@linux.intel.com>, <tobin@kernel.org>,
+        <gregkh@linuxfoundation.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] lib/string: update match_string() doc-strings with correct behavior
+Date:   Wed, 12 Feb 2020 16:47:23 +0200
+Message-ID: <20200212144723.21884-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200211174651.10330-1-vincent.guittot@linaro.org>
- <20200211174651.10330-2-vincent.guittot@linaro.org> <20200212132036.GT3420@suse.de>
-In-Reply-To: <20200212132036.GT3420@suse.de>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 12 Feb 2020 15:47:30 +0100
-Message-ID: <CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] sched/fair: reorder enqueue/dequeue_task_fair path
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-12_08:2020-02-11,2020-02-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=771 bulkscore=0 impostorscore=0 clxscore=1011
+ spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002120114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020 at 14:20, Mel Gorman <mgorman@suse.de> wrote:
->
-> On Tue, Feb 11, 2020 at 06:46:48PM +0100, Vincent Guittot wrote:
-> > The walk through the cgroup hierarchy during the enqueue/dequeue of a task
-> > is split in 2 distinct parts for throttled cfs_rq without any added value
-> > but making code less readable.
-> >
-> > Change the code ordering such that everything related to a cfs_rq
-> > (throttled or not) will be done in the same loop.
-> >
-> > In addition, the same steps ordering is used when updating a cfs_rq:
-> > - update_load_avg
-> > - update_cfs_group
-> > - update *h_nr_running
-> >
-> > No functional and performance changes are expected and have been noticed
-> > during tests.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
-> >  1 file changed, 20 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 1a0ce83e835a..a1ea02b5362e 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -5259,32 +5259,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> >               cfs_rq = cfs_rq_of(se);
-> >               enqueue_entity(cfs_rq, se, flags);
-> >
-> > -             /*
-> > -              * end evaluation on encountering a throttled cfs_rq
-> > -              *
-> > -              * note: in the case of encountering a throttled cfs_rq we will
-> > -              * post the final h_nr_running increment below.
-> > -              */
-> > -             if (cfs_rq_throttled(cfs_rq))
-> > -                     break;
-> >               cfs_rq->h_nr_running++;
-> >               cfs_rq->idle_h_nr_running += idle_h_nr_running;
-> >
-> > +             /* end evaluation on encountering a throttled cfs_rq */
-> > +             if (cfs_rq_throttled(cfs_rq))
-> > +                     goto enqueue_throttle;
-> > +
-> >               flags = ENQUEUE_WAKEUP;
-> >       }
-> >
-> >       for_each_sched_entity(se) {
-> >               cfs_rq = cfs_rq_of(se);
-> > -             cfs_rq->h_nr_running++;
-> > -             cfs_rq->idle_h_nr_running += idle_h_nr_running;
-> >
-> > +             /* end evaluation on encountering a throttled cfs_rq */
-> >               if (cfs_rq_throttled(cfs_rq))
-> > -                     break;
-> > +                     goto enqueue_throttle;
-> > AFAICT, there are in tip/sched/core
-> >               update_load_avg(cfs_rq, se, UPDATE_TG);
-> >               update_cfs_group(se);
-> > +
-> > +             cfs_rq->h_nr_running++;
-> > +             cfs_rq->idle_h_nr_running += idle_h_nr_running;
-> >       }
-> >
-> > +enqueue_throttle:
-> >       if (!se) {
-> >               add_nr_running(rq, 1);
-> >               /*
->
-> I'm having trouble reconciling the patch with the description and the
-> comments explaining the intent behind the code are unhelpful.
->
-> There are two loops before and after your patch -- the first dealing with
-> sched entities that are not on a runqueue and the second for the remaining
-> entities that are. The intent appears to be to update the load averages
-> once the entity is active on a runqueue.
->
-> I'm not getting why the changelog says everything related to cfs is
-> now done in one loop because there are still two. But even if you do
-> get throttled, it's not clear why you jump to the !se check given that
-> for_each_sched_entity did not complete. What it *does* appear to do is
-> have all the h_nr_running related to entities being enqueued updated in
-> one loop and all remaining entities stats updated in the other.
+There were a few attempts at changing behavior of the match_string()
+helpers (i.e. 'match_string()' & 'sysfs_match_string()'), to change &
+extend the behavior according to the doc-string.
 
-Let's take the example of 2 levels in addition to root so we have :
-root->cfs1->cfs2
-Now we enqueue a task T1 on cfs2 but cfs1 is throttled, we will have
-the sequence:
+But the simplest approach is to just fix the doc-strings. The current
+behavior is fine as-is, and some bugs were introduced trying to fix it.
 
-In 1st for_each_sched_entity loop:
-  loop 1
-    enqueue_entity (T1->se, cfs2) which calls update load_avg(cfs2)
-    cfs2->h_nr_running++;
-  loop 2
-    enqueue_entity (cfs2->gse, cfs1) which calls update load_avg(cfs1)
-    break because cfs1 is throttled
+As for extending the behavior, new helpers can always be introduced if
+needed.
 
-In 2nd for_each_sched_entity loop:
-  loop 1
-    cfs1->h_nr_running++
-    break because throttled
+The match_string() helpers behave more like 'strncmp()' in the sense that
+they go up to n elements or until the first NULL element in the array of
+strings.
 
-Using the 2nd loop for incrementing h_nr_running of the throttled cfs
-is useless and we could do that directly in 1st loop and skip the 2nd
-loop
+This change updates the doc-strings with this info.
 
-With this patch we have :
+Some references to the previous attempts (in no particular order):
+  https://lore.kernel.org/lkml/20190508111913.7276-1-alexandru.ardelean@analog.com/
+  https://lore.kernel.org/lkml/20190625130104.29904-1-alexandru.ardelean@analog.com/
+  https://lore.kernel.org/lkml/20190422083257.21805-1-alexandru.ardelean@analog.com/
+  
 
-In 1st for_each_sched_entity loop:
-  loop 1
-    enqueue_entity (T1->se, cfs2) which update load_avg(cfs2)
-    cfs2->h_nr_running++;
-  loop 2
-    enqueue_entity (cfs2->gse, cfs1) which update load_avg(cfs1)
-    cfs1->h_nr_running++
-    skip the 2nd for_each_sched_entity entirely
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ lib/string.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Then the patch also reorders the call to update_load_avg() and the
-increment of h_nr_running
+diff --git a/lib/string.c b/lib/string.c
+index f607b967d978..061a17b062b1 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -696,9 +696,12 @@ EXPORT_SYMBOL(sysfs_streq);
+ /**
+  * match_string - matches given string in an array
+  * @array:	array of strings
+- * @n:		number of strings in the array or -1 for NULL terminated arrays
++ * @n:		number of strings in the array to compare
+  * @string:	string to match with
+  *
++ * This routine will look for a string in an array of strings up to the
++ * n-th element in the array or until the first NULL element.
++ *
+  * Return:
+  * index of a @string in the @array if matches, or %-EINVAL otherwise.
+  */
+@@ -722,11 +725,14 @@ EXPORT_SYMBOL(match_string);
+ /**
+  * __sysfs_match_string - matches given string in an array
+  * @array: array of strings
+- * @n: number of strings in the array or -1 for NULL terminated arrays
++ * @n: number of strings in the array to compare
+  * @str: string to match with
+  *
+  * Returns index of @str in the @array or -EINVAL, just like match_string().
+  * Uses sysfs_streq instead of strcmp for matching.
++ *
++ * This routine will look for a string in an array of strings up to the
++ * n-th element in the array or until the first NULL element.
+  */
+ int __sysfs_match_string(const char * const *array, size_t n, const char *str)
+ {
+-- 
+2.20.1
 
-Before the patch we had different order between the to
-for_each_sched_entity which is not a problem because there is
-currently no relation between both. But the following patches make
-PELT using h_nr_running so we must have the same ordering to prevent
-updating pelt with the wrong h_nr_running value
-
->
-> Following the accounting is tricky. Before the patch, if throttling
-> happened then h_nr_running was updated without updating the corresponding
-> nr_running counter in rq. They are out of sync until unthrottle_cfs_rq
-> is called at the very least. After your patch, the same is true and while
-> the accounting appears to be equivalent, it's not clear it's correct and
-> I do not find the code any easier to understand after the patch or how
-> it's connected to runnable_load_avg which this series is about :(
->
-> I think the patch is functionally ok but I am having trouble figuring
-> out the motive. Maybe it'll be obvious after I read the rest of the series.
->
-> --
-> Mel Gorman
-> SUSE Labs
