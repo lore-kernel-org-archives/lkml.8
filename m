@@ -2,174 +2,160 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF68C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D09ECC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B3221569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EA624650
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G+UvlnLL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLVtOPey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgBLRXt (ORCPT
+        id S1728226AbgBLRYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:23:49 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46124 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgBLRXt (ORCPT
+        Wed, 12 Feb 2020 12:24:54 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34767 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgBLRYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:23:49 -0500
-Received: by mail-lj1-f193.google.com with SMTP id x14so3204854ljd.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 09:23:46 -0800 (PST)
+        Wed, 12 Feb 2020 12:24:53 -0500
+Received: by mail-ua1-f67.google.com with SMTP id 1so1178964uao.1;
+        Wed, 12 Feb 2020 09:24:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YZr1nc2MMJDzpqB9JOfpyRPCxbAR505Ej70RCsv/wk4=;
-        b=G+UvlnLLVKjVlxxQvVi0scUUGngqNXOY34KbUJIyu++IE35cnORnKL7btXkIijKnSL
-         4JfAk5l1RFVHrPGt/pp+YrlCgJACSq8iJ68bmL5V9shtQP0FVy6BhTxGMYik1JdG0tzY
-         uDeFuHil6xDU3BRA1IzMEd/x79VwYuCluHbVEaZVVQYOeFmAf4TU5uQ7VSamrYUo4GuX
-         74q5XQwOdXVBc+OLWgUMeMf+H05QWxFbjzn2TAkiL3TnPEx0wEYVp7NLleXEZnTu0i4v
-         j9jnUOd4e4PKjsvGRLmmeEWwkPPdky3mtcYbt8XQI7/pzEmitJM7o4bn5WYEwNiz7eUh
-         9G7g==
+        bh=jCGxfylxy3MldAt/reEr7p2HcESXZ2SEVCL7ze7sb8M=;
+        b=mLVtOPeyTrlGTAOEBO32ZUHoFId8CdOxxgdZYat1MHSCbZKEoRcEDicBnpT71GntOI
+         jE9GscwR8WoZBDG3NW2w5NV4KY4Y8KfFRmaVsjrpAkVgBIy1+dNvlJV4eDDZDPfUqKVK
+         oorEhZlJcQWCPlGU6yTKKyzkjd8lVDC09X8BRQFifOVlbdeW8BUCX8oUY+gdFrqV43ve
+         A7HVKdPyoFHMCkXVqFcQSKxCEkspuET12AzZarmTfBeGT1hUgL0I2kOfIADygzgcXX0I
+         HilyTVF18ofv8eL17GJwyyCw6bLnd7ieFA+NvVspb+P0wA90z7swiFmFjYi2DXaQkKOH
+         2Y2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YZr1nc2MMJDzpqB9JOfpyRPCxbAR505Ej70RCsv/wk4=;
-        b=VsumPcpfOrsVshXhiOKYx9fW1HBGTPjgntme0Nf3Xex49TZipvcuhMmRwncjpvRRqB
-         6Q7ypPxuPglO677zGcMepyyUH8Tjgs6ZuHdAuGEBwHtS9u3aza7B1/4m/yBRahpL7N3C
-         wxlrTJ4rax0/iwka7zIGJK9e112zpEDoSJvoaTitp6hF7yb1wZ3lSfe8yyDO8M6NA0Za
-         FoULTC5jatSSYpgO54Yyr2xeEpQdSmdWuohqcYHfix4EgIWA8wylrwNcuNNPUBUKS6pU
-         CijyHfPgyg/RBNLGLrxpImhHpm0ub2RKTI/f0uD86uPXblMUgd+x/kTLkBWGq3h/QNRk
-         mZ3Q==
-X-Gm-Message-State: APjAAAWkbfYeETlfQwM1zGXnc2sUN4vQiBFBOrm48tLRHWsQCCEHgZPy
-        BBboJaZZR0h1mTcT9utC+zmQvImlJmtnYVAoCIcBhQ==
-X-Google-Smtp-Source: APXvYqwV70oqrBIrF4HWfDsbPKou2uKu/ooe53tS/zQEVjVVTCcmq11lzjZ/7aas9gqyLAgb66ocUKHFUHUYl6KcrYk=
-X-Received: by 2002:a05:651c:297:: with SMTP id b23mr8476854ljo.260.1581528225757;
- Wed, 12 Feb 2020 09:23:45 -0800 (PST)
+        bh=jCGxfylxy3MldAt/reEr7p2HcESXZ2SEVCL7ze7sb8M=;
+        b=KBcoofSdsZBPCXwqDwvfsx2OFZGhpGqfvSjS/0luzx4qe9h1NLHCPGcQnMzMEt1Vsd
+         mncszrkchSVB50iY1p2OqxoRKF49UPqyWwI4l01wB9sk5cv/hh5DDftqr5jBPvA4lelZ
+         Fi1xLTcpSjWNP/SzESJyWQvMAVqIA4iNJJTomEPXW65es3jTVgR2Ll1Db9kT32y7V+EV
+         NWV3YC6du45Cxnbta11CpkhKgrYQp4LDVeBeLNmKlyulkpEhowvyD7gVMvOhcQtXthg2
+         UbfI8h25izvycMHsBY6/hgivFTruUhKJVmJt8jQ4a7qfe0V+1vnXfS8jjT7pBVFrUYhM
+         e3Xg==
+X-Gm-Message-State: APjAAAVerJ5jEi5PMl2rK8MVAROpjCnwvpD3isLjRhExSS0aO9f/MEMp
+        aeViCftYeUNFpTc0O9y5sXLhkj5K/ZcYTSID99g=
+X-Google-Smtp-Source: APXvYqyAepvFaN7GJfHPGtS87hCZr+gc51607hAiqYlgiF4eorNgglWZn4G42TMyi4n7UoLDOJ1DHv82wxTfkbU3tGs=
+X-Received: by 2002:ab0:66d6:: with SMTP id d22mr5082237uaq.92.1581528292397;
+ Wed, 12 Feb 2020 09:24:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20200211225547.235083-1-dancol@google.com> <20200211225547.235083-2-dancol@google.com>
- <88ea16bd-38be-b4f9-dfb3-e0626f5b6aaf@tycho.nsa.gov>
-In-Reply-To: <88ea16bd-38be-b4f9-dfb3-e0626f5b6aaf@tycho.nsa.gov>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Wed, 12 Feb 2020 09:23:09 -0800
-Message-ID: <CAKOZuet1vcDwkqoJgqmDjg7pjLGfvh11ZdUZpoyoXXWdz9Y4CQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] Add a new flags-accepting interface for anonymous inodes
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Tim Murray <timmurray@google.com>, Nosh Minwalla <nosh@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>, selinux@vger.kernel.org
+References: <cover.1581475981.git.shengjiu.wang@nxp.com> <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
+In-Reply-To: <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 12 Feb 2020 14:24:40 -0300
+Message-ID: <CAOMZO5Do=dzh4WXvm44mB7-PeesWuA6qRtMXwHCH9piXd1dZEw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks again for the review.
-
-On Wed, Feb 12, 2020 at 8:36 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+On Wed, Feb 12, 2020 at 1:35 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
 >
-> On 2/11/20 5:55 PM, Daniel Colascione wrote:
-> > Add functions forwarding from the old names to the new ones so we
-> > don't need to change any callers.
-> >
-> > Signed-off-by: Daniel Colascione <dancol@google.com>
+> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+> IP module found on i.MX815.
+
+i.MX815 in an internal terminology. Please avoid it on the commit log.
+
 >
-> (please add linux-fsdevel, viro to cc on future versions of this patch
-> since this is a VFS change)
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
 >
-> > ---
-> >   fs/anon_inodes.c            | 62 ++++++++++++++++++++++---------------
-> >   include/linux/anon_inodes.h | 27 +++++++++++++---
-> >   2 files changed, 59 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-> > index 89714308c25b..caa36019afca 100644
-> > --- a/fs/anon_inodes.c
-> > +++ b/fs/anon_inodes.c
-> > @@ -56,60 +56,71 @@ static struct file_system_type anon_inode_fs_type = {
-> >   };
-> >
-> >   /**
-> > - * anon_inode_getfile - creates a new file instance by hooking it up to an
-> > - *                      anonymous inode, and a dentry that describe the "class"
-> > - *                      of the file
-> > + * anon_inode_getfile2 - creates a new file instance by hooking it up to
-> > + *                       an anonymous inode, and a dentry that describe
-> > + *                       the "class" of the file
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.txt b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> new file mode 100644
+> index 000000000000..0e8153165e3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> @@ -0,0 +1,57 @@
+> +NXP Asynchronous Sample Rate Converter (ASRC) Controller
+> +
+> +The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
+> +signal associated with an input clock into a signal associated with a different
+> +output clock. The driver currently works as a Front End of DPCM with other Back
+> +Ends Audio controller such as ESAI, SSI and SAI. It has four context to support
+> +four substreams within totally 32 channels.
+> +
+> +Required properties:
+> +- compatible:                Contains "fsl,imx8mn-easrc".
+> +
+> +- reg:                       Offset and length of the register set for the
+> +                            device.
+> +
+> +- interrupts:                Contains the asrc interrupt.
+> +
+> +- dmas:                      Generic dma devicetree binding as described in
+> +                            Documentation/devicetree/bindings/dma/dma.txt.
+> +
+> +- dma-names:                 Contains "ctx0_rx", "ctx0_tx",
+> +                                     "ctx1_rx", "ctx1_tx",
+> +                                     "ctx2_rx", "ctx2_tx",
+> +                                     "ctx3_rx", "ctx3_tx".
+> +
+> +- clocks:                    Contains an entry for each entry in clock-names.
+> +
+> +- clock-names:               "mem" - Peripheral clock to driver module.
+> +
+> +- fsl,easrc-ram-script-name: The coefficient table for the filters
+> +
+> +- fsl,asrc-rate:             Defines a mutual sample rate used by DPCM Back
+> +                            Ends.
+> +
+> +- fsl,asrc-width:            Defines a mutual sample width used by DPCM Back
+> +                            Ends.
+> +
+> +Example:
+> +
+> +easrc: easrc@300C0000 {
+> +       compatible = "fsl,imx8mn-easrc";
+> +       reg = <0x0 0x300C0000 0x0 0x10000>;
+> +       interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
+> +       clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
+> +       clock-names = "mem";
+> +       dmas = <&sdma2 16 23 0> , <&sdma2 17 23 0>,
+> +              <&sdma2 18 23 0> , <&sdma2 19 23 0>,
+> +              <&sdma2 20 23 0> , <&sdma2 21 23 0>,
+> +              <&sdma2 22 23 0> , <&sdma2 23 23 0>;
+> +       dma-names = "ctx0_rx", "ctx0_tx",
+> +                   "ctx1_rx", "ctx1_tx",
+> +                   "ctx2_rx", "ctx2_tx",
+> +                   "ctx3_rx", "ctx3_tx";
+> +       fsl,easrc-ram-script-name = "imx/easrc/easrc-imx8mn.bin";
+> +       fsl,asrc-rate  = <8000>;
+> +       fsl,asrc-width = <16>;
+> +       status = "disabled";
+> +};
+> --
+> 2.21.0
 >
-> Not going to bikeshed on names but anon_inode_getfile_flags or _secure
-> or something would be more descriptive.
-
-_flags is fine, but I think _secure is overfitting.
-
-> >    *
-> >    * @name:    [in]    name of the "class" of the new file
-> >    * @fops:    [in]    file operations for the new file
-> >    * @priv:    [in]    private data for the new file (will be file's private_data)
-> > - * @flags:   [in]    flags
-> > + * @flags:   [in]    flags for the file
-> > + * @anon_inode_flags: [in] flags for anon_inode*
->
-> Do we really envision ever needing more than one new flag here?  If not,
-> then making it a bool secure parameter or encoding it as an
-> unused/ignored flag bit in the existing flags argument would seem
-> preferable.
-
-A bool and a flag is the same as far as the machine is concerned with
-respect to argument passing, and I find the flag much more descriptive
-than a bare "true" or a "false" scattered at call sites. Besides, a
-flags argument could lead to less churn later.
-
-> In some cases, we actually want the "anon inode" to inherit the security
-> context of a related inode (e.g. ioctls on /dev/kvm can create anon
-> inodes representing VMs, vCPUs, etc and further ioctls are performed on
-> those inodes), in which case we may need the caller to pass in the
-> related inode as well.
-
-See my other reply on this subject. Passing an optional related inode
-seems like a decent approach here.
-
-> >    *
-> > - * Creates a new file by hooking it on a single inode. This is useful for files
-> > + * Creates a new file by hooking it on an unspecified inode. This is useful for files
-> >    * that do not need to have a full-fledged inode in order to operate correctly.
-> >    * All the files created with anon_inode_getfile() will share a single inode,
-> >    * hence saving memory and avoiding code duplication for the file/inode/dentry
-> >    * setup.  Returns the newly created file* or an error pointer.
-> > + *
-> > + * anon_inode_flags must be zero.
-> >    */
-> > -struct file *anon_inode_getfile(const char *name,
-> > -                             const struct file_operations *fops,
-> > -                             void *priv, int flags)
-> > +struct file *anon_inode_getfile2(const char *name,
-> > +                              const struct file_operations *fops,
-> > +                              void *priv, int flags, int anon_inode_flags)
-> >   {
-> > +     struct inode *inode;
-> >       struct file *file;
-> >
-> > -     if (IS_ERR(anon_inode_inode))
-> > -             return ERR_PTR(-ENODEV);
-> > -
-> > -     if (fops->owner && !try_module_get(fops->owner))
-> > -             return ERR_PTR(-ENOENT);
-> > +     if (anon_inode_flags)
-> > +             return ERR_PTR(-EINVAL);
->
-> Not sure this is how it is normally done (i.e. one patch to just
-> introduce an extended interface but disallow all use of it, then a
-> separate patch to introduce the first use).  Would recommend combining;
-> otherwise reviewers can't see how it will be used without looking at both.
-
-All things being equal, finer-grained patches are better: they allow
-for easier bisection. But I don't feel strongly one way or the other
-here, so let's see what other reviewers say.
