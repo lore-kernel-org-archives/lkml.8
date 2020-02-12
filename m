@@ -7,62 +7,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876F0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4B3206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E28120714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="pvAOFnQm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="zZXNM0dY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgBLI6a (ORCPT
+        id S1728843AbgBLI63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:58:30 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45864 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728816AbgBLI62 (ORCPT
+        Wed, 12 Feb 2020 03:58:29 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33639 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728807AbgBLI60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:58:28 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g3so1170358wrs.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:58:27 -0800 (PST)
+        Wed, 12 Feb 2020 03:58:26 -0500
+Received: by mail-wr1-f67.google.com with SMTP id u6so1216375wrt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:58:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PaNb/Wp11IhwyKZtaeQKdn01ArSCATdD8YJx8G+8pWE=;
-        b=pvAOFnQmyb0XpA+3rrFTqQcXgWZcZCpPzPU33FovZQy6p03SaD2vv8L9o14UdUxpV4
-         lRnvQWA8AhmVTmy+NXcIyx+3RCBFVt6T52mgROqI4g7nEo7B28nJJ110uTTtCENtgFUU
-         MHfpS/MJ3RQtT+12WCGlJII+jr1NL8Zf7S3JhzWhUCKPzhIUKHF6ZBH9+rMTQASlDrKr
-         nOGpUIWJYfO8faoOhN1iAJVDyc7QhTXdVDgaSzgG9kA8jBoyGWc4cTkOdbIohA5LTqbJ
-         NoHHgIL5VwYGSa+tx0onKADDLFh9xu3UA1RyVj9ngAQUODL/Vy4dXJ3VDcncqarJLsZ8
-         iITw==
+        bh=PbPM+IFIv10EDyvULs9OlFwo1yj0tKaQ85CzafFBjwk=;
+        b=zZXNM0dYGW7Znea8Gw9/B3wlfsH1LC/HedoZf5DlseriHMnA5bh7R5UjtuxUSkGVGL
+         s50bzjS0iKOUMjVM0pnMs2IOIvM9j6binbeGCOF2f/w383kJWcCfCaDsUil+X4wFRYOQ
+         DWqN1Lw6QxQvPoejpNSHByEodgJpzeem5k+EztSflE+5n7CbSnIAkgvSSLKIoFFpXltS
+         76iwoxDy4+TfvXswUpTO66A74szY1M9TySL2stCmKVhUEzZjWiFY3A6/FvydyTbPKAD+
+         Y2dGAT+Yxu1e9AbldCUM/UC/LIgGgajmnUKaFk5SWMbZf/a6fszg2vPtaaXYis+pSQ7s
+         N+KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=PaNb/Wp11IhwyKZtaeQKdn01ArSCATdD8YJx8G+8pWE=;
-        b=REDt6nvNneneDPIrDEwi8zom4o7M/Tl1n98zyqWqjMNZiq0PaLlvK1bhSOWlq8oIxw
-         fCQA+AY9kBB/lzdvbEqYmOgdK68uva2wMd8oyXpr7i2SdbCf5T4kC5Felpm2V6PNYub4
-         Gu7Dy2c+yWJh9q22F9MeMCVIhO7r7H3QhPDAFuGCf5YZDnBy9a24NaL8E1Z8HdNToRXL
-         I3kTFQHi/GbMDcat7rdD59wgfjOgjXpLYBYcMIYVZC6E89vQ5l18Wt0eg1QK9+UsSg6y
-         vm7MzFXwbHVsWWY5sqsZMGWnOyTJCp7WBXZtbTKXK1RWNUfq0r4zw/BfYRx9YydRdjy4
-         kJyA==
-X-Gm-Message-State: APjAAAUTC+lBqWabaCgLJxmaP7wHvr4T9siNPrEjspkvDG+jOv6hf51d
-        17s9QvDryRItds4OL+x8EO3yVBsk6numJA==
-X-Google-Smtp-Source: APXvYqzKiH9zifcTTIKwEkQwuhqhZwzylYLpbie9d/XFWY0VwbhKL+YdrSFnArDcgBvpusTZBora6w==
-X-Received: by 2002:a5d:4bd0:: with SMTP id l16mr5409699wrt.271.1581497906135;
-        Wed, 12 Feb 2020 00:58:26 -0800 (PST)
+        bh=PbPM+IFIv10EDyvULs9OlFwo1yj0tKaQ85CzafFBjwk=;
+        b=Xzrn7lpAQHpUMu9V7eQq5FccGpfjtmVEw76vE/GRxq+KeL+QtIlWLJGNUYokMiRtYO
+         OHLcFvV4MAqRN5SKHBx91+GnPRDZYQ4E8RuBwPshZPrSrjISjwr88ChEyi3bnYPmvO5w
+         Qdlli8qt74W24fDMhzkOnELlBocwOZ5L8yFR2C29RBMR80fFkfwabMS/YMYzSdv+Rcl3
+         kEF4pImjZRrDe+bhauqJXLp5MrES8prsTbfKP6V73H08pM19YcyuPGE3Zng0k/+C6X+C
+         WGhbHiy32PTp+1C4lnDvXzvaLqo+OqnxdO2pxhusxiEA0OsC+Lk92EoRn6pvJORqym6y
+         iMcA==
+X-Gm-Message-State: APjAAAWfzBZYXJMVFOz9j/sGGK0saLfdaNlL8uXEo1C/JhG7/NYu6b3T
+        oEQ6UmDhCgoz+m8L457wSjVOmNZRB7PTZQ==
+X-Google-Smtp-Source: APXvYqy8AArVJd0v7iAp1VwlYWnjCfUnUd8JqsSiNMR90W7DDrXOHzxYBneaXTtGlPm9cMF7Wwrijw==
+X-Received: by 2002:adf:ffc5:: with SMTP id x5mr14481864wrs.92.1581497902930;
+        Wed, 12 Feb 2020 00:58:22 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id n13sm7498001wmd.21.2020.02.12.00.58.25
+        by smtp.gmail.com with ESMTPSA id p26sm7019262wmc.24.2020.02.12.00.58.22
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Feb 2020 00:58:25 -0800 (PST)
+        Wed, 12 Feb 2020 00:58:22 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
         michal.simek@xilinx.com, git@xilinx.com, arnd@arndb.de
-Cc:     Stefan Asserhall <stefan.asserhall@xilinx.com>
-Subject: [PATCH 10/10] microblaze: Use asm generic cmpxchg.h for !SMP case
-Date:   Wed, 12 Feb 2020 09:58:07 +0100
-Message-Id: <4d8c08bc549fc663eba0237a4ccd5e1e0e1bc01c.1581497860.git.michal.simek@xilinx.com>
+Cc:     Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH 08/10] microblaze: Remove unused boot_cpuid variable
+Date:   Wed, 12 Feb 2020 09:58:05 +0100
+Message-Id: <658d8948b81137b205b02032bda43d2ea6998fe7.1581497860.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <cover.1581497860.git.michal.simek@xilinx.com>
 References: <cover.1581497860.git.michal.simek@xilinx.com>
@@ -73,68 +76,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The whole implementation is done in asm-generic/cmpxchg.h file and there is
-no reason to duplicate it.
-Also do not include asm-generic/cmpxchg-local.h because it is already
-included from asm-generic/cmpxchg.h
+boot_cpuid is not used on uni processor system that's why can be removed.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
 ---
 
- arch/microblaze/include/asm/cmpxchg.h | 40 ++-------------------------
- 1 file changed, 3 insertions(+), 37 deletions(-)
+ arch/microblaze/include/asm/setup.h | 2 --
+ arch/microblaze/kernel/setup.c      | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/arch/microblaze/include/asm/cmpxchg.h b/arch/microblaze/include/asm/cmpxchg.h
-index 596300c74509..3523b51aab36 100644
---- a/arch/microblaze/include/asm/cmpxchg.h
-+++ b/arch/microblaze/include/asm/cmpxchg.h
-@@ -2,42 +2,8 @@
- #ifndef _ASM_MICROBLAZE_CMPXCHG_H
- #define _ASM_MICROBLAZE_CMPXCHG_H
+diff --git a/arch/microblaze/include/asm/setup.h b/arch/microblaze/include/asm/setup.h
+index c209d5297029..be10da9d87cb 100644
+--- a/arch/microblaze/include/asm/setup.h
++++ b/arch/microblaze/include/asm/setup.h
+@@ -10,8 +10,6 @@
+ #include <uapi/asm/setup.h>
  
--#include <linux/irqflags.h>
+ # ifndef __ASSEMBLY__
+-extern unsigned int boot_cpuid; /* move to smp.h */
 -
--void __bad_xchg(volatile void *ptr, int size);
--
--static inline unsigned long __xchg(unsigned long x, volatile void *ptr,
--								int size)
--{
--	unsigned long ret;
--	unsigned long flags;
--
--	switch (size) {
--	case 1:
--		local_irq_save(flags);
--		ret = *(volatile unsigned char *)ptr;
--		*(volatile unsigned char *)ptr = x;
--		local_irq_restore(flags);
--		break;
--
--	case 4:
--		local_irq_save(flags);
--		ret = *(volatile unsigned long *)ptr;
--		*(volatile unsigned long *)ptr = x;
--		local_irq_restore(flags);
--		break;
--	default:
--		__bad_xchg(ptr, size), ret = 0;
--		break;
--	}
--
--	return ret;
--}
--
--#define xchg(ptr, x) \
--	((__typeof__(*(ptr))) __xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
--
--#include <asm-generic/cmpxchg.h>
--#include <asm-generic/cmpxchg-local.h>
-+#ifndef CONFIG_SMP
-+# include <asm-generic/cmpxchg.h>
-+#endif
+ extern char cmd_line[COMMAND_LINE_SIZE];
  
- #endif /* _ASM_MICROBLAZE_CMPXCHG_H */
+ extern char *klimit;
+diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
+index a8fc15ac4291..dd121e33b8e3 100644
+--- a/arch/microblaze/kernel/setup.c
++++ b/arch/microblaze/kernel/setup.c
+@@ -41,7 +41,6 @@ DEFINE_PER_CPU(unsigned int, ENTRY_SP);	/* Saved SP on kernel entry */
+ DEFINE_PER_CPU(unsigned int, R11_SAVE);	/* Temp variable for entry */
+ DEFINE_PER_CPU(unsigned int, CURRENT_SAVE);	/* Saved current pointer */
+ 
+-unsigned int boot_cpuid;
+ /*
+  * Placed cmd_line to .data section because can be initialized from
+  * ASM code. Default position is BSS section which is cleared
 -- 
 2.25.0
 
