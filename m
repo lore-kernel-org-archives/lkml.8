@@ -2,204 +2,188 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41072C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DE8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A98520675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:21:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="it8LJrho";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="KbHJ/KX5"
+	by mail.kernel.org (Postfix) with ESMTP id 2872921569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgBLMVr (ORCPT
+        id S1727555AbgBLMY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:21:47 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:52693 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgBLMVr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:21:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1581510106; x=1613046106;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=t/zFM9wupqkBBYmHV62dAPwtKvKTv2+xl8snIqkp8YY=;
-  b=it8LJrhoMsTHEtBdvnRqzQVTLHJOQqkqsMRvpix6TBxLMxLk4JqLamKH
-   ur/IGs21lfkvMOK4bd3dy6Os6Xgr8lgadyow22Rkx878KEVrCS97joHEA
-   L7D6z+J894px86z2c7R1ONA3hAvz0TAcR6VBjYCUreSoVgwZflQQcFhkQ
-   pCSHDWQySviU0HSnWRKIO8yZxNhZ5870Xm/X1NfoD06t/wdhQ+9A1TUCr
-   bGfWuAgdZ6Vy7ZfhEiDiSz+/HmCM+Zz22YRiad91VqnSmoasRj0CeiNT1
-   7B/ANAiHSDDsRoSpe/ELks8lXNF5c/wc2/NJvqAqTRY3OSMcZOr2VnGNS
-   w==;
-IronPort-SDR: 4tDKme4gk+e/6KCjbBhr68l8abtwgE1ipkY75vJzIfbSbYtBuMtgxwTVeZoGa3cieeZzyzll/U
- e0z0MpXvlffbBqdQih21NtvL1zJUNRxKISd7HihnkB+gMD28CudTlXmI6Pt7NYGqmxftzla/Bp
- /jUPAcm9hlriUZ3X4NUZ+UiTgPS35wUuyd1XginGQ3wDChGpUZHpoNYhZUpengC1eo6kGJ0W6I
- +UhInvvtpagIrG3Ca8l/8IlavvkrXrt46PYgCTD1JWo4pkYLJKuWG3lX2hL5/+9OVOhZTr+Ngq
- RY4=
-X-IronPort-AV: E=Sophos;i="5.70,428,1574092800"; 
-   d="scan'208";a="129668258"
-Received: from mail-bn8nam12lp2175.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.175])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Feb 2020 20:21:44 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NneyyJdfICcPyi+HzwzLzUCSjkqxNvO/zKVfRTGTGlEUSpWK4//AN/pwmBRZL0moMRW+1AFipNSjkTsuKqoagzXYdBaFcGAqunyHiu4eNOWGwKKlX+HfZgIXIDLuIgyjzRicGVgIjVpsOuHekRYcvKFrLrlpMOE8iDrxM81MijrZmEOeLsB57BY/UXrCjYhygmNocZEq2WLJzMvFVp6qvn+s6k2Zp1y6w8UrIqxUEuf0UokoGz8ZpPmdD8ITx4azeCaIeJ8dPrE1Qdo0jAVLkvFQ5aZL6WbSq9KuYieOT6WDR1GiT8e9ScJnd7/5VmQXH0SqI2QutpSrxCDsnAW2dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/fkx7eYLDraqBmlcrfIlW+uIkUIWNUEKCCn2gZhuLRE=;
- b=SvbyMpSaE/3DGndu9EPprfSmNaK/8h2R1/5VG0inRYg8dOcFunQuz28I00rxA8nRzav1HT0SF3Ua81Rr4FC2NUgkheJZLi16blga2qP07N4ksVgbHCFlzaFI4g9AGMD8cmV429ENid9t7qJYnav51xrzgRRvn4FCmt6DaN15xlUQTZ3yiCwi3x3SmzJDa1IVQR861iRtn5z6J/XA024VnRaG9mmm7URg03P+vjq7XFUR5+FzB04zH1dJzvSpiFLirDNFoqrdA312Qr+9d56HijeyNZttGjazbp1Ajv6uHRR7cDZ5juwHr1KMR4g/3arvgf3VzXq1jYXHmawtqnlTug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/fkx7eYLDraqBmlcrfIlW+uIkUIWNUEKCCn2gZhuLRE=;
- b=KbHJ/KX567czfFA0eKrytsSZZyeQOhlCwUrKGnSk1GUmuOTxnv/muieLTmXWarcUsMiaynGc28rEh7DRDgSM6FyZooE/i65vDAyh4FlQhUHMPhKuMXYFSRbHnZ7DU2REoEF/+mxX7PHr0WNo/vshCQPJKU5IoYEzlxMM8LS63yQ=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB6976.namprd04.prod.outlook.com (10.186.146.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Wed, 12 Feb 2020 12:21:44 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
- 12:21:44 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 1/2] scsi: ufs: Use ufshcd_config_pwr_mode() when scale
- gear
-Thread-Topic: [PATCH v1 1/2] scsi: ufs: Use ufshcd_config_pwr_mode() when
- scale gear
-Thread-Index: AQHV4Wa4/7BeUknJikSF1o9Bj2JpaKgXdp1Q
-Date:   Wed, 12 Feb 2020 12:21:43 +0000
-Message-ID: <MN2PR04MB6991136AD340D28D930F27F3FC1B0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1581485910-8307-1-git-send-email-cang@codeaurora.org>
- <1581485910-8307-2-git-send-email-cang@codeaurora.org>
-In-Reply-To: <1581485910-8307-2-git-send-email-cang@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ed26d036-ac11-489a-a5d3-08d7afb61f4a
-x-ms-traffictypediagnostic: MN2PR04MB6976:
-x-microsoft-antispam-prvs: <MN2PR04MB6976517096D2FC4350EBCC25FC1B0@MN2PR04MB6976.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:576;
-x-forefront-prvs: 0311124FA9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(366004)(396003)(346002)(136003)(189003)(199004)(8676002)(110136005)(316002)(54906003)(2906002)(81156014)(7416002)(55016002)(8936002)(9686003)(33656002)(186003)(81166006)(71200400001)(86362001)(4326008)(478600001)(26005)(66556008)(66446008)(66476007)(5660300002)(76116006)(7696005)(64756008)(66946007)(6506007)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6976;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xBiXRpPgjnGTaiz0o21Pz4EZfcuzUTXG8fH44Mqri1aJ4kad2vVIPCO+UVYqdeVyYinw1OCDV3riyKa6vGKEiL2KlDhDZJaQekYyebH9hQnU73C/81YBlPGNfY+IviWCSysfLficRio7SuJ+0c2t4uUbQL6W7WD0VFcxaAgA6kamjfo+QgIP6XEkS/Rc1wQ4+lLssQog1K5VYGh5tipZwctgJNV+OpyLotSSNIx7xtzj9v/7T8HYqdCv51gnaorWRV3tXD3kkqkIMbpJmjT1Qpfx8I8TKHV7gzO+ci/O7ylm67fG1kZaK2//OHJyoYdi3IhAufTBOf8ZH8NeFNYIRR2wxN6SRzhPDGxSwq8PQL341dxJxJGIL9OmB2r8BMR5bDVPtz2H4delkRjA2fsh5svDe+DpW/LL8YL+b7EAHxNc7ahwuPh+zLwYP3Qr7fvC
-x-ms-exchange-antispam-messagedata: BZYJvj8/fERvCz69WksrnLvYGzqSIMk96JB//TWP6cKv6NB0vA5Cpk5RryavHkKMpPJoAEZQmp4g5OdNxhTUhMp2KbfY4T/1HVPu7vpsAGjxwgsMtWbljQn2R5TbDc8SyJySWXmaOCLHRKVC1TBD3g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 12 Feb 2020 07:24:28 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2413 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725887AbgBLMY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:24:28 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id AA5652B296E844F20F58;
+        Wed, 12 Feb 2020 12:24:25 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 12 Feb 2020 12:24:24 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 12 Feb
+ 2020 12:24:25 +0000
+Subject: Re: [PATCH RFC 5/7] perf pmu: Support matching by sysid
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "james.clark@arm.com" <james.clark@arm.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "liuqi (BA)" <liuqi115@huawei.com>
+References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
+ <1579876505-113251-6-git-send-email-john.garry@huawei.com>
+ <20200210120759.GG1907700@krava>
+ <63799909-067b-e5f4-dcf1-9ba1ec145348@huawei.com>
+ <20200211134704.GB93194@krava>
+ <2a51ce93-fa68-8088-f31f-2fd692253335@huawei.com>
+ <f72c7f52-a285-e052-8656-de2940a6fc7f@huawei.com>
+ <20200212121603.GJ183981@krava>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <68f9d5ce-d0a1-f7fa-fd01-e4f613ebad0c@huawei.com>
+Date:   Wed, 12 Feb 2020 12:24:24 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed26d036-ac11-489a-a5d3-08d7afb61f4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 12:21:43.9392
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X4HuL70Bgzfl0C+fJlE29sBxthKn3qMA8B5ohWtd2Aleu6MIh1DZg0q9f4eFOsnIMVDJiBb2Xwf6CGK8Av6MaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6976
+In-Reply-To: <20200212121603.GJ183981@krava>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 12/02/2020 12:16, Jiri Olsa wrote:
+>>> et me consider this part for perf test support.
+>> I will note that perf test has many issues on my arm64 board:
+>>
+>> do] password for john:
+>>   1: vmlinux symtab matches kallsyms                       : Skip
+>>   2: Detect openat syscall event                           : FAILED!
+>>   3: Detect openat syscall event on all cpus               : FAILED!
+>>   4: Read samples using the mmap interface                 : FAILED!
+>>   5: Test data source output                               : Ok
+>>   6: Parse event definition strings                        : FAILED!
+>>   7: Simple expression parser                              : Ok
+>>   8: PERF_RECORD_* events & perf_sample fields             : Ok
+>>   9: Parse perf pmu format                                 : Ok
+>> 10: DSO data read                                         : Ok
+>> 11: DSO data cache                                        : Ok
+>> 12: DSO data reopen                                       : Ok
+>> 13: Roundtrip evsel->name                                 : Ok
+>> 14: Parse sched tracepoints fields                        : FAILED!
+>> 15: syscalls:sys_enter_openat event fields                : FAILED!
+> looks like some issue with tracepoints
+> 
+>> 16: Setup struct perf_event_attr                          : Skip
+>> 17: Match and link multiple hists                         : Ok
+>> 18: 'import perf' in python                               : Ok
+>> 21: Breakpoint accounting                                 : Ok
+>> 22: Watchpoint                                            :
+>> 22.1: Read Only Watchpoint                                : Ok
+>> 22.2: Write Only Watchpoint                               : Ok
+>> 22.3: Read / Write Watchpoint                             : Ok
+>> 22.4: Modify Watchpoint                                   : Ok
+>> 23: Number of exit events of a simple workload            : Ok
+>> 24: Software clock events period values                   : Ok
+>> 25: Object code reading                                   : Ok
+>> 26: Sample parsing                                        : Ok
+>> 27: Use a dummy software event to keep tracking           : Ok
+>> 28: Parse with no sample_id_all bit set                   : Ok
+>> 29: Filter hist entries                                   : Ok
+>> 30: Lookup mmap thread                                    : Ok
+>> 31: Share thread maps                                     : Ok
+>> 32: Sort output of hist entries                           : Ok
+>> 33: Cumulate child hist entries                           : Ok
+>> 34: Track with sched_switch                               : Ok
+>> 35: Filter fds with revents mask in a fdarray             : Ok
+>> 36: Add fd to a fdarray, making it autogrow               : Ok
+>> 37: kmod_path__parse                                      : Ok
+>> 38: Thread map                                            : Ok
+>> 39: LLVM search and compile                               :
+>> 39.1: Basic BPF llvm compile                              : Skip
+>> 39.2: kbuild searching                                    : Skip
+>> 39.3: Compile source for BPF prologue generation          : Skip
+>> 39.4: Compile source for BPF relocation                   : Skip
+> Skip is fine;-)
+> 
+>> 40: Session topology                                      : FAILED!
+> I'd expect that one to fail if we don't have special
+> code to support arm in there
+> 
+>> 41: BPF filter                                            :
+>> 41.1: Basic BPF filtering                                 : Skip
+>> 41.2: BPF pinning                                         : Skip
+>> 41.3: BPF prologue generation                             : Skip
+>> 41.4: BPF relocation checker                              : Skip
+>> 42: Synthesize thread map                                 : Ok
+>> 43: Remove thread map                                     : Ok
+>> 44: Synthesize cpu map                                    : Ok
+>> 45: Synthesize stat config                                : Ok
+>> 46: Synthesize stat                                       : Ok
+>> 47: Synthesize stat round                                 : Ok
+>> 48: Synthesize attr update                                : Ok
+>> 49: Event times                                           : Ok
+>> 50: Read backward ring buffer                             : FAILED!
+> hum, I thought this was generic code that would work across archs
+> 
+>> 51: Print cpu map                                         : Ok
+>> 52: Merge cpu map                                         : Ok
+>> 53: Probe SDT events                                      : Ok
+>> 54: is_printable_array                                    : Ok
+>> 55: Print bitmap                                          : Ok
+>> 56: perf hooks                          umber__scnprintf                : Ok
+>> 59: mem2node                                              : Ok
+>> 60: time utils                                            : Ok
+>> 61: Test jit_write_elf                                    : Ok
+>> 62: maps__merge_in                                        : Ok
+>> 63: DWARF unwind                                          : Ok
+>> 64: Check open filename arg using perf trace + vfs_getname: FAILED!
+>> 65: Add vfs_getname probe to get syscall args filenames   : FAILED!
+>> 66: Use vfs_getname probe to get syscall args filenames   : FAILED!
+> with these we have always a problem across archs,
+> it's tricky to make script test that works everywhere:-\
+> 
+>> 67: Zstd perf.data compression/decompression              : Ok
+>> 68: probe libc's inet_pton & backtrace it with ping       : Skip
+>> john@ubuntu:~/linux$
+>>
+>> I know that the perf tool definitely has issues for system topology for
+>> arm64, which I need to check on.
+>>
+>> Maybe I can conscribe help internally to help check the rest...
 
->=20
-> When scale gear, use ufshcd_config_pwr_mode() instead of
-> ufshcd_change_power_mode() so that
-> vops_pwr_change_notify(PRE_CHANGE)
-> can be utilized to allow vendors use customized settings before change
-> the power mode.
->=20
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index adcce41..67bd4f2 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -1059,8 +1059,7 @@ static int ufshcd_scale_gear(struct ufs_hba *hba,
-> bool scale_up)
->         }
->=20
->         /* check if the power mode needs to be changed or not? */
-> -       ret =3D ufshcd_change_power_mode(hba, &new_pwr_info);
-> -
-> +       ret =3D ufshcd_config_pwr_mode(hba, &new_pwr_info);
+Hi jirka,
 
-You might want to inform ufshcd_config_pwr_mode() of the caller,
-As now it will be called much more frequently, and you want/don't want
-To call your vops on probe but not on scale_gear?
+> the json/alias test would be also to make sure the x86 still works,
+> so regardless of some tests failing on arm, I think it's still better
+> to have that test
 
-Also, Alim exported ufshcd_config_pwr_mode a while ago,
-In commit 0d846e703dc8 "scsi: ufs: make ufshcd_config_pwr_mode of non-stati=
-c func"),
-But nobody uses it outside ufshcd - so maybe revert this commit as part of =
-this series?
+OK, I can look at this separately now, and it won't be blocked like this 
+series is on the kernel sysid issue.
 
-
-
->         if (ret)
->                 dev_err(hba->dev, "%s: failed err %d, old gear: (tx %d rx=
- %d), new
-> gear: (tx %d rx %d)",
->                         __func__, ret,
-> @@ -4126,8 +4125,6 @@ int ufshcd_config_pwr_mode(struct ufs_hba *hba,
->                 memcpy(&final_params, desired_pwr_mode, sizeof(final_para=
-ms));
->=20
->         ret =3D ufshcd_change_power_mode(hba, &final_params);
-> -       if (!ret)
-> -               ufshcd_print_pwr_info(hba);
->=20
->         return ret;
->  }
-> @@ -7157,6 +7154,7 @@ static int ufshcd_probe_hba(struct ufs_hba *hba,
-> bool async)
->                                         __func__, ret);
->                         goto out;
->                 }
-> +               ufshcd_print_pwr_info(hba);
->         }
->=20
->         /* set the state as operational after switching to desired gear *=
-/
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-> Forum,
-> a Linux Foundation Collaborative Project
+Thanks,
+john
