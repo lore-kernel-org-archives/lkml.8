@@ -2,130 +2,138 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1EEC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2A1C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B6824671
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bJr9lPFU"
+	by mail.kernel.org (Postfix) with ESMTP id 080472467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581537023;
+	bh=5BhYJKA3gORqzCNRHwgf0DsrwzjD8c/aFfBMdkZL8IE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bFfmZdgZj1+gej40erGH9gZCik5t028VTTNA3f6q2JhH/31a+js2RdWwV6NHdtGUI
+	 kx8QCc4chyAFfYU34/N/liLq8OGN2eMvjiha3rQR8TFcfEgc8SkJy+gWvX2jf7LF3W
+	 4ezSMtx0kOD67Op++FtZFngZYwjrwtcMwn1y5DwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgBLTuA (ORCPT
+        id S1729069AbgBLTuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:50:00 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.179]:34487 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729018AbgBLTt7 (ORCPT
+        Wed, 12 Feb 2020 14:50:22 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46878 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbgBLTuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:49:59 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 6C441411A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:49:57 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1y1Fj6jghAGTX1y1FjIuwh; Wed, 12 Feb 2020 13:49:57 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TtzHE9bt3EsnQaUgQbettd2dBBa+zgbK1XhwIh6LAZ8=; b=bJr9lPFUVcqwf7A5m+kbN5zfIQ
-        ZM5QxBS1BMjGSLSBomD228kTD9jX8NFst6tcdo0H8OOBMysEt/yfLe0V3JuZlIKLiMAxVBrf2Jftg
-        aX/AjrSQvqADKCSXHxae5RMnUuB2Dn7nP6PSpaqixfsJFt3vdWqVuMDpNUMp8AcGxA7jCZrdWVw+E
-        BsE7mcIZubgYGTw/aPAM3kxXqxXqAv5w6E+2Vk2CruwQoaw+q5UNpm7N2vw6fZe6q30bsiRxk7CkL
-        VyjaijJHlHZnEEO3nei1AgRqHhQFsOCjMEW/dTKBVIa2Vgd2qYFI0V9O0Di0pWd6QSBNZQsw32X5b
-        RjEGWtQA==;
-Received: from [201.144.174.25] (port=3740 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1y1D-001GNE-QC; Wed, 12 Feb 2020 13:49:56 -0600
-Date:   Wed, 12 Feb 2020 13:52:31 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] auxdisplay: charlcd: replace zero-length array with
- flexible-array member
-Message-ID: <20200212195231.GA2867@embeddedor>
+        Wed, 12 Feb 2020 14:50:21 -0500
+Received: by mail-lj1-f194.google.com with SMTP id x14so3721946ljd.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:50:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CHXH6o1ncLcAF0HeWBgC/IvihmP9toR2+/NwDUguxaw=;
+        b=F1RTR2Mk3atysxi94JEv4Vc5seMqqx02k5CmzRHPSL9IrjapbyqOHw2Fl4dXiCvUEV
+         ncTWbgP69pZD/8vVK6OQciM9WRN9WfMjKk6TsKRj9cuZUdWmWVaikWPX14ZlXYji3kdw
+         CWzsabp8eT8r94ZjWLxWvcikM9+qEZil4HvcY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CHXH6o1ncLcAF0HeWBgC/IvihmP9toR2+/NwDUguxaw=;
+        b=bG/rYnd8LkmTFoYBRun486aMp+qLgHy8vlZcJZE76g3MABWKGN4lHHPZeUjfk4kGrC
+         OIkSwJu6Q3U3NYkd3Ur1lUMTdbhU9RYbvkA2NzeiRZf+mQt3G/YFhKO1+jFKR37s3LVz
+         RkSloFCJ27YhxU3iwYs4U6s7WXhjmenanUw2vr5xkvMfViQzdFi4u9Q2+QDLik1OZz/M
+         b2+Mm4UO1BRNW7QYq6ZDJA9Y1z9kE+CBk5/tpDvKLX/dDITu4tnR5sqBcSK/qQax7g1e
+         yJl4g8XuqMku0r/zMRljA0CgzY79vjlijiOIQSOq//YEg9CMb3aAE2xLSJ1aiBUVBCr3
+         lMHA==
+X-Gm-Message-State: APjAAAVVZUpSU6D97vFLCu95Xwmhd/BU0/tlIkWQCixRI0phZnAidgsQ
+        3f96XV5pKWvL5i2br7RAyHDF56rxoY8=
+X-Google-Smtp-Source: APXvYqyWsKYUd1jbLMQIyg1PeqXvXSdkomDHR5vrj5B+neKgwherChs0rlwBpkbeRWKPGuEsOXxj+Q==
+X-Received: by 2002:a2e:8944:: with SMTP id b4mr8826107ljk.90.1581537016606;
+        Wed, 12 Feb 2020 11:50:16 -0800 (PST)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id w8sm75040ljj.75.2020.02.12.11.50.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 11:50:15 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id f24so2488863lfh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:50:15 -0800 (PST)
+X-Received: by 2002:a19:c82:: with SMTP id 124mr7333707lfm.152.1581537014849;
+ Wed, 12 Feb 2020 11:50:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.144.174.25
-X-Source-L: No
-X-Exim-ID: 1j1y1D-001GNE-QC
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.144.174.25]:3740
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 48
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+ <20200210150519.538333-8-gladkov.alexey@gmail.com> <87v9odlxbr.fsf@x220.int.ebiederm.org>
+ <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+ <87tv3vkg1a.fsf@x220.int.ebiederm.org> <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+ <87v9obipk9.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87v9obipk9.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 12 Feb 2020 11:49:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
+Message-ID: <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Wed, Feb 12, 2020 at 11:18 AM Eric W. Biederman
+<ebiederm@xmission.com> wrote:
+>
+> > So it's just fs_info that needs to be rcu-delayed because it contains
+> > that list. Or is there something else?
+>
+> The fundamental dcache thing we are playing with is:
+>
+>         dentry = d_hash_and_lookup(proc_root, &name);
+>         if (dentry) {
+>                 d_invalidate(dentry);
+>                 dput(dentry);
+>         }
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Ahh. And we can't do that part under the RCU read lock. So it's not
+the freeing, it's the list traversal itself.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+Fair enough.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Hmm.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+I wonder if we could split up d_invalidate(). It already ends up being
+two phases: first the unhashing under the d_lock, and then the
+recursive shrinking of parents and children.
 
-This issue was found with the help of Coccinelle.
+The recursive shrinking of the parent isn't actually interesting for
+the proc shrinking case: we just looked up one child, after all. So we
+only care about the d_walk of the children.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+So if we only did the first part under the RCU lock, and just
+collected the dentries (can we perhaps then re-use the hash list to
+collect them to another list?) and then did the child d_walk
+afterwards?
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/auxdisplay/charlcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/auxdisplay/charlcd.c b/drivers/auxdisplay/charlcd.c
-index 874c259a8829..c0da3820454b 100644
---- a/drivers/auxdisplay/charlcd.c
-+++ b/drivers/auxdisplay/charlcd.c
-@@ -88,7 +88,7 @@ struct charlcd_priv {
- 		int len;
- 	} esc_seq;
- 
--	unsigned long long drvdata[0];
-+	unsigned long long drvdata[];
- };
- 
- #define charlcd_to_priv(p)	container_of(p, struct charlcd_priv, lcd)
--- 
-2.25.0
-
+             Linus
