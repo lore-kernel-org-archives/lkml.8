@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAC8C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60445C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48CE52082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9732168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581527360;
-	bh=Ms18AFYMJJs9CTQf+OnEnXNdqo5oWSloKrt5rZKf4t0=;
+	s=default; t=1581527367;
+	bh=WxQ7PbbXyIoC7+GJrQ+uRoXEdtshYOhNhga+Q5j5StU=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=b/4n0RrjVs4f9CGOrB5VFVUR+WwcieoopolcePDFKSZgDUYYb48U22MAM+U9kZB2P
-	 tM1ALjJgZWnWO1qo8xpeUpKqjxYu91ccS5bjto0MO+g+YPJ7xIkZynWgvi7Ef0CyUh
-	 v3hjSae76cGJivbuULLKgd9v9T8CMAXtXH3vrZnY=
+	b=d9CEGN57A/ON/HTur9o1xhMJaKf8mDYijIp/KEWxvxFw44T2Vh2wzJA8iH/KaEqWy
+	 WOxF5gT56TNIAqDa0KY0CtLb06mNPDff3/zsG02Rh7okuFGTqolrmNsLdXqx4e2nZd
+	 LYhtaSGSjpjDKmu2xdtvalf4qo9NVoQEM+wZV2hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgBLRJT (ORCPT
+        id S1728984AbgBLRJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:09:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57786 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 12:09:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgBLRJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:09:19 -0500
+        id S1727548AbgBLRJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 12:09:26 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D33C20658;
-        Wed, 12 Feb 2020 17:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72ACD206D7;
+        Wed, 12 Feb 2020 17:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581527358;
-        bh=Ms18AFYMJJs9CTQf+OnEnXNdqo5oWSloKrt5rZKf4t0=;
+        s=default; t=1581527365;
+        bh=WxQ7PbbXyIoC7+GJrQ+uRoXEdtshYOhNhga+Q5j5StU=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=DTq7nvfsXFWhnCTs/UmHCwiBDz0FNSkNwRCJZHROJzS/Et+icCWGxl2qmINJhfcu1
-         +NgdiPlJWl47gJm3NxTynqKE2Ch6CPuOeir5Qvzb4BEXD6kd9vEs5Y/wn3ANjO2Gnh
-         YNsI5XJYXMdDcbtXRppyqd0YnQHhq0ul5APZyG8I=
+        b=XpRX7ne2mZkalX9khWt5mbVKEE+pTXnEivDwPc1ytzZaF8Ikxuz/DzSybwhXFMZ7z
+         vAugyREUU5xdwNYxGsMH2zCGj/BqqHmyrKKxCgkWRv/f/YEDTPG6xb1HzXWTeq0w3w
+         cxb0L7ikrzIL7lKvc3yacFK9POK3dyz4MqgbnpcQ=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200212100830.446-4-geert+renesas@glider.be>
-References: <20200212100830.446-1-geert+renesas@glider.be> <20200212100830.446-4-geert+renesas@glider.be>
-Subject: Re: [PATCH 3/7] ARM: mmp: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+In-Reply-To: <20200212100830.446-5-geert+renesas@glider.be>
+References: <20200212100830.446-1-geert+renesas@glider.be> <20200212100830.446-5-geert+renesas@glider.be>
+Subject: Re: [PATCH 4/7] ARM: rockchip: Replace <linux/clk-provider.h> by <linux/of_clk.h>
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
@@ -60,16 +60,16 @@ To:     Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <mripard@kernel.org>,
         Michal Simek <michal.simek@xilinx.com>,
         Russell King <linux@armlinux.org.uk>
-Date:   Wed, 12 Feb 2020 09:09:17 -0800
-Message-ID: <158152735760.121156.12656312630814539415@swboyd.mtv.corp.google.com>
+Date:   Wed, 12 Feb 2020 09:09:24 -0800
+Message-ID: <158152736474.121156.2573812734157351119@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2020-02-12 02:08:26)
-> The Marvell MMP platform code is not a clock provider, and just needs to
+Quoting Geert Uytterhoeven (2020-02-12 02:08:27)
+> The Rockchip platform code is not a clock provider, and just needs to
 > call of_clk_init().
 >=20
 > Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
