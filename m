@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5755EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BCEC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2795B2082F
+	by mail.kernel.org (Postfix) with ESMTP id D47152082F
 	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p3kVKCqF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r8IAdQpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgBLEUD (ORCPT
+        id S1728188AbgBLEUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:20:03 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53898 "EHLO
+        Tue, 11 Feb 2020 23:20:01 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53928 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgBLESr (ORCPT
+        with ESMTP id S1727974AbgBLESr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 23:18:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=A6iWVb3zlDQS/VntSVu1LOGr/OubbxQggSx3CMqmkcA=; b=p3kVKCqFG4KTxDyrYl8WC4YcFv
-        qK5fjiTePUliVUHjNkZH53pxDwgPYIqz+I3SCVqRs+iHUjDDCy5aZlZKdDEDkxkSWDO4TlqW02/7X
-        csIWdkr/o/VRP7po+sjfQtIF6xCGwmVc8RNJY04BFKvpDlICjbC8KVYCOkimMuQczJ4Ka/Ne04an0
-        GnL++QUEk+Rg8WeH0MA8DAWFLWUf0NuH53Mo0tt0CSs1iLkGSvmfuEktXIBvDI2/XzIOV29ElsvO4
-        sQXtBNBiDLPz8AhTCmIQwT/RufUke68Wgmk9qmJRxgpIufXKO8XuN7BWSbz62ZtSBXbqiTyf6o2Tq
-        k1G+cqEQ==;
+        bh=5Ar0Jeyv020FR8vajw8QCoSu+6yNwintSCRCindI1ZQ=; b=r8IAdQpEyytTz+UkRifmhnp5oX
+        tug+Zi6+43HDkgNWNMhAa6OxOVd1gvh5gww7IiRtJBPzgMbvLgd4eyZtWFBYBKhBWDBKmzf9sKi6t
+        2I9goiE3TQteNTlAxrA50cRHD4Dyj1NxT6zZxIc3j4q1cn4+JYscrIoBIFKc5iRshjfoKQLa441Ox
+        xYxbbKWzdqFhZXpx8MbdbSRVRBHohpv2+cBC5IcdVnOeJJGWWpjF4qTtq/+1LJpHlyuqYxHdoA4JL
+        4a+qp70EIhma0kqSu9bFWN7Vt/okHXBWf9mim6hn+OffxYV+Gb8S/Zv2Vh5S1N+x+hgBjCDvvh+RP
+        nnc2wqAg==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU6-0006mv-NF; Wed, 12 Feb 2020 04:18:46 +0000
+        id 1j1jU6-0006na-Ty; Wed, 12 Feb 2020 04:18:46 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/25] mm: Allow hpages to be arbitrary order
-Date:   Tue, 11 Feb 2020 20:18:26 -0800
-Message-Id: <20200212041845.25879-7-willy@infradead.org>
+Subject: [PATCH v2 11/25] fs: Make page_mkwrite_check_truncate thp-aware
+Date:   Tue, 11 Feb 2020 20:18:31 -0800
+Message-Id: <20200212041845.25879-12-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
 References: <20200212041845.25879-1-willy@infradead.org>
@@ -54,43 +54,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Remove the assumption in hpage_nr_pages() that compound pages are
-necessarily PMD sized.  The return type needs to be signed as we need
-to use the negative value, eg when calling update_lru_size().
+If the page is compound, check the appropriate indices and return the
+appropriate sizes.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/huge_mm.h | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ include/linux/pagemap.h | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 5aca3d1bdb32..16367e2f771e 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -230,12 +230,8 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
- 	else
- 		return NULL;
- }
--static inline int hpage_nr_pages(struct page *page)
--{
--	if (unlikely(PageTransHuge(page)))
--		return HPAGE_PMD_NR;
--	return 1;
--}
-+
-+#define hpage_nr_pages(page)	(long)compound_nr(page)
- 
- struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
-@@ -289,7 +285,7 @@ static inline struct list_head *page_deferred_list(struct page *page)
- #define HPAGE_PUD_MASK ({ BUILD_BUG(); 0; })
- #define HPAGE_PUD_SIZE ({ BUILD_BUG(); 0; })
- 
--#define hpage_nr_pages(x) 1
-+#define hpage_nr_pages(x) 1L
- 
- static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index aa925295347c..2ec33aabdbf6 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -732,17 +732,18 @@ static inline int page_mkwrite_check_truncate(struct page *page,
+ 					      struct inode *inode)
  {
+ 	loff_t size = i_size_read(inode);
+-	pgoff_t index = size >> PAGE_SHIFT;
+-	int offset = offset_in_page(size);
++	pgoff_t first_index = size >> PAGE_SHIFT;
++	pgoff_t last_index = first_index + hpage_nr_pages(page) - 1;
++	unsigned long offset = offset_in_this_page(page, size);
+ 
+ 	if (page->mapping != inode->i_mapping)
+ 		return -EFAULT;
+ 
+ 	/* page is wholly inside EOF */
+-	if (page->index < index)
+-		return PAGE_SIZE;
++	if (page->index < first_index)
++		return thp_size(page);
+ 	/* page is wholly past EOF */
+-	if (page->index > index || !offset)
++	if (page->index > last_index || !offset)
+ 		return -EFAULT;
+ 	/* page is partially inside EOF */
+ 	return offset;
 -- 
 2.25.0
 
