@@ -2,118 +2,159 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E3FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53A8C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F4A20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SjLXJ7pz"
+	by mail.kernel.org (Postfix) with ESMTP id 8BCB721569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581547964;
+	bh=CRev1luXwdujbwtyZQWOhQiyui/cJ+jDftyaZlu3U4Y=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=kcy3EP/sWVqEaIKyESz7QoFa6laqUKU48I7NhoYiYy7r4EYJbkT5PTXR3DUh4CBWB
+	 Vi1/YwiJpZ8ltKY6oXfYcblPs9nwBjZpvmbQJgAOd0tjH5syZGdpcqtbXVS8FaHftX
+	 Y7aewiJ3TQ3q0Mn1evrGvHsrohwrsutYggFtWpSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgBLWsr (ORCPT
+        id S1729185AbgBLWwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:48:47 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49387 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728603AbgBLWsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:48:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HvvK0qmSz9s1x;
-        Thu, 13 Feb 2020 09:48:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581547725;
-        bh=7MTWO8ALLh5y8cP63+tLZI7W7tp7MQmmOxjTpe7xR0g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SjLXJ7pz8/Nw5+xF6FxqIZ2pz4/k1iZb4aYDmEbXiC2I9KooYmyuHr1nTlmVjP3K8
-         XyFHF2BMUipcKXq7mF2gOatlcyGPypFXBW5F1WjXJnc3ncNwZgEn4Ds+adRvVXWPg1
-         w2Ijpbs0xYq6UNPqs3pzwFb+qPfTiTsw85aq8+ZqE3H0QIqzACRTaiKStfgG26kfIN
-         L0geQ9S3zJi5ax3sJWslxiJQlnsqVSKIS7pk79+bIxMUuN8BUoGdAF+OaTtvB++fxi
-         JLaRZmI4uM0oj8vgyPKe3zO2KWuU/vq5TH3ZbULjXJ8vy+R+yHRbIRxbIS8CAry3Ex
-         x/Gw/jZLZvw/g==
-Date:   Thu, 13 Feb 2020 09:48:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Connor O'Brien <connoro@google.com>
-Subject: linux-next: manual merge of the selinux tree with Linus' tree
-Message-ID: <20200213094844.6bafd9e1@canb.auug.org.au>
+        Wed, 12 Feb 2020 17:52:44 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41831 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbgBLWwn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 17:52:43 -0500
+Received: by mail-il1-f196.google.com with SMTP id f10so3241361ils.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:52:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RbZn7NBPUx8xwAK1CHGdzIBD9eDqney+TnaE+OAg8mI=;
+        b=dN9EQ3nB3q7uyXHZZCeUKYuZZMbCoMMndb7Vca2/9RWVsJKA5Kii0vsUb4OaZHsOxS
+         DCuxSlKrVXKAUx/Uf5ZTSW3YmMojhrssIQ3koKoLCqpj5OoDZ8fOAtJLU71OgTx7UNuD
+         XyUg8FkgjmF2g4ujNm+fXpTZE0KW57WQLXbzY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RbZn7NBPUx8xwAK1CHGdzIBD9eDqney+TnaE+OAg8mI=;
+        b=UkrKzFUdoQChZZQhs/Rd9p46qOj90pWxsnf2AQZqqv8R0GnoTspq4i6Yc2N1Ey224M
+         nt94Ns25e+W3gZvhV8pdFQUgMSnCGeF7fCXSllymjOHTNav1nkUgb+BIMABeRxE9ap3D
+         Cnex/CxdHPI4lSk9r0ZgodKgLFhv5AMqXe/t9p+KFIsGrScbJyo+Sr+pycBaNVgdeWAO
+         UWIBCkMMv0+pCg7+DxKxlSdpazmHqv8YWC/ysVZQzBG0n6iVICy17P/5rUJT0cLG8JNr
+         vIvhV599HU/lHqhTmqUVYLpspH5yLmu+l22tyKYx+Re7KPcht6Q2vDjyHupVMVHZCad4
+         L/MQ==
+X-Gm-Message-State: APjAAAVK+Unce8JHXjfaFe+vKNTBNAtmcDmvb4IjaGPCGoulVDsDQLT7
+        yd4C8G0I8a4BqPwr5Tbo80HPbrno5Js=
+X-Google-Smtp-Source: APXvYqyQJgB8KL/SxBQ64+lBNmvNex3b/CGx4perVHk/sNcI0Gt37Y4ZfsGV5v2iasQKz7uy2UcImw==
+X-Received: by 2002:a92:5c8f:: with SMTP id d15mr3218328ilg.102.1581547961756;
+        Wed, 12 Feb 2020 14:52:41 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id 203sm150734ilb.42.2020.02.12.14.52.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 14:52:41 -0800 (PST)
+Subject: Re: [PATCH v3 3/3] IMA: Add module name and base name prefix to log.
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        joe@perches.com, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+ <20200211231414.6640-4-tusharsu@linux.microsoft.com>
+ <1581517770.8515.35.camel@linux.ibm.com>
+ <1581521161.3494.7.camel@HansenPartnership.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <d428f807-7e67-a173-183d-f2ab15bdef9e@linuxfoundation.org>
+Date:   Wed, 12 Feb 2020 15:52:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//+TgZ+HvOmgRa9/AjaIXjhj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1581521161.3494.7.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//+TgZ+HvOmgRa9/AjaIXjhj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2/12/20 8:26 AM, James Bottomley wrote:
+> On Wed, 2020-02-12 at 09:29 -0500, Mimi Zohar wrote:
+>> On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
+>>> The #define for formatting log messages, pr_fmt, is duplicated in
+>>> the
+>>> files under security/integrity.
+>>>
+>>> This change moves the definition to security/integrity/integrity.h
+>>> and
+>>> removes the duplicate definitions in the other files under
+>>> security/integrity. Also, it adds KBUILD_MODNAME and
+>>> KBUILD_BASENAME prefix
+>>> to the log messages.
+>>>
+>>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>>> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+>>> Suggested-by: Joe Perches <joe@perches.com>
+>>> Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+>>
+>> <snip>
+>>
+>>> diff --git a/security/integrity/integrity.h
+>>> b/security/integrity/integrity.h
+>>> index 73fc286834d7..b1bb4d2263be 100644
+>>> --- a/security/integrity/integrity.h
+>>> +++ b/security/integrity/integrity.h
+>>> @@ -6,6 +6,12 @@
+>>>    * Mimi Zohar <zohar@us.ibm.com>
+>>>    */
+>>>   
+>>> +#ifdef pr_fmt
+>>> +#undef pr_fmt
+>>> +#endif
+>>> +
+>>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " KBUILD_BASENAME ": " fmt
+>>> +
+>>>   #include <linux/types.h>
+>>>   #include <linux/integrity.h>
+>>>   #include <crypto/sha.h>
+>>
+>> Joe, Shuah, including the pr_fmt() in integrity/integrity.h not only
+>> affects the integrity directory but everything below it.  Adding
+>> KBUILD_BASENAME to pr_fmt() modifies all of the existing IMA and EVM
+>> kernel messages.  Is that ok or should there be a separate pr_fmt()
+>> for the subdirectories?
+> 
 
-Hi all,
+> Log messages are often consumed by log monitors, which mostly use
+> pattern matching to find messages they're interested in, so you have to
+> take some care when changing the messages the kernel spits out and you
+> have to make sure any change gets well notified so the distributions
+> can warn about it.
+> 
+> For this one, can we see a "before" and "after" message so we know
+> what's happening?
+> 
 
-Today's linux-next merge of the selinux tree got a conflict in:
+Mimi and James,
 
-  security/selinux/hooks.c
+My suggestion was based on thinking that simplifying this by removing
+duplicate defines. Some messages are missing modules names, adding
+module name to them does change the messages.
 
-between commit:
+If using one pr_fmt for all modules changes the world and makes it
+difficult for log monitors, I would say it isn't a good change.
 
-  a20456aef80f ("selinux: fix typo in filesystem name")
+I will leave this totally up to Mimi to decide. Feel free to throw
+out my suggestion if it leads more trouble than help. :)
 
-from Linus' tree and commit:
+thanks,
+-- Shuah
 
-  4ca54d3d3022 ("security: selinux: allow per-file labeling for bpffs")
-
-from the selinux tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc security/selinux/hooks.c
-index ae891d712800,44f6f4e20cba..000000000000
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@@ -698,7 -701,8 +701,8 @@@ static int selinux_set_mnt_opts(struct=20
- =20
-  	if (!strcmp(sb->s_type->name, "debugfs") ||
-  	    !strcmp(sb->s_type->name, "tracefs") ||
- -	    !strcmp(sb->s_type->name, "binderfs") ||
- +	    !strcmp(sb->s_type->name, "binder") ||
-+ 	    !strcmp(sb->s_type->name, "bpf") ||
-  	    !strcmp(sb->s_type->name, "pstore"))
-  		sbsec->flags |=3D SE_SBGENFS;
- =20
-
---Sig_//+TgZ+HvOmgRa9/AjaIXjhj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5EgMwACgkQAVBC80lX
-0Gx69Af/dhdVp6t5LRp4/xZFS0/el+Mn5fKJK9YUfJkBANCOqMkdfm2Bh+FHaWzH
-k06M/rsAMAt3LzA6ceT2seOO/hA31z5trnQT/Vdh/tOdviSTXHM8w4aYE26aYWDk
-QVS/TdpKgDDIVLtHvC9D0YH9rBsGQQFxkNjeV8NsNbY12yu3JSTeBdk3i2E1Hs30
-0t0fzvXt3r+4QyCCXX/5i/aJKhr84WQWtGbpeLdBfCu+hciSBxW10LbGqMAJizk4
-cquK83PpZ0I19w16DowU/eAlBQu0a3qdPdkce9OAfqZEjqMcZ0fxpur/BgLNnSMd
-lwTrxRM5JML/9JesetLtuufhp7F70Q==
-=PEHO
------END PGP SIGNATURE-----
-
---Sig_//+TgZ+HvOmgRa9/AjaIXjhj--
