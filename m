@@ -2,192 +2,252 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54ACC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4441AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8054C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CDB21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="POlhJANY"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0FY3OSQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgBLQeX (ORCPT
+        id S1728656AbgBLQfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:34:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28945 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727439AbgBLQeX (ORCPT
+        Wed, 12 Feb 2020 11:35:44 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44365 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgBLQfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:34:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581525261;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XeLe0VqvdqoWiGR03rxndmykwmmXsnBvd6JZdgln7y4=;
-        b=POlhJANYimN8IanVDLDyKw5Vm92rElusmK1HDa36YIsL0TR/GUlzBc2rg+uPesIbsxFgNq
-        Ye3beJ3IcgEzFLVgIiqeovem1t5Hxl/cDuWjImWiBTaH/mLic/WIbAcMcp96kd9RVUGHb9
-        /t64QnwgNzPjBWffstFgO3V2dzmh5CY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-362-TgV48k-ROgqaZ5fnqyH9Sw-1; Wed, 12 Feb 2020 11:34:19 -0500
-X-MC-Unique: TgV48k-ROgqaZ5fnqyH9Sw-1
-Received: by mail-wm1-f70.google.com with SMTP id p26so933189wmg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:34:19 -0800 (PST)
+        Wed, 12 Feb 2020 11:35:43 -0500
+Received: by mail-qv1-f66.google.com with SMTP id n8so1182520qvg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:35:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ErEqPgupRH9qwXigutRb5nRU2tSqdRNtaUNrXot3qOY=;
+        b=0FY3OSQjod8BNoUEE6WvqGkSCWhPWM3K8BmwU/xQaGFTN8p9yFt2mHhxAOX75eeZyk
+         DVMjTyvPE8pvY2ZqP64Brq457RoQ6jYk1pKorcRKj8GJJD4sHvICh9n1uJUGRnV3Vr5V
+         sdn784FgS9mZtHy5hvfaIwQJDVfTOIW7bbCmJNTVPmRvAICfTREbDWXf59G0ZS6x4XhA
+         Nsks2kBCro1QtPJaPIAuk3GR4iKPqaX6AJyEWTYDqXAP4MJbuMBYWExSjtJj00capEQR
+         1/gvmrdfzH2Jxgq9V98XVBX8JND00CcKBROg6UOCiB7q62uZdSEL9KTIsMjoEIyT6TTD
+         YQ3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XeLe0VqvdqoWiGR03rxndmykwmmXsnBvd6JZdgln7y4=;
-        b=OjWyQu5detZaRq6d0k5Fi+XjIdaGjZKAy1akxa+wXdspenLj4Av+GPmFOu+HH5Q26a
-         aAsGPLmjMdWWItBIzcBH/4UTTGPOlUKQgVIq3h7e4C4wZlG33lDwWrsMMJ7XVC3A/S2U
-         W2+qHCFIKEZFXdkHyMxzXK6HM64ZLp5Bx5YY50wQWMaWS9/w4QfQcnjY/4bwF2fz7GE2
-         8GpzCS4BXdJ4V+CY5eieKYpJ8MYG+hLBhmbdA6KnvyvTSU3wpsHmRXN8/uErdUC2L6Hh
-         ZES5QHXrnDWaHSslV7qTNIMhkY6erMUF15/CKHCRCIrVAxoFrCv03nNsQ3HIzKPXFaxd
-         AY4Q==
-X-Gm-Message-State: APjAAAWZ+MDKtukloH3BAe5vinXsn7DPths49CiQqVVgnAZFe1dI/SSs
-        Bg4psMIY/+okX4mJnnQn8HC+WDstnfQE+7/n/2hvmlqG5rJq4SQ59U31NCn90U0FFVur7hF6qW8
-        PrGt9y6uYN/KpM4sY3z6x68AF
-X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr13953431wmj.72.1581525258505;
-        Wed, 12 Feb 2020 08:34:18 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwzR9LoAw0PLm1NN8TKVgvBlTdyQ4+WmwfyRs+Y2SnZ+YimN+K/oDsDwHuGaXIU12ce2wCypA==
-X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr13953400wmj.72.1581525258231;
-        Wed, 12 Feb 2020 08:34:18 -0800 (PST)
-Received: from eperezma.remote.csb (153.143.221.87.dynamic.jazztel.es. [87.221.143.153])
-        by smtp.gmail.com with ESMTPSA id a16sm1172111wrt.30.2020.02.12.08.34.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ErEqPgupRH9qwXigutRb5nRU2tSqdRNtaUNrXot3qOY=;
+        b=AOglLcGYQ9baEyAb+LVMs9Y9F7ew8hwAI23LWpkN9fNjNm7qq8i+X5CnEJ45u6P6aJ
+         TUeGH8AwDPnTk9VQi92AkrcMnIWR4yTTe6BNgtahefSUMQzR0MmOupoc6LZBoqs4MKjr
+         RlWfbjua5zDpAl9q8WlA8tz6xOiGVVRyQm47B1f7+3dhsZwS/AI/slxwqi9LCEbiTzJs
+         +YasG/kspKbiMlt3sRRf9Y4RCqI5WLkiPoKQAOTVqyNcgxOfH/eCxDJAMY10pIPgdpth
+         tDmntl6GToXLyhgKn2bGSciJB8kJt9mWqkKysfhMTSrQi63rc5y1/N+G31Jd4iIzYbY+
+         bh4Q==
+X-Gm-Message-State: APjAAAXZJfkgStgmGQdVRpFG/q1FHmAzEfqUN2rkri5GOr1VSndYtTTZ
+        6RLMhoOiwhyWKoLdKx7S8fPDqQ==
+X-Google-Smtp-Source: APXvYqwUxExxKSsaixRm6IofspdH+NUspdRSMq4om9NxqPMEW40z/llLitVs6aIvlb+AwVfAPgGiKg==
+X-Received: by 2002:a05:6214:108a:: with SMTP id o10mr7757297qvr.246.1581525342222;
+        Wed, 12 Feb 2020 08:35:42 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:26be])
+        by smtp.gmail.com with ESMTPSA id v78sm469947qkb.48.2020.02.12.08.35.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 08:34:17 -0800 (PST)
-Message-ID: <50a79c3491ac483583c97df2fac29e2c3248fdea.camel@redhat.com>
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger
- random crashes in KVM guests after reboot
-From:   Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Date:   Wed, 12 Feb 2020 17:34:16 +0100
-In-Reply-To: <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
-References: <20200107042401-mutt-send-email-mst@kernel.org>
-         <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
-         <20200107065434-mutt-send-email-mst@kernel.org>
-         <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
-         <20200120012724-mutt-send-email-mst@kernel.org>
-         <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
-         <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
-         <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
-         <20200206171349-mutt-send-email-mst@kernel.org>
-         <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
-         <20200207025806-mutt-send-email-mst@kernel.org>
-         <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
-         <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
-         <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
-         <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
-         <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-6.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 12 Feb 2020 08:35:41 -0800 (PST)
+Date:   Wed, 12 Feb 2020 11:35:40 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Rik van Riel <riel@surriel.com>, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200212163540.GA180867@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org>
+ <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-11 at 14:13 +0100, Christian Borntraeger wrote:
+On Tue, Feb 11, 2020 at 03:44:38PM -0800, Andrew Morton wrote:
+> On Tue, 11 Feb 2020 14:31:01 -0500 Johannes Weiner <hannes@cmpxchg.org> wrote:
 > 
-> On 11.02.20 14:04, Eugenio Pérez wrote:
-> > On Mon, 2020-02-10 at 12:01 +0100, Christian Borntraeger wrote:
-> > > On 10.02.20 10:47, Eugenio Perez Martin wrote:
-> > > > Hi Christian.
+> > On Tue, Feb 11, 2020 at 02:05:38PM -0500, Rik van Riel wrote:
+> > > On Tue, 2020-02-11 at 12:55 -0500, Johannes Weiner wrote:
+> > > > The VFS inode shrinker is currently allowed to reclaim inodes with
+> > > > populated page cache. As a result it can drop gigabytes of hot and
+> > > > active page cache on the floor without consulting the VM (recorded as
+> > > > "inodesteal" events in /proc/vmstat).
 > > > > 
-> > > > I'm not able to reproduce the failure with eccb852f1fe6bede630e2e4f1a121a81e34354ab commit. Could you add more
-> > > > data?
-> > > > Your configuration (libvirt or qemu line), and host's dmesg output if any?
-> > > > 
-> > > > Thanks!
+> > > > This causes real problems in practice. Consider for example how the
+> > > > VM
+> > > > would cache a source tree, such as the Linux git tree. As large parts
+> > > > of the checked out files and the object database are accessed
+> > > > repeatedly, the page cache holding this data gets moved to the active
+> > > > list, where it's fully (and indefinitely) insulated from one-off
+> > > > cache
+> > > > moving through the inactive list.
 > > > 
-> > > If it was not obvious, this is on s390x, a big endian system.
+> > > > This behavior of invalidating page cache from the inode shrinker goes
+> > > > back to even before the git import of the kernel tree. It may have
+> > > > been less noticeable when the VM itself didn't have real workingset
+> > > > protection, and floods of one-off cache would push out any active
+> > > > cache over time anyway. But the VM has come a long way since then and
+> > > > the inode shrinker is now actively subverting its caching strategy.
 > > > 
+> > > Two things come to mind when looking at this:
+> > > - highmem
+> > > - NUMA
+> > > 
+> > > IIRC one of the reasons reclaim is done in this way is
+> > > because a page cache page in one area of memory (highmem,
+> > > or a NUMA node) can end up pinning inode slab memory in
+> > > another memory area (normal zone, other NUMA node).
 > > 
-> > Hi Christian. Thank you very much for your fast responses.
-> > 
-> > Could you try this patch on top of eccb852f1fe6bede630e2e4f1a121a81e34354ab?
+> > That's a good point, highmem does ring a bell now that you mention it.
 > 
-> I still get 
-> [   43.665145] Guest moved used index from 0 to 289
-> after some reboots.
+> Yup, that's why this mechanism exists.  Here:
 > 
+> https://marc.info/?l=git-commits-head&m=103646757213266&w=2
+
+Ah, thanks for digging that up, I did not know that.
+
+> > If we still care, I think this could be solved by doing something
+> > similar to what we do with buffer_heads_over_limit: allow a lowmem
+> > allocation to reclaim page cache inside the highmem zone if the bhs
+> > (or inodes in this case) have accumulated excessively.
 > 
-> > Thanks!
-> > 
-> > From 71d0f9108a18aa894cc0c0c1c7efbad39f465a27 Mon Sep 17 00:00:00 2001
-> > From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <
-> > eperezma@redhat.com>
-> > Date: Tue, 11 Feb 2020 13:19:10 +0100
-> > Subject: [PATCH] vhost: fix return value of vhost_get_vq_desc
-> > 
-> > Before of the batch change, it was the chain's head. Need to keep that
-> > way or we will not be able to free a chain of descriptors.
-> > 
-> > Fixes: eccb852f1fe6 ("vhost: batching fetches")
-> > ---
-> >  drivers/vhost/vhost.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > index b5a51b1f2e79..fc422c3e5c08 100644
-> > --- a/drivers/vhost/vhost.c
-> > +++ b/drivers/vhost/vhost.c
-> > @@ -2409,12 +2409,11 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
-> >  			*out_num += ret;
-> >  		}
-> >  
-> > -		ret = desc->id;
-> > -
-> >  		if (!(desc->flags & VRING_DESC_F_NEXT))
-> >  			break;
-> >  	}
-> >  
-> > +	ret = vq->descs[vq->first_desc].id;
-> >  	vq->first_desc = i + 1;
-> >  
-> >  	return ret;
-> > 
+> Well, reclaiming highmem pagecache at random would be a painful way to
+> reclaim lowmem inodes.  Better to pick an inode then shoot down all its
+> pagecache.  Perhaps we could take its pagecache's aging into account.
 
-Sorry, still not able to reproduce the issue.
+That reminds me of trying to correlate inode pages in reclaim to batch
+the cache tree lock, slab page objects in the shrinker to free whole
+pages etc. We never managed to actually do that. :-)
 
-Could we try to disable all the vhost features?
+> Testing this will be a challenge, but the issue was real - a 7GB
+> highmem machine isn't crazy and I expect the inode has become larger
+> since those days.
 
-Thanks!
+Since the cache purging code was written for highmem scenarios, how
+about making it specific to CONFIG_HIGHMEM at least?
 
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index 661088ae6dc7..08f6d2ccb697 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -250,11 +250,11 @@ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
-        } while (0)
+That way we improve the situation for the more common setups, without
+regressing highmem configurations. And if somebody wanted to improve
+the CONFIG_HIGHMEM behavior as well, they could still do so.
+
+Somethig like the below delta on top of my patch?
+
+---
+ fs/inode.c         | 44 ++++++++++++++++++++++++++++++++++++++++----
+ include/linux/fs.h |  5 +++++
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/fs/inode.c b/fs/inode.c
+index 575b780fa9bb..45b2abd4fef6 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -454,6 +454,18 @@ bool inode_add_lru(struct inode *inode)
+ 	return true;
+ }
  
- enum {
--       VHOST_FEATURES = (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) |
--                        (1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
--                        (1ULL << VIRTIO_RING_F_EVENT_IDX) |
--                        (1ULL << VHOST_F_LOG_ALL) |
--                        (1ULL << VIRTIO_F_ANY_LAYOUT) |
-+       VHOST_FEATURES = /* (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) | */
-+                        /* (1ULL << VIRTIO_RING_F_INDIRECT_DESC) | */
-+                        /* (1ULL << VIRTIO_RING_F_EVENT_IDX) | */
-+                        /* (1ULL << VHOST_F_LOG_ALL) | */
-+                        /* (1ULL << VIRTIO_F_ANY_LAYOUT) | */
-                         (1ULL << VIRTIO_F_VERSION_1)
- };
++/*
++ * Usually, inodes become reclaimable when they are no longer
++ * referenced and their page cache has been reclaimed. The following
++ * API allows the VM to communicate cache population state to the VFS.
++ *
++ * However, on CONFIG_HIGHMEM we can't wait for the page cache to go
++ * away: cache pages allocated in a large highmem zone could pin
++ * struct inode memory allocated in relatively small lowmem zones. So
++ * when CONFIG_HIGHMEM is enabled, we tie cache to the inode lifetime.
++ */
++
++#ifndef CONFIG_HIGHMEM
+ /**
+  * inode_pages_set - mark the inode as holding page cache
+  * @inode: the inode whose first cache page was just added
+@@ -512,6 +524,7 @@ void inode_pages_clear(struct inode *inode)
+ 
+ 	spin_unlock(&inode->i_lock);
+ }
++#endif /* !CONFIG_HIGHMEM */
+ 
+ /**
+  * inode_sb_list_add - add inode to the superblock list of inodes
+@@ -826,16 +839,39 @@ static enum lru_status inode_lru_isolate(struct list_head *item,
+ 	}
+ 
+ 	/*
+-	 * Populated inodes shouldn't be on the shrinker LRU, but they
+-	 * can be briefly visible when a new page is added to an inode
+-	 * that was already linked but inode_pages_set() hasn't run
+-	 * yet to move them off.
++	 * Usually, populated inodes shouldn't be on the shrinker LRU,
++	 * but they can be briefly visible when a new page is added to
++	 * an inode that was already linked but inode_pages_set()
++	 * hasn't run yet to move them off.
++	 *
++	 * The other exception is on HIGHMEM systems: highmem cache
++	 * can pin lowmem struct inodes, and we might be in dire
++	 * straits in the lower zones. Purge cache to free the inode.
+ 	 */
+ 	if (inode_has_buffers(inode) || !mapping_empty(&inode->i_data)) {
++#ifdef CONFIG_HIGHMEM
++		__iget(inode);
++		spin_unlock(&inode->i_lock);
++		spin_unlock(lru_lock);
++		if (remove_inode_buffers(inode)) {
++			unsigned long reap;
++			reap = invalidate_mapping_pages(&inode->i_data, 0, -1);
++			if (current_is_kswapd())
++				__count_vm_events(KSWAPD_INODESTEAL, reap);
++			else
++				__count_vm_events(PGINODESTEAL, reap);
++			if (current->reclaim_state)
++				current->reclaim_state->reclaimed_slab += reap;
++		}
++		iput(inode);
++		spin_lock(lru_lock);
++		return LRU_RETRY;
++#else
+ 		list_lru_isolate(lru, &inode->i_lru);
+ 		spin_unlock(&inode->i_lock);
+ 		this_cpu_dec(nr_unused);
+ 		return LRU_REMOVED;
++#endif
+ 	}
+ 
+ 	WARN_ON(inode->i_state & I_NEW);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index a98d9dee39f4..abdb3fd3432f 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3106,8 +3106,13 @@ static inline void remove_inode_hash(struct inode *inode)
+ 		__remove_inode_hash(inode);
+ }
+ 
++#ifndef CONFIG_HIGHMEM
+ extern void inode_pages_set(struct inode *inode);
+ extern void inode_pages_clear(struct inode *inode);
++#else
++static inline void inode_pages_set(struct inode *inode) {}
++static inline void inode_pages_clear(struct inode *inode) {}
++#endif
+ 
+ extern void inode_sb_list_add(struct inode *inode);
+ 
+-- 
+2.24.1
 
