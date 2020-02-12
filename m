@@ -2,336 +2,260 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FED2C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BCEC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2A221569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B569D20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m8nC0OSE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gL0FnKJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgBLSc4 (ORCPT
+        id S1728887AbgBLSfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:32:56 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:39424 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbgBLScz (ORCPT
+        Wed, 12 Feb 2020 13:35:43 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34647 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLSfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:32:55 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CI8VLT102933;
-        Wed, 12 Feb 2020 18:31:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=nz7vd3fyzwcyP/5qHs4DQXgU0UFGi/84mrF3oEBKNv4=;
- b=m8nC0OSEGT6rx/LqZh+8FrrfjYNJUGNcfIZ3ezzAPQzJmA4lizlq/ixtUyTFp6CJy78H
- 8kxazmEzLtuFKC0anF8zXv3trhKrzRqdFkD3saTECI/RUEnHyrfjwCq7lws+wgrznCVP
- yuI1jKraaWXGObjQrSOlmTF9GS5fPFZUR/NB2NPQW+xdJchCxF0B/l3Orp3UJ61mKqOh
- 9shbJfHQ/blh5tfXxSUqXLbPKJy+JV9eY6ES5vcIW9ItPjq4Np28tFPtHg37+s+X1Hr0
- eB4HtrBpvZ9ZexCEq5o2v9fl9NrUYHcqCYcOY+ouA+U5wTtY4GkSk0PEKot4g42J8Jwx EQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2y2jx6d23e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Feb 2020 18:31:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CIRF7c048321;
-        Wed, 12 Feb 2020 18:31:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2y4kagp4km-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Feb 2020 18:31:40 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01CIVXHa010665;
-        Wed, 12 Feb 2020 18:31:33 GMT
-Received: from localhost (/10.159.151.237)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Feb 2020 10:31:32 -0800
-Date:   Wed, 12 Feb 2020 10:31:29 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] block: Add support for REQ_ALLOCATE flag
-Message-ID: <20200212183129.GO6874@magnolia>
-References: <158132703141.239613.3550455492676290009.stgit@localhost.localdomain>
- <158132723311.239613.5269033996109738831.stgit@localhost.localdomain>
- <20200212165837.GL6874@magnolia>
- <092f2dc2-7bb7-d5dd-9a54-e9430940ece9@virtuozzo.com>
+        Wed, 12 Feb 2020 13:35:42 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j16so2964256otl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:35:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9KNdQTzecz/SJfMs4GgqFV3ANdv8gWp3Rod0UgNCFVs=;
+        b=gL0FnKJNJiJNa9dSHzfhhNO8SJ4Pvmvg5qHjXBm14UpYgAz9qO/shxHONMQmDjm/F7
+         CVgI1kGgADGkKWBRA0XCry6kkiADNAVNomJaW45cly2aK/nPwXtTYH2h+Fk+XIfIStRg
+         GMneMhvlMmKABuSc4cuohZ9MurZaBflu5tAvvfGfQz6ooYomObrajNfY0EcNqD5pLuJz
+         cnTw1K05XqPopYYhXXTldVau4/73meozj+jdbfnVzojvtHrd5HOJW5kV5/c3LIOuqv4h
+         0kiwWAwb4J4FS2Qg2htzghvR7a//KW24+EuP5JaPfs33cLv1XBVp1W+u8WeCDZklnWNv
+         xG0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9KNdQTzecz/SJfMs4GgqFV3ANdv8gWp3Rod0UgNCFVs=;
+        b=EZi06dRWIo6yzoPSP0TKrk6yGxAe2voBWpQVAPPjR8z33QqWHedUG4Cdq8h2H6kjeq
+         DQaQ5ILkRU7Z6f25BkH/KCedsNCJ5FKX5tmsWfXLMyzJPKLhyKzcRWUx6viqKFo7Bojs
+         CWUUteL2++6PWmiZncgdWq0/kLyPvjlAP9GGmSTq1XrUagcJTA2S6GUnyRlCrgKLb8Ba
+         TI5ncTHQBatq1xM4Hs6wClAArdjmOfyK58NR8+6zjtPzb8/3ISFMDciy1uRJRY+3q6kl
+         dhhQjP0CJZdroyjvQV97Ni8NSkLbBpGT68+KUV9wuMQ1u5XbiyvhPWiA36oThs9aOovn
+         N4cg==
+X-Gm-Message-State: APjAAAXamPRb/18Sb9uYaacs8BpO+nRADYhEwDbuRR74nxwZRPWJsx+B
+        7SV4XDex6fz/y9oTHHxK0nM=
+X-Google-Smtp-Source: APXvYqwUt8l78PKdBjAN9Sm0spQ3EBv7VF5bXaxMvmVuCBKXVYP4jn/2xFRFH/2gRqt+vQHJcJEVug==
+X-Received: by 2002:a9d:6f0d:: with SMTP id n13mr10594922otq.165.1581532540729;
+        Wed, 12 Feb 2020 10:35:40 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id y6sm412731oti.44.2020.02.12.10.35.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 10:35:40 -0800 (PST)
+Date:   Wed, 12 Feb 2020 11:35:38 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>, asb@lowrisc.org,
+        linux-riscv@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: Status of building and booting the RISCV64 kernel with Clang
+Message-ID: <20200212183538.GA34230@ubuntu-m2-xlarge-x86>
+References: <20200212054001.GA27071@ubuntu-m2-xlarge-x86>
+ <CAKwvOdnTW1AjB8nVKFd9i=ur88QtEp7taT2jo8R2-FXdBzZthQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <092f2dc2-7bb7-d5dd-9a54-e9430940ece9@virtuozzo.com>
+In-Reply-To: <CAKwvOdnTW1AjB8nVKFd9i=ur88QtEp7taT2jo8R2-FXdBzZthQ@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
- suspectscore=2 mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002120132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=2 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002120132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 08:33:52PM +0300, Kirill Tkhai wrote:
-> Hi, Darrick,
+On Wed, Feb 12, 2020 at 10:29:10AM -0800, 'Nick Desaulniers' via Clang Built Linux wrote:
+> + Palmer, Alex
 > 
-> On 12.02.2020 19:58, Darrick J. Wong wrote:
-> > On Mon, Feb 10, 2020 at 12:33:53PM +0300, Kirill Tkhai wrote:
-> >> This adds support for REQ_ALLOCATE extension of REQ_OP_WRITE_ZEROES
-> >> operation, which encourages a block device driver to just allocate
-> >> blocks (or mark them allocated) instead of actual blocks zeroing.
-> >> REQ_ALLOCATE is aimed to be used for network filesystems providing
-> >> a block device interface. Also, block devices, which map a file
-> >> on other filesystem (like loop), may use this for less fragmentation
-> >> and batching fallocate() requests. Hypervisors like QEMU may
-> >> introduce optimizations of clusters allocations based on this.
-> >>
-> >> BLKDEV_ZERO_ALLOCATE is a new corresponding flag for
-> >> blkdev_issue_zeroout().
-> >>
-> >> Stacking devices start from zero max_allocate_sectors limit for now,
-> >> and the support is going to be implemented separate for each device
-> >> in the future.
-> >>
-> >> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> >> Reviewed-by: Bob Liu <bob.liu@oracle.com>
-> >> ---
-> >>  block/blk-lib.c           |   17 ++++++++++-------
-> >>  block/blk-settings.c      |    4 ++++
-> >>  fs/block_dev.c            |    4 ++++
-> >>  include/linux/blk_types.h |    5 ++++-
-> >>  include/linux/blkdev.h    |   13 ++++++++++---
-> >>  5 files changed, 32 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/block/blk-lib.c b/block/blk-lib.c
-> >> index 3e38c93cfc53..9cd6f86523ba 100644
-> >> --- a/block/blk-lib.c
-> >> +++ b/block/blk-lib.c
-> >> @@ -214,7 +214,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
-> >>  		struct bio **biop, unsigned flags)
-> >>  {
-> >>  	struct bio *bio = *biop;
-> >> -	unsigned int max_write_zeroes_sectors;
-> >> +	unsigned int max_write_zeroes_sectors, req_flags = 0;
-> >>  	struct request_queue *q = bdev_get_queue(bdev);
-> >>  
-> >>  	if (!q)
-> >> @@ -224,18 +224,21 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
-> >>  		return -EPERM;
-> >>  
-> >>  	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
-> >> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
-> >> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, flags);
-> >>  
-> >>  	if (max_write_zeroes_sectors == 0)
-> >>  		return -EOPNOTSUPP;
-> >>  
-> >> +	if (flags & BLKDEV_ZERO_NOUNMAP)
-> >> +		req_flags |= REQ_NOUNMAP;
-> >> +	if (flags & BLKDEV_ZERO_ALLOCATE)
-> >> +		req_flags |= REQ_ALLOCATE|REQ_NOUNMAP;
-> >> +
-> >>  	while (nr_sects) {
-> >>  		bio = blk_next_bio(bio, 0, gfp_mask);
-> >>  		bio->bi_iter.bi_sector = sector;
-> >>  		bio_set_dev(bio, bdev);
-> >> -		bio->bi_opf = REQ_OP_WRITE_ZEROES;
-> >> -		if (flags & BLKDEV_ZERO_NOUNMAP)
-> >> -			bio->bi_opf |= REQ_NOUNMAP;
-> >> +		bio->bi_opf = REQ_OP_WRITE_ZEROES | req_flags;
-> >>  
-> >>  		if (nr_sects > max_write_zeroes_sectors) {
-> >>  			bio->bi_iter.bi_size = max_write_zeroes_sectors << 9;
-> >> @@ -362,7 +365,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
-> >>  	sector_t bs_mask;
-> >>  	struct bio *bio;
-> >>  	struct blk_plug plug;
-> >> -	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
-> >> +	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, flags);
-> >>  
-> >>  	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
-> >>  	if ((sector | nr_sects) & bs_mask)
-> >> @@ -391,7 +394,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
-> >>  			try_write_zeroes = false;
-> >>  			goto retry;
-> >>  		}
-> >> -		if (!bdev_write_zeroes_sectors(bdev, 0)) {
-> >> +		if (!bdev_write_zeroes_sectors(bdev, flags)) {
-> >>  			/*
-> >>  			 * Zeroing offload support was indicated, but the
-> >>  			 * device reported ILLEGAL REQUEST (for some devices
-> >> diff --git a/block/blk-settings.c b/block/blk-settings.c
-> >> index c8eda2e7b91e..8d5df9d37239 100644
-> >> --- a/block/blk-settings.c
-> >> +++ b/block/blk-settings.c
-> >> @@ -48,6 +48,7 @@ void blk_set_default_limits(struct queue_limits *lim)
-> >>  	lim->chunk_sectors = 0;
-> >>  	lim->max_write_same_sectors = 0;
-> >>  	lim->max_write_zeroes_sectors = 0;
-> >> +	lim->max_allocate_sectors = 0;
-> >>  	lim->max_discard_sectors = 0;
-> >>  	lim->max_hw_discard_sectors = 0;
-> >>  	lim->discard_granularity = 0;
-> >> @@ -83,6 +84,7 @@ void blk_set_stacking_limits(struct queue_limits *lim)
-> >>  	lim->max_dev_sectors = UINT_MAX;
-> >>  	lim->max_write_same_sectors = UINT_MAX;
-> >>  	lim->max_write_zeroes_sectors = UINT_MAX;
-> >> +	lim->max_allocate_sectors = 0;
-> >>  }
-> >>  EXPORT_SYMBOL(blk_set_stacking_limits);
-> >>  
-> >> @@ -506,6 +508,8 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
-> >>  					b->max_write_same_sectors);
-> >>  	t->max_write_zeroes_sectors = min(t->max_write_zeroes_sectors,
-> >>  					b->max_write_zeroes_sectors);
-> >> +	t->max_allocate_sectors = min(t->max_allocate_sectors,
-> >> +					b->max_allocate_sectors);
-> >>  	t->bounce_pfn = min_not_zero(t->bounce_pfn, b->bounce_pfn);
-> >>  
-> >>  	t->seg_boundary_mask = min_not_zero(t->seg_boundary_mask,
-> >> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> >> index 69bf2fb6f7cd..1ffef894b3bd 100644
-> >> --- a/fs/block_dev.c
-> >> +++ b/fs/block_dev.c
-> >> @@ -2122,6 +2122,10 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
-> >>  		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
-> >>  					     GFP_KERNEL, BLKDEV_ZERO_NOFALLBACK);
-> >>  		break;
-> >> +	case FALLOC_FL_KEEP_SIZE:
-> >> +		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
-> >> +			GFP_KERNEL, BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
-> > 
-> > I think this should be ^^^ indented to match the other calls.
-> 
-> The only idea I have about this is something like the below. But the below is over 90 char...
-> 
-> 		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
-> 					     GFP_KERNEL,
-> 					     BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
-> 
-> Could you please clarify what you mean?
+> On Tue, Feb 11, 2020 at 9:40 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Hi all,
+> >
+> > We (ClangBuiltLinux) have started looking at building the RISCV64
+> > kernel with clang and booting it in QEMU. I thought it would be nice to
+> > give some sort of status update and go over the issues we have notice
+> > so far and see what people's thoughts are for solving them. If this
+> > email is unwelcome, apologies! This testing was done with clang-11 (tip
+> > of tree) and QEMU 4.2.0 with this rootfs (built with
+> > buildroot-2019.02.9):
+> >
+> > https://github.com/nathanchance/continuous-integration/blob/21ea056022f9cf1d62b7f805c3862daf9d89736f/images/riscv/rootfs.cpio
+> >
+> >
+> >
+> > Outstanding issues on the LLVM side:
+> >
+> > 1. LLVM output over -mno-save-restore (https://github.com/ClangBuiltLinux/linux/issues/804)
+> >
+> > The kernel passes -mno-save-restore to KBUILD_CFLAGS which causes a ton
+> > of warning spam from LLVM:
+> >
+> > '-save-restore' is not a recognized feature for this target (ignoring feature)
+> >
+> > This has been reported upstream as https://llvm.org/pr44853 but it could
+> > easily be fixed in the kernel by guarding the call against
+> > CONFIG_CC_IS_CLANG (although this is obviously fragile if the ABI ever
+> > changes to -msave-restore by default).
 
-I mostly meant that the indent for the nth lines ought to be more than a
-single indent to make it easier to scan through the code, but you're
-right, the kernel indentation style is uglier.  I could suggest
-something like this, which actually does fit:
+And this issue has been fixed:
+https://github.com/llvm/llvm-project/commit/07f7c00208b393296f8f27d6cd3cec2b11d86fd8
 
-	case FALLOC_FL_KEEP_SIZE:
-		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
-				GFP_KERNEL,
-				BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
-		break;
-
-But that's apparently apocryphal. :/
-
---D
-
-> >>  	case FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE | FALLOC_FL_NO_HIDE_STALE:
-> >>  		error = blkdev_issue_discard(bdev, start >> 9, len >> 9,
-> >>  					     GFP_KERNEL, 0);
-> >> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-> >> index 70254ae11769..86accd2caa4e 100644
-> >> --- a/include/linux/blk_types.h
-> >> +++ b/include/linux/blk_types.h
-> >> @@ -335,7 +335,9 @@ enum req_flag_bits {
-> >>  
-> >>  	/* command specific flags for REQ_OP_WRITE_ZEROES: */
-> >>  	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
-> >> -
-> >> +	__REQ_ALLOCATE,		/* only notify about allocated blocks,
-> >> +				 * and do not actually zero them
-> > 
-> > "only notify"?  Is someone getting a notification?  Or are we simply
-> > "notifying" the device that it must ensure allocated blocks?
-> > 
-> > If it's that last one, then perhaps this should be reworded:
-> > 
-> > /*
-> >  * Ensure the LBA range is backed by physical storage
-> >  * without writing zeroes to the blocks.
-> >  */
-> 
-> Sounds good.
->  
-> >> +				 */
-> >>  	__REQ_HIPRI,
-> >>  
-> >>  	/* for driver use */
-> >> @@ -362,6 +364,7 @@ enum req_flag_bits {
-> >>  #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
-> >>  
-> >>  #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
-> >> +#define REQ_ALLOCATE		(1ULL << __REQ_ALLOCATE)
-> >>  #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
-> >>  
-> >>  #define REQ_DRV			(1ULL << __REQ_DRV)
-> >> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> >> index 55a714161684..40707f980a2e 100644
-> >> --- a/include/linux/blkdev.h
-> >> +++ b/include/linux/blkdev.h
-> >> @@ -336,6 +336,7 @@ struct queue_limits {
-> >>  	unsigned int		max_hw_discard_sectors;
-> >>  	unsigned int		max_write_same_sectors;
-> >>  	unsigned int		max_write_zeroes_sectors;
-> >> +	unsigned int		max_allocate_sectors;
-> >>  	unsigned int		discard_granularity;
-> >>  	unsigned int		discard_alignment;
-> >>  
-> >> @@ -990,6 +991,8 @@ static inline struct bio_vec req_bvec(struct request *rq)
-> >>  static inline unsigned int blk_queue_get_max_write_zeroes_sectors(
-> >>  		struct request_queue *q, unsigned int op_flags)
-> >>  {
-> >> +	if (op_flags & REQ_ALLOCATE)
-> >> +		return q->limits.max_allocate_sectors;
-> >>  	return q->limits.max_write_zeroes_sectors;
-> >>  }
-> >>  
-> >> @@ -1226,6 +1229,7 @@ extern int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
-> >>  
-> >>  #define BLKDEV_ZERO_NOUNMAP	(1 << 0)  /* do not free blocks */
-> >>  #define BLKDEV_ZERO_NOFALLBACK	(1 << 1)  /* don't write explicit zeroes */
-> >> +#define BLKDEV_ZERO_ALLOCATE	(1 << 2)  /* allocate range of blocks */
-> >>  
-> >>  extern int __blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
-> >>  		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop,
-> >> @@ -1430,10 +1434,13 @@ static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev,
-> >>  {
-> >>  	struct request_queue *q = bdev_get_queue(bdev);
-> >>  
-> >> -	if (q)
-> >> -		return q->limits.max_write_zeroes_sectors;
-> >> +	if (!q)
-> >> +		return 0;
-> >>  
-> >> -	return 0;
-> >> +	if (flags & BLKDEV_ZERO_ALLOCATE)
-> >> +		return q->limits.max_allocate_sectors;
-> >> +	else
-> >> +		return q->limits.max_write_zeroes_sectors;
-> >>  }
-> >>  
-> >>  static inline enum blk_zoned_model bdev_zoned_model(struct block_device *bdev)
-> >>
-> >>
-> 
-> Thanks,
-> Kirill
+> > 2. -fPIC causes issues when using Clang + GNU as (https://github.com/ClangBuiltLinux/linux/issues/865)
+> >
+> > The kernel on a whole builds with -fno-integrated-as so we fall back to
+> > GNU as when assembling. Kernel modules are built with -fPIC and fail to
+> > build with a bunch of assembler errors like so (seen with binutils
+> > 2.31.1 and ToT):
+> >
+> > /tmp/flexfilelayout-2d0cdc.s:359: Error: bad expression
+> > /tmp/flexfilelayout-2d0cdc.s:359: Error: illegal operands `auipc a0,%got_pcrel_hi(mem_map)'
+> > /tmp/flexfilelayout-2d0cdc.s:367: Error: bad expression
+> > /tmp/flexfilelayout-2d0cdc.s:367: Error: illegal operands `auipc a2,%got_pcrel_hi(pfn_base)'
+> > /tmp/flexfilelayout-2d0cdc.s:374: Error: bad expression
+> > /tmp/flexfilelayout-2d0cdc.s:374: Error: illegal operands `auipc a3,%got_pcrel_hi(va_pa_offset)'
+> >
+> > This has been reported upstream as https://llvm.org/pr44854. The way to
+> > work around this in the kernel is to just disable CONFIG_MODULES (which
+> > is a big hammer but that obviously won't be sent upstream in any form).
+> >
+> >
+> >
+> >
+> > Outstanding issues on the kernel side:
+> >
+> > 1. -Wuninitialized warnings around local register variables
+> >
+> > There are a few warnings around local "register" variables, which are
+> > uninitialized when using clang:
+> >
+> > In file included from ../arch/riscv/kernel/asm-offsets.c:10:
+> > In file included from ../include/linux/sched.h:12:
+> > ../arch/riscv/include/asm/current.h:30:9: warning: variable 'tp' is uninitialized when used here [-Wuninitialized]
+> >         return tp;
+> >                ^~
+> > ../arch/riscv/include/asm/current.h:29:33: note: initialize the variable 'tp' to silence this warning
+> >         register struct task_struct *tp __asm__("tp");
+> >                                        ^
+> >                                         = NULL
+> > 1 warning generated.
+> >
+> > ../arch/riscv/kernel/process.c:112:19: warning: variable 'gp' is uninitialized when used here [-Wuninitialized]
+> >                 childregs->gp = gp;
+> >                                 ^~
+> > ../arch/riscv/kernel/process.c:110:34: note: initialize the variable 'gp' to silence this warning
+> >                 const register unsigned long gp __asm__ ("gp");
+> >                                                ^
+> >                                                 = 0
+> > 1 warning generated.
+> >
+> > ../arch/riscv/kernel/stacktrace.c:34:8: warning: variable 'current_sp' is uninitialized when used here [-Wuninitialized]
+> >                 sp = current_sp;
+> >                      ^~~~~~~~~~
+> > ../arch/riscv/kernel/stacktrace.c:32:42: note: initialize the variable 'current_sp' to silence this warning
+> >                 const register unsigned long current_sp __asm__ ("sp");
+> >                                                        ^
+> >                                                         = 0
+> > 1 warning generated.
+> >
+> > The way to solve these is to make these register variables global, where
+> > they are properly initialized and work. This has been done in the kernel
+> > a few times:
+> >
+> > fe92da0f355e ("MIPS: Changed current_thread_info() to an equivalent supported by both clang and GCC")
+> > 3337a10e0d0c ("arm64: LLVMLinux: Add current_stack_pointer() for arm64")
+> > 786248705ecf ("arm64: LLVMLinux: Calculate current_thread_info from current_stack_pointer")
+> > 0abc08baf2dd ("ARM: 8170/1: Add global named register current_stack_pointer for ARM")
+> > f6c9cbf091a4 ("ARM: 8173/1: Calculate current_thread_info from current_stack_pointer")
+> >
+> > The LLVM community has rejected adopting GCC's behavior of allowing
+> > local register variables because it would seriously complicate the
+> > register allocator; the full discussion can be viewed here:
+> > http://lists.llvm.org/pipermail/llvm-dev/2014-March/071472.html
+> >
+> > This is the diff I am currently working with; I am not sure of any side
+> > effects aside from two that I will list below.
+> >
+> > https://gist.github.com/b5fda253a243127736fd2ac5d317dcdd
+> >
+> >
+> >
+> > Booting in QEMU:
+> >
+> > This is where things get interesting... The kernel does not start at all
+> > when the registers are purely local. It does start when the tp register
+> > is moved globally (arch/riscv/include/asm/current.h diff above) but it
+> > does not finish getting to userspace. Additionally, the diff in
+> >  -s ARCH=riscv CC=clang CROSS_COMPILE=riscv64-linux-gnu- O=out.riscv distclean defconfig all
+> > ...
+> > $ timeout 30s qemu-system-riscv64 -M virt -m 512M -no-reboot -bios default -kernel out.riscv/arch/riscv/boot/Image -display none -serial mon:stdio -initrd out.riscv/rootfs.cpio
+> > ...
+> > [    0.000000] Linux version 5.6.0-rc1-00001-g90c81dfc010e (nathan@ubuntu-m2-xlarge-x86) (ClangBuiltLinux clang version 11.0.0 (git://github.com/llvm/llvm-project 9c1a88c96457ffde71f13c74fd4d52a77d86cc9f)) #1 SMP Tue Feb 11 22:13:03 MST 2020
+> > ...
+> > [    0.624295] Run /init as init process
+> > /init: exec: line 7: /sbin/init: Text file busy
+> > [    0.712090] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000200
+> > [    0.712739] CPU: 0 PID: 1 Comm: init Not tainted 5.6.0-rc1-00001-g90c81dfc010e #1
+> > [    0.713228] Call Trace:
+> > [    0.713508] [<ffffffe00004a3e6>] walk_stackframe+0x0/0xc6
+> > [    0.713832] [<ffffffe0007c0070>] dump_stack+0x9e/0xd6
+> > [    0.714112] [<ffffffe00004f250>] panic+0x112/0x2dc
+> > [    0.714387] [<ffffffe000051886>] exit_mm+0x0/0x12a
+> > [    0.714676] [<ffffffe000051a80>] sys_exit_group+0x0/0xe
+> > [    0.714965] [<ffffffe000051aa4>] __wake_up_parent+0x0/0x24
+> > [    0.715262] [<ffffffe000051a8e>] __do_sys_exit_group+0x0/0x16
+> > [    0.715568] [<ffffffe000048e3e>] ret_from_syscall+0x0/0x2
+> > [    0.716409] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000200 ]---
+> > qemu-system-riscv64: terminating on signal 15 from pid 55965 (timeout)
+> >
+> > GCC 9.2.0 works just fine.
+> >
+> > $ make -j$(nproc) -s ARCH=riscv CROSS_COMPILE=riscv64-linux- O=out.riscv distclean defconfig all
+> > $ timeout 30s qemu-system-riscv64 -M virt -m 512M -no-reboot -bios default -kernel out.riscv/arch/riscv/boot/Image -display none -serial mon:stdio -initrd out.riscv/rootfs.cpio
+> > ...
+> > [    0.634854] Run /init as init process
+> > Starting syslogd: OK
+> > Starting klogd: OK
+> > Initializing random number generator... [    1.329410] random: dd: uninitialized urandom read (512 bytes read)
+> > done.
+> > Starting network: OK
+> > Linux version 5.6.0-rc1-00001-g90c81dfc010e (nathan@ubuntu-m2-xlarge-x86) (gcc version 9.2.0 (GCC)) #1 SMP Tue Feb 11 22:20:36 MST 2020
+> > Linux version 5.6.0-rc1-00001-g90c81dfc010e (nathan@ubuntu-m2-xlarge-x86) (gcc version 9.2.0 (GCC)) #1 SMP Tue Feb 11 22:20:36 MST 2020
+> > Stopping network: OK
+> > Saving random seed... [    2.165960] random: dd: uninitialized urandom read (512 bytes read)
+> > done.
+> > Stopping klogd: OK
+> > Stopping syslogd: OK
+> > umount: devtmpfs busy - remounted read-only
+> > umount: can't unmount /: Invalid argument
+> > The system is going down NOW!
+> > Sent SIGTERM to all processes
+> > Sent SIGKILL to all processes
+> > Requesting system poweroff
+> > [    4.412388] reboot: Power down
+> >
+> > I have tried to do some debugging in gdb to see where things are going
+> > wrong and I see it get to run_init_process, succeed, then jump to the
+> > exception handler and panic so I am not really sure where things are
+> > going wrong. Any sort of ideas on where to go from here would certainly
+> > be appreciated :)
+> >
+> > Thanks for all the hard work everyone has done, hopefully we can help
+> > add to it!
+> >
+> > Cheers,
+> > Nathan
