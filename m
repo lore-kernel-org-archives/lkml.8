@@ -2,181 +2,167 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4892C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B16C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B24120848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF69D20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="JTg5YtD+"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="InfEDylZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbgBLLOr (ORCPT
+        id S1727860AbgBLLO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:14:47 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.112]:45416 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725887AbgBLLOr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:14:47 -0500
-Received: from [100.113.4.207] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-b.eu-central-1.aws.symcld.net id 31/86-62111-42ED34E5; Wed, 12 Feb 2020 11:14:44 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIJsWRWlGSWpSXmKPExsWSoc9roqtyzzn
-  OoP2hgMXUh0/YLLbuUbX4dqWDyeLyrjlsDiwe6w6qeuycdZfdY9OqTjaPz5vkAliiWDPzkvIr
-  ElgzTr6Zx1qwj7fiUXsHUwPjTO4uRi4ORoGlzBLTu/eyQTjHWCSePJjPCuFsZpT43fsTLMMic
-  IJZYteVl2AZIYGJTBJXJx9khnDuMkpcnPKKsYuRk4NNwEJi8okHYC0iAusZJe50f2YCSTALOE
-  rc3vsWzBYWiJVYt+k2O4gtIhAn0bl/NhuEbSRx8WYnC4jNIqAqMfljHzOIzQtUv3r+arAFQgL
-  6EltWPmMFsTkFDCQmPlsPVs8oICvxpXE1M8QucYlbT+aD7ZIQEJBYsuc8M4QtKvHy8T9WiPpU
-  iZNNNxgh4joSZ68/gbIVJfacWwjVKytxaX43VNxX4u/TLihbS+JP6zUWCNtCYkl3K5DNAWSrS
-  Pw7VAkRzpHY83AZVLmaxNKVG9ggbBmJ1TPXgUNRQmARi8TspY/ZJzAazEJyNoStI7Fg9yc2CF
-  tbYtnC18yzwEEhKHFy5hOWBYwsqxgtk4oy0zNKchMzc3QNDQx0DQ2Ndc2BpJleYpVukl5qqW5
-  yal5JUSJQVi+xvFivuDI3OSdFLy+1ZBMjMDWlFLKX7GD8sPa93iFGSQ4mJVHeWzec44T4kvJT
-  KjMSizPii0pzUosPMcpwcChJ8MbeAcoJFqWmp1akZeYA0yRMWoKDR0mE1+4uUJq3uCAxtzgzH
-  SJ1ilGXY8LLuYuYhVjy8vNSpcR5e0FmCIAUZZTmwY2ApexLjLJSwryMDAwMQjwFqUW5mSWo8q
-  8YxTkYlYR5d4JM4cnMK4Hb9AroCCagI66bOIAcUZKIkJJqYDK62a27ZJqtqsL+jfITswwnHdx
-  8m7X75BzGV+HXi9e7Vu5XP8dVZXGo3POgoeDxe/45UsfTpsQXBeVFfLVKL3SK1b/zgimFt+9w
-  le9XP9bmDX92udflLXbqjFwT4N/wvC+Uo+rb6s4zWywWuLW9nvZ/zyVLbdfqnFP7blQxSH7av
-  5ZTP8hk57LnD46vVrD/dz//9p0UxTK18JuzdDMfXVlU8+j8I6uvE22vt1p6Fl/q430RLuN9dI
-  MC032u5CNHxF9/XXHsamDagR5tp//9p/WcYwOy7G45XdkVwbfzU3N6THiAxRR+bqPWl06fq9a
-  ZuisWsZRZ6X8x/XvgBzvb9bObJ9pnqC3eq7MzKH3mJiWW4oxEQy3mouJEAKMMxsdUBAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-27.tower-249.messagelabs.com!1581506083!2012667!1
-X-Originating-IP: [104.47.13.52]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 9075 invoked from network); 12 Feb 2020 11:14:44 -0000
-Received: from mail-he1eur04lp2052.outbound.protection.outlook.com (HELO EUR04-HE1-obe.outbound.protection.outlook.com) (104.47.13.52)
-  by server-27.tower-249.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Feb 2020 11:14:44 -0000
+        Wed, 12 Feb 2020 06:14:56 -0500
+Received: from mail-mw2nam10on2061.outbound.protection.outlook.com ([40.107.94.61]:6195
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725887AbgBLLOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:14:55 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H0TDJ+Eb24tV7h9lCDWanUWsKFUZXT+SxOeFbZJm6pKENWA5pt0XNr7Bztg8peVvTTY4JV5j/5MGbtBlTqLAHCY5/qvXMkLmXUSD6RQd0us6aQVf5KahRF7gEpJqlgTvDrJeXQdVpIopqSwUQxgfSgHfcIAGl6ZRNP8lQ35HHahD+HlNilUwQAgkkrtMVNxu9QNoNVeiO1wV0PYO43upkQ8r1aMl1L3y4/OCZqwqgPfRzYZGDblRT852NLszJ01gu6sPtNXJ2DKR+XX7EZDc8+zMBzpGUB9VYEv37TO5/hWOLUgRdAi1jo5/DcyEdEgrZueOf3YLATqFTZBsgREA2g==
+ b=gG1eL+xdVHiLtDpQLmJiJN4YCXqvv0vItfNlGYCbNlE/uvADIfQNUx9frs1dElYtIkYbLN4VBiZrLGfxOpYdtBqcrdeJE7qpA8Vb2H96qLmbcVtfO6p0kO9ZWmC/FDJ3flIjhlkJ3U4MjfZu81trtq2MqD8i68XmgU17PnXeUlGH/6JqAQI7agmMSuHgq6hKTDvBd08lVP0btxm/c6W8yys0GtRCLu7DPbSc/YkfvezLLFHOOWsdv5yu+kheEQT4Ot/u3n/f6e05GFhWewHxCRj5oFxcmyjXlZ6JZFzPKNxeQF4LLZkX9re29xfn/01gXP/brmSPCBDk9J3tEbAm4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4yZN2sN/1hNkbtBTMkbdZIASXypWgNoiBIbyfDza86Q=;
- b=X4M9dQcuNcZjyKFv4a+AwD3MbmyUH1SCQpv40lLxSo0dfYt3IdvmIvxiavnm4d/eIdeJIeLBx/HYhHQKDbgxOeYXDXeoMQOdQfRO3MMJskylZtQpb9tMsqNfgphn03ld86gb0yn41r2ipKCRtpvpzpr3Wtw8FBJBfmwMV1682HNktsnLYS7MvZHzvLezePI4piR+es/Twb1KUXxPjaCqLJu3q3K6Uy7Qpk+ioSQ8YbsilswE+ie1T+3RN6PDQBa37ws8xaMUqSJl0nI3Jq8bQn/iJADMGhR/1WSSe/0FV2Q2rAXnC4w+8PzGsgAjvCUxk/7BMYeEPCBKnSsy5VwwFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
+ bh=twpvHZEms3tuvH2nBeYpnefXIBMh8mNWxuwuqlSsfpQ=;
+ b=V/kbs1MoN17QDjEB73JlSbwa1OyISlVaE1oKpv4fOfRfAwuVrPZPjIdt4TdiQtKwM5gp8Pfq+4jakCog77cJSHo9dJo4IZqelUIjOxvLIbd8pOS2Ut4bFmn1E8v8XGCxApMavmS5hJEq9NaJbDRvSSFn+GgztHoFaiA3NGPp2unhBvxUpe4rz0I9MLO9p0MYtkZMsFVoozCRTQiogOseYNMP3nnX+2jECrdBkJpCxRJkPl//Ml5Pz4Emf8osZSj4f9TgOmLnLDpIKS3jROWsFmLzJZh6qvIllPgulxyx+I86GCTuKSGdNi11xNVZofqDlgSyjl6fwAB4ExT2ZQ0Nyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=glider.be smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4yZN2sN/1hNkbtBTMkbdZIASXypWgNoiBIbyfDza86Q=;
- b=JTg5YtD+E9EvrApU3jHLi6AV6MYYbX+u7e2TCh93hjHpAgC47VqsArcfka933Xs0hY9XrHUd8as53hbzN8rjc9gbvUJJAbr2r7PKITZmpm6jC8h18mYKeHBAW77h2LlBZBJvfQgvR4iaU68nGPyBBnaQt7QIzsPTOcPY3J+SmdE=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB2391.EURPRD10.PROD.OUTLOOK.COM (20.177.115.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.29; Wed, 12 Feb 2020 11:14:43 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2729.021; Wed, 12 Feb 2020
- 11:14:43 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] regulator: da9063: Replace zero-length array with
- flexible-array member
-Thread-Topic: [PATCH] regulator: da9063: Replace zero-length array with
- flexible-array member
-Thread-Index: AQHV4TU7XbdeFIRzwE217omIGbXoEqgXaC9Q
-Date:   Wed, 12 Feb 2020 11:14:42 +0000
-Message-ID: <AM6PR10MB226386E325F5EEA41A1C47BA801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <20200211234710.GA29532@embeddedor>
-In-Reply-To: <20200211234710.GA29532@embeddedor>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.85]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 15214e2c-b641-44a8-f335-08d7afacc29a
-x-ms-traffictypediagnostic: AM6PR10MB2391:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB239167C612573EB2650E692BA71B0@AM6PR10MB2391.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 0311124FA9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(199004)(189003)(33656002)(52536014)(2906002)(4326008)(81166006)(8676002)(966005)(478600001)(5660300002)(9686003)(81156014)(8936002)(316002)(66476007)(186003)(71200400001)(53546011)(110136005)(55236004)(6506007)(7696005)(86362001)(66446008)(66946007)(64756008)(66556008)(76116006)(26005)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2391;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gjEkDO5lEVXZg0g63WVBZrA44CBrk2X87vk3YUEHXQhbmhTfD0b6oPlp/8QLc4hCacNw1mEabCaDyMywc7lFpvXqfgtLYAq5fx1nv2aivSOAxEeHtdKq63VEIwnTVLodcn9VJLcBMxR4bWgRvvetfohtEKo5AzId8TRILhjN4Miv4QdVTp84JLuMqPwoNfIK21s46q5wLLmFD29cxrmfkNPQXyqUcSN80Mj9CeoytNUAGtct5WY1O9wh6tbrONdHkjGR/QgQYCFWoPwubr/Jj75usouuc7F49ML/elV0oNIrVH2YvlKeWDiJ8DVkLMyb16HxM4+6oQeWWhVWkA/+z1lAVl5r4rt4LaQIXzTu5eVBLnftWLNvjpLHROw6JW7s6qG1T3zf5XqMrX38RZK3zvR6vrd5c3u2EH8uacyZ24Wuv/q+z9NwMdGm14+h+HhKoCSnS0Ix6MDzD4upf/kyhFgNDGqM+/oCKCmIUABMXKTODa0VaG47YpMupMl99HnU0sf9HT1ZUjxDcCbJXYQESQ==
-x-ms-exchange-antispam-messagedata: VnWQEsd/qlk/YaUqU/E5PRbEfYhXEd5lZDGFyDCUaUgVCwme4r5IK6GH5vA6uO2DvSXc3ScxHSYPgKA+RDiShNsUrZy/8QlXHNa/yJ/bTbugzexd7pPcdkF/Cv/kE8IEZQE35CXnSN071OT+f7OG5w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=twpvHZEms3tuvH2nBeYpnefXIBMh8mNWxuwuqlSsfpQ=;
+ b=InfEDylZEyu55FVoTilThsFgKw9kNUJZrVYL8Y/IPxDo8gyuGuSrTb5xqGQtetTIuHQ83tYxmX3cXS+5Rv8o/N/N8+PL5ScMB6B1cZQd7oAfIgEQSzELZ/jfs4dxjZXQ/CYRfh+7fjjMGhCalNo+546Nib4cALcoLtNPjj4jDWI=
+Received: from BN7PR02CA0012.namprd02.prod.outlook.com (2603:10b6:408:20::25)
+ by BY5PR02MB6643.namprd02.prod.outlook.com (2603:10b6:a03:213::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Wed, 12 Feb
+ 2020 11:14:52 +0000
+Received: from SN1NAM02FT021.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::204) by BN7PR02CA0012.outlook.office365.com
+ (2603:10b6:408:20::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
+ Transport; Wed, 12 Feb 2020 11:14:52 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; glider.be; dkim=none (message not signed)
+ header.d=none;glider.be; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT021.mail.protection.outlook.com (10.152.72.144) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
+ via Frontend Transport; Wed, 12 Feb 2020 11:14:52 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j1pyl-00089d-Lz; Wed, 12 Feb 2020 03:14:51 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j1pyg-00023d-IM; Wed, 12 Feb 2020 03:14:46 -0800
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01CBEfQs016071;
+        Wed, 12 Feb 2020 03:14:43 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1j1pyb-00020F-15; Wed, 12 Feb 2020 03:14:41 -0800
+Subject: Re: [PATCH 7/7] ARM: zynq: Replace <linux/clk-provider.h> by
+ <linux/of_clk.h>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Russell King <linux@armlinux.org.uk>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200212100830.446-1-geert+renesas@glider.be>
+ <20200212100830.446-8-geert+renesas@glider.be>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <60cdf168-a4c9-d3c5-871b-cd1bd5bfcffe@xilinx.com>
+Date:   Wed, 12 Feb 2020 12:14:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15214e2c-b641-44a8-f335-08d7afacc29a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 11:14:42.9175
+In-Reply-To: <20200212100830.446-8-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(189003)(199004)(70206006)(356004)(186003)(2906002)(6666004)(9786002)(5660300002)(81166006)(81156014)(110136005)(70586007)(26005)(8676002)(336012)(4744005)(498600001)(31696002)(36756003)(44832011)(8936002)(4326008)(2616005)(31686004)(7416002)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6643;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6c692e37-1659-4377-a336-08d7afacc80e
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6643:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB66434C47E6EC75022491BE4EC61B0@BY5PR02MB6643.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1247;
+X-Forefront-PRVS: 0311124FA9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: h7hKVJhLOPgc8K74hZJb+qKJ1vbApeHU7HnvtXkWwRxehL61Cr+WpB8R/g3YB+9b8BPfNcrmNnjKQLW2oyz6VqXZBK3kBtpz1Xb/s4JygCH5NE0LxhUhQz5PsIATsv6W1U9CELWZ5HcIDY/hJWHlmnVkZkBDaR+irsr+KVynQYReOuYAAGMEs8PBk/KahUru33+OlTLI66DU5e1wAKhGqzdpA9WDKJphmGRfUAfvWT7JPBdlHkhK96XxUFGr8TTQUs683/vTbJZPG6ZcEyuVkuZgkt8H8FMdecTGw4Xqif1rsnQ4BV2GfJuMDW5SLYvqnu5bqSiAcoIRAyPsIGIb0Wzd2Y0DZc0HgJzS50oWn9GGwBc6VcMbdjptjXb8kxrIAkViNKIF1raQQTwYKa+pRMkUDwiEOykmbYRvz7pLlpdwA9+mk3/4/d5ta5x8QZYQ
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 11:14:52.0731
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q9ml36pjuBHaaE735OT1D/E3N1yVeARrZ4Q+al1JoTpDED6R6qZQnRpPuP5y614iZGi1+DQ4gXcU1RGobB9msM81wIj1Q2tnKvvT0LcMMl4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2391
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c692e37-1659-4377-a336-08d7afacc80e
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6643
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11 February 2020 23:47, Gustavo A. R. Silva wrote:
-
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2]=
-,
-> introduced in C99:
->=20
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->=20
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
->=20
-> This issue was found with the help of Coccinelle.
->=20
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On 12. 02. 20 11:08, Geert Uytterhoeven wrote:
+> The Zynq platform code is not a clock provider, and just needs to call
+> of_clk_init().
+> 
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  drivers/regulator/da9063-regulator.c | 2 +-
+>  arch/arm/mach-zynq/common.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9=
-063-
-> regulator.c
-> index 2b0c7a85306a..368f8ad2a9f9 100644
-> --- a/drivers/regulator/da9063-regulator.c
-> +++ b/drivers/regulator/da9063-regulator.c
-> @@ -119,7 +119,7 @@ struct da9063_regulator {
->  struct da9063_regulators {
->  	unsigned				n_regulators;
->  	/* Array size to be defined during init. Keep at end. */
-> -	struct da9063_regulator			regulator[0];
-> +	struct da9063_regulator			regulator[];
+> 
+> diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
+> index 3a4248fd796281c3..a9dd2f71cd19d2a9 100644
+> --- a/arch/arm/mach-zynq/common.c
+> +++ b/arch/arm/mach-zynq/common.c
+> @@ -12,10 +12,10 @@
+>  #include <linux/cpumask.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk.h>
+> -#include <linux/clk-provider.h>
+>  #include <linux/clk/zynq.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_clk.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/of.h>
+> 
 
-Same comment as for da9062. The probe uses malloc and does not statically
-initialise for this struct so this will break the probe.
+Looks good. Applied to zynq/soc.
 
->  };
->=20
->  /* BUCK modes for DA9063 */
-> --
-> 2.25.0
+Thanks,
+Michal
+
