@@ -2,182 +2,122 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58271C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C14CC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378C320873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98072168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:32:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PtqNSKTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgBLRbM (ORCPT
+        id S1728869AbgBLRcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:31:12 -0500
-Received: from mga03.intel.com ([134.134.136.65]:13379 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgBLRbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:31:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 09:31:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
-   d="scan'208";a="266748103"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Feb 2020 09:31:09 -0800
-Received: from [10.125.249.51] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 588665803DA;
-        Wed, 12 Feb 2020 09:31:06 -0800 (PST)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v5_3/3=5d_perf_x86=3a_Exposing_an_Uncore_u?=
- =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, alexander.antonov@intel.com
-References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
- <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
- <20200211171544.GA1933705@kroah.com>
- <20200211184200.GA302770@tassilo.jf.intel.com>
- <20200211185759.GA1941673@kroah.com>
- <25dca8dd-c52d-676d-ffe4-90f3a6ddc915@linux.intel.com>
- <20200211201427.GA1975593@kroah.com>
-From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Message-ID: <7a697574-aa76-3eda-d504-1ec72bcb6353@linux.intel.com>
-Date:   Wed, 12 Feb 2020 20:31:02 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 12:32:17 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:40724 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbgBLRcQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 12:32:16 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CHVO1d096683;
+        Wed, 12 Feb 2020 17:31:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=s65aO/8IZJu4xCgV1gff0ctcMPYShMHG/a2PtOoIauY=;
+ b=PtqNSKTuGm2rh0qwec5o0nv6tsIw9GkespctJjWvBi/nKDvfLzF+qIrs8eBWD/C2qqYh
+ ZwiHJ3aIg0V4lNasBx5KvTCBRcwfK2R6mNsgLhX3FfCH/tKGH/kBEQbzKZ2ZIwLKW9vH
+ vLFYyRREkaH5IQepvY9jutuaM42rC8jFnPw5p5ES+icjnvEQ/mESp6H9W1r3Id1VCyWw
+ Cz31rr3n7M3mUAqNw3HJm+5mJTCjzM5f5SY8Ewhyp8lwdyLXBltlD8T/o1TeUjXbT0ny
+ 9xGLa+FB02g0gdkHqpj3jVKLnUArHKL98g6y07SGRiZmHuakZ1GAOYtp0NymiwLkupuP uA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2y2p3smaat-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Feb 2020 17:31:57 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CHRisZ101603;
+        Wed, 12 Feb 2020 17:31:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2y4k7x2r88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Feb 2020 17:31:56 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01CHVuxh154129;
+        Wed, 12 Feb 2020 17:31:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2y4k7x2r6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Feb 2020 17:31:55 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01CHVrj4020985;
+        Wed, 12 Feb 2020 17:31:53 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 12 Feb 2020 09:31:52 -0800
+Subject: Re: [PATCH 1/1] net/rds: Track user mapped pages through special API
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Hans Westgaard Ry <hans.westgaard.ry@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20200212030355.1600749-1-jhubbard@nvidia.com>
+ <20200212030355.1600749-2-jhubbard@nvidia.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <c0d8d04e-08d1-60ff-ea4c-e6c71f3e118a@oracle.com>
+Date:   Wed, 12 Feb 2020 09:31:51 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200211201427.GA1975593@kroah.com>
+In-Reply-To: <20200212030355.1600749-2-jhubbard@nvidia.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002120130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.02.2020 23:14, Greg KH wrote:
-> On Tue, Feb 11, 2020 at 02:59:21PM -0500, Liang, Kan wrote:
->>
->> On 2/11/2020 1:57 PM, Greg KH wrote:
->>> On Tue, Feb 11, 2020 at 10:42:00AM -0800, Andi Kleen wrote:
->>>> On Tue, Feb 11, 2020 at 09:15:44AM -0800, Greg KH wrote:
->>>>> On Tue, Feb 11, 2020 at 07:15:49PM +0300, roman.sudarikov@linux.intel.com wrote:
->>>>>> +static ssize_t skx_iio_mapping_show(struct device *dev,
->>>>>> +				struct device_attribute *attr, char *buf)
->>>>>> +{
->>>>>> +	struct pmu *pmu = dev_get_drvdata(dev);
->>>>>> +	struct intel_uncore_pmu *uncore_pmu =
->>>>>> +		container_of(pmu, struct intel_uncore_pmu, pmu);
->>>>>> +
->>>>>> +	struct dev_ext_attribute *ea =
->>>>>> +		container_of(attr, struct dev_ext_attribute, attr);
->>>>>> +	long die = (long)ea->var;
->>>>>> +
->>>>>> +	return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
->>>>> If "0000:" is always the "prefix" of the output of this file, why have
->>>>> it at all as you always know it is there?
->>
->> I think Roman only test with BIOS configured as single-segment. So he
->> hard-code the segment# here.
->>
->> I'm not sure if Roman can do some test with multiple-segment BIOS. If not, I
->> think we should at least print a warning here.
->>
->>>>> What is ever going to cause that to change?
->>>> I think it's just to make it a complete PCI address.
->>> Is that what this really is?  If so, it's not a "complete" pci address,
->>> is it?  If it is, use the real pci address please.
->> I think we don't need a complete PCI address here. The attr is to disclose
->> the mapping information between die and PCI BUS. Segment:BUS should be good
->> enough.
-> "good enough" for today, but note that you can not change the format of
-> the data in the file in the future, you would have to create a new file.
-> So I suggest at least try to future-proof it as much as possible if you
-> _know_ this could change.
->
-> Just use the full pci address, there's no reason not to, otherwise it's
-> just confusing.
->
-> thanks,
->
-> greg k-h
-Hi Greg,
+On 2/11/20 7:03 PM, John Hubbard wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Convert net/rds to use the newly introduces pin_user_pages() API,
+> which properly sets FOLL_PIN. Setting FOLL_PIN is now required for
+> code that requires tracking of pinned pages.
+> 
+> Note that this effectively changes the code's behavior: it now
+> ultimately calls set_page_dirty_lock(), instead of set_page_dirty().
+> This is probably more accurate.
+> 
+> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+> dealing with a file backed page where we have reference on the inode it
+> hangs off." [1]
+> 
+> [1] https://urldefense.com/v3/__https://lore.kernel.org/r/20190723153640.GB720@lst.de__;!!GqivPVa7Brio!OJHuecs9Iup5ig3kQBi_423uMMuskWhBQAdOICrY3UQ_ZfEaxt9ySY7E8y32Q7pk5tByyA$
+> 
+> Cc: Hans Westgaard Ry <hans.westgaard.ry@oracle.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+Change looks fine to me. Just on safer side, we will try
+to test this change with regression suite to make sure it
+works as expected.
 
-Yes, the "Segment:Bus" pair is enough to distinguish between different 
-Root ports.
-Please see the changes below which are to address all previous comments.
+For patch itself,
 
-Thanks,
-Roman
-
-diff --git a/arch/x86/events/intel/uncore_snbep.c 
-b/arch/x86/events/intel/uncore_snbep.c
-index 96fca1ac22a4..f805fbdbbe81 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -3616,15 +3616,22 @@ skx_iio_mapping_visible(struct kobject *kobj, 
-struct attribute *attr, int die)
-  static ssize_t skx_iio_mapping_show(struct device *dev,
-                  struct device_attribute *attr, char *buf)
-  {
-+    struct pci_bus *bus = NULL;
-      struct pmu *pmu = dev_get_drvdata(dev);
-      struct intel_uncore_pmu *uncore_pmu =
-          container_of(pmu, struct intel_uncore_pmu, pmu);
-+    int pmu_idx = uncore_pmu->pmu_idx;
-
-      struct dev_ext_attribute *ea =
-          container_of(attr, struct dev_ext_attribute, attr);
-      long die = (long)ea->var;
-
--    return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
-+    do {
-+        bus = pci_find_next_bus(bus);
-+    } while (pmu_idx--);
-+
-+    return sprintf(buf, "%04x:%02x\n", pci_domain_nr(bus),
-+                       skx_iio_stack(uncore_pmu, die));
-  }
-
-  static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-@@ -3691,10 +3698,7 @@ static int skx_iio_get_topology(struct 
-intel_uncore_type *type)
-      return 0;
-  }
-
--static struct attribute *uncore_empry_attr;
--
-  static struct attribute_group skx_iio_mapping_group = {
--    .attrs        = &uncore_empry_attr,
-      .is_visible    = skx_iio_mapping_visible,
-  };
-
-@@ -3729,7 +3733,8 @@ static int skx_iio_set_mapping(struct 
-intel_uncore_type *type)
-          return -ENOMEM;
-      }
-      for (die = 0; die < uncore_max_dies(); die++) {
--        sprintf(buf, "node%ld", die);
-+        sprintf(buf, "die%ld", die);
-+        sysfs_attr_init(&eas[die].attr.attr);
-          eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
-          if (!eas[die].attr.attr.name) {
-              ret = -ENOMEM;
-@@ -3752,6 +3757,7 @@ static int skx_iio_set_mapping(struct 
-intel_uncore_type *type)
-      kfree(eas);
-      kfree(attrs);
-      kfree(type->topology);
-+    type->attr_update = NULL;
-
-      return ret;
-  }
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
