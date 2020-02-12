@@ -2,67 +2,163 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2894DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7617AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1932082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE7F20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581523445;
+	bh=xU2rLIEhWXbj7R8laJx0IdOIdIu2LUAcXTPhXJVEGts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CsCoqBVg2dlkAw+f1nInP9MhHZwC8QSxuhN53BWeOXlqYJ9Nd/uSMVjET8jj3LobX
+	 ADPJQbbxYNenudo62PAaPa49rC9D8uKRNGkBdUP8Y9uBfstbndkcsJz7zkEZX3UEgi
+	 KGbyYeBaVyLdcpRDRd6W6ymB2ZfI92uvI9nZrgws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgBLQD7 (ORCPT
+        id S1728692AbgBLQEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:03:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:32922 "EHLO mx2.suse.de"
+        Wed, 12 Feb 2020 11:04:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgBLQD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:03:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9E478AF3E;
-        Wed, 12 Feb 2020 16:03:56 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 204E8DA8DB; Wed, 12 Feb 2020 17:03:42 +0100 (CET)
-Date:   Wed, 12 Feb 2020 17:03:41 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: linux-next: build warning after merge of the btrfs tree
-Message-ID: <20200212160341.GL2902@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20200212091028.718ca6dc@canb.auug.org.au>
+        id S1726728AbgBLQEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:04:04 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26EFD2082F;
+        Wed, 12 Feb 2020 16:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581523443;
+        bh=xU2rLIEhWXbj7R8laJx0IdOIdIu2LUAcXTPhXJVEGts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s2wmDc2m/nLk75G4YSx5bHyDiFUbZLlVFIIXygs098A1skc2j+utskUCrOA66qQl9
+         7jGPPvqRTxjMSKJI4frmiE3XkvpjPDGb/qSUUdl6X3x7jT6kc/DQxsph1C3AF0veK7
+         Y5inDoL9lP0tLIbht/gumou5mEGOejK6bkPVT/ng=
+Date:   Wed, 12 Feb 2020 08:04:02 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH net-next 05/10] sysfs: add sysfs_change_owner()
+Message-ID: <20200212160402.GA1799124@kroah.com>
+References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
+ <20200212104321.43570-6-christian.brauner@ubuntu.com>
+ <20200212131808.GA1789899@kroah.com>
+ <20200212150743.zyubvz53unyevbkx@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212091028.718ca6dc@canb.auug.org.au>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20200212150743.zyubvz53unyevbkx@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 09:10:28AM +1100, Stephen Rothwell wrote:
-> Hi all,
+On Wed, Feb 12, 2020 at 04:07:43PM +0100, Christian Brauner wrote:
+> On Wed, Feb 12, 2020 at 05:18:08AM -0800, Greg Kroah-Hartman wrote:
+> > On Wed, Feb 12, 2020 at 11:43:16AM +0100, Christian Brauner wrote:
+> > > Add a helper to change the owner of sysfs objects.
+> > 
+> > Seems sane, but:
+> > 
+> > > The ownership of a sysfs object is determined based on the ownership of
+> > > the corresponding kobject, i.e. only if the ownership of a kobject is
+> > > changed will this function change the ownership of the corresponding
+> > > sysfs entry.
+> > 
+> > A "sysfs object" is a kobject.  So I don't understand this sentance,
+> > sorry.
 > 
-> After merging the btrfs tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
+> I meant that only if you change the uid/gid the underlying kobject is
+> associated with will this function do anything, meaning that you can't
+> pass in uids/gids directly. I'll explain why I did this down below [1].
+> Sorry if that was confusing.
 > 
-> fs/btrfs/volumes.c: In function 'btrfs_scratch_superblocks':
-> fs/btrfs/volumes.c:7338:3: warning: ignoring return value of 'write_one_page', declared with attribute warn_unused_result [-Wunused-result]
->  7338 |   write_one_page(page);
->       |   ^~~~~~~~~~~~~~~~~~~~
+> > 
+> > > This function will be used to correctly account for kobject ownership
+> > > changes, e.g. when moving network devices between network namespaces.
+> > > 
+> > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > ---
+> > >  fs/sysfs/file.c       | 35 +++++++++++++++++++++++++++++++++++
+> > >  include/linux/sysfs.h |  6 ++++++
+> > >  2 files changed, 41 insertions(+)
+> > > 
+> > > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> > > index 6239d9584f0b..6a0fe88061fd 100644
+> > > --- a/fs/sysfs/file.c
+> > > +++ b/fs/sysfs/file.c
+> > > @@ -642,3 +642,38 @@ int sysfs_file_change_owner(struct kobject *kobj, const char *name)
+> > >  	return error;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(sysfs_file_change_owner);
+> > > +
+> > > +/**
+> > > + *	sysfs_change_owner - change owner of the given object.
+> > > + *	@kobj:	object.
+> > > + */
+> > > +int sysfs_change_owner(struct kobject *kobj)
+> > 
+> > What does this change the owner of the given object _to_?
 > 
-> Introduced by commit
-> 
->   d19ec014a46b ("btrfs: use the page-cache for super block reading")
+> [1]:
+> So ownership only changes if the kobject's uid/gid have been changed.
+> So when to stick with the networking example, when a network device is
+> moved into a new network namespace, the uid/gid of the kobject will be
+> changed to the root user of the owning user namespace of that network
+> namespace. So when the move of the network device has completed and
+> kobject_get_ownership() is called it will now return a different
+> uid/gid.
 
-Known and fix is in the patchset revision that will be in the next
-for-next branch update. Thanks.
+Ok, then this needs to say "change the uid/gid of the kobject to..." in
+order to explain what it is now being set to.  Otherwise this is really
+confusing if you only read the kerneldoc, right?
+
+> So my reasoning was that ownership is determined dynamically that way. I
+> guess what you're hinting at is that we could simply add uid_t uid,
+> gid_t gid arguments to these sysfs helpers. That's fine with me too.
+
+It's fine if you want to set it to the "root owner", just say that
+somewhere :)
+
+> It
+> means that callers are responsible to either retrieve the ownership from
+> the kobject (in case it was changed through another call) or the call to
+> syfs_change_owner(kobj, uid, gid) sets the new owner of the kobject. I
+> don't know what the best approach is. Maybe a hybrid whereby we allow
+> passing in uid/gid but also allow passing in ({g,u}id_t - 1) to indicate
+> that we want the ownership to be taken from the kobject itself (e.g.
+> when a network device has been updated by dev_change_net_namespace()).
+> 
+> > 
+> > > +{
+> > > +	int error;
+> > > +	const struct kobj_type *ktype;
+> > > +
+> > > +	if (!kobj->state_in_sysfs)
+> > > +		return -EINVAL;
+> > > +
+> > > +	error = sysfs_file_change_owner(kobj, NULL);
+> > 
+> > It passes NULL?
+> 
+> Which means, change the ownership of "kobj" itself and not lookup a file
+> relative to "kobj".
+
+Ok, that's totally not obvious at all :(
+
+Better naming please, I know it's hard, but it matters.
+
+thanks,
+
+greg k-h
