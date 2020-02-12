@@ -2,113 +2,126 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB2CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EA3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E303720675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FCF20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O6+ZFFyD"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="ITMK8LOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgBLMYe (ORCPT
+        id S1727778AbgBLMYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:24:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21275 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725887AbgBLMYd (ORCPT
+        Wed, 12 Feb 2020 07:24:45 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45866 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgBLMYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:24:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581510272;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=02thXXwKdJdsWCJDCArtijKBLWpAxcSktpwDL3W1img=;
-        b=O6+ZFFyDv209It3TLuWjxCfF2xerSP+0KZ6yfTf8kITUWgoz6uAHeO7OT4IFUv/ybfTB3f
-        LhgqVvfJlenaqUSHSJPOZQF9qSu8Mh648shloa+YTtv5lKG1AZZo3fVnlI4o9bgrZiy0i2
-        wDXyAE7RLEsbO2DUVchC/dpAW9DJzW0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-77atQPJLNDai5_pK6bL6CQ-1; Wed, 12 Feb 2020 07:24:30 -0500
-X-MC-Unique: 77atQPJLNDai5_pK6bL6CQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74AA71005512;
-        Wed, 12 Feb 2020 12:24:29 +0000 (UTC)
-Received: from krava (ovpn-204-247.brq.redhat.com [10.40.204.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 40A505D9E2;
-        Wed, 12 Feb 2020 12:24:28 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 13:24:25 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        nd@arm.com, Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v4 0/4] perf tools: Add support for some spe events and
- precise ip
-Message-ID: <20200212122425.GA194466@krava>
-References: <20200210122509.GA2005279@krava>
- <20200211140445.21986-1-james.clark@arm.com>
+        Wed, 12 Feb 2020 07:24:44 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so1154918pfg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 04:24:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=x/nxEaTTP4mdZANLaqJuiHgW2OIpQlw3HGG1GiDrG8k=;
+        b=ITMK8LOAm4w9qmTRfMOeA37gwDDOLpQQ/8a2Z3SRrSpfdlsQ0/vxwhtmYgNTGgR1Cz
+         tlws5/87h5rm8Z6PQJxpFd3ov2vMJxFSM6bJG79plkbEjDjDO+E3/CHiUJ+n6tI/QUhI
+         FUTwdI6r/grSgrkn7EX0gxaQ9scjqFcMdX++7fjMNzPIZ6jPcAGLq2Uiwy7OC8o+nUzE
+         FCNvivZNq57PWuE1TFEhD1sbp0hJSUSxcwXUIfRKVayNitJ5/uS5XbA9EDDaXizHEcWo
+         3lQukAIR08TiHoHzX4cy9Y1tBOHDl6ebDOCZ0NwN0duE2dhdG4LMiV1x2EO+aVhdgR5q
+         c4Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=x/nxEaTTP4mdZANLaqJuiHgW2OIpQlw3HGG1GiDrG8k=;
+        b=p1oFkU0XxERrT9MufpVmHjBwkxk6ZUtraHmS5zPkfABbriX7OZooM+LntbOk6uwwq5
+         Xe/AQ6s02WRKdDorwgHySVLOfIkh1j2g7yRHqeUfPWhkzgI1ARfCjcVKwhKbpGUqZFG1
+         4DcmNnRTL00PWiSCig4OjRrpgQcxBUUqmYvj5POjIUkqp4/mxnm7iNlwj37121r8PQPb
+         mWNJ9+oAVDQ7zp5ndJe2FUy/U2czJJfeYlOpFLTZKGt906OxdfZiuabjkcYXJrTrSqRP
+         IaJiB+dKPaQMrDNEZ59ZCbmXf3GPtpoaBogat1uo4tuzz6tr0H8BQXnl9Uk5P/tSu+tk
+         dZ9Q==
+X-Gm-Message-State: APjAAAU+p5aKIdyl6Gz6EFbeOC1KEHTnLelyi+J/ijCqv7HZR5KAUAl3
+        3w57CsDUHs6XKII7fyMDeGRT4Q==
+X-Google-Smtp-Source: APXvYqysE1YVsfpW0EEtBngwXNN8YrDBSGQFG6DRR+1GbiUVSMIP4hN73LTI1LYnKzhSGHsq4BtxZg==
+X-Received: by 2002:a63:8f49:: with SMTP id r9mr12333824pgn.190.1581510283487;
+        Wed, 12 Feb 2020 04:24:43 -0800 (PST)
+Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.171])
+        by smtp.gmail.com with ESMTPSA id l69sm313535pgd.1.2020.02.12.04.24.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 04:24:42 -0800 (PST)
+Date:   Wed, 12 Feb 2020 17:54:36 +0530
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>,
+        Ben Chan <benchan@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging:gasket:gasket_core.c:unified quoted string split
+ across lines in one line
+Message-ID: <20200212122436.GA25104@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211140445.21986-1-james.clark@arm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:04:41PM +0000, James Clark wrote:
-> Hi Jirka,
-> 
-> Oops. I've removed all the changes to evlist.c and evsel.h
+When the driver tries to map a region, but the region has certain
+permissions, or when it attempts to open gasket with tgid, or when it
+realeases device node; the logs are displayed in one line only while the
+code has the strings split in two lines which makes it difficult for
+developers to search for code based on the log messages. So, this patch
+fixes three warnings of 'quoted string split across lines' in
+gasket_core.c by merging the strings in one line.
 
-hi,
-it looks ok from my POV, but I don't follow auxtrace that much
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+---
+ drivers/staging/gasket/gasket_core.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Adrian,
-it's changing some generic bits of the auxtrace framework,
-could you please check?
-
-thanks,
-jirka
-
-> 
-> 
-> James
-> 
-> Tan Xiaojun (4):
->   perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
->   perf tools: Add support for "report" for some spe events
->   perf report: Add SPE options to --itrace argument
->   perf tools: Support "branch-misses:pp" on arm64
-> 
->  tools/perf/Documentation/itrace.txt           |   5 +-
->  tools/perf/arch/arm/util/auxtrace.c           |  38 +
->  tools/perf/builtin-record.c                   |   5 +
->  tools/perf/util/Build                         |   2 +-
->  tools/perf/util/arm-spe-decoder/Build         |   1 +
->  .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 ++++++
->  .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
->  .../arm-spe-pkt-decoder.c                     |   0
->  .../arm-spe-pkt-decoder.h                     |   2 +
->  tools/perf/util/arm-spe.c                     | 756 +++++++++++++++++-
->  tools/perf/util/arm-spe.h                     |   3 +
->  tools/perf/util/auxtrace.c                    |  13 +
->  tools/perf/util/auxtrace.h                    |  14 +-
->  13 files changed, 1089 insertions(+), 41 deletions(-)
->  create mode 100644 tools/perf/util/arm-spe-decoder/Build
->  create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
->  create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->  rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
->  rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
-> 
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/staging/gasket/gasket_core.c b/drivers/staging/gasket/gasket_core.c
+index cd8be80d2076..411aaf248b37 100644
+--- a/drivers/staging/gasket/gasket_core.c
++++ b/drivers/staging/gasket/gasket_core.c
+@@ -692,8 +692,7 @@ static bool gasket_mmap_has_permissions(struct gasket_dev *gasket_dev,
+ 		(vma->vm_flags & (VM_WRITE | VM_READ | VM_EXEC));
+ 	if (requested_permissions & ~(bar_permissions)) {
+ 		dev_dbg(gasket_dev->dev,
+-			"Attempting to map a region with requested permissions "
+-			"0x%x, but region has permissions 0x%x.\n",
++			"Attempting to map a region with requested permissions 0x%x, but region has permissions 0x%x.\n",
+ 			requested_permissions, bar_permissions);
+ 		return false;
+ 	}
+@@ -1180,8 +1179,7 @@ static int gasket_open(struct inode *inode, struct file *filp)
+ 	inode->i_size = 0;
+ 
+ 	dev_dbg(gasket_dev->dev,
+-		"Attempting to open with tgid %u (%s) (f_mode: 0%03o, "
+-		"fmode_write: %d is_root: %u)\n",
++		"Attempting to open with tgid %u (%s) (f_mode: 0%03o, fmode_write: %d is_root: %u)\n",
+ 		current->tgid, task_name, filp->f_mode,
+ 		(filp->f_mode & FMODE_WRITE), is_root);
+ 
+@@ -1258,8 +1256,7 @@ static int gasket_release(struct inode *inode, struct file *file)
+ 	mutex_lock(&gasket_dev->mutex);
+ 
+ 	dev_dbg(gasket_dev->dev,
+-		"Releasing device node. Call origin: tgid %u (%s) "
+-		"(f_mode: 0%03o, fmode_write: %d, is_root: %u)\n",
++		"Releasing device node. Call origin: tgid %u (%s) (f_mode: 0%03o, fmode_write: %d, is_root: %u)\n",
+ 		current->tgid, task_name, file->f_mode,
+ 		(file->f_mode & FMODE_WRITE), is_root);
+ 	dev_dbg(gasket_dev->dev, "Current open count (owning tgid %u): %d\n",
+-- 
+2.17.1
 
