@@ -2,75 +2,79 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7AEC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC41C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D284A2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581493658;
-	bh=khRNRuCZwxnKABFVYe1snupsbWNrsELF2kP13DYwuWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HdLKcCYzX3PACJJsMC58Ztz+92w7vxAGX3wtIQfuzQXdPx/2oBVO8gIQlry56LRkK
-	 hRhKcqzSDWyC46gROSygoLNOIhIXL50/4Q0AMuHrkXfFd6N+5/CdW+AfWp6fkyV3Vj
-	 psTyEx0zNQAbkIq0byglnV+o6nHMjUufjmWcbjno=
+	by mail.kernel.org (Postfix) with ESMTP id 50253206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:50:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oBuvATo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgBLHri (ORCPT
+        id S1728379AbgBLHuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:47:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbgBLHrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:47:37 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9499E206DB;
-        Wed, 12 Feb 2020 07:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581493657;
-        bh=khRNRuCZwxnKABFVYe1snupsbWNrsELF2kP13DYwuWQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z/XcnxHy23iM4GNy0ATaZ9fXD01JkDVv2jFLkWtBH1hr5bIaQRG2L5y3SZntbR+4w
-         ui4xuR/WJ9uh3d6CPKUWk8Zc8gyBCc/IIQpmDb+0dmzDSK07ZPd9YY0lnR5qgA3AHT
-         uT//b0xogwwtTzSr597rYSqWVx9ahQIK3PW/PtOI=
-Date:   Wed, 12 Feb 2020 15:47:25 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, stefan@agner.ch,
-        kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        catalin.marinas@arm.com, will@kernel.org, abel.vesa@nxp.com,
-        bjorn.andersson@linaro.org, olof@lixom.net, maxime@cerno.tech,
-        leonard.crestez@nxp.com, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by
- default
-Message-ID: <20200212074724.GE11096@dragon>
-References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
- <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
+        Wed, 12 Feb 2020 02:50:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:45576 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728311AbgBLHuH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 02:50:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1nVf4vn0jnrm81iZchVFMrYKYcdKsraT+ctD9FAeWIM=; b=oBuvATo3aKkkhrPnQLe1L0Tftm
+        uv8E37LrW9Pl5sTQe1Wy9e7orifQHoglTYXc1w2y2d2PZRXnn1ZRJno6yb8bAtFrS23Nv1z6MlQu+
+        PCXcY/HGH3ZEKI9ys82yZFU16SWh4aUL+Ltr1XtAayHALsQDDUZpKB73BVDpjiAUQ0ZjerBY2w1Mo
+        GR883VVdazQIFtoLPO8K5Bt64FAprxdqtw/wnu61fukHeF6YTmqaBbWqypLvggygw/EE0w4FECYp+
+        jYyLb0AkhqNUG0BO1EBsLvgUlCt/bsPoP/urbcQTA0wEZt6TMno2z4hGVRIfBRX2p0wcXE652oa1s
+        FygXWy1w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1mmc-0002Q8-Rr; Wed, 12 Feb 2020 07:50:06 +0000
+Date:   Tue, 11 Feb 2020 23:50:06 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 25/25] mm: Align THP mappings for non-DAX
+Message-ID: <20200212075006.GJ7068@infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-26-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200212041845.25879-26-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:39:08AM +0800, Anson Huang wrote:
-> Enable CONFIG_PINCTRL_IMX8MP by default to support i.MX8MP
-> pinctrl driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index b52e007f0856..b8d9e0d76062 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -577,13 +577,10 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+>  	unsigned long ret;
+>  	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
+>  
+> -	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+> -		goto out;
+> -
+>  	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
+>  	if (ret)
+>  		return ret;
+> -out:
+> +
+>  	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
+>  }
+>  EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
 
-Applied, thanks.
+There is no point in splitting thp_get_unmapped_area and
+__thp_get_unmapped_area with this applied (and arguably even before
+that).  But we still have ext2 and ext4 that use thp_get_unmapped_area but
+only support huge page mappings for DAX, do we need to handle those somehow?
