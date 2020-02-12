@@ -2,95 +2,69 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F448C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF0CC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E332168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229E82168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581548491;
-	bh=jPIoR6HnEouOv7esTETSQgXhRvVhy6uR40copln16Y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eeYN90FsKIqdaJBoVjl+mg+xTIjhayXEum6uEV7YyHkI0i6x6zla7Yupmo6Lgrb/0
-	 FeTQ34wX6vkVLiGPDJ6FWSwLv5VDma9GNT5sAYznzaGdLpXLSO1TtAUdyP5WT9tT+0
-	 kGAdLao5zW4L79kGJHYMom6K9gyw4UBhtmPJsIgA=
+	s=default; t=1581548516;
+	bh=1Dc+b6kANOK+MTUko6hygKOXL+SmgqNxbhJ3tJ96sug=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=xgkflt6Jr2oqqtVUuEZAPg65mcr4oUqYxyp2RG0DW3gZaJfqnPw2gad/LEQuLuRYV
+	 GxB8TdvK3Nkub90tpcYJY/gromAGAS+UIA6H/8MEQpe2QtjK54QWCjGNXvPxYWMmac
+	 H5hT+eu5LKk5lO1jP6yH59DKKuoSJ61ug/nwS27g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgBLXBa (ORCPT
+        id S1729303AbgBLXBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:01:30 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44248 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729303AbgBLXB3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:01:29 -0500
-Received: by mail-qt1-f194.google.com with SMTP id k7so2956167qth.11;
-        Wed, 12 Feb 2020 15:01:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JcBz18PbzZYVHWwEFTSmvfhhBhEOyk01/pzZwuqpias=;
-        b=C08D8zJvnxcF6THx/Xy4j4IHVRV0ZEIEnD2cKDTN9+Pwe7/Sf3uPuJFFoXtekZluOw
-         tIiV8LowyEHjUlfaG3l6YX5hP9dZfpx83cyi2b8h0kPK1NgiWZnFGU3h+26COK8hOXdk
-         rbOPwcSKm8wPdadHKuNz2PnkuRF7Oo7QMvVqPSogyhqBCjkMFV2Q92QIZQggR4XXa3AH
-         PQI6GBqtHUVvtmjNp05Akr6oPjTg5R1oaqNZWu5x7vqufCRJ8scIERiyK12jDHtZTz5T
-         ZIC1xaljOkdnYqEO2XOKfLPmapPpy3aR8ZVbFWHCUdDv25MWLirNyBY+fsUqok+Pn/3X
-         vQhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=JcBz18PbzZYVHWwEFTSmvfhhBhEOyk01/pzZwuqpias=;
-        b=bjiKcJi51Qytw0GLmTvbEre30q3sa3sJdn52k4qBOiBihNth+05CQnM9qtV1B+h6wT
-         50oZYnn1xDXYjIu9ApwkDA4hSLdkSyt53u+KXsqysStjJh3703YqNdjbDEQWxF1K3wxD
-         KFy1OlU/WL3rsQ/nylx1omA+vivJs5/lthcPb0UK9vGLprOfYKUASBh/cH/bDgvCN+vd
-         cD9bWKTKFAY+OwndwgbpY+3kYYyy4IXNiHVfmJs0c7vJa6yL4S781/ovDad6QTnrRgrO
-         e+ZPgavqz9H5+tB0y5B48QHWtqVY+dlkj5Zsxim1ZpT592LEILIdnYikXO9MPGIlGXfS
-         LYDg==
-X-Gm-Message-State: APjAAAXw15zfX9Y1l7oqzaqDPArcpjJ2WiztEcDoCV8FpDtW7+v5dYXh
-        WpJzk5s9nNtnaWgxm1MUmmY=
-X-Google-Smtp-Source: APXvYqxUBrwYNknj5zpmevGUVW3jASjeHfY3u+ieBhdpk2U/351Efexdj4WPrdQZz3irqQ8mK5/I2w==
-X-Received: by 2002:ac8:7765:: with SMTP id h5mr9318296qtu.223.1581548488699;
-        Wed, 12 Feb 2020 15:01:28 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:985a])
-        by smtp.gmail.com with ESMTPSA id c45sm389679qtd.43.2020.02.12.15.01.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:01:28 -0800 (PST)
-Date:   Wed, 12 Feb 2020 18:01:27 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v6 0/6] clone3 & cgroups: allow spawning processes into
- cgroups
-Message-ID: <20200212230127.GA88887@mtj.thefacebook.com>
-References: <20200205132623.670015-1-christian.brauner@ubuntu.com>
+        Wed, 12 Feb 2020 18:01:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727692AbgBLXBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:01:55 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49E521569;
+        Wed, 12 Feb 2020 23:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581548514;
+        bh=1Dc+b6kANOK+MTUko6hygKOXL+SmgqNxbhJ3tJ96sug=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=B02hWz3753ZHM5ekoQQLoas2pIjQX/l6HIjRBD/qLVakEVqrolq2dMisDy2ZrmOBj
+         uI5cD+KoD+MoDWoDB43+lY112neAIEoLEiC5BJTxVB5IW8iC/5G+7Lsn8WV40so9vC
+         1/xXlA7jUoSX70HtV6x5CkGw/S7Q1b00RW+ZO23Y=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205132623.670015-1-christian.brauner@ubuntu.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1581498180-2652-1-git-send-email-Anson.Huang@nxp.com>
+References: <1581498180-2652-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] clk: imx: drop redundant initialization
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux-imx@nxp.com
+To:     Anson Huang <Anson.Huang@nxp.com>, abel.vesa@nxp.com,
+        allison@lohutok.net, broonie@kernel.org, festevam@gmail.com,
+        gregkh@linuxfoundation.org, info@metux.net, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        peng.fan@nxp.com, rfontana@redhat.com, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, tglx@linutronix.de
+Date:   Wed, 12 Feb 2020 15:01:54 -0800
+Message-ID: <158154851405.184098.10235896077677896514@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 02:26:17PM +0100, Christian Brauner wrote:
-> Hey Tejun,
-> 
-> This is v6 of the promised series to enable spawning processes into a
-> target cgroup different from the parent's cgroup.
+Quoting Anson Huang (2020-02-12 01:03:00)
+> No need to initialize flags as 0, remove the initialization.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
 
-Applied 1-6 to cgroup/for-5.7. There was a conflict with 0cd9d33ace33
-("cgroup: init_tasks shouldn't be linked to the root cgroup") which
-got fixed up while applying. I'd really appreciate if you can take a
-look to see everything is ok.
-
-Thanks a lot for working on this. This is really great.
-
--- 
-tejun
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
