@@ -2,128 +2,118 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939A3C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5280CC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602F42082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hYIlU5K4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w4dQ1bvk"
+	by mail.kernel.org (Postfix) with ESMTP id 3543A2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgBLRQB (ORCPT
+        id S1728098AbgBLRRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:16:01 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:56539 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726982AbgBLRQB (ORCPT
+        Wed, 12 Feb 2020 12:17:09 -0500
+Received: from mail.netline.ch ([148.251.143.178]:59978 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbgBLRRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:16:01 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 373D77B86;
-        Wed, 12 Feb 2020 12:16:00 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 12 Feb 2020 12:16:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=VlwaHrYSMc5EXnk7OL7eHGgUQRx
-        9+OHs9o+E4xgjGdg=; b=hYIlU5K4+ezqu7KluFhemjtph9JOs+x11ZR5fXOy0zW
-        kq/xY2VBXMX3S4I+qE0fXsNQrIpAu1cOYcCm3t8I7qrLhalik1b9oKjJ6EpT3xov
-        8/7iBexBt2i/aydlwFqSh7oiHChvKi7SmJgmv90dFD34oNSOn0rsoXCnBuMqM7yR
-        Cvezfcu9kB8wMPSNrvROYswP/61c9xMg7YB6oy4//k+dJpbpOn6c/Hgur+bpWKUP
-        YCBd8U0nJALJojMf3cmeM/FvSLXOVGQlT2fyX5sD+JkzDWq1T5RZFpkbkbKnZeOD
-        kL6lvzEVR4hoGq+TKBaaj1KbGl92MREUNKjuh9PHDhQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=VlwaHr
-        YSMc5EXnk7OL7eHGgUQRx9+OHs9o+E4xgjGdg=; b=w4dQ1bvkrRBqTnYkwbOESa
-        5Q3Itg4wv4HIEiNLypSnDC9vw5/Or1wnm27ZHa0Jr07PMBZbC9m1j6uzxzOTKXSJ
-        MCaUi6CraFraYKsy1+6UaL0U+TvGNbGP4Tow0w0sv0PgDTtOh11DnDH5SFwtDa6o
-        cn5rIM8lBSJtiXlmSoA5cAMwO80n/B6bJot2/TZbCY1APr7hVCQArIRSoXO7+36D
-        b6Y6ECkYlbluMSOSIO2Nt9q0fI3wjA0s5+jQp4bKwqf27YkSzX37011B/1rMr4gl
-        A3/dzay78+4zK6xw0YFq+CKh9PfsPFowEwA9x1Y8rtFoOv6V4DqJOLV/FuRhf6fQ
-        ==
-X-ME-Sender: <xms:zTJEXk6EtNTrdAC_6kwRCIcAhu0CuZLe0RUaLqvKA621vAbYoSUG8A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieehgddutddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:zTJEXqNUOvm3UA2ubbpF_Mn1RE9LyA6nP91YSYaPQpIRo0jz9JXPAg>
-    <xmx:zTJEXikuucGRdFkbOzYAUFF2EO1s2d_p6nErMSPNQqNkd383GH6-yQ>
-    <xmx:zTJEXhR176hzeg3xaL_go2tR1R3dCGONt-5Kwg8QurmJNHuhng5LTw>
-    <xmx:0DJEXlEm2yYxWz6W9MxkKZt8pA49S7ySE_nGRRDsAF5U_RUkpLBazg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5A7833060717;
-        Wed, 12 Feb 2020 12:15:57 -0500 (EST)
-Date:   Wed, 12 Feb 2020 18:15:55 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] ARM: sunxi: Replace <linux/clk-provider.h> by
- <linux/of_clk.h>
-Message-ID: <20200212171555.rhglnhhfxljd2ktb@gilmour.lan>
-References: <20200212100830.446-1-geert+renesas@glider.be>
- <20200212100830.446-7-geert+renesas@glider.be>
- <158152739647.121156.16877229572128607400@swboyd.mtv.corp.google.com>
+        Wed, 12 Feb 2020 12:17:09 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id 514DB2A604B;
+        Wed, 12 Feb 2020 18:17:06 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id TidibmeR2N2o; Wed, 12 Feb 2020 18:17:06 +0100 (CET)
+Received: from thor (252.80.76.83.dynamic.wline.res.cust.swisscom.ch [83.76.80.252])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 01A9A2A6046;
+        Wed, 12 Feb 2020 18:17:05 +0100 (CET)
+Received: from [::1]
+        by thor with esmtp (Exim 4.93)
+        (envelope-from <michel@daenzer.net>)
+        id 1j1vdJ-000ow8-2f; Wed, 12 Feb 2020 18:17:05 +0100
+Subject: Re: [PATCH v2] drm/i915: Disable
+ -Wtautological-constant-out-of-range-compare
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        dri-devel@lists.freedesktop.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+References: <20200211050808.29463-1-natechancellor@gmail.com>
+ <20200211061338.23666-1-natechancellor@gmail.com>
+ <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net>
+ <20200211203935.GA16176@ubuntu-m2-xlarge-x86>
+ <f3a6346b-2abf-0b6a-3d84-66e12f700b2b@daenzer.net>
+ <20200212170734.GA16396@ubuntu-m2-xlarge-x86>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Message-ID: <d81a2cfe-79b6-51d4-023e-0960c0593856@daenzer.net>
+Date:   Wed, 12 Feb 2020 18:17:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ww2rdwwsu4sgynif"
-Content-Disposition: inline
-In-Reply-To: <158152739647.121156.16877229572128607400@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200212170734.GA16396@ubuntu-m2-xlarge-x86>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-02-12 6:07 p.m., Nathan Chancellor wrote:
+> On Wed, Feb 12, 2020 at 09:52:52AM +0100, Michel Dänzer wrote:
+>> On 2020-02-11 9:39 p.m., Nathan Chancellor wrote:
+>>> On Tue, Feb 11, 2020 at 10:41:48AM +0100, Michel Dänzer wrote:
+>>>> On 2020-02-11 7:13 a.m., Nathan Chancellor wrote:
+>>>>> A recent commit in clang added -Wtautological-compare to -Wall, which is
+>>>>> enabled for i915 so we see the following warning:
+>>>>>
+>>>>> ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
+>>>>> result of comparison of constant 576460752303423487 with expression of
+>>>>> type 'unsigned int' is always false
+>>>>> [-Wtautological-constant-out-of-range-compare]
+>>>>>         if (unlikely(remain > N_RELOC(ULONG_MAX)))
+>>>>>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+>>>>>
+>>>>> This warning only happens on x86_64 but that check is relevant for
+>>>>> 32-bit x86 so we cannot remove it.
+>>>>
+>>>> That's suprising. AFAICT N_RELOC(ULONG_MAX) works out to the same value
+>>>> in both cases, and remain is a 32-bit value in both cases. How can it be
+>>>> larger than N_RELOC(ULONG_MAX) on 32-bit (but not on 64-bit)?
+>>>>
+>>>
+>>> Hi Michel,
+>>>
+>>> Can't this condition be true when UINT_MAX == ULONG_MAX?
+>>
+>> Oh, right, I think I was wrongly thinking long had 64 bits even on 32-bit.
+>>
+>>
+>> Anyway, this suggests a possible better solution:
+>>
+>> #if UINT_MAX == ULONG_MAX
+>> 	if (unlikely(remain > N_RELOC(ULONG_MAX)))
+>> 		return -EINVAL;
+>> #endif
+>>
+>>
+>> Or if that can't be used for some reason, something like
+>>
+>> 	if (unlikely((unsigned long)remain > N_RELOC(ULONG_MAX)))
+>> 		return -EINVAL;
+>>
+>> should silence the warning.
+> 
+> I do like this one better than the former.
 
---ww2rdwwsu4sgynif
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+FWIW, one downside of this one compared to all alternatives (presumably)
+is that it might end up generating actual code even on 64-bit, which
+always ends up skipping the return.
 
-On Wed, Feb 12, 2020 at 09:09:56AM -0800, Stephen Boyd wrote:
-> Quoting Geert Uytterhoeven (2020-02-12 02:08:29)
-> > The Allwinner platform code is not a clock provider, and just needs to
-> > call of_clk_init().
-> >
-> > Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
->
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
-Applied, thanks!
-Maxime
-
---ww2rdwwsu4sgynif
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkQyywAKCRDj7w1vZxhR
-xVAyAP44cXhjx/0CW1CFNAKxhdKU4gzpGWXvxPJibw12XvM6WQD/a/OTdlgu8Ofs
-1nDzz3yzF/+ciyJSn/Q0Gv9vy5DD3Qs=
-=bEj4
------END PGP SIGNATURE-----
-
---ww2rdwwsu4sgynif--
+-- 
+Earthling Michel Dänzer               |               https://redhat.com
+Libre software enthusiast             |             Mesa and X developer
