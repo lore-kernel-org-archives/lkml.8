@@ -2,276 +2,137 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932AFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9012C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F442082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:59:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=stapelberg-ch.20150623.gappssmtp.com header.i=@stapelberg-ch.20150623.gappssmtp.com header.b="O9JVJqX9"
+	by mail.kernel.org (Postfix) with ESMTP id 7CD91206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581494374;
+	bh=i14A9J9hpgpvFg3Uo6lAkikCx/JaXzNhPWUOPAr8/xI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x3sdYHS8fvE9CqhslD1JIrzjsXXnMtg+OyTQM4z60+4xDfCAP5U3lBmVzS4N2IE7u
+	 +FbzvgH043wdHs9Am9zb6vO2UoA01e+wSzcFzS5fqgj0q/jZ8GdKn9NXvRRdCxmxS/
+	 ZmkV/pI6eUCyU7QyDYRwJddomVwbuUI/NhJ1IBlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgBLH7A (ORCPT
+        id S1728442AbgBLH7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:59:00 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42878 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgBLH7A (ORCPT
+        Wed, 12 Feb 2020 02:59:33 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44440 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbgBLH7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:59:00 -0500
-Received: by mail-oi1-f193.google.com with SMTP id j132so1158566oih.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 23:58:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=stapelberg-ch.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+gfCeGVf1+C6H+B7Y7Cv1jC8wNsWdETJ4+jIe0R9/HA=;
-        b=O9JVJqX9m8hYGFPU4CRTUSanQgJSsniqg79vog0h5MuWoIFVVMHKz0wjsaXiGlsjKq
-         q3y3w4GoAycW1jj/lLe0UGA7dFeG0BcgHaLOXkbXMzmOHAXAKywJSkCJAHpUmuy7QtO9
-         lbffL2ZVPM7BSsjUqBcyJJq97/ArVsl39meURQZYp7H946aAX6VWWKc2WP7Dq4B1bGXF
-         cIjU3Wjv0PuFj/x+GritqwoB99xIODZRtBVUHRIs7pwn6s4I5x0EgupDPj6QcVl6HnOS
-         dQDzcJJKVxYMJIfEp6KQwrjnuz9j6cX6byyXLpUpG9QTOYnKEcb/PTekqpHiRNUdWFY1
-         GtfA==
+        Wed, 12 Feb 2020 02:59:33 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so1157903ljj.11;
+        Tue, 11 Feb 2020 23:59:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+gfCeGVf1+C6H+B7Y7Cv1jC8wNsWdETJ4+jIe0R9/HA=;
-        b=QaxZHPHh0hhER1Evl5xmXmj21eLoGEokN1jtFcS5mU+0rTIobCoSoJencH5Nrl8FjO
-         GZmQPLUnARzDDuUodFLYScOg/SGNE409N3pC2OlUojy72gWQJ95LqRbgVPLNjQmiGL3C
-         p/gkpTq7K/5bOOtCszgeMrDHDLIj5UZAJkXzLCx330lcJ1htgz7Oij8lCV2aPtGINfes
-         sNjMPtfrPQRt8ni0RpsgzE2hKHJGZwGsuthWHUKWouRvJh68fsJk4ZT0m3t+Xq1BUYYj
-         MrMcVGj+Ks3zBeKabYXBxuLg4wqHwJA3mQ9tcyNRpRK5JLzpRwbc658YBbwG8A0Yym+b
-         uAiw==
-X-Gm-Message-State: APjAAAVePE42uANhUhagnrgy7uGHVJw6xdguOFjA12LCso7XVBNjtjCv
-        GgVNSDqe7dWRq2/9erjyOYlCW61SrfCRbxJdbgz1EA==
-X-Google-Smtp-Source: APXvYqyihgfPdh+cTb8/ZFqn4kCxLLTio71MqKbIopYNfnqlfwl09rcj7ZGZ158u3JZSfWq6mdZjsUTvokEg44pdx0k=
-X-Received: by 2002:a54:4f04:: with SMTP id e4mr5137716oiy.111.1581494338133;
- Tue, 11 Feb 2020 23:58:58 -0800 (PST)
-MIME-Version: 1.0
-References: <CAJfpegtUAHPL9tsFB85ZqjAfy0xwz7ATRcCtLbzFBo8=WnCvLw@mail.gmail.com>
- <20200209080918.1562823-1-michael+lkml@stapelberg.ch> <CAJfpegv4iL=bW3TXP3F9w1z6-LUox8KiBmw7UBcWE-0jiK0YsA@mail.gmail.com>
-In-Reply-To: <CAJfpegv4iL=bW3TXP3F9w1z6-LUox8KiBmw7UBcWE-0jiK0YsA@mail.gmail.com>
-From:   Michael Stapelberg <michael+lkml@stapelberg.ch>
-Date:   Wed, 12 Feb 2020 08:58:47 +0100
-Message-ID: <CANnVG6kYh6M30mwBHcGeFf=fhqKmWKPeUj2GYbvNgtq0hm=gXQ@mail.gmail.com>
-Subject: Re: Still a pretty bad time on 5.4.6 with fuse_request_end.
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     fuse-devel <fuse-devel@lists.sourceforge.net>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ckD3dBez4wVRfdf+Cbf8pOGR+4nkWo4QLK+apFAS7kQ=;
+        b=HO8ROIUa3Fx9Cf2VlGk0CfxVIeOHxjYTY3bIiUeXgVrpV4MnIpEm54VLNmMKQzs/r2
+         EnlR6Se7MM1U2v9s2WZkvnY3lrlAD3T9T3/65NU393gMwCyn/XKXGtvdqdlzxbhvJCQu
+         ZuTWof6JXi1u5TA1OmUSCFwlG/0nN5ASmcUFG5Xlw1nNvFDqqF7pZ7c1N2EcjJ4ze7nW
+         tnvjR1kRAHfFhxEIclsrGSIwKsY8HFKAIKqbnOJ25jc7vHIKodDNxZutBvK/vr656i1X
+         e1UwB6DBiI6WSyrnDjMC0dkeAQ97B99uBgQFUBtyMK5IcP7GUqek8144MYdPsXclzzMA
+         zVZQ==
+X-Gm-Message-State: APjAAAXJUGXHbY46iuhsIkxAzfSJJ6A9iX+MVOGDMhQyxZowyqAIt8Z5
+        0r1ObZLCCjbeYN7eyLMV6ZM=
+X-Google-Smtp-Source: APXvYqykknzoF6XL4gncXU2NZtkDtiRKMRvFI6HHf1YJH7oaEpQm3+1gGStpZKikF9eqqqZrOZ/8EQ==
+X-Received: by 2002:a05:651c:327:: with SMTP id b7mr6441062ljp.22.1581494371256;
+        Tue, 11 Feb 2020 23:59:31 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id g15sm3513421ljk.8.2020.02.11.23.59.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 23:59:30 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1j1mvh-0006qy-GF; Wed, 12 Feb 2020 08:59:29 +0100
+Date:   Wed, 12 Feb 2020 08:59:29 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Johan Hovold <johan@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kyle Sanderson <kyle.leet@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: ti_usb_3410_5052: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200212075929.GE4150@localhost>
+References: <20200211232420.GA22388@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211232420.GA22388@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sure: here=E2=80=99s a backtrace and req->args printed:
+On Tue, Feb 11, 2020 at 05:24:20PM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+> 
+> This issue was found with the help of Coccinelle.
 
-(gdb) bt full
-#0  0xffffffff82000ff3 in __x86_indirect_thunk_r8 () at
-arch/x86/lib/retpoline.S:40
-No locals.
-#1  0xffffffff8137ec68 in fuse_request_end (fc=3D0xffff88813a57be00,
-req=3D0xffff88813a5a3770) at fs/fuse/dev.c:329
-        fiq =3D 0xffff88813a57be48
-        async =3D true
-#2  0xffffffff81382d88 in fuse_dev_do_write (fud=3D0xffff88813a57be00,
-cs=3D0xffffc90002fafa00, nbytes=3D4294967294) at fs/fuse/dev.c:1912
-        err =3D 0
-        fc =3D 0xffff88813a57be00
-        fpq =3D 0xffff888132815f48
-        req =3D 0xffff88813a5a3770
-        oh =3D {
-          len =3D 16,
-          error =3D -2,
-          unique =3D 66942
-        }
-#3  0xffffffff81382e69 in fuse_dev_write (iocb=3D0xffffc900008cbe48,
-from=3D0xffffc900008cbe20) at fs/fuse/dev.c:1934
-        cs =3D {
-          write =3D 0,
-          req =3D 0xffff88813a5a3770,
-          iter =3D 0xffffc900008cbe20,
-          pipebufs =3D 0x0 <fixed_percpu_data>,
-          currbuf =3D 0x0 <fixed_percpu_data>,
-          pipe =3D 0x0 <fixed_percpu_data>,
-          nr_segs =3D 0,
-          pg =3D 0x0 <fixed_percpu_data>,
-          len =3D 0,
-          offset =3D 24,
-          move_pages =3D 0
-        }
-        fud =3D 0xffff888132815f40
-#4  0xffffffff8120122e in call_write_iter (file=3D<optimized out>,
-iter=3D<optimized out>, kio=3D<optimized out>) at
-./include/linux/fs.h:1901
-No locals.
-#5  new_sync_write (filp=3D0xffff888119886b00, buf=3D<optimized out>,
-len=3D<optimized out>, ppos=3D0xffffc900008cbee8) at fs/read_write.c:483
-        iov =3D {
-          iov_base =3D 0xc0008ec008,
-          iov_len =3D 16
-        }
-        kiocb =3D {
-          ki_filp =3D 0xffff888119886b00,
-          ki_pos =3D 0,
-          ki_complete =3D 0x0 <fixed_percpu_data>,
-          private =3D 0x0 <fixed_percpu_data>,
-          ki_flags =3D 0,
-          ki_hint =3D 0,
-          ki_ioprio =3D 0,
-          ki_cookie =3D 0
-        }
-        iter =3D {
-          type =3D 5,
-          iov_offset =3D 0,
-          count =3D 0,
-          {
-            iov =3D 0xffffc900008cbe20,
-            kvec =3D 0xffffc900008cbe20,
-            bvec =3D 0xffffc900008cbe20,
-            pipe =3D 0xffffc900008cbe20
-          },
-          {
-            nr_segs =3D 0,
-            {
-              head =3D 0,
-              start_head =3D 0
-            }
-          }
-        }
-        ret =3D <optimized out>
-#6  0xffffffff812012e4 in __vfs_write (file=3D<optimized out>,
-p=3D<optimized out>, count=3D<optimized out>, pos=3D<optimized out>) at
-fs/read_write.c:496
-No locals.
-#7  0xffffffff81203f04 in vfs_write (pos=3D<optimized out>, count=3D16,
-buf=3D<optimized out>, file=3D<optimized out>) at fs/read_write.c:558
-        ret =3D 16
-        ret =3D <optimized out>
-#8  vfs_write (file=3D0xffff888119886b00, buf=3D0xc0008ec008 "\020",
-count=3D16, pos=3D0xffffc900008cbee8) at fs/read_write.c:542
-        ret =3D 16
-#9  0xffffffff812041b2 in ksys_write (fd=3D<optimized out>,
-buf=3D0xc0008ec008 "\020", count=3D16) at fs/read_write.c:611
-        pos =3D 0
-        ppos =3D <optimized out>
-        f =3D <optimized out>
-        ret =3D 824643076104
-#10 0xffffffff81204245 in __do_sys_write (count=3D<optimized out>,
-buf=3D<optimized out>, fd=3D<optimized out>) at fs/read_write.c:623
-No locals.
-#11 __se_sys_write (count=3D<optimized out>, buf=3D<optimized out>,
-fd=3D<optimized out>) at fs/read_write.c:620
-        ret =3D <optimized out>
-        ret =3D <optimized out>
-#12 __x64_sys_write (regs=3D<optimized out>) at fs/read_write.c:620
-No locals.
-#13 0xffffffff810028a8 in do_syscall_64 (nr=3D<optimized out>,
-regs=3D0xffffc900008cbf58) at arch/x86/entry/common.c:294
-        ti =3D <optimized out>
-#14 0xffffffff81e0007c in entry_SYSCALL_64 () at arch/x86/entry/entry_64.S:=
-175
-No locals.
-#15 0x0000000000000000 in ?? ()
-No symbol table info available.
+Same here, the scripts may need to be updated as you missed a couple of
+instances:
 
-(gdb) p *req->args
-$5 =3D {
-  nodeid =3D 18446683600620026424,
-  opcode =3D 2167928246,
-  in_numargs =3D 65535,
-  out_numargs =3D 65535,
-  force =3D false,
-  noreply =3D false,
-  nocreds =3D false,
-  in_pages =3D false,
-  out_pages =3D false,
-  out_argvar =3D true,
-  page_zeroing =3D true,
-  page_replace =3D false,
-  in_args =3D {{
-      size =3D 978828800,
-      value =3D 0x2fafce0
-    }, {
-      size =3D 978992728,
-      value =3D 0xffffffff8138efaa <fuse_alloc_forget+26>
-    }, {
-      size =3D 50002688,
-      value =3D 0xffffffff8138635f <fuse_lookup_name+255>
-    }},
-  out_args =3D {{
-      size =3D 570,
-      value =3D 0xffffc90002fafb10
-    }, {
-      size =3D 6876,
-      value =3D 0x3000000001adc
-    }},
-  end =3D 0x1000100000001
-}
+	$ git grep '\[0\];' drivers/usb/serial
+	...
+	drivers/usb/serial/io_usbvend.h:        __u8    Data[0];                // Data starts here
+	drivers/usb/serial/io_usbvend.h:        __u8    Data[0];                // Download starts here
+	...
 
-Independently, as a separate test, I have also modified the source like thi=
-s:
+Could you replace these as well so that is done in one patch per
+subsystem?
 
-bool async;
-bool async_early =3D req->args->end;
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/usb/serial/ti_usb_3410_5052.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/serial/ti_usb_3410_5052.c b/drivers/usb/serial/ti_usb_3410_5052.c
+> index dd0ad67aa71e..db3ab25d9228 100644
+> --- a/drivers/usb/serial/ti_usb_3410_5052.c
+> +++ b/drivers/usb/serial/ti_usb_3410_5052.c
+> @@ -219,7 +219,7 @@ struct ti_write_data_bytes {
+>  	u8	bDataCounter;
+>  	__be16	wBaseAddrHi;
+>  	__be16	wBaseAddrLo;
+> -	u8	bData[0];
+> +	u8	bData[];
+>  } __packed;
+>  
+>  struct ti_read_data_request {
+> @@ -234,7 +234,7 @@ struct ti_read_data_bytes {
+>  	__u8	bCmdCode;
+>  	__u8	bModuleId;
+>  	__u8	bErrorCode;
+> -	__u8	bData[0];
+> +	__u8	bData[];
+>  } __packed;
+>  
+>  /* Interrupt struct */
 
-if (test_and_set_bit(FR_FINISHED, &req->flags))
-goto put_request;
-
-async =3D req->args->end;
-
-=E2=80=A6and printed the value of async and async_early. async is true,
-async_early is false.
-
-Perhaps some other routine is modifying the request, and checking
-req->args->end early enough masks that bug?
-
-On Tue, Feb 11, 2020 at 11:55 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> On Sun, Feb 9, 2020 at 9:09 AM <michael+lkml@stapelberg.ch> wrote:
-> >
-> > From: Michael Stapelberg <michael+lkml@stapelberg.ch>
-> >
-> > Hey,
-> >
-> > I recently ran into this, too. The symptom for me is that processes usi=
-ng the
-> > affected FUSE file system hang indefinitely, sync(2) system calls hang
-> > indefinitely, and even triggering an abort via echo 1 >
-> > /sys/fs/fuse/connections/*/abort does not get the file system unstuck (=
-there is
-> > always 1 request still pending). Only removing power will get the machi=
-ne
-> > unstuck.
-> >
-> > I=E2=80=99m triggering this when building packages for https://distr1.o=
-rg/, which uses a
-> > FUSE daemon (written in Go using the jacobsa/fuse package) to provide p=
-ackage
-> > contents.
-> >
-> > I bisected the issue to commit
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3D2b319d1f6f92a4ced9897678113d176ee16ae85d
-> >
-> > With that commit, I run into a kernel oops within =E2=89=881 minute aft=
-er starting my
-> > batch build. With the commit before, I can batch build for many minutes=
- without
-> > issues.
->
-> Pretty weird.   I'm not seeing how this could change behavior, as the
-> args->end value is not changed after being initialized, and so moving
-> the test later should not make a difference.
->
-> Could you print out the complete contents of req->args?
->
-> Thanks,
-> Miklos
+Thanks,
+Johan
