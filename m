@@ -2,159 +2,131 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EB7C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E66FC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEB621739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4142621734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iObFqh0M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJiaddZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgBLUFS (ORCPT
+        id S1729071AbgBLUG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:05:18 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33522 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbgBLUFR (ORCPT
+        Wed, 12 Feb 2020 15:06:28 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46305 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgBLUG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:05:17 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b18so3253044otp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:05:16 -0800 (PST)
+        Wed, 12 Feb 2020 15:06:28 -0500
+Received: by mail-pf1-f193.google.com with SMTP id k29so1748369pfp.13;
+        Wed, 12 Feb 2020 12:06:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/kjyX5muGQ72/8Ouh0RejnwRnuJLAGJtwzfYASR2iBI=;
-        b=iObFqh0MwgmJdVqLjAmup1k9f6GKi9iyDSX5i98EQ+oFmZYsA+NYEuNGZIPUDJDoN6
-         1MJ+lzaW53VaP3jgNuai6vgAz6VsauHIpSoyXFZGDvpLvfksgULcouJZ8v0z3teWmA7b
-         u9lpmMz3jQZoJpUSKKLuFy3iluae8wLXPD1VdNs8wX/RXLiV9t8NiO5dbKRCsUQAx8pf
-         QMjq7CM57Jozd4ncBrPbtyxl/GxFKqQ/NZNlw7+69Rb+8Dw6l+NpWoT7wls5Q6lINCdO
-         631s3GBtUVVwqgfNfy+qcuDu4bxyoowthQlEXc+/O9Xv+DbHJI7s8TD8X+FCq0Z3pYqg
-         8AFw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=B5E+DB4+vknXt88petGEGI+dIA4MgxXGZFZRi0jSQkc=;
+        b=aJiaddZTO7Hg7BNimGLLTGUBqNLBZOj0cNtWV/YmN+qhdYCfTQ52ZCVoKC7w0h23ny
+         UqNGD3iJo7AysaIjnH4YPQdN0f62CG+i/yZCF1/Zs54Px4vvNZ3hUzZKQass1O0RX6Oh
+         MQMFiux29AAgrp9Yacl0GLeEFXJ6uPDXkIUPLT3QxYzeqgOYLkF0yeNFeFWrCaMX0yyb
+         alcUP7IfbwiAEyEAnnncoM4TosiULvfev5y6nzvF71Ux9da6yT9Pt2PrE5xtejcPxKAp
+         K90piSZN1VlwX57Q3mOU7/AtYWsS29z5hMsZ8hfJVZxPkOskgfZx+r8Lj9a6sgkd6FyS
+         d6UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/kjyX5muGQ72/8Ouh0RejnwRnuJLAGJtwzfYASR2iBI=;
-        b=M42NczBEQwLYy6MYAtiObYJ/Qat/YOQOCN+P2Uphl5/GUjgIVYqFJYZWeQEViYWhrM
-         aBvwq4txIQEtF93jF+EmlWPfEKrqdvoppTzYgEkXqADg0KkEaojIBCexVPHBYrNkqdPn
-         hngpA9jg81SJZ0p+22jGQksyoU6Pu0WKZaIFycUNFOr5Op6UuD+6Q38yMRTJl9Ynlc8s
-         CJjJSw8e/IKlyRMU7qGPboO+mh1dobqP7jSbw/8ivoX3ZP0YJpUPiWaccFwJGMhIQA44
-         KdK0+3VjbJ4JoKOaJkdFA8VrWLWSH1w8bwPtPHi9C/me8DqUmnSfb3G7z1EAJ15igvI6
-         A1Ug==
-X-Gm-Message-State: APjAAAXPookMVXJheNe8kwuGBLxF6oMjfYuO2VcVEMq74JP1kvNxUK48
-        w7FMYDd/i4WOS40cdtjUNDwxX91Nf2dr+/Z36GBsqg==
-X-Google-Smtp-Source: APXvYqxUKGCdfnEC2TtaAhESS1iOD+ffWkDt+ePRPY5e31xLSZmoQ1cPYQtaMXUCk4za5gWmbKRZY4hW7F+6oLDcRgk=
-X-Received: by 2002:a9d:34c:: with SMTP id 70mr3416728otv.174.1581537915705;
- Wed, 12 Feb 2020 12:05:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211225547.235083-1-dancol@google.com> <202002112332.BE71455@keescook>
- <CAG48ez0ogRxvCK1aCnviN+nBqp6gmbUD7NjaMKvA7bF=esAc1A@mail.gmail.com>
- <20200212171416.GD1083891@xz-x1> <20200212194100.GA29809@redhat.com>
-In-Reply-To: <20200212194100.GA29809@redhat.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Wed, 12 Feb 2020 12:04:39 -0800
-Message-ID: <CAKOZuevusieaKCt5r-jnQ5ArGfw5Otszq2CAcrqFi6MYxkKwtA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] Harden userfaultfd
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tim Murray <timmurray@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B5E+DB4+vknXt88petGEGI+dIA4MgxXGZFZRi0jSQkc=;
+        b=f2zhLTwWOUhbQOpPYIv8xlQ444I+l7hJLHosnytsF9sqD78N+H6ZOfeaae76U5xJgi
+         5Fn8TdPSaHQU+9CdJXC0u4W8+5VOc5FTnMlQcjnEErFWsaL1yYTRNf4t2ztm55BhA7wz
+         jF/Fx+NhpGxg6j1F2yDtTM4sS9k9leT0wrioCenMKh12qDpYtY1p2cyj7UX08GfO7hZd
+         faMyf9WxUHuy85nF0fPkRh1GAp85KlmWjDCxfXdEnCX6B9xRgvxhBRv1PQ5eN+FrKvi8
+         Z0sxRdM0Xdgt2M9NpS2mJScFIChdxxYZm/Kh77hGYzV4sBIy3hD8QbfiqMjIVzRkIjSY
+         at6w==
+X-Gm-Message-State: APjAAAX9l8M7FuNRCMjw8Pj0n+g9n+pwl2EslPg0fAAcNxzp7mGu0BG9
+        Ds9GtH9AptEF5sIN6aI7UXguDFNU
+X-Google-Smtp-Source: APXvYqwdieK8nyzLx+4nfdeVsv0hkcfU+KuNygTwMkohZq4AersD7fPV0sqJtCIiuyJYlBAe34n1Cg==
+X-Received: by 2002:a63:2a13:: with SMTP id q19mr13455341pgq.82.1581537987047;
+        Wed, 12 Feb 2020 12:06:27 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x7sm77557pfp.93.2020.02.12.12.06.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 12:06:26 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     olteanv@gmail.com, hkallweit1@gmail.com, michal.vokac@ysoft.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] net: dsa: Treat VLAN ID 0 as PVID untagged
+Date:   Wed, 12 Feb 2020 12:05:55 -0800
+Message-Id: <20200212200555.2393-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 11:41 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
->
-> Hello everyone,
->
-> On Wed, Feb 12, 2020 at 12:14:16PM -0500, Peter Xu wrote:
-> > Right. AFAICT QEMU uses it far more than disk IOs.  A guest page can
-> > be accessed by any kernel component on the destination host during a
-> > postcopy procedure.  It can be as simple as when a vcpu writes to a
-> > missing guest page which still resides on the source host, then KVM
-> > will get a page fault and trap into userfaultfd asking for that page.
-> > The same thing happens to other modules like vhost, etc., as long as a
-> > missing guest page is touched by a kernel module.
->
-> Correct.
->
-> How does the android garbage collection work to make sure there cannot
-> be kernel faults on the missing memory?
+VLAN ID 0 is special by all kinds and is really meant to be the default
+ingress and egress untagged VLAN. We were not configuring it that way
+and so we would be ingress untagged but egress tagged.
 
-We don't pass pointers to the heap into system calls. (Big primitive
-arrays, ByteBuffer, etc. are allocated off the regular heap.)
+When our devices are interfaced with other link partners such as switch
+devices, the results would be entirely equipment dependent. Some
+switches are completely fine with accepting an egress tagged frame with
+VLAN ID 0 and would send their responses untagged, so everything works,
+but other devices are not so tolerant and would typically reject a VLAN
+ID 0 tagged frame.
 
-> If I understood correctly (I didn't have much time to review sorry)
-> what's proposed with regard to limiting uffd events from kernel
-> faults,
+Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Hi all,
 
-I don't understand what you mean. The purpose of preventing UFFD from
-handling kernel faults is exploit mitigation.
+After looking at all DSA drivers and how they implement port_vlan_add()
+I think this is the right change to do, but would appreciate if you
+could test this on your respective platforms to ensure this is not
+problematic.
 
-> the only use case I know that could deal with it is the
-> UFFD_FEATURE_SIGBUS but that's not normal userfaultfd: that's also the
-> only feature required from uffd to implement a pure malloc library in
-> userland that never takes the mmap sem for writing to implement
-> userland mremap/mmap/munmap lib calls (as those will convert to
-> UFFDIO_ZEROPAGE and MADV_DONTNEED internally to the lib and there will
-> be always a single vma). We just need to extend UFFDIO_ZEROPAGE to map
-> the THP zeropage to make this future pure-uffd malloc lib perform
-> better.
+Thank you
 
-The key requirement here is the ability to prevent unprivileged
-processes from using UFFD to widen kernel exploit windows by
-preventing UFFD from taking kernel faults. Forcing unprivileged
-processes to use UFFD only with UFFD_FEATURE_SIGBUS would satisfy this
-requirement, but it's much less flexible and unnecessarily couples two
-features.
 
-> On the other end I'm also planning a mremap_vma_merge userland syscall
-> that will merge fragmented vmas.
+ net/dsa/slave.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-This is probably a separate discussion, but does that operation really
-need to be a system call? Historically, userspace has operated mostly
-on page ranges and not VMAs per se, and the kernel has been free to
-merge and split VMAs as needed for its internal purposes. This
-approach has serious negative side effects (like making munmap
-fallible: see [1]), but it is what it is.
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 088c886e609e..d3a2782eb94d 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -1100,6 +1100,7 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+ {
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	struct bridge_vlan_info info;
++	u16 flags = 0;
+ 	int ret;
+ 
+ 	/* Check for a possible bridge VLAN entry now since there is no
+@@ -1118,7 +1119,13 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+ 			return -EBUSY;
+ 	}
+ 
+-	ret = dsa_port_vid_add(dp, vid, 0);
++	/* VLAN ID 0 is special and should be the default egress and ingress
++	 * untagged VLAN, make sure it gets programmed as such.
++	 */
++	if (vid == 0)
++		flags = BRIDGE_VLAN_INFO_PVID | BRIDGE_VLAN_INFO_UNTAGGED;
++
++	ret = dsa_port_vid_add(dp, vid, flags);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.17.1
 
-[1] https://lore.kernel.org/linux-mm/CAKOZuetOD6MkGPVvYFLj5RXh200FaDyu3sQqZviVRhTFFS3fjA@mail.gmail.com/
-
-> Currently once you have a nice heap all contiguous but with small
-> objects and you free the fragments you can't build THP anymore even if
-> you make the memory virtually contiguous again by calling mremap. That
-> just build up a ton of vmas slowing down the app forever and also
-> preventing THP collapsing ever again.
-
-Shouldn't the THP background kthread take care of merging VMAs?
-
-> mremap_vma_merge will require no new kernel feature, but it
-> fundamentally must be able to handle kernel faults. If databases
-> starts to use that, how can you enable this feature without breaking
-> random apps then?
-
-Presumably, those apps wouldn't issue the system call on address
-ranges managed with a non-kernel-fault UFFD.
-
-> So it'd be a feature usable only by one user (Android) perhaps? And
-> only until you start defragging the vmas of small objects?
-
-We shouldn't be fragmenting at all, either at the memory level or the
-VMA level. The GC is a moving collector, and we don't punch holes in
-the heap.
