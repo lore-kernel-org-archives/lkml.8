@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FC6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F1FC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D74620873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9D920848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QgJ8JI65"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mzmo0k/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgBLETg (ORCPT
+        id S1728307AbgBLETl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:19:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54010 "EHLO
+        Tue, 11 Feb 2020 23:19:41 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53956 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgBLESr (ORCPT
+        with ESMTP id S1727991AbgBLESr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 23:18:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=rIiQdfF70UH/NrhNrIlb2hDhHJTI1cNopc0LJtiqgNw=; b=QgJ8JI65whKFKU40aTGC2KbUv3
-        BOdg/4SyM3pmx8HK0RKR0bP0589Kia3x6ulK2ToRDjDsrVpakDyE40tBu88D3EmHYynUa5oa0x+vc
-        P/Vjoatctq97kYIa2S2vMPDKfP4r2k/f0gNCt62+MxHeqanSZ8qOyxEvD2jNCUdjh46X0lt5y8esb
-        S7OVD4wbUosgzfkOI/s3dIYt8CU6AWifyjf0xFKTHvPILoi7jnbFXffxzvggiwGWHV/hRquBL2D9O
-        O0T4AU04ap+pZLPolLLlUVH51OTrxxe90oEQdd1CP0m62bmrSIRBjfQKMvVWSLqAbqIE3StRc5Ces
-        IvgLH8Tw==;
+        bh=OHiH3KAgiS8rCXh8VJ0556v4ieZAW8VpEHQUzRQYEA4=; b=Mzmo0k/aq/GOLignpIcekDR9ml
+        +jfxQ5r99fcTR6tkjKnQv+GQzMNXmc1WCJ/KNHxG8Ve3zMTQOW7l6i1FbOfnKUZI3Eiw5yhla3ueI
+        4FfrnVuwbS4gv0rvuZ18fFl0Euri8VR5EPuXEGBEDeAcPvpg5GTjUj60tLCPgl1Nw54UJqhAHdv8J
+        ZfNRECkJVehwyOcfB2jd5qI1K47e7PzpVG0LUyaRIm/FokguXb3RRqxW7pFJsuk7FQ1D5aVxZP+lr
+        32PV2qGten9T2IY8nyUPJKyF9akRp/1wZ/4x0PfXzZR6tRcDH/B3GpgY4cadVwioBtChkzABhkqI0
+        7bOQ4Uuw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU7-0006pL-Ic; Wed, 12 Feb 2020 04:18:47 +0000
+        id 1j1jU7-0006oB-4o; Wed, 12 Feb 2020 04:18:47 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v2 25/25] mm: Align THP mappings for non-DAX
-Date:   Tue, 11 Feb 2020 20:18:45 -0800
-Message-Id: <20200212041845.25879-26-willy@infradead.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 16/25] iomap: Support large pages in read paths
+Date:   Tue, 11 Feb 2020 20:18:36 -0800
+Message-Id: <20200212041845.25879-17-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
 References: <20200212041845.25879-1-willy@infradead.org>
@@ -52,36 +52,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Kucharski <william.kucharski@oracle.com>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-When we have the opportunity to use transparent huge pages to map a
-file, we want to follow the same rules as DAX.
+Use thp_size() instead of PAGE_SIZE, use offset_in_this_page() and
+abstract away how to access the list of readahead pages.
 
-Signed-off-by: William Kucharski <william.kucharski@oracle.com>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/huge_memory.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ fs/iomap/buffered-io.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index b52e007f0856..b8d9e0d76062 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -577,13 +577,10 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
- 	unsigned long ret;
- 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index e522039f627f..68f8903ecd6d 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -179,14 +179,16 @@ iomap_read_finish(struct iomap_page *iop, struct page *page)
+ static void
+ iomap_read_page_end_io(struct bio_vec *bvec, int error)
+ {
+-	struct page *page = bvec->bv_page;
++	struct page *page = compound_head(bvec->bv_page);
+ 	struct iomap_page *iop = to_iomap_page(page);
++	unsigned offset = bvec->bv_offset +
++				PAGE_SIZE * (bvec->bv_page - page);
  
--	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
--		goto out;
--
- 	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
- 	if (ret)
- 		return ret;
--out:
-+
- 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
+ 	if (unlikely(error)) {
+ 		ClearPageUptodate(page);
+ 		SetPageError(page);
+ 	} else {
+-		iomap_set_range_uptodate(page, bvec->bv_offset, bvec->bv_len);
++		iomap_set_range_uptodate(page, offset, bvec->bv_len);
+ 	}
+ 
+ 	iomap_read_finish(iop, page);
+@@ -239,6 +241,16 @@ static inline bool iomap_block_needs_zeroing(struct inode *inode,
+ 		pos >= i_size_read(inode);
  }
- EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
+ 
++/*
++ * Estimate the number of vectors we need based on the current page size;
++ * if we're wrong we'll end up doing an overly large allocation or needing
++ * to do a second allocation, neither of which is a big deal.
++ */
++static unsigned int iomap_nr_vecs(struct page *page, loff_t length)
++{
++	return (length + thp_size(page) - 1) >> page_shift(page);
++}
++
+ static loff_t
+ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 		struct iomap *iomap, struct iomap *srcmap)
+@@ -263,7 +275,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 		goto done;
+ 
+ 	if (iomap_block_needs_zeroing(inode, iomap, pos)) {
+-		zero_user(page, poff, plen);
++		zero_user_large(page, poff, plen);
+ 		iomap_set_range_uptodate(page, poff, plen);
+ 		goto done;
+ 	}
+@@ -294,7 +306,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 
+ 	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
+ 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
+-		int nr_vecs = (length + PAGE_SIZE - 1) >> PAGE_SHIFT;
++		int nr_vecs = iomap_nr_vecs(page, length);
+ 
+ 		if (ctx->bio)
+ 			submit_bio(ctx->bio);
+@@ -331,9 +343,9 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+ 
+ 	trace_iomap_readpage(page->mapping->host, 1);
+ 
+-	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
+-		ret = iomap_apply(inode, page_offset(page) + poff,
+-				PAGE_SIZE - poff, 0, ops, &ctx,
++	for (poff = 0; poff < thp_size(page); poff += ret) {
++		ret = iomap_apply(inode, file_offset_of_page(page) + poff,
++				thp_size(page) - poff, 0, ops, &ctx,
+ 				iomap_readpage_actor);
+ 		if (ret <= 0) {
+ 			WARN_ON_ONCE(ret == 0);
+@@ -376,7 +388,7 @@ iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
+ 		if (WARN_ON(ret == 0))
+ 			break;
+ 		done += ret;
+-		if (offset_in_page(pos + done) == 0) {
++		if (offset_in_this_page(ctx->cur_page, pos + done) == 0) {
+ 			ctx->rac->nr_pages -= ctx->rac->batch_count;
+ 			if (!ctx->cur_page_in_bio)
+ 				unlock_page(ctx->cur_page);
 -- 
 2.25.0
 
