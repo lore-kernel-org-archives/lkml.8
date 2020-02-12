@@ -2,91 +2,77 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5019FC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2864C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F56A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:08:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581502094;
-	bh=PnUHhbL5EBNau7gDirwckZRcXzaNtj8tI2PqO1V/IHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qLnUrA+/9kPHS5wwmsEMK76JhOf7BAwZOMjuxsYWRX0YUpH5xkWwBypnMmU1ngkHd
-	 PPPcg20v5kdq+yZe0Fhd4hhbpgdbJz8oOdVlZrIklZh7F1WfT5wRSWesI3OMFNXbed
-	 47H2u7mepuPXhI6rUv7TUNQBiNpIcBdgZhVFhTqQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8EEEA2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OacO3J0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgBLKIN (ORCPT
+        id S1729006AbgBLKIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:08:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:58456 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgBLKIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:08:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60D3930E;
-        Wed, 12 Feb 2020 02:08:12 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCC6E3F68F;
-        Wed, 12 Feb 2020 02:08:11 -0800 (PST)
-Date:   Wed, 12 Feb 2020 10:08:10 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 24/28] sound: Call cpu_latency_qos_*() instead of
- pm_qos_*()
-Message-ID: <20200212100810.GA4028@sirena.org.uk>
-References: <1654227.8mz0SueHsU@kreacher>
- <197693303.hiACyxC3Vm@kreacher>
+        Wed, 12 Feb 2020 05:08:25 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:33590 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgBLKIZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:08:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1VYkDOIpAfRD96wLx5w8WHVUHIn+SwJhTrRYn7nKarE=; b=OacO3J0j4acTuklH+KL1mTKc5C
+        TvL5VfnqnUZ+yeRtBivvaLezVa9rgHHg78irGwLLWy9OwpwM829XAG9DUcsILgfBX5CTn/PCGHSiR
+        +9GNKlCPGPBvXt6Yjw/qvqr95aNbvHBprG4hE8MLmm6kcfjEUVsuxwsMJpQQhpNaHRC/aMPGpxZDc
+        DiPGdDyZAMA2ClzM+PYVS6ius6Je18kgHL2whJG9aDOHSnMxnEHoehO9R4rVTr+uovITSfaw5bo+A
+        +jncipPkgEWfP3kGtfMLwf+iA8THHABP9eN/AMbzTInQIRQtvpeP+IrAFOr8BAB+TY4QQMKBuAVAk
+        cYag2zDg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1ovu-0006fe-JE; Wed, 12 Feb 2020 10:07:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0064F300679;
+        Wed, 12 Feb 2020 11:06:00 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 239922026E97A; Wed, 12 Feb 2020 11:07:49 +0100 (CET)
+Date:   Wed, 12 Feb 2020 11:07:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, dalias@libc.org, jcmvbkbc@gmail.com
+Cc:     mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH 0/8] tracing vs rcu vs nmi
+Message-ID: <20200212100749.GC14914@hirez.programming.kicks-ass.net>
+References: <20200212093210.468391728@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <197693303.hiACyxC3Vm@kreacher>
-X-Cookie: Violence is molding.
+In-Reply-To: <20200212093210.468391728@infradead.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 12, 2020 at 10:32:10AM +0100, Peter Zijlstra wrote:
+> Hi all,
+> 
+> These here patches are the result of Mathieu and Steve trying to get commit
+> 865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
+> tracepoints") reverted again.
+> 
+> One of the things discovered is that tracing MUST NOT happen before nmi_enter()
+> or after nmi_exit(). I've only fixed x86, but quickly gone through other
+> architectures and there is definitely more stuff to be fixed (simply grep for
+> nmi_enter in your arch).
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 12, 2020 at 12:34:15AM +0100, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->=20
-> Call cpu_latency_qos_add/update/remove_request() and
-> cpu_latency_qos_request_active() instead of
-> pm_qos_add/update/remove_request() and pm_qos_request_active(),
-> respectively, because the latter are going to be dropped.
-
-What's the story with dependencies here, I only have this patch and not
-the cover letter?
-
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5DzocACgkQJNaLcl1U
-h9CdQwf/Q2e/vTZXZOGkQc4SmmLKO8vWdGP403zQCNWSaKnp8IbFP281lmCkdON+
-JzyFvlSUWFUEE8U7sSIuzWo7dLQurQkEq1O2klXl8W4HXo0W+8MZtsfFWQHt48ST
-vCwe03qod15tZiXHwCfZzIxrwpM5/GfyX9EvFpa7BXCrHPkYs6R9Nr6W6txlwVQC
-2Ase3vHCV8SycxbO7t5i4IYkKbjqhy9w/tw0SC+CtUVYCPKwnNXOMESjAnlKeec+
-lpaW2Csy6UPWrWTPI8+03haZjxWMAk1zeL3F1ke8jYRCJly/2msG2px7DU1fKXRM
-4mHpdaPzJIFLlB4tZFcse46+9ckXyQ==
-=Qcri
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
+Xtensa and SuperH need to mark their NMI C handler notrace.
