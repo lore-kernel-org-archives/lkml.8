@@ -2,78 +2,85 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C098FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BCBC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942182082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722E321569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581502600;
+	bh=BSd7L1WcqmA7Rn1t/qtLYAH7L9DL0l8H2ANtY/V6cDc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sag54gCzPw+G4aCEoFtksnmhhxB7p+LlzUV5SJfu00oAgkklvpNgfdNU4xH40Ns3x
+	 ZB8cVpUB8+sBIHAyLeqE9MR87VT2u6Q6GlQEZzGCDERbeqZ26p4rnpBlmA3GHEsXAa
+	 2Non8L1D7ukmamZNiBq3zHieM7JahwOsScr06YF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgBLKQR (ORCPT
+        id S1727848AbgBLKQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:16:17 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:47436 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgBLKPu (ORCPT
+        Wed, 12 Feb 2020 05:16:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41999 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgBLKQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:15:50 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id 1mFn2200D5USYZQ01mFnWF; Wed, 12 Feb 2020 11:15:48 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j1p3b-0001NJ-GH; Wed, 12 Feb 2020 11:15:47 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j1p3b-0002J0-Ei; Wed, 12 Feb 2020 11:15:47 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        James Hartley <james.hartley@sondrel.com>,
-        John Crispin <john@phrozen.org>
-Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 7/7] MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-Date:   Wed, 12 Feb 2020 11:15:44 +0100
-Message-Id: <20200212101544.8793-8-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212101544.8793-1-geert+renesas@glider.be>
-References: <20200212101544.8793-1-geert+renesas@glider.be>
+        Wed, 12 Feb 2020 05:16:39 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so1346431otd.9;
+        Wed, 12 Feb 2020 02:16:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BSd7L1WcqmA7Rn1t/qtLYAH7L9DL0l8H2ANtY/V6cDc=;
+        b=gReBd1Ywov8ljWD1+wSAQA4uHUVj9uIy8Je3MtzuZ/kZ3CfR+97pLCp1EsVr5huVDr
+         GR1VRClCJVP8AW3Cgyi0H6jaJPPDkO6FHevE1c0xsjAUH+YCMWbbnM8W18oqECMsbpSS
+         qOrcI90WIJqKOlMLWXwOVANoe0XBIukrGCGw75mUIfdtfGYXgR/bnthuX2UjDT0oosSa
+         TUV4X4oS99IFidi2xfF1cA9lGHIsup04ePZnAUtJF3f1To/aBZWLyhII/OADy4If9B8F
+         qP+xKFU5uPIq9FPY9CkPOUF9nPlyte7zT8A8gfwTR3NplT58yHbFGktJ+484YJcC57ID
+         AIGA==
+X-Gm-Message-State: APjAAAVIwgvvVF/6r0CnFL3O11z7Eus+JKxJ72EJEMjywrs58Pn/WgDG
+        76MmwOtaRzj8ReakPVliPuZPgQjg4+LABMt/u6o=
+X-Google-Smtp-Source: APXvYqyfmunP1o2BTpeb9JU1HjP2UYYEVp4pQeJQcvu4Jqvu9FNFexZwM5K2BHzwypUIBN4OQGyWST7sYQ52txz7keM=
+X-Received: by 2002:a9d:67d7:: with SMTP id c23mr8759446otn.262.1581502598886;
+ Wed, 12 Feb 2020 02:16:38 -0800 (PST)
+MIME-Version: 1.0
+References: <1654227.8mz0SueHsU@kreacher> <197693303.hiACyxC3Vm@kreacher> <20200212100810.GA4028@sirena.org.uk>
+In-Reply-To: <20200212100810.GA4028@sirena.org.uk>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 12 Feb 2020 11:16:27 +0100
+Message-ID: <CAJZ5v0i8DsjQkf_4ezOYMrvB47ZuxsgNmTbHQB-JEK8bMHUpPg@mail.gmail.com>
+Subject: Re: [PATCH 24/28] sound: Call cpu_latency_qos_*() instead of pm_qos_*()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Ralink platform code is not a clock provider, and just needs to call
-of_clk_init().
+On Wed, Feb 12, 2020 at 11:08 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Feb 12, 2020 at 12:34:15AM +0100, Rafael J. Wysocki wrote:
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > Call cpu_latency_qos_add/update/remove_request() and
+> > cpu_latency_qos_request_active() instead of
+> > pm_qos_add/update/remove_request() and pm_qos_request_active(),
+> > respectively, because the latter are going to be dropped.
+>
+> What's the story with dependencies here, I only have this patch and not
+> the cover letter?
 
-Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+The cover letter is here:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/mips/ralink/timer-gic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lore.kernel.org/linux-pm/CAJZ5v0h1z2p66J5KB3P0RjPkLE-DfDbcfhG_OrnDG_weir7HMA@mail.gmail.com/T/#m92ce7ffd743083e89e45c0a98da8c0140e44c70b
 
-diff --git a/arch/mips/ralink/timer-gic.c b/arch/mips/ralink/timer-gic.c
-index 944fbe0fc7416f5a..dcf2a44ac51eede6 100644
---- a/arch/mips/ralink/timer-gic.c
-+++ b/arch/mips/ralink/timer-gic.c
-@@ -8,7 +8,7 @@
- #include <linux/init.h>
- 
- #include <linux/of.h>
--#include <linux/clk-provider.h>
-+#include <linux/of_clk.h>
- #include <linux/clocksource.h>
- 
- #include "common.h"
--- 
-2.17.1
-
+Generally speaking, this patch depends on the previous patches in the series.
