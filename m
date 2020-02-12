@@ -2,121 +2,169 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2752EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3885BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28702082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E31B20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jb9F5htF"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Z1P6PqCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgBLQOK (ORCPT
+        id S1728514AbgBLQPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:14:10 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40511 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLQOI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:14:08 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n18so2964223ljo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:14:07 -0800 (PST)
+        Wed, 12 Feb 2020 11:15:09 -0500
+Received: from mail-dm6nam10on2045.outbound.protection.outlook.com ([40.107.93.45]:23489
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727439AbgBLQPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:15:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SMXAkLH4ueFVVq0K3kkDmuimSHFP3B19/LGT18c5lta7plAly6sEH4ADLfzEGvqTtsTs8WTftbWpb1LUwVbXTl+7PUxlhXelfFbhowdCTnWTbrwNqnHF/cAyobbgxJ1O1IWZfLUgs+sMjdKKwdfRoVU69s8RoBOeQsN5Bw4ReJJkom7SaXGha9wO2mhAgKW/ASlCnvmpVitiCzfCsqOZDGRgWKj+Mhw1bEWH2dKyvhk87GyDpbhoAAW1AHkVYeYHVs7BPA/cgmLLJAq3qey3nHTa8o0SR7w5azeS9yrhG6qn0iIniOkHZZwT2ot/byybC3qeUcBAdeHyNZ7ceTQVxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8NHCy4DuKN9F7W6AsOPSnaJ6eMCAlmaQ51Gvf2AIXLo=;
+ b=Ikuov+lU9WC3CHONWLi4O+c39QsbIvUVFSGWXq+VhYjZsVqEy/uM+q5jgY2l84s98TDUkMI5HBUmUi5hs7/X2ZMKNI9u5MmpiDEpU5OqeqkWRrLcnyq/vI7WveSyaE0CJLEqV1iwzMH5h5QFmJc8ATX9heQPL3mB9fEqZMrYhYhpFLZ4GRZk91J8/katBGkWHdVxPOb3Cfp1Tj3ef134MVXHAtewTSx0M/0bO0puG+mqba4yTbN/jf+sBSVN5SlYWaHGfoO3YPmoN8UFvcM7reDs8p3E1aqKVRtEylV9abdbOMcBS9b+glo3Bq5/XNJPL6mXieIWs0XMbzS790uLUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0tcKPeVamvtlrN5RSH/6sRJOKOPqbnT+njiiXrnR2FE=;
-        b=jb9F5htF3IHR2jF/s4ghJMuM4i/gcB51R39jS5/m6WKp+ydkzJfT04xG0Y73Oniy8v
-         jXGY43W6LFKq1WsCfGVnTUgql5Rsoi8rTm4OjnsgouvKM528XjRv++J5z1ktbgXnaxjv
-         DcdZO4N2qO2UIpsJgNlJN9HHASvrhD4jKNE1l9FpLfdA3+XV2xYgVqd/t3Pl9dU3lHUO
-         NS2U6ybhnLxXAz5twY0Rw/BH05pfjJBJ8//FsvaNitbvsCdeMdaS6n1tgQUbqexBs4l4
-         GZp6UB6wHhoUEuC7NODSQJ6S00E67Bc2jXKNcueGfK599Evvdl26IRjAXjPN52010wEr
-         DycQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0tcKPeVamvtlrN5RSH/6sRJOKOPqbnT+njiiXrnR2FE=;
-        b=Q+6a+xNnF/PwNJWvhqkTxWLllIzvWllTVJxQYxwryNjN9bZMDN7id65mCYEXsgxOX8
-         C3Cj/ZGCC2FxK3WQmxbyljEqWRu9Q9b+F3AUIYVpiUaHXm37kEx3xYdKaAal4F+SeKht
-         zWuGnPL0ra5Kpa3PICofmXQlzSAp5BfT3GYvQMmpwltwxiOHB5Q6YZuudhyT1gSo9sOG
-         GAC1hIvVUo533k9BWSUUOT8oLEs6dUO2DEwU4f6HNtSGnp9FNf+440I0EyygITbz16iD
-         54f9JiJvuuAtW73/PcQrKzXlvrPMbM6zJ8yGONv+e+ISzQ4uFhcz0zeY6YdW/EOdAcZA
-         gX6Q==
-X-Gm-Message-State: APjAAAVom6smp3nUeceEjo4OymWH//xWfZwvcyyS28D1bxM09aMDJqlN
-        A5/U2R80u7k1dEs6qfDSdSFj/cnt3DmHLmMDhrRu1g==
-X-Google-Smtp-Source: APXvYqwUx2RtHdSeOxuAp36dMrleO/imyGInK7FYFJk2eU3wiQYyWc47tYUJS8FHowdnJCYuUNb8GkPXTepYvI4Y9gQ=
-X-Received: by 2002:a2e:96c6:: with SMTP id d6mr8306485ljj.4.1581524046440;
- Wed, 12 Feb 2020 08:14:06 -0800 (PST)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8NHCy4DuKN9F7W6AsOPSnaJ6eMCAlmaQ51Gvf2AIXLo=;
+ b=Z1P6PqCU6SgaZZ4OUPDvFBr8/9aSYzbwMYyHIV3je1AzXsmJJR7uHjyL/w2hQmsgYN5o4/8YPIj/V0ld8jkncu42zczFbXPaXuUIfz4i6UXiCAVBtM8ei2lwmefM4aVySHo1aqNLaRyzLPLAgvIbKy6gtbsri9WnLfN/mGoC2ag=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rodrigo.Siqueira@amd.com; 
+Received: from MW2PR12MB2524.namprd12.prod.outlook.com (52.132.180.155) by
+ MW2PR12MB2348.namprd12.prod.outlook.com (52.132.183.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Wed, 12 Feb 2020 16:15:02 +0000
+Received: from MW2PR12MB2524.namprd12.prod.outlook.com
+ ([fe80::c15:4b9f:526:4736]) by MW2PR12MB2524.namprd12.prod.outlook.com
+ ([fe80::c15:4b9f:526:4736%7]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
+ 16:15:01 +0000
+Date:   Wed, 12 Feb 2020 11:14:53 -0500
+From:   Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
+        Michael Strauss <Michael.Strauss@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
+Subject: Re: linux-next: build failure after merge of the amdgpu tree
+Message-ID: <20200212161453.x6ijsoeitik2xfqn@outlook.office365.com>
+References: <20200212094838.4465f954@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vejvm5ky6sii2nop"
+Content-Disposition: inline
+In-Reply-To: <20200212094838.4465f954@canb.auug.org.au>
+X-ClientProxiedBy: YTOPR0101CA0016.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::29) To MW2PR12MB2524.namprd12.prod.outlook.com
+ (2603:10b6:907:9::27)
 MIME-Version: 1.0
-References: <20200212093654.4816-1-mgorman@techsingularity.net>
- <CAKfTPtA7LVe0wccghiQbRArfZZFz7xZwV3dsoQ_Jcdr4swVWZQ@mail.gmail.com> <20200212154850.GQ3466@techsingularity.net>
-In-Reply-To: <20200212154850.GQ3466@techsingularity.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 12 Feb 2020 17:13:55 +0100
-Message-ID: <CAKfTPtDG+nxaBQFubfHC_LGxPwtJcR3xY5oS4-i-SkqrvPSwcw@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/11] Reconcile NUMA balancing decisions with the
- load balancer
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from outlook.office365.com (165.204.55.250) by YTOPR0101CA0016.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Wed, 12 Feb 2020 16:15:00 +0000
+X-Originating-IP: [165.204.55.250]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 07eebf53-cce7-4abe-29e5-08d7afd6b62c
+X-MS-TrafficTypeDiagnostic: MW2PR12MB2348:|MW2PR12MB2348:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MW2PR12MB234847AF0B708E85790EFCCB981B0@MW2PR12MB2348.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-Forefront-PRVS: 0311124FA9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(376002)(39860400002)(396003)(346002)(136003)(366004)(189003)(199004)(8676002)(8936002)(86362001)(81156014)(26005)(956004)(6916009)(66946007)(16526019)(54906003)(5660300002)(316002)(2906002)(81166006)(66476007)(66556008)(186003)(44144004)(52116002)(6666004)(4326008)(1076003)(6506007)(55016002)(7696005)(21480400003)(966005)(9686003)(478600001)(2700100001);DIR:OUT;SFP:1101;SCL:1;SRVR:MW2PR12MB2348;H:MW2PR12MB2524.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CIvp6sTbT2175ByuhVgjTTG5OkT+TcuT3DpipmVsQ1I8P2Q6pJ+njMBP2+YW8RvduQxJLQmQB/8USfAynrz/AQ3Q9LO4qZTpIA8EHntbMebOTmIwfgIhinh9d0ENmeXzFyqU9Y7c7zS4x3sxwOYWWrgvbjdfZLdqsFUIVEhaaw+fxw0uv8wU0R8UJ4l6r1l0bEQPGZXscQumAzlAna8vVoUvkrRP78J+iimnud9V23eBCGzwwzWr0JQhhHJwcBo3TVKo8V5Dgc2i2aExzOAH3FOFOTbJnUdOd2tbfgSYabFnRPQ1I4ifI+YypSLAJBKaTqHkL9fo1AqX3woP+e2Fgtefe583XLfdK1AIXEfYFnJO/rZ7U51uPxkJP2IZ1LqFvMunePHm38BU0UUpkj9lQcOByOX1Iwt4DCSnYs5GOVDPjBc4BzQhS4wS1OawiO5D7vs66iukmg5rAdUe9iZ9OVcm4H/4bfUsMVi45EqE21NEtLwchyiC3MbD8hI54/iEbHAA3x1Dj3czPbqYrUYe6b/QXdsQ86bJ/4mHPsU922ykqO0OLbQ8TCDaS4/f/cqow/nCFErkl0eT3nhxv19TY341GUWlP6SYd7X/DyuMETwCJkJLL48b6lps/tVvyfbyybf3nwv2AAbnpXxT9ZzX3w==
+X-MS-Exchange-AntiSpam-MessageData: xYi6t5M0xX4UAcRcjLfRCpuRPfPdk4PjhTM2y/vjvZDMQjx+8pK7dR8szlGYqhT1/mI6wHWbCOzVjHx+E5z7c+lAxonI+rBvNPE5fGqM3QPHOC8vamdNFBNJY5XIEBVDnvjwtaXfnvRNJ+YIWVGW9Q==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07eebf53-cce7-4abe-29e5-08d7afd6b62c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 16:15:01.2812
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6a5tl57MhqKTn24SV8JbU5wh0PBoH3OCv1bac8E7MlOOqLOUPwnpefE862FmnZlz15VxbvwpqUrVUK1mRedSYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR12MB2348
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020 at 16:48, Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Wed, Feb 12, 2020 at 02:22:03PM +0100, Vincent Guittot wrote:
-> > Hi Mel,
-> >
-> > On Wed, 12 Feb 2020 at 10:36, Mel Gorman <mgorman@techsingularity.net> wrote:
-> > >
-> > > The NUMA balancer makes placement decisions on tasks that partially
-> > > take the load balancer into account and vice versa but there are
-> > > inconsistencies. This can result in placement decisions that override
-> > > each other leading to unnecessary migrations -- both task placement and
-> > > page placement. This is a prototype series that attempts to reconcile the
-> > > decisions. It's a bit premature but it would also need to be reconciled
-> > > with Vincent's series "[PATCH 0/4] remove runnable_load_avg and improve
-> > > group_classify"
-> > >
-> > > The first three patches are unrelated and are either pending in tip or
-> > > should be but they were part of the testing of this series so I have to
-> > > mention them.
-> > >
-> > > The fourth and fifth patches are tracing only and was needed to get
-> > > sensible data out of ftrace with respect to task placement for NUMA
-> > > balancing. Patches 6-8 reduce overhead and reduce the changes of NUMA
-> > > balancing overriding itself. Patches 9-11 try and bring the CPU placement
-> > > decisions of NUMA balancing in line with the load balancer.
-> >
-> > Don't know if it's only me but I can't find patches 9-11 on mailing list
-> >
->
-> I think my outgoing SMTP must have decided I was spamming. I tried
-> resending just those patches.
+--vejvm5ky6sii2nop
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I received them.
+Hi Stephen,
+
+First of all, thanks for your report
+
+On 02/12, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> After merging the amdgpu tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> ERROR: "get_num_odm_splits" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefi=
+ned!
+>=20
+> Presumably caused by commit
+>=20
+>   5bf24270d1cc ("drm/amd/display: add odm split logic to scaling calculat=
+ions")
+
+Today I managed to reproduce the issue with 'make allmodconfig', now I'm
+trying to understand why my .config file did not trigger this issue.  At
+first glance looks like 'make allmodconfig' does not add
+'CONFIG_DRM_AMD_DC_DCN=3Dy' as a result files under
+'drivers/gpu/drm/amd/display/dc/' directory does not get compiled which
+includes the file that defines 'get_num_odm_splits'. I'm still looking
+at it...=20
+
 Thanks
+=20
+> I used the amdgpu tree from next-20200211 for today.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
 
->
-> At the moment, I'm redoing a series in top of tip taking the tracing
-> patches, yours on top (for testing) and the minor optimisations to see
-> what that gets me.  The reconcilation between NUMA balancing and load
-> balancing (patches 9-11) can be redone on top if the rest look ok.
->
-> --
-> Mel Gorman
-> SUSE Labs
+
+
+--=20
+Rodrigo Siqueira
+Software Engineer, Advanced Micro Devices (AMD)
+https://siqueira.tech
+
+--vejvm5ky6sii2nop
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl5EJHgACgkQWJzP/com
+vP8HZA//bMsHUtPkmCZU1U9+zoOm93x/vhDWl6lldWKubHKMkK0CmGbO4R6OuIbJ
+++jKXShBuZ8kv5/37DgjxDMVSwTueH9pmti11cwiH4/OdlpArFBLpLRrfdrb0OEa
+6QYcO9uDKEYRoSnXWfcNZQ0FXN8pCQRfaRhNBqVQwu04gr4U51XoIR2+yftOnaef
+JgqTYzFcCXKVYW0OafgtEbFjCkOuwdq+kgScXL7NGfUShzB6djDINt4xeLeXed+O
+CVVgchS/s6r4mvLAHaNxqVLj4o059dYh9wC56ScYbs45ejQHDNh1pDHP7v9FthX3
+mV/iGQ1QUJYu/oTUJxoAroI1rMOZHz2airW+dMXEUlj38Tpj/L18nfJ4a/SRjqPj
++yStuaronhqbYFCUM5p5qWk/F31H21h5sZTf4btz5VeCUZD0DotVJkd1S3B+CIJO
+9Uaqb87e0VMG/alZUlXxdmjkqNoNWSZ3/4Oexiv+0fJ1lL6YMiCsQO4yx7MRcrPU
+FNKlxKARhn/OFJzdHHoo/5gFkw4pwbDUt1oXaZZnYohJ3UGc3976NJC6nwhnWo0s
+3RhDQxtbpQcdHP9V7xqgw9qwnXNKE7roqmZkmSXa1jZIiLPyzzRNazNfUyV2HXmH
+CKmqCHrWZpQMCl7ASj6+tJnQ47GmeQqQXmVWH8y6/TVg2e4an6o=
+=PCSk
+-----END PGP SIGNATURE-----
+
+--vejvm5ky6sii2nop--
