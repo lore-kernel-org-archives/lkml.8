@@ -2,152 +2,330 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D330AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB69C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B420020848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C71A20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:23:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRFpLSOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgBLSUO (ORCPT
+        id S1728809AbgBLSXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:20:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:36160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbgBLSUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:20:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5029930E;
-        Wed, 12 Feb 2020 10:20:10 -0800 (PST)
-Received: from localhost (unknown [10.1.198.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5B563F68E;
-        Wed, 12 Feb 2020 10:20:09 -0800 (PST)
-Date:   Wed, 12 Feb 2020 18:20:08 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, rjw@rjwysocki.net,
-        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] arm64: add support for the AMU extension v1
-Message-ID: <20200212182008.GA25421@arm.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-2-ionela.voinescu@arm.com>
- <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
- <20200212161045.GA7475@arm.com>
- <133890f7-59bb-63b9-0ca8-2294e3596058@arm.com>
+        Wed, 12 Feb 2020 13:23:54 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46189 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLSXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:23:53 -0500
+Received: by mail-io1-f67.google.com with SMTP id t26so3310959ioi.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:23:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b+DAXXKCbPYVpdtSBetgHy/+8Iiz8QVNmv4wPJt2ZGw=;
+        b=SRFpLSOMQ48Nug7miQDT1k7pJK/Aa90LOOQB2ztM7CAguyWY+EzctjYSAFx0Le53sG
+         BiUDHnfZUffvNYTqz5xjc+aFtXbjjZDblFzz7uGaDCh0RZATIwv9lT9N/81eKyA8wh68
+         cZ/FN1D/b5DaOQe4tmBNULiiHMeF38oFIa0tWjhuvs7tAE2HD5tFSBV8IWLxHUFmW15j
+         mbUwyJmDxUBBkaVQZ1f4fCspBLMSoDuFRR5Sw2FiXe7B4EWbBdBk+yN71Gph6j2fKoSK
+         09lugkN9z+cdw77HSX1UIiwdjjJtY/Dnt+tQWdmboJRwDa6ILI3wpofXMt9kn+ZCRIHv
+         YPvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b+DAXXKCbPYVpdtSBetgHy/+8Iiz8QVNmv4wPJt2ZGw=;
+        b=jZuyOxZ3vc3zrtOe7PsiswGbXaB16EUH04k7FGyXuM4Bed7y7spLxrIcA+jQZhg+at
+         ETNRtnAC4bT+saT60yevFHJXhH2yYE5XXOmobXfCuZIhmGQW+0hBehF0rbdBDcWRsCzi
+         61lP2aEf2w08pTSknPtIOZ2w8xBFYkAlKQtjSJBeUPbWKTN4usfBw49sttlPKd14jhuy
+         8DgtwesPiPsHGJO4LzXakS1rb9mXdd2YAMaLZr0Hz3/c2n7zYU+EPKEn6cxqdlXwDai1
+         6sjLa27zBSolQBzQQrn+CLNkNWHnGL+0extuk1YoTCwwUFp+JHpGcGfijAeAXFZ0vyyF
+         MNaA==
+X-Gm-Message-State: APjAAAXj1zc6zXH4h3p3vzo/BkS9PmtHwfqsQPSBZ0uf1a3p1tRTBAUR
+        4t/sxZugQhfUn6MpiXFCUfknyHWPbWzipAW+b3A=
+X-Google-Smtp-Source: APXvYqyBnkyCKeQLTszGJpzkGExR01eLe6I9CLu8wQSRkPa37wX2gXPvZ9TXRcE5t8TBdLaQFVp3zBrJfFOT2XMD91o=
+X-Received: by 2002:a5e:df06:: with SMTP id f6mr19123552ioq.84.1581531832229;
+ Wed, 12 Feb 2020 10:23:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <133890f7-59bb-63b9-0ca8-2294e3596058@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200212111246.12563-1-kraxel@redhat.com>
+In-Reply-To: <20200212111246.12563-1-kraxel@redhat.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Wed, 12 Feb 2020 10:23:41 -0800
+Message-ID: <CAPaKu7QWFxEgbsyqKK1LmHvtQUvaHAReScyq-J6rSLNEGpE5XA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/virtio: rework batching
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
-
-On Wednesday 12 Feb 2020 at 16:20:56 (+0000), Suzuki Kuruppassery Poulose wrote:
-> > > > +static bool has_amu(const struct arm64_cpu_capabilities *cap,
-> > > > +		       int __unused)
-> > > > +{
-> > > > +	/*
-> > > > +	 * The AMU extension is a non-conflicting feature: the kernel can
-> > > > +	 * safely run a mix of CPUs with and without support for the
-> > > > +	 * activity monitors extension. Therefore, if not disabled through
-> > > > +	 * the kernel command line early parameter, enable the capability
-> > > > +	 * to allow any late CPU to use the feature.
-> > > > +	 *
-> > > > +	 * With this feature enabled, the cpu_enable function will be called
-> > > > +	 * for all CPUs that match the criteria, including secondary and
-> > > > +	 * hotplugged, marking this feature as present on that respective CPU.
-> > > > +	 * The enable function will also print a detection message.
-> > > > +	 */
-> > > > +
-> > > > +	if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
-> > > 
-> > > This looks problematic. Don't we end up in allocating the memory during
-> > > "each CPU" check and thus leaking memory ? Do we really need to allocate
-> > > this dynamically ?
-> > > 
-> > 
-> > Yes, it does make some assumptions. Given that the AMU capability is
-> > a WEAK_LOCAL_CPU_FEATURE I relied on the match function being called
-> > only once, when the return value is true. If the return value is false,
-> 
-> That is not correct. A WEAK_LOCAL_CPU_FEATURE is still SCOPE_LOCAL_CPU,
-> implies it is run on all the booting CPUs (including the hotplugged
-> ones). The WEAK is there to imply that its "permitted" or "optional"
-> for a hotplugged CPU. So, eventually you will re-allocate this variable
-> every single time a CPU turns up, where you could also loose the current
-> state.
-> 
-
-> > which will result in it being called multiple times, it's either because
-> > disable_amu == false, or it has become false due to a previous failed
-> > allocation, in which case a new allocation will not be attempted.
-
-First of all, I agree with you that this should be corrected.
-
-But for completion (and my education) I retraced my steps in regards
-to my assumption above. While cpu_enable is called for all CPUs - boot,
-secondary, hotplugged, the matches function (in this case has_amu) is
-not always called for all CPUs, and that's where the confusion came
-from.
-
-Looking over the update_cpu_capabilities function, that's called from
-both setup_boot_cpu_capabilities and check_local_cpu_capabilities
-(secondary CPUs) for SCOPE_LOCAL_CPU:
-
------
-static void update_cpu_capabilities(u16 scope_mask)
-{
-        int i;
-        const struct arm64_cpu_capabilities *caps;
-
-        scope_mask &= ARM64_CPUCAP_SCOPE_MASK;
-        for (i = 0; i < ARM64_NCAPS; i++) {
-                caps = cpu_hwcaps_ptrs[i];
-                if (!caps || !(caps->type & scope_mask) ||
-                    cpus_have_cap(caps->capability) ||
-                    !caps->matches(caps, cpucap_default_scope(caps)))
-                        continue;
-
---> The matches function is only called if !cpus_have_cap
+On Wed, Feb 12, 2020 at 3:13 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> Drop the virtio_gpu_{disable,enable}_notify().  Add a new
+> virtio_gpu_notify() call instead, which must be called whenever
+> the driver wants make sure the host is notified needed.
+>
+> Drop notification from command submission.  Add virtio_gpu_notify()
+> calls everywhere instead.  This results in more batching because we now
+> notify only once for a series of commands.  We already had that for page
+> flips, now we also batch resource creation (create + attach-backing),
+> display updates (edid + display-info) and device initialization.  With
+> this in place it is also possible to make notification optional for
+> userspace ioctls.
+Can you separate out the batching changes (create + attach-backing,
+edid + display-info, etc.)?  This patch can mechanically append a
+virtio_gpu_notify call to every virtio_gpu_cmd_* call site. A second
+patch can make the batching changes.
 
 
-                if (caps->desc)
-                        pr_info("detected: %s\n", caps->desc);
-                cpus_set_cap(caps->capability);
 
---> If matches returns true we mark it as present in cpu_hwcaps.
 
-                if ((scope_mask & SCOPE_BOOT_CPU) && (caps->type & SCOPE_BOOT_CPU))
-                        set_bit(caps->capability, boot_capabilities);
-        }   
-}
----
+>
+> v2:
+>  - rebase to latest drm-misc-next.
+>  - use "if (!atomic_read())".
+>  - add review & test tags.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> Reviewed-by: Gurchetan Singh <gurchetansingh@chromium.org>
+> Tested-by: Gurchetan Singh <gurchetansingh@chromium.org>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.h     |  6 ++---
+>  drivers/gpu/drm/virtio/virtgpu_display.c |  2 ++
+>  drivers/gpu/drm/virtio/virtgpu_ioctl.c   |  4 ++++
+>  drivers/gpu/drm/virtio/virtgpu_kms.c     |  3 +++
+>  drivers/gpu/drm/virtio/virtgpu_object.c  |  1 +
+>  drivers/gpu/drm/virtio/virtgpu_plane.c   |  5 ++--
+>  drivers/gpu/drm/virtio/virtgpu_vq.c      | 30 ++++++++++--------------
+>  7 files changed, 26 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index af9403e1cf78..2f6c4ccbfd14 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -179,8 +179,7 @@ struct virtio_gpu_device {
+>         struct virtio_gpu_queue cursorq;
+>         struct kmem_cache *vbufs;
+>
+> -       bool disable_notify;
+> -       bool pending_notify;
+> +       atomic_t pending_commands;
+nit: this could be named ctrlq_pending_commands or be moved to virtio_gpu_queue.
 
-Therefore caps->matches (in this case has_amu) will only be called as
-long as it returns false. This is where my assumption above came from.
-Also, this is the reason it was working nicely in my testing, as I did
-not test hotplug this time.
-
-Where the has_amu code breaks is when we end up calling
-verify_local_cpu_capabilities instead of update_cpu_capabilities after
-sys_caps_initialised, which will happen for hotplugged CPUs.
-In that case we call caps->matches for all CPUs. Also, if anyone in the
-future ends up calling this_cpu_has_cap for the AMU capability.
-
-I will fix this.
-
-Thank you,
-Ionela.
-
+>
+>         struct ida      resource_ida;
+>
+> @@ -335,8 +334,7 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work);
+>  void virtio_gpu_dequeue_cursor_func(struct work_struct *work);
+>  void virtio_gpu_dequeue_fence_func(struct work_struct *work);
+>
+> -void virtio_gpu_disable_notify(struct virtio_gpu_device *vgdev);
+> -void virtio_gpu_enable_notify(struct virtio_gpu_device *vgdev);
+> +void virtio_gpu_notify(struct virtio_gpu_device *vgdev);
+>
+>  /* virtio_gpu_display.c */
+>  void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+> index af953db4a0c9..2b7e6ae65546 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_display.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+> @@ -90,6 +90,7 @@ static void virtio_gpu_crtc_mode_set_nofb(struct drm_crtc *crtc)
+>         virtio_gpu_cmd_set_scanout(vgdev, output->index, 0,
+>                                    crtc->mode.hdisplay,
+>                                    crtc->mode.vdisplay, 0, 0);
+> +       virtio_gpu_notify(vgdev);
+>  }
+>
+>  static void virtio_gpu_crtc_atomic_enable(struct drm_crtc *crtc,
+> @@ -108,6 +109,7 @@ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
+>         struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
+>
+>         virtio_gpu_cmd_set_scanout(vgdev, output->index, 0, 0, 0, 0, 0);
+> +       virtio_gpu_notify(vgdev);
+>         output->enabled = false;
+>  }
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> index 205ec4abae2b..75d818d707e6 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> @@ -158,6 +158,7 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+>
+>         virtio_gpu_cmd_submit(vgdev, buf, exbuf->size,
+>                               vfpriv->ctx_id, buflist, out_fence);
+> +       virtio_gpu_notify(vgdev);
+>         return 0;
+>
+>  out_memdup:
+> @@ -314,6 +315,7 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
+>                 (vgdev, vfpriv->ctx_id, offset, args->level,
+>                  &args->box, objs, fence);
+>         dma_fence_put(&fence->f);
+> +       virtio_gpu_notify(vgdev);
+>         return 0;
+>
+>  err_unlock:
+> @@ -359,6 +361,7 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
+>                          args->level, &args->box, objs, fence);
+>                 dma_fence_put(&fence->f);
+>         }
+> +       virtio_gpu_notify(vgdev);
+>         return 0;
+>
+>  err_unlock:
+> @@ -445,6 +448,7 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+>         /* not in cache - need to talk to hw */
+>         virtio_gpu_cmd_get_capset(vgdev, found_valid, args->cap_set_ver,
+>                                   &cache_ent);
+> +       virtio_gpu_notify(vgdev);
+>
+>  copy_exit:
+>         ret = wait_event_timeout(vgdev->resp_wq,
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> index 4009c2f97d08..7eabcf1ca424 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> @@ -44,6 +44,7 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
+>                 if (vgdev->has_edid)
+>                         virtio_gpu_cmd_get_edids(vgdev);
+>                 virtio_gpu_cmd_get_display_info(vgdev);
+> +               virtio_gpu_notify(vgdev);
+>                 drm_helper_hpd_irq_event(vgdev->ddev);
+>                 events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
+>         }
+> @@ -92,6 +93,7 @@ static void virtio_gpu_get_capsets(struct virtio_gpu_device *vgdev,
+>         }
+>         for (i = 0; i < num_capsets; i++) {
+>                 virtio_gpu_cmd_get_capset_info(vgdev, i);
+> +               virtio_gpu_notify(vgdev);
+>                 ret = wait_event_timeout(vgdev->resp_wq,
+>                                          vgdev->capsets[i].id > 0, 5 * HZ);
+>                 if (ret == 0) {
+> @@ -205,6 +207,7 @@ int virtio_gpu_init(struct drm_device *dev)
+>         if (vgdev->has_edid)
+>                 virtio_gpu_cmd_get_edids(vgdev);
+>         virtio_gpu_cmd_get_display_info(vgdev);
+> +       virtio_gpu_notify(vgdev);
+>         wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
+>                            5 * HZ);
+>         return 0;
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+> index 8870ee23ff2b..65d6834d3c74 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+> @@ -224,6 +224,7 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+>                 return ret;
+>         }
+>
+> +       virtio_gpu_notify(vgdev);
+>         *bo_ptr = bo;
+>         return 0;
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> index ac42c84d2d7f..fd6487fb0855 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> @@ -154,8 +154,6 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+>         if (!drm_atomic_helper_damage_merged(old_state, plane->state, &rect))
+>                 return;
+>
+> -       virtio_gpu_disable_notify(vgdev);
+> -
+>         bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+>         if (bo->dumb)
+>                 virtio_gpu_update_dumb_bo(vgdev, plane->state, &rect);
+> @@ -187,7 +185,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+>                                       rect.x2 - rect.x1,
+>                                       rect.y2 - rect.y1);
+>
+> -       virtio_gpu_enable_notify(vgdev);
+> +       virtio_gpu_notify(vgdev);
+>  }
+>
+>  static int virtio_gpu_cursor_prepare_fb(struct drm_plane *plane,
+> @@ -265,6 +263,7 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
+>                          plane->state->crtc_w,
+>                          plane->state->crtc_h,
+>                          0, 0, objs, vgfb->fence);
+> +               virtio_gpu_notify(vgdev);
+>                 dma_fence_wait(&vgfb->fence->f, true);
+>                 dma_fence_put(&vgfb->fence->f);
+>                 vgfb->fence = NULL;
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> index cfe9c54f87a3..357fef8197dc 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> @@ -329,7 +329,6 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+>                                       int incnt)
+>  {
+>         struct virtqueue *vq = vgdev->ctrlq.vq;
+> -       bool notify = false;
+>         int ret, idx;
+>
+>         if (!drm_dev_enter(vgdev->ddev, &idx)) {
+> @@ -368,16 +367,10 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+>
+>         trace_virtio_gpu_cmd_queue(vq, virtio_gpu_vbuf_ctrl_hdr(vbuf));
+>
+> -       notify = virtqueue_kick_prepare(vq);
+> +       atomic_inc(&vgdev->pending_commands);
+>
+>         spin_unlock(&vgdev->ctrlq.qlock);
+>
+> -       if (notify) {
+> -               if (vgdev->disable_notify)
+> -                       vgdev->pending_notify = true;
+> -               else
+> -                       virtqueue_notify(vq);
+> -       }
+>         drm_dev_exit(idx);
+>  }
+>
+> @@ -434,19 +427,20 @@ static void virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
+>         }
+>  }
+>
+> -void virtio_gpu_disable_notify(struct virtio_gpu_device *vgdev)
+> +void virtio_gpu_notify(struct virtio_gpu_device *vgdev)
+>  {
+> -       vgdev->disable_notify = true;
+> -}
+> +       bool notify;
+>
+> -void virtio_gpu_enable_notify(struct virtio_gpu_device *vgdev)
+> -{
+> -       vgdev->disable_notify = false;
+> -
+> -       if (!vgdev->pending_notify)
+> +       if (!atomic_read(&vgdev->pending_commands))
+>                 return;
+> -       vgdev->pending_notify = false;
+> -       virtqueue_notify(vgdev->ctrlq.vq);
+> +
+> +       spin_lock(&vgdev->ctrlq.qlock);
+> +       atomic_set(&vgdev->pending_commands, 0);
+> +       notify = virtqueue_kick_prepare(vgdev->ctrlq.vq);
+> +       spin_unlock(&vgdev->ctrlq.qlock);
+> +
+> +       if (notify)
+> +               virtqueue_notify(vgdev->ctrlq.vq);
+>  }
+>
+>  static void virtio_gpu_queue_ctrl_buffer(struct virtio_gpu_device *vgdev,
+> --
+> 2.18.2
+>
