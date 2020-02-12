@@ -7,145 +7,181 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0BBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3B4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D0C20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C40206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKC16U1F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVR5trMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgBLLVR (ORCPT
+        id S1728119AbgBLLVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:21:17 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37383 "EHLO
+        Wed, 12 Feb 2020 06:21:41 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39962 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725821AbgBLLVR (ORCPT
+        by vger.kernel.org with ESMTP id S1727054AbgBLLVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:21:17 -0500
+        Wed, 12 Feb 2020 06:21:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581506475;
+        s=mimecast20190719; t=1581506500;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=EN6k1gG4mAwoS9ZHwlbxFwC3ldx82UzJBX4isvQNgEw=;
-        b=HKC16U1FJykVg0fsyBNueWfHcVTbJ/ZdEnkm1Yyg16re+P9XB0fc/NtaIrWDwxO/kJ7mvj
-        D9BAQldaiP41dFFpb8TRb/ZwrOusg7JK+cIKNmbLPXvwJ7H23yu9VojNvvBcBOoGPC/Dcn
-        Cgci14Yl07cqFKfvr3ZabL9gI1Q9it0=
+         in-reply-to:in-reply-to:references:references;
+        bh=nyWKTYu2WVz0laYq03PXmBiLoDtz0a+w3PSsjOOR0hM=;
+        b=CVR5trMfgV8PGC0XW+LdLVNgu8ruezEh1D3SKL3vRavi3zXVN1nJCQcpTPaRaXTg/IldSK
+        6BtrAuGVu97Ilr6diK1Wf34sEEJKw0Hc3sacEbVupbMFWUlfGnmTg6iwSHciEbDsoMHTBI
+        Z6lmrmHkmHmqHeGj8NfVMByY3rftGQ8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-gwgr0YYJP7mtnLTRLnwpnw-1; Wed, 12 Feb 2020 06:21:14 -0500
-X-MC-Unique: gwgr0YYJP7mtnLTRLnwpnw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-321-xtVBKsuLMTuY51FtNIlNuQ-1; Wed, 12 Feb 2020 06:21:35 -0500
+X-MC-Unique: xtVBKsuLMTuY51FtNIlNuQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4F0413E5;
-        Wed, 12 Feb 2020 11:21:11 +0000 (UTC)
-Received: from [10.36.117.92] (ovpn-117-92.ams2.redhat.com [10.36.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C65505C1B0;
-        Wed, 12 Feb 2020 11:21:10 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm: vmpressure: don't need call kfree if kstrndup
- fails
-To:     Yang Shi <yang.shi@linux.alibaba.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1581398649-125989-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <b47f8f37-fbde-5487-5025-fcb0df7a7e30@redhat.com>
-Date:   Wed, 12 Feb 2020 12:21:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5E9F1005502;
+        Wed, 12 Feb 2020 11:21:33 +0000 (UTC)
+Received: from localhost (ovpn-12-47.pek2.redhat.com [10.72.12.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F8C55C102;
+        Wed, 12 Feb 2020 11:21:30 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 19:21:28 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        richardw.yang@linux.intel.com
+Subject: Re: [PATCH 1/7] mm/sparse.c: Introduce new function
+ fill_subsection_map()
+Message-ID: <20200212112128.GI8965@MiWiFi-R3L-srv>
+References: <20200209104826.3385-1-bhe@redhat.com>
+ <20200209104826.3385-2-bhe@redhat.com>
+ <0463a54b-12cb-667e-7c86-66cd707cec84@redhat.com>
+ <20200211124648.GF8965@MiWiFi-R3L-srv>
+ <659d16c9-79f7-a1d6-ca05-d6164c9c11a6@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1581398649-125989-1-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <659d16c9-79f7-a1d6-ca05-d6164c9c11a6@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.02.20 06:24, Yang Shi wrote:
-> When kstrndup fails (returns NULL) there is no memory is allocated by
-> kmalloc, so no need to call kfree().
-
-"When kstrndup fails, no memory was allocated and we can exit directly."
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
+On 02/11/20 at 03:44pm, David Hildenbrand wrote:
+> On 11.02.20 13:46, Baoquan He wrote:
+> > On 02/10/20 at 10:49am, David Hildenbrand wrote:
+> >> On 09.02.20 11:48, Baoquan He wrote:
+> >>> Wrap the codes filling subsection map in section_activate() into
+> >>> fill_subsection_map(), this makes section_activate() cleaner and
+> >>> easier to follow.
+> >>>
+> >>> Signed-off-by: Baoquan He <bhe@redhat.com>
+> >>> ---
+> >>>  mm/sparse.c | 45 ++++++++++++++++++++++++++++++++++-----------
+> >>>  1 file changed, 34 insertions(+), 11 deletions(-)
+> >>>
+> >>> diff --git a/mm/sparse.c b/mm/sparse.c
+> >>> index c184b69460b7..9ad741ccbeb6 100644
+> >>> --- a/mm/sparse.c
+> >>> +++ b/mm/sparse.c
+> >>> @@ -788,24 +788,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >>>  		depopulate_section_memmap(pfn, nr_pages, altmap);
+> >>>  }
+> >>>  
+> >>> -static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> >>> -		unsigned long nr_pages, struct vmem_altmap *altmap)
+> >>> +/**
+> >>> + * fill_subsection_map - fill subsection map of a memory region
+> >>> + * @pfn - start pfn of the memory range
+> >>> + * @nr_pages - number of pfns to add in the region
+> >>> + *
+> >>> + * This clears the related subsection map inside one section, and only
+> >>> + * intended for hotplug.
+> >>> + *
+> >>> + * Return:
+> >>> + * * 0		- On success.
+> >>> + * * -EINVAL	- Invalid memory region.
+> >>> + * * -EEXIST	- Subsection map has been set.
+> >>> + */
+> >>> +static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> >>>  {
+> >>> -	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> >>>  	struct mem_section *ms = __pfn_to_section(pfn);
+> >>> -	struct mem_section_usage *usage = NULL;
+> >>> +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> >>>  	unsigned long *subsection_map;
+> >>> -	struct page *memmap;
+> >>>  	int rc = 0;
+> >>>  
+> >>>  	subsection_mask_set(map, pfn, nr_pages);
+> >>>  
+> >>> -	if (!ms->usage) {
+> >>> -		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+> >>> -		if (!usage)
+> >>> -			return ERR_PTR(-ENOMEM);
+> >>> -		ms->usage = usage;
+> >>> -	}
+> >>>  	subsection_map = &ms->usage->subsection_map[0];
+> >>>  
+> >>>  	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
+> >>> @@ -816,6 +820,25 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> >>>  		bitmap_or(subsection_map, map, subsection_map,
+> >>>  				SUBSECTIONS_PER_SECTION);
+> >>>  
+> >>> +	return rc;
+> >>> +}
+> >>> +
+> >>> +static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> >>> +		unsigned long nr_pages, struct vmem_altmap *altmap)
+> >>> +{
+> >>> +	struct mem_section *ms = __pfn_to_section(pfn);
+> >>> +	struct mem_section_usage *usage = NULL;
+> >>> +	struct page *memmap;
+> >>> +	int rc = 0;
+> >>> +
+> >>> +	if (!ms->usage) {
+> >>> +		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+> >>> +		if (!usage)
+> >>> +			return ERR_PTR(-ENOMEM);
+> >>> +		ms->usage = usage;
+> >>> +	}
+> >>> +
+> >>> +	rc = fill_subsection_map(pfn, nr_pages);
+> >>>  	if (rc) {
+> >>>  		if (usage)
+> >>>  			ms->usage = NULL;
+> >>>
+> >>
+> >> What about having two variants of
+> >> section_activate()/section_deactivate() instead? Then we don't have any
+> >> subsection related stuff in !subsection code.
+> > 
+> > Thanks for looking into this, David.
+> > 
+> > Having two variants of section_activate()/section_deactivate() is also
+> > good. Just not like memmap handling which is very different between classic
+> > sparse and vmemmap, makes having two variants very attractive, the code
+> > and logic in section_activate()/section_deactivate() is not too much,
+> > and both of them basically can share the most of code, these make the
+> > variants way not so necessary. I personally prefer the current way, what
+> > do you think?
 > 
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  mm/vmpressure.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+> I was looking at
 > 
-> diff --git a/mm/vmpressure.c b/mm/vmpressure.c
-> index 4bac22f..0590f00 100644
-> --- a/mm/vmpressure.c
-> +++ b/mm/vmpressure.c
-> @@ -371,10 +371,8 @@ int vmpressure_register_event(struct mem_cgroup *memcg,
->  	int ret = 0;
->  
->  	spec_orig = spec = kstrndup(args, MAX_VMPRESSURE_ARGS_LEN, GFP_KERNEL);
-> -	if (!spec) {
-> -		ret = -ENOMEM;
-> -		goto out;
-> -	}
-> +	if (!spec)
-> +		return -ENOMEM;
->  
->  	/* Find required level */
->  	token = strsep(&spec, ",");
+> if (nr_pages < PAGES_PER_SECTION && early_section(ms))
+> 	return pfn_to_page(pfn);
 > 
+> and thought that it is also specific to sub-section handling. I wonder
+> if we can simply move that into the VMEMMAP variant of
+> populate_section_memmap()?
+> 
+> But apart from that I agree that the end result with the current
+> approach is also nice.
+> 
+> Can you reshuffle the patches, moving the fixes to the very front so we
+> can backport more easily?
 
-
--- 
-Thanks,
-
-David / dhildenb
+Sure, I will move it as the 1st one. Thanks.
 
