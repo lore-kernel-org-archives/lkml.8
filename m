@@ -2,239 +2,118 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A677C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771CBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8A920714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4749C20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1GpmvKdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgBLIud (ORCPT
+        id S1728782AbgBLIue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:50:33 -0500
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:20079 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728478AbgBLIub (ORCPT
+        Wed, 12 Feb 2020 03:50:34 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35430 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbgBLIuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:50:31 -0500
-IronPort-SDR: ZmyX65XzAzeV1zd3u5CgrLqvs7MbMC+x/5UuK6VjGds8gHoDM71WPMyWrx6IIrnnY7mms4b6Kw
- 7CHFb3XxmaDohKKZFddWZTLDjL216XfiaWakokLJY7I6R/xvIJvuOOoHtrrLyGUQH8zH6zBheF
- duHf5Ls16Ls5WkYySVRKfViIoo7BTHUVDUO/e6MphcESU/mkqN0u2Q+r7K7F3gTRKZm9vkZuuQ
- IhN4w+IeUpKIZr8bJQdk02UpMccY2Mgg3Zus+yJixTGssfZ8KbJcONVzOpYF+Zc6HewKKYoP/H
- 0wE=
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="45799270"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 12 Feb 2020 00:43:25 -0800
-IronPort-SDR: tWl/AbnplIy3EWwXsw3LdDWQ95qw23fo6t8pq4kQBBqR4nUUuGhmYgTtv3qkvhQm/7Nlp+UrPV
- rvIzereImIUjsxlPj4eX1nozxVE6Yd9lIEosWx/qU3hYseuQaYchBnL5D58QPUyICgGuuHjlIu
- GYkmj2swlre3umxNtVCuxAF04cwCYp+SsD/3B3XFWcLob2kccyKrGOaSU8ckU+Iyjtla9J3njj
- h7MXgYswPD98ccl3DuJuR82yeeCOmaL9UIpPt68p7JVLacJlJdB9cz6ao4xh8131Rbdg+8GaWN
- 1Hs=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
-        <nick@shmanahar.org>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v7 08/48] Input: atmel_mxt_ts - implement T15 Key Array support
-Date:   Wed, 12 Feb 2020 00:41:38 -0800
-Message-ID: <20200212084218.32344-9-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212084218.32344-1-jiada_wang@mentor.com>
-References: <20200212084218.32344-1-jiada_wang@mentor.com>
+        Wed, 12 Feb 2020 03:50:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NpTlCgYb/z6Vi+BVrieZmKjPIGNXZC/UxztwFhX/oFk=; b=1GpmvKdEeXdDZ/5zRSW5wO/Ao
+        nIujDFAzKzE3wq0D2nTcxVjtYyGVdgu1Jd5MgAcflDcQotS08VoIoR0OIO/fNaU0VVhPk8cID0BAL
+        QEAkby765VihaP7Gjoam3MhHORaKOqUuSWkPj7RvVZXr+I34PhC2m7RFnanmtkN8r7DQrlrm1G7DI
+        ArD1iqCp0xPVPiIUKYD+Gob2cBT0UT4YUKEWG2R3mNUdWaA7FXqEQd2nGm4WtJhllzYfyZE9AYJUT
+        TA43u+2ZLmgsFKARTkcG9MICatJ953z6e8k5lEgMM03lkQDPJkMtQjKyp7zW/IwKFqKSCHzzLLK0G
+        0D0f9OELg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50926)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j1nim-0001dz-8f; Wed, 12 Feb 2020 08:50:12 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j1nie-0001HG-SN; Wed, 12 Feb 2020 08:50:04 +0000
+Date:   Wed, 12 Feb 2020 08:50:04 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200212085004.GL25745@shell.armlinux.org.uk>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org>
+ <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+ <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Tue, Feb 11, 2020 at 05:03:02PM -0800, Linus Torvalds wrote:
+> On Tue, Feb 11, 2020 at 4:47 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > What's the situation with highmem on ARM?
+> 
+> Afaik it's exactly the same as highmem on x86 - only 32-bit ARM ever
+> needed it, and I was ranting at some people for repeating all the
+> mistakes Intel did.
+> 
+> But arm64 doesn't need it, and while 32-bit arm is obviosuly still
+> selling, I think that in many ways the switch-over to 64-bit has been
+> quicker on ARM than it was on x86. Partly because it happened later
+> (so all the 64-bit teething pains were dealt with), but largely
+> because everybody ended up actively discouraging 32-bit on the Android
+> side.
+> 
+> There were a couple of unfortunate early 32-bit arm server attempts,
+> but they were - predictably - complete garbage and nobody bought them.
+> They don't exist any more.
+> 
+> So at least my gut feel is that the arm people don't have any big
+> reason to push for maintaining HIGHMEM support either.
+> 
+> But I'm adding a couple of arm people and the arm list just in case
+> they have some input.
+> 
+> [ Obvious background for newly added people: we're talking about
+> making CONFIG_HIGHMEM a deprecated feature and saying that if you want
+> to run with lots of memory on a 32-bit kernel, you're doing legacy
+> stuff and can use a legacy kernel ]
 
-There is a key array object in many maXTouch chips which allows some X/Y
-lines to be used as a key array. This patch maps them to a series of keys
-which may be configured in a platform data array.
+Well, the recent 32-bit ARM systems generally have more than 1G
+of memory, so make use of highmem as a rule.  You're probably
+talking about crippling support for any 32-bit ARM system produced
+in the last 8 to 10 years.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Benson Leung <bleung@chromium.org>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 15bb074b5abf3a101f7b79544213f1c110ea4cab)
-[gdavis: Resolve forward port conflicts due to applying upstream
-	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
-	 data support").]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Fix compilation warning]
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 85 ++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index d36f4df0c425..e0e9e6770bc5 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -314,6 +314,9 @@ struct mxt_data {
- 	struct mxt_dbg dbg;
- 	struct gpio_desc *reset_gpio;
- 	bool use_retrigen_workaround;
-+	unsigned long t15_keystatus;
-+	int t15_num_keys;
-+	const unsigned int *t15_keymap;
- 
- 	/* Cached parameters from object table */
- 	u16 T5_address;
-@@ -324,6 +327,8 @@ struct mxt_data {
- 	u16 T71_address;
- 	u8 T9_reportid_min;
- 	u8 T9_reportid_max;
-+	u8 T15_reportid_min;
-+	u8 T15_reportid_max;
- 	u16 T18_address;
- 	u8 T19_reportid;
- 	u8 T42_reportid_min;
-@@ -987,6 +992,38 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
- 	data->update_input = true;
- }
- 
-+static void mxt_proc_t15_messages(struct mxt_data *data, u8 *msg)
-+{
-+	struct input_dev *input_dev = data->input_dev;
-+	struct device *dev = &data->client->dev;
-+	int key;
-+	bool curr_state, new_state;
-+	bool sync = false;
-+	unsigned long keystates = le32_to_cpu((__force __le32)msg[2]);
-+
-+	for (key = 0; key < data->t15_num_keys; key++) {
-+		curr_state = test_bit(key, &data->t15_keystatus);
-+		new_state = test_bit(key, &keystates);
-+
-+		if (!curr_state && new_state) {
-+			dev_dbg(dev, "T15 key press: %u\n", key);
-+			__set_bit(key, &data->t15_keystatus);
-+			input_event(input_dev, EV_KEY,
-+				    data->t15_keymap[key], 1);
-+			sync = true;
-+		} else if (curr_state && !new_state) {
-+			dev_dbg(dev, "T15 key release: %u\n", key);
-+			__clear_bit(key, &data->t15_keystatus);
-+			input_event(input_dev, EV_KEY,
-+				    data->t15_keymap[key], 0);
-+			sync = true;
-+		}
-+	}
-+
-+	if (sync)
-+		input_sync(input_dev);
-+}
-+
- static void mxt_proc_t42_messages(struct mxt_data *data, u8 *msg)
- {
- 	struct device *dev = &data->client->dev;
-@@ -1045,6 +1082,9 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
- 	} else if (report_id == data->T19_reportid) {
- 		mxt_input_button(data, message);
- 		data->update_input = true;
-+	} else if (report_id >= data->T15_reportid_min
-+		   && report_id <= data->T15_reportid_max) {
-+		mxt_proc_t15_messages(data, message);
- 	} else {
- 		mxt_dump_message(data, message);
- 	}
-@@ -1706,6 +1746,8 @@ static void mxt_free_object_table(struct mxt_data *data)
- 	data->T71_address = 0;
- 	data->T9_reportid_min = 0;
- 	data->T9_reportid_max = 0;
-+	data->T15_reportid_min = 0;
-+	data->T15_reportid_max = 0;
- 	data->T18_address = 0;
- 	data->T19_reportid = 0;
- 	data->T42_reportid_min = 0;
-@@ -1784,6 +1826,10 @@ static int mxt_parse_object_table(struct mxt_data *data,
- 						object->num_report_ids - 1;
- 			data->num_touchids = object->num_report_ids;
- 			break;
-+		case MXT_TOUCH_KEYARRAY_T15:
-+			data->T15_reportid_min = min_id;
-+			data->T15_reportid_max = max_id;
-+			break;
- 		case MXT_SPT_COMMSCONFIG_T18:
- 			data->T18_address = object->start_address;
- 			break;
-@@ -2077,6 +2123,7 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 	int error;
- 	unsigned int num_mt_slots;
- 	unsigned int mt_flags = 0;
-+	int i;
- 
- 	switch (data->multitouch) {
- 	case MXT_TOUCH_MULTI_T9:
-@@ -2190,6 +2237,15 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 				     0, 255, 0, 0);
- 	}
- 
-+	/* For T15 Key Array */
-+	if (data->T15_reportid_min) {
-+		data->t15_keystatus = 0;
-+
-+		for (i = 0; i < data->t15_num_keys; i++)
-+			input_set_capability(input_dev, EV_KEY,
-+					data->t15_keymap[i]);
-+	}
-+
- 	input_set_drvdata(input_dev, data);
- 
- 	error = input_register_device(input_dev);
-@@ -3148,8 +3204,10 @@ static void mxt_input_close(struct input_dev *dev)
- static int mxt_parse_device_properties(struct mxt_data *data)
- {
- 	static const char keymap_property[] = "linux,gpio-keymap";
-+	static const char buttons_property[] = "atmel,key-buttons";
- 	struct device *dev = &data->client->dev;
- 	u32 *keymap;
-+	u32 *buttonmap;
- 	int n_keys;
- 	int error;
- 
-@@ -3179,6 +3237,33 @@ static int mxt_parse_device_properties(struct mxt_data *data)
- 		data->t19_num_keys = n_keys;
- 	}
- 
-+	if (device_property_present(dev, buttons_property)) {
-+		n_keys = device_property_read_u32_array(dev, buttons_property,
-+							NULL, 0);
-+		if (n_keys <= 0) {
-+			error = n_keys < 0 ? n_keys : -EINVAL;
-+			dev_err(dev, "invalid/malformed '%s' property: %d\n",
-+				buttons_property, error);
-+			return error;
-+		}
-+
-+		buttonmap = devm_kmalloc_array(dev, n_keys, sizeof(*buttonmap),
-+					       GFP_KERNEL);
-+		if (!buttonmap)
-+			return -ENOMEM;
-+
-+		error = device_property_read_u32_array(dev, buttons_property,
-+						       buttonmap, n_keys);
-+		if (error) {
-+			dev_err(dev, "failed to parse '%s' property: %d\n",
-+				buttons_property, error);
-+			return error;
-+		}
-+
-+		data->t15_keymap = buttonmap;
-+		data->t15_num_keys = n_keys;
-+	}
-+
- 	return 0;
- }
- 
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
