@@ -2,222 +2,179 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394A6C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7583CC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C0F20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6B921569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:39:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LcnC4u4u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoJPg2l2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgBLWip (ORCPT
+        id S1729272AbgBLWjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:38:45 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43839 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgBLWip (ORCPT
+        Wed, 12 Feb 2020 17:39:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41455 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728447AbgBLWjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:38:45 -0500
-Received: by mail-qk1-f195.google.com with SMTP id p7so3772579qkh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:38:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MbuouEYX9Z5H4Bei49aJTBTOhhzBjt11ZC9Vcbkm2TY=;
-        b=LcnC4u4utEQh5u2B7Cy8I0wiVFJav4imq09k05KoYVAT91KM6wIJKJKyAxuMC/0piq
-         mbzuJdfVYzZL5kRntwkIpgNs3Mp5b+a4sB03duMuuzsomRJg6g1ozZs+Hf0h+wcpxNh/
-         ecNpJ4qX1xrxy8Vf/FihrxuPvOAUTlyWW8rNU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MbuouEYX9Z5H4Bei49aJTBTOhhzBjt11ZC9Vcbkm2TY=;
-        b=FFX6Nd39wj+PcL6KeeDaeINRgdgFa2tSsz9Tq2wp+LjkMc2/7J0fdia8GUynchjG+E
-         UMb8UNY+ean3jJqpCZDpOVh1wAHlU19l3AYMzlH4PESNbNsyaZmMOYADxioz4GKgqMUC
-         V7Fd+fR7205GziRCL2T81h4eAZ9YMt+Ur8+nRJRs7HQHqnTvLLLkGe8gLmKnO1/br8Pr
-         4Gys5QPViQsl1AfhgxhSqUoiPY0xTT5v27ureTfEYtcwSBkDjk7D6Oywf7WjQveANuZE
-         9eJCu4ZbCfskU7y+MdvuD/xNfTLEERHo6rGBoN7m6iSxHieuy6WWo5Knf1wVYQhHqU2R
-         x57g==
-X-Gm-Message-State: APjAAAVy1O6mVTE57FzS/ruB5NLyj6N7A8DyQRmJDMjDTzn9FEdmuhCE
-        Qn2tvlf+73sbKm6dgI4shXLezQ==
-X-Google-Smtp-Source: APXvYqxilKvNE1pe0kckjH0YEcr3/p5zYeWTBIgYpExn2meot/UiU7lxVr0r1cKxwONr0BPfJIx/wA==
-X-Received: by 2002:a05:620a:1426:: with SMTP id k6mr10915279qkj.276.1581547123725;
-        Wed, 12 Feb 2020 14:38:43 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p50sm398573qtf.5.2020.02.12.14.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 14:38:43 -0800 (PST)
-Date:   Wed, 12 Feb 2020 17:38:37 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 1/9] rcu: Rename rcu_irq_{enter,exit}_irqson()
-Message-ID: <20200212223837.GB115917@google.com>
-References: <20200212210139.382424693@infradead.org>
- <20200212210749.858223764@infradead.org>
+        Wed, 12 Feb 2020 17:39:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581547147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aHRhn6tYA2uPSVh6/rkm63iog4UAvaa+4hT5pNyhnbA=;
+        b=EoJPg2l2HU38X+hhTZMcHAUcILJ66+gH+9j3JeBtKsBQRFpBadoDtvzwyvxsccFwlURUv/
+        fuzusU5NCtqxIRpwtlfbc0IAm+JD4O+0XhICKt5J8FEcNRE4/CJRE+zimeHTYqnaAhxjzT
+        eqBT+if/i5QL4yDeh/BmSOxqwPrr58o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-wICrGc1-NMGw74EGxDF9nw-1; Wed, 12 Feb 2020 17:38:58 -0500
+X-MC-Unique: wICrGc1-NMGw74EGxDF9nw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 115101800D6B;
+        Wed, 12 Feb 2020 22:38:56 +0000 (UTC)
+Received: from x2.localnet (ovpn-116-254.phx2.redhat.com [10.3.116.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2713A19C6A;
+        Wed, 12 Feb 2020 22:38:46 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     linux-audit@redhat.com
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>, nhorman@tuxdriver.com,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling the audit daemon
+Date:   Wed, 12 Feb 2020 17:38:45 -0500
+Message-ID: <3142237.YMNxv0uec1@x2>
+Organization: Red Hat
+In-Reply-To: <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
+References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca> <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212210749.858223764@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:01:40PM +0100, Peter Zijlstra wrote:
-> The functions do in fact use local_irq_{save,restore}() and can
-> therefore be used when IRQs are in fact disabled. Worse, they are
-> already used in places where IRQs are disabled, leading to great
-> confusion when reading the code.
+On Wednesday, February 5, 2020 5:50:28 PM EST Paul Moore wrote:
+> > > > > ... When we record the audit container ID in audit_signal_info() we
+> > > > > take an extra reference to the audit container ID object so that it
+> > > > > will not disappear (and get reused) until after we respond with an
+> > > > > AUDIT_SIGNAL_INFO2.  In audit_receive_msg() when we do the
+> > > > > AUDIT_SIGNAL_INFO2 processing we drop the extra reference we took
+> > > > > in
+> > > > > audit_signal_info().  Unless I'm missing some other change you
+> > > > > made,
+> > > > > this *shouldn't* affect the syscall records, all it does is
+> > > > > preserve
+> > > > > the audit container ID object in the kernel's ACID store so it
+> > > > > doesn't
+> > > > > get reused.
+> > > > 
+> > > > This is exactly what I had understood.  I hadn't considered the extra
+> > > > details below in detail due to my original syscall concern, but they
+> > > > make sense.
+> > > > 
+> > > > The syscall I refer to is the one connected with the drop of the
+> > > > audit container identifier by the last process that was in that
+> > > > container in patch 5/16.  The production of this record is contingent
+> > > > on
+> > > > the last ref in a contobj being dropped.  So if it is due to that ref
+> > > > being maintained by audit_signal_info() until the AUDIT_SIGNAL_INFO2
+> > > > record it fetched, then it will appear that the fetch action closed
+> > > > the
+> > > > container rather than the last process in the container to exit.
+> > > > 
+> > > > Does this make sense?
+> > > 
+> > > More so than your original reply, at least to me anyway.
+> > > 
+> > > It makes sense that the audit container ID wouldn't be marked as
+> > > "dead" since it would still be very much alive and available for use
+> > > by the orchestrator, the question is if that is desirable or not.  I
+> > > think the answer to this comes down the preserving the correctness of
+> > > the audit log.
+> > > 
+> > > If the audit container ID reported by AUDIT_SIGNAL_INFO2 has been
+> > > reused then I think there is a legitimate concern that the audit log
+> > > is not correct, and could be misleading.  If we solve that by grabbing
+> > > an extra reference, then there could also be some confusion as
+> > > userspace considers a container to be "dead" while the audit container
+> > > ID still exists in the kernel, and the kernel generated audit
+> > > container ID death record will not be generated until much later (and
+> > > possibly be associated with a different event, but that could be
+> > > solved by unassociating the container death record).
+> > 
+> > How does syscall association of the death record with AUDIT_SIGNAL_INFO2
+> > possibly get associated with another event?  Or is the syscall
+> > association with the fetch for the AUDIT_SIGNAL_INFO2 the other event?
 > 
-> Rename them to fix this confusion.
+> The issue is when does the audit container ID "die".  If it is when
+> the last task in the container exits, then the death record will be
+> associated when the task's exit.  If the audit container ID lives on
+> until the last reference of it in the audit logs, including the
+> SIGNAL_INFO2 message, the death record will be associated with the
+> related SIGNAL_INFO2 syscalls, or perhaps unassociated depending on
+> the details of the syscalls/netlink.
+> 
+> > Another idea might be to bump the refcount in audit_signal_info() but
+> > mark tht contid as dead so it can't be reused if we are concerned that
+> > the dead contid be reused?
+> 
+> Ooof.  Yes, maybe, but that would be ugly.
+> 
+> > There is still the problem later that the reported contid is incomplete
+> > compared to the rest of the contid reporting cycle wrt nesting since
+> > AUDIT_SIGNAL_INFO2 will need to be more complex w/2 variable length
+> > fields to accommodate a nested contid list.
+> 
+> Do we really care about the full nested audit container ID list in the
+> SIGNAL_INFO2 record?
+> 
+> > > Of the two
+> > > approaches, I think the latter is safer in that it preserves the
+> > > correctness of the audit log, even though it could result in a delay
+> > > of the container death record.
+> > 
+> > I prefer the former since it strongly indicates last task in the
+> > container.  The AUDIT_SIGNAL_INFO2 msg has the pid and other subject
+> > attributes and the contid to strongly link the responsible party.
+> 
+> Steve is the only one who really tracks the security certifications
+> that are relevant to audit, see what the certification requirements
+> have to say and we can revisit this.
+
+Sever Virtualization Protection Profile is the closest applicable standard
+
+https://www.niap-ccevs.org/Profile/Info.cfm?PPID=408&id=408
+
+It is silent on audit requirements for the lifecycle of a VM. I assume that 
+all that is needed is what the orchestrator says its doing at the high level. 
+So, if an orchestrator wants to shutdown a container, the orchestrator must 
+log that intent and its results. In a similar fashion, systemd logs that it's 
+killing a service and we don't actually hook the exit syscall of the service 
+to record that.
+
+Now, if a container was being used as a VPS, and it had a fully functioning 
+userspace, it's own services, and its very own audit daemon, then in this 
+case it would care who sent a signal to its auditd. The tenant of that 
+container may have to comply with PCI-DSS or something else. It would log the 
+audit service is being terminated and systemd would record that its tearing 
+down the environment. The OS doesn't need to do anything.
+
+-Steve
 
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
-
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/rcupdate.h   |    4 ++--
->  include/linux/rcutiny.h    |    4 ++--
->  include/linux/rcutree.h    |    4 ++--
->  include/linux/tracepoint.h |    4 ++--
->  kernel/cpu_pm.c            |    4 ++--
->  kernel/rcu/tree.c          |    8 ++++----
->  kernel/trace/trace.c       |    4 ++--
->  7 files changed, 16 insertions(+), 16 deletions(-)
-> 
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -120,9 +120,9 @@ static inline void rcu_init_nohz(void) {
->   */
->  #define RCU_NONIDLE(a) \
->  	do { \
-> -		rcu_irq_enter_irqson(); \
-> +		rcu_irq_enter_irqsave(); \
->  		do { a; } while (0); \
-> -		rcu_irq_exit_irqson(); \
-> +		rcu_irq_exit_irqsave(); \
->  	} while (0)
->  
->  /*
-> --- a/include/linux/rcutiny.h
-> +++ b/include/linux/rcutiny.h
-> @@ -68,8 +68,8 @@ static inline int rcu_jiffies_till_stall
->  static inline void rcu_idle_enter(void) { }
->  static inline void rcu_idle_exit(void) { }
->  static inline void rcu_irq_enter(void) { }
-> -static inline void rcu_irq_exit_irqson(void) { }
-> -static inline void rcu_irq_enter_irqson(void) { }
-> +static inline void rcu_irq_exit_irqsave(void) { }
-> +static inline void rcu_irq_enter_irqsave(void) { }
->  static inline void rcu_irq_exit(void) { }
->  static inline void exit_rcu(void) { }
->  static inline bool rcu_preempt_need_deferred_qs(struct task_struct *t)
-> --- a/include/linux/rcutree.h
-> +++ b/include/linux/rcutree.h
-> @@ -46,8 +46,8 @@ void rcu_idle_enter(void);
->  void rcu_idle_exit(void);
->  void rcu_irq_enter(void);
->  void rcu_irq_exit(void);
-> -void rcu_irq_enter_irqson(void);
-> -void rcu_irq_exit_irqson(void);
-> +void rcu_irq_enter_irqsave(void);
-> +void rcu_irq_exit_irqsave(void);
->  
->  void exit_rcu(void);
->  
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -181,7 +181,7 @@ static inline struct tracepoint *tracepo
->  		 */							\
->  		if (rcuidle) {						\
->  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
-> -			rcu_irq_enter_irqson();				\
-> +			rcu_irq_enter_irqsave();			\
->  		}							\
->  									\
->  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
-> @@ -195,7 +195,7 @@ static inline struct tracepoint *tracepo
->  		}							\
->  									\
->  		if (rcuidle) {						\
-> -			rcu_irq_exit_irqson();				\
-> +			rcu_irq_exit_irqsave();				\
->  			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
->  		}							\
->  									\
-> --- a/kernel/cpu_pm.c
-> +++ b/kernel/cpu_pm.c
-> @@ -24,10 +24,10 @@ static int cpu_pm_notify(enum cpu_pm_eve
->  	 * could be disfunctional in cpu idle. Copy RCU_NONIDLE code to let
->  	 * RCU know this.
->  	 */
-> -	rcu_irq_enter_irqson();
-> +	rcu_irq_enter_irqsave();
->  	ret = __atomic_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL,
->  		nr_to_call, nr_calls);
-> -	rcu_irq_exit_irqson();
-> +	rcu_irq_exit_irqsave();
->  
->  	return notifier_to_errno(ret);
->  }
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -699,10 +699,10 @@ void rcu_irq_exit(void)
->  /*
->   * Wrapper for rcu_irq_exit() where interrupts are enabled.
->   *
-> - * If you add or remove a call to rcu_irq_exit_irqson(), be sure to test
-> + * If you add or remove a call to rcu_irq_exit_irqsave(), be sure to test
->   * with CONFIG_RCU_EQS_DEBUG=y.
->   */
-> -void rcu_irq_exit_irqson(void)
-> +void rcu_irq_exit_irqsave(void)
->  {
->  	unsigned long flags;
->  
-> @@ -875,10 +875,10 @@ void rcu_irq_enter(void)
->  /*
->   * Wrapper for rcu_irq_enter() where interrupts are enabled.
->   *
-> - * If you add or remove a call to rcu_irq_enter_irqson(), be sure to test
-> + * If you add or remove a call to rcu_irq_enter_irqsave(), be sure to test
->   * with CONFIG_RCU_EQS_DEBUG=y.
->   */
-> -void rcu_irq_enter_irqson(void)
-> +void rcu_irq_enter_irqsave(void)
->  {
->  	unsigned long flags;
->  
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3004,9 +3004,9 @@ void __trace_stack(struct trace_array *t
->  	if (unlikely(in_nmi()))
->  		return;
->  
-> -	rcu_irq_enter_irqson();
-> +	rcu_irq_enter_irqsave();
->  	__ftrace_trace_stack(buffer, flags, skip, pc, NULL);
-> -	rcu_irq_exit_irqson();
-> +	rcu_irq_exit_irqsave();
->  }
->  
->  /**
-> 
-> 
