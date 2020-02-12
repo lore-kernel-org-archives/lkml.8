@@ -2,130 +2,88 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD4EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AB22073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FFE2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="fXJEbKcP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iK5CEFVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgBLPCf (ORCPT
+        id S1728513AbgBLPCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:02:35 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38437 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLPCe (ORCPT
+        Wed, 12 Feb 2020 10:02:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43304 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgBLPCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:02:34 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t6so1062684plj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 07:02:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FR6J0RTBbPdiqIfgczIlNViu+Jfpdo5P+6apUdMx6rM=;
-        b=fXJEbKcPz4oZt4vjeQJC2jNIOrpZ1m2hZnnwZkP5rU7AE2QIVND8VnVMxzeeqSSoOE
-         aaGtrB9l3mGgYnaDu6hBgE8HqEV/vlrEpzSTLPJMZtzBdy0U7sA++/WL2Tasz6q1t2DL
-         TJA5cIkn3M9qod38ONclfYM57sLuwI2y41BcyXlLoNeNJCFTZle9xCkJGpI0ShEPH/TZ
-         Ef8lVuQKM5KuYVuBrg5lMfWivUlln/vjvsZicO5bgPPUB3JFRztvcgEHmKxRO1w3PA2B
-         XoEKYiqP5t2BHeGzn0QEEwhurrfy+LJht3miMz511brInMhXFsN4R8i0LAaJ8+tD6Wrw
-         nBFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FR6J0RTBbPdiqIfgczIlNViu+Jfpdo5P+6apUdMx6rM=;
-        b=T+fRnea6NE1JfrPU4TMot6WsoLLVppjU4ohxijJiiZ4Yw5LTap691qg7kcMD90HB0h
-         f6RMuN/70M0MYFY0Ed3yJqaLMJr2SCGXDTU9+qTP1NvhOG9vmIkghBxHx/ju1IBWIR0u
-         CQDmn206/P4AtAFKtyX5395GtiGjq9hT10LmUrlAd651YlwINLWUkvJwcjaDOsrB6YjC
-         KvnRdOvldXm2CdkIysk2j0VE4kXyFzFy4GQTvrL5UB/in6fYs+j+u+0m9ewugQyWXLsb
-         BY0ghydwm0VDZzFrnOfi/SgINOmEunSjBW+H3Gs6No77TpDjCASUwW1KKZRCiR7HbvRf
-         VIuw==
-X-Gm-Message-State: APjAAAWLgUW6AOFR9/bOCIII/xrHx5m1wv0zPDYgEMzWSEsMRbJBT7Lr
-        NdCemogkcWuwyQpZt2A40nTJLQ==
-X-Google-Smtp-Source: APXvYqx6grvy4ycKCwhlUc6ND3/5PFcUMpv8fDnyny3EdLaNp4drcF3H+3/1rlIxxUXFqoQfmv7M6Q==
-X-Received: by 2002:a17:90a:e996:: with SMTP id v22mr10613007pjy.53.1581519752767;
-        Wed, 12 Feb 2020 07:02:32 -0800 (PST)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id d73sm1312155pfd.109.2020.02.12.07.02.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 07:02:31 -0800 (PST)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Saravanan Sekar <sravanhome@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH RFT] regulator: mp5416: Fix output discharge enable bit for LDOs
-Date:   Wed, 12 Feb 2020 23:02:23 +0800
-Message-Id: <20200212150223.20042-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 12 Feb 2020 10:02:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=FaxeSXwVb9YdybUdnSUzUuefptnpP1pWk8I0wE1Oxzo=; b=iK5CEFVRW9fYTbRCi9CnjsGQfB
+        uVCamwQdLUMJVwpRf1eQtmWuO9Qj/M/kZySXlUMYjzNM4uCxkJADTlqAcB7q4bjo4xF5ch9gbAkUm
+        zPxzPqocEgc/coGG0VoB/fK9XoXmWH2JTNPhcAAOXflURp3evLfpjGP15o+fWaB+GUJ2lRzvUuG45
+        43y57IhbEJ/PAANBIhWtTNqN+xn9Aje5JVdp1HEA/khkpqbeWDf4S8/UMTZS74qMOjpm3gjf+MXa1
+        sZnoyTwWBt8UYDSQjczJnjR3MAAn33C4bu+3mgKweKYxehnoJ0OWcBRaLx3cz5IxPN/qfIXNs4+Ey
+        bJDw3QLw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1tWo-00061G-T4; Wed, 12 Feb 2020 15:02:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E0ADA30066E;
+        Wed, 12 Feb 2020 16:00:22 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DE4CF2032662E; Wed, 12 Feb 2020 16:02:11 +0100 (CET)
+Date:   Wed, 12 Feb 2020 16:02:11 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH 4/8] sched,rcu,tracing: Mark preempt_count_{add,sub}()
+ notrace
+Message-ID: <20200212150211.GS14897@hirez.programming.kicks-ass.net>
+References: <20200212093210.468391728@infradead.org>
+ <20200212094107.838108888@infradead.org>
+ <20200212092417.04c3da8c@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212092417.04c3da8c@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The .active_discharge_on/.active_discharge_mask settings does not match
-the datasheet, fix it.
+On Wed, Feb 12, 2020 at 09:24:17AM -0500, Steven Rostedt wrote:
+> On Wed, 12 Feb 2020 10:32:14 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > Because of the requirement that no tracing happens until after we've
+> > incremented preempt_count, see nmi_enter() / trace_rcu_enter(), mark
+> > these functions as notrace.
+> 
+> I actually depend on these function being traced.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
-Hi Saravanan,
-I don't have the h/w to test, please help review and test this patch.
+Why? They already have a tracepoint inside.
 
-Thanks,
-Axel
+> We do have
+> "preempt_enable_notrace()" and "preempt_disable_notrace()" for places
+> that shouldn't be traced. Can't we use those? (or simply
+> __preempt_count_add()) in the nmi_enter() code instead? (perhaps create
+> a preempt_count_add_notrace()).
 
- drivers/regulator/mp5416.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/regulator/mp5416.c b/drivers/regulator/mp5416.c
-index 7954ad17249b..67ce1b52a1a1 100644
---- a/drivers/regulator/mp5416.c
-+++ b/drivers/regulator/mp5416.c
-@@ -73,7 +73,7 @@
- 		.owner			= THIS_MODULE,			\
- 	}
- 
--#define MP5416LDO(_name, _id)						\
-+#define MP5416LDO(_name, _id, _dval)					\
- 	[MP5416_LDO ## _id] = {						\
- 		.id = MP5416_LDO ## _id,				\
- 		.name = _name,						\
-@@ -87,9 +87,9 @@
- 		.vsel_mask = MP5416_MASK_VSET,				\
- 		.enable_reg = MP5416_REG_LDO ##_id,			\
- 		.enable_mask = MP5416_REGULATOR_EN,			\
--		.active_discharge_on	= BIT(_id),			\
-+		.active_discharge_on	= _dval,			\
- 		.active_discharge_reg	= MP5416_REG_CTL2,		\
--		.active_discharge_mask	= BIT(_id),			\
-+		.active_discharge_mask	= _dval,			\
- 		.owner			= THIS_MODULE,			\
- 	}
- 
-@@ -155,10 +155,10 @@ static struct regulator_desc mp5416_regulators_desc[MP5416_MAX_REGULATORS] = {
- 	MP5416BUCK("buck2", 2, mp5416_I_limits2, MP5416_REG_CTL1, BIT(1), 2),
- 	MP5416BUCK("buck3", 3, mp5416_I_limits1, MP5416_REG_CTL1, BIT(2), 1),
- 	MP5416BUCK("buck4", 4, mp5416_I_limits2, MP5416_REG_CTL2, BIT(5), 2),
--	MP5416LDO("ldo1", 1),
--	MP5416LDO("ldo2", 2),
--	MP5416LDO("ldo3", 3),
--	MP5416LDO("ldo4", 4),
-+	MP5416LDO("ldo1", 1, BIT(4)),
-+	MP5416LDO("ldo2", 2, BIT(3)),
-+	MP5416LDO("ldo3", 3, BIT(2)),
-+	MP5416LDO("ldo4", 4, BIT(1)),
- };
- 
- /*
--- 
-2.20.1
+My initial patch has __preempt_count_add/sub() in, but then I figured
+someone would go complain the tracepoint would go missing.
 
