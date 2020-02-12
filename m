@@ -2,222 +2,192 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D71C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F30C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63072073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocN5cXNd"
+	by mail.kernel.org (Postfix) with ESMTP id 6F46521D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581503572;
+	bh=kHV32jEDnPvZQAKmMdNGxXaDqS1B6CzOhU1Igck7lvY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=w0ZKEsU0Nhu1BttkBcTuKbEh1hgTd9y9olw1G9qE0RjoTJ4aS2+tgR3+mz87/sBkY
+	 JdmY+MVG8CaxGl1X5TJxiGA8nc03I+VL4fDrAZLiiUH/PX4RKGOOMxFwdAlOfxPEir
+	 689ZQHqa2ySEyogB+iPjGKX9dm7+irt0p/vrD+9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgBLK3e (ORCPT
+        id S1727777AbgBLKcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:29:34 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50671 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgBLK3d (ORCPT
+        Wed, 12 Feb 2020 05:32:52 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:32826 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgBLKcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:29:33 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so711805pjb.0;
-        Wed, 12 Feb 2020 02:29:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qrIu8Jkz2wpM8W+TP78G0aZpBZ0BfsPMDbCMB5VExMA=;
-        b=ocN5cXNduPet9cp95r3WX9wfcOziPCbCA38D+muLWQZxVfN+cKGWIRGGpDKAl2qa/V
-         wIF3jMZOaR5DiOYtF2+HFK7aLBBZMyw1DpAqrNqVBjeN35IFK7mm4ntm2DmiKH0A62zz
-         19rTmJECA3NVqEaNP5Z+vx+fFUd7V7WNo/RTwtDu1QgoFIKJjY9+tH+Go+fopGDoGidd
-         ZxHrEZ1gtfYY/0stPSVHsl3ViE+mg0GM4SLr7PM11zXODfuEcGEsJ1xUyDSkm4m1HAaX
-         UuqQkdj0N2i4AWMCWbJCvLMwObhxld4Uw07ShioK14zNBX+u50AtDypMP3WGMCbO3C5V
-         8k1w==
+        Wed, 12 Feb 2020 05:32:51 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so1431780otp.0;
+        Wed, 12 Feb 2020 02:32:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qrIu8Jkz2wpM8W+TP78G0aZpBZ0BfsPMDbCMB5VExMA=;
-        b=EIL9ayllQ9SC9YNQGaMno5EaHavP5ktaUMNl4yIei1L2OOdIFuYC0zSMuRhvfFtxBI
-         kLDNC8mYIBXiB2+gXz4a1FTEjpbY8Sg9FTSStZhG1rdMbj8dLv8LpTOKg5tFLEHhC+7N
-         LKbR2JomhtcSXPqgTN8SC41bg+X3vBNI6q6IZgngzmz5V+Ih6+xHFIJOcpdyoGOUqMTy
-         nZK5rixxGqLJBrB22MUrm6YbyeqrAgCdNjDBfVl9FGxxx/UTTiLNPJwzoDVsnXrQRIEj
-         wisw//89pULr50BJDiXHunFu/nTPGI81BHMgpMfJpWIFCcoZJtdj+1lNeT15e0SoRf6D
-         Pjyw==
-X-Gm-Message-State: APjAAAVGhibNBXvxmsw35MJJUbhnkD3gZ/nBxboEY/dVBY934Q8m9/1f
-        CMO9dD5AWWU6Hf1F+7T+qWM=
-X-Google-Smtp-Source: APXvYqyZg2aspnp+u07UAHUYTj5c7CClLBkt7whw5m0aEIu2PvYwuhc7QRe+Gm4SqRfn6ljk8E+Y0A==
-X-Received: by 2002:a17:90a:e28e:: with SMTP id d14mr9592350pjz.56.1581503373136;
-        Wed, 12 Feb 2020 02:29:33 -0800 (PST)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id f8sm6535563pjg.28.2020.02.12.02.29.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Feb 2020 02:29:32 -0800 (PST)
-Date:   Wed, 12 Feb 2020 19:28:19 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
-Message-ID: <20200212102817.GA18107@js1304-desktop>
-References: <20191107205334.158354-1-hannes@cmpxchg.org>
- <20191107205334.158354-3-hannes@cmpxchg.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gzv9rt4/sNqw8bJZ2qsq654js0pdgt12w5ZQU73AU3k=;
+        b=Mh1sLVZt+D8gsL7IxIkjsA7q6wmOMGNgxfTe286J6KfCVyEthFRWT8vDWe3MMqFuUJ
+         bfPHvatcdxwUC6s7fV2oB46SRlbDcFTCQdbcJ4uyV7lqKBlHQ3S7g0E91SpitwjFyhrI
+         anFLefv1Kfp6vNECrzbEFJfkkVivUS53CotdK2nDtXojjOmM5dCzelxo8QsJfTCx5b3i
+         u8EWrclg0ce6uXFJLbSTJzgBzxCdmX6TDpiizY5FsC5eWbUsgflIgKOG4d7LtMie2cNM
+         xMx0FFT4pqLiopmYlI91Q1CMLjr6jmrmNnE49wYpj0hflBXdkiT7dOGvtxLzd4XHloMc
+         SYkA==
+X-Gm-Message-State: APjAAAXBORr/c8gi4O9PqfjUZpUJR9Qy0UOTz29edcoO12y9yGGQRcwH
+        Nq+bYWe8gSTYWZFl/r2b0K0Emv3+Jl1F11sdezg=
+X-Google-Smtp-Source: APXvYqyy0kS7yyyUWf4LuMflnzcOEsRX4eqdYDT7PPvW+fTKcUJ6nyzjykovZhYc07IsNLnHlvxZIEw2/zbxRrszOjs=
+X-Received: by 2002:a9d:7559:: with SMTP id b25mr8433715otl.189.1581503570435;
+ Wed, 12 Feb 2020 02:32:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107205334.158354-3-hannes@cmpxchg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1654227.8mz0SueHsU@kreacher> <1759702.XAW9B0MHEz@kreacher>
+In-Reply-To: <1759702.XAW9B0MHEz@kreacher>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 12 Feb 2020 11:32:39 +0100
+Message-ID: <CAJZ5v0g7H=hQPZ18qtzXv_c_w_QL1i4vuKcogygipcH2vz689Q@mail.gmail.com>
+Subject: Re: [PATCH 16/28] drm: i915: Call cpu_latency_qos_*() instead of pm_qos_*()
+To:     intel-gfx <intel-gfx@lists.freedesktop.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Johannes.
+On Wed, Feb 12, 2020 at 12:40 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>
+> Call cpu_latency_qos_add/update/remove_request() instead of
+> pm_qos_add/update/remove_request(), respectively, because the
+> latter are going to be dropped.
+>
+> No intentional functional impact.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-When I tested my patchset on v5.5, I found that my patchset doesn't
-work as intended. I tracked down the issue and this patch would be the
-reason of unintended work. I don't fully understand the patchset so I
-could be wrong. Please let me ask some questions.
+Please note that the whole series is available here:
 
-On Thu, Nov 07, 2019 at 12:53:33PM -0800, Johannes Weiner wrote:
-...snip...
-> -static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data_t *pgdat)
-> +static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t *pgdat)
->  {
-> -	struct mem_cgroup *memcg;
-> -
-> -	memcg = mem_cgroup_iter(root_memcg, NULL, NULL);
-> -	do {
-> -		unsigned long refaults;
-> -		struct lruvec *lruvec;
-> +	struct lruvec *target_lruvec;
-> +	unsigned long refaults;
->  
-> -		lruvec = mem_cgroup_lruvec(memcg, pgdat);
-> -		refaults = lruvec_page_state_local(lruvec, WORKINGSET_ACTIVATE);
-> -		lruvec->refaults = refaults;
-> -	} while ((memcg = mem_cgroup_iter(root_memcg, memcg, NULL)));
-> +	target_lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
-> +	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
-> +	target_lruvec->refaults = refaults;
+https://lore.kernel.org/linux-pm/1654227.8mz0SueHsU@kreacher/
 
-Is it correct to just snapshot the refault for the target memcg? I
-think that we need to snapshot the refault for all the child memcgs
-since we have traversed all the child memcgs with the refault count
-that is aggregration of all the child memcgs. If next reclaim happens
-from the child memcg, workingset transition that is already considered
-could be considered again.
-
+> ---
+>  drivers/gpu/drm/i915/display/intel_dp.c |  4 ++--
+>  drivers/gpu/drm/i915/i915_drv.c         | 12 +++++-------
+>  drivers/gpu/drm/i915/intel_sideband.c   |  5 +++--
+>  3 files changed, 10 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index c7424e2a04a3..208457005a11 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -1360,7 +1360,7 @@ intel_dp_aux_xfer(struct intel_dp *intel_dp,
+>          * lowest possible wakeup latency and so prevent the cpu from going into
+>          * deep sleep states.
+>          */
+> -       pm_qos_update_request(&i915->pm_qos, 0);
+> +       cpu_latency_qos_update_request(&i915->pm_qos, 0);
+>
+>         intel_dp_check_edp(intel_dp);
+>
+> @@ -1488,7 +1488,7 @@ intel_dp_aux_xfer(struct intel_dp *intel_dp,
+>
+>         ret = recv_bytes;
+>  out:
+> -       pm_qos_update_request(&i915->pm_qos, PM_QOS_DEFAULT_VALUE);
+> +       cpu_latency_qos_update_request(&i915->pm_qos, PM_QOS_DEFAULT_VALUE);
+>
+>         if (vdd)
+>                 edp_panel_vdd_off(intel_dp, false);
+> diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
+> index f7385abdd74b..74481a189cfc 100644
+> --- a/drivers/gpu/drm/i915/i915_drv.c
+> +++ b/drivers/gpu/drm/i915/i915_drv.c
+> @@ -502,8 +502,7 @@ static int i915_driver_early_probe(struct drm_i915_private *dev_priv)
+>         mutex_init(&dev_priv->backlight_lock);
+>
+>         mutex_init(&dev_priv->sb_lock);
+> -       pm_qos_add_request(&dev_priv->sb_qos,
+> -                          PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
+> +       cpu_latency_qos_add_request(&dev_priv->sb_qos, PM_QOS_DEFAULT_VALUE);
+>
+>         mutex_init(&dev_priv->av_mutex);
+>         mutex_init(&dev_priv->wm.wm_mutex);
+> @@ -568,7 +567,7 @@ static void i915_driver_late_release(struct drm_i915_private *dev_priv)
+>         vlv_free_s0ix_state(dev_priv);
+>         i915_workqueues_cleanup(dev_priv);
+>
+> -       pm_qos_remove_request(&dev_priv->sb_qos);
+> +       cpu_latency_qos_remove_request(&dev_priv->sb_qos);
+>         mutex_destroy(&dev_priv->sb_lock);
 >  }
->  
->  /*
-> diff --git a/mm/workingset.c b/mm/workingset.c
-> index e8212123c1c3..f0885d9f41cd 100644
-> --- a/mm/workingset.c
-> +++ b/mm/workingset.c
-> @@ -213,28 +213,53 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
->  	*workingsetp = workingset;
+>
+> @@ -1226,8 +1225,7 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
+>                 }
+>         }
+>
+> -       pm_qos_add_request(&dev_priv->pm_qos, PM_QOS_CPU_DMA_LATENCY,
+> -                          PM_QOS_DEFAULT_VALUE);
+> +       cpu_latency_qos_add_request(&dev_priv->pm_qos, PM_QOS_DEFAULT_VALUE);
+>
+>         intel_gt_init_workarounds(dev_priv);
+>
+> @@ -1273,7 +1271,7 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
+>  err_msi:
+>         if (pdev->msi_enabled)
+>                 pci_disable_msi(pdev);
+> -       pm_qos_remove_request(&dev_priv->pm_qos);
+> +       cpu_latency_qos_remove_request(&dev_priv->pm_qos);
+>  err_mem_regions:
+>         intel_memory_regions_driver_release(dev_priv);
+>  err_ggtt:
+> @@ -1296,7 +1294,7 @@ static void i915_driver_hw_remove(struct drm_i915_private *dev_priv)
+>         if (pdev->msi_enabled)
+>                 pci_disable_msi(pdev);
+>
+> -       pm_qos_remove_request(&dev_priv->pm_qos);
+> +       cpu_latency_qos_remove_request(&dev_priv->pm_qos);
 >  }
->  
-> +static void advance_inactive_age(struct mem_cgroup *memcg, pg_data_t *pgdat)
-> +{
-> +	/*
-> +	 * Reclaiming a cgroup means reclaiming all its children in a
-> +	 * round-robin fashion. That means that each cgroup has an LRU
-> +	 * order that is composed of the LRU orders of its child
-> +	 * cgroups; and every page has an LRU position not just in the
-> +	 * cgroup that owns it, but in all of that group's ancestors.
-> +	 *
-> +	 * So when the physical inactive list of a leaf cgroup ages,
-> +	 * the virtual inactive lists of all its parents, including
-> +	 * the root cgroup's, age as well.
-> +	 */
-> +	do {
-> +		struct lruvec *lruvec;
-> +
-> +		lruvec = mem_cgroup_lruvec(memcg, pgdat);
-> +		atomic_long_inc(&lruvec->inactive_age);
-> +	} while (memcg && (memcg = parent_mem_cgroup(memcg)));
-> +}
-> +
+>
 >  /**
->   * workingset_eviction - note the eviction of a page from memory
-> + * @target_memcg: the cgroup that is causing the reclaim
->   * @page: the page being evicted
->   *
->   * Returns a shadow entry to be stored in @page->mapping->i_pages in place
->   * of the evicted @page so that a later refault can be detected.
->   */
-> -void *workingset_eviction(struct page *page)
-> +void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg)
->  {
->  	struct pglist_data *pgdat = page_pgdat(page);
-> -	struct mem_cgroup *memcg = page_memcg(page);
-> -	int memcgid = mem_cgroup_id(memcg);
->  	unsigned long eviction;
->  	struct lruvec *lruvec;
-> +	int memcgid;
->  
->  	/* Page is fully exclusive and pins page->mem_cgroup */
->  	VM_BUG_ON_PAGE(PageLRU(page), page);
->  	VM_BUG_ON_PAGE(page_count(page), page);
->  	VM_BUG_ON_PAGE(!PageLocked(page), page);
->  
-> -	lruvec = mem_cgroup_lruvec(memcg, pgdat);
-> -	eviction = atomic_long_inc_return(&lruvec->inactive_age);
-> +	advance_inactive_age(page_memcg(page), pgdat);
-> +
-> +	lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
-> +	/* XXX: target_memcg can be NULL, go through lruvec */
-> +	memcgid = mem_cgroup_id(lruvec_memcg(lruvec));
-> +	eviction = atomic_long_read(&lruvec->inactive_age);
->  	return pack_shadow(memcgid, pgdat, eviction, PageWorkingset(page));
+> diff --git a/drivers/gpu/drm/i915/intel_sideband.c b/drivers/gpu/drm/i915/intel_sideband.c
+> index cbfb7171d62d..0648eda309e4 100644
+> --- a/drivers/gpu/drm/i915/intel_sideband.c
+> +++ b/drivers/gpu/drm/i915/intel_sideband.c
+> @@ -60,7 +60,7 @@ static void __vlv_punit_get(struct drm_i915_private *i915)
+>          * to the Valleyview P-unit and not all sideband communications.
+>          */
+>         if (IS_VALLEYVIEW(i915)) {
+> -               pm_qos_update_request(&i915->sb_qos, 0);
+> +               cpu_latency_qos_update_request(&i915->sb_qos, 0);
+>                 on_each_cpu(ping, NULL, 1);
+>         }
 >  }
->  
-> @@ -244,10 +269,13 @@ void *workingset_eviction(struct page *page)
->   * @shadow: shadow entry of the evicted page
->   *
->   * Calculates and evaluates the refault distance of the previously
-> - * evicted page in the context of the node it was allocated in.
-> + * evicted page in the context of the node and the memcg whose memory
-> + * pressure caused the eviction.
->   */
->  void workingset_refault(struct page *page, void *shadow)
+> @@ -68,7 +68,8 @@ static void __vlv_punit_get(struct drm_i915_private *i915)
+>  static void __vlv_punit_put(struct drm_i915_private *i915)
 >  {
-> +	struct mem_cgroup *eviction_memcg;
-> +	struct lruvec *eviction_lruvec;
->  	unsigned long refault_distance;
->  	struct pglist_data *pgdat;
->  	unsigned long active_file;
-> @@ -277,12 +305,12 @@ void workingset_refault(struct page *page, void *shadow)
->  	 * would be better if the root_mem_cgroup existed in all
->  	 * configurations instead.
->  	 */
-> -	memcg = mem_cgroup_from_id(memcgid);
-> -	if (!mem_cgroup_disabled() && !memcg)
-> +	eviction_memcg = mem_cgroup_from_id(memcgid);
-> +	if (!mem_cgroup_disabled() && !eviction_memcg)
->  		goto out;
-> -	lruvec = mem_cgroup_lruvec(memcg, pgdat);
-> -	refault = atomic_long_read(&lruvec->inactive_age);
-> -	active_file = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES);
-> +	eviction_lruvec = mem_cgroup_lruvec(eviction_memcg, pgdat);
-> +	refault = atomic_long_read(&eviction_lruvec->inactive_age);
-> +	active_file = lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE);
-
-Do we need to use the aggregation LRU count of all the child memcgs?
-AFAIU, refault here is the aggregation counter of all the related
-memcgs. Without using the aggregation count for LRU, active_file could
-be so small than the refault distance and refault cannot happen
-correctly.
-
-Thanks.
+>         if (IS_VALLEYVIEW(i915))
+> -               pm_qos_update_request(&i915->sb_qos, PM_QOS_DEFAULT_VALUE);
+> +               cpu_latency_qos_update_request(&i915->sb_qos,
+> +                                              PM_QOS_DEFAULT_VALUE);
+>
+>         iosf_mbi_punit_release();
+>  }
+> --
+> 2.16.4
+>
+>
+>
+>
+>
