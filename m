@@ -2,158 +2,587 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C06BC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3770C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF91206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:22:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FIQ+g8mx"
+	by mail.kernel.org (Postfix) with ESMTP id 7F7C7206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgBLLWH (ORCPT
+        id S1728331AbgBLLWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:22:07 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59958 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgBLLWF (ORCPT
+        Wed, 12 Feb 2020 06:22:10 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:59066 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728236AbgBLLWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:22:05 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLptt023254;
-        Wed, 12 Feb 2020 05:21:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581506511;
-        bh=irXm3n0Br626t+Byi041gd8ETS1z2r1vmrQt2s1wqxw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=FIQ+g8mxDGB7ja+P/VTDmdpabW4bqxs5fgWyvW4ZWk6QV7GT5n/BsgRD5NX6AMb79
-         9lyKsEBuYJzGcLZPVExFi9yKqu0v/Hq92Qw+rsZ9CiDwIDDqF1/4PtVukFqeyX942k
-         95nzIw9gcrBDv+lxV2q1n2a3eeIyY9geoeljf91k=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLpmM078572;
-        Wed, 12 Feb 2020 05:21:51 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
- Feb 2020 05:21:51 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 12 Feb 2020 05:21:51 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLc5Z049841;
-        Wed, 12 Feb 2020 05:21:48 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Athani Nadeem Ladkhan <nadeem@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 3/5] PCI: endpoint: Protect concurrent access to memory allocation with mutex
-Date:   Wed, 12 Feb 2020 16:55:12 +0530
-Message-ID: <20200212112514.2000-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212112514.2000-1-kishon@ti.com>
-References: <20200212112514.2000-1-kishon@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 12 Feb 2020 06:22:06 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 12 Feb 2020 16:51:55 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 12 Feb 2020 16:51:33 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id C354A24FD; Wed, 12 Feb 2020 16:51:31 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v3 1/4] dt-bindings: phy: qcom,qmp: Convert QMP phy bindings to yaml
+Date:   Wed, 12 Feb 2020 16:51:25 +0530
+Message-Id: <1581506488-26881-2-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
+References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci-epc-mem uses bitmap to manage the PCI address region. This address
-region will be shared by multiple endpoint functions (in the case of
-multi function endpoint) and it has to be protected from concurrent
-access to avoid updating inconsistent state. Use mutex to protect while
-updating bitmap.
+Convert QMP phy  bindings to DT schema format using json-schema.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 ---
- drivers/pci/endpoint/pci-epc-mem.c | 10 ++++++++--
- include/linux/pci-epc.h            |  3 +++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 283 +++++++++++++++++++++
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 227 -----------------
+ 2 files changed, 283 insertions(+), 227 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 
-diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-index d2b174ce15de..abfac1109a13 100644
---- a/drivers/pci/endpoint/pci-epc-mem.c
-+++ b/drivers/pci/endpoint/pci-epc-mem.c
-@@ -79,6 +79,7 @@ int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
- 	mem->page_size = page_size;
- 	mem->pages = pages;
- 	mem->size = size;
-+	mutex_init(&mem->lock);
- 
- 	epc->mem = mem;
- 
-@@ -122,7 +123,7 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
- 				     phys_addr_t *phys_addr, size_t size)
- {
- 	int pageno;
--	void __iomem *virt_addr;
-+	void __iomem *virt_addr = NULL;
- 	struct pci_epc_mem *mem = epc->mem;
- 	unsigned int page_shift = ilog2(mem->page_size);
- 	int order;
-@@ -130,15 +131,18 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
- 
-+	mutex_lock(&mem->lock);
- 	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
- 	if (pageno < 0)
--		return NULL;
-+		goto ret;
- 
- 	*phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
- 	virt_addr = ioremap(*phys_addr, size);
- 	if (!virt_addr)
- 		bitmap_release_region(mem->bitmap, pageno, order);
- 
-+ret:
-+	mutex_unlock(&mem->lock);
- 	return virt_addr;
- }
- EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-@@ -164,7 +168,9 @@ void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
- 	pageno = (phys_addr - mem->phys_base) >> page_shift;
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
-+	mutex_lock(&mem->lock);
- 	bitmap_release_region(mem->bitmap, pageno, order);
-+	mutex_unlock(&mem->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
- 
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 9dd60f2e9705..4e3e527c49d1 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -71,6 +71,7 @@ struct pci_epc_ops {
-  * @bitmap: bitmap to manage the PCI address space
-  * @pages: number of bits representing the address region
-  * @page_size: size of each page
-+ * @lock: mutex to protect bitmap
-  */
- struct pci_epc_mem {
- 	phys_addr_t	phys_base;
-@@ -78,6 +79,8 @@ struct pci_epc_mem {
- 	unsigned long	*bitmap;
- 	size_t		page_size;
- 	int		pages;
-+	/* mutex to protect against concurrent access for memory allocation*/
-+	struct mutex	lock;
- };
- 
- /**
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+new file mode 100644
+index 0000000..b39a594
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+@@ -0,0 +1,283 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm QMP PHY controller
++
++maintainers:
++  - Manu Gautam <mgautam@codeaurora.org>
++
++description:
++  QMP phy controller supports physical layer functionality for a number of
++  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
++
++properties:
++  compatible:
++    enum:
++      - qcom,ipq8074-qmp-pcie-phy
++      - qcom,msm8996-qmp-pcie-phy
++      - qcom,msm8996-qmp-usb3-phy
++      - qcom,msm8998-qmp-usb3-phy
++      - qcom,msm8998-qmp-ufs-phy
++      - qcom,msm8998-qmp-pcie-phy
++      - qcom,sdm845-qmp-usb3-phy
++      - qcom,sdm845-qmp-usb3-uni-phy
++      - qcom,sdm845-qmp-ufs-phy
++      - qcom,sm8150-qmp-ufs-phy
++
++  reg:
++    minItems: 1
++    items:
++      - description: Address and length of PHY's common serdes block.
++      - description: Address and length of the DP_COM control block.
++
++  reg-names:
++    items:
++      - const: reg-base
++      - const: dp_com
++
++  "#clock-cells":
++     enum: [ 1, 2 ]
++
++  "#address-cells":
++    enum: [ 1, 2 ]
++
++  "#size-cells":
++    enum: [ 1, 2 ]
++
++  clocks:
++    maxItems: 4
++    minItems: 1
++
++  clock-names:
++    maxItems: 4
++    minItems: 1
++
++  resets:
++    maxItems: 3
++    minItems: 1
++
++  reset-names:
++    maxItems: 3
++    minItems: 1
++
++  vdda-phy-supply:
++    description:
++        Phandle to a regulator supply to PHY core block.
++
++  vdda-pll-supply:
++    description:
++        Phandle to 1.8V regulator supply to PHY refclk pll block.
++
++  vddp-ref-clk-supply:
++    description:
++        Phandle to a regulator supply to any specific refclk
++        pll block.
++
++#Required nodes:
++patternProperties:
++  "^lanes@[0-9a-f]+$":
++    type: object
++    description:
++      Each device node of QMP phy is required to have as many child nodes as
++      the number of lanes the PHY has.
++
++required:
++  - compatible
++  - reg
++  - "#clock-cells"
++  - "#address-cells"
++  - "#size-cells"
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - vdda-phy-supply
++  - vdda-pll-supply
++
++additionalProperties: false
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++             enum:
++               - qcom,sdm845-qmp-usb3-phy
++               - qcom,sdm845-qmp-usb3-uni-phy
++    then:
++      properties:
++        clocks:
++          items:
++            - description: Phy aux clock.
++            - description: Phy config clock.
++            - description: 19.2 MHz ref clk.
++            - description: Phy common block aux clock.
++        clock-names:
++          items:
++            - const: aux
++            - const: cfg_ahb
++            - const: ref
++            - const: com_aux
++        resets:
++          items:
++            - description: reset of phy block.
++            - description: phy common block reset.
++        reset-names:
++          items:
++             - const: phy
++             - const: common
++  - if:
++      properties:
++        compatible:
++          contains:
++             enum:
++               - qcom,msm8996-qmp-pcie-phy
++    then:
++      properties:
++        clocks:
++          items:
++            - description: Phy aux clock.
++            - description: Phy config clock.
++            - description: 19.2 MHz ref clk.
++
++        clock-names:
++          items:
++            - const: aux
++            - const: cfg_ahb
++            - const: ref
++        resets:
++          items:
++            - description: reset of phy block.
++            - description: phy common block reset.
++            - description: phy's ahb cfg block reset.
++        reset-names:
++          items:
++             - const: phy
++             - const: common
++             - const: cfg
++  - if:
++      properties:
++        compatible:
++          contains:
++             enum:
++               - qcom,msm8996-qmp-pcie-phy
++               - qcom,msm8996-qmp-usb3-phy
++               - qcom,msm8998-qmp-pcie-phy
++               - qcom,msm8998-qmp-usb3-phy
++    then:
++      properties:
++        clocks:
++          items:
++            - description: Phy aux clock.
++            - description: Phy config clock.
++            - description: 19.2 MHz ref clk.
++        clock-names:
++          items:
++            - const: aux
++            - const: cfg_ahb
++            - const: ref
++        resets:
++          items:
++            - description: reset of phy block.
++            - description: phy common block reset.
++        reset-names:
++          items:
++             - const: phy
++             - const: common
++  - if:
++      properties:
++        compatible:
++          contains:
++             enum:
++               - qcom,msm8998-qmp-ufs-phy
++               - qcom,sdm845-qmp-ufs-phy
++               - qcom,sm8150-qmp-ufs-phy
++    then:
++      properties:
++        clocks:
++          items:
++            - description: 19.2 MHz ref clk.
++            - description: Phy reference aux clock.
++        clock-names:
++          items:
++            - const: ref
++            - const: ref_aux
++        resets:
++          items:
++            - description: PHY reset in the UFS controller.
++        reset-names:
++          items:
++            - const: ufsphy
++  - if:
++      properties:
++        compatible:
++          contains:
++             enum:
++               - qcom,ipq8074-qmp-pcie-phy
++    then:
++      properties:
++        clocks:
++          items:
++            - description: pipe clk.
++        clock-names:
++          items:
++            - const: pipe_clk
++        resets:
++          items:
++            - description: reset of phy block.
++            - description: phy common block reset.
++        reset-names:
++          items:
++            - const: phy
++            - const: common
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: qcom,sdm845-qmp-usb3-phy
++    then:
++      required:
++        - reg-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++    usb_1_qmpphy: phy@88e9000 {
++        compatible = "qcom,sdm845-qmp-usb3-phy";
++        reg = <0 0x088e9000 0 0x18c>,
++              <0 0x088e8000 0 0x10>;
++        reg-names = "reg-base", "dp_com";
++        #clock-cells = <1>;
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
++                 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
++                 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
++        clock-names = "aux", "cfg_ahb", "ref", "com_aux";
++
++        resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
++                 <&gcc GCC_USB3_PHY_PRIM_BCR>;
++        reset-names = "phy", "common";
++
++        vdda-phy-supply = <&vdda_usb2_ss_1p2>;
++        vdda-pll-supply = <&vdda_usb2_ss_core>;
++
++        usb_1_ssphy: lanes@88e9200 {
++                reg = <0 0x088e9200 0 0x128>,
++                      <0 0x088e9400 0 0x200>,
++                      <0 0x088e9c00 0 0x218>,
++                      <0 0x088e9600 0 0x128>,
++                      <0 0x088e9800 0 0x200>,
++                      <0 0x088e9a00 0 0x100>;
++                #phy-cells = <0>;
++                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
++                clock-names = "pipe0";
++                clock-output-names = "usb3_phy_pipe_clk_src";
++            };
++        };
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+deleted file mode 100644
+index eac9ad3..0000000
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ /dev/null
+@@ -1,227 +0,0 @@
+-Qualcomm QMP PHY controller
+-===========================
+-
+-QMP phy controller supports physical layer functionality for a number of
+-controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+-
+-Required properties:
+- - compatible: compatible list, contains:
+-	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+-	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+-	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+-	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
+-	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
+-	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
+-	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+-	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+-	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845,
+-	       "qcom,sm8150-qmp-ufs-phy" for UFS QMP phy on sm8150.
+-
+-- reg:
+-  - index 0: address and length of register set for PHY's common
+-             serdes block.
+-  - index 1: address and length of the DP_COM control block (for
+-             "qcom,sdm845-qmp-usb3-phy" only).
+-
+-- reg-names:
+-  - For "qcom,sdm845-qmp-usb3-phy":
+-    - Should be: "reg-base", "dp_com"
+-  - For all others:
+-    - The reg-names property shouldn't be defined.
+-
+- - #address-cells: must be 1
+- - #size-cells: must be 1
+- - ranges: must be present
+-
+- - clocks: a list of phandles and clock-specifier pairs,
+-	   one for each entry in clock-names.
+- - clock-names: "cfg_ahb" for phy config clock,
+-		"aux" for phy aux clock,
+-		"ref" for 19.2 MHz ref clk,
+-		"com_aux" for phy common block aux clock,
+-		"ref_aux" for phy reference aux clock,
+-
+-		For "qcom,ipq8074-qmp-pcie-phy": no clocks are listed.
+-		For "qcom,msm8996-qmp-pcie-phy" must contain:
+-			"aux", "cfg_ahb", "ref".
+-		For "qcom,msm8996-qmp-usb3-phy" must contain:
+-			"aux", "cfg_ahb", "ref".
+-		For "qcom,msm8998-qmp-usb3-phy" must contain:
+-			"aux", "cfg_ahb", "ref".
+-		For "qcom,msm8998-qmp-ufs-phy" must contain:
+-			"ref", "ref_aux".
+-		For "qcom,msm8998-qmp-pcie-phy" must contain:
+-			"aux", "cfg_ahb", "ref".
+-		For "qcom,sdm845-qmp-usb3-phy" must contain:
+-			"aux", "cfg_ahb", "ref", "com_aux".
+-		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+-			"aux", "cfg_ahb", "ref", "com_aux".
+-		For "qcom,sdm845-qmp-ufs-phy" must contain:
+-			"ref", "ref_aux".
+-		For "qcom,sm8150-qmp-ufs-phy" must contain:
+-			"ref", "ref_aux".
+-
+- - resets: a list of phandles and reset controller specifier pairs,
+-	   one for each entry in reset-names.
+- - reset-names: "phy" for reset of phy block,
+-		"common" for phy common block reset,
+-		"cfg" for phy's ahb cfg block reset,
+-		"ufsphy" for the PHY reset in the UFS controller.
+-
+-		For "qcom,ipq8074-qmp-pcie-phy" must contain:
+-			"phy", "common".
+-		For "qcom,msm8996-qmp-pcie-phy" must contain:
+-			"phy", "common", "cfg".
+-		For "qcom,msm8996-qmp-usb3-phy" must contain
+-			"phy", "common".
+-		For "qcom,msm8998-qmp-usb3-phy" must contain
+-			"phy", "common".
+-		For "qcom,msm8998-qmp-ufs-phy": must contain:
+-			"ufsphy".
+-		For "qcom,msm8998-qmp-pcie-phy" must contain:
+-			"phy", "common".
+-		For "qcom,sdm845-qmp-usb3-phy" must contain:
+-			"phy", "common".
+-		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+-			"phy", "common".
+-		For "qcom,sdm845-qmp-ufs-phy": must contain:
+-			"ufsphy".
+-		For "qcom,sm8150-qmp-ufs-phy": must contain:
+-			"ufsphy".
+-
+- - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+- - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+-
+-Optional properties:
+- - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
+-			pll block.
+-
+-Required nodes:
+- - Each device node of QMP phy is required to have as many child nodes as
+-   the number of lanes the PHY has.
+-
+-Required properties for child nodes of PCIe PHYs (one child per lane):
+- - reg: list of offset and length pairs of register sets for PHY blocks -
+-	tx, rx, pcs, and pcs_misc (optional).
+- - #phy-cells: must be 0
+-
+-Required properties for a single "lanes" child node of non-PCIe PHYs:
+- - reg: list of offset and length pairs of register sets for PHY blocks
+-	For 1-lane devices:
+-		tx, rx, pcs, and (optionally) pcs_misc
+-	For 2-lane devices:
+-		tx0, rx0, pcs, tx1, rx1, and (optionally) pcs_misc
+- - #phy-cells: must be 0
+-
+-Required properties for child node of PCIe and USB3 qmp phys:
+- - clocks: a list of phandles and clock-specifier pairs,
+-	   one for each entry in clock-names.
+- - clock-names: Must contain following:
+-		 "pipe<lane-number>" for pipe clock specific to each lane.
+- - clock-output-names: Name of the PHY clock that will be the parent for
+-		       the above pipe clock.
+-	For "qcom,ipq8074-qmp-pcie-phy":
+-		- "pcie20_phy0_pipe_clk"	Pipe Clock parent
+-			(or)
+-		  "pcie20_phy1_pipe_clk"
+- - #clock-cells: must be 0
+-    - Phy pll outputs pipe clocks for pipe based PHYs. These clocks are then
+-      gate-controlled by the gcc.
+-
+-Required properties for child node of PHYs with lane reset, AKA:
+-	"qcom,msm8996-qmp-pcie-phy"
+- - resets: a list of phandles and reset controller specifier pairs,
+-	   one for each entry in reset-names.
+- - reset-names: Must contain following:
+-		 "lane<lane-number>" for reset specific to each lane.
+-
+-Example:
+-	phy@34000 {
+-		compatible = "qcom,msm8996-qmp-pcie-phy";
+-		reg = <0x34000 0x488>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
+-			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
+-			<&gcc GCC_PCIE_CLKREF_CLK>;
+-		clock-names = "aux", "cfg_ahb", "ref";
+-
+-		vdda-phy-supply = <&pm8994_l28>;
+-		vdda-pll-supply = <&pm8994_l12>;
+-
+-		resets = <&gcc GCC_PCIE_PHY_BCR>,
+-			<&gcc GCC_PCIE_PHY_COM_BCR>,
+-			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
+-		reset-names = "phy", "common", "cfg";
+-
+-		pciephy_0: lane@35000 {
+-			reg = <0x35000 0x130>,
+-				<0x35200 0x200>,
+-				<0x35400 0x1dc>;
+-			#clock-cells = <0>;
+-			#phy-cells = <0>;
+-
+-			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+-			clock-names = "pipe0";
+-			clock-output-names = "pcie_0_pipe_clk_src";
+-			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
+-			reset-names = "lane0";
+-		};
+-
+-		pciephy_1: lane@36000 {
+-		...
+-		...
+-	};
+-
+-	phy@88eb000 {
+-		compatible = "qcom,sdm845-qmp-usb3-uni-phy";
+-		reg = <0x88eb000 0x18c>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
+-			 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+-			 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
+-			 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
+-		clock-names = "aux", "cfg_ahb", "ref", "com_aux";
+-
+-		resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
+-			 <&gcc GCC_USB3_PHY_SEC_BCR>;
+-		reset-names = "phy", "common";
+-
+-		lane@88eb200 {
+-			reg = <0x88eb200 0x128>,
+-			      <0x88eb400 0x1fc>,
+-			      <0x88eb800 0x218>,
+-			      <0x88eb600 0x70>;
+-			#clock-cells = <0>;
+-			#phy-cells = <0>;
+-			clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
+-			clock-names = "pipe0";
+-			clock-output-names = "usb3_uni_phy_pipe_clk_src";
+-		};
+-	};
+-
+-	phy@1d87000 {
+-		compatible = "qcom,sdm845-qmp-ufs-phy";
+-		reg = <0x1d87000 0x18c>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-		clock-names = "ref",
+-			      "ref_aux";
+-		clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>,
+-			 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
+-
+-		lanes@1d87400 {
+-			reg = <0x1d87400 0x108>,
+-			      <0x1d87600 0x1e0>,
+-			      <0x1d87c00 0x1dc>,
+-			      <0x1d87800 0x108>,
+-			      <0x1d87a00 0x1e0>;
+-			#phy-cells = <0>;
+-		};
+-	};
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
