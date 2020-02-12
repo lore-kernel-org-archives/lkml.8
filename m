@@ -2,342 +2,162 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DB3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE13C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DE22073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442E220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:53:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHYm9cVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgBLMvj (ORCPT
+        id S1727790AbgBLMxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:51:39 -0500
-Received: from mga06.intel.com ([134.134.136.31]:63674 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728384AbgBLMvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:51:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 04:51:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="237702600"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.167])
-  by orsmga006.jf.intel.com with ESMTP; 12 Feb 2020 04:51:31 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 13/13] perf intel-pt: Add support for text poke events
-Date:   Wed, 12 Feb 2020 14:49:49 +0200
-Message-Id: <20200212124949.3589-14-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212124949.3589-1-adrian.hunter@intel.com>
-References: <20200212124949.3589-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Wed, 12 Feb 2020 07:53:16 -0500
+Received: from mail-io1-f54.google.com ([209.85.166.54]:32989 "EHLO
+        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLMxQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:53:16 -0500
+Received: by mail-io1-f54.google.com with SMTP id z8so2116132ioh.0;
+        Wed, 12 Feb 2020 04:53:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8uUbtIUDOW9ebVPssPKku+drjcOUJo/uTJ9SaDOnJuw=;
+        b=lHYm9cVGTtyA8EiT1D0sqLSb/jKtkCxagH9ASKv9owFIoKOYqhwIWFFOTeEeC8uBVy
+         46hUmqQq+PkyS/mU/NByGdrVF9AFXzjiP0hWR2h1B1K2eASskBK587/8MMKVcLJGPcSA
+         tsbJ7Ll2fMVmKkwxkifsb0uyWU7MvL+7fOEuz9t7w09ht+c1jCJ6+tk3sTBZWUttVe7X
+         2sn2nTuSMetpweeqhPSMNF9eMmF3mvAF29dZcXa3O+TPZUXvvRu3AObjEpfZAy/kjOKa
+         U+ORlpik+ZuI5VYmeps5yTXx0PWjNTSnwod/KQU9UIdyjxikqILCeP+UVFcrwlnIaVSz
+         ++Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8uUbtIUDOW9ebVPssPKku+drjcOUJo/uTJ9SaDOnJuw=;
+        b=CskD1aAmMAqfhE7AUlqLjXKryUrogUgdHHXKzj6Q4xqoYz8h0L/y/8Ly/TkoT/Lxe1
+         mHj9fRoU9Wnbr1vbhon1/RPym1HGFxtXMMpW3ns1swI/UzlzpY32eYeyDl8XBZmxYsu3
+         fABB9UM0uuSSxLdHdFq/MsrAkgfmy1+zlfE+v7l8qpoLn19S/YKURu+IG0qR6zEwUCMN
+         s4cGhPIVMFIFjbaBlNw+gZMOORg2c0RavqqsWReWHi5NYUT4LY9e996aDKxp+ZbICKHI
+         hseomwn70QNCyXDzeHADQnz+Ex3iKOPsmUvD+zAVf8/s8PbkVSDYBVQwp73okpMgQevc
+         XHfg==
+X-Gm-Message-State: APjAAAXOj0ZhKIvc6ruGJBhAe0oqtJezgmdvI6zuodTOyoSmULDqyBVT
+        hKGS6sDd+6LOPo/wIULonsVUuJustzdOOlr4evQ=
+X-Google-Smtp-Source: APXvYqwenciTJqmwlFW6J+SzmV88Taxk40rh0SJ/KvqEvhgKlj/Xxm/QR6ynx3a5PYe6nSlUw1F3G3nRefDQUE1y3/U=
+X-Received: by 2002:a6b:8e51:: with SMTP id q78mr16467343iod.179.1581511995705;
+ Wed, 12 Feb 2020 04:53:15 -0800 (PST)
+MIME-Version: 1.0
+References: <CABXGCsMfzj+mpjvuZifzWEKbX7X36v7iMVPampSS6kOc2Hzoow@mail.gmail.com>
+ <2405a741abf0d5fe8f55b5d3de8488e3054cc5e1.camel@archlinux.org>
+In-Reply-To: <2405a741abf0d5fe8f55b5d3de8488e3054cc5e1.camel@archlinux.org>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Wed, 12 Feb 2020 17:53:04 +0500
+Message-ID: <CABXGCsPYaXYFqQfnYWeeOKYq-SCjBvixo-Mme-fGLSB8Kw5H+g@mail.gmail.com>
+Subject: Re: [BUG] Kernel log flooded by message "logitech-djreceiver
+ 0003:046D:C53A.000C: logi_dj_hidpp_event: invalid device index:7"
+To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select text poke events when available and the kernel is being traced.
-Process text poke events to invalidate entries in Intel PT's instruction
-cache.
+On Mon, 10 Feb 2020 at 17:38, Filipe La=C3=ADns <lains@archlinux.org> wrote=
+:
+>
+> On Mon, 2020-02-10 at 13:21 +0500, Mikhail Gavrilov wrote:
+> > Kernel log flooded by message
+> > logitech-djreceiver 0003:046D:C53A.000C: logi_dj_hidpp_event: invalid
+> > device index:7
+> > This happens when the mouse is idle.
+> > And it started since I begin using the mouse pad with Power Play
+> > technology.
+> >
+> >
+> > Kernel ver: 5.6 pre RC
+> > --
+> > Best Regards,
+> > Mike Gavrilov.
+>
+> Hello Mike,
+>
+> Yes, the Powerplay mat exports a static HID++ 2.0 device with index 7
+> to configure the led on the mat. The current code expects devices to
+> have a maximum index of 6, which is the maximum index of pairable
+> devices.
+>
+> I already submitted a patch adding support for the Logitech G Powerplay
+> mat but it wasn't been upstreamed it. I will attach it in case you want
+> to try it.
+>
 
-Example:
 
-  The example requires kernel config:
-    CONFIG_PROC_SYSCTL=y
-    CONFIG_SCHED_DEBUG=y
-    CONFIG_SCHEDSTATS=y
+Thanks, I tested the patch for a day and "logitech-djreceiver"
+messages was not appear anymore and no other regressions are noted.
+Why this patch wasn't been upstreamed?
 
-  Before:
+Also would be good if "logitech-djreceiver" provides information for
+upower daemon as how did it happening with unifying receiver and my
+previous mouse Logitech Zone Touch Mouse T400.
 
-    # perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # echo 1 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    1
-    # echo 0 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 3.341 MB perf.data.before ]
-    [1]+  Terminated                 perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M
-    # perf script -i perf.data.before --itrace=e >/dev/null
-    Warning:
-    474 instruction trace errors
+For example:
 
-  After:
+$ upower --dump
+Device: /org/freedesktop/UPower/devices/mouse_hidpp_battery_0
+  native-path:          hidpp_battery_0
+  model:                Zone Touch Mouse T400
+  serial:               4026-cf-15-61-0d
+  power supply:         no
+  updated:              Sun 22 Dec 2019 02:41:30 PM +05 (89 seconds ago)
+  has history:          yes
+  has statistics:       yes
+  mouse
+    present:             yes
+    rechargeable:        yes
+    state:               discharging
+    warning-level:       none
+    battery-level:       normal
+    percentage:          55% (should be ignored)
+    icon-name:          'battery-low-symbolic'
 
-    # perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # echo 1 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    1
-    # echo 0 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 2.646 MB perf.data.after ]
-    [1]+  Terminated                 perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
-    # perf script -i perf.data.after --itrace=e >/dev/null
+Device: /org/freedesktop/UPower/devices/DisplayDevice
+  power supply:         no
+  updated:              Sun 22 Dec 2019 10:58:54 AM +05 (13445 seconds ago)
+  has history:          no
+  has statistics:       no
+  unknown
+    warning-level:       none
+    icon-name:          'battery-missing-symbolic'
 
-Example:
+Daemon:
+  daemon-version:  0.99.11
+  on-battery:      no
+  lid-is-closed:   no
+  lid-is-present:  no
+  critical-action: HybridSleep
 
-  The example requires kernel config:
-    # CONFIG_FUNCTION_TRACER is not set
+https://user-images.githubusercontent.com/200750/71320201-d8a5ea80-24c9-11e=
+a-9ea9-97100545d294.png
 
-  Before:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __schedule
-    Added new event:
-      probe:__schedule     (on __schedule)
+Currently, only sensors show the power charge level, but without
+"upower" daemon user-friendly indication not available in DE.
 
-    You can now use it in all perf tools, such as:
+$ sensors
+hidpp_battery_0-hid-3-9
+Adapter: HID adapter
+in0:           4.08 V
 
-            perf record -e probe:__schedule -aR sleep 1
 
-    # perf record -e probe:__schedule -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.026 MB perf.data (68 samples) ]
-    # perf probe -d probe:__schedule
-    Removed event: probe:__schedule
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 41.268 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    Warning:
-    207 instruction trace errors
 
-  After:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __schedule
-    Added new event:
-      probe:__schedule     (on __schedule)
-
-    You can now use it in all perf tools, such as:
-
-        perf record -e probe:__schedule -aR sleep 1
-
-    # perf record -e probe:__schedule -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.028 MB perf.data (107 samples) ]
-    # perf probe -d probe:__schedule
-    Removed event: probe:__schedule
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 39.978 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    # perf script -i t1 --no-itrace -D | grep 'POKE\|KSYMBOL'
-    6 565303693547 0x291f18 [0x50]: PERF_RECORD_KSYMBOL addr ffffffffc027a000 len 4096 type 2 flags 0x0 name kprobe_insn_page
-    6 565303697010 0x291f68 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027a000 old len 0 new len 6
-    6 565303838278 0x291fa8 [0x50]: PERF_RECORD_KSYMBOL addr ffffffffc027c000 len 4096 type 2 flags 0x0 name kprobe_optinsn_page
-    6 565303848286 0x291ff8 [0xa0]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027c000 old len 0 new len 106
-    6 565369336743 0x292af8 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffff88ab8890 old len 5 new len 5
-    7 566434327704 0x217c208 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffff88ab8890 old len 5 new len 5
-    6 566456313475 0x293198 [0xa0]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027c000 old len 106 new len 0
-    6 566456314935 0x293238 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027a000 old len 6 new len 0
-
-Example:
-
-  The example requires kernel config:
-    CONFIG_FUNCTION_TRACER=y
-
-  Before:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __kmalloc
-    Added new event:
-      probe:__kmalloc      (on __kmalloc)
-
-    You can now use it in all perf tools, such as:
-
-        perf record -e probe:__kmalloc -aR sleep 1
-
-    # perf record -e probe:__kmalloc -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.022 MB perf.data (6 samples) ]
-    # perf probe -d probe:__kmalloc
-    Removed event: probe:__kmalloc
-    # kill %1
-    [ perf record: Woken up 2 times to write data ]
-    [ perf record: Captured and wrote 43.850 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    Warning:
-    8 instruction trace errors
-
-  After:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __kmalloc
-    Added new event:
-      probe:__kmalloc      (on __kmalloc)
-
-    You can now use it in all perf tools, such as:
-
-            perf record -e probe:__kmalloc -aR sleep 1
-
-    # perf record -e probe:__kmalloc -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.037 MB perf.data (206 samples) ]
-    # perf probe -d probe:__kmalloc
-    Removed event: probe:__kmalloc
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 41.442 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    # perf script -i t1 --no-itrace -D | grep 'POKE\|KSYMBOL'
-    5 312216133258 0x8bafe0 [0x50]: PERF_RECORD_KSYMBOL addr ffffffffc0360000 len 415 type 2 flags 0x0 name ftrace_trampoline
-    5 312216133494 0x8bb030 [0x1d8]: PERF_RECORD_TEXT_POKE addr 0xffffffffc0360000 old len 0 new len 415
-    5 312216229563 0x8bb208 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    5 312216239063 0x8bb248 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-    5 312216727230 0x8bb288 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffabbea190 old len 5 new len 5
-    5 312216739322 0x8bb2c8 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    5 312216748321 0x8bb308 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-    7 313287163462 0x2817430 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    7 313287174890 0x2817470 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-    7 313287818979 0x28174b0 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffabbea190 old len 5 new len 5
-    7 313287829357 0x28174f0 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    7 313287841246 0x2817530 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/arch/x86/util/intel-pt.c |  4 ++
- tools/perf/util/intel-pt.c          | 75 +++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
-
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 20df442fdf36..ec75445ef7cf 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -827,6 +827,10 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 		}
- 	}
- 
-+	if (have_timing_info && !intel_pt_evsel->core.attr.exclude_kernel &&
-+	    perf_can_record_text_poke_events() && perf_can_record_cpu_wide())
-+		opts->text_poke = true;
-+
- 	if (intel_pt_evsel) {
- 		/*
- 		 * To obtain the auxtrace buffer file descriptor, the auxtrace
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 33cf8928cf05..64768312c994 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -514,6 +514,17 @@ intel_pt_cache_lookup(struct dso *dso, struct machine *machine, u64 offset)
- 	return auxtrace_cache__lookup(dso->auxtrace_cache, offset);
- }
- 
-+static void intel_pt_cache_invalidate(struct dso *dso, struct machine *machine,
-+				      u64 offset)
-+{
-+	struct auxtrace_cache *c = intel_pt_cache(dso, machine);
-+
-+	if (!c)
-+		return;
-+
-+	auxtrace_cache__remove(dso->auxtrace_cache, offset);
-+}
-+
- static inline u8 intel_pt_cpumode(struct intel_pt *pt, uint64_t ip)
- {
- 	return ip >= pt->kernel_start ?
-@@ -2592,6 +2603,67 @@ static int intel_pt_process_itrace_start(struct intel_pt *pt,
- 					event->itrace_start.tid);
- }
- 
-+static int intel_pt_find_map(struct thread *thread, u8 cpumode, u64 addr,
-+			     struct addr_location *al)
-+{
-+	if (!al->map || addr < al->map->start || addr >= al->map->end) {
-+		if (!thread__find_map(thread, cpumode, addr, al))
-+			return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Invalidate all instruction cache entries that overlap the text poke */
-+static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
-+{
-+	u8 cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
-+	u64 addr = event->text_poke.addr + event->text_poke.new_len - 1;
-+	/* Assume text poke begins in a basic block no more than 4096 bytes */
-+	int cnt = 4096 + event->text_poke.new_len;
-+	struct thread *thread = pt->unknown_thread;
-+	struct addr_location al = { .map = NULL };
-+	struct machine *machine = pt->machine;
-+	struct intel_pt_cache_entry *e;
-+	u64 offset;
-+
-+	if (!event->text_poke.new_len)
-+		return 0;
-+
-+	for (; cnt; cnt--, addr--) {
-+		if (intel_pt_find_map(thread, cpumode, addr, &al)) {
-+			if (addr < event->text_poke.addr)
-+				return 0;
-+			continue;
-+		}
-+
-+		if (!al.map->dso || !al.map->dso->auxtrace_cache)
-+			continue;
-+
-+		offset = al.map->map_ip(al.map, addr);
-+
-+		e = intel_pt_cache_lookup(al.map->dso, machine, offset);
-+		if (!e)
-+			continue;
-+
-+		if (addr + e->byte_cnt + e->length <= event->text_poke.addr) {
-+			/*
-+			 * No overlap. Working backwards there cannot be another
-+			 * basic block that overlaps the text poke if there is a
-+			 * branch instruction before the text poke address.
-+			 */
-+			if (e->branch != INTEL_PT_BR_NO_BRANCH)
-+				return 0;
-+		} else {
-+			intel_pt_cache_invalidate(al.map->dso, machine, offset);
-+			intel_pt_log("Invalidated instruction cache for %s at %#"PRIx64"\n",
-+				     al.map->dso->long_name, addr);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int intel_pt_process_event(struct perf_session *session,
- 				  union perf_event *event,
- 				  struct perf_sample *sample,
-@@ -2653,6 +2725,9 @@ static int intel_pt_process_event(struct perf_session *session,
- 		 event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
- 		err = intel_pt_context_switch(pt, event, sample);
- 
-+	if (!err && event->header.type == PERF_RECORD_TEXT_POKE)
-+		err = intel_pt_text_poke(pt, event);
-+
- 	intel_pt_log("event %u: cpu %d time %"PRIu64" tsc %#"PRIx64" ",
- 		     event->header.type, sample->cpu, sample->time, timestamp);
- 	intel_pt_log_event(event);
--- 
-2.17.1
-
+--
+Best Regards,
+Mike Gavrilov.
