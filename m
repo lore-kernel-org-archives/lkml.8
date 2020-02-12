@@ -2,253 +2,232 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651E6C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E43C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C0C206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUqvP+q7"
+	by mail.kernel.org (Postfix) with ESMTP id 12BE921569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgBLV2d (ORCPT
+        id S1729107AbgBLV3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:28:33 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42567 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbgBLV2c (ORCPT
+        Wed, 12 Feb 2020 16:29:55 -0500
+Received: from outbound-smtp53.blacknight.com ([46.22.136.237]:56037 "EHLO
+        outbound-smtp53.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727420AbgBLV3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:28:32 -0500
-Received: by mail-ed1-f66.google.com with SMTP id e10so4121917edv.9;
-        Wed, 12 Feb 2020 13:28:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zA+YU8ReUi/0ae6CAaxfuHRSGLgBv7ovkCkn/iNPxhk=;
-        b=bUqvP+q735g2EZjRvjKosa+gPsciGyFK/4/a4/uFXxYp6YZcu6lU8zAx1UDzAOmGOy
-         COmV5v71fGmEWgMXtvoMBU0llOWUtqQmOX/Fu4EQYO+2X+ib05iPuS4vO21/BX8swWq0
-         IEkF4tU2ml6QMjQb3YhZaHakCtRLCeE4qTCdlR/oFmxvKBExMQ0uzhsKEvSVPgfaRu3x
-         umiBuovJy6SeY40a/nQgzcufmkdpb3Xy02cYdrhbiEJGl/PmS0PvJOaDW3HQbRvT640L
-         p4UrHzB9rihKxWOrjVnHby0sLkdzl3dzXg4CtH/R2UdQlDdKeH73Z0zwT+LLavK52gaU
-         hNHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zA+YU8ReUi/0ae6CAaxfuHRSGLgBv7ovkCkn/iNPxhk=;
-        b=gwZYgr/jKKF07sZsC85AughwehMfnAsUigz0tqWOwbrJZXYFemVvmoY9m/PnDvXeda
-         6aBNiUd2SdusEzAGP8rX/eecUB8UhFmtRnFDTJVqRPhDWcSr7L/nVONZ8muQEj62WCx+
-         xrys7PzgA3W393SCJbmMrR2Q668+yqOB+793PcBigHTfSkOwv5ZHt0BBL4pZcycEhWNM
-         fbUxT9F5KTs5S5z5McpWhG13Yb5No9rG4FqPAv2WgThEav0OfEuNiuHn4/ZJlo6rHfFf
-         iURJEWZNheYLZ5L8o/QfrTOIhpgGKKR5EhIw71PZSPu9Y7sYRobzXl2st8V09AbYgNDi
-         8Aeg==
-X-Gm-Message-State: APjAAAXICQjVtGt8nHWy9hDGY9yEEjenhzUB7y8aSuCwW6eL6jNJdDHH
-        fYLzy55zK/sQbc8BSRb2QsiIALiy
-X-Google-Smtp-Source: APXvYqzPmxtytWdMachkPHPV6wq0/+IYH0DiSUfy+uC8N4Xd98gzYmIfTY4cANu7SJ54NTfwlbw0ew==
-X-Received: by 2002:a50:cfc1:: with SMTP id i1mr12607102edk.369.1581542909672;
-        Wed, 12 Feb 2020 13:28:29 -0800 (PST)
-Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id l11sm33520edi.28.2020.02.12.13.28.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 13:28:29 -0800 (PST)
-Subject: Re: [PATCH net] net: dsa: Treat VLAN ID 0 as PVID untagged
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>, michal.vokac@ysoft.com,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200212200555.2393-1-f.fainelli@gmail.com>
- <CA+h21hpG5y1D2d53P7KK6X5uBFxoSQ_iCs3rRAJe61yxfWWAPA@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <6ba11003-48fd-0b93-332d-3bc485bcb577@gmail.com>
-Date:   Wed, 12 Feb 2020 13:28:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 16:29:55 -0500
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp53.blacknight.com (Postfix) with ESMTPS id C1870FA870
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 21:29:51 +0000 (GMT)
+Received: (qmail 12560 invoked from network); 12 Feb 2020 21:29:51 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Feb 2020 21:29:51 -0000
+Date:   Wed, 12 Feb 2020 21:29:50 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        linux-kernel@vger.kernel.org, pauld@redhat.com,
+        parth@linux.ibm.com, valentin.schneider@arm.com
+Subject: Re: [RFC 2/4] sched/numa: replace runnable_load_avg by load_avg
+Message-ID: <20200212212950.GT3466@techsingularity.net>
+References: <20200211174651.10330-1-vincent.guittot@linaro.org>
+ <20200211174651.10330-3-vincent.guittot@linaro.org>
+ <20200212133715.GU3420@suse.de>
+ <20200212194903.GS3466@techsingularity.net>
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hpG5y1D2d53P7KK6X5uBFxoSQ_iCs3rRAJe61yxfWWAPA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200212194903.GS3466@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 12:47 PM, Vladimir Oltean wrote:
-> Hi Florian,
+On Wed, Feb 12, 2020 at 07:49:03PM +0000, Mel Gorman wrote:
+> On Wed, Feb 12, 2020 at 01:37:15PM +0000, Mel Gorman wrote:
+> > >  static void task_numa_assign(struct task_numa_env *env,
+> > >  			     struct task_struct *p, long imp)
+> > >  {
+> > > @@ -1556,6 +1594,11 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+> > >  	long orig_src_load, orig_dst_load;
+> > >  	long src_capacity, dst_capacity;
+> > >  
+> > > +
+> > > +	/* If dst node has spare capacity, there is no real load imbalance */
+> > > +	if (env->dst_stats.node_type == node_has_spare)
+> > > +		return false;
+> > > +
+> > 
+> > Not exactly what the load balancer thinks though, the load balancer
+> > may decide to balance the tasks between NUMA groups even when there is
+> > capacity. That said, what you did here is compatible with the current code.
+> > 
+> > I'll want to test this further but in general
+> > 
+> > Acked-by: Mel Gorman <mgorman@techsingularity.net>
+> > 
 > 
-> On Wed, 12 Feb 2020 at 22:06, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> VLAN ID 0 is special by all kinds and is really meant to be the default
->> ingress and egress untagged VLAN. We were not configuring it that way
->> and so we would be ingress untagged but egress tagged.
->>
->> When our devices are interfaced with other link partners such as switch
->> devices, the results would be entirely equipment dependent. Some
->> switches are completely fine with accepting an egress tagged frame with
->> VLAN ID 0 and would send their responses untagged, so everything works,
->> but other devices are not so tolerant and would typically reject a VLAN
->> ID 0 tagged frame.
+> And I was wrong. I worried that the conflict with the load balancer would
+> be a problem when I wrote this comment.  That was based on finding that
+> I had to account for the load balancer when using capacity to decide
+> whether an idle CPU can be used. When I didn't, performance went to
+> hell but thought that maybe you had somehow avoided the same problem.
+> Unfortunately, testing indicates that the same, or similar, problem is
+> here.
 > 
-> Are you sure that it's not in fact those devices that are not doing
-> what they're supposed to? VID 0 should be sent as tagged and no port
-> membership checks should be enforced on it.
 
-Where everything works what I see is the following:
+Maybe this on top of your patch? I've slotted it in and will see what
+falls out. You may notice a stray hunk related to cpu_runnable_load.
+It's because an earlier patch introduces it unnecessarily and only needs
+it later in your series. It's a minor cleanup of the overall series but
+easiest to illustrate for now.
 
-- Linux on egress sends an untagged frame (as captured by tcpdump) but
-the VLAN entry for VID 0 makes it egress tagged and the machine on the
-other sees it as such as well
-- the response from that machine is also ingress tagged as captured from
-the DSA master network device
+--8<--
+sched/numa: Use similar logic to the load balancer for moving between domains with spare capacity
 
-what I do not have visibility into are systems where this does not work
-but will try to request that. Breaking users is obviously bad which
-prompted me for doing this specification violating frame. I am not sure
-whether DSA standalone ports qualify as managed ports or not, sounds
-like no given we have not added support for doing much UC/MC filtering
-unlike what NICs do.
+The standard load balancer generally tries to keep the number of running
+tasks or idle CPUs balanced between NUMA domains. The NUMA balancer allows
+tasks to move if there is spare capacity but this causes a conflict and
+utilisation between NUMA nodes gets badly skewed. This patch uses similar
+logic between the NUMA balancer and load balancer when deciding if a task
+migrating to its preferred node can use an idle CPU.
 
-> 
->>
->> Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->> Hi all,
->>
->> After looking at all DSA drivers and how they implement port_vlan_add()
->> I think this is the right change to do, but would appreciate if you
->> could test this on your respective platforms to ensure this is not
->> problematic.
-> 
-> I'm pretty sure this is problematic, for the simple reason that with
-> this change, DSA is insisting that the default PVID is 0, contrary to
-> the bridge core which insists it is 1. And some switches, like the
-> Microchip Ocelot/Felix, don't support more than 1 egress-untagged
-> VLAN, so adding one of the VIDs 0 or 1 will fail (I don't know the
-> exact order off-hand). See 1c44ce560b4d ("net: mscc: ocelot: fix
-> vlan_filtering when enslaving to bridge before link is up") for more
-> details of how that is going to work.
+Signed-off-by: Mel Gorman <mgorman@suse.com>
 
-OK, I do wonder if we would be better off just skipping the VLAN
-programming for VID = 0 and/or just defining a different
-reserved/default VLAN ID for switches that have global VLAN filtering.
-
-> 
->>
->> Thank you
->>
->>
->>  net/dsa/slave.c | 9 ++++++++-
->>  1 file changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/dsa/slave.c b/net/dsa/slave.c
->> index 088c886e609e..d3a2782eb94d 100644
->> --- a/net/dsa/slave.c
->> +++ b/net/dsa/slave.c
->> @@ -1100,6 +1100,7 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
->>  {
->>         struct dsa_port *dp = dsa_slave_to_port(dev);
->>         struct bridge_vlan_info info;
->> +       u16 flags = 0;
->>         int ret;
->>
->>         /* Check for a possible bridge VLAN entry now since there is no
->> @@ -1118,7 +1119,13 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
->>                         return -EBUSY;
->>         }
->>
->> -       ret = dsa_port_vid_add(dp, vid, 0);
->> +       /* VLAN ID 0 is special and should be the default egress and ingress
->> +        * untagged VLAN, make sure it gets programmed as such.
->> +        */
->> +       if (vid == 0)
->> +               flags = BRIDGE_VLAN_INFO_PVID | BRIDGE_VLAN_INFO_UNTAGGED;
-> 
-> IEEE 802.1Q-2018, page 247, Table 9-2—Reserved VID values:
-> 
-> The null VID. Indicates that the tag header contains only priority
-> information; no VID is
-> present in the frame. This VID value shall not be configured as a PVID
-> or a member of a VID
-> Set, or configured in any FDB entry, or used in any Management operation.
-> 
->> +
->> +       ret = dsa_port_vid_add(dp, vid, flags);
->>         if (ret)
->>                 return ret;
->>
->> --
->> 2.17.1
->>
-> 
-> Is this a test?
-
-Of course, I am always testing you, that way you do not know if I am
-incredibly smart or stupid.
--- 
-Florian
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 9cabfb4fe505..ee80f31ec710 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1520,6 +1520,7 @@ struct task_numa_env {
+ 
+ static unsigned long cpu_load(struct rq *rq);
+ static unsigned long cpu_util(int cpu);
++static inline long adjust_numa_imbalance(int imbalance, int src_nr_running);
+ 
+ static inline enum
+ numa_type numa_classify(unsigned int imbalance_pct,
+@@ -1594,11 +1595,6 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+ 	long orig_src_load, orig_dst_load;
+ 	long src_capacity, dst_capacity;
+ 
+-
+-	/* If dst node has spare capacity, there is no real load imbalance */
+-	if (env->dst_stats.node_type == node_has_spare)
+-		return false;
+-
+ 	/*
+ 	 * The load is corrected for the CPU capacity available on each node.
+ 	 *
+@@ -1757,19 +1753,36 @@ static void task_numa_compare(struct task_numa_env *env,
+ static void task_numa_find_cpu(struct task_numa_env *env,
+ 				long taskimp, long groupimp)
+ {
+-	long src_load, dst_load, load;
+ 	bool maymove = false;
+ 	int cpu;
+ 
+-	load = task_h_load(env->p);
+-	dst_load = env->dst_stats.load + load;
+-	src_load = env->src_stats.load - load;
+-
+ 	/*
+-	 * If the improvement from just moving env->p direction is better
+-	 * than swapping tasks around, check if a move is possible.
++	 * If dst node has spare capacity, then check if there is an
++	 * imbalance that would be overruled by the load balancer.
+ 	 */
+-	maymove = !load_too_imbalanced(src_load, dst_load, env);
++	if (env->dst_stats.node_type == node_has_spare) {
++		unsigned int imbalance;
++		int src_running, dst_running;
++
++		/* Would movement cause an imbalance? */
++		src_running = env->src_stats.nr_running - 1;
++		dst_running = env->src_stats.nr_running + 1;
++		imbalance = max(0, dst_running - src_running);
++		imbalance = adjust_numa_imbalance(imbalance, src_running);
++
++		/* Use idle CPU if there is no imbalance */
++		maymove = true;
++	} else {
++		long src_load, dst_load, load;
++		/*
++		 * If the improvement from just moving env->p direction is better
++		 * than swapping tasks around, check if a move is possible.
++		 */
++		load = task_h_load(env->p);
++		dst_load = env->dst_stats.load + load;
++		src_load = env->src_stats.load - load;
++		maymove = !load_too_imbalanced(src_load, dst_load, env);
++	}
+ 
+ 	for_each_cpu(cpu, cpumask_of_node(env->dst_nid)) {
+ 		/* Skip this CPU if the source task cannot migrate */
+@@ -5491,11 +5504,6 @@ static unsigned long cpu_load_without(struct rq *rq, struct task_struct *p)
+ 	return load;
+ }
+ 
+-static unsigned long cpu_runnable_load(struct rq *rq)
+-{
+-	return cfs_rq_runnable_load_avg(&rq->cfs);
+-}
+-
+ static unsigned long capacity_of(int cpu)
+ {
+ 	return cpu_rq(cpu)->cpu_capacity;
+@@ -8705,6 +8713,21 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+ 	}
+ }
+ 
++static inline long adjust_numa_imbalance(int imbalance, int src_nr_running)
++{
++	unsigned int imbalance_min;
++
++	/*
++	 * Allow a small imbalance based on a simple pair of communicating
++	 * tasks that remain local when the source domain is almost idle.
++	 */
++	imbalance_min = 2;
++	if (src_nr_running <= imbalance_min)
++		return 0;
++
++	return imbalance;
++}
++
+ /**
+  * calculate_imbalance - Calculate the amount of imbalance present within the
+  *			 groups of a given sched_domain during load balance.
+@@ -8801,24 +8824,9 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+ 		}
+ 
+ 		/* Consider allowing a small imbalance between NUMA groups */
+-		if (env->sd->flags & SD_NUMA) {
+-			unsigned int imbalance_min;
+-
+-			/*
+-			 * Compute an allowed imbalance based on a simple
+-			 * pair of communicating tasks that should remain
+-			 * local and ignore them.
+-			 *
+-			 * NOTE: Generally this would have been based on
+-			 * the domain size and this was evaluated. However,
+-			 * the benefit is similar across a range of workloads
+-			 * and machines but scaling by the domain size adds
+-			 * the risk that lower domains have to be rebalanced.
+-			 */
+-			imbalance_min = 2;
+-			if (busiest->sum_nr_running <= imbalance_min)
+-				env->imbalance = 0;
+-		}
++		if (env->sd->flags & SD_NUMA)
++			env->imbalance = adjust_numa_imbalance(env->imbalance,
++						busiest->sum_nr_running);
+ 
+ 		return;
+ 	}
