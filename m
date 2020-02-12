@@ -2,111 +2,151 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C851C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB3C352A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E76215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581472790;
-	bh=G7RLWpka10wopwaQV9NFvaZA9IzSzliKTWT6zQz6pN8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vs3ytMBuTvpYFuoyWpG36bd+hJ3f1UqYQ+wIeEzculRVmbxW8l9k4wamO6lVXECFc
-	 vli+QUwW5ZAvlxCPqZ2Y1K3LO4KTha/g8dXItz3ylyVDKV8DfUxwSdrng4dlnxWsOA
-	 r4BPc8NPdbbIEzCHAWThPBKkP0PWFvSpyeoELfeI=
+	by mail.kernel.org (Postfix) with ESMTP id 074C52082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbgBLB7t (ORCPT
+        id S1727671AbgBLCAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 20:59:49 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44026 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgBLB7t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 20:59:49 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so491019oif.10;
-        Tue, 11 Feb 2020 17:59:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oUgmGZs9ysmhnlBcesm5luyKADc/t2m7O/Es9uN8oM0=;
-        b=SwG0izXwTqMlwyJxqphql03KfZZ19JlEBJ/1pJKFo+pqOUEiTfMWT3nxd07lAyID3+
-         PM0oaX0wP9RHrloGSd/tnZamPouNEvAm+SbftQgPXxNvk5NExiTXrjnMc+I5MD2CNLYe
-         fBa3qa2DETgyNzlTIwUkxMLjjfkX/LZtZXnD4hOuz6KJhpaxcQwFN5VqZRxAIsa6HBOH
-         1AiHOTUkTCHytgNAoFC6At9kYH7OUBq41m+ZOd8MtDalBffANCSflTCdS86lxVXYZo8W
-         8XpXNq6M7HHNZWeXn5vHDuWkFyuJWlaTXWlXPfWBWOU3q3682A1vs7NFUvX8+bmNVcuq
-         gzoQ==
-X-Gm-Message-State: APjAAAVqk6cz7mzhFeoGlAHfCxm/O9F3HVvghE0xnMQTNpxfIFxK/uN/
-        2KjP4lFzIJ8FrIHf/45fXA==
-X-Google-Smtp-Source: APXvYqzYkrEPi4s5FihRWg4m7/OX91OhLNOhEUTKhsmkD+7S2Uhze22H30khgoNiGbcUKSRzyqL2/w==
-X-Received: by 2002:aca:4a0b:: with SMTP id x11mr4616138oia.37.1581472787109;
-        Tue, 11 Feb 2020 17:59:47 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y14sm1699802oih.23.2020.02.11.17.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 17:59:46 -0800 (PST)
-Received: (nullmailer pid 16508 invoked by uid 1000);
-        Wed, 12 Feb 2020 01:59:45 -0000
-Date:   Tue, 11 Feb 2020 19:59:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
- options
-Message-ID: <20200212015945.GA15472@bogus>
-References: <20200210162838.173903-1-amirmizi6@gmail.com>
- <20200210162838.173903-7-amirmizi6@gmail.com>
+        Tue, 11 Feb 2020 21:00:42 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9724 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726968AbgBLCAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 21:00:42 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CC7B9611207F6164D34C;
+        Wed, 12 Feb 2020 10:00:39 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.66) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Feb 2020
+ 10:00:38 +0800
+Subject: Re: [v3] nbd: fix potential NULL pointer fault in nbd_genl_disconnect
+To:     Mike Christie <mchristi@redhat.com>, <josef@toxicpanda.com>,
+        <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200210073241.41813-1-sunke32@huawei.com>
+ <5E418D62.8090102@redhat.com>
+ <c3531fc5-73b3-6ef4-816e-97f491f45c18@huawei.com> <5E42D8B1.406@redhat.com>
+From:   "sunke (E)" <sunke32@huawei.com>
+Message-ID: <1b1110b2-1db6-9781-89cf-82b1403b1641@huawei.com>
+Date:   Wed, 12 Feb 2020 10:00:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210162838.173903-7-amirmizi6@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5E42D8B1.406@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.66]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 18:28:37 +0200, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
->  PTP based physical layer.
-> 
-> This patch adds the documentation for corresponding device tree bindings of
->  I2C based Physical TPM.
-> Refer to the 'I2C Interface Definition' section in
->  'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
->  for specification.
-> 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> ---
->  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.example.dts:17.12-13 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+在 2020/2/12 0:39, Mike Christie 写道:
+> On 02/10/2020 10:12 PM, sunke (E) wrote:
+>>
+>>
+>> 在 2020/2/11 1:05, Mike Christie 写道:
+>>> On 02/10/2020 01:32 AM, Sun Ke wrote:
+>>>> Open /dev/nbdX first, the config_refs will be 1 and
+>>>> the pointers in nbd_device are still null. Disconnect
+>>>> /dev/nbdX, then reference a null recv_workq. The
+>>>> protection by config_refs in nbd_genl_disconnect is useless.
+>>>>
+>>>> To fix it, just add a check for a non null task_recv in
+>>>> nbd_genl_disconnect.
+>>>>
+>>>> Signed-off-by: Sun Ke <sunke32@huawei.com>
+>>>> ---
+>>>> v1 -> v2:
+>>>> Add an omitted mutex_unlock.
+>>>>
+>>>> v2 -> v3:
+>>>> Add nbd->config_lock, suggested by Josef.
+>>>> ---
+>>>>    drivers/block/nbd.c | 8 ++++++++
+>>>>    1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+>>>> index b4607dd96185..870b3fd0c101 100644
+>>>> --- a/drivers/block/nbd.c
+>>>> +++ b/drivers/block/nbd.c
+>>>> @@ -2008,12 +2008,20 @@ static int nbd_genl_disconnect(struct sk_buff
+>>>> *skb, struct genl_info *info)
+>>>>                   index);
+>>>>            return -EINVAL;
+>>>>        }
+>>>> +    mutex_lock(&nbd->config_lock);
+>>>>        if (!refcount_inc_not_zero(&nbd->refs)) {
+>>>> +        mutex_unlock(&nbd->config_lock);
+>>>>            mutex_unlock(&nbd_index_mutex);
+>>>>            printk(KERN_ERR "nbd: device at index %d is going down\n",
+>>>>                   index);
+>>>>            return -EINVAL;
+>>>>        }
+>>>> +    if (!nbd->recv_workq) {
+>>>> +        mutex_unlock(&nbd->config_lock);
+>>>> +        mutex_unlock(&nbd_index_mutex);
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +    mutex_unlock(&nbd->config_lock);
+>>>>        mutex_unlock(&nbd_index_mutex);
+>>>>        if (!refcount_inc_not_zero(&nbd->config_refs)) {
+>>>>            nbd_put(nbd);
+>>>>
+>>>
+>>> With my other patch then we will not need this right? It handles your
+>>> case by just being integrated with the existing checks in:
+>>>
+>>> nbd_disconnect_and_put->nbd_clear_sock->sock_shutdown
+>>>
+>>> ...
+>>>
+>>> static void sock_shutdown(struct nbd_device *nbd)
+>>> {
+>>>
+>>> ....
+>>>
+>>>           if (config->num_connections == 0)
+>>>                   return;
+>>>
+>>>
+>>> num_connections is zero for your case since we never did a
+>>> nbd_genl_disconnect so we would return here.
+>>>
+>>>
+>>> .
+>>>
+>> Hi Mike
+>>
+>> Your point is not right totally.
+>>
+>> Yes, config->num_connections is 0 and will return in sock_shutdown. Then
+>> it will back to nbd_disconnect_and_put and do flush_workqueue
+>> (nbd->recv_workq).
+>>
+>> nbd_disconnect_and_put
+>>      ->nbd_clear_sock
+>>          ->sock_shutdown
+>>      ->flush_workqueue
+>>
+> 
+> My patch removed that extra flush_workqueue in nbd_disconnect_and_put.
+> 
+> The idea of the patch was to move the flush calls to when we do
+> sock_shutdown in the config (connect, disconnect, clear sock) code
+> paths, because that is the time we know we will need to kill the recv
+> workers and wait for them to complete so we know they are not still
+> running when userspace does a new config operation.
+> 
+Yes, I see.
 
-See https://patchwork.ozlabs.org/patch/1235916
-Please check and re-submit.
