@@ -2,113 +2,122 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B8AC3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C499C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D66421569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:22:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WkUUywFK"
+	by mail.kernel.org (Postfix) with ESMTP id 73C5221569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581546223;
+	bh=A4C/+1j/Ghgx3dQsINgBdHoFn1yj2sBPjy8M2iOebqU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EyaqQ+TrdKpR8aabJKewhp7h8jF7Pak86Xot8+MKFtM9xZXyiP5L4vX8hv8SiwfYc
+	 U5JBVek5nzrnC/ckmDjVWT+2Z6r34f6m7emgh8iCQqcyUXC+LzzER+hjX2ErlzusWH
+	 dDZzMcjsfblGGxWnZohPrJ3mRRlUlb0x/xrdi2RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgBLWWl (ORCPT
+        id S1729165AbgBLWXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:22:41 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:45106 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbgBLWWl (ORCPT
+        Wed, 12 Feb 2020 17:23:42 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45581 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgBLWXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:22:41 -0500
-Received: from [10.137.112.97] (unknown [131.107.147.225])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 336432010ADE;
-        Wed, 12 Feb 2020 14:22:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 336432010ADE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1581546160;
-        bh=Gfu4834khvWd5NyU28yO95P+YwjE64NeIVO9DnT21f8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WkUUywFKYC7RryjuGd40mQ/FV4j+fINQ+zFxsDHVh79zh5hEnQHdvjb3ybijJLW/d
-         1JrSenIX6wU6tE+cbz5RBrdGJ7wiKCNOT2DqgsUOgKO3yXO/Blz5w5MoGc3KgDxC57
-         xbYN8LDWOrpTi+8iVI8B73fAHEEyk1XpPjgTDOts=
-Subject: Re: [PATCH v3 0/3] IMA: improve log messages in IMA
-To:     Mimi Zohar <zohar@linux.ibm.com>, joe@perches.com,
-        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
- <1581521009.8515.72.camel@linux.ibm.com>
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Message-ID: <3a2b7a5e-5759-2f29-80bb-e71dda8e5cec@linux.microsoft.com>
-Date:   Wed, 12 Feb 2020 14:22:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 17:23:42 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so3569616otp.12;
+        Wed, 12 Feb 2020 14:23:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fCkVC9NqRVI+yjNU/x8RfyABDYXvK7aIQSvHuq/V4LY=;
+        b=LN9x4PDO+sbBYznxmJJpB//3PbHAMxr+Dp5f68RGgky0vQ9m+OnrSok2gkRLz8OYZP
+         OcPZh4G/zHgHBOYk1Mf86x9y9w5ZgUjRYqsy8twmCZOMi/Jtn0ZWXPXfB7GcXzJd3+GX
+         b3E8V51ecpAmwf6152/LMDkRMd1hgKXxNBSQQY9WpAaDKIdh2RqwChEPqENzhtGkcBzv
+         yZoSa4mBK28ucbkIDR8CUIKWAStq6opTiDsuCgEfB0M6QQrRFBIoXTDiTi1kzAyaDi/T
+         EAmGKIEs2/yye5o5RhC63z8N1hmBd+MmHRhatkX3AXSVkL2LfwRNy63730vSQKZsTz2d
+         Xgug==
+X-Gm-Message-State: APjAAAU3/cuf2rmayPiLu4fLNJCwltLLnieshHv3IBUVzjmjZFrPtgye
+        yOmpUCf8lHSjkGk50CXUOBIw2YXeusO9eXhe+3+SGQ==
+X-Google-Smtp-Source: APXvYqxfTT8qr8c4bypJ1HYQhwx61Zp/gO/g6UAOTefrhcOIgagR/0Bd4khYcmlsGTGodOF7H7aii0b1l6/sTkrq4f0=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr11303250otd.266.1581546221551;
+ Wed, 12 Feb 2020 14:23:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1581521009.8515.72.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190805142706.22520-1-keith.busch@intel.com> <20190805142706.22520-4-keith.busch@intel.com>
+ <CAJZ5v0hCkibcbiYdPmBXdnDHZbGP2q0uNRi01oU0NMz5o3WwGA@mail.gmail.com>
+ <1922204.kTHyOg1r71@kreacher> <CAPcyv4iLyHLqRD4E9HHx+pcRVHkF8zYKjCBE9YDQOiZTQVyo0g@mail.gmail.com>
+In-Reply-To: <CAPcyv4iLyHLqRD4E9HHx+pcRVHkF8zYKjCBE9YDQOiZTQVyo0g@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 12 Feb 2020 23:23:28 +0100
+Message-ID: <CAJZ5v0gsgWOROhbXaknirQ_J+ed2R6-zpMXWAcb8mxQGi8Gx2g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] acpi/hmat: Skip publishing target info for nodes with
+ no online memory
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 12, 2020 at 5:29 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Mon, Aug 26, 2019 at 2:05 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Monday, August 12, 2019 10:59:58 AM CEST Rafael J. Wysocki wrote:
+> > > On Mon, Aug 5, 2019 at 4:30 PM Keith Busch <keith.busch@intel.com> wrote:
+> > > >
+> > > > From: Dan Williams <dan.j.williams@intel.com>
+> > > >
+> > > > There are multiple scenarios where the HMAT may contain information
+> > > > about proximity domains that are not currently online. Rather than fail
+> > > > to report any HMAT data just elide those offline domains.
+> > > >
+> > > > If and when those domains are later onlined they can be added to the
+> > > > HMEM reporting at that point.
+> > > >
+> > > > This was found while testing EFI_MEMORY_SP support which reserves
+> > > > "specific purpose" memory from the general allocation pool. If that
+> > > > reservation results in an empty numa-node then the node is not marked
+> > > > online leading a spurious:
+> > > >
+> > > >     "acpi/hmat: Ignoring HMAT: Invalid table"
+> > > >
+> > > > ...result for HMAT parsing.
+> > > >
+> > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > > > Reviewed-by: Keith Busch <keith.busch@intel.com>
+> > > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > When you send somebody else's patches, you should sign them off as a
+> > > rule, but since you sent this one with your own R-by, I converted that
+> > > to a S-o-b.
+> > >
+> >
+> > And all patches in the series have been applied.
+>
+> I want to flag this patch (commit 5c7ed4385424 "HMAT: Skip publishing
+> target info for nodes with no online memory")
+> for -stable to cleanup a spurious WARN_ON:
+>
+> WARNING: CPU: 7 PID: 1 at drivers/base/node.c:191 node_set_perf_attrs+0x90/0xa0
+> CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.3.6-100.fc29.x86_64 #1
+> RIP: 0010:node_set_perf_attrs+0x90/0xa0
+> Call Trace:
+>  ? do_early_param+0x8e/0x8e
+>  hmat_init+0x2ff/0x443
+>  ? hmat_parse_subtable+0x55a/0x55a
+>  ? do_early_param+0x8e/0x8e
+>  do_one_initcall+0x46/0x1f4
+>
+> Do you mind if I forward to stable@, or do you collect ACPI patches to
+> send to stable@?
 
-
-On 2020-02-12 7:23 a.m., Mimi Zohar wrote:
-> Hi Tushar,
-> 
-> "in IMA" is redundant in the above Subject line.
-> 
-Thanks Mimi. I will fix it in the next iteration.
-
-> On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
->> Some files under IMA prefix the log statement with the respective file
->> names and not with the string "ima". This is not consistent with the rest
->> of the IMA files.
->>
->> The function process_buffer_measurement() does not have log messages for
->> failure conditions.
->>
->> The #define for formatting log messages, pr_fmt, is duplicated in the
->> files under security/integrity.
->>
->> This patchset addresses the above issues.
-> 
-> The cover letter should provide a summary of the problem(s) being
-> addressed by the individual patches, not a repetition of the
-> individual patch descriptions.
-> 
-Thanks. I will fix the cover letter description in the next iteration.
-
-> Mimi
-> 
->>
->> Tushar Sugandhi (3):
->>    add log prefix to ima_mok.c, ima_asymmetric_keys.c, ima_queue_keys.c
->>    add log message to process_buffer_measurement failure conditions
->>    add module name and base name prefix to log statements
->>
->>   security/integrity/digsig.c                  | 2 --
->>   security/integrity/digsig_asymmetric.c       | 2 --
->>   security/integrity/evm/evm_crypto.c          | 2 --
->>   security/integrity/evm/evm_main.c            | 2 --
->>   security/integrity/evm/evm_secfs.c           | 2 --
->>   security/integrity/ima/Makefile              | 6 +++---
->>   security/integrity/ima/ima_asymmetric_keys.c | 2 --
->>   security/integrity/ima/ima_crypto.c          | 2 --
->>   security/integrity/ima/ima_fs.c              | 2 --
->>   security/integrity/ima/ima_init.c            | 2 --
->>   security/integrity/ima/ima_kexec.c           | 1 -
->>   security/integrity/ima/ima_main.c            | 5 +++--
->>   security/integrity/ima/ima_policy.c          | 2 --
->>   security/integrity/ima/ima_queue.c           | 2 --
->>   security/integrity/ima/ima_queue_keys.c      | 2 --
->>   security/integrity/ima/ima_template.c        | 2 --
->>   security/integrity/ima/ima_template_lib.c    | 2 --
->>   security/integrity/integrity.h               | 6 ++++++
->>   18 files changed, 12 insertions(+), 34 deletions(-)
->>
+Please forward it, thanks!
