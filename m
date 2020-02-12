@@ -2,156 +2,126 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F674C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F302BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B79D20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7212082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581489284;
+	bh=CzRudUeDo+wVwa7/TNw7sOyO0DwUDMqITe6/PlMG8AQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b/0nbdXNJpbVjULMN+eiOH1f48hFgFWz4wYFO5MQ0yMAMSWIXIjM03Artz1IROopE
+	 Pcuv64zy8UwjPVYDFemda0NtTBpdqw2Xf6IhRcLXx6wvJoTYAVDibwoSmfdxjFqZe5
+	 xblWxEt8Hp/A7vsyVpox3dbdnYi8XSccxuXvBU4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgBLGdu convert rfc822-to-8bit (ORCPT
+        id S1728282AbgBLGeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 01:33:50 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:39369 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbgBLGdu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 01:33:50 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01C6Wl64029615, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01C6Wl64029615
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Feb 2020 14:32:47 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 12 Feb 2020 14:32:47 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 12 Feb 2020 14:32:47 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f]) by
- RTEXMB01.realtek.com.tw ([fe80::1832:8abc:ec2d:974f%6]) with mapi id
- 15.01.1779.005; Wed, 12 Feb 2020 14:32:47 +0800
-From:   Kailang <kailang@realtek.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     Benjamin Poirier <benjamin.poirier@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk value
-Thread-Topic: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
- 7th quirk value
-Thread-Index: AQHV4KAyVK0d0c4RkUCatRD1s4Jmc6gVFbAAgAAJ9ACAAJRvkP//fXAAgAHpSsA=
-Date:   Wed, 12 Feb 2020 06:32:46 +0000
-Message-ID: <e3d27837151c46debf6d9c5af37f7460@realtek.com>
-References: <20200211055651.4405-1-benjamin.poirier@gmail.com>
-        <20200211055651.4405-2-benjamin.poirier@gmail.com>
-        <b23abac0-401c-9472-320c-4e9d7eab26de@perex.cz> <20200211081604.GA8286@f3>
-        <ab7a0abd24df485d8f8cc3723403a44f@realtek.com> <s5ho8u54h19.wl-tiwai@suse.de>
-In-Reply-To: <s5ho8u54h19.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.105.169]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 12 Feb 2020 01:34:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728085AbgBLGen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 01:34:43 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53335206DB;
+        Wed, 12 Feb 2020 06:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581489282;
+        bh=CzRudUeDo+wVwa7/TNw7sOyO0DwUDMqITe6/PlMG8AQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d4g4lNmp0zgUEvD5Jg1HZ/pSYEOYUwWzEbd72XucSsanE7PW6E7KaMoizocCC9c/t
+         fLsIxOWqbCUmHAYQrB/RRoUcW3yXF6qgwvTwkbZNe8+cBgUnJcRi5dGGEeKdxlXsX9
+         ZfevMBE0eHrc3SnIROac5ZH1k6H9MTGLrsW4OB+M=
+Date:   Tue, 11 Feb 2020 22:34:40 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Daniel Rosenberg <drosen@google.com>,
+        Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v7 2/8] fs: Add standard casefolding support
+Message-ID: <20200212063440.GL870@sol.localdomain>
+References: <20200208013552.241832-1-drosen@google.com>
+ <20200208013552.241832-3-drosen@google.com>
+ <20200208021216.GE23230@ZenIV.linux.org.uk>
+ <CA+PiJmTYbEA-hgrKwtp0jZXqsfYrzgogOZ0Pt=gTCtqhBfnqFA@mail.gmail.com>
+ <20200210234207.GJ23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210234207.GJ23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 11:42:07PM +0000, Al Viro wrote:
+> On Mon, Feb 10, 2020 at 03:11:13PM -0800, Daniel Rosenberg wrote:
+> > On Fri, Feb 7, 2020 at 6:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > >
+> > > On Fri, Feb 07, 2020 at 05:35:46PM -0800, Daniel Rosenberg wrote:
+> > >
+> > >
+> > > Again, is that safe in case when the contents of the string str points to
+> > > keeps changing under you?
+> > 
+> > I'm not sure what you mean. I thought it was safe to use the str and
+> > len passed into d_compare. Even if it gets changed under RCU
+> > conditions I thought there was some code to ensure that the name/len
+> > pair passed in is consistent, and any other inconsistencies would get
+> > caught by d_seq later. Are there unsafe code paths that can follow?
+> 
+> If you ever fetch the same byte twice, you might see different values.
+> You need a fairly careful use of READ_ONCE() or equivalents to make
+> sure that you don't get screwed over by that.
+> 
+> Sure, ->d_seq mismatch will throw the result out, but you need to make
+> sure you won't oops/step on uninitialized memory/etc. in process.
+> 
+> It's not impossible to get right, but it's not trivial and you need all
+> code working with that much more careful than normal for string handling.
 
+It looks like this is a real problem, not just a "theoretical" data race.
+For example, see:
 
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Tuesday, February 11, 2020 5:20 PM
-> To: Kailang <kailang@realtek.com>
-> Cc: Benjamin Poirier <benjamin.poirier@gmail.com>; Jaroslav Kysela
-> <perex@perex.cz>; alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon
-> 7th quirk value
-> 
-> On Tue, 11 Feb 2020 10:10:50 +0100,
-> Kailang wrote:
-> >
-> > Hi,
-> >
-> > Speaker 2 connect to DAC 0x2 was Lenovo requested.
-> > This was tune for EQ setting.
-> > I didn't know more for this.
-> 
-> Thanks, that was my expectation, too.  Applying EQ to built-in speakers is an
-> oft-seen workaround for laptops to avoid the possible hardware damage.
-> 
-> Now the question is whether this obvious level of lowering is the expected
-> result.
-> 
-> Kailang, could you try to ask Lenovo about it?
+utf8ncursor():
+        /* The first byte of s may not be an utf8 continuation. */
+        if (len > 0 && (*s & 0xC0) == 0x80)
+                return -1;
 
-I have confirmed with our Lenovo AE.
+and then utf8byte():
+                } else if ((*u8c->s & 0xC0) == 0x80) {
+                        /* This is a continuation of the current character. */
+                        if (!u8c->p)
+                                u8c->len--;
+                        return (unsigned char)*u8c->s++;
 
-> 
-> 
-> Takashi
-> 
-> >
-> > BR,
-> > Kailang
-> >
-> > > -----Original Message-----
-> > > From: Benjamin Poirier <benjamin.poirier@gmail.com>
-> > > Sent: Tuesday, February 11, 2020 4:16 PM
-> > > To: Jaroslav Kysela <perex@perex.cz>
-> > > Cc: Takashi Iwai <tiwai@suse.de>; Kailang <kailang@realtek.com>;
-> > > alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH 2/2] ALSA: hda/realtek - Fix Lenovo Thinkpad X1
-> > > Carbon 7th quirk value
-> > >
-> > > On 2020/02/11 08:40 +0100, Jaroslav Kysela wrote:
-> > > [...]
-> > > > >
-> > > > > In summary, Node 0x17 DAC connection 0x3 offers the loudest max
-> > > > > volume and the most detailed mixer controls. That connection is
-> > > > > obtained with quirk ALC295_FIXUP_DISABLE_DAC3. Therefore, change
-> > > > > the ThinkPad X1 Carbon 7th to use ALC295_FIXUP_DISABLE_DAC3.
-> > > >
-> > > > The volume split (individual volume control) will cause trouble
-> > > > for the UCM volume control at the moment which is the target for
-> > > > this device to get the digital microphone working. If there is no
-> > > > possibility to share DAC, it would be probably more nice to join
-> > > > the volume
-> > > control in the driver.
-> > > >
-> > > > Have you tried to use 0x03 as source for all four speakers?
-> > >
-> > > Front speakers are fixed to 0x02. Node 0x14
-> > >   Connection: 1
-> > >      0x02
-> > >
-> > > >
-> > > > Why PA handles the rear volume control with the current driver
-> > > > code in the legacy ALSA driver? It should be handled like standard
-> > > > stereo device. I'll check.
-> > >
-> > > The device comes up with "Analog Stereo Output" profile by default.
-> > > I changed it to "Analog Surround 4.0 Output" to test controlling each
-> channel individually:
-> > >
-> > > > > pavucontrol controls are reported with the device configured
-> > > > > with the "Analog Surround 4.0 Output" profile.
-> > >
-> > > >
-> > > > You should also test PA with UCM.
-> > >
-> > > Please let me know what do I need to test exactly? I'm not familiar with
-> UCM.
-> > >
-> > > ------Please consider the environment before printing this e-mail.
-> >
+The first byte of the string is checked in two different functions, so it's very
+likely to be loaded twice.  In between, it could change from a non-continuation
+byte to a continuation byte.  That would cause the string length to be
+decremented from 0 to UINT_MAX.  Then utf8_strncasecmp() would run beyond the
+bounds of the string until something happened to mismatch.
+
+That's just an example that I found right away; there are probably more.
+
+IMO, this needs to be fixed before anyone can actually use the ext4 and f2fs
+casefolding stuff.
+
+I don't know the best solution.  One option is to fix fs/unicode/ to handle
+concurrently modified strings.  Another could be to see what it would take to
+serialize lookups and renames for casefolded directories...
+
+- Eric
