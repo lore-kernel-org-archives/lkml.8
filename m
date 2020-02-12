@@ -2,65 +2,110 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8262DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEDCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8A2206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pzmo+Nyf"
+	by mail.kernel.org (Postfix) with ESMTP id EB0D6206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgBLHnT (ORCPT
+        id S1728401AbgBLHni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:43:19 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbgBLHnT (ORCPT
+        Wed, 12 Feb 2020 02:43:38 -0500
+Received: from outbound-smtp53.blacknight.com ([46.22.136.237]:43227 "EHLO
+        outbound-smtp53.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727669AbgBLHni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:43:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=i3FzU/6t3BUZQYdYKWKIP++waVhK3QKo6kpSCfJQFvg=; b=pzmo+Nyf5LhurqtfRObXcjN6/i
-        30JD94xN3M0+qt1rP80flGX/Md2ds9rmbNxwaBVV7MLc0S4DRwNS/Wn2iY8Tg1qs/aHtczJEdGKpg
-        2ck6k5Lrem7z3nme/5pWKJ1Uj95mbxSNqmBCf5kU1ebyIZl66IDfJj+yrsdviQI1o6xINTWOi+bz/
-        i3fgDk8fsNnzakvbTENrz6r6YxhUScL9FbYbVMFc/GHD/sAnOFO7tKSfCtc/VyOh/V6vkkPZWJ5pl
-        xpNtbqbTM3YuBYafebNA32b7oNP3azQOpNB/VM2lfcDDT4YVv151hmIO2gDK2rJKneWcAT+kGOCTc
-        BQe7Kcsw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1mg2-0000Aw-Ux; Wed, 12 Feb 2020 07:43:18 +0000
-Date:   Tue, 11 Feb 2020 23:43:18 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/25] fs: Add a filesystem flag for large pages
-Message-ID: <20200212074318.GG7068@infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-10-willy@infradead.org>
+        Wed, 12 Feb 2020 02:43:38 -0500
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp53.blacknight.com (Postfix) with ESMTPS id 55DD3FAE23
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 07:43:36 +0000 (GMT)
+Received: (qmail 4764 invoked from network); 12 Feb 2020 07:43:36 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Feb 2020 07:43:35 -0000
+Date:   Wed, 12 Feb 2020 07:43:33 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, shakeelb@google.com,
+        yang.shi@linux.alibaba.com
+Subject: Re: [RFC Patch] mm/vmscan.c: not inherit classzone_idx from previous
+ reclaim
+Message-ID: <20200212074333.GM3466@techsingularity.net>
+References: <20200209074145.31389-1-richardw.yang@linux.intel.com>
+ <20200211104223.GL3466@techsingularity.net>
+ <20200212022554.GA7855@richard>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200212041845.25879-10-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200212022554.GA7855@richard>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 08:18:29PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Wed, Feb 12, 2020 at 10:25:55AM +0800, Wei Yang wrote:
+> On Tue, Feb 11, 2020 at 10:42:23AM +0000, Mel Gorman wrote:
+> >On Sun, Feb 09, 2020 at 03:41:45PM +0800, Wei Yang wrote:
+> >> Before commit e716f2eb24de ("mm, vmscan: prevent kswapd sleeping
+> >> prematurely due to mismatched classzone_idx"), classzone_idx could have
+> >> two possibilities on a new loop based on whether there is a wakeup
+> >> during reclaiming:
+> >> 
+> >>   * 0 if no wakeup
+> >>   * the classzone_idx request by wakeup
+> >> 
+> >> As described in the changelog, this commit is willing to change the
+> >> first case to (MAX_NR_ZONES - 1) to avoid some premature sleep. But it
+> >> does not achieve the goal.
+> >> 
+> >> There are two versions of kswapd_classzone_idx() since this change:
+> >> 
+> >>   * commit e716f2eb24de ("mm, vmscan: prevent kswapd sleeping
+> >>     prematurely due to mismatched classzone_idx")
+> >>   * commit dffcac2cb88e ("mm/vmscan.c: prevent useless kswapd loops")
+> >> 
+> >> Both of them would return the classzone_idx we passed as the 2nd
+> >> parameter when (pgdat->kswapd_classzone_idx == MAX_NR_ZONES). This
+> >> means if there is no wakeup during reclaiming, we would use
+> >> classzone_idx in previous round to sleep.
+> >> 
+> >
+> >This is somewhat intended.
+> >
+> >> This patch fixes the logic by using (MAX_NR_ZONES - 1) for the first
+> >> case.
+> >> 
+> >
+> >Ok, what is the user-visible impact that is fixed by this patch or is
+> >this based on code review only? Please describe the test case exactly
+> >and the before and after results. I ask because this area is a magnet for
+> >regressions and intuitive ideas often lead to counter-intuitive results.
+> >
 > 
-> The page cache needs to know whether the filesystem supports pages >
-> PAGE_SIZE.
+> This is based on code review only. I know your concern. This is an area more
+> like art then engineering :-)
+> 
 
-Does it make sense to set this flag on the file_system_type, which
-is rather broad scope, or a specific superblock or even inode?
+Then I'm afraid that until there is a corner case identified and a
+description of the impact it's
 
-For some file systems we might require on-disk flags that aren't set
-for all instances.
+Nacked-by: Mel Gorman <mgorman@techsingularity.net>
+
+> Would you mind sharing some idea why we intend to inherit the classzone_idx?
+> And for kswapd_order, we would restart at 0 if no wakeup during reclaim.
+> 
+
+Broadly speaking it was driven by cases whereby kswapd either a) fell
+asleep prematurely and there were many stalls in direct reclaim before
+kswapd recovered, b) stalls in direct reclaim immediately after kswapd went
+to sleep or c) kswapd reclaimed for lower zones and went to sleep while
+parallel tasks were direct reclaiming in higher zones or higher orders.
+
+-- 
+Mel Gorman
+SUSE Labs
