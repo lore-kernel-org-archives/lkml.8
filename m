@@ -2,104 +2,93 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC50EC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF708C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A4C206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JllzjkrR"
+	by mail.kernel.org (Postfix) with ESMTP id C44402168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgBLOXe (ORCPT
+        id S1728294AbgBLOYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:23:34 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40689 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgBLOXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:23:33 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q8so1320608pfh.7;
-        Wed, 12 Feb 2020 06:23:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2CG8ksxxPOqr0AnERJ/PdtG9O/daCfWo5DfUdNbgZas=;
-        b=JllzjkrRB5hg0Jei6ang1AiW8KaPckknGXzSJuwpvLzqlt3vERdsiwP74Qo3BXwspr
-         hR87nSv3mDIl1cgRTrISAy0eQNeyrwQf0JIAggE6iXYzQO/Ce3tBoRWiEZWhLMFwTE6Z
-         tHRD1JoUhop4fVlY8UMyW0HeLIhfoAVHQgG3mdIHDmYb2h21XnwLjBSkLhmrl7DvuLEt
-         GugQr+KTRou6MiXtV6soXwBZfW3H+R2sTIldasINr+OzHTKx+yAaUh93myPq3WY2uOpN
-         XuwRJ4Sc75dPv008QC9S7r5jVkTwGdI09GCvUtWUNbsM6zSuD9eeuzm290qcpIP1ESZ/
-         f/5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2CG8ksxxPOqr0AnERJ/PdtG9O/daCfWo5DfUdNbgZas=;
-        b=Ytp8WQSjFYsAc2jT7u7W0J0Vloyj8vdBG7dCbp1NylEWv1i7tvINgTPs9mnYcvDfT9
-         raizbKcup/33TMgfIWtqyllVk6aFEQzJcXLeyO8Ky5lVp7kuHXl4hvkjpPlHyvz8ScPa
-         +goVOfjuhhXRD0phz4k9CoXpAhASS8DCdmNJGxWVUh73YcLZDOH8KMT5cs3flPLINU0g
-         Ol43vKwVwyCWGSTP/bJ7l01ExmMwLGT+zZrIoh5JHrq0mhcfPixizpD+vbuCMH1XNNNG
-         cJW4YIP4aUtyuRmYxrB3KI5wZuyqMnKV5vvFEuc6SkLyx6NkfYiL5i/Wx5WnJ78wGy/s
-         q1gg==
-X-Gm-Message-State: APjAAAXd7F9bUzkEpk6LWOBwyaOR8qmZOnq/7Z7QfLg4PQ5EQ3NrZWCJ
-        q0N8xmmVuEVWaiCICdLgEcuqN+g0ysWuxael57I=
-X-Google-Smtp-Source: APXvYqwwT802Htg8/QLgGZfEl3X3B9sS1Nqnk9ag0wVeXU9UXD0zSNNN+/vGOTk50zGCdWCOveiGwSni6DcNPzpy4uU=
-X-Received: by 2002:a65:5242:: with SMTP id q2mr12353141pgp.74.1581517412831;
- Wed, 12 Feb 2020 06:23:32 -0800 (PST)
+        Wed, 12 Feb 2020 09:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727988AbgBLOYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:24:21 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 276BD206D7;
+        Wed, 12 Feb 2020 14:24:20 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 09:24:17 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH 4/8] sched,rcu,tracing: Mark preempt_count_{add,sub}()
+ notrace
+Message-ID: <20200212092417.04c3da8c@gandalf.local.home>
+In-Reply-To: <20200212094107.838108888@infradead.org>
+References: <20200212093210.468391728@infradead.org>
+        <20200212094107.838108888@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200211130054.001bfce9@canb.auug.org.au> <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
-In-Reply-To: <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 12 Feb 2020 16:23:25 +0200
-Message-ID: <CAHp75Ve3oenxkSCr9FC14MErQeN6pwrafemgKUNMwxUDr+aYKA@mail.gmail.com>
-Subject: Re: linux-next: Tree for Feb 11 (drivers/platform/x86/intel_pmc_core.c)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 9:32 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 2/10/20 6:00 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20200210:
-> >
->
-> on i386:
->
-> Function args are reversed (offset and status);
->
-> ../drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
-> ../drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-conversion]
->    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
->                                            ^~~~~~~~
-> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'u32 {aka unsigned int}' but argument is of type 'char *'
->  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
->              ^~~~~~~~~~~~~~~~~~~~
-> ../drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-conversion]
->    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
->                                                      ^~~~~~
-> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'const char *' but argument is of type 'int'
->  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
->              ^~~~~~~~~~~~~~~~~~~~
+On Wed, 12 Feb 2020 10:32:14 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Thank you, it should be fixed in today's Linux Next.
+> Because of the requirement that no tracing happens until after we've
+> incremented preempt_count, see nmi_enter() / trace_rcu_enter(), mark
+> these functions as notrace.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I actually depend on these function being traced. We do have
+"preempt_enable_notrace()" and "preempt_disable_notrace()" for places
+that shouldn't be traced. Can't we use those? (or simply
+__preempt_count_add()) in the nmi_enter() code instead? (perhaps create
+a preempt_count_add_notrace()).
+
+-- Steve
+
+
+
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/sched/core.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3781,7 +3781,7 @@ static inline void preempt_latency_start
+>  	}
+>  }
+>  
+> -void preempt_count_add(int val)
+> +void notrace preempt_count_add(int val)
+>  {
+>  #ifdef CONFIG_DEBUG_PREEMPT
+>  	/*
+> @@ -3813,7 +3813,7 @@ static inline void preempt_latency_stop(
+>  		trace_preempt_on(CALLER_ADDR0, get_lock_parent_ip());
+>  }
+>  
+> -void preempt_count_sub(int val)
+> +void notrace preempt_count_sub(int val)
+>  {
+>  #ifdef CONFIG_DEBUG_PREEMPT
+>  	/*
+> 
+
