@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C55C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A9EC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1425B206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8672073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgBLJhA (ORCPT
+        id S1728918AbgBLJhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:37:00 -0500
-Received: from outbound-smtp15.blacknight.com ([46.22.139.232]:45724 "EHLO
-        outbound-smtp15.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728626AbgBLJg7 (ORCPT
+        Wed, 12 Feb 2020 04:37:01 -0500
+Received: from outbound-smtp24.blacknight.com ([81.17.249.192]:42652 "EHLO
+        outbound-smtp24.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728879AbgBLJhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:36:59 -0500
-Received: from mail.blacknight.com (unknown [81.17.254.10])
-        by outbound-smtp15.blacknight.com (Postfix) with ESMTPS id 7D3E01C2276
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 09:36:56 +0000 (GMT)
-Received: (qmail 25079 invoked from network); 12 Feb 2020 09:36:56 -0000
+        Wed, 12 Feb 2020 04:37:00 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp24.blacknight.com (Postfix) with ESMTPS id D6F92B86E9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 09:36:58 +0000 (GMT)
+Received: (qmail 25318 invoked from network); 12 Feb 2020 09:36:58 -0000
 Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 12 Feb 2020 09:36:56 -0000
+  by 81.17.254.9 with ESMTPA; 12 Feb 2020 09:36:58 -0000
 From:   Mel Gorman <mgorman@techsingularity.net>
 To:     Vincent Guittot <vincent.guittot@linaro.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Phil Auld <pauld@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 01/11] sched/fair: Allow a small load imbalance between low utilisation SD_NUMA domains
-Date:   Wed, 12 Feb 2020 09:36:44 +0000
-Message-Id: <20200212093654.4816-2-mgorman@techsingularity.net>
+Subject: [PATCH 05/11] sched/numa: Distinguish between the different task_numa_migrate failure cases
+Date:   Wed, 12 Feb 2020 09:36:48 +0000
+Message-Id: <20200212093654.4816-6-mgorman@techsingularity.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200212093654.4816-1-mgorman@techsingularity.net>
 References: <20200212093654.4816-1-mgorman@techsingularity.net>
@@ -49,195 +49,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPU load balancer balances between different domains to spread load
-and strives to have equal balance everywhere. Communicating tasks can
-migrate so they are topologically close to each other but these decisions
-are independent. On a lightly loaded NUMA machine, two communicating tasks
-pulled together at wakeup time can be pushed apart by the load balancer.
-In isolation, the load balancer decision is fine but it ignores the tasks
-data locality and the wakeup/LB paths continually conflict. NUMA balancing
-is also a factor but it also simply conflicts with the load balancer.
-
-This patch allows a fixed degree of imbalance of two tasks to exist between
-NUMA domains when the source domain is almost idle. In some cases, this
-prevents communicating tasks being pulled apart. It was evaluated whether
-the imbalance should be scaled to the domain size. However, no additional
-benefit was measured across a range of workloads and machines and scaling
-adds the risk that lower domains have to be rebalanced. While this could
-change again in the future, such a change should specify the use case
-and benefit.
-
-The most obvious impact is on netperf TCP_STREAM -- two simple
-communicating tasks with some softirq offload depending on the
-transmission rate.
-
- 2-socket Haswell machine 48 core, HT enabled
- netperf-tcp -- mmtests config config-network-netperf-unbound
-			      baseline              lbnuma-v3
- Hmean     64         568.73 (   0.00%)      577.56 *   1.55%*
- Hmean     128       1089.98 (   0.00%)     1128.06 *   3.49%*
- Hmean     256       2061.72 (   0.00%)     2104.39 *   2.07%*
- Hmean     1024      7254.27 (   0.00%)     7557.52 *   4.18%*
- Hmean     2048     11729.20 (   0.00%)    13350.67 *  13.82%*
- Hmean     3312     15309.08 (   0.00%)    18058.95 *  17.96%*
- Hmean     4096     17338.75 (   0.00%)    20483.66 *  18.14%*
- Hmean     8192     25047.12 (   0.00%)    27806.84 *  11.02%*
- Hmean     16384    27359.55 (   0.00%)    33071.88 *  20.88%*
- Stddev    64           2.16 (   0.00%)        2.02 (   6.53%)
- Stddev    128          2.31 (   0.00%)        2.19 (   5.05%)
- Stddev    256         11.88 (   0.00%)        3.22 (  72.88%)
- Stddev    1024        23.68 (   0.00%)        7.24 (  69.43%)
- Stddev    2048        79.46 (   0.00%)       71.49 (  10.03%)
- Stddev    3312        26.71 (   0.00%)       57.80 (-116.41%)
- Stddev    4096       185.57 (   0.00%)       96.15 (  48.19%)
- Stddev    8192       245.80 (   0.00%)      100.73 (  59.02%)
- Stddev    16384      207.31 (   0.00%)      141.65 (  31.67%)
-
-In this case, there was a sizable improvement to performance and
-a general reduction in variance. However, this is not univeral.
-For most machines, the impact was roughly a 3% performance gain.
-
- Ops NUMA base-page range updates       19796.00         292.00
- Ops NUMA PTE updates                   19796.00         292.00
- Ops NUMA PMD updates                       0.00           0.00
- Ops NUMA hint faults                   16113.00         143.00
- Ops NUMA hint local faults %            8407.00         142.00
- Ops NUMA hint local percent               52.18          99.30
- Ops NUMA pages migrated                 4244.00           1.00
-
-Without the patch, only 52.18% of sampled accesses are local.  In an
-earlier changelog, 100% of sampled accesses are local and indeed on
-most machines, this was still the case. In this specific case, the
-local sampled rates was 99.3% but note the "base-page range updates"
-and "PTE updates".  The activity with the patch is negligible as were
-the number of faults. The small number of pages migrated were related to
-shared libraries.  A 2-socket Broadwell showed better results on average
-but are not presented for brevity as the performance was similar except
-it showed 100% of the sampled NUMA hints were local. The patch holds up
-for a 4-socket Haswell, an AMD EPYC and AMD Epyc 2 machine.
-
-For dbench, the impact depends on the filesystem used and the number of
-clients. On XFS, there is little difference as the clients typically
-communicate with workqueues which have a separate class of scheduler
-problem at the moment. For ext4, performance is generally better,
-particularly for small numbers of clients as NUMA balancing activity is
-negligible with the patch applied.
-
-A more interesting example is the Facebook schbench which uses a
-number of messaging threads to communicate with worker threads. In this
-configuration, one messaging thread is used per NUMA node and the number of
-worker threads is varied. The 50, 75, 90, 95, 99, 99.5 and 99.9 percentiles
-for response latency is then reported.
-
- Lat 50.00th-qrtle-1        44.00 (   0.00%)       37.00 (  15.91%)
- Lat 75.00th-qrtle-1        53.00 (   0.00%)       41.00 (  22.64%)
- Lat 90.00th-qrtle-1        57.00 (   0.00%)       42.00 (  26.32%)
- Lat 95.00th-qrtle-1        63.00 (   0.00%)       43.00 (  31.75%)
- Lat 99.00th-qrtle-1        76.00 (   0.00%)       51.00 (  32.89%)
- Lat 99.50th-qrtle-1        89.00 (   0.00%)       52.00 (  41.57%)
- Lat 99.90th-qrtle-1        98.00 (   0.00%)       55.00 (  43.88%)
- Lat 50.00th-qrtle-2        42.00 (   0.00%)       42.00 (   0.00%)
- Lat 75.00th-qrtle-2        48.00 (   0.00%)       47.00 (   2.08%)
- Lat 90.00th-qrtle-2        53.00 (   0.00%)       52.00 (   1.89%)
- Lat 95.00th-qrtle-2        55.00 (   0.00%)       53.00 (   3.64%)
- Lat 99.00th-qrtle-2        62.00 (   0.00%)       60.00 (   3.23%)
- Lat 99.50th-qrtle-2        63.00 (   0.00%)       63.00 (   0.00%)
- Lat 99.90th-qrtle-2        68.00 (   0.00%)       66.00 (   2.94%
-
-For higher worker threads, the differences become negligible but it's
-interesting to note the difference in wakeup latency at low utilisation
-and mpstat confirms that activity was almost all on one node until
-the number of worker threads increase.
-
-Hackbench generally showed neutral results across a range of machines.
-This is different to earlier versions of the patch which allowed imbalances
-for higher degrees of utilisation. perf bench pipe showed negligible
-differences in overall performance as the differences are very close to
-the noise.
-
-An earlier prototype of the patch showed major regressions for NAS C-class
-when running with only half of the available CPUs -- 20-30% performance
-hits were measured at the time. With this version of the patch, the impact
-is negligible with small gains/losses within the noise measured. This is
-because the number of threads far exceeds the small imbalance the aptch
-cares about. Similarly, there were report of regressions for the autonuma
-benchmark against earlier versions but again, normal load balancing now
-applies for that workload.
-
-In general, the patch simply seeks to avoid unnecessary cross-node
-migrations in the basic case where imbalances are very small.  For low
-utilisation communicating workloads, this patch generally behaves better
-with less NUMA balancing activity. For high utilisation, there is no
-change in behaviour.
+sched:sched_stick_numa is meant to fire when a task is unable to migrate
+to the preferred node but from the trace, it's possibile to tell the
+difference between "no CPU found", "migration to idle CPU failed" and
+"tasks could not be swapped". Extend the tracepoint accordingly.
 
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Phil Auld <pauld@redhat.com>
-Tested-by: Phil Auld <pauld@redhat.com>
-Link: https://lkml.kernel.org/r/20200114101319.GO3466@techsingularity.net
 ---
- kernel/sched/fair.c | 35 +++++++++++++++++++++++------------
- 1 file changed, 23 insertions(+), 12 deletions(-)
+ include/trace/events/sched.h | 51 +++++++++++++++++++++++++++++++++-----------
+ kernel/sched/fair.c          |  6 +++---
+ 2 files changed, 42 insertions(+), 15 deletions(-)
 
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 420e80e56e55..3d07c0af4ab8 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -487,7 +487,11 @@ TRACE_EVENT(sched_process_hang,
+ );
+ #endif /* CONFIG_DETECT_HUNG_TASK */
+ 
+-DECLARE_EVENT_CLASS(sched_move_task_template,
++/*
++ * Tracks migration of tasks from one runqueue to another. Can be used to
++ * detect if automatic NUMA balancing is bouncing between nodes
++ */
++TRACE_EVENT(sched_move_numa,
+ 
+ 	TP_PROTO(struct task_struct *tsk, int src_cpu, int dst_cpu),
+ 
+@@ -519,20 +523,43 @@ DECLARE_EVENT_CLASS(sched_move_task_template,
+ 			__entry->dst_cpu, __entry->dst_nid)
+ );
+ 
+-/*
+- * Tracks migration of tasks from one runqueue to another. Can be used to
+- * detect if automatic NUMA balancing is bouncing between nodes
+- */
+-DEFINE_EVENT(sched_move_task_template, sched_move_numa,
+-	TP_PROTO(struct task_struct *tsk, int src_cpu, int dst_cpu),
++TRACE_EVENT(sched_stick_numa,
+ 
+-	TP_ARGS(tsk, src_cpu, dst_cpu)
+-);
++	TP_PROTO(struct task_struct *src_tsk, int src_cpu, struct task_struct *dst_tsk, int dst_cpu),
+ 
+-DEFINE_EVENT(sched_move_task_template, sched_stick_numa,
+-	TP_PROTO(struct task_struct *tsk, int src_cpu, int dst_cpu),
++	TP_ARGS(src_tsk, src_cpu, dst_tsk, dst_cpu),
+ 
+-	TP_ARGS(tsk, src_cpu, dst_cpu)
++	TP_STRUCT__entry(
++		__field( pid_t,	src_pid			)
++		__field( pid_t,	src_tgid		)
++		__field( pid_t,	src_ngid		)
++		__field( int,	src_cpu			)
++		__field( int,	src_nid			)
++		__field( pid_t,	dst_pid			)
++		__field( pid_t,	dst_tgid		)
++		__field( pid_t,	dst_ngid		)
++		__field( int,	dst_cpu			)
++		__field( int,	dst_nid			)
++	),
++
++	TP_fast_assign(
++		__entry->src_pid	= task_pid_nr(src_tsk);
++		__entry->src_tgid	= task_tgid_nr(src_tsk);
++		__entry->src_ngid	= task_numa_group_id(src_tsk);
++		__entry->src_cpu	= src_cpu;
++		__entry->src_nid	= cpu_to_node(src_cpu);
++		__entry->dst_pid	= dst_tsk ? task_pid_nr(dst_tsk) : 0;
++		__entry->dst_tgid	= dst_tsk ? task_tgid_nr(dst_tsk) : 0;
++		__entry->dst_ngid	= dst_tsk ? task_numa_group_id(dst_tsk) : 0;
++		__entry->dst_cpu	= dst_cpu;
++		__entry->dst_nid	= dst_cpu >= 0 ? cpu_to_node(dst_cpu) : -1;
++	),
++
++	TP_printk("src_pid=%d src_tgid=%d src_ngid=%d src_cpu=%d src_nid=%d dst_pid=%d dst_tgid=%d dst_ngid=%d dst_cpu=%d dst_nid=%d",
++			__entry->src_pid, __entry->src_tgid, __entry->src_ngid,
++			__entry->src_cpu, __entry->src_nid,
++			__entry->dst_pid, __entry->dst_tgid, __entry->dst_ngid,
++			__entry->dst_cpu, __entry->dst_nid)
+ );
+ 
+ TRACE_EVENT(sched_swap_numa,
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fe4e0d775375..199d1476bb90 100644
+index 4ab18fba5b82..6005ce28033b 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -8658,10 +8658,6 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 	/*
- 	 * Try to use spare capacity of local group without overloading it or
- 	 * emptying busiest.
--	 * XXX Spreading tasks across NUMA nodes is not always the best policy
--	 * and special care should be taken for SD_NUMA domain level before
--	 * spreading the tasks. For now, load_balance() fully relies on
--	 * NUMA_BALANCING and fbq_classify_group/rq to override the decision.
- 	 */
- 	if (local->group_type == group_has_spare) {
- 		if (busiest->group_type > group_fully_busy) {
-@@ -8701,16 +8697,31 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 			env->migration_type = migrate_task;
- 			lsub_positive(&nr_diff, local->sum_nr_running);
- 			env->imbalance = nr_diff >> 1;
--			return;
--		}
-+		} else {
+@@ -1849,7 +1849,7 @@ static int task_numa_migrate(struct task_struct *p)
  
--		/*
--		 * If there is no overload, we just want to even the number of
--		 * idle cpus.
--		 */
--		env->migration_type = migrate_task;
--		env->imbalance = max_t(long, 0, (local->idle_cpus -
-+			/*
-+			 * If there is no overload, we just want to even the number of
-+			 * idle cpus.
-+			 */
-+			env->migration_type = migrate_task;
-+			env->imbalance = max_t(long, 0, (local->idle_cpus -
- 						 busiest->idle_cpus) >> 1);
-+		}
-+
-+		/* Consider allowing a small imbalance between NUMA groups */
-+		if (env->sd->flags & SD_NUMA) {
-+			unsigned int imbalance_min;
-+
-+			/*
-+			 * Allow a small imbalance based on a simple pair of
-+			 * communicating tasks that remain local when the
-+			 * source domain is almost idle.
-+			 */
-+			imbalance_min = 2;
-+			if (busiest->sum_nr_running <= imbalance_min)
-+				env->imbalance = 0;
-+		}
-+
- 		return;
+ 	/* No better CPU than the current one was found. */
+ 	if (env.best_cpu == -1) {
+-		trace_sched_stick_numa(p, env.src_cpu, -1);
++		trace_sched_stick_numa(p, env.src_cpu, NULL, -1);
+ 		return -EAGAIN;
  	}
  
+@@ -1858,7 +1858,7 @@ static int task_numa_migrate(struct task_struct *p)
+ 		ret = migrate_task_to(p, env.best_cpu);
+ 		WRITE_ONCE(best_rq->numa_migrate_on, 0);
+ 		if (ret != 0)
+-			trace_sched_stick_numa(p, env.src_cpu, env.best_cpu);
++			trace_sched_stick_numa(p, env.src_cpu, NULL, env.best_cpu);
+ 		return ret;
+ 	}
+ 
+@@ -1866,7 +1866,7 @@ static int task_numa_migrate(struct task_struct *p)
+ 	WRITE_ONCE(best_rq->numa_migrate_on, 0);
+ 
+ 	if (ret != 0)
+-		trace_sched_stick_numa(p, env.src_cpu, task_cpu(env.best_task));
++		trace_sched_stick_numa(p, env.src_cpu, env.best_task, env.best_cpu);
+ 	put_task_struct(env.best_task);
+ 	return ret;
+ }
 -- 
 2.16.4
 
