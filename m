@@ -2,89 +2,303 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C4EC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B293C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E172173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2560A206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cte8xNkI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YTTXxHpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgBLJGn (ORCPT
+        id S1728685AbgBLJHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:06:43 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33138 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgBLJGn (ORCPT
+        Wed, 12 Feb 2020 04:07:22 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58902 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728150AbgBLJHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:06:43 -0500
-Received: by mail-oi1-f195.google.com with SMTP id q81so1363537oig.0;
-        Wed, 12 Feb 2020 01:06:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KdiHyv1C8Z3O51Il2rRtKfTPYZzHq2aAiI21t6YVfMs=;
-        b=cte8xNkI44GgsFD77ysg/J0+ROdUNaqr+8/qMeiMSvUTstItSyKa+1zbC936kxrWBR
-         cv0glfQP1KHjjzFbxYSTJao3VNZztB19IYH2m+ItrGt5d0F6SOq5qdEuZx+drk27kCpQ
-         pGKZokcJiORu3/nxErNnRCWc+jHy2i0FoqBD0TpcDWp5R1nSQkYEKW1obTRdpv3yIaqX
-         g60WNW95r77sjFcgekae14GjYakaPLg0/z8gOgdEpXQvSsttsRAlnOLg3/ke3ZtUw0Bg
-         VsFxYg0aJZifwjQBgCa0LFsXmndcr6s4ag/0rW6/l/G1dQ1/RmSEQj672xfEbY+TveLV
-         SC2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KdiHyv1C8Z3O51Il2rRtKfTPYZzHq2aAiI21t6YVfMs=;
-        b=gz1jKyhc45qy7Kk3oBWTSPwbmWtHlJ5iR6dixGYdt5oksvPg+rzJ1VuQgSMEmOssf4
-         vBmsY2yLZozXbUIHPWu4i3ED8Q45ZrizYzyLHlRdvgMHMnpvVnMX5pPZkCkCBbiB9TdE
-         oavniu+w+JutmnVAr+mviYPZE6xGDlumFuuysJKhX4tdSd2TdKpfQvsMunZCo1IVzTLj
-         mqnJ9Leo3oX+swomvhWlyFkvlCm/wV1dK/cEdTOxgTdlzLCdaUfMc/KbE/jVTqQ7qs+/
-         urLlR+OxjacsVV20rOUdCbI4M9Kzm7RXnftRbv94eJ14T2clw4GAeVkjkTy9Kd1E+C7p
-         gyTA==
-X-Gm-Message-State: APjAAAWZ/6WlaLRCdDGPeWyxi9Ows5humYtw5SlCxt9Yk+3PVs15yp5Y
-        Xwq2lCmDeAB7nA9vnjseCoZT69xCr3MMHaOSCqI=
-X-Google-Smtp-Source: APXvYqz8LnWunxxKZNW1cjt4ireZgvOfph0KWPT5e7ByuK9ekEqH5ZKVzzbSPgDtk7Xf0cv7GXM0tk/J2jgQ4cISQQk=
-X-Received: by 2002:aca:3114:: with SMTP id x20mr5662123oix.121.1581498402770;
- Wed, 12 Feb 2020 01:06:42 -0800 (PST)
+        Wed, 12 Feb 2020 04:07:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581498439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xd4zjQZSa1NqEGRzZDTzigGv8FiBSvE9RlLefOdlOZ4=;
+        b=YTTXxHppla5bRvc6PHCtE0fd/2dvOw1ZEWl4Sbe69xo7gKmLyXU75dMHaABnnynm4ODhMM
+        VwhYX4y4lIkjAoKr+Msk5IL9bSwgKvmiddaRUD2TlC3wYSuJfn+kfs6i8cavsVvQAxXKrF
+        Bsks3OOKLcrmnStDjQ+e6WkkZ3ToHYs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-nGovIV4SNhyApnXVWNc58g-1; Wed, 12 Feb 2020 04:07:18 -0500
+X-MC-Unique: nGovIV4SNhyApnXVWNc58g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A325813E4;
+        Wed, 12 Feb 2020 09:07:16 +0000 (UTC)
+Received: from [10.72.13.111] (ovpn-13-111.pek2.redhat.com [10.72.13.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5144690086;
+        Wed, 12 Feb 2020 09:06:58 +0000 (UTC)
+Subject: Re: [virtio-dev] Re: [PATCH v2 4/5] virtio-mmio: add MSI interrupt
+ feature support
+To:     "Liu, Jing2" <jing2.liu@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org
+Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com, mst@redhat.com,
+        qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
+        gerry@linux.alibaba.com
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <4c3d13be5a391b1fc50416838de57d903cbf8038.1581305609.git.zhabin@linux.alibaba.com>
+ <0c71ff9d-1a7f-cfd2-e682-71b181bdeae4@redhat.com>
+ <c42c8b49-5357-f341-2942-ba84afc25437@linux.intel.com>
+ <ad96269f-753d-54b8-a4ae-59d1595dd3b2@redhat.com>
+ <5522f205-207b-b012-6631-3cc77dde3bfe@linux.intel.com>
+ <45e22435-08d3-08fe-8843-d8db02fcb8e3@redhat.com>
+ <4c19292f-9d25-a859-3dde-6dd5a03fdf0b@linux.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <44209f3c-613c-3766-ca83-321b77b0f0dd@redhat.com>
+Date:   Wed, 12 Feb 2020 17:06:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-8-drinkcat@chromium.org> <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
-In-Reply-To: <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-Date:   Wed, 12 Feb 2020 14:36:31 +0530
-Message-ID: <CAOh2x=kS_X-zmwWKfm2CAHAjuLqEcOZ61gkCLKKi8webmpLTOw@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] RFC: drm/panfrost: devfreq: Add support for 2 regulators
-To:     Nicolas Boichat <drinkcat@chromium.org>, sboyd@kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, vireshk@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4c19292f-9d25-a859-3dde-6dd5a03fdf0b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 2:19 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> +Viresh Kumar +Stephen Boyd for clock advice.
 
-You missed adding us in the cc list of the email, fixed that now :)
+On 2020/2/12 =E4=B8=8A=E5=8D=8811:54, Liu, Jing2 wrote:
+>
+>
+> On 2/11/2020 3:40 PM, Jason Wang wrote:
+>>
+>> On 2020/2/11 =E4=B8=8B=E5=8D=882:02, Liu, Jing2 wrote:
+>>>
+>>>
+>>> On 2/11/2020 12:02 PM, Jason Wang wrote:
+>>>>
+>>>> On 2020/2/11 =E4=B8=8A=E5=8D=8811:35, Liu, Jing2 wrote:
+>>>>>
+>>>>> On 2/11/2020 11:17 AM, Jason Wang wrote:
+>>>>>>
+>>>>>> On 2020/2/10 =E4=B8=8B=E5=8D=885:05, Zha Bin wrote:
+>>>>>>> From: Liu Jiang<gerry@linux.alibaba.com>
+>>>>>>>
+>>>>>>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage=20
+>>>>>>> of using
+>>>>>>> virtio over mmio devices as a lightweight machine model for moder=
+n
+>>>>>>> cloud. The standard virtio over MMIO transport layer only=20
+>>>>>>> supports one
+>>>>>>> legacy interrupt, which is much heavier than virtio over PCI=20
+>>>>>>> transport
+>>>>>>> layer using MSI. Legacy interrupt has long work path and causes=20
+>>>>>>> specific
+>>>>>>> VMExits in following cases, which would considerably slow down th=
+e
+>>>>>>> performance:
+>>>>>>>
+>>>>>>> 1) read interrupt status register
+>>>>>>> 2) update interrupt status register
+>>>>>>> 3) write IOAPIC EOI register
+>>>>>>>
+>>>>>>> We proposed to add MSI support for virtio over MMIO via new featu=
+re
+>>>>>>> bit VIRTIO_F_MMIO_MSI[1] which increases the interrupt performanc=
+e.
+>>>>>>>
+>>>>>>> With the VIRTIO_F_MMIO_MSI feature bit supported, the=20
+>>>>>>> virtio-mmio MSI
+>>>>>>> uses msi_sharing[1] to indicate the event and vector mapping.
+>>>>>>> Bit 1 is 0: device uses non-sharing and fixed vector per event=20
+>>>>>>> mapping.
+>>>>>>> Bit 1 is 1: device uses sharing mode and dynamic mapping.
+>>>>>>
+>>>>>>
+>>>>>> I believe dynamic mapping should cover the case of fixed vector?
+>>>>>>
+>>>>> Actually this bit *aims* for msi sharing or msi non-sharing.
+>>>>>
+>>>>> It means, when msi sharing bit is 1, device doesn't want vector=20
+>>>>> per queue
+>>>>>
+>>>>> (it wants msi vector sharing as name) and doesn't want a high=20
+>>>>> interrupt rate.
+>>>>>
+>>>>> So driver turns to !per_vq_vectors and has to do dynamical mapping.
+>>>>>
+>>>>> So they are opposite not superset.
+>>>>>
+>>>>> Thanks!
+>>>>>
+>>>>> Jing
+>>>>
+>>>>
+>>>> I think you need add more comments on the command.
+>>>>
+>>>> E.g if I want to map vector 0 to queue 1, how do I need to do?
+>>>>
+>>>> write(1, queue_sel);
+>>>> write(0, vector_sel);
+>>>
+>>> That's true. Besides, two commands are used for msi sharing mode,
+>>>
+>>> VIRTIO_MMIO_MSI_CMD_MAP_CONFIG and VIRTIO_MMIO_MSI_CMD_MAP_QUEUE.
+>>>
+>>> "To set up the event and vector mapping for MSI sharing mode, driver=20
+>>> SHOULD write a valid MsiVecSel followed by=20
+>>> VIRTIO_MMIO_MSI_CMD_MAP_CONFIG/VIRTIO_MMIO_MSI_CMD_MAP_QUEUE command=20
+>>> to map the configuration change/selected queue events respectively.=C2=
+=A0=20
+>>> " (See spec patch 5/5)
+>>>
+>>> So if driver detects the msi sharing mode, when it does setup vq,=20
+>>> writes the queue_sel (this already exists in setup vq), vector sel=20
+>>> and then MAP_QUEUE command to do the queue event mapping.
+>>>
+>>
+>> So actually the per vq msix could be done through this.=20
+>
+> Right, per vq msix can also be mapped by the 2 commands if we want.
+>
+> The current design benefits for those devices requesting per vq msi=20
+> that driver
+>
+> doesn't have to map during setup each queue,
+>
+> since we define the relationship by default.
+>
+
+Well since you've defined the dynamic mapping, having some "default"=20
+mapping won't help to reduce the complexity but increase it.
+
+
+>
+>> I don't get why you need to introduce MSI_SHARING_MASK which is the=20
+>> charge of driver instead of device.=20
+>
+> MSI_SHARING_MASK is just for identifying the msi_sharing bit in=20
+> readl(MsiState) (0x0c4). The device tells whether it wants msi_sharing.
+>
+> MsiState register: R
+>
+> le32 {
+> =C2=A0=C2=A0=C2=A0 msi_enabled : 1;
+> =C2=A0=C2=A0=C2=A0 msi_sharing: 1;
+> =C2=A0=C2=A0=C2=A0 reserved : 30;
+> };
+>
+
+The question is why device want such information.
+
+
+>
+>> The interrupt rate should have no direct relationship with whether it=20
+>> has been shared or not.
+>
+>>
+>> Btw, you introduce mask/unmask without pending, how to deal with the=20
+>> lost interrupt during the masking then?
+>>
+>>
+>>> For msi non-sharing mode, no special action is needed because we=20
+>>> make the rule of per_vq_vector and fixed relationship.
+>>>
+>>> Correct me if this is not that clear for spec/code comments.
+>>>
+>>
+>> The ABI is not as straightforward as PCI did. Why not just reuse the=20
+>> PCI layout?
+>>
+>> E.g having
+>>
+>> queue_sel
+>> queue_msix_vector
+>> msix_config
+>>
+>> for configuring map between msi vector and queues/config
+>
+> Thanks for the advice. :)
+>
+> Actually when looking into pci, the queue_msix_vector/msix_config is=20
+> the msi vector index, which is the same as the mmio register MsiVecSel=20
+> (0x0d0).
+>
+> So we don't introduce two extra registers for mapping even in sharing=20
+> mode.
+>
+> What do you think?
+>
+
+I'm not sure I get the point, but I still prefer the separate vector_sel=20
+from queue_msix_vector.
+
+Btw, Michael propose per vq registers which could also work.
+
+Thanks
+
+
+>
+>>
+>> Then
+>>
+>> vector_sel
+>> address
+>> data
+>> pending
+>> mask
+>> unmask
+>>
+>> for configuring msi table?
+>
+> PCI-like msix table is not introduced to device and instead simply use=20
+> commands to tell the mask/configure/enable.
+>
+> Thanks!
+>
+> Jing
+>
+>>
+>> Thanks
+>>
+>>
+>>> Thanks!
+>>>
+>>> Jing
+>>>
+>>>
+>>>>
+>>>> ?
+>>>>
+>>>> Thanks
+>>>>
+>>>>
+>>>>>
+>>>>>
+>>>>>> Thanks
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> ------------------------------------------------------------------=
+---=20
+>>>>>>
+>>>>>> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.or=
+g
+>>>>>> For additional commands, e-mail:=20
+>>>>>> virtio-dev-help@lists.oasis-open.org
+>>>>>>
+>>>>>
+>>>>
+>>
+
