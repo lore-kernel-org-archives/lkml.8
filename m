@@ -2,75 +2,131 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99FDC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21844C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE9220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5A720714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qHhw+JIq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pg1+RZ7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgBLRyq (ORCPT
+        id S1728886AbgBLRzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:54:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33400 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLRyp (ORCPT
+        Wed, 12 Feb 2020 12:55:18 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:44474 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLRzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:54:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7XNKwAQCe0wWD09kLZnG/QEn+5bffeFhq6ruL0n9m7M=; b=qHhw+JIqRJlFPo9Hs7xaQi3qIj
-        Jg2LHudVqRZys2sFoRHD7Qb/sJmBBUXyE6FarlkHqm6U+h7L4UcbNCd3FJMQ/zI4ajl25XX07JpIt
-        Af13uKlDkd2uiD/27TuEMsRcgFliRvCXUGZvQBML2ahaeNR8AP5o34VVM0BfZeRBxmNZJXT1popJX
-        BtQlWvxj8C5lMaDgDVN7JYbuUfXtA/McOdBV2QdrXUUuG0FC+FOT1eHpHpOWvLWoK+f0s5e59/r9m
-        8DXpQAKt2Lo6Sncqwuc8HVMkcCy1T7qlYRhmOdVN9LecwtySaL05IeohtS9fhNHcu1+Jbmy133RHI
-        fjtPt/XQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1wDl-0003lq-Ey; Wed, 12 Feb 2020 17:54:45 +0000
-Date:   Wed, 12 Feb 2020 09:54:45 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/25] fs: Introduce i_blocks_per_page
-Message-ID: <20200212175445.GB11424@infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-11-willy@infradead.org>
- <20200212074453.GH7068@infradead.org>
- <20200212150540.GE7778@bombadil.infradead.org>
+        Wed, 12 Feb 2020 12:55:17 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CHhWLh190088;
+        Wed, 12 Feb 2020 17:55:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Y+1Njwk15wXKV3Mssus0sPgtfffmph3i+pYY6U43ZAs=;
+ b=Pg1+RZ7QzoBMtC4+0gvZ+2TM/uNiNTSbr4agsKdrxwmWsszElNa3xwONwu1E386Z5ALi
+ WR99QVhSq9H0MHOj2io3WWG3Ih4SpxQtau01QFypH9T8wMuTIwfOlsebfZnSnlsQrBZn
+ DRSMJiwLAqyIrdMnTHXJK3ABzVVdV2fbo63ZU9Qnob2jAU2h2L0CVzpY1bcFDgwx9WlI
+ p3Z433JEkjKui0syY2aRR0LZbSmTsnFGWeus2Ezy1J28UoOyxmo3iOq8WAJsntXhhRgp
+ wBmMhBtz6/6IJfPFyOT6KlFnXJ8gtyO2Pv3nvJ1CY4COeoMjqHIIqh/m6cLeSuBvleEZ aQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2y2p3sme6s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Feb 2020 17:55:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CHfcOZ093948;
+        Wed, 12 Feb 2020 17:55:04 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2y4k7x3xw5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Feb 2020 17:55:04 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01CHt4Kw045592;
+        Wed, 12 Feb 2020 17:55:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2y4k7x3xvh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Feb 2020 17:55:04 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01CHt4EK028539;
+        Wed, 12 Feb 2020 17:55:04 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 12 Feb 2020 09:55:03 -0800
+Subject: Re: [PATCH 1/1] net/rds: Track user mapped pages through special API
+To:     Leon Romanovsky <leonro@mellanox.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hans Westgaard Ry <hans.westgaard.ry@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20200212030355.1600749-1-jhubbard@nvidia.com>
+ <20200212030355.1600749-2-jhubbard@nvidia.com>
+ <c0d8d04e-08d1-60ff-ea4c-e6c71f3e118a@oracle.com>
+ <20200212175159.GD679970@unreal>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <b0e45342-4415-67e4-8c5b-37a6fc8d310e@oracle.com>
+Date:   Wed, 12 Feb 2020 09:55:02 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212150540.GE7778@bombadil.infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200212175159.GD679970@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002120131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 07:05:40AM -0800, Matthew Wilcox wrote:
-> > > + * Return: The number of filesystem blocks covered by this page.
-> > > + */
-> > > +static inline
-> > > +unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
-> > 
-> > static inline unisnged int
-> > i_blocks_per_page(struct inode *inode, struct page *page)
+On 2/12/20 9:51 AM, Leon Romanovsky wrote:
+> On Wed, Feb 12, 2020 at 09:31:51AM -0800, santosh.shilimkar@oracle.com wrote:
+>> On 2/11/20 7:03 PM, John Hubbard wrote:
+>>> From: Leon Romanovsky <leonro@mellanox.com>
+>>>
+>>> Convert net/rds to use the newly introduces pin_user_pages() API,
+>>> which properly sets FOLL_PIN. Setting FOLL_PIN is now required for
+>>> code that requires tracking of pinned pages.
+>>>
+>>> Note that this effectively changes the code's behavior: it now
+>>> ultimately calls set_page_dirty_lock(), instead of set_page_dirty().
+>>> This is probably more accurate.
+>>>
+>>> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+>>> dealing with a file backed page where we have reference on the inode it
+>>> hangs off." [1]
+>>>
+>>> [1] https://urldefense.com/v3/__https://lore.kernel.org/r/20190723153640.GB720@lst.de__;!!GqivPVa7Brio!OJHuecs9Iup5ig3kQBi_423uMMuskWhBQAdOICrY3UQ_ZfEaxt9ySY7E8y32Q7pk5tByyA$
+>>>
+>>> Cc: Hans Westgaard Ry <hans.westgaard.ry@oracle.com>
+>>> Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+>>> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+>>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>>> ---
+>> Change looks fine to me. Just on safer side, we will try
+>> to test this change with regression suite to make sure it
+>> works as expected.
 > 
-> That's XFS coding style.  Linus has specifically forbidden that:
+> Thanks Santosh,
+> I wrote this patch before John's series was merged into the tree,
+> but back then, Hans tested it and it worked, hope that it still works. :)
 > 
-> https://lore.kernel.org/lkml/1054519757.161606@palladium.transmeta.com/
+I see. Wasn't aware of it. In that case, its should be fine.
 
-Not just xfs but lots of places.  But if you don't like that follow
-the real Linus style we use elsewhere:
-
-static inline unsigned int i_blocks_per_page(struct inode *inode,
-		struct page *page)
+Regards,
+Santosh
