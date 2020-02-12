@@ -2,157 +2,155 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4312C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAA4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B975620714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CD220873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQTj4phV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/p0LXqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgBLJzb (ORCPT
+        id S1729018AbgBLJzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:55:31 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33471 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728846AbgBLJza (ORCPT
+        Wed, 12 Feb 2020 04:55:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45989 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728846AbgBLJzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:55:30 -0500
-Received: by mail-wr1-f66.google.com with SMTP id u6so1436600wrt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 01:55:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5qqmmgh1mRA8+uKd3OvijHJxqdZDdPNm7C7N0rHwtQ0=;
-        b=ZQTj4phV6Ct6hAZ9+3hpFPdlE3z+Cx/i/rtMRiLdQSrUdYcPxaojrRblBDxxa9sUFr
-         z4/+4zKw6rfRxYW1MyKnDCMlDrNwIEqHnZ2oRp6ckiZA6XWcT8zUmtRvkopMkOfRmunq
-         a0X31u+6mOY7gexXKHddCIOlf2V9zMC2huzBvbOBm5jznmroIIpWafVfqoJLwEYdE5M8
-         pT2y5sVIRhjfuakBod8G4f5eJXiYCUZ+8j3897A0IK+3idy4rTesYmDiBfm2L03KOUxi
-         nS2WG4GzIK8YAls2dsBBOYXz/riEAmjDZi9MO3zW9DqQMRvwBZGz0VJ08eC6f3J96v2l
-         nhUw==
+        Wed, 12 Feb 2020 04:55:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581501345;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bFNhckmD80QJf6jRDOHI6PRM4MMiU94KSnf7/vGNBgo=;
+        b=Q/p0LXqgDpcgKzMvSrWm/XzSjD+H2v+tacZqseLyP6o59P0EngN7O7FvtKsUxGhhT5Lghl
+        bH+Cnaoz7+drwoVPiTrT1B/BGeyl6Tp7ymekC53oS9KJyGvzGxI/vfqeH8Y+38A70Jq97u
+        ixeSlzhyB9hA9/Eae/cVdkG3oUU8QAA=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-ZgcbkkfuMtCexj59ckLK2Q-1; Wed, 12 Feb 2020 04:55:44 -0500
+X-MC-Unique: ZgcbkkfuMtCexj59ckLK2Q-1
+Received: by mail-qt1-f199.google.com with SMTP id k27so894260qtu.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 01:55:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5qqmmgh1mRA8+uKd3OvijHJxqdZDdPNm7C7N0rHwtQ0=;
-        b=Y8OFqHPma3USYJvaEjYTjD6JQTTN3OnFOHMREpiOrsuVDOYDtclLX9oBxu9/Z6+6W3
-         nlZpCuGOoiRYCiTJ8oW/Kx823NzPNahp8uaeI66O67kCBXu92BGwNyjkLyg202dvk23f
-         8eeyjpGm0EZ2JuvOOnUBKWr5ziLU/8tRL98+ObyIsaD/9HTo1bwSMwoxxcfgfy4zvd4M
-         wXSkpy0B10WKz8Deq3RkFNSIeWPDGueKPzGWblYQGZ+b0yucJvaIC/XdEIbZ3vMm9KDr
-         s4b8xbITrhrxv0rr0BM+WVZczFZTS5LC6RGkmZ+knPMS5je6J/NtcWLxnbk687zFMgnL
-         c44g==
-X-Gm-Message-State: APjAAAXDT4ScHd6+Lp3l0W7P8WBeJXOvv3DPOsXSR3bHLMntEJw0xI29
-        SZBcxajkddb6VaptBnJnbkzK5Bl4KxItu5GuJk6YJNpjLf0=
-X-Google-Smtp-Source: APXvYqxL9Eo4qb2sOJrd1wkpY5K5/0EEQ1noRNaNgdXfALwcSpj9a+jGRMYLeglfrh/aGIAZ7gTQTMGTxHsaLfrIN3k=
-X-Received: by 2002:adf:f7c6:: with SMTP id a6mr15060118wrq.164.1581501328222;
- Wed, 12 Feb 2020 01:55:28 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=bFNhckmD80QJf6jRDOHI6PRM4MMiU94KSnf7/vGNBgo=;
+        b=qw1AZ7i/CwPCILvm9fYLz94FmmYeNyVuk4Bjxl5xULTTZKCtLEcga7NMyHj2298ehz
+         VkEdrpFKaQOIejQnxd4/7ed8BioEzl3A4O+isyOr9MFFkIP+zupj28jyh2/eQnf8UGvE
+         9H5NCmUz/M5jdUoi3S65i9y1RxSigx/WTi0ilrjWHxPbFsMd9RQKhesqQOloPBviu5wI
+         w119rD9hboD5DFVte0W2NOEHMQzWWaZ4DgC0l+0yDyc9SAmmcPiJlMLtNavGrrA/NV5U
+         tpFKmxt5MtEbIM5y5pn1CIYDINsc4r/W1Bfhugcc209mE5VbRV3tolUTNRYyETwOH5OF
+         NKPQ==
+X-Gm-Message-State: APjAAAX6EnnhZggQQpF7arVhP/uhoRxRNaY2qVQvD5+z+Cw/dRAUvvTj
+        Ytz5wa94LLjy0vHTb8zM8INFml2OIez3Ptsr34qj/MYucsRJJX5gwaNE1EPmfM4VjH3uarpuDMa
+        n/qoa/0foSF97PugRP9exzZl0
+X-Received: by 2002:a37:c20c:: with SMTP id i12mr6835436qkm.369.1581501343958;
+        Wed, 12 Feb 2020 01:55:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwCGfkRPm08o/LHssSKBU88oQZ98wfqpUmh8XnUJ6AgE1yA5tbBHLFkuTpDWg4gHursBy+Haw==
+X-Received: by 2002:a37:c20c:: with SMTP id i12mr6835426qkm.369.1581501343730;
+        Wed, 12 Feb 2020 01:55:43 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id d206sm3549894qke.66.2020.02.12.01.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 01:55:42 -0800 (PST)
+Date:   Wed, 12 Feb 2020 04:55:38 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Zha Bin <zhabin@linux.alibaba.com>,
+        virtio-dev@lists.oasis-open.org, slp@redhat.com,
+        jing2.liu@linux.intel.com, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
+        gerry@linux.alibaba.com
+Subject: Re: [PATCH v2 1/5] virtio-mmio: add notify feature for per-queue
+Message-ID: <20200212045245-mutt-send-email-mst@kernel.org>
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <8a4ea95d6d77a2814aaf6897b5517353289a098e.1581305609.git.zhabin@linux.alibaba.com>
+ <20200211062205-mutt-send-email-mst@kernel.org>
+ <ef613d3a-0372-64f3-7644-2e88cc9d4355@redhat.com>
+ <20200212024158-mutt-send-email-mst@kernel.org>
+ <d4eb9cde-5d06-3df9-df28-15378a9c6929@redhat.com>
+ <82d99b35-0c64-2eb2-9c23-7af2597b880b@redhat.com>
 MIME-Version: 1.0
-References: <20200210061544.7600-1-yuehaibing@huawei.com> <9351a746-8823-ee26-70da-fd3127a02c91@linux.intel.com>
- <be093793-3514-840a-ff2f-4dc21d8ee7f1@huawei.com> <CAEnQRZDWFgXocRJxtc2e7McRCAtod6-GwPJaVMdb4ymBZgSD1w@mail.gmail.com>
- <CAJKOXPcxL2vpWGwO1OL9Vv0g6hzbW-AyGJNn=7Yq2iy10_cbhg@mail.gmail.com>
-In-Reply-To: <CAJKOXPcxL2vpWGwO1OL9Vv0g6hzbW-AyGJNn=7Yq2iy10_cbhg@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 12 Feb 2020 11:55:16 +0200
-Message-ID: <CAEnQRZB2n+NOEete9fe7=EU9D2gfURf52NnUZTRDM0n9ey_FSw@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Fix randbuild error
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Yuehaibing <yuehaibing@huawei.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <82d99b35-0c64-2eb2-9c23-7af2597b880b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Tue, 11 Feb 2020 at 10:46, Daniel Baluta <daniel.baluta@gmail.com> wrote:
-> >
-> > On Tue, Feb 11, 2020 at 3:59 AM Yuehaibing <yuehaibing@huawei.com> wrote:
-> > >
-> > > On 2020/2/11 5:00, Pierre-Louis Bossart wrote:
-> > > >
-> > > >
-> > > > On 2/10/20 12:15 AM, YueHaibing wrote:
-> > > >> when do randconfig like this:
-> > > >> CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
-> > > >> CONFIG_SND_SOC_SOF_IMX8=y
-> > > >> CONFIG_SND_SOC_SOF_OF=y
-> > > >> CONFIG_IMX_DSP=m
-> > > >> CONFIG_IMX_SCU=y
-> > > >>
-> > > >> there is a link error:
-> > > >>
-> > > >> sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
-> > > >> imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
-> > > >>
-> > > >> Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
-> > > >>
-> > > >> Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > >> Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
-> > > >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > > >
-> > > > Thanks for the report.
-> > > >
-> > > > Would you mind sharing the .config and instructions to reproduce this case? we have an unrelated issue with allyesconfig that was reviewed here:
-> > > >
-> > > > https://github.com/thesofproject/linux/pull/1778
-> > > >
-> > > > and I'd probably a good thing to fix everything in one shot.
-> > >
-> > > config is attached, which is on x86_64
-> >
-> > Thanks, I think this is legit. It was introduced with:
-> >
-> > commit f52cdcce9197fef9d4a68792dd3b840ad2b77117
-> > Author: Daniel Baluta <daniel.baluta@nxp.com>
-> > Date:   Sat Jan 4 15:39:53 2020 +0000
-> >
-> >     firmware: imx: Allow IMX DSP to be selected as module
-> >
-> >     IMX DSP is only needed by SOF or any other module that
-> >     wants to communicate with the DSP. When SOF is build
-> >     as a module IMX DSP is forced to be built inside the
-> >     kernel image. This is not optimal, so allow IMX DSP
-> >     to be built as a module.
-> >
-> >     Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> >     Signed-off-by: Shawn Guo <shawnguo@kernel.org>
->
-> Hi,
->
-> Since it's a module, don't you just miss EXPORT_SYMBOL there?
+On Wed, Feb 12, 2020 at 05:33:06PM +0800, Jason Wang wrote:
+> 
+> On 2020/2/12 下午4:53, Jason Wang wrote:
+> > 
+> > On 2020/2/12 下午4:18, Michael S. Tsirkin wrote:
+> > > On Wed, Feb 12, 2020 at 11:39:54AM +0800, Jason Wang wrote:
+> > > > On 2020/2/11 下午7:33, Michael S. Tsirkin wrote:
+> > > > > On Mon, Feb 10, 2020 at 05:05:17PM +0800, Zha Bin wrote:
+> > > > > > From: Liu Jiang<gerry@linux.alibaba.com>
+> > > > > > 
+> > > > > > The standard virtio-mmio devices use notification register to signal
+> > > > > > backend. This will cause vmexits and slow down the
+> > > > > > performance when we
+> > > > > > passthrough the virtio-mmio devices to guest virtual machines.
+> > > > > > We proposed to update virtio over MMIO spec to add the per-queue
+> > > > > > notify feature VIRTIO_F_MMIO_NOTIFICATION[1]. It can allow the VMM to
+> > > > > > configure notify location for each queue.
+> > > > > > 
+> > > > > > [1]https://lkml.org/lkml/2020/1/21/31
+> > > > > > 
+> > > > > > Signed-off-by: Liu Jiang<gerry@linux.alibaba.com>
+> > > > > > Co-developed-by: Zha Bin<zhabin@linux.alibaba.com>
+> > > > > > Signed-off-by: Zha Bin<zhabin@linux.alibaba.com>
+> > > > > > Co-developed-by: Jing Liu<jing2.liu@linux.intel.com>
+> > > > > > Signed-off-by: Jing Liu<jing2.liu@linux.intel.com>
+> > > > > > Co-developed-by: Chao Peng<chao.p.peng@linux.intel.com>
+> > > > > > Signed-off-by: Chao Peng<chao.p.peng@linux.intel.com>
+> > > > > Hmm. Any way to make this static so we don't need
+> > > > > base and multiplier?
+> > > > E.g page per vq?
+> > > > 
+> > > > Thanks
+> > > Problem is, is page size well defined enough?
+> > > Are there cases where guest and host page sizes differ?
+> > > I suspect there might be.
+> > 
+> > 
+> > Right, so it looks better to keep base and multiplier, e.g for vDPA.
+> > 
+> > 
+> > > 
+> > > But I also think this whole patch is unproven. Is someone actually
+> > > working on QEMU code to support pass-trough of virtio-pci
+> > > as virtio-mmio for nested guests? What's the performance
+> > > gain like?
+> > 
+> > 
+> > I don't know.
+> > 
+> > Thanks
+> 
+> 
+> Btw, I think there's no need for a nested environment to test. Current
+> eventfd hook to MSIX should still work for MMIO.
+> 
+> Thanks
 
-This is a good point. Will have a deeper look at this asap and sent a
-fix .
 
->
-> > So, I think we should change the Fixes tag. Are there
-> > any clear rules on when to use select vs depends?
-> >
-> > On my side, I know what both are doing but it is not clear
-> > when to use them.
->
-> Visible symbols usually should not be selected. The same with symbols
-> with dependencies. The docs have this rule mentioned.
+Oh yes it's the wildcard thingy but how much extra performance does one get
+from it with MMIO? A couple % might not be worth the trouble for MMIO.
 
-I see. Thanks!
+-- 
+MST
+
