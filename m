@@ -2,157 +2,118 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A13EC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0B5C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0368F20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D3220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBz6nbVg"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="dUeaWcB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgBLQXW (ORCPT
+        id S1728715AbgBLQX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:23:22 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33940 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgBLQXV (ORCPT
+        Wed, 12 Feb 2020 11:23:59 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43209 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBLQX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:23:21 -0500
-Received: by mail-pl1-f194.google.com with SMTP id j7so1152008plt.1;
-        Wed, 12 Feb 2020 08:23:20 -0800 (PST)
+        Wed, 12 Feb 2020 11:23:58 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u12so1110149pgb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:23:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yuS3UA1IgBJUj+Wpff0h1v7oXXukTf3YUcZ7+4lm5Pc=;
-        b=ZBz6nbVg0BvKO4Kpp4xvT89r/oVFpqbGIv6DR+w3SZFiDgfpiCsa6srQmCI7ILhPsg
-         ftsBjyXrlU+BY6jaNV2yB9qcscoalG03jvehW6GwpDD7HLsYyyPpMnkh9zMVvo8bT9OV
-         WY7wem6cbcoBfg1yjGFvHS+IbXfECEzMnhhsTxFINGSMv+utJY7AyzknnwDbd/gzNGjh
-         7yWTVzwMm78qnN7L7BeNToUPFxxslox45BOqW3slHHfw1nIyKT/Wl+WvOE3oXoQnKHb+
-         Do/jOgYPgDl55OtppFGbDAmiQ+TnOUerZWMq/6crZdwYG6W+rF1Q3FCiXMfFtNqdNEtp
-         ODgA==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=RPf0qd07XC0OOgOapJr/kDhbr+rGuzMt9BHSs7VK5/M=;
+        b=dUeaWcB7fuWIvEKzmYm9b+dMATUK5ExPoVF5uz+XbZrV986c/7ZUKxiELMZyxipwMD
+         1RUk/X2dZklh2rOUgrGjHNF1qDI1tftagxZSLDZeZzgJnXon8nHd/5ivrOWxJ2z/Quol
+         0fLkLJT9qUyJSI09E6JgFMkBBxxoUuFR2ZoBYCe9KrD28/tVFDRp7HJ80deMqTvy4jc2
+         sPljRpie80sjXVDaKmHDRm2v2lVgyQPfm43BcZ9NhdT+n3hvcOemxeUTZvQMiBPEjNiB
+         QezheQ9VMb9FKQ0p5qNL3hcNgcu5RQovzjPUuEvlPjHBaCjFoDM0Pa5MHOxqyDTLZACA
+         xONg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yuS3UA1IgBJUj+Wpff0h1v7oXXukTf3YUcZ7+4lm5Pc=;
-        b=Git5yNlMuwbZhJmZKkCQyphCFxle8rkhieJlvvNQfj0ACx79U1j47S1fSfAhe8VfpJ
-         jwANpOrig2bCBa6QgdXVmmf5jMN/nE8MHo7LKwXMGf+WIbinT6v2GE9+s0hI6vwAjJaY
-         s86DhuC4+aeUoSyMfD7PmLgfy68mE8q/8+dya+VKZABgkmYzNiYvwhnhVDgGmHxLMurP
-         dTZnHEOJF/Pd3gnjmK43Ab+NwfglRxIetiKlGjUtactG7BekRWbq7W9dJtRV+ThJZnaH
-         s4HazdbSDca+eVXXKYsixDZ91tXuGE7KMsbytG6GonIfxSldYwwNy27gjE4UxucV8ZJ2
-         6Npw==
-X-Gm-Message-State: APjAAAVd+ICO1NrqGNhU4tws5aWcmYGWczAOMZ4k8f2AB+QxIdvjTb8w
-        sTHp92Ga6kbfdFUKnxyy2zI9xPRyktstOHNSQvc=
-X-Google-Smtp-Source: APXvYqyQ68Kti3qwh42kkGAhB0AUJ6hfRU+pu7Wom3J96ut79md2/f+Fd78hgzJvaOGt2BLMWtLQct6myw5vSBS/bc8=
-X-Received: by 2002:a17:902:9342:: with SMTP id g2mr8825074plp.339.1581524600442;
- Wed, 12 Feb 2020 08:23:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200128110102.11522-1-martin@kaiser.cx> <20200128110102.11522-6-martin@kaiser.cx>
-In-Reply-To: <20200128110102.11522-6-martin@kaiser.cx>
-From:   PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Date:   Wed, 12 Feb 2020 21:53:09 +0530
-Message-ID: <CANc+2y6oasMLCzDJAebFca4yoWWTL4r3Esyws-K5EuMLwbuAqA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] hwrng: imx-rngc - check the rng type
-To:     Martin Kaiser <martin@kaiser.cx>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=RPf0qd07XC0OOgOapJr/kDhbr+rGuzMt9BHSs7VK5/M=;
+        b=nHeQQZK/lMLA3qw64I3WBZUj5nXWpSbXpGOjJSxKlSs7xLETstTpRhFJmIiGHpKOT5
+         E8e12X6j9WSjNZZu9CzuVAg2uostGb+qKhhgguF5quZAdqtWbXR3Y3kEgt7dmMCSlli9
+         Bjn5rXUTMiAtRZrou/M7mBMISn9asrDoe9bVfKNscjr+8/UTBeQFJ146LS5pHKNY6RAO
+         4th91ukOepbk/1nomYGCTLpDFtdvgJGL95vA5qT23RlFHZgktyXiu9VrcsSJcmVPGz3l
+         QBU9TBqOU4hxslhLu7JKjnEuk5uwgWr1lMDhq3qvNV24Sjg/ncCvdLDsKDhtYTppm+3U
+         zksQ==
+X-Gm-Message-State: APjAAAVWq3SPPfPmt0GeHy38Gox0jg8pXgUm6QUac++/FrZmf4vQ8Efa
+        aYYM0Rfp+k6LRiABZ3cBcbXF3A==
+X-Google-Smtp-Source: APXvYqwA82NVa9GoZoUratpibu79hOk3wllm05r7A8GrU5cq9PSBnDYtIdZEziICapSe7ywBb9awww==
+X-Received: by 2002:a65:4305:: with SMTP id j5mr13799109pgq.315.1581524636923;
+        Wed, 12 Feb 2020 08:23:56 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:6918:d286:95c1:bba2? ([2601:646:c200:1ef2:6918:d286:95c1:bba2])
+        by smtp.gmail.com with ESMTPSA id s130sm1652186pfc.62.2020.02.12.08.23.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 08:23:56 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 23/62] x86/idt: Move IDT to data segment
+Date:   Wed, 12 Feb 2020 08:23:54 -0800
+Message-Id: <EEAC8672-C98F-45D0-9F2D-0802516C3908@amacapital.net>
+References: <20200212115516.GE20066@8bytes.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        Juergen Gross <JGross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+In-Reply-To: <20200212115516.GE20066@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020 at 16:31, Martin Kaiser <martin@kaiser.cx> wrote:
->
-> Read the rng type and hardware revision during probe. Fail the probe
-> operation if the type is not one of rngc or rngb.
-> (There's also an rnga type, which needs a different driver.)
->
-> Display the type and revision in a debug print if probe was successful.
->
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  drivers/char/hw_random/imx-rngc.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-> index 8222055b9e9b..27d85fced30b 100644
-> --- a/drivers/char/hw_random/imx-rngc.c
-> +++ b/drivers/char/hw_random/imx-rngc.c
-> @@ -18,12 +18,22 @@
->  #include <linux/completion.h>
->  #include <linux/io.h>
->
-> +#define RNGC_VER_ID                    0x0000
->  #define RNGC_COMMAND                   0x0004
->  #define RNGC_CONTROL                   0x0008
->  #define RNGC_STATUS                    0x000C
->  #define RNGC_ERROR                     0x0010
->  #define RNGC_FIFO                      0x0014
->
-> +/* the fields in the ver id register */
-> +#define RNGC_TYPE_SHIFT                28
-> +#define RNGC_VER_MAJ_SHIFT             8
-> +
-> +/* the rng_type field */
-> +#define RNGC_TYPE_RNGB                 0x1
-> +#define RNGC_TYPE_RNGC                 0x2
-> +
-> +
->  #define RNGC_CMD_CLR_ERR               0x00000020
->  #define RNGC_CMD_CLR_INT               0x00000010
->  #define RNGC_CMD_SEED                  0x00000002
-> @@ -212,6 +222,8 @@ static int imx_rngc_probe(struct platform_device *pdev)
->         struct imx_rngc *rngc;
->         int ret;
->         int irq;
-> +       u32 ver_id;
-> +       u8  rng_type;
->
->         rngc = devm_kzalloc(&pdev->dev, sizeof(*rngc), GFP_KERNEL);
->         if (!rngc)
-> @@ -237,6 +249,17 @@ static int imx_rngc_probe(struct platform_device *pdev)
->         if (ret)
->                 return ret;
->
-> +       ver_id = readl(rngc->base + RNGC_VER_ID);
-> +       rng_type = ver_id >> RNGC_TYPE_SHIFT;
-> +       /*
-> +        * This driver supports only RNGC and RNGB. (There's a different
-> +        * driver for RNGA.)
-> +        */
-> +       if (rng_type != RNGC_TYPE_RNGC && rng_type != RNGC_TYPE_RNGB) {
-> +               ret = -ENODEV;
-> +               goto err;
-> +       }
-> +
->         ret = devm_request_irq(&pdev->dev,
->                         irq, imx_rngc_irq, 0, pdev->name, (void *)rngc);
->         if (ret) {
-> @@ -269,7 +292,10 @@ static int imx_rngc_probe(struct platform_device *pdev)
->                 goto err;
->         }
->
-> -       dev_info(&pdev->dev, "Freescale RNGC registered.\n");
-> +       dev_info(&pdev->dev,
-> +               "Freescale RNG%c registered (HW revision %d.%02d)\n",
-> +               rng_type == RNGC_TYPE_RNGB ? 'B' : 'C',
-> +               (ver_id >> RNGC_VER_MAJ_SHIFT) & 0xff, ver_id & 0xff);
->         return 0;
->
->  err:
-> --
-> 2.20.1
->
 
-Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+
+> On Feb 12, 2020, at 3:55 AM, Joerg Roedel <joro@8bytes.org> wrote:
+>=20
+> =EF=BB=BFOn Tue, Feb 11, 2020 at 02:41:25PM -0800, Andy Lutomirski wrote:
+>>> On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
+>>>=20
+>>> From: Joerg Roedel <jroedel@suse.de>
+>>>=20
+>>> With SEV-ES, exception handling is needed very early, even before the
+>>> kernel has cleared the bss segment. In order to prevent clearing the
+>>> currently used IDT, move the IDT to the data segment.
+>>=20
+>> Ugh.  At the very least this needs a comment in the code.
+>=20
+> Yes, right, added a comment for that.
+>=20
+>> I had a patch to fix the kernel ELF loader to clear BSS, which would
+>> fix this problem once and for all, but it didn't work due to the messy
+>> way that the decompressor handles memory.  I never got around to
+>> fixing this, sadly.
+>=20
+> Aren't there other ways of booting (Xen-PV?) which don't use the kernel
+> ELF loader?
+
+Dunno. I would hope the any sane loader would clear BSS before executing any=
+thing. This isn=E2=80=99t currently the case, though. Oh well.
+
+>=20
+> Regards,
+>=20
+>    Joerg
