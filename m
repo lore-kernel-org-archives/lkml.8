@@ -2,77 +2,192 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4494AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54ACC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1318820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8054C2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:34:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="POlhJANY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgBLQdX (ORCPT
+        id S1728674AbgBLQeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:33:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:35018 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbgBLQdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:33:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCE12328;
-        Wed, 12 Feb 2020 08:33:22 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C9333F68F;
-        Wed, 12 Feb 2020 08:33:20 -0800 (PST)
-Subject: Re: [PATCH v3 3/7] arm64/kvm: disable access to AMU registers from
- kvm guests
-To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, rjw@rjwysocki.net
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-4-ionela.voinescu@arm.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <f4f2b3a7-b8fe-e724-8a57-f6e8991760b4@arm.com>
-Date:   Wed, 12 Feb 2020 16:33:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200211184542.29585-4-ionela.voinescu@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Feb 2020 11:34:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28945 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727439AbgBLQeX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:34:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581525261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XeLe0VqvdqoWiGR03rxndmykwmmXsnBvd6JZdgln7y4=;
+        b=POlhJANYimN8IanVDLDyKw5Vm92rElusmK1HDa36YIsL0TR/GUlzBc2rg+uPesIbsxFgNq
+        Ye3beJ3IcgEzFLVgIiqeovem1t5Hxl/cDuWjImWiBTaH/mLic/WIbAcMcp96kd9RVUGHb9
+        /t64QnwgNzPjBWffstFgO3V2dzmh5CY=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-TgV48k-ROgqaZ5fnqyH9Sw-1; Wed, 12 Feb 2020 11:34:19 -0500
+X-MC-Unique: TgV48k-ROgqaZ5fnqyH9Sw-1
+Received: by mail-wm1-f70.google.com with SMTP id p26so933189wmg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:34:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XeLe0VqvdqoWiGR03rxndmykwmmXsnBvd6JZdgln7y4=;
+        b=OjWyQu5detZaRq6d0k5Fi+XjIdaGjZKAy1akxa+wXdspenLj4Av+GPmFOu+HH5Q26a
+         aAsGPLmjMdWWItBIzcBH/4UTTGPOlUKQgVIq3h7e4C4wZlG33lDwWrsMMJ7XVC3A/S2U
+         W2+qHCFIKEZFXdkHyMxzXK6HM64ZLp5Bx5YY50wQWMaWS9/w4QfQcnjY/4bwF2fz7GE2
+         8GpzCS4BXdJ4V+CY5eieKYpJ8MYG+hLBhmbdA6KnvyvTSU3wpsHmRXN8/uErdUC2L6Hh
+         ZES5QHXrnDWaHSslV7qTNIMhkY6erMUF15/CKHCRCIrVAxoFrCv03nNsQ3HIzKPXFaxd
+         AY4Q==
+X-Gm-Message-State: APjAAAWZ+MDKtukloH3BAe5vinXsn7DPths49CiQqVVgnAZFe1dI/SSs
+        Bg4psMIY/+okX4mJnnQn8HC+WDstnfQE+7/n/2hvmlqG5rJq4SQ59U31NCn90U0FFVur7hF6qW8
+        PrGt9y6uYN/KpM4sY3z6x68AF
+X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr13953431wmj.72.1581525258505;
+        Wed, 12 Feb 2020 08:34:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwzR9LoAw0PLm1NN8TKVgvBlTdyQ4+WmwfyRs+Y2SnZ+YimN+K/oDsDwHuGaXIU12ce2wCypA==
+X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr13953400wmj.72.1581525258231;
+        Wed, 12 Feb 2020 08:34:18 -0800 (PST)
+Received: from eperezma.remote.csb (153.143.221.87.dynamic.jazztel.es. [87.221.143.153])
+        by smtp.gmail.com with ESMTPSA id a16sm1172111wrt.30.2020.02.12.08.34.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 08:34:17 -0800 (PST)
+Message-ID: <50a79c3491ac483583c97df2fac29e2c3248fdea.camel@redhat.com>
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger
+ random crashes in KVM guests after reboot
+From:   Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Date:   Wed, 12 Feb 2020 17:34:16 +0100
+In-Reply-To: <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
+References: <20200107042401-mutt-send-email-mst@kernel.org>
+         <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+         <20200107065434-mutt-send-email-mst@kernel.org>
+         <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
+         <20200120012724-mutt-send-email-mst@kernel.org>
+         <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
+         <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
+         <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
+         <20200206171349-mutt-send-email-mst@kernel.org>
+         <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
+         <20200207025806-mutt-send-email-mst@kernel.org>
+         <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
+         <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
+         <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
+         <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
+         <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-6.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/2020 18:45, Ionela Voinescu wrote:
-> Access to the AMU counters should be disabled by default in kvm guests,
-> as information from the counters might reveal activity in other guests
-> or activity on the host.
+On Tue, 2020-02-11 at 14:13 +0100, Christian Borntraeger wrote:
 > 
-> Therefore, disable access to AMU registers from EL0 and EL1 in kvm
-> guests by:
->   - Hiding the presence of the extension in the feature register
->     (SYS_ID_AA64PFR0_EL1) on the VCPU.
->   - Disabling access to the AMU registers before switching to the guest.
->   - Trapping accesses and injecting an undefined instruction into the
->     guest.
+> On 11.02.20 14:04, Eugenio Pérez wrote:
+> > On Mon, 2020-02-10 at 12:01 +0100, Christian Borntraeger wrote:
+> > > On 10.02.20 10:47, Eugenio Perez Martin wrote:
+> > > > Hi Christian.
+> > > > 
+> > > > I'm not able to reproduce the failure with eccb852f1fe6bede630e2e4f1a121a81e34354ab commit. Could you add more
+> > > > data?
+> > > > Your configuration (libvirt or qemu line), and host's dmesg output if any?
+> > > > 
+> > > > Thanks!
+> > > 
+> > > If it was not obvious, this is on s390x, a big endian system.
+> > > 
+> > 
+> > Hi Christian. Thank you very much for your fast responses.
+> > 
+> > Could you try this patch on top of eccb852f1fe6bede630e2e4f1a121a81e34354ab?
 > 
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> ---
+> I still get 
+> [   43.665145] Guest moved used index from 0 to 289
+> after some reboots.
+> 
+> 
+> > Thanks!
+> > 
+> > From 71d0f9108a18aa894cc0c0c1c7efbad39f465a27 Mon Sep 17 00:00:00 2001
+> > From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <
+> > eperezma@redhat.com>
+> > Date: Tue, 11 Feb 2020 13:19:10 +0100
+> > Subject: [PATCH] vhost: fix return value of vhost_get_vq_desc
+> > 
+> > Before of the batch change, it was the chain's head. Need to keep that
+> > way or we will not be able to free a chain of descriptors.
+> > 
+> > Fixes: eccb852f1fe6 ("vhost: batching fetches")
+> > ---
+> >  drivers/vhost/vhost.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index b5a51b1f2e79..fc422c3e5c08 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -2409,12 +2409,11 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+> >  			*out_num += ret;
+> >  		}
+> >  
+> > -		ret = desc->id;
+> > -
+> >  		if (!(desc->flags & VRING_DESC_F_NEXT))
+> >  			break;
+> >  	}
+> >  
+> > +	ret = vq->descs[vq->first_desc].id;
+> >  	vq->first_desc = i + 1;
+> >  
+> >  	return ret;
+> > 
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Sorry, still not able to reproduce the issue.
+
+Could we try to disable all the vhost features?
+
+Thanks!
+
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 661088ae6dc7..08f6d2ccb697 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -250,11 +250,11 @@ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
+        } while (0)
+ 
+ enum {
+-       VHOST_FEATURES = (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) |
+-                        (1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
+-                        (1ULL << VIRTIO_RING_F_EVENT_IDX) |
+-                        (1ULL << VHOST_F_LOG_ALL) |
+-                        (1ULL << VIRTIO_F_ANY_LAYOUT) |
++       VHOST_FEATURES = /* (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) | */
++                        /* (1ULL << VIRTIO_RING_F_INDIRECT_DESC) | */
++                        /* (1ULL << VIRTIO_RING_F_EVENT_IDX) | */
++                        /* (1ULL << VHOST_F_LOG_ALL) | */
++                        /* (1ULL << VIRTIO_F_ANY_LAYOUT) | */
+                         (1ULL << VIRTIO_F_VERSION_1)
+ };
+
