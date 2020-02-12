@@ -2,81 +2,145 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F57C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EC5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488B52073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63C22073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581513492;
+	bh=9lC0NLLMXRwM/8N7YwMQM48/0FD5N7I+tSFUZTrgg8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IHSsAIUwyAXQRTvpW/nGB0hxruwA4LCfd/IAZ/Q4mgYXwLU1miQ8JHBEJTPi3NWta
+	 uVYFzvcF1kPxRdjcyjqBT+zImx2FB/cW5Z2DVWKyBz+OtIVQRiHOP5laKH9bdyOgOQ
+	 AZ+aHA7xkeNGrTXe5zyg4k2nSDRL/i8NYNacZ/io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgBLNRG (ORCPT
+        id S1728021AbgBLNSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:17:06 -0500
-Received: from 8bytes.org ([81.169.241.247]:53838 "EHLO theia.8bytes.org"
+        Wed, 12 Feb 2020 08:18:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgBLNRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:17:06 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id AAF1F20E; Wed, 12 Feb 2020 14:17:04 +0100 (CET)
-Date:   Wed, 12 Feb 2020 14:16:53 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 39/62] x86/sev-es: Harden runtime #VC handler for
- exceptions from user-space
-Message-ID: <20200212131652.GH20066@8bytes.org>
-References: <20200211135256.24617-1-joro@8bytes.org>
- <20200211135256.24617-40-joro@8bytes.org>
- <CALCETrXnFr47OEDk8OYrHHW=1XNAQMUB=wPevhLM6ROnO6_Rog@mail.gmail.com>
+        id S1725887AbgBLNSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 08:18:11 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B4EF2073C;
+        Wed, 12 Feb 2020 13:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581513489;
+        bh=9lC0NLLMXRwM/8N7YwMQM48/0FD5N7I+tSFUZTrgg8w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=veYP90b3VCLa7J6+E0JrAnlQXvFD1YCR9D+Bhuba8wyocvmCOc7o8LpPSS/PcU5Dh
+         i4W3vx+L/ssQ9OE1/qNgOz9rdzzzikiotkNEUjNu1vKWZceXFl7sgUlhBhpA9o5dM7
+         PLd8FL6mj5lUvo8XqCiEjLnynBKXMyt/o9nnFI3k=
+Date:   Wed, 12 Feb 2020 05:18:08 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH net-next 05/10] sysfs: add sysfs_change_owner()
+Message-ID: <20200212131808.GA1789899@kroah.com>
+References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
+ <20200212104321.43570-6-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrXnFr47OEDk8OYrHHW=1XNAQMUB=wPevhLM6ROnO6_Rog@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200212104321.43570-6-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:47:05PM -0800, Andy Lutomirski wrote:
-> On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
-> >
-> > From: Joerg Roedel <jroedel@suse.de>
-> >
-> > Send SIGBUS to the user-space process that caused the #VC exception
-> > instead of killing the machine. Also ratelimit the error messages so
-> > that user-space can't flood the kernel log.
+On Wed, Feb 12, 2020 at 11:43:16AM +0100, Christian Brauner wrote:
+> Add a helper to change the owner of sysfs objects.
+
+Seems sane, but:
+
+> The ownership of a sysfs object is determined based on the ownership of
+> the corresponding kobject, i.e. only if the ownership of a kobject is
+> changed will this function change the ownership of the corresponding
+> sysfs entry.
+
+A "sysfs object" is a kobject.  So I don't understand this sentance,
+sorry.
+
+> This function will be used to correctly account for kobject ownership
+> changes, e.g. when moving network devices between network namespaces.
 > 
-> What would cause this?  CPUID?  Something else?
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+>  fs/sysfs/file.c       | 35 +++++++++++++++++++++++++++++++++++
+>  include/linux/sysfs.h |  6 ++++++
+>  2 files changed, 41 insertions(+)
+> 
+> diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> index 6239d9584f0b..6a0fe88061fd 100644
+> --- a/fs/sysfs/file.c
+> +++ b/fs/sysfs/file.c
+> @@ -642,3 +642,38 @@ int sysfs_file_change_owner(struct kobject *kobj, const char *name)
+>  	return error;
+>  }
+>  EXPORT_SYMBOL_GPL(sysfs_file_change_owner);
+> +
+> +/**
+> + *	sysfs_change_owner - change owner of the given object.
+> + *	@kobj:	object.
+> + */
+> +int sysfs_change_owner(struct kobject *kobj)
 
-Yes, CPUID, RDTSC(P) and, most importantly, user-space mapping some IO
-space an accessing it, causing MMIO #VC exceptions.
+What does this change the owner of the given object _to_?
 
-Especially the MMIO case has so many implications that it will not be
-supported at the moment. Imagine for example MMIO accesses by 32bit
-user-space with non-standard, non-zero based code and data segments. Or
-user-space changing the instruction bytes between when the #VC exception
-is raised and when the handler parses the instruction. Lots of checks
-are needed to make this work securely, and the complexity of this is not
-worth it at this time.
+> +{
+> +	int error;
+> +	const struct kobj_type *ktype;
+> +
+> +	if (!kobj->state_in_sysfs)
+> +		return -EINVAL;
+> +
+> +	error = sysfs_file_change_owner(kobj, NULL);
+
+It passes NULL?
 
 
-Regards,
+> +	if (error)
+> +		return error;
+> +
+> +	ktype = get_ktype(kobj);
+> +	if (ktype) {
+> +		struct attribute **kattr;
+> +
+> +		for (kattr = ktype->default_attrs; kattr && *kattr; kattr++) {
+> +			error = sysfs_file_change_owner(kobj, (*kattr)->name);
+> +			if (error)
+> +				return error;
+> +		}
+> +
+> +		error = sysfs_groups_change_owner(kobj, ktype->default_groups);
+> +		if (error)
+> +			return error;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(sysfs_change_owner);
 
-	Joerg
+I can understand wanting to change owners/groups/whatever of existing
+sysfs objects and their files, but I can't figure out how to call this
+function to set the attribute I want to change.
 
+With only one parameter, how does this work?  It guesses?  :)
+
+thanks,
+
+greg k-h
