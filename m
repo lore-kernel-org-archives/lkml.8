@@ -2,111 +2,132 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2055CC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABCEC352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30CD206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FFD21739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:22:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="po54q2qU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgBMAWC (ORCPT
+        id S1729313AbgBMAWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:22:02 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729119AbgBMAWB (ORCPT
+        Wed, 12 Feb 2020 19:22:08 -0500
+Received: from gateway20.websitewelcome.com ([192.185.55.25]:48647 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729132AbgBMAWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:22:01 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01D0JWRq177919
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:22:00 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y3pqhen17-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:22:00 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 13 Feb 2020 00:21:58 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 13 Feb 2020 00:21:54 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01D0Lrd658720472
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 00:21:53 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A81D11C050;
-        Thu, 13 Feb 2020 00:21:53 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D97411C05C;
-        Thu, 13 Feb 2020 00:21:52 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.191.187])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Feb 2020 00:21:52 +0000 (GMT)
-Subject: Re: [PATCH v3 2/3] IMA: Add log statements for failure conditions.
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>, joe@perches.com,
-        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 12 Feb 2020 19:21:51 -0500
-In-Reply-To: <ce89d382-8e8b-71d0-5271-4db83d324f94@linux.microsoft.com>
-References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
-         <20200211231414.6640-3-tusharsu@linux.microsoft.com>
-         <1581518823.8515.49.camel@linux.ibm.com>
-         <ce89d382-8e8b-71d0-5271-4db83d324f94@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021300-0020-0000-0000-000003A9992F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021300-0021-0000-0000-00002201815E
-Message-Id: <1581553311.8515.96.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-12_10:2020-02-12,2020-02-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- bulkscore=0 malwarescore=0 mlxlogscore=754 adultscore=0 spamscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130001
+        Wed, 12 Feb 2020 19:22:07 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 8A4F4400C2EEE
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:45:37 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 21uUji0oZSl8q21uUjQiH7; Wed, 12 Feb 2020 17:59:14 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/+tuQXIxcgFaHv6yXlJ1vmExFRnqlxjpnHGOi7H52Tg=; b=po54q2qUsGuaR0K/Wp1vdgTtMA
+        4bqd8irT0krgOs1LiVOytLou0n39j7GCldKLTSLj6DB8xRasxdqlbzlvZ/wM0Ot48ApyfidA0/eia
+        9RyncvjU45xE4mXrHLV+xgyGS7BHwgOkZXHN6UeIJipMGwoTDuTt8BVpDfl0NDdNze/ehwnqtYx3K
+        de9oaVhsFhgDoaqFVR1fCyQtua/pXXF3Vt/YlzvAfrS8PAP9RFHY0PF9B3hsI0AWl5zhrvN3iv+/+
+        zQzkd5wMRVzV26FryXUDqCLpFKO+D/chlpNGqp2oO49IH7uivTKFJ1eqwHJCfNJhWzhr6t02Hy2J3
+        17O01tGQ==;
+Received: from [200.68.141.42] (port=17873 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j21uT-003MB9-45; Wed, 12 Feb 2020 17:59:13 -0600
+Date:   Wed, 12 Feb 2020 17:59:11 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] mfd: pm8xxx: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200212235911.GA20179@embeddedor.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.42
+X-Source-L: No
+X-Exim-ID: 1j21uT-003MB9-45
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.42]:17873
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-12 at 14:30 -0800, Tushar Sugandhi wrote:
-> 
-> On 2020-02-12 6:47 a.m., Mimi Zohar wrote:
-> > Hi Tushar,
-> > 
-> > Please remove the period at the end of the  Subject line.
-> Thanks. I will fix it in the next iteration.
-> > 
-> > On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
-> >> process_buffer_measurement() does not have log messages for failure
-> >> conditions.
-> >>
-> >> This change adds a log statement in the above function.
-> > 
-> > I agree some form of notification needs to be added.  The question is
-> > whether the failure should be audited or a kernel message emitted.
-> >   IMA emits audit messages (integrity_audit_msg) for a number of
-> > reasons - on failure to calculate a file hash, invalid policy rules,
-> > failure to communicate with the TPM, signature verification errors,
-> > etc.
-> I believe both IMA audit messages and kernel message should be emitted -
-> for better discoverability and diagnosability.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Like file measurement failures, failure to measure a key or the boot
-command line should be audited as well.  For debugging purposes, you
-could make this message pr_devel.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Mimi
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/mfd/qcom-pm8xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+index 29133326c6fd..acd172ddcbd6 100644
+--- a/drivers/mfd/qcom-pm8xxx.c
++++ b/drivers/mfd/qcom-pm8xxx.c
+@@ -76,7 +76,7 @@ struct pm_irq_chip {
+ 	unsigned int		num_masters;
+ 	const struct pm_irq_data *pm_irq_data;
+ 	/* MUST BE AT THE END OF THIS STRUCT */
+-	u8			config[0];
++	u8			config[];
+ };
+ 
+ static int pm8xxx_read_block_irq(struct pm_irq_chip *chip, unsigned int bp,
+-- 
+2.23.0
 
