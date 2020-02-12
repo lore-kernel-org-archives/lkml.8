@@ -2,114 +2,85 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896D0C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CF6C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C99820848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPAjur7K"
+	by mail.kernel.org (Postfix) with ESMTP id B796220848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581544730;
+	bh=NIzr3bNWf1aMRrgZ8jkW+jI7fikdoe2GZiH8v1p3UTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K1eBjRb8WKS/rjv+1jlF5oSuOQtq93XpKyoIdIHkINGhF6ieqYU/gIx31aY8nWaIy
+	 qOTiKAoI5GZsnynD7qPpzlaJTdlHY/74BG8kElnrQA0huVvSWstAhx2KAEg0LdktfX
+	 SeZ8pzTt4S0zEPnFosFIIka0zhZGIoDyJelOPhvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgBLV5r (ORCPT
+        id S1729192AbgBLV6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:57:47 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37358 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729127AbgBLV5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:57:30 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so1904717pfn.4;
-        Wed, 12 Feb 2020 13:57:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LujJUjQ6vuT9G1EH+1pDyua8gOLBQgmZvKNk8hNJ9k0=;
-        b=MPAjur7KT+S3e/RyXoOYVbFEWxns16KwM8HtVFLFbze0TsYdYTuesbZNNY2bk02IoZ
-         ZuaV49erEXTa4kSHbtQfXsdMWALFe62RXBtBPNiaN72SZT5DHSAsJJi0NlRYragOnGYP
-         1fbBF0Qs16S3kfMCkMEnZmj+ANywWu9Uc7HssHh+eKhiumdJbPzywGr6BjidTDNN2Pq5
-         hTOmtt761oUh9PnqlgxbiXnA3hM0mvo/j2NnYWfrIFHsu5fRcvLGwCsnAk7dORnnYGZS
-         B8YYjG/UyPLdCKhuShOuy3iHL+5DbTZhnpMJbrnKDD7PBqwIRxSKb+cCdXiRrYeSWH21
-         ZB0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LujJUjQ6vuT9G1EH+1pDyua8gOLBQgmZvKNk8hNJ9k0=;
-        b=QQhlfh2w73ThI/ExNwIMlKfZqwklXa2OaWi6vE0vKrVFAigj2fUyjyvvFab9gVwBnt
-         G62cR/rPSmX5L5m2M3JQB5xwbgEoEjcQR538KVtTJQdd/oqJeac1gX4wnPJpYHG/Chim
-         vxdOeFYKG4lViEspenMlDBeiv9onULrXtLDht5dd0xlJ7XwH48kfKXBFf02X4Ne3VXlc
-         9USkCJT8v+N1CdKKNEMEGOp9Qzs2MTsPvYWwkqodqTMOcB793TIJj2Ug52nS4O7mtDLE
-         Cni8YVVYuGnRI2/8me8GHp4OvMsZqedHLak1zNZHoQtjPK8dQZyAK/NJTS0LR/X8Yh4I
-         K4aQ==
-X-Gm-Message-State: APjAAAUvmQPrWtmPvpaIvj3tCrd9Vy/KQ7b6NnyazrwX/wjsXpBrvmqM
-        qVwtUI2OFOcUJqPPPMNRnoo=
-X-Google-Smtp-Source: APXvYqwxq2f7iaRQZmppOXJZwE6uWhP+IzhUAMdPNDCYHFIN2eO34CAldrpvS6sjiyK8XBjPcrxsHQ==
-X-Received: by 2002:a62:a515:: with SMTP id v21mr10731828pfm.128.1581544649121;
-        Wed, 12 Feb 2020 13:57:29 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:200::3:533f])
-        by smtp.gmail.com with ESMTPSA id r6sm214431pfh.91.2020.02.12.13.57.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 13:57:28 -0800 (PST)
-From:   rentao.bupt@gmail.com
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v2 2/5] ARM: dts: aspeed-g4: add vhub port and endpoint properties
-Date:   Wed, 12 Feb 2020 13:57:14 -0800
-Message-Id: <20200212215717.9474-3-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212215717.9474-1-rentao.bupt@gmail.com>
-References: <20200212215717.9474-1-rentao.bupt@gmail.com>
+        Wed, 12 Feb 2020 16:58:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbgBLV6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 16:58:49 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F102082F;
+        Wed, 12 Feb 2020 21:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581544728;
+        bh=NIzr3bNWf1aMRrgZ8jkW+jI7fikdoe2GZiH8v1p3UTA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kExeR861AcmKi8/BScBgFovpGQ+GVNS6kuNsYmZMbM6pXa/JrG0W+SdhkVQc7mdxR
+         K0TogNvzqBOIOQhAW+CK5FzYnux5bvhbZLlejU+g08/juxJg1VVoa0F2jY+4JgDqhe
+         WUpQrQmhYpPqIVi/iMvKXv9T7LplaxE2dhUxlQ24=
+Date:   Wed, 12 Feb 2020 13:58:47 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v6] dynamic_debug: allow to work if debugfs is disabled
+Message-ID: <20200212215847.GA2386833@kroah.com>
+References: <20200123093628.GA18991@willie-the-truck>
+ <20200123085015.GA436361@kroah.com>
+ <CAGETcx86rQpS4qodSiv_v+E_8P3DUQDY9jiN_Yq07Jwh9tHQcQ@mail.gmail.com>
+ <20200125101130.449a8e4d@lwn.net>
+ <20200125014231.GI147870@mit.edu>
+ <20200123155340.GD147870@mit.edu>
+ <20200209110549.GA1621867@kroah.com>
+ <20200210211142.GB1373304@kroah.com>
+ <827b4265-918e-99a7-544a-668edad5b2b9@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <827b4265-918e-99a7-544a-668edad5b2b9@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+On Mon, Feb 10, 2020 at 01:15:50PM -0800, Randy Dunlap wrote:
+> On 2/10/20 1:11 PM, Greg Kroah-Hartman wrote:
+> > diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+> > index 252e5ef324e5..585451d12608 100644
+> > --- a/Documentation/admin-guide/dynamic-debug-howto.rst
+> > +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+> > @@ -54,6 +54,9 @@ If you make a mistake with the syntax, the write will fail thus::
+> >  				<debugfs>/dynamic_debug/control
+> >    -bash: echo: write error: Invalid argument
+> >  
+> > +Note, for systems without 'debugfs' enabled, the control file can also
+> 
+> Hi Greg,
+> If you make any more changes, please drop the word "also" here       ^^^^
 
-Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-endpoints"
-properties to describe supported number of vhub ports and endpoints.
+I will delete it by hand when I apply the patch now, thanks!
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- Changes in v2:
-   - None. The patch is newly added and it's given v2 to align with
-     version of the patch series.
-
- arch/arm/boot/dts/aspeed-g4.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 807a0fc20670..8e04303e8514 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -164,6 +164,8 @@
- 			reg = <0x1e6a0000 0x300>;
- 			interrupts = <5>;
- 			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+			aspeed,vhub-downstream-ports = <5>;
-+			aspeed,vhub-generic-endpoints = <15>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb2d_default>;
- 			status = "disabled";
--- 
-2.17.1
-
+greg k-h
