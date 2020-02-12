@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC43C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD4BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C932073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6F82073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgBLMD0 (ORCPT
+        id S1728446AbgBLMDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:03:26 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:42724 "EHLO inva021.nxp.com"
+        Wed, 12 Feb 2020 07:03:23 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:48838 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbgBLMDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:03:24 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CDE42041D1;
-        Wed, 12 Feb 2020 13:03:23 +0100 (CET)
+        id S1728287AbgBLMDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:03:21 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F23FD1A469A;
+        Wed, 12 Feb 2020 13:03:19 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8ABE32014BE;
-        Wed, 12 Feb 2020 13:03:14 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E6CB1A04D1;
+        Wed, 12 Feb 2020 13:03:11 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 086C1402F3;
-        Wed, 12 Feb 2020 20:03:03 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 455544029B;
+        Wed, 12 Feb 2020 20:03:01 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -36,9 +36,9 @@ To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
         peng.fan@nxp.com, ping.bai@nxp.com, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 5/5] clk: imx8mp: Add missing of_node_put()
-Date:   Wed, 12 Feb 2020 19:57:37 +0800
-Message-Id: <1581508657-12107-5-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/5] clk: imx8mm: Add missing of_node_put()
+Date:   Wed, 12 Feb 2020 19:57:35 +0800
+Message-Id: <1581508657-12107-3-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581508657-12107-1-git-send-email-Anson.Huang@nxp.com>
 References: <1581508657-12107-1-git-send-email-Anson.Huang@nxp.com>
@@ -53,19 +53,19 @@ of_node_put() needs to be called.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/clk/imx/clk-imx8mp.c | 1 +
+ drivers/clk/imx/clk-imx8mm.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
-index f6c120c..b6462c0 100644
---- a/drivers/clk/imx/clk-imx8mp.c
-+++ b/drivers/clk/imx/clk-imx8mp.c
-@@ -434,6 +434,7 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
+diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
+index 3d19e87..e09c13a 100644
+--- a/drivers/clk/imx/clk-imx8mm.c
++++ b/drivers/clk/imx/clk-imx8mm.c
+@@ -322,6 +322,7 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
  
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mp-anatop");
- 	anatop_base = of_iomap(np, 0);
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
+ 	base = of_iomap(np, 0);
 +	of_node_put(np);
- 	if (WARN_ON(!anatop_base))
+ 	if (WARN_ON(!base))
  		return -ENOMEM;
  
 -- 
