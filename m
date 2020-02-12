@@ -2,75 +2,68 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79665C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39747C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600D120848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B972073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qC1Fti8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgBLSQv (ORCPT
+        id S1728910AbgBLSSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:16:51 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:33926 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbgBLSQv (ORCPT
+        Wed, 12 Feb 2020 13:18:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41994 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBLSSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:16:51 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E648A13CCE137;
-        Wed, 12 Feb 2020 10:16:49 -0800 (PST)
-Date:   Wed, 12 Feb 2020 10:16:47 -0800 (PST)
-Message-Id: <20200212.101647.1964597534877583063.davem@davemloft.net>
-To:     christian.brauner@ubuntu.com
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rafael@kernel.org, pavel@ucw.cz,
-        kuba@kernel.org, edumazet@google.com, stephen@networkplumber.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH net-next 00/10] net: fix sysfs permssions when device
- changes network
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200212180044.uhxwthf5ljxrrnpe@wittgenstein>
-References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
-        <20200212.095318.414327505774757849.davem@davemloft.net>
-        <20200212180044.uhxwthf5ljxrrnpe@wittgenstein>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 12 Feb 2020 10:16:50 -0800 (PST)
+        Wed, 12 Feb 2020 13:18:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4+pGNKZQNPPjUYhUfxAE2vdkfqWETPzu/0lbzblOiLM=; b=qC1Fti8lZ0koII3U5Sa2TjOM28
+        nosTSzdm25oQSeIMGq07AVlCw20djEBGUpWliyiKQwITDdQcoaxm1uXqtkNjwxfTpJNhiOtI8jhOb
+        r7GEIlGzU7vqitlAbk9aJYzHnlfzWJw31vQC/Z3Til1uih5qj+enBDV26fhdRz3DdCxYbTIaNuUIX
+        2OnWR1DrQfnRApPtzcldB3qtqOzSKFM+aq41f9gck471QDMk1xCwWxmFurCQfy00JF0ZQaamhxAYP
+        Bw2GDAtxWrBD9CBq026AuSAIvMitA8b0oUDL/p3WShFpcX4ybJFYzF5XIQaHgMzYrROtQoZVzZ4bv
+        WrZl7SaA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1waR-0004Q0-E1; Wed, 12 Feb 2020 18:18:11 +0000
+Date:   Wed, 12 Feb 2020 10:18:11 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v5 04/13] mm: Add readahead address space operation
+Message-ID: <20200212181811.GC9756@infradead.org>
+References: <20200211010348.6872-1-willy@infradead.org>
+ <20200211010348.6872-5-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211010348.6872-5-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date: Wed, 12 Feb 2020 19:00:44 +0100
+On Mon, Feb 10, 2020 at 05:03:39PM -0800, Matthew Wilcox wrote:
+> +struct readahead_control {
+> +	struct file *file;
+> +	struct address_space *mapping;
+> +/* private: use the readahead_* accessors instead */
+> +	pgoff_t start;
+> +	unsigned int nr_pages;
+> +	unsigned int batch_count;
 
-> On Wed, Feb 12, 2020 at 09:53:18AM -0800, David Miller wrote:
->> 
->> net-next is closed
-> 
-> I just assumed it was open since rc1 has been out for a few days now.
-
-Then why do I bother maintaining:
-
-	http://vger.kernel.org/~davem/net-next.html
-
-which is also mentioned in the netdev FAQ
-Documentation/networking/netdev-FAQ.rst:
-
-====================
-If you aren't subscribed to netdev and/or are simply unsure if
-``net-next`` has re-opened yet, simply check the ``net-next`` git
-repository link above for any new networking-related commits.  You may
-also check the following website for the current status:
-
-  http://vger.kernel.org/~davem/net-next.html
-====================
+We often use __ prefixes for the private fields to make that a little
+more clear.
