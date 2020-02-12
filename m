@@ -2,122 +2,115 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F146CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648CC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4186206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F49521734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nzIrN17S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmT6dKzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgBLQiL (ORCPT
+        id S1728624AbgBLQko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:38:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35512 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgBLQiK (ORCPT
+        Wed, 12 Feb 2020 11:40:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47206 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727548AbgBLQko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:38:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PM+7PJ6Z7kS+rPQtWGRINgob1poar/Cfo5GEs5f/tg0=; b=nzIrN17SVPRIuHkkfn8v2yCVY1
-        XSIFGa89nuFKxhpDtW2pDOEAkiBFTxxjqUH0mi+jYzLpgEA604cWCXwqsxLVm+ErTB6m6NIXVhYDS
-        kc9nbfVGz+pUb8XMXh+NRluBL2FW9TeKlhQp/cWGgQpT8rnwldCFSqVceQQq8kqf4hqBA/b+KnRBR
-        MVTwVWQMVQjJ+r1MTreZkToSdC9pHKboXKX/NT7+2MSxw48a1HloDBf+zbLN//3J/c39dFxRLBPLC
-        8CrWwCfKwwzRNBivpmbzq9CElNV8tXnRsqFi4lIMq+fMzFOREkl31Mjv8VKFhp8L2UkL0tENtUOCb
-        WBO/4o3Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1v1X-0003Re-Gn; Wed, 12 Feb 2020 16:38:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 549E6300235;
-        Wed, 12 Feb 2020 17:36:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86BD92038B228; Wed, 12 Feb 2020 17:38:00 +0100 (CET)
-Date:   Wed, 12 Feb 2020 17:38:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        arnd@arndb.de, Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 0/7] microblaze: Define SMP safe operations
-Message-ID: <20200212163800.GY14946@hirez.programming.kicks-ass.net>
-References: <cover.1581522136.git.michal.simek@xilinx.com>
- <20200212160852.GC14973@hirez.programming.kicks-ass.net>
+        Wed, 12 Feb 2020 11:40:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581525642;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NrzhUur53Q4Y2ZEl1kiuBFTu/KwLXcTXVoqRdvHJiBI=;
+        b=MmT6dKzIFED2xhfqhOBjly+jhYXiP1wFlnVwK+4da6z35cIqLUZEyrDvnfQqFh8nH2rw9O
+        8hHQPz48rA3YiLWxNpia0pGSfrRJ1K/z+eps2lM4jCNEDHIQiyWJxwo0/xeJ7rxkM5w1CF
+        YNFbI1rPmbILrpTIJfmyhLz5ENm1eGQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-Mdftop4CNUWSWA7jm5_pNw-1; Wed, 12 Feb 2020 11:40:40 -0500
+X-MC-Unique: Mdftop4CNUWSWA7jm5_pNw-1
+Received: by mail-wr1-f69.google.com with SMTP id c6so1026144wrm.18
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:40:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NrzhUur53Q4Y2ZEl1kiuBFTu/KwLXcTXVoqRdvHJiBI=;
+        b=uSlkbqLo0g8QU7Nmd54+o2OHGzYeHdmE+ZWgEHXFaRrzqJYiGrrEWKitGKc89lyn6M
+         iiF3taOKjJrx6QdqE72T6FRLuUciILHnKoMZs9zM4wX3dYAiruS1WRYX/1FzTCWCQYs5
+         2CtlN3dDTgz4tU1wsS8SDP/1tUT/5TDEgdcj61taUotFAJKm270zWLiQVq7/dITsjFcr
+         6CWwowPyxe/LNg+5VXUsXw5JxhbiuiVwvZdxAsA3B3ESEwWwY4joGTbJcdcRyRfey3wh
+         Zh/cm+8ITapfTUP6h3eSjkaYBUvgLbfIpGAZMOiAOyg0oN2N2JIVC4zac/OF51VsglYT
+         Fyvw==
+X-Gm-Message-State: APjAAAUA5m+zLM42EM1VEqjynqbLk/gnm+gw1e5pI2f5i1LuWD840v1n
+        l+XZ5WPy3UBr8WLQC9qbsfoEsJIdwAvNFOmmTD5gPsuWG/v8g7sJUpYSvIND+/hHviWZgdsjVw/
+        exn7YMUDGYZy4+Aw1KXhKCJi6
+X-Received: by 2002:adf:f288:: with SMTP id k8mr17060151wro.301.1581525639840;
+        Wed, 12 Feb 2020 08:40:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzXp2B+0mO+xq5e6mZFerIe0v8m3gwrAdj/HKSYiJvdfgdAfcAjS2vwUxPN1hDCGYWFBWWsgQ==
+X-Received: by 2002:adf:f288:: with SMTP id k8mr17060137wro.301.1581525639611;
+        Wed, 12 Feb 2020 08:40:39 -0800 (PST)
+Received: from [192.168.178.40] ([151.30.86.140])
+        by smtp.gmail.com with ESMTPSA id n8sm1179999wrx.42.2020.02.12.08.40.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 08:40:39 -0800 (PST)
+Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
+ kvm_flush_remote_tlbs()
+To:     Paul Burton <paulburton@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20200207223520.735523-1-peterx@redhat.com>
+ <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
+ <20200212163004.cpd33ux4zslfc3es@lantea.localdomain>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <66e0a38c-a7f5-dcd1-d06b-b317588fad7a@redhat.com>
+Date:   Wed, 12 Feb 2020 17:40:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212160852.GC14973@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200212163004.cpd33ux4zslfc3es@lantea.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 05:08:52PM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 12, 2020 at 04:42:22PM +0100, Michal Simek wrote:
+On 12/02/20 17:30, Paul Burton wrote:
+> Hi Paolo,
 > 
-> > Microblaze has 32bit exclusive load/store instructions which should be used
-> > instead of irq enable/disable. For more information take a look at
-> > https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug984-vivado-microblaze-ref.pdf
-> > starting from page 25.
+> On Wed, Feb 12, 2020 at 01:25:30PM +0100, Paolo Bonzini wrote:
+>> MIPS folks, I see that arch/mips/kvm/mmu.c uses pud_index, so it's not
+>> clear to me if it's meant to only work if CONFIG_PGTABLE_LEVELS=4 or
+>> it's just bit rot.  Should I add a "depends on PGTABLE_LEVEL=4" to
+>> arch/mips/Kconfig?
 > 
-> >  arch/microblaze/include/asm/Kbuild           |   1 -
-> >  arch/microblaze/include/asm/atomic.h         | 265 ++++++++++++++++++-
-> >  arch/microblaze/include/asm/bitops.h         | 189 +++++++++++++
-> >  arch/microblaze/include/asm/cmpxchg.h        |  87 ++++++
-> >  arch/microblaze/include/asm/cpuinfo.h        |   2 +-
-> >  arch/microblaze/include/asm/pgtable.h        |  19 +-
-> >  arch/microblaze/include/asm/spinlock.h       | 240 +++++++++++++++++
-> >  arch/microblaze/include/asm/spinlock_types.h |  25 ++
-> >  arch/microblaze/kernel/cpu/cache.c           | 154 ++++++-----
-> >  arch/microblaze/kernel/cpu/cpuinfo.c         |  38 ++-
-> >  arch/microblaze/kernel/cpu/mb.c              | 207 ++++++++-------
-> >  arch/microblaze/kernel/timer.c               |   2 +-
-> >  arch/microblaze/mm/consistent.c              |   8 +-
-> >  13 files changed, 1040 insertions(+), 197 deletions(-)
-> >  create mode 100644 arch/microblaze/include/asm/bitops.h
-> >  create mode 100644 arch/microblaze/include/asm/spinlock.h
-> >  create mode 100644 arch/microblaze/include/asm/spinlock_types.h
+> I'm no expert on this bit of code, but I'm pretty sure the systems
+> KVM/VZ has been used on the most internally had PGTABLE_LEVEL=3.
 > 
-> I'm missing asm/barrier.h
-> 
-> Also that PDF (thanks for that!), seems light on memory ordering
-> details.
-> 
-> Your comment:
-> 
-> +/*
-> + * clear_bit doesn't imply a memory barrier
-> + */
-> 
-> worries me, because that would imply your ll/sc does not impose order,
-> but then you also don't have any explicit barriers in your locking
-> primitives or atomics where required.
-> 
-> In the PDF I only find MBAR; is that what smp_mb() ends up being?
+> I suspect this is actually a regression from commit 31168f033e37 ("mips:
+> drop __pXd_offset() macros that duplicate pXd_index() ones"). Whilst
+> that commit is correct that pud_index() & __pud_offset() are the same
+> when pud_index() is actually provided, it doesn't take into account the
+> __PAGETABLE_PUD_FOLDED case. There __pud_offset() was available but
+> would always evaluate to zero, whereas pud_index() isn't defined...
 
-Bah, I'm sure I did patches at some point that made
-asm-generic/barrier.h #error if you didn't define at least one memory
-barrier on CONFIG_SMP, but it seems that all got lost somewhere.
+Ok, I'll try to whip out a patch that handles __PAGETABLE_PUD_FOLDED.
+On the other hand this makes me worry about how much KVM is being tested
+by people that care about MIPS (even just compile-tested).
 
+Paolo
 
