@@ -2,120 +2,183 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746ECC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C644C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBD120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E7520873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:46:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="SCsGmzWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgBLOqZ (ORCPT
+        id S1728430AbgBLOqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:46:25 -0500
-Received: from muru.com ([72.249.23.125]:54896 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727526AbgBLOqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:46:25 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 4A8A680F6;
-        Wed, 12 Feb 2020 14:47:07 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 06:46:20 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>
-Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
- support
-Message-ID: <20200212144620.GJ64767@atomide.com>
-References: <20200211181005.54008-1-tony@atomide.com>
- <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
-MIME-Version: 1.0
+        Wed, 12 Feb 2020 09:46:36 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:12465 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbgBLOqf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:46:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581518792;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=eF0eU+wT6Jz3VQhXmG5csiS9c3rSC4Z9DeL2XQYqdFw=;
+        b=SCsGmzWDrloScq92rU+PXSYfAOu0RbAOZ7agPUad+rT+j1Pxyx3f5duf4L0nRwk5mq
+        Ms349kTulXSgOtFYrxgy9fRdKaWvGo0wMPOlBKgA/pdpUcHZWVOVcazrl+v76CBuSx6n
+        fqmnkzGxlu0fKPkrsui8bbTF7FagUzUESnORojltiAyJMRDel7TpT7MuBuRyfIbEc2sd
+        Bos3qm9owufelou5Uk9Ov8wjoATpYpUcoOtCJ6aB4JfFhJGFr9rztH/9K9rzw3OEKwXh
+        Jf83TygUD4bZ55MZBFg7838F0xDjroI2h4ynbVy5iGY/wF5aNlIa8aO6Y7EmCXVunOWf
+        KqIg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1CEkJ4uk
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 12 Feb 2020 15:46:19 +0100 (CET)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: i2c: jz4780: silence log flood on txabrt
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200212094628.GB1143@ninjato>
+Date:   Wed, 12 Feb 2020 15:46:19 +0100
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <213C52CC-E5DC-4641-BE68-3D5C4FEA1FB5@goldelico.com>
+References: <cover.1581457290.git.hns@goldelico.com> <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com> <20200212094628.GB1143@ninjato>
+To:     Wolfram Sang <wsa@the-dreams.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [200212 09:18]:
-> On 11/02/2020 20.10, Tony Lindgren wrote:
-> > +static int cpcap_voice_set_tdm_slot(struct snd_soc_dai *dai,
-> > +				    unsigned int tx_mask, unsigned int rx_mask,
-> > +				    int slots, int slot_width)
-> > +{
-> > +	struct snd_soc_component *component = dai->component;
-> > +	struct cpcap_audio *cpcap = snd_soc_component_get_drvdata(component);
-> > +	int err, ts_mask, mask;
-> > +	bool voice_call;
-> > +
-> > +	/*
-> > +	 * Primitive test for voice call, probably needs more checks
-> > +	 * later on for 16-bit calls detected, Bluetooth headset etc.
-> > +	 */
-> > +	if (tx_mask == 0 && rx_mask == 1 && slot_width == 8)
-> > +		voice_call = true;
-> > +	else
-> > +		voice_call = false;
-> 
-> You only have voice call if only rx slot0 is in use?
+Hi,
 
-Yeah so it seems. Then there's the modem to wlcore bluetooth path that
-I have not looked at. But presumably that's again just configuring some
-tdm slot on the PMIC.
+> Am 12.02.2020 um 10:46 schrieb Wolfram Sang <wsa@the-dreams.de>:
+>=20
+>=20
+> The printout for txabrt is way too talkative. Reduce it to the =
+minimum,
+> the rest can be gained by I2C core debugging and datasheet =
+information.
+> Also, make it a debug printout, it won't help the regular user.
+>=20
+> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> ---
+>=20
+> Sorry, normally I don't do counter patches. Yet, this time I realized
+> that it would be faster to actually do what I envisioned than to
+> describe it in words. I hope you don't feel offended.
 
-> If you record mono on the voice DAI, then rx_mask is also 1, no?
+No problem. I had thought a little about that myself, but did not
+dare to solve more than my problem...
 
-It is above :) But maybe I don't follow what you're asking here and
-maybe you have some better check in mind.
+> This driver has
+> way too many dev_err anyhow, so this may be a start.
+>=20
+> Obviously, I can't test, does it work for you?
 
-I have no idea where we would implement recording voice calls for
-example, I guess mcbsp could do that somewhere to dump out a tdm slot
-specific traffic.
+Yes,it works.
 
-> > +
-> > +	ts_mask = 0x7 << CPCAP_BIT_MIC2_TIMESLOT0;
-> > +	ts_mask |= 0x7 << CPCAP_BIT_MIC1_RX_TIMESLOT0;
-> > +
-> > +	mask = (tx_mask & 0x7) << CPCAP_BIT_MIC2_TIMESLOT0;
-> > +	mask |= (rx_mask & 0x7) << CPCAP_BIT_MIC1_RX_TIMESLOT0;
-> > +
-> > +	err = regmap_update_bits(cpcap->regmap, CPCAP_REG_CDI,
-> > +				 ts_mask, mask);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err = cpcap_set_samprate(cpcap, CPCAP_DAI_VOICE, slot_width * 1000);
-> > +	if (err)
-> > +		return err;
-> 
-> You will also set the sampling rate for voice in
-> cpcap_voice_hw_params(), but that is for normal playback/capture, right?
+Do you want to push your patch yourself, or should I add it to my
+patch series and resubmit in a v2?
 
-Yeah so normal playback/capture is already working with cpcap codec driver
-with mainline Linux. The voice call needs to set rate to 8000.
+BR and thanks,
+Nikolaus
 
-> > +
-> > +	err = cpcap_voice_call(cpcap, dai, voice_call);
-> > +	if (err)
-> > +		return err;
-> 
-> It feels like that these should be done via DAPM with codec to codec route?
+>=20
+> drivers/i2c/busses/i2c-jz4780.c | 36 ++-------------------------------
+> 1 file changed, 2 insertions(+), 34 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c =
+b/drivers/i2c/busses/i2c-jz4780.c
+> index 16a67a64284a..b426fc956938 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -78,25 +78,6 @@
+>=20
+> #define X1000_I2C_DC_STOP		BIT(9)
+>=20
+> -static const char * const jz4780_i2c_abrt_src[] =3D {
+> -	"ABRT_7B_ADDR_NOACK",
+> -	"ABRT_10ADDR1_NOACK",
+> -	"ABRT_10ADDR2_NOACK",
+> -	"ABRT_XDATA_NOACK",
+> -	"ABRT_GCALL_NOACK",
+> -	"ABRT_GCALL_READ",
+> -	"ABRT_HS_ACKD",
+> -	"SBYTE_ACKDET",
+> -	"ABRT_HS_NORSTRT",
+> -	"SBYTE_NORSTRT",
+> -	"ABRT_10B_RD_NORSTRT",
+> -	"ABRT_MASTER_DIS",
+> -	"ARB_LOST",
+> -	"SLVFLUSH_TXFIFO",
+> -	"SLV_ARBLOST",
+> -	"SLVRD_INTX",
+> -};
+> -
+> #define JZ4780_I2C_INTST_IGC		BIT(11)
+> #define JZ4780_I2C_INTST_ISTT		BIT(10)
+> #define JZ4780_I2C_INTST_ISTP		BIT(9)
+> @@ -576,21 +557,8 @@ static irqreturn_t jz4780_i2c_irq(int irqno, void =
+*dev_id)
+>=20
+> static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
+> {
+> -	int i;
+> -
+> -	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
+> -	dev_err(&i2c->adap.dev, "device addr=3D%x\n",
+> -		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
+> -	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
+> -		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
+> -	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
+> -		i2c->cmd, i2c->data_buf[i2c->cmd]);
+> -
+> -	for (i =3D 0; i < 16; i++) {
+> -		if (src & BIT(i))
+> -			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=3D%s\n",
+> -				i, jz4780_i2c_abrt_src[i]);
+> -	}
+> +	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, =
+recv: %d\n",
+> +		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], =
+i2c->data_buf[i2c->cmd]);
+> }
+>=20
+> static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
+> --=20
+> 2.20.1
+>=20
 
-Sure if you have some better way of doing it :) Do you have an example to
-point me to?
-
-Regards,
-
-Tony
