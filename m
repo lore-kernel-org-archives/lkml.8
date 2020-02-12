@@ -2,203 +2,235 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD66C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F31CC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A312082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1698521739
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="T9jemaU9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crulFNRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgBLFKZ (ORCPT
+        id S1728162AbgBLFLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 00:10:25 -0500
-Received: from mail-bn7nam10on2068.outbound.protection.outlook.com ([40.107.92.68]:6031
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgBLFKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 00:10:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GnDqWNGY3R0DR7D6nA1GYoIM6SBrCWv+/Q1FEFhilbaprh/+bff+AXFLXG4oAQw39uebfOxSDF89H+9GOhWiqBYhOmBEAnmFNCg9zrWLivGF7E/sNZoJGQEKb+ug2Rsp5VRMQ9yyZ+xTktVJgvv7i/V7KAdz8GMA2gXC897B+czwv8frg0E+vqYFep7rvRlaXpNZzRYWB6TTAU8wChWdzgp5n9VxEmJpaSgu1/EEqhFmU/fqo93PvH+5LvhimBSZs3vSZIhiDucmF0F+uza8tgXRv4/KMJ2TPqOvjzydij0AhsxTy9H1ZcJtcrJbGAIM2CrXPFZMLy0OGG1U9W1dhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h2TDpxxDqRiemWKqPM1xmti2ELd37TRpQ9mtfxsk8oI=;
- b=k0fGSLPq0u18R3hYv4IWy+x9aNuqXf1IZzp25e/t9qsv433YxYq/FftKcJjwBnUapiXV4MTidO+5+aj5BjiyaBUkX+XjZgICbcVIoV25AfU0rVw4EuU4HnpStCdWp24m7l6CbRHi+C9FDRo2oQLa4Eyyx1ebn1KaZxjHgl6KD/vEkSy92XBH0SQOiGU6Mjydb/3J9XCzPaM1hRTPHZfdw/UPvKqPQ6Q8UpMRfT9DU83aYN2VQdUTII1yY5c/19uxBFFeqYq0QJcYPSf7lGIdp2pPwVmt0BayobVVJiPr3r9JVzxUrk9/d/TPjTA8r0WlyZ9VfYR5UgXQyoQCBNprZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Wed, 12 Feb 2020 00:11:16 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46222 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgBLFLP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 00:11:15 -0500
+Received: by mail-ed1-f68.google.com with SMTP id m8so892330edi.13;
+        Tue, 11 Feb 2020 21:11:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h2TDpxxDqRiemWKqPM1xmti2ELd37TRpQ9mtfxsk8oI=;
- b=T9jemaU9ptjBO1zkTNJPWXaCI3cW3DWLzrYKrvovxFhnPZWd74mPM+MeclKUAHZtgl6Ijxa98GBsmk+93GXvQJXnfEdYUo+b7FsE5Qmx17W5+nnfnIfkOAkBR4jb2fiCXcMNvzfb1KKCuonvLGfserrfPlZp+5oup7AQyQPaWuU=
-Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.27.215) by
- BN7PR02MB4068.namprd02.prod.outlook.com (52.133.221.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Wed, 12 Feb 2020 05:10:18 +0000
-Received: from BN7PR02MB5124.namprd02.prod.outlook.com
- ([fe80::2080:b53d:b5bd:cbe2]) by BN7PR02MB5124.namprd02.prod.outlook.com
- ([fe80::2080:b53d:b5bd:cbe2%5]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
- 05:10:17 +0000
-From:   Kalyani Akula <kalyania@xilinx.com>
-To:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "monstr@seznam.cz" <monstr@seznam.cz>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        git-dev <git-dev@xilinx.com>,
-        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Harsh Jain <harshj@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        Kalyani Akula <kalyania@xilinx.com>
-Subject: RE: [PATCH V6 0/4] Add Xilinx's ZynqMP AES-GCM driver support
-Thread-Topic: [PATCH V6 0/4] Add Xilinx's ZynqMP AES-GCM driver support
-Thread-Index: AQHV1aLL+qOyLD1FZ0K9Asrl2Q9GTagXGSkQ
-Date:   Wed, 12 Feb 2020 05:10:16 +0000
-Message-ID: <BN7PR02MB51244DF14A79839729851EF4AF1B0@BN7PR02MB5124.namprd02.prod.outlook.com>
-References: <1580192308-10952-1-git-send-email-kalyani.akula@xilinx.com>
-In-Reply-To: <1580192308-10952-1-git-send-email-kalyani.akula@xilinx.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kalyania@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c57db2bf-b03f-4295-4cf3-08d7af79d9ea
-x-ms-traffictypediagnostic: BN7PR02MB4068:|BN7PR02MB4068:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN7PR02MB4068ABAD41523B16E3A95491AF1B0@BN7PR02MB4068.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:586;
-x-forefront-prvs: 0311124FA9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(396003)(39860400002)(376002)(189003)(199004)(110136005)(66556008)(8936002)(66476007)(5660300002)(66946007)(76116006)(316002)(52536014)(54906003)(7696005)(64756008)(966005)(71200400001)(2906002)(66446008)(478600001)(4326008)(26005)(33656002)(9686003)(55016002)(186003)(86362001)(53546011)(6506007)(8676002)(81156014)(81166006)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4068;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cZ0DXBp9f4X1R4iMPMgLTjL0sAnPdIUjPSEzFVA4hPmhksWnsuX+ePVS4G0M8amnb191aPQfFaqhNfJoadtEor2hCsZx1UYG07Z5iNiMSkbOPL1g7/6Zi2R2ji9vF0cNfQB9+UXBOkxgQHZchp2mHNxLFsD+BEixiP6ndjEXld5IlGUO+GUIylBQBvt0Ol4EQ/l/wLYguQGiQ5ms0vvVNrqpLQLsiXdZUEHEP0rTAwJPPXibZd55haGE5Jlz2z/HuS6xlm2YA869ETkOeLLO6dtEYFAoJ6J1lgkdOgU1Tz76Fe7hy0fybFY/A8BdYdizKEfJzVup3/5W1Mrhn2dC4zEklDToUAZUfupwqlDPhXs7UN3zKgwB7MK/o1JZMDzXzcDyer9A42G1/D29A70E3E937JRxqAQ/5zWUbBFQ2/xm8I9A/lo1JI+Cnllg47ntpvB1tvhPSOa5ULEKQ2mjzUtb9FYsrwL2wmPzDSb/LHs703b9EoyHxU+n5ipvuScbCpWrH+YdT1HPbwVeXJZqMw==
-x-ms-exchange-antispam-messagedata: nq9rFp+EZ+FF+c2SuQU6YOqf08humxIhggsYTjTCjNdfroF9p2rYphnDq5ZZ9boGT4kZy+zoH3LcoBb0f51iTx315MrMb8w1I36zEGhUU/aEHEt/zwC0UEr0cOhKHeNbkyr3Hot2TbvPIVzTdc8gPA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VAHsM7ERRWf6VvA2d+qJije/DfRWmaudBVFG5XXrd2k=;
+        b=crulFNRxzQjKaFZ+O112GMemS/O3G1o1WhM264cFQ6NvJmYQcSVZ6O260i8ql5lIYD
+         1sc/cDEU0Xs03tQhY05wDISZIFkIrOjPvDhtprZDk1fY3V8rL4y3ZIUz3EaxHUFpniYP
+         XuUhThKbDw0xAvoQ0JDLrqXXNSki1TxEmTSYSUArWRq+xiphm1OGcy8Ma5leefrcah0A
+         lAR2BJDI59CR10f6FQnDoADzEvdz6E+DEaosSBv//hU2gf1pTFmnoGyrp5ZKwE6Y3HGF
+         8+NG2HX/F54m1ekcpBgFaOv2dfklQxQvTuNhLsvkFtb/hT1tHwGig2B/E3MLGQMkOrOR
+         0FoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VAHsM7ERRWf6VvA2d+qJije/DfRWmaudBVFG5XXrd2k=;
+        b=RGuHaPgCoRzlca3+8OaYplU3tUH3MthSrlAhsIWC5aBW3pktzrtj9e2OKFUp+kp6LI
+         qeNiXTrYRyhgnN8pI/HbtkQkXDURVF+prqom53If3buN6t+2nFvvBCvlwN7GGOnDSP6a
+         TiFoZZoS/KcykK2XzLy4kYzsq8Vm+uPrB20enfKa5o+wrywebhEEtF2xCqZM/cvwCgnW
+         3HI+25a+8RRZcMXpju+s39wCyhJYZ3z1m9qpeTnR2aQ4ruQxTZuW4nRfYCoS5qDTlyH5
+         4QHLB5mecWvkNAGOERTuvIUOKHmMhy73wYDGBRw1H0H20dd3zsn0utnzY5EVjL1iXwJb
+         0jHg==
+X-Gm-Message-State: APjAAAVdgSwqOYCets+7rVY1NLAb40Pg2FwVYtYAsF1jMOvOazLd7voe
+        KX2PmDK2ZOxXP1BZ3w9xgXWqNadZTGm/6gF61QY=
+X-Google-Smtp-Source: APXvYqxZtiQgcAOlN6AM+xiGfDaNNUSvPUiUDKseZhwzCbWU94qzlZmjKTiMQDWFRDgL/c/3Voan9QCB+OYt8M7V3Yc=
+X-Received: by 2002:a17:906:3195:: with SMTP id 21mr9583601ejy.207.1581484272427;
+ Tue, 11 Feb 2020 21:11:12 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c57db2bf-b03f-4295-4cf3-08d7af79d9ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 05:10:17.0983
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vvRsmdPdM6+fKd0bCRyftMKqeIY8ULX2tyzNSTWOUYx5yC/ImsIbWhOjnInBbCBZfe46Q2rX5DgUvsetnu9y4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4068
+References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+ <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
+ <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+ <1d201377996e16ce25acb640867e1214@codeaurora.org> <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
+ <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
+ <CAF6AEGvLOWKVCjjmqranEi9TKOpMM+BPK199wQ7f=Ez491uhcA@mail.gmail.com> <CAOCk7NrifMkwartV4rj_v_V4=EHeSkmb28tdBUrxoPHVSX5G5Q@mail.gmail.com>
+In-Reply-To: <CAOCk7NrifMkwartV4rj_v_V4=EHeSkmb28tdBUrxoPHVSX5G5Q@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 11 Feb 2020 21:10:59 -0800
+Message-ID: <CAF6AEGv2Ymn+4uDXsO2-P+HR9dpOotB=NRMSEsBu8_uOCJ2vBQ@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Herbert,
+On Tue, Feb 11, 2020 at 8:05 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Tue, Feb 11, 2020 at 5:28 PM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > On Tue, Feb 11, 2020 at 7:59 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> > >
+> > > On Tue, Feb 11, 2020 at 8:44 AM Rob Clark <robdclark@gmail.com> wrote:
+> > > >
+> > > > On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
+> > > > >
+> > > > > On 2020-02-07 19:40, Jeffrey Hugo wrote:
+> > > > > > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
+> > > > > >>
+> > > > > >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
+> > > > > >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
+> > > > > >> > wrote:
+> > > > > >> >>
+> > > > > >> >> For a given byte clock, if VCO recalc value is exactly same as
+> > > > > >> >> vco set rate value, vco_set_rate does not get called assuming
+> > > > > >> >> VCO is already set to required value. But Due to GDSC toggle,
+> > > > > >> >> VCO values are erased in the HW. To make sure VCO is programmed
+> > > > > >> >> correctly, we forcefully call set_rate from vco_prepare.
+> > > > > >> >
+> > > > > >> > Is this specific to certain SoCs? I don't think I've observed this.
+> > > > > >>
+> > > > > >> As far as Qualcomm SOCs are concerned, since pll is analog and the
+> > > > > >> value
+> > > > > >> is directly read from hardware if we get recalc value same as set rate
+> > > > > >> value, the vco_set_rate will not be invoked. We checked in our idp
+> > > > > >> device which has the same SOC but it works there since the rates are
+> > > > > >> different.
+> > > > > >
+> > > > > > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
+> > > > > > does this issue apply to?  Everything implementing the 10nm pll?  One
+> > > > > > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
+> > > > > > so I'm interested to know what is the actual impact here.  I don't see
+> > > > > > an "IDP" SoC in the IP catalog, so I really have no idea what you are
+> > > > > > referring to.
+> > > > >
+> > > > >
+> > > > > This is not 10nm specific. It is applicable for other nms also.
+> > > > > Its specific to the frequency being set. If vco_recalc returns the same
+> > > > > value as being set by vco_set_rate,
+> > > > > vco_set_rate will not be invoked second time onwards.
+> > > > >
+> > > > > For example: Lets take below devices:
+> > > > >
+> > > > > Cheza is based on SDM845 which is 10nm only.
+> > > > > Clk frequency:206016
+> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
+> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
+> > > > >
+> > > > > Trogdor is based on sc7180 which is also 10nm.
+> > > > > Clk frequency:69300
+> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
+> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
+> > > > >
+> > > > > In same trogdor device, we slightly changed the clock frequency and the
+> > > > > values actually differ which will not cause any issue.
+> > > > > Clk frequency:69310
+> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
+> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
+> > > >
+> > > >
+> > > > tbh, loosing state when power is off is kind of the behavior that I'd
+> > > > expect.  It kinda makes me wonder if things are not getting powered
+> > > > off all the way on some SoCs?
+> > > >
+> > > > jhugo, are you worried that this patch will cause problems on other
+> > > > users of the 10nm pll?
+> > >
+> > > Essentially yes.  Conceptually it doesn't seem like this change should
+> > > cause any harm, however -
+> > >
+> > > This sounds like we are trying to work around the clk framework, which
+> > > seems wrong.  It feels like we should be able to set a clk flag for
+> > > this and make the framework deal with it.
+> > >
+> > > Also, this fix is 10nm specific, yet this issue affects all
+> > > implementations?  Seems like this should perhaps be in common code so
+> > > that we don't need to play whack-a-mole by fixing every implementation
+> > > piecemeal.
+> > >
+> > > Finally, the PLLs are notorious for not taking a configuration unless
+> > > they are running.  I admit, I haven't looked at this patch in detail
+> > > to determine if that is the case here, but there doesn't seem to be
+> > > any indication from the commit test or a comment that doing so is
+> > > actually valid in all cases.
+> >
+> > I'm not obviously seeing a clk-provider flag for this.. although I
+> > won't claim to be a clk expert so maybe I'm looking for the wrong
+> > thing..
+> >
+> > On a more practical level, I'd kinda like to get some sort of fix for
+> > v5.6, as currently suspend/resume doesn't work (or at least the
+> > display does not survive) on trogdor, which is a bit annoying.  It
+> > sounds a bit like cheza was just getting lucky (because of rate
+> > rounding?)  I'm not sure if it is the same situation on other sdm850
+> > devices (yoga c630) or sdm835 devices (are they using the 10mm pll as
+> > well?).
+>
+> sdm835 is the first implementation of the 10nm PLL.  Pretty much
+> everything after (including sdm845/850) also uses the 10nm PLL.
+>
+> >  I will confess to not really testing s/r on the yoga c630,
+> > although maybe someone else has (Bjorn?).
+> >
+> > Possibly this should be pushed up to the clk framework, although not
+> > sure if it has a good way to realize the clk provider has lost power?
+> > But that sounds like a better thing for v5.7 than v5.6-rc fixes.. ofc
+> > if there is a better way that I'm not seeing, I'm all ears.
+>
+> There is a suspend/resume sequence in the HPG where VCO isn't lost,
+> but that assumes the GDSC isn't turned off.  If GDSC is turned off,
+> then we need to go through the entire power-up sequence again.  Feels
+> like this should be plumbed into runtime PM based on the
+> suspend/resume usecase, but that's probably more complicated then this
+> change.
 
-When can we expect this patch-set to be merged.
+since gdsc is modelled as genpd, that seems to (afaict) happen all
+outside the scope of what the driver knows about.. (but I may be
+overlooking something)
 
-Regards,
-Kalyani
+> Looking at the HPG for the power up sequence, it seems like we should
+> be setting the bias in the middle of the dsi_pll_commit(), so the
+> order of operations is slight off, however I somewhat doubt that will
+> have a meaningful impact and it does seem like this change is in line
+> with the spirit of the HPG.
+>
+> It wasn't clear to me from the commit message what usecase triggered
+> this.  You've made it clear that its suspend/resume (it would be good
+> if that was mentioned) and that its impacting an actual target.  To
+> me, the current description seemed more theoretical and didn't
+> describe the impact that was being addressed.  Overall, it really
+> didn't answer the "why should I care if I have this change" question.
+>
+> Right now, I think my concerns are cosmetic, therefore I don't have
+> reservations about it being picked up.  If you like:
+>
+> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-> -----Original Message-----
-> From: Kalyani Akula <kalyani.akula@xilinx.com>
-> Sent: Tuesday, January 28, 2020 11:48 AM
-> To: herbert@gondor.apana.org.au; davem@davemloft.net;
-> monstr@seznam.cz; linux-crypto@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>; devicetree@vger.kernel.org; git-dev
-> <git-dev@xilinx.com>; Mohan Marutirao Dhanawade
-> <mohand@xilinx.com>; Sarat Chand Savitala <saratcha@xilinx.com>; Harsh
-> Jain <harshj@xilinx.com>; Michal Simek <michals@xilinx.com>; Kalyani Akul=
-a
-> <kalyania@xilinx.com>; Kalyani Akula <kalyania@xilinx.com>
-> Subject: [PATCH V6 0/4] Add Xilinx's ZynqMP AES-GCM driver support
->=20
-> This patch set adds support for
-> - dt-binding docs for Xilinx ZynqMP AES driver
-> - Adds device tree node for ZynqMP AES driver
-> - Adds communication layer support for aes in zynqmp.c
-> - Adds Xilinx ZynqMP driver for AES Algorithm
->=20
-> NOTE: This patchset is based on Michal's branch
-> https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=3Darm/=
-driv
-> ers
-> because of possible merge conflict for 1/4 patch with below commit commit
-> 461011b1e1ab ("drivers: firmware: xilinx: Add support for feature check")
->=20
-> V6 Changes:
-> - Updated SPDX-License-Identifier in xlnx,zynqmp-aes.yaml.
->=20
-> V5 Changes :
-> - Moved arm64: zynqmp: Add Xilinx AES node from 2/4 to 4/4.
-> - Moved crypto: Add Xilinx AES driver patch from 4/4 to 3/4.
-> - Moved dt-bindings patch from 1/4 to 2/4
-> - Moved firmware: xilinx: Add ZynqMP aes API for AES patch from 3/4 to 1/=
-4
-> - Converted dt-bindings from .txt to .yaml format.
-> - Corrected typo in the subject.
-> - Updated zynqmp-aes node to correct location.
-> - Replaced ARCH_ZYNQMP with ZYNQMP_FIRMWARE in Kconfig
-> - Removed extra new lines and added wherever necessary.
-> - Updated Signed-off-by sequence.
-> - Ran checkpatch for all patches in the series.
->=20
-> V4 Changes :
-> - Addressed review comments.
->=20
-> V3 Changes :
-> - Added software fallback in cases where Hardware doesn't have
->   the capability to handle the request.
-> - Removed use of global variable for storing the driver data.
-> - Enabled CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=3Dy and executed all
->   the kernel selftests. Also covered tests with tcrypt module.
->=20
-> V2 Changes :
-> - Converted RFC PATCH to PATCH
-> - Removed ALG_SET_KEY_TYPE that was added to support keytype
->   attribute. Taken using setkey interface.
-> - Removed deprecated BLKCIPHER in Kconfig
-> - Erased Key/IV from the buffer.
-> - Renamed zynqmp-aes driver to zynqmp-aes-gcm.
-> - Addressed few other review comments
->=20
->=20
-> Kalyani Akula (4):
->   firmware: xilinx: Add ZynqMP aes API for AES functionality
->   dt-bindings: crypto: Add bindings for ZynqMP AES-GCM driver
->   crypto: Add Xilinx AES driver
->   arm64: zynqmp: Add Xilinx AES node.
->=20
->  .../bindings/crypto/xlnx,zynqmp-aes.yaml           |  37 ++
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   4 +
->  drivers/crypto/Kconfig                             |  12 +
->  drivers/crypto/Makefile                            |   1 +
->  drivers/crypto/xilinx/Makefile                     |   2 +
->  drivers/crypto/xilinx/zynqmp-aes-gcm.c             | 466
-> +++++++++++++++++++++
->  drivers/firmware/xilinx/zynqmp.c                   |  25 ++
->  include/linux/firmware/xlnx-zynqmp.h               |   2 +
->  8 files changed, 549 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
->  create mode 100644 drivers/crypto/xilinx/Makefile  create mode 100644
-> drivers/crypto/xilinx/zynqmp-aes-gcm.c
->=20
-> --
-> 1.9.5
 
+hmm, yeah, I guess the commit msg didn't really make that clear.. at
+any rate, I want to see a clean solution pursued in the long run, but
+in the short term I also want to get things working (at least if it
+doesn't break any other users).  So I don't want to land this patch at
+the expense of follow-up for a cleaner solution.. but like I said, I
+would like to get s/r working for now.  So I guess I'd like to see
+some commitment from the display team to follow-up to improve this in
+the next cycle.  And suggestions welcome about how the clk framework
+could make this easier.
+
+BR,
+-R
