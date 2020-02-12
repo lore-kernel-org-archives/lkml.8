@@ -2,124 +2,185 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A64C35242
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF0BC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8FD206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D4D20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cgrquLM6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3m3P7+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgBLAX3 (ORCPT
+        id S1728087AbgBLA27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 19:23:29 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:33626 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727985AbgBLAX3 (ORCPT
+        Tue, 11 Feb 2020 19:28:59 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37138 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgBLA26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 19:23:29 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 1EA021159C1C
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:04:19 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1eZnjK6ZlvBMd1eZnjdhO3; Tue, 11 Feb 2020 17:04:19 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dlq1N3Fubvme0hsUEXmBUOOTkEBmRxGWUp1Spz2xoes=; b=cgrquLM6s6/IT+C+Wi9m5OhnFR
-        8zdv7LDog2pwH+qIbPwt0S4CPL7Vy9OJXJGTlrY+eOPR3uV8e8dM+cxUVkDsNiJ9YonYhYn/6dtAy
-        iOVWloeYjcwS5KKDgBB4j9ZCnF8s/eu794QmGcp5ermySwD5l5WK2foF7sI3+2XKFtLaAbRetw3bb
-        qLyqK3w+rU3JZYVbnunBoFW/gvd+qEpG5kyte1b/IIaq74a7Y4s4C6/p01h4ZF+O56VZ3OW39hqoR
-        rO7Ptj3/Auvvg9vTbaKeqYtXoav97uKAPumwq3cRovYy54a/KKxp16rP/+oLSMUOXFbU0/sSJHHCM
-        B6s8Xhug==;
-Received: from [200.68.140.36] (port=28979 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1eZl-003Rge-LZ; Tue, 11 Feb 2020 17:04:17 -0600
-Date:   Tue, 11 Feb 2020 17:06:52 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] firewire: cdev: Replace zero-length array with
- flexible-array member
-Message-ID: <20200211230652.GA11360@embeddedor>
+        Tue, 11 Feb 2020 19:28:58 -0500
+Received: by mail-ed1-f67.google.com with SMTP id s3so320362edy.4;
+        Tue, 11 Feb 2020 16:28:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5ZyotboeQnfX3ApYlhv3hcCNZzz6LIMW24tRirhDBC0=;
+        b=d3m3P7+n6hZ/F+wWRU4iSoQ7U+slq7kc2DjtKnBbPjHXqtqpexttbO+qNbBGXcYIqS
+         Lt7V8pxV3Xsyuaaze8GFVU58KSHkywNs1GKN/xfeNAaTypvB1U7PPkeajJVbJTGKCfkQ
+         vs3KvfwFFqQPJfZvaUVlZxj5iP5cVAbOVazipcWALqEjyUWXRwaTgGqqsFnJtQdnvdzQ
+         OFYfs5A/tkmNCNDu0jgqIjJXdcgxOrDGoycIUjfvKUUZ9d9g0mnP2qbol2Cd6PJEG4hC
+         W729TZPC1+czKg4orgiGtcGmf0+t9+Vfvl0ZJa244PgEdEVXwmK15lVg2S8NnqtLXe6H
+         Ms8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5ZyotboeQnfX3ApYlhv3hcCNZzz6LIMW24tRirhDBC0=;
+        b=h8iL8s0PjYcXQZYqiFzSEFlxnAYywsCxeFinfDXiRVdvaflFeUJJN9Q2/ElqYBBNQT
+         fTxepm0QUlS1a2lbKViY36DbGM1vQkKTFtbBbTCocV/O1d5TJQMvpzvgwgxzZjmlKDJu
+         wQgaCnqRNHTToA+M1kMhhG1u4d3ktYYMQP9TGoqQyuqtWLCJ2gMFMjQ9oOIpz8NrdfAJ
+         ZJZqjBd9I/2g1bwJaxl6f3Xft82xXOcEpuy2YClCa2xxWZKtnzbwOsdtFPZdgw3IAPpI
+         jve8xOFEkqEgOJfx9FvB01kWwSQlj/hIuS51MlzRHbdm7APZtqUPSZPwnkSQls0Cye/l
+         cR6A==
+X-Gm-Message-State: APjAAAVrLfJ1FUL16CceV3UctWAJZR54i7lD7vRyAiPm1BuQdS9Ytntt
+        GtIQNdjkGvD5gYxxQveP1fucywrmRrQ/FJP1Tjo=
+X-Google-Smtp-Source: APXvYqw4KdNzAga+QI5x4feq8a96q/btCz8UFtzDxNFineH4PDvzVI6XTkyhJS3cLENwNxpu8RtGsiznYmoCFsb05Ks=
+X-Received: by 2002:a05:6402:298:: with SMTP id l24mr8284606edv.70.1581467336302;
+ Tue, 11 Feb 2020 16:28:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1eZl-003Rge-LZ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:28979
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+ <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
+ <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+ <1d201377996e16ce25acb640867e1214@codeaurora.org> <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
+ <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
+In-Reply-To: <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 11 Feb 2020 16:28:45 -0800
+Message-ID: <CAF6AEGvLOWKVCjjmqranEi9TKOpMM+BPK199wQ7f=Ez491uhcA@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, Feb 11, 2020 at 7:59 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Tue, Feb 11, 2020 at 8:44 AM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
+> > >
+> > > On 2020-02-07 19:40, Jeffrey Hugo wrote:
+> > > > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
+> > > >>
+> > > >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
+> > > >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
+> > > >> > wrote:
+> > > >> >>
+> > > >> >> For a given byte clock, if VCO recalc value is exactly same as
+> > > >> >> vco set rate value, vco_set_rate does not get called assuming
+> > > >> >> VCO is already set to required value. But Due to GDSC toggle,
+> > > >> >> VCO values are erased in the HW. To make sure VCO is programmed
+> > > >> >> correctly, we forcefully call set_rate from vco_prepare.
+> > > >> >
+> > > >> > Is this specific to certain SoCs? I don't think I've observed this.
+> > > >>
+> > > >> As far as Qualcomm SOCs are concerned, since pll is analog and the
+> > > >> value
+> > > >> is directly read from hardware if we get recalc value same as set rate
+> > > >> value, the vco_set_rate will not be invoked. We checked in our idp
+> > > >> device which has the same SOC but it works there since the rates are
+> > > >> different.
+> > > >
+> > > > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
+> > > > does this issue apply to?  Everything implementing the 10nm pll?  One
+> > > > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
+> > > > so I'm interested to know what is the actual impact here.  I don't see
+> > > > an "IDP" SoC in the IP catalog, so I really have no idea what you are
+> > > > referring to.
+> > >
+> > >
+> > > This is not 10nm specific. It is applicable for other nms also.
+> > > Its specific to the frequency being set. If vco_recalc returns the same
+> > > value as being set by vco_set_rate,
+> > > vco_set_rate will not be invoked second time onwards.
+> > >
+> > > For example: Lets take below devices:
+> > >
+> > > Cheza is based on SDM845 which is 10nm only.
+> > > Clk frequency:206016
+> > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
+> > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
+> > >
+> > > Trogdor is based on sc7180 which is also 10nm.
+> > > Clk frequency:69300
+> > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
+> > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
+> > >
+> > > In same trogdor device, we slightly changed the clock frequency and the
+> > > values actually differ which will not cause any issue.
+> > > Clk frequency:69310
+> > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
+> > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
+> >
+> >
+> > tbh, loosing state when power is off is kind of the behavior that I'd
+> > expect.  It kinda makes me wonder if things are not getting powered
+> > off all the way on some SoCs?
+> >
+> > jhugo, are you worried that this patch will cause problems on other
+> > users of the 10nm pll?
+>
+> Essentially yes.  Conceptually it doesn't seem like this change should
+> cause any harm, however -
+>
+> This sounds like we are trying to work around the clk framework, which
+> seems wrong.  It feels like we should be able to set a clk flag for
+> this and make the framework deal with it.
+>
+> Also, this fix is 10nm specific, yet this issue affects all
+> implementations?  Seems like this should perhaps be in common code so
+> that we don't need to play whack-a-mole by fixing every implementation
+> piecemeal.
+>
+> Finally, the PLLs are notorious for not taking a configuration unless
+> they are running.  I admit, I haven't looked at this patch in detail
+> to determine if that is the case here, but there doesn't seem to be
+> any indication from the commit test or a comment that doing so is
+> actually valid in all cases.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+I'm not obviously seeing a clk-provider flag for this.. although I
+won't claim to be a clk expert so maybe I'm looking for the wrong
+thing..
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+On a more practical level, I'd kinda like to get some sort of fix for
+v5.6, as currently suspend/resume doesn't work (or at least the
+display does not survive) on trogdor, which is a bit annoying.  It
+sounds a bit like cheza was just getting lucky (because of rate
+rounding?)  I'm not sure if it is the same situation on other sdm850
+devices (yoga c630) or sdm835 devices (are they using the 10mm pll as
+well?).  I will confess to not really testing s/r on the yoga c630,
+although maybe someone else has (Bjorn?).
 
-This issue was found with the help of Coccinelle.
+Possibly this should be pushed up to the clk framework, although not
+sure if it has a good way to realize the clk provider has lost power?
+But that sounds like a better thing for v5.7 than v5.6-rc fixes.. ofc
+if there is a better way that I'm not seeing, I'm all ears.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/firewire/core-cdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-index 16a7045736a9..3626e06dedba 100644
---- a/drivers/firewire/core-cdev.c
-+++ b/drivers/firewire/core-cdev.c
-@@ -130,7 +130,7 @@ struct inbound_transaction_resource {
- struct descriptor_resource {
- 	struct client_resource resource;
- 	struct fw_descriptor descriptor;
--	u32 data[0];
-+	u32 data[];
- };
- 
- struct iso_resource {
--- 
-2.25.0
-
+BR,
+-R
