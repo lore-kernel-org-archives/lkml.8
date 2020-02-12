@@ -6,79 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513C4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E27C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F1420724
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5999E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgBLOD6 (ORCPT
+        id S1728300AbgBLOEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:03:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45354 "EHLO mx2.suse.de"
+        Wed, 12 Feb 2020 09:04:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:33286 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgBLOD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:03:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DAE13B1A8;
-        Wed, 12 Feb 2020 14:03:55 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 15:03:55 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v1] printk: Declare log_wait as external variable
-Message-ID: <20200212140355.56drih2wfcryjjtl@pathway.suse.cz>
-References: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
- <20200211124317.x5erhl7kvxj2nq6a@pathway.suse.cz>
- <20200212013133.GB13208@google.com>
+        id S1725887AbgBLOEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:04:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B43328;
+        Wed, 12 Feb 2020 06:04:35 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 241AA3F6CF;
+        Wed, 12 Feb 2020 06:04:33 -0800 (PST)
+Subject: Re: dma_mask limited to 32-bits with OF platform device
+To:     Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>
+Cc:     stefan.wahren@i2se.com, afaerber@suse.de, hverkuil@xs4all.nl,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
+ <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
+ <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
+Date:   Wed, 12 Feb 2020 14:04:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212013133.GB13208@google.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-02-12 10:31:33, Sergey Senozhatsky wrote:
-> On (20/02/11 13:43), Petr Mladek wrote:
-> >
-> > Even better solution might be to move fs/proc/kmsg.c to
-> > kernel/printk/proc_kmsg.c and declare printk_log_wait only
-> > in kernel/printk/internal.h. I think that this is what
-> > Sergey suggested.
+On 12/02/2020 12:33 pm, Roger Quadros wrote:
+[...]
+> For now, let's say that we limit dma-ranges to 4GB size. with 
+> "dma-ranges = <0x00000000 0x00000000 0x1 0x00000000>;"
+> Then, dma_bus_limit is set correctly to 0xffffffff, SATA driver sets 
+> masks to 64-bit as IP supports that.
 > 
-> Yes, right.
+> [   13.306847] ahci 4a140000.sata: dma_mask 0xffffffffffffffff, 
+> coherent_mask 0xffffffffffffffff, dma_bus_limit 0xffffffff
 > 
-> > Another great thing would be to extract devkmsg stuff from
-> > kernel/printk/printk.c and put it into kernel/printk/dev_kmsg.c.
-> 
-> Yeah, can do, I would still prefer proc_kmsg to "move in".
-> Either both can live in printk.c (won't make it much worse),
-> or in kernel/printk/dev_kmsg.c and kernel/printk/proc_kmsg.c
+> However, the SATA controller still tries to do DMA above 32-bits.
+> dma_alloc() doesn't seem to be taking dma_bus_limit into account?
 
-I would prefer to split it:
+Yay ARM LPAE... Peter and Christoph have already been playing 
+whack-a-mole with other bugs under that config - is this with or without 
+SWIOTLB? (and whichever way, does the other work any better?)
 
-    + printk.c is already too big and would deserve splitting.
-
-    + The two different kmgs interfaces are confusing on its
-      own. IMHO, it will be even more confusing when they
-      live in one huge source file.
-
-
-> I can take a look at dev_ksmg.c/proc_kmsg.c option, unless
-> someone else wants to spend their time on this.
-
-It would be lovely from my POV. I am only concerned about
-the lockless printk() stuff. I would prefer to avoid creating
-too many conflicts in the same merge window. Well, I am
-not sure how many conflicts there would be. Adding John
-into CC.
-
-Best Regards,
-Petr
+Robin.
