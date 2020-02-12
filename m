@@ -2,98 +2,107 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4636FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B963C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105CC206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2972082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I5uemIgZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kvSUNg+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgBLPyc (ORCPT
+        id S1728639AbgBLPyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:54:32 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43736 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbgBLPyc (ORCPT
+        Wed, 12 Feb 2020 10:54:44 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64526 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728245AbgBLPyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:54:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=EIQuvZVjRgnZucfdtz7UxkDAyXXF62ACmzF0Z1QyBKQ=; b=I5uemIgZznT+KbXN73VDUVcGQe
-        YT/UiFrjY2biFKrNf4NvXDs8X7FZJ0am5TD+zu5aZ2+FHjB20O9wkWFzLzXaGdGavuCtBzblcBBKi
-        SHjW5dUuZVLM4KV3o7ZhVVA1tGvysjlWcM649K0FS3i54wSZxlIT6LSdi/5WT9ULT+CVnImWlw0M3
-        w/dXR7XkrxM9QdfrCzO4ACyK6YjQeOQeHJkVEJAJCH0PbMYP+2X/Gz8GlNmW3ko6xN+Yiqb1shVPv
-        e482LAGCQef8sq25rp9W2A5J9Ku20gKII0Tr7zGRrKgVxyHJCKrZHLF4jCfqDT3IIeIq6Yrqcr0OU
-        YUUsXz9A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1uLO-0002OF-TQ; Wed, 12 Feb 2020 15:54:30 +0000
-Subject: Re: [PATCH] remoteproc: fix kernel-doc warnings
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-References: <20200212093211.15270-1-arnaud.pouliquen@st.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c912fe7e-601d-6d07-c368-109fecd11a7a@infradead.org>
-Date:   Wed, 12 Feb 2020 07:54:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 10:54:43 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581522883; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=5GXYmuEvVBgrpfgyHmVLvKxCJbgXZCJNez/OEN+oLSs=; b=kvSUNg+nvKju4c+Q6KrClvqbYpFxpC3BgTtB2vDBlDftihOM5H7F9QCTkmGJZ6eEktnmDU7S
+ T/NMsBquYASR9IBNeSfB2cSiYldgyUitQrJJC0cKeaBUElnYT8u3xpochzKXiRBHybwoSFxE
+ K8gPUZiAcSXZ00GVXgLOoxSj9hU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e441fb6.7ff518051768-smtp-out-n03;
+ Wed, 12 Feb 2020 15:54:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8043EC4479D; Wed, 12 Feb 2020 15:54:30 +0000 (UTC)
+Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1EE1C43383;
+        Wed, 12 Feb 2020 15:54:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1EE1C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mka@chromium.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        hemantg@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        gubbaven@codeaurora.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: qcom: sc7180: Add node for bluetooth soc wcn3990
+Date:   Wed, 12 Feb 2020 21:24:19 +0530
+Message-Id: <20200212155419.20741-1-bgodavar@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20200212093211.15270-1-arnaud.pouliquen@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add bluetooth SoC node for SC7180 IDP board.
 
-kernel-doc supports "..." as a function argument for varargs.
-See Documentation/doc-guide/kernel-doc.rst:
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+---
+v2:
+  * updated commit text
+  * removed status form dts node
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-"If a function has a variable number of arguments, its description should
-be written in kernel-doc notation as::
-
-      * @...: description"
-
-
-So the below could be done as:
-
-On 2/12/20 1:32 AM, Arnaud Pouliquen wrote:
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..5f9a5812505c 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -224,7 +224,7 @@ EXPORT_SYMBOL(rproc_da_to_va);
->  /**
->   * rproc_find_carveout_by_name() - lookup the carveout region by a name
->   * @rproc: handle of a remote processor
-> - * @name,..: carveout name to find (standard printf format)
-> + * @name: carveout name to find (standard printf format)
-
- * @name: carveout name to find
- * @...: standard printf format of args to search for carveout name
-
-although I'm not so sure about the descriptions there.
-
->   *
->   * Platform driver has the capability to register some pre-allacoted carveout
->   * (physically contiguous memory regions) before rproc firmware loading and
-
-
-thanks for the kernel-doc update.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50ad4fde..7a50a439b6f3 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -19,6 +19,7 @@
+ 	aliases {
+ 		hsuart0 = &uart3;
+ 		serial0 = &uart8;
++		bluetooth0 = &bluetooth;
+ 	};
+ 
+ 	chosen {
+@@ -256,6 +257,16 @@
+ 
+ &uart3 {
+ 	status = "okay";
++
++	bluetooth: wcn3990-bt {
++		compatible = "qcom,wcn3990-bt";
++		vddio-supply = <&vreg_l10a_1p8>;
++		vddxo-supply = <&vreg_l1c_1p8>;
++		vddrf-supply = <&vreg_l2c_1p3>;
++		vddch0-supply = <&vreg_l10c_3p3>;
++		max-speed = <3200000>;
++		clocks = <&rpmhcc RPMH_RF_CLK2>;
++	};
+ };
+ 
+ &uart8 {
 -- 
-~Randy
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
