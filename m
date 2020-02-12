@@ -2,129 +2,88 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9EEC3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A976C3B188
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDB124672
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:11:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BDKWxixy"
+	by mail.kernel.org (Postfix) with ESMTP id 69D6E24672
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581534816;
+	bh=1a9kGc2FHXHoP81cfgRKZPjCFj1Bh30cASvmFV8sBIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kue+7uyj/X8UwGBxDL5JCqxE+aNzUtw13f+o4gW9aEYAV57j5AN53ixg/FjxJ7Dgl
+	 QAxsFnGm8MZRBxRvPfhnp+a+7dlow2JdVENI0XCatIpbZPHN3GCawl+uV29YXtKfju
+	 UvsoD35oRg2dhSngvFxBbczY0HJSw9bSLCGii234=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgBLTLq (ORCPT
+        id S1728901AbgBLTNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:11:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42032 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgBLTLp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:11:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Fdj4pjSLaEA0mriWg+9pPCfLYyKsbL26nDUwmXyEzZY=; b=BDKWxixyiR+ivlBsbW/hOT2dnx
-        kmmfDKzRELyGIkQTNvQz34ICsJuL0HwBvqXENn0RKUhRNDWn/S8FiU9517p3DRTbcnwkpJfEC2dlB
-        sSbJYkZ9PnUKiOXEkTPb1Dn4bb3fp4gtOf3eoSWsWTzrZFDux87hLp4n1RcackMkqQektV8tVOitw
-        /tFW4hTg+1K7xbbSNhdy5Ka+FtlMXfIuiMwtLNOCOViJg8f4h1g6xHhcW4XJwcRbBCfzAkVvIfoLO
-        9TtVSwyPFGkUqyNWVzC1ThG3bg9tWUlvSnt54FNNXOFp3HS6CnM7bw5pnvH3atoQQR1HJkfeJWdmd
-        So7/134g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1xQH-0001lZ-L3; Wed, 12 Feb 2020 19:11:45 +0000
-Date:   Wed, 12 Feb 2020 11:11:45 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/25] mm: Fix documentation of FGP flags
-Message-ID: <20200212191145.GH7778@bombadil.infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-6-willy@infradead.org>
- <20200212074215.GF7068@infradead.org>
+        Wed, 12 Feb 2020 14:13:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727279AbgBLTNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 14:13:35 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7BCB2082F;
+        Wed, 12 Feb 2020 19:13:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581534814;
+        bh=1a9kGc2FHXHoP81cfgRKZPjCFj1Bh30cASvmFV8sBIE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m7TSwmeiJbixkv33KF/GJF/BoNHaJT+UaPopod9xL+DiFBFEYe6JJOjsyCMXgSTMX
+         fltmZLPZ/66dPiU4SDru61fge96aNLc/6sn1v5kc0oYkMGKM8yIBzk1qWNZutWB1RJ
+         x6o76PLkYCJc3JSzzEDOzZacnMh6N1tbBv3+czfI=
+Date:   Wed, 12 Feb 2020 11:13:34 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH 10/28] PM: QoS: Rename things related to the CPU latency
+ QoS
+Message-ID: <20200212191334.GA1987092@kroah.com>
+References: <1654227.8mz0SueHsU@kreacher>
+ <3305010.P0mNzRSuHC@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212074215.GF7068@infradead.org>
+In-Reply-To: <3305010.P0mNzRSuHC@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:42:15PM -0800, Christoph Hellwig wrote:
-> On Tue, Feb 11, 2020 at 08:18:25PM -0800, Matthew Wilcox wrote:
-> > - * @fgp_flags: PCG flags
-> > + * @fgp_flags: FGP flags
-> >   * @gfp_mask: gfp mask to use for the page cache data page allocation
-> >   *
-> >   * Looks up the page cache slot at @mapping & @offset.
-> >   *
-> > - * PCG flags modify how the page is returned.
-> > + * FGP flags modify how the page is returned.
+On Wed, Feb 12, 2020 at 12:04:31AM +0100, Rafael J. Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 > 
-> This still looks weird.  Why not just a single line:
+> First, rename PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE to
+> PM_QOS_CPU_LATENCY_DEFAULT_VALUE and update all of the code
+> referring to it accordingly.
 > 
-> 	* @fgp_flags: FGP_* flags that control how the page is returned.
+> Next, rename cpu_dma_constraints to cpu_latency_constraints, move
+> the definition of it closer to the functions referring to it and
+> update all of them accordingly.  [While at it, add a comment to mark
+> the start of the code related to the CPU latency QoS.]
+> 
+> Finally, rename the pm_qos_power_*() family of functions and
+> pm_qos_power_fops to cpu_latency_qos_*() and cpu_latency_qos_fops,
+> respectively, and update the definition of cpu_latency_qos_miscdev.
+> [While at it, update the miscdev interface code start comment.]
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/tty/serial/8250/8250_omap.c |  6 ++--
+>  drivers/tty/serial/omap-serial.c    |  6 ++--
+>  include/linux/pm_qos.h              |  2 +-
+>  kernel/power/qos.c                  | 56 +++++++++++++++++++------------------
+>  4 files changed, 36 insertions(+), 34 deletions(-)
 
-Well, now you got me reading the entire comment for this function, and
-looking at the html output, so I ended up rewriting it entirely.
-
-+++ b/mm/filemap.c
-@@ -1574,37 +1574,34 @@ struct page *find_lock_entry(struct address_space *mapping, pgoff_t offset)
- EXPORT_SYMBOL(find_lock_entry);
- 
- /**
-- * pagecache_get_page - find and get a page reference
-- * @mapping: the address_space to search
-- * @offset: the page index
-- * @fgp_flags: FGP flags
-- * @gfp_mask: gfp mask to use for the page cache data page allocation
-- *
-- * Looks up the page cache slot at @mapping & @offset.
-+ * pagecache_get_page - Find and get a reference to a page.
-+ * @mapping: The address_space to search.
-+ * @offset: The page index.
-+ * @fgp_flags: %FGP flags modify how the page is returned.
-+ * @gfp_mask: Memory allocation flags to use if %FGP_CREAT is specified.
-  *
-- * FGP flags modify how the page is returned.
-+ * Looks up the page cache entry at @mapping & @offset.
-  *
-- * @fgp_flags can be:
-+ * @fgp_flags can be zero or more of these flags:
-  *
-- * - FGP_ACCESSED: the page will be marked accessed
-- * - FGP_LOCK: Page is return locked
-- * - FGP_CREAT: If page is not present then a new page is allocated using
-- *   @gfp_mask and added to the page cache and the VM's LRU
-- *   list. The page is returned locked and with an increased
-- *   refcount.
-- * - FGP_FOR_MMAP: Similar to FGP_CREAT, only we want to allow the caller to do
-- *   its own locking dance if the page is already in cache, or unlock the page
-- *   before returning if we had to add the page to pagecache.
-+ * * %FGP_ACCESSED - The page will be marked accessed.
-+ * * %FGP_LOCK - The page is returned locked.
-+ * * %FGP_CREAT - If no page is present then a new page is allocated using
-+ *   @gfp_mask and added to the page cache and the VM's LRU list.
-+ *   The page is returned locked and with an increased refcount.
-+ * * %FGP_FOR_MMAP - The caller wants to do its own locking dance if the
-+ *   page is already in cache.  If the page was allocated, unlock it before
-+ *   returning so the caller can do the same dance.
-  *
-- * If FGP_LOCK or FGP_CREAT are specified then the function may sleep even
-- * if the GFP flags specified for FGP_CREAT are atomic.
-+ * If %FGP_LOCK or %FGP_CREAT are specified then the function may sleep even
-+ * if the %GFP flags specified for %FGP_CREAT are atomic.
-  *
-  * If there is a page cache page, it is returned with an increased refcount.
-  *
-- * Return: the found page or %NULL otherwise.
-+ * Return: The found page or %NULL otherwise.
-  */
- struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
--       int fgp_flags, gfp_t gfp_mask)
-+               int fgp_flags, gfp_t gfp_mask)
- {
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
