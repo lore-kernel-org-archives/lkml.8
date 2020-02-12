@@ -2,146 +2,85 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE03C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5940DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A43720714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2188320659
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IyduzuDP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B6rLVHGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgBLM5L (ORCPT
+        id S1727862AbgBLM6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:57:11 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38902 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbgBLM5L (ORCPT
+        Wed, 12 Feb 2020 07:58:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27613 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726728AbgBLM6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:57:11 -0500
-Received: by mail-lj1-f195.google.com with SMTP id w1so2194365ljh.5;
-        Wed, 12 Feb 2020 04:57:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=FuSs9kS8ae3w5JjTuFnQ+TphT7r0wrypfGkdXwpwO3k=;
-        b=IyduzuDPBYv3bttdle4/H2G/Mobjrt2pHYyuCTdRgF3Nxm7H6tBfoondtSVigiw6Tl
-         f3V36pAg8zbGds845Zknr0bzJ2lh1g3Bf/Qg66A906mOxWKAxK3Z0E0rK7/djP/Av5Lr
-         c+tmAjcG5IwBgwN4T+eZ6sxwv/AMsxjgUH0XD7aYonE156L/xGbtPujYtu+ZTMEhRYZn
-         H7f8aq6sAewK9W/QZbKyBGBf4aJLa39q5XAcSbqLPxeH1b8xhQdjdn4S1MikK3d4xKEd
-         Ot+5p8Hkm5DAOiqjVaRwohUuSuPhLXOi2riiZl1CYkJlOfhie2k2D4kIw3lPbr37QKmP
-         Vulw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FuSs9kS8ae3w5JjTuFnQ+TphT7r0wrypfGkdXwpwO3k=;
-        b=Ttyqeu29dGR7H/wz+C/TBV1tJXOC3wzExSJlzOouY+B7ZkB1b4EIkRX/eEAz8DheWb
-         uUTeAnzgnfzGG/qeSgqwSgCT8N1ieSUm7l0jEdFNFWYcpbRKdsvDqw5qcDNs61GX3UKK
-         Ti5mT8PF1WfGUrkU4WRDWriD71pyQBa3/Cr8f7uQMmtrUxPK2AbJlMijtmQT4X6iHust
-         tsjGugfG89BDrr5+cA6EfJsM5p+dXoEACx8XXNNKqm3F0ObhR4QkYHXlKYRFa4WbTAv6
-         D7Djqrp4sAXvjH78H79Nf4To2jiGiuOKb1EpyPaC500MQyUv3P5Yb9i71PjJIAl7WK8O
-         paLw==
-X-Gm-Message-State: APjAAAV3BqQbRTilWQ4hL0u+UWef22LfKDcnLmSxQ5d2IECS516quNqB
-        k3F+UIufCGaUvp5hzJM1BmqidKgNbds=
-X-Google-Smtp-Source: APXvYqxcw6Qgtiyx0LP+B0IJNtbp/9B9kOUrcgrqm5D7yiJFSUFGSOQXha2tKnmxxWuj4+YkHDI5Kw==
-X-Received: by 2002:a2e:96c4:: with SMTP id d4mr7873560ljj.225.1581512228434;
-        Wed, 12 Feb 2020 04:57:08 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id t1sm226977lji.98.2020.02.12.04.57.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 04:57:04 -0800 (PST)
-Subject: Re: [PATCH v2] fs: optimise kiocb_set_rw_flags()
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>, willy@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <8cecd243-38aa-292d-15cd-49b485f9253f@gmail.com>
- <5328b35d948ea2a3aa5df2b1d740c7cb1f38c846.1579224594.git.asml.silence@gmail.com>
- <14929e52-9437-e856-7eff-4e5b45968f89@gmail.com>
-Message-ID: <3fd1844b-d059-7729-8d09-ad51d11514fa@gmail.com>
-Date:   Wed, 12 Feb 2020 15:57:03 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 07:58:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581512291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WNE9XiYfIRFh5LYCvgVuz7J2bfIjYJxs9twoYqkH1vE=;
+        b=B6rLVHGrult10fEy9RK0Vcx6KCvD4yIlOFG6NwJfU+QAtVTKF9HIqurSDoagx9oRuhmwAe
+        oO8tDMozVSZnL28ujrjZ4aVktqrwio4jTrwTMta4kwjR9z0DkHCwjMc4c19kO2U/YMZNm5
+        6+6AxMjn8XgN9v9XM/2dAgWxw+XlDxU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-GUBT95-nNVi27y58GnvC5Q-1; Wed, 12 Feb 2020 07:58:03 -0500
+X-MC-Unique: GUBT95-nNVi27y58GnvC5Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04ABD108F25C;
+        Wed, 12 Feb 2020 12:58:02 +0000 (UTC)
+Received: from mail (ovpn-122-89.rdu2.redhat.com [10.10.122.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 733DC5DA7B;
+        Wed, 12 Feb 2020 12:57:58 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 07:57:57 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Jon Masters <jcm@jonmasters.org>,
+        Rafael Aquini <aquini@redhat.com>,
+        Mark Salter <msalter@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: tlb: skip tlbi broadcast for single threaded
+ TLB flushes
+Message-ID: <20200212125757.GD3699@redhat.com>
+References: <20200203201745.29986-1-aarcange@redhat.com>
+ <20200203201745.29986-3-aarcange@redhat.com>
+ <20200210175106.GA27215@arrakis.emea.arm.com>
+ <20200210201411.GC3699@redhat.com>
+ <20200211140025.GB153117@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <14929e52-9437-e856-7eff-4e5b45968f89@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211140025.GB153117@arrakis.emea.arm.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/2020 4:01 PM, Pavel Begunkov wrote:
-> On 1/17/2020 4:32 AM, Pavel Begunkov wrote:
->> kiocb_set_rw_flags() generates a poor code with several memory writes
->> and a lot of jumps. Help compilers to optimise it.
->>
->> Tested with gcc 9.2 on x64-86, and as a result, it its output now is a
->> plain code without jumps accumulating in a register before a memory
->> write.
-> 
-> Humble ping
+Hello,
 
-Anyone?
+On Tue, Feb 11, 2020 at 02:00:25PM +0000, Catalin Marinas wrote:
+> I think there is another race here. IIUC, the assumption you make is
+> that when mm_users <= 1 && mm_count == 1, the only active user of this
+> pgd/ASID is on the CPU doing the TLBI. This is not the case for
+> try_to_unmap() where the above condition may be true but the active
+> thread on a different CPU won't notice the local TLBI.
 
-> 
->>
->> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
->> ---
->>
->> v2: check for 0 flags in advance (Matthew Wilcox)
->>
->>  include/linux/fs.h | 16 +++++++++++-----
->>  1 file changed, 11 insertions(+), 5 deletions(-)
->>
->> diff --git a/include/linux/fs.h b/include/linux/fs.h
->> index 98e0349adb52..22b46fc8fdfa 100644
->> --- a/include/linux/fs.h
->> +++ b/include/linux/fs.h
->> @@ -3402,22 +3402,28 @@ static inline int iocb_flags(struct file *file)
->>  
->>  static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
->>  {
->> +	int kiocb_flags = 0;
->> +
->> +	if (!flags)
->> +		return 0;
->>  	if (unlikely(flags & ~RWF_SUPPORTED))
->>  		return -EOPNOTSUPP;
->>  
->>  	if (flags & RWF_NOWAIT) {
->>  		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
->>  			return -EOPNOTSUPP;
->> -		ki->ki_flags |= IOCB_NOWAIT;
->> +		kiocb_flags |= IOCB_NOWAIT;
->>  	}
->>  	if (flags & RWF_HIPRI)
->> -		ki->ki_flags |= IOCB_HIPRI;
->> +		kiocb_flags |= IOCB_HIPRI;
->>  	if (flags & RWF_DSYNC)
->> -		ki->ki_flags |= IOCB_DSYNC;
->> +		kiocb_flags |= IOCB_DSYNC;
->>  	if (flags & RWF_SYNC)
->> -		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
->> +		kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
->>  	if (flags & RWF_APPEND)
->> -		ki->ki_flags |= IOCB_APPEND;
->> +		kiocb_flags |= IOCB_APPEND;
->> +
->> +	ki->ki_flags |= kiocb_flags;
->>  	return 0;
->>  }
->>  
->>
-> 
+The "current->mm == mm" check is what shall prevent the above.
 
--- 
-Pavel Begunkov
+Thanks,
+Andrea
+
