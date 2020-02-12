@@ -2,48 +2,83 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5CCC3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337B2C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3A821739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF755218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:02:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EaXusB6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgBLUA4 (ORCPT
+        id S1729055AbgBLUCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:00:56 -0500
-Received: from relay.sw.ru ([185.231.240.75]:47826 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728098AbgBLUA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:00:56 -0500
-Received: from [192.168.15.120]
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j1yBE-0007nX-2q; Wed, 12 Feb 2020 23:00:16 +0300
-Subject: Re: [PATCH v6 6/6] loop: Add support for REQ_ALLOCATE
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <158132703141.239613.3550455492676290009.stgit@localhost.localdomain>
- <158132724397.239613.16927024926439560344.stgit@localhost.localdomain>
- <20200212170156.GM6874@magnolia>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <f108e700-62fb-6ecd-2bba-0ab7a6b9ef7b@virtuozzo.com>
-Date:   Wed, 12 Feb 2020 23:00:15 +0300
+        Wed, 12 Feb 2020 15:02:06 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60165 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727600AbgBLUCF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:02:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581537724;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xACQJzdDDlbOWzGGCryoyeWskqYfJq+P7a8dbWxnMZg=;
+        b=EaXusB6fxxGR0qZaqZr8nVMssqse3H0+S1yYgDuim2BZfomOvQPQ5adUouehb7O9xf4IS3
+        eC6vlqo7Fsddv0mC4gwuYQtXK5FWEVUL+Pz+ThzewEILmzzAINDytZWMJpiUeqzNxLyVV4
+        Ak5MwmRrHo03jv33LCTnAamEFK3sH6s=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-RmmUsNWMNiyLqUdBOgPXhQ-1; Wed, 12 Feb 2020 15:02:02 -0500
+X-MC-Unique: RmmUsNWMNiyLqUdBOgPXhQ-1
+Received: by mail-wm1-f70.google.com with SMTP id a189so1184599wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:02:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xACQJzdDDlbOWzGGCryoyeWskqYfJq+P7a8dbWxnMZg=;
+        b=Q9HBFZ65c80lTTJYjGCxlh7LuC1bIM69Hm5cSywxq5Ffepg2EIhE59lKivGlIV5nbF
+         04DrZUBGs5vVw8QdTTRLC6+rw2F5aaOYR1mhTk9x1vxToWWqgvll8cd04w0FpbSebz1O
+         AKU8ypdi3S91OlBmTPjXyz5A6w4hnpZIxDkBfYGnPDpmYcawUG3+/fT/+LXCUBV5rbkg
+         u6EqaEeVBWu+K6hdErfFxcTHv6/NTctgKr096/rSn3Y4wIgwzhXNc/o9uYh+29QjnX/9
+         klySl7Vr/q6qRG7PqcngYK6EcHlJ5yvUqdkkmkoZ5ya0M/Jv+bVpdVpRBac/Yksbklmk
+         tB6w==
+X-Gm-Message-State: APjAAAW+Yr8Fs/siq6WoZeVLl5tfLX/aPvlBKqGocBGkHXpFmar5krKY
+        EVqEF8i28t9E23TxrYQ35vmoUrCtShuk1rEdGqah2jPxTPpcViMehTUI7piB3f+1//o6KgZ6/ye
+        dIox836lTt3E76hbrwXJI9W36
+X-Received: by 2002:adf:e2c5:: with SMTP id d5mr16732615wrj.165.1581537720864;
+        Wed, 12 Feb 2020 12:02:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwmfvhQhntZ0xl323TsLbJsGJRLD3EnRwc6SDjJpS5+J/aqGrVF/uNojcfTxi8DzEt/rbz3dA==
+X-Received: by 2002:adf:e2c5:: with SMTP id d5mr16732593wrj.165.1581537720554;
+        Wed, 12 Feb 2020 12:02:00 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
+        by smtp.gmail.com with ESMTPSA id e16sm1954758wrs.73.2020.02.12.12.01.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 12:02:00 -0800 (PST)
+Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>
+References: <20200212164714.7733-1-pbonzini@redhat.com>
+ <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
+ <b90a886e-b320-43d3-b2b6-7032aac57abe@redhat.com>
+ <CAHk-=wh8eYt9b8SrP0+L=obHWKU0=vXj8BxBNZ3DYd=6wZTKqw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <23585515-73a9-596e-21f1-cbbcc9d7e7f9@redhat.com>
+Date:   Wed, 12 Feb 2020 21:01:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20200212170156.GM6874@magnolia>
+In-Reply-To: <CAHk-=wh8eYt9b8SrP0+L=obHWKU0=vXj8BxBNZ3DYd=6wZTKqw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -52,49 +87,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.02.2020 20:01, Darrick J. Wong wrote:
-> On Mon, Feb 10, 2020 at 12:34:04PM +0300, Kirill Tkhai wrote:
->> Support for new modifier of REQ_OP_WRITE_ZEROES command.
->> This results in allocation extents in backing file instead
->> of actual blocks zeroing.
+On 12/02/20 20:38, Linus Torvalds wrote:
+> On Wed, Feb 12, 2020 at 11:19 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
 >>
->> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->> Reviewed-by: Bob Liu <bob.liu@oracle.com>
->> ---
->>  drivers/block/loop.c |   15 ++++++++++++---
->>  1 file changed, 12 insertions(+), 3 deletions(-)
+>>> So this clearly never even got a _whiff_ of build-testing.
 >>
->> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
->> index 739b372a5112..bfe76d9adf09 100644
->> --- a/drivers/block/loop.c
->> +++ b/drivers/block/loop.c
->> @@ -581,6 +581,15 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
->>  	return 0;
->>  }
->>  
->> +static unsigned int write_zeroes_to_fallocate_mode(unsigned int flags)
->> +{
->> +	if (flags & REQ_ALLOCATE)
->> +		return 0;
->> +	if (flags & REQ_NOUNMAP)
->> +		return FALLOC_FL_ZERO_RANGE;
->> +	return FALLOC_FL_PUNCH_HOLE;
->> +}
->> +
->>  static int do_req_filebacked(struct loop_device *lo, struct request *rq)
->>  {
->>  	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
->> @@ -604,9 +613,7 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
->>  		 * write zeroes the range.  Otherwise, punch them out.
->>  		 */
+>> Oh come on.
 > 
-> Please update this comment to reflect the new REQ_ALLOCATE mode, and
-> move it to where you define write_zeroes_to_fallocate_mode().
-> 
-> With that fixed,
-> 
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Seriously - if you don't even _look_ at the warnings the build
+> generates, then it hasn't been build-tested.
+>
+> I don't want to hear "Oh come on". I'm 100% serious.
 
-Just to clarify. Is this "Reviewed-by:" tag for this patch or for the whole series?
+I know, but still I consider it.  There is no reason why the "build
+test" should be anything more than "make && echo yes i am build-tested".
+ It shouldn't involve any grep or script magic, it's already hard enough
+to script all the functional part of the testing.
 
-Kirill
+My "Oh come on" was because "it never got a whiff of build-testing"
+hides how "the default build testing configuration is crap".  Of course
+I don't want warnings either, but unless there is -Werror somewhere
+mistakes _will_ happen.  Get new commits from you, or make mrproper to
+build another architecture? Everything gets rebuilt and the warnings
+scroll by.  During next-release development I will catch it of course,
+but for rc I usually don't even need to build more than once before
+applying a pull request.  I am surprised it took a few years for the
+wrong set of factors to occur at the same time.
+
+Did I screw up?  Yes.  Could we do better to avoid someone else doing
+the same mistake?  Hell yes.
+
+I'm not making excuses.  I'm just saying that the *root* cause is not my
+mistake or even Oliver's.  The root cause is that our (shared!)
+definition of "good" does not match the exit code of "make".  We all
+want zero warnings, but we don't enable -Werror.  Let's add at least a
+Kconfig to enable it for every architecture you build-test (is it only
+x86 or anything else?).
+
+Paolo
+
+> Build-testing is not just "building". It's the "testing" of the build
+> too. You clearly never did _any_ testing of the build, since the build
+> had huge warnings.
+> 
+> Without the checking of the result, "build-testing" is just
+> "building", and completely irrelevant.
+> 
+> If you have problems seeing the warnings, add a "-Werror" to your scripts.
+>
+> I do not want to see a _single_ warning in the kernel build. Yes, we
+> have one in the samples code, and even that annoys the hell out of me.
+> 
+> And exactly because we don't have any warnings in the default build,
+> it should be really really easy to check for new ones - it's not like
+> you have to wade through pages of warnings to see if any of them are
+> your new ones.
+> 
+> So no "Oh come on". You did *zero* testing of this crap, and you need
+> to own that fact instead of making excuses about it.
+
