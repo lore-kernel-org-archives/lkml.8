@@ -2,96 +2,350 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F20BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DDAC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D59320661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4E120661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbgBLIpX (ORCPT
+        id S1728708AbgBLIpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:45:23 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:59551 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbgBLIpX (ORCPT
+        Wed, 12 Feb 2020 03:45:32 -0500
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:18970 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbgBLIpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:45:23 -0500
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MeTkC-1jbxsT3Bxc-00aRVf for <linux-kernel@vger.kernel.org>; Wed, 12 Feb
- 2020 09:45:21 +0100
-Received: by mail-qt1-f181.google.com with SMTP id w47so1006266qtk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:45:21 -0800 (PST)
-X-Gm-Message-State: APjAAAWZDsNYAMO9JWoL7ZxWUTgbF03wL97zE6AI1ETKgGn1GPDhlf0R
-        eAGOc8yN9i89i0eFXvMCGsyNRZWEvTahxId0+UY=
-X-Google-Smtp-Source: APXvYqyoiB7A3Z5YLF1Wd53jS5LTIXRFVCQ9olFobFpEFDhS8r385QfNMcHJIzO+HEvxYQEIiKZQU5rVVXj9rzffIH0=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr18306021qte.204.1581497120610;
- Wed, 12 Feb 2020 00:45:20 -0800 (PST)
+        Wed, 12 Feb 2020 03:45:32 -0500
+IronPort-SDR: 24Bkyj6AXkcB6CTZ0yoRi80odw824jcEeIMp+afykoSU27gvepLvej+lvQve5tFodQKlTzZy0c
+ yRZn8SUevMxX45OrW1VscAbe5QUTfV5AJ5G2AbZgM0aBbLHbDcWdsQ8PtLT2aNO0xLJrAt3Atf
+ +ZvDLC+/feU/iO/V7vIebHLxqAy5OA1v63BJWLClpW2N7NtF0C/6MXMDnrkjdXiL3uMxpwkR6y
+ FfTwdvkybE64h0dJQvbRzymlYwmLoE5Ag+Fvu3Ym9ERPqqOfMj1yvR+tZUpO0QThKIHRm688Uj
+ w9A=
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="45742570"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 12 Feb 2020 00:45:31 -0800
+IronPort-SDR: GjpDQenedTNKJ2alr3lyyRf5BnG/wPkK5AMJJ2dd6jEEkkdA7ib0db0lSE7kQUvIu08S++i+81
+ Uoo1jKKvc/1YIIqVG3pkr1fI+IqPKHXfR2eVxLrGi5ruIKTdDnNyFyIEiG0KjWufrh5eDpqtKv
+ 6oYaLHtz1R0eLdR6lxkpc5NqUunWAVAlyAbedMQ1zgAB47ZrcUdL0w3HUBPqCHH4ryo4CeKl6G
+ cY+nLMZ/oHyboUdjBe7v4w06dZW823obbD0nke5FavP4chh8fnvV60bOceIVnYaF6sXtyLUnyW
+ Bfc=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v7 24/48] Input: atmel_mxt_ts - make bootloader interrupt driven
+Date:   Wed, 12 Feb 2020 00:41:54 -0800
+Message-ID: <20200212084218.32344-25-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200212084218.32344-1-jiada_wang@mentor.com>
+References: <20200212084218.32344-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-References: <fe6868726b897fb7e89058d8e45985141260ed68.1581494174.git.michal.simek@xilinx.com>
- <CAK8P3a1kjK=fqJiPWPOG19pBEX+khAgVyMC-7AqT4BiH8dDn8g@mail.gmail.com> <6c931ed2-b03b-2e38-a10b-2d238e4b7a22@xilinx.com>
-In-Reply-To: <6c931ed2-b03b-2e38-a10b-2d238e4b7a22@xilinx.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 12 Feb 2020 09:45:04 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3xxu1wFKdsAHfuy2vpLigbuPR878mq75hh8HR=Tg=7LA@mail.gmail.com>
-Message-ID: <CAK8P3a3xxu1wFKdsAHfuy2vpLigbuPR878mq75hh8HR=Tg=7LA@mail.gmail.com>
-Subject: Re: [PATCH] microblaze: Fix unistd_32.h generation format
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:rNqGHMEjq0UvwIEDTO1Ijp9rnzU/a+F58iTCsxtVF2RkSipmwUN
- xv4m+RAQe7Qr2HNYywbwHPJePDkaq9OXVjINbn9yCOIYOk8Kopb5HthS19a0heJMtckh4Ni
- CWEX4wXvN0Ws5RN22j4Uz6rQQzNXS2dm9LU/JjkaufyaCj7wfjg/8SEkvPx7LO7AKklqhA/
- m2L2E1sI6ZOt1oZRLt9sg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I3GsEcsbuVY=:soUIOb8xaHVdalQWpanHIV
- agou2lApAnNHu6oYNaE8bDK2aj3CHEofuFyBp2z4Kawx0hRV2V/PfitR72rACVO1OOWksbGyh
- F1Qk5fPSx7rB+8CjufvchhX8hvm5mkcf9xNkBCCaib/xntMlEGvHp72ZoiNHt6BUW+VmeWidb
- LPPUc7gclWZ3M04P7cdNOpk7qaE5GS5I2u+jqCkgLOoh5bEHGZQdvxXEy+KdaVo6GTiBA9FTh
- r6VfBiJhhnbeweEcsJFBFyPiKlo+USmCe1nBAqSYltc3gG7wJ/8zvjJzwWnWilS0IfoM7czsv
- utpUxAJAsGjw/o+ATDSHtVXc8NSPrtK37imo2ZuEpaosEG6M5b/Akmc4TfODoI29uvBKcM9lF
- d3xdfj7QU9Fhd2doucORvvkgH1obOl/o2/zU2d3b7GDX230ApleIB8Be+SPrXINjiYE/BadUq
- OqB9BYDHSKob3lJaZ10741Cx9lOHJn7kvcPE7ZIq/sosFyTZuiN5CyCJmcIRp/zHg97SjwGz8
- +phgL3RQGjcJwLLbAcsyVRHkNuEIaQ8ydNNK0xz23TXNbae1exRh5clHy0i4xRnpX3QRzQ57h
- /KBtT0yaEvia56Nb7i7Z9CZdjAVjQMsrU2zrnWXFWSOYWs2AVycbQD4CcBP6m6Bd0RAch1ksL
- BuuSuaq6j6klXjqqgV8PcZJt7mdO71G247AzNYxXwWErylgoWzoauQDBh/dwBmIteZXt8arwG
- 6ZkOi9H6RSVrw9bTEUHMWqM7CmF8ACyVnTuwNVqCo0OqvXTGLsk8gZbPFuSOaWTFmnusY/oy2
- uvh5VFU5Yhag0/95SsDFFTQvFOjN/TRgzPhxcg5YwfYx86YQm0=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 9:42 AM Michal Simek <michal.simek@xilinx.com> wrote:
->
-> On 12. 02. 20 9:38, Arnd Bergmann wrote:
-> > On Wed, Feb 12, 2020 at 8:56 AM Michal Simek <michal.simek@xilinx.com> wrote:
-> >>
-> >> Generated files are also checked by sparse that's why add newline
-> >> to remove sparse (C=1) warning:
-> >> ./arch/microblaze/include/generated/uapi/asm/unistd_32.h:438:45:
-> >> warning: no newline at end of file
-> >>
-> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> >> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
-> >
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > The patch looks good, but if you don't mind respinning it, could respin
-> > it to do the same thing for all architectures at once? I see that  some
-> > already have it, but most don't.
->
-> I have not a problem to do so. I expect that this can be taken via your
-> tree that I can create only one patch. If this should go via
-> architectures tree would be better to create separate one.
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Yes, I can take that into the asm-generic tree, or maybe you can just send it
-to Andrew Morton.
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit 67a3eea0cfc724c3c2a7410ac064f74227c7c6ef)
+[gdavis: Resolve forward port conflicts due to applying upstream
+	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+	 data support").]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: Replace two use msecs_to_jiffies() instead of HZ,
+	remove check of &data->flash->work
+	don't poll to call mxt_check_bootloader() in mxt_check_bootloader()]
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 127 ++++++++++-------------
+ 1 file changed, 57 insertions(+), 70 deletions(-)
 
-       Arnd
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 2164da9a160c..07601539ac27 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -27,6 +27,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <asm/unaligned.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/workqueue.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+ #include <media/videobuf2-v4l2.h>
+@@ -218,6 +219,7 @@ enum t100_type {
+ #define MXT_REGULATOR_DELAY	150	/* msec */
+ #define MXT_CHG_DELAY	        100	/* msec */
+ #define MXT_POWERON_DELAY	150	/* msec */
++#define MXT_BOOTLOADER_WAIT	36E5	/* 1 minute */
+ 
+ /* Command to unlock bootloader */
+ #define MXT_UNLOCK_CMD_MSB	0xaa
+@@ -299,6 +301,7 @@ struct mxt_fw_frame {
+ 
+ /* Firmware update context */
+ struct mxt_flash {
++	struct mxt_data *data;
+ 	const struct firmware *fw;
+ 	struct mxt_fw_frame *frame;
+ 	loff_t pos;
+@@ -306,8 +309,8 @@ struct mxt_flash {
+ 	unsigned int count;
+ 	unsigned int retry;
+ 	u8 previous;
+-	bool complete;
+-	bool wait;
++	struct completion flash_completion;
++	struct delayed_work work;
+ };
+ 
+ /* Each client has this additional data */
+@@ -356,6 +359,7 @@ struct mxt_data {
+ 	char *cfg_name;
+ 	const char *pcfg_name;
+ 	const char *input_name;
++	struct mxt_flash *flash;
+ 
+ 	/* Cached parameters from object table */
+ 	u16 T5_address;
+@@ -600,35 +604,19 @@ static int mxt_write_firmware_frame(struct mxt_data *data, struct mxt_flash *f)
+ 				   f->frame_size);
+ }
+ 
+-static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
++static int mxt_check_bootloader(struct mxt_data *data)
+ {
+ 	struct device *dev = &data->client->dev;
++	struct mxt_flash *f = data->flash;
+ 	u8 state;
+ 	int ret;
+ 
+-	if (f->wait) {
+-		/*
+-		 * In application update mode, the interrupt
+-		 * line signals state transitions. We must wait for the
+-		 * CHG assertion before reading the status byte.
+-		 * Once the status byte has been read, the line is deasserted.
+-		 */
+-		ret = mxt_wait_for_completion(data, &data->chg_completion,
+-					      MXT_FW_CHG_TIMEOUT);
+-		if (ret) {
+-			/*
+-			 * TODO: handle -ERESTARTSYS better by terminating
+-			 * fw update process before returning to userspace
+-			 * by writing length 0x000 to device (iff we are in
+-			 * WAITING_FRAME_DATA state).
+-			 */
+-			dev_warn(dev, "Update wait error %d\n", ret);
+-			return ret;
+-		}
++	/* Handle interrupt after download/flash process */
++	if (f->pos >= f->fw->size) {
++		complete(&f->flash_completion);
++		return 0;
+ 	}
+ 
+-	f->wait = false;
+-
+ 	ret = mxt_bootloader_read(data, &state, 1);
+ 	if (ret)
+ 		return ret;
+@@ -643,7 +631,6 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
+ 		ret = mxt_send_bootloader_cmd(data, true);
+ 		if (ret)
+ 			return ret;
+-		f->wait = true;
+ 
+ 		break;
+ 
+@@ -657,14 +644,11 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
+ 		if (ret)
+ 			return ret;
+ 
+-		f->wait = true;
+-
+ 		break;
+ 
+ 	case MXT_FRAME_CRC_CHECK:
+ 		if (f->previous != MXT_WAITING_FRAME_DATA)
+ 			goto unexpected;
+-		f->wait = true;
+ 		break;
+ 
+ 	case MXT_FRAME_CRC_PASS:
+@@ -675,16 +659,13 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
+ 		f->retry = 0;
+ 		f->pos += f->frame_size;
+ 		f->count++;
+-		f->wait = true;
+ 
+-		if (f->pos >= f->fw->size) {
+-			f->complete = true;
++		if (f->pos >= f->fw->size)
+ 			dev_info(dev, "Sent %u frames, %zu bytes\n",
+ 				f->count, f->fw->size);
+-		} else if (f->count % 50 == 0) {
++		else if (f->count % 50 == 0)
+ 			dev_dbg(dev, "Sent %u frames, %lld/%zu bytes\n",
+ 				f->count, f->pos, f->fw->size);
+-		}
+ 
+ 		break;
+ 
+@@ -697,7 +678,6 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
+ 		/* Back off by 20ms per retry */
+ 		dev_dbg(dev, "Bootloader frame CRC failure\n");
+ 		f->retry++;
+-		f->wait = true;
+ 		msleep(f->retry * 20);
+ 		break;
+ 
+@@ -1415,7 +1395,11 @@ static irqreturn_t mxt_interrupt(int irq, void *dev_id)
+ 
+ 	if (data->in_bootloader) {
+ 		complete(&data->chg_completion);
+-		return IRQ_HANDLED;
++
++		if (data->flash)
++			cancel_delayed_work_sync(&data->flash->work);
++
++		return IRQ_RETVAL(mxt_check_bootloader(data));
+ 	}
+ 
+ 	if (!data->object_table)
+@@ -3316,16 +3300,13 @@ static int mxt_enter_bootloader(struct mxt_data *data)
+ 		if (data->suspend_mode == MXT_SUSPEND_REGULATOR)
+ 			mxt_regulator_enable(data);
+ 
+-		if (data->suspend_mode == MXT_SUSPEND_DEEP_SLEEP)
+-			enable_irq(data->irq);
+-
+ 		data->suspended = false;
+ 	}
+ 
+ 	if (!data->in_bootloader) {
+-		/* Change to the bootloader mode */
+-		data->in_bootloader = true;
++		disable_irq(data->irq);
+ 
++		/* Change to the bootloader mode */
+ 		ret = mxt_t6_command(data, MXT_COMMAND_RESET,
+ 				     MXT_BOOT_VALUE, false);
+ 		if (ret)
+@@ -3338,67 +3319,73 @@ static int mxt_enter_bootloader(struct mxt_data *data)
+ 		if (ret)
+ 			return ret;
+ 
++		data->in_bootloader = true;
+ 		mxt_sysfs_remove(data);
+ 		mxt_free_input_device(data);
+ 		mxt_free_object_table(data);
+-	} else {
+-		enable_irq(data->irq);
+ 	}
+ 
+-	reinit_completion(&data->chg_completion);
++	dev_dbg(&data->client->dev, "Entered bootloader\n");
+ 
+ 	return 0;
+ }
+ 
++static void mxt_fw_work(struct work_struct *work)
++{
++	struct mxt_flash *f =
++		container_of(work, struct mxt_flash, work.work);
++
++	mxt_check_bootloader(f->data);
++}
++
+ static int mxt_load_fw(struct device *dev)
+ {
+ 	struct mxt_data *data = dev_get_drvdata(dev);
+-	struct mxt_flash f = { 0, };
+ 	int ret;
+ 
+-	ret = request_firmware(&f.fw, data->fw_name, dev);
++	data->flash = devm_kzalloc(dev, sizeof(struct mxt_flash), GFP_KERNEL);
++	if (!data->flash)
++		return -ENOMEM;
++
++	data->flash->data = data;
++
++	ret = request_firmware(&data->flash->fw, data->fw_name, dev);
+ 	if (ret) {
+ 		dev_err(dev, "Unable to open firmware %s\n", data->fw_name);
+-		return ret;
++		goto free;
+ 	}
+ 
+ 	/* Check for incorrect enc file */
+-	ret = mxt_check_firmware_format(dev, f.fw);
++	ret = mxt_check_firmware_format(dev, data->flash->fw);
+ 	if (ret)
+ 		goto release_firmware;
+ 
+-	ret = mxt_enter_bootloader(data);
+-	if (ret)
+-		goto release_firmware;
++	init_completion(&data->flash->flash_completion);
++	INIT_DELAYED_WORK(&data->flash->work, mxt_fw_work);
++	reinit_completion(&data->flash->flash_completion);
+ 
+-	while (true) {
+-		ret = mxt_check_bootloader(data, &f);
++	if (!data->in_bootloader) {
++		ret = mxt_enter_bootloader(data);
+ 		if (ret)
+-			return ret;
+-
+-		if (f.complete)
+-			break;
++			goto release_firmware;
+ 	}
+ 
+-	/* Wait for flash. */
+-	ret = mxt_wait_for_completion(data, &data->chg_completion,
+-				      MXT_FW_RESET_TIME);
+-	if (ret)
+-		goto disable_irq;
++	enable_irq(data->irq);
+ 
++	/* Poll after 0.1s if no interrupt received */
++	schedule_delayed_work(&data->flash->work, msecs_to_jiffies(100));
+ 
+-	/*
+-	 * Wait for device to reset. Some bootloader versions do not assert
+-	 * the CHG line after bootloading has finished, so ignore potential
+-	 * errors.
+-	 */
+-	mxt_wait_for_completion(data, &data->chg_completion, MXT_FW_RESET_TIME);
++	/* Wait for flash. */
++	ret = mxt_wait_for_completion(data, &data->flash->flash_completion,
++				      MXT_BOOTLOADER_WAIT);
+ 
+-	data->in_bootloader = false;
+-disable_irq:
+ 	disable_irq(data->irq);
++	cancel_delayed_work_sync(&data->flash->work);
++	data->in_bootloader = false;
+ release_firmware:
+-	release_firmware(f.fw);
++	release_firmware(data->flash->fw);
++free:
++	devm_kfree(dev, data->flash);
+ 	return ret;
+ }
+ 
+-- 
+2.17.1
+
