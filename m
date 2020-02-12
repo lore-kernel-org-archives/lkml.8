@@ -2,112 +2,308 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DFEC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE15AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7416E21739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581537827;
-	bh=Zf7NBUAek1yLzN1x6/9lISUJiqE/o1AkQy75wlqY+I0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Kw1Rj+lKctaCoRLmrrTaFBUgS/7UEG9vMDXVgeuhRjTYqpq1awS4SsC16BL0K+/22
-	 p/J5mLdpuCz5Pp48GDlYTmi6H9Ci8LcZrPJ3iGmT+GhWS/bvC7FjMsCSg4CjT97Zqu
-	 bDU724o28LpP3bD0IQJhuWl8MAHRG+iBZSa5hjmQ=
+	by mail.kernel.org (Postfix) with ESMTP id C08EB218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgBLUDr (ORCPT
+        id S1729082AbgBLUEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:03:47 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39962 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgBLUDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:03:46 -0500
-Received: by mail-lf1-f66.google.com with SMTP id c23so2505043lfi.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:03:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BPPHdbNaIkwiUwi0XK7V81BmqTqsxD9Wh/eCAuOFZ7c=;
-        b=edEbWD8VWSEo0ZJ6AJhYjMiocwqPWZuh1eMEPANkqs/U4/0xnwRt7xq+7HnenPiGeJ
-         VFphHJXoMrc/FwJ+qGT7Ukw5K8rPi428h9mf6Q5VDFjXFC52E+csZrxYeIflstJkvyxz
-         55c6XXfz4qcfrKgrhUQu/+BijxMyjycSx/JE8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BPPHdbNaIkwiUwi0XK7V81BmqTqsxD9Wh/eCAuOFZ7c=;
-        b=WYKAS3TMw8ktB7ZldVI9NP3am0LjMD8ROXiax5fLlKflRVP69P51tpe1Nqg6kCcp5x
-         13GEj8W+F4FLEtIKusOwtmK1qu85jywqAgsdvEqKnds6fCftRz9cA8QxEYqrTF9ySzdi
-         5deRnSi0O5Yj3gTfRcOO0w/ZAG+/Mr2/zVaseHyMfCi/Kc9lmzeKv+Fi530gtvhg9cMc
-         NK01WcEbkasSGbbp202XpJMZiTGOhLIfOtDaxbKnBMkI45KSmittbZgbZ54CCJx8CT9L
-         kB/o94Wkcs3oqUN8QreOCnYl9+w8p9RKGrKD5jOG2qtt6PohpPnoveVm+OeDJrJcF1Hy
-         8LHA==
-X-Gm-Message-State: APjAAAXi7IcgFdb6l3DwQyWEXvI+MiNu74s+h71AnR9KIGdyQiabnRZu
-        Ini2pwTDet2+bC261cieLMy1YU9m7To=
-X-Google-Smtp-Source: APXvYqx2ADEwD/Xh1Y2Ww/lpQ7t9cQfjl6n3jCgyzd3/ZjXQBsZIcio8b07nTcTjdhCMQOldIcQ9ng==
-X-Received: by 2002:ac2:52a5:: with SMTP id r5mr7470050lfm.19.1581537824190;
-        Wed, 12 Feb 2020 12:03:44 -0800 (PST)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id f16sm104445ljn.17.2020.02.12.12.03.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 12:03:43 -0800 (PST)
-Received: by mail-lj1-f179.google.com with SMTP id y6so3823164lji.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:03:43 -0800 (PST)
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr8860316ljk.201.1581537822998;
- Wed, 12 Feb 2020 12:03:42 -0800 (PST)
+        Wed, 12 Feb 2020 15:04:23 -0500
+Received: from relay.sw.ru ([185.231.240.75]:47892 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727600AbgBLUEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:04:22 -0500
+Received: from [192.168.15.120]
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j1yEt-0007oX-5E; Wed, 12 Feb 2020 23:04:03 +0300
+Subject: Re: [PATCH v6 4/6] block: Add support for REQ_ALLOCATE flag
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <158132703141.239613.3550455492676290009.stgit@localhost.localdomain>
+ <158132723311.239613.5269033996109738831.stgit@localhost.localdomain>
+ <20200212165837.GL6874@magnolia>
+ <092f2dc2-7bb7-d5dd-9a54-e9430940ece9@virtuozzo.com>
+ <20200212183129.GO6874@magnolia>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <45b40cef-eabf-0699-50a6-c9a3b2fc4bdd@virtuozzo.com>
+Date:   Wed, 12 Feb 2020 23:04:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200208083604.GA86051@localhost>
-In-Reply-To: <20200208083604.GA86051@localhost>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 12 Feb 2020 12:03:26 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whdiabQ0dqVDJ0_5dfur7f2D5oESCjv34f4svrK3RJj=w@mail.gmail.com>
-Message-ID: <CAHk-=whdiabQ0dqVDJ0_5dfur7f2D5oESCjv34f4svrK3RJj=w@mail.gmail.com>
-Subject: Re: Applying pipe fix this merge window?
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200212183129.GO6874@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 8, 2020 at 12:36 AM Josh Triplett <josh@joshtriplett.org> wrote:
->
-> I've been hammering on your pipe fix patch (switching to exclusive wait
-> queues) for a month or so, on several different systems, and I've run
-> into no issues with it. The patch *substantially* improves parallel
-> build times on large (~100 CPU) systems, both with parallel make and
-> with other things that use make's pipe-based jobserver.
+On 12.02.2020 21:31, Darrick J. Wong wrote:
+> On Wed, Feb 12, 2020 at 08:33:52PM +0300, Kirill Tkhai wrote:
+>> Hi, Darrick,
+>>
+>> On 12.02.2020 19:58, Darrick J. Wong wrote:
+>>> On Mon, Feb 10, 2020 at 12:33:53PM +0300, Kirill Tkhai wrote:
+>>>> This adds support for REQ_ALLOCATE extension of REQ_OP_WRITE_ZEROES
+>>>> operation, which encourages a block device driver to just allocate
+>>>> blocks (or mark them allocated) instead of actual blocks zeroing.
+>>>> REQ_ALLOCATE is aimed to be used for network filesystems providing
+>>>> a block device interface. Also, block devices, which map a file
+>>>> on other filesystem (like loop), may use this for less fragmentation
+>>>> and batching fallocate() requests. Hypervisors like QEMU may
+>>>> introduce optimizations of clusters allocations based on this.
+>>>>
+>>>> BLKDEV_ZERO_ALLOCATE is a new corresponding flag for
+>>>> blkdev_issue_zeroout().
+>>>>
+>>>> Stacking devices start from zero max_allocate_sectors limit for now,
+>>>> and the support is going to be implemented separate for each device
+>>>> in the future.
+>>>>
+>>>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>>> Reviewed-by: Bob Liu <bob.liu@oracle.com>
+>>>> ---
+>>>>  block/blk-lib.c           |   17 ++++++++++-------
+>>>>  block/blk-settings.c      |    4 ++++
+>>>>  fs/block_dev.c            |    4 ++++
+>>>>  include/linux/blk_types.h |    5 ++++-
+>>>>  include/linux/blkdev.h    |   13 ++++++++++---
+>>>>  5 files changed, 32 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/block/blk-lib.c b/block/blk-lib.c
+>>>> index 3e38c93cfc53..9cd6f86523ba 100644
+>>>> --- a/block/blk-lib.c
+>>>> +++ b/block/blk-lib.c
+>>>> @@ -214,7 +214,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
+>>>>  		struct bio **biop, unsigned flags)
+>>>>  {
+>>>>  	struct bio *bio = *biop;
+>>>> -	unsigned int max_write_zeroes_sectors;
+>>>> +	unsigned int max_write_zeroes_sectors, req_flags = 0;
+>>>>  	struct request_queue *q = bdev_get_queue(bdev);
+>>>>  
+>>>>  	if (!q)
+>>>> @@ -224,18 +224,21 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
+>>>>  		return -EPERM;
+>>>>  
+>>>>  	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
+>>>> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
+>>>> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, flags);
+>>>>  
+>>>>  	if (max_write_zeroes_sectors == 0)
+>>>>  		return -EOPNOTSUPP;
+>>>>  
+>>>> +	if (flags & BLKDEV_ZERO_NOUNMAP)
+>>>> +		req_flags |= REQ_NOUNMAP;
+>>>> +	if (flags & BLKDEV_ZERO_ALLOCATE)
+>>>> +		req_flags |= REQ_ALLOCATE|REQ_NOUNMAP;
+>>>> +
+>>>>  	while (nr_sects) {
+>>>>  		bio = blk_next_bio(bio, 0, gfp_mask);
+>>>>  		bio->bi_iter.bi_sector = sector;
+>>>>  		bio_set_dev(bio, bdev);
+>>>> -		bio->bi_opf = REQ_OP_WRITE_ZEROES;
+>>>> -		if (flags & BLKDEV_ZERO_NOUNMAP)
+>>>> -			bio->bi_opf |= REQ_NOUNMAP;
+>>>> +		bio->bi_opf = REQ_OP_WRITE_ZEROES | req_flags;
+>>>>  
+>>>>  		if (nr_sects > max_write_zeroes_sectors) {
+>>>>  			bio->bi_iter.bi_size = max_write_zeroes_sectors << 9;
+>>>> @@ -362,7 +365,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+>>>>  	sector_t bs_mask;
+>>>>  	struct bio *bio;
+>>>>  	struct blk_plug plug;
+>>>> -	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
+>>>> +	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, flags);
+>>>>  
+>>>>  	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
+>>>>  	if ((sector | nr_sects) & bs_mask)
+>>>> @@ -391,7 +394,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+>>>>  			try_write_zeroes = false;
+>>>>  			goto retry;
+>>>>  		}
+>>>> -		if (!bdev_write_zeroes_sectors(bdev, 0)) {
+>>>> +		if (!bdev_write_zeroes_sectors(bdev, flags)) {
+>>>>  			/*
+>>>>  			 * Zeroing offload support was indicated, but the
+>>>>  			 * device reported ILLEGAL REQUEST (for some devices
+>>>> diff --git a/block/blk-settings.c b/block/blk-settings.c
+>>>> index c8eda2e7b91e..8d5df9d37239 100644
+>>>> --- a/block/blk-settings.c
+>>>> +++ b/block/blk-settings.c
+>>>> @@ -48,6 +48,7 @@ void blk_set_default_limits(struct queue_limits *lim)
+>>>>  	lim->chunk_sectors = 0;
+>>>>  	lim->max_write_same_sectors = 0;
+>>>>  	lim->max_write_zeroes_sectors = 0;
+>>>> +	lim->max_allocate_sectors = 0;
+>>>>  	lim->max_discard_sectors = 0;
+>>>>  	lim->max_hw_discard_sectors = 0;
+>>>>  	lim->discard_granularity = 0;
+>>>> @@ -83,6 +84,7 @@ void blk_set_stacking_limits(struct queue_limits *lim)
+>>>>  	lim->max_dev_sectors = UINT_MAX;
+>>>>  	lim->max_write_same_sectors = UINT_MAX;
+>>>>  	lim->max_write_zeroes_sectors = UINT_MAX;
+>>>> +	lim->max_allocate_sectors = 0;
+>>>>  }
+>>>>  EXPORT_SYMBOL(blk_set_stacking_limits);
+>>>>  
+>>>> @@ -506,6 +508,8 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+>>>>  					b->max_write_same_sectors);
+>>>>  	t->max_write_zeroes_sectors = min(t->max_write_zeroes_sectors,
+>>>>  					b->max_write_zeroes_sectors);
+>>>> +	t->max_allocate_sectors = min(t->max_allocate_sectors,
+>>>> +					b->max_allocate_sectors);
+>>>>  	t->bounce_pfn = min_not_zero(t->bounce_pfn, b->bounce_pfn);
+>>>>  
+>>>>  	t->seg_boundary_mask = min_not_zero(t->seg_boundary_mask,
+>>>> diff --git a/fs/block_dev.c b/fs/block_dev.c
+>>>> index 69bf2fb6f7cd..1ffef894b3bd 100644
+>>>> --- a/fs/block_dev.c
+>>>> +++ b/fs/block_dev.c
+>>>> @@ -2122,6 +2122,10 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
+>>>>  		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
+>>>>  					     GFP_KERNEL, BLKDEV_ZERO_NOFALLBACK);
+>>>>  		break;
+>>>> +	case FALLOC_FL_KEEP_SIZE:
+>>>> +		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
+>>>> +			GFP_KERNEL, BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
+>>>
+>>> I think this should be ^^^ indented to match the other calls.
+>>
+>> The only idea I have about this is something like the below. But the below is over 90 char...
+>>
+>> 		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
+>> 					     GFP_KERNEL,
+>> 					     BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
+>>
+>> Could you please clarify what you mean?
+> 
+> I mostly meant that the indent for the nth lines ought to be more than a
+> single indent to make it easier to scan through the code, but you're
+> right, the kernel indentation style is uglier.  I could suggest
+> something like this, which actually does fit:
+> 
+> 	case FALLOC_FL_KEEP_SIZE:
+> 		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
+> 				GFP_KERNEL,
+> 				BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
+> 		break;
+> 
+> But that's apparently apocryphal. :/
 
-Hmm. I just applied the doc fix that Randy sent, and that made me
-revisit this commit and the commit message.
+Just to mention.
 
-And I realized that I find it surprising that it makes your build
-times noticeably better.
+We could also introduce BLKDEV_ZERO_ALLOCATE_NOFALLBACK, which is combination
+of both bits. But this does not look good for me, since this make grep over
+kernel code more difficult. And it won't good to introduce a new identifier
+for a single place.
 
-Yes, I have that silly example program to show the issue in the commit
-message, and yes, the exclusive directed write->read wakeups should
-most definitely improve by that commit.
+> --D
+> 
+>>>>  	case FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE | FALLOC_FL_NO_HIDE_STALE:
+>>>>  		error = blkdev_issue_discard(bdev, start >> 9, len >> 9,
+>>>>  					     GFP_KERNEL, 0);
+>>>> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+>>>> index 70254ae11769..86accd2caa4e 100644
+>>>> --- a/include/linux/blk_types.h
+>>>> +++ b/include/linux/blk_types.h
+>>>> @@ -335,7 +335,9 @@ enum req_flag_bits {
+>>>>  
+>>>>  	/* command specific flags for REQ_OP_WRITE_ZEROES: */
+>>>>  	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
+>>>> -
+>>>> +	__REQ_ALLOCATE,		/* only notify about allocated blocks,
+>>>> +				 * and do not actually zero them
+>>>
+>>> "only notify"?  Is someone getting a notification?  Or are we simply
+>>> "notifying" the device that it must ensure allocated blocks?
+>>>
+>>> If it's that last one, then perhaps this should be reworded:
+>>>
+>>> /*
+>>>  * Ensure the LBA range is backed by physical storage
+>>>  * without writing zeroes to the blocks.
+>>>  */
+>>
+>> Sounds good.
+>>  
+>>>> +				 */
+>>>>  	__REQ_HIPRI,
+>>>>  
+>>>>  	/* for driver use */
+>>>> @@ -362,6 +364,7 @@ enum req_flag_bits {
+>>>>  #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
+>>>>  
+>>>>  #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
+>>>> +#define REQ_ALLOCATE		(1ULL << __REQ_ALLOCATE)
+>>>>  #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
+>>>>  
+>>>>  #define REQ_DRV			(1ULL << __REQ_DRV)
+>>>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+>>>> index 55a714161684..40707f980a2e 100644
+>>>> --- a/include/linux/blkdev.h
+>>>> +++ b/include/linux/blkdev.h
+>>>> @@ -336,6 +336,7 @@ struct queue_limits {
+>>>>  	unsigned int		max_hw_discard_sectors;
+>>>>  	unsigned int		max_write_same_sectors;
+>>>>  	unsigned int		max_write_zeroes_sectors;
+>>>> +	unsigned int		max_allocate_sectors;
+>>>>  	unsigned int		discard_granularity;
+>>>>  	unsigned int		discard_alignment;
+>>>>  
+>>>> @@ -990,6 +991,8 @@ static inline struct bio_vec req_bvec(struct request *rq)
+>>>>  static inline unsigned int blk_queue_get_max_write_zeroes_sectors(
+>>>>  		struct request_queue *q, unsigned int op_flags)
+>>>>  {
+>>>> +	if (op_flags & REQ_ALLOCATE)
+>>>> +		return q->limits.max_allocate_sectors;
+>>>>  	return q->limits.max_write_zeroes_sectors;
+>>>>  }
+>>>>  
+>>>> @@ -1226,6 +1229,7 @@ extern int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+>>>>  
+>>>>  #define BLKDEV_ZERO_NOUNMAP	(1 << 0)  /* do not free blocks */
+>>>>  #define BLKDEV_ZERO_NOFALLBACK	(1 << 1)  /* don't write explicit zeroes */
+>>>> +#define BLKDEV_ZERO_ALLOCATE	(1 << 2)  /* allocate range of blocks */
+>>>>  
+>>>>  extern int __blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+>>>>  		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop,
+>>>> @@ -1430,10 +1434,13 @@ static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev,
+>>>>  {
+>>>>  	struct request_queue *q = bdev_get_queue(bdev);
+>>>>  
+>>>> -	if (q)
+>>>> -		return q->limits.max_write_zeroes_sectors;
+>>>> +	if (!q)
+>>>> +		return 0;
+>>>>  
+>>>> -	return 0;
+>>>> +	if (flags & BLKDEV_ZERO_ALLOCATE)
+>>>> +		return q->limits.max_allocate_sectors;
+>>>> +	else
+>>>> +		return q->limits.max_write_zeroes_sectors;
+>>>>  }
+>>>>  
+>>>>  static inline enum blk_zoned_model bdev_zoned_model(struct block_device *bdev)
+>>>>
+>>>>
+>>
+>> Thanks,
+>> Kirill
 
-But the make jobserver code ends up using "poll()/pselect()" and
-non-blocking reads, because of how it handles the child death signals.
-
-Which means that none of the nice exclusive directed write->read
-wakeups should even trigger in the first place, because the readers
-never block, and he poll/pselect code doesn't use exclusive wakeups
-(because it can't - it doesn't actually consume the data).
-
-So I was looking at it, and going "it should actually not help GNU
-jobserver at all" in the fixed jobserver case.
-
-So humor me, Josh - can you try to figure out why your numbers changed
-for this commit?
-
-                Linus
