@@ -2,104 +2,254 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDB8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94227C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DF820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C1820714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez55nzmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgBLQqd (ORCPT
+        id S1728716AbgBLQrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:46:33 -0500
-Received: from mga17.intel.com ([192.55.52.151]:64817 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgBLQqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:46:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 08:46:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
-   d="scan'208";a="226920523"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 12 Feb 2020 08:46:30 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j1v9f-000yCc-3l; Wed, 12 Feb 2020 18:46:27 +0200
-Date:   Wed, 12 Feb 2020 18:46:27 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        keescook@chromium.org, tobin@kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH] lib/string: update match_string() doc-strings with
- correct behavior
-Message-ID: <20200212164627.GU10400@smile.fi.intel.com>
-References: <20200212144723.21884-1-alexandru.ardelean@analog.com>
+        Wed, 12 Feb 2020 11:47:20 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36631 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgBLQrU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:47:20 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so3321933wma.1;
+        Wed, 12 Feb 2020 08:47:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SKa1ymo+xngGE1G8vLfgl5ipgmzkjWe5i0UrcJ3bDbg=;
+        b=ez55nzmnkWrb3vr0b+5+L+ycOVeUN9d3D+SLIAR0TxouAQE1Gbx+THHba3B2V2tBC6
+         Pf9V4VLD1XaHpucds2KmvV9e6wXIwrhn4xRG3vqFSQkkGQXnW1Vrumz/wsrFUcRTmFes
+         ehpHRlGdZaCLJXhPOscGWSI19bXg44OrRehMBiMVqWnV6kKnwzBwYMtcN7oGK5jugVRG
+         cz5iGTm9KndW6u/O7PyF5heOTNl8XgXWGb5NXnxDi3YBJzkcKl2Hq4MKDunlIWznzIjy
+         y+g2XO+QnsvfXrZPkeAXZ3iySAmvLwhniHxsZHpTwfa7kYgUFoY1XTP8PjwdanFLskg6
+         OIWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=SKa1ymo+xngGE1G8vLfgl5ipgmzkjWe5i0UrcJ3bDbg=;
+        b=JyqoNiYhsx16pFBXsnK8UtEmituAHBFvUuCnhyYNX7yhI9Qpg/tJDaP/AD+Iblk5+/
+         Xy57jSXsciPK9fyCPA2TyQa7lPizgZtmu1nv5G5QtDAQf5OcySJz2g2P8vvh+05Lnulq
+         DtCQSpjfZgOZCItkkGQQeEY2FLepvCFXqO5KwaXqgKI7ZaBGMPRQsGhNIdn5prWS1hhj
+         f+8zdR2HEU0lgIo2SZlGc+IAUzKdyMQTQFJ4ckWo7YiqcBA74xW4HzHgNcv0AOrupada
+         7+kLcvVXKfN5/BHoiG5dBcTJZFslV3nf9Gft4eL1dexirXysyUt+Jhs2FzlVtE/3TbCI
+         E/BA==
+X-Gm-Message-State: APjAAAU60c5aWQcf8ZYdYY53MqU9LlNy2peS0G3UMjjVKyysMeNeMUGs
+        FuUvAkfZbewKu+tlxJFawCOrk1Dk
+X-Google-Smtp-Source: APXvYqxU40wrpOGbIh/LNi+TIAmqKs8utMpQWCPonG4hKQ8YbENmX1w/ToLcug8AO0gsvmkWOKBN2Q==
+X-Received: by 2002:a1c:a5c7:: with SMTP id o190mr7684561wme.183.1581526036591;
+        Wed, 12 Feb 2020 08:47:16 -0800 (PST)
+Received: from donizetti.fritz.box ([151.30.86.140])
+        by smtp.gmail.com with ESMTPSA id 16sm1436726wmi.0.2020.02.12.08.47.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 08:47:15 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        rkrcmar@kernel.org
+Subject: [GIT PULL] KVM changes for Linux 5.6-rc2
+Date:   Wed, 12 Feb 2020 17:47:14 +0100
+Message-Id: <20200212164714.7733-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212144723.21884-1-alexandru.ardelean@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 04:47:23PM +0200, Alexandru Ardelean wrote:
-> There were a few attempts at changing behavior of the match_string()
-> helpers (i.e. 'match_string()' & 'sysfs_match_string()'), to change &
-> extend the behavior according to the doc-string.
-> 
-> But the simplest approach is to just fix the doc-strings. The current
-> behavior is fine as-is, and some bugs were introduced trying to fix it.
-> 
-> As for extending the behavior, new helpers can always be introduced if
-> needed.
-> 
-> The match_string() helpers behave more like 'strncmp()' in the sense that
-> they go up to n elements or until the first NULL element in the array of
-> strings.
-> 
-> This change updates the doc-strings with this info.
-> 
-> Some references to the previous attempts (in no particular order):
->   https://lore.kernel.org/lkml/20190508111913.7276-1-alexandru.ardelean@analog.com/
->   https://lore.kernel.org/lkml/20190625130104.29904-1-alexandru.ardelean@analog.com/
->   https://lore.kernel.org/lkml/20190422083257.21805-1-alexandru.ardelean@analog.com/
+Linus,
 
-...
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
->  /**
->   * match_string - matches given string in an array
->   * @array:	array of strings
-> - * @n:		number of strings in the array or -1 for NULL terminated arrays
-> + * @n:		number of strings in the array to compare
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-But this change won't be helpful, it actually hides the part of behaviour that
-is being used.
+are available in the Git repository at:
 
->   * @string:	string to match with
->   *
-> + * This routine will look for a string in an array of strings up to the
-> + * n-th element in the array or until the first NULL element.
-> + *
+  git://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-Perhaps this needs to be rephrased. Because now it has completely hidden the -1 case.
+for you to fetch changes up to c4c3fdc9c43b77f1b99c71d6edda8e20d00c3e2d:
 
->   * Return:
->   * index of a @string in the @array if matches, or %-EINVAL otherwise.
->   */
+  docs: virt: guest-halt-polling.txt convert to ReST (2020-02-12 14:33:07 +0100)
 
-Ditto for the second part.
+----------------------------------------------------------------
+A mix of cleanups and bugfixes, some of them slightly more invasive than usual
+but still not worth waiting for 5.7.  On top of this, Mauro converted the
+KVM documentation to rst format, which was very welcome, and Eric ported
+the selftests infrastructure to nested AMD virtualization (which will come
+in handy when adding nested live migration support, as it did for Intel).
 
--- 
-With Best Regards,
-Andy Shevchenko
+----------------------------------------------------------------
+Eric Auger (4):
+      selftests: KVM: Replace get_{gdt,idt}_base() by get_{gdt,idt}()
+      selftests: KVM: AMD Nested test infrastructure
+      selftests: KVM: SVM: Add vmcall test
+      selftests: KVM: Remove unused x86_register enum
 
+Marc Zyngier (1):
+      KVM: Disable preemption in kvm_get_running_vcpu()
 
+Mauro Carvalho Chehab (28):
+      docs: kvm: add arm/pvtime.rst to index.rst
+      docs: virt: convert UML documentation to ReST
+      docs: virt: user_mode_linux.rst: update compiling instructions
+      docs: virt: user_mode_linux.rst: fix URL references
+      docs: virt: convert halt-polling.txt to ReST format
+      docs: virt: Convert msr.txt to ReST format
+      docs: kvm: devices/arm-vgic-its.txt to ReST format
+      docs: kvm: devices/arm-vgit-v3.txt to ReST
+      docs: kvm: convert devices/arm-vgit.txt to ReST
+      docs: kvm: convert devices/mpic.txt to ReST
+      docs: kvm: convert devices/s390_flic.txt to ReST
+      docs: kvm: convert devices/vcpu.txt to ReST
+      docs: kvm: convert devices/vfio.txt to ReST
+      docs: kvm: convert devices/vm.txt to ReST
+      docs: kvm: convert devices/xics.txt to ReST
+      docs: kvm: convert devices/xive.txt to ReST
+      docs: kvm: Convert api.txt to ReST format
+      docs: kvm: convert arm/hyp-abi.txt to ReST
+      docs: kvm: arm/psci.txt: convert to ReST
+      docs: kvm: Convert hypercalls.txt to ReST format
+      docs: kvm: Convert locking.txt to ReST format
+      docs: kvm: Convert mmu.txt to ReST format
+      docs: kvm: Convert nested-vmx.txt to ReST format
+      docs: kvm: Convert ppc-pv.txt to ReST format
+      docs: kvm: Convert s390-diag.txt to ReST format
+      docs: kvm: Convert timekeeping.txt to ReST format
+      docs: kvm: review-checklist.txt: rename to ReST
+      docs: virt: guest-halt-polling.txt convert to ReST
+
+Miaohe Lin (3):
+      KVM: x86: remove duplicated KVM_REQ_EVENT request
+      KVM: apic: reuse smp_wmb() in kvm_make_request()
+      KVM: nVMX: Fix some comment typos and coding style
+
+Oliver Upton (4):
+      KVM: x86: Mask off reserved bit from #DB exception payload
+      KVM: nVMX: Handle pending #DB when injecting INIT VM-exit
+      KVM: x86: Deliver exception payload on KVM_GET_VCPU_EVENTS
+      KVM: nVMX: Emulate MTF when performing instruction emulation
+
+Paolo Bonzini (2):
+      KVM: x86: do not reset microcode version on INIT or RESET
+      KVM: x86: fix WARN_ON check of an unsigned less than zero
+
+Peter Xu (4):
+      KVM: Provide kvm_flush_remote_tlbs_common()
+      KVM: MIPS: Drop flush_shadow_memslot() callback
+      KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
+      KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
+
+Sean Christopherson (6):
+      KVM: x86/mmu: Avoid retpoline on ->page_fault() with TDP
+      KVM: nVMX: Use correct root level for nested EPT shadow page tables
+      KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+      KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
+      KVM: nVMX: Rename EPTP validity helper and associated variables
+      KVM: nVMX: Drop unnecessary check on ept caps for execute-only
+
+ .../guest-halt-polling.rst}                        |   12 +-
+ Documentation/virt/index.rst                       |    2 +
+ Documentation/virt/kvm/{api.txt => api.rst}        | 3350 ++++++++++++--------
+ .../virt/kvm/arm/{hyp-abi.txt => hyp-abi.rst}      |   28 +-
+ Documentation/virt/kvm/arm/index.rst               |   12 +
+ Documentation/virt/kvm/arm/{psci.txt => psci.rst}  |   46 +-
+ .../devices/{arm-vgic-its.txt => arm-vgic-its.rst} |  106 +-
+ .../devices/{arm-vgic-v3.txt => arm-vgic-v3.rst}   |  132 +-
+ .../kvm/devices/{arm-vgic.txt => arm-vgic.rst}     |   89 +-
+ Documentation/virt/kvm/devices/index.rst           |   19 +
+ .../virt/kvm/devices/{mpic.txt => mpic.rst}        |   11 +-
+ .../kvm/devices/{s390_flic.txt => s390_flic.rst}   |   70 +-
+ Documentation/virt/kvm/devices/vcpu.rst            |  114 +
+ Documentation/virt/kvm/devices/vcpu.txt            |   76 -
+ .../virt/kvm/devices/{vfio.txt => vfio.rst}        |   25 +-
+ Documentation/virt/kvm/devices/{vm.txt => vm.rst}  |  206 +-
+ .../virt/kvm/devices/{xics.txt => xics.rst}        |   28 +-
+ .../virt/kvm/devices/{xive.txt => xive.rst}        |  152 +-
+ .../kvm/{halt-polling.txt => halt-polling.rst}     |   90 +-
+ .../virt/kvm/{hypercalls.txt => hypercalls.rst}    |  129 +-
+ Documentation/virt/kvm/index.rst                   |   16 +
+ Documentation/virt/kvm/locking.rst                 |  243 ++
+ Documentation/virt/kvm/locking.txt                 |  215 --
+ Documentation/virt/kvm/{mmu.txt => mmu.rst}        |   62 +-
+ Documentation/virt/kvm/{msr.txt => msr.rst}        |  147 +-
+ .../virt/kvm/{nested-vmx.txt => nested-vmx.rst}    |   37 +-
+ Documentation/virt/kvm/{ppc-pv.txt => ppc-pv.rst}  |   26 +-
+ .../{review-checklist.txt => review-checklist.rst} |    3 +
+ .../virt/kvm/{s390-diag.txt => s390-diag.rst}      |   13 +-
+ .../virt/kvm/{timekeeping.txt => timekeeping.rst}  |  223 +-
+ ...UserModeLinux-HOWTO.txt => user_mode_linux.rst} | 1810 +++++------
+ arch/mips/include/asm/kvm_host.h                   |    7 -
+ arch/mips/kvm/Kconfig                              |    1 +
+ arch/mips/kvm/mips.c                               |   22 +-
+ arch/mips/kvm/trap_emul.c                          |   15 +-
+ arch/mips/kvm/vz.c                                 |   14 +-
+ arch/x86/include/asm/kvm_host.h                    |   17 +-
+ arch/x86/include/uapi/asm/kvm.h                    |    1 +
+ arch/x86/kvm/lapic.c                               |    3 -
+ arch/x86/kvm/mmu.h                                 |   13 +
+ arch/x86/kvm/mmu/mmu.c                             |   11 +-
+ arch/x86/kvm/mmu/paging_tmpl.h                     |    2 +-
+ arch/x86/kvm/svm.c                                 |    3 +-
+ arch/x86/kvm/vmx/nested.c                          |  104 +-
+ arch/x86/kvm/vmx/nested.h                          |    9 +-
+ arch/x86/kvm/vmx/vmx.c                             |   42 +-
+ arch/x86/kvm/vmx/vmx.h                             |    3 +
+ arch/x86/kvm/x86.c                                 |   44 +-
+ include/linux/kvm_host.h                           |   11 +-
+ tools/testing/selftests/kvm/Makefile               |    3 +-
+ .../selftests/kvm/include/x86_64/processor.h       |   44 +-
+ tools/testing/selftests/kvm/include/x86_64/svm.h   |  297 ++
+ .../selftests/kvm/include/x86_64/svm_util.h        |   38 +
+ tools/testing/selftests/kvm/lib/x86_64/svm.c       |  161 +
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c       |    6 +-
+ .../testing/selftests/kvm/x86_64/svm_vmcall_test.c |   79 +
+ virt/kvm/arm/vgic/vgic-mmio.c                      |   12 -
+ virt/kvm/kvm_main.c                                |   22 +-
+ 58 files changed, 5036 insertions(+), 3440 deletions(-)
+ rename Documentation/{virtual/guest-halt-polling.txt => virt/guest-halt-polling.rst} (91%)
+ rename Documentation/virt/kvm/{api.txt => api.rst} (71%)
+ rename Documentation/virt/kvm/arm/{hyp-abi.txt => hyp-abi.rst} (79%)
+ create mode 100644 Documentation/virt/kvm/arm/index.rst
+ rename Documentation/virt/kvm/arm/{psci.txt => psci.rst} (60%)
+ rename Documentation/virt/kvm/devices/{arm-vgic-its.txt => arm-vgic-its.rst} (71%)
+ rename Documentation/virt/kvm/devices/{arm-vgic-v3.txt => arm-vgic-v3.rst} (77%)
+ rename Documentation/virt/kvm/devices/{arm-vgic.txt => arm-vgic.rst} (66%)
+ create mode 100644 Documentation/virt/kvm/devices/index.rst
+ rename Documentation/virt/kvm/devices/{mpic.txt => mpic.rst} (91%)
+ rename Documentation/virt/kvm/devices/{s390_flic.txt => s390_flic.rst} (87%)
+ create mode 100644 Documentation/virt/kvm/devices/vcpu.rst
+ delete mode 100644 Documentation/virt/kvm/devices/vcpu.txt
+ rename Documentation/virt/kvm/devices/{vfio.txt => vfio.rst} (72%)
+ rename Documentation/virt/kvm/devices/{vm.txt => vm.rst} (61%)
+ rename Documentation/virt/kvm/devices/{xics.txt => xics.rst} (84%)
+ rename Documentation/virt/kvm/devices/{xive.txt => xive.rst} (62%)
+ rename Documentation/virt/kvm/{halt-polling.txt => halt-polling.rst} (64%)
+ rename Documentation/virt/kvm/{hypercalls.txt => hypercalls.rst} (55%)
+ create mode 100644 Documentation/virt/kvm/locking.rst
+ delete mode 100644 Documentation/virt/kvm/locking.txt
+ rename Documentation/virt/kvm/{mmu.txt => mmu.rst} (94%)
+ rename Documentation/virt/kvm/{msr.txt => msr.rst} (74%)
+ rename Documentation/virt/kvm/{nested-vmx.txt => nested-vmx.rst} (90%)
+ rename Documentation/virt/kvm/{ppc-pv.txt => ppc-pv.rst} (91%)
+ rename Documentation/virt/kvm/{review-checklist.txt => review-checklist.rst} (95%)
+ rename Documentation/virt/kvm/{s390-diag.txt => s390-diag.rst} (90%)
+ rename Documentation/virt/kvm/{timekeeping.txt => timekeeping.rst} (85%)
+ rename Documentation/virt/uml/{UserModeLinux-HOWTO.txt => user_mode_linux.rst} (74%)
+ create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
+ create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm_util.h
+ create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
+ create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
