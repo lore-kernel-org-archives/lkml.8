@@ -2,50 +2,55 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F35C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAE6C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4DC20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B7C20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:22:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NqlArlMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgBLQVB (ORCPT
+        id S1728410AbgBLQWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:21:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:34824 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgBLQVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:21:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD813328;
-        Wed, 12 Feb 2020 08:20:59 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE1A63F68F;
-        Wed, 12 Feb 2020 08:20:57 -0800 (PST)
-Subject: Re: [PATCH v3 1/7] arm64: add support for the AMU extension v1
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, rjw@rjwysocki.net,
-        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-2-ionela.voinescu@arm.com>
- <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
- <20200212161045.GA7475@arm.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <133890f7-59bb-63b9-0ca8-2294e3596058@arm.com>
-Date:   Wed, 12 Feb 2020 16:20:56 +0000
+        Wed, 12 Feb 2020 11:22:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52776 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgBLQWH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:22:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=paAaZ5BcMuWyEdjcdidH9zALtMbJC+QbPpvk37Tl80I=; b=NqlArlMmBBjgYzUA5uHWPfVEll
+        GCLftbjGmqDziXM7xmgbIVIP21UtsNTqK5mgfRMjPnygBG2huXvhSN6UodVXrSU77/vd+Mv+6Edr/
+        wtRxZyoM5wGtXPEdlQAwRFQhnHjkPpZLTSH10LLlXVXwNdvK0Patk6+rDbs8I05DgctJt8rMVoUFD
+        gLmq+bdJPUguX3hF0MsJVvC6v9jZ5it9IuKXzVsNSu79Pjh1tNgf/RXfosb8FpwvLYK/gUc2/lt/S
+        Td0z1mKBfP7awDhO4912FD3QZcfagFLm0wAw2eyAbRbH0OJnESEXeiTadGfKYID8NmLjMUzpwNXce
+        6qA0C02A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1um6-0005AQ-3T; Wed, 12 Feb 2020 16:22:06 +0000
+Subject: Re: [PATCH v2] remoteproc: fix kernel-doc warnings
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <20200212161956.10358-1-arnaud.pouliquen@st.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <90b9f2de-bdde-f464-1985-fbd4d9a8dcf9@infradead.org>
+Date:   Wed, 12 Feb 2020 08:22:05 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200212161045.GA7475@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200212161956.10358-1-arnaud.pouliquen@st.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,103 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ionela,
+On 2/12/20 8:19 AM, Arnaud Pouliquen wrote:
+> Fix the following warnings when documentation is built:
+> drivers/remoteproc/remoteproc_virtio.c:330: warning: Function parameter
+> or member 'id' not described in 'rproc_add_virtio_dev'
+> drivers/remoteproc/remoteproc_core.c:243: warning: Function parameter
+> or member 'name' not described in 'rproc_find_carveout_by_name'
+> drivers/remoteproc/remoteproc_core.c:473: warning: Function parameter
+> or member 'offset' not described in 'rproc_handle_vdev'
+> drivers/remoteproc/remoteproc_core.c:604: warning: Function parameter
+> or member 'offset' not described in 'rproc_handle_trace'
+> drivers/remoteproc/remoteproc_core.c:678: warning: Function parameter
+> or member 'offset' not described in 'rproc_handle_devmem'
+> drivers/remoteproc/remoteproc_core.c:873: warning: Function parameter
+> or member 'offset' not described in 'rproc_handle_carveout'
+> drivers/remoteproc/remoteproc_core.c:1029: warning: cannot understand function
+> prototype: 'rproc_handle_resource_t rproc_loading_handlers[RSC_LAST] = '
+> drivers/remoteproc/remoteproc_core.c:1693: warning: Function parameter
+> or member 'work' not described in 'rproc_crash_handler_work'
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> ---
+>  drivers/remoteproc/remoteproc_core.c   | 10 ++++++++--
+>  drivers/remoteproc/remoteproc_virtio.c |  1 +
+>  2 files changed, 9 insertions(+), 2 deletions(-)
 
-On 12/02/2020 16:10, Ionela Voinescu wrote:
-> Hi Suzuki,
-> 
-> On Wednesday 12 Feb 2020 at 11:30:44 (+0000), Suzuki Kuruppassery Poulose wrote:
->>> +static int __init set_disable_amu(char *str)
->>> +{
->>> +	int value = 0;
->>> +
->>> +	disable_amu = get_option(&str, &value) ? !!value : true;
->>
->> minor nit: You could simply use strtobool(str) here, which accepts:
->>
->> disable_amu= [0/1/on/off/y/n]
->>
-> 
-> Yes, this was intentional as I wanted "disable_amu" to be a valid option
-> as well, not only "disable_amu=<option>".
-> 
-> If you don't mind I'd like to keep it like this. Currently the use of
+Looks good.  Thanks.
 
-Sure, thats fine.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
->>> +
->>> +	return 0;
->>> +}
->>> +early_param("disable_amu", set_disable_amu);
->>> +
->>> +static bool has_amu(const struct arm64_cpu_capabilities *cap,
->>> +		       int __unused)
->>> +{
->>> +	/*
->>> +	 * The AMU extension is a non-conflicting feature: the kernel can
->>> +	 * safely run a mix of CPUs with and without support for the
->>> +	 * activity monitors extension. Therefore, if not disabled through
->>> +	 * the kernel command line early parameter, enable the capability
->>> +	 * to allow any late CPU to use the feature.
->>> +	 *
->>> +	 * With this feature enabled, the cpu_enable function will be called
->>> +	 * for all CPUs that match the criteria, including secondary and
->>> +	 * hotplugged, marking this feature as present on that respective CPU.
->>> +	 * The enable function will also print a detection message.
->>> +	 */
->>> +
->>> +	if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
->>
->> This looks problematic. Don't we end up in allocating the memory during
->> "each CPU" check and thus leaking memory ? Do we really need to allocate
->> this dynamically ?
->>
-> 
-> Yes, it does make some assumptions. Given that the AMU capability is
-> a WEAK_LOCAL_CPU_FEATURE I relied on the match function being called
-> only once, when the return value is true. If the return value is false,
 
-That is not correct. A WEAK_LOCAL_CPU_FEATURE is still SCOPE_LOCAL_CPU,
-implies it is run on all the booting CPUs (including the hotplugged
-ones). The WEAK is there to imply that its "permitted" or "optional"
-for a hotplugged CPU. So, eventually you will re-allocate this variable
-every single time a CPU turns up, where you could also loose the current
-state.
+-- 
+~Randy
 
-> which will result in it being called multiple times, it's either because
-> disable_amu == false, or it has become false due to a previous failed
-> allocation, in which case a new allocation will not be attempted.
-> 
-> For better handling I could have a cpumask_available check before the
-> allocation just in case the capability type changes in the future, or to
-> at least not rely on assumptions based on the type of the capability.
-> 
-> The reason this is dynamic is that I wanted to avoid the memory being
-> allocated when disable_amu is true - as Valentin mentioned in a comment
-> in the meantime "the static allocation is done against NR_CPUS whereas
-> the dynamic one is done against nr_cpu_ids".
-> 
-> Would this be alright?
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 182e05ca3410..4cee6b147ddd 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -1222,7 +1222,11 @@ static bool has_amu(const struct arm64_cpu_capabilities *cap,
->           * The enable function will also print a detection message.
->           */
->   
-> -       if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
-> +       if (disable_amu)
-> +               return false;
-> +
-> +       if (!cpumask_available(amu_cpus) &&
-> +           !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
->                  pr_err("Activity Monitors Unit (AMU): fail to allocate memory");
->                  disable_amu = true;
->          }
-
-This looks fine.
-
-Cheers
-Suzuki
