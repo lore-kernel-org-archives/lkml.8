@@ -2,110 +2,116 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14157C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510F0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3AA20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hh/9JA8c"
+	by mail.kernel.org (Postfix) with ESMTP id 280B6206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgBLQKy (ORCPT
+        id S1728658AbgBLQLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:10:54 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33849 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726351AbgBLQKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:10:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581523851;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SVVq6qjRCsdQwLjJ3Pl2oKorAivzLQr7S00rXFIKNVM=;
-        b=Hh/9JA8ckC15wtm2NIqgxhL5Dzdqu2WOyQKpRyusIpH+T2NIsD7j8zE/ECnD1GXWUlIWVY
-        3sKN/bJitoPm2KpyiP/KMCM3fpuwEAFdYduhjnLw23xlTQfT8k81dO04wjoJLtf9edfYyw
-        4GRZ0IympuO9am3MK8Ks1Ak7ryiU8S0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-y1KLSIPVOpe_iMVvs1g-Og-1; Wed, 12 Feb 2020 11:10:47 -0500
-X-MC-Unique: y1KLSIPVOpe_iMVvs1g-Og-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DA7D107ACCC;
-        Wed, 12 Feb 2020 16:10:45 +0000 (UTC)
-Received: from emilne (unknown [10.18.25.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C5AF45C100;
-        Wed, 12 Feb 2020 16:10:44 +0000 (UTC)
-Message-ID: <eac106d0fd30e20b6df4287f8bc01844191d29c6.camel@redhat.com>
-Subject: Re: [PATCH] scsi: Delete scsi_use_blk_mq
-From:   "Ewan D. Milne" <emilne@redhat.com>
-To:     John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        jejb@linux.vnet.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 12 Feb 2020 11:10:44 -0500
-In-Reply-To: <2e2ead7d-503e-3881-b837-7c689a4d44c6@huawei.com>
-References: <1581355992-139274-1-git-send-email-john.garry@huawei.com>
-         <3795ab1d-5282-458b-6199-91e3def32463@acm.org>
-         <2e2ead7d-503e-3881-b837-7c689a4d44c6@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 12 Feb 2020 11:11:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36448 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726351AbgBLQLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:11:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 66C18AE84;
+        Wed, 12 Feb 2020 16:11:06 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 16:11:03 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH 1/4] sched/fair: reorder enqueue/dequeue_task_fair path
+Message-ID: <20200212161103.GX3420@suse.de>
+References: <20200211174651.10330-1-vincent.guittot@linaro.org>
+ <20200211174651.10330-2-vincent.guittot@linaro.org>
+ <20200212132036.GT3420@suse.de>
+ <CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-11 at 11:50 +0000, John Garry wrote:
-> On 10/02/2020 22:37, Bart Van Assche wrote:
-> > On 2/10/20 9:33 AM, John Garry wrote:
-> > > -module_param_named(use_blk_mq, scsi_use_blk_mq, bool, S_IWUSR | 
-> > > S_IRUGO);
+On Wed, Feb 12, 2020 at 03:47:30PM +0100, Vincent Guittot wrote:
+> > I'm having trouble reconciling the patch with the description and the
+> > comments explaining the intent behind the code are unhelpful.
+> >
+> > There are two loops before and after your patch -- the first dealing with
+> > sched entities that are not on a runqueue and the second for the remaining
+> > entities that are. The intent appears to be to update the load averages
+> > once the entity is active on a runqueue.
+> >
+> > I'm not getting why the changelog says everything related to cfs is
+> > now done in one loop because there are still two. But even if you do
+> > get throttled, it's not clear why you jump to the !se check given that
+> > for_each_sched_entity did not complete. What it *does* appear to do is
+> > have all the h_nr_running related to entities being enqueued updated in
+> > one loop and all remaining entities stats updated in the other.
 > 
-> Hi Bart,
+> Let's take the example of 2 levels in addition to root so we have :
+> root->cfs1->cfs2
+> Now we enqueue a task T1 on cfs2 but cfs1 is throttled, we will have
+> the sequence:
 > 
-> > Will this change cause trouble to shell scripts that set or read this 
-> > parameter (/sys/module/scsi_mod/parameters/use_blk_mq)? 
+> In 1st for_each_sched_entity loop:
+>   loop 1
+>     enqueue_entity (T1->se, cfs2) which calls update load_avg(cfs2)
+>     cfs2->h_nr_running++;
+>   loop 2
+>     enqueue_entity (cfs2->gse, cfs1) which calls update load_avg(cfs1)
+>     break because cfs1 is throttled
 > 
-> The entry in Documentation/admin-guide/kernel-parameters.txt is gone for 
-> 2 years now.
+> In 2nd for_each_sched_entity loop:
+>   loop 1
+>     cfs1->h_nr_running++
+>     break because throttled
 > 
-> And it is not an archaic module param, it was introduced 6 years ago. As 
-> such, I'd say that if a shell script was setup to access this parameter, 
-> then it would prob also pre-check if it exists and gracefully accept 
-> that it may not.
+> Using the 2nd loop for incrementing h_nr_running of the throttled cfs
+> is useless and we could do that directly in 1st loop and skip the 2nd
+> loop
 > 
-> I will also note that there is still scsi_sysfs.c:show_use_blk_mq(), 
-> which would stay.
+> With this patch we have :
 > 
-> What will the
-> > impact be on systems where scsi_mod.use_blk_mq=Y is passed by GRUB to 
-> > the kernel at boot time, e.g. because it has been set in the 
-> > GRUB_CMDLINE_LINUX variable in /etc/default/grub?
+> In 1st for_each_sched_entity loop:
+>   loop 1
+>     enqueue_entity (T1->se, cfs2) which update load_avg(cfs2)
+>     cfs2->h_nr_running++;
+>   loop 2
+>     enqueue_entity (cfs2->gse, cfs1) which update load_avg(cfs1)
+>     cfs1->h_nr_running++
+>     skip the 2nd for_each_sched_entity entirely
 > 
-> The kernel should any params that does not recognize.
+> Then the patch also reorders the call to update_load_avg() and the
+> increment of h_nr_running
 > 
-> 
-> Having said all that, I don't feel too strongly about deleting this - 
-> it's only some tidy-up.
-> 
-> Thanks,
-> John
+> Before the patch we had different order between the to
+> for_each_sched_entity which is not a problem because there is
+> currently no relation between both. But the following patches make
+> PELT using h_nr_running so we must have the same ordering to prevent
+> updating pelt with the wrong h_nr_running value
 > 
 
-I think we should remove it.  It is not good to have a kernel parameter
-that people used to be able to set to "N" that no longer does that.
+Ok, understood. Thanks for clearing that up!
 
--Ewan
-
-
+-- 
+Mel Gorman
+SUSE Labs
