@@ -2,142 +2,138 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA5BC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FA0C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796BE24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6040224682
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGbF+u6a"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="CeOgukl0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgBLSlM (ORCPT
+        id S1728901AbgBLSwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:41:12 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45351 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLSlM (ORCPT
+        Wed, 12 Feb 2020 13:52:13 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33897 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLSwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:41:12 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g3so3625567wrs.12;
-        Wed, 12 Feb 2020 10:41:10 -0800 (PST)
+        Wed, 12 Feb 2020 13:52:13 -0500
+Received: by mail-qt1-f196.google.com with SMTP id h12so2431015qtu.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:52:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bK9qzUlWnpg+0hBwF5lzoTmox1kfj2Ll8ygXpLpFOJc=;
-        b=GGbF+u6a4AWrUdJ/Qkh3apMbxerKlUc5ngMYtIQaG8bUtqy4KQGBPL9NWiMSVNKzSg
-         Roxppk3OMN0skJ/V6CtwE7Zqjr7MSoSpM1Ti0uwV/PFyzQ8NZBLQU9rhhPvvOsMQbd72
-         Hy9ESksArFeQKfAE7jFjfc3XhnGn1r0TrKb6bL1EsdYAWVvWlhnQH31Yi+oZ03Oc7XZJ
-         EaMWuqm+HIdpq3F0278+xrSFg0zIF92k1V7s0pnJqhn51sdAujxWDDldUx/ywPp7N32u
-         UIeYXfweNVpCTe7FBEeHQEWIOTPQlOGp2ljUcGqj6VNHIQmDE3pN4uIqI0pDCyvl2UpF
-         hnmA==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ATjtj9uhoqbutpORm3twmVpl6WMWrzgSu/Pef3LSt8M=;
+        b=CeOgukl06W8Hf4S1CRY2NUWa4z3u+gGuwykBw8jvgPAOCOEqPHzjcGo8O/kZffzk05
+         v6pDOrnWKwO2Uc0Pv9YX1Gf3iRrqs1SZe9rz76aKfncwXlCGXaX4/VL3H8LkvrFOhDl6
+         Q/W3RYEYvohBIFAMpqLUXnH67k2XGZf76gyo0SvoWnVwRbyTqyYt37GB5wSC2VoiiPF/
+         +vb+eYKGZOVcrxuDvI2ZJ5+appiYzcQnj8hBF1TDF+Bef5PGXixPhNinsokmZ0m4fFXU
+         tK8oQWE7EEyOZ+8guuS0/DagdIi9RENopyLQ8RF+FKBFkgaLAf+f6D+ZfNhPgp1YAEdo
+         Xkyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bK9qzUlWnpg+0hBwF5lzoTmox1kfj2Ll8ygXpLpFOJc=;
-        b=jkpda/8UlZbXde8ggdGpr86Mq6ZGxoF4QB5xgoneyVvGXuKO9n2zx7M12aUCgyPhzv
-         yD5NuFqlTESZ4nmmHwWJU+k+8u9NHemOhmQUW+A94PaHZJRLF66+ZGrby7P7N8rpga+H
-         SqEVy86IF0XUCw0i8iWBk9wPkCRAD7W8gfVzhNZQh1Bf98jMW+c0GI5uY86S+TYDYDWR
-         V3BrggJ4JYhH9VsMgJ1FomGEbSwcprsM1Y2uFW9XE1mTiG5J1a5bCPl+cC/YJbtNdkk9
-         NUAFdy3gyJnVFkkJ1dALPbGFEziMeXuboHrrAF4745hpoQAQlMeC3rh0JBkP5pSuwsEw
-         9CIQ==
-X-Gm-Message-State: APjAAAVYlB9QrR1Xc1XDSV4CGpqKGWky/gLBZw0PHOjz6cAcq1Cnr8Mq
-        Xw0oLbhdVHmgA/nHUi5eNOUIC0/1A2c=
-X-Google-Smtp-Source: APXvYqzeeiOXbNyFH2B+WsaUHqdmFLaqkjb64ZLwpug040wXSYBZPeWxwp45uYgYsFg8mNzqIE4OTg==
-X-Received: by 2002:a5d:6886:: with SMTP id h6mr16643789wru.154.1581532869861;
-        Wed, 12 Feb 2020 10:41:09 -0800 (PST)
-Received: from [192.168.1.35] (78.red-88-21-202.staticip.rima-tde.net. [88.21.202.78])
-        by smtp.gmail.com with ESMTPSA id d16sm1740712wrg.27.2020.02.12.10.41.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 10:41:09 -0800 (PST)
-Subject: Re: [PATCH 0/7] MIPS: Replace <linux/clk-provider.h> by
- <linux/of_clk.h>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        James Hartley <james.hartley@sondrel.com>,
-        John Crispin <john@phrozen.org>
-Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212101544.8793-1-geert+renesas@glider.be>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Autocrypt: addr=f4bug@amsat.org; keydata=
- mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
- u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
- HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
- YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
- ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
- dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
- ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
- Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
- HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
- Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
- YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
- klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
- jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
- 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
- loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
- sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
- JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
- 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
- K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
- n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
- CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <5119fa3c-713b-cfe0-4261-c91ccb01abe9@amsat.org>
-Date:   Wed, 12 Feb 2020 19:41:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ATjtj9uhoqbutpORm3twmVpl6WMWrzgSu/Pef3LSt8M=;
+        b=TW1EwHnX38s1nuHbbLI+Fl126Sg5LFv3fSFT+Eg3cVP9aQt5u0VrlmJXI661FJg9YQ
+         pX9+2sr4P9Et7IoFn414U/oNMau2oD7epi99hKohC+e8Upn/RvThwUV6MyNixCmK7T3G
+         D9Gb0DJPSQDiGb7w7FSqiYWv6QbqTuIcA6Nan3zcbYtfBVYOFdEi9+4Iir9J4fVjwb6M
+         gDlnB/EoXBAQTEAsyt//kQuqH+sCBvGhliaGkD0lBIb3M4g4IRQ/7nYccunfmfIq0dBI
+         z4+46io3Zlur+/biVpcF/e3ysGQ1gHofgCggaT1kG2z5A6WwimfDv7HpsSQ7AiX2HNck
+         faQQ==
+X-Gm-Message-State: APjAAAV9V5foJa8QxFsJI290+9Vl073jElTAcxTwHMHZaMXlqUZ2R35i
+        70997P09vHcF8Z/nHvJts89wlg==
+X-Google-Smtp-Source: APXvYqx5Ca61AWNH6d2djo58vJ8Cb09R7uCxhUTN2gPc4ax8cB+65DSTSeMcWR0luIlwyTq0lYXeaw==
+X-Received: by 2002:ac8:365c:: with SMTP id n28mr8285715qtb.260.1581533530780;
+        Wed, 12 Feb 2020 10:52:10 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::5a94])
+        by smtp.gmail.com with ESMTPSA id g53sm682746qtk.76.2020.02.12.10.52.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 10:52:09 -0800 (PST)
+Date:   Wed, 12 Feb 2020 13:52:09 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Rik van Riel <riel@surriel.com>, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200212185209.GA206066@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org>
+ <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <20200212163540.GA180867@cmpxchg.org>
+ <20200212102645.7b2e5b228048b6d22331e47d@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200212101544.8793-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212102645.7b2e5b228048b6d22331e47d@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 11:15 AM, Geert Uytterhoeven wrote:
-> 	Hi all,
+On Wed, Feb 12, 2020 at 10:26:45AM -0800, Andrew Morton wrote:
+> On Wed, 12 Feb 2020 11:35:40 -0500 Johannes Weiner <hannes@cmpxchg.org> wrote:
 > 
-> The OF clock helpers were moved to <linux/of_clk.h> a while ago.
-> Hence code that is not a clock provider, but just needs to call
-> of_clk_init(), can (and should) include <linux/of_clk.h> instead of
-> <linux/clk-provider.h>.
+> > Since the cache purging code was written for highmem scenarios, how
+> > about making it specific to CONFIG_HIGHMEM at least?
 > 
-> All these patches are independent of each others, and thus can be
-> applied by the corresponding subsystem maintainers.
-> 
-> Thanks!
-> 
-> Geert Uytterhoeven (7):
->   MIPS: ath79: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: jz4740: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: Pistachio: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-> 
->  arch/mips/ath79/setup.c          | 2 +-
->  arch/mips/bmips/setup.c          | 2 +-
->  arch/mips/generic/init.c         | 2 +-
->  arch/mips/jz4740/time.c          | 2 +-
->  arch/mips/pic32/pic32mzda/time.c | 2 +-
->  arch/mips/pistachio/time.c       | 2 +-
->  arch/mips/ralink/timer-gic.c     | 2 +-
->  7 files changed, 7 insertions(+), 7 deletions(-)
-> 
+> Why do I have memories of suggesting this a couple of weeks ago ;)
 
-Series:
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Sorry, you did. I went back and found your email now. It completely
+slipped my mind after that thread went off into another direction.
+
+> > That way we improve the situation for the more common setups, without
+> > regressing highmem configurations. And if somebody wanted to improve
+> > the CONFIG_HIGHMEM behavior as well, they could still do so.
+> > 
+> > Somethig like the below delta on top of my patch?
+> 
+> Does it need to be that complicated?  What's wrong with
+> 
+> --- a/fs/inode.c~a
+> +++ a/fs/inode.c
+> @@ -761,6 +761,10 @@ static enum lru_status inode_lru_isolate
+>  		return LRU_ROTATE;
+>  	}
+>  
+> +#ifdef CONFIG_HIGHMEM
+> +	/*
+> +	 * lengthy blah
+> +	 */
+>  	if (inode_has_buffers(inode) || inode->i_data.nrpages) {
+>  		__iget(inode);
+>  		spin_unlock(&inode->i_lock);
+> @@ -779,6 +783,7 @@ static enum lru_status inode_lru_isolate
+>  		spin_lock(lru_lock);
+>  		return LRU_RETRY;
+>  	}
+> +#endif
+
+Pages can show up here even under !CONFIG_HIGHMEM. Because of the lock
+order to maintain LRU state (i_lock -> xa_lock), when the page cache
+inserts new pages it doesn't unlink the inode from the LRU atomically,
+and the shrinker might get here before inode_pages_set(). In that case
+we need the shrinker to punt the inode off the LRU (the #else branch).
+
+>  	WARN_ON(inode->i_state & I_NEW);
+>  	inode->i_state |= I_FREEING;
+> _
+> 
+> Whatever we do will need plenty of testing.  It wouldn't surprise me
+> if there are people who unknowingly benefit from this code on
+> 64-bit machines.
+
+If we agree this is the way to go, I can put the patch into our tree
+and gather data from the Facebook fleet before we merge it.
