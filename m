@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26E5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA7EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C170206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B482073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TI3mIKwD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dG5wrawF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgBLPi6 (ORCPT
+        id S1728618AbgBLPjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:38:58 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34296 "EHLO
+        Wed, 12 Feb 2020 10:39:01 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26948 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728551AbgBLPi4 (ORCPT
+        by vger.kernel.org with ESMTP id S1727026AbgBLPi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:38:56 -0500
+        Wed, 12 Feb 2020 10:38:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581521935;
+        s=mimecast20190719; t=1581521936;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=KMTNafIK+vSY11odONr7Db9tI/pw4yx07aThuFNMb4I=;
-        b=TI3mIKwDyFclwzRe3e4eN516YYB2FVjHG0h0qM7U6cKJt2c7Uxw5Tax4oZZ1wdXRSKWw7m
-        AERHp02UCSYFNetkMYCEiwOceepLvDX4+bEIO2jKbYsluBST/6B2Ijp9ysqe/nZ2d56CSR
-        5679EU7StMdvYQicPhvU9rzMbAvZLNU=
+        bh=2YEslZPhP18g4Rp7UueQO3wJPsjA+JWs+ANOpmXAkRg=;
+        b=dG5wrawFJpjZH533uXobNzh5U6eKqliGn44+fI1HHtqgXoG5TfVc9h5qWOVtrzysqcAuUy
+        vUuqEySg3V6T7HS1JntV0GtcvPRSwi+KLyK45Q73vwrCEF4KjcoETTtXiIWE2sFF5I9SMm
+        wuDKgYKMGuH9kVmoOOkofinOZAc9sDs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-118-kgNGyrdiM0aDrz4T_NuZgQ-1; Wed, 12 Feb 2020 10:38:51 -0500
-X-MC-Unique: kgNGyrdiM0aDrz4T_NuZgQ-1
+ us-mta-395-4tNYdBAWO1W2YludDTKmsg-1; Wed, 12 Feb 2020 10:38:54 -0500
+X-MC-Unique: 4tNYdBAWO1W2YludDTKmsg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA5EE107ACC9;
-        Wed, 12 Feb 2020 15:38:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5C0B800D41;
+        Wed, 12 Feb 2020 15:38:52 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 11CAD6E40A;
-        Wed, 12 Feb 2020 15:38:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F332A6E40A;
+        Wed, 12 Feb 2020 15:38:51 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>
 Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip 1/3] locking/lockdep: Make remove_class_from_lock_chains() depend on CONFIG_PROVE_LOCKING
-Date:   Wed, 12 Feb 2020 10:38:26 -0500
-Message-Id: <20200212153828.346-2-longman@redhat.com>
+Subject: [PATCH-tip 3/3] locking/lockdep: Consolidate CONFIG_DEBUG_LOCKDEP code
+Date:   Wed, 12 Feb 2020 10:38:28 -0500
+Message-Id: <20200212153828.346-4-longman@redhat.com>
 In-Reply-To: <20200212153828.346-1-longman@redhat.com>
 References: <20200212153828.346-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
@@ -60,56 +60,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The remove_class_from_lock_chains() is essentially an no-op if
-CONFIG_PROVE_LOCKING isn't enabled. Make it so.
+Move the CONFIG_DEBUG_LOCKDEP code in lockdep.c together in one place.
+This is a code relocation patch. There is no functional change.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/lockdep.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/locking/lockdep.c | 118 +++++++++++++++++++--------------------
+ 1 file changed, 57 insertions(+), 61 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index e55c4ee14e64..3dad36e2187b 100644
+index 417c0616d791..eb1bb8ffd777 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -4998,12 +4998,12 @@ void lockdep_reset(void)
- 	raw_local_irq_restore(flags);
- }
+@@ -454,13 +454,6 @@ unsigned int nr_softirq_chains;
+ unsigned int nr_process_chains;
+ unsigned int max_lockdep_depth;
  
-+#ifdef CONFIG_PROVE_LOCKING
- /* Remove a class from a lock chain. Must be called with the graph lock held. */
- static void remove_class_from_lock_chain(struct pending_free *pf,
- 					 struct lock_chain *chain,
- 					 struct lock_class *class)
- {
--#ifdef CONFIG_PROVE_LOCKING
- 	int i;
- 
- 	for (i = chain->base; i < chain->base + chain->depth; i++) {
-@@ -5031,13 +5031,14 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
- 	hlist_del_rcu(&chain->entry);
- 	__set_bit(chain - lock_chains, pf->lock_chains_being_freed);
- 	nr_zapped_lock_chains++;
+-#ifdef CONFIG_DEBUG_LOCKDEP
+-/*
+- * Various lockdep statistics:
+- */
+-DEFINE_PER_CPU(struct lockdep_stats, lockdep_stats);
 -#endif
- }
-+#endif
- 
- /* Must be called with the graph lock held. */
- static void remove_class_from_lock_chains(struct pending_free *pf,
- 					  struct lock_class *class)
+-
+ const char *__get_key_name(const struct lockdep_subclass_key *key, char *str)
  {
-+#ifdef CONFIG_PROVE_LOCKING
- 	struct lock_chain *chain;
- 	struct hlist_head *head;
- 	int i;
-@@ -5048,6 +5049,7 @@ static void remove_class_from_lock_chains(struct pending_free *pf,
- 			remove_class_from_lock_chain(pf, chain, class);
- 		}
+ 	return kallsyms_lookup((unsigned long)key, NULL, NULL, NULL, str);
+@@ -802,6 +795,10 @@ static inline void remove_class_from_lock_chains(struct pending_free *pf,
+ #endif /* CONFIG_PROVE_LOCKING */
+ 
+ #ifdef CONFIG_DEBUG_LOCKDEP
++/*
++ * Various lockdep statistics:
++ */
++DEFINE_PER_CPU(struct lockdep_stats, lockdep_stats);
+ 
+ #ifndef check_lock_chain_key
+ static inline bool check_lock_chain_key(struct lock_chain *chain)
+@@ -961,9 +958,61 @@ static void check_data_structures(void)
  	}
-+#endif
  }
  
++/*
++ * We are building curr_chain_key incrementally, so double-check
++ * it from scratch, to make sure that it's done correctly:
++ */
++static void check_chain_key(struct task_struct *curr)
++{
++	struct held_lock *hlock, *prev_hlock = NULL;
++	unsigned int i;
++	u64 chain_key = INITIAL_CHAIN_KEY;
++
++	for (i = 0; i < curr->lockdep_depth; i++) {
++		hlock = curr->held_locks + i;
++		if (chain_key != hlock->prev_chain_key) {
++			debug_locks_off();
++			/*
++			 * We got mighty confused, our chain keys don't match
++			 * with what we expect, someone trample on our task state?
++			 */
++			WARN(1, "hm#1, depth: %u [%u], %016Lx != %016Lx\n",
++				curr->lockdep_depth, i,
++				(unsigned long long)chain_key,
++				(unsigned long long)hlock->prev_chain_key);
++			return;
++		}
++
++		/*
++		 * hlock->class_idx can't go beyond MAX_LOCKDEP_KEYS, but is
++		 * it registered lock class index?
++		 */
++		if (DEBUG_LOCKS_WARN_ON(!test_bit(hlock->class_idx, lock_classes_in_use)))
++			return;
++
++		if (prev_hlock && (prev_hlock->irq_context !=
++							hlock->irq_context))
++			chain_key = INITIAL_CHAIN_KEY;
++		chain_key = iterate_chain_key(chain_key, hlock->class_idx);
++		prev_hlock = hlock;
++	}
++	if (chain_key != curr->curr_chain_key) {
++		debug_locks_off();
++		/*
++		 * More smoking hash instead of calculating it, damn see these
++		 * numbers float.. I bet that a pink elephant stepped on my memory.
++		 */
++		WARN(1, "hm#2, depth: %u [%u], %016Lx != %016Lx\n",
++			curr->lockdep_depth, i,
++			(unsigned long long)chain_key,
++			(unsigned long long)curr->curr_chain_key);
++	}
++}
++
+ #else /* CONFIG_DEBUG_LOCKDEP */
+ 
+-static inline void check_data_structures(void) { }
++static inline void check_data_structures(void)			{ }
++static inline void check_chain_key(struct task_struct *curr)	{ }
+ 
+ #endif /* CONFIG_DEBUG_LOCKDEP */
+ 
+@@ -1173,59 +1222,6 @@ register_lock_class(struct lockdep_map *lock, unsigned int subclass, int force)
+ 	return class;
+ }
+ 
+-/*
+- * We are building curr_chain_key incrementally, so double-check
+- * it from scratch, to make sure that it's done correctly:
+- */
+-static void check_chain_key(struct task_struct *curr)
+-{
+-#ifdef CONFIG_DEBUG_LOCKDEP
+-	struct held_lock *hlock, *prev_hlock = NULL;
+-	unsigned int i;
+-	u64 chain_key = INITIAL_CHAIN_KEY;
+-
+-	for (i = 0; i < curr->lockdep_depth; i++) {
+-		hlock = curr->held_locks + i;
+-		if (chain_key != hlock->prev_chain_key) {
+-			debug_locks_off();
+-			/*
+-			 * We got mighty confused, our chain keys don't match
+-			 * with what we expect, someone trample on our task state?
+-			 */
+-			WARN(1, "hm#1, depth: %u [%u], %016Lx != %016Lx\n",
+-				curr->lockdep_depth, i,
+-				(unsigned long long)chain_key,
+-				(unsigned long long)hlock->prev_chain_key);
+-			return;
+-		}
+-
+-		/*
+-		 * hlock->class_idx can't go beyond MAX_LOCKDEP_KEYS, but is
+-		 * it registered lock class index?
+-		 */
+-		if (DEBUG_LOCKS_WARN_ON(!test_bit(hlock->class_idx, lock_classes_in_use)))
+-			return;
+-
+-		if (prev_hlock && (prev_hlock->irq_context !=
+-							hlock->irq_context))
+-			chain_key = INITIAL_CHAIN_KEY;
+-		chain_key = iterate_chain_key(chain_key, hlock->class_idx);
+-		prev_hlock = hlock;
+-	}
+-	if (chain_key != curr->curr_chain_key) {
+-		debug_locks_off();
+-		/*
+-		 * More smoking hash instead of calculating it, damn see these
+-		 * numbers float.. I bet that a pink elephant stepped on my memory.
+-		 */
+-		WARN(1, "hm#2, depth: %u [%u], %016Lx != %016Lx\n",
+-			curr->lockdep_depth, i,
+-			(unsigned long long)chain_key,
+-			(unsigned long long)curr->curr_chain_key);
+-	}
+-#endif
+-}
+-
  /*
+  * Initialize a lock instance's lock-class mapping info:
+  */
 -- 
 2.18.1
 
