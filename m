@@ -2,135 +2,141 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2ACC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C5C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8052F2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4082168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dYl0w06g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgBLTSj (ORCPT
+        id S1729079AbgBLTTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:18:39 -0500
-Received: from out01.mta.xmission.com ([166.70.13.231]:49190 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLTSi (ORCPT
+        Wed, 12 Feb 2020 14:19:32 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27810 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728930AbgBLTTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:18:38 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j1xWr-0003Xk-B0; Wed, 12 Feb 2020 12:18:33 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j1xWq-0000bg-Ky; Wed, 12 Feb 2020 12:18:33 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
+        Wed, 12 Feb 2020 14:19:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581535170;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ALtsPsHoJJ/yr/NY82gjbpHubR4mBebZy4GAbdTJqzM=;
+        b=dYl0w06gTBlDDuT/cwWaN8yaKoSNW/BKDCotNM1A4GQlMXjT5omgzcVMP735cpxaRGILsU
+        Mdb7zKn3rGpVoGjSmK2sKAOjyrxAAJD1288G0yem2c01VsW1W8dYHmrOCQblur2wBUbfP+
+        I/a7E+7JWVDqkP8q69ykX16/LXIkilw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-lkLT1y3OPRWFrdghI_P21g-1; Wed, 12 Feb 2020 14:19:28 -0500
+X-MC-Unique: lkLT1y3OPRWFrdghI_P21g-1
+Received: by mail-wm1-f70.google.com with SMTP id f66so1349057wmf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:19:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ALtsPsHoJJ/yr/NY82gjbpHubR4mBebZy4GAbdTJqzM=;
+        b=kzyIhGeBCiigoHxnNU2YwMZp5/Bgj3rgP+LrSyLr/T8uW601uxfG/IKnOnslCldYeq
+         AXniIdM+ZA/Cdz7s0UDyQZ9gsQLQtzwLlYeFhyePK210pQl18FeZc6V5TmlPbojSS6d3
+         fkWj+07jeF/MSRJOMMwLYpCXUugpm/d8EeZDZeDQRpOJNfe9O+xXIAKNlNc8BqlekJQ5
+         YS/UA/bXAAm30wbtCx4iIEDJoT3no9snyM7rRW+rg2Wr7bPTd7b5X0ygzuT0cTCVXdFO
+         tpZmpMJsxtzOJ9kS81mw3FvVedwqE37mOpxkcbZYKh2TvbLAhcQMGSFI9/C3zYWBzL/r
+         Ibqg==
+X-Gm-Message-State: APjAAAX9DMWPB2JFmqmXwpfCZfs5RJ67AiucBjtTx8vL3urmj/N5yfTM
+        GeIQaiSbpY1EZmwupqnsg/bpPa0k+D9+EDYFOh23Lt1Hi7N9mag1Lpa7rvkHpqPyy+Hygv9bF1/
+        pMs+ZN6r0bejkLcCE6Xj1vc8V
+X-Received: by 2002:a1c:3b09:: with SMTP id i9mr560742wma.31.1581535167688;
+        Wed, 12 Feb 2020 11:19:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyeyaA14PxiDCO4uOSF5JvBIm+xF1sF2jVONkZ/53zgfRVuwKC20eBEA1OtGwEYi/yLlQpFbg==
+X-Received: by 2002:a1c:3b09:: with SMTP id i9mr560716wma.31.1581535167364;
+        Wed, 12 Feb 2020 11:19:27 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
+        by smtp.gmail.com with ESMTPSA id d204sm1919873wmd.30.2020.02.12.11.19.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 11:19:26 -0800 (PST)
+Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc2
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
-        <20200210150519.538333-8-gladkov.alexey@gmail.com>
-        <87v9odlxbr.fsf@x220.int.ebiederm.org>
-        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
-        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
-        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
-Date:   Wed, 12 Feb 2020 13:16:38 -0600
-In-Reply-To: <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
-        (Linus Torvalds's message of "Wed, 12 Feb 2020 10:45:06 -0800")
-Message-ID: <87v9obipk9.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>
+References: <20200212164714.7733-1-pbonzini@redhat.com>
+ <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <b90a886e-b320-43d3-b2b6-7032aac57abe@redhat.com>
+Date:   Wed, 12 Feb 2020 20:19:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j1xWq-0000bg-Ky;;;mid=<87v9obipk9.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+FpT+28WqNfECAgpxZXu0sEMmAMmxCfO0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+On 12/02/20 19:53, Linus Torvalds wrote:
+> It doesn't even compile. Just in the patch itself - so this is not a
+> merge issue, I see this:
+> 
+>           int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+>   ..
+>   @@ -1599,6 +1599,40 @@ static int skip_emulated_instruction(struct
+> kvm_vcpu *vcpu)
+>   ..
+>   +static void vmx_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>   +       return skip_emulated_instruction(vcpu);
+>   ..
+>   -       .skip_emulated_instruction = skip_emulated_instruction,
+>   +       .skip_emulated_instruction = vmx_skip_emulated_instruction,
+> 
+> ie note how that vmx_skip_emulated_instruction() is a void function,
+> and then you have
+> 
+>          return skip_emulated_instruction(vcpu);
+> 
+> in it, and you assign that garbage to ".skip_emulated_instruction"
+> which is supposed to be returning 'int'.
 
-> On Wed, Feb 12, 2020 at 7:01 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> Fundamentally proc_flush_task is an optimization.  Just getting rid of
->> dentries earlier.  At least at one point it was an important
->> optimization because the old process dentries would just sit around
->> doing nothing for anyone.
->
-> I'm pretty sure it's still important. It's very easy to generate a
-> _ton_ of dentries with /proc.
->
->> I wonder if instead of invalidating specific dentries we could instead
->> fire wake up a shrinker and point it at one or more instances of proc.
->
-> It shouldn't be the dentries themselves that are a freeing problem.
-> They're being RCU-free'd anyway because of lookup. It's the
-> proc_mounts list that is the problem, isn't it?
->
-> So it's just fs_info that needs to be rcu-delayed because it contains
-> that list. Or is there something else?
+Indeed I missed the warning.  Of course the return value is in %rax so,
+despite the patch being shitty (it is), it is also true that it
+*happens* to pass the corresponding unit test.
 
-The fundamental dcache thing we are playing with is:
+Not a particularly high bar to clear I admit, but enough to explain the
+mistake and ensure it doesn't happen again; I have now added "ccflags-y
++= -Werror" to the KVM makefile.
 
-	dentry = d_hash_and_lookup(proc_root, &name);
-	if (dentry) {
-		d_invalidate(dentry);
-		dput(dentry);
-	}
+> So this clearly never even got a _whiff_ of build-testing.
 
-As Al pointed out upthread dput and d_invalidate can both sleep.
+Oh come on.
 
-The dput can potentially go away if we use __d_lookup_rcu instead of
-d_lookup.
+> You're now on my shit-list, which means that I want to see only (a)
+> pure fixes and (b) well-tested such. Nothing else will be pulled.
 
-The challenge is d_invalidate.
+Fair enough, I removed the following patches from the pull request and
+will resend:
 
-It has the fundamentally sleeping detach_mounts loop.  Even
-shrink_dcache_parent has a cond_sched() in there to ensure it doesn't
-live lock the system.
+ KVM: nVMX: Emulate MTF when performing instruction emulation
+ KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
+ KVM: nVMX: Rename EPTP validity helper and associated variables
+ KVM: nVMX: Drop unnecessary check on ept caps for execute-only
+ KVM: Provide kvm_flush_remote_tlbs_common()
+ KVM: MIPS: Drop flush_shadow_memslot() callback
+ KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
+ KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
 
-We could and arguabley should set DCACHE_CANT_MOUNT on the proc pid
-dentries.  Which will prevent having to deal with mounts.
+The first one is a bug fix, but since it's the one that caused all the
+mess I guess it's not really a good idea to argue about it.
 
-But I don't see an easy way of getting shrink_dcache_parent to run
-without sleeping.  Ideas?
-
-
-Eric
-
-
-
-
-
-
+Paolo
 
