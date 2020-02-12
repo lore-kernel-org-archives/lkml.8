@@ -2,108 +2,121 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D89C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF7AC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C55E20714
+	by mail.kernel.org (Postfix) with ESMTP id E84A920714
 	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:23:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qwHaZKo3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sBHFiUbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgBLGXa (ORCPT
+        id S1728219AbgBLGXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 01:23:30 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45543 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgBLGX3 (ORCPT
+        Wed, 12 Feb 2020 01:23:33 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:29113 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728191AbgBLGXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 01:23:29 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d9so770558qte.12
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:23:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wCIGTDCK3CFLiIsiFAwO9TOgJOimjyz3BYLMXapp1co=;
-        b=qwHaZKo3KsqKr8AlD7RU0Lj3K3IPFPgtOiJTCzqROhD3TL0MYBfbu5JO95ACseI2Z3
-         SbQRysvUUuqdnFfo7RAvxd5OpiCrU7ezqjcq0TsOs2kGpdM0azBqCYoAKnbHUlk+l1dK
-         Zztydhox5XLGXe1NSAS6X90916opnB7psuUEz3IcHy6+Zwp/A1lO8jKH+h2goUAeUyyd
-         mF8WJ1b+II1J7STjDKQ1K90mhkRivAMI/y3geqANhrCwd2nt1o1VAzFeJlfuPRwPQnpv
-         n6WnTu0fTh9a9V3ckvGqg/uw8ZNBkJHDX3mM/FiCivYM/GQ3PdGog9h2GpSItggcT5xS
-         cadQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wCIGTDCK3CFLiIsiFAwO9TOgJOimjyz3BYLMXapp1co=;
-        b=Qp+ESooRvPnhqkg4VdjnMepP/5fUp+jt2mDQSxeFLgwn5p4mHwa1TUeA+iehlX/3CN
-         yY4ATg5rxsI1Eh5lDSZuKip2uVpAnKyuexJ2Tz63A1uuj3i2HPPpd4TuQbuxyLM9+DLf
-         h1JX3gQOItZgqCw2vdMy8bX36y4RES7VCRB1XFdIY1IEKAc7Uv+5tetJcOJrNus8cNOA
-         yTpBEE2Hn0og8pwsvIEIY7ilN+7FT1TtHkdEtgfCkaCLKYbubHPMNx1P/pg90wm21RBr
-         VlEUryVroDafO038PWe3j9ZTaIE77o4ZqkeDQ0XnSLb/nD6ORzg4INqTJDkxIq+77s72
-         yy0Q==
-X-Gm-Message-State: APjAAAVtQ7FdC+y5m53z2Ushm0yjqQ5ie9byfwXJeFRYD6sNIW5k6Um1
-        i/H/wl5w4WWI1QbHvh59RBVf7IvvK73TWg3Fwd6Icw==
-X-Google-Smtp-Source: APXvYqzFx6k10gUgdOT63zuzi1P3uHNFriTd2XVMEv/caoOhPibQxYxk5pUIa+ygHIDuwfr2kaKBHXeZBfRntB2PXkw=
-X-Received: by 2002:ac8:7159:: with SMTP id h25mr5774429qtp.380.1581488608196;
- Tue, 11 Feb 2020 22:23:28 -0800 (PST)
+        Wed, 12 Feb 2020 01:23:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581488612; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=+MeToIl2UVuSzBxG95x4EhHM10yDLWzdMfdITlc4I5M=;
+ b=sBHFiUbRflwVLY9WfiA05vJhgWgoJlPgwY4Q+PIyaKLbQFyCT+8pKgt2LrtyGuSyhx1/1rAz
+ ISYAZW1aQzByk/YQD1k9D0QDM68t6NS9xK2skrvnh4z2zK9ic858wDyYeSBRnGMJugVF0zT2
+ i1tlx/He40f68zSq89Bmu3OagbY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4399e3.7fc9851bf618-smtp-out-n02;
+ Wed, 12 Feb 2020 06:23:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 803D0C433A2; Wed, 12 Feb 2020 06:23:31 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA43CC43383;
+        Wed, 12 Feb 2020 06:23:29 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200115182816.33892-1-trishalfonso@google.com>
- <CACT4Y+bPzRbWw-dPQkLVENPKy_DBdjrbSce0f6XE3=W7RhfhBA@mail.gmail.com> <CAKFsvUKhwAOV9O+LWBr=-zLEJCFJvKOH-ePsXMMVJzHotqd3Ug@mail.gmail.com>
-In-Reply-To: <CAKFsvUKhwAOV9O+LWBr=-zLEJCFJvKOH-ePsXMMVJzHotqd3Ug@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 12 Feb 2020 07:23:16 +0100
-Message-ID: <CACT4Y+aRq9j=3GODWBcnDnW=Pgp4e=N2++FTYEuq-00OmfXpbw@mail.gmail.com>
-Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-um@lists.infradead.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Feb 2020 11:53:29 +0530
+From:   bgodavar@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, hemantg@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, gubbaven@codeaurora.org
+Subject: Re: [PATCH v1] arm64: dts: qcom: sc7180: Add node for bluetooth soc
+ wcn3990
+In-Reply-To: <20200211173323.GE18972@google.com>
+References: <20200211121612.29075-1-bgodavar@codeaurora.org>
+ <20200211173323.GE18972@google.com>
+Message-ID: <bacac82fbdfcc920e5982c5e1c629549@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 12:48 AM Patricia Alfonso
-<trishalfonso@google.com> wrote:
->
-> On Thu, Jan 16, 2020 at 12:44 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Wed, Jan 15, 2020 at 7:28 PM Patricia Alfonso
-> > <trishalfonso@google.com> wrote:
-> > > +config KASAN_SHADOW_OFFSET
-> > > +       hex
-> > > +       depends on KASAN
-> > > +       default 0x100000000000
-> > > +       help
-> > > +         This is the offset at which the ~2.25TB of shadow memory is
-> > > +         initialized and used by KASAN for memory debugging. The default
-> > > +         is 0x100000000000.
-> >
-> > What are restrictions on this value?
-> The only restriction is that there is enough space there to map all of
-> the KASAN shadow memory without conflicting with anything else.
->
-> > In user-space we use 0x7fff8000 as a base (just below 2GB) and it's
-> > extremely profitable wrt codegen since it fits into immediate of most
-> > instructions.
-> > We can load and add the base with a short instruction:
-> >     2d8c: 48 81 c2 00 80 ff 7f    add    $0x7fff8000,%rdx
-> > Or even add base, load shadow and check it with a single 7-byte instruction:
-> >      1e4: 80 b8 00 80 ff 7f 00    cmpb   $0x0,0x7fff8000(%rax)
-> >
-> I just tested with 0x7fff8000 as the KASAN_SHADOW_OFFSET and it worked
-> so I can make that the default if it will be more efficient.
+Hi Matthias,
 
-I think it's the right thing to do if it works.
+
+On 2020-02-11 23:03, Matthias Kaehlcke wrote:
+> On Tue, Feb 11, 2020 at 05:46:12PM +0530, Balakrishna Godavarthi wrote:
+> 
+>> subject: arm64: dts: qcom: sc7180: Add node for bluetooth soc wcn3990
+> 
+> Preferably say in the subjct that the node is added for the IDP board.
+> 
+[Bala]: will update
+
+>> Add node for bluetooth soc wcn3990.
+>> 
+>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts 
+>> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> index 388f50ad4fde..19f82ddc1f09 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> @@ -19,6 +19,7 @@
+>>  	aliases {
+>>  		hsuart0 = &uart3;
+>>  		serial0 = &uart8;
+>> +		bluetooth0 = &bluetooth;
+>>  	};
+>> 
+>>  	chosen {
+>> @@ -256,6 +257,16 @@
+>> 
+>>  &uart3 {
+>>  	status = "okay";
+> 
+> nit: add a blank line
+> 
+
+[Bala]: will update
+
+>> +	bluetooth: wcn3990-bt {
+>> +		compatible = "qcom,wcn3990-bt";
+>> +		vddio-supply = <&vreg_l10a_1p8>;
+>> +		vddxo-supply = <&vreg_l1c_1p8>;
+>> +		vddrf-supply = <&vreg_l2c_1p3>;
+>> +		vddch0-supply = <&vreg_l10c_3p3>;
+>> +		max-speed = <3200000>;
+>> +		clocks = <&rpmhcc RPMH_RF_CLK2>;
+>> +		status = "okay";
+> 
+> status is not needed here AFAIK.
+[Bala]: true, will update
