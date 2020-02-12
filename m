@@ -2,143 +2,110 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4508EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14157C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274282082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3AA20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hh/9JA8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgBLQKt (ORCPT
+        id S1728630AbgBLQKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:10:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:34666 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbgBLQKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:10:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4AC8328;
-        Wed, 12 Feb 2020 08:10:47 -0800 (PST)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 501EA3F68F;
-        Wed, 12 Feb 2020 08:10:47 -0800 (PST)
-Date:   Wed, 12 Feb 2020 16:10:45 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, rjw@rjwysocki.net,
-        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] arm64: add support for the AMU extension v1
-Message-ID: <20200212161045.GA7475@arm.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-2-ionela.voinescu@arm.com>
- <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
+        Wed, 12 Feb 2020 11:10:54 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33849 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726351AbgBLQKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:10:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581523851;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SVVq6qjRCsdQwLjJ3Pl2oKorAivzLQr7S00rXFIKNVM=;
+        b=Hh/9JA8ckC15wtm2NIqgxhL5Dzdqu2WOyQKpRyusIpH+T2NIsD7j8zE/ECnD1GXWUlIWVY
+        3sKN/bJitoPm2KpyiP/KMCM3fpuwEAFdYduhjnLw23xlTQfT8k81dO04wjoJLtf9edfYyw
+        4GRZ0IympuO9am3MK8Ks1Ak7ryiU8S0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-y1KLSIPVOpe_iMVvs1g-Og-1; Wed, 12 Feb 2020 11:10:47 -0500
+X-MC-Unique: y1KLSIPVOpe_iMVvs1g-Og-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DA7D107ACCC;
+        Wed, 12 Feb 2020 16:10:45 +0000 (UTC)
+Received: from emilne (unknown [10.18.25.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C5AF45C100;
+        Wed, 12 Feb 2020 16:10:44 +0000 (UTC)
+Message-ID: <eac106d0fd30e20b6df4287f8bc01844191d29c6.camel@redhat.com>
+Subject: Re: [PATCH] scsi: Delete scsi_use_blk_mq
+From:   "Ewan D. Milne" <emilne@redhat.com>
+To:     John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        jejb@linux.vnet.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 12 Feb 2020 11:10:44 -0500
+In-Reply-To: <2e2ead7d-503e-3881-b837-7c689a4d44c6@huawei.com>
+References: <1581355992-139274-1-git-send-email-john.garry@huawei.com>
+         <3795ab1d-5282-458b-6199-91e3def32463@acm.org>
+         <2e2ead7d-503e-3881-b837-7c689a4d44c6@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
-
-On Wednesday 12 Feb 2020 at 11:30:44 (+0000), Suzuki Kuruppassery Poulose wrote:
-> > +static int __init set_disable_amu(char *str)
-> > +{
-> > +	int value = 0;
-> > +
-> > +	disable_amu = get_option(&str, &value) ? !!value : true;
+On Tue, 2020-02-11 at 11:50 +0000, John Garry wrote:
+> On 10/02/2020 22:37, Bart Van Assche wrote:
+> > On 2/10/20 9:33 AM, John Garry wrote:
+> > > -module_param_named(use_blk_mq, scsi_use_blk_mq, bool, S_IWUSR | 
+> > > S_IRUGO);
 > 
-> minor nit: You could simply use strtobool(str) here, which accepts:
+> Hi Bart,
 > 
-> disable_amu= [0/1/on/off/y/n]
->
-
-Yes, this was intentional as I wanted "disable_amu" to be a valid option
-as well, not only "disable_amu=<option>".
-
-If you don't mind I'd like to keep it like this. Currently the use of
-AMU is enabled by default, and the most common kernel parameter to
-disable it would be "disable_amu". Allowing "disable_amu=0" is just in
-case we change the default in the kernel to not support AMU and we'd
-like platforms to be able to enable it. 
-
+> > Will this change cause trouble to shell scripts that set or read this 
+> > parameter (/sys/module/scsi_mod/parameters/use_blk_mq)? 
 > 
-> > +
-> > +	return 0;
-> > +}
-> > +early_param("disable_amu", set_disable_amu);
-> > +
-> > +static bool has_amu(const struct arm64_cpu_capabilities *cap,
-> > +		       int __unused)
-> > +{
-> > +	/*
-> > +	 * The AMU extension is a non-conflicting feature: the kernel can
-> > +	 * safely run a mix of CPUs with and without support for the
-> > +	 * activity monitors extension. Therefore, if not disabled through
-> > +	 * the kernel command line early parameter, enable the capability
-> > +	 * to allow any late CPU to use the feature.
-> > +	 *
-> > +	 * With this feature enabled, the cpu_enable function will be called
-> > +	 * for all CPUs that match the criteria, including secondary and
-> > +	 * hotplugged, marking this feature as present on that respective CPU.
-> > +	 * The enable function will also print a detection message.
-> > +	 */
-> > +
-> > +	if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
+> The entry in Documentation/admin-guide/kernel-parameters.txt is gone for 
+> 2 years now.
 > 
-> This looks problematic. Don't we end up in allocating the memory during
-> "each CPU" check and thus leaking memory ? Do we really need to allocate
-> this dynamically ?
+> And it is not an archaic module param, it was introduced 6 years ago. As 
+> such, I'd say that if a shell script was setup to access this parameter, 
+> then it would prob also pre-check if it exists and gracefully accept 
+> that it may not.
+> 
+> I will also note that there is still scsi_sysfs.c:show_use_blk_mq(), 
+> which would stay.
+> 
+> What will the
+> > impact be on systems where scsi_mod.use_blk_mq=Y is passed by GRUB to 
+> > the kernel at boot time, e.g. because it has been set in the 
+> > GRUB_CMDLINE_LINUX variable in /etc/default/grub?
+> 
+> The kernel should any params that does not recognize.
+> 
+> 
+> Having said all that, I don't feel too strongly about deleting this - 
+> it's only some tidy-up.
+> 
+> Thanks,
+> John
 > 
 
-Yes, it does make some assumptions. Given that the AMU capability is
-a WEAK_LOCAL_CPU_FEATURE I relied on the match function being called
-only once, when the return value is true. If the return value is false,
-which will result in it being called multiple times, it's either because
-disable_amu == false, or it has become false due to a previous failed
-allocation, in which case a new allocation will not be attempted.
+I think we should remove it.  It is not good to have a kernel parameter
+that people used to be able to set to "N" that no longer does that.
 
-For better handling I could have a cpumask_available check before the
-allocation just in case the capability type changes in the future, or to
-at least not rely on assumptions based on the type of the capability.
+-Ewan
 
-The reason this is dynamic is that I wanted to avoid the memory being
-allocated when disable_amu is true - as Valentin mentioned in a comment
-in the meantime "the static allocation is done against NR_CPUS whereas
-the dynamic one is done against nr_cpu_ids".
 
-Would this be alright?
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 182e05ca3410..4cee6b147ddd 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1222,7 +1222,11 @@ static bool has_amu(const struct arm64_cpu_capabilities *cap,
-         * The enable function will also print a detection message.
-         */
- 
--       if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
-+       if (disable_amu)
-+               return false;
-+
-+       if (!cpumask_available(amu_cpus) &&
-+           !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
-                pr_err("Activity Monitors Unit (AMU): fail to allocate memory");
-                disable_amu = true;
-        }
-
-Otherwise I can go for static allocation.
-
-Thank you,
-Ionela.
