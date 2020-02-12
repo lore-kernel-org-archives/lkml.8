@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CB2C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586CBC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1088206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF4D206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPJAFE4X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PG7Udi8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbgBLXqt (ORCPT
+        id S1729470AbgBLXqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:46:49 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38854 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729431AbgBLXqq (ORCPT
+        Wed, 12 Feb 2020 18:46:53 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44289 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbgBLXqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:46:46 -0500
-Received: by mail-lj1-f194.google.com with SMTP id w1so4432697ljh.5;
-        Wed, 12 Feb 2020 15:46:44 -0800 (PST)
+        Wed, 12 Feb 2020 18:46:45 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q8so4394901ljj.11;
+        Wed, 12 Feb 2020 15:46:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tdwll2I+0UIi7XhGuE9ZdnnXdDMdxuduY/8e8BdrqG0=;
-        b=DPJAFE4Xa0zWnM4wQBIUIw+9iy542KOe40KcuQLCRhxoMVl6zFobIkvzwIeFRTpd0z
-         NNmpDp2C4rpRYwl5z9hq6RzpwXXJupuSzW65NTMjHUrO1U9UsuyliLiItt4GEnuljSjY
-         ANL2x3l5c/D+xLDYZW+NGcZoXj4k5QI/Mx6KUie7HQZl9UJu4+QXDIqrd4ISmpWMpuUd
-         w44TWa/ctADXqby1JOlga4Hdnk8QCe3Mrzd1XPlnnvzHdI4hJ+7K4itvOVW3oYNxg1aR
-         +6N0yuF0a57AFRH0xk1hx40nE3SmJ13xJEAV7rWlLB/M+iGZGFU0W/VrS/oMhzBaaMvo
-         cD+w==
+        bh=xq9tBk/6KoDVPMtQ/rhYvGgBAgv98Cu3SgI5vW4OCek=;
+        b=PG7Udi8bcc2n1H3a05otjSOGGZCtsp6Rn9pVmskrOMGeztPARSLFX0O2ABD02/dlX4
+         XlBM5H9j8o9N2gKre+eTpgRf9oErS/UpIierdVRE9nPOTVWySlNP137HzqxNbYqoR3Co
+         T6ouxcfB/eAPrkwLbT+QoUCqoe0IzrS1b9iEffsMAaRn3BYf43C59oew3KC5aZ8/Z58x
+         hENhGeecIMAr/RGpgEPizN+rjuXfngJBxrLNotxMag5tqJkdhBK8uB/rP30SpZBv+dVM
+         kEAEGKK12rnPYziQdpCu2ATub2fbMAN1JeknXmC2sfB4QLGrT6RIEznz8U5G9i33okcM
+         t5dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tdwll2I+0UIi7XhGuE9ZdnnXdDMdxuduY/8e8BdrqG0=;
-        b=OSvHqD50wigET06TYzG8lV6QSJSss3FzZAy0BtwrXkseZW0dBPpcTj9VgqUJGWx8Ij
-         An5xWBr6r5TNJs7ddnHukTM02efn6Ma8cK2f/OsI/yMoGoDY77ZNp4UsKmJXUlJXWDBS
-         znzVwKnRgUSuJNwhJRK4jsl2VzidJk/KEwudXSasBwbbXhNLqKJrDIOoooK5S8W5mdTQ
-         daWm92mrnnm145HsW2VFffoxdgix7I/QyI3+L8kqTe70526v0iSbtVxmfhBwOLt1VVta
-         mL2pOfkauTLTRb5Wy/2+FZYGSe0keCD8tEqi0mwiW1fMPl8I3bnrHK3uoI9Lbjmo787P
-         5EXA==
-X-Gm-Message-State: APjAAAVbKLqGaHD2xTCkDVRwQOtiEVdsqS6W1zoh/m08WJTx0U2q71Jj
-        FfrcdB3PYxUF9xVj2z25QGQ=
-X-Google-Smtp-Source: APXvYqyzrEP3eOlPkO2+R7iNd00URCRT1RLgY23Okr2hcs4KDOBHef8XQdAAXw/pMjkkAafdhVyj5Q==
-X-Received: by 2002:a2e:90f:: with SMTP id 15mr8787275ljj.120.1581551203538;
-        Wed, 12 Feb 2020 15:46:43 -0800 (PST)
+        bh=xq9tBk/6KoDVPMtQ/rhYvGgBAgv98Cu3SgI5vW4OCek=;
+        b=r5ruepCdM5w0FroFneNdV1/JUT+ZmQWKOj/29V+Zts5+dbVgEGaFiZNL7jKCkfZ5CC
+         xFE69HJW99BnXmzciMZa/CHSyNJFSC4oHCviiQTXj1vnlaC9U4DqRWgA1Y2jLJUPuQY7
+         yA/wyqSFAqOhjtnsz/+FIuAxecO14SEX9GdqUGdk+PYxah26gwQ32wR3nkXFQUdK1fnF
+         g2RkaZytx+bP8agCIyXCfR7JhZJ0DW3sNSxFxn9J4wWrcUi/Nu/c+NLSwW/CvpPqDu4S
+         R6qwWjbScfBiNNutPyfoIYlyFNoYODbGzUiPN9qBf4EgpCZqYVOwZj8SrLRqvnLyxn7G
+         /YsQ==
+X-Gm-Message-State: APjAAAUWeB4pQQkjitqfTQqP+76JjfMjYLCCVITWrxGCMi55YWuMychI
+        tgTIUGArE+oofSAtRA8Exbc=
+X-Google-Smtp-Source: APXvYqyvFrklEk7ubbXdiW8Kd821C04G0XWZws5U+xsziFH/pjA21sNz4bQ+O/HFWS2tepUSkdm8pg==
+X-Received: by 2002:a2e:a0d0:: with SMTP id f16mr9166327ljm.130.1581551202375;
+        Wed, 12 Feb 2020 15:46:42 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id u15sm234453lfl.87.2020.02.12.15.46.42
+        by smtp.gmail.com with ESMTPSA id u15sm234453lfl.87.2020.02.12.15.46.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:46:43 -0800 (PST)
+        Wed, 12 Feb 2020 15:46:41 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -74,9 +74,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         David Heidelberg <david@ixit.cz>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 12/12] ARM: dts: tegra30: beaver: Add CPU Operating Performance Points
-Date:   Thu, 13 Feb 2020 02:46:07 +0300
-Message-Id: <20200212234607.11521-13-digetx@gmail.com>
+Subject: [PATCH v7 11/12] ARM: dts: tegra30: beaver: Set up voltage regulators for DVFS
+Date:   Thu, 13 Feb 2020 02:46:06 +0300
+Message-Id: <20200212234607.11521-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200212234607.11521-1-digetx@gmail.com>
 References: <20200212234607.11521-1-digetx@gmail.com>
@@ -87,53 +87,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilize common Tegra30 CPU OPP table. CPU DVFS is available now on beaver.
+Set min/max voltage and couple CPU/CORE regulators.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/tegra30-beaver.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/tegra30-beaver.dts | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index 6ebb3105af9e..86556622be25 100644
+index a3b0f3555cd2..6ebb3105af9e 100644
 --- a/arch/arm/boot/dts/tegra30-beaver.dts
 +++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -2,6 +2,8 @@
- /dts-v1/;
+@@ -1806,9 +1806,14 @@ vdd2_reg: vdd2 {
  
- #include "tegra30.dtsi"
-+#include "tegra30-cpu-opp.dtsi"
-+#include "tegra30-cpu-opp-microvolt.dtsi"
+ 				vddctrl_reg: vddctrl {
+ 					regulator-name = "vdd_cpu,vdd_sys";
+-					regulator-min-microvolt = <1000000>;
+-					regulator-max-microvolt = <1000000>;
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-coupled-with = <&core_vdd_reg>;
++					regulator-coupled-max-spread = <300000>;
++					regulator-max-step-microvolt = <100000>;
+ 					regulator-always-on;
++
++					nvidia,tegra-cpu-regulator;
+ 				};
  
- / {
- 	model = "NVIDIA Tegra30 Beaver evaluation board";
-@@ -2124,4 +2126,26 @@ sound {
- 			 <&tegra_car TEGRA30_CLK_EXTERN1>;
- 		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 				vio_reg: vio {
+@@ -1868,17 +1873,22 @@ ldo8_reg: ldo8 {
+ 			};
+ 		};
+ 
+-		tps62361@60 {
++		core_vdd_reg: tps62361@60 {
+ 			compatible = "ti,tps62361";
+ 			reg = <0x60>;
+ 
+ 			regulator-name = "tps62361-vout";
+ 			regulator-min-microvolt = <500000>;
+ 			regulator-max-microvolt = <1500000>;
++			regulator-coupled-with = <&vddctrl_reg>;
++			regulator-coupled-max-spread = <300000>;
++			regulator-max-step-microvolt = <100000>;
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 			ti,vsel0-state-high;
+ 			ti,vsel1-state-high;
++
++			nvidia,tegra-core-regulator;
+ 		};
  	};
-+
-+	cpus {
-+		cpu0: cpu@0 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+
-+		cpu@1 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+
-+		cpu@2 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+
-+		cpu@3 {
-+			cpu-supply = <&vddctrl_reg>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+	};
- };
+ 
 -- 
 2.24.0
 
