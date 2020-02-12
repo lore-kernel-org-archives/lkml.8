@@ -2,87 +2,85 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D5FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22740C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B662082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581486865;
-	bh=ZrjcmZM12h0EldXJ8Giqwii9I5qf6RI9hpKRyNmH38c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=AGmLO203nOGtvIXDPfqs8Xna8LVFPN07el1z88sbOTpcFiW6Ry1/g/OYsgBJBRypg
-	 aoEkr3lZVv2cDOG0YVSsUByzWWRplDaBWN2OmZltEwWTYNQQ60LtfQwoaK9oHe650I
-	 L/7ZSAVUMi/qu4j4kz42F4Qrx/7nAzpadUoC1C5Q=
+	by mail.kernel.org (Postfix) with ESMTP id E8E7A2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgBLFyY (ORCPT
+        id S1728202AbgBLFzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 00:54:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbgBLFyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 00:54:23 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB642073C;
-        Wed, 12 Feb 2020 05:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581486863;
-        bh=ZrjcmZM12h0EldXJ8Giqwii9I5qf6RI9hpKRyNmH38c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wAcKbsEWkDj0E5NJtwA78tMBkG+1OLa+YNG7fY/00SBwbIyHXVJSQFAe+HKihrXsp
-         JwX+6QyW5N5aH+24AfRh4lx+C+qYTe2KK8vQ6CWGYWl2wt674ghTWY44eTtj/jqo2I
-         qImC+7bjwHY32BNBEpJIx4U/eybys6k19YZjpR4g=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        artem.bityutskiy@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Subject: [PATCH] tracing: Skip software disabled event at __synth_event_trace_end()
-Date:   Wed, 12 Feb 2020 14:54:19 +0900
-Message-Id: <158148685911.20407.3538292497442671878.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        Wed, 12 Feb 2020 00:55:18 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:59876 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbgBLFzS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 00:55:18 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1kzP-00BGKg-Vq; Wed, 12 Feb 2020 05:55:12 +0000
+Date:   Wed, 12 Feb 2020 05:55:11 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Daniel Rosenberg <drosen@google.com>,
+        Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v7 6/8] f2fs: Handle casefolding with Encryption
+Message-ID: <20200212055511.GL23230@ZenIV.linux.org.uk>
+References: <20200208013552.241832-1-drosen@google.com>
+ <20200208013552.241832-7-drosen@google.com>
+ <20200212051013.GG870@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212051013.GG870@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the synthetic event is software disabled,
-__synth_event_trace_start() does not allocate an event buffer.
-In this case __synth_event_trace_end() also should not commit
-the buffer.
+On Tue, Feb 11, 2020 at 09:10:13PM -0800, Eric Biggers wrote:
 
-Check the trace_state->disabled at __synth_event_trace_end()
-and if it is disabled, skip it.
+> How about:
+> 
+> int f2fs_ci_compare(const struct inode *parent, const struct qstr *name,
+> 		    u8 *de_name, size_t de_name_len, bool quick)
+> {
+> 	const struct super_block *sb = parent->i_sb;
+> 	const struct unicode_map *um = sb->s_encoding;
+> 	struct fscrypt_str decrypted_name = FSTR_INIT(NULL, de_name_len);
+> 	struct qstr entry = QSTR_INIT(de_name, de_name_len);
+> 	int ret;
+> 
+> 	if (IS_ENCRYPTED(parent)) {
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace_events_hist.c |    3 +++
- 1 file changed, 3 insertions(+)
+oops.  parent->d_inode is unstable here; could have become NULL by that
+point.
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 483b3fd1094f..781e4b55e117 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1847,6 +1847,9 @@ __synth_event_trace_start(struct trace_event_file *file,
- static inline void
- __synth_event_trace_end(struct synth_event_trace_state *trace_state)
- {
-+	if (trace_state->disabled)
-+		return;
-+
- 	trace_event_buffer_commit(&trace_state->fbuffer);
- 
- 	ring_buffer_nest_end(trace_state->buffer);
+> 	if (quick)
+> 		ret = utf8_strncasecmp_folded(um, name, &entry);
+> 	else
+> 		ret = utf8_strncasecmp(um, name, &entry);
+> 	if (ret < 0) {
+> 		/* Handle invalid character sequence as either an error
+> 		 * or as an opaque byte sequence.
+> 		 */
 
+Really?  How would the callers possibly tell mismatch from an
+error?  And if they could, would would they *do* with that
+error, seeing that it might be an effect of a race with
+rename()?
+
+Again, ->d_compare() is NOT given a stable name.  Or *parent.  Or
+(parent->d_inode).
