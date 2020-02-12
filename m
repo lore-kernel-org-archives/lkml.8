@@ -2,268 +2,250 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A62C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C27C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C9D21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4aLdABN"
+	by mail.kernel.org (Postfix) with ESMTP id D322C21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgBLWZY (ORCPT
+        id S1729264AbgBLWZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:25:24 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35179 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbgBLWZW (ORCPT
+        Wed, 12 Feb 2020 17:25:27 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44534 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbgBLWZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:25:22 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q8so4245113ljb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:25:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0CUbHP/EPh4AO1uTbHnps+SXg3HP5g8yx8ixZz33gns=;
-        b=U4aLdABNtOOCi2r88ChEahVs9MTkIkcbzK+CNIaOopWiBG9RWs1B8wUTNGrnUAzTZh
-         Zx6pmY6Wil2vorbs1/tkNhQW72wSw9SsGuXxLcPBervl/BWc6juD9hVue51nNX3VTNXy
-         4cvc5/wbx1XPMqBBRsEm5mYreaQjhGYnu+wb3BoejUdP8QkMEKkskPkuhsq3Xz/lhog0
-         LhzwjeMm8ZQqTDrYBj35XidQ5oOBsP77lO0pp2SXtN948wz7p+igJBlIIGvjPFIWt3bb
-         6R2i1Z7KSCrpm8S6YZ36dYBXEQ4Q/qY70r4bBjDl1nx+wWFt55ZnIazqCbH9G3WWl3Qw
-         EuPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0CUbHP/EPh4AO1uTbHnps+SXg3HP5g8yx8ixZz33gns=;
-        b=iZJXlaRcRjj/ZCyfnyZD0Pu6YyP34NN/i54wuFVSTSLz+1zCP1k8CbjhtUS7ILxSFz
-         rWUPvSj7MHcYYoZS9VvJRvzMN1f00TfnsfUsdUlI+87QTxf145Y/8LU7QxzuEWNc51Nj
-         nv6ZYkYkRkueWWLb8cUp2Clz860DA8ThrnGH/n4PQJeXfcnDI3wZ11yiwPwlDmGzuZ4j
-         sW7DzVXk8J752DohQhztkfp0AGTZa0cpIFxZeWtaHp0BbrZoyDq0LJuP3sdgVoZ/q4rB
-         ApcQ5DDi/ViE8ON3eFta+hWAC+9NJb4fsUbQs8WRNm9fK3WQ3fdRO9ywd09uXhCXyd1h
-         8/wQ==
-X-Gm-Message-State: APjAAAXBt7zya/XCTTUivE0hsVBl3S9u6+TNoxNfR+YrLRsYZz/w+vdr
-        D/BVCS0NMG5YnVUyTlzn+14=
-X-Google-Smtp-Source: APXvYqx+Gyj2x6H2HEYYeBRlNwVQLOMAPueoHPhtXwOT5KaW+fSfVjeng+C+acSytTn+85kmx9Ms3Q==
-X-Received: by 2002:a2e:995a:: with SMTP id r26mr9480280ljj.78.1581546320307;
-        Wed, 12 Feb 2020 14:25:20 -0800 (PST)
-Received: from localhost.localdomain ([5.20.204.163])
-        by smtp.gmail.com with ESMTPSA id 126sm188008lfm.38.2020.02.12.14.25.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 14:25:19 -0800 (PST)
-From:   andrey.lebedev@gmail.com
-To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
-Subject: [PATCH v2 1/2] ARM: sun7i: Support LVDS output on Allwinner A20
-Date:   Thu, 13 Feb 2020 00:23:55 +0200
-Message-Id: <20200212222355.17141-1-andrey.lebedev@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200210195633.GA21832@kedthinkpad>
-References: <20200210195633.GA21832@kedthinkpad>
+        Wed, 12 Feb 2020 17:25:23 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id CE6B929AAE;
+        Wed, 12 Feb 2020 17:25:19 -0500 (EST)
+Date:   Thu, 13 Feb 2020 09:25:19 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 06/18] m68k: Replace setup_irq() by request_irq()
+In-Reply-To: <1941c51a3237c4e9df6d9a5b87615cd1bba572dc.1581478324.git.afzal.mohd.ma@gmail.com>
+Message-ID: <alpine.LNX.2.22.394.2002130912140.8@nippy.intranet>
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com> <1941c51a3237c4e9df6d9a5b87615cd1bba572dc.1581478324.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Lebedev <andrey@lebedev.lt>
+On Wed, 12 Feb 2020, afzal mohammed wrote:
 
-A20 SoC (found in Cubieboard 2 among others) requires different LVDS set
-up procedure than A33. Timing controller (tcon) driver only implements
-sun6i-style procedure, that doesn't work on A20 (sun7i).
+> request_irq() is preferred over setup_irq(). Existing callers of
+> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
+> memory allocators are ready by 'mm_init()'.
+> 
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
+> 
+> Hence replace setup_irq() by request_irq().
+> 
+> Seldom remove_irq() usage has been observed coupled with setup_irq(),
+> wherever that has been found, it too has been replaced by free_irq().
+> 
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> 
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+> ---
+> 
+> Since cc'ing cover letter to all maintainers/reviewers would be too
+> many, refer for cover letter,
+>  https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
+> 
+>  arch/m68k/68000/timers.c      |  9 ++-------
+>  arch/m68k/coldfire/pit.c      |  9 ++-------
+>  arch/m68k/coldfire/sltimers.c | 19 +++++--------------
+>  arch/m68k/coldfire/timers.c   | 19 +++++--------------
+>  4 files changed, 14 insertions(+), 42 deletions(-)
+> 
+> diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
+> index 71ddb4c98726..7a55d664592e 100644
+> --- a/arch/m68k/68000/timers.c
+> +++ b/arch/m68k/68000/timers.c
+> @@ -68,12 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
+>  
+>  /***************************************************************************/
+>  
+> -static struct irqaction m68328_timer_irq = {
+> -	.name	 = "timer",
+> -	.flags	 = IRQF_TIMER,
+> -	.handler = hw_tick,
+> -};
+> -
+>  /***************************************************************************/
+>  
+>  static u64 m68328_read_clk(struct clocksource *cs)
+> @@ -106,7 +100,8 @@ void hw_timer_init(irq_handler_t handler)
+>  	TCTL = 0;
+>  
+>  	/* set ISR */
+> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
+> +	if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
+> +		pr_err("request_irq() on %s failed\n", "timer");
 
-Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
----
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 95 ++++++++++++++++++++----------
- drivers/gpu/drm/sun4i/sun4i_tcon.h | 14 +++++
- 2 files changed, 77 insertions(+), 32 deletions(-)
+"request_irq() on timer failed" is bad grammar and doesn't convey what 
+went wrong. It could be taken to mean that request_irq() was called 
+because a timer went off.
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index c81cdce6ed55..e4c605ca685e 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -114,46 +114,73 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
- 	}
- }
- 
-+static void sun6i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
-+				      const struct drm_encoder *encoder)
-+{
-+	u8 val;
-+
-+	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+		     SUN6I_TCON0_LVDS_ANA0_C(2) |
-+		     SUN6I_TCON0_LVDS_ANA0_V(3) |
-+		     SUN6I_TCON0_LVDS_ANA0_PD(2) |
-+		     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
-+	udelay(2);
-+
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+			   SUN6I_TCON0_LVDS_ANA0_EN_MB,
-+			   SUN6I_TCON0_LVDS_ANA0_EN_MB);
-+	udelay(2);
-+
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
-+			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
-+
-+	if (sun4i_tcon_get_pixel_depth(encoder) == 18)
-+		val = 7;
-+	else
-+		val = 0xf;
-+
-+	regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
-+			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
-+
-+}
-+
-+static void sun4i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
-+				      const struct drm_encoder *encoder)
-+{
-+	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+		     SUN4I_TCON0_LVDS_ANA0_CK_EN |
-+		     SUN4I_TCON0_LVDS_ANA0_REG_V |
-+		     SUN4I_TCON0_LVDS_ANA0_REG_C |
-+		     SUN4I_TCON0_LVDS_ANA0_EN_MB |
-+		     SUN4I_TCON0_LVDS_ANA0_PD |
-+		     SUN4I_TCON0_LVDS_ANA0_DCHS);
-+
-+	udelay(2); /* delay at least 1200 ns */
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
-+			   SUN4I_TCON0_LVDS_ANA1_INIT,
-+			   SUN4I_TCON0_LVDS_ANA1_INIT);
-+	udelay(1); /* delay at least 120 ns */
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
-+			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
-+			   SUN4I_TCON0_LVDS_ANA1_UPDATE);
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+			   SUN4I_TCON0_LVDS_ANA0_EN_MB,
-+			   SUN4I_TCON0_LVDS_ANA0_EN_MB);
-+}
-+
-+
- static void sun4i_tcon_lvds_set_status(struct sun4i_tcon *tcon,
- 				       const struct drm_encoder *encoder,
- 				       bool enabled)
- {
- 	if (enabled) {
--		u8 val;
--
- 		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
- 				   SUN4I_TCON0_LVDS_IF_EN,
- 				   SUN4I_TCON0_LVDS_IF_EN);
--
--		/*
--		 * As their name suggest, these values only apply to the A31
--		 * and later SoCs. We'll have to rework this when merging
--		 * support for the older SoCs.
--		 */
--		regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
--			     SUN6I_TCON0_LVDS_ANA0_C(2) |
--			     SUN6I_TCON0_LVDS_ANA0_V(3) |
--			     SUN6I_TCON0_LVDS_ANA0_PD(2) |
--			     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
--		udelay(2);
--
--		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
--				   SUN6I_TCON0_LVDS_ANA0_EN_MB,
--				   SUN6I_TCON0_LVDS_ANA0_EN_MB);
--		udelay(2);
--
--		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
--				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
--				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
--
--		if (sun4i_tcon_get_pixel_depth(encoder) == 18)
--			val = 7;
--		else
--			val = 0xf;
--
--		regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
--				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
--				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
-+		if (tcon->quirks->setup_lvds_phy)
-+			tcon->quirks->setup_lvds_phy(tcon, encoder);
- 	} else {
- 		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
- 				   SUN4I_TCON0_LVDS_IF_EN, 0);
-@@ -1454,23 +1481,27 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
- };
- 
- static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
-+	.supports_lvds		= true,
- 	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	.dclk_min_div		= 4,
- 	/* Same display pipeline structure as A10 */
- 	.set_mux		= sun4i_a10_tcon_set_mux,
-+	.setup_lvds_phy		= sun4i_tcon_setup_lvds_phy,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
- 	.has_channel_0		= true,
- 	.has_lvds_alt		= true,
- 	.dclk_min_div		= 1,
-+	.setup_lvds_phy		= sun6i_tcon_setup_lvds_phy,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
- 	.supports_lvds		= true,
- 	.has_channel_0		= true,
- 	.dclk_min_div		= 1,
-+	.setup_lvds_phy		= sun6i_tcon_setup_lvds_phy,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index a62ec826ae71..cfbf4e6c1679 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -193,6 +193,13 @@
- #define SUN4I_TCON_MUX_CTRL_REG			0x200
- 
- #define SUN4I_TCON0_LVDS_ANA0_REG		0x220
-+#define SUN4I_TCON0_LVDS_ANA0_DCHS			BIT(16)
-+#define SUN4I_TCON0_LVDS_ANA0_PD			(BIT(20) | BIT(21))
-+#define SUN4I_TCON0_LVDS_ANA0_EN_MB			BIT(22)
-+#define SUN4I_TCON0_LVDS_ANA0_REG_C			(BIT(24) | BIT(25))
-+#define SUN4I_TCON0_LVDS_ANA0_REG_V			(BIT(26) | BIT(27))
-+#define SUN4I_TCON0_LVDS_ANA0_CK_EN			(BIT(29) | BIT(28))
-+
- #define SUN6I_TCON0_LVDS_ANA0_EN_MB			BIT(31)
- #define SUN6I_TCON0_LVDS_ANA0_EN_LDO			BIT(30)
- #define SUN6I_TCON0_LVDS_ANA0_EN_DRVC			BIT(24)
-@@ -201,6 +208,10 @@
- #define SUN6I_TCON0_LVDS_ANA0_V(x)			(((x) & 3) << 8)
- #define SUN6I_TCON0_LVDS_ANA0_PD(x)			(((x) & 3) << 4)
- 
-+#define SUN4I_TCON0_LVDS_ANA1_REG		0x224
-+#define SUN4I_TCON0_LVDS_ANA1_INIT			(0x1f << 26 | 0x1f << 10)
-+#define SUN4I_TCON0_LVDS_ANA1_UPDATE			(0x1f << 16 | 0x1f << 00)
-+
- #define SUN4I_TCON1_FILL_CTL_REG		0x300
- #define SUN4I_TCON1_FILL_BEG0_REG		0x304
- #define SUN4I_TCON1_FILL_END0_REG		0x308
-@@ -228,6 +239,9 @@ struct sun4i_tcon_quirks {
- 
- 	/* callback to handle tcon muxing options */
- 	int	(*set_mux)(struct sun4i_tcon *, const struct drm_encoder *);
-+	/* handler for LVDS setup routine */
-+	void	(*setup_lvds_phy)(struct sun4i_tcon *tcon,
-+				  const struct drm_encoder *encoder);
- };
- 
- struct sun4i_tcon {
--- 
-2.20.1
+Have you considered,
+
+		pr_err("%s: request_irq() failed\n", "timer");
+
+I think that would be more typical of error messages on UNIX. E.g.
+
+$ grep x -- /tmp/foo
+grep: /tmp/foo: No such file or directory
+
+>  
+>  	/* Restart mode, Enable int, Set clock source */
+>  	TCTL = TCTL_OM | TCTL_IRQEN | CLOCK_SOURCE;
+> diff --git a/arch/m68k/coldfire/pit.c b/arch/m68k/coldfire/pit.c
+> index eb6f16b0e2e6..d09e253abe5a 100644
+> --- a/arch/m68k/coldfire/pit.c
+> +++ b/arch/m68k/coldfire/pit.c
+> @@ -111,12 +111,6 @@ static irqreturn_t pit_tick(int irq, void *dummy)
+>  
+>  /***************************************************************************/
+>  
+> -static struct irqaction pit_irq = {
+> -	.name	 = "timer",
+> -	.flags	 = IRQF_TIMER,
+> -	.handler = pit_tick,
+> -};
+> -
+>  /***************************************************************************/
+>  
+>  static u64 pit_read_clk(struct clocksource *cs)
+> @@ -156,7 +150,8 @@ void hw_timer_init(irq_handler_t handler)
+>  	cf_pit_clockevent.min_delta_ticks = 0x3f;
+>  	clockevents_register_device(&cf_pit_clockevent);
+>  
+> -	setup_irq(MCF_IRQ_PIT1, &pit_irq);
+> +	if (request_irq(MCF_IRQ_PIT1, pit_tick, IRQF_TIMER, "timer", NULL))
+> +		pr_err("request_irq() on %s failed\n", "timer");
+>  
+
+Same here.
+
+>  	clocksource_register_hz(&pit_clk, FREQ);
+>  }
+> diff --git a/arch/m68k/coldfire/sltimers.c b/arch/m68k/coldfire/sltimers.c
+> index 1b11e7bacab3..2188a21e5413 100644
+> --- a/arch/m68k/coldfire/sltimers.c
+> +++ b/arch/m68k/coldfire/sltimers.c
+> @@ -50,18 +50,14 @@ irqreturn_t mcfslt_profile_tick(int irq, void *dummy)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static struct irqaction mcfslt_profile_irq = {
+> -	.name	 = "profile timer",
+> -	.flags	 = IRQF_TIMER,
+> -	.handler = mcfslt_profile_tick,
+> -};
+> -
+>  void mcfslt_profile_init(void)
+>  {
+>  	printk(KERN_INFO "PROFILE: lodging TIMER 1 @ %dHz as profile timer\n",
+>  	       PROFILEHZ);
+>  
+> -	setup_irq(MCF_IRQ_PROFILER, &mcfslt_profile_irq);
+> +	if (request_irq(MCF_IRQ_PROFILER, mcfslt_profile_tick, IRQF_TIMER,
+> +			"profile timer", NULL))
+> +		pr_err("request_irq() on %s failed\n", "profile timer");
+>  
+
+And here.
+
+>  	/* Set up TIMER 2 as high speed profile clock */
+>  	__raw_writel(MCF_BUSCLK / PROFILEHZ - 1, PA(MCFSLT_STCNT));
+> @@ -92,12 +88,6 @@ static irqreturn_t mcfslt_tick(int irq, void *dummy)
+>  	return timer_interrupt(irq, dummy);
+>  }
+>  
+> -static struct irqaction mcfslt_timer_irq = {
+> -	.name	 = "timer",
+> -	.flags	 = IRQF_TIMER,
+> -	.handler = mcfslt_tick,
+> -};
+> -
+>  static u64 mcfslt_read_clk(struct clocksource *cs)
+>  {
+>  	unsigned long flags;
+> @@ -140,7 +130,8 @@ void hw_timer_init(irq_handler_t handler)
+>  	mcfslt_cnt = mcfslt_cycles_per_jiffy;
+>  
+>  	timer_interrupt = handler;
+> -	setup_irq(MCF_IRQ_TIMER, &mcfslt_timer_irq);
+> +	if (request_irq(MCF_IRQ_TIMER, mcfslt_tick, IRQF_TIMER, "timer", NULL))
+> +		pr_err("request_irq() on %s failed\n", "timer");
+>  
+
+And so on.
+
+>  	clocksource_register_hz(&mcfslt_clk, MCF_BUSCLK);
+>  
+> diff --git a/arch/m68k/coldfire/timers.c b/arch/m68k/coldfire/timers.c
+> index 227aa5d13709..f384e92d8b1c 100644
+> --- a/arch/m68k/coldfire/timers.c
+> +++ b/arch/m68k/coldfire/timers.c
+> @@ -82,12 +82,6 @@ static irqreturn_t mcftmr_tick(int irq, void *dummy)
+>  
+>  /***************************************************************************/
+>  
+> -static struct irqaction mcftmr_timer_irq = {
+> -	.name	 = "timer",
+> -	.flags	 = IRQF_TIMER,
+> -	.handler = mcftmr_tick,
+> -};
+> -
+>  /***************************************************************************/
+>  
+>  static u64 mcftmr_read_clk(struct clocksource *cs)
+> @@ -134,7 +128,8 @@ void hw_timer_init(irq_handler_t handler)
+>  
+>  	timer_interrupt = handler;
+>  	init_timer_irq();
+> -	setup_irq(MCF_IRQ_TIMER, &mcftmr_timer_irq);
+> +	if (request_irq(MCF_IRQ_TIMER, mcftmr_tick, IRQF_TIMER, "timer", NULL))
+> +		pr_err("request_irq() on %s failed\n", "timer");
+>  
+>  #ifdef CONFIG_HIGHPROFILE
+>  	coldfire_profile_init();
+> @@ -170,12 +165,6 @@ irqreturn_t coldfire_profile_tick(int irq, void *dummy)
+>  
+>  /***************************************************************************/
+>  
+> -static struct irqaction coldfire_profile_irq = {
+> -	.name	 = "profile timer",
+> -	.flags	 = IRQF_TIMER,
+> -	.handler = coldfire_profile_tick,
+> -};
+> -
+>  void coldfire_profile_init(void)
+>  {
+>  	printk(KERN_INFO "PROFILE: lodging TIMER2 @ %dHz as profile timer\n",
+> @@ -188,7 +177,9 @@ void coldfire_profile_init(void)
+>  	__raw_writew(MCFTIMER_TMR_ENORI | MCFTIMER_TMR_CLK16 |
+>  		MCFTIMER_TMR_RESTART | MCFTIMER_TMR_ENABLE, PA(MCFTIMER_TMR));
+>  
+> -	setup_irq(MCF_IRQ_PROFILER, &coldfire_profile_irq);
+> +	if (request_irq(MCF_IRQ_PROFILER, coldfire_profile_tick, IRQF_TIMER,
+> +			"profile timer", NULL))
+> +		pr_err("request_irq() on %s failed\n", "profile timer");
+>  }
+>  
+>  /***************************************************************************/
+> 
 
