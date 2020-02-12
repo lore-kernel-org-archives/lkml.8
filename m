@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA51AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A40EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B9C20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F95206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="B2qGXv48"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="CnrjqZt0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgBLO0G (ORCPT
+        id S1728388AbgBLO0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:26:06 -0500
-Received: from gateway20.websitewelcome.com ([192.185.45.27]:12758 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727963AbgBLO0G (ORCPT
+        Wed, 12 Feb 2020 09:26:36 -0500
+Received: from gateway34.websitewelcome.com ([192.185.148.104]:44951 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727963AbgBLO0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:26:06 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id CE1DC400C2F58
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 07:12:28 -0600 (CST)
+        Wed, 12 Feb 2020 09:26:36 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 18A431F5F63
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:26:35 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 1sxojOkCwEfyq1sxojYVwJ; Wed, 12 Feb 2020 08:26:05 -0600
+        id 1syIja8DuXVkQ1syJjyIu9; Wed, 12 Feb 2020 08:26:35 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -36,26 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SuHy9MhuFjeF+hW2j/MAWzkKf2exP+J6tjIVq/cC8QQ=; b=B2qGXv48QzgFtdqHe7+kBVqc0t
-        OrbWCjsYqVV4nDkFB42FnXbqcZ7blFxYebFrZQnMg10Lzkufe0O4NSPFpGPTfPBMiBOmCrcUzGKqs
-        GbqVjATzk9HYobZa4Onx0HYdP2UD+tpLU8oVK7MSbLamG/eggknJwSuQAjkiUi+QjH/erPyUjICOm
-        p7aJLnQcYUilzdOE85d4umX3KS9DxBTx5dLUnb7Jydns8EUZ6/fO1sok1FcwAilTOyQ5b+pFLD2FA
-        UXdZVxB3IWWPMsYBr4tIJDPc4j9X4wTsQO1WXJCW0Gxc/kb15YUFtfsuZKdmFvFrKdNMMeukMK3xx
-        Z306LlIA==;
-Received: from [201.144.174.25] (port=17588 helo=[192.168.43.131])
+        bh=te3jjYqqOQDO88++IZRXfmpvSYZqnQp1UqUOiP63X2k=; b=CnrjqZt0/lv1uFpt7fVAgTLIjX
+        7TGCNCMKZWq+tJRW8p32p9xnUdjk4fT/2agotqoYeXqxFuScLF5YuduUD92Fz/3zMblPqOcLWJbav
+        bUawBYRg55aKcU9+BjVWOa+S0jJJ9JbEggWXVOvGTKWQgai0sYsudwQMUfGkBuUIeU/OzqNS037Yu
+        k1ntXfU94IW2CV2PPTP1/140H2fTakT5CG7ColsnCZaH+RWXbbO0vZnGw5pbLN0bsNC8WGEbzjgfc
+        4FBN5Jps0Vne1apo9iHmANz9esPNB4iyJvsKf/iBrwO74AmTU0fmWkuvNmZAbZn99CXh2cJvxzYjI
+        wF0RQqDg==;
+Received: from [201.144.174.25] (port=5284 helo=[192.168.43.131])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j1sxo-002qcj-KU; Wed, 12 Feb 2020 08:26:04 -0600
-Subject: Re: [PATCH] regulator: da9062: Replace zero-length array with
+        id 1j1syI-002qtc-LA; Wed, 12 Feb 2020 08:26:34 -0600
+Subject: Re: [PATCH] regulator: da9063: Replace zero-length array with
  flexible-array member
 To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
         Support Opensource <Support.Opensource@diasemi.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200211234612.GA28682@embeddedor>
- <AM6PR10MB22630DDD54D581091C3C99A9801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200211234710.GA29532@embeddedor>
+ <AM6PR10MB226386E325F5EEA41A1C47BA801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -100,12 +100,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <b5270b23-45aa-9830-7249-272e82454280@embeddedor.com>
-Date:   Wed, 12 Feb 2020 08:28:35 -0600
+Message-ID: <575985a9-cc82-1eae-6651-30a603f494d7@embeddedor.com>
+Date:   Wed, 12 Feb 2020 08:29:06 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <AM6PR10MB22630DDD54D581091C3C99A9801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+In-Reply-To: <AM6PR10MB226386E325F5EEA41A1C47BA801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -117,13 +117,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.144.174.25
 X-Source-L: No
-X-Exim-ID: 1j1sxo-002qcj-KU
+X-Exim-ID: 1j1syI-002qtc-LA
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [201.144.174.25]:17588
+X-Source-Sender: ([192.168.43.131]) [201.144.174.25]:5284
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
+X-Email-Count: 10
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -133,8 +133,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2/12/20 05:12, Adam Thomson wrote:
-> On 11 February 2020 23:46, Gustavo A. R. Silva wrote:
+On 2/12/20 05:14, Adam Thomson wrote:
+> On 11 February 2020 23:47, Gustavo A. R. Silva wrote:
 > 
 >> The current codebase makes use of the zero-length array language
 >> extension to the C90 standard, but the preferred mechanism to declare
@@ -159,25 +159,23 @@ On 2/12/20 05:12, Adam Thomson wrote:
 >>
 >> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 >> ---
->>  drivers/regulator/da9062-regulator.c | 2 +-
+>>  drivers/regulator/da9063-regulator.c | 2 +-
 >>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-
+>> diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-
 >> regulator.c
->> index b064d8a19d4c..c3b6ba9bafdf 100644
->> --- a/drivers/regulator/da9062-regulator.c
->> +++ b/drivers/regulator/da9062-regulator.c
->> @@ -86,7 +86,7 @@ struct da9062_regulators {
->>  	int					irq_ldo_lim;
+>> index 2b0c7a85306a..368f8ad2a9f9 100644
+>> --- a/drivers/regulator/da9063-regulator.c
+>> +++ b/drivers/regulator/da9063-regulator.c
+>> @@ -119,7 +119,7 @@ struct da9063_regulator {
+>>  struct da9063_regulators {
 >>  	unsigned				n_regulators;
 >>  	/* Array size to be defined during init. Keep at end. */
->> -	struct da9062_regulator			regulator[0];
->> +	struct da9062_regulator			regulator[];
+>> -	struct da9063_regulator			regulator[0];
+>> +	struct da9063_regulator			regulator[];
 > 
-> I don't think is the correct change here for this driver. In the probe
-> 'struct_size()' is used to determine the actual size requested from 'malloc()'
-> when allocating memory for this structure. It's not statically initialised.
-> Your change will break that code I believe.
+> Same comment as for da9062. The probe uses malloc and does not statically
+> initialise for this struct so this will break the probe.
 > 
 
 Dynamic memory allocations won't be affected by this change:
