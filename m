@@ -2,167 +2,115 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B16C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0123FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF69D20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6212073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="InfEDylZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asC2bVXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgBLLO4 (ORCPT
+        id S1727669AbgBLLTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:14:56 -0500
-Received: from mail-mw2nam10on2061.outbound.protection.outlook.com ([40.107.94.61]:6195
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbgBLLOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:14:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gG1eL+xdVHiLtDpQLmJiJN4YCXqvv0vItfNlGYCbNlE/uvADIfQNUx9frs1dElYtIkYbLN4VBiZrLGfxOpYdtBqcrdeJE7qpA8Vb2H96qLmbcVtfO6p0kO9ZWmC/FDJ3flIjhlkJ3U4MjfZu81trtq2MqD8i68XmgU17PnXeUlGH/6JqAQI7agmMSuHgq6hKTDvBd08lVP0btxm/c6W8yys0GtRCLu7DPbSc/YkfvezLLFHOOWsdv5yu+kheEQT4Ot/u3n/f6e05GFhWewHxCRj5oFxcmyjXlZ6JZFzPKNxeQF4LLZkX9re29xfn/01gXP/brmSPCBDk9J3tEbAm4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=twpvHZEms3tuvH2nBeYpnefXIBMh8mNWxuwuqlSsfpQ=;
- b=V/kbs1MoN17QDjEB73JlSbwa1OyISlVaE1oKpv4fOfRfAwuVrPZPjIdt4TdiQtKwM5gp8Pfq+4jakCog77cJSHo9dJo4IZqelUIjOxvLIbd8pOS2Ut4bFmn1E8v8XGCxApMavmS5hJEq9NaJbDRvSSFn+GgztHoFaiA3NGPp2unhBvxUpe4rz0I9MLO9p0MYtkZMsFVoozCRTQiogOseYNMP3nnX+2jECrdBkJpCxRJkPl//Ml5Pz4Emf8osZSj4f9TgOmLnLDpIKS3jROWsFmLzJZh6qvIllPgulxyx+I86GCTuKSGdNi11xNVZofqDlgSyjl6fwAB4ExT2ZQ0Nyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=glider.be smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Wed, 12 Feb 2020 06:19:37 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51797 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgBLLTh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:19:37 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t23so1753498wmi.1;
+        Wed, 12 Feb 2020 03:19:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=twpvHZEms3tuvH2nBeYpnefXIBMh8mNWxuwuqlSsfpQ=;
- b=InfEDylZEyu55FVoTilThsFgKw9kNUJZrVYL8Y/IPxDo8gyuGuSrTb5xqGQtetTIuHQ83tYxmX3cXS+5Rv8o/N/N8+PL5ScMB6B1cZQd7oAfIgEQSzELZ/jfs4dxjZXQ/CYRfh+7fjjMGhCalNo+546Nib4cALcoLtNPjj4jDWI=
-Received: from BN7PR02CA0012.namprd02.prod.outlook.com (2603:10b6:408:20::25)
- by BY5PR02MB6643.namprd02.prod.outlook.com (2603:10b6:a03:213::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Wed, 12 Feb
- 2020 11:14:52 +0000
-Received: from SN1NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by BN7PR02CA0012.outlook.office365.com
- (2603:10b6:408:20::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
- Transport; Wed, 12 Feb 2020 11:14:52 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; glider.be; dkim=none (message not signed)
- header.d=none;glider.be; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT021.mail.protection.outlook.com (10.152.72.144) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Wed, 12 Feb 2020 11:14:52 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j1pyl-00089d-Lz; Wed, 12 Feb 2020 03:14:51 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j1pyg-00023d-IM; Wed, 12 Feb 2020 03:14:46 -0800
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01CBEfQs016071;
-        Wed, 12 Feb 2020 03:14:43 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1j1pyb-00020F-15; Wed, 12 Feb 2020 03:14:41 -0800
-Subject: Re: [PATCH 7/7] ARM: zynq: Replace <linux/clk-provider.h> by
- <linux/of_clk.h>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Russell King <linux@armlinux.org.uk>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200212100830.446-1-geert+renesas@glider.be>
- <20200212100830.446-8-geert+renesas@glider.be>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <60cdf168-a4c9-d3c5-871b-cd1bd5bfcffe@xilinx.com>
-Date:   Wed, 12 Feb 2020 12:14:37 +0100
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HTAbsiExrv4QW5/STpGu+6w7JGxPZpOjJdCEoGEBulE=;
+        b=asC2bVXdzvBx2cv631MWiOZTxgICbuneQqKi8jfIo5dqiZz0iQBe81K/qJOaxhm6Rs
+         3Zw+GgWiVagyFqB07np+5rwwcH598FjsDyOChfSCPUsoC8IlWL5MusYCKHfZ+NSBG0Uy
+         8Ypisw0s6+NJL73FtztJHvi84kXMdy+QLlq48H69RO5NeSFhgGpfv3uJY8ogDRPNQPl0
+         CICVXNayohk4XXsQiP59rNGzOnXzIXcGr2JAf3fuQyj9ke8nBLUgWXwgY+v5u3RU9BD6
+         Cp15qkrpgkjyEf4QKF83kFQBXnlnKZzzQk/0jaTeWhf+Pp/kzC1qCCWs9MZhScTZaWel
+         KMoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HTAbsiExrv4QW5/STpGu+6w7JGxPZpOjJdCEoGEBulE=;
+        b=qDxEhOcnuCD6GF9rF4fa20WIQ0xb8+nKVllb8VTR5OHQTUw/uuN4ed6v/uEzU3xWTe
+         BxtmRzrMxjKAmvkxh7zr/IVaY9ps/KSIrFclkrEOrdJ/vxkxw27LewIxS1mmbSwrrYPK
+         5M5fadGYnEd7ZoxsY0MoK8UwY/kL0JloyQ666Usj64znv+c5G9yXMSzDo1O8DGwXHhAO
+         e75qm4GnwRvji4rAAqoa2tUGj1BoArQdO5T3+aPggTAyzWJOiyVP54YaTu2ILwsItfQg
+         esT3UVitLnPsJBRrB+iBcL1bJS6JI+zeY/kushlrAaitHP0/gkFNg36jakDt94OcQY61
+         6YXw==
+X-Gm-Message-State: APjAAAUr/V6nkLzVAy9qH7b2akyAPSDI1tU6GU/gfGrl3pUr9MUpAcZq
+        k0nUf/NGXs3U0E5CcdVJEcg=
+X-Google-Smtp-Source: APXvYqwkFBJvPdmgKxekMrEjI+4BX8KddY4MNX3CmIouqTPCRhht4uH4TzYx/UcbXZMVAfkKZRPdog==
+X-Received: by 2002:a7b:c216:: with SMTP id x22mr12685206wmi.51.1581506375637;
+        Wed, 12 Feb 2020 03:19:35 -0800 (PST)
+Received: from [192.168.2.41] ([46.227.18.67])
+        by smtp.gmail.com with ESMTPSA id m21sm300439wmi.27.2020.02.12.03.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 03:19:34 -0800 (PST)
+Subject: Re: [PATCH] tty/serial: atmel: manage shutdown in case of RS485 or
+ ISO7816 mode
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+References: <20200210152053.8289-1-nicolas.ferre@microchip.com>
+From:   Richard Genoud <richard.genoud@gmail.com>
+Message-ID: <f40181d1-3781-2cd9-11b3-420ef0d29ce7@gmail.com>
+Date:   Wed, 12 Feb 2020 12:19:18 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200212100830.446-8-geert+renesas@glider.be>
+In-Reply-To: <20200210152053.8289-1-nicolas.ferre@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(189003)(199004)(70206006)(356004)(186003)(2906002)(6666004)(9786002)(5660300002)(81166006)(81156014)(110136005)(70586007)(26005)(8676002)(336012)(4744005)(498600001)(31696002)(36756003)(44832011)(8936002)(4326008)(2616005)(31686004)(7416002)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6643;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6c692e37-1659-4377-a336-08d7afacc80e
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6643:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB66434C47E6EC75022491BE4EC61B0@BY5PR02MB6643.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1247;
-X-Forefront-PRVS: 0311124FA9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: h7hKVJhLOPgc8K74hZJb+qKJ1vbApeHU7HnvtXkWwRxehL61Cr+WpB8R/g3YB+9b8BPfNcrmNnjKQLW2oyz6VqXZBK3kBtpz1Xb/s4JygCH5NE0LxhUhQz5PsIATsv6W1U9CELWZ5HcIDY/hJWHlmnVkZkBDaR+irsr+KVynQYReOuYAAGMEs8PBk/KahUru33+OlTLI66DU5e1wAKhGqzdpA9WDKJphmGRfUAfvWT7JPBdlHkhK96XxUFGr8TTQUs683/vTbJZPG6ZcEyuVkuZgkt8H8FMdecTGw4Xqif1rsnQ4BV2GfJuMDW5SLYvqnu5bqSiAcoIRAyPsIGIb0Wzd2Y0DZc0HgJzS50oWn9GGwBc6VcMbdjptjXb8kxrIAkViNKIF1raQQTwYKa+pRMkUDwiEOykmbYRvz7pLlpdwA9+mk3/4/d5ta5x8QZYQ
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 11:14:52.0731
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c692e37-1659-4377-a336-08d7afacc80e
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6643
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12. 02. 20 11:08, Geert Uytterhoeven wrote:
-> The Zynq platform code is not a clock provider, and just needs to call
-> of_clk_init().
+Le 10/02/2020 à 16:20, Nicolas Ferre a écrit :
+> In atmel_shutdown() we call atmel_stop_rx() and atmel_stop_tx() functions.
+> Prevent the rx restart that is implemented in RS485 or ISO7816 modes when
+> calling atmel_stop_tx() by using the atomic information tasklet_shutdown
+> that is already in place for this purpose.
 > 
-> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: 98f2082c3ac4 ("tty/serial: atmel: enforce tasklet init and termination sequences")
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+
 > ---
->  arch/arm/mach-zynq/common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/tty/serial/atmel_serial.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
-> index 3a4248fd796281c3..a9dd2f71cd19d2a9 100644
-> --- a/arch/arm/mach-zynq/common.c
-> +++ b/arch/arm/mach-zynq/common.c
-> @@ -12,10 +12,10 @@
->  #include <linux/cpumask.h>
->  #include <linux/platform_device.h>
->  #include <linux/clk.h>
-> -#include <linux/clk-provider.h>
->  #include <linux/clk/zynq.h>
->  #include <linux/clocksource.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_clk.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/of.h>
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index c15c398c88a9..a39c87a7c2e1 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -570,7 +570,8 @@ static void atmel_stop_tx(struct uart_port *port)
+>  	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
+>  
+>  	if (atmel_uart_is_half_duplex(port))
+> -		atmel_start_rx(port);
+> +		if (!atomic_read(&atmel_port->tasklet_shutdown))
+> +			atmel_start_rx(port);
+>  
+>  }
+>  
 > 
-
-Looks good. Applied to zynq/soc.
-
-Thanks,
-Michal
 
