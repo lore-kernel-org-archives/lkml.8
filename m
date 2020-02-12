@@ -2,85 +2,86 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A95C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10F8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D7620714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF73420714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="o4z8ZeqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgBLJzE (ORCPT
+        id S1728970AbgBLJzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:55:04 -0500
-Received: from mxhk.zte.com.cn ([63.217.80.70]:41084 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbgBLJzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:55:04 -0500
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 2D67C77E27890162EE2D;
-        Wed, 12 Feb 2020 17:55:03 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id 01C9sSL8090064;
-        Wed, 12 Feb 2020 17:54:28 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020021217544887-2102570 ;
-          Wed, 12 Feb 2020 17:54:48 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     mingo@redhat.com
-Cc:     peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
-        Huang Zijiang <huang.zijiang@zte.com.cn>
-Subject: [PATCH] sched: Use kmem_cache_zalloc() instead of kmem_cache_alloc() with flag GFP_ZERO.
-Date:   Wed, 12 Feb 2020 17:54:21 +0800
-Message-Id: <1581501261-5558-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-02-12 17:54:48,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-02-12 17:54:30,
-        Serialize complete at 2020-02-12 17:54:30
-X-MAIL: mse-fl2.zte.com.cn 01C9sSL8090064
+        Wed, 12 Feb 2020 04:55:11 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:62115 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728712AbgBLJzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 04:55:10 -0500
+X-UUID: 569e267dd7884339957488b3b7250a38-20200212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Vr1pHkQVOl3JW4Dfr5vCs2HYOfLXE6nj+3u5wfIpXq4=;
+        b=o4z8ZeqJWm49Rh9nJxQ30LLooRuKQ5JAS1tzIbEjKZ5cY3AOtA0CXNYqijJEXuBLLtzNm0TV7B10vpqGK0HYuzHi4f9/9LBXwZFZYidwKCRc8S8a5jrAnEdGWZg8nXRuUNEFnBMKHiU8y+vJic8iqaXxHkXkwvpU2qe1Iq8y/9E=;
+X-UUID: 569e267dd7884339957488b3b7250a38-20200212
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1879772572; Wed, 12 Feb 2020 17:55:04 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Feb 2020 17:54:20 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 12 Feb 2020 17:55:10 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
+        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH 2/2] drm/mediatek: move gce event property to mutex device node
+Date:   Wed, 12 Feb 2020 17:55:01 +0800
+Message-ID: <20200212095501.12124-2-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200212095501.12124-1-bibby.hsieh@mediatek.com>
+References: <20200212095501.12124-1-bibby.hsieh@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Zijiang <huang.zijiang@zte.com.cn>
-
- Use kmem_cache_zalloc instead of manually setting kmem_cache_alloc
- with flag GFP_ZERO since kzalloc sets allocated memory
- to zero.
-
- Change in v2:
-      add indation
-
-Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00..20ea28f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6949,7 +6949,7 @@ struct task_group *sched_create_group(struct task_group *parent)
- {
- 	struct task_group *tg;
- 
--	tg = kmem_cache_alloc(task_group_cache, GFP_KERNEL | __GFP_ZERO);
-+	tg = kmem_cache_zalloc(task_group_cache, GFP_KERNEL);
- 	if (!tg)
- 		return ERR_PTR(-ENOMEM);
- 
--- 
-1.9.1
+QWNjb3JkaW5nIG10ayBoYXJkd2FyZSBkZXNpZ24sIHN0cmVhbV9kb25lMCBhbmQgc3RyZWFtX2Rv
+bmUxIGFyZQ0KZ2VuZXJhdGVkIGJ5IG11dGV4LCBzbyB3ZSBtb3ZlIGdjZSBldmVudCBwcm9wZXJ0
+eSB0byBtdXRleCBkZXZpY2UgbW9kZS4NCg0KU2lnbmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJp
+YmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2NydGMuYyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
+ZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KaW5k
+ZXggM2M1M2VhMjIyMDhjLi44YTMxZTViOTgzZGIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2NydGMuYw0KQEAgLTgxOSw3ICs4MTksNyBAQCBpbnQgbXRrX2RybV9jcnRjX2Ny
+ZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwNCiAJCQlkcm1fY3J0Y19pbmRleCgmbXRr
+X2NydGMtPmJhc2UpKTsNCiAJCW10a19jcnRjLT5jbWRxX2NsaWVudCA9IE5VTEw7DQogCX0NCi0J
+cmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzJfaW5kZXgoZGV2LT5vZl9ub2RlLCAibWVkaWF0ZWss
+Z2NlLWV2ZW50cyIsDQorCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyX2luZGV4KHByaXYtPm11
+dGV4X25vZGUsICJtZWRpYXRlayxnY2UtZXZlbnRzIiwNCiAJCQkJCSBkcm1fY3J0Y19pbmRleCgm
+bXRrX2NydGMtPmJhc2UpLA0KIAkJCQkJICZtdGtfY3J0Yy0+Y21kcV9ldmVudCk7DQogCWlmIChy
+ZXQpDQotLSANCjIuMTguMA0K
 
