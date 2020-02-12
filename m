@@ -2,104 +2,114 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC1FC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0971BC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2AF206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A6524650
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:17:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uz44U9t2"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="BybYr6Ow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgBLVOa (ORCPT
+        id S1729037AbgBLVRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:14:30 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33480 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729198AbgBLVOO (ORCPT
+        Wed, 12 Feb 2020 16:17:40 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38894 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbgBLVRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:14:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=MtLsQLaXADO+AZHxVktK/gN+oXBYn0ymRHkx9dI1F3k=; b=Uz44U9t2iYCgfqgExOEiwrMeZI
-        6X9awiCu6DPIxtRsoIZDg5DpXXWXhTgnZSLFJzVOgoLdAH1B/OO56E3L9k0zdDSWsk7emmdtdZY9B
-        n9GUqKnH95dALIQ9zbbDajTwE0zsfP+SYYIFwV8nvlA1iXQ93QndsMU67hlIw1ZpvGryDWcNKlV3/
-        P+0CLRWtSxvzTG1KjdEKjjd44iJTfyLh3t7fbMYm/HelHc9Lb4L9tEl5R7/8bZAvweireWH9dB0VZ
-        Qx0yzGUMnIQ5cax1GYYxeR0h+k+MPJ5ftVtpUDGTPu3BuiFleMweLTlTXla1iCHZJdiLqDAFoFLFs
-        70+Gu7uQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1zKK-0002Ki-Jn; Wed, 12 Feb 2020 21:13:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C1C2630700B;
-        Wed, 12 Feb 2020 22:11:52 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 875D8203A89A0; Wed, 12 Feb 2020 22:13:41 +0100 (CET)
-Message-Id: <20200212210750.142334759@infradead.org>
-User-Agent: quilt/0.65
-Date:   Wed, 12 Feb 2020 22:01:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org
-Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        "Steven Rostedt (VMware)" <rosted@goodmis.org>
-Subject: [PATCH v2 6/9] perf,tracing: Prepare the perf-trace interface for RCU changes
-References: <20200212210139.382424693@infradead.org>
+        Wed, 12 Feb 2020 16:17:39 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j17so1423420pjz.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:17:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MK5SxGz0zRKTkZ22e5kVA3DOZ9q0nFCfNa4gxsGnCQE=;
+        b=BybYr6OwRkevGXDa58RRkYPnSQJfnsxtjzQ8PRMBdjuoH6oIQGDwTpKps2Rfik9ORZ
+         VD/FxMuAF+Mfn/d9TP++HBiHu0JXsxYx1eRjqEPcecgAvu3l2tCLiwBzcewBQkc1Y0TP
+         MfST43KQXD4fF7THk0na8Uxta0AJBN4R7sf/sW104783E4bbbMEd3uIM5h1jtVJlaqzH
+         7rtLCCbmYYL5YhxA7nk3i1rk8NFM/zA52rmiyj1ziqmMXN7fOf2ab2DcB9IcF3SZhSgY
+         49AyszXaL0KrUyAHSYfKc2L+Jj2ZZvNWjGsVKRyKTpOfmj5lpS97s2XLgpZG3wb2Y/q0
+         kNzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MK5SxGz0zRKTkZ22e5kVA3DOZ9q0nFCfNa4gxsGnCQE=;
+        b=GXHDuMKEFJ7DbfJL3h3PX4yO5HXLSfskfWxnWMT7haZEplGX2dEaLtDBsWnTdEnSov
+         kD9I+28F4e0v651mj7te5KoSt9sQliRudV0/SKFSOFWlCF48kC2HGAan/fpbJlv9T1fC
+         78hOT4tBqb7e8kXKtMRdQ33qPR+BZp/5tiSVoOCBL4vb+HG1A71zkbqcRgx6zxqMaWI8
+         nzKGmOuieN75gXOvT8F6jnnwu18UAKW/K4Yk7Qjiv4QdsEoxoqL/zhXR6NCwAdruUn6n
+         LW58NjLTdVy9c5Vq5PBfeGqGW/XHh2uKUOCp+xgUXyTAkR9VebgOfLTqmMsKeWBYZC/G
+         AZmQ==
+X-Gm-Message-State: APjAAAUsJtrydHmGU6LpZdm3/2PWfw8cfoQnp4Ath1EKrpUkRtOl9ccZ
+        SYoRyFclWcUiT/AjRdvG5nRobw==
+X-Google-Smtp-Source: APXvYqzigz4EM0OaOIYfqAWucMj8jZnoisCQPum3T3EjTXHzETVL43sXIpYMlZK8r7W5iP9FMqh+Rg==
+X-Received: by 2002:a17:90a:cb11:: with SMTP id z17mr1158574pjt.122.1581542259114;
+        Wed, 12 Feb 2020 13:17:39 -0800 (PST)
+Received: from debian ([27.57.24.230])
+        by smtp.gmail.com with ESMTPSA id l69sm64890pgd.1.2020.02.12.13.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 13:17:38 -0800 (PST)
+Date:   Thu, 13 Feb 2020 02:47:30 +0530
+From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        jeffrin@rajagiritech.edu.in
+Subject: Re: [PATCH 5.4 000/309] 5.4.19-stable review
+Message-ID: <20200212211730.GA36144@debian>
+References: <20200210122406.106356946@linuxfoundation.org>
+ <20200212073531.GA5184@debian>
+ <20200212133037.GA1791775@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212133037.GA1791775@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tracepoint interface will stop providing regular RCU context; make
-sure we do it ourselves, since perf makes use of regular RCU protected
-data.
+On Wed, Feb 12, 2020 at 05:30:37AM -0800, Greg Kroah-Hartman wrote:
+> On Wed, Feb 12, 2020 at 01:05:31PM +0530, Jeffrin Jose wrote:
+> > On Mon, Feb 10, 2020 at 04:29:16AM -0800, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 5.4.19 release.
+> > > There are 309 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > > The whole patch series can be found in one patch at:
+> > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.19-rc1.gz
+> > > or in the git tree and branch at:
+> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > > and the diffstat can be found below.
+> > 
+> > hello ,
+> > 
+> > compiled and booted 5.4.19-rc1+ . No new error according to "sudo dmesg -l err"
+> 
+> Thanks for testing, there shouldn't be a need to run 'sudo' for that
+> dmesg command :)
+> 
+> greg k-h
 
-Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |    5 +++++
- 1 file changed, 5 insertions(+)
+hello,
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8950,6 +8950,7 @@ void perf_tp_event(u16 event_type, u64 c
- {
- 	struct perf_sample_data data;
- 	struct perf_event *event;
-+	unsigned long rcu_flags;
- 
- 	struct perf_raw_record raw = {
- 		.frag = {
-@@ -8961,6 +8962,8 @@ void perf_tp_event(u16 event_type, u64 c
- 	perf_sample_data_init(&data, 0, 0);
- 	data.raw = &raw;
- 
-+	rcu_flags = trace_rcu_enter();
-+
- 	perf_trace_buf_update(record, event_type);
- 
- 	hlist_for_each_entry_rcu(event, head, hlist_entry) {
-@@ -8996,6 +8999,8 @@ void perf_tp_event(u16 event_type, u64 c
- 	}
- 
- 	perf_swevent_put_recursion_context(rctx);
-+
-+	trace_rcu_exit(rcu_flags);
- }
- EXPORT_SYMBOL_GPL(perf_tp_event);
- 
+   thanks for helping me improve.
+   i had "CONFIG_SECURITY_DMESG_RESTRICT=y"
+   i did related to "sudo sysctl kernel.dmesg_restrict=0"
+   now dmesg without sudo is working.
 
-
+--
+software engineer
+rajagiri school of engineering and technology
