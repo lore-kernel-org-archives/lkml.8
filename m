@@ -2,88 +2,200 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D8AC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6323EC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C293206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E9921739
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:11:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QqKpIGph"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y1grTSXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgBLGIq (ORCPT
+        id S1728202AbgBLGLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 01:08:46 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59215 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725887AbgBLGIq (ORCPT
+        Wed, 12 Feb 2020 01:11:42 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7226 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727893AbgBLGLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 01:08:46 -0500
-X-UUID: 84c92f6bafd04e06bc906fd0e676de58-20200212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SWD5TohyT5cMPrdmmo17mXTsqaC7XRDeHZDf6wxl7cY=;
-        b=QqKpIGphIjGohnCyD8IAS+Rvhp6QiGtoKfw21hkpiSgyk0/ISqf3VfrZaZ0I6USNo/u1GDfCNekz+hx3EDXSorL0F2XISXUewfRUb/mRQ2mdNoeFC+kjaX+gkfWQVISej/+WmlJL94L75bGKmyFJ+VvlCm/JQ42qz88verQ3d2c=;
-X-UUID: 84c92f6bafd04e06bc906fd0e676de58-20200212
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <wen.su@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 208193523; Wed, 12 Feb 2020 14:08:42 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Feb 2020 14:07:53 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Feb 2020 14:08:49 +0800
-Message-ID: <1581487721.16783.9.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/4] dt-bindings: regulator: Add document for MT6359
- regulator
-From:   Wen Su <Wen.Su@mediatek.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 12 Feb 2020 14:08:41 +0800
-In-Reply-To: <8398188f-820a-5abf-f52e-b79c0c583704@gmail.com>
-References: <1580958411-2478-1-git-send-email-Wen.Su@mediatek.com>
-         <1580958411-2478-2-git-send-email-Wen.Su@mediatek.com>
-         <20200206114927.GN3897@sirena.org.uk> <1581335854.16783.1.camel@mtkswgap22>
-         <8398188f-820a-5abf-f52e-b79c0c583704@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 12 Feb 2020 01:11:42 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4397000000>; Tue, 11 Feb 2020 22:11:12 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 11 Feb 2020 22:11:40 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 11 Feb 2020 22:11:40 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Feb
+ 2020 06:11:40 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 12 Feb 2020 06:11:40 +0000
+Received: from jckuo-lt.nvidia.com (Not Verified[10.19.108.125]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e43971a0001>; Tue, 11 Feb 2020 22:11:39 -0800
+From:   JC Kuo <jckuo@nvidia.com>
+To:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
+        <robh@kernel.org>, <jonathanh@nvidia.com>, <kishon@ti.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <nkristam@nvidia.com>, JC Kuo <jckuo@nvidia.com>
+Subject: [PATCH v6 1/5] phy: tegra: xusb: Protect Tegra186 soc with config
+Date:   Wed, 12 Feb 2020 14:11:29 +0800
+Message-ID: <20200212061133.11665-2-jckuo@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200212061133.11665-1-jckuo@nvidia.com>
+References: <20200212061133.11665-1-jckuo@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581487872; bh=FhTo0zaxKV4viKBzNnNpJAoXrX17BeUPDOLf/A4rnxs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=Y1grTSXRyQJ5j48Ff46G8dE7ekyg6++IODy+apYeCiNWPE6I/97fGDzX/Q4Zd+Yk4
+         9WO3+2Dre5jCRvQnb2BwaKZJa5dDrEJpbZ6K9LtgGXWjVpdFMjOY/rOxcT/5IAcSlQ
+         iwyGFkp5Mm9LIi9P2VGADIXDB2CH/yTZrRezSp2vcihx/g2ieV3nGAOAwrO5o8vpFb
+         qt46NjDDoNPaVnftbX/fcdmzpWV71FycgoPoYKeFBcH/g5EcXTIYUtJVsNpFVlHFXu
+         Yrvfy+7Ozvkp0uLYm/Cxv0yZ64Sx1UlXxhtY0e6Pm5UmiLHfa+RPikHgObVy086Os+
+         zdmnhtKp9h9Lg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIA0KDQpPbiBUdWUsIDIwMjAtMDItMTEgYXQgMTc6MDYgKzAxMDAsIE1hdHRoaWFzIEJydWdn
-ZXIgd3JvdGU6DQo+IA0KPiBPbiAxMC8wMi8yMDIwIDEyOjU3LCBXZW4gU3Ugd3JvdGU6DQo+ID4g
-SGksIA0KPiA+IA0KPiA+IE9uIFRodSwgMjAyMC0wMi0wNiBhdCAxMTo0OSArMDAwMCwgTWFyayBC
-cm93biB3cm90ZToNCj4gPj4gT24gVGh1LCBGZWIgMDYsIDIwMjAgYXQgMTE6MDY6NDhBTSArMDgw
-MCwgV2VuIFN1IHdyb3RlOg0KPiA+Pg0KPiA+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+
-PiArLSBjb21wYXRpYmxlOiAibWVkaWF0ZWssbXQ2MzU5LXJlZ3VsYXRvciINCj4gPj4NCj4gPj4g
-V2h5IGRvZXMgdGhpcyBuZWVkIGEgY29tcGF0aWJsZSBzdHJpbmcgLSBpdCBsb29rcyBsaWtlIGl0
-J3MganVzdA0KPiA+PiBlbmNvZGluZyB0aGUgd2F5IExpbnV4IHNwbGl0cyBkZXZpY2VzIHVwIGlu
-dG8gdGhlIERULCBub3QNCj4gPj4gcHJvdmlkaW5nIHNvbWUgcmV1c2FibGUgSVAgYmxvY2suDQo+
-ID4gDQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KPiA+IEkgd2lsbCByZW1vdmUgaXQg
-aW4gdGhlIG5leHQgcGF0Y2guDQo+ID4gDQo+IA0KPiBJZiB0aGlzIHRoZSB3YXkgdG8gZ28sIHRo
-ZW4gcGxlYXNlIGZpeCBhbGwgdGhlIG90aGVyIE1lZGlhVGVrIGJpbmRpbmcNCj4gZGVzY3JpcHRp
-b24gZm9yIHJlZ3VsYXRvcnMgKCsgdGhlIGR0cykgYXMgdGhpcyBpcyB0aGVuIHdyb25nLg0KPiBU
-aGFua3MhDQo+IE1hdHRoaWFzDQoNClRoZSBtdDYzNTktcmVndWxhdG9yIGRyaXZlciBpcyBzdGls
-bCBhIHJldXNhYmxlIElQIGJsb2NrLkl0IGNvdWxkIGJlDQphZGRpbmcgbW9yZSBvdGhlciBNZWRp
-YVRlayBwbWljIG10NjM1OSBzaW1pbGFyIGNvbXBhdGlibGUgZGV2aWNlLiBCdXQNCmN1cnJlbnRs
-eSB0aGlzIHBhdGNoIG9ubHkgdGVzdGluZyBvbiBwbWljIG10NjM1OS4NCklzIGl0IGFsbG93YWJs
-ZSB0byBrZWVwIGNvbXBhdGlibGUgc3RyaW5nIGluIGJpbmRpbmcgZGVzY3JpcHRpb24gPw0KDQpU
-aGFua3MNCg0K
+As xusb-tegra186.c will be reused for Tegra194, it would be good to
+protect Tegra186 soc data with CONFIG_ARCH_TEGRA_186_SOC. This commit
+also reshuffles Tegra186 soc data single CONFIG_ARCH_TEGRA_186_SOC
+will be sufficient.
+
+Signed-off-by: JC Kuo <jckuo@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+Changes in v6: none
+Changes in v5: none
+Changes in v4: none
+Changes in v3: none
+Changes in v2:
+- new patch to protect Tegra186 soc data with config
+
+ drivers/phy/tegra/xusb-tegra186.c | 70 ++++++++++++++++---------------
+ 1 file changed, 36 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
+index 84c27394c181..01f7d979c9a8 100644
+--- a/drivers/phy/tegra/xusb-tegra186.c
++++ b/drivers/phy/tegra/xusb-tegra186.c
+@@ -503,19 +503,6 @@ static const char * const tegra186_usb2_functions[] = {
+ 	"xusb",
+ };
+ 
+-static const struct tegra_xusb_lane_soc tegra186_usb2_lanes[] = {
+-	TEGRA186_LANE("usb2-0", 0,  0, 0, usb2),
+-	TEGRA186_LANE("usb2-1", 0,  0, 0, usb2),
+-	TEGRA186_LANE("usb2-2", 0,  0, 0, usb2),
+-};
+-
+-static const struct tegra_xusb_pad_soc tegra186_usb2_pad = {
+-	.name = "usb2",
+-	.num_lanes = ARRAY_SIZE(tegra186_usb2_lanes),
+-	.lanes = tegra186_usb2_lanes,
+-	.ops = &tegra186_usb2_pad_ops,
+-};
+-
+ static int tegra186_usb2_port_enable(struct tegra_xusb_port *port)
+ {
+ 	return 0;
+@@ -765,27 +752,6 @@ static const char * const tegra186_usb3_functions[] = {
+ 	"xusb",
+ };
+ 
+-static const struct tegra_xusb_lane_soc tegra186_usb3_lanes[] = {
+-	TEGRA186_LANE("usb3-0", 0,  0, 0, usb3),
+-	TEGRA186_LANE("usb3-1", 0,  0, 0, usb3),
+-	TEGRA186_LANE("usb3-2", 0,  0, 0, usb3),
+-};
+-
+-static const struct tegra_xusb_pad_soc tegra186_usb3_pad = {
+-	.name = "usb3",
+-	.num_lanes = ARRAY_SIZE(tegra186_usb3_lanes),
+-	.lanes = tegra186_usb3_lanes,
+-	.ops = &tegra186_usb3_pad_ops,
+-};
+-
+-static const struct tegra_xusb_pad_soc * const tegra186_pads[] = {
+-	&tegra186_usb2_pad,
+-	&tegra186_usb3_pad,
+-#if 0 /* TODO implement */
+-	&tegra186_hsic_pad,
+-#endif
+-};
+-
+ static int
+ tegra186_xusb_read_fuse_calibration(struct tegra186_xusb_padctl *padctl)
+ {
+@@ -885,6 +851,7 @@ static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
+ 	.vbus_override = tegra186_xusb_padctl_vbus_override,
+ };
+ 
++#if IS_ENABLED(CONFIG_ARCH_TEGRA_186_SOC)
+ static const char * const tegra186_xusb_padctl_supply_names[] = {
+ 	"avdd-pll-erefeut",
+ 	"avdd-usb",
+@@ -892,6 +859,40 @@ static const char * const tegra186_xusb_padctl_supply_names[] = {
+ 	"vddio-hsic",
+ };
+ 
++static const struct tegra_xusb_lane_soc tegra186_usb2_lanes[] = {
++	TEGRA186_LANE("usb2-0", 0,  0, 0, usb2),
++	TEGRA186_LANE("usb2-1", 0,  0, 0, usb2),
++	TEGRA186_LANE("usb2-2", 0,  0, 0, usb2),
++};
++
++static const struct tegra_xusb_pad_soc tegra186_usb2_pad = {
++	.name = "usb2",
++	.num_lanes = ARRAY_SIZE(tegra186_usb2_lanes),
++	.lanes = tegra186_usb2_lanes,
++	.ops = &tegra186_usb2_pad_ops,
++};
++
++static const struct tegra_xusb_lane_soc tegra186_usb3_lanes[] = {
++	TEGRA186_LANE("usb3-0", 0,  0, 0, usb3),
++	TEGRA186_LANE("usb3-1", 0,  0, 0, usb3),
++	TEGRA186_LANE("usb3-2", 0,  0, 0, usb3),
++};
++
++static const struct tegra_xusb_pad_soc tegra186_usb3_pad = {
++	.name = "usb3",
++	.num_lanes = ARRAY_SIZE(tegra186_usb3_lanes),
++	.lanes = tegra186_usb3_lanes,
++	.ops = &tegra186_usb3_pad_ops,
++};
++
++static const struct tegra_xusb_pad_soc * const tegra186_pads[] = {
++	&tegra186_usb2_pad,
++	&tegra186_usb3_pad,
++#if 0 /* TODO implement */
++	&tegra186_hsic_pad,
++#endif
++};
++
+ const struct tegra_xusb_padctl_soc tegra186_xusb_padctl_soc = {
+ 	.num_pads = ARRAY_SIZE(tegra186_pads),
+ 	.pads = tegra186_pads,
+@@ -916,6 +917,7 @@ const struct tegra_xusb_padctl_soc tegra186_xusb_padctl_soc = {
+ 	.num_supplies = ARRAY_SIZE(tegra186_xusb_padctl_supply_names),
+ };
+ EXPORT_SYMBOL_GPL(tegra186_xusb_padctl_soc);
++#endif
+ 
+ MODULE_AUTHOR("JC Kuo <jckuo@nvidia.com>");
+ MODULE_DESCRIPTION("NVIDIA Tegra186 XUSB Pad Controller driver");
+-- 
+2.17.1
 
