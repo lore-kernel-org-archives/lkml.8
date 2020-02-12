@@ -2,68 +2,276 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A0DC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932AFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAC320873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:58:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581494288;
-	bh=l4Ydi+YAkhSWMA7Xt1/lLVzT50jm4UuMqPacNHvAN7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UYlophg9/ka07w9dNj2yKygvPmoTsF7QXVnXrKEWbyEpzA/VpZAr1+UZ2vSVd1/Em
-	 /2ECVvX/ayeuy9rdR1rxTubRmPeJnvghzx34cYinawVxw7KuGPvl+EC0cb+9U466O6
-	 cybLmhLGLdOuy9EFzQU9RAv6GoYbKOM9pm0Y8YL8=
+	by mail.kernel.org (Postfix) with ESMTP id 61F442082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=stapelberg-ch.20150623.gappssmtp.com header.i=@stapelberg-ch.20150623.gappssmtp.com header.b="O9JVJqX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgBLH6I (ORCPT
+        id S1728427AbgBLH7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:58:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbgBLH6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:58:07 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC058206DB;
-        Wed, 12 Feb 2020 07:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581494287;
-        bh=l4Ydi+YAkhSWMA7Xt1/lLVzT50jm4UuMqPacNHvAN7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X8E+xqPwytUirJUKTx6MIE63P70ai95J0dVyl61gmmMC4dlF9IikVo7L5dJUVWEcS
-         lpf8NFiyp1lvekfJMnV0waskC9rcCn2absnEXcPZjEOYc66rkXuYTl9ozmymFG1NsF
-         Eq+EQcOL4vR483ITihCOCkA0kN4uyokPKuwfLocU=
-Date:   Wed, 12 Feb 2020 15:57:59 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/3] dt-bindings: clock: Convert i.MX8MQ to json-schema
-Message-ID: <20200212075758.GF11096@dragon>
-References: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
+        Wed, 12 Feb 2020 02:59:00 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42878 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbgBLH7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 02:59:00 -0500
+Received: by mail-oi1-f193.google.com with SMTP id j132so1158566oih.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 23:58:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=stapelberg-ch.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+gfCeGVf1+C6H+B7Y7Cv1jC8wNsWdETJ4+jIe0R9/HA=;
+        b=O9JVJqX9m8hYGFPU4CRTUSanQgJSsniqg79vog0h5MuWoIFVVMHKz0wjsaXiGlsjKq
+         q3y3w4GoAycW1jj/lLe0UGA7dFeG0BcgHaLOXkbXMzmOHAXAKywJSkCJAHpUmuy7QtO9
+         lbffL2ZVPM7BSsjUqBcyJJq97/ArVsl39meURQZYp7H946aAX6VWWKc2WP7Dq4B1bGXF
+         cIjU3Wjv0PuFj/x+GritqwoB99xIODZRtBVUHRIs7pwn6s4I5x0EgupDPj6QcVl6HnOS
+         dQDzcJJKVxYMJIfEp6KQwrjnuz9j6cX6byyXLpUpG9QTOYnKEcb/PTekqpHiRNUdWFY1
+         GtfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+gfCeGVf1+C6H+B7Y7Cv1jC8wNsWdETJ4+jIe0R9/HA=;
+        b=QaxZHPHh0hhER1Evl5xmXmj21eLoGEokN1jtFcS5mU+0rTIobCoSoJencH5Nrl8FjO
+         GZmQPLUnARzDDuUodFLYScOg/SGNE409N3pC2OlUojy72gWQJ95LqRbgVPLNjQmiGL3C
+         p/gkpTq7K/5bOOtCszgeMrDHDLIj5UZAJkXzLCx330lcJ1htgz7Oij8lCV2aPtGINfes
+         sNjMPtfrPQRt8ni0RpsgzE2hKHJGZwGsuthWHUKWouRvJh68fsJk4ZT0m3t+Xq1BUYYj
+         MrMcVGj+Ks3zBeKabYXBxuLg4wqHwJA3mQ9tcyNRpRK5JLzpRwbc658YBbwG8A0Yym+b
+         uAiw==
+X-Gm-Message-State: APjAAAVePE42uANhUhagnrgy7uGHVJw6xdguOFjA12LCso7XVBNjtjCv
+        GgVNSDqe7dWRq2/9erjyOYlCW61SrfCRbxJdbgz1EA==
+X-Google-Smtp-Source: APXvYqyihgfPdh+cTb8/ZFqn4kCxLLTio71MqKbIopYNfnqlfwl09rcj7ZGZ158u3JZSfWq6mdZjsUTvokEg44pdx0k=
+X-Received: by 2002:a54:4f04:: with SMTP id e4mr5137716oiy.111.1581494338133;
+ Tue, 11 Feb 2020 23:58:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAJfpegtUAHPL9tsFB85ZqjAfy0xwz7ATRcCtLbzFBo8=WnCvLw@mail.gmail.com>
+ <20200209080918.1562823-1-michael+lkml@stapelberg.ch> <CAJfpegv4iL=bW3TXP3F9w1z6-LUox8KiBmw7UBcWE-0jiK0YsA@mail.gmail.com>
+In-Reply-To: <CAJfpegv4iL=bW3TXP3F9w1z6-LUox8KiBmw7UBcWE-0jiK0YsA@mail.gmail.com>
+From:   Michael Stapelberg <michael+lkml@stapelberg.ch>
+Date:   Wed, 12 Feb 2020 08:58:47 +0100
+Message-ID: <CANnVG6kYh6M30mwBHcGeFf=fhqKmWKPeUj2GYbvNgtq0hm=gXQ@mail.gmail.com>
+Subject: Re: Still a pretty bad time on 5.4.6 with fuse_request_end.
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     fuse-devel <fuse-devel@lists.sourceforge.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kyle Sanderson <kyle.leet@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 09:26:05AM +0800, Anson Huang wrote:
-> Convert the i.MX8MQ clock binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Sure: here=E2=80=99s a backtrace and req->args printed:
 
-Applied all, thanks.
+(gdb) bt full
+#0  0xffffffff82000ff3 in __x86_indirect_thunk_r8 () at
+arch/x86/lib/retpoline.S:40
+No locals.
+#1  0xffffffff8137ec68 in fuse_request_end (fc=3D0xffff88813a57be00,
+req=3D0xffff88813a5a3770) at fs/fuse/dev.c:329
+        fiq =3D 0xffff88813a57be48
+        async =3D true
+#2  0xffffffff81382d88 in fuse_dev_do_write (fud=3D0xffff88813a57be00,
+cs=3D0xffffc90002fafa00, nbytes=3D4294967294) at fs/fuse/dev.c:1912
+        err =3D 0
+        fc =3D 0xffff88813a57be00
+        fpq =3D 0xffff888132815f48
+        req =3D 0xffff88813a5a3770
+        oh =3D {
+          len =3D 16,
+          error =3D -2,
+          unique =3D 66942
+        }
+#3  0xffffffff81382e69 in fuse_dev_write (iocb=3D0xffffc900008cbe48,
+from=3D0xffffc900008cbe20) at fs/fuse/dev.c:1934
+        cs =3D {
+          write =3D 0,
+          req =3D 0xffff88813a5a3770,
+          iter =3D 0xffffc900008cbe20,
+          pipebufs =3D 0x0 <fixed_percpu_data>,
+          currbuf =3D 0x0 <fixed_percpu_data>,
+          pipe =3D 0x0 <fixed_percpu_data>,
+          nr_segs =3D 0,
+          pg =3D 0x0 <fixed_percpu_data>,
+          len =3D 0,
+          offset =3D 24,
+          move_pages =3D 0
+        }
+        fud =3D 0xffff888132815f40
+#4  0xffffffff8120122e in call_write_iter (file=3D<optimized out>,
+iter=3D<optimized out>, kio=3D<optimized out>) at
+./include/linux/fs.h:1901
+No locals.
+#5  new_sync_write (filp=3D0xffff888119886b00, buf=3D<optimized out>,
+len=3D<optimized out>, ppos=3D0xffffc900008cbee8) at fs/read_write.c:483
+        iov =3D {
+          iov_base =3D 0xc0008ec008,
+          iov_len =3D 16
+        }
+        kiocb =3D {
+          ki_filp =3D 0xffff888119886b00,
+          ki_pos =3D 0,
+          ki_complete =3D 0x0 <fixed_percpu_data>,
+          private =3D 0x0 <fixed_percpu_data>,
+          ki_flags =3D 0,
+          ki_hint =3D 0,
+          ki_ioprio =3D 0,
+          ki_cookie =3D 0
+        }
+        iter =3D {
+          type =3D 5,
+          iov_offset =3D 0,
+          count =3D 0,
+          {
+            iov =3D 0xffffc900008cbe20,
+            kvec =3D 0xffffc900008cbe20,
+            bvec =3D 0xffffc900008cbe20,
+            pipe =3D 0xffffc900008cbe20
+          },
+          {
+            nr_segs =3D 0,
+            {
+              head =3D 0,
+              start_head =3D 0
+            }
+          }
+        }
+        ret =3D <optimized out>
+#6  0xffffffff812012e4 in __vfs_write (file=3D<optimized out>,
+p=3D<optimized out>, count=3D<optimized out>, pos=3D<optimized out>) at
+fs/read_write.c:496
+No locals.
+#7  0xffffffff81203f04 in vfs_write (pos=3D<optimized out>, count=3D16,
+buf=3D<optimized out>, file=3D<optimized out>) at fs/read_write.c:558
+        ret =3D 16
+        ret =3D <optimized out>
+#8  vfs_write (file=3D0xffff888119886b00, buf=3D0xc0008ec008 "\020",
+count=3D16, pos=3D0xffffc900008cbee8) at fs/read_write.c:542
+        ret =3D 16
+#9  0xffffffff812041b2 in ksys_write (fd=3D<optimized out>,
+buf=3D0xc0008ec008 "\020", count=3D16) at fs/read_write.c:611
+        pos =3D 0
+        ppos =3D <optimized out>
+        f =3D <optimized out>
+        ret =3D 824643076104
+#10 0xffffffff81204245 in __do_sys_write (count=3D<optimized out>,
+buf=3D<optimized out>, fd=3D<optimized out>) at fs/read_write.c:623
+No locals.
+#11 __se_sys_write (count=3D<optimized out>, buf=3D<optimized out>,
+fd=3D<optimized out>) at fs/read_write.c:620
+        ret =3D <optimized out>
+        ret =3D <optimized out>
+#12 __x64_sys_write (regs=3D<optimized out>) at fs/read_write.c:620
+No locals.
+#13 0xffffffff810028a8 in do_syscall_64 (nr=3D<optimized out>,
+regs=3D0xffffc900008cbf58) at arch/x86/entry/common.c:294
+        ti =3D <optimized out>
+#14 0xffffffff81e0007c in entry_SYSCALL_64 () at arch/x86/entry/entry_64.S:=
+175
+No locals.
+#15 0x0000000000000000 in ?? ()
+No symbol table info available.
+
+(gdb) p *req->args
+$5 =3D {
+  nodeid =3D 18446683600620026424,
+  opcode =3D 2167928246,
+  in_numargs =3D 65535,
+  out_numargs =3D 65535,
+  force =3D false,
+  noreply =3D false,
+  nocreds =3D false,
+  in_pages =3D false,
+  out_pages =3D false,
+  out_argvar =3D true,
+  page_zeroing =3D true,
+  page_replace =3D false,
+  in_args =3D {{
+      size =3D 978828800,
+      value =3D 0x2fafce0
+    }, {
+      size =3D 978992728,
+      value =3D 0xffffffff8138efaa <fuse_alloc_forget+26>
+    }, {
+      size =3D 50002688,
+      value =3D 0xffffffff8138635f <fuse_lookup_name+255>
+    }},
+  out_args =3D {{
+      size =3D 570,
+      value =3D 0xffffc90002fafb10
+    }, {
+      size =3D 6876,
+      value =3D 0x3000000001adc
+    }},
+  end =3D 0x1000100000001
+}
+
+Independently, as a separate test, I have also modified the source like thi=
+s:
+
+bool async;
+bool async_early =3D req->args->end;
+
+if (test_and_set_bit(FR_FINISHED, &req->flags))
+goto put_request;
+
+async =3D req->args->end;
+
+=E2=80=A6and printed the value of async and async_early. async is true,
+async_early is false.
+
+Perhaps some other routine is modifying the request, and checking
+req->args->end early enough masks that bug?
+
+On Tue, Feb 11, 2020 at 11:55 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> On Sun, Feb 9, 2020 at 9:09 AM <michael+lkml@stapelberg.ch> wrote:
+> >
+> > From: Michael Stapelberg <michael+lkml@stapelberg.ch>
+> >
+> > Hey,
+> >
+> > I recently ran into this, too. The symptom for me is that processes usi=
+ng the
+> > affected FUSE file system hang indefinitely, sync(2) system calls hang
+> > indefinitely, and even triggering an abort via echo 1 >
+> > /sys/fs/fuse/connections/*/abort does not get the file system unstuck (=
+there is
+> > always 1 request still pending). Only removing power will get the machi=
+ne
+> > unstuck.
+> >
+> > I=E2=80=99m triggering this when building packages for https://distr1.o=
+rg/, which uses a
+> > FUSE daemon (written in Go using the jacobsa/fuse package) to provide p=
+ackage
+> > contents.
+> >
+> > I bisected the issue to commit
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?id=3D2b319d1f6f92a4ced9897678113d176ee16ae85d
+> >
+> > With that commit, I run into a kernel oops within =E2=89=881 minute aft=
+er starting my
+> > batch build. With the commit before, I can batch build for many minutes=
+ without
+> > issues.
+>
+> Pretty weird.   I'm not seeing how this could change behavior, as the
+> args->end value is not changed after being initialized, and so moving
+> the test later should not make a difference.
+>
+> Could you print out the complete contents of req->args?
+>
+> Thanks,
+> Miklos
