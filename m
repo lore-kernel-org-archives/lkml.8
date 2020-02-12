@@ -2,70 +2,76 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47275C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68A1C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2590620873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86790206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgBLPgV (ORCPT
+        id S1728562AbgBLPg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:36:21 -0500
-Received: from 8bytes.org ([81.169.241.247]:54056 "EHLO theia.8bytes.org"
+        Wed, 12 Feb 2020 10:36:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:34174 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbgBLPgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:36:20 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 56BB03D3; Wed, 12 Feb 2020 16:36:19 +0100 (CET)
-Date:   Wed, 12 Feb 2020 16:36:17 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Juergen Gross <JGross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 46/62] x86/sev-es: Handle INVD Events
-Message-ID: <20200212153617.GD22063@8bytes.org>
-References: <20200211135256.24617-47-joro@8bytes.org>
- <EA510462-A43C-4F7E-BFE8-B212003B3627@amacapital.net>
+        id S1727665AbgBLPg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:36:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9B54328;
+        Wed, 12 Feb 2020 07:36:26 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 909A13F68F;
+        Wed, 12 Feb 2020 07:36:24 -0800 (PST)
+Subject: Re: [PATCH v3 3/7] arm64/kvm: disable access to AMU registers from
+ kvm guests
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
+        rjw@rjwysocki.net
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-4-ionela.voinescu@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <a4d66284-a0fc-4bbb-3a98-ea4093bcf389@arm.com>
+Date:   Wed, 12 Feb 2020 15:36:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200211184542.29585-4-ionela.voinescu@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <EA510462-A43C-4F7E-BFE8-B212003B3627@amacapital.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 04:12:19PM -0800, Andy Lutomirski wrote:
+On 11/02/2020 18:45, Ionela Voinescu wrote:
+> Access to the AMU counters should be disabled by default in kvm guests,
+> as information from the counters might reveal activity in other guests
+> or activity on the host.
 > 
+> Therefore, disable access to AMU registers from EL0 and EL1 in kvm
+> guests by:
+>  - Hiding the presence of the extension in the feature register
+>    (SYS_ID_AA64PFR0_EL1) on the VCPU.
+>  - Disabling access to the AMU registers before switching to the guest.
+>  - Trapping accesses and injecting an undefined instruction into the
+>    guest.
 > 
-> > On Feb 11, 2020, at 5:53 AM, Joerg Roedel <joro@8bytes.org> wrote:
-> > 
-> > ﻿From: Tom Lendacky <thomas.lendacky@amd.com>
-> > 
-> > Implement a handler for #VC exceptions caused by INVD instructions.
-> 
-> Uh, what?  Surely the #VC code can have a catch-all OOPS path for things like this. Linux should never ever do INVD.
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
 
-Right, its hard to come up with a valid use-case for INVD in the Linux
-kernel. I changed the patch to mark INVD as unsupported and print an
-error message.
-
-Regards,
-
-	Joerg
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com> 
