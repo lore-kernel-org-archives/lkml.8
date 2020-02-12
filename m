@@ -2,160 +2,171 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09ECC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8599C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7EA624650
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLVtOPey"
+	by mail.kernel.org (Postfix) with ESMTP id 8867921569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgBLRYy (ORCPT
+        id S1728793AbgBLR3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:24:54 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:34767 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLRYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:24:53 -0500
-Received: by mail-ua1-f67.google.com with SMTP id 1so1178964uao.1;
-        Wed, 12 Feb 2020 09:24:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jCGxfylxy3MldAt/reEr7p2HcESXZ2SEVCL7ze7sb8M=;
-        b=mLVtOPeyTrlGTAOEBO32ZUHoFId8CdOxxgdZYat1MHSCbZKEoRcEDicBnpT71GntOI
-         jE9GscwR8WoZBDG3NW2w5NV4KY4Y8KfFRmaVsjrpAkVgBIy1+dNvlJV4eDDZDPfUqKVK
-         oorEhZlJcQWCPlGU6yTKKyzkjd8lVDC09X8BRQFifOVlbdeW8BUCX8oUY+gdFrqV43ve
-         A7HVKdPyoFHMCkXVqFcQSKxCEkspuET12AzZarmTfBeGT1hUgL0I2kOfIADygzgcXX0I
-         HilyTVF18ofv8eL17GJwyyCw6bLnd7ieFA+NvVspb+P0wA90z7swiFmFjYi2DXaQkKOH
-         2Y2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jCGxfylxy3MldAt/reEr7p2HcESXZ2SEVCL7ze7sb8M=;
-        b=KBcoofSdsZBPCXwqDwvfsx2OFZGhpGqfvSjS/0luzx4qe9h1NLHCPGcQnMzMEt1Vsd
-         mncszrkchSVB50iY1p2OqxoRKF49UPqyWwI4l01wB9sk5cv/hh5DDftqr5jBPvA4lelZ
-         Fi1xLTcpSjWNP/SzESJyWQvMAVqIA4iNJJTomEPXW65es3jTVgR2Ll1Db9kT32y7V+EV
-         NWV3YC6du45Cxnbta11CpkhKgrYQp4LDVeBeLNmKlyulkpEhowvyD7gVMvOhcQtXthg2
-         UbfI8h25izvycMHsBY6/hgivFTruUhKJVmJt8jQ4a7qfe0V+1vnXfS8jjT7pBVFrUYhM
-         e3Xg==
-X-Gm-Message-State: APjAAAVerJ5jEi5PMl2rK8MVAROpjCnwvpD3isLjRhExSS0aO9f/MEMp
-        aeViCftYeUNFpTc0O9y5sXLhkj5K/ZcYTSID99g=
-X-Google-Smtp-Source: APXvYqyAepvFaN7GJfHPGtS87hCZr+gc51607hAiqYlgiF4eorNgglWZn4G42TMyi4n7UoLDOJ1DHv82wxTfkbU3tGs=
-X-Received: by 2002:ab0:66d6:: with SMTP id d22mr5082237uaq.92.1581528292397;
- Wed, 12 Feb 2020 09:24:52 -0800 (PST)
+        Wed, 12 Feb 2020 12:29:30 -0500
+Received: from mga18.intel.com ([134.134.136.126]:64771 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727231AbgBLR33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 12:29:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 09:29:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="251980707"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 12 Feb 2020 09:29:28 -0800
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id CA48B5803DA;
+        Wed, 12 Feb 2020 09:29:28 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v14 0/5] Add Error Disconnect Recover (EDR) support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200212143842.GA133681@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <3d24296d-5bba-ee37-17d2-3a378b230f63@linux.intel.com>
+Date:   Wed, 12 Feb 2020 09:26:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <cover.1581475981.git.shengjiu.wang@nxp.com> <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
-In-Reply-To: <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 12 Feb 2020 14:24:40 -0300
-Message-ID: <CAOMZO5Do=dzh4WXvm44mB7-PeesWuA6qRtMXwHCH9piXd1dZEw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200212143842.GA133681@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 1:35 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
->
-> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> IP module found on i.MX815.
+Hi Bjorn,
 
-i.MX815 in an internal terminology. Please avoid it on the commit log.
+On 2/12/20 6:38 AM, Bjorn Helgaas wrote:
+> On Fri, Feb 07, 2020 at 04:03:30PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> This patchset adds support for following features:
+>>
+>> 1. Error Disconnect Recover (EDR) support.
+>> 2. _OSC based negotiation support for DPC.
+>>
+>> You can find EDR spec in the following link.
+>>
+>> https://members.pcisig.com/wg/PCI-SIG/document/12614
+> Hi Sathy,
+>
+> Bad timing!  Linus tagged v5.6-rc1 on Feb 9, shortly after you posted
+> this.  Would you mind refreshing this so it applies on my "master"
+> branch (v5.6-rc1)?
+Sure.
+>
+>> Changes since v13:
+>>   * Moved all EDR related code to edr.c
+>>   * Addressed Bjorns comments.
+>>
+>> Changes since v12:
+>>   * Addressed Bjorns comments.
+>>   * Added check for CONFIG_PCIE_EDR before requesting DPC control from firmware.
+>>   * Removed ff_check parameter from AER APIs.
+>>   * Used macros for _OST return status values in DPC driver.
+>>
+>> Changes since v11:
+>>   * Allowed error recovery to proceed after successful reset_link().
+>>   * Used correct ACPI handle for sending EDR status.
+>>   * Rebased on top of v5.5-rc5
+>>
+>> Changes since v10:
+>>   * Added "edr_enabled" member to dpc priv structure, which is used to cache EDR
+>>     enabling status based on status of pcie_ports_dpc_native and FF mode.
+>>   * Changed type of _DSM argument from Integer to Package in acpi_enable_dpc_port()
+>>     function to fix ACPI related boot warnings.
+>>   * Rebased on top of v5.5-rc3
+>>
+>> Changes since v9:
+>>   * Removed caching of pcie_aer_get_firmware_first() in dpc driver.
+>>   * Added proper spec reference in git log for patch 5 & 7.
+>>   * Added new function parameter "ff_check" to pci_cleanup_aer_uncorrect_error_status(),
+>>     pci_aer_clear_fatal_status() and pci_cleanup_aer_error_status_regs() functions.
+>>   * Rebased on top of v5.4-rc5
+>>
+>> Changes since v8:
+>>   * Rebased on top of v5.4-rc1
+>>
+>> Changes since v7:
+>>   * Updated DSM version number to match the spec.
+>>
+>> Changes since v6:
+>>   * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
+>>   * Addressed Bjorn comments.
+>>
+>> Changes since v5:
+>>   * Addressed Keith's comments.
+>>   * Added additional check for FF mode in pci_aer_init().
+>>   * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
+>>
+>> Changes since v4:
+>>   * Rebased on top of v5.3-rc1
+>>   * Fixed lock/unlock issue in edr_handle_event().
+>>   * Merged "Update error status after reset_link()" patch into this patchset.
+>>
+>> Changes since v3:
+>>   * Moved EDR related ACPI functions/definitions to pci-acpi.c
+>>   * Modified commit history in few patches to include spec reference.
+>>   * Added support to handle DPC triggered by NON_FATAL errors.
+>>   * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+>>   * Addressed Bjorn comments.
+>>
+>> Changes since v2:
+>>   * Split EDR support patch into multiple patches.
+>>   * Addressed Bjorn comments.
+>>
+>> Changes since v1:
+>>   * Rebased on top of v5.1-rc1
+>>
+>> Kuppuswamy Sathyanarayanan (5):
+>>    PCI/ERR: Update error status after reset_link()
+>>    PCI/DPC: Remove pcie_device reference from dpc_dev structure
+>>    PCI/EDR: Export AER, DPC and error recovery functions
+>>    PCI/DPC: Add Error Disconnect Recover (EDR) support
+>>    PCI/ACPI: Enable EDR support
+>>
+>>   drivers/acpi/pci_root.c   |  16 +++
+>>   drivers/pci/pci-acpi.c    |   3 +
+>>   drivers/pci/pci.h         |   8 ++
+>>   drivers/pci/pcie/Kconfig  |  10 ++
+>>   drivers/pci/pcie/Makefile |   1 +
+>>   drivers/pci/pcie/aer.c    |  39 ++++--
+>>   drivers/pci/pcie/dpc.c    |  92 ++++++++------
+>>   drivers/pci/pcie/dpc.h    |  20 +++
+>>   drivers/pci/pcie/edr.c    | 259 ++++++++++++++++++++++++++++++++++++++
+>>   drivers/pci/pcie/err.c    |  35 ++++--
+>>   drivers/pci/probe.c       |   1 +
+>>   include/linux/acpi.h      |   6 +-
+>>   include/linux/pci-acpi.h  |   8 ++
+>>   include/linux/pci.h       |   1 +
+>>   14 files changed, 441 insertions(+), 58 deletions(-)
+>>   create mode 100644 drivers/pci/pcie/dpc.h
+>>   create mode 100644 drivers/pci/pcie/edr.c
+>>
+>> -- 
+>> 2.21.0
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
->
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
->
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.txt b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
-> new file mode 100644
-> index 000000000000..0e8153165e3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
-> @@ -0,0 +1,57 @@
-> +NXP Asynchronous Sample Rate Converter (ASRC) Controller
-> +
-> +The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
-> +signal associated with an input clock into a signal associated with a different
-> +output clock. The driver currently works as a Front End of DPCM with other Back
-> +Ends Audio controller such as ESAI, SSI and SAI. It has four context to support
-> +four substreams within totally 32 channels.
-> +
-> +Required properties:
-> +- compatible:                Contains "fsl,imx8mn-easrc".
-> +
-> +- reg:                       Offset and length of the register set for the
-> +                            device.
-> +
-> +- interrupts:                Contains the asrc interrupt.
-> +
-> +- dmas:                      Generic dma devicetree binding as described in
-> +                            Documentation/devicetree/bindings/dma/dma.txt.
-> +
-> +- dma-names:                 Contains "ctx0_rx", "ctx0_tx",
-> +                                     "ctx1_rx", "ctx1_tx",
-> +                                     "ctx2_rx", "ctx2_tx",
-> +                                     "ctx3_rx", "ctx3_tx".
-> +
-> +- clocks:                    Contains an entry for each entry in clock-names.
-> +
-> +- clock-names:               "mem" - Peripheral clock to driver module.
-> +
-> +- fsl,easrc-ram-script-name: The coefficient table for the filters
-> +
-> +- fsl,asrc-rate:             Defines a mutual sample rate used by DPCM Back
-> +                            Ends.
-> +
-> +- fsl,asrc-width:            Defines a mutual sample width used by DPCM Back
-> +                            Ends.
-> +
-> +Example:
-> +
-> +easrc: easrc@300C0000 {
-> +       compatible = "fsl,imx8mn-easrc";
-> +       reg = <0x0 0x300C0000 0x0 0x10000>;
-> +       interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
-> +       clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
-> +       clock-names = "mem";
-> +       dmas = <&sdma2 16 23 0> , <&sdma2 17 23 0>,
-> +              <&sdma2 18 23 0> , <&sdma2 19 23 0>,
-> +              <&sdma2 20 23 0> , <&sdma2 21 23 0>,
-> +              <&sdma2 22 23 0> , <&sdma2 23 23 0>;
-> +       dma-names = "ctx0_rx", "ctx0_tx",
-> +                   "ctx1_rx", "ctx1_tx",
-> +                   "ctx2_rx", "ctx2_tx",
-> +                   "ctx3_rx", "ctx3_tx";
-> +       fsl,easrc-ram-script-name = "imx/easrc/easrc-imx8mn.bin";
-> +       fsl,asrc-rate  = <8000>;
-> +       fsl,asrc-width = <16>;
-> +       status = "disabled";
-> +};
-> --
-> 2.21.0
->
