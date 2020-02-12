@@ -2,115 +2,111 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ECDC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C83BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887722168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="n429HJfv"
+	by mail.kernel.org (Postfix) with ESMTP id 369C920714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgBLPAK (ORCPT
+        id S1728526AbgBLPAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:00:10 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:27493 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLPAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:00:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581519607;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3yrlgbwpWQZTwSSfMKPtb8XHqELW1Q2VHBhevB4Ahuo=;
-        b=n429HJfv3UUpI05fIeMj5pZySRovNjCWs/mlTHPY+2+mACKh0bhGjfxbGJrfUAshNP
-        9bR6+nSvSeKKjaLtITuNv/9MnO0ssUXjkmrHv2umT4GRSLLNvZeHudT7H4V5c+z6N6EL
-        zgMBehjnm4A9DyQ40ciyNiO86Z2ga3HJiv6siiI7WFVggOo0gWCoLBhDRnBXsrDRcjPe
-        j1vvF8xgtYRJx9oEvrjFeqCde/2rsitarfdvVILBiwNaUWmpQTYU0jtBjKuXr5XB+zvU
-        BV4CJjcngBim0w6cHTw9yxthudI2coByo3DVCOatFrz+dM+xWKM1gTbEucs67OCYn8ro
-        T80A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1CExt59j
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 12 Feb 2020 15:59:55 +0100 (CET)
+        Wed, 12 Feb 2020 10:00:43 -0500
+Received: from monster.unsafe.ru ([5.9.28.80]:59254 "EHLO mail.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727231AbgBLPAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:00:43 -0500
+Received: from comp-core-i7-2640m-0182e6 (nat-pool-brq-t.redhat.com [213.175.37.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id 9F5EFC61AB0;
+        Wed, 12 Feb 2020 15:00:39 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 16:00:38 +0100
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+Subject: Re: [PATCH v8 03/11] proc: move /proc/{self|thread-self} dentries to
+ proc_fs_info
+Message-ID: <20200212150038.rr364l5kjcgbmr3g@comp-core-i7-2640m-0182e6>
+Mail-Followup-To: Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+ <20200210150519.538333-4-gladkov.alexey@gmail.com>
+ <CALCETrWGpRr86tVKJU-sEMcg+x0Yzp+TbiBhrAc71RaO8=DYGQ@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: i2c: jz4780: silence log flood on txabrt
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200212145356.GB2492@ninjato>
-Date:   Wed, 12 Feb 2020 15:59:55 +0100
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <0C9F4243-159B-418C-B481-4B45B210F9F6@goldelico.com>
-References: <cover.1581457290.git.hns@goldelico.com> <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com> <20200212094628.GB1143@ninjato> <213C52CC-E5DC-4641-BE68-3D5C4FEA1FB5@goldelico.com> <20200212145356.GB2492@ninjato>
-To:     Wolfram Sang <wsa@the-dreams.de>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <CALCETrWGpRr86tVKJU-sEMcg+x0Yzp+TbiBhrAc71RaO8=DYGQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 10:23:23AM -0800, Andy Lutomirski wrote:
+> On Mon, Feb 10, 2020 at 7:06 AM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
+> >
+> > This is a preparation patch that moves /proc/{self|thread-self} dentries
+> > to be stored inside procfs fs_info struct instead of making them per pid
+> > namespace. Since we want to support multiple procfs instances we need to
+> > make sure that these dentries are also per-superblock instead of
+> > per-pidns,
+> 
+> The changelog makes perfect sense so far...
+> 
+> > unmounting a private procfs won't clash with other procfs
+> > mounts.
+> 
+> This doesn't parse as part of the previous sentence.  I'm also not
+> convinced that this really involves unmounting per se.  Maybe just
+> delete these words.
 
-> Am 12.02.2020 um 15:53 schrieb Wolfram Sang <wsa@the-dreams.de>:
-> 
-> Hi,
-> 
->>> Sorry, normally I don't do counter patches. Yet, this time I realized
->>> that it would be faster to actually do what I envisioned than to
->>> describe it in words. I hope you don't feel offended.
->> 
->> No problem. I had thought a little about that myself, but did not
->> dare to solve more than my problem...
-> 
-> Glad you like it. Well, it still kinda solves your problem only, because
-> there are still too many dev_err in there, but I think this is good
-> enough for now.
-> 
->>> Obviously, I can't test, does it work for you?
->> 
->> Yes,it works.
-> 
-> Good!
-> 
->> Do you want to push your patch yourself, or should I add it to my
->> patch series and resubmit in a v2?
-> 
-> I'll apply the patch to my tree directly as a bugfix for 5.6. You can
-> drop the I2C list from V2 then.
+Sure. I will remove this part.
 
-Ok, fine.
-
-BR and thanks,
-Nikolaus
+-- 
+Rgrds, legion
 
