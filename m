@@ -2,108 +2,99 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57752C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC34C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB6B20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581487153;
-	bh=xQFnOudKqb/kbsLlYNKBDsIDCJCWea6054v8vCNp2FQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hdBwA4Pd4vS3SvFQcEFOMMxqHXWSrDQPcEZ6ae5qQVNod3sdEIRVxmfwZHfdrC3Pn
-	 Oh7vE5h9Ptz7asXDLmikGfzkkUMy7MpebQdTEVX13q5n1iE5tyJGmwMa2vePZAQOrp
-	 M8JbjrITDNW5jisi2jbh+tbo+Qug3Actlc1KJGRE=
+	by mail.kernel.org (Postfix) with ESMTP id DDD2B2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 06:05:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GidHGpfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgBLF7M (ORCPT
+        id S1728187AbgBLGFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 00:59:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgBLF7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 00:59:12 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEDE12073C;
-        Wed, 12 Feb 2020 05:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581487151;
-        bh=xQFnOudKqb/kbsLlYNKBDsIDCJCWea6054v8vCNp2FQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EsE7XRDFHHOJfmDnCHM815qhGLMokCKAMN0ADFh7v0kZYkXrKVyCmg3ov9QmVtxw8
-         yU3nMgZ5d6TS7d8e5dmazqBXjtQqTTJgUxJkjAKkGUCuNYVAgrkKkuG4uNoWXxC9u9
-         l1eeoPbZjmyRuFtYZGF48Bp8fihJgKHWSZUymX7w=
-Date:   Tue, 11 Feb 2020 21:59:09 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v7 7/8] ext4: Hande casefolding with encryption
-Message-ID: <20200212055909.GI870@sol.localdomain>
-References: <20200208013552.241832-1-drosen@google.com>
- <20200208013552.241832-8-drosen@google.com>
+        Wed, 12 Feb 2020 01:05:48 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37691 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgBLGFr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 01:05:47 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so413609pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 22:05:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Js4SWp4AxGnmgpS0xpb2r+20hjEB6ZJuleDc08nwvzc=;
+        b=GidHGpfU+1Q586bqtdp7qWIQdqBWX0kfx/pBWtI1uAajniLiy2nPpkxJ7JjnAweVHg
+         ilZrHgwOmIDgE611haEEILEBp4woWOhMLh2UhtBdIbORMMG6SuYfjXk2XjPtQTp5tyr1
+         WkA/POXqdq+jTPxtC+KlqAU+qgfuXQsKGJ1cI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Js4SWp4AxGnmgpS0xpb2r+20hjEB6ZJuleDc08nwvzc=;
+        b=HT/pxn+GYvl4dm9NnwX1HoUZiJRxLWRcHfD0PHCzWxhNwwUD4howRl63C9MBTXmHIC
+         tKakzVb/y50rMxGkxttjfvpn78qnxwd4NouoggQC0NtoOHKgBgKCxkj0PndvGyvidPHG
+         uYNzyAA+/9kReF9KDI7ryoLGvatztzjJpQChF11RTJyhjdl37oQThYvjdZx6+24JWlEW
+         3wqaKTQIF7ZB+q7ppxdo1JPTJaEf7mMRGra6KRvMvYScYgjXF/VoUIhLEGkJZGsU5/fi
+         hETUhlo9SHHFeFzz6VU6JdQ89ZuTciq9QvIseli/IqpyEjlreG5VkvT4n/V7RTJw5EHt
+         OgPg==
+X-Gm-Message-State: APjAAAW5O8iVyL1phA6qItlFdRRzDrTIWQCWnDOkRNbzDM14CuSSvlfG
+        t7yalIV55K6Xuv8XNccjk3SLvw==
+X-Google-Smtp-Source: APXvYqxpyZsLuZkNUFq1aaY5ImmMD5AfRib3xtsrExdV4p76C8R6dTdGEPgJdoE+a7Q4WF+2gH+auA==
+X-Received: by 2002:a17:902:9f88:: with SMTP id g8mr22080796plq.100.1581487546921;
+        Tue, 11 Feb 2020 22:05:46 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id d69sm6792163pfd.72.2020.02.11.22.05.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 22:05:46 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: mt8173: add arm,no-tick-in-suspend in timer
+Date:   Wed, 12 Feb 2020 14:05:37 +0800
+Message-Id: <20200212060536.156890-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208013552.241832-8-drosen@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 05:35:51PM -0800, Daniel Rosenberg wrote:
-> This adds support for encryption with casefolding.
-> 
-> Since the name on disk is case preserving, and also encrypted, we can no
-> longer just recompute the hash on the fly. Additionally, to avoid
-> leaking extra information from the hash of the unencrypted name, we use
-> siphash via an fscrypt v2 policy.
-> 
-> The hash is stored at the end of the directory entry for all entries
-> inside of an encrypted and casefolded directory apart from those that
-> deal with '.' and '..'. This way, the change is backwards compatible
-> with existing ext4 filesystems.
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
-> ---
->  Documentation/filesystems/ext4/directory.rst |  27 ++
->  fs/ext4/dir.c                                |  27 +-
->  fs/ext4/ext4.h                               |  64 +++-
->  fs/ext4/hash.c                               |  24 +-
->  fs/ext4/ialloc.c                             |   5 +-
->  fs/ext4/inline.c                             |  41 +--
->  fs/ext4/namei.c                              | 291 +++++++++++++------
->  fs/ext4/super.c                              |   6 -
->  8 files changed, 343 insertions(+), 142 deletions(-)
+Arch timer stops during system suspend. Add arm,no-tick-in-suspend
+property in timer.
 
-How was this tested?  I tried it (using a patched version of 'mke2fs' that
-allows the encrypt and encoding options to be combined), and I immediately got
-an ext4 error about a bad directory entry:
+This is a follow up for d8ec7595a013
+("clocksource/drivers/arm_arch_timer: Don't assume clock runs in
+suspend")
 
-~/e2fsprogs/misc/mke2fs -F -t ext4 -O encrypt -E encoding=utf8 /dev/vdb
-mount /dev/vdb /mnt
-fscrypt setup /mnt
-mkdir /mnt/dir
-# (assumes /etc/fscrypt.conf contains policy_version 2)
-echo hunter2 | fscrypt encrypt /mnt/dir --quiet --source=custom_passphrase --name=dir
-chattr +F /mnt/dir
-echo contents > /mnt/dir/file
-umount /mnt
-mount /dev/vdb /mnt
-ls /mnt/dir/
-[  391.292067] EXT4-fs error (device vdb): htree_dirblock_to_tree:1038: inode #8193: block 4251: comm ls: bad entry in directory: directory entry too close to block end - offset=80, inode=18, rec_len=4004, lblk=0, size=4096
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 8b4e806d5119..1a9ad90bd7a6 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -331,6 +331,7 @@ timer {
+ 			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10
+ 			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		arm,no-tick-in-suspend;
+ 	};
+ 
+ 	soc {
+-- 
+2.25.0.225.g125e21ebc7-goog
+
