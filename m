@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D75C3B188
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05369C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAFB20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72B420848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgBLEfq (ORCPT
+        id S1728148AbgBLEfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:35:46 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:37988 "EHLO inva021.nxp.com"
+        Tue, 11 Feb 2020 23:35:48 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:59428 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727918AbgBLEfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 23:35:45 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2AE5F2256C7;
-        Wed, 12 Feb 2020 05:35:43 +0100 (CET)
+        id S1726960AbgBLEfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 23:35:46 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D5271C71CD;
+        Wed, 12 Feb 2020 05:35:44 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1027E2256CC;
-        Wed, 12 Feb 2020 05:35:36 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 31C391C71C8;
+        Wed, 12 Feb 2020 05:35:37 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6787C402B7;
-        Wed, 12 Feb 2020 12:35:27 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 88F1F4029B;
+        Wed, 12 Feb 2020 12:35:28 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, broonie@kernel.org,
@@ -35,9 +35,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] ASoC: fsl_asrc: Move common definition to fsl_asrc_common
-Date:   Wed, 12 Feb 2020 12:30:01 +0800
-Message-Id: <916c5542c7248ee3dc9ebe5324b80beb2af9d1fa.1581475981.git.shengjiu.wang@nxp.com>
+Subject: [PATCH 2/3] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+Date:   Wed, 12 Feb 2020 12:30:02 +0800
+Message-Id: <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1581475981.git.shengjiu.wang@nxp.com>
 References: <cover.1581475981.git.shengjiu.wang@nxp.com>
@@ -49,73 +49,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a new ASRC included in i.MX serial platform, there
-are some common definition can be shared with each other.
-So move the common definition to a separate header file.
+EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+IP module found on i.MX815.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- sound/soc/fsl/fsl_asrc.h        | 11 +----------
- sound/soc/fsl/fsl_asrc_common.h | 21 +++++++++++++++++++++
- 2 files changed, 22 insertions(+), 10 deletions(-)
- create mode 100644 sound/soc/fsl/fsl_asrc_common.h
+ .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
 
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 8a821132d9d0..e8abb27ffeda 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -10,8 +10,7 @@
- #ifndef _FSL_ASRC_H
- #define _FSL_ASRC_H
- 
--#define IN	0
--#define OUT	1
-+#include  "fsl_asrc_common.h"
- 
- #define ASRC_DMA_BUFFER_NUM		2
- #define ASRC_INPUTFIFO_THRESHOLD	32
-@@ -283,14 +282,6 @@
- #define ASRMCR1i_OW16_MASK		(1 << ASRMCR1i_OW16_SHIFT)
- #define ASRMCR1i_OW16(v)		((v) << ASRMCR1i_OW16_SHIFT)
- 
--
--enum asrc_pair_index {
--	ASRC_INVALID_PAIR = -1,
--	ASRC_PAIR_A = 0,
--	ASRC_PAIR_B = 1,
--	ASRC_PAIR_C = 2,
--};
--
- #define ASRC_PAIR_MAX_NUM	(ASRC_PAIR_C + 1)
- 
- enum asrc_inclk {
-diff --git a/sound/soc/fsl/fsl_asrc_common.h b/sound/soc/fsl/fsl_asrc_common.h
+diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.txt b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
 new file mode 100644
-index 000000000000..8acc55778ff2
+index 000000000000..0e8153165e3b
 --- /dev/null
-+++ b/sound/soc/fsl/fsl_asrc_common.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2019 NXP
-+ *
-+ */
++++ b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
+@@ -0,0 +1,57 @@
++NXP Asynchronous Sample Rate Converter (ASRC) Controller
 +
-+#ifndef _FSL_ASRC_COMMON_H
-+#define _FSL_ASRC_COMMON_H
++The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
++signal associated with an input clock into a signal associated with a different
++output clock. The driver currently works as a Front End of DPCM with other Back
++Ends Audio controller such as ESAI, SSI and SAI. It has four context to support
++four substreams within totally 32 channels.
 +
-+/* directions */
-+#define IN	0
-+#define OUT	1
++Required properties:
++- compatible:                Contains "fsl,imx8mn-easrc".
 +
-+enum asrc_pair_index {
-+	ASRC_INVALID_PAIR = -1,
-+	ASRC_PAIR_A = 0,
-+	ASRC_PAIR_B = 1,
-+	ASRC_PAIR_C = 2,
++- reg:                       Offset and length of the register set for the
++			     device.
++
++- interrupts:                Contains the asrc interrupt.
++
++- dmas:                      Generic dma devicetree binding as described in
++		             Documentation/devicetree/bindings/dma/dma.txt.
++
++- dma-names:                 Contains "ctx0_rx", "ctx0_tx",
++				      "ctx1_rx", "ctx1_tx",
++			              "ctx2_rx", "ctx2_tx",
++				      "ctx3_rx", "ctx3_tx".
++
++- clocks:                    Contains an entry for each entry in clock-names.
++
++- clock-names:               "mem" - Peripheral clock to driver module.
++
++- fsl,easrc-ram-script-name: The coefficient table for the filters
++
++- fsl,asrc-rate:             Defines a mutual sample rate used by DPCM Back
++			     Ends.
++
++- fsl,asrc-width:            Defines a mutual sample width used by DPCM Back
++			     Ends.
++
++Example:
++
++easrc: easrc@300C0000 {
++	compatible = "fsl,imx8mn-easrc";
++	reg = <0x0 0x300C0000 0x0 0x10000>;
++	interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
++	clock-names = "mem";
++	dmas = <&sdma2 16 23 0> , <&sdma2 17 23 0>,
++	       <&sdma2 18 23 0> , <&sdma2 19 23 0>,
++	       <&sdma2 20 23 0> , <&sdma2 21 23 0>,
++	       <&sdma2 22 23 0> , <&sdma2 23 23 0>;
++	dma-names = "ctx0_rx", "ctx0_tx",
++		    "ctx1_rx", "ctx1_tx",
++		    "ctx2_rx", "ctx2_tx",
++		    "ctx3_rx", "ctx3_tx";
++	fsl,easrc-ram-script-name = "imx/easrc/easrc-imx8mn.bin";
++	fsl,asrc-rate  = <8000>;
++	fsl,asrc-width = <16>;
++	status = "disabled";
 +};
-+
-+#endif /* _FSL_ASRC_COMMON_H */
 -- 
 2.21.0
 
