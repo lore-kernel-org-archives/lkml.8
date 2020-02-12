@@ -2,120 +2,199 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9723C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F61C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8893C20661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC6720714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgBLIu6 (ORCPT
+        id S1728809AbgBLIvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:50:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32426 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728538AbgBLIu6 (ORCPT
+        Wed, 12 Feb 2020 03:51:11 -0500
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:20103 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728650AbgBLIvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:50:58 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01C8oRd4184482
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:50:57 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1ucm6khj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:50:56 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sandipan@linux.ibm.com>;
-        Wed, 12 Feb 2020 08:50:49 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Feb 2020 08:50:45 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01C8noiP50463198
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Feb 2020 08:49:50 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 380DFAE057;
-        Wed, 12 Feb 2020 08:50:44 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60A42AE045;
-        Wed, 12 Feb 2020 08:50:42 +0000 (GMT)
-Received: from [9.124.35.38] (unknown [9.124.35.38])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Feb 2020 08:50:42 +0000 (GMT)
-Subject: Re: [PATCH v12 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
- tests
-To:     Mina Almasry <almasrymina@google.com>, mike.kravetz@oracle.com
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-References: <20200211213128.73302-1-almasrymina@google.com>
- <20200211213128.73302-8-almasrymina@google.com>
-From:   Sandipan Das <sandipan@linux.ibm.com>
-Date:   Wed, 12 Feb 2020 14:20:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 03:51:11 -0500
+IronPort-SDR: ypXWsRUpNLh0b5egqYGfw6ykEFIQpcMdUf+OtQgx2rUKWkEgqxhqubnZD0oJw43e/yUiGNszGq
+ saWEM+9ViHvZVUeWd4q5luzvhtJRj7aFlyZ+OWHC456wlkNz9fTXbyhccZOrOTPqU4eyKAVyOn
+ 86uxc/Ljl5xFG+Yq3U+Ni3wfafGajNEboqBkUKFyYABTo7CuYO3HzOtJFdRWyxbIFcsOBp+w2P
+ dBxiqyL/4EnyLe54qjCGgr5tlsQ2PICzj0X8dUxQyh3g9gZUtP+t6Y1s898wSVZhTmyHD1+dPn
+ jA8=
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="45799301"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 12 Feb 2020 00:44:04 -0800
+IronPort-SDR: CPsj5TNxjYY0z+R8RzyJ8Xvnj8BRltlvIFLz4m61oGQG6TlIpMy1SQAEQPj4cv2ovYTSA60eoN
+ CWbXcFr+ZNStsywiYU4jWoclFsMcOe55prmEzotoEZH1HVtkZUw1MAi0QckN21jv5i14s4CSpm
+ vrGoiTu6ZzgrxWQmtsaFSAomJxWb8krRXWWEU5yOEKlUvHKEbLnjvtKNh05GEgd89yrZJ43Ia5
+ VApCQWFY03zPenMTefD11kQwogQXyuvZqQV+qQF0bcmGS4RmWetN8QDgAx9jCznSNAnVoz9Z/0
+ kpM=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v7 12/48] Input: atmel_mxt_ts - release touch state during suspend
+Date:   Wed, 12 Feb 2020 00:41:42 -0800
+Message-ID: <20200212084218.32344-13-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200212084218.32344-1-jiada_wang@mentor.com>
+References: <20200212084218.32344-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-In-Reply-To: <20200211213128.73302-8-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021208-0020-0000-0000-000003A965B0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021208-0021-0000-0000-000022014956
-Message-Id: <37a49c35-567f-1663-33cd-3dac150020a0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-12_03:2020-02-11,2020-02-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=999 priorityscore=1501 suspectscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002120070
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
+If fingers are down as the MXT chip goes into suspend it does not send a
+lift message. In addition, it may not complete its final measurement cycle
+immediately, which means touch messages may be received by the interrupt
+handler after mxt_stop() has completed.
 
-On 12/02/20 3:01 am, Mina Almasry wrote:
-> The tests use both shared and private mapped hugetlb memory, and
-> monitors the hugetlb usage counter as well as the hugetlb reservation
-> counter. They test different configurations such as hugetlb memory usage
-> via hugetlbfs, or MAP_HUGETLB, or shmget/shmat, and with and without
-> MAP_POPULATE.
-> 
-> Also add test for hugetlb reservation reparenting, since this is
-> a subtle issue.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Cc: sandipan@linux.ibm.com
-> 
-> 
-> ---
-> 
-> Changes in v12:
-> - Fixed tests on machines with non-2MB default hugepage size.
-> Changes in v11:
-> - Modify test to not assume 2MB hugepage size.
-> - Updated resv.* to rsvd.*
-> Changes in v10:
-> - Updated tests to resv.* name changes.
-> Changes in v9:
-> - Added tests for hugetlb reparenting.
-> - Make tests explicitly support cgroup v1 and v2 via script argument.
-> Changes in v6:
-> - Updates tests for cgroups-v2 and NORESERVE allocations.
-> 
+So:
+- disable irq during suspend
+- flush any messages created after suspend
+- tell app layer that slots were released at suspend
 
-For powerpc64,
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+Acked-by: Benson Leung <bleung@chromium.org>
+Acked-by: Yufeng Shen <miletus@chromium.org>
+(cherry picked from ndyer/linux/for-upstream commit 26794433086dbc7dea18d2f6a1c8d61ab25bcfda)
+[gdavis: Resolve forward port conflicts due to applying upstream
+	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+	 data support").]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[gdavis: Squash fix from Dirk Behme:
+	 - Input: atmel_mxt_ts - remove superfluous data->suspended]
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 52 ++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 3 deletions(-)
 
-Tested-by: Sandipan Das <sandipan@linux.ibm.com>
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index b6286b1f4a1a..2bc34c14dbbf 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -372,6 +372,9 @@ struct mxt_data {
+ 	unsigned int t19_num_keys;
+ 
+ 	enum mxt_suspend_mode suspend_mode;
++
++	/* Indicates whether device is in suspend */
++	bool suspended;
+ };
+ 
+ struct mxt_vb2_buffer {
+@@ -1151,10 +1154,10 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
+ 		mxt_proc_t42_messages(data, message);
+ 	} else if (report_id == data->T48_reportid) {
+ 		mxt_proc_t48_messages(data, message);
+-	} else if (!data->input_dev) {
++	} else if (!data->input_dev || data->suspended) {
+ 		/*
+-		 * Do not report events if input device
+-		 * is not yet registered.
++		 * Do not report events if input device is not
++		 * yet registered or returning from suspend
+ 		 */
+ 		mxt_dump_message(data, message);
+ 	} else if (report_id >= data->T9_reportid_min &&
+@@ -3135,6 +3138,11 @@ static int mxt_load_fw(struct device *dev, const char *fn)
+ 	if (ret)
+ 		goto release_firmware;
+ 
++	if (data->suspended) {
++		enable_irq(data->irq);
++		data->suspended = false;
++	}
++
+ 	if (!data->in_bootloader) {
+ 		/* Change to the bootloader mode */
+ 		data->in_bootloader = true;
+@@ -3306,8 +3314,27 @@ static void mxt_sysfs_remove(struct mxt_data *data)
+ 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+ }
+ 
++static void mxt_reset_slots(struct mxt_data *data)
++{
++	struct input_dev *input_dev = data->input_dev;
++	int id;
++
++	if (!input_dev)
++		return;
++
++	for (id = 0; id < data->num_touchids; id++) {
++		input_mt_slot(input_dev, id);
++		input_mt_report_slot_state(input_dev, MT_TOOL_FINGER, 0);
++	}
++
++	mxt_input_sync(data);
++}
++
+ static void mxt_start(struct mxt_data *data)
+ {
++	if (!data->suspended || data->in_bootloader)
++		return;
++
+ 	switch (data->suspend_mode) {
+ 	case MXT_SUSPEND_T9_CTRL:
+ 		mxt_soft_reset(data);
+@@ -3320,16 +3347,29 @@ static void mxt_start(struct mxt_data *data)
+ 
+ 	case MXT_SUSPEND_DEEP_SLEEP:
+ 	default:
++		/*
++		 * Discard any touch messages still in message buffer
++		 * from before chip went to sleep
++		 */
++		mxt_process_messages_until_invalid(data);
++
+ 		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
+ 
+ 		/* Recalibrate since chip has been in deep sleep */
+ 		mxt_t6_command(data, MXT_COMMAND_CALIBRATE, 1, false);
++
++		mxt_acquire_irq(data);
+ 		break;
+ 	}
++
++	data->suspended = false;
+ }
+ 
+ static void mxt_stop(struct mxt_data *data)
+ {
++	if (data->suspended || data->in_bootloader)
++		return;
++
+ 	switch (data->suspend_mode) {
+ 	case MXT_SUSPEND_T9_CTRL:
+ 		/* Touch disable */
+@@ -3339,9 +3379,15 @@ static void mxt_stop(struct mxt_data *data)
+ 
+ 	case MXT_SUSPEND_DEEP_SLEEP:
+ 	default:
++		disable_irq(data->irq);
++
+ 		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_DEEPSLEEP);
++
++		mxt_reset_slots(data);
+ 		break;
+ 	}
++
++	data->suspended = true;
+ }
+ 
+ static int mxt_input_open(struct input_dev *dev)
+-- 
+2.17.1
 
