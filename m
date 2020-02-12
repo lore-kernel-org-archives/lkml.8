@@ -2,104 +2,168 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8A7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CC6C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6A12073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BCE2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:42:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJKKvum6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgBLDkQ (ORCPT
+        id S1727944AbgBLDmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 22:40:16 -0500
-Received: from mga05.intel.com ([192.55.52.43]:25726 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727602AbgBLDkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 22:40:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 19:40:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="380645109"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga004.jf.intel.com with ESMTP; 11 Feb 2020 19:40:11 -0800
-Date:   Wed, 12 Feb 2020 11:19:29 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     mdf@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v7 2/2] fpga: dfl: fme: add performance reporting support
-Message-ID: <20200212031929.GB5645@hao-dev>
-References: <1581306469-22629-1-git-send-email-hao.wu@intel.com>
- <1581306469-22629-3-git-send-email-hao.wu@intel.com>
- <20200210163400.GA21900@willie-the-truck>
+        Tue, 11 Feb 2020 22:42:45 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35391 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbgBLDmp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 22:42:45 -0500
+Received: by mail-oi1-f195.google.com with SMTP id b18so727159oie.2;
+        Tue, 11 Feb 2020 19:42:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tPe7sTayWWBZzGlUQCbzCqIvW36rOIyLLoO5hc2eptg=;
+        b=gJKKvum6+KIMyQN1PT+4Un6tw/8+QshaMNQ8mn5RqgeKGhTRxgwgelkAr6wxrbRV9t
+         uHLre/owowED3HIc7UcGZkOZjePv6fbvWHkiIvUqIW5JXBHyBaKgags/NjJkjwmFMhRd
+         i3AOcnHgZpPcA7Q9Ouet1OkI4YVgxBj2qV15/U/YX6iQoOjlwFKFz3i+J7P1nYfkduv4
+         DEdv37YzbBI96VoFqKaZ6xBlIR3hgDAPYH3NIcWUcpuEKegMfinMe82NouApPsq0rMmn
+         CQ0/4lm8nPQv+um2HdtxV+gXbrkhVbV+3qHEfty5jMWfj3swql9iAYxmJRiW5VSJPmlS
+         EHDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tPe7sTayWWBZzGlUQCbzCqIvW36rOIyLLoO5hc2eptg=;
+        b=ny4H10wZ7kod1Dydrkk+bS09NZn3B9Ulwi1uQBZkc5q2yV92+Hx6FjNXZjBHa57nww
+         XYQmojnGSQlhPFU8xzOBcr+mcdI+S48EEQTOwRmtHGLIDJ5jh3SAXR9Z0Hl4O0Okz1Ny
+         V4FMMz8mjfoEYvYaHVdoHe6tJ31G7SyWzMKVN0Y3OWLkZNOUXRwYXwkbocKbZE49vJWy
+         C69jVXL8HJBS4molHzGAPuQRvwsaTEKjF7hkPrwd136qAqx5nJd8LdfNC+YGbQGH33+B
+         We8IvKYyztBRlYrsufQRKSG3uqYXmG7IgtqYe1SL8jEL73FqS95G7C6KXmlC8GCV7IXt
+         kihQ==
+X-Gm-Message-State: APjAAAWomU0O3DEWD0p/y5sQVgKEwr/rLe5riwwllt4tvgQsZ12wRtF4
+        tDwq6jp3NpVW/a18hUv+0tI=
+X-Google-Smtp-Source: APXvYqxdHgCrQE5Sx0ptTXpecq6+yGFDYQopgvYcRQyajlZHP/h3n8YaFQ0tl474G661j4BKcUFwmA==
+X-Received: by 2002:aca:1c09:: with SMTP id c9mr5137811oic.85.1581478962535;
+        Tue, 11 Feb 2020 19:42:42 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id m69sm1928958otc.78.2020.02.11.19.42.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Feb 2020 19:42:41 -0800 (PST)
+Date:   Tue, 11 Feb 2020 20:42:39 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v4 5/6] PCI: rcar: Add support for rcar PCIe controller
+ in endpoint mode
+Message-ID: <20200212034239.GA38314@ubuntu-m2-xlarge-x86>
+References: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200208183641.6674-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210163400.GA21900@willie-the-truck>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200208183641.6674-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:34:01PM +0000, Will Deacon wrote:
-> Hi,
+Hi Lad,
+
+On Sat, Feb 08, 2020 at 06:36:40PM +0000, Lad Prabhakar wrote:
+> This patch adds support for rcar PCIe controller to work in endpoint mode.
 > 
-> On Mon, Feb 10, 2020 at 11:47:49AM +0800, Wu Hao wrote:
-> > This patch adds support for performance reporting private feature
-> > for FPGA Management Engine (FME). Now it supports several different
-> > performance counters, including 'basic', 'cache', 'fabric', 'vtd'
-> > and 'vtd_sip'. It allows user to use standard linux tools to access
-> > these performance counters.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/pci/controller/Kconfig        |   7 +
+>  drivers/pci/controller/Makefile       |   1 +
+>  drivers/pci/controller/pcie-rcar-ep.c | 492 ++++++++++++++++++++++++++++++++++
+>  drivers/pci/controller/pcie-rcar.h    |   6 +
+>  4 files changed, 506 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
 > 
-> I had a quick look at this, and it mostly looks alright to me. Just a few
-> high-level comments/questions:
 
-Hi Will
+<snip>
 
-Thanks a lot for the review! :)
+> diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
+> new file mode 100644
+> index 0000000..32a7fca
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-rcar-ep.c
 
-> 
->   - I would still prefer for the PMU drivers to live under drivers/perf/
+<snip>
 
-Hm.. one possible way is to create a platform device, and introduce a new
-platform device driver under drivers/perf/.
+> +static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
+> +				struct pci_epf_bar *epf_bar)
+> +{
+> +	struct rcar_pcie *ep = epc_get_drvdata(epc);
+> +	dma_addr_t cpu_addr = epf_bar->phys_addr;
+> +	int flags = epf_bar->flags | LAR_ENABLE | LAM_64BIT;
+> +	enum pci_barno bar = epf_bar->barno;
+> +	u64 size = 1ULL << fls64(epf_bar->size - 1);
+> +	u32 mask;
+> +	int idx;
+> +	int err;
+> +
+> +	idx = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
+> +	if (idx >= ep->num_ib_windows) {
+> +		dev_err(ep->dev, "no free inbound window\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO)
+> +		flags |= IO_SPACE;
+> +
+> +	ep->bar_to_atu[bar] = idx;
+> +	/* use 64 bit bars */
+> +	set_bit(idx, ep->ib_window_map);
+> +	set_bit(idx + 1, ep->ib_window_map);
+> +
+> +	if (cpu_addr > 0) {
+> +		unsigned long nr_zeros = __ffs64(cpu_addr);
+> +		u64 alignment = 1ULL << nr_zeros;
+> +
+> +		size = min(size, alignment);
+> +	} else {
+> +		size = size;
+> +	}
 
-> 
->   - You should probably give the PMU a better name than "fme%d", for example
->     "intel_fpga_dfl_fme%d".
+We received a report from the 0day bot that clang warns that this is
+unnecessary. Would you mind removing it if you have to spin up a new
+version?
 
-Sure. as it's not intel only, so will use "fpga_dfl_fme" or "dfl_fme" instead.
+You can view the full report here:
 
-> 
->   - CPU0 can be hotplugged off on non-x86 systems. How do you cope with
->     that?
+https://groups.google.com/d/msg/clang-built-linux/KHUKw5L8yxw/Mb7KRMG7BQAJ
 
-Oh.. then we can't just always return CPU0 for cpumask, have to switch
-to another available cpu. Will add code to handle this case in the next
-version. Thanks!
-
-> 
->   - readq() will emit 2x32-bit reads on some architectures. What happens
->     in this case?
-
-64bit counter may increase and carry out of bit31 between 2-32bit reads,
-we probably need some more code (add extra reads?) to handle this case.
-
-
-Thanks again for these valuable comments, will try to fix all of them in
-the next version. : )
-
-Hao
-
-> 
-> Will
+Cheers,
+Nathan
