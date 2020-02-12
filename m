@@ -2,178 +2,95 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD78C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F448C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469FA21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DFJx1Cf1"
+	by mail.kernel.org (Postfix) with ESMTP id 09E332168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581548491;
+	bh=jPIoR6HnEouOv7esTETSQgXhRvVhy6uR40copln16Y0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eeYN90FsKIqdaJBoVjl+mg+xTIjhayXEum6uEV7YyHkI0i6x6zla7Yupmo6Lgrb/0
+	 FeTQ34wX6vkVLiGPDJ6FWSwLv5VDma9GNT5sAYznzaGdLpXLSO1TtAUdyP5WT9tT+0
+	 kGAdLao5zW4L79kGJHYMom6K9gyw4UBhtmPJsIgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgBLXBP (ORCPT
+        id S1729314AbgBLXBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:01:15 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33766 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729283AbgBLXBM (ORCPT
+        Wed, 12 Feb 2020 18:01:30 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44248 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729303AbgBLXB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:01:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581548471;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T7ssd3WUg57xOpsdw6H7Y8SPEq2D0xhwPC+MXaKd81Y=;
-        b=DFJx1Cf1YocxZ81qahV2v3L4+KHvt03OcqChTCeXmuKablkS2kzIBtEavAmdtMaFcVyh7j
-        Nd65FFxkOjGzfGarHNhuAYRK8PsxRanMqs05tJJaFujDcQCccHzMeqtvJWJ9/Ja5jX7t4o
-        kx8Xi33ahrHAz3434/Cn6urt+UrAIbs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-147-KAfS8exQMqun0Pn3GMSzMg-1; Wed, 12 Feb 2020 18:00:52 -0500
-X-MC-Unique: KAfS8exQMqun0Pn3GMSzMg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8117800D48;
-        Wed, 12 Feb 2020 23:00:50 +0000 (UTC)
-Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E6A15C109;
-        Wed, 12 Feb 2020 23:00:49 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sean Paul <seanpaul@chromium.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] drm/nouveau/kms/nv50-: Probe SOR caps for DP interlacing support
-Date:   Wed, 12 Feb 2020 18:00:35 -0500
-Message-Id: <20200212230043.170477-2-lyude@redhat.com>
-In-Reply-To: <20200212230043.170477-1-lyude@redhat.com>
-References: <20200212230043.170477-1-lyude@redhat.com>
+        Wed, 12 Feb 2020 18:01:29 -0500
+Received: by mail-qt1-f194.google.com with SMTP id k7so2956167qth.11;
+        Wed, 12 Feb 2020 15:01:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JcBz18PbzZYVHWwEFTSmvfhhBhEOyk01/pzZwuqpias=;
+        b=C08D8zJvnxcF6THx/Xy4j4IHVRV0ZEIEnD2cKDTN9+Pwe7/Sf3uPuJFFoXtekZluOw
+         tIiV8LowyEHjUlfaG3l6YX5hP9dZfpx83cyi2b8h0kPK1NgiWZnFGU3h+26COK8hOXdk
+         rbOPwcSKm8wPdadHKuNz2PnkuRF7Oo7QMvVqPSogyhqBCjkMFV2Q92QIZQggR4XXa3AH
+         PQI6GBqtHUVvtmjNp05Akr6oPjTg5R1oaqNZWu5x7vqufCRJ8scIERiyK12jDHtZTz5T
+         ZIC1xaljOkdnYqEO2XOKfLPmapPpy3aR8ZVbFWHCUdDv25MWLirNyBY+fsUqok+Pn/3X
+         vQhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=JcBz18PbzZYVHWwEFTSmvfhhBhEOyk01/pzZwuqpias=;
+        b=bjiKcJi51Qytw0GLmTvbEre30q3sa3sJdn52k4qBOiBihNth+05CQnM9qtV1B+h6wT
+         50oZYnn1xDXYjIu9ApwkDA4hSLdkSyt53u+KXsqysStjJh3703YqNdjbDEQWxF1K3wxD
+         KFy1OlU/WL3rsQ/nylx1omA+vivJs5/lthcPb0UK9vGLprOfYKUASBh/cH/bDgvCN+vd
+         cD9bWKTKFAY+OwndwgbpY+3kYYyy4IXNiHVfmJs0c7vJa6yL4S781/ovDad6QTnrRgrO
+         e+ZPgavqz9H5+tB0y5B48QHWtqVY+dlkj5Zsxim1ZpT592LEILIdnYikXO9MPGIlGXfS
+         LYDg==
+X-Gm-Message-State: APjAAAXw15zfX9Y1l7oqzaqDPArcpjJ2WiztEcDoCV8FpDtW7+v5dYXh
+        WpJzk5s9nNtnaWgxm1MUmmY=
+X-Google-Smtp-Source: APXvYqxUBrwYNknj5zpmevGUVW3jASjeHfY3u+ieBhdpk2U/351Efexdj4WPrdQZz3irqQ8mK5/I2w==
+X-Received: by 2002:ac8:7765:: with SMTP id h5mr9318296qtu.223.1581548488699;
+        Wed, 12 Feb 2020 15:01:28 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:985a])
+        by smtp.gmail.com with ESMTPSA id c45sm389679qtd.43.2020.02.12.15.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 15:01:28 -0800 (PST)
+Date:   Wed, 12 Feb 2020 18:01:27 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v6 0/6] clone3 & cgroups: allow spawning processes into
+ cgroups
+Message-ID: <20200212230127.GA88887@mtj.thefacebook.com>
+References: <20200205132623.670015-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205132623.670015-1-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, we make the mistake of allowing interlacing on all
-connectors. Nvidia hardware does not always support interlacing with DP
-though, so we need to make sure that we don't allow interlaced modes to
-be set in such situations as otherwise we'll end up accidentally hanging
-the display HW.
+On Wed, Feb 05, 2020 at 02:26:17PM +0100, Christian Brauner wrote:
+> Hey Tejun,
+> 
+> This is v6 of the promised series to enable spawning processes into a
+> target cgroup different from the parent's cgroup.
 
-This fixes some hangs with Turing, which would be caused by attempting
-to set an interlaced mode on hardware that doesn't support it. This
-patch likely fixes other hardware hanging in the same way as well.
+Applied 1-6 to cgroup/for-5.7. There was a conflict with 0cd9d33ace33
+("cgroup: init_tasks shouldn't be linked to the root cgroup") which
+got fixed up while applying. I'd really appreciate if you can take a
+look to see everything is ok.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
----
- drivers/gpu/drm/nouveau/dispnv50/disp.c     | 21 ++++++++++++++-------
- drivers/gpu/drm/nouveau/nouveau_connector.c | 10 +++++++++-
- drivers/gpu/drm/nouveau/nouveau_encoder.h   |  3 +++
- 3 files changed, 26 insertions(+), 8 deletions(-)
+Thanks a lot for working on this. This is really great.
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/no=
-uveau/dispnv50/disp.c
-index a3dc2ba19fb2..32a1c4221f1e 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -1714,6 +1714,9 @@ nv50_sor_create(struct drm_connector *connector, st=
-ruct dcb_output *dcbe)
- 		struct nv50_disp *disp =3D nv50_disp(encoder->dev);
- 		struct nvkm_i2c_aux *aux =3D
- 			nvkm_i2c_aux_find(i2c, dcbe->i2c_index);
-+		u32 caps =3D nvif_rd32(&disp->disp->object,
-+				     0x00640144 + (nv_encoder->or * 8));
-+
- 		if (aux) {
- 			if (disp->disp->object.oclass < GF110_DISP) {
- 				/* HW has no support for address-only
-@@ -1727,13 +1730,17 @@ nv50_sor_create(struct drm_connector *connector, =
-struct dcb_output *dcbe)
- 			nv_encoder->aux =3D aux;
- 		}
-=20
--		if (nv_connector->type !=3D DCB_CONNECTOR_eDP &&
--		    nv50_has_mst(drm)) {
--			ret =3D nv50_mstm_new(nv_encoder, &nv_connector->aux,
--					    16, nv_connector->base.base.id,
--					    &nv_encoder->dp.mstm);
--			if (ret)
--				return ret;
-+		if (nv_connector->type !=3D DCB_CONNECTOR_eDP) {
-+			if (nv50_has_mst(drm)) {
-+				ret =3D nv50_mstm_new(nv_encoder,
-+						    &nv_connector->aux,
-+						    16,
-+						    connector->base.id,
-+						    &nv_encoder->dp.mstm);
-+				if (ret)
-+					return ret;
-+			}
-+			nv_encoder->dp.caps.interlace =3D !!(caps & 0x04000000);
- 		}
- 	} else {
- 		struct nvkm_i2c_bus *bus =3D
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/dr=
-m/nouveau/nouveau_connector.c
-index 9a9a7f5003d3..97a84daf8eab 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -509,7 +509,11 @@ nouveau_connector_set_encoder(struct drm_connector *=
-connector,
- 	nv_connector->detected_encoder =3D nv_encoder;
-=20
- 	if (drm->client.device.info.family >=3D NV_DEVICE_INFO_V0_TESLA) {
--		connector->interlace_allowed =3D true;
-+		if (nv_encoder->dcb->type =3D=3D DCB_OUTPUT_DP)
-+			connector->interlace_allowed =3D
-+				nv_encoder->dp.caps.interlace;
-+		else
-+			connector->interlace_allowed =3D true;
- 		connector->doublescan_allowed =3D true;
- 	} else
- 	if (nv_encoder->dcb->type =3D=3D DCB_OUTPUT_LVDS ||
-@@ -1060,6 +1064,10 @@ nouveau_connector_mode_valid(struct drm_connector =
-*connector,
- 	case DCB_OUTPUT_TV:
- 		return get_slave_funcs(encoder)->mode_valid(encoder, mode);
- 	case DCB_OUTPUT_DP:
-+		if (mode->flags & DRM_MODE_FLAG_INTERLACE &&
-+		    !nv_encoder->dp.caps.interlace)
-+			return MODE_NO_INTERLACE;
-+
- 		max_clock  =3D nv_encoder->dp.link_nr;
- 		max_clock *=3D nv_encoder->dp.link_bw;
- 		clock =3D clock * (connector->display_info.bpc * 3) / 10;
-diff --git a/drivers/gpu/drm/nouveau/nouveau_encoder.h b/drivers/gpu/drm/=
-nouveau/nouveau_encoder.h
-index 3517f920bf89..2a8a7aec48c4 100644
---- a/drivers/gpu/drm/nouveau/nouveau_encoder.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_encoder.h
-@@ -63,6 +63,9 @@ struct nouveau_encoder {
- 			struct nv50_mstm *mstm;
- 			int link_nr;
- 			int link_bw;
-+			struct {
-+				bool interlace : 1;
-+			} caps;
- 		} dp;
- 	};
-=20
---=20
-2.24.1
-
+-- 
+tejun
