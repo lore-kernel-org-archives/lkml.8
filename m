@@ -2,127 +2,234 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2890C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DBFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8211E206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:08:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="O6bqdQqB"
+	by mail.kernel.org (Postfix) with ESMTP id 788CF20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgBLRI2 (ORCPT
+        id S1728940AbgBLRIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:08:28 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38168 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLRI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:08:28 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z19so2755000qkj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 09:08:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HsBl5rMluvvE/pco2RfgwIL5+jpMuMRec38m/p38OMc=;
-        b=O6bqdQqB754/215opJE3M7EUYVTUIhhbCE2lNZaklstLauxL4cB6U5Lkm8nLa6ai+V
-         M6T/WjrYmfRSVrpnvIulIoWhLs9eS8Y55Aariv3m4POcoSqfrPc52/AL5HHw49GU3aro
-         q9emBN3umt3HPcAAZjNvc7ea18lJ/hn8Q3S4jrizD022B9CE+zN+WAsr6FS6zAPsSER0
-         lkBBVZbw1FZR9AD9LiyKVVyyqDxsGlA8Ky4TnhMZQhNdW8OGVXr8cXXeIQ1SLHE1IhDD
-         yb2N6V11ijw8SEjuvEiC7qqWBmpm6xRnSyJIfQPhV6KRUx6DOyATDYdS8rZ1mEZvPFQy
-         lORA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HsBl5rMluvvE/pco2RfgwIL5+jpMuMRec38m/p38OMc=;
-        b=dFM3IytRLiKX4t020x3MCnk5jmuqUozOUNKk2/tD98J7mJgDooRviMEDtach+hRXIt
-         WG79PTy4qGaVwRUk1NuCXXBBnfFB5uGO7wEPF4nznuoyaQInZQ6bDYdb4/jHLHMPCWFp
-         3UJjYxaqrQNt9XXuFaK8aOymjypPSVLVnaaroCuwRod7+ku/SenPFMDlaMjh2pHqz+W8
-         n8NwKgf8pcLrAlnE+nqzmU70mgxx41Hoj7RQ8E5AdGGmy0VaIiZBC/7ATDaz05R4m39t
-         x4wguMOwIFwB9mEa1RNl3xGFzwgHLrjim5qIbA22rn6bg8c0Kv5sJY/hK5BJJ9poLBd3
-         Xwfw==
-X-Gm-Message-State: APjAAAW0ImLQ3f35XFWpM4zqz9vw+ikjxN0YBTR9RxKV7QeP94rzw+D2
-        7n/2BdRouwDEkM3ohlbSbK8x6w==
-X-Google-Smtp-Source: APXvYqzFArg0u7ixTyn9XIaPgPpptQEFElmY295g4IC8sWja/fFRjB35UdOOImoT6soG8zmA6a9W0w==
-X-Received: by 2002:a37:e409:: with SMTP id y9mr12047308qkf.352.1581527307550;
-        Wed, 12 Feb 2020 09:08:27 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:26be])
-        by smtp.gmail.com with ESMTPSA id o6sm495462qkk.53.2020.02.12.09.08.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 09:08:26 -0800 (PST)
-Date:   Wed, 12 Feb 2020 12:08:26 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200212170826.GC180867@cmpxchg.org>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200130170020.GZ24244@dhcp22.suse.cz>
- <20200203215201.GD6380@cmpxchg.org>
- <20200211164753.GQ10636@dhcp22.suse.cz>
+        Wed, 12 Feb 2020 12:08:43 -0500
+Received: from monster.unsafe.ru ([5.9.28.80]:37610 "EHLO mail.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728098AbgBLRIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 12:08:42 -0500
+Received: from comp-core-i7-2640m-0182e6 (nat-pool-brq-t.redhat.com [213.175.37.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id 97063C61AB0;
+        Wed, 12 Feb 2020 17:08:38 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 18:08:37 +0100
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs
+ instances
+Message-ID: <20200212170836.kiqogl4cqdpyjjk3@comp-core-i7-2640m-0182e6>
+Mail-Followup-To: "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+ <20200210150519.538333-8-gladkov.alexey@gmail.com>
+ <87v9odlxbr.fsf@x220.int.ebiederm.org>
+ <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+ <87tv3vkg1a.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211164753.GQ10636@dhcp22.suse.cz>
+In-Reply-To: <87tv3vkg1a.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 05:47:53PM +0100, Michal Hocko wrote:
-> Unless I am missing something then I am afraid it doesn't. Say you have a
-> default systemd cgroup deployment (aka deeper cgroup hierarchy with
-> slices and scopes) and now you want to grant a reclaim protection on a
-> leaf cgroup (or even a whole slice that is not really important). All the
-> hierarchy up the tree has the protection set to 0 by default, right? You
-> simply cannot get that protection. You would need to configure the
-> protection up the hierarchy and that is really cumbersome.
+On Wed, Feb 12, 2020 at 08:59:29AM -0600, Eric W. Biederman wrote:
+> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+> 
+> > On Mon, Feb 10, 2020 at 07:36:08PM -0600, Eric W. Biederman wrote:
+> >> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+> >> 
+> >> > This allows to flush dcache entries of a task on multiple procfs mounts
+> >> > per pid namespace.
+> >> >
+> >> > The RCU lock is used because the number of reads at the task exit time
+> >> > is much larger than the number of procfs mounts.
+> >> 
+> >> A couple of quick comments.
+> >> 
+> >> > Cc: Kees Cook <keescook@chromium.org>
+> >> > Cc: Andy Lutomirski <luto@kernel.org>
+> >> > Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
+> >> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> >> > Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+> >> > ---
+> >> >  fs/proc/base.c                | 20 +++++++++++++++-----
+> >> >  fs/proc/root.c                | 27 ++++++++++++++++++++++++++-
+> >> >  include/linux/pid_namespace.h |  2 ++
+> >> >  include/linux/proc_fs.h       |  2 ++
+> >> >  4 files changed, 45 insertions(+), 6 deletions(-)
+> >> >
+> >> > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> >> > index 4ccb280a3e79..24b7c620ded3 100644
+> >> > --- a/fs/proc/base.c
+> >> > +++ b/fs/proc/base.c
+> >> > @@ -3133,7 +3133,7 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
+> >> >  	.permission	= proc_pid_permission,
+> >> >  };
+> >> >  
+> >> > -static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+> >> > +static void proc_flush_task_mnt_root(struct dentry *mnt_root, pid_t pid, pid_t tgid)
+> >> Perhaps just rename things like:
+> >> > +static void proc_flush_task_root(struct dentry *root, pid_t pid, pid_t tgid)
+> >> >  {
+> >> 
+> >> I don't think the mnt_ prefix conveys any information, and it certainly
+> >> makes everything longer and more cumbersome.
+> >> 
+> >> >  	struct dentry *dentry, *leader, *dir;
+> >> >  	char buf[10 + 1];
+> >> > @@ -3142,7 +3142,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+> >> >  	name.name = buf;
+> >> >  	name.len = snprintf(buf, sizeof(buf), "%u", pid);
+> >> >  	/* no ->d_hash() rejects on procfs */
+> >> > -	dentry = d_hash_and_lookup(mnt->mnt_root, &name);
+> >> > +	dentry = d_hash_and_lookup(mnt_root, &name);
+> >> >  	if (dentry) {
+> >> >  		d_invalidate(dentry);
+> >> >  		dput(dentry);
+> >> > @@ -3153,7 +3153,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
+> >> >  
+> >> >  	name.name = buf;
+> >> >  	name.len = snprintf(buf, sizeof(buf), "%u", tgid);
+> >> > -	leader = d_hash_and_lookup(mnt->mnt_root, &name);
+> >> > +	leader = d_hash_and_lookup(mnt_root, &name);
+> >> >  	if (!leader)
+> >> >  		goto out;
+> >> >  
+> >> > @@ -3208,14 +3208,24 @@ void proc_flush_task(struct task_struct *task)
+> >> >  	int i;
+> >> >  	struct pid *pid, *tgid;
+> >> >  	struct upid *upid;
+> >> > +	struct dentry *mnt_root;
+> >> > +	struct proc_fs_info *fs_info;
+> >> >  
+> >> >  	pid = task_pid(task);
+> >> >  	tgid = task_tgid(task);
+> >> >  
+> >> >  	for (i = 0; i <= pid->level; i++) {
+> >> >  		upid = &pid->numbers[i];
+> >> > -		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
+> >> > -					tgid->numbers[i].nr);
+> >> > +
+> >> > +		rcu_read_lock();
+> >> > +		list_for_each_entry_rcu(fs_info, &upid->ns->proc_mounts, pidns_entry) {
+> >> > +			mnt_root = fs_info->m_super->s_root;
+> >> > +			proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
+> >> > +		}
+> >> > +		rcu_read_unlock();
+> >> > +
+> >> > +		mnt_root = upid->ns->proc_mnt->mnt_root;
+> >> > +		proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
+> >> 
+> >> I don't think this following of proc_mnt is needed.  It certainly
+> >> shouldn't be.  The loop through all of the super blocks should be
+> >> enough.
+> >
+> > Yes, thanks!
+> >
+> >> Once this change goes through.  UML can be given it's own dedicated
+> >> proc_mnt for the initial pid namespace, and proc_mnt can be removed
+> >> entirely.
+> >
+> > After you deleted the old sysctl syscall we could probably do it.
+> >
+> >> Unless something has changed recently UML is the only other user of
+> >> pid_ns->proc_mnt.  That proc_mnt really only exists to make the loop in
+> >> proc_flush_task easy to write.
+> >
+> > Now I think, is there any way to get rid of proc_mounts or even
+> > proc_flush_task somehow.
+> >
+> >> It also probably makes sense to take the rcu_read_lock() over
+> >> that entire for loop.
+> >
+> > Al Viro pointed out to me that I cannot use rcu locks here :(
+> 
+> Fundamentally proc_flush_task is an optimization.  Just getting rid of
+> dentries earlier.  At least at one point it was an important
+> optimization because the old process dentries would just sit around
+> doing nothing for anyone.
+> 
+> I wonder if instead of invalidating specific dentries we could instead
+> fire wake up a shrinker and point it at one or more instances of proc.
+> 
+> The practical challenge I see is something might need to access the
+> dentries to see that they are invalid.
+> 
+> We definitely could try without this optimization and see what happens.
 
-Okay, I think I know what you mean. Let's say you have a tree like
-this:
+When Linus said that a semaphore for proc_mounts is a bad idea, I tried
+to come up with some kind of asynchronous way to clear it per superblock.
+I gave up with the asynchronous GC because userspace can quite easily get
+ahead of it.
 
-                          A
-                         / \
-                        B1  B2
-                       / \   \
-                      C1 C2   C3
+Without this optimization the kernel starts to consume a lot of memory
+during intensive reading /proc. I tried to do:
 
-and there is no actual delegation point - everything belongs to the
-same user / trust domain. C1 sets memory.low to 10G, but its parents
-set nothing. You're saying we should honor the 10G protection during
-global and limit reclaims anywhere in the tree?
+while :; do
+	for x in `seq 0 9`; do sleep 0.1; done;
+	ls /proc/[0-9]*;
+done >/dev/null;
 
-Now let's consider there is a delegation point at B1: we set up and
-trust B1, but not its children. What effect would the C1 protection
-have then? Would we ignore it during global and A reclaim, but honor
-it when there is B1 limit reclaim?
+and memory consumption went up without proc_flush_task. Since we have
+mounted procfs in each container, this is dangerous.
 
-Doing an explicit downward propagation from the root to C1 *could* be
-tedious, but I can't think of a scenario where it's completely
-impossible. Especially because we allow proportional distribution when
-the limit is overcommitted and you don't have to be 100% accurate.
+-- 
+Rgrds, legion
 
-And the clarity that comes with being explicit is an asset too,
-IMO. Since it has an effect at the reclaim level, it's not a bad thing
-to have that effect *visible* in the settings at that level as well:
-the protected memory doesn't come out of thin air, it's delegated down
-from the top where memory pressure originates.
-
-My patch is different. It allows a configuration that simply isn't
-possible today: protecting C1 and C2 from C3, without having to
-protect C1 and C2 from each other.
-
-So I don't think requiring an uninterrupted, authorized chain of
-protection from the top is necessarily wrong. In fact, I think it has
-benefits. But requiring the protection chain to go all the way to the
-leaves for it to have any effect, that is a real problem, and it can't
-be worked around.
