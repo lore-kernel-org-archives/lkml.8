@@ -2,142 +2,69 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701DBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97455C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425D5206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="E/5cXsEI"
+	by mail.kernel.org (Postfix) with ESMTP id 70290206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581527171;
+	bh=sieMuaXvkCN45E7atxS9RyI0PoF5ma3kVN+ou27Wuc0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=0IURoh1ZKpyNcgSFFhhBrDHt4hAdzuW97HcYaN3lQUwNQL+HqIHSgQwFzx4l/kEO+
+	 UIwPUKOXVIBob40lcN83wpulikxhBXpO3MIU61fHSDCkVGlcuok3UyS6pjC9u3f/fv
+	 t70FfETsC5shtkUK1N8chQdkoIGyjo72TusOGJOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgBLREl (ORCPT
+        id S1728775AbgBLRGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:04:41 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:57806 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728612AbgBLREk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:04:40 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581527079; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=1db+ymtXm5ZOsHNHHCA3Y5/L6QAZrcF4lOpLSvkECPQ=;
- b=E/5cXsEID+gMR4YPX+FJ8my7QPY5Cu6BCuTvzaGhtDMREjH06owDlPdZ7RhCJtDpXmttne1c
- O3U17tp2ws7AXX+Ne6dI4vQ/kujNAYblzRUpE8YevzHwcKWk71ppMOrmefBYQuGN0SzN94XO
- ll6WCUGLHB9IAcl9JCTl7htoh1M=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e443022.7f6c02d759d0-smtp-out-n02;
- Wed, 12 Feb 2020 17:04:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8A793C433A2; Wed, 12 Feb 2020 17:04:33 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 12 Feb 2020 12:06:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727054AbgBLRGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 12:06:10 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5402BC43383;
-        Wed, 12 Feb 2020 17:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB1120658;
+        Wed, 12 Feb 2020 17:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581527169;
+        bh=sieMuaXvkCN45E7atxS9RyI0PoF5ma3kVN+ou27Wuc0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Jy6dN6rt0ftG2OUvuzlew0cOSLS7B2KdqEu97Ik7K5a6qjKCP6/zAb7MmvVY9lyv9
+         UIJSUgTZUlfyihRHqaynLCZkrHwvamGeFN0AFaDvDSF7n6kHeAVUzBJZKYPfVObhbE
+         5AIfh9GL5kKeoOVkQiuszbmKF/oWbULO3pyel22Q=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 12 Feb 2020 09:04:31 -0800
-From:   asutoshd@codeaurora.org
-To:     Can Guo <cang@codeaurora.org>
-Cc:     nguyenb@codeaurora.org, hongwus@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pedro Sousa <sousa@synopsys.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi-owner@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] scsi: ufs: Select INITIAL ADAPT type for HS Gear4
-In-Reply-To: <1581485910-8307-3-git-send-email-cang@codeaurora.org>
-References: <1581485910-8307-1-git-send-email-cang@codeaurora.org>
- <1581485910-8307-3-git-send-email-cang@codeaurora.org>
-Message-ID: <ac3f68fa7f0dd3de567cc321eb5c5026@codeaurora.org>
-X-Sender: asutoshd@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200212100047.18642-1-geert+renesas@glider.be>
+References: <20200212100047.18642-1-geert+renesas@glider.be>
+Subject: Re: [PATCH] ARC: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-snps-arc@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vineet Gupta <vgupta@synopsys.com>
+Date:   Wed, 12 Feb 2020 09:06:08 -0800
+Message-ID: <158152716893.121156.17153312552420472005@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-11 21:38, Can Guo wrote:
-> ADAPT is added specifically for HS Gear4 mode only, select INITIAL 
-> ADAPT
-> before do power mode change to G4 and select NO ADAPT before switch to
-> non-G4 modes.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
+Quoting Geert Uytterhoeven (2020-02-12 02:00:47)
+> The ARC platform code is not a clock provider, and just needs to call
+> of_clk_init().
+>=20
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
 
-Reviewed-by:  Asutosh Das <asutoshd@codeaurora.org>
-
->  drivers/scsi/ufs/ufs-qcom.c | 14 ++++++++++++++
->  drivers/scsi/ufs/unipro.h   |  7 +++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index d593523..6a905bb 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -942,6 +942,20 @@ static int ufs_qcom_pwr_change_notify(struct 
-> ufs_hba *hba,
->  		if (!ufshcd_is_hs_mode(&hba->pwr_info) &&
->  			ufshcd_is_hs_mode(dev_req_params))
->  			ufs_qcom_dev_ref_clk_ctrl(host, true);
-> +
-> +		if (host->hw_ver.major >= 0x4) {
-> +			if (dev_req_params->gear_tx == UFS_HS_G4) {
-> +				/* INITIAL ADAPT */
-> +				ufshcd_dme_set(hba,
-> +					       UIC_ARG_MIB(PA_TXHSADAPTTYPE),
-> +					       PA_INITIAL_ADAPT);
-> +			} else {
-> +				/* NO ADAPT */
-> +				ufshcd_dme_set(hba,
-> +					       UIC_ARG_MIB(PA_TXHSADAPTTYPE),
-> +					       PA_NO_ADAPT);
-> +			}
-> +		}
->  		break;
->  	case POST_CHANGE:
->  		if (ufs_qcom_cfg_timers(hba, dev_req_params->gear_rx,
-> diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
-> index 3dc4d8b..766d551 100644
-> --- a/drivers/scsi/ufs/unipro.h
-> +++ b/drivers/scsi/ufs/unipro.h
-> @@ -146,6 +146,12 @@
->  #define PA_SLEEPNOCONFIGTIME	0x15A2
->  #define PA_STALLNOCONFIGTIME	0x15A3
->  #define PA_SAVECONFIGTIME	0x15A4
-> +#define PA_TXHSADAPTTYPE       0x15D4
-> +
-> +/* Adpat type for PA_TXHSADAPTTYPE attribute */
-> +#define PA_REFRESH_ADAPT       0x00
-> +#define PA_INITIAL_ADAPT       0x01
-> +#define PA_NO_ADAPT            0x03
-> 
->  #define PA_TACTIVATE_TIME_UNIT_US	10
->  #define PA_HIBERN8_TIME_UNIT_US		100
-> @@ -203,6 +209,7 @@ enum ufs_hs_gear_tag {
->  	UFS_HS_G1,		/* HS Gear 1 (default for reset) */
->  	UFS_HS_G2,		/* HS Gear 2 */
->  	UFS_HS_G3,		/* HS Gear 3 */
-> +	UFS_HS_G4,		/* HS Gear 4 */
->  };
-> 
->  enum ufs_unipro_ver {
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
