@@ -2,127 +2,151 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19D3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F11C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83424206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:55:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IWB2GGrr"
+	by mail.kernel.org (Postfix) with ESMTP id 4911D21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581523148;
+	bh=cwp8aLRXoFn/Mb1HJoRZJdKN/1M27LTXc5yobJKF+44=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=R9f8p7dyxwKkEu8uVjJsX62gjOUdtKeL63ZjSOY7SrbptsgEZqpBtfNRS+xPwE9ba
+	 OZMbZ1Jr5O2Mr+6lAM5ZDDM/qbcxXh/2SsqipPu3SrPNdYFbaS8TZFW8QAU2ooUtlx
+	 phIHm7B1s71mgmqRVP/jjHVzmdJyqiPDsA0fTDQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgBLPzE (ORCPT
+        id S1728410AbgBLP7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:55:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43790 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbgBLPzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:55:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=236Mw1/uA8IzDXd3kiwB4aT/6byMucMo+CkTmpwTWV4=; b=IWB2GGrr71/zFcxIvbhVH1hZXm
-        ydlx9gUhkyKw9Oli8Y2DcKNQZo1bXX1ISiLawDf7LTwuduqj9WVsjHeEPjFUHMVaEKles4FJsDTdN
-        T0er4IbprW9Lw4JM2KjnM2S08JjlV9l0gVEQTHhIP9RqZvX1NAVnlNluwQc1EPSu5bitIlMWELQnq
-        52dpCghtlfAtfj9komDCeR9ygX9+r48vw7E80osLdNZYP9I7U+xQYQASUliWWSkRT00l9NKXXYxLd
-        3tOMLJPWPyacvT2le07WKx6695JEnWanhrgTwy/xIKOyA67DPN2zbL0JFcQJuf712jLQn8fPvcJLP
-        884IB6PA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1uLu-0002bQ-Hg; Wed, 12 Feb 2020 15:55:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 12 Feb 2020 10:59:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727458AbgBLP7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:59:07 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8F20D30220B;
-        Wed, 12 Feb 2020 16:53:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CAA6C2B49C819; Wed, 12 Feb 2020 16:55:00 +0100 (CET)
-Date:   Wed, 12 Feb 2020 16:55:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        arnd@arndb.de,
-        Stefan Asserhall load and store 
-        <stefan.asserhall@xilinx.com>, Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 7/7] microblaze: Do atomic operations by using exclusive
- ops
-Message-ID: <20200212155500.GB14973@hirez.programming.kicks-ass.net>
-References: <cover.1581522136.git.michal.simek@xilinx.com>
- <ba3047649af07dadecf1a52e7d815db8f068eb24.1581522136.git.michal.simek@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba3047649af07dadecf1a52e7d815db8f068eb24.1581522136.git.michal.simek@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E69252082F;
+        Wed, 12 Feb 2020 15:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581523146;
+        bh=cwp8aLRXoFn/Mb1HJoRZJdKN/1M27LTXc5yobJKF+44=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=AKHNCeDGe09QhQn2+jEEUSxZD+VmL+Yfbw5hv6eqnx3J9ZaX+xn0Q506FLb48XM06
+         N3DMJTOSd1pzaPBwCK1tI/lKpxhoClud79huRCQCBeqjefrz3SaedEWiB4DQX5ccQc
+         bKyad7yczWKCXZCYxYp3wUs8FUUIOL8Mrc42SErk=
+Message-ID: <1581523144.8740.8.camel@kernel.org>
+Subject: Re: [tracing] 9fe41efaca:
+ BUG:unable_to_handle_page_fault_for_address
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+Date:   Wed, 12 Feb 2020 09:59:04 -0600
+In-Reply-To: <20200212113444.GS12867@shao2-debian>
+References: <20200212113444.GS12867@shao2-debian>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 04:42:29PM +0100, Michal Simek wrote:
-> From: Stefan Asserhall load and store <stefan.asserhall@xilinx.com>
-> 
-> Implement SMP aware atomic operations.
-> 
-> Signed-off-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
->  arch/microblaze/include/asm/atomic.h | 265 +++++++++++++++++++++++++--
->  1 file changed, 253 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/microblaze/include/asm/atomic.h b/arch/microblaze/include/asm/atomic.h
-> index 41e9aff23a62..522d704fad63 100644
-> --- a/arch/microblaze/include/asm/atomic.h
-> +++ b/arch/microblaze/include/asm/atomic.h
-> @@ -1,28 +1,269 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2013-2020 Xilinx, Inc.
-> + */
-> +
->  #ifndef _ASM_MICROBLAZE_ATOMIC_H
->  #define _ASM_MICROBLAZE_ATOMIC_H
->  
-> +#include <linux/types.h>
->  #include <asm/cmpxchg.h>
-> -#include <asm-generic/atomic.h>
-> -#include <asm-generic/atomic64.h>
-> +
-> +#define ATOMIC_INIT(i)	{ (i) }
-> +
-> +#define atomic_read(v)	READ_ONCE((v)->counter)
-> +
-> +static inline void atomic_set(atomic_t *v, int i)
-> +{
-> +	int result, tmp;
-> +
-> +	__asm__ __volatile__ (
-> +		/* load conditional address in %2 to %0 */
-> +		"1:	lwx	%0, %2, r0;\n"
-> +		/* attempt store */
-> +		"	swx	%3, %2, r0;\n"
-> +		/* checking msr carry flag */
-> +		"	addic	%1, r0, 0;\n"
-> +		/* store failed (MSR[C] set)? try again */
-> +		"	bnei	%1, 1b;\n"
-> +		/* Outputs: result value */
-> +		: "=&r" (result), "=&r" (tmp)
-> +		/* Inputs: counter address */
-> +		: "r" (&v->counter), "r" (i)
-> +		: "cc", "memory"
-> +	);
-> +}
-> +#define atomic_set	atomic_set
+Hi,
 
-Uuuuhh.. *what* ?!?
+On Wed, 2020-02-12 at 19:34 +0800, kernel test robot wrote:
+> FYI, we noticed the following commit (built with gcc-7):
+> 
+> commit: 9fe41efaca08416657efa8731c0d47ccb6a3f3eb ("tracing: Add synth
+> event generation test module")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
+> master
+> 
+> in testcase: rcuperf
+> with following parameters:
+> 
+> 	runtime: 300s
+> 	perf_type: rcu
+> 
+> 
+> 
+> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2
+> -m 8G
+> 
 
-Are you telling me your LL/SC implementation is so bugger that
-atomic_set() being a WRITE_ONCE() does not in fact work?
+I think the below patch should fix this, but I'm not able to build and
+test on a 32-bit system at the moment - my system needs an update to be
+able to run the qemu lkp-tests and my real 32-bit system is also having
+problems of its own.  I'll verify that this actually works on the lkp-
+tests once I get to the point of being able to test this on i386.
+
+Thanks,
+
+Tom
+
+
+Subject: [PATCH] tracing: Remove bogus 64-bit synth_event_trace() vararg
+ assumption
+
+The vararg code in synth_event_trace() assumed the args were 64 bit
+which is not the case on 32 bit systems.  Just use long which should
+work on every system, and remove the u64 casts from the synth event
+test module.
+
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+---
+ kernel/trace/synth_event_gen_test.c | 4 ++--
+ kernel/trace/trace_events_hist.c    | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/synth_event_gen_test.c b/kernel/trace/synth_event_gen_test.c
+index 4aefe003cb7c..2a7465569a43 100644
+--- a/kernel/trace/synth_event_gen_test.c
++++ b/kernel/trace/synth_event_gen_test.c
+@@ -424,11 +424,11 @@ static int __init test_trace_synth_event(void)
+ 	/* Trace some bogus values just for testing */
+ 	ret = synth_event_trace(create_synth_test, 7,	/* number of values */
+ 				444,			/* next_pid_field */
+-				(u64)"clackers",	/* next_comm_field */
++				"clackers",		/* next_comm_field */
+ 				1000000,		/* ts_ns */
+ 				1000,			/* ts_ms */
+ 				smp_processor_id(),	/* cpu */
+-				(u64)"Thneed",		/* my_string_field */
++				"Thneed",		/* my_string_field */
+ 				999);			/* my_int_field */
+ 	return ret;
+ }
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 2fcb755e900a..e65276c3c9d1 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1883,12 +1883,12 @@ int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
+ 
+ 	va_start(args, n_vals);
+ 	for (i = 0, n_u64 = 0; i < state.event->n_fields; i++) {
+-		u64 val;
++		long val;
+ 
+-		val = va_arg(args, u64);
++		val = va_arg(args, long);
+ 
+ 		if (state.event->fields[i]->is_string) {
+-			char *str_val = (char *)(long)val;
++			char *str_val = (char *)val;
+ 			char *str_field = (char *)&state.entry->fields[n_u64];
+ 
+ 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
+-- 
+2.14.1
+
