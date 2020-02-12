@@ -2,56 +2,98 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2386C35242
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CADC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C8C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=scoopta.email header.i=@scoopta.email header.b="l35Edr8f"
+	by mail.kernel.org (Postfix) with ESMTP id 01C7D20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581477859;
+	bh=mBWVEBG2jTxD+zdNGdiJ9jwLnAWUmNwN96Qt1ATXxMM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=14E/MP7JxeEKGbsoTCCWxPQ1rVmKNKdk+uXBgdmcnoX4TNSxOUgMO15j2n61+zLY5
+	 gFnffxdnDrYaS8gV7YRgw/1+uflJl3lc4Sd8xx43sHGq8iGrpVF55T+jTrDvhdg/YQ
+	 c36JSQo2x0MRUHglAI6L6/gx+hVUYzGAgn3970sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgBLDXR (ORCPT
+        id S1727898AbgBLDYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 22:23:17 -0500
-Received: from scoopta.email ([198.58.106.30]:35058 "EHLO scoopta.email"
+        Tue, 11 Feb 2020 22:24:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbgBLDXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 22:23:17 -0500
-X-Greylist: delayed 609 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 22:23:16 EST
-DKIM-Signature: a=rsa-sha256; b=l35Edr8f14bRCsWAzZzOrVlarLPsbcBl4f6j9Ip/9xcJPb+J+U4ymAGErXx5K/G9qFdHyWJrLHvBDcqNxCESF6/z1K8+YrA3M8+tiw1ylf7rQCe1Jb1QeoRBEtP8aAjn+1+FHUEm7xU0Ls5Qan0aHbkTXBDRdecdFEybKFpNF07lVpG2Uw0oF1h5XUIm/H9HVeIjURo8yolo86Ekm4TjMTa5lmEHFypFIKOngZReJJK5LkWCZjKbF3AVw8Ur1Iyk8f0Q4wF+9R6SUhA6ETEiM8Jkbrh9VvzIOL2Kw+heApsKuUxoeajEfILOnzwiY3+9/I3xshCdB9VB007d++qTo2J+5O3/JFw3ENbW7kBX/J392GUfyV7txUHYHDV5RRER7zhoEekSV67dhYqRE+dNLqCArhXOZK9Kg8w+Q0iZMa4P3NSzNKkAr2c6sdp6nwaZDmvnIx1ywL3BTJxpEDswzY7Mv2OPI8faestjjKwFapiPa7kYJeM7/0uKz9XV/9FnvBH5n4LKTo50WHkaAbPs10T+vhYE/Wf9z5QHcel/PtqkmZLi6q5Z8GVpY4Y31sdqk8yy43UhFoBvjrbqeN+YtL2VFfrC/caoaqPl3ZMWV9gXkkj/lNU5YY1+69R1YROs0zQ+0+FuuR5V+tm0T8zAEUKyFp4YnLqoyP1Ng9YD28b6pjYklURGEV2STXKFTLlX8SWfM/tRJBRjEe/8ND/u8JMYsSnNmNwNkhwM5jt950VHB492wv88HrPimsx6pKgxclQLv/pewC7QPIM6dnJLq6mn12fnKZ2o4wu17nKER9AcPUFHP+6VPn6l1mxEkpExHdUnR2QHY+x7kSCl/w1dw2Hj1NVC4k1bjcEewczGVRbsyZ0ejCujjXmy+R6jRlQtoi/p2J/kzqEDweb7fjXhm8VipSVw1xAFzPSQ5AGJwdYiWtha40pFQZAdt999pBNz6W0R5/
- h5dADvoJSh5gFiopBSEB6WZh2f13cM/+E08YJg4On5Lo8Ge2y3fDMWqsodDs5l5D7MSQpg1/zrXJjrpRoGWi1ln5nGVTXkgmArn14Fly+W86h0rnJsOOzvW6FWQ5zuLjO/qh2p4zW0DSSbZqsz33cthVgyMWxye7on9sF4sW5k70WL4jttFo++KSCqoRCe1Lf4xd0f9IQq7jLPFHh1+hn9idlqiu1Ul0pFuhT4e28ktmeZKp+J9ZzzD4O1GDQGTeB/jhOHXclapjt8pt+We8dpJAUuEzQ541JRnn9Ic1+Rl+YuMRgSIjCOYQmVLMKwagbdlMDAycSpOy46c8VvWFpH26eQVONQILwmpq/DH6XVAEVwcdq/kvppiPLdHfBWyusTFHEs5SA1CjOUAg==; s=20190906; c=relaxed/relaxed; d=scoopta.email; v=1; bh=HZZOqhv2dax/2TCAyXa+ed6N05ltomfM1ZgKrEujBLA=; h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type;
-MIME-Version: 1.0
-X-UserIsAuth: true
-Received: from 2600:1700:4810:f9ef:0:0:f0c5:cafe (EHLO [IPv6:2600:1700:4810:f9ef::f0c5:cafe]) ([2600:1700:4810:f9ef:0:0:f0c5:cafe])
-          by scoopta.email (JAMES SMTP Server ) with ESMTPA ID 1759566365
-          for <linux-kernel@vger.kernel.org>;
-          Tue, 11 Feb 2020 19:13:06 -0800 (PST)
-To:     linux-kernel@vger.kernel.org
-From:   Scoopta <mlist@scoopta.email>
-Subject: RX 5700 XT Issues
-Message-ID: <8e09f86e-b241-971a-ea8c-8948b9e06d20@scoopta.email>
-Date:   Tue, 11 Feb 2020 19:13:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-Content-Type: text/plain; charset=utf-8
+        id S1727641AbgBLDYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 22:24:17 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FBCD2082F;
+        Wed, 12 Feb 2020 03:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581477857;
+        bh=mBWVEBG2jTxD+zdNGdiJ9jwLnAWUmNwN96Qt1ATXxMM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2Z/nr1hJvBKn/UFlGu1nNbTvndgpqmllyLnspyObsXgwGY2DHe8+QUbeY9EBXx8aA
+         axXIYMlFHBP29/zapP+8/mdMqyskSX4SaPos79xOdGPPFbQalPAfi2F4dHl7CvByyr
+         aYV4I1UCO8w2joypRL/08/YUwIibZ0ohJwIzA40I=
+Date:   Wed, 12 Feb 2020 12:24:12 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
+        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] tracing: Add missing nest end to
+ synth_event_trace_start() error case
+Message-Id: <20200212122412.9666e6fd30c8d5d48ea5a2d8@kernel.org>
+In-Reply-To: <20abc444b3eeff76425f895815380abe7aa53ff8.1581374549.git.zanussi@kernel.org>
+References: <cover.1581374549.git.zanussi@kernel.org>
+        <20abc444b3eeff76425f895815380abe7aa53ff8.1581374549.git.zanussi@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When playing demanding games my RX 5700 XT will sometimes just stop. All
-my displays turn off but the system stays responsive. Audio keeps
-working and I can REISUB no problem, the card just stops. Fans turn off
-lm-sensors reports N/A as all information on the sensors and my monitors
-go into power save. syslog is also completely quiet. amdgpu doesn't seem
-to error or anything so I have no idea how to troubleshoot if this is a
-hardware issue or if it's a driver issue. I couldn't find a drm or GPU
-specific list so I'm sending it here. I want to be sure it's not a
-driver issue or other kernel issue before doing an RMA.
+On Mon, 10 Feb 2020 17:06:48 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
+> If the ring_buffer reserve in synth_event_trace_start() fails, the
+> matching ring_buffer_nest_end() should be called in the error code,
+> since nothing else will ever call it in this case.
+> 
+
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks,
+
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> ---
+>  kernel/trace/trace_events_hist.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index b3bcfd8c7332..a546ffa14785 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -2043,6 +2043,7 @@ int synth_event_trace_start(struct trace_event_file *file,
+>  	entry = trace_event_buffer_reserve(&trace_state->fbuffer, file,
+>  					   sizeof(*entry) + fields_size);
+>  	if (!entry) {
+> +		ring_buffer_nest_end(trace_state->buffer);
+>  		ret = -EINVAL;
+>  		goto out;
+>  	}
+> -- 
+> 2.14.1
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
