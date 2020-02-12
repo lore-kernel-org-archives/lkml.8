@@ -2,102 +2,97 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401A9C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DDCC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135B021739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A2324673
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="mex+J8Ow";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="1l0/s3VC"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NlAKLCPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgBLUsy (ORCPT
+        id S1729047AbgBLUt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:48:54 -0500
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:55868 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgBLUsy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:48:54 -0500
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 12BBF55B30;
-        Wed, 12 Feb 2020 15:48:52 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=5GPDyBY1KAAr0S2ZkUo91m7Bf6s=; b=mex+J8
-        Owd5Ze1R2YaA5KwoVnoQIT02jzOqHZRvUoNEYOMXCTzuChpEIczaNqEitgKMHR8P
-        /9hHl9ln77mntYIFfuAtbTa80NexUB8ZQD/NUtF4cw9EjeTFPzlYlVWz+Oe2mTPz
-        PHdWNwAPUJTN1/r8iiZ/aIV3aScnDpNI1+IjA=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 096B755B2F;
-        Wed, 12 Feb 2020 15:48:52 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Bp0EdcbKaDs3gCEwDZM9KmJwa83NKzzAz84oizMrUV8=; b=1l0/s3VCLjBqIkeBerOUcSUT+1wyu73kWBGNLxUtuXlcNEymGHsLC7zDJF1xu8xvzlnbyCaPjb+UoFAduLa9DlqE9n8cjTMtOW8mwVVWKPi2LP1OcYZiOAL9n/2xkK1F4iGZ5SrOhKPSQMJuPAljIWTejVJOfdfU8fpqM3JQuMc=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 12 Feb 2020 15:49:57 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59089 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbgBLUt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:49:57 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 7FB1655B2E;
-        Wed, 12 Feb 2020 15:48:51 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 9CB7C2DA09EC;
-        Wed, 12 Feb 2020 15:48:50 -0500 (EST)
-Date:   Wed, 12 Feb 2020 15:48:50 -0500 (EST)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Quentin Perret <qperret@google.com>
-cc:     masahiroy@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, maennich@google.com,
-        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
-Subject: Re: [PATCH v4 0/3] kbuild: allow symbol whitelisting with
- TRIM_UNUSED_KSYM
-In-Reply-To: <20200212202140.138092-1-qperret@google.com>
-Message-ID: <nycvar.YSQ.7.76.2002121545120.1559@knanqh.ubzr>
-References: <20200212202140.138092-1-qperret@google.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HsG92BKjz9sPF;
+        Thu, 13 Feb 2020 07:49:53 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581540593;
+        bh=J4dkHbEB6RBjqAe2DsJvhKK3a5yp+QsKjyiLfWeKdQ8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NlAKLCPh3d/AEovh1gYr2h0iCC8F/OVilArU2v3uqrK3EFOXC+GqCW0jq5KoPZZ9O
+         /Y68aS/pbVOHPI8cbC+ODN/W0LX97JUIQyIRM7f1J89x7CPCIe3zSMZI6BOWSsIF37
+         o9kd5JPAe5xm+OOVODhFSSrajqhqJh82q+GJmfsH3Uc2kepV3tZrvLMxwf1uNnuD+w
+         bNqsR/P9Rj/mKaHL6BhRCUkObsNTh6Han8IS+UbUY5O/qw8uAEyAJD21xW09eOFpX9
+         aAkgeJTZEcky6gxt0+NKNvQD19/OczGV7VYNu/sbBjgtT7ERCfHw/RWksqP4vbOaHD
+         Iq8L6X+ltfpJQ==
+Date:   Thu, 13 Feb 2020 07:49:40 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johan Korsnes <jkorsnes@cisco.com>
+Subject: linux-next: Fixes tag needs some work in the hid tree
+Message-ID: <20200213074940.4fc25926@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 134EB9B8-4DD9-11EA-A8FA-C28CBED8090B-78420484!pb-smtp1.pobox.com
+Content-Type: multipart/signed; boundary="Sig_/Tizg3_K0VfuuX+xai=TK+ti";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020, Quentin Perret wrote:
+--Sig_/Tizg3_K0VfuuX+xai=TK+ti
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> The current norm on Android and many other systems is for vendors to
-> introduce significant changes to their downstream kernels, and to
-> contribute very little (if any) code back upstream. The Generic Kernel
-> Image (GKI) project in Android attempts to improve the status-quo by
-> having a unique kernel for all android devices of the same architecture,
-> regardless of the SoC vendor. The key idea is to make all interested
-> parties agree on a common solution, and contribute their code upstream
-> to make it available to use by the wider community.
-> 
-> The kernel-to-drivers ABI on Android devices varies significantly from
-> one vendor kernel to another today because of changes to exported
-> symbols, dependencies on vendor symbols, and surely other things. The
-> first step for GKI is to try and put some order into this by agreeing on
-> one version of the ABI that works for everybody.
-> 
-> For practical reasons, we need to reduce the ABI surface to a subset of
-> the exported symbols, simply to make the problem realistically solvable,
-> but there is currently no upstream support for this use-case.
-> 
-> As such, this series attempts to improve the situation by enabling users
-> to specify a symbol 'whitelist' at compile time. Any symbol specified in
-> this whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is
-> set, even if it has no in-tree user. The whitelist is defined as a
-> simple text file, listing symbols, one per line.
+Hi all,
 
-For the whole series:
+In commit
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
+  5ebdffd25098 ("HID: core: fix off-by-one memset in hid_report_raw_event()=
+")
 
+Fixes tag
 
-Nicolas
+  Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
+
+has these problem(s):
+
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Tizg3_K0VfuuX+xai=TK+ti
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5EZOQACgkQAVBC80lX
+0GzFkwf8DVL2KKXhB0IZt+fgPLqZ/8eSIRb6zCgUr7K7z9+sKP7Nl56Zh7G0mG78
+3YTuRolnXtlsJHk7UE2L4LPzh0VMSx8CvSVcHt2uan/wNVvMaSvOcWprEvUzYOKA
+PiVLjhh6Z30XAxToQBN8RotSciM6fKS96Onys1Nx5EzCutq9d7fWuHUT/7rz0P2s
+SqYwveUggnAjGtJUhTt0drIEuGThhT1xJ+BPrY0l2Zig/aHBdy/yRPY77aAU9Nl2
+DaeoMGZpHeY11u0vCthK+LGm7L9NPJY1pYANn9RcHjFuVa7ets0wzSw5SLdin6Lb
+zHArYw+sjNvF9i1kkQ1Ed8ziD46pVQ==
+=yomP
+-----END PGP SIGNATURE-----
+
+--Sig_/Tizg3_K0VfuuX+xai=TK+ti--
