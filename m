@@ -2,79 +2,170 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC41C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F8AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50253206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2CB7206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oBuvATo3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nhg3rKGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgBLHuH (ORCPT
+        id S1728412AbgBLHvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:50:07 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45576 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728311AbgBLHuH (ORCPT
+        Wed, 12 Feb 2020 02:51:03 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38742 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728354AbgBLHvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:50:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1nVf4vn0jnrm81iZchVFMrYKYcdKsraT+ctD9FAeWIM=; b=oBuvATo3aKkkhrPnQLe1L0Tftm
-        uv8E37LrW9Pl5sTQe1Wy9e7orifQHoglTYXc1w2y2d2PZRXnn1ZRJno6yb8bAtFrS23Nv1z6MlQu+
-        PCXcY/HGH3ZEKI9ys82yZFU16SWh4aUL+Ltr1XtAayHALsQDDUZpKB73BVDpjiAUQ0ZjerBY2w1Mo
-        GR883VVdazQIFtoLPO8K5Bt64FAprxdqtw/wnu61fukHeF6YTmqaBbWqypLvggygw/EE0w4FECYp+
-        jYyLb0AkhqNUG0BO1EBsLvgUlCt/bsPoP/urbcQTA0wEZt6TMno2z4hGVRIfBRX2p0wcXE652oa1s
-        FygXWy1w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1mmc-0002Q8-Rr; Wed, 12 Feb 2020 07:50:06 +0000
-Date:   Tue, 11 Feb 2020 23:50:06 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 25/25] mm: Align THP mappings for non-DAX
-Message-ID: <20200212075006.GJ7068@infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-26-willy@infradead.org>
+        Wed, 12 Feb 2020 02:51:02 -0500
+Received: by mail-pg1-f193.google.com with SMTP id d6so772873pgn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 23:51:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yiz9WBSdL7NQOdvbn80An19iJZYDNk/obNeFYG2L8Bs=;
+        b=nhg3rKGmLf/ztkCT+0gU6qiovpFdDomiRBtx3D5rpDSWaazkpSyqNkRTpVLBE9itSC
+         Y7XnYaE4y5gNB0j5dMsvQxQI9z8S0g219xc81Yv/dTG9AvrN2ditkF9z9IIJ60b6K0Cs
+         kOsenjKrpqo7cf+WM5hrgiUr1mMxkX8CsxpAc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yiz9WBSdL7NQOdvbn80An19iJZYDNk/obNeFYG2L8Bs=;
+        b=ukKHj0kosQ7UeMjAcq2XepYuw/XGgftv3gwqCwZJj4IAO+M+kHhf+QEbe9l+jWZ1Ik
+         MXrRq/czwX6rZ5wZGS0SevAaBt9MqCuzD62FI3tY5+1Y3iUYW9V5UTrti7SxF8JFmLI7
+         cw/C1/ogBIh4nimO//o8xifzOVSL1A9phWzE9W5X/JDfdE/yc/kIJ2r79E35ph78MC06
+         03fAT2jz0Ks3cIZKbY8v/ID4NKLpFB8yn7jlo8ianRNovHplA+QcRTirg1n2d18BORt/
+         OWnkZK2BCsi598Dzjo++dWMBUAQrbnjH+HHY0b5OPj+2d6tYGjhNg3oBqPmNxw8QTIU2
+         7sOw==
+X-Gm-Message-State: APjAAAU4w30JUvsbEMl/z8CTysUPdY0++Vremvonfm5wQXC8T8ILAAJo
+        M01dYtf7I/BCd5OyRdY/PqDDVg==
+X-Google-Smtp-Source: APXvYqyPQNw1fJJzxrr+Vej5UzAZPt9dUWwkqtIGchQ+MVvd9EJarctCHQVbAN0x96enDO2Wl9uRtg==
+X-Received: by 2002:a63:5558:: with SMTP id f24mr6981271pgm.92.1581493860306;
+        Tue, 11 Feb 2020 23:51:00 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b98sm5858832pjc.16.2020.02.11.23.50.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 23:50:59 -0800 (PST)
+Date:   Tue, 11 Feb 2020 23:50:58 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     timmurray@google.com, nosh@google.com, nnk@google.com,
+        lokeshgidra@google.com, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, selinux@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Harden userfaultfd
+Message-ID: <202002112332.BE71455@keescook>
+References: <20200211225547.235083-1-dancol@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212041845.25879-26-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200211225547.235083-1-dancol@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index b52e007f0856..b8d9e0d76062 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -577,13 +577,10 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
->  	unsigned long ret;
->  	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
->  
-> -	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
-> -		goto out;
-> -
->  	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
->  	if (ret)
->  		return ret;
-> -out:
-> +
->  	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
->  }
->  EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
+Hi!
 
-There is no point in splitting thp_get_unmapped_area and
-__thp_get_unmapped_area with this applied (and arguably even before
-that).  But we still have ext2 and ext4 that use thp_get_unmapped_area but
-only support huge page mappings for DAX, do we need to handle those somehow?
+Firstly, thanks for working on this! It's been on my TODO list for a
+while. :)
+
+Casey already recommended including the LSM list to CC (since this is a
+new LSM -- there are many LSMs). Additionally, the series should
+probably be sent _to_ the userfaultfd maintainers:
+	Andrea Arcangeli <aarcange@redhat.com>
+	Mike Rapoport <rppt@linux.ibm.com>
+and I'd also CC a couple other people that have done recent work:
+	Peter Xu <peterx@redhat.com>
+	Jann Horn <jannh@google.com>
+
+More notes below...
+
+On Tue, Feb 11, 2020 at 02:55:41PM -0800, Daniel Colascione wrote:
+> Userfaultfd in unprivileged contexts could be potentially very
+> useful. We'd like to harden userfaultfd to make such unprivileged use
+> less risky. This patch series allows SELinux to manage userfaultfd
+> file descriptors and allows administrators to limit userfaultfd to
+> servicing user-mode faults, increasing the difficulty of using
+> userfaultfd in exploit chains invoking delaying kernel faults.
+
+I actually think these are two very different goals and likely the
+series could be split into two for them. One is LSM hooking of
+userfaultfd and the SELinux attachment, and the other is the user-mode
+fault restrictions. And they would likely go via separate trees (LSM
+through James's LSM tree, and probably akpm's -mm tree for the sysctl).
+
+> A new anon_inodes interface allows callers to opt into SELinux
+> management of anonymous file objects. In this mode, anon_inodes
+> creates new ephemeral inodes for anonymous file objects instead of
+> reusing a singleton dummy inode. A new LSM hook gives security modules
+> an opportunity to configure and veto these ephemeral inodes.
+> 
+> Existing anon_inodes users must opt into the new functionality.
+> 
+> Daniel Colascione (6):
+>   Add a new flags-accepting interface for anonymous inodes
+>   Add a concept of a "secure" anonymous file
+>   Teach SELinux about a new userfaultfd class
+>   Wire UFFD up to SELinux
+
+The above is the first "series"... I don't have much opinion about it,
+though I do like the idea of making userfaultfd visible to the LSM.
+
+>   Let userfaultfd opt out of handling kernel-mode faults
+>   Add a new sysctl for limiting userfaultfd to user mode faults
+
+Now this I'm very interested in. Can you go into more detail about two
+things:
+
+- What is the threat being solved? (I understand the threat, but detailing
+  it in the commit log is important for people who don't know it. Existing
+  commit cefdca0a86be517bc390fc4541e3674b8e7803b0 gets into some of the
+  details already, but I'd like to see reference to external sources like
+  https://duasynt.com/blog/linux-kernel-heap-spray)
+
+- Why is this needed in addition to the existing vm.unprivileged_userfaultfd
+  sysctl? (And should this maybe just be another setting for that
+  sysctl, like "2"?)
+
+As to the mechanics of the change, I'm not sure I like the idea of adding
+a UAPI flag for this. Why not just retain the permission check done at
+open() and if kernelmode faults aren't allowed, ignore them? This would
+require no changes to existing programs and gains the desired defense.
+(And, I think, the sysctl value could be bumped to "2" as that's a
+better default state -- does qemu actually need kernelmode traps?)
+
+Thanks again for the patches!
+
+-Kees
+
+> 
+>  Documentation/admin-guide/sysctl/vm.rst | 13 ++++
+>  fs/anon_inodes.c                        | 89 +++++++++++++++++--------
+>  fs/userfaultfd.c                        | 29 ++++++--
+>  include/linux/anon_inodes.h             | 27 ++++++--
+>  include/linux/lsm_hooks.h               |  8 +++
+>  include/linux/security.h                |  2 +
+>  include/linux/userfaultfd_k.h           |  3 +
+>  include/uapi/linux/userfaultfd.h        |  9 +++
+>  kernel/sysctl.c                         |  9 +++
+>  security/security.c                     |  8 +++
+>  security/selinux/hooks.c                | 68 +++++++++++++++++++
+>  security/selinux/include/classmap.h     |  2 +
+>  12 files changed, 229 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.25.0.225.g125e21ebc7-goog
+> 
+
+-- 
+Kees Cook
