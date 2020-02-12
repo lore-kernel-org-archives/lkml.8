@@ -2,155 +2,98 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8FAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0A32073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k5mhsrZm"
+	by mail.kernel.org (Postfix) with ESMTP id EDE0B2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581508836;
+	bh=4U3kyUNQZkoiolbCGBcod0ynM+vltNtaxpiev9leMnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M3m8w82n5zkU7AbiefVFFReTpJZocr7pvaO9g6qV1NkZ+Qm3rnrUkogRjHmEOqRm0
+	 ORmwHy1GClQBdMdjsTFacu0fxATPLhhbVVKEzYhiSGeWh1RepQ3ouCgjKH6I+SjKdb
+	 SE3B9/NOcP/24hS+Na4sucLcvWg/IQXTO1XOqSDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgBLMAZ (ORCPT
+        id S1728379AbgBLMAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:00:25 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60892 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728207AbgBLMAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:00:25 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581508824; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=RLVnJC/Yp3dxGv33CP0wjpJhPdl/x7brvP9Cxn1hiIY=; b=k5mhsrZm0rv1A6WeX1kKc5t8un54dDLEuK9qNoK3JPkoN8iJ6kDVbuSVRwqKyaaiGkuld6ip
- fCEUIuqjKg7yJSdvQtRlDLMGgnt5KB5V7QBTCBjno+BVirkSg5yV+Ly2akroXuYzrLUJkLJy
- KbU1Mc88sZcIcArm++66MHdQmzU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e43e8c7.7fe49e644fb8-smtp-out-n03;
- Wed, 12 Feb 2020 12:00:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7C3D9C447A3; Wed, 12 Feb 2020 12:00:07 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8FAFEC433A2;
-        Wed, 12 Feb 2020 12:00:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FAFEC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V1] dt-bindings: mmc: sdhci-msm: Add CQE reg map
-To:     Doug Anderson <dianders@google.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
- <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <1e3f8fc3-dde9-5aaf-12a9-0eb0bc5ceb83@codeaurora.org>
-Date:   Wed, 12 Feb 2020 17:30:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 07:00:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:60106 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728049AbgBLMAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:00:34 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DAEE30E;
+        Wed, 12 Feb 2020 04:00:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A54FF3F6CF;
+        Wed, 12 Feb 2020 04:00:33 -0800 (PST)
+Date:   Wed, 12 Feb 2020 12:00:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     vishnu <vravulap@amd.com>
+Cc:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>, Alexander.Deucher@amd.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: amd: Buffer Size instead of MAX Buffer
+Message-ID: <20200212120032.GD4028@sirena.org.uk>
+References: <1581426768-8937-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <20200211153847.GK4543@sirena.org.uk>
+ <c4b900ee-743e-8ce0-1061-02c383bff90e@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4zI0WCX1RcnW9Hbu"
+Content-Disposition: inline
+In-Reply-To: <c4b900ee-743e-8ce0-1061-02c383bff90e@amd.com>
+X-Cookie: Violence is molding.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2/11/2020 10:12 PM, Doug Anderson wrote:
-> Hi,
->
-> On Tue, Feb 11, 2020 at 7:29 AM Veerabhadrarao Badiganti
-> <vbadigan@codeaurora.org> wrote:
->> CQE feature has been enabled on sdhci-msm. Add CQE reg map
->> that needs to be supplied for supporting CQE feature.
->>
->> Change-Id: I788c4bd5b7cbca16bc1030a410cc5550ed7204e1
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> index 7ee639b..eaa0998 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> @@ -27,6 +27,11 @@ Required properties:
->>   - reg: Base address and length of the register in the following order:
->>          - Host controller register map (required)
->>          - SD Core register map (required for msm-v4 and below)
->> +       - CQE register map (Optional, needed only for eMMC and msm-v4.2 above)
-> I did a quick search and it appears that SD cards implementing 6.0 of
-> the spec can also use CQE.  Is that correct?  If so, maybe remove the
-> part about "eMMC"?
-On qcom platforms, only SDHC instance meant for eMMC has the CQE support.
-So mentioned that its needed only for eMMC.
->
-> Maybe also change "needed" to "useful" to make it clear that this
-> entry isn't actually required for all msm-v4.2 controllers?
-sure.
->
->> +- reg-names: When CQE register map is supplied, below reg-names are required
->> +       - "hc_mem" for Host controller register map
->> +       - "core_mem" for SD cpre regoster map
-> s/regoster/register
->
->
->> +       - "cqhci_mem" for CQE register map
-> I'm at least slightly confused.  You say that reg-names are there only
-> if CQE register map is supplied.  ...and that requires 4.2 and above.
-> ...but "core_mem" is only there on 4.0 and below.  So there should
-> never be a "core_mem" entry?
-core_mem is present till <v5.0
-cqhci_mem is present on >=v4.2
-Say, for version v4.2 both are present; .... and for v5.0 only cqhci_mem 
-is present.
+--4zI0WCX1RcnW9Hbu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Both hc reg-map and core reg-map are being accessed through index.
-So no need to list the reg names 'hc_mem' & 'core_mem' in general.
+On Wed, Feb 12, 2020 at 02:36:32PM +0530, vishnu wrote:
 
-But coming to cqhci reg-map we can't access it with fixed index, since 
-its index varies between 1/2
-based on controller version.
+> prior to this fix the value in Tx/Rx Ring Buffer Size register
+> ACP_BT_TX_RINGBUFSIZE,ACP_BT_RX_RINGBUFSIZE and same in I2S RINGBUFSIZE
+> registers was statically set to maximum which is wrong.
+> Buffer size must be equal to actual allocated.
 
-So we are accessing it through reg-names. Since reg-names has to be 
-associated with corresponding
-reg maps, other two reg-names (hc_mem & core_mem) also need to br listed 
-when cqhci_mem is listed.
+OK, makes sense - this is the sort of thing which should have been in
+the commit message.
 
-That is the reason, I mentioned it like these are needed only cqe reg 
-map is supplied.
-If it is creating confusion, i will remove that statement.
-> Trying to specify that sanely in free-form text seems like it's gonna
-> be hard and not worth it.  You should probably transition to yaml
-> first?
->
->
-> I will also note that Rob isn't a huge fan of "reg-names".  In a
-> different conversation I think you mentioned you had a reason for
-> having it.  I guess just be prepared to defend yourself against Rob if
-> you feel strongly about keeping reg-names.
-Sure. Its the same reason mentioned in above comment.
->
-> -Doug
+--4zI0WCX1RcnW9Hbu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5D6N8ACgkQJNaLcl1U
+h9DZiQf/dWgDV9LNXeiT35fpCE0NNPfQAot1I/qWDk4lx8xnWZkk7Yst9HKWTZ45
+5QMT35X8ffIrVDWwbiIWfN+ba+z89OhY5vInIfxYQQ4iRJXnOVEwN4LaCub00Iq+
+XfO+f5Y0nB7aQEFeMWFC1mduSg2uGNK7+p4AXhXVI33tfl2uJhzIM7vRhdMW1+9F
+SxZhZAT3SZaUwbHD3QE35wGSZvxM+902oXYLMsac9USfVNj2DjcUNvU0xXHE6p25
+XES2+b++z6ihK9p4ZggZ0mSLdRwLMGatIWdXLrNvU6EQlJeAFM623z7cyskVWBEp
+IpgjwHZYEkN85PbpOutNNmEaCljHEA==
+=Bcit
+-----END PGP SIGNATURE-----
+
+--4zI0WCX1RcnW9Hbu--
