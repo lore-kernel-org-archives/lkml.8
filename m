@@ -2,120 +2,115 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3004C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C77C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8873C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581504403;
-	bh=xOU7PQkgW4q9YMHWoFq9bb7nNnTDoGpTbdZfbr70KEY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=oIz0poxYIhasEctzBRX/4qvsyHCY5XoPX568Eh0w+2JqjZcK10fJ5N+8hDu1r0EsY
-	 2/lQuIN+uAYEnlmCt36o3715rsHyyfVeceEtJJ9kyXQkLWlifyAFGst3BoF8yxAtpu
-	 SnLo1Fie3a6nwlamGVgLe7By2DTyQHs+oonvU3MU=
+	by mail.kernel.org (Postfix) with ESMTP id 785CC20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:47:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aWDhzZ7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgBLKqm (ORCPT
+        id S1727874AbgBLKrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:46:42 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38295 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgBLKqm (ORCPT
+        Wed, 12 Feb 2020 05:47:45 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46715 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgBLKro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:46:42 -0500
-Received: by mail-lj1-f193.google.com with SMTP id w1so1746568ljh.5;
-        Wed, 12 Feb 2020 02:46:41 -0800 (PST)
+        Wed, 12 Feb 2020 05:47:44 -0500
+Received: by mail-lf1-f68.google.com with SMTP id z26so1224264lfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 02:47:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=17X1P7t2FPFW7M4slmZioExSFdvzkpCr0KSpfhHxYNg=;
+        b=aWDhzZ7UO4+EStPZ3cZ5Q7KDr3hnn3d+LksWJJjjCMa0zZHvUDMqWrNaVciDllF4EZ
+         FIt8rz98AYs+DZWmXO/aPM3+POlIBtoHsZHjDZPZ9rRNe1CkhHSKWsg+ZOEDn23+V8J1
+         vr/WleMJhFym/KW20IAIxn69xFvRXR/YNKp+1NHZjCt64waUSAXs6GvD/vj84BZovo97
+         Pbe9AmTZzxGCi79Oxq9Ri+ieHMG48qFwJwwkLc7ONA+zZdUR5MNLWoeZ5h0b2gP20cJo
+         4RGQSUGtn9NjvZ+CwuLl+VBSyO3HYb8vLDsVTjoFM6gu1CWOXcqEtk01/a6hJL494MYZ
+         sd4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vy/8LlDz/KObVyLZSWteSlNQfy03Ob41JwklHt6HAa8=;
-        b=s6WyuQ68jAoEWy3fnzI+cGcNhrP9ESXoooeXtf4FzJZEcPEOT2zQquzcu6TIpr+2Mw
-         XxL3YGoVI9NzFDwhLR0JMQwKF4BZaIF1nRtBneBk9q/jqjJbVF4ZLdpJKDUxKOWiAmCI
-         Bdjula21mItCuu9AAE1/9UNCIT/sgdvha92ZZUJQUF2lJhU4izDj+VE8xBbl+EQwGNn7
-         jRN3fveWHVLYO4jli9fm2H+A6lCmymOm0F+y3uKdKDso6tfcuSj6ajEAYlW9mTUR4prk
-         SZRJc8sJBuj518/GEO460CoK2oYMFRjTmMWKTvFtTPANvZOijvasFF1Zbu8m8jDam/Bm
-         FK+A==
-X-Gm-Message-State: APjAAAUsRsBAxz8qlwhsHogokgVW8SplMfEIsnWivBhyc//Dr4S0TJvL
-        K5F6agwyfSsvdsKAVqLEF7w=
-X-Google-Smtp-Source: APXvYqyPcIz3R22UQSDl/z8PePXUGeJFtGavWO9nR4gTSGiD2x1BrksDbc0O7BxHh6ChHZgQ8mhxlQ==
-X-Received: by 2002:a2e:a490:: with SMTP id h16mr18671lji.115.1581504400351;
-        Wed, 12 Feb 2020 02:46:40 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id g15sm40369ljl.10.2020.02.12.02.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 02:46:39 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1j1pXS-0005Hh-Q9; Wed, 12 Feb 2020 11:46:38 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        Sanchayan Maity <maitysanchayan@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: [PATCH] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
-Date:   Wed, 12 Feb 2020 11:46:29 +0100
-Message-Id: <20200212104629.20272-1-johan@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=17X1P7t2FPFW7M4slmZioExSFdvzkpCr0KSpfhHxYNg=;
+        b=C1HfKlkG4Ju0h3rT5dGLK+gBtCHv+Vj+WXLz4X5eh5PmKV9lfxwXDj6A4Uny+Z9VuH
+         uIWI8UKoQdPmcujBno2k/A+F2w7I7ZRU7KGO/D7fzDmr333Bocq1yfcU7CxhM5Z+aHUX
+         DFJrSSX52sEMkyHzXA74RMJ7TniUwrPrJOSRWv9LwQvbbH5rOnwo+0lbnMzepKB3gQ3X
+         AQiYfQLsBj0LTIRzd9JjDWKzn29Dy2G0WsrTdCstcyWLuyiNviwY57HokQkfFthVb4ag
+         YRqUx0egmFbzVXWHyMe8dLaLUAY0fNv0jqrH8eBZWmDT5TSAsteNAWV+eI+mcTOoJCma
+         YBbg==
+X-Gm-Message-State: APjAAAUCn6r1ZMKE6Tv4zTy41cLcOXbt7KvyzTcIZdxFUIUnFzBduqDs
+        or3d/M9BzBSMrUJgryhaBrzaown/1gMNBZsLGkW6gCKNOmA=
+X-Google-Smtp-Source: APXvYqyV4ki1Xa39qTcwrcrHZU+8mYLMB7WPx9tV1QxoNnySzNnmRTqNaZ7vdoV3Eo+RVkDXPJNgX0a7EkHhvXeMni0=
+X-Received: by 2002:a19:850a:: with SMTP id h10mr6417830lfd.89.1581504462560;
+ Wed, 12 Feb 2020 02:47:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200211091937.29558-1-brgl@bgdev.pl> <20200211091937.29558-7-brgl@bgdev.pl>
+In-Reply-To: <20200211091937.29558-7-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Feb 2020 11:47:31 +0100
+Message-ID: <CACRpkdZNyCBxQF_pVPGENob5EKZfYjuaNq5bLNA42XjraXzNZg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 6/7] gpiolib: add new ioctl() for monitoring
+ changes in line info
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sram-node compatible properties have mistakingly combined the
-model-specific string with the generic "mtd-ram" string.
+On Tue, Feb 11, 2020 at 10:19 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
-"cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
-not present in any binding.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Currently there is no way for user-space to be informed about changes
+> in status of GPIO lines e.g. when someone else requests the line or its
+> config changes. We can only periodically re-read the line-info. This
+> is fine for simple one-off user-space tools, but any daemon that provides
+> a centralized access to GPIO chips would benefit hugely from an event
+> driven line info synchronization.
+>
+> This patch adds a new ioctl() that allows user-space processes to reuse
+> the file descriptor associated with the character device for watching
+> any changes in line properties. Every such event contains the updated
+> line information.
+>
+> Currently the events are generated on three types of status changes: when
+> a line is requested, when it's released and when its config is changed.
+> The first two are self-explanatory. For the third one: this will only
+> happen when another user-space process calls the new SET_CONFIG ioctl()
+> as any changes that can happen from within the kernel (i.e.
+> set_transitory() or set_debounce()) are of no interest to user-space.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The physmap driver will however bind to platform devices that specify
-"mtd-ram".
+Looks good to me. This got really slim and clean after
+the reviews, and I am of course also impressed by the kfifo
+improvement this brings.
 
-Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
-Cc: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-index cd075621de52..84fcc203a2e4 100644
---- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -275,7 +275,7 @@ &weim {
- 
- 	/* SRAM on Colibri nEXT_CS0 */
- 	sram@0,0 {
--		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
-+		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
- 		reg = <0 0 0x00010000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -286,7 +286,7 @@ sram@0,0 {
- 
- 	/* SRAM on Colibri nEXT_CS1 */
- 	sram@1,0 {
--		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
-+		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
- 		reg = <1 0 0x00010000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-2.24.1
+A question:
 
+Bartosz, since you know about possible impacts on userspace,
+since this code use the preferred ktime_get_ns() rather than
+ktime_get_ns_real(), what happens if we just patch the other
+event timestamp to use ktime_get_ns() instead, so we use the
+same everywhere?
+
+If it's fine I'd like to just toss in a patch for that as well.
+
+Yours,
+Linus Walleij
