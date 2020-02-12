@@ -2,171 +2,102 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E78AC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401A9C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79B321739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135B021739
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ievYme6t"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="mex+J8Ow";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="1l0/s3VC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgBLUr4 (ORCPT
+        id S1729058AbgBLUsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:47:56 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38578 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbgBLUrz (ORCPT
+        Wed, 12 Feb 2020 15:48:54 -0500
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:55868 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgBLUsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:47:55 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p23so4022142edr.5;
-        Wed, 12 Feb 2020 12:47:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ocVi9UeaQe1UnqqnrvLRMbaF86CAckEwz1wjknCQnjg=;
-        b=ievYme6tNhf7wTnSDN1+8dI+y71+GcsRdTmWT5zD0zXgldCLscjL8DmdMrYvoNjapw
-         85Zb5pOcZ0aXklXnT99JoGssExC96kdlzwFffVY+8CEeYWzGHuNbyRCU2339GrdAt2CJ
-         AS3KZEeuArEPSPGIJbH9h5smuPwXNzJgal4nDtzXQ2MgvTLR24NXsua69EQDKEWRTppB
-         hSpfPCAPYSrJ7yUAxoQvRFcaIePuPWDeuppJc4TTUM7PEXyK6pteDYOM0pUNOQOZTEYr
-         zQGWb18rfDzHrGtuP8JY4G6xi9iugXJtcAM5fxyKcdR/gfFZdGUJ1pET7oLRhgv3Pxgp
-         ibmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ocVi9UeaQe1UnqqnrvLRMbaF86CAckEwz1wjknCQnjg=;
-        b=J/bmwOVTFuppIVhNgrnhmo/ZQ3SFAVSY9jLck+8PvL3QnWXN8S79r1BLfTUVtWeACv
-         Ytz7EYumDEeNdGE81TTu/1YFkWU+2Rl2uV8Duq37Ck9d2Q5X6aSErvR02/rI3/Rb+W5O
-         UszJQ8scHE5CRjYVpxoRi48Msq5W35RWxzSdF/hLoR2KyNDAG+LdSs2yaCfgNklOTq82
-         IefL+4eFA44dLR9kda2dv7x25IrNOUWpyf6J4KOnRsAU1HaJMBFDaK1yNfIUKM+oL63L
-         sQjyIYeM4bQicwWjpxTrro7stWswsEH3mK/ysXIH1Jk5LLP1QXHPaNtvA4v0LA7vqyLB
-         Z/KA==
-X-Gm-Message-State: APjAAAWVCy9+BwVzOo/E2X/JD3Ju96MYBQU0rCHk+5yZ/IIosQ6TnEGp
-        qvZZu10INwoz1grRgRCoGjEYrZxZ+Bo20Dp9Z9w=
-X-Google-Smtp-Source: APXvYqySCIIJhmq37z2RmNr9z8yiBAXyw7CW1K6vEWy4ZznnC+5H7VxR1Ka5yEdaSUvZOZLzggXFQJjBnmoRjX7gQ38=
-X-Received: by 2002:a17:906:9501:: with SMTP id u1mr12014650ejx.113.1581540473965;
- Wed, 12 Feb 2020 12:47:53 -0800 (PST)
+        Wed, 12 Feb 2020 15:48:54 -0500
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 12BBF55B30;
+        Wed, 12 Feb 2020 15:48:52 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=5GPDyBY1KAAr0S2ZkUo91m7Bf6s=; b=mex+J8
+        Owd5Ze1R2YaA5KwoVnoQIT02jzOqHZRvUoNEYOMXCTzuChpEIczaNqEitgKMHR8P
+        /9hHl9ln77mntYIFfuAtbTa80NexUB8ZQD/NUtF4cw9EjeTFPzlYlVWz+Oe2mTPz
+        PHdWNwAPUJTN1/r8iiZ/aIV3aScnDpNI1+IjA=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 096B755B2F;
+        Wed, 12 Feb 2020 15:48:52 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Bp0EdcbKaDs3gCEwDZM9KmJwa83NKzzAz84oizMrUV8=; b=1l0/s3VCLjBqIkeBerOUcSUT+1wyu73kWBGNLxUtuXlcNEymGHsLC7zDJF1xu8xvzlnbyCaPjb+UoFAduLa9DlqE9n8cjTMtOW8mwVVWKPi2LP1OcYZiOAL9n/2xkK1F4iGZ5SrOhKPSQMJuPAljIWTejVJOfdfU8fpqM3JQuMc=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 7FB1655B2E;
+        Wed, 12 Feb 2020 15:48:51 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 9CB7C2DA09EC;
+        Wed, 12 Feb 2020 15:48:50 -0500 (EST)
+Date:   Wed, 12 Feb 2020 15:48:50 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Quentin Perret <qperret@google.com>
+cc:     masahiroy@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, maennich@google.com,
+        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
+Subject: Re: [PATCH v4 0/3] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYM
+In-Reply-To: <20200212202140.138092-1-qperret@google.com>
+Message-ID: <nycvar.YSQ.7.76.2002121545120.1559@knanqh.ubzr>
+References: <20200212202140.138092-1-qperret@google.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200212200555.2393-1-f.fainelli@gmail.com>
-In-Reply-To: <20200212200555.2393-1-f.fainelli@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 12 Feb 2020 22:47:43 +0200
-Message-ID: <CA+h21hpG5y1D2d53P7KK6X5uBFxoSQ_iCs3rRAJe61yxfWWAPA@mail.gmail.com>
-Subject: Re: [PATCH net] net: dsa: Treat VLAN ID 0 as PVID untagged
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>, michal.vokac@ysoft.com,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 134EB9B8-4DD9-11EA-A8FA-C28CBED8090B-78420484!pb-smtp1.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+On Wed, 12 Feb 2020, Quentin Perret wrote:
 
-On Wed, 12 Feb 2020 at 22:06, Florian Fainelli <f.fainelli@gmail.com> wrote=
-:
->
-> VLAN ID 0 is special by all kinds and is really meant to be the default
-> ingress and egress untagged VLAN. We were not configuring it that way
-> and so we would be ingress untagged but egress tagged.
->
-> When our devices are interfaced with other link partners such as switch
-> devices, the results would be entirely equipment dependent. Some
-> switches are completely fine with accepting an egress tagged frame with
-> VLAN ID 0 and would send their responses untagged, so everything works,
-> but other devices are not so tolerant and would typically reject a VLAN
-> ID 0 tagged frame.
+> The current norm on Android and many other systems is for vendors to
+> introduce significant changes to their downstream kernels, and to
+> contribute very little (if any) code back upstream. The Generic Kernel
+> Image (GKI) project in Android attempts to improve the status-quo by
+> having a unique kernel for all android devices of the same architecture,
+> regardless of the SoC vendor. The key idea is to make all interested
+> parties agree on a common solution, and contribute their code upstream
+> to make it available to use by the wider community.
+> 
+> The kernel-to-drivers ABI on Android devices varies significantly from
+> one vendor kernel to another today because of changes to exported
+> symbols, dependencies on vendor symbols, and surely other things. The
+> first step for GKI is to try and put some order into this by agreeing on
+> one version of the ABI that works for everybody.
+> 
+> For practical reasons, we need to reduce the ABI surface to a subset of
+> the exported symbols, simply to make the problem realistically solvable,
+> but there is currently no upstream support for this use-case.
+> 
+> As such, this series attempts to improve the situation by enabling users
+> to specify a symbol 'whitelist' at compile time. Any symbol specified in
+> this whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is
+> set, even if it has no in-tree user. The whitelist is defined as a
+> simple text file, listing symbols, one per line.
 
-Are you sure that it's not in fact those devices that are not doing
-what they're supposed to? VID 0 should be sent as tagged and no port
-membership checks should be enforced on it.
+For the whole series:
 
->
-> Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implement=
-ation")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
-> Hi all,
->
-> After looking at all DSA drivers and how they implement port_vlan_add()
-> I think this is the right change to do, but would appreciate if you
-> could test this on your respective platforms to ensure this is not
-> problematic.
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
 
-I'm pretty sure this is problematic, for the simple reason that with
-this change, DSA is insisting that the default PVID is 0, contrary to
-the bridge core which insists it is 1. And some switches, like the
-Microchip Ocelot/Felix, don't support more than 1 egress-untagged
-VLAN, so adding one of the VIDs 0 or 1 will fail (I don't know the
-exact order off-hand). See 1c44ce560b4d ("net: mscc: ocelot: fix
-vlan_filtering when enslaving to bridge before link is up") for more
-details of how that is going to work.
 
->
-> Thank you
->
->
->  net/dsa/slave.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-> index 088c886e609e..d3a2782eb94d 100644
-> --- a/net/dsa/slave.c
-> +++ b/net/dsa/slave.c
-> @@ -1100,6 +1100,7 @@ static int dsa_slave_vlan_rx_add_vid(struct net_dev=
-ice *dev, __be16 proto,
->  {
->         struct dsa_port *dp =3D dsa_slave_to_port(dev);
->         struct bridge_vlan_info info;
-> +       u16 flags =3D 0;
->         int ret;
->
->         /* Check for a possible bridge VLAN entry now since there is no
-> @@ -1118,7 +1119,13 @@ static int dsa_slave_vlan_rx_add_vid(struct net_de=
-vice *dev, __be16 proto,
->                         return -EBUSY;
->         }
->
-> -       ret =3D dsa_port_vid_add(dp, vid, 0);
-> +       /* VLAN ID 0 is special and should be the default egress and ingr=
-ess
-> +        * untagged VLAN, make sure it gets programmed as such.
-> +        */
-> +       if (vid =3D=3D 0)
-> +               flags =3D BRIDGE_VLAN_INFO_PVID | BRIDGE_VLAN_INFO_UNTAGG=
-ED;
-
-IEEE 802.1Q-2018, page 247, Table 9-2=E2=80=94Reserved VID values:
-
-The null VID. Indicates that the tag header contains only priority
-information; no VID is
-present in the frame. This VID value shall not be configured as a PVID
-or a member of a VID
-Set, or configured in any FDB entry, or used in any Management operation.
-
-> +
-> +       ret =3D dsa_port_vid_add(dp, vid, flags);
->         if (ret)
->                 return ret;
->
-> --
-> 2.17.1
->
-
-Is this a test?
-
-Regards,
--Vladimir
+Nicolas
