@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19416C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C68C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89B324672
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1ED206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581551829;
-	bh=04022Z+GhRss93ALaWrVLdBePoZNbpSZXrK1QnQKf10=;
+	s=default; t=1581551832;
+	bh=DgqBhn8+y8icnHTprdOCpWASh+IAFG78RVzWKutlH9I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=WnZfl9iYiI3FLOmBJp4A7cH19Bl+zBsOHuIH7mmplQaE5eWv4vZE9bmI+/XgGoTeq
-	 hx7AV2L/Repoqf0H0aSgqi8koEWXa0rI5LtQmMHvhF8XHv6oTORwc1kbQAaXzxmGh+
-	 HCOKEnJYc/nDkHXT/K9s9Osnl7bj/c3Vtbg6O6fg=
+	b=ameovLCKgStveMttnqKYSeA8MtBgqKvoBhgcP75DZHrLULgXvGy44N/O4ZsB3lItj
+	 oT0vV8wMEn5Kuj06YiKV7Idg5UXM5+phTNADqrUTpj9tnOk0YiQP7WIPQ81nZZri8v
+	 4spy5ZAF+kwHxQbHausD0Far72WLhVeqaErTpEAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgBLX5J (ORCPT
+        id S1729360AbgBLX5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:57:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:39678 "EHLO foss.arm.com"
+        Wed, 12 Feb 2020 18:57:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:39694 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbgBLX5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:57:08 -0500
+        id S1727117AbgBLX5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:57:10 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2F4F328;
-        Wed, 12 Feb 2020 15:57:07 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1289DFEC;
+        Wed, 12 Feb 2020 15:57:10 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35CCE3F68E;
-        Wed, 12 Feb 2020 15:57:07 -0800 (PST)
-Date:   Wed, 12 Feb 2020 23:57:05 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B56E3F68E;
+        Wed, 12 Feb 2020 15:57:09 -0800 (PST)
+Date:   Wed, 12 Feb 2020 23:57:08 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
@@ -41,9 +41,9 @@ Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: Fix SND_SOC_ALL_CODECS imply misc fallout" to the asoc tree
-In-Reply-To: <20200212145650.4602-4-geert@linux-m68k.org>
-Message-Id: <applied-20200212145650.4602-4-geert@linux-m68k.org>
+Subject: Applied "ASoC: Fix SND_SOC_ALL_CODECS imply I2C fallout" to the asoc tree
+In-Reply-To: <20200212145650.4602-3-geert@linux-m68k.org>
+Message-Id: <applied-20200212145650.4602-3-geert@linux-m68k.org>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,7 +52,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: Fix SND_SOC_ALL_CODECS imply misc fallout
+   ASoC: Fix SND_SOC_ALL_CODECS imply I2C fallout
 
 has been applied to the asoc tree at
 
@@ -77,103 +77,112 @@ to this mail.
 Thanks,
 Mark
 
-From d8dd3f92a6ba11f9046df48765e6f12ad70a3946 Mon Sep 17 00:00:00 2001
+From 1d0158f547e0dbefa9e18930e93f270ab0309707 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Feb 2020 15:56:50 +0100
-Subject: [PATCH] ASoC: Fix SND_SOC_ALL_CODECS imply misc fallout
+Date: Wed, 12 Feb 2020 15:56:49 +0100
+Subject: [PATCH] ASoC: Fix SND_SOC_ALL_CODECS imply I2C fallout
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Fixes for missing miscellaneous support:
+Fixes for CONFIG_I2C=n:
 
-    ERROR: "abx500_get_register_interruptible" [...] undefined!
-    ERROR: "abx500_set_register_interruptible" [...] undefined!
-    ERROR: "arizona_free_irq" [...] undefined!
-    ERROR: "arizona_request_irq" [...] undefined!
-    ERROR: "arizona_set_irq_wake" [...] undefined!
-    ERROR: "mc13xxx_reg_rmw" [...] undefined!
-    ERROR: "mc13xxx_reg_write" [...] undefined!
-    ERROR: "snd_soc_free_ac97_component" [...] undefined!
-    ERROR: "snd_soc_new_ac97_component" [...] undefined!
+    WARNING: unmet direct dependencies detected for REGMAP_I2C
+      Depends on [n]: I2C [=n]
+      Selected by [m]:
+      - SND_SOC_ADAU1781_I2C [=m] && SOUND [=m] && !UML && SND [=m] && SND_SOC [=m]
+      - SND_SOC_ADAU1977_I2C [=m] && SOUND [=m] && !UML && SND [=m] && SND_SOC [=m]
+      - SND_SOC_RT5677 [=m] && SOUND [=m] && !UML && SND [=m] && SND_SOC [=m]
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+    sound/soc/codecs/...: error: type defaults to ‘int’ in declaration of ‘module_i2c_driver’ [-Werror=implicit-int]
+
+    drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_byte_reg_read’:
+    drivers/base/regmap/regmap-i2c.c:25:8: error: implicit declaration of function ‘i2c_smbus_read_byte_data’; did you mean ‘i2c_set_adapdata’? [-Werror=implicit-function-declaration]
+
 Fixes: ea00d95200d02ece ("ASoC: Use imply for SND_SOC_ALL_CODECS")
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Link: https://lore.kernel.org/r/20200212145650.4602-4-geert@linux-m68k.org
+Link: https://lore.kernel.org/r/20200212145650.4602-3-geert@linux-m68k.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ sound/soc/codecs/Kconfig | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 3ef804d07dee..d957fd6980b1 100644
+index c2fb985de8c4..3ef804d07dee 100644
 --- a/sound/soc/codecs/Kconfig
 +++ b/sound/soc/codecs/Kconfig
-@@ -319,6 +319,7 @@ config SND_SOC_WM_ADSP
+@@ -339,6 +339,7 @@ config SND_SOC_AD193X_SPI
  
- config SND_SOC_AB8500_CODEC
+ config SND_SOC_AD193X_I2C
  	tristate
-+	depends on ABX500_CORE
- 
- config SND_SOC_AC97_CODEC
- 	tristate "Build generic ASoC AC97 CODEC driver"
-@@ -343,8 +344,9 @@ config SND_SOC_AD193X_I2C
++	depends on I2C
  	select SND_SOC_AD193X
  
  config SND_SOC_AD1980
--	select REGMAP_AC97
- 	tristate
-+	depends on SND_SOC_AC97_BUS
-+	select REGMAP_AC97
+@@ -353,6 +354,7 @@ config SND_SOC_ADAU_UTILS
  
- config SND_SOC_AD73311
+ config SND_SOC_ADAU1373
  	tristate
-@@ -646,6 +648,7 @@ config SND_SOC_CS47L15
++	depends on I2C
+ 	select SND_SOC_ADAU_UTILS
  
- config SND_SOC_CS47L24
+ config SND_SOC_ADAU1701
+@@ -387,6 +389,7 @@ config SND_SOC_ADAU1781
+ 
+ config SND_SOC_ADAU1781_I2C
  	tristate
-+	depends on MFD_CS47L24
++	depends on I2C
+ 	select SND_SOC_ADAU1781
+ 	select REGMAP_I2C
  
- config SND_SOC_CS47L35
+@@ -407,6 +410,7 @@ config SND_SOC_ADAU1977_SPI
+ 
+ config SND_SOC_ADAU1977_I2C
  	tristate
-@@ -1234,6 +1237,7 @@ config SND_SOC_STA529
++	depends on I2C
+ 	select SND_SOC_ADAU1977
+ 	select REGMAP_I2C
  
- config SND_SOC_STAC9766
+@@ -450,6 +454,7 @@ config SND_SOC_ADAV801
+ 
+ config SND_SOC_ADAV803
  	tristate
-+	depends on SND_SOC_AC97_BUS
++	depends on I2C
+ 	select SND_SOC_ADAV80X
  
- config SND_SOC_STI_SAS
- 	tristate "codec Audio support for STI SAS codec"
-@@ -1415,9 +1419,11 @@ config SND_SOC_WM5100
+ config SND_SOC_ADS117X
+@@ -471,6 +476,7 @@ config SND_SOC_AK4458
  
- config SND_SOC_WM5102
+ config SND_SOC_AK4535
  	tristate
-+	depends on MFD_WM5102
++	depends on I2C
  
- config SND_SOC_WM5110
- 	tristate
-+	depends on MFD_WM5110
+ config SND_SOC_AK4554
+ 	tristate "AKM AK4554 CODEC"
+@@ -481,6 +487,7 @@ config SND_SOC_AK4613
  
- config SND_SOC_WM8350
+ config SND_SOC_AK4641
  	tristate
-@@ -1579,9 +1585,11 @@ config SND_SOC_WM8996
++	depends on I2C
  
- config SND_SOC_WM8997
- 	tristate
-+	depends on MFD_WM8997
+ config SND_SOC_AK4642
+ 	tristate "AKM AK4642 CODEC"
+@@ -488,6 +495,7 @@ config SND_SOC_AK4642
  
- config SND_SOC_WM8998
+ config SND_SOC_AK4671
  	tristate
-+	depends on MFD_WM8998
++	depends on I2C
  
- config SND_SOC_WM9081
- 	tristate
-@@ -1639,6 +1647,7 @@ config SND_SOC_MAX9877
+ config SND_SOC_AK5386
+ 	tristate "AKM AK5638 CODEC"
+@@ -1112,6 +1120,7 @@ config SND_SOC_RT5670
  
- config SND_SOC_MC13783
+ config SND_SOC_RT5677
  	tristate
-+	depends on MFD_MC13XXX
++	depends on I2C
+ 	select REGMAP_I2C
+ 	select REGMAP_IRQ
  
- config SND_SOC_ML26124
- 	tristate
 -- 
 2.20.1
 
