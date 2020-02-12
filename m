@@ -2,124 +2,108 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F0FC35242
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7599C352A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C129A206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="J8DOEd5+"
+	by mail.kernel.org (Postfix) with ESMTP id AF35E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581466771;
+	bh=w9zWL4o2HAKds3LpMaqdUwP5gcbuhFqnYi3cxNKDsT0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bGyV1AC6rTVZes6QQPZEYphcCn/XxMyXaJ8ltuRZby/Gutmx30NAwmZtYimxNoNwy
+	 MXrzbNVoZ14MTQMnWqHclTI/i3fHWAYGsLksyAjUtOw4chGPzFar7/v5vc9eXk6ifb
+	 B9Yd+EZhDwP2RTAYzT6N/FgmKXX79ojvVuE0OKkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgBLAST (ORCPT
+        id S1728095AbgBLATa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 19:18:19 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:31627 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727985AbgBLASS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 19:18:18 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id C09EE26C66A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 17:40:05 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1f8PjYyr08vkB1f8PjX85Q; Tue, 11 Feb 2020 17:40:05 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=826huAG5ON0O/lfMhDpKUhNKj75IXOzCCcEnxbYam4I=; b=J8DOEd5+Zj56yKjv9GxEr/9liR
-        UxDb0yEozNCQtzTvTsjQ/6Nzv7jY4PMpcocRI1RLtNWUcZdEfadqZcNsYKNTtGPlWbh64mO46Z5fc
-        HSmPuT+YqB+oY4cyV7ADajR1EKG1xmts+TOzRBPHNuirE+T2pnefl+SZTFNOL+SpV38VFZwrD4Cq3
-        VjGWpDTya1CN0iqllnWMJvE5g8YzTR4zl27fE40CPAQkpP23qk7tJJeHxOyNnENQVBp9r55FJHO+v
-        xzmsjHdTZIcGqgGm7cCr6eCyBBuFzxLr5fYeImmEC0zCP1VQv4S/dLs/x56PEYF1/HqKLtx7U3A+3
-        4nZJpRdA==;
-Received: from [200.68.140.36] (port=31131 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j1f8O-003iJb-Fb; Tue, 11 Feb 2020 17:40:04 -0600
-Date:   Tue, 11 Feb 2020 17:42:37 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] hwmon: (ibmaem) Replace zero-length array with
- flexible-array member
-Message-ID: <20200211234237.GA26971@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.36
-X-Source-L: No
-X-Exim-ID: 1j1f8O-003iJb-Fb
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.36]:31131
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 52
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Tue, 11 Feb 2020 19:19:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727985AbgBLATa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 19:19:30 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4DF1206D6;
+        Wed, 12 Feb 2020 00:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581466768;
+        bh=w9zWL4o2HAKds3LpMaqdUwP5gcbuhFqnYi3cxNKDsT0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jDUI8gnVwIzyE5ZFs/uNqKwQrQ7QYN7VBXMtsDohVxxnUH9dh6iOM9LNSKNDF+PXy
+         OYBfkKCBSzhwo4Qeu5YfTRLcG3vguj5B13PRIz8r4WtTtF8DxP/ERu9ib+3bchW2vw
+         kTJmZR3eqlWwTQQMHDMiUrmOGETamNHy+pzbRERk=
+Date:   Tue, 11 Feb 2020 16:19:27 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        david@redhat.com, mst@redhat.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mgorman@techsingularity.net,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, mhocko@kernel.org, vbabka@suse.cz,
+        osalvador@suse.de
+Subject: Re: [PATCH v17 0/9] mm / virtio: Provide support for free page
+ reporting
+Message-Id: <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
+In-Reply-To: <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+        <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
+        <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, 11 Feb 2020 15:55:31 -0800 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> On the host I just have to monitor /proc/meminfo and I can see the
+> difference. I get the following results on the host, in the enabled case
+> it takes about 30 seconds for it to settle into the final state since I
+> only report page a bit at a time:
+> Baseline/Applied
+>   MemTotal:    131963012 kB
+>   MemFree:      95189740 kB
+> 
+> Enabled:
+>   MemTotal:    131963012 kB
+>   MemFree:     126459472 kB
+> 
+> This is what I was referring to with the comment above. I had a test I was
+> running back around the first RFC that consisted of bringing up enough VMs
+> so that there was a bit of memory overcommit and then having the VMs in
+> turn run memhog. As I recall the difference between the two was  something
+> like a couple minutes to run through all the VMs as the memhog would take
+> up to 40+ seconds for one that was having to pull from swap while it took
+> only 5 to 7 seconds for the VMs that were all running the page hinting.
+> 
+> I had referenced it here in the RFC:
+> https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
+> 
+> I have been verifying the memory has been getting freed but didn't feel
+> like the test added much value so I haven't added it to the cover page for
+> a while since the time could vary widely and is dependent on things like
+> the disk type used for the host swap since my SSD is likely faster than
+> spinning rust, but may not be as fast as other SSDs on the market. Since
+> the disk speed can play such a huge role I wasn't comfortable posting
+> numbers since the benefits could vary so widely.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
+OK, thanks.  I'll add the patches to the mm pile.  The new
+mm/page_reporting.c is unreviewed afaict, so I guess you own that for
+now ;)
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/hwmon/ibmaem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwmon/ibmaem.c b/drivers/hwmon/ibmaem.c
-index db63c1295cb2..fb052c2d9c34 100644
---- a/drivers/hwmon/ibmaem.c
-+++ b/drivers/hwmon/ibmaem.c
-@@ -232,7 +232,7 @@ struct aem_read_sensor_req {
- 
- struct aem_read_sensor_resp {
- 	struct aem_iana_id	id;
--	u8			bytes[0];
-+	u8			bytes[];
- } __packed;
- 
- /* Data structures to talk to the IPMI layer */
--- 
-2.25.0
+It would be very nice to get some feedback from testers asserting "yes,
+this really helped my workload" but I understand this sort of testing
+is hard to obtain at this stage.
 
