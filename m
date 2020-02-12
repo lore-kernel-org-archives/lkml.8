@@ -2,79 +2,86 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74466C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7F3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A01221569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:10:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wm4Paj5b"
+	by mail.kernel.org (Postfix) with ESMTP id 445392073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgBLKKU (ORCPT
+        id S1729113AbgBLKK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:10:20 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33876 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728809AbgBLKKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:10:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aDcXpc6fMD8W2Mej57+kBGa9iXxzdLXhNN1IYVmTtF0=; b=Wm4Paj5bD8pvXfMYKLX84VybP2
-        wZSTllkN5TEVWKQoXIu+U6VUp2z3uehJv8ls26EQtGOD/vdgE+lhO42rwlKF1svuccToBcCYbzCl1
-        vt7QABOuS0XG1C0N9EnxrEXPO0kJYIXPJTAiKRRumV4q7sai+EHiiNFsie/9qJkCL8Lfg2TXiwZ1g
-        9dDqcDghPr3OH6RSZkbt8oiib1fZWsd3ui3MuFR3t/tO4sDC9614DddKiu0SaLFdfv3EAbz9OtEHh
-        NvHf04cZsaWUAacrBQTDE9aNWXv5aVJWgciBmMReVoCcjD1VPOHGOQOM0wUXJV0GLRN+wa3gM2rRz
-        s8fUBQPQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1oxi-0006jD-9y; Wed, 12 Feb 2020 10:09:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE600306012;
-        Wed, 12 Feb 2020 11:07:51 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 068872026E97A; Wed, 12 Feb 2020 11:09:41 +0100 (CET)
-Date:   Wed, 12 Feb 2020 11:09:40 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, linux@armlinux.org.uk
-Cc:     mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH 0/8] tracing vs rcu vs nmi
-Message-ID: <20200212100940.GD14914@hirez.programming.kicks-ass.net>
-References: <20200212093210.468391728@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212093210.468391728@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 12 Feb 2020 05:10:28 -0500
+Received: from mx7.zte.com.cn ([202.103.147.169]:25060 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728809AbgBLKK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:10:28 -0500
+X-Greylist: delayed 935 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 05:10:26 EST
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 24D58A4FEEEF343EF461;
+        Wed, 12 Feb 2020 17:54:45 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id 01C9sDsc032663;
+        Wed, 12 Feb 2020 17:54:13 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2020021217543472-2102565 ;
+          Wed, 12 Feb 2020 17:54:34 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     sudeep.dutt@intel.com
+Cc:     ashutosh.dixit@intel.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, vincent.whitchurch@axis.com,
+        alexios.zavras@intel.com, tglx@linutronix.de, allison@lohutok.net,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
+        Huang Zijiang <huang.zijiang@zte.com.cn>
+Subject: [PATCH] misc: Use kzalloc() instead of kmalloc() with flag GFP_ZERO.
+Date:   Wed, 12 Feb 2020 17:54:07 +0800
+Message-Id: <1581501247-5479-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2020-02-12 17:54:34,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2020-02-12 17:54:16,
+        Serialize complete at 2020-02-12 17:54:16
+X-MAIL: mse-fl1.zte.com.cn 01C9sDsc032663
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:32:10AM +0100, Peter Zijlstra wrote:
-> Hi all,
-> 
-> These here patches are the result of Mathieu and Steve trying to get commit
-> 865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
-> tracepoints") reverted again.
-> 
-> One of the things discovered is that tracing MUST NOT happen before nmi_enter()
-> or after nmi_exit(). I've only fixed x86, but quickly gone through other
-> architectures and there is definitely more stuff to be fixed (simply grep for
-> nmi_enter in your arch).
+From: Huang Zijiang <huang.zijiang@zte.com.cn>
 
-Someone should probably look at the whole ARM FiQ stuff, I got a little
-lost, but probably handle_fiq_as_nmi() wants notrace and everything
-using set_fiq_handler() wants looking at.
+Use kzalloc instead of manually setting kmalloc
+with flag GFP_ZERO since kzalloc sets allocated memory
+to zero.
+
+Change in v2:
+     add indation
+
+Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ drivers/misc/mic/host/mic_boot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/misc/mic/host/mic_boot.c b/drivers/misc/mic/host/mic_boot.c
+index 4f2d921..fb5b398 100644
+--- a/drivers/misc/mic/host/mic_boot.c
++++ b/drivers/misc/mic/host/mic_boot.c
+@@ -137,7 +137,7 @@ static void *__mic_dma_alloc(struct device *dev, size_t size,
+ 	struct scif_hw_dev *scdev = dev_get_drvdata(dev);
+ 	struct mic_device *mdev = scdev_to_mdev(scdev);
+ 	dma_addr_t tmp;
+-	void *va = kmalloc(size, gfp | __GFP_ZERO);
++	void *va = kzalloc(size, gfp);
+ 
+ 	if (va) {
+ 		tmp = mic_map_single(mdev, va, size);
+-- 
+1.9.1
+
