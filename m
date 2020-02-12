@@ -2,68 +2,177 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39747C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31C3C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B972073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF0C2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qC1Fti8l"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="y2gv+7sT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgBLSSM (ORCPT
+        id S1728931AbgBLSSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:18:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41994 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgBLSSL (ORCPT
+        Wed, 12 Feb 2020 13:18:39 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41400 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLSSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:18:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4+pGNKZQNPPjUYhUfxAE2vdkfqWETPzu/0lbzblOiLM=; b=qC1Fti8lZ0koII3U5Sa2TjOM28
-        nosTSzdm25oQSeIMGq07AVlCw20djEBGUpWliyiKQwITDdQcoaxm1uXqtkNjwxfTpJNhiOtI8jhOb
-        r7GEIlGzU7vqitlAbk9aJYzHnlfzWJw31vQC/Z3Til1uih5qj+enBDV26fhdRz3DdCxYbTIaNuUIX
-        2OnWR1DrQfnRApPtzcldB3qtqOzSKFM+aq41f9gck471QDMk1xCwWxmFurCQfy00JF0ZQaamhxAYP
-        Bw2GDAtxWrBD9CBq026AuSAIvMitA8b0oUDL/p3WShFpcX4ybJFYzF5XIQaHgMzYrROtQoZVzZ4bv
-        WrZl7SaA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1waR-0004Q0-E1; Wed, 12 Feb 2020 18:18:11 +0000
-Date:   Wed, 12 Feb 2020 10:18:11 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 04/13] mm: Add readahead address space operation
-Message-ID: <20200212181811.GC9756@infradead.org>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-5-willy@infradead.org>
+        Wed, 12 Feb 2020 13:18:39 -0500
+Received: by mail-qt1-f195.google.com with SMTP id l21so2299917qtr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:18:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OWGcBq+RmtovTTracPqR5yMhReLnPEQNRqBqlsGYoqQ=;
+        b=y2gv+7sTsHniWkrRXHbMycwPBOZkSVEUBxS0FbQa9VB6OPJaYJ1Ny9M6xr/G2DVX+A
+         2y3zu+4t8K+YEOEZiGZ16SmwaFBkHE7wfdPJ73oAGMEcRLyA7SdYtUq2rlqAIOJ7AlQ+
+         UybJYIDz3qsZGxZfUM1AtJQB0pELtShzFC9k3aLs7g4W9U5IbFUlcjQfKEHGvhzfclm+
+         JveHX0RcnHpMZXSqGvlbSX7VBuxQcKiVaV6YvUnzx7SOAGPdgFUsRDnB4h3byEIPdOR4
+         Deg6SO3d+i3NoTjYxf140EY5fK1CDhyhjBV3mFZrOFF2taWoChENIoAjBrb9azCLuXXz
+         mScA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OWGcBq+RmtovTTracPqR5yMhReLnPEQNRqBqlsGYoqQ=;
+        b=FHQQcmz0YpoL4FHnWoOjig9H3PNeyfdJwf4Q0WM5q5x+AtLpDvF10IwaWnAeqUX1sG
+         xLsmMcKFyeCiWSd2cG7jK1zeZev/ljOzUiJC7pGqR2BYzkYKA9SKEExwKwqXtCbdG9bd
+         NTWLnuakhy7Dvz1iyzMincvMfGqIe30ytL+zOgJg98k1GPcZ58YcVzNf+mZUXc2V9tOP
+         A74WOzLITTaDya7X+dVvYgCSpi/II0VSL35xQalUOjWsSSenUF/XBu4VGgYYkqHPw/CX
+         poY4Y2PlrYQk+f3SRS2x11qTHRByXFr9bZP9e/xJ1hTYQQvE5Eh2+fv2f8wNXlVa0tDF
+         YV0Q==
+X-Gm-Message-State: APjAAAVVRllNNpZUoUhiaiZyLnUX2APTbP6sJlX5eoZXWeAs7f6CL1sq
+        h2elsmtM3mh3OZAmUTC1o1QTKQ==
+X-Google-Smtp-Source: APXvYqwp6yb7UZLL9gr229Rnz2uuFRz38SvQqwJmNe7+ZVm7dUDCROR1mDfi5DonZ9jY0+5tL1WvCA==
+X-Received: by 2002:ac8:6f27:: with SMTP id i7mr8195494qtv.253.1581531516578;
+        Wed, 12 Feb 2020 10:18:36 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::5a94])
+        by smtp.gmail.com with ESMTPSA id b84sm619400qkc.73.2020.02.12.10.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 10:18:35 -0800 (PST)
+Date:   Wed, 12 Feb 2020 13:18:34 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
+Message-ID: <20200212181834.GD180867@cmpxchg.org>
+References: <20191107205334.158354-1-hannes@cmpxchg.org>
+ <20191107205334.158354-3-hannes@cmpxchg.org>
+ <20200212102817.GA18107@js1304-desktop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211010348.6872-5-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200212102817.GA18107@js1304-desktop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 05:03:39PM -0800, Matthew Wilcox wrote:
-> +struct readahead_control {
-> +	struct file *file;
-> +	struct address_space *mapping;
-> +/* private: use the readahead_* accessors instead */
-> +	pgoff_t start;
-> +	unsigned int nr_pages;
-> +	unsigned int batch_count;
+On Wed, Feb 12, 2020 at 07:28:19PM +0900, Joonsoo Kim wrote:
+> Hello, Johannes.
+> 
+> When I tested my patchset on v5.5, I found that my patchset doesn't
+> work as intended. I tracked down the issue and this patch would be the
+> reason of unintended work. I don't fully understand the patchset so I
+> could be wrong. Please let me ask some questions.
+> 
+> On Thu, Nov 07, 2019 at 12:53:33PM -0800, Johannes Weiner wrote:
+> ...snip...
+> > -static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data_t *pgdat)
+> > +static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t *pgdat)
+> >  {
+> > -	struct mem_cgroup *memcg;
+> > -
+> > -	memcg = mem_cgroup_iter(root_memcg, NULL, NULL);
+> > -	do {
+> > -		unsigned long refaults;
+> > -		struct lruvec *lruvec;
+> > +	struct lruvec *target_lruvec;
+> > +	unsigned long refaults;
+> >  
+> > -		lruvec = mem_cgroup_lruvec(memcg, pgdat);
+> > -		refaults = lruvec_page_state_local(lruvec, WORKINGSET_ACTIVATE);
+> > -		lruvec->refaults = refaults;
+> > -	} while ((memcg = mem_cgroup_iter(root_memcg, memcg, NULL)));
+> > +	target_lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
+> > +	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
+> > +	target_lruvec->refaults = refaults;
+> 
+> Is it correct to just snapshot the refault for the target memcg? I
+> think that we need to snapshot the refault for all the child memcgs
+> since we have traversed all the child memcgs with the refault count
+> that is aggregration of all the child memcgs. If next reclaim happens
+> from the child memcg, workingset transition that is already considered
+> could be considered again.
 
-We often use __ prefixes for the private fields to make that a little
-more clear.
+Good catch, you're right! We have to update all cgroups in the tree,
+like we used to. However, we need to use lruvec_page_state() instead
+of _local, because we do recursive comparisons in shrink_node()! So
+it's not a clean revert of that hunk.
+
+Does this patch here fix the problem you are seeing?
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index c82e9831003f..e7431518db13 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2993,12 +2993,17 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
+ 
+ static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t *pgdat)
+ {
+-	struct lruvec *target_lruvec;
+-	unsigned long refaults;
++	struct mem_cgroup *memcg;
+ 
+-	target_lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
+-	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
+-	target_lruvec->refaults = refaults;
++	memcg = mem_cgroup_iter(target_memcg, NULL, NULL);
++	do {
++		unsigned long refaults;
++		struct lruvec *lruvec;
++
++		lruvec = mem_cgroup_lruvec(memcg, pgdat);
++		refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
++		lruvec->refaults = refaults;
++	} while ((memcg = mem_cgroup_iter(target_memcg, memcg, NULL)));
+ }
+ 
+ /*
+
+> > @@ -277,12 +305,12 @@ void workingset_refault(struct page *page, void *shadow)
+> >  	 * would be better if the root_mem_cgroup existed in all
+> >  	 * configurations instead.
+> >  	 */
+> > -	memcg = mem_cgroup_from_id(memcgid);
+> > -	if (!mem_cgroup_disabled() && !memcg)
+> > +	eviction_memcg = mem_cgroup_from_id(memcgid);
+> > +	if (!mem_cgroup_disabled() && !eviction_memcg)
+> >  		goto out;
+> > -	lruvec = mem_cgroup_lruvec(memcg, pgdat);
+> > -	refault = atomic_long_read(&lruvec->inactive_age);
+> > -	active_file = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES);
+> > +	eviction_lruvec = mem_cgroup_lruvec(eviction_memcg, pgdat);
+> > +	refault = atomic_long_read(&eviction_lruvec->inactive_age);
+> > +	active_file = lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE);
+> 
+> Do we need to use the aggregation LRU count of all the child memcgs?
+> AFAIU, refault here is the aggregation counter of all the related
+> memcgs. Without using the aggregation count for LRU, active_file could
+> be so small than the refault distance and refault cannot happen
+> correctly.
+
+lruvec_page_state() *is* aggregated for all child memcgs (as opposed
+to lruvec_page_state_local()), so that comparison looks correct to me.
