@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B751C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A942C3B188
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACA120848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FFC21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uBxxufH2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGInGhkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgBLV5a (ORCPT
+        id S1729186AbgBLV5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:57:30 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40727 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgBLV53 (ORCPT
+        Wed, 12 Feb 2020 16:57:32 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45114 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgBLV5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:57:29 -0500
-Received: by mail-pj1-f65.google.com with SMTP id 12so1456105pjb.5;
-        Wed, 12 Feb 2020 13:57:28 -0800 (PST)
+        Wed, 12 Feb 2020 16:57:31 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b9so1774397pgk.12;
+        Wed, 12 Feb 2020 13:57:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4tjReg1lKs1fiF+Bw+voT3e/60NS6rAfZNC8eRItwu4=;
-        b=uBxxufH2TXDNmGTqq+C5wD0GGdpyuCRtnmznd9noZd4cRbu7OXTY/p2UMCPhY8W/AV
-         7/3wAbv/UaiTLiAxmW/cZjxRqmes7gR2zVWrh4oUj3CLtMTeVGLB2nuJZ1eV3V+ASnqC
-         +SGs1CG6gdSwu1FZ5sEuznNXN0dP0dKGFfJV0lYt6fylP0A0TgZqMzddE8qMvCBc7d5I
-         vg3PSxC2EeJG1DT0z61QtZHmVRCAY4KTBZEceK/y/rp2+IquzLjOlBQhEbxNHM3kmsMW
-         wZhEnewRYxx8rqzH3wTv7Wwp32/5sNXmrtbqi6vcg6fY0ukSPwU6sOi4vA1dzcwMDxZM
-         yO1w==
+        bh=fcer5maloVUCbkrSQe8DVkPL6Lk2CjvPvSpxHsxWCA0=;
+        b=lGInGhknBbblmThHtOa744jV16eu2Xyt2aJIm0PxY//v6EDHVQoK5BSn+MknS02bMV
+         tbA5WHwtJZorWqS04XVWCwpGUBQU+pbfOzlFLHLYtxu40nNkRBDitMK+dVqXc8tARDcO
+         BepqoRcl4CHTjalDmGkH5eDUSt9LuKa7irkD/hbmNIT3gDaL5bubldX9qYxCDbQWSKrh
+         /9W0WufeNzu/OvP1Hh3lXXAeBj348e2RqbvpWSuAEN8t+BDZ1l7H0vtcCs8DjOeUHm4m
+         GP2hqK3qtscWZE3htNBsmE7cXAi4Kn84itEE0Cos0Z+wHhZ8G70Aj+nH+EU7/Qi2/CNe
+         QiRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4tjReg1lKs1fiF+Bw+voT3e/60NS6rAfZNC8eRItwu4=;
-        b=DXOaRe08TF0MG3eA8nVOfyF12HaqrQWFBA6Az7eLpzCmdsJjiMUe8V2DyeHM89oNql
-         6A5dgm/cPoEa9TUOjnt1+idkjTAOIKpDMq2lhPw3pCS0hmF0QfgYuWXqfQ5wUtcIkx6K
-         zmzWtX/exmQX3fKXrFKPqxhx5me6Wusgf+zI7XVWRrhrv5qVYEBLJ2ZSe/PyaOaCQBN3
-         yNbnjuWhyX+Q25npV+aK9UeGEyvDwyMXzzLtPpg1ux/IH+d7Z5MrrqCQ1GO/dEHPi07s
-         VUAnn8PPqBcLj8j9pnSp0kR2v930poNOCMfqo031kpAp6co5VwajoVIlYNHFTb+PhSKT
-         dYFw==
-X-Gm-Message-State: APjAAAWfLWU9rFiFWyGVcYaH4R46IQCgeSQkJJdLvUR6/054kYZkYiNc
-        VkB/Doen4Dg1WlK/QmiYeJc=
-X-Google-Smtp-Source: APXvYqwMgat7Gk1D6frRVSn6oMuL1szqmix2RnpoqBNodIThX9cLtAzCbjNrA5Yzb14UMaEO1pjWoQ==
-X-Received: by 2002:a17:90a:8043:: with SMTP id e3mr1281673pjw.24.1581544647745;
-        Wed, 12 Feb 2020 13:57:27 -0800 (PST)
+        bh=fcer5maloVUCbkrSQe8DVkPL6Lk2CjvPvSpxHsxWCA0=;
+        b=p2T8St9yC+2oUzBJni3P4ebSPnTQiz7NMHSe/A9zSa/0WhrBM8E32LgqrPB+HgvPp/
+         9TxIAOFV1rtIoAmSRSUBphfxjDDqOxDMVJ2RUMPvgtw+BFTwMIK7isPcvVYFhjaTtbVJ
+         m7FrQzZHQZ7P099mtmToxS/a3rKior3JDn2jnjuWbpmsFKYAg2rvuSxQP/yOnsVfuDXh
+         pS2WcBreKBC4m0FTZvsKjoNCau+DCr7761fMGEmZlwXS/uz9A3mAnKH2TVjNxC/skGjm
+         6iOqzAyZIaxJGfoC4H/tvLmxOzfOiIl3CZgnah63DjDo80NYrNGmXYjRzQI+A0qs6mpB
+         cJ5A==
+X-Gm-Message-State: APjAAAVohl78B9PShLQRWUfOltFF9w6I094XnX89q2JSeu4/HdTisS5b
+        mNwcc7EoHFvfsTFqa4jodFc=
+X-Google-Smtp-Source: APXvYqxclQ88Laxxq1gwYJEcZ4+1ZPZl3eGG+pqs9MZeB3l0Bz+whOVPNY0gnX+iG+v3p+tsU2Y4Qg==
+X-Received: by 2002:aa7:94b0:: with SMTP id a16mr10508433pfl.35.1581544650459;
+        Wed, 12 Feb 2020 13:57:30 -0800 (PST)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:200::3:533f])
-        by smtp.gmail.com with ESMTPSA id r6sm214431pfh.91.2020.02.12.13.57.26
+        by smtp.gmail.com with ESMTPSA id r6sm214431pfh.91.2020.02.12.13.57.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 13:57:27 -0800 (PST)
+        Wed, 12 Feb 2020 13:57:30 -0800 (PST)
 From:   rentao.bupt@gmail.com
 To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -72,9 +72,9 @@ To:     Felipe Balbi <balbi@kernel.org>,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
         taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v2 1/5] usb: gadget: aspeed: read vhub properties from device tree
-Date:   Wed, 12 Feb 2020 13:57:13 -0800
-Message-Id: <20200212215717.9474-2-rentao.bupt@gmail.com>
+Subject: [PATCH v2 3/5] ARM: dts: aspeed-g5: add vhub port and endpoint properties
+Date:   Wed, 12 Feb 2020 13:57:15 -0800
+Message-Id: <20200212215717.9474-4-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200212215717.9474-1-rentao.bupt@gmail.com>
 References: <20200212215717.9474-1-rentao.bupt@gmail.com>
@@ -85,455 +85,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-The patch introduces 2 DT properties ("aspeed,vhub-downstream-ports" and
-"aspeed,vhub-generic-endpoints") which replaces hardcoded port/endpoint
-number. It is to make it more convenient to add support for newer vhub
-revisions with different number of ports and endpoints.
+Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-endpoints"
+properties to describe supported number of vhub ports and endpoints.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
 ---
  Changes in v2:
-   - removed ast_vhub_config structure and moved vhub port/endpoint
-     number into device tree.
+   - None. The patch is newly added and it's given v2 to align with
+     version of the patch series.
 
- drivers/usb/gadget/udc/aspeed-vhub/core.c | 68 ++++++++++++++---------
- drivers/usb/gadget/udc/aspeed-vhub/dev.c  | 30 +++++++---
- drivers/usb/gadget/udc/aspeed-vhub/epn.c  |  4 +-
- drivers/usb/gadget/udc/aspeed-vhub/hub.c  | 26 ++++++---
- drivers/usb/gadget/udc/aspeed-vhub/vhub.h | 23 +++-----
- 5 files changed, 91 insertions(+), 60 deletions(-)
+ arch/arm/boot/dts/aspeed-g5.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-index 90b134d5dca9..d6f737fac4e2 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-@@ -99,7 +99,7 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
- {
- 	struct ast_vhub *vhub = data;
- 	irqreturn_t iret = IRQ_NONE;
--	u32 istat;
-+	u32 i, istat;
- 
- 	/* Stale interrupt while tearing down */
- 	if (!vhub->ep0_bufs)
-@@ -121,10 +121,10 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
- 
- 	/* Handle generic EPs first */
- 	if (istat & VHUB_IRQ_EP_POOL_ACK_STALL) {
--		u32 i, ep_acks = readl(vhub->regs + AST_VHUB_EP_ACK_ISR);
-+		u32 ep_acks = readl(vhub->regs + AST_VHUB_EP_ACK_ISR);
- 		writel(ep_acks, vhub->regs + AST_VHUB_EP_ACK_ISR);
- 
--		for (i = 0; ep_acks && i < AST_VHUB_NUM_GEN_EPs; i++) {
-+		for (i = 0; ep_acks && i < vhub->max_epns; i++) {
- 			u32 mask = VHUB_EP_IRQ(i);
- 			if (ep_acks & mask) {
- 				ast_vhub_epn_ack_irq(&vhub->epns[i]);
-@@ -134,21 +134,11 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
- 	}
- 
- 	/* Handle device interrupts */
--	if (istat & (VHUB_IRQ_DEVICE1 |
--		     VHUB_IRQ_DEVICE2 |
--		     VHUB_IRQ_DEVICE3 |
--		     VHUB_IRQ_DEVICE4 |
--		     VHUB_IRQ_DEVICE5)) {
--		if (istat & VHUB_IRQ_DEVICE1)
--			ast_vhub_dev_irq(&vhub->ports[0].dev);
--		if (istat & VHUB_IRQ_DEVICE2)
--			ast_vhub_dev_irq(&vhub->ports[1].dev);
--		if (istat & VHUB_IRQ_DEVICE3)
--			ast_vhub_dev_irq(&vhub->ports[2].dev);
--		if (istat & VHUB_IRQ_DEVICE4)
--			ast_vhub_dev_irq(&vhub->ports[3].dev);
--		if (istat & VHUB_IRQ_DEVICE5)
--			ast_vhub_dev_irq(&vhub->ports[4].dev);
-+	for (i = 0; i < vhub->max_ports; i++) {
-+		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
-+
-+		if (istat & dev_mask)
-+			ast_vhub_dev_irq(&vhub->ports[i].dev);
- 	}
- 
- 	/* Handle top-level vHub EP0 interrupts */
-@@ -182,7 +172,7 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
- 
- void ast_vhub_init_hw(struct ast_vhub *vhub)
- {
--	u32 ctrl;
-+	u32 ctrl, port_mask, epn_mask;
- 
- 	UDCDBG(vhub,"(Re)Starting HW ...\n");
- 
-@@ -222,15 +212,20 @@ void ast_vhub_init_hw(struct ast_vhub *vhub)
- 	}
- 
- 	/* Reset all devices */
--	writel(VHUB_SW_RESET_ALL, vhub->regs + AST_VHUB_SW_RESET);
-+	port_mask = GENMASK(vhub->max_ports, 1);
-+	writel(VHUB_SW_RESET_ROOT_HUB |
-+	       VHUB_SW_RESET_DMA_CONTROLLER |
-+	       VHUB_SW_RESET_EP_POOL |
-+	       port_mask, vhub->regs + AST_VHUB_SW_RESET);
- 	udelay(1);
- 	writel(0, vhub->regs + AST_VHUB_SW_RESET);
- 
- 	/* Disable and cleanup EP ACK/NACK interrupts */
-+	epn_mask = GENMASK(vhub->max_epns - 1, 0);
- 	writel(0, vhub->regs + AST_VHUB_EP_ACK_IER);
- 	writel(0, vhub->regs + AST_VHUB_EP_NACK_IER);
--	writel(VHUB_EP_IRQ_ALL, vhub->regs + AST_VHUB_EP_ACK_ISR);
--	writel(VHUB_EP_IRQ_ALL, vhub->regs + AST_VHUB_EP_NACK_ISR);
-+	writel(epn_mask, vhub->regs + AST_VHUB_EP_ACK_ISR);
-+	writel(epn_mask, vhub->regs + AST_VHUB_EP_NACK_ISR);
- 
- 	/* Default settings for EP0, enable HW hub EP1 */
- 	writel(0, vhub->regs + AST_VHUB_EP0_CTRL);
-@@ -273,7 +268,7 @@ static int ast_vhub_remove(struct platform_device *pdev)
- 		return 0;
- 
- 	/* Remove devices */
--	for (i = 0; i < AST_VHUB_NUM_PORTS; i++)
-+	for (i = 0; i < vhub->max_ports; i++)
- 		ast_vhub_del_dev(&vhub->ports[i].dev);
- 
- 	spin_lock_irqsave(&vhub->lock, flags);
-@@ -295,7 +290,7 @@ static int ast_vhub_remove(struct platform_device *pdev)
- 	if (vhub->ep0_bufs)
- 		dma_free_coherent(&pdev->dev,
- 				  AST_VHUB_EP0_MAX_PACKET *
--				  (AST_VHUB_NUM_PORTS + 1),
-+				  (vhub->max_ports + 1),
- 				  vhub->ep0_bufs,
- 				  vhub->ep0_bufs_dma);
- 	vhub->ep0_bufs = NULL;
-@@ -309,11 +304,32 @@ static int ast_vhub_probe(struct platform_device *pdev)
- 	struct ast_vhub *vhub;
- 	struct resource *res;
- 	int i, rc = 0;
-+	const struct device_node *np = pdev->dev.of_node;
- 
- 	vhub = devm_kzalloc(&pdev->dev, sizeof(*vhub), GFP_KERNEL);
- 	if (!vhub)
- 		return -ENOMEM;
- 
-+	rc = of_property_read_u32(np, "aspeed,vhub-downstream-ports",
-+				  &vhub->max_ports);
-+	if (rc < 0)
-+		return -ENODEV;
-+
-+	vhub->ports = devm_kcalloc(&pdev->dev, vhub->max_ports,
-+				   sizeof(*vhub->ports), GFP_KERNEL);
-+	if (!vhub->ports)
-+		return -ENOMEM;
-+
-+	rc = of_property_read_u32(np, "aspeed,vhub-generic-endpoints",
-+				  &vhub->max_epns);
-+	if (rc < 0)
-+		return -ENODEV;
-+
-+	vhub->epns = devm_kcalloc(&pdev->dev, vhub->max_epns,
-+				  sizeof(*vhub->epns), GFP_KERNEL);
-+	if (!vhub->epns)
-+		return -ENOMEM;
-+
- 	spin_lock_init(&vhub->lock);
- 	vhub->pdev = pdev;
- 
-@@ -366,7 +382,7 @@ static int ast_vhub_probe(struct platform_device *pdev)
- 	 */
- 	vhub->ep0_bufs = dma_alloc_coherent(&pdev->dev,
- 					    AST_VHUB_EP0_MAX_PACKET *
--					    (AST_VHUB_NUM_PORTS + 1),
-+					    (vhub->max_ports + 1),
- 					    &vhub->ep0_bufs_dma, GFP_KERNEL);
- 	if (!vhub->ep0_bufs) {
- 		dev_err(&pdev->dev, "Failed to allocate EP0 DMA buffers\n");
-@@ -380,7 +396,7 @@ static int ast_vhub_probe(struct platform_device *pdev)
- 	ast_vhub_init_ep0(vhub, &vhub->ep0, NULL);
- 
- 	/* Init devices */
--	for (i = 0; i < AST_VHUB_NUM_PORTS && rc == 0; i++)
-+	for (i = 0; i < vhub->max_ports && rc == 0; i++)
- 		rc = ast_vhub_init_dev(vhub, i);
- 	if (rc)
- 		goto err;
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/dev.c b/drivers/usb/gadget/udc/aspeed-vhub/dev.c
-index 4008e7a51188..d268306a7bfe 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/dev.c
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/dev.c
-@@ -77,7 +77,7 @@ static void ast_vhub_dev_enable(struct ast_vhub_dev *d)
- 	writel(d->ep0.buf_dma, d->regs + AST_VHUB_DEV_EP0_DATA);
- 
- 	/* Clear stall on all EPs */
--	for (i = 0; i < AST_VHUB_NUM_GEN_EPs; i++) {
-+	for (i = 0; i < d->max_epns; i++) {
- 		struct ast_vhub_ep *ep = d->epns[i];
- 
- 		if (ep && (ep->epn.stalled || ep->epn.wedged)) {
-@@ -137,7 +137,7 @@ static int ast_vhub_ep_feature(struct ast_vhub_dev *d,
- 	     is_set ? "SET" : "CLEAR", ep_num, wValue);
- 	if (ep_num == 0)
- 		return std_req_complete;
--	if (ep_num >= AST_VHUB_NUM_GEN_EPs || !d->epns[ep_num - 1])
-+	if (ep_num >= d->max_epns || !d->epns[ep_num - 1])
- 		return std_req_stall;
- 	if (wValue != USB_ENDPOINT_HALT)
- 		return std_req_driver;
-@@ -181,7 +181,7 @@ static int ast_vhub_ep_status(struct ast_vhub_dev *d,
- 
- 	DDBG(d, "GET_STATUS(ep%d)\n", ep_num);
- 
--	if (ep_num >= AST_VHUB_NUM_GEN_EPs)
-+	if (ep_num >= d->max_epns)
- 		return std_req_stall;
- 	if (ep_num != 0) {
- 		ep = d->epns[ep_num - 1];
-@@ -299,7 +299,7 @@ static void ast_vhub_dev_nuke(struct ast_vhub_dev *d)
- {
- 	unsigned int i;
- 
--	for (i = 0; i < AST_VHUB_NUM_GEN_EPs; i++) {
-+	for (i = 0; i < d->max_epns; i++) {
- 		if (!d->epns[i])
- 			continue;
- 		ast_vhub_nuke(d->epns[i], -ESHUTDOWN);
-@@ -416,10 +416,10 @@ static struct usb_ep *ast_vhub_udc_match_ep(struct usb_gadget *gadget,
- 	 * that will allow the generic code to use our
- 	 * assigned address.
- 	 */
--	for (i = 0; i < AST_VHUB_NUM_GEN_EPs; i++)
-+	for (i = 0; i < d->max_epns; i++)
- 		if (d->epns[i] == NULL)
- 			break;
--	if (i >= AST_VHUB_NUM_GEN_EPs)
-+	if (i >= d->max_epns)
- 		return NULL;
- 	addr = i + 1;
- 
-@@ -526,6 +526,7 @@ void ast_vhub_del_dev(struct ast_vhub_dev *d)
- 
- 	usb_del_gadget_udc(&d->gadget);
- 	device_unregister(d->port_dev);
-+	kfree(d->epns);
- }
- 
- static void ast_vhub_dev_release(struct device *dev)
-@@ -546,14 +547,25 @@ int ast_vhub_init_dev(struct ast_vhub *vhub, unsigned int idx)
- 
- 	ast_vhub_init_ep0(vhub, &d->ep0, d);
- 
-+	/*
-+	 * A USB device can have up to 30 endpoints besides control
-+	 * endpoint 0.
-+	 */
-+	d->max_epns = min_t(u32, vhub->max_epns, 30);
-+	d->epns = kcalloc(d->max_epns, sizeof(*d->epns), GFP_KERNEL);
-+	if (!d->epns)
-+		return -ENOMEM;
-+
- 	/*
- 	 * The UDC core really needs us to have separate and uniquely
- 	 * named "parent" devices for each port so we create a sub device
- 	 * here for that purpose
- 	 */
- 	d->port_dev = kzalloc(sizeof(struct device), GFP_KERNEL);
--	if (!d->port_dev)
--		return -ENOMEM;
-+	if (!d->port_dev) {
-+		rc = -ENOMEM;
-+		goto fail_alloc;
-+	}
- 	device_initialize(d->port_dev);
- 	d->port_dev->release = ast_vhub_dev_release;
- 	d->port_dev->parent = parent;
-@@ -584,6 +596,8 @@ int ast_vhub_init_dev(struct ast_vhub *vhub, unsigned int idx)
- 	device_del(d->port_dev);
-  fail_add:
- 	put_device(d->port_dev);
-+ fail_alloc:
-+	kfree(d->epns);
- 
- 	return rc;
- }
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/epn.c b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-index 7475c74aa5c5..0bd6b20435b8 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/epn.c
-@@ -800,10 +800,10 @@ struct ast_vhub_ep *ast_vhub_alloc_epn(struct ast_vhub_dev *d, u8 addr)
- 
- 	/* Find a free one (no device) */
- 	spin_lock_irqsave(&vhub->lock, flags);
--	for (i = 0; i < AST_VHUB_NUM_GEN_EPs; i++)
-+	for (i = 0; i < vhub->max_epns; i++)
- 		if (vhub->epns[i].dev == NULL)
- 			break;
--	if (i >= AST_VHUB_NUM_GEN_EPs) {
-+	if (i >= vhub->max_epns) {
- 		spin_unlock_irqrestore(&vhub->lock, flags);
- 		return NULL;
- 	}
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/hub.c b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-index 19b3517e04c0..9c7e57fbd8ef 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-@@ -133,10 +133,13 @@ static const struct ast_vhub_full_cdesc {
- 
- #define AST_VHUB_HUB_DESC_SIZE	(USB_DT_HUB_NONVAR_SIZE + 2)
- 
--static const struct usb_hub_descriptor ast_vhub_hub_desc = {
-+/*
-+ * "bNbrPorts" field is updated in "ast_vhub_init_hub" function based on
-+ * "max_ports" of the vhub.
-+ */
-+static struct usb_hub_descriptor ast_vhub_hub_desc = {
- 	.bDescLength			= AST_VHUB_HUB_DESC_SIZE,
- 	.bDescriptorType		= USB_DT_HUB,
--	.bNbrPorts			= AST_VHUB_NUM_PORTS,
- 	.wHubCharacteristics		= cpu_to_le16(HUB_CHAR_NO_LPSM),
- 	.bPwrOn2PwrGood			= 10,
- 	.bHubContrCurrent		= 0,
-@@ -504,7 +507,7 @@ static void ast_vhub_wake_work(struct work_struct *work)
- 	 * we let the normal host wake path deal with it later.
- 	 */
- 	spin_lock_irqsave(&vhub->lock, flags);
--	for (i = 0; i < AST_VHUB_NUM_PORTS; i++) {
-+	for (i = 0; i < vhub->max_ports; i++) {
- 		struct ast_vhub_port *p = &vhub->ports[i];
- 
- 		if (!(p->status & USB_PORT_STAT_SUSPEND))
-@@ -587,7 +590,7 @@ static enum std_req_rc ast_vhub_set_port_feature(struct ast_vhub_ep *ep,
- 	struct ast_vhub *vhub = ep->vhub;
- 	struct ast_vhub_port *p;
- 
--	if (port == 0 || port > AST_VHUB_NUM_PORTS)
-+	if (port == 0 || port > vhub->max_ports)
- 		return std_req_stall;
- 	port--;
- 	p = &vhub->ports[port];
-@@ -630,7 +633,7 @@ static enum std_req_rc ast_vhub_clr_port_feature(struct ast_vhub_ep *ep,
- 	struct ast_vhub *vhub = ep->vhub;
- 	struct ast_vhub_port *p;
- 
--	if (port == 0 || port > AST_VHUB_NUM_PORTS)
-+	if (port == 0 || port > vhub->max_ports)
- 		return std_req_stall;
- 	port--;
- 	p = &vhub->ports[port];
-@@ -676,7 +679,7 @@ static enum std_req_rc ast_vhub_get_port_stat(struct ast_vhub_ep *ep,
- 	struct ast_vhub *vhub = ep->vhub;
- 	u16 stat, chg;
- 
--	if (port == 0 || port > AST_VHUB_NUM_PORTS)
-+	if (port == 0 || port > vhub->max_ports)
- 		return std_req_stall;
- 	port--;
- 
-@@ -757,7 +760,7 @@ void ast_vhub_hub_suspend(struct ast_vhub *vhub)
- 	 * Forward to unsuspended ports without changing
- 	 * their connection status.
- 	 */
--	for (i = 0; i < AST_VHUB_NUM_PORTS; i++) {
-+	for (i = 0; i < vhub->max_ports; i++) {
- 		struct ast_vhub_port *p = &vhub->ports[i];
- 
- 		if (!(p->status & USB_PORT_STAT_SUSPEND))
-@@ -780,7 +783,7 @@ void ast_vhub_hub_resume(struct ast_vhub *vhub)
- 	 * Forward to unsuspended ports without changing
- 	 * their connection status.
- 	 */
--	for (i = 0; i < AST_VHUB_NUM_PORTS; i++) {
-+	for (i = 0; i < vhub->max_ports; i++) {
- 		struct ast_vhub_port *p = &vhub->ports[i];
- 
- 		if (!(p->status & USB_PORT_STAT_SUSPEND))
-@@ -814,7 +817,7 @@ void ast_vhub_hub_reset(struct ast_vhub *vhub)
- 	 * Clear all port status, disable gadgets and "suspend"
- 	 * them. They will be woken up by a port reset.
- 	 */
--	for (i = 0; i < AST_VHUB_NUM_PORTS; i++) {
-+	for (i = 0; i < vhub->max_ports; i++) {
- 		struct ast_vhub_port *p = &vhub->ports[i];
- 
- 		/* Only keep the connected flag */
-@@ -838,5 +841,10 @@ void ast_vhub_init_hub(struct ast_vhub *vhub)
- {
- 	vhub->speed = USB_SPEED_UNKNOWN;
- 	INIT_WORK(&vhub->wake_work, ast_vhub_wake_work);
-+
-+	/*
-+	 * Fixup number of ports in hub descriptor.
-+	 */
-+	ast_vhub_hub_desc.bNbrPorts = vhub->max_ports;
- }
- 
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-index 761919e220d3..e46980fe66f2 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-@@ -76,17 +76,9 @@
- #define VHUB_SW_RESET_DEVICE2			(1 << 2)
- #define VHUB_SW_RESET_DEVICE1			(1 << 1)
- #define VHUB_SW_RESET_ROOT_HUB			(1 << 0)
--#define VHUB_SW_RESET_ALL			(VHUB_SW_RESET_EP_POOL | \
--						 VHUB_SW_RESET_DMA_CONTROLLER | \
--						 VHUB_SW_RESET_DEVICE5 | \
--						 VHUB_SW_RESET_DEVICE4 | \
--						 VHUB_SW_RESET_DEVICE3 | \
--						 VHUB_SW_RESET_DEVICE2 | \
--						 VHUB_SW_RESET_DEVICE1 | \
--						 VHUB_SW_RESET_ROOT_HUB)
-+
- /* EP ACK/NACK IRQ masks */
- #define VHUB_EP_IRQ(n)				(1 << (n))
--#define VHUB_EP_IRQ_ALL				0x7fff	/* 15 EPs */
- 
- /* USB status reg */
- #define VHUB_USBSTS_HISPEED			(1 << 27)
-@@ -210,8 +202,6 @@
-  *                                      *
-  ****************************************/
- 
--#define AST_VHUB_NUM_GEN_EPs	15	/* Generic non-0 EPs */
--#define AST_VHUB_NUM_PORTS	5	/* vHub ports */
- #define AST_VHUB_EP0_MAX_PACKET	64	/* EP0's max packet size */
- #define AST_VHUB_EPn_MAX_PACKET	1024	/* Generic EPs max packet size */
- #define AST_VHUB_DESCS_COUNT	256	/* Use 256 descriptor mode (valid
-@@ -342,7 +332,7 @@ struct ast_vhub_dev {
- 	struct ast_vhub			*vhub;
- 	void __iomem			*regs;
- 
--	/* Device index (0...4) and name string */
-+	/* Device index (zero-based) and name string */
- 	unsigned int			index;
- 	const char			*name;
- 
-@@ -358,7 +348,8 @@ struct ast_vhub_dev {
- 
- 	/* Endpoint structures */
- 	struct ast_vhub_ep		ep0;
--	struct ast_vhub_ep		*epns[AST_VHUB_NUM_GEN_EPs];
-+	struct ast_vhub_ep		**epns;
-+	u32				max_epns;
- 
- };
- #define to_ast_dev(__g) container_of(__g, struct ast_vhub_dev, gadget)
-@@ -393,10 +384,12 @@ struct ast_vhub {
- 	bool				ep1_stalled : 1;
- 
- 	/* Per-port info */
--	struct ast_vhub_port		ports[AST_VHUB_NUM_PORTS];
-+	struct ast_vhub_port		*ports;
-+	u32				max_ports;
- 
- 	/* Generic EP data structures */
--	struct ast_vhub_ep		epns[AST_VHUB_NUM_GEN_EPs];
-+	struct ast_vhub_ep		*epns;
-+	u32				max_epns;
- 
- 	/* Upstream bus is suspended ? */
- 	bool				suspended : 1;
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index ebec0fa8baa7..f12ec04d3cbc 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -195,6 +195,8 @@
+ 			reg = <0x1e6a0000 0x300>;
+ 			interrupts = <5>;
+ 			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
++			aspeed,vhub-downstream-ports = <5>;
++			aspeed,vhub-generic-endpoints = <15>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb2ad_default>;
+ 			status = "disabled";
 -- 
 2.17.1
 
