@@ -2,149 +2,75 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79132C352A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C886C35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4965320842
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CkaG5Gej"
+	by mail.kernel.org (Postfix) with ESMTP id 6174B20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgBLBT3 (ORCPT
+        id S1728103AbgBLBaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 20:19:29 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41019 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbgBLBT3 (ORCPT
+        Tue, 11 Feb 2020 20:30:08 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:37913 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727330AbgBLBaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 20:19:29 -0500
-Received: by mail-io1-f65.google.com with SMTP id m25so296645ioo.8;
-        Tue, 11 Feb 2020 17:19:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kAE5YK5ptxtbuQnOU15dRXQpkp+DTRx4GZkHUX5A+v4=;
-        b=CkaG5GejNspicmv5zvT1An89YyaxAHBpKAQi9dtfonhl+Zk5q48JqbkKpUo6aTlB22
-         sARdQCNbVC4rH8Uln3FSNqeOBnz2DAD045ne0kgzcCVV/7WzWpqC5V9XevHd94bTrW8P
-         D9cIIn89CGhGk/KupLMB1QVvp50C+QcIRcB8jcAEAj8Yhpca/SccHGIL5A/3dwZ1Q0Ws
-         Q1KXsHKFsXiiqFugKo4f/FogTh84MC7+5CfIMkN05ryb/AJp86ZXX1ijbk9cg7bQ4xMR
-         AoC/WA/+XhC7rAXGYIZCpc1M64fQoj5hpYDJzPWSYL3MUriEnDFMIAZPxVVXviBc9KSE
-         9f0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kAE5YK5ptxtbuQnOU15dRXQpkp+DTRx4GZkHUX5A+v4=;
-        b=i62usv/IeC5WKJ7QCZtCFM4mg1yO3DDmx+QBiUQU+X2Q2SCDvJFdX7gLvGUsS+MAA8
-         c0S19/m+e835rf3B16vp+54h4RmCIbnvvjlXH4wDo28Ek71bBEBkjwwNPiGQ2Hrf0qED
-         hixlEh7dOrBJvSiAZk8rjp3DhyDi9l64VYeMvnmQoTyp91+NGs+BnzEYULzfVNyaYY0S
-         88wobGhxus67ULJY8GTyG5EaSUxXG2Owc7GfV9dvELHiLLXexjQYSgzCd3unhWWmKxfY
-         cTozsTAuWMQy0mPG0hm9XfiLMFPklS7xnLLQ6bXZ0j2egBPjoZ0Wr3/fD1HP4Jpd0nnF
-         ko0g==
-X-Gm-Message-State: APjAAAWpWuSFGFqB017Zenjaqt74XcTLCmKhhX9orQCu4QH66z6nN3n1
-        FN2bThJMRPBMerYt4m0OZsqFBkfcOLSZq8fv43E=
-X-Google-Smtp-Source: APXvYqynLPmdSNLhpziF/vijEhxYQZVqmzYbFPwtfE+PuECGlAsnYff4gawpAvHezgL8NLLeMoqRQ7S7rFoPF+/bARE=
-X-Received: by 2002:a6b:6e06:: with SMTP id d6mr15011186ioh.95.1581470366660;
- Tue, 11 Feb 2020 17:19:26 -0800 (PST)
+        Tue, 11 Feb 2020 20:30:08 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TpjeQz9_1581471003;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TpjeQz9_1581471003)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 12 Feb 2020 09:30:04 +0800
+Subject: Re: [RFC] why can't dynamic isolation just like the static way
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+References: <fed10a26-7423-23b5-316c-c74d354870dd@linux.alibaba.com>
+ <20200211114350.GJ14914@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <4800c9fd-2fbd-df35-cfa9-c048f9fe8b11@linux.alibaba.com>
+Date:   Wed, 12 Feb 2020 09:30:03 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200211224416.29318.44077.stgit@localhost.localdomain>
- <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
- <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com> <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
-In-Reply-To: <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 11 Feb 2020 17:19:15 -0800
-Message-ID: <CAKgT0Ud==Z1BAF-ja-ZtGR5Dxj+7dE3YEpB-D-Wk4A9U1Yooew@mail.gmail.com>
-Subject: Re: [PATCH v17 0/9] mm / virtio: Provide support for free page reporting
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Matthew Wilcox <willy@infradead.org>, lcapitulino@redhat.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200211114350.GJ14914@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 4:19 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Tue, 11 Feb 2020 15:55:31 -0800 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
->
-> > On the host I just have to monitor /proc/meminfo and I can see the
-> > difference. I get the following results on the host, in the enabled case
-> > it takes about 30 seconds for it to settle into the final state since I
-> > only report page a bit at a time:
-> > Baseline/Applied
-> >   MemTotal:    131963012 kB
-> >   MemFree:      95189740 kB
-> >
-> > Enabled:
-> >   MemTotal:    131963012 kB
-> >   MemFree:     126459472 kB
-> >
-> > This is what I was referring to with the comment above. I had a test I was
-> > running back around the first RFC that consisted of bringing up enough VMs
-> > so that there was a bit of memory overcommit and then having the VMs in
-> > turn run memhog. As I recall the difference between the two was  something
-> > like a couple minutes to run through all the VMs as the memhog would take
-> > up to 40+ seconds for one that was having to pull from swap while it took
-> > only 5 to 7 seconds for the VMs that were all running the page hinting.
-> >
-> > I had referenced it here in the RFC:
-> > https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
-> >
-> > I have been verifying the memory has been getting freed but didn't feel
-> > like the test added much value so I haven't added it to the cover page for
-> > a while since the time could vary widely and is dependent on things like
-> > the disk type used for the host swap since my SSD is likely faster than
-> > spinning rust, but may not be as fast as other SSDs on the market. Since
-> > the disk speed can play such a huge role I wasn't comfortable posting
-> > numbers since the benefits could vary so widely.
->
-> OK, thanks.  I'll add the patches to the mm pile.  The new
-> mm/page_reporting.c is unreviewed afaict, so I guess you own that for
-> now ;)
 
-I will see what I can do to get some additional review of those
-patches. There has been some review, but I rewrote that block after
-suggestions as I had to split it out over several patches to account
-for the gains from the changes in patches 7 and 8.
 
-> It would be very nice to get some feedback from testers asserting "yes,
-> this really helped my workload" but I understand this sort of testing
-> is hard to obtain at this stage.
+On 2020/2/11 下午7:43, Peter Zijlstra wrote:
+> On Tue, Feb 11, 2020 at 04:17:34PM +0800, 王贇 wrote:
+>> Hi, folks
+>>
+>> We are dealing with isolcpus these days and try to do the isolation
+>> dynamically.
+>>
+>> The kernel doc lead us into the cpuset.sched_load_balance, it's fine
+>> to achieve the dynamic isolation with it, however we got problem with
+>> the systemd stuff.
+> 
+> Then don't use systemd :-) Also, if systemd is the problem, why are you
+> bugging us?
 
-Without the QEMU patches applied there isn't much that this patch set
-can do on its own, so that is another piece I have to work on. Yet
-another reason to make sure it does no harm if it is not enabled.
+Well, that's... fair enough :-P
 
-So far the one that surprised me the most is that somebody from Huawei
-was working to add device pass-thru support to it already.
-https://lore.kernel.org/lkml/1578408399-20092-1-git-send-email-weiqi4@huawei.com/
+What we try to understand is why dynamic isolation is so different with
+the way of static isolation, is it not good to have a simple way instead?
 
-Thanks.
+Regards,
+Michael Wang
 
-- Alex
+> 
