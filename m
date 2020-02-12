@@ -2,221 +2,269 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F7CC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE58C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE822168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581537207;
-	bh=rpCM9ekTToj/j8DzvkJPe9VjJir7de0FzdYMpj4d/bA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tC+k6gJ3kG65JDO/Sxz6FLUQcKLV1FOfcBg4Af8sMdi6HJjvHrEXOGjuutnf/OD4w
-	 AAbsbRD/cPj4fLoFAOHim+0oa49OLYbFQTmNWGXAXKccyv9AJQ6KoUbR5iONHL/Z1Q
-	 hIK2V5qqqOTg/XqACE7N0P56AhCDbdHKgPdro+bU=
+	by mail.kernel.org (Postfix) with ESMTP id B1BE82168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:54:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="KzuOXwP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgBLTx0 (ORCPT
+        id S1728977AbgBLTyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:53:26 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35154 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbgBLTx0 (ORCPT
+        Wed, 12 Feb 2020 14:54:46 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43923 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgBLTyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:53:26 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y73so1759415pfg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:53:25 -0800 (PST)
+        Wed, 12 Feb 2020 14:54:46 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r11so3865579wrq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=988zIL8d+x57bhbL7IA3JnepL7Xa/OoILgzP9jiq4TY=;
-        b=qZnrSz369m8/FKxgWHq63V8eD4+egg40oz+Cpc4wyRGPR7h+iml6b27dFEKUnWPGnZ
-         l7rPa7UyXBs6uzEneN/HbQGA7NigZLvd3cV+PkHW48SAAnWN3iDf3xTCzhOHJCH7XN/D
-         M+Dz0vG4B93gT8mZVRZvcng4Rkv9vH2iXwARsp+Kqp8YGrAUnJRcSX0nCpkjvwXv4G6g
-         +8m2dH4CSJ1RnXmkmAXOitqpQWQ3ZAZJJVxTw1BIsrtY/+0PQW3hP+QXaFVEKF8AHczP
-         xjyGLOUfc2CxPBoj6cmBPuxjF7Iy5O6wMDf612h4m9/mXL0EsqaGzhQS7c+AjgZAxSrB
-         8jhw==
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8h+Be9OF2MK5Ytpf2Np0wQ3iq3A9mioBHD0VRufyqqs=;
+        b=KzuOXwP/+AczoDterQIfUoyyRVd1T5q06m9N7yXg/EIcJV0Hg3BaneqpiZueDOUbyf
+         75kWFFgECPDmtsVJQJ48OhX86KUkkFf2uZg79Z8OUMSZNQi8x1RuKASjzxVa4QcOjghS
+         B/I6RdenX/vbGwlu17ITtB78+UKMhqHkQoCGGc/DK3XMcm9ioKNWINQdqh38ob0CIDcW
+         iltBuYbPUQ/BKQx6kO+d+REfDu+cqjkhCrFJhMjs6O596hgVZAtLzHgDo5okHe2oL2Y8
+         PdO6aXdLs9/HrGK9DN3NqQzASfiX0Zxx6WM/r9clWgMsZQzru9w2K27ey3K23bRWpk43
+         41yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=988zIL8d+x57bhbL7IA3JnepL7Xa/OoILgzP9jiq4TY=;
-        b=agThd3aiFpWaWXx4VBJ3P2NZmjRMyiTHdMKH5tFraFUm1hLimh3C8aP9jMbiMzhMpf
-         I9z8O2sCy2AmsRtdu+gO13aYW0njTHRJb6Zbo5JAufSFkk6pzQVzURZRTRhWGf02epiL
-         JQkwHAYS6txJ0e4jCGZm1ugCSF0gtGLERbO1En2KAbjfA1K/C3rfemoMoTTpDv4X4Rfo
-         IEyAlX68ITa2YrkPRfRm3rCQGmg6A5Pa8J3Z3p2R46SX7XJ5KkqO95pY+AwfdR0GmnRP
-         GdBTUWMciBYXVthOrKwk8kOLcCQrIFyLSDBko7eotE4wbpu7YVm9yoAtE1iXda9UOK21
-         9E5g==
-X-Gm-Message-State: APjAAAXu/rs5VBk/xETjsPzaxfn/Z/pbyG02x0MrEMOLCppTTtTDihpL
-        9T4xtl/9IVBZbIytygtHKmI=
-X-Google-Smtp-Source: APXvYqz47fSDzYXvypxdE3JPoalztTIbDa6+X8zSSTbWFSvKaq4eE2hMqiAowqb0sItclFu54Z778A==
-X-Received: by 2002:a63:e18:: with SMTP id d24mr13786719pgl.36.1581537205345;
-        Wed, 12 Feb 2020 11:53:25 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id dw10sm82303pjb.11.2020.02.12.11.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 11:53:24 -0800 (PST)
-Date:   Wed, 12 Feb 2020 11:53:22 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: fix long time stall from mm_populate
-Message-ID: <20200212195322.GA83146@google.com>
-References: <20200211035004.GA242563@google.com>
- <20200211035412.GR8731@bombadil.infradead.org>
- <20200211042536.GB242563@google.com>
- <20200211122323.GS8731@bombadil.infradead.org>
- <20200211163404.GC242563@google.com>
- <20200211172803.GA7778@bombadil.infradead.org>
- <20200211175731.GA185752@google.com>
- <20200212101804.GD25573@quack2.suse.cz>
- <20200212174015.GB93795@google.com>
- <20200212182851.GG7778@bombadil.infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8h+Be9OF2MK5Ytpf2Np0wQ3iq3A9mioBHD0VRufyqqs=;
+        b=k4TR7Tu1wcLyUywLcq1iXueOUCP1yXngWdCjfrYFUeJUtOt7KVFvHk3mcFwKyxwOFM
+         6fPJ3q0m7IqtiwShLjV4Ew1Yoe6l/bWkQmKeXDkteDheBkS16UCXtrW9tsAF9qTWXJMG
+         Yg1lxCceP3cgMV4H6PAJ8HP0HwGeLLBFI/JkatYf757Ud1YchFXtVJZw14B45R6bSjwA
+         S2HcdhTFkkaVollTz+qor12PomqXm4amsjnmGVLZ4Ix3hX1mZwbRTqAFmfPf+C4DWfTz
+         /dnnVO7dsc+Quo4seIKs+8wmZQI7KCc79sKkDoIhy1JUdeAOwofj8VezewnMPm73XOiK
+         IL0A==
+X-Gm-Message-State: APjAAAUe6KxInf8jeE5aNVHGCpsmaE7waOOfuNkycRC+I1I4y5/gZrWI
+        35djrrNVHdplvjxVcAqN4QVMYsvM21+mldy7z/IH
+X-Google-Smtp-Source: APXvYqyO39GcuK0lCZrVW17R51sCLoUFtXVAQVtueys2KeFSpTcHV0AgMs8QzVnkGVgZlqfP1GXQFpbkp3llvduOqU0=
+X-Received: by 2002:a5d:534d:: with SMTP id t13mr17667438wrv.77.1581537283865;
+ Wed, 12 Feb 2020 11:54:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212182851.GG7778@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200212014822.28684-1-atish.patra@wdc.com> <20200212014822.28684-9-atish.patra@wdc.com>
+ <CAAhSdy1BB=-FR_hx2mObDeWD+z2WzaVdZeiO9inmGPXasMcCTg@mail.gmail.com>
+In-Reply-To: <CAAhSdy1BB=-FR_hx2mObDeWD+z2WzaVdZeiO9inmGPXasMcCTg@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Wed, 12 Feb 2020 11:54:32 -0800
+Message-ID: <CAOnJCUJif_njbXAbZcAtzaBiEugL1Qb=_HrB3CtsebvRGd2kJA@mail.gmail.com>
+Subject: Re: [PATCH v8 08/11] RISC-V: Add SBI HSM extension
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Mao Han <han_mao@c-sky.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:28:51AM -0800, Matthew Wilcox wrote:
-> On Wed, Feb 12, 2020 at 09:40:15AM -0800, Minchan Kim wrote:
-> > How about this?
-> > 
-> > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> > index 1bf83c8fcaa7..d07d602476df 100644
-> > --- a/include/linux/page-flags.h
-> > +++ b/include/linux/page-flags.h
-> > @@ -363,8 +363,28 @@ PAGEFLAG(MappedToDisk, mappedtodisk, PF_NO_TAIL)
-> >  /* PG_readahead is only used for reads; PG_reclaim is only for writes */
-> >  PAGEFLAG(Reclaim, reclaim, PF_NO_TAIL)
-> >  	TESTCLEARFLAG(Reclaim, reclaim, PF_NO_TAIL)
-> > -PAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-> > -	TESTCLEARFLAG(Readahead, reclaim, PF_NO_COMPOUND)
+On Tue, Feb 11, 2020 at 8:53 PM Anup Patel <anup@brainfault.org> wrote:
+>
+> On Wed, Feb 12, 2020 at 7:22 AM Atish Patra <atish.patra@wdc.com> wrote:
+> >
+> > SBI specification defines HSM extension that allows to start/stop a hart
+> > by a supervisor anytime. The specification is available at
+> >
+> > https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+> >
+> > Implement SBI HSM extension.
+>
+> I think this PATCH needs to be further broken down.
+>
+> There are three distinct changes here:
+> 1. Exporting sbi_err_map_linux_errno() function
+>     arch/riscv/kernel/sbi.c
+>     arch/riscv/include/asm/sbi.h
+> 2. SBI HSM defines
+>     arch/riscv/include/asm/sbi.h
+> 3. SBI HSM helper functions (which are mostly static functions)
+>     arch/riscv/kernel/Makefile
+>     arch/riscv/kernel/cpu_ops_sbi.c
+>
+> We need separate patches for point1 and point2 above.
+>
+> Also, point3 can be part of current PATCH9.
+>
+
+Done.
+
+> Regards,
+> Anup
+>
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  arch/riscv/include/asm/sbi.h    | 15 +++++++++++
+> >  arch/riscv/kernel/Makefile      |  3 +++
+> >  arch/riscv/kernel/cpu_ops_sbi.c | 48 +++++++++++++++++++++++++++++++++
+> >  arch/riscv/kernel/sbi.c         |  3 ++-
+> >  4 files changed, 68 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/riscv/kernel/cpu_ops_sbi.c
+> >
+> > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> > index d55d8090ab5c..0981a0c97eda 100644
+> > --- a/arch/riscv/include/asm/sbi.h
+> > +++ b/arch/riscv/include/asm/sbi.h
+> > @@ -26,6 +26,7 @@ enum sbi_ext_id {
+> >         SBI_EXT_TIME = 0x54494D45,
+> >         SBI_EXT_IPI = 0x735049,
+> >         SBI_EXT_RFENCE = 0x52464E43,
+> > +       SBI_EXT_HSM = 0x48534D,
+> >  };
+> >
+> >  enum sbi_ext_base_fid {
+> > @@ -56,6 +57,19 @@ enum sbi_ext_rfence_fid {
+> >         SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
+> >  };
+> >
+> > +enum sbi_ext_hsm_fid {
+> > +       SBI_EXT_HSM_HART_START = 0,
+> > +       SBI_EXT_HSM_HART_STOP,
+> > +       SBI_EXT_HSM_HART_STATUS,
+> > +};
 > > +
-> > +SETPAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-> > +CLEARPAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
+> > +enum sbi_hsm_hart_status {
+> > +       SBI_HSM_HART_STATUS_AVAILABLE = 0,
+> > +       SBI_HSM_HART_STATUS_NOT_AVAILABLE,
+> > +       SBI_HSM_HART_STATUS_START_PENDING,
+> > +       SBI_HSM_HART_STATUS_STOP_PENDING,
+> > +};
 > > +
+> >  #define SBI_SPEC_VERSION_DEFAULT       0x1
+> >  #define SBI_SPEC_VERSION_MAJOR_SHIFT   24
+> >  #define SBI_SPEC_VERSION_MAJOR_MASK    0x7f
+> > @@ -130,6 +144,7 @@ static inline unsigned long sbi_minor_version(void)
+> >  {
+> >         return sbi_spec_version & SBI_SPEC_VERSION_MINOR_MASK;
+> >  }
+> > +int sbi_err_map_linux_errno(int err);
+> >  #else /* CONFIG_RISCV_SBI */
+> >  /* stubs for code that is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
+> >  void sbi_set_timer(uint64_t stime_value);
+> > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> > index f81a6ff88005..a0be34b96846 100644
+> > --- a/arch/riscv/kernel/Makefile
+> > +++ b/arch/riscv/kernel/Makefile
+> > @@ -44,5 +44,8 @@ obj-$(CONFIG_PERF_EVENTS)     += perf_event.o
+> >  obj-$(CONFIG_PERF_EVENTS)      += perf_callchain.o
+> >  obj-$(CONFIG_HAVE_PERF_REGS)   += perf_regs.o
+> >  obj-$(CONFIG_RISCV_SBI)                += sbi.o
+> > +ifeq ($(CONFIG_RISCV_SBI), y)
+> > +obj-$(CONFIG_SMP) += cpu_ops_sbi.o
+> > +endif
+> >
+> >  clean:
+> > diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
+> > new file mode 100644
+> > index 000000000000..9bdb60e0a4df
+> > --- /dev/null
+> > +++ b/arch/riscv/kernel/cpu_ops_sbi.c
+> > @@ -0,0 +1,48 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
 > > +/*
-> > + * Since PG_readahead is shared with PG_reclaim of the page flags,
-> > + * PageReadahead should double check whether it's readahead marker
-> > + * or PG_reclaim. It could be done by PageWriteback check because
-> > + * PG_reclaim is always with PG_writeback.
+> > + * HSM extension and cpu_ops implementation.
+> > + *
+> > + * Copyright (c) 2020 Western Digital Corporation or its affiliates.
 > > + */
-> > +static inline int PageReadahead(struct page *page)
-> > +{
-> > +	VM_BUG_ON_PGFLAGS(PageCompound(page), page);
-> > +	return test_bit(PG_reclaim, &(page)->flags) && !PageWriteback(page);
-> 
-> Why not ...
-> 
-> 	return page->flags & (1UL << PG_reclaim | 1UL << PG_writeback) ==
-> 		(1UL << PG_reclaim);
-> 
-> > +static inline int TestClearPageReadahead(struct page *page)
-> > +{
-> > +	VM_BUG_ON_PGFLAGS(PageCompound(page), page);
 > > +
-> > +	return test_and_clear_bit(PG_reclaim, &page->flags) && !PageWriteback(page);
-> 
-> That's definitely wrong.  It'll clear PageReclaim and then pretend it did
-> nothing wrong.
-> 
-> 	return !PageWriteback(page) ||
-> 		test_and_clear_bit(PG_reclaim, &page->flags);
-> 
+> > +#include <linux/init.h>
+> > +#include <linux/mm.h>
+> > +#include <asm/sbi.h>
+> > +#include <asm/smp.h>
+> > +
+> > +static int sbi_hsm_hart_stop(void)
+> > +{
+> > +       struct sbiret ret;
+> > +
+> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
+> > +
+> > +       if (ret.error)
+> > +               return sbi_err_map_linux_errno(ret.error);
+> > +       else
+> > +               return 0;
+> > +}
+> > +
+> > +static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
+> > +                      unsigned long priv)
+> > +{
+> > +       struct sbiret ret;
+> > +
+> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
+> > +                             hartid, saddr, priv, 0, 0, 0);
+> > +       if (ret.error)
+> > +               return sbi_err_map_linux_errno(ret.error);
+> > +       else
+> > +               return 0;
+> > +}
+> > +
+> > +static int sbi_hsm_hart_get_status(unsigned long hartid)
+> > +{
+> > +       struct sbiret ret;
+> > +
+> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
+> > +                             hartid, 0, 0, 0, 0, 0);
+> > +       if (ret.error)
+> > +               return sbi_err_map_linux_errno(ret.error);
+> > +       else
+> > +               return ret.value;
+> > +}
+> > diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+> > index cd0f68aeac70..45ad49269f2c 100644
+> > --- a/arch/riscv/kernel/sbi.c
+> > +++ b/arch/riscv/kernel/sbi.c
+> > @@ -47,7 +47,7 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
+> >  }
+> >  EXPORT_SYMBOL(sbi_ecall);
+> >
+> > -static int sbi_err_map_linux_errno(int err)
+> > +int sbi_err_map_linux_errno(int err)
+> >  {
+> >         switch (err) {
+> >         case SBI_SUCCESS:
+> > @@ -64,6 +64,7 @@ static int sbi_err_map_linux_errno(int err)
+> >                 return -ENOTSUPP;
+> >         };
+> >  }
+> > +EXPORT_SYMBOL(sbi_err_map_linux_errno);
+> >
+> >  #ifdef CONFIG_RISCV_SBI_V01
+> >  /**
+> > --
+> > 2.24.0
+> >
+>
 
-Much better, Thanks for the review, Matthew!
-If there is no objection, I will send two patches to Andrew.
-One is PageReadahead strict, the other is limit retry from mm_populate.
 
-From 351236413beda22cb7fec1713cad4360de930188 Mon Sep 17 00:00:00 2001
-From: Minchan Kim <minchan@kernel.org>
-Date: Wed, 12 Feb 2020 09:28:21 -0800
-Subject: [PATCH] mm: make PageReadahead more strict
-
-PG_readahead flag is shared with PG_reclaim but PG_reclaim is only
-used in write context while PG_readahead is used for read context.
-
-To make it clear, let's introduce PageReadahead wrapper with
-!PageWriteback check so it could make code clear and we could drop
-PageWriteback check in page_cache_async_readahead, which removes
-pointless dropping mmap_sem.
-
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- include/linux/page-flags.h | 28 ++++++++++++++++++++++++++--
- mm/readahead.c             |  6 ------
- 2 files changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 1bf83c8fcaa7..f91a9b2a49bd 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -363,8 +363,32 @@ PAGEFLAG(MappedToDisk, mappedtodisk, PF_NO_TAIL)
- /* PG_readahead is only used for reads; PG_reclaim is only for writes */
- PAGEFLAG(Reclaim, reclaim, PF_NO_TAIL)
- 	TESTCLEARFLAG(Reclaim, reclaim, PF_NO_TAIL)
--PAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
--	TESTCLEARFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-+
-+SETPAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-+CLEARPAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
-+
-+/*
-+ * Since PG_readahead is shared with PG_reclaim of the page flags,
-+ * PageReadahead should double check whether it's readahead marker
-+ * or PG_reclaim. It could be done by PageWriteback check because
-+ * PG_reclaim is always with PG_writeback.
-+ */
-+static inline int PageReadahead(struct page *page)
-+{
-+	VM_BUG_ON_PGFLAGS(PageCompound(page), page);
-+
-+	return (page->flags & (1UL << PG_reclaim | 1UL << PG_writeback)) ==
-+		(1UL << PG_reclaim);
-+}
-+
-+/* Clear PG_readahead only if it's PG_readahead, not PG_reclaim */
-+static inline int TestClearPageReadahead(struct page *page)
-+{
-+	VM_BUG_ON_PGFLAGS(PageCompound(page), page);
-+
-+	return !PageWriteback(page) ||
-+			test_and_clear_bit(PG_reclaim, &page->flags);
-+}
- 
- #ifdef CONFIG_HIGHMEM
- /*
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 2fe72cd29b47..85b15e5a1d7b 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -553,12 +553,6 @@ page_cache_async_readahead(struct address_space *mapping,
- 	if (!ra->ra_pages)
- 		return;
- 
--	/*
--	 * Same bit is used for PG_readahead and PG_reclaim.
--	 */
--	if (PageWriteback(page))
--		return;
--
- 	ClearPageReadahead(page);
- 
- 	/*
 -- 
-2.25.0.225.g125e21ebc7-goog
-
+Regards,
+Atish
