@@ -2,116 +2,118 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510F0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974D7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280B6206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4DD2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cB8DmvKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgBLQLK (ORCPT
+        id S1727548AbgBLQOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:11:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36448 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbgBLQLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:11:10 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66C18AE84;
-        Wed, 12 Feb 2020 16:11:06 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 16:11:03 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH 1/4] sched/fair: reorder enqueue/dequeue_task_fair path
-Message-ID: <20200212161103.GX3420@suse.de>
-References: <20200211174651.10330-1-vincent.guittot@linaro.org>
- <20200211174651.10330-2-vincent.guittot@linaro.org>
- <20200212132036.GT3420@suse.de>
- <CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com>
+        Wed, 12 Feb 2020 11:14:07 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41107 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgBLQOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:14:07 -0500
+Received: by mail-pf1-f195.google.com with SMTP id j9so1458927pfa.8;
+        Wed, 12 Feb 2020 08:14:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OE7vpo0ZLwKc2Q/gSZxbs7a6GJfpkch8/DsdID/PORQ=;
+        b=cB8DmvKisQrlJkwK9PyfwxgRrDpyXZNfhy4jncjU2FNYol3VGdk7rq+8a5hVaxYZ5b
+         ZpPyNrN9c0EapSL7MNHmrc8cg2S+Ow4NmeKlXgLChPxipLIzdAFYLOK/p1+/3RPg00+5
+         JJJJuwcuoyMaQdq6Gdn2gHR/EDiTHf9Bu2LSA4ngMyQZiJyoKJtayMFQwxOdH218jfnC
+         VwL/uES+mHf2cP4IgFE6us8CV1MUaS51x3v2WA2Bl4/Jqy8wQLkG1Ck2tTeKUkdwAPxx
+         him4NdBe2VsLUWQeMn5ZMu2HgZoBoP/Dxw2maCXEbyN7sA4X9p85DH5YaG23ZwinD7V0
+         OOMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OE7vpo0ZLwKc2Q/gSZxbs7a6GJfpkch8/DsdID/PORQ=;
+        b=Az+iuXNLVwR1u0OO6KMYcsb32y0R6C2InzGYoTz2AZLMLOkQfx3ODBxlqIzbBWctqk
+         DqDfEflVOuVH2d5kW4JMl8TmQoafcH2Hk3fPa10X1V5vtQ9GvzO/QOE2Kiocb/hcOPMC
+         gNb1gs7uqoV8hTwqM7mDQCSDlK8pH8F33x4yFBDw+zF6jsAbg5REO/JpDG1FjRlTcvbQ
+         WD/jdoxOjD6bc0CTC3c54YLUeFVzvvEvV9x57xt/B0rQCPJxrWgcp81lI4qYodMuqhDA
+         3hDao+HiO84iatPFvjXEp+mcimL2YBj0ikZGp6ACwnNxoexN4ResOxna/mYINKY0yVqF
+         tlzA==
+X-Gm-Message-State: APjAAAWbHPSczBHJQQ5BUxSiN+35CUgCfvMxY/hEdgmKyMjHJif9sUxB
+        frsoKw0l+Qs4FSzig6IVXRCGRnG8RMO6t0U05Ws=
+X-Google-Smtp-Source: APXvYqxh5GSPAkd71YH7sbjXip6T8nkNYUtTrt6qORPoCu8bXvvIHMza/bhRQ2uItfBi8M2VJco7HFV7RTGY08zVjwM=
+X-Received: by 2002:aa7:9796:: with SMTP id o22mr9076367pfp.101.1581524045940;
+ Wed, 12 Feb 2020 08:14:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200128110102.11522-1-martin@kaiser.cx> <20200128110102.11522-4-martin@kaiser.cx>
+In-Reply-To: <20200128110102.11522-4-martin@kaiser.cx>
+From:   PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Date:   Wed, 12 Feb 2020 21:43:55 +0530
+Message-ID: <CANc+2y6Scy1=S7zeQ4gVowRoWmzsq4wiNXbLVeY1Qvu0oo9cUw@mail.gmail.com>
+Subject: Re: [PATCH 3/6] hwrng: imx-rngc - use devres for registration
+To:     Martin Kaiser <martin@kaiser.cx>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 03:47:30PM +0100, Vincent Guittot wrote:
-> > I'm having trouble reconciling the patch with the description and the
-> > comments explaining the intent behind the code are unhelpful.
-> >
-> > There are two loops before and after your patch -- the first dealing with
-> > sched entities that are not on a runqueue and the second for the remaining
-> > entities that are. The intent appears to be to update the load averages
-> > once the entity is active on a runqueue.
-> >
-> > I'm not getting why the changelog says everything related to cfs is
-> > now done in one loop because there are still two. But even if you do
-> > get throttled, it's not clear why you jump to the !se check given that
-> > for_each_sched_entity did not complete. What it *does* appear to do is
-> > have all the h_nr_running related to entities being enqueued updated in
-> > one loop and all remaining entities stats updated in the other.
-> 
-> Let's take the example of 2 levels in addition to root so we have :
-> root->cfs1->cfs2
-> Now we enqueue a task T1 on cfs2 but cfs1 is throttled, we will have
-> the sequence:
-> 
-> In 1st for_each_sched_entity loop:
->   loop 1
->     enqueue_entity (T1->se, cfs2) which calls update load_avg(cfs2)
->     cfs2->h_nr_running++;
->   loop 2
->     enqueue_entity (cfs2->gse, cfs1) which calls update load_avg(cfs1)
->     break because cfs1 is throttled
-> 
-> In 2nd for_each_sched_entity loop:
->   loop 1
->     cfs1->h_nr_running++
->     break because throttled
-> 
-> Using the 2nd loop for incrementing h_nr_running of the throttled cfs
-> is useless and we could do that directly in 1st loop and skip the 2nd
-> loop
-> 
-> With this patch we have :
-> 
-> In 1st for_each_sched_entity loop:
->   loop 1
->     enqueue_entity (T1->se, cfs2) which update load_avg(cfs2)
->     cfs2->h_nr_running++;
->   loop 2
->     enqueue_entity (cfs2->gse, cfs1) which update load_avg(cfs1)
->     cfs1->h_nr_running++
->     skip the 2nd for_each_sched_entity entirely
-> 
-> Then the patch also reorders the call to update_load_avg() and the
-> increment of h_nr_running
-> 
-> Before the patch we had different order between the to
-> for_each_sched_entity which is not a problem because there is
-> currently no relation between both. But the following patches make
-> PELT using h_nr_running so we must have the same ordering to prevent
-> updating pelt with the wrong h_nr_running value
-> 
+Hi Martin,
 
-Ok, understood. Thanks for clearing that up!
+On Tue, 28 Jan 2020 at 16:31, Martin Kaiser <martin@kaiser.cx> wrote:
+>
+> Use devres to register the rngc with the hwrng core. Drop the explicit
+> deregistration.
+>
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> ---
+>  drivers/char/hw_random/imx-rngc.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
+> index 903894518c8d..1381ddd5b891 100644
+> --- a/drivers/char/hw_random/imx-rngc.c
+> +++ b/drivers/char/hw_random/imx-rngc.c
+> @@ -263,7 +263,7 @@ static int imx_rngc_probe(struct platform_device *pdev)
+>                 }
+>         }
+>
+> -       ret = hwrng_register(&rngc->rng);
+> +       ret = devm_hwrng_register(&pdev->dev, &rngc->rng);
+>         if (ret) {
+>                 dev_err(&pdev->dev, "FSL RNGC registering failed (%d)\n", ret);
+>                 goto err;
+> @@ -282,8 +282,6 @@ static int __exit imx_rngc_remove(struct platform_device *pdev)
+>  {
+>         struct imx_rngc *rngc = platform_get_drvdata(pdev);
+>
+> -       hwrng_unregister(&rngc->rng);
+> -
+>         clk_disable_unprepare(rngc->clk);
+>
+>         return 0;
+> --
+> 2.20.1
+>
 
--- 
-Mel Gorman
-SUSE Labs
+After imx_rngc_remove function hwrng_unregister will get called. This
+leaves a window where the clock to rng hardware block is disabled but
+still user space can access it via /dev/hwrng. This does not look
+right, please revisit the patch.
+
+Regards,
+PrasannaKumar
