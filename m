@@ -2,135 +2,147 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE12CC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9232C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C625521734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD72321739
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581538228;
+	bh=5tUfKPKeSnEHMpXpar/HVxMpVibvs8mXtMO6HQd8Mt8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=par8pcmBdzoqRLOx5pUTP3s0EyI6ieDrbAvQqgJFQqZ7boVbA1TAbrcHl5qcIFrKp
+	 ZgLhMvgi2/e6Rf+n9asCGNe4vXl5LorPAg7NIslYt0u2GY1/aXTY0W7u4e7wA/KgOb
+	 IOQKKEL5fzeE66A/ydDrw34+JQk19Y4R33SlBMbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgBLUHL (ORCPT
+        id S1728962AbgBLUK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:07:11 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:52151 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbgBLUHK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:07:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id c12so2598056ilr.18
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:07:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Co8lYCnMNWbIOoFwBwNevLnEaupm4wQuaFmfZ70UHoc=;
-        b=CxOJJnDL2ekQugj63qA9xZ0eQvfZMlnDU6vEHlIMEzPuk8Z1+xkzRgzq8dx8m0qhOy
-         Ca1zA6uTUMldHOhiPEwdGt6HLY974K1NocmCg0vpMTcinDzcwWcnZMf8VTvdFmCpEtB2
-         cFgCpqRN8E6O1coKXj3x3ziqAN9JJCkSslTRuDu7Gq7WUoiKXuYi2xYopQrbiFv/UMTo
-         L/WGoclapbmAmG7yp36Bxskt7rKCXcGPxJWQ65KDLKfORfI+ffmTAQMHns5aTE76QR2i
-         b6Up9VrPIwbjjof/2xOPplyPKZz5WZbjUctzFJ46VCwJg8bqrPQggNHKNnfVIDybtWhF
-         IbwA==
-X-Gm-Message-State: APjAAAUEIU/6ULMNdsNhKkReY+gJsXVMlj/faErkAxx/JkrqSZoL9tLb
-        WdjYWXKY7+ny187zy4pYpYDzwBOW0pL8ttjhgPZfxOUTkPpK
-X-Google-Smtp-Source: APXvYqxN1xgoOdBqreIIiflzMcbePxougWNMY9WnyU+8s6P4MynybcE32RWCk4rH9/dCpZ3j8H7J85xtN/KmYzaiVQpGDbbFjVk/
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:34e:: with SMTP id x14mr20904842jap.38.1581538029931;
- Wed, 12 Feb 2020 12:07:09 -0800 (PST)
-Date:   Wed, 12 Feb 2020 12:07:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000791270059e668493@google.com>
-Subject: general protection fault in redraw_screen
-From:   syzbot <syzbot+4a5a3604a566ede699b9@syzkaller.appspotmail.com>
-To:     daniel.vetter@ffwll.ch, ghalat@redhat.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, lukas@wunner.de,
-        maarten.lankhorst@linux.intel.com, nico@fluxnic.net,
-        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
+        Wed, 12 Feb 2020 15:10:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727361AbgBLUK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:10:27 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0A021734;
+        Wed, 12 Feb 2020 20:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581538227;
+        bh=5tUfKPKeSnEHMpXpar/HVxMpVibvs8mXtMO6HQd8Mt8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=k1M/KpjnSNabfpZsKQQ+pjF5h/ws4c/royzSywtlpASUF+715/BAXQ16Xyfy+qM23
+         ZGfXmQorlzZH2u5LHHCiD+GOBBz1p2xKpkUXz58v/ZXushPpZuRZoHmB+0fiLwFTdU
+         GkZybKnY4d3jPM5+WugjR1l8wGunQ0J6HRtMGW5g=
+Message-ID: <1581538225.25773.3.camel@kernel.org>
+Subject: Re: [PATCH] tracing: Remove bogus 64-bit synth_event_trace() vararg
+  assumption
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+Date:   Wed, 12 Feb 2020 14:10:25 -0600
+In-Reply-To: <20200212145026.0cbaa86b@gandalf.local.home>
+References: <20200212113444.GS12867@shao2-debian>
+         <1581523144.8740.8.camel@kernel.org>
+         <20200212145026.0cbaa86b@gandalf.local.home>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Steve,
 
-syzbot found the following crash on:
+On Wed, 2020-02-12 at 14:50 -0500, Steven Rostedt wrote:
+> From: Tom Zanussi <zanussi@kernel.org>
+> 
+> [ Tom, please send patches normally, and not embedded in a reply.
+> Otherwise it will not be picked up by my patchwork, and may be lost.
+> ]
 
-HEAD commit:    359c92c0 Merge tag 'dax-fixes-5.6-rc1' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15a432a1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6780df5a5f208964
-dashboard link: https://syzkaller.appspot.com/bug?extid=4a5a3604a566ede699b9
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d2e2a1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ff82e6e00000
+Sorry about that.  I just finished getting my 32-bit test system up and
+running and this does fix the problem, although I do have an updated
+patch that also fixes some compile warnings on 32-bit compiles that I
+saw in the test module.
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+I'll post that as a separate patch, of course.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1701cfa5e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1481cfa5e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1081cfa5e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4a5a3604a566ede699b9@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0020000001: 0000 [#1] PREEMPT SMP KASAN
-KASAN: probably user-memory-access in range [0x0000000100000008-0x000000010000000f]
-CPU: 1 PID: 2936 Comm: kworker/1:49 Not tainted 5.6.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events console_callback
-RIP: 0010:add_softcursor drivers/tty/vt/vt.c:865 [inline]
-RIP: 0010:set_cursor drivers/tty/vt/vt.c:906 [inline]
-RIP: 0010:redraw_screen+0xf1c/0x1830 drivers/tty/vt/vt.c:1013
-Code: 00 00 00 00 00 fc ff df 80 3c 10 00 74 12 48 89 df e8 68 2f b5 fd 48 ba 00 00 00 00 00 fc ff df 4c 8b 2b 4d 89 ec 49 c1 ec 03 <41> 8a 04 14 84 c0 0f 85 ef 07 00 00 45 0f b7 75 00 48 8b 45 a0 48
-RSP: 0018:ffffc900085b7b38 EFLAGS: 00010203
-RAX: 1ffff110127e0c74 RBX: ffff888093f063a0 RCX: ffff88809e516640
-RDX: dffffc0000000000 RSI: 00000000000000c0 RDI: 0000000000000000
-RBP: ffffc900085b7bc0 R08: ffffffff83fef5be R09: ffffed10431c9484
-R10: ffffed10431c9484 R11: 0000000000000000 R12: 0000000020000001
-R13: 000000010000000c R14: 000000000000001f R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000455300 CR3: 000000008c51f000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- complete_change_console+0xb9/0x750 drivers/tty/vt/vt_ioctl.c:1264
- change_console+0x2d8/0x450 drivers/tty/vt/vt_ioctl.c:1389
- console_callback+0x104/0x330 drivers/tty/vt/vt.c:2824
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace f61ede7c24462fc9 ]---
-RIP: 0010:add_softcursor drivers/tty/vt/vt.c:865 [inline]
-RIP: 0010:set_cursor drivers/tty/vt/vt.c:906 [inline]
-RIP: 0010:redraw_screen+0xf1c/0x1830 drivers/tty/vt/vt.c:1013
-Code: 00 00 00 00 00 fc ff df 80 3c 10 00 74 12 48 89 df e8 68 2f b5 fd 48 ba 00 00 00 00 00 fc ff df 4c 8b 2b 4d 89 ec 49 c1 ec 03 <41> 8a 04 14 84 c0 0f 85 ef 07 00 00 45 0f b7 75 00 48 8b 45 a0 48
-RSP: 0018:ffffc900085b7b38 EFLAGS: 00010203
-RAX: 1ffff110127e0c74 RBX: ffff888093f063a0 RCX: ffff88809e516640
-RDX: dffffc0000000000 RSI: 00000000000000c0 RDI: 0000000000000000
-RBP: ffffc900085b7bc0 R08: ffffffff83fef5be R09: ffffed10431c9484
-R10: ffffed10431c9484 R11: 0000000000000000 R12: 0000000020000001
-R13: 000000010000000c R14: 000000000000001f R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000455300 CR3: 000000008c51f000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Tom
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> 
+> The vararg code in synth_event_trace() assumed the args were 64 bit
+> which is not the case on 32 bit systems.  Just use long which should
+> work on every system, and remove the u64 casts from the synth event
+> test module.
+> 
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> ---
+>  kernel/trace/synth_event_gen_test.c | 4 ++--
+>  kernel/trace/trace_events_hist.c    | 6 +++---
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/synth_event_gen_test.c
+> b/kernel/trace/synth_event_gen_test.c
+> index 4aefe003cb7c..2a7465569a43 100644
+> --- a/kernel/trace/synth_event_gen_test.c
+> +++ b/kernel/trace/synth_event_gen_test.c
+> @@ -424,11 +424,11 @@ static int __init test_trace_synth_event(void)
+>  	/* Trace some bogus values just for testing */
+>  	ret = synth_event_trace(create_synth_test, 7,	/*
+> number of values */
+>  				444,			/*
+> next_pid_field */
+> -				(u64)"clackers",	/*
+> next_comm_field */
+> +				"clackers",		/*
+> next_comm_field */
+>  				1000000,		/* ts_ns */
+>  				1000,			/*
+> ts_ms */
+>  				smp_processor_id(),	/* cpu */
+> -				(u64)"Thneed",		/*
+> my_string_field */
+> +				"Thneed",		/*
+> my_string_field */
+>  				999);			/*
+> my_int_field */
+>  	return ret;
+>  }
+> diff --git a/kernel/trace/trace_events_hist.c
+> b/kernel/trace/trace_events_hist.c
+> index 2fcb755e900a..e65276c3c9d1 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1883,12 +1883,12 @@ int synth_event_trace(struct trace_event_file
+> *file, unsigned int n_vals, ...)
+>  
+>  	va_start(args, n_vals);
+>  	for (i = 0, n_u64 = 0; i < state.event->n_fields; i++) {
+> -		u64 val;
+> +		long val;
+>  
+> -		val = va_arg(args, u64);
+> +		val = va_arg(args, long);
+>  
+>  		if (state.event->fields[i]->is_string) {
+> -			char *str_val = (char *)(long)val;
+> +			char *str_val = (char *)val;
+>  			char *str_field = (char *)&state.entry-
+> >fields[n_u64];
+>  
+>  			strscpy(str_field, str_val,
+> STR_VAR_LEN_MAX);
