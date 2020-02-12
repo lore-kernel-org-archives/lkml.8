@@ -2,145 +2,99 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078EBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E45DC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1642168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13132206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgBLPxM (ORCPT
+        id S1728690AbgBLPxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:53:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:34472 "EHLO foss.arm.com"
+        Wed, 12 Feb 2020 10:53:16 -0500
+Received: from mga04.intel.com ([192.55.52.120]:37261 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728052AbgBLPxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:53:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AD72328;
-        Wed, 12 Feb 2020 07:53:11 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7BEF3F68F;
-        Wed, 12 Feb 2020 07:53:09 -0800 (PST)
-Subject: Re: Suspect broken frequency transitions on SDM845
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, Ionela Voinescu <ionela.voinescu@arm.com>,
-        Quentin Perret <qperret@google.com>,
-        Lukasz Luba <lukasz.luba@arm.com>
-References: <eb8c48fb-c9b1-79c1-21b3-cd41ea37e2c6@arm.com>
-Message-ID: <c46e07df-b01a-4ff5-19c7-9b70063f1665@arm.com>
-Date:   Wed, 12 Feb 2020 15:53:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728052AbgBLPxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:53:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 07:53:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="347535140"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 12 Feb 2020 07:53:10 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 12 Feb 2020 17:53:09 +0200
+Date:   Wed, 12 Feb 2020 17:53:09 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        heikki.krogerus@intel.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
+Message-ID: <20200212155309.GG1498@kuha.fi.intel.com>
+References: <20200207203752.209296-1-pmalani@chromium.org>
+ <20200207203752.209296-2-pmalani@chromium.org>
+ <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <eb8c48fb-c9b1-79c1-21b3-cd41ea37e2c6@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/2020 12:53, Valentin Schneider wrote:
-> We've been getting some sporadic failures on the big CPUs of a Pixel3
-> running mainline [1], here is an example of a correct run (CPU4):
+Hi Rob,
+
+On Tue, Feb 11, 2020 at 05:25:13PM -0600, Rob Herring wrote:
+> > +examples:
+> > +  - |+
+> > +    typec {
+> > +      compatible = "google,cros-ec-typec";
+> > +
+> > +      port@0 {
 > 
-> | frequency (kHz) | sysbench events |
-> |-----------------+-----------------|
-> |          825600 |             236 |
-> |         1286400 |             369 |
-> |         1689600 |             483 |
-> |         2092800 |             600 |
-> |         2476800 |             711 |
+> 'port' is reserved for OF graph binding which this is not.
 > 
-> and here is a failed one (still CPU4):
+> > +        port-number = <0>;
+> > +        power-role = "dual";
+> > +        data-role = "dual";
+> > +        try-power-role = "source";
 > 
-> | frequency (kHz) | sysbench events |
-> |-----------------+-----------------|
-> |          825600 |             234 |
-> |         1286400 |             369 |
-> |         1689600 |             449 |
-> |         2092800 |             600 |
-> |         2476800 |             355 |
+> These are usb-connector binding properties, but this is not a
+> usb-connector node. However, I think it should be. The main thing to
+> work out seems to be have multiple connectors.
 > 
-> 
-> We've encountered something like this in the past with the exact same
-> test on h960 [2] but it is much harder to reproduce reliably this time
-> around.
-> 
-> I haven't found much time to dig into this; I did get a run of ~100 
-> iterations with about ~15 failures, but nothing cpufreq related showed up in
-> dmesg. I briefly suspected fast-switch, but it's only used by schedutil, so
-> in this test I would expect the frequency transition to be complete before we
-> even try to start executing sysbench.
-> 
+> With your binding, how does one associate the USB host controller with
+> each port/connector? That's a solved problem with the connector
+> binding.
 
-I've been adding some more debug stuff in that test case following some of
-Lukasz' recommendations, and I still don't find anything that would
-explain what I'm seeing.
+It looks like OF graph is required to be used for that. The plan was
+actually to propose that we use device properties "usb2-port" and
+"usb3-port" that directly reference the port nodes under the USB host
+controller, but I guess that's too late for that.
 
-The raw output of the test is:
+OF graph creates one problem. We are going to need to identify the
+endpoints somehow in the USB Type-C drivers, so how do we know which
+endpoint is for example the USB2 port, which is USB3, which is
+DisplayPort, etc?
 
-        CPU0:
-            300000: 61
-            576000: 114
-            825600: 172
-            1056000: 221
-            1324800: 278
-            1612800: 339
-        CPU4:
-            825600: 236
-            1286400: 368
-            1689600: 479
-            2092800: 420 <---}
-            2476800: 339 <---} Both of these are not monotonically increasing...
+Does the remote-endpoint parent need to have a specific compatible
+property, like the USB2 port needs to have compatible = "usb2-port"
+and so on?
 
+thanks,
 
-/sys/kernel/debug/clk/clk_summary doesn't seem to include CPU clocks, or
-doesn't get updated because I see no diff from one frequency to another
-(even between lowest & highest tested frequency)
-
-
-/sys/devices/system/cpu/cpu*/cpufreq/stats/time_in_state does get updated,
-and seems to hint that I am getting the frequency I'm asking for:
-
-  [2020-02-12 14:48:21,706] 2476800 39544
-  [2020-02-12 14:48:23,929] 2476800 39745
-
-There's about ~10% (200ms) missing here, but that shouldn't lead to about
-half the expected performance (I get ~710 "score" out of that 2.477GHz freq
-on non-failing runs).
-
-
-I also made sure to read back
-  /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq
-and I do see the value I've asked for.
-
-
-Finally, I also probed the thermal state via
-  /sys/class/thermal/cooling_device*/cur_state
-and they are *always* 0 (i.e., no throttling) right after finishing the
-execution of the benchmark, which should be close to the "hottest" point.
-
-
-So AFAICT there is nothing on the cpufreq side that hints at a slow or
-unsuccessful frequency transition. Can FW mess about frequencies without
-notifying the kernel?
-
-> If anyone has the time and will to look into this, that would be much
-> appreciated.
-> 
-> [1]: https://git.linaro.org/people/amit.pundir/linux.git/log/?h=blueline-mainline-tracking
-> [2]: https://lore.kernel.org/lkml/d3ede0ab-b635-344c-faba-a9b1531b7f05@arm.com/
-> 
-> Cheers,
-> Valentin
-> 
+-- 
+heikki
