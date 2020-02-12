@@ -2,89 +2,101 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67539C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46454C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBAB2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E00621734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DeFs2IHu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pCKkrMly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgBLWZM (ORCPT
+        id S1729237AbgBLWZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:25:12 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37287 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgBLWZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:25:12 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HvN61ZWjz9sPK;
-        Thu, 13 Feb 2020 09:25:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581546310;
-        bh=5Ozm5xx+3DdQ1zIW8D90UeqxLNEwGBSksX3PJvuTcFg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DeFs2IHu+DohMUfTs+AKiMIX8kwfZFWw7t1Rena1WfbpBQ+unHUqkgPirS/rKGx6T
-         afV5dpbTah9UWn8BrZg+SuutXpCRNByH9gYR2x45pJbp6IhG0XaUo0Ez/rbU7AvYya
-         KByT7H09bJQB8Bl7yewsi2V95lXYyQYr/oUEfI2tTONL9UwHEaHBbx1H+wJTlFDIHf
-         fusATg1fPDUyjFgh5e5PVxGRdURhYGZk8J+kZTOv3prs53pnYuslAQVaz0/fZfyazV
-         aUVbafBy1PXMJGJMXsCnQqWMU5bFfJOF0S/j6Azy5SBj+MLc9T+74GGDcHSqfjMor7
-         /EExt5/laRDPw==
-Date:   Thu, 13 Feb 2020 09:25:04 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: linux-next: Signed-off-by missing for commit in the rcu tree
-Message-ID: <20200213092504.27fd6dc8@canb.auug.org.au>
+        Wed, 12 Feb 2020 17:25:20 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:46070 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgBLWZU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 17:25:20 -0500
+Received: from [10.137.112.97] (unknown [131.107.147.225])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 601FE20B9C02;
+        Wed, 12 Feb 2020 14:25:19 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 601FE20B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1581546319;
+        bh=EK492kUpferPtd3ir32dLEL2sG+uHfaicrUji4e0uDo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pCKkrMlySrkSHXPiF1TAQtj9W/1MGhSzjq6QV0x6wLdndbAs/krqJT63bgwl9X56r
+         iBQoAIiDKhRvVlSmallft66lsgoRw5bY3UWHSAzGTA5lZi6h5oR8uIGxZhEcm94gPI
+         nyr3s15WlQLhYLpQTDSTYR3IgxVJu2vL+NNJVhCA=
+Subject: Re: [PATCH v3 1/3] IMA: Update KBUILD_MODNAME for IMA files to ima
+To:     Mimi Zohar <zohar@linux.ibm.com>, joe@perches.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+ <20200211231414.6640-2-tusharsu@linux.microsoft.com>
+ <1581518950.8515.51.camel@linux.ibm.com>
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Message-ID: <a3cbb918-887a-4534-144b-7a392d766bdb@linux.microsoft.com>
+Date:   Wed, 12 Feb 2020 14:25:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/65DsBl+EQgpMkEosoWHGG4A";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1581518950.8515.51.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/65DsBl+EQgpMkEosoWHGG4A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 2020-02-12 6:49 a.m., Mimi Zohar wrote:
+> On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
+>> Log statements from ima_mok.c, ima_asymmetric_keys.c, and
+>> ima_queue_keys.c are prefixed with the respective file names
+>> and not with the string "ima".
+> 
+> Before listing the specific filenames, the patch description should
+> provide a generic explanation of the problem.  For example, the kernel
+> Makefile "obj-$CONFIG_XXXX" specifies object files which may be built
+> as loadable kernel modules[1].
+> 
+Thanks Mimi. I will update the patch description in the next iteration.
 
-Commit
 
-  8e3a97174c3b ("doc: Add some more RCU list patterns in the kernel")
-
-is missing a Signed-off-by from its author (but does have an
-Co-developed-by).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/65DsBl+EQgpMkEosoWHGG4A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Ee0AACgkQAVBC80lX
-0Gzt2gf+Myl4mLoqUOzhFWS9bIN4leb3kyPEcX6zFD9HUOkHGe1zFAswy2iODgg9
-iXRjcnNdQYHojOUwJ/OMnySfxwI/5ojF5xt6+D6HN21JCh/RNVj/gJuP+8jk/Cat
-Z9c4GxgIJQOe8KDYhDloT4j8OmFdHqMTtLrGxA1VtnSYy9+NnlxC64AjVsh2bFKw
-21X0BClxyGuQemaaa5j2kYRuEDNizBbusP2BZycaW4FuRlLTRrnKba0An8YRsSPa
-2yCSi5A8+2bek4cO6jEzklH5VfgplK34/K73OjU6dFq3a1kXgo/JBO16Egk91uPd
-JE3GcOOVCC/AupgatHnnNiCpknqrag==
-=TdaI
------END PGP SIGNATURE-----
-
---Sig_/65DsBl+EQgpMkEosoWHGG4A--
+> Mimi
+> 
+> [1] Refer to Documentation/kbuild/makefiles.rst
+> 
+>>
+>> This change fixes the log statement prefix to be consistent with the rest
+>> of the IMA files.
+>>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+>> ---
+>>   security/integrity/ima/Makefile | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
+>> index 064a256f8725..67dabca670e2 100644
+>> --- a/security/integrity/ima/Makefile
+>> +++ b/security/integrity/ima/Makefile
+>> @@ -11,6 +11,6 @@ ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
+>>   ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
+>>   ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
+>>   ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
+>> -obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
+>> -obj-$(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) += ima_asymmetric_keys.o
+>> -obj-$(CONFIG_IMA_QUEUE_EARLY_BOOT_KEYS) += ima_queue_keys.o
+>> +ima-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
+>> +ima-$(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) += ima_asymmetric_keys.o
+>> +ima-$(CONFIG_IMA_QUEUE_EARLY_BOOT_KEYS) += ima_queue_keys.o
