@@ -2,162 +2,145 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5746EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078EBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385AF206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1642168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgBLPws (ORCPT
+        id S1728673AbgBLPxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:52:48 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49682 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgBLPws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:52:48 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 2FACD293C13
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     devicetree@vger.kernel.org
-Cc:     myungjoo.ham@samsung.com, cw00.choi@samsung.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        linux-kernel@vger.kernel.org, dafna.hirschfeld@collabora.com,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: [PATCH v3] dt-bindings: extcon: usbc-cros-ec: convert extcon-usbc-cros-ec.txt to yaml format
-Date:   Wed, 12 Feb 2020 16:51:55 +0100
-Message-Id: <20200212155155.14210-1-dafna.hirschfeld@collabora.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Feb 2020 10:53:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:34472 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728052AbgBLPxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:53:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AD72328;
+        Wed, 12 Feb 2020 07:53:11 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7BEF3F68F;
+        Wed, 12 Feb 2020 07:53:09 -0800 (PST)
+Subject: Re: Suspect broken frequency transitions on SDM845
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, Ionela Voinescu <ionela.voinescu@arm.com>,
+        Quentin Perret <qperret@google.com>,
+        Lukasz Luba <lukasz.luba@arm.com>
+References: <eb8c48fb-c9b1-79c1-21b3-cd41ea37e2c6@arm.com>
+Message-ID: <c46e07df-b01a-4ff5-19c7-9b70063f1665@arm.com>
+Date:   Wed, 12 Feb 2020 15:53:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <eb8c48fb-c9b1-79c1-21b3-cd41ea37e2c6@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-convert the binding file extcon-usbc-cros-ec.txt to
-yaml format extcon-usbc-cros-ec.yaml
+On 04/02/2020 12:53, Valentin Schneider wrote:
+> We've been getting some sporadic failures on the big CPUs of a Pixel3
+> running mainline [1], here is an example of a correct run (CPU4):
+> 
+> | frequency (kHz) | sysbench events |
+> |-----------------+-----------------|
+> |          825600 |             236 |
+> |         1286400 |             369 |
+> |         1689600 |             483 |
+> |         2092800 |             600 |
+> |         2476800 |             711 |
+> 
+> and here is a failed one (still CPU4):
+> 
+> | frequency (kHz) | sysbench events |
+> |-----------------+-----------------|
+> |          825600 |             234 |
+> |         1286400 |             369 |
+> |         1689600 |             449 |
+> |         2092800 |             600 |
+> |         2476800 |             355 |
+> 
+> 
+> We've encountered something like this in the past with the exact same
+> test on h960 [2] but it is much harder to reproduce reliably this time
+> around.
+> 
+> I haven't found much time to dig into this; I did get a run of ~100 
+> iterations with about ~15 failures, but nothing cpufreq related showed up in
+> dmesg. I briefly suspected fast-switch, but it's only used by schedutil, so
+> in this test I would expect the frequency transition to be complete before we
+> even try to start executing sysbench.
+> 
 
-This was tested and verified on ARM with:
-make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+I've been adding some more debug stuff in that test case following some of
+Lukasz' recommendations, and I still don't find anything that would
+explain what I'm seeing.
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
----
-Changes since v1:
-1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
-2 - changing the maintainers
-3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
+The raw output of the test is:
 
-Changes since v2:
-1 - Changing the patch subject to start with "dt-bindings: extcon: usbc-cros-ec:"
-2 - In the example, adding a parent isp node, a reg field to cros-ec@0
-and adding nodes 'extcon0/1' instead of one node 'extcon'.
+        CPU0:
+            300000: 61
+            576000: 114
+            825600: 172
+            1056000: 221
+            1324800: 278
+            1612800: 339
+        CPU4:
+            825600: 236
+            1286400: 368
+            1689600: 479
+            2092800: 420 <---}
+            2476800: 339 <---} Both of these are not monotonically increasing...
 
- .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 --------
- .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 56 +++++++++++++++++++
- 2 files changed, 56 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-deleted file mode 100644
-index 8e8625c00dfa..000000000000
---- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--ChromeOS EC USB Type-C cable and accessories detection
--
--On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
--able to detect the state of external accessories such as display adapters
--or USB devices when said accessories are attached or detached.
--
--The node for this device must be under a cros-ec node like google,cros-ec-spi
--or google,cros-ec-i2c.
--
--Required properties:
--- compatible:		Should be "google,extcon-usbc-cros-ec".
--- google,usb-port-id:	Specifies the USB port ID to use.
--
--Example:
--	cros-ec@0 {
--		compatible = "google,cros-ec-i2c";
--
--		...
--
--		extcon {
--			compatible = "google,extcon-usbc-cros-ec";
--			google,usb-port-id = <0>;
--		};
--	}
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-new file mode 100644
-index 000000000000..d7a2fc544c4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS EC USB Type-C cable and accessories detection
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+description: |
-+  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-+  able to detect the state of external accessories such as display adapters
-+  or USB devices when said accessories are attached or detached.
-+  The node for this device must be under a cros-ec node like google,cros-ec-spi
-+  or google,cros-ec-i2c.
-+
-+properties:
-+  compatible:
-+    const: google,extcon-usbc-cros-ec
-+
-+  google,usb-port-id:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: the port id
-+    minimum: 0
-+    maximum: 255
-+
-+required:
-+  - compatible
-+  - google,usb-port-id
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    isp1 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
-+
-+            usbc_extcon0: extcon0 {
-+                compatible = "google,extcon-usbc-cros-ec";
-+                google,usb-port-id = <0>;
-+            };
-+
-+            usbc_extcon1: extcon1 {
-+                compatible = "google,extcon-usbc-cros-ec";
-+                google,usb-port-id = <1>;
-+            };
-+        };
-+    };
--- 
-2.17.1
+/sys/kernel/debug/clk/clk_summary doesn't seem to include CPU clocks, or
+doesn't get updated because I see no diff from one frequency to another
+(even between lowest & highest tested frequency)
 
+
+/sys/devices/system/cpu/cpu*/cpufreq/stats/time_in_state does get updated,
+and seems to hint that I am getting the frequency I'm asking for:
+
+  [2020-02-12 14:48:21,706] 2476800 39544
+  [2020-02-12 14:48:23,929] 2476800 39745
+
+There's about ~10% (200ms) missing here, but that shouldn't lead to about
+half the expected performance (I get ~710 "score" out of that 2.477GHz freq
+on non-failing runs).
+
+
+I also made sure to read back
+  /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq
+and I do see the value I've asked for.
+
+
+Finally, I also probed the thermal state via
+  /sys/class/thermal/cooling_device*/cur_state
+and they are *always* 0 (i.e., no throttling) right after finishing the
+execution of the benchmark, which should be close to the "hottest" point.
+
+
+So AFAICT there is nothing on the cpufreq side that hints at a slow or
+unsuccessful frequency transition. Can FW mess about frequencies without
+notifying the kernel?
+
+> If anyone has the time and will to look into this, that would be much
+> appreciated.
+> 
+> [1]: https://git.linaro.org/people/amit.pundir/linux.git/log/?h=blueline-mainline-tracking
+> [2]: https://lore.kernel.org/lkml/d3ede0ab-b635-344c-faba-a9b1531b7f05@arm.com/
+> 
+> Cheers,
+> Valentin
+> 
