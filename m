@@ -2,105 +2,95 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FBFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07720C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562F920675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE32520848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:25:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HqCZkzW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgBLMZV convert rfc822-to-8bit (ORCPT
+        id S1726775AbgBLMZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:25:21 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44280 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgBLMZV (ORCPT
+        Wed, 12 Feb 2020 07:25:30 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31570 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725887AbgBLMZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:25:21 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h9so1666186otj.11;
-        Wed, 12 Feb 2020 04:25:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5ZiL9siKE7XkZCgZqu6b2vONRR+3a8KiQl3qZgEgmeE=;
-        b=g5JohOIlnQGNtFp92wC2rmcWv99k0FB61crK8zhRjPVU5793KJIuHb8Tf9JhbSatNS
-         13mzdUdiiLttR8iSXXoxtCmoBTmHxOYMylHoXSAXjRAVm0dv8FliUUuPwL8PFeiW6FW0
-         v7TlBBeNIZ0uSDA/BZmnOWMFv2lq1KPGVlIJ7HmWQi+YYPJhMVl0ioTihJHbHjsTKfcH
-         bXUymMusnhEOW89ihKNOajvLI1STmHqm8ilT0L3M1NA3p23golG9NnS3xL4O36c4iDSI
-         nAZt2uS5JyMckyQZKCpPjle+bSV9E33f52oq55dU0qErSpch16ErLSK4B8X5mAr76PTo
-         YajA==
-X-Gm-Message-State: APjAAAXteWGCnSbs3BrKf3EYqx/TmUBakymowi1jayUHJwqNlUJb1aGc
-        Z8dRw2/bL3NAglhovI/26+zMVA+9TOylrtSP7ixa0A==
-X-Google-Smtp-Source: APXvYqxmGlXr/EAwEwS6bZTnKJ7k87TTOgxf/vN5Qb27UlIEyVHcDP7C58ED8HUgPwgzR225uufjJyjdtXjeckYQfGs=
-X-Received: by 2002:a9d:8f8:: with SMTP id 111mr8606343otf.107.1581510320462;
- Wed, 12 Feb 2020 04:25:20 -0800 (PST)
+        Wed, 12 Feb 2020 07:25:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581510328;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pDUH9gbb0ZVsTJG5o97WNAaGdKzWJn2GoPx52Q8GeLg=;
+        b=HqCZkzW/vbmISwHykXQzcNsR+Eik7s2nlee0WkvVaYSShyGRMcdo8DazQw2WoCmSK7i8PJ
+        fJhaIlDog+x8E+e4TlbTMmY4bnjXWAwhYoagbZAu4DENWwcfUMCPQPWrUsbU0NZ+NAOBqL
+        M1HS46lTS0p6KYHBVys6PQn9sPGbWKY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-4MsLLPGdNHGjriyOEYqYgA-1; Wed, 12 Feb 2020 07:25:27 -0500
+X-MC-Unique: 4MsLLPGdNHGjriyOEYqYgA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11404101FC67;
+        Wed, 12 Feb 2020 12:25:26 +0000 (UTC)
+Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52F1E5D9E2;
+        Wed, 12 Feb 2020 12:25:21 +0000 (UTC)
+Subject: Re: [PATCH v5 0/4] selftests: KVM: AMD Nested SVM test infrastructure
+To:     Paolo Bonzini <pbonzini@redhat.com>, eric.auger.pro@gmail.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        vkuznets@redhat.com
+Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com,
+        krish.sadhukhan@oracle.com
+References: <20200207142715.6166-1-eric.auger@redhat.com>
+ <25441007-2b1a-f98a-3ca8-ffe9849d7031@redhat.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <7fdf6081-44a1-35e6-a652-69c753a17491@redhat.com>
+Date:   Wed, 12 Feb 2020 13:25:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20200212101651.9010-1-geert+renesas@glider.be> <CAEbi=3fMRq++Eot+BEtCedeyhM65kTc+nS7=inCTR8MkT5srww@mail.gmail.com>
-In-Reply-To: <CAEbi=3fMRq++Eot+BEtCedeyhM65kTc+nS7=inCTR8MkT5srww@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 12 Feb 2020 13:25:09 +0100
-Message-ID: <CAMuHMdU+VLpg5Yezo2Ea9v2vmvbA=nEcKObBgZYwjSV10OkY=A@mail.gmail.com>
-Subject: Re: [PATCH] nds32: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-To:     Greentime Hu <green.hu@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Nick Hu <nickhu@andestech.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <25441007-2b1a-f98a-3ca8-ffe9849d7031@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greentime,
+Hi Paolo,
 
-On Wed, Feb 12, 2020 at 11:52 AM Greentime Hu <green.hu@gmail.com> wrote:
-> Geert Uytterhoeven <geert+renesas@glider.be> 於 2020年2月12日 週三 下午6:16寫道：
-> > The Andes platform code is not a clock provider, and just needs to call
-> > of_clk_init().
-> >
-> > Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  arch/nds32/kernel/time.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/nds32/kernel/time.c b/arch/nds32/kernel/time.c
-> > index ac9d78ce3a818926..574a3d0a853980a9 100644
-> > --- a/arch/nds32/kernel/time.c
-> > +++ b/arch/nds32/kernel/time.c
-> > @@ -2,7 +2,7 @@
-> >  // Copyright (C) 2005-2017 Andes Technology Corporation
-> >
-> >  #include <linux/clocksource.h>
-> > -#include <linux/clk-provider.h>
-> > +#include <linux/of_clk.h>
-> >
-> >  void __init time_init(void)
-> >  {
->
-> Thank you, Geert.
->
-> Let me know if you like to put in your tree or nds32's.
-> Acked-by: Greentime Hu <green.hu@gmail.com>
+On 2/12/20 1:09 PM, Paolo Bonzini wrote:
+> On 07/02/20 15:27, Eric Auger wrote:
+>>
+>> History:
+>> v4 -> v5:
+>> - Added "selftests: KVM: Remove unused x86_register enum"
+>> - reorder GPRs within gpr64_regs
+>> - removed vmcb_hva and save_area_hva from svm_test_data
+>> - remove the naming for vmcb_gpa in run_guest
+> 
+> I preferred v4. :)
 
-Please take it in the nds32 tree.
-Thanks!
+Ah OK
 
-Gr{oetje,eeting}s,
+I queued the patch to remove the unused enum though.
 
-                        Geert
+Thanks
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Eric
+> 
+> Paolo
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
