@@ -2,193 +2,230 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28254C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A1BC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59A420661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:49:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OQE3DuQq"
+	by mail.kernel.org (Postfix) with ESMTP id 8B3AD20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgBLItU (ORCPT
+        id S1728663AbgBLItt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:49:20 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38902 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgBLItT (ORCPT
+        Wed, 12 Feb 2020 03:49:49 -0500
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:20030 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728540AbgBLIts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:49:19 -0500
-Received: by mail-qt1-f194.google.com with SMTP id f3so918765qtc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:49:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BPMiAB16vFeuTny9mUeuPkgcErc/c1u/+DPFpZpBO4k=;
-        b=OQE3DuQq8CSnmuvX45YQR0RHiYLUGWs9u/r3JwctxlV8TEpNMLx/YMPZIei1Z67SOj
-         0gEvNwWN+/xeYQZkOHf+6kBok3+slMsYBUX9OkzK4tjvEd0pZDfxbvlMjSBD0n8hDoTF
-         BWP+0WkA8vvCdMDpt2dOH1ibDeLpIIZe+axss=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BPMiAB16vFeuTny9mUeuPkgcErc/c1u/+DPFpZpBO4k=;
-        b=Jjyqu5WF5O6LIePk+KiqfYni4wU25BGErxlWycuT3SX+mkNMgs66XFnYt4aj3hPeIN
-         v2fstiVPi3QGvs3L2R5b8DczrdxJDWycjTiucEgTjKdr0bBDwJ1TtNs+lXr73U3eJmEs
-         QE6y6B43AkXA6CiVKjSVX1YwleZDFp220JUM6K1FFGu8AyhZl6fKdiQ4/xyZAoTMznbt
-         J7TaoTAh3SZnyqxquSMFymL8MNFrK8tq+AwE3+3rYCCKTbOoAM0JasNkyChEYI1qYM/5
-         Ki3u95c5JprWXJkoBnUrJPyQHfUjPnvJgea9ZuA8087qk/bZNnomOlcXmDff9U50Hij1
-         1DcQ==
-X-Gm-Message-State: APjAAAWmnfngz+TTQDH5hr4ZTZQoUE00LWoxV6QiY8BdlYgXamlpd/rJ
-        IJaQjGSe9BV1viODVY3jO86SF9JhidcshSi7UV/3zg==
-X-Google-Smtp-Source: APXvYqzmVKHpUTNXqrbIKC3EqSdbu2muveQewCve0sKVxzWsWtlKrXbYUc3Qqq6GrpJeSuO++OcFsP8+K90kFIcIFgk=
-X-Received: by 2002:ac8:4446:: with SMTP id m6mr6253965qtn.159.1581497358305;
- Wed, 12 Feb 2020 00:49:18 -0800 (PST)
+        Wed, 12 Feb 2020 03:49:48 -0500
+IronPort-SDR: gQ2KP6QR6UNbaCrmZsISwk9TDCizHlk2x0TY+MzZ0r/sVXZaSvB0GO7sKeFPRf4lfSM06vY8Kv
+ zc+vdg8GhiRLxuwafCF+S4wtXGTjuNR8HYE69kmMb7ckGS0MQ0e0xnKf1OFM5Vjh7K6Y9GOto2
+ iuMxP1fb8uYcOgSOCrx0kRT9DHia3sas1oALf3gP7yF5cBLOvPvwgRUs2MX6LGrpq57lSYdhB3
+ glNmMuiLDwrroKxbKUB3mLEsDz475K0nJc/sy6fsCb32rPiU25GgHtFckkUA1KRBF5GgQVUnrd
+ 4I4=
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="45799240"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 12 Feb 2020 00:42:28 -0800
+IronPort-SDR: y5b59sdYvy6Qq0p77BYTV5ZLuVQca4cPhPv0gQ0v3wBVy1H2DBp9IbX7IjCarcI5YiOrFa/sQ6
+ Gj7/w3VHLc/g74m/IIoGbsUeCQe5d2evFLx6i8VmQ3JrD7zX0f7u4BNWY4KK/Wn5eJnB0iNce7
+ xnc0KC1pVw1TgnzR3rUKghxHRuFNozXpSXixb+eoiIrOuz0rrj+UcCzOavfXSqTnnoaBGof2TJ
+ H5Q9KPKY6qQBCUEmZMKoRq4bFdEVMqzjKJTGQtSpdO6SB5j4lzUhyQ5BPqwjyh4HPH5Tm+RfFF
+ zVk=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v7 00/48] atmel_mxt_ts misc
+Date:   Wed, 12 Feb 2020 00:41:30 -0800
+Message-ID: <20200212084218.32344-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org> <20200207052627.130118-8-drinkcat@chromium.org>
-In-Reply-To: <20200207052627.130118-8-drinkcat@chromium.org>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 12 Feb 2020 16:49:07 +0800
-Message-ID: <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] RFC: drm/panfrost: devfreq: Add support for 2 regulators
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Viresh Kumar +Stephen Boyd for clock advice.
+This patch-set forward ports Nick Dyer's work in ndyer/linux github repository
+as long as some other features and fixes
 
-On Fri, Feb 7, 2020 at 1:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
-> devfreq, and provides OPP table with 2 sets of voltages.
->
-> TODO: This is incomplete as we'll need add support for setting
-> a pair of voltages as well.
+Balasubramani Vivekanandan (2):
+  Input: atmel_mxt_ts: Limit the max bytes transferred in an i2c
+    transaction
+  Input: atmel_mxt_ts: use gpiod_set_value_cansleep for reset pin
 
-So all we need for this to work (at least apparently, that is, I can
-change frequency) is this:
-https://lore.kernel.org/patchwork/patch/1192945/
-(ah well, Viresh just replied, so, probably not, I'll check that out
-and use the correct API)
+Dean Jenkins (1):
+  Input: atmel_mxt_ts: return error from
+    mxt_process_messages_until_invalid()
 
-But then there's a slight problem: panfrost_devfreq uses a bunch of
-clk_get_rate calls, and the clock PLLs (at least on MTK platform) are
-never fully precise, so we get back 299999955 for 300 Mhz and
-799999878 for 800 Mhz. That means that the kernel is unable to keep
-devfreq stats as neither of these values are in the table:
-[ 4802.470952] devfreq devfreq1: Couldn't update frequency transition
-information.
-The kbase driver fixes this by remembering the last set frequency, and
-reporting that to devfreq. Should we do that as well or is there a
-better fix?
+Deepak Das (6):
+  Input: Atmel: improve error handling in mxt_start()
+  Input: Atmel: improve error handling in mxt_initialize()
+  Input: Atmel: improve error handling in mxt_update_cfg()
+  Input: Atmel: Improve error handling in mxt_initialize_input_device()
+  Input: Atmel: handle ReportID "0x00" while processing T5 messages
+  Input: Atmel: use T44 object to process T5 messages
 
-Another thing that I'm not implementing is the dance that Mediatek
-does in their kbase driver when changing the clock (described in patch
-2/7):
-""
-The binding we use with out-of-tree Mali drivers includes more
-clocks, this is used for devfreq: the out-of-tree driver switches
-clk_mux to clk_sub_parent (26Mhz), adjusts clk_main_parent, then
-switches clk_mux back to clk_main_parent:
-(see https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#423)
-clocks =
-        <&topckgen CLK_TOP_MFGPLL_CK>,
-        <&topckgen CLK_TOP_MUX_MFG>,
-        <&clk26m>,
-        <&mfgcfg CLK_MFG_BG3D>;
-clock-names =
-        "clk_main_parent",
-        "clk_mux",
-        "clk_sub_parent",
-        "subsys_mfg_cg";
-""
-Is there a clean/simple way to implement this in the clock
-framework/device tree? Or should we implement something in the
-panfrost driver?
+George G. Davis (1):
+  input: atmel_mxt_ts: export GPIO reset line via sysfs
 
-Thanks!
+Jiada Wang (3):
+  Input: introduce input_mt_report_slot_inactive
+  Input: atmel_mxt_ts - eliminate data->raw_info_block
+  Input: atmel_mxt_ts - Fix compilation warning
+
+Karl Tsou (1):
+  Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Kautuk Consul (2):
+  Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
+  Input: atmel_mxt_ts - rely on calculated_crc rather than file
+    config_crc
+
+Naveen Chakka (2):
+  input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+    status
+  input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
+
+Nick Dyer (26):
+  Input: atmel_mxt_ts - rework sysfs init/remove
+  Input: atmel_mxt_ts - only read messages in mxt_acquire_irq() when
+    necessary
+  Input: atmel_mxt_ts - split large i2c transfers into blocks
+  Input: atmel_mxt_ts - output status from T48 Noise Supression
+  Input: atmel_mxt_ts - output status from T42 Touch Suppression
+  Input: atmel_mxt_ts - implement T9 vector/orientation support
+  Input: atmel_mxt_ts - implement T15 Key Array support
+  Input: atmel_mxt_ts - handle reports from T47 Stylus object
+  Input: atmel_mxt_ts - implement support for T107 active stylus
+  Input: atmel_mxt_ts - release touch state during suspend
+  Input: atmel_mxt_ts - add regulator control support
+  Input: atmel_mxt_ts - report failures in suspend/resume
+  Input: atmel_mxt_ts - allow specification of firmware file name
+  Input: atmel_mxt_ts - handle cfg filename via pdata/sysfs
+  Input: atmel_mxt_ts - allow input name to be specified in platform
+    data
+  Input: atmel_mxt_ts - refactor firmware flash to extract context into
+    struct
+  Input: atmel_mxt_ts - refactor code to enter bootloader into separate
+    func
+  Input: atmel_mxt_ts - combine bootloader version query with probe
+  Input: atmel_mxt_ts - improve bootloader state machine handling
+  Input: atmel_mxt_ts - rename bl_completion to chg_completion
+  Input: atmel_mxt_ts - make bootloader interrupt driven
+  Input: atmel_mxt_ts - delay enabling IRQ when not using regulators
+  Input: atmel_mxt_ts - implement I2C retries
+  Input: atmel_mxt_ts - orientation is not present in hover
+  Input: atmel_mxt_ts - implement debug output for messages
+  Input: atmel_mxt_ts - implement improved debug message interface
+
+Nikhil Ravindran (1):
+  Input: atmel_mxt_ts: Add support for run self-test routine.
+
+Sanjeev Chugh (1):
+  Input: atmel_mxt_ts: Implement synchronization during various
+    operation
+
+karl tsou (1):
+  Input: atmel_mxt_ts - add config checksum attribute to sysfs
+
+keerthikumarp (1):
+  input: atmel_mxt_ts: Add Missing Delay for reset handling of Atmel
+    touch panel controller in detachable displays.
+
+---
+v7:
+Fix regression found when updating firmware
+Following commits have been updated to fix regression found when
+updating firmware
+Input: atmel_mxt_ts - improve bootloader state machine handling
+Input: atmel_mxt_ts - make bootloader interrupt driven
+input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen status
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+v6:
+Fix issue in commit ("Input: introduce input_mt_report_slot_inactive")
+reported by kernel test robot
+
+v5:
+Following commits have been updated to address warnings & errors
+reported by kbuild test robot 
+Input: atmel_mxt_ts - make bootloader interrupt driven
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Following commit has been updated
+Input: introduce input_mt_report_slot_inactive
+
+v4:
+Following commit in v3 patch-set has been removed
+Input: switch to use return value of input_mt_report_slot_state
+
+Following commit has been updated to address checkpatch warning
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+v3:
+Following commits have been updated compared to v2 patchset
+Input: atmel_mxt_ts - implement debug output for messages
+- added inline comment
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msg
+- changed dev_info() to dev_dbg()
+
+v2:
+Following commit in v1 patchset has been split into two commits
+Input: introduce input_mt_report_slot_inactive
+
+Following commits have been updated compared to v1 patchset
+Input: atmel_mxt_ts - split large i2c transfers into blocks
+Input: atmel_mxt_ts - output status from T42 Touch Suppression
+
+Following commits in v1 patchset have been squashed
+Input: touchscreen: Atmel: Add device tree support for T15 key array
+objects
+Input: atmel_mxt_ts - check data->input_dev is not null in
+mxt_input_sync()
+Input: atmel_mxt_ts - check firmware format before entering bootloader
+Input: atmel_mxt_ts: update stale use_retrigen_workaround flag
+input: atmel_mxt_ts: move bootloader probe from mxt_initialize()
+input: Atmel: limit the max bytes transferred while reading T5 messages
+Input: atmel_mxt_ts: Use msecs_to_jiffies() instead of HZ
+Input: atmel_mxt_ts: Use complete when in_bootloader true
+Input: atmel_mxt_ts: Prevent crash due to freeing of input device
+input: atmel_mxt_ts: Add NULL check for sysfs attribute debug_msg_attr
+
+Following commits in v1 patchset have been dropped:
+Input: atmel_mxt_ts - configure and use gpios as real gpios
+Input: touchscreen: Atmel: Enable IRQ_DISABLE_UNLAZY flag for interrupt
+Input: atmel_mxt_ts - add memory access interface via sysfs
+Input: atmel_mxt_ts: Remove sysfs attributes during driver detach
+Input: atmel_mxt_ts: Avoid race condition in freeing of input device
 
 
+v1: initial version
+---
+ .../bindings/input/atmel,maxtouch.txt         |   14 +
+ MAINTAINERS                                   |    1 +
+ drivers/hid/hid-alps.c                        |    3 +-
+ drivers/hid/hid-multitouch.c                  |    6 +-
+ drivers/input/misc/xen-kbdfront.c             |    2 +-
+ drivers/input/mouse/elan_i2c_core.c           |    2 +-
+ drivers/input/touchscreen/atmel_mxt_ts.c      | 2270 ++++++++++++++---
+ drivers/input/touchscreen/cyttsp4_core.c      |    5 +-
+ drivers/input/touchscreen/cyttsp_core.c       |    2 +-
+ drivers/input/touchscreen/melfas_mip4.c       |    4 +-
+ drivers/input/touchscreen/mms114.c            |    2 +-
+ drivers/input/touchscreen/raspberrypi-ts.c    |    2 +-
+ drivers/input/touchscreen/stmfts.c            |    2 +-
+ include/dt-bindings/input/atmel_mxt_ts.h      |   22 +
+ include/linux/input/mt.h                      |    5 +
+ 15 files changed, 1985 insertions(+), 357 deletions(-)
+ create mode 100644 include/dt-bindings/input/atmel_mxt_ts.h
 
->
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
->
-> ---
->  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 17 +++++++++++++++++
->  drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
->  2 files changed, 18 insertions(+)
->
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> index 413987038fbfccb..9c0987a3d71c597 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> @@ -79,6 +79,21 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
->         struct devfreq *devfreq;
->         struct thermal_cooling_device *cooling;
->
-> +       /* If we have 2 regulator, we need an OPP table with 2 voltages. */
-> +       if (pfdev->comp->num_supplies > 1) {
-> +               pfdev->devfreq.dev_opp_table =
-> +                       dev_pm_opp_set_regulators(dev,
-> +                                       pfdev->comp->supply_names,
-> +                                       pfdev->comp->num_supplies);
-> +               if (IS_ERR(pfdev->devfreq.dev_opp_table)) {
-> +                       ret = PTR_ERR(pfdev->devfreq.dev_opp_table);
-> +                       pfdev->devfreq.dev_opp_table = NULL;
-> +                       dev_err(dev,
-> +                               "Failed to init devfreq opp table: %d\n", ret);
-> +                       return ret;
-> +               }
-> +       }
-> +
->         ret = dev_pm_opp_of_add_table(dev);
->         if (ret == -ENODEV) /* Optional, continue without devfreq */
->                 return 0;
-> @@ -119,6 +134,8 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
->         if (pfdev->devfreq.cooling)
->                 devfreq_cooling_unregister(pfdev->devfreq.cooling);
->         dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
-> +       if (pfdev->devfreq.dev_opp_table)
-> +               dev_pm_opp_put_regulators(pfdev->devfreq.dev_opp_table);
->  }
->
->  void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index c30c719a805940a..5009a8b7c853ea1 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -110,6 +110,7 @@ struct panfrost_device {
->         struct {
->                 struct devfreq *devfreq;
->                 struct thermal_cooling_device *cooling;
-> +               struct opp_table *dev_opp_table;
->                 ktime_t busy_time;
->                 ktime_t idle_time;
->                 ktime_t time_last_update;
-> --
-> 2.25.0.341.g760bfbb309-goog
->
+-- 
+2.17.1
+
