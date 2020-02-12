@@ -2,305 +2,182 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE9BC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA85C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4E621734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D4420658
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TXrZmYzh"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="IK9pxZec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgBLQ7Y (ORCPT
+        id S1728624AbgBLRBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:59:24 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41668 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgBLQ7X (ORCPT
+        Wed, 12 Feb 2020 12:01:11 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.2]:47105 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726351AbgBLRBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:59:23 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CGtOVl121429;
-        Wed, 12 Feb 2020 16:58:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=I9mpgCY1Oxokgr9n0GWz7U2xRyXHvzAyC9jnnwDEPA8=;
- b=TXrZmYzhVGOOyNNgFuab3uYn2N7wvgtQlOsGWkxfw9VfaE7CDyMzBnjbWB+KHwaZ/hVp
- sMwzyf+szde0i+4EDzluf/USWBwaY7yc/bfzBIvpo1Sz7m9A37c8MXR0xKQ/SaFeXZbt
- mATwrOndnfvLfaRSi5ItsRtplMlD8NOWJvPxiTpSdB6Tc0SyPtsCsqf0szUvzLOOjZ30
- slUtExzevqmBF10EfvUf77z7uXQljW+7GAvfwpVskTbhGJICZS9WYGbZjiQ7D7Wjm+Bs
- ektRFiNe0NnXSbbhTZsAQ1iIoHcc7nM6MY2DJ1uKfutxq9U3eH3C0WVx2HFyV9MK7guv 1g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2y2k88cb8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Feb 2020 16:58:45 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CGvj0n119038;
-        Wed, 12 Feb 2020 16:58:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2y4k7x0tv9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Feb 2020 16:58:44 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01CGwesf008138;
-        Wed, 12 Feb 2020 16:58:40 GMT
-Received: from localhost (/10.159.151.237)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Feb 2020 08:58:40 -0800
-Date:   Wed, 12 Feb 2020 08:58:37 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] block: Add support for REQ_ALLOCATE flag
-Message-ID: <20200212165837.GL6874@magnolia>
-References: <158132703141.239613.3550455492676290009.stgit@localhost.localdomain>
- <158132723311.239613.5269033996109738831.stgit@localhost.localdomain>
+        Wed, 12 Feb 2020 12:01:10 -0500
+Received: from [100.113.3.77] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-a.eu-central-1.aws.symcld.net id 65/3D-54715-25F244E5; Wed, 12 Feb 2020 17:01:06 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1VTbUxbVRjm3Hvb3iFdDgXSQ6UCdV/gWlox7i7
+  bzIyE1cR9yNwfnbgLvaM1/cC2ZIUlZnyoFGRsDNxoKGOzRNwoYHGTMaYGjKNEHGMQYQKRrGOA
+  oigoyEZnb2839c/J87zP+z7nOSfnkLioSCAhGZuVMRtpvYwfTmhThKnyjJS0TGXJdUAN3ezGq
+  ObiUoyqmfTxqd6eQpz6ayhAb3XW8akOv4dPrTycwqiJtimcGm9ZJai2JTfY+YS6baGIr77iGB
+  eoGzx56o+7ZjC154Kdr673vqpu/XyYUC94ntpHvs7TGbNMtkM87cS9y7zcxihbqX2cOAZKosp
+  AOAlgI44qHxQBjnxLILurGONIO0D3K/7ms4SAvThqWKwPKiJYhSHf7bkQGQdo4kFFgKwh+ZBC
+  p3p/Co5Ew08BuuavDjrjsA9HV2vb8TJAklFwPzrZRLID0fA15D9djHHYhAbGFoKYgOvRWF0Hz
+  mIhfBN5J77mcbu5eGjs+AcC1mcNfAmdc8exPQBK0WLhxWA/DsXotu9s0AdBiFxdN3AOx6CZO3
+  4e188gb9EI4OqbUf8PvhBORF3fnwvNStHg2fJQfTfqW+gL4WS0cvV+qIdCrvL3CDYOguuQvzu
+  fK+vR8PQAj8Mb0MgvpaEIcehibUvwKAi6CdR4vJA4AZSO/8R2BKxwmIRaO1O4ciKqLp8UOII3
+  EYm8tT6iARAXAJVl1uVorQZap5erlEq5SpUqV8m3bFHQBXJaweTJsxmj1UwHRAV9xKKw5Buy9
+  RqFkbF6QOAJat4BuzvATfdvim4QS2KyGOFsQlqmaG2WSZOvpS3at8x5esbSDeJIUoaEWfKAFm
+  lmchjbYZ0+8JAfyYiMkEULD7Ky0JJLGyy6HE7qA1vJEzPO8zjZ7mwMrN+wq4gwmoyMRCwcZgc
+  gO6DNMz62e/Q1BoFUEiUEYWFhoohcxmzQWf+vzwIxCWRRwhLWJUJntD7edTYQCAsEqkgKBrLS
+  /0qSY9i+z1Kdp5Pmn7xSCXbGXnIb91eRvFWt4+EmDP6Ysp3fHb634M/1f4hXP/pK5mxR8Zol0
+  S9MZZnemEkfrZ5/UdB/RvOzt2AOXRt6zjT74dzyweVs1UjzAf8zbunSnW1ltshdmwa+WEzY3P
+  C7Y7UuQzDfceDd1qr4dTtG4s7YJjMlM7727Zobtl1NR7eOvp/cpah+pZYUJ9y6nLdBtG2ghFd
+  jt/fugXcH6zw9lU0bpwWHv0x/marUxKc545cyNi6PP902fy/hSHKlpTPd3hYjkhqEPcqKX+fv
+  To9Yvmsc9sDrz4fhO55dWUsl1nhOuuS2S/V+a6dyr/uo/9Dy2/2jhk/yY50ywqKlVcm42UL/A
+  14sn0qVBAAA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-6.tower-233.messagelabs.com!1581526865!1083509!1
+X-Originating-IP: [104.47.13.51]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.25; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 9140 invoked from network); 12 Feb 2020 17:01:05 -0000
+Received: from mail-he1eur04lp2051.outbound.protection.outlook.com (HELO EUR04-HE1-obe.outbound.protection.outlook.com) (104.47.13.51)
+  by server-6.tower-233.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Feb 2020 17:01:05 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=auYkxJ4dhXxeKRbP8K/gga0OroGV5kAqkgIQOCLn/nplUw5B+9Z5LQY7yFBfVs/umdVU6iBZeR7inr5cZcSZz3R/qC0qMpX3qppmhUQwF4dJps78bikNbvK0Q40EZXfHU2HS5Rgfh23GaCqmBacsCKn3PTH1jTWoc5wt20O6x+lm3+fXYdbvH6T6tnt7oIvG8TjpoB7xO2nYkxZNjtMn0/z93405j4Mpa51AJ4cFOd9mglo2QQK1R2uBLEXJtQZGQ8BDPb5glPVINklFaMhbkedvJhFzEEdlu0yUoYoDbcGZHEWKRX2HxM1NLggJPWtybfnDWe8pljuqeDOrqf5/Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BhpGFwof2GNhCRRD26ntc9hHvmXKpz85pZfAR6EE2TY=;
+ b=IlghsstShRM4h0i7Y4j/+N1COuZ+r3RT47rFTYIzxsuuTpvxyo2lRnUtt083AJoA7J6ZU/gbQfN7UPUHq73PEs2iJCPz6btx/JAGNSdWwfpAjct2XZS3mD/YFsgSc9Cf443ZiH+7G3VtJCTEi2+v1U7Vw2qy65Johlj5oJ2fge7wY95uNLUH7u/+L1YPcAoZY9enLmV0n4MRqfbNqO/gHRTngBrPffr8BcFbJaNch886I5YCs2U71ksZROKM6VWlyJvhBiZKPxdgk3UazDoIL4xmhJq0EmHdgOVKMmqPrdoLyjbNcPCPvZosYt2Ye9PAfczw3XfqhDK6oF1Rlfkv+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BhpGFwof2GNhCRRD26ntc9hHvmXKpz85pZfAR6EE2TY=;
+ b=IK9pxZec0qltlqVcKAQlgkbYJ6c78DwDVqs8fXXa0lnmwwbe4hcwaMqnyFomBXEsVF3i9kUn3MwJLE01AzqK+ocCD4p6http3M9rN+8ZrHsu2YVXacaW8F8D2ERWWG/6f1bJmw0iRmB7P7j6Zbuea7bhYjtPN76ca3HQTJJHusc=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
+ AM6PR10MB2952.EURPRD10.PROD.OUTLOOK.COM (10.255.122.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Wed, 12 Feb 2020 17:01:03 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2729.021; Wed, 12 Feb 2020
+ 17:01:03 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        "Lu, Brent" <brent.lu@intel.com>,
+        "cychiang@google.com" <cychiang@google.com>
+Subject: RE: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
+ callback
+Thread-Topic: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
+ callback
+Thread-Index: AQHV3+t05QGFzNuez06VZ5VdF8K2kqgUfAmAgAFKeYCAAGrTgIAARPoAgAAJp4CAAAclgIAAAzgAgADQubCAAFzUAIAAEt9Q
+Date:   Wed, 12 Feb 2020 17:01:03 +0000
+Message-ID: <AM6PR10MB22636A4193260B94F17EB9FC801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
+ <AM6PR10MB2263F302A86B17C95B16361280190@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
+ <855c88fb-4438-aefb-ac9b-a9a5a2dc8caa@linux.intel.com>
+ <CAFQqKeWHDyyd_YBBaD6P2sCL5OCNEsiUU6B7eUwtiLv8GZU0yg@mail.gmail.com>
+ <2eeca7fe-aec9-c680-5d61-930de18b952b@linux.intel.com>
+ <CAFQqKeXK3OG7KXaHGUuC75sxWrdf11xJooC7XsDCOyd6KUgPTQ@mail.gmail.com>
+ <c9dbcdd8-b943-94a6-581f-7bbebe8c6d25@linux.intel.com>
+ <AM6PR10MB22630C79D08CE74878A6A096801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <043c8384-6ce2-c78e-f52c-6a37a4bab3a0@linux.intel.com>
+In-Reply-To: <043c8384-6ce2-c78e-f52c-6a37a4bab3a0@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.85]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4598d1e0-e647-4365-475c-08d7afdd24ab
+x-ms-traffictypediagnostic: AM6PR10MB2952:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR10MB295218A3A4F6B07319F111F6A71B0@AM6PR10MB2952.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0311124FA9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(376002)(39850400004)(199004)(189003)(86362001)(186003)(7696005)(52536014)(26005)(66556008)(64756008)(66446008)(55016002)(33656002)(8936002)(2906002)(8676002)(4326008)(81156014)(81166006)(7416002)(71200400001)(478600001)(9686003)(55236004)(53546011)(6506007)(5660300002)(66476007)(110136005)(54906003)(76116006)(316002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2952;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4H933pgnTXGUvOLyVwxmuwDDvK/yw+AiwIwUN5XgnnDlv101OVNxG7B9/WlkyoQv4ciIZV5gVK/YA7BaxLsZ555qM/YIK8lWlcPw/lJQ3qOP7g1yN+SJN6wBo9cF0IQxIQbeK7Zpp+91rAM2AhMU6TdJJMAHMuuSr5PMNWWx48gOTkfPRTL+5Iv5oUBS79/cHv3zHazo/bM2z0SjgLlibvCx5d7xMtJpfRBuQad2bi0dym2TLi9ryBu5jScRrP+/NcpbOz60lww+jQtg26RbAFQ5G5WR4Oc+HYljauaIIhxCrDeuXt2tM4RivOGwWljjkESo1Ry4YykV3h/PR4nhGTiHGIlPl5oxESRtHAHcPp6vSTER5Ez/WMobYTU2wXdZBJ/j5gEaZIfgD9oVHnAAjT1TjmNPQLTE40bqwUuz6WfzgnRGZiMqTSKB/CA+Ww9+
+x-ms-exchange-antispam-messagedata: VvVnlXU9e+ZaSI3Fkv/6y1Jc1DYZx8F+QgCoIBmBpRxNIApuUcReOn/68gNrzXCSyBo7wSY4v0dHGpZ61ev6iX7zw0ie5XROcXUDvXpXiYYbLCbITA+GUH1JCLSjeMZ3Q2JyXSNQlMwQKpYy7Hx5xw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158132723311.239613.5269033996109738831.stgit@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- suspectscore=2 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002120128
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9529 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- suspectscore=2 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 impostorscore=0 clxscore=1011 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002120128
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4598d1e0-e647-4365-475c-08d7afdd24ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 17:01:03.2443
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3aTMzBTjpFUAkcBu7VK13jgXRiQs2IC4buoqp2sGTPnZPe+YIt0+Bkx0X4lTH0Kr+8vCN5Skz3n4JtsMZERo1iRyxjpBBR6vpUfc83RHqPM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2952
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 12:33:53PM +0300, Kirill Tkhai wrote:
-> This adds support for REQ_ALLOCATE extension of REQ_OP_WRITE_ZEROES
-> operation, which encourages a block device driver to just allocate
-> blocks (or mark them allocated) instead of actual blocks zeroing.
-> REQ_ALLOCATE is aimed to be used for network filesystems providing
-> a block device interface. Also, block devices, which map a file
-> on other filesystem (like loop), may use this for less fragmentation
-> and batching fallocate() requests. Hypervisors like QEMU may
-> introduce optimizations of clusters allocations based on this.
-> 
-> BLKDEV_ZERO_ALLOCATE is a new corresponding flag for
-> blkdev_issue_zeroout().
-> 
-> Stacking devices start from zero max_allocate_sectors limit for now,
-> and the support is going to be implemented separate for each device
-> in the future.
-> 
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Reviewed-by: Bob Liu <bob.liu@oracle.com>
-> ---
->  block/blk-lib.c           |   17 ++++++++++-------
->  block/blk-settings.c      |    4 ++++
->  fs/block_dev.c            |    4 ++++
->  include/linux/blk_types.h |    5 ++++-
->  include/linux/blkdev.h    |   13 ++++++++++---
->  5 files changed, 32 insertions(+), 11 deletions(-)
-> 
-> diff --git a/block/blk-lib.c b/block/blk-lib.c
-> index 3e38c93cfc53..9cd6f86523ba 100644
-> --- a/block/blk-lib.c
-> +++ b/block/blk-lib.c
-> @@ -214,7 +214,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
->  		struct bio **biop, unsigned flags)
->  {
->  	struct bio *bio = *biop;
-> -	unsigned int max_write_zeroes_sectors;
-> +	unsigned int max_write_zeroes_sectors, req_flags = 0;
->  	struct request_queue *q = bdev_get_queue(bdev);
->  
->  	if (!q)
-> @@ -224,18 +224,21 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
->  		return -EPERM;
->  
->  	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
-> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
-> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, flags);
->  
->  	if (max_write_zeroes_sectors == 0)
->  		return -EOPNOTSUPP;
->  
-> +	if (flags & BLKDEV_ZERO_NOUNMAP)
-> +		req_flags |= REQ_NOUNMAP;
-> +	if (flags & BLKDEV_ZERO_ALLOCATE)
-> +		req_flags |= REQ_ALLOCATE|REQ_NOUNMAP;
-> +
->  	while (nr_sects) {
->  		bio = blk_next_bio(bio, 0, gfp_mask);
->  		bio->bi_iter.bi_sector = sector;
->  		bio_set_dev(bio, bdev);
-> -		bio->bi_opf = REQ_OP_WRITE_ZEROES;
-> -		if (flags & BLKDEV_ZERO_NOUNMAP)
-> -			bio->bi_opf |= REQ_NOUNMAP;
-> +		bio->bi_opf = REQ_OP_WRITE_ZEROES | req_flags;
->  
->  		if (nr_sects > max_write_zeroes_sectors) {
->  			bio->bi_iter.bi_size = max_write_zeroes_sectors << 9;
-> @@ -362,7 +365,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
->  	sector_t bs_mask;
->  	struct bio *bio;
->  	struct blk_plug plug;
-> -	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
-> +	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, flags);
->  
->  	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
->  	if ((sector | nr_sects) & bs_mask)
-> @@ -391,7 +394,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
->  			try_write_zeroes = false;
->  			goto retry;
->  		}
-> -		if (!bdev_write_zeroes_sectors(bdev, 0)) {
-> +		if (!bdev_write_zeroes_sectors(bdev, flags)) {
->  			/*
->  			 * Zeroing offload support was indicated, but the
->  			 * device reported ILLEGAL REQUEST (for some devices
-> diff --git a/block/blk-settings.c b/block/blk-settings.c
-> index c8eda2e7b91e..8d5df9d37239 100644
-> --- a/block/blk-settings.c
-> +++ b/block/blk-settings.c
-> @@ -48,6 +48,7 @@ void blk_set_default_limits(struct queue_limits *lim)
->  	lim->chunk_sectors = 0;
->  	lim->max_write_same_sectors = 0;
->  	lim->max_write_zeroes_sectors = 0;
-> +	lim->max_allocate_sectors = 0;
->  	lim->max_discard_sectors = 0;
->  	lim->max_hw_discard_sectors = 0;
->  	lim->discard_granularity = 0;
-> @@ -83,6 +84,7 @@ void blk_set_stacking_limits(struct queue_limits *lim)
->  	lim->max_dev_sectors = UINT_MAX;
->  	lim->max_write_same_sectors = UINT_MAX;
->  	lim->max_write_zeroes_sectors = UINT_MAX;
-> +	lim->max_allocate_sectors = 0;
->  }
->  EXPORT_SYMBOL(blk_set_stacking_limits);
->  
-> @@ -506,6 +508,8 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
->  					b->max_write_same_sectors);
->  	t->max_write_zeroes_sectors = min(t->max_write_zeroes_sectors,
->  					b->max_write_zeroes_sectors);
-> +	t->max_allocate_sectors = min(t->max_allocate_sectors,
-> +					b->max_allocate_sectors);
->  	t->bounce_pfn = min_not_zero(t->bounce_pfn, b->bounce_pfn);
->  
->  	t->seg_boundary_mask = min_not_zero(t->seg_boundary_mask,
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 69bf2fb6f7cd..1ffef894b3bd 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -2122,6 +2122,10 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
->  		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
->  					     GFP_KERNEL, BLKDEV_ZERO_NOFALLBACK);
->  		break;
-> +	case FALLOC_FL_KEEP_SIZE:
-> +		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
-> +			GFP_KERNEL, BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
-
-I think this should be ^^^ indented to match the other calls.
-
-> +		break;
->  	case FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE | FALLOC_FL_NO_HIDE_STALE:
->  		error = blkdev_issue_discard(bdev, start >> 9, len >> 9,
->  					     GFP_KERNEL, 0);
-> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-> index 70254ae11769..86accd2caa4e 100644
-> --- a/include/linux/blk_types.h
-> +++ b/include/linux/blk_types.h
-> @@ -335,7 +335,9 @@ enum req_flag_bits {
->  
->  	/* command specific flags for REQ_OP_WRITE_ZEROES: */
->  	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
-> -
-> +	__REQ_ALLOCATE,		/* only notify about allocated blocks,
-> +				 * and do not actually zero them
-
-"only notify"?  Is someone getting a notification?  Or are we simply
-"notifying" the device that it must ensure allocated blocks?
-
-If it's that last one, then perhaps this should be reworded:
-
-/*
- * Ensure the LBA range is backed by physical storage
- * without writing zeroes to the blocks.
- */
-
---D
-
-> +				 */
->  	__REQ_HIPRI,
->  
->  	/* for driver use */
-> @@ -362,6 +364,7 @@ enum req_flag_bits {
->  #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
->  
->  #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
-> +#define REQ_ALLOCATE		(1ULL << __REQ_ALLOCATE)
->  #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
->  
->  #define REQ_DRV			(1ULL << __REQ_DRV)
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 55a714161684..40707f980a2e 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -336,6 +336,7 @@ struct queue_limits {
->  	unsigned int		max_hw_discard_sectors;
->  	unsigned int		max_write_same_sectors;
->  	unsigned int		max_write_zeroes_sectors;
-> +	unsigned int		max_allocate_sectors;
->  	unsigned int		discard_granularity;
->  	unsigned int		discard_alignment;
->  
-> @@ -990,6 +991,8 @@ static inline struct bio_vec req_bvec(struct request *rq)
->  static inline unsigned int blk_queue_get_max_write_zeroes_sectors(
->  		struct request_queue *q, unsigned int op_flags)
->  {
-> +	if (op_flags & REQ_ALLOCATE)
-> +		return q->limits.max_allocate_sectors;
->  	return q->limits.max_write_zeroes_sectors;
->  }
->  
-> @@ -1226,6 +1229,7 @@ extern int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
->  
->  #define BLKDEV_ZERO_NOUNMAP	(1 << 0)  /* do not free blocks */
->  #define BLKDEV_ZERO_NOFALLBACK	(1 << 1)  /* don't write explicit zeroes */
-> +#define BLKDEV_ZERO_ALLOCATE	(1 << 2)  /* allocate range of blocks */
->  
->  extern int __blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
->  		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop,
-> @@ -1430,10 +1434,13 @@ static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev,
->  {
->  	struct request_queue *q = bdev_get_queue(bdev);
->  
-> -	if (q)
-> -		return q->limits.max_write_zeroes_sectors;
-> +	if (!q)
-> +		return 0;
->  
-> -	return 0;
-> +	if (flags & BLKDEV_ZERO_ALLOCATE)
-> +		return q->limits.max_allocate_sectors;
-> +	else
-> +		return q->limits.max_write_zeroes_sectors;
->  }
->  
->  static inline enum blk_zoned_model bdev_zoned_model(struct block_device *bdev)
-> 
-> 
+T24gMTIgRmVicnVhcnkgMjAyMCAxNTo0OCwgUGllcnJlLUxvdWlzIEJvc3NhcnQgd3JvdGU6DQoN
+Cj4gPj4gVGhhbmtzIFJhbmphbmkuIFRoYXQgaW5mb3JtYXRpb24gY2xvc2VzIHRoZSBkb29yIG9u
+IHRoZSBpZGVhIG9mIHBsYXlpbmcNCj4gPj4gd2l0aCB0aGUgdHJpZ2dlciBvcmRlciBzdWdnZXN0
+ZWQgZWFybGllciBpbiB0aGUgdGhyZWFkLCBzbyBteSBndWVzcyBpcw0KPiA+PiB0aGF0IHdlIHJl
+YWxseSBuZWVkIHRvIGV4cG9zZSB0aGUgTUNMSy9CQ0xLIHdpdGggdGhlIGNsayBBUEkgYW5kIHR1
+cm4NCj4gPj4gdGhlbSBvbi9vZmYgZnJvbSB0aGUgbWFjaGluZSBkcml2ZXIgYXMgbmVlZGVkLiBJ
+IGhvcGUgaXMgdGhhdCB3ZSBkb24ndA0KPiA+PiBuZWVkIHRoZSBGU1lOQyBhcyB3ZWxsLCB0aGF0
+IHdvdWxkIGJlIHJhdGhlciBwYWluZnVsIHRvIGltcGxlbWVudC4NCj4gPg0KPiA+IEFtIG5vdCBn
+b2luZyB0byBtYWtlIG15c2VsZiBwb3B1bGFyIGhlcmUuIEl0J3MgTUNMSyBhbmQgRlNZTkMgKG9y
+IFdDTEsgYXMNCj4gaXQncw0KPiA+IHRlcm1lZCBmb3Igb3VyIGRldmljZSkgdGhhdCBpcyByZXF1
+aXJlZCBmb3IgU1JNIHRvIGxvY2sgaW4gdGhlIFBMTC4NCj4gPg0KPiA+IFNvIGZhciBJJ3ZlIG5v
+dCBmb3VuZCBhIHdheSBpbiB0aGUgY29kZWMgZHJpdmVyIHRvIGJlIGFibGUgdG8gZ2V0IGFyb3Vu
+ZCB0aGlzLg0KPiA+IEkgc3BlbnQgYSB2ZXJ5IGxvbmcgdGltZSB3aXRoIFNhdGh5YSBpbiB0aGUg
+ZWFybHkgZGF5cyAoQXBvbGxvIExha2UpIGxvb2tpbmcgYXQNCj4gPiBvcHRpb25zIGJ1dCBub3Ro
+aW5nIHdvdWxkIGZpdCB3aGljaCBpcyB3aHkgSSBoYXZlIHRoZSBzb2x1dGlvbiB0aGF0J3MgaW4g
+cGxhY2UNCj4gPiByaWdodCBub3cuIFdlIGNvdWxkIHByb2JhYmx5IHJlZHVjZSB0aGUgbnVtYmVy
+IG9mIHJlY2hlY2tzIGJlZm9yZSB0aW1lb3V0IGluDQo+IHRoZQ0KPiA+IGRyaXZlciBidXQgdGhh
+dCdzIHJlYWxseSBqdXN0IHBhcGVyaW5nIG92ZXIgdGhlIGNyYWNrIGFuZCB0aGVyZSdzIHN0aWxs
+IHRoZQ0KPiA+IHBvc3NpYmlsaXR5IG9mIG5vaXNlIGxhdGVyIHdoZW4gU1JNIGZpbmFsbHkgZG9l
+cyBsb2NrLg0KPiANCj4gU29ycnksIHlvdSBsb3N0IG1lIGF0ICJ0aGUgc29sdXRpb24gdGhhdCdz
+IGluIHBsYWNlIHJpZ2h0IG5vdyIuIFRoZXJlIGlzDQo+IG5vdGhpbmcgaW4gdGhlIGJ4dF9kYTcy
+MTlfbWF4OTgzNTdhLmMgY29kZSB0aGF0IGRlYWxzIHdpdGggY2xvY2tzIG9yDQo+IGRlZmluZXMg
+YSB0cmlnZ2VyIG9yZGVyPw0KDQpJIG1lYW50IHNvbHV0aW9uIGluIHRoZSBjb250ZXh0IG9mIHRo
+ZSBjb2RlYyBkcml2ZXIuIFRoZSBhcHByb2FjaCBvcg0KZXhwZWN0YXRpb24gKG1heWJlIG1vcmUg
+c3VpdGFibGUgd29yZGluZykgZm9yIHRoZSBkcml2ZXIgaXMgdGhhdCB0aGUgcmVxdWlyZWQNCmNs
+b2NraW5nIGNhbiBiZSBlbmFibGVkIHByaW9yIHRvIHRoZSBEQUkgd2lkZ2V0IGZvciB0aGUgY29k
+ZWMgYmVpbmcgcG93ZXJlZCB2aWENCkRBUE0gYXMgcGFydCBvZiBhbiBhdWRpbyBwYXRoLiBUaGlz
+IGFwcHJvYWNoIGhhcyBiZWVuIHRoZXJlIHNpbmNlIHRoZSBiZWdpbm5pbmcsDQpmb3Igd2FudCBv
+ZiBhIGJldHRlciBvcHRpb24sIGFuZCBJJ3ZlIGFsd2F5cyBoaWdobGlnaHRlZCB0aGlzIG5lZWQg
+d2hlbg0KcGxhdGZvcm1zIGFyZSB1c2luZyBvdXIgZGV2aWNlIHdpdGggU1JNLg0KDQpZb3UncmUg
+cmlnaHQgdGhvdWdoIHRoYXQgdGhpcyBpc24ndCB0YWtlbiBjYXJlIG9mIGluIGV4aXN0aW5nIG1h
+aW5saW5lIExpbnV4DQptYWNoaW5lIGZpbGVzIHRoYXQgdXNlIHRoaXMgZGV2aWNlIHdpdGggU1JN
+Lg0K
