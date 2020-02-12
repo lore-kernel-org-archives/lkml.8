@@ -2,161 +2,259 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0CBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F8C35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3703E2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15542073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KPfg4MOb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wUxk6Sy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbgBLCKy (ORCPT
+        id S1727535AbgBLCLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:10:54 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10912 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgBLCKy (ORCPT
+        Tue, 11 Feb 2020 21:11:20 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43524 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbgBLCLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:10:54 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e435e6b0000>; Tue, 11 Feb 2020 18:09:47 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 11 Feb 2020 18:10:51 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 11 Feb 2020 18:10:51 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Feb
- 2020 02:10:51 +0000
-Subject: Re: [PATCH v6 12/12] mm: dump_page(): additional diagnostics for huge
- pinned pages
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200211001536.1027652-1-jhubbard@nvidia.com>
- <20200211001536.1027652-13-jhubbard@nvidia.com>
- <20200211132159.pii2x5pssifemgaz@box>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <909f4ad5-128f-b4bd-e4cb-787885167a97@nvidia.com>
-Date:   Tue, 11 Feb 2020 18:10:50 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 11 Feb 2020 21:11:19 -0500
+Received: by mail-ot1-f67.google.com with SMTP id p8so353183oth.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 18:11:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n6k/Lbub/n1jxmtDamXfDiU39sk3ANWZWTNVfSZ9e5g=;
+        b=wUxk6Sy9q6qoyjX1z79P+a13uxDl7LnfZY8mNFGDgLHAlzg+XIha1ypLspjBiq7hGA
+         HscwnVJCrLtXWufw1he5v8VfT3HhFn4FyHWnUeTsvsjxPaEAAXBiVH0y2bC/U+NCpyPW
+         0BtVAPLHJwtrtf3dif65ZmZBB4BUJJNeT61X2XptZj0kCPVjl86sk8jl0uxD4TNa040Y
+         iedDOzlawJRkS23dZ4HPD5Tv83JGGozqICZ559cUnrRv1Za8W1K53jibHXYJ97fH0ckR
+         IF7Z9sw+FkJ1KG/xqorkkIHoNWCYYP0GScu1biUAByDXEN7ff8+g+wya90Fu0XzcpdDT
+         2g+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n6k/Lbub/n1jxmtDamXfDiU39sk3ANWZWTNVfSZ9e5g=;
+        b=rh2wUwWlgQ4P0bwGgHmzH0D88GJkPbXmXAXDnvl0KuJKgKahFyIFqdAaYT8NWLJ7tK
+         l4aQ9cCdQHcCZcuTinpLT/CH6YbeIauNZ6Jl52X+LqnPcTOyVUhoA9QUxJSYsEVmSzU5
+         5qQ5p6cBrt1lv4FfnQAkAfNGSW4CrdSBA8CYWXkV0kY7k9wg4LVEj/it4i8dm6+D6z8W
+         3UA9GMW4lpSri4B0Z+g0Eqd35XvR9q8Oq74aiIWuDRIAgdq2IPkW3XU6W7eWwOqePmm6
+         zksI61GQh+5WEpf26PSNK8G8I0bITWz3q8vEZ8zxenD5B2SwhwOOMKfyLVLxTxMlvR4e
+         aZgQ==
+X-Gm-Message-State: APjAAAVADhYNOjIVrINd6yuHVPXD28SSfAlQJxmSJRRhEnOGQFqrX+RD
+        bmLDTiFF/i1zg4RfGGSRhUDiPPavY8/pCh+tqYP2cg==
+X-Google-Smtp-Source: APXvYqx9WyDPh84T/dWz0V7MAkV6Fu38Ls7r23WUTJHuOaZMt9M7Cqkp1o3QjcNUD57URwJnbkv4nhKPOxGIjSTARy8=
+X-Received: by 2002:a05:6830:22ee:: with SMTP id t14mr7441403otc.236.1581473478420;
+ Tue, 11 Feb 2020 18:11:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211132159.pii2x5pssifemgaz@box>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581473388; bh=zCZhatfwPo+VLNp+cEurTVm8c4ASNzi1xPIVnn9hsG4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=KPfg4MObEIiKHoeHFaJJrWQ8njdIGT3atUWt2b4jjTApxYejTmazQdE0YwMrBuFKU
-         3i/G5o9jjd6ioP0Qi2W/rUjSr00msSRFXATO/5rNEQ7DmoOJMKI37ZOJVs8SZHCmVU
-         blSLD+y8cV0ai0JTOpf3gRqP3613aMkN7Wiqb69HyX0DDCJPPKFj/TYL7jfNr87yWY
-         q37kkzihJidOZqNjw1XmMcIbjHjswPB2bRGry8NZkq9bXL4NReTx1MJk/Z1MLjIDdG
-         YKIMBb2eV93ApkPqaCI7R9IFDMlf3cKAs3qmM6FxY0PkH5G8/SVcHRa8M4LKHCtWB+
-         EblOFHEBRSltw==
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-6-drinkcat@chromium.org> <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
+ <CAGETcx_3-ZoVAf+Uf0Yo86pUU1nL4S4-jrS0eZi50yvhCO985g@mail.gmail.com> <CAL_JsqLw1fyj949KtG6wNRG_Ky6cq2wS3VH2Ku+ZykU3bSap=g@mail.gmail.com>
+In-Reply-To: <CAL_JsqLw1fyj949KtG6wNRG_Ky6cq2wS3VH2Ku+ZykU3bSap=g@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 11 Feb 2020 18:10:42 -0800
+Message-ID: <CAGETcx9H09LZ7v+SrPLmtyLQBVzoVg9yRFMwYnQOLCtndWgHTw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 5:21 AM, Kirill A. Shutemov wrote:
-...
->> diff --git a/mm/debug.c b/mm/debug.c
->> index f5ffb0784559..2189357f0987 100644
->> --- a/mm/debug.c
->> +++ b/mm/debug.c
->> @@ -85,11 +85,22 @@ void __dump_page(struct page *page, const char *reason)
->>  	mapcount = PageSlab(head) ? 0 : page_mapcount(page);
->>  
->>  	if (compound)
->> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
->> -			"index:%#lx head:%px order:%u compound_mapcount:%d\n",
->> -			page, page_ref_count(head), mapcount,
->> -			mapping, page_to_pgoff(page), head,
->> -			compound_order(head), compound_mapcount(page));
->> +		if (hpage_pincount_available(page)) {
->> +			pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
->> +				"index:%#lx head:%px order:%u "
->> +				"compound_mapcount:%d compound_pincount:%d\n",
->> +				page, page_ref_count(head), mapcount,
->> +				mapping, page_to_pgoff(page), head,
->> +				compound_order(head), compound_mapcount(page),
->> +				compound_pincount(page));
->> +		} else {
->> +			pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
->> +				"index:%#lx head:%px order:%u "
->> +				"compound_mapcount:%d\n",
->> +				page, page_ref_count(head), mapcount,
->> +				mapping, page_to_pgoff(page), head,
->> +				compound_order(head), compound_mapcount(page));
->> +		}
-> 
-> Have you considered using pr_cont() here. I guess it would be easier to
-> read.
+On Tue, Feb 11, 2020 at 5:58 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Feb 11, 2020 at 2:09 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Tue, Feb 11, 2020 at 11:44 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > +Saravana
+> > >
+> > > On Thu, Feb 6, 2020 at 11:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > > >
+> > > > When there is a single power domain per device, the core will
+> > > > ensure the power domain is switched on (so it is technically
+> > > > equivalent to having not power domain specified at all).
+> > > >
+> > > > However, when there are multiple domains, as in MT8183 Bifrost
+> > > > GPU, we need to handle them in driver code.
+> > > >
+> > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > >
+> > > > ---
+> > > >
+> > > > The downstream driver we use on chromeos-4.19 currently uses 2
+> > > > additional devices in device tree to accomodate for this [1], but
+> > > > I believe this solution is cleaner.
+> > > >
+> > > > [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+> > > >
+> > > > v4:
+> > > >  - Match the exact power domain names as specified in the compatible
+> > > >    struct, instead of just matching the number of power domains.
+> > > >    [Review: Ulf Hansson]
+> > > >  - Dropped print and reordered function [Review: Steven Price]
+> > > >  - nits: Run through latest version of checkpatch:
+> > > >    - Use WARN instead of BUG_ON.
+> > > >    - Drop braces for single expression if block.
+> > > > v3:
+> > > >  - Use the compatible matching data to specify the number of power
+> > > >    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+> > > >    as the core will handle these 2 cases in the exact same way
+> > > >    (automatically, without driver intervention), and there should
+> > > >    be no adverse consequence in this case (the concern is about
+> > > >    switching on only some power domains and not others).
+> > > >
+> > > >  drivers/gpu/drm/panfrost/panfrost_device.c | 97 ++++++++++++++++++++--
+> > > >  drivers/gpu/drm/panfrost/panfrost_device.h | 11 +++
+> > > >  drivers/gpu/drm/panfrost/panfrost_drv.c    |  2 +
+> > > >  3 files changed, 102 insertions(+), 8 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > > > index 3720d50f6d9f965..8136babd3ba9935 100644
+> > > > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> > > > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > > > @@ -5,6 +5,7 @@
+> > > >  #include <linux/clk.h>
+> > > >  #include <linux/reset.h>
+> > > >  #include <linux/platform_device.h>
+> > > > +#include <linux/pm_domain.h>
+> > > >  #include <linux/regulator/consumer.h>
+> > > >
+> > > >  #include "panfrost_device.h"
+> > > > @@ -120,6 +121,79 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+> > > >                         pfdev->regulators);
+> > > >  }
+> > > >
+> > > > +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> > > > +{
+> > > > +       int i;
+> > > > +
+> > > > +       for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> > > > +               if (!pfdev->pm_domain_devs[i])
+> > > > +                       break;
+> > > > +
+> > > > +               if (pfdev->pm_domain_links[i])
+> > > > +                       device_link_del(pfdev->pm_domain_links[i]);
+> > > > +
+> > > > +               dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> > > > +       }
+> > > > +}
+> > > > +
+> > > > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> > > > +{
+> > > > +       int err;
+> > > > +       int i, num_domains;
+> > > > +
+> > > > +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> > > > +                                                "power-domains",
+> > > > +                                                "#power-domain-cells");
+> > > > +
+> > > > +       /*
+> > > > +        * Single domain is handled by the core, and, if only a single power
+> > > > +        * the power domain is requested, the property is optional.
+> > > > +        */
+> > > > +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> > > > +               return 0;
+> > > > +
+> > > > +       if (num_domains != pfdev->comp->num_pm_domains) {
+> > > > +               dev_err(pfdev->dev,
+> > > > +                       "Incorrect number of power domains: %d provided, %d needed\n",
+> > > > +                       num_domains, pfdev->comp->num_pm_domains);
+> > > > +               return -EINVAL;
+> > > > +       }
+> > > > +
+> > > > +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
+> > > > +                       "Too many supplies in compatible structure.\n"))
+> > > > +               return -EINVAL;
+> > > > +
+> > > > +       for (i = 0; i < num_domains; i++) {
+> > > > +               pfdev->pm_domain_devs[i] =
+> > > > +                       dev_pm_domain_attach_by_name(pfdev->dev,
+> > > > +                                       pfdev->comp->pm_domain_names[i]);
+> > > > +               if (IS_ERR_OR_NULL(pfdev->pm_domain_devs[i])) {
+> > > > +                       err = PTR_ERR(pfdev->pm_domain_devs[i]) ? : -ENODATA;
+> > > > +                       pfdev->pm_domain_devs[i] = NULL;
+> > > > +                       dev_err(pfdev->dev,
+> > > > +                               "failed to get pm-domain %s(%d): %d\n",
+> > > > +                               pfdev->comp->pm_domain_names[i], i, err);
+> > > > +                       goto err;
+> > > > +               }
+> > > > +
+> > > > +               pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> > > > +                               pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> > > > +                               DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> > >
+> > > We're in the process of adding device links based on DT properties.
+> > > Shouldn't we add power domains to that? See drivers/of/property.c for
+> > > what's handled.
+> >
+> > Rob,
+> >
+> > drivers/of/property.c doesn't enable the RPM_ACTIVE AND PM_RUNTIME
+> > flags. Wanted to start off conservative.
+>
+> I worry that you can't add it later without potentially breaking platforms.
+>
+> I haven't checked, but I assume these flags make runtime PM honor
+> device links? That seems like the more conservative option (more
+> reasons why a device can't suspend).
 
-Yes, and it does have the advantage of removing some of the code duplication above. 
-On the other hand, though, it leaves the end result (the long lines being printed) 
-the same, and introduces a window in which the output can get garbled by another 
-thread that is printk'-ing. And actually, what I'd really like is to shorten the
-printed output lines, as I mentioned in [1].
+Conservative as in, if of_devlink adds the RPM_ACTIVE flag, the
+drivers can't remove it.
 
-So overall, given that this series has been fairly difficult to get finalized, 
-and it's now in Andrew's tree at last, I'd *really* like to leave it as-is right 
-now, and build on top of it. So I will submit a follow-on patch to formally propose
-shortening the printed lines, and that can live or die independently of this series,
-which is hopefully over now.
+> > But adding command line ops
+> > to change the default flags shouldn't be difficult. But before I do
+> > that, I want to change of_devlink to
+> > fw_devlink=<disabled|permissive|enabled>. May be I can extend that to
+> > "disabled, permissive, suspend, runtime".
+>
+> I think any command line option should be debug primarily. It's kind
+> of a big hammer.
 
-> 
-> You can use my Ack anyway.
+It is a big hammer. But it's better than disabling of_devlink
+altogether. There is always going to be weird hardware that won't work
+with of_devlink if all the device link flags are set. They'll need
+some fix up of drivers and/or clean up of DT. And having different
+of_devlink command line options would at least let those hardware to
+run with as much of_devlink enabled as possible while working to get
+more fixes into the kernel. That way, we can make sure we don't
+regress further while trying to improve the support.
+
+> Can drivers adjust the flags themselves? Just modify the flags rather
+> than trying to create new links?
+
+They can, but only in an additive manner. And the way to do it would
+be to add a device link like usual and the framework takes care of
+combining the flags. That's why I don't set most of the flags by
+default.
 
 
-Thanks, and I appreciate all of your reviews and bug spotting and ideas for improvements 
-on this series, it's been really helpful.
-
-
-> 
-> 
->>  	else
->>  		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p index:%#lx\n",
->>  			page, page_ref_count(page), mapcount,
->> -- 
->> 2.25.0
->>
-> 
-
-
-[1] https://lore.kernel.org/r/96e1f693-0e7b-2817-f13d-1946ff7654a1@nvidia.com
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+-Saravana
