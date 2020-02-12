@@ -2,62 +2,84 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53A9C47409
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2F0C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A824C20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C05524672
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgBLJ2F (ORCPT
+        id S1728834AbgBLJaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:28:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:57894 "EHLO foss.arm.com"
+        Wed, 12 Feb 2020 04:30:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:57938 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbgBLJ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:28:04 -0500
+        id S1728530AbgBLJaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 04:30:39 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E75D430E;
-        Wed, 12 Feb 2020 01:28:03 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C2143F6CF;
-        Wed, 12 Feb 2020 01:28:02 -0800 (PST)
-Date:   Wed, 12 Feb 2020 09:28:00 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Will Deacon <will.deacon@arm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jann Horn <jannh@google.com>,
-        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 6/7] arm64, elf: Disable automatic READ_IMPLIES_EXEC
- for 64-bit address spaces
-Message-ID: <20200212092800.GD488264@arrakis.emea.arm.com>
-References: <20200210193049.64362-1-keescook@chromium.org>
- <20200210193049.64362-7-keescook@chromium.org>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D521130E;
+        Wed, 12 Feb 2020 01:30:38 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D400A3F6CF;
+        Wed, 12 Feb 2020 01:30:36 -0800 (PST)
+Subject: Re: [PATCH v3 7/7] clocksource/drivers/arm_arch_timer: validate
+ arch_timer_rate
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
+        rjw@rjwysocki.net
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-8-ionela.voinescu@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <05e257b6-0a39-135d-8117-7883739538c3@arm.com>
+Date:   Wed, 12 Feb 2020 09:30:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210193049.64362-7-keescook@chromium.org>
+In-Reply-To: <20200211184542.29585-8-ionela.voinescu@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 11:30:48AM -0800, Kees Cook wrote:
-> With arm64 64-bit environments, there should never be a need for automatic
-> READ_IMPLIES_EXEC, as the architecture has always been execute-bit aware
-> (as in, the default memory protection should be NX unless a region
-> explicitly requests to be executable).
+On 11/02/2020 18:45, Ionela Voinescu wrote:
+> From: Valentin Schneider <valentin.schneider@arm.com>
 > 
-> Suggested-by: Hector Marco-Gisbert <hecmargi@upv.es>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Using an arch timer with a frequency of less than 1MHz can result in an
+> incorrect functionality of the system which assumes a reasonable rate.
+> 
+> One example is the use of activity monitors for frequency invariance
+> which uses the rate of the arch timer as the known rate of the constant
+> cycle counter in computing its ratio compared to the maximum frequency
+> of a CPU. For arch timer frequencies less than 1MHz this ratio could
+> end up being 0 which is an invalid value for its use.
+> 
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+I'm being pedantic here (as usual), but I'd contrast this a bit more. The
+activity monitor code checks by itself that the ratio doesn't end up being
+0, which is why we don't slam the brakes if the arch timer freq is < 1MHz.
+
+It's just a CNTFRQ sanity check that goes a bit beyond the 0 value check,
+IMO.
+
+> Therefore, warn if the arch timer rate is below 1MHz which contravenes
+> the recommended architecture interval of 1 to 50MHz.
+> 
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+
+ISTR something somewhere that says the first signoff should be that of the
+author of the patch, and seeing as I just provided an untested diff that
+ought to be you :)
+
