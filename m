@@ -2,135 +2,99 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770B5C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9752C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D1E20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8D520661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="ex8fNHPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgBLInJ (ORCPT
+        id S1728567AbgBLIne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:43:09 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:21926 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728452AbgBLInJ (ORCPT
+        Wed, 12 Feb 2020 03:43:34 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37886 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728457AbgBLIne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:43:09 -0500
-IronPort-SDR: t5OXWPlqqSSpvlmrkyv4lQxKbNQ9+/Pqxivph6BJU+r4GPUnWEJXYMzk2L0iyZgLdpER/tq+h1
- yXSWHvGW1tuwtwz7LlghEF2WnvJfmvLHJiVSRqLvIj2EyagppuAwxeIONYbMFrNrkJmu8LhQUg
- FpXhK5WpmP0GBrTDwL5NQbLGLY2nM5Hm7L9JlZrGCO5c4EPtw2CILYiFUjAew77mo8ywLUsvRD
- SegE/Gf+2tihsXhJ5jEr0N/1yhEHMM0093La+Lbs1kCW/ikrvHN0zxjHkWZePiGj4cBDiVtZ4D
- twU=
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="47666980"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 12 Feb 2020 00:43:08 -0800
-IronPort-SDR: xHmzvPSEfzFleHXfxkl6OoopIXjr+kKAa2mLIiHHotJHF9jqWvD8RDpAEvRUV9f+eoHMtHykwL
- ISb+uCu7laht3G3k2uhIdPzRqFr9xWK4ctn9Jbof5UrM1MM9BBhUNZ1Lcnt1hoKihXpB0JpFrB
- 1Whloyk1isUUePQGFZoirzd4dcX7JdoDDHaYG/s9OjoB04e3JKyWueX6d1YlTF5/L1KvfEx9YS
- wmNz+8YcOVyOdYlVx+LV0u1LvFde6eqGb6fZmMnu5GiJd7qmNeFmQz8vPSnm12uSzHCR0xikJH
- HFs=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
-        <nick@shmanahar.org>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v7 05/48] Input: atmel_mxt_ts - output status from T48 Noise Supression
-Date:   Wed, 12 Feb 2020 00:41:35 -0800
-Message-ID: <20200212084218.32344-6-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212084218.32344-1-jiada_wang@mentor.com>
-References: <20200212084218.32344-1-jiada_wang@mentor.com>
+        Wed, 12 Feb 2020 03:43:34 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so1140783wru.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:43:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fGdSUfQkLfF9DHdMDJ60li9faldkILwXEkxG3rbMJHU=;
+        b=ex8fNHPDp1r+bWrBKR0esR9qfcYVyA5glEE7UMwCBgPwjATziesFGlYx0DxioyRJYZ
+         dPWRNvswyEl7UkeGN87c4FKCWNfh09bJMNiG62/RHoU7A/ETKml7KPHU34POrzFwNt52
+         48B5WIVvgl3LaxY2IWtXFPCWNEEv6E1QGchGoBPP2h0uQ0c7KwQKYQs1ag2e4RnCCoUY
+         VnEeMhxymeqTBVrq1dDt30+TNrEuDAJTyJoGoF4ggxK+xzKoriEuWdkGlvke9yX7C+S0
+         jwdOQ6eCnJwLrflFglAClPwML1MiuvVgkKf+JdNddxa5BKMLhu9v7+6Qfg4Z1nkqeHix
+         l32Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=fGdSUfQkLfF9DHdMDJ60li9faldkILwXEkxG3rbMJHU=;
+        b=gq4uCeIDI/qKnNjrcOFwPlTjibbbUeLM2462fbZez4GGnPqALoJU6uM2MKKkTCpDOZ
+         BroJI/kK0P8tdZMU2wJ6zzcgrQDh8zBLh27UbROEZ+WoFHrwpZT9X6OaRNL5ef5LxA2K
+         xqWMNkgPuSFiOruSsQQsei1vWhCEwNXXSCktqAXkhtQCncJUInxrbYHZzyeMe/fmhDmn
+         T3VY9qDrG0Xqe2fQ6+sP9j3N97RMFpYKFdKezf5mRrLKshI+Jcl7UG1mSuwo5N1erSyn
+         wA3D++UXZtKWRbqlJQmbavHHLfAq34SLy4s1qieA/xgN7qG2jwK6uzO0+YZAgdmwEkrp
+         qklg==
+X-Gm-Message-State: APjAAAWpnum9zIOy2vdewvAW7jxWmtZ/QseKsAFMABI6otlrcIV/Junp
+        Rh3XsCfjCL5apiHd4QslowOmWf2UeD0Pbg==
+X-Google-Smtp-Source: APXvYqxgoPwHQJmB9TPvdAU8TKfypqitKOvk7OPqb3X+I31fSJGcGIKDmQNob8tkfVJ1c0OC7naEDg==
+X-Received: by 2002:a5d:54c1:: with SMTP id x1mr13514491wrv.240.1581497011545;
+        Wed, 12 Feb 2020 00:43:31 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id x6sm9023725wrr.6.2020.02.12.00.43.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 00:43:30 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: [PATCH] microblaze: Fix _reset() function
+Date:   Wed, 12 Feb 2020 09:43:29 +0100
+Message-Id: <ce58b2e6d0fbc8bf94d3cd986c068fbc4fda4d04.1581497006.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+There is a need to disable VM before jump to zero reset vector.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Benson Leung <bleung@chromium.org>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 2895a6ff150a49f27a02938f8d262be238b296d8)
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 6e22e01f1aa2..59ee743ec8d7 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -324,6 +324,7 @@ struct mxt_data {
- 	u16 T18_address;
- 	u8 T19_reportid;
- 	u16 T44_address;
-+	u8 T48_reportid;
- 	u8 T100_reportid_min;
- 	u8 T100_reportid_max;
+ arch/microblaze/kernel/entry.S | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/microblaze/kernel/entry.S b/arch/microblaze/kernel/entry.S
+index f6ded356394a..b179f8f6d287 100644
+--- a/arch/microblaze/kernel/entry.S
++++ b/arch/microblaze/kernel/entry.S
+@@ -958,6 +958,7 @@ ENTRY(_switch_to)
+ 	nop
  
-@@ -978,6 +979,24 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
- 	data->update_input = true;
- }
+ ENTRY(_reset)
++	VM_OFF
+ 	brai	0; /* Jump to reset vector */
  
-+static int mxt_proc_t48_messages(struct mxt_data *data, u8 *msg)
-+{
-+	struct device *dev = &data->client->dev;
-+	u8 status, state;
-+
-+	status = msg[1];
-+	state  = msg[4];
-+
-+	dev_dbg(dev, "T48 state %d status %02X %s%s%s%s%s\n", state, status,
-+		status & 0x01 ? "FREQCHG " : "",
-+		status & 0x02 ? "APXCHG " : "",
-+		status & 0x04 ? "ALGOERR " : "",
-+		status & 0x10 ? "STATCHG " : "",
-+		status & 0x20 ? "NLVLCHG " : "");
-+
-+	return 0;
-+}
-+
- static int mxt_proc_message(struct mxt_data *data, u8 *message)
- {
- 	u8 report_id = message[0];
-@@ -987,6 +1006,8 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
- 
- 	if (report_id == data->T6_reportid) {
- 		mxt_proc_t6_messages(data, message);
-+	} else if (report_id == data->T48_reportid) {
-+		mxt_proc_t48_messages(data, message);
- 	} else if (!data->input_dev) {
- 		/*
- 		 * Do not report events if input device
-@@ -1666,6 +1687,7 @@ static void mxt_free_object_table(struct mxt_data *data)
- 	data->T18_address = 0;
- 	data->T19_reportid = 0;
- 	data->T44_address = 0;
-+	data->T48_reportid = 0;
- 	data->T100_reportid_min = 0;
- 	data->T100_reportid_max = 0;
- 	data->max_reportid = 0;
-@@ -1747,6 +1769,9 @@ static int mxt_parse_object_table(struct mxt_data *data,
- 		case MXT_SPT_GPIOPWM_T19:
- 			data->T19_reportid = min_id;
- 			break;
-+		case MXT_PROCG_NOISESUPPRESSION_T48:
-+			data->T48_reportid = min_id;
-+			break;
- 		case MXT_TOUCH_MULTITOUCHSCREEN_T100:
- 			data->multitouch = MXT_TOUCH_MULTITOUCHSCREEN_T100;
- 			data->T100_reportid_min = min_id;
+ 	/* These are compiled and loaded into high memory, then
 -- 
-2.17.1
+2.25.0
 
