@@ -2,104 +2,111 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4236C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3CBC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D107A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7484920714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:18:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="urBVcOWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgBLQSH (ORCPT
+        id S1728708AbgBLQSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:18:07 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:36876 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726728AbgBLQSC (ORCPT
+        Wed, 12 Feb 2020 11:18:08 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39980 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728645AbgBLQSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:18:02 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CGENMI001203;
-        Wed, 12 Feb 2020 11:18:01 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y1udmyfnc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Feb 2020 11:18:01 -0500
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01CGHxhP052876
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 12 Feb 2020 11:18:00 -0500
-Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 12 Feb 2020 08:17:58 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 12 Feb 2020 08:17:34 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 12 Feb 2020 08:17:58 -0800
-Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01CGHsf7001230;
-        Wed, 12 Feb 2020 11:17:56 -0500
-From:   Alexandru Tachici <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v3 1/5] staging: iio: adc: ad7192: fail probe on get_voltage
-Date:   Wed, 12 Feb 2020 18:17:17 +0200
-Message-ID: <20200212161721.16200-2-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200212161721.16200-1-alexandru.tachici@analog.com>
-References: <20200212161721.16200-1-alexandru.tachici@analog.com>
+        Wed, 12 Feb 2020 11:18:06 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581524286; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=8s1WzLOWb+AoZJksEERSbSfmDvAs4ADMWJjK4sRp03g=;
+ b=urBVcOWfjlkMC1FO4sZ2CwgGBN2TA6Ohw0zzUpNxNjQXO7VgGmu4IvCP6PEATTiUWqxtKYFP
+ O+CnsI4fkbzzG3sE0RLeI9b1wo2OejAjm2oa7nfu8ijZgt9icBV435VBAY+5DlltNplcA25u
+ ojQSvaKEulqxfwA69v76d57/2ZE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e44253d.7fbef56473e8-smtp-out-n01;
+ Wed, 12 Feb 2020 16:18:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1909DC43383; Wed, 12 Feb 2020 16:18:04 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14222C43383;
+        Wed, 12 Feb 2020 16:17:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14222C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-12_08:2020-02-11,2020-02-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 bulkscore=0 adultscore=0 mlxlogscore=928 lowpriorityscore=0
- clxscore=1015 mlxscore=0 impostorscore=0 spamscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002120125
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] brcmfmac: abort and release host after error
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200128221457.12467-1-linux@roeck-us.net>
+References: <20200128221457.12467-1-linux@roeck-us.net>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200212161804.1909DC43383@smtp.codeaurora.org>
+Date:   Wed, 12 Feb 2020 16:18:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes the ad7192_probe fail in case
-regulator_get_voltage will return an error or voltage
-is set to 0.
+Guenter Roeck <linux@roeck-us.net> wrote:
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/staging/iio/adc/ad7192.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+> With commit 216b44000ada ("brcmfmac: Fix use after free in
+> brcmf_sdio_readframes()") applied, we see locking timeouts in
+> brcmf_sdio_watchdog_thread().
+> 
+> brcmfmac: brcmf_escan_timeout: timer expired
+> INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
+> Not tainted 4.19.94-07984-g24ff99a0f713 #1
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
+> [<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
+> [<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
+> [<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
+> [<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
+> 
+> In addition to restarting or exiting the loop, it is also necessary to
+> abort the command and to release the host.
+> 
+> Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: Matthias Kaehlcke <mka@chromium.org>
+> Cc: Brian Norris <briannorris@chromium.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Acked-by: franky.lin@broadcom.com
+> Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index bf3e2a9cc07f..41da8b4cdc48 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -899,10 +899,13 @@ static int ad7192_probe(struct spi_device *spi)
- 
- 	voltage_uv = regulator_get_voltage(st->avdd);
- 
--	if (voltage_uv)
-+	if (voltage_uv > 0) {
- 		st->int_vref_mv = voltage_uv / 1000;
--	else
-+	} else {
-+		ret = voltage_uv;
- 		dev_err(&spi->dev, "Device tree error, reference voltage undefined\n");
-+		goto error_disable_avdd;
-+	}
- 
- 	spi_set_drvdata(spi, indio_dev);
- 	st->devid = spi_get_device_id(spi)->driver_data;
+Patch applied to wireless-drivers-next.git, thanks.
+
+863844ee3bd3 brcmfmac: abort and release host after error
+
 -- 
-2.20.1
+https://patchwork.kernel.org/patch/11355277/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
