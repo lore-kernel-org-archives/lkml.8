@@ -2,113 +2,96 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8D0C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB40C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0388F2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1012468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgBLUQl (ORCPT
+        id S1729054AbgBLUTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:16:41 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46908 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbgBLUQk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:16:40 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CF1E11C0370; Wed, 12 Feb 2020 21:16:38 +0100 (CET)
-Date:   Wed, 12 Feb 2020 21:16:38 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
-        jjhiblot@ti.com, tony@atomide.com
-Subject: Re: LED backlight on Droid 4 and others
-Message-ID: <20200212201638.GB20085@amd>
-References: <20200105183202.GA17784@duo.ucw.cz>
- <20200106084549.GA14821@dell>
- <20200211172900.GH64767@atomide.com>
+        Wed, 12 Feb 2020 15:19:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:37624 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727361AbgBLUTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:19:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F4AB328;
+        Wed, 12 Feb 2020 12:19:44 -0800 (PST)
+Received: from localhost (unknown [10.1.198.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2DB03F68E;
+        Wed, 12 Feb 2020 12:19:43 -0800 (PST)
+Date:   Wed, 12 Feb 2020 20:19:42 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, sudeep.holla@arm.com, lukasz.luba@arm.com,
+        valentin.schneider@arm.com, rjw@rjwysocki.net,
+        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] arm64: add support for the AMU extension v1
+Message-ID: <20200212201942.GA12970@arm.com>
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-2-ionela.voinescu@arm.com>
+ <93472f17-6465-641d-ea82-3230b5697ffd@arm.com>
+ <20200212161045.GA7475@arm.com>
+ <133890f7-59bb-63b9-0ca8-2294e3596058@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="QKdGvSO+nmPlgiQ/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211172900.GH64767@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <133890f7-59bb-63b9-0ca8-2294e3596058@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi guys,
 
---QKdGvSO+nmPlgiQ/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wednesday 12 Feb 2020 at 16:20:56 (+0000), Suzuki Kuruppassery Poulose wrote:
+> > For better handling I could have a cpumask_available check before the
+> > allocation just in case the capability type changes in the future, or to
+> > at least not rely on assumptions based on the type of the capability.
+> > 
+> > The reason this is dynamic is that I wanted to avoid the memory being
+> > allocated when disable_amu is true - as Valentin mentioned in a comment
+> > in the meantime "the static allocation is done against NR_CPUS whereas
+> > the dynamic one is done against nr_cpu_ids".
+> > 
+> > Would this be alright?
+> > 
+> > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > index 182e05ca3410..4cee6b147ddd 100644
+> > --- a/arch/arm64/kernel/cpufeature.c
+> > +++ b/arch/arm64/kernel/cpufeature.c
+> > @@ -1222,7 +1222,11 @@ static bool has_amu(const struct arm64_cpu_capabilities *cap,
+> >           * The enable function will also print a detection message.
+> >           */
+> > -       if (!disable_amu && !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
+> > +       if (disable_amu)
+> > +               return false;
+> > +
+> > +       if (!cpumask_available(amu_cpus) &&
+> > +           !zalloc_cpumask_var(&amu_cpus, GFP_KERNEL)) {
+> >                  pr_err("Activity Monitors Unit (AMU): fail to allocate memory");
+> >                  disable_amu = true;
+> >          }
 
-Hi!
+Going down the rabbit hole in regards to this section, it seems it's
+actually not fine. When CONFIG_CPUMASK_OFFSTACK==y it fails to
+allocate memory because zalloc_cpumask_var cannot be used before
+initializing the slub allocator (mm_init) to allocate a cpumask.
 
-> > > It would be good to get LED backlight to work in clean way for 5.6
-> > > kernel.
-> ...
-> > > [If you have an idea what else is needed, it would be welcome; it
-> > > works for me in development tree but not in tree I'd like to
-> > > upstream.]
-> > >=20
-> > > Lee, would you be willing to take "backlight: add led-backlight
-> > > driver"? Would it help if I got "leds: Add managed API to get a LED
-> > > from a device driver" and "leds: Add of_led_get() and led_put()" into
-> > > for_next tree of the LED subsystem?
-> >=20
-> > It looks like you have an open question from Tony on v10.
-> >=20
-> > Is that patch orthogonal, or are there depend{ants,encies}?
->=20
-> Uhh looks like we messed up a bit with integration. Now droid4
-> LCD backlight can no longer be enabled at all manually in v5.6-rc1
-> without the "add led-backlight driver" patch.. Should we just
-> merge it to fix it rather than start scrambling with other
-> temporary hacks?
+The alternative alloc_bootmem_cpumask_var is an __init function that
+can be used only during the initialization phase, which is not the case
+for has_amu that can be called later (for hotplugged CPUs). Therefore,
+dynamic allocation is not an option here.
 
-We should just merge the "add led-backlight driver". Everything should
-be ready for it. I'm sorry if I broke something working, I was not
-aware it worked at all.
-
-Unfortunately, this is backlight code, not LED, so I can't just merge it.
-
-> I don't care if we use "default-brightness", or if we use
-> "default-brightness-level". The binding merged says now
-> "default-brightness", so let's go with that one. That's what
-> other LED drivers are using too.
-
-No opinion on that.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---QKdGvSO+nmPlgiQ/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl5EXSYACgkQMOfwapXb+vICqQCfdtyPBlJKQO90lCtkFWlVhCoQ
-XaAAoILSfdQrM5bUUqiTeghX0xqVkkHp
-=vMQC
------END PGP SIGNATURE-----
-
---QKdGvSO+nmPlgiQ/--
+Thanks,
+Ionela.
