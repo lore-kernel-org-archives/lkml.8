@@ -2,135 +2,139 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D884C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96026C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138B52073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581465751;
-	bh=VXj1a+npI+7ydAyG+Owt//6Nop6TGqj0xGSkiZ+iHYA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=e3uoql8QlndWB9wZRjgfqXb/WxxxQPPNJGH+Hy4mLytn2oluZpZ/lg4/GkQxtaATU
-	 z7NKHPjahShxxeM5liV0c7CWjScAwGTxWCMRnHRjmDLPPpe0/wrmykAc6l+HtS9lhU
-	 Dgr3f4L7e2zxavtOVJMKkpoTPUMxYyScrtl9+8U4=
+	by mail.kernel.org (Postfix) with ESMTP id 76C55206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBLACa (ORCPT
+        id S1728051AbgBLAJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 19:02:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbgBLACa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 19:02:30 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93D0C20724;
-        Wed, 12 Feb 2020 00:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581465749;
-        bh=VXj1a+npI+7ydAyG+Owt//6Nop6TGqj0xGSkiZ+iHYA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=peRaHaSjJBWu0RxNWsbg2RkLC4l6xVY/UNgyg4oYdntqHFeDLMDpCQq3ZzzKuUrOA
-         zeKtNvUu0+uN19gu6qqY1w2j4lz2W0GQnIGL18vKQttilbW3vUx2lHkkkV77SlzbVT
-         RktuuaFjkVVQ6c/0oY+eZo3VzmOB0u5pYTbjNi84=
-Subject: Re: [PATCH v3 7/7] selftests/exec: Add READ_IMPLIES_EXEC tests
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jann Horn <jannh@google.com>,
-        Russell King <linux@armlinux.org.uk>, x86@kernel.org,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200210193049.64362-1-keescook@chromium.org>
- <20200210193049.64362-8-keescook@chromium.org>
- <4f8a5036-dc2a-90ad-5fc8-69560a5dd78e@kernel.org>
- <202002111124.0A334167@keescook>
- <c09c345a-786f-25d2-1ee5-65f9cb23db6d@kernel.org>
- <202002111549.CF18B7B3B@keescook>
-From:   shuah <shuah@kernel.org>
-Message-ID: <36e45314-b672-b211-72c5-eef1d48984c0@kernel.org>
-Date:   Tue, 11 Feb 2020 17:02:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 19:09:17 -0500
+Received: from www62.your-server.de ([213.133.104.62]:39780 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbgBLAJQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 19:09:16 -0500
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j1faW-0007DH-Se; Wed, 12 Feb 2020 01:09:09 +0100
+Received: from [85.7.42.192] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j1faW-000ETx-4j; Wed, 12 Feb 2020 01:09:08 +0100
+Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
+ mutable hooks list for the BPF LSM]
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jann Horn <jannh@google.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
+References: <20200123152440.28956-1-kpsingh@chromium.org>
+ <20200123152440.28956-5-kpsingh@chromium.org>
+ <20200211031208.e6osrcathampoog7@ast-mbp> <20200211124334.GA96694@google.com>
+ <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
+ <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
+ <20200211190943.sysdbz2zuz5666nq@ast-mbp>
+ <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
+ <20200211201039.om6xqoscfle7bguz@ast-mbp>
+ <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
+ <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
+ <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
+Date:   Wed, 12 Feb 2020 01:09:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <202002111549.CF18B7B3B@keescook>
+In-Reply-To: <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.1/25720/Mon Feb 10 12:53:41 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 4:54 PM, Kees Cook wrote:
-> On Tue, Feb 11, 2020 at 02:06:53PM -0700, shuah wrote:
->> On 2/11/20 12:25 PM, Kees Cook wrote:
->>> On Tue, Feb 11, 2020 at 11:11:21AM -0700, shuah wrote:
->>>> On 2/10/20 12:30 PM, Kees Cook wrote:
->>>>> In order to check the matrix of possible states for handling
->>>>> READ_IMPLIES_EXEC across native, compat, and the state of PT_GNU_STACK,
->>>>> add tests for these execution conditions.
->>>>>
->>>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+On 2/12/20 12:26 AM, Alexei Starovoitov wrote:
+> On Tue, Feb 11, 2020 at 1:38 PM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+>>
+>> On Tue, Feb 11, 2020 at 09:33:49PM +0100, Jann Horn wrote:
 >>>>
->>>> No issues for this to go through tip.
->>>>
->>>> A few problems to fix first. This fails to compile when 32-bit libraries
->>>> aren't installed. It should fail the 32-bit part and run other checks.
+>>>> Got it. Then let's whitelist them ?
+>>>> All error injection points are marked with ALLOW_ERROR_INJECTION().
+>>>> We can do something similar here, but let's do it via BTF and avoid
+>>>> abusing yet another elf section for this mark.
+>>>> I think BTF_TYPE_EMIT() should work. Just need to pick explicit enough
+>>>> name and extensive comment about what is going on.
 >>>
->>> Do you mean the Makefile should detect the missing compat build deps and
->>> avoid building them? Testing compat is pretty important to this test, so
->>> it seems like missing the build deps causing the build to fail is the
->>> correct action here. This is likely true for the x86/ selftests too.
->>>
->>> What would you like this to do?
->>>
+>>> Sounds reasonable to me. :)
 >>
->> selftests/x86 does this already and runs the dependency check in
->> x86/Makefile.
->>
->>
->> check_cc.sh:# check_cc.sh - Helper to test userspace compilation support
->> Makefile:CAN_BUILD_I386 := $(shell ./check_cc.sh $(CC)
->> trivial_32bit_program.c -m32)
->> Makefile:CAN_BUILD_X86_64 := $(shell ./check_cc.sh $(CC)
->> trivial_64bit_program.c)
->> Makefile:CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh $(CC)
->> trivial_program.c -no-pie)
->>
->> Take a look and see if you can leverage this.
+>> awesome :)
 > 
-> I did before, and it can certainly be done, but their stuff is somewhat
-> specific to x86_64/ia32. I'm looking at supporting _all_ compat for any
-> 64-bit architecture. I can certainly write some similar build tooling,
-> but the question I have for you is one of coverage:
-> 
-> If a builder is 64-bit, it needs to be able to produce 32-bit compat
-> binaries for testing, otherwise the test is incomplete. (i.e. the tests
-> will only be able to test native behavior and not compat). This doesn't
-> seem like an "XFAIL" situation to me, and it doesn't seem right to
-> silently pass. It seems like the build should explicitly fail because
-> the needed prerequisites are missing. Do you instead want me to just
-> have it skip building the compat binaries if it can't build them?
-> 
+> Looks like the kernel already provides this whitelisting.
+> $ bpftool btf dump file /sys/kernel/btf/vmlinux |grep FUNC|grep '\<security_'
+> gives the list of all LSM hooks that lsm-bpf will be able to attach to.
+> There are two exceptions there security_add_hooks() and security_init().
+> Both are '__init'. Too late for lsm-bpf to touch.
+> So filtering BTF funcs by 'security_' prefix will be enough.
+> It should be documented though.
+> The number of attachable funcs depends on kconfig which is
+> a nice property and further strengthen the point that
+> lsm-bpf is very much kernel specific.
+> We probably should blacklist security_bpf*() hooks though.
 
-Can we do the following:
+One thing that is not quite clear to me wrt the fexit approach; assuming
+we'd whitelist something like security_inode_link():
 
+int security_inode_link(struct dentry *old_dentry, struct inode *dir,
+                          struct dentry *new_dentry)
+{
+         if (unlikely(IS_PRIVATE(d_backing_inode(old_dentry))))
+                 return 0;
+         return call_int_hook(inode_link, 0, old_dentry, dir, new_dentry);
+}
 
-Build and run tests thatc an be built.
-Skip build and warn that test coverage is incomplete for compat
-with a strong recommendation on installing 32-bit libraries with
-some instructions on how to if applicable.
+Would this then mean the BPF prog needs to reimplement above check by
+probing old_dentry->d_inode to later ensure its verdict stays 0 there
+too, or that such extra code is to be moved to call-sites instead? If
+former, what about more complex logic?
 
-thanks,
--- Shuah
+Another approach could be to have a special nop inside call_int_hook()
+macro which would then get patched to avoid these situations. Somewhat
+similar like static keys where it could be defined anywhere in text but
+with updating of call_int_hook()'s RC for the verdict.
+
+Thanks,
+Daniel
