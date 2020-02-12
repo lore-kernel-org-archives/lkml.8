@@ -2,160 +2,74 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBF8C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD87CC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2736724691
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JQ53Dbr4"
+	by mail.kernel.org (Postfix) with ESMTP id 8A88E246CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581540774;
+	bh=Le553J1GKH//ZhenIBD4rTUG7bly9lGNZ9MLpeAqJ+A=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=C3QuNqQiBh3Y5pLzVuzvC+NDH1aulU8a4WxSGzDQjJw7vIQlrQA83qtXukbXO+xRm
+	 Zhng1np7NTt7ySXCi3rrz11NtPEcouOdlrU9eW6kKFlL5JGS0cp3cHDLF0RjFdudQo
+	 DZywUgYolu7G/ss5KRFQfVTSl/GthQ3Wzg2mq/2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgBLUwt (ORCPT
+        id S1729145AbgBLUwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:52:49 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:56024 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgBLUwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:52:49 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so1375605pjz.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 12:52:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5Riei2te89GePxp1E22YfDRMlt9VDR+rVb3GVGaMfJg=;
-        b=JQ53Dbr4gFf+t/4h045U2ePzleTePdzzGco4e5vpYZF/tx6k2lSHmzgFYS9PkNOsPi
-         4hemxsqyRGxAFi+Nj337+XhsLlyLTZatkzxDPNBMmBpCs6FhqOCYc/siI4z1kyxSLWCv
-         33oHiTuAWyyX6COIAf19wNKzJAD9jEX6+GNOs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Riei2te89GePxp1E22YfDRMlt9VDR+rVb3GVGaMfJg=;
-        b=BmXDprui9WuDaBzr+hu8aGBcrFbud2PT+5fd4wNp3mekOaVc/ztZ1yq1peNtwajEvW
-         OTWe3xCX0OtlFNTGz9Ny0nXzb+ivgWec2ZixAQtTQJiTtV4/sqTvU/Fx9K2QKvvymFrC
-         BzFKFhEkfBd1OScrZb7JFSCJopMMYgkNMD27pGkwmAPdvliRuRMfSye2caEU3sOQlRd1
-         8DuZImWmWdIcbgm3QXBo4c3+J6+2c+w+1W0Xc+Se1iJCSXzwQkDh5kc7ozyhJVaFbpij
-         q8wEkGBf+Y3XSR4q+4sR9cRG6sgVB+JfcwY8jZTrZhVme7CGrrWuzfo+rdZsy7krPrMe
-         QrUg==
-X-Gm-Message-State: APjAAAV5WeF/lwGJ1OhuizIL0XJdImKdYKWUEFK1TlHCki4r7UP1sFR4
-        QczZTUYgCndO9pI91mqUuS6EDA==
-X-Google-Smtp-Source: APXvYqwRJ/D+5PHCCQimDIaqNZzboSVXpwGADlZL0PQ/ajJ/Nr9Q/V/DtBm9p164OpIJB4ae5vZpMA==
-X-Received: by 2002:a17:90a:20aa:: with SMTP id f39mr1042834pjg.35.1581540768513;
-        Wed, 12 Feb 2020 12:52:48 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id b21sm152679pfp.0.2020.02.12.12.52.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 12:52:48 -0800 (PST)
-Date:   Wed, 12 Feb 2020 12:52:47 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 3/4] phy: qcom-qmp: Add QMP V3 USB3 PHY support for
- SC7180
-Message-ID: <20200212205247.GD50449@google.com>
-References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
- <1581506488-26881-4-git-send-email-sanm@codeaurora.org>
+        Wed, 12 Feb 2020 15:52:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbgBLUwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:52:53 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6A45246C6;
+        Wed, 12 Feb 2020 20:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581540772;
+        bh=Le553J1GKH//ZhenIBD4rTUG7bly9lGNZ9MLpeAqJ+A=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Glns89LZmubQsZ7EVGIYM6DvYh+yb7VbA6YJELtEcqHri432YL1JGcoAViSRN2r7U
+         op3iLqUmLF5edbUExDO6gDB1okXod16knd3wvOd1vwM2PewxQqVp51GE9dlwbGXMbA
+         GADH0oeR26ghjfie7YKFEpJz25uIygZGI+nF+RhU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1581506488-26881-4-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200212101544.8793-6-geert+renesas@glider.be>
+References: <20200212101544.8793-1-geert+renesas@glider.be> <20200212101544.8793-6-geert+renesas@glider.be>
+Subject: Re: [PATCH 5/7] MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        James Hartley <james.hartley@sondrel.com>,
+        John Crispin <john@phrozen.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>
+Date:   Wed, 12 Feb 2020 12:52:52 -0800
+Message-ID: <158154077209.184098.4497252353825063485@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 04:51:27PM +0530, Sandeep Maheswaram wrote:
-> Adding QMP v3 USB3 phy support for SC7180.
-> Adding only usb phy reset in the list to avoid
-> reset of DP block.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Quoting Geert Uytterhoeven (2020-02-12 02:15:42)
+> The Microchip PIC32MZDA platform code is not a clock provider, and just
+> needs to call of_clk_init().
+>=20
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 38 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 7db2a94..dc300a9 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1139,6 +1139,10 @@ static const char * const msm8996_usb3phy_reset_l[] = {
->  	"phy", "common",
->  };
->  
-> +static const char * const sc7180_usb3phy_reset_l[] = {
-> +	"phy",
-> +};
-> +
->  /* list of regulators */
->  static const char * const qmp_phy_vreg_l[] = {
->  	"vdda-phy", "vdda-pll",
-> @@ -1265,6 +1269,37 @@ static const struct qmp_phy_cfg qmp_v3_usb3phy_cfg = {
->  	.is_dual_lane_phy	= true,
->  };
->  
-> +static const struct qmp_phy_cfg sc7180_usb3phy_cfg = {
-> +	.type			= PHY_TYPE_USB3,
-> +	.nlanes			= 1,
-> +
-> +	.serdes_tbl		= qmp_v3_usb3_serdes_tbl,
-> +	.serdes_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_serdes_tbl),
-> +	.tx_tbl			= qmp_v3_usb3_tx_tbl,
-> +	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_tx_tbl),
-> +	.rx_tbl			= qmp_v3_usb3_rx_tbl,
-> +	.rx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_rx_tbl),
-> +	.pcs_tbl		= qmp_v3_usb3_pcs_tbl,
-> +	.pcs_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_pcs_tbl),
-> +	.clk_list		= qmp_v3_phy_clk_l,
-> +	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
-> +	.reset_list		= sc7180_usb3phy_reset_l,
-> +	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
-> +	.vreg_list		= qmp_phy_vreg_l,
-> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-> +	.regs			= qmp_v3_usb3phy_regs_layout,
-> +
-> +	.start_ctrl		= SERDES_START | PCS_START,
-> +	.pwrdn_ctrl		= SW_PWRDN,
-> +
-> +	.has_pwrdn_delay	= true,
-> +	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
-> +	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
-> +
-> +	.has_phy_dp_com_ctrl	= true,
-> +	.is_dual_lane_phy	= true,
-> +};
-> +
->  static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
->  	.type			= PHY_TYPE_USB3,
->  	.nlanes			= 1,
-> @@ -2103,6 +2138,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
->  		.compatible = "qcom,ipq8074-qmp-pcie-phy",
->  		.data = &ipq8074_pciephy_cfg,
->  	}, {
-> +		.compatible = "qcom,sc7180-qmp-usb3-phy",
-> +		.data = &sc7180_usb3phy_cfg,
-> +	}, {
->  		.compatible = "qcom,sdm845-qmp-usb3-phy",
->  		.data = &qmp_v3_usb3phy_cfg,
->  	}, {
 
-I don't claim to be really knowledgable about this driver, but I confirmed
-that this matches qmp_v3_usb3phy_cfg, except for the resets, since we don't
-want to reset DP from the USB driver.
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
