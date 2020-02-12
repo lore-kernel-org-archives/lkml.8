@@ -2,124 +2,87 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4ABC3B188
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F733C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AED206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7762173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:41:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="awJhzI94"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=krude.de header.i=@krude.de header.b="eW/iRqpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgBLTlO (ORCPT
+        id S1729030AbgBLTln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:41:14 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22508 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727600AbgBLTlN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:41:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581536472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/niUyGCzwKmL8P0YFidMu7QFy/0jVujYkp3YM5pI1SY=;
-        b=awJhzI94hXRcMKM1p1XY4flBHo6cJ8udaZzzy4sXDb7F9bqNP5/PulFkQ8xmkTowHcv54T
-        EEan9M+Shd++jMIQbpVOaTwN/djdtmbMAaJ/fhdKPjgCOwI8JBXrKcqOUZG3R//MUJZtrU
-        deoDnLr7369VB/nv12QHaeXKcn+dLTA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-216-UosBqSVOMsOqpSSGjRWgwA-1; Wed, 12 Feb 2020 14:41:09 -0500
-X-MC-Unique: UosBqSVOMsOqpSSGjRWgwA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0246A0CBF;
-        Wed, 12 Feb 2020 19:41:06 +0000 (UTC)
-Received: from mail (ovpn-122-89.rdu2.redhat.com [10.10.122.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8EE086E40A;
-        Wed, 12 Feb 2020 19:41:01 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 14:41:00 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-        Daniel Colascione <dancol@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] Harden userfaultfd
-Message-ID: <20200212194100.GA29809@redhat.com>
-References: <20200211225547.235083-1-dancol@google.com>
- <202002112332.BE71455@keescook>
- <CAG48ez0ogRxvCK1aCnviN+nBqp6gmbUD7NjaMKvA7bF=esAc1A@mail.gmail.com>
- <20200212171416.GD1083891@xz-x1>
+        Wed, 12 Feb 2020 14:41:43 -0500
+Received: from smtp.noc-kru.de ([88.218.226.4]:39301 "EHLO smtp.noc-kru.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727361AbgBLTln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 14:41:43 -0500
+X-Greylist: delayed 544 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 14:41:41 EST
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mx.noc-kru.de (Postfix) with ESMTP id C2BE15A2199;
+        Wed, 12 Feb 2020 20:32:35 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at idefix.krude.de
+Received: from smtp.noc-kru.de ([88.218.226.4])
+        by localhost (idefix.noc-kru.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JVfAgvFchAtr; Wed, 12 Feb 2020 20:32:33 +0100 (CET)
+Received: from phlox.h.transitiv.net (2001-4dd0-2d41-0-d1dc-282-62ef-8fa2.ipv6dyn.netcologne.de [IPv6:2001:4dd0:2d41:0:d1dc:282:62ef:8fa2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by mx.noc-kru.de (Postfix) with ESMTPSA id 13F3F5A229E;
+        Wed, 12 Feb 2020 20:32:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=krude.de; s=mail;
+        t=1581535953; bh=1vmRLVZks48GT3ZVlDPxnXV5eHetAPhkCTAe9N3Qtxg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eW/iRqpV3rlUoNITwHSxS0QXKIs8HLqajq+M2MNdMwofEcn/SG8X7W6AEjso5yuDr
+         FOEMusYTUwK9zL2JDgJGTKoFS3kdL4X7fuyGdyzCR+7OKJSO+1hWhjOnRtH0tKCVq2
+         bWp3gyztgR0Qn23r0ysZdALSRktWWe2gDUtWmF3g=
+Date:   Wed, 12 Feb 2020 20:32:27 +0100
+From:   Johannes Krude <johannes@krude.de>
+To:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        trivial@kernel.org
+Subject: [PATCH] bpf_prog_offload_info_fill: replace bitwise AND by logical
+ AND
+Message-ID: <20200212193227.GA3769@phlox.h.transitiv.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212171416.GD1083891@xz-x1>
-User-Agent: Mutt/1.13.1 (2019-12-14)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
+This if guards whether user-space wants a copy of the offload-jited
+bytecode and whether this bytecode exists. By erroneously doing a bitwise
+AND instead of a logical AND on user- and kernel-space buffer-size can lead
+to no data being copied to user-space especially when user-space size is a
+power of two and bigger then the kernel-space buffer.
 
-On Wed, Feb 12, 2020 at 12:14:16PM -0500, Peter Xu wrote:
-> Right. AFAICT QEMU uses it far more than disk IOs.  A guest page can
-> be accessed by any kernel component on the destination host during a
-> postcopy procedure.  It can be as simple as when a vcpu writes to a
-> missing guest page which still resides on the source host, then KVM
-> will get a page fault and trap into userfaultfd asking for that page.
-> The same thing happens to other modules like vhost, etc., as long as a
-> missing guest page is touched by a kernel module.
+Signed-off-by: Johannes Krude <johannes@krude.de>
+---
+ kernel/bpf/offload.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Correct.
-
-How does the android garbage collection work to make sure there cannot
-be kernel faults on the missing memory?
-
-If I understood correctly (I didn't have much time to review sorry)
-what's proposed with regard to limiting uffd events from kernel
-faults, the only use case I know that could deal with it is the
-UFFD_FEATURE_SIGBUS but that's not normal userfaultfd: that's also the
-only feature required from uffd to implement a pure malloc library in
-userland that never takes the mmap sem for writing to implement
-userland mremap/mmap/munmap lib calls (as those will convert to
-UFFDIO_ZEROPAGE and MADV_DONTNEED internally to the lib and there will
-be always a single vma). We just need to extend UFFDIO_ZEROPAGE to map
-the THP zeropage to make this future pure-uffd malloc lib perform
-better.
-
-On the other end I'm also planning a mremap_vma_merge userland syscall
-that will merge fragmented vmas.
-
-Currently once you have a nice heap all contiguous but with small
-objects and you free the fragments you can't build THP anymore even if
-you make the memory virtually contiguous again by calling mremap. That
-just build up a ton of vmas slowing down the app forever and also
-preventing THP collapsing ever again.
-
-mremap_vma_merge will require no new kernel feature, but it
-fundamentally must be able to handle kernel faults. If databases
-starts to use that, how can you enable this feature without breaking
-random apps then?
-
-So it'd be a feature usable only by one user (Android) perhaps? And
-only until you start defragging the vmas of small objects?
-
-Thanks,
-Andrea
+diff --git a/kernel/bpf/offload.c b/kernel/bpf/offload.c
+index 2c5dc6541..bd09290e3 100644
+--- a/kernel/bpf/offload.c
++++ b/kernel/bpf/offload.c
+@@ -321,7 +321,7 @@ int bpf_prog_offload_info_fill(struct bpf_prog_info *info,
+ 
+ 	ulen = info->jited_prog_len;
+ 	info->jited_prog_len = aux->offload->jited_len;
+-	if (info->jited_prog_len & ulen) {
++	if (info->jited_prog_len && ulen) {
+ 		uinsns = u64_to_user_ptr(info->jited_prog_insns);
+ 		ulen = min_t(u32, info->jited_prog_len, ulen);
+ 		if (copy_to_user(uinsns, aux->offload->jited_image, ulen)) {
+-- 
+2.24.0
 
