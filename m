@@ -2,118 +2,121 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974D7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2752EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4DD2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28702082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cB8DmvKi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jb9F5htF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgBLQOH (ORCPT
+        id S1728098AbgBLQOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:14:07 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41107 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgBLQOH (ORCPT
+        Wed, 12 Feb 2020 11:14:10 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40511 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgBLQOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:14:07 -0500
-Received: by mail-pf1-f195.google.com with SMTP id j9so1458927pfa.8;
-        Wed, 12 Feb 2020 08:14:06 -0800 (PST)
+        Wed, 12 Feb 2020 11:14:08 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n18so2964223ljo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:14:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OE7vpo0ZLwKc2Q/gSZxbs7a6GJfpkch8/DsdID/PORQ=;
-        b=cB8DmvKisQrlJkwK9PyfwxgRrDpyXZNfhy4jncjU2FNYol3VGdk7rq+8a5hVaxYZ5b
-         ZpPyNrN9c0EapSL7MNHmrc8cg2S+Ow4NmeKlXgLChPxipLIzdAFYLOK/p1+/3RPg00+5
-         JJJJuwcuoyMaQdq6Gdn2gHR/EDiTHf9Bu2LSA4ngMyQZiJyoKJtayMFQwxOdH218jfnC
-         VwL/uES+mHf2cP4IgFE6us8CV1MUaS51x3v2WA2Bl4/Jqy8wQLkG1Ck2tTeKUkdwAPxx
-         him4NdBe2VsLUWQeMn5ZMu2HgZoBoP/Dxw2maCXEbyN7sA4X9p85DH5YaG23ZwinD7V0
-         OOMg==
+        bh=0tcKPeVamvtlrN5RSH/6sRJOKOPqbnT+njiiXrnR2FE=;
+        b=jb9F5htF3IHR2jF/s4ghJMuM4i/gcB51R39jS5/m6WKp+ydkzJfT04xG0Y73Oniy8v
+         jXGY43W6LFKq1WsCfGVnTUgql5Rsoi8rTm4OjnsgouvKM528XjRv++J5z1ktbgXnaxjv
+         DcdZO4N2qO2UIpsJgNlJN9HHASvrhD4jKNE1l9FpLfdA3+XV2xYgVqd/t3Pl9dU3lHUO
+         NS2U6ybhnLxXAz5twY0Rw/BH05pfjJBJ8//FsvaNitbvsCdeMdaS6n1tgQUbqexBs4l4
+         GZp6UB6wHhoUEuC7NODSQJ6S00E67Bc2jXKNcueGfK599Evvdl26IRjAXjPN52010wEr
+         DycQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OE7vpo0ZLwKc2Q/gSZxbs7a6GJfpkch8/DsdID/PORQ=;
-        b=Az+iuXNLVwR1u0OO6KMYcsb32y0R6C2InzGYoTz2AZLMLOkQfx3ODBxlqIzbBWctqk
-         DqDfEflVOuVH2d5kW4JMl8TmQoafcH2Hk3fPa10X1V5vtQ9GvzO/QOE2Kiocb/hcOPMC
-         gNb1gs7uqoV8hTwqM7mDQCSDlK8pH8F33x4yFBDw+zF6jsAbg5REO/JpDG1FjRlTcvbQ
-         WD/jdoxOjD6bc0CTC3c54YLUeFVzvvEvV9x57xt/B0rQCPJxrWgcp81lI4qYodMuqhDA
-         3hDao+HiO84iatPFvjXEp+mcimL2YBj0ikZGp6ACwnNxoexN4ResOxna/mYINKY0yVqF
-         tlzA==
-X-Gm-Message-State: APjAAAWbHPSczBHJQQ5BUxSiN+35CUgCfvMxY/hEdgmKyMjHJif9sUxB
-        frsoKw0l+Qs4FSzig6IVXRCGRnG8RMO6t0U05Ws=
-X-Google-Smtp-Source: APXvYqxh5GSPAkd71YH7sbjXip6T8nkNYUtTrt6qORPoCu8bXvvIHMza/bhRQ2uItfBi8M2VJco7HFV7RTGY08zVjwM=
-X-Received: by 2002:aa7:9796:: with SMTP id o22mr9076367pfp.101.1581524045940;
- Wed, 12 Feb 2020 08:14:05 -0800 (PST)
+        bh=0tcKPeVamvtlrN5RSH/6sRJOKOPqbnT+njiiXrnR2FE=;
+        b=Q+6a+xNnF/PwNJWvhqkTxWLllIzvWllTVJxQYxwryNjN9bZMDN7id65mCYEXsgxOX8
+         C3Cj/ZGCC2FxK3WQmxbyljEqWRu9Q9b+F3AUIYVpiUaHXm37kEx3xYdKaAal4F+SeKht
+         zWuGnPL0ra5Kpa3PICofmXQlzSAp5BfT3GYvQMmpwltwxiOHB5Q6YZuudhyT1gSo9sOG
+         GAC1hIvVUo533k9BWSUUOT8oLEs6dUO2DEwU4f6HNtSGnp9FNf+440I0EyygITbz16iD
+         54f9JiJvuuAtW73/PcQrKzXlvrPMbM6zJ8yGONv+e+ISzQ4uFhcz0zeY6YdW/EOdAcZA
+         gX6Q==
+X-Gm-Message-State: APjAAAVom6smp3nUeceEjo4OymWH//xWfZwvcyyS28D1bxM09aMDJqlN
+        A5/U2R80u7k1dEs6qfDSdSFj/cnt3DmHLmMDhrRu1g==
+X-Google-Smtp-Source: APXvYqwUx2RtHdSeOxuAp36dMrleO/imyGInK7FYFJk2eU3wiQYyWc47tYUJS8FHowdnJCYuUNb8GkPXTepYvI4Y9gQ=
+X-Received: by 2002:a2e:96c6:: with SMTP id d6mr8306485ljj.4.1581524046440;
+ Wed, 12 Feb 2020 08:14:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20200128110102.11522-1-martin@kaiser.cx> <20200128110102.11522-4-martin@kaiser.cx>
-In-Reply-To: <20200128110102.11522-4-martin@kaiser.cx>
-From:   PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Date:   Wed, 12 Feb 2020 21:43:55 +0530
-Message-ID: <CANc+2y6Scy1=S7zeQ4gVowRoWmzsq4wiNXbLVeY1Qvu0oo9cUw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] hwrng: imx-rngc - use devres for registration
-To:     Martin Kaiser <martin@kaiser.cx>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200212093654.4816-1-mgorman@techsingularity.net>
+ <CAKfTPtA7LVe0wccghiQbRArfZZFz7xZwV3dsoQ_Jcdr4swVWZQ@mail.gmail.com> <20200212154850.GQ3466@techsingularity.net>
+In-Reply-To: <20200212154850.GQ3466@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 12 Feb 2020 17:13:55 +0100
+Message-ID: <CAKfTPtDG+nxaBQFubfHC_LGxPwtJcR3xY5oS4-i-SkqrvPSwcw@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/11] Reconcile NUMA balancing decisions with the
+ load balancer
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+On Wed, 12 Feb 2020 at 16:48, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Wed, Feb 12, 2020 at 02:22:03PM +0100, Vincent Guittot wrote:
+> > Hi Mel,
+> >
+> > On Wed, 12 Feb 2020 at 10:36, Mel Gorman <mgorman@techsingularity.net> wrote:
+> > >
+> > > The NUMA balancer makes placement decisions on tasks that partially
+> > > take the load balancer into account and vice versa but there are
+> > > inconsistencies. This can result in placement decisions that override
+> > > each other leading to unnecessary migrations -- both task placement and
+> > > page placement. This is a prototype series that attempts to reconcile the
+> > > decisions. It's a bit premature but it would also need to be reconciled
+> > > with Vincent's series "[PATCH 0/4] remove runnable_load_avg and improve
+> > > group_classify"
+> > >
+> > > The first three patches are unrelated and are either pending in tip or
+> > > should be but they were part of the testing of this series so I have to
+> > > mention them.
+> > >
+> > > The fourth and fifth patches are tracing only and was needed to get
+> > > sensible data out of ftrace with respect to task placement for NUMA
+> > > balancing. Patches 6-8 reduce overhead and reduce the changes of NUMA
+> > > balancing overriding itself. Patches 9-11 try and bring the CPU placement
+> > > decisions of NUMA balancing in line with the load balancer.
+> >
+> > Don't know if it's only me but I can't find patches 9-11 on mailing list
+> >
+>
+> I think my outgoing SMTP must have decided I was spamming. I tried
+> resending just those patches.
 
-On Tue, 28 Jan 2020 at 16:31, Martin Kaiser <martin@kaiser.cx> wrote:
+I received them.
+Thanks
+
 >
-> Use devres to register the rngc with the hwrng core. Drop the explicit
-> deregistration.
+> At the moment, I'm redoing a series in top of tip taking the tracing
+> patches, yours on top (for testing) and the minor optimisations to see
+> what that gets me.  The reconcilation between NUMA balancing and load
+> balancing (patches 9-11) can be redone on top if the rest look ok.
 >
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  drivers/char/hw_random/imx-rngc.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-> index 903894518c8d..1381ddd5b891 100644
-> --- a/drivers/char/hw_random/imx-rngc.c
-> +++ b/drivers/char/hw_random/imx-rngc.c
-> @@ -263,7 +263,7 @@ static int imx_rngc_probe(struct platform_device *pdev)
->                 }
->         }
->
-> -       ret = hwrng_register(&rngc->rng);
-> +       ret = devm_hwrng_register(&pdev->dev, &rngc->rng);
->         if (ret) {
->                 dev_err(&pdev->dev, "FSL RNGC registering failed (%d)\n", ret);
->                 goto err;
-> @@ -282,8 +282,6 @@ static int __exit imx_rngc_remove(struct platform_device *pdev)
->  {
->         struct imx_rngc *rngc = platform_get_drvdata(pdev);
->
-> -       hwrng_unregister(&rngc->rng);
-> -
->         clk_disable_unprepare(rngc->clk);
->
->         return 0;
 > --
-> 2.20.1
->
-
-After imx_rngc_remove function hwrng_unregister will get called. This
-leaves a window where the clock to rng hardware block is disabled but
-still user space can access it via /dev/hwrng. This does not look
-right, please revisit the patch.
-
-Regards,
-PrasannaKumar
+> Mel Gorman
+> SUSE Labs
