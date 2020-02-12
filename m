@@ -2,51 +2,75 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819DCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99FDC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A822168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE9220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qHhw+JIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgBLRxT (ORCPT
+        id S1728767AbgBLRyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:53:19 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:33582 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLRxT (ORCPT
+        Wed, 12 Feb 2020 12:54:46 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33400 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLRyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:53:19 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B7C9113B3AC25;
-        Wed, 12 Feb 2020 09:53:18 -0800 (PST)
-Date:   Wed, 12 Feb 2020 09:53:18 -0800 (PST)
-Message-Id: <20200212.095318.414327505774757849.davem@davemloft.net>
-To:     christian.brauner@ubuntu.com
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rafael@kernel.org, pavel@ucw.cz,
-        kuba@kernel.org, edumazet@google.com, stephen@networkplumber.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH net-next 00/10] net: fix sysfs permssions when device
- changes network
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200212104321.43570-1-christian.brauner@ubuntu.com>
-References: <20200212104321.43570-1-christian.brauner@ubuntu.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 12 Feb 2020 09:53:19 -0800 (PST)
+        Wed, 12 Feb 2020 12:54:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7XNKwAQCe0wWD09kLZnG/QEn+5bffeFhq6ruL0n9m7M=; b=qHhw+JIqRJlFPo9Hs7xaQi3qIj
+        Jg2LHudVqRZys2sFoRHD7Qb/sJmBBUXyE6FarlkHqm6U+h7L4UcbNCd3FJMQ/zI4ajl25XX07JpIt
+        Af13uKlDkd2uiD/27TuEMsRcgFliRvCXUGZvQBML2ahaeNR8AP5o34VVM0BfZeRBxmNZJXT1popJX
+        BtQlWvxj8C5lMaDgDVN7JYbuUfXtA/McOdBV2QdrXUUuG0FC+FOT1eHpHpOWvLWoK+f0s5e59/r9m
+        8DXpQAKt2Lo6Sncqwuc8HVMkcCy1T7qlYRhmOdVN9LecwtySaL05IeohtS9fhNHcu1+Jbmy133RHI
+        fjtPt/XQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1wDl-0003lq-Ey; Wed, 12 Feb 2020 17:54:45 +0000
+Date:   Wed, 12 Feb 2020 09:54:45 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/25] fs: Introduce i_blocks_per_page
+Message-ID: <20200212175445.GB11424@infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-11-willy@infradead.org>
+ <20200212074453.GH7068@infradead.org>
+ <20200212150540.GE7778@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212150540.GE7778@bombadil.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 12, 2020 at 07:05:40AM -0800, Matthew Wilcox wrote:
+> > > + * Return: The number of filesystem blocks covered by this page.
+> > > + */
+> > > +static inline
+> > > +unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
+> > 
+> > static inline unisnged int
+> > i_blocks_per_page(struct inode *inode, struct page *page)
+> 
+> That's XFS coding style.  Linus has specifically forbidden that:
+> 
+> https://lore.kernel.org/lkml/1054519757.161606@palladium.transmeta.com/
 
-net-next is closed
+Not just xfs but lots of places.  But if you don't like that follow
+the real Linus style we use elsewhere:
+
+static inline unsigned int i_blocks_per_page(struct inode *inode,
+		struct page *page)
