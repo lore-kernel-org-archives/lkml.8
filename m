@@ -2,224 +2,80 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA7EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0236C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B482073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A741D2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dG5wrawF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1JAp9IgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgBLPjB (ORCPT
+        id S1728640AbgBLPjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:39:01 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26948 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727026AbgBLPi5 (ORCPT
+        Wed, 12 Feb 2020 10:39:06 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:33512 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgBLPjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:38:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581521936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=2YEslZPhP18g4Rp7UueQO3wJPsjA+JWs+ANOpmXAkRg=;
-        b=dG5wrawFJpjZH533uXobNzh5U6eKqliGn44+fI1HHtqgXoG5TfVc9h5qWOVtrzysqcAuUy
-        vUuqEySg3V6T7HS1JntV0GtcvPRSwi+KLyK45Q73vwrCEF4KjcoETTtXiIWE2sFF5I9SMm
-        wuDKgYKMGuH9kVmoOOkofinOZAc9sDs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-4tNYdBAWO1W2YludDTKmsg-1; Wed, 12 Feb 2020 10:38:54 -0500
-X-MC-Unique: 4tNYdBAWO1W2YludDTKmsg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5C0B800D41;
-        Wed, 12 Feb 2020 15:38:52 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F332A6E40A;
-        Wed, 12 Feb 2020 15:38:51 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip 3/3] locking/lockdep: Consolidate CONFIG_DEBUG_LOCKDEP code
-Date:   Wed, 12 Feb 2020 10:38:28 -0500
-Message-Id: <20200212153828.346-4-longman@redhat.com>
-In-Reply-To: <20200212153828.346-1-longman@redhat.com>
-References: <20200212153828.346-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Wed, 12 Feb 2020 10:39:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=eCwIZ8Hf6W398rCvWhZ+i5ZRPRRZxaxzUmzv2wz82pE=; b=1JAp9IgMQN6yuuPOz8FEz6IG3t
+        dc4IWKrCf+0M6ik8hAb2VJ5w1rGW+hPlEqE1EgRVVsrDHmfT5RzRxWfpezdA17dnXPpHUhx3wegav
+        WXX3rtSjqMnUwIqLcHKoSbEV+KQhOXqK3Y1CyxTbiZIig1O8UwHwCNqDPHQczpl2Z5M8MsxJHajj7
+        JIVjUS1Idgs1ngdUH0ggJeVXNk9nSOwjlEnHMCEYMeYuOQdtar/uXNKDXT+ckjy4Mx4E4As3Tc9AX
+        hl6FdDOeY5a4lOsMkGp51wPs6YElRwxapa/T9tG/XDx6fN9UIVqcpsXNLWfFdvNkVhywgK/aUKuA9
+        ZuQxRC2w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1u5r-00046F-4s; Wed, 12 Feb 2020 15:38:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C7E6E300E0C;
+        Wed, 12 Feb 2020 16:36:34 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B17F120149390; Wed, 12 Feb 2020 16:38:23 +0100 (CET)
+Date:   Wed, 12 Feb 2020 16:38:23 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH 4/8] sched,rcu,tracing: Mark preempt_count_{add,sub}()
+ notrace
+Message-ID: <20200212153823.GW14897@hirez.programming.kicks-ass.net>
+References: <20200212093210.468391728@infradead.org>
+ <20200212094107.838108888@infradead.org>
+ <20200212092417.04c3da8c@gandalf.local.home>
+ <20200212150211.GS14897@hirez.programming.kicks-ass.net>
+ <20200212101415.3615d66c@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212101415.3615d66c@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the CONFIG_DEBUG_LOCKDEP code in lockdep.c together in one place.
-This is a code relocation patch. There is no functional change.
+On Wed, Feb 12, 2020 at 10:14:15AM -0500, Steven Rostedt wrote:
+> > My initial patch has __preempt_count_add/sub() in, but then I figured
+> > someone would go complain the tracepoint would go missing.
+> 
+> Fine, but what bug are you trying to fix? I haven't seen one mentioned
+> yet. Function tracing has recursion protection, and tracing
+> preempt_count in nmi_enter() causes no problems. What's the problem you
+> are trying to solve?
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/lockdep.c | 118 +++++++++++++++++++--------------------
- 1 file changed, 57 insertions(+), 61 deletions(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 417c0616d791..eb1bb8ffd777 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -454,13 +454,6 @@ unsigned int nr_softirq_chains;
- unsigned int nr_process_chains;
- unsigned int max_lockdep_depth;
- 
--#ifdef CONFIG_DEBUG_LOCKDEP
--/*
-- * Various lockdep statistics:
-- */
--DEFINE_PER_CPU(struct lockdep_stats, lockdep_stats);
--#endif
--
- const char *__get_key_name(const struct lockdep_subclass_key *key, char *str)
- {
- 	return kallsyms_lookup((unsigned long)key, NULL, NULL, NULL, str);
-@@ -802,6 +795,10 @@ static inline void remove_class_from_lock_chains(struct pending_free *pf,
- #endif /* CONFIG_PROVE_LOCKING */
- 
- #ifdef CONFIG_DEBUG_LOCKDEP
-+/*
-+ * Various lockdep statistics:
-+ */
-+DEFINE_PER_CPU(struct lockdep_stats, lockdep_stats);
- 
- #ifndef check_lock_chain_key
- static inline bool check_lock_chain_key(struct lock_chain *chain)
-@@ -961,9 +958,61 @@ static void check_data_structures(void)
- 	}
- }
- 
-+/*
-+ * We are building curr_chain_key incrementally, so double-check
-+ * it from scratch, to make sure that it's done correctly:
-+ */
-+static void check_chain_key(struct task_struct *curr)
-+{
-+	struct held_lock *hlock, *prev_hlock = NULL;
-+	unsigned int i;
-+	u64 chain_key = INITIAL_CHAIN_KEY;
-+
-+	for (i = 0; i < curr->lockdep_depth; i++) {
-+		hlock = curr->held_locks + i;
-+		if (chain_key != hlock->prev_chain_key) {
-+			debug_locks_off();
-+			/*
-+			 * We got mighty confused, our chain keys don't match
-+			 * with what we expect, someone trample on our task state?
-+			 */
-+			WARN(1, "hm#1, depth: %u [%u], %016Lx != %016Lx\n",
-+				curr->lockdep_depth, i,
-+				(unsigned long long)chain_key,
-+				(unsigned long long)hlock->prev_chain_key);
-+			return;
-+		}
-+
-+		/*
-+		 * hlock->class_idx can't go beyond MAX_LOCKDEP_KEYS, but is
-+		 * it registered lock class index?
-+		 */
-+		if (DEBUG_LOCKS_WARN_ON(!test_bit(hlock->class_idx, lock_classes_in_use)))
-+			return;
-+
-+		if (prev_hlock && (prev_hlock->irq_context !=
-+							hlock->irq_context))
-+			chain_key = INITIAL_CHAIN_KEY;
-+		chain_key = iterate_chain_key(chain_key, hlock->class_idx);
-+		prev_hlock = hlock;
-+	}
-+	if (chain_key != curr->curr_chain_key) {
-+		debug_locks_off();
-+		/*
-+		 * More smoking hash instead of calculating it, damn see these
-+		 * numbers float.. I bet that a pink elephant stepped on my memory.
-+		 */
-+		WARN(1, "hm#2, depth: %u [%u], %016Lx != %016Lx\n",
-+			curr->lockdep_depth, i,
-+			(unsigned long long)chain_key,
-+			(unsigned long long)curr->curr_chain_key);
-+	}
-+}
-+
- #else /* CONFIG_DEBUG_LOCKDEP */
- 
--static inline void check_data_structures(void) { }
-+static inline void check_data_structures(void)			{ }
-+static inline void check_chain_key(struct task_struct *curr)	{ }
- 
- #endif /* CONFIG_DEBUG_LOCKDEP */
- 
-@@ -1173,59 +1222,6 @@ register_lock_class(struct lockdep_map *lock, unsigned int subclass, int force)
- 	return class;
- }
- 
--/*
-- * We are building curr_chain_key incrementally, so double-check
-- * it from scratch, to make sure that it's done correctly:
-- */
--static void check_chain_key(struct task_struct *curr)
--{
--#ifdef CONFIG_DEBUG_LOCKDEP
--	struct held_lock *hlock, *prev_hlock = NULL;
--	unsigned int i;
--	u64 chain_key = INITIAL_CHAIN_KEY;
--
--	for (i = 0; i < curr->lockdep_depth; i++) {
--		hlock = curr->held_locks + i;
--		if (chain_key != hlock->prev_chain_key) {
--			debug_locks_off();
--			/*
--			 * We got mighty confused, our chain keys don't match
--			 * with what we expect, someone trample on our task state?
--			 */
--			WARN(1, "hm#1, depth: %u [%u], %016Lx != %016Lx\n",
--				curr->lockdep_depth, i,
--				(unsigned long long)chain_key,
--				(unsigned long long)hlock->prev_chain_key);
--			return;
--		}
--
--		/*
--		 * hlock->class_idx can't go beyond MAX_LOCKDEP_KEYS, but is
--		 * it registered lock class index?
--		 */
--		if (DEBUG_LOCKS_WARN_ON(!test_bit(hlock->class_idx, lock_classes_in_use)))
--			return;
--
--		if (prev_hlock && (prev_hlock->irq_context !=
--							hlock->irq_context))
--			chain_key = INITIAL_CHAIN_KEY;
--		chain_key = iterate_chain_key(chain_key, hlock->class_idx);
--		prev_hlock = hlock;
--	}
--	if (chain_key != curr->curr_chain_key) {
--		debug_locks_off();
--		/*
--		 * More smoking hash instead of calculating it, damn see these
--		 * numbers float.. I bet that a pink elephant stepped on my memory.
--		 */
--		WARN(1, "hm#2, depth: %u [%u], %016Lx != %016Lx\n",
--			curr->lockdep_depth, i,
--			(unsigned long long)chain_key,
--			(unsigned long long)curr->curr_chain_key);
--	}
--#endif
--}
--
- /*
-  * Initialize a lock instance's lock-class mapping info:
-  */
--- 
-2.18.1
-
+The same one as yesterday; if we hit a tracer in NMI context, when
+!rcu_is_watching() and in_nmi() is still 0, we're fucked.
