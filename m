@@ -2,108 +2,186 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C9AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD8FC35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2892086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581474421;
-	bh=FOM6ShHGfdrGYdqrB/c61jbqI2+Z0wVkTwBfSD8/QHw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Mcz2KdQh9a2wpUULdGtL7pORkBMBIai2NJ08QvG1DRRfEbzsDQG6qpo0NCwM0yZ2J
-	 Udo2vTN3UobTlGf6W2V2Vk5PxVcMzX9TitrY44dn+EA83Qw0Em1e5uNm5pFLIxTkP6
-	 LF/eUQ8SzMgP4emgs3/csMXQSMVSpzRyKfBMWCjU=
+	by mail.kernel.org (Postfix) with ESMTP id 1C16D2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgBLC1B (ORCPT
+        id S1727782AbgBLC1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:27:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 21:27:53 -0500
+Received: from mga04.intel.com ([192.55.52.120]:50742 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbgBLC1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:27:00 -0500
-Received: from localhost.localdomain (89.208.247.74.16clouds.com [89.208.247.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539712082F;
-        Wed, 12 Feb 2020 02:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581474420;
-        bh=FOM6ShHGfdrGYdqrB/c61jbqI2+Z0wVkTwBfSD8/QHw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IkvnqeF6dXlU0xRckeIb9ArZbAJjkV7+AqfX+Uy3t0waw6awv7aTTeJEsXE/FIo+T
-         P0/tY/fN9ss2Q0ph8qgY0s7EhBWXzTOG3qOY/iNLmeb2NtA5Dyat/aCYPhqzqq11hP
-         GVQvdOb0ejbdcom95WhSoaH2OXWqgVjWANOri1bM=
-From:   guoren@kernel.org
-To:     linux-csky@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Amanieu d'Antras <amanieu@gmail.com>
-Subject: [PATCH] csky: Implement copy_thread_tls
-Date:   Wed, 12 Feb 2020 10:26:51 +0800
-Message-Id: <20200212022651.11169-1-guoren@kernel.org>
-X-Mailer: git-send-email 2.17.0
+        id S1727535AbgBLC1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 21:27:53 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 18:27:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="226715029"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga008.jf.intel.com with ESMTP; 11 Feb 2020 18:27:50 -0800
+Date:   Wed, 12 Feb 2020 10:28:08 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+Subject: Re: [Patch v2] mm/sparsemem: get address to page struct instead of
+ address to pfn
+Message-ID: <20200212022808.GB7855@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200210005048.10437-1-richardw.yang@linux.intel.com>
+ <90742479-cbb1-4ea9-c20c-53a1df34b806@redhat.com>
+ <20200210231623.GC32495@richard>
+ <e36cd022-c1f1-a7e8-8888-5bf5b4cd993d@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e36cd022-c1f1-a7e8-8888-5bf5b4cd993d@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+On Tue, Feb 11, 2020 at 03:01:35PM +0100, David Hildenbrand wrote:
+>On 11.02.20 00:16, Wei Yang wrote:
+>> On Mon, Feb 10, 2020 at 10:00:47AM +0100, David Hildenbrand wrote:
+>>> On 10.02.20 01:50, Wei Yang wrote:
+>>>> memmap should be the address to page struct instead of address to pfn.
+>>>>
+>>>
+>>> "mm/sparsemem: fix wrong address in ms->section_mem_map with sub-sections
+>>>
+>>> We want to store the address of the memmap, not the address of the first
+>>> pfn.
+>>>
+>>> E.g., we can have both (boot) system memory and devmem residing in a
+>>> single section. Once we hot-add the devmem part, the address stored in
+>>> ms->section_mem_map would be wrong, and kdump would not be able to
+>>> dump the right memory.
+>>> "
+>>>
+>>> ? See below
+>>>
+>>>> As mentioned by David, if system memory and devmem sit within a
+>>>> section, the mismatch address would lead kdump to dump unexpected
+>>>> memory.
+>>>>
+>>>> Since sub-section only works for SPARSEMEM_VMEMMAP, pfn_to_page() is
+>>>> valid to get the page struct address at this point.
+>>>>
+>>>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>>> CC: Dan Williams <dan.j.williams@intel.com>
+>>>> CC: David Hildenbrand <david@redhat.com>
+>>>> CC: Baoquan He <bhe@redhat.com>
+>>>>
+>>>> ---
+>>>> v2:
+>>>>   * adjust comment to mention the mismatch data would affect kdump
+>>>>
+>>>> ---
+>>>>  mm/sparse.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/sparse.c b/mm/sparse.c
+>>>> index 586d85662978..4862ec2cfbc0 100644
+>>>> --- a/mm/sparse.c
+>>>> +++ b/mm/sparse.c
+>>>> @@ -887,7 +887,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+>>>>  
+>>>>  	/* Align memmap to section boundary in the subsection case */
+>>>>  	if (section_nr_to_pfn(section_nr) != start_pfn)
+>>>> -		memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+>>>> +		memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+>>>
+>>> I think this whole code should be reworked.
+>>>
+>>> Callee returns a pointer. Caller: Nah, I know it better.
+>>>
+>>> Just nasty.
+>>>
+>>>
+>>> Can we do something like this instead:
+>>>
+>>>
+>>> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+>>> index 200aef686722..c5091feef29e 100644
+>>> --- a/mm/sparse-vmemmap.c
+>>> +++ b/mm/sparse-vmemmap.c
+>>> @@ -266,5 +266,5 @@ struct page * __meminit
+>>> __populate_section_memmap(unsigned long pfn,
+>>>        if (vmemmap_populate(start, end, nid, altmap))
+>>>                return NULL;
+>>>
+>>> -       return pfn_to_page(pfn);
+>>> +       return pfn_to_page(SECTION_ALIGN_DOWN(pfn));
+>>> }
+>>> diff --git a/mm/sparse.c b/mm/sparse.c
+>>> index c184b69460b7..21902d7931e4 100644
+>>> --- a/mm/sparse.c
+>>> +++ b/mm/sparse.c
+>>> @@ -788,6 +788,10 @@ static void section_deactivate(unsigned long pfn,
+>>> unsigned long nr_pages,
+>>>                depopulate_section_memmap(pfn, nr_pages, altmap);
+>>> }
+>>>
+>>> +/*
+>>> + * Returns the memmap of the first pfn of the section (not of
+>>> + * sub-sections).
+>>> + */
+>>> static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>>>                unsigned long nr_pages, struct vmem_altmap *altmap)
+>>> {
+>>> @@ -882,9 +886,6 @@ int __meminit sparse_add_section(int nid, unsigned
+>>> long start_pfn,
+>>>        set_section_nid(section_nr, nid);
+>>>        section_mark_present(ms);
+>>>
+>>> -       /* Align memmap to section boundary in the subsection case */
+>>> -       if (section_nr_to_pfn(section_nr) != start_pfn)
+>>> -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+>>>        sparse_init_one_section(ms, section_nr, memmap, ms->usage, 0);
+>>>
+>>>        return 0;
+>>>
+>>>
+>>> Untested, of course :)
+>> 
+>> I think you get some point. As you mentioned in the following reply, we need
+>> to adjust poisoning after this change.
+>
+>We can just poison after setting up the section (IOW, move it further down).
+>
+>> 
+>> This looks like a trade off between two options. I don't have a strong
+>> preference.
+>
+>I clearly prefer if *section*_activate() returns the memmap of the
+>section. This code is just confusing. But I can send a cleanup on top if
+>you want to keep it like that for now.
+>
 
-This is required for clone3 which passes the TLS value through a
-struct rather than a register.
+Sure, a cleanup patch may help audience get more understanding about the
+change.
 
-Cc: Amanieu d'Antras <amanieu@gmail.com>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
----
- arch/csky/Kconfig          | 1 +
- arch/csky/kernel/process.c | 7 ++++---
- 2 files changed, 5 insertions(+), 3 deletions(-)
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
-diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-index 72b2999a889a..047427f71d83 100644
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@ -36,6 +36,7 @@ config CSKY
- 	select GX6605S_TIMER if CPU_CK610
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_AUDITSYSCALL
-+	select HAVE_COPY_THREAD_TLS
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
-diff --git a/arch/csky/kernel/process.c b/arch/csky/kernel/process.c
-index 5349cd8c0f30..f7b231ca269a 100644
---- a/arch/csky/kernel/process.c
-+++ b/arch/csky/kernel/process.c
-@@ -40,10 +40,11 @@ unsigned long thread_saved_pc(struct task_struct *tsk)
- 	return sw->r15;
- }
- 
--int copy_thread(unsigned long clone_flags,
-+int copy_thread_tls(unsigned long clone_flags,
- 		unsigned long usp,
- 		unsigned long kthread_arg,
--		struct task_struct *p)
-+		struct task_struct *p,
-+		unsigned long tls)
- {
- 	struct switch_stack *childstack;
- 	struct pt_regs *childregs = task_pt_regs(p);
-@@ -70,7 +71,7 @@ int copy_thread(unsigned long clone_flags,
- 			childregs->usp = usp;
- 		if (clone_flags & CLONE_SETTLS)
- 			task_thread_info(p)->tp_value = childregs->tls
--						      = childregs->regs[0];
-+						      = tls;
- 
- 		childregs->a0 = 0;
- 		childstack->r15 = (unsigned long) ret_from_fork;
 -- 
-2.17.0
-
+Wei Yang
+Help you, Help me
