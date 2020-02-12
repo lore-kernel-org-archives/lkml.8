@@ -2,86 +2,84 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A4BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3475C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9AB20661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD7E2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581514240;
+	bh=AcjdVVoP0TYLfXTwuTOv4a+GMYgqOI6mbOrzqIgvPwQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n07yK0ot+diwHF07pG3Kos53KSkytPD0VyAKlQu9K1hVLZ3slT3JKiF09sf5LJu/p
+	 p/QO3sgewig9rfiCn2lDgPXtBMKgnhnfRrKapbovWEnkc+oUARqsHOnUf3YDivpVrC
+	 ZncoYKgZ3CTyTGayyysL6QndI+PB3+tVkpD1TvVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgBLN2h (ORCPT
+        id S1727984AbgBLNak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:28:37 -0500
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:57467 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgBLN2g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:28:36 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        Wed, 12 Feb 2020 08:30:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgBLNaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 08:30:39 -0500
+Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6F31430008F11;
-        Wed, 12 Feb 2020 14:28:34 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 43BB3154292; Wed, 12 Feb 2020 14:28:34 +0100 (CET)
-Date:   Wed, 12 Feb 2020 14:28:34 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, matthias.bgg@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        jslaby@suse.com
-Subject: Re: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
-Message-ID: <20200212132834.c63354wynhmrg6hz@wunner.de>
-References: <20200128141958.vwbxoqglt5gw4xj5@wunner.de>
- <C099APQHQAHB.3Q9UVYJYT98TN@linux-9qgx>
- <20200131152414.73tgwsfhzgu4apkx@wunner.de>
- <dfbe2c94dd52a31826be751f8dd9afc4ed08ec6d.camel@suse.de>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBDF20661;
+        Wed, 12 Feb 2020 13:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581514237;
+        bh=AcjdVVoP0TYLfXTwuTOv4a+GMYgqOI6mbOrzqIgvPwQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UEKv5Dh3icrofal9goHcw6Po2lotjshH3+8Q27C5kqUZ+iFD0WHU1Zkv3+lHPCV6j
+         YrfAjvv14HDIpqdhXBGPAVmsKtNYm7P2Pf70C5s/uonaLejpH8DTZjz6IM4Dl8iPe5
+         hnvxqzbJKBCGxkpX60TE3UqqldzjceRecimhZGJY=
+Date:   Wed, 12 Feb 2020 05:30:37 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jeffrin Jose <jeffrin@rajagiritech.edu.in>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/309] 5.4.19-stable review
+Message-ID: <20200212133037.GA1791775@kroah.com>
+References: <20200210122406.106356946@linuxfoundation.org>
+ <20200212073531.GA5184@debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dfbe2c94dd52a31826be751f8dd9afc4ed08ec6d.camel@suse.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200212073531.GA5184@debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 08:10:21PM +0100, Nicolas Saenz Julienne wrote:
-> On Fri, 2020-01-31 at 16:24 +0100, Lukas Wunner wrote:
-> > On Thu, Jan 30, 2020 at 05:11:55PM +0100, Nicolas Saenz Julienne wrote:
-> > > BTW did you had the oportunity to have a go at the patch?
+On Wed, Feb 12, 2020 at 01:05:31PM +0530, Jeffrin Jose wrote:
+> On Mon, Feb 10, 2020 at 04:29:16AM -0800, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.19 release.
+> > There are 309 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > I've just performed a quick test and it doesn't work for me.
-> > If I add stdout-path = "serial1:115200n8"; to the chosen node,
-> > I only get a regular console with this patch, not an earlycon.
+> > Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.19-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
 > 
-> That's surprising, you're using u-boot isn't it? and the upstream device tree?
+> hello ,
+> 
+> compiled and booted 5.4.19-rc1+ . No new error according to "sudo dmesg -l err"
 
-My apologies for the delay.
+Thanks for testing, there shouldn't be a need to run 'sudo' for that
+dmesg command :)
 
-We boot the kernel directly from the Foundation's bootloader without
-U-Boot as intermediary, and we use the downstream DT and kernel
-(with RT & custom patches).
-
-As far as I could see, the 8250_bcm2835aux UART wasn't even found
-when the kernel searched for available earlycons.  The compatible
-string in the DT does match the one in Matthias' patch.
-
-I notice that Greg has already applied the patch to tty/next.
-I'm currently stretched a little thin but I'll debug this further
-once the dust has settled here.
-
-Thanks,
-
-Lukas
+greg k-h
