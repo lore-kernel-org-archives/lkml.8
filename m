@@ -2,118 +2,120 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771CBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9723C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4749C20661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1GpmvKdE"
+	by mail.kernel.org (Postfix) with ESMTP id 8893C20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgBLIue (ORCPT
+        id S1728699AbgBLIu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:50:34 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35430 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbgBLIuc (ORCPT
+        Wed, 12 Feb 2020 03:50:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32426 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728538AbgBLIu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:50:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NpTlCgYb/z6Vi+BVrieZmKjPIGNXZC/UxztwFhX/oFk=; b=1GpmvKdEeXdDZ/5zRSW5wO/Ao
-        nIujDFAzKzE3wq0D2nTcxVjtYyGVdgu1Jd5MgAcflDcQotS08VoIoR0OIO/fNaU0VVhPk8cID0BAL
-        QEAkby765VihaP7Gjoam3MhHORaKOqUuSWkPj7RvVZXr+I34PhC2m7RFnanmtkN8r7DQrlrm1G7DI
-        ArD1iqCp0xPVPiIUKYD+Gob2cBT0UT4YUKEWG2R3mNUdWaA7FXqEQd2nGm4WtJhllzYfyZE9AYJUT
-        TA43u+2ZLmgsFKARTkcG9MICatJ953z6e8k5lEgMM03lkQDPJkMtQjKyp7zW/IwKFqKSCHzzLLK0G
-        0D0f9OELg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50926)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j1nim-0001dz-8f; Wed, 12 Feb 2020 08:50:12 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j1nie-0001HG-SN; Wed, 12 Feb 2020 08:50:04 +0000
-Date:   Wed, 12 Feb 2020 08:50:04 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Rik van Riel <riel@surriel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200212085004.GL25745@shell.armlinux.org.uk>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
- <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
- <20200211193101.GA178975@cmpxchg.org>
- <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
- <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
- <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
- <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+        Wed, 12 Feb 2020 03:50:58 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01C8oRd4184482
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:50:57 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1ucm6khj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:50:56 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sandipan@linux.ibm.com>;
+        Wed, 12 Feb 2020 08:50:49 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Feb 2020 08:50:45 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01C8noiP50463198
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Feb 2020 08:49:50 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 380DFAE057;
+        Wed, 12 Feb 2020 08:50:44 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 60A42AE045;
+        Wed, 12 Feb 2020 08:50:42 +0000 (GMT)
+Received: from [9.124.35.38] (unknown [9.124.35.38])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Feb 2020 08:50:42 +0000 (GMT)
+Subject: Re: [PATCH v12 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ tests
+To:     Mina Almasry <almasrymina@google.com>, mike.kravetz@oracle.com
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200211213128.73302-1-almasrymina@google.com>
+ <20200211213128.73302-8-almasrymina@google.com>
+From:   Sandipan Das <sandipan@linux.ibm.com>
+Date:   Wed, 12 Feb 2020 14:20:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211213128.73302-8-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021208-0020-0000-0000-000003A965B0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021208-0021-0000-0000-000022014956
+Message-Id: <37a49c35-567f-1663-33cd-3dac150020a0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-12_03:2020-02-11,2020-02-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=999 priorityscore=1501 suspectscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002120070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 05:03:02PM -0800, Linus Torvalds wrote:
-> On Tue, Feb 11, 2020 at 4:47 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > What's the situation with highmem on ARM?
-> 
-> Afaik it's exactly the same as highmem on x86 - only 32-bit ARM ever
-> needed it, and I was ranting at some people for repeating all the
-> mistakes Intel did.
-> 
-> But arm64 doesn't need it, and while 32-bit arm is obviosuly still
-> selling, I think that in many ways the switch-over to 64-bit has been
-> quicker on ARM than it was on x86. Partly because it happened later
-> (so all the 64-bit teething pains were dealt with), but largely
-> because everybody ended up actively discouraging 32-bit on the Android
-> side.
-> 
-> There were a couple of unfortunate early 32-bit arm server attempts,
-> but they were - predictably - complete garbage and nobody bought them.
-> They don't exist any more.
-> 
-> So at least my gut feel is that the arm people don't have any big
-> reason to push for maintaining HIGHMEM support either.
-> 
-> But I'm adding a couple of arm people and the arm list just in case
-> they have some input.
-> 
-> [ Obvious background for newly added people: we're talking about
-> making CONFIG_HIGHMEM a deprecated feature and saying that if you want
-> to run with lots of memory on a 32-bit kernel, you're doing legacy
-> stuff and can use a legacy kernel ]
 
-Well, the recent 32-bit ARM systems generally have more than 1G
-of memory, so make use of highmem as a rule.  You're probably
-talking about crippling support for any 32-bit ARM system produced
-in the last 8 to 10 years.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+On 12/02/20 3:01 am, Mina Almasry wrote:
+> The tests use both shared and private mapped hugetlb memory, and
+> monitors the hugetlb usage counter as well as the hugetlb reservation
+> counter. They test different configurations such as hugetlb memory usage
+> via hugetlbfs, or MAP_HUGETLB, or shmget/shmat, and with and without
+> MAP_POPULATE.
+> 
+> Also add test for hugetlb reservation reparenting, since this is
+> a subtle issue.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> Cc: sandipan@linux.ibm.com
+> 
+> 
+> ---
+> 
+> Changes in v12:
+> - Fixed tests on machines with non-2MB default hugepage size.
+> Changes in v11:
+> - Modify test to not assume 2MB hugepage size.
+> - Updated resv.* to rsvd.*
+> Changes in v10:
+> - Updated tests to resv.* name changes.
+> Changes in v9:
+> - Added tests for hugetlb reparenting.
+> - Make tests explicitly support cgroup v1 and v2 via script argument.
+> Changes in v6:
+> - Updates tests for cgroups-v2 and NORESERVE allocations.
+> 
+
+For powerpc64,
+
+Tested-by: Sandipan Das <sandipan@linux.ibm.com>
+
