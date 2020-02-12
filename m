@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E6AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207AFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3439C206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3D0206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="qfGV6Kya"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="oP3fH6O+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgBLI6Y (ORCPT
+        id S1728814AbgBLI6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:58:24 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37864 "EHLO
+        Wed, 12 Feb 2020 03:58:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38236 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728426AbgBLI6W (ORCPT
+        with ESMTP id S1728768AbgBLI6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:58:22 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a6so1225529wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:58:20 -0800 (PST)
+        Wed, 12 Feb 2020 03:58:24 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so1222624wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:58:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QTqRW37ZLR6od2QUdreH7KhM1duNKLl7Hn5wfFcZ2P4=;
-        b=qfGV6KyaP47LsMtH+a0NetLwNali11oFrqd5qEgy/3M8UgS/lqFbSNj8k4C68Jas1X
-         Ffwgh1W37SvTjz61P9FUjwYPIbmx8tVq7PCmL+1s3y/TN4imhaonpHZi/dOHegkpGLSQ
-         GGo3N63wdIZ1zBPSykZbivrgHsPNwtY2LXZT0CAuD8jDZVkfmgLblulJ4nfWTryZWKFo
-         I/LJqO/TAeTKnYFwDUZkYXWqOtSBBedSgP90d8GoGcxrZtkluQETfGTcLb4FwVu1cPa+
-         EWKnny8u56W70atIeMGx/NSEBGa8z9+p4DVpBHPVepJW9FhxFDezslMUYZzUH0dt6pQA
-         bxFQ==
+        bh=3yrvW1QnDdvO63in3dRUZs4rJOwYNpH9/tgF+hnzj7A=;
+        b=oP3fH6O+4ITPoX9/Zi/S3apt/zZIU9P7OQnfv2RTQG2UQlro4x1SAXbLd/UJJvtQBd
+         0HjbcLt+hjzcp/hI9kPu+l8EKNCLYyVFujCf/SxUHI6OVTFNx6hKj9UJ8dKCq27Jtfjv
+         iNeP8pS18UUxN6ilxG8KsQLiVhfmIwoCM1+nSTy3FeyD/L6MpZeJxfK6fS5Bx7YKOEuA
+         d2MziozttVmnbtCHoTMnG4hyuzqjIWiZ6KD7D2bH0btWJFKoPiSz7PIaxxAZnczj07Ew
+         RgzTGrzMXVsznewMYJTfAAh7Wuh25ptXuJGpShHsz1tjpRYgTMQmYPr4oCa+0VTrdSIS
+         IvWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=QTqRW37ZLR6od2QUdreH7KhM1duNKLl7Hn5wfFcZ2P4=;
-        b=tJ/OTdp4wK3wGwvHzgVwvU6oCqjcMrN3aMSoooGVC0MMKHfpgK6qASoKJCyZ4MkuNE
-         GFRYCjLyyk02M4XMBkj2d0zKhFwKPNJUix4Dd1X+s1YHK30ZPktQWKO7foh91IMkV64I
-         +D2bMGmFd9yJhQQ80SbPxwxuCbZKyLH8xezlPS9EDDJsdD8MTqU2N95ANKGsE6y+YKYP
-         pc3XMSQnpAZ2S2kDsQ/JJblR83AB7gOmYyYj2RuhEJRN/345GfKznllPNu47Yfofs03h
-         8otqVZFTsAZXlR/FVPlaVb8eo2kH4UOpPnGWCA1a3Ddp21iCjNL5qCJp0BllfmTux+Su
-         Y+iQ==
-X-Gm-Message-State: APjAAAXqfZjjrFWt234/2ckIIShaNtSIYpceSwDjpzgwwxYENZEXXTwP
-        0X0SLlDSJ3qzkyipo0TfhODmDXd0vMFQ5Q==
-X-Google-Smtp-Source: APXvYqzm5+HrOHkCHTNWLPMHAKaLN5plj69c6q/7JJ+6abQQDQbPqp2C0hp9N+Gk5HAM/btVRX1APw==
-X-Received: by 2002:a1c:ba83:: with SMTP id k125mr11511803wmf.106.1581497899718;
-        Wed, 12 Feb 2020 00:58:19 -0800 (PST)
+        bh=3yrvW1QnDdvO63in3dRUZs4rJOwYNpH9/tgF+hnzj7A=;
+        b=LyVgYC0MBZSGaXpTk5TUus84JUsbCn7NWqWELp3mOajGT2oxn9Fqxlyt653EwBTjHw
+         EqqjMcOxtFtLEAZPSPpMotd28pL3i+rMTa91ZkEYvB15oyvoxpMp1NkxESgum7ZOzmmf
+         no1cL+dcPLy1SsuKfSsQm5UFCRhA/6xUQW3O3ukdSoRbOzANFdbUery5mUuILA38mU09
+         l3Gx6iv5IbN5Y2yUBHEoueO6WnBaqLEoJKYAsajUHzAxfKJQVVm6R7ymXg4KepJBaa0L
+         dLJ1BCyVNWr3nYdYqa7ZHlV7jIAwPhQc8ClD9HnvTANVjSxi4MaIWokvi2DzM/DdeYMb
+         4lOQ==
+X-Gm-Message-State: APjAAAWbFMAFkDyffRtcP5r2Dc9fW/lUh/Ysnrw7NRCrIMTsmJpgfnZS
+        xbs4S8Izf+PrJXgA622JYehZl9DKbvbMRw==
+X-Google-Smtp-Source: APXvYqxl6EMFnQECsh0qHrFjZYiGEKhyjBd0znZaDnf8uRTRKLuTXujl4JXhh+JdsdZCmAeJrEVcYw==
+X-Received: by 2002:a7b:cf0d:: with SMTP id l13mr12036781wmg.13.1581497901298;
+        Wed, 12 Feb 2020 00:58:21 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id i2sm7469722wmb.28.2020.02.12.00.58.18
+        by smtp.gmail.com with ESMTPSA id g25sm9352693wmh.3.2020.02.12.00.58.20
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Feb 2020 00:58:19 -0800 (PST)
+        Wed, 12 Feb 2020 00:58:20 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
         michal.simek@xilinx.com, git@xilinx.com, arnd@arndb.de
 Cc:     Stefan Asserhall <stefan.asserhall@xilinx.com>
-Subject: [PATCH 06/10] microblaze: Add sync to tlb operations
-Date:   Wed, 12 Feb 2020 09:58:03 +0100
-Message-Id: <c3d70f467907944e2680678f8aacb6d04def3f20.1581497860.git.michal.simek@xilinx.com>
+Subject: [PATCH 07/10] microblaze: Add missing irqflags.h header
+Date:   Wed, 12 Feb 2020 09:58:04 +0100
+Message-Id: <bb096275c875973d5cd56271d27cbbede5d324d6.1581497860.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <cover.1581497860.git.michal.simek@xilinx.com>
 References: <cover.1581497860.git.michal.simek@xilinx.com>
@@ -75,36 +75,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stefan Asserhall <stefan.asserhall@xilinx.com>
 
-Do the real sync by using mbar instruction.
+Without this header local_save_flags() is not defined.
 
 Signed-off-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/microblaze/kernel/misc.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/microblaze/kernel/cpu/pvr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/microblaze/kernel/misc.S b/arch/microblaze/kernel/misc.S
-index 6759af688451..1228a09d8109 100644
---- a/arch/microblaze/kernel/misc.S
-+++ b/arch/microblaze/kernel/misc.S
-@@ -39,7 +39,7 @@ _tlbia_1:
- 	rsubi	r11, r12, MICROBLAZE_TLB_SIZE - 1
- 	bneid	r11, _tlbia_1 /* loop for all entries */
- 	addik	r12, r12, 1
--	/* sync */
-+	mbar	1 /* sync */
- 	rtsd	r15, 8
- 	nop
- 	.size  _tlbia, . - _tlbia
-@@ -58,6 +58,7 @@ _tlbie:
- 	blti	r12, _tlbie_1 /* Check if found */
- 	mts	rtlbhi, r0 /* flush: ensure V is clear */
- 	nop
-+	mbar	1 /* sync */
- _tlbie_1:
- 	rtsd	r15, 8
- 	nop
+diff --git a/arch/microblaze/kernel/cpu/pvr.c b/arch/microblaze/kernel/cpu/pvr.c
+index 8d0dc6db48cf..f139052a39bd 100644
+--- a/arch/microblaze/kernel/cpu/pvr.c
++++ b/arch/microblaze/kernel/cpu/pvr.c
+@@ -14,6 +14,7 @@
+ #include <linux/compiler.h>
+ #include <asm/exceptions.h>
+ #include <asm/pvr.h>
++#include <linux/irqflags.h>
+ 
+ /*
+  * Until we get an assembler that knows about the pvr registers,
 -- 
 2.25.0
 
