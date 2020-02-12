@@ -4,45 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8572C3B189
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E36C3B18B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC1B21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E489215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EvJY83cu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bpV61dLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgBLESv (ORCPT
+        id S1728162AbgBLESu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:18:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53980 "EHLO
+        Tue, 11 Feb 2020 23:18:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53992 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728003AbgBLESr (ORCPT
+        with ESMTP id S1728011AbgBLESr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 23:18:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=gXJv+foPDzm9zZZb2en6nqyTOSipe1jE6l4dnk9iVRY=; b=EvJY83cuo9CuZJSwbi/lXWN3fj
-        3hmkqb1bPoc4dHHzywZCdrw9jpeYiTqqBtnxy23Te13nFXUD9zv6WmZrQqrNpCxOJDcnHFLEaAjvu
-        cI/IU+S+kEnckvQ33zp+vvt5HrXRget0R5I4oS4OF/XVbp84syTfZTPyqwi23UR9+KYuASjxG3j4b
-        Jq+mT5s/TcDEa6IPWtAko+4rA1fFFXCi6hu8ubmfD5KucwIokKRQrNw3OpJNIKP/SPZXU/lNrfjpu
-        BIhDwvKiLNrJ5+cqAt4m6860BFcMc/AJCQJ89CaoeCaX7cbamgIiU5I3qifIGDaoRGjtM1WX3xVjF
-        duIt4uvA==;
+        bh=UfFsjnMZO/Rq4fYsTDy7TAQ1WDn/2/A9cAH2PPVx4Dc=; b=bpV61dLdwafyzPNxp6FbhzqRwJ
+        XRn6Pl44OIU/41u7z97pqglIliE/1VqmSbRySYbVFJRuVRft/OXdYdyRLmTwpF2EOAPnFqRL15qO1
+        Qa9Rj/fj1zgklqzpMA+8V+9h9dosTebFWSLFNs5UN1x8Ps6gkKlgYQCJLXJJVhU5yx1wk99j4BH3n
+        zQQzS+2vNL2Uckl/cCaJ5uig19zh2yCoKyNzbW++uU1cObrtqkEOZ16W4xaiGNzCCXxjUIz3K0+3W
+        6fzXvOVRw8o3SuD+lZD9WyLJDwKJ3Bp4KiGInAH4GKrU0eTmxhESHW7zSeyv7QGwzZwssYGybcAAQ
+        L4PEpiJQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU7-0006oi-B9; Wed, 12 Feb 2020 04:18:47 +0000
+        id 1j1jU7-0006p3-Fh; Wed, 12 Feb 2020 04:18:47 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v2 20/25] mm: Make prep_transhuge_page return its argument
-Date:   Tue, 11 Feb 2020 20:18:40 -0800
-Message-Id: <20200212041845.25879-21-willy@infradead.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 23/25] mm: Allow large pages to be removed from the page cache
+Date:   Tue, 11 Feb 2020 20:18:43 -0800
+Message-Id: <20200212041845.25879-24-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
 References: <20200212041845.25879-1-willy@infradead.org>
@@ -55,73 +54,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-By permitting NULL or order-0 pages as an argument, and returning the
-argument, callers can write:
-
-	return prep_transhuge_page(alloc_pages(...));
-
-instead of assigning the result to a temporary variable and conditionally
-passing that to prep_transhuge_page().
+page_cache_free_page() assumes compound pages are PMD_SIZE; fix
+that assumption.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- include/linux/huge_mm.h | 7 +++++--
- mm/huge_memory.c        | 9 +++++++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 3de788ee25bd..865b9c16c99c 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -158,7 +158,7 @@ extern unsigned long thp_get_unmapped_area(struct file *filp,
- 		unsigned long addr, unsigned long len, unsigned long pgoff,
- 		unsigned long flags);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 08b5cd4ce47b..e74a22af7e4e 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -248,7 +248,7 @@ static void page_cache_free_page(struct address_space *mapping,
+ 		freepage(page);
  
--extern void prep_transhuge_page(struct page *page);
-+extern struct page *prep_transhuge_page(struct page *page);
- extern void free_transhuge_page(struct page *page);
- bool is_transparent_hugepage(struct page *page);
- 
-@@ -307,7 +307,10 @@ static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
- 	return false;
- }
- 
--static inline void prep_transhuge_page(struct page *page) {}
-+static inline struct page *prep_transhuge_page(struct page *page)
-+{
-+	return page;
-+}
- 
- static inline bool is_transparent_hugepage(struct page *page)
- {
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index b08b199f9a11..b52e007f0856 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -508,15 +508,20 @@ static inline struct deferred_split *get_deferred_split_queue(struct page *page)
- }
- #endif
- 
--void prep_transhuge_page(struct page *page)
-+struct page *prep_transhuge_page(struct page *page)
- {
-+	if (!page || compound_order(page) == 0)
-+		return page;
- 	/*
--	 * we use page->mapping and page->indexlru in second tail page
-+	 * we use page->mapping and page->index in second tail page
- 	 * as list_head: assuming THP order >= 2
- 	 */
-+	BUG_ON(compound_order(page) == 1);
- 
- 	INIT_LIST_HEAD(page_deferred_list(page));
- 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
-+
-+	return page;
- }
- 
- bool is_transparent_hugepage(struct page *page)
+ 	if (PageTransHuge(page) && !PageHuge(page)) {
+-		page_ref_sub(page, HPAGE_PMD_NR);
++		page_ref_sub(page, hpage_nr_pages(page));
+ 		VM_BUG_ON_PAGE(page_count(page) <= 0, page);
+ 	} else {
+ 		put_page(page);
 -- 
 2.25.0
 
