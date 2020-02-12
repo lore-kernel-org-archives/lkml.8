@@ -2,78 +2,70 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40F6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE147C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CBF20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="si99YFEQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8694320848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgBLEU0 (ORCPT
+        id S1728130AbgBLEVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:20:26 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53876 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbgBLESq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 23:18:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=G02P3NwoSCoisXgQ/IS2rHa3w6ThGczr5ALv3SgsGPE=; b=si99YFEQ0elcNaPbG1Sa7xumtX
-        V7eGl8RRqn/ROGpPEuHPSmuTWjQIm5vo7lQlpOZyNr13m5VvzeRnukA8bO75KMxjKUMkqCvVFh9RC
-        bAGhuFS7oXGvdVwJlWCSFVy2qtN1ME4nHd27PKLOLRcFpRUQbNZhMNAwiN2REv3fDHGKextlNerDD
-        AakK2U6Jo2OqyZdebCrhKzIsfldMP9qoKNsSszalDBnlEhAMnq5Knq12SDN/Xf2sQKEbysUiSHdRV
-        Xn/xPbEVn5qH1t/ema2JlwYjN6p69/bDPnkIZG02tw99eCasVDKlwm2YRsUoTroeE1jDg5M3G8Pfg
-        rq46tHlQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU6-0006mQ-Hd; Wed, 12 Feb 2020 04:18:46 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/25] mm: Optimise find_subpage for !THP
-Date:   Tue, 11 Feb 2020 20:18:22 -0800
-Message-Id: <20200212041845.25879-3-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
+        Tue, 11 Feb 2020 23:21:00 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10613 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727602AbgBLEU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 23:20:59 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B424F22BED64EA8E65D6;
+        Wed, 12 Feb 2020 12:20:57 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.66) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Feb 2020
+ 12:20:51 +0800
+Subject: Re: [PATCH] block: rename 'q->debugfs_dir' in blk_unregister_queue()
+To:     Bart Van Assche <bvanassche@acm.org>, <axboe@kernel.dk>,
+        <ming.lei@redhat.com>
+CC:     <yi.zhang@huawei.com>, <zhangxiaoxu5@huawei.com>,
+        <luoshijie1@huawei.com>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200211035137.19454-1-yukuai3@huawei.com>
+ <c57b050d-9ed7-9d6b-b1d0-628a197f6ea6@acm.org>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <18bf436a-9c6a-dba8-46a4-ef57132f467a@huawei.com>
+Date:   Wed, 12 Feb 2020 12:20:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c57b050d-9ed7-9d6b-b1d0-628a197f6ea6@acm.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.66]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On 2020/2/12 11:27, Bart Van Assche wrote:
+> What is the behavior of this loop if multiple block devices are being
+> removed concurrently? Does it perhaps change remove block device removal
+> from an O(1) into an O(n) operation?
+Yes, there may be performance overhead.(I thought it's minimal) However,
+I can change the name of dir form "read_to_remove_%d" to
+"read_to_remove_%s(dev_name)_%d" to fix that.
+> 
+> Since this scenario may only matter to syzbot tests: has it been
+> considered to delay block device creation if the debugfs directory from
+> a previous incarnation of the block device still exists?
+> 
+I think it's a bug device creation succeed when the debugfs directory
+exist. Of course delay block device creation can fix the problem, but I
+haven't come up with a good solution. And by renaming the dir, there is
+no need to delay cration.
 
-If THP is disabled, find_subpage can become a no-op.
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- include/linux/pagemap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 75bdfec49710..0842622cca90 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -340,7 +340,7 @@ static inline struct page *find_subpage(struct page *page, pgoff_t offset)
- 
- 	VM_BUG_ON_PAGE(PageTail(page), page);
- 
--	return page + (offset & (compound_nr(page) - 1));
-+	return page + (offset & (hpage_nr_pages(page) - 1));
- }
- 
- struct page *find_get_entry(struct address_space *mapping, pgoff_t offset);
--- 
-2.25.0
+Thanks!
+Yu Kuai
 
