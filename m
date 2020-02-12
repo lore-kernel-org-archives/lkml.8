@@ -2,269 +2,131 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE58C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4722C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BE82168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B05206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="KzuOXwP/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wCji2WQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgBLTyq (ORCPT
+        id S1728984AbgBLT4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:54:46 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43923 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgBLTyq (ORCPT
+        Wed, 12 Feb 2020 14:56:34 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52436 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgBLT4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:54:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r11so3865579wrq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:54:44 -0800 (PST)
+        Wed, 12 Feb 2020 14:56:34 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so3713921wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 11:56:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8h+Be9OF2MK5Ytpf2Np0wQ3iq3A9mioBHD0VRufyqqs=;
-        b=KzuOXwP/+AczoDterQIfUoyyRVd1T5q06m9N7yXg/EIcJV0Hg3BaneqpiZueDOUbyf
-         75kWFFgECPDmtsVJQJ48OhX86KUkkFf2uZg79Z8OUMSZNQi8x1RuKASjzxVa4QcOjghS
-         B/I6RdenX/vbGwlu17ITtB78+UKMhqHkQoCGGc/DK3XMcm9ioKNWINQdqh38ob0CIDcW
-         iltBuYbPUQ/BKQx6kO+d+REfDu+cqjkhCrFJhMjs6O596hgVZAtLzHgDo5okHe2oL2Y8
-         PdO6aXdLs9/HrGK9DN3NqQzASfiX0Zxx6WM/r9clWgMsZQzru9w2K27ey3K23bRWpk43
-         41yg==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qQ41iYMZO33MrUoyEW3Beg7Vzzsi5jGTe9Ra4Gt4eOs=;
+        b=wCji2WQ1ILTnUjjzJRUz4oCz7XrV3NIrWY98W9S4feK3Hf3Gb7UzVvUMTQLGLQarhA
+         Z71iDX5l+F6H0VteLOBcg5HtBY9V8U3aGfl0HftoKglz8RVxJIJ/v9h+AYYBS+cwtiGU
+         ATv5gQtBTkukhhWvrOkoT+n4RX43Hvj/QBrCrzD9+fI3wGKBNDll1Ay90I52QtGEp5oa
+         +2M1H6Jcq2pjVceTCsPUe8Oz3d+csREdnXV5Qm5S1GznGt8kP8T+vq1TFC8CmtZvAXx+
+         +856xkwVgJqdGI9ZTnqPIr0t8ewOsNdmdXuzBa011faQw3rJ4E9D/kj5S/prQGPUrMA1
+         28/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8h+Be9OF2MK5Ytpf2Np0wQ3iq3A9mioBHD0VRufyqqs=;
-        b=k4TR7Tu1wcLyUywLcq1iXueOUCP1yXngWdCjfrYFUeJUtOt7KVFvHk3mcFwKyxwOFM
-         6fPJ3q0m7IqtiwShLjV4Ew1Yoe6l/bWkQmKeXDkteDheBkS16UCXtrW9tsAF9qTWXJMG
-         Yg1lxCceP3cgMV4H6PAJ8HP0HwGeLLBFI/JkatYf757Ud1YchFXtVJZw14B45R6bSjwA
-         S2HcdhTFkkaVollTz+qor12PomqXm4amsjnmGVLZ4Ix3hX1mZwbRTqAFmfPf+C4DWfTz
-         /dnnVO7dsc+Quo4seIKs+8wmZQI7KCc79sKkDoIhy1JUdeAOwofj8VezewnMPm73XOiK
-         IL0A==
-X-Gm-Message-State: APjAAAUe6KxInf8jeE5aNVHGCpsmaE7waOOfuNkycRC+I1I4y5/gZrWI
-        35djrrNVHdplvjxVcAqN4QVMYsvM21+mldy7z/IH
-X-Google-Smtp-Source: APXvYqyO39GcuK0lCZrVW17R51sCLoUFtXVAQVtueys2KeFSpTcHV0AgMs8QzVnkGVgZlqfP1GXQFpbkp3llvduOqU0=
-X-Received: by 2002:a5d:534d:: with SMTP id t13mr17667438wrv.77.1581537283865;
- Wed, 12 Feb 2020 11:54:43 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qQ41iYMZO33MrUoyEW3Beg7Vzzsi5jGTe9Ra4Gt4eOs=;
+        b=id/kCwN5ytcyiC0LJmZTIgt+70hZcC0Tyv44wf5/bmmDZoE/cYqmVtZTrjy2xTrpGp
+         vn7KEwR2R45dXcCt66a0Kol575nY9ONU5+EVdRLmrfoGpdpGc6P40D8+xKoRB2ZhW837
+         FCRSgKr2lrimtxrRiqvVh8iy5ZBRN+GrHBZFRnPs3RYO7BeiT8aBorO9cBQC3lpm6T34
+         XgdAfLNPsRu7OW5nk2rAj51yF+DvhuCh1QXwKWSZRUU1y1mU1M8Iqy9Et3HTCuKGUy3R
+         kq1/vTCiiexmQVBltmoQnuKSXPsFIksJg8TjeGG83NFS8Befzmu0wdfCYgm/3rzDcCFD
+         wSjg==
+X-Gm-Message-State: APjAAAWU832nxEXM3rhuaCpLyCZ5LT0Fa5+S01tEwZkcWARd6WXFZcxw
+        mlqylOMo9nCyDRiGVaGxUaBWrQ==
+X-Google-Smtp-Source: APXvYqwEl9cQngn/7oDlMn7bWea1TxMCkOAElS0ziVIFCzxa+Eol6iOxsuuvkqztF8uDox/Brt/9lQ==
+X-Received: by 2002:a7b:cbc9:: with SMTP id n9mr720068wmi.89.1581537392650;
+        Wed, 12 Feb 2020 11:56:32 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id o4sm1846268wrx.25.2020.02.12.11.56.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 11:56:32 -0800 (PST)
+Date:   Wed, 12 Feb 2020 19:56:28 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, masahiroy@kernel.org, nico@fluxnic.net,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        maennich@google.com, kernel-team@android.com, jeyu@kernel.org,
+        hch@infradead.org
+Subject: Re: [PATCH v3 3/3] kbuild: generate autoksyms.h early
+Message-ID: <20200212195628.GA120870@google.com>
+References: <20200207180755.100561-4-qperret@google.com>
+ <202002111002.wXBhAK5H%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200212014822.28684-1-atish.patra@wdc.com> <20200212014822.28684-9-atish.patra@wdc.com>
- <CAAhSdy1BB=-FR_hx2mObDeWD+z2WzaVdZeiO9inmGPXasMcCTg@mail.gmail.com>
-In-Reply-To: <CAAhSdy1BB=-FR_hx2mObDeWD+z2WzaVdZeiO9inmGPXasMcCTg@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Wed, 12 Feb 2020 11:54:32 -0800
-Message-ID: <CAOnJCUJif_njbXAbZcAtzaBiEugL1Qb=_HrB3CtsebvRGd2kJA@mail.gmail.com>
-Subject: Re: [PATCH v8 08/11] RISC-V: Add SBI HSM extension
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Mao Han <han_mao@c-sky.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202002111002.wXBhAK5H%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 8:53 PM Anup Patel <anup@brainfault.org> wrote:
->
-> On Wed, Feb 12, 2020 at 7:22 AM Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> > SBI specification defines HSM extension that allows to start/stop a hart
-> > by a supervisor anytime. The specification is available at
-> >
-> > https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
-> >
-> > Implement SBI HSM extension.
->
-> I think this PATCH needs to be further broken down.
->
-> There are three distinct changes here:
-> 1. Exporting sbi_err_map_linux_errno() function
->     arch/riscv/kernel/sbi.c
->     arch/riscv/include/asm/sbi.h
-> 2. SBI HSM defines
->     arch/riscv/include/asm/sbi.h
-> 3. SBI HSM helper functions (which are mostly static functions)
->     arch/riscv/kernel/Makefile
->     arch/riscv/kernel/cpu_ops_sbi.c
->
-> We need separate patches for point1 and point2 above.
->
-> Also, point3 can be part of current PATCH9.
->
+On Tuesday 11 Feb 2020 at 10:14:14 (+0800), kbuild test robot wrote:
+> Hi Quentin,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on kbuild/for-next]
+> [also build test ERROR on linux/master linus/master v5.6-rc1 next-20200210]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Quentin-Perret/kbuild-allow-symbol-whitelisting-with-TRIM_UNUSED_KSYM/20200211-020659
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git for-next
+> config: i386-randconfig-c002-20200211 (attached as .config)
+> compiler: gcc-7 (Debian 7.5.0-4) 7.5.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> ERROR: "trace_event_raw_init" [lib/objagg.ko] undefined!
+> >> ERROR: "trace_event_reg" [lib/objagg.ko] undefined!
+> >> ERROR: "ida_destroy" [lib/objagg.ko] undefined!
+> >> ERROR: "rhashtable_destroy" [lib/objagg.ko] undefined!
+> >> ERROR: "kmalloc_order_trace" [lib/objagg.ko] undefined!
+> >> ERROR: "sort" [lib/objagg.ko] undefined!
+> >> ERROR: "__raw_spin_lock_init" [lib/objagg.ko] undefined!
+> >> ERROR: "rhashtable_init" [lib/objagg.ko] undefined!
+> >> ERROR: "rht_bucket_nested" [lib/objagg.ko] undefined!
+> >> ERROR: "__list_del_entry_valid" [lib/objagg.ko] undefined!
+> >> ERROR: "__rht_bucket_nested" [lib/objagg.ko] undefined!
+> >> ERROR: "kmem_cache_alloc_trace" [lib/objagg.ko] undefined!
+> >> ERROR: "kmalloc_caches" [lib/objagg.ko] undefined!
+> >> ERROR: "queue_work_on" [lib/objagg.ko] undefined!
+> >> ERROR: "system_wq" [lib/objagg.ko] undefined!
+> >> ERROR: "kfree" [lib/objagg.ko] undefined!
+> >> ERROR: "__list_add_valid" [lib/objagg.ko] undefined!
+> >> ERROR: "lockdep_rht_bucket_is_held" [lib/objagg.ko] undefined!
+> >> ERROR: "rhashtable_insert_slow" [lib/objagg.ko] undefined!
+> >> ERROR: "__local_bh_enable_ip" [lib/objagg.ko] undefined!
 
-Done.
+I find myself unable to reproduce this error on my box. Could you please
+provide the full build log ?
 
-> Regards,
-> Anup
->
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > ---
-> >  arch/riscv/include/asm/sbi.h    | 15 +++++++++++
-> >  arch/riscv/kernel/Makefile      |  3 +++
-> >  arch/riscv/kernel/cpu_ops_sbi.c | 48 +++++++++++++++++++++++++++++++++
-> >  arch/riscv/kernel/sbi.c         |  3 ++-
-> >  4 files changed, 68 insertions(+), 1 deletion(-)
-> >  create mode 100644 arch/riscv/kernel/cpu_ops_sbi.c
-> >
-> > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> > index d55d8090ab5c..0981a0c97eda 100644
-> > --- a/arch/riscv/include/asm/sbi.h
-> > +++ b/arch/riscv/include/asm/sbi.h
-> > @@ -26,6 +26,7 @@ enum sbi_ext_id {
-> >         SBI_EXT_TIME = 0x54494D45,
-> >         SBI_EXT_IPI = 0x735049,
-> >         SBI_EXT_RFENCE = 0x52464E43,
-> > +       SBI_EXT_HSM = 0x48534D,
-> >  };
-> >
-> >  enum sbi_ext_base_fid {
-> > @@ -56,6 +57,19 @@ enum sbi_ext_rfence_fid {
-> >         SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
-> >  };
-> >
-> > +enum sbi_ext_hsm_fid {
-> > +       SBI_EXT_HSM_HART_START = 0,
-> > +       SBI_EXT_HSM_HART_STOP,
-> > +       SBI_EXT_HSM_HART_STATUS,
-> > +};
-> > +
-> > +enum sbi_hsm_hart_status {
-> > +       SBI_HSM_HART_STATUS_AVAILABLE = 0,
-> > +       SBI_HSM_HART_STATUS_NOT_AVAILABLE,
-> > +       SBI_HSM_HART_STATUS_START_PENDING,
-> > +       SBI_HSM_HART_STATUS_STOP_PENDING,
-> > +};
-> > +
-> >  #define SBI_SPEC_VERSION_DEFAULT       0x1
-> >  #define SBI_SPEC_VERSION_MAJOR_SHIFT   24
-> >  #define SBI_SPEC_VERSION_MAJOR_MASK    0x7f
-> > @@ -130,6 +144,7 @@ static inline unsigned long sbi_minor_version(void)
-> >  {
-> >         return sbi_spec_version & SBI_SPEC_VERSION_MINOR_MASK;
-> >  }
-> > +int sbi_err_map_linux_errno(int err);
-> >  #else /* CONFIG_RISCV_SBI */
-> >  /* stubs for code that is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
-> >  void sbi_set_timer(uint64_t stime_value);
-> > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> > index f81a6ff88005..a0be34b96846 100644
-> > --- a/arch/riscv/kernel/Makefile
-> > +++ b/arch/riscv/kernel/Makefile
-> > @@ -44,5 +44,8 @@ obj-$(CONFIG_PERF_EVENTS)     += perf_event.o
-> >  obj-$(CONFIG_PERF_EVENTS)      += perf_callchain.o
-> >  obj-$(CONFIG_HAVE_PERF_REGS)   += perf_regs.o
-> >  obj-$(CONFIG_RISCV_SBI)                += sbi.o
-> > +ifeq ($(CONFIG_RISCV_SBI), y)
-> > +obj-$(CONFIG_SMP) += cpu_ops_sbi.o
-> > +endif
-> >
-> >  clean:
-> > diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
-> > new file mode 100644
-> > index 000000000000..9bdb60e0a4df
-> > --- /dev/null
-> > +++ b/arch/riscv/kernel/cpu_ops_sbi.c
-> > @@ -0,0 +1,48 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * HSM extension and cpu_ops implementation.
-> > + *
-> > + * Copyright (c) 2020 Western Digital Corporation or its affiliates.
-> > + */
-> > +
-> > +#include <linux/init.h>
-> > +#include <linux/mm.h>
-> > +#include <asm/sbi.h>
-> > +#include <asm/smp.h>
-> > +
-> > +static int sbi_hsm_hart_stop(void)
-> > +{
-> > +       struct sbiret ret;
-> > +
-> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
-> > +
-> > +       if (ret.error)
-> > +               return sbi_err_map_linux_errno(ret.error);
-> > +       else
-> > +               return 0;
-> > +}
-> > +
-> > +static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-> > +                      unsigned long priv)
-> > +{
-> > +       struct sbiret ret;
-> > +
-> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
-> > +                             hartid, saddr, priv, 0, 0, 0);
-> > +       if (ret.error)
-> > +               return sbi_err_map_linux_errno(ret.error);
-> > +       else
-> > +               return 0;
-> > +}
-> > +
-> > +static int sbi_hsm_hart_get_status(unsigned long hartid)
-> > +{
-> > +       struct sbiret ret;
-> > +
-> > +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
-> > +                             hartid, 0, 0, 0, 0, 0);
-> > +       if (ret.error)
-> > +               return sbi_err_map_linux_errno(ret.error);
-> > +       else
-> > +               return ret.value;
-> > +}
-> > diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> > index cd0f68aeac70..45ad49269f2c 100644
-> > --- a/arch/riscv/kernel/sbi.c
-> > +++ b/arch/riscv/kernel/sbi.c
-> > @@ -47,7 +47,7 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
-> >  }
-> >  EXPORT_SYMBOL(sbi_ecall);
-> >
-> > -static int sbi_err_map_linux_errno(int err)
-> > +int sbi_err_map_linux_errno(int err)
-> >  {
-> >         switch (err) {
-> >         case SBI_SUCCESS:
-> > @@ -64,6 +64,7 @@ static int sbi_err_map_linux_errno(int err)
-> >                 return -ENOTSUPP;
-> >         };
-> >  }
-> > +EXPORT_SYMBOL(sbi_err_map_linux_errno);
-> >
-> >  #ifdef CONFIG_RISCV_SBI_V01
-> >  /**
-> > --
-> > 2.24.0
-> >
->
+In the meantime I'll proceed to send a v4.
 
-
--- 
-Regards,
-Atish
+Thanks,
+Quentin
