@@ -2,96 +2,62 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2A0C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17204C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49AF215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581473118;
-	bh=FFaMZEc4E/x/xophYACoLJfYNCkVhTJ16jaEkNs90pY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pBFdAfK0Doc7ob+IF6CChz/ZebWPZldfD4/qNV0mwhcLD/LLLEDaHGT21NCGHy4Wz
-	 lQjCqTop188oWFpedGB25Wd1XEadJeQc30hOyWO/W43dlbiLpXgrtO8qwxQRjLxQSw
-	 n/4sbFkMAYCRmAgtEIH9Bc0ppWSTQ45mrkvJRSYQ=
+	by mail.kernel.org (Postfix) with ESMTP id EDDB620848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbgBLCFR (ORCPT
+        id S1727604AbgBLCGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:05:17 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37949 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBLCFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:05:17 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z9so368329oth.5;
-        Tue, 11 Feb 2020 18:05:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SPSyVH5BY8YlezL4QmTEFwwCly81f3R+OHqr47mHZ/A=;
-        b=AJ3ZzcaKflJxvWw+G9eT9krptto+5XpaC+PXtD7NXtgTY012UngjUzw4GgiuKKZPgr
-         9nxkbqqL2r4THtCQTNhURgNNY6OC3ztG93Rdf0Ki7ZMpkg08eCcLDAE7Cm1HbmE7aZI8
-         NrJ37lgB9v3haFujfB2GWwd6ILzrtSK0+uixF96fLbDtB7oXdsl9FcMKzCYqWRVHM3gp
-         m4dfNxVpYgMtaBaPeYGw/SdE6D0B7z7CczsIJiRbVwTDiuSLeSf0TGMhxRiuCCWna0h1
-         2ePPyYaTZRwduPn7LTwAm/tGHhJDxgrxGGTO9IRkuEdufd74/bAeMRZG1s2ob13FQ3FB
-         yxfw==
-X-Gm-Message-State: APjAAAWavVMEzwutAmZDYyl5C/kibbxnAlyICnyXM/Hf0BcWz+tZgm1n
-        lsYhXlLMl9ozFF4tQdx4oBetzkk=
-X-Google-Smtp-Source: APXvYqwOlhfZZBLT289wJr1MHH4C8G3kp95kP+M607Gu437a4Mn8H6ODIDYqfK5ohNHfNspIQls/CQ==
-X-Received: by 2002:a05:6830:4a4:: with SMTP id l4mr7597940otd.91.1581473114770;
-        Tue, 11 Feb 2020 18:05:14 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n25sm1711611oic.6.2020.02.11.18.05.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 18:05:14 -0800 (PST)
-Received: (nullmailer pid 26689 invoked by uid 1000);
-        Wed, 12 Feb 2020 02:05:13 -0000
-Date:   Tue, 11 Feb 2020 20:05:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: Document JZ47xx VPU auxiliary
- processor
-Message-ID: <20200212020513.GA24870@bogus>
-References: <20200211142614.13567-1-paul@crapouillou.net>
+        Tue, 11 Feb 2020 21:06:33 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:57730 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbgBLCGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 21:06:32 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1j1hQ5-0001BF-TF; Wed, 12 Feb 2020 10:06:29 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1j1hQ4-0007hA-DZ; Wed, 12 Feb 2020 10:06:28 +0800
+Date:   Wed, 12 Feb 2020 10:06:28 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>, davem@davemloft.net,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] crypto: export() overran state buffer on test vector
+Message-ID: <20200212020628.7grnopgwm6shn3hi@gondor.apana.org.au>
+References: <20200206085442.GA5585@Red>
+ <20200207065719.GA8284@sol.localdomain>
+ <20200207104659.GA10979@Red>
+ <20200208085713.ftuqxhatk6iioz7e@gondor.apana.org.au>
+ <20200211192118.GA24059@Red>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211142614.13567-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211192118.GA24059@Red>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:26:09AM -0300, Paul Cercueil wrote:
-> Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
-> Ingenic is a second Xburst MIPS CPU very similar to the main core.
-> This document describes the devicetree bindings for this auxiliary
-> processor.
+On Tue, Feb 11, 2020 at 08:21:18PM +0100, Corentin Labbe wrote:
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: Update TCSM0 address in example
->     v3: Change node name to 'video-decoder'
->     v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
->     v5: - Fix 'reg' not in <addr, len> pairs
->         - Add missing include to devicetree example
-> 
->  .../bindings/remoteproc/ingenic,vpu.yaml      | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+> Do you mean that I should abandon ahash as a fallback ?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Perhaps switching to shash is not as straightforward because of
+SG handling.  But if you're getting problems with statesize
+perhaps at least force a sync ahash algorithm might be a good
+idea.
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
