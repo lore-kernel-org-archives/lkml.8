@@ -2,140 +2,157 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47727C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07968C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2A42082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="mvdUvAsQ"
+	by mail.kernel.org (Postfix) with ESMTP id D9719206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgBLPOX (ORCPT
+        id S1728247AbgBLPPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:14:23 -0500
-Received: from mail.efficios.com ([167.114.26.124]:35984 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbgBLPOW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:14:22 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 30F122565FE;
-        Wed, 12 Feb 2020 10:14:21 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id uCkcnQ8ODkoA; Wed, 12 Feb 2020 10:14:21 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E3C15256987;
-        Wed, 12 Feb 2020 10:14:20 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E3C15256987
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1581520460;
-        bh=mW2NXnzY6Fox50h6j/jkDgJSsUhd0Yb5gYCdadXil9o=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=mvdUvAsQjqTqthMLUHmoh844evr5sdQsidamfP3xEtimLTe4SjNLpvqiTeV8SZzQy
-         IbFEVRWkB9xtQmb9Lu7QjeHikEin5qLfHrRG8tQezp+WhUPx1BvNcZMBuW32hH0QSc
-         u2YuFw8Kk7hb0CCckiXm00rRTSJwhIei8za8EMuvjOu4sqpHnoXld4LcL0NO/8b4aB
-         SIYFq/kg4zkGaDrLDYBWM4nKncD7UqcHMxKS216qoWp3AS5zCyQgjyc8imx/0SCcgN
-         IFyOHBlVvN6eQBduxwcTNt+PA/DzhoK9XBTasfFhOSlSG2yonnNA9TcLB4iuRWmiOa
-         U2IS9zXIAbOKA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id K7RhqByAevvq; Wed, 12 Feb 2020 10:14:20 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id CD8F8256553;
-        Wed, 12 Feb 2020 10:14:20 -0500 (EST)
-Date:   Wed, 12 Feb 2020 10:14:20 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Message-ID: <1771156780.158.1581520460744.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200212080220.GO14897@hirez.programming.kicks-ass.net>
-References: <20200211095047.58ddf750@gandalf.local.home> <20200211153452.GW14914@hirez.programming.kicks-ass.net> <20200211111828.48058768@gandalf.local.home> <20200211172952.GY14914@hirez.programming.kicks-ass.net> <903136616.617885.1581442521855.JavaMail.zimbra@efficios.com> <20200212080220.GO14897@hirez.programming.kicks-ass.net>
-Subject: Re: [PATCH v2] tracing/perf: Move rcu_irq_enter/exit_irqson() to
- perf trace point hook
+        Wed, 12 Feb 2020 10:15:45 -0500
+Received: from mga05.intel.com ([192.55.52.43]:30081 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727458AbgBLPPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:15:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 07:15:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="313430830"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 12 Feb 2020 07:15:43 -0800
+Received: from [10.251.28.99] (kliang2-mobl.ccr.corp.intel.com [10.251.28.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 0E5075803DA;
+        Wed, 12 Feb 2020 07:15:42 -0800 (PST)
+Subject: Re: [LKP] Re: [perf x86] b77491648e: will-it-scale.per_process_ops
+ -2.1% regression
+To:     "Chen, Rong A" <rong.a.chen@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     Roman Sudarikov <roman.sudarikov@linux.intel.com>,
+        0day robot <lkp@intel.com>,
+        Alexander Antonov <alexander.antonov@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200205123110.GN12867@shao2-debian>
+ <87tv44danp.fsf@linux.intel.com>
+ <782f409a-ff90-831c-56a0-abb3c31ab8d8@intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <c92cd67f-c2bd-7c5b-7668-7a2d64d2f8c5@linux.intel.com>
+Date:   Wed, 12 Feb 2020 10:15:41 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3899 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: tracing/perf: Move rcu_irq_enter/exit_irqson() to perf trace point hook
-Thread-Index: mO9rXol55U3N6uNBOWWh5IuLvZAWrg==
+In-Reply-To: <782f409a-ff90-831c-56a0-abb3c31ab8d8@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 12, 2020, at 3:02 AM, Peter Zijlstra peterz@infradead.org wrote:
 
-> On Tue, Feb 11, 2020 at 12:35:21PM -0500, Mathieu Desnoyers wrote:
+
+On 2/12/2020 5:56 AM, Chen, Rong A wrote:
 > 
->> Minor nits:
->> 
->> Why not make these an enum ?
->> 
->> > +
->> > +#define trace_rcu_enter()					\
->> > +({								\
->> > +	unsigned long state = 0;				\
->> > +	if (!rcu_is_watching())	{				\
->> > +		if (in_nmi()) {					\
->> > +			state = __TR_NMI;			\
->> > +			rcu_nmi_enter();			\
->> > +		} else {					\
->> > +			state = __TR_IRQ;			\
->> > +			rcu_irq_enter_irqson();			\
->> > +		}						\
->> > +	}							\
->> > +	state;							\
->> > +})
->> > +
->> > +#define trace_rcu_exit(state)					\
->> > +do {								\
->> > +	switch (state) {					\
->> > +	case __TR_IRQ:						\
->> > +		rcu_irq_exit_irqson();				\
->> > +		break;						\
->> > +	case __IRQ_NMI:						\
->> > +		rcu_nmi_exit();					\
->> > +		break;						\
->> > +	default:						\
->> > +		break;						\
->> > +	}							\
->> > +} while (0)
->> 
->> And convert these into static inline functions ?
 > 
-> Probably the same reason the rest of the file is macros; header hell.
+> On 2/6/2020 4:47 AM, Andi Kleen wrote:
+>> kernel test robot <rong.a.chen@intel.com> writes:
+>>
+>>> Greeting,
+>>>
+>>> FYI, we noticed a -2.1% regression of will-it-scale.per_process_ops 
+>>> due to commit:
+>>>
+>>>
+>>> commit: b77491648e6eb2f26b6edf5eaea859adc17f4dcc ("perf x86: 
+>>> Infrastructure for exposing an Uncore unit to PMON mapping")
+>>> https://github.com/0day-ci/linux/commits/roman-sudarikov-linux-intel-com/perf-x86-Exposing-IO-stack-to-IO-PMON-mapping-through-sysfs/20200118-075508 
+>>>
+>> Seems to be spurious bisect. I don't think that commit could change
+>> anything performance related.
 > 
-> Now, I could probably make these inlines, but then I'd have to add more
-> RCU function declariations to this file (which is outside of
-> rcupdate.h). Do we want to do that?
+> Hi Andi,
+> 
+> I commented out some lines in arch/x86/events/intel/uncore.c and 
+> will-it-scale.per_process_ops increased.
+> 
+> commit:
+>    v5.4
+>    b77491648e ("perf x86: Infrastructure for exposing an Uncore unit to 
+> PMON mapping")
+>    f33fe1b258 ("test")
+> 
+> 
+>              v5.4  b77491648e6eb2f26b6edf5eae 
+> f33fe1b258b2a4b2fc97600b2b  testcase/testparams/testbox
+> ----------------  -------------------------- -------------------------- 
+> ---------------------------
+>           %stddev      change         %stddev      change %stddev
+>               \          |                \          | \
+>       47983                       47004 47647 
+> will-it-scale/performance-process-100%-signal1-ucode=0xb000038/lkp-bdw-ep6
+>       47983                       47004 47647        GEO-MEAN 
+> will-it-scale.per_process_ops
+> 
+> diff --git a/arch/x86/events/intel/uncore.c 
+> b/arch/x86/events/intel/uncore.c
+> index 55201bfde2c84c..0dc9c455423d99 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -887,7 +887,7 @@ static int uncore_pmu_register(struct 
+> intel_uncore_pmu *pmu)
+>                  pmu->pmu.attr_groups = pmu->type->attr_groups;
+>          }
+> 
+> -       pmu->pmu.attr_update = attr_update;
+> +       // pmu->pmu.attr_update = attr_update;
+> 
+>          if (pmu->type->num_boxes == 1) {
+>                  if (strlen(pmu->type->name) > 0)
+> @@ -903,7 +903,7 @@ static int uncore_pmu_register(struct 
+> intel_uncore_pmu *pmu)
+>           * Exposing mapping of Uncore units to corresponding Uncore PMUs
+>           * through /sys/devices/uncore_<type>_<idx>/mapping
+>           */
+> -       uncore_platform_mapping(pmu->type);
+> +       // uncore_platform_mapping(pmu->type);
 
-Probably not :) I was just wondering why.
+The patch is for SKX uncore. The test machine looks like a BDX.
+So the mapping_group should always be invisible.
+The attr_update should not update.
+I think there should be no performance impact.
 
-Thanks,
+static void uncore_platform_mapping(struct intel_uncore_type *t)
+{
+	if (t->get_topology && t->set_mapping &&
+	    !t->get_topology(t, max_dies) && !t->set_mapping(t, max_dies))
+		mapping_group.is_visible = NULL;
+	else
+		mapping_group.is_visible = not_visible;
+}
 
-Mathieu
+Kan
 
 > 
-> The reason these were in this file is because I want to keep the comment
-> and implementation near to nmi_enter/exit.
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+>          ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
+>          if (!ret)
+> 
+> Best Regards,
+> Rong Chen
+> 
+>>
+>> -Andi
+>> _______________________________________________
+>> LKP mailing list -- lkp@lists.01.org
+>> To unsubscribe send an email to lkp-leave@lists.01.org
+> 
