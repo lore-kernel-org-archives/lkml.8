@@ -2,139 +2,94 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96026C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8454AC35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C55206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50232206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 00:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="hAaKEW5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgBLAJR (ORCPT
+        id S1728069AbgBLAMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 19:09:17 -0500
-Received: from www62.your-server.de ([213.133.104.62]:39780 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgBLAJQ (ORCPT
+        Tue, 11 Feb 2020 19:12:22 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37314 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbgBLAMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 19:09:16 -0500
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j1faW-0007DH-Se; Wed, 12 Feb 2020 01:09:09 +0100
-Received: from [85.7.42.192] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j1faW-000ETx-4j; Wed, 12 Feb 2020 01:09:08 +0100
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jann Horn <jannh@google.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>,
+        Tue, 11 Feb 2020 19:12:22 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so68569pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 16:12:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=Pr1WOT/2gw7Ui+bqMEREVDpwEXR+a792WriIpzt4B7s=;
+        b=hAaKEW5qHGtMe9K0r+9i4uWI4R3ZoMh+/psZvnhtmZTk8JOlUtnKNNqWB1Mirb283u
+         tG7MUfH6JiABF4KWtCFqWV73gNqKtPEQKLHogaYe8okqGHgb41jbwJFPJwr3nCY+7Uu0
+         T/koDrUYm446tI/FyX3ntJioWz/ASvkIV9/Aqins4Pg65CroAuLWyUqnU0z4/e+lzOGd
+         H+tNqNK+H3oELg6622w0cA/vLZHwFQP4DADvL9QeLgEmFSa7g7ujy4w0ZORVsA3W9wdC
+         1PX32M5zF1910+L6+bdy1KG8CFVS1lnzY4+mG1qBmljFTOZ+Xdg0gqx4CqnDL8Y7kDGy
+         uoiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=Pr1WOT/2gw7Ui+bqMEREVDpwEXR+a792WriIpzt4B7s=;
+        b=RdCRX+TnXvYishzVwV6VgxgArkHccPA1fyL0XRktkxpvVR8LlfJ5mUlD4dNNHtlcuy
+         PrlmleZHw7B2l+F7LMgMHSlOrr+61aPM/KfJHNjxBAbhL4GIPiouohHzgbvJCX/ut5lC
+         PAfN+nMsm2RnmmwYMDzJXAeRySS0Nm83/e/FPB0wnsIH6yUZrHgoExfbFj+s5FN4KJfR
+         gzXm+x8j+WUsxHdUTEPb1Hh+yJ0+opPXzIMqWuUt2O+tjEYdXmGPeIugZAe3WRRLMidl
+         jhtiQbV8GPS0O3GJGlpJj7+/cFEbRB6hlYWSSsB1UhVaJkZwfeWLHz0HHjQY+jLX/GaQ
+         GwKw==
+X-Gm-Message-State: APjAAAV0BAzWlk5vHJCl1E3XoXoLZp1qkJOlULh2Td7hKT/IcrGqI+Re
+        1e3XT3MWJ5Q5v/U/HKBgOf45d2daTlE=
+X-Google-Smtp-Source: APXvYqzfWf+52u5ptCvMmUlokh+ZnxotB+Jwjj8OIwwQjng66p5yI7RzfTPGOOK/x7Jm4L9EdIIjEQ==
+X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr6623427pjx.54.1581466341415;
+        Tue, 11 Feb 2020 16:12:21 -0800 (PST)
+Received: from ?IPv6:2600:1010:b06b:b0e7:939:1384:befb:d8c9? ([2600:1010:b06b:b0e7:939:1384:befb:d8c9])
+        by smtp.gmail.com with ESMTPSA id r9sm5705115pfl.136.2020.02.11.16.12.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2020 16:12:20 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 46/62] x86/sev-es: Handle INVD Events
+Date:   Tue, 11 Feb 2020 16:12:19 -0800
+Message-Id: <EA510462-A43C-4F7E-BFE8-B212003B3627@amacapital.net>
+References: <20200211135256.24617-47-joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        Juergen Gross <JGross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-References: <20200123152440.28956-1-kpsingh@chromium.org>
- <20200123152440.28956-5-kpsingh@chromium.org>
- <20200211031208.e6osrcathampoog7@ast-mbp> <20200211124334.GA96694@google.com>
- <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
- <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
- <20200211190943.sysdbz2zuz5666nq@ast-mbp>
- <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
- <20200211201039.om6xqoscfle7bguz@ast-mbp>
- <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
- <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
- <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
-Date:   Wed, 12 Feb 2020 01:09:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.1/25720/Mon Feb 10 12:53:41 2020)
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+In-Reply-To: <20200211135256.24617-47-joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 12:26 AM, Alexei Starovoitov wrote:
-> On Tue, Feb 11, 2020 at 1:38 PM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
->>
->> On Tue, Feb 11, 2020 at 09:33:49PM +0100, Jann Horn wrote:
->>>>
->>>> Got it. Then let's whitelist them ?
->>>> All error injection points are marked with ALLOW_ERROR_INJECTION().
->>>> We can do something similar here, but let's do it via BTF and avoid
->>>> abusing yet another elf section for this mark.
->>>> I think BTF_TYPE_EMIT() should work. Just need to pick explicit enough
->>>> name and extensive comment about what is going on.
->>>
->>> Sounds reasonable to me. :)
->>
->> awesome :)
-> 
-> Looks like the kernel already provides this whitelisting.
-> $ bpftool btf dump file /sys/kernel/btf/vmlinux |grep FUNC|grep '\<security_'
-> gives the list of all LSM hooks that lsm-bpf will be able to attach to.
-> There are two exceptions there security_add_hooks() and security_init().
-> Both are '__init'. Too late for lsm-bpf to touch.
-> So filtering BTF funcs by 'security_' prefix will be enough.
-> It should be documented though.
-> The number of attachable funcs depends on kconfig which is
-> a nice property and further strengthen the point that
-> lsm-bpf is very much kernel specific.
-> We probably should blacklist security_bpf*() hooks though.
 
-One thing that is not quite clear to me wrt the fexit approach; assuming
-we'd whitelist something like security_inode_link():
 
-int security_inode_link(struct dentry *old_dentry, struct inode *dir,
-                          struct dentry *new_dentry)
-{
-         if (unlikely(IS_PRIVATE(d_backing_inode(old_dentry))))
-                 return 0;
-         return call_int_hook(inode_link, 0, old_dentry, dir, new_dentry);
-}
+> On Feb 11, 2020, at 5:53 AM, Joerg Roedel <joro@8bytes.org> wrote:
+>=20
+> =EF=BB=BFFrom: Tom Lendacky <thomas.lendacky@amd.com>
+>=20
+> Implement a handler for #VC exceptions caused by INVD instructions.
 
-Would this then mean the BPF prog needs to reimplement above check by
-probing old_dentry->d_inode to later ensure its verdict stays 0 there
-too, or that such extra code is to be moved to call-sites instead? If
-former, what about more complex logic?
-
-Another approach could be to have a special nop inside call_int_hook()
-macro which would then get patched to avoid these situations. Somewhat
-similar like static keys where it could be defined anywhere in text but
-with updating of call_int_hook()'s RC for the verdict.
-
-Thanks,
-Daniel
+Uh, what?  Surely the #VC code can have a catch-all OOPS path for things lik=
+e this. Linux should never ever do INVD.=
