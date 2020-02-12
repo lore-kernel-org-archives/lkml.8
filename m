@@ -2,166 +2,86 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE7FC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A4BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF88F20661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9AB20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgBLN11 (ORCPT
+        id S1728023AbgBLN2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:27:27 -0500
-Received: from www62.your-server.de ([213.133.104.62]:57368 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgBLN11 (ORCPT
+        Wed, 12 Feb 2020 08:28:37 -0500
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:57467 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgBLN2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:27:27 -0500
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j1s2v-0004et-Je; Wed, 12 Feb 2020 14:27:18 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j1s2u-000X31-Sa; Wed, 12 Feb 2020 14:27:16 +0100
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Jann Horn <jannh@google.com>, KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-References: <20200211124334.GA96694@google.com>
- <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
- <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
- <20200211190943.sysdbz2zuz5666nq@ast-mbp>
- <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
- <20200211201039.om6xqoscfle7bguz@ast-mbp>
- <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
- <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
- <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
- <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
- <20200212024542.gdsafhvqykucdp4h@ast-mbp>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <ff6dec98-5e33-4603-1b90-e4bff23695cc@iogearbox.net>
-Date:   Wed, 12 Feb 2020 14:27:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 12 Feb 2020 08:28:36 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6F31430008F11;
+        Wed, 12 Feb 2020 14:28:34 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 43BB3154292; Wed, 12 Feb 2020 14:28:34 +0100 (CET)
+Date:   Wed, 12 Feb 2020 14:28:34 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, matthias.bgg@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
+        jslaby@suse.com
+Subject: Re: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
+Message-ID: <20200212132834.c63354wynhmrg6hz@wunner.de>
+References: <20200128141958.vwbxoqglt5gw4xj5@wunner.de>
+ <C099APQHQAHB.3Q9UVYJYT98TN@linux-9qgx>
+ <20200131152414.73tgwsfhzgu4apkx@wunner.de>
+ <dfbe2c94dd52a31826be751f8dd9afc4ed08ec6d.camel@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20200212024542.gdsafhvqykucdp4h@ast-mbp>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.1/25721/Wed Feb 12 06:24:38 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dfbe2c94dd52a31826be751f8dd9afc4ed08ec6d.camel@suse.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 3:45 AM, Alexei Starovoitov wrote:
-> On Wed, Feb 12, 2020 at 01:09:07AM +0100, Daniel Borkmann wrote:
->>
->> Another approach could be to have a special nop inside call_int_hook()
->> macro which would then get patched to avoid these situations. Somewhat
->> similar like static keys where it could be defined anywhere in text but
->> with updating of call_int_hook()'s RC for the verdict.
+On Mon, Feb 03, 2020 at 08:10:21PM +0100, Nicolas Saenz Julienne wrote:
+> On Fri, 2020-01-31 at 16:24 +0100, Lukas Wunner wrote:
+> > On Thu, Jan 30, 2020 at 05:11:55PM +0100, Nicolas Saenz Julienne wrote:
+> > > BTW did you had the oportunity to have a go at the patch?
+> > 
+> > I've just performed a quick test and it doesn't work for me.
+> > If I add stdout-path = "serial1:115200n8"; to the chosen node,
+> > I only get a regular console with this patch, not an earlycon.
 > 
-> Sounds nice in theory. I couldn't quite picture how that would look
-> in the code, so I hacked:
-> diff --git a/security/security.c b/security/security.c
-> index 565bc9b67276..ce4bc1e5e26c 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -28,6 +28,7 @@
->   #include <linux/string.h>
->   #include <linux/msg.h>
->   #include <net/flow.h>
-> +#include <linux/jump_label.h>
-> 
->   #define MAX_LSM_EVM_XATTR      2
-> 
-> @@ -678,12 +679,26 @@ static void __init lsm_early_task(struct task_struct *task)
->    *     This is a hook that returns a value.
->    */
-> 
-> +#define LSM_HOOK_NAME(FUNC) \
-> +       DEFINE_STATIC_KEY_FALSE(bpf_lsm_key_##FUNC);
-> +#include <linux/lsm_hook_names.h>
-> +#undef LSM_HOOK_NAME
-> +__diag_push();
-> +__diag_ignore(GCC, 8, "-Wstrict-prototypes", "");
-> +#define LSM_HOOK_NAME(FUNC) \
-> +       int bpf_lsm_call_##FUNC() {return 0;}
-> +#include <linux/lsm_hook_names.h>
-> +#undef LSM_HOOK_NAME
-> +__diag_pop();
-> +
->   #define call_void_hook(FUNC, ...)                              \
->          do {                                                    \
->                  struct security_hook_list *P;                   \
->                                                                  \
->                  hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
->                          P->hook.FUNC(__VA_ARGS__);              \
-> +               if (static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
-> +                      (void)bpf_lsm_call_##FUNC(__VA_ARGS__); \
->          } while (0)
-> 
->   #define call_int_hook(FUNC, IRC, ...) ({                       \
-> @@ -696,6 +711,8 @@ static void __init lsm_early_task(struct task_struct *task)
->                          if (RC != 0)                            \
->                                  break;                          \
->                  }                                               \
-> +               if (RC == IRC && static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
-> +                      RC = bpf_lsm_call_##FUNC(__VA_ARGS__); \
+> That's surprising, you're using u-boot isn't it? and the upstream device tree?
 
-Nit: the `RC == IRC` test could be moved behind the static_branch_unlikely() so
-that it would be bypassed when not enabled.
+My apologies for the delay.
 
->          } while (0);                                            \
->          RC;                                                     \
->   })
-> 
-> The assembly looks good from correctness and performance points.
-> union security_list_options can be split into lsm_hook_names.h too
-> to avoid __diag_ignore. Is that what you have in mind?
-> I don't see how one can improve call_int_hook() macro without
-> full refactoring of linux/lsm_hooks.h
-> imo static_key doesn't have to be there in the first set. We can add this
-> optimization later.
+We boot the kernel directly from the Foundation's bootloader without
+U-Boot as intermediary, and we use the downstream DT and kernel
+(with RT & custom patches).
 
-Yes, like the above diff looks good, and then we'd dynamically attach the program
-at bpf_lsm_call_##FUNC()'s fexit hook for a direct jump, so all the security_blah()
-internals could stay as-is which then might also address Jann's concerns wrt
-concrete annotation as well as potential locking changes inside security_blah().
-Agree that patching out via static key could be optional but since you were talking
-about avoiding indirect jumps..
+As far as I could see, the 8250_bcm2835aux UART wasn't even found
+when the kernel searched for available earlycons.  The compatible
+string in the DT does match the one in Matthias' patch.
+
+I notice that Greg has already applied the patch to tty/next.
+I'm currently stretched a little thin but I'll debug this further
+once the dust has settled here.
 
 Thanks,
-Daniel
+
+Lukas
