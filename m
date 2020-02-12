@@ -2,108 +2,79 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0275C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764C420675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:45:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aqikuFHN"
+	by mail.kernel.org (Postfix) with ESMTP id 816E420675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgBLLpD (ORCPT
+        id S1728384AbgBLLpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Feb 2020 06:45:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:59914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728085AbgBLLpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Feb 2020 06:45:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45294 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727987AbgBLLpD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:45:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581507902;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z/XW9HBv8g40NKs9Q4i4eHubCeo+923+Sg7WFrBrwCY=;
-        b=aqikuFHNwD8PKxYAMCsEaQuKjBe39140DP7FR2OquRttFB1VR7pBMfM5ZJ1brKf+fAFMxL
-        2eQlnOBuOMZwpRRBzHZ18QfhH9GzevudUoKKh5AgGpcgui5+NWDrNVk14JsslLXuy2Kjln
-        CfDnN4gPLNsmr4uganRxhOovEUdAITM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-101-C2oxTt35MAWslsOHFG-b2g-1; Wed, 12 Feb 2020 06:45:00 -0500
-X-MC-Unique: C2oxTt35MAWslsOHFG-b2g-1
-Received: by mail-wm1-f69.google.com with SMTP id g26so612698wmk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:45:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z/XW9HBv8g40NKs9Q4i4eHubCeo+923+Sg7WFrBrwCY=;
-        b=YnUCtaPptq+UwbXzS+QphJk36XoUXHIbtZ2Z6vkBQFEql/zKYEtvIZN06PbB+ibjo3
-         jGzDA4qRAqCH97j1nFzjHuQo8GRnj4LyDF2kZtgK8DhjJ5+iegjzpSBiOAcLWWkiEdNk
-         OZwb4tUak7ZImbpH/r6dgeELjakxSHD5qTaRSZ8AUpfud1hnEk0AmgZSaso5jF/7LcBG
-         9GIUfy46vDlae91sTmDM2kit/GJSblzNvBu2j0LdpXMv9CZ9pqZZAz/27yEXa76GXItk
-         jdu/vxxaD8CaUeN+0za3wioIAOTNlryz5meZu8ygUM5fjJeib73lMvkDdJHswXff2axG
-         FzjQ==
-X-Gm-Message-State: APjAAAUXOXlf6d26Cin6pq9fEkxBMEwU+M3/Q+Nsze7rDo3N+FUTEwjh
-        Rv2sCotXy7/mb/5bmbx6sTgzl0QWiMZOUMYCg0O3bPcFCp0Jt+XlIw9YjNd5AacfzUymkTSHD2A
-        Z6m1mLfwkEV/jMO0RptuyCJZc
-X-Received: by 2002:a1c:2786:: with SMTP id n128mr12005156wmn.47.1581507899078;
-        Wed, 12 Feb 2020 03:44:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwNLEvraETcWc9irlpjFpNKiOUzmnEDzoDdQ3QMWGLuFUihhVD3y/6Sc35cwcZEI+Ez97BY6w==
-X-Received: by 2002:a1c:2786:: with SMTP id n128mr12005134wmn.47.1581507898813;
-        Wed, 12 Feb 2020 03:44:58 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
-        by smtp.gmail.com with ESMTPSA id l132sm451131wmf.16.2020.02.12.03.44.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 03:44:58 -0800 (PST)
-Subject: Re: [PATCH v4 3/3] selftests: KVM: SVM: Add vmcall test
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com
-References: <20200206104710.16077-1-eric.auger@redhat.com>
- <20200206104710.16077-4-eric.auger@redhat.com>
- <2469b52e-9f66-b19b-7269-297dbbd0ca27@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a30f5513-d80b-a4e9-0279-995bf5c6417a@redhat.com>
-Date:   Wed, 12 Feb 2020 12:45:04 +0100
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C93730E;
+        Wed, 12 Feb 2020 03:45:03 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2F583F68F;
+        Wed, 12 Feb 2020 03:45:00 -0800 (PST)
+Subject: Re: [PATCH v3 2/7] arm64: trap to EL1 accesses to AMU counters from
+ EL0
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        sudeep.holla@arm.com, lukasz.luba@arm.com,
+        valentin.schneider@arm.com, rjw@rjwysocki.net
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Steve Capper <steve.capper@arm.com>
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-3-ionela.voinescu@arm.com>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <fe7cc5d0-fd1f-ad36-2e56-bafe94d52ac4@arm.com>
+Date:   Wed, 12 Feb 2020 11:44:59 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <2469b52e-9f66-b19b-7269-297dbbd0ca27@oracle.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200211184542.29585-3-ionela.voinescu@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/02/20 23:46, Krish Sadhukhan wrote:
->>
->> +
->> +static inline void l2_vmcall(struct svm_test_data *svm)
->> +{
->> +    __asm__ __volatile__("vmcall");
-> Is it possible to re-use the existing vmcall() function ?
+On 11/02/2020 18:45, Ionela Voinescu wrote:
+> The activity monitors extension is an optional extension introduced
+> by the ARMv8.4 CPU architecture. In order to access the activity
+> monitors counters safely, if desired, the kernel should detect the
+> presence of the extension through the feature register, and mediate
+> the access.
+> 
+> Therefore, disable direct accesses to activity monitors counters
+> from EL0 (userspace) and trap them to EL1 (kernel).
+> 
+> To be noted that the ARM64_AMU_EXTN kernel config and the disable_amu
+> kernel parameter do not have an effect on this code. Given that the
+> amuserenr_el0 resets to an UNKNOWN value, setting the trap of EL0
+> accesses to EL1 is always attempted for safety and security
+> considerations. Therefore firmware should still ensure accesses to
+> AMU registers are not trapped in EL2/EL3 as this code cannot be
+> bypassed if the CPU implements the Activity Monitors Unit.
+> 
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Steve Capper <steve.capper@arm.com>
+> ---
 
-Technically the AMD opcode is "vmmcall".  Using vmcall() still makes
-sense as it tests KVM's emulation of the Intel opcode.
-
-> Also, we should probably re-name the function to 'l2_guest_code' which
-> is used in the existing code and also it matches with 'l1_guest_code'
-> naming.
-
-Ok.  I also removed the "inline" which is really not used since we take
-the address of the function.
-
-Paolo
-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
