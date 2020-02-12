@@ -2,112 +2,156 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF975C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8BBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D8E2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581499042;
-	bh=FTt9sZj9d8jlFGVStQB9x9BY+It9/XSXnSvGbxdj0Fg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zRnvP6FxvPKUueIm9bFwQ9bNPacstcPQq8dx6i17rHii2qwVL0WBdKEyzztXVHD9F
-	 3sgx+7A82PKOYOUsKWwdDE3VkxBrO5cDH7YOXHSH2Apox1SPw2xutTi2PIVqaGbaqP
-	 ct89aX2la1K6HUqEn6RFSCKzB15Mo/EnI0JVOVBk=
+	by mail.kernel.org (Postfix) with ESMTP id A5A6E20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dGJf8KsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgBLJRW (ORCPT
+        id S1728802AbgBLJRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:17:22 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37227 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgBLJRV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:17:21 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q84so1371183oic.4;
-        Wed, 12 Feb 2020 01:17:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UFykYmpeqq57o6fsy3lLQgTxgLUBdF0//2jzAtV9jNI=;
-        b=oHqav0W9EJMmXoN2QtfEobnDgt5oyffWex9D0gqZjWBhvps765zyokW19FXeE6r/+P
-         BwBWvNTotuxxQiyPFFKnbeHym3f2B3/+ae6sEnRI3DOLQSXzigpK301ptNNtdNGnf7hk
-         QZZm2axThTABIY3JmQYYxWg9PdDIyVJt+bFHG83lw8S5aOCejaUgp5XiitZ0DW0z8Ooh
-         dRqBUt/x4C5cPhXGGxA5bJvejyVqvoaZLu1A5kCjKf0gIb5J2siZ1Tcv1hBaOk8OIYYE
-         xeN546t0tn2l3/Maf+ZKkiYeHX2EQLp0Xm0Y50rjXh7OYVfVeRcZaofkz2SNSXKvzBjr
-         9YVQ==
-X-Gm-Message-State: APjAAAW04Fh1J6YR2fMwK7K0TaAHQEHB3lNqY5xXrlFqBDXaZdO3IFYf
-        ey1wiuVCnusxMeFI5D9mhUDY0qZgBdXc+Fa5dLBKEA==
-X-Google-Smtp-Source: APXvYqzvxhB1urHRH45huzlpCbCrbTRtg8deoE3xRA4Tt/YsGbE5dBuQR8SE6FVUo6yzeJG6lRcGDlDORNKCut2uUdg=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr5789883oig.103.1581499040711;
- Wed, 12 Feb 2020 01:17:20 -0800 (PST)
+        Wed, 12 Feb 2020 04:17:44 -0500
+Received: from mail-eopbgr770044.outbound.protection.outlook.com ([40.107.77.44]:5249
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728150AbgBLJRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 04:17:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DpEUZtza+bKsveHkdMlO5Dv7hYlSRt7mu5LkWk/6Obl4WsmpYZz7HO51t1ma0++qLthvy8x06ab2ix0nzFmyJdanuUvoCSg013+31of9CAReixDVDgTHvJumr5w7F34F0bsL1QxvQ8EZBpHbSeJtE42wBK7KnlHnBFcYteKIUiawC/Ybi/jPDd5LFHWJKHHSnIMVwVvo37A7Mn0dCCYoo8qMg0QNqgTOkaC8Fftq+5PdTwd2BWTfRlpfDvA1ZjlbOZ33Z7fhfbfG25wcN2BI3JM3d4Kd1ol0kBSpcnHKF9Y//cMPhLhz3gh2WkUSlwQu3rddFxaJo6xxTBrJ7FoZoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UZnk3Kb9YptpUuvWJyaItWWenaWLmlBPQchBNS+WEbg=;
+ b=jrAy3knfxQf7M8QzjBDEofPf7/SFZ3sZ2bOpAsiOP+J+/QzGtbqgZEhA8fbS3J3IIkE6v3c8vseHKsxg+iBdKcAS/sDEZZV62sc2SP0eVclebDzTg2B5V4g/Y7RYvv2Cm+xddtY+7uxFRnVurrYeTpt6jFqokAlSD7dnzJ/ImE2LBTXvlHzvr8AI7LHtqK0nsj45csSbw1l3p/gXXCrCgKnfnue3+sv3j35uPR/Q/ugvvbEnzy5L48FEpHPUhV/GGRhxNYFQ9N8Ifu44QwyDthL0N7ifYH8XdsHVPlk3pC58aS1zC0kUs5pbXqZjpN8ABn37V7Fd87yNCAi+cB8muQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=arndb.de smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UZnk3Kb9YptpUuvWJyaItWWenaWLmlBPQchBNS+WEbg=;
+ b=dGJf8KsQKAw/3zKwnFxCVmX7YJwGzPT4+9TLAIXpu8ogzWYM+eKDFwCcxz6PXQkyyh7mi/FZ/d9vTSu1SCHBgtGpIML3wc7VVJGIuXAdiRF5LJtflY5phgWJmfv45DuH2PWbKLWm9zNqeCt/8mRI3T/TJYvZ4cVCtDGssO9fFMg=
+Received: from SN4PR0201CA0038.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::24) by BN8PR02MB5939.namprd02.prod.outlook.com
+ (2603:10b6:408:b4::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23; Wed, 12 Feb
+ 2020 09:17:42 +0000
+Received: from BL2NAM02FT052.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::204) by SN4PR0201CA0038.outlook.office365.com
+ (2603:10b6:803:2e::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
+ Transport; Wed, 12 Feb 2020 09:17:42 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT052.mail.protection.outlook.com (10.152.77.0) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
+ via Frontend Transport; Wed, 12 Feb 2020 09:17:41 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j1o9M-0005Nt-Pm; Wed, 12 Feb 2020 01:17:40 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j1o9H-0005TM-M8; Wed, 12 Feb 2020 01:17:35 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01C9HQsC017676;
+        Wed, 12 Feb 2020 01:17:26 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1j1o98-0005QJ-47; Wed, 12 Feb 2020 01:17:26 -0800
+Subject: Re: [PATCH] microblaze: Fix unistd_32.h generation format
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>
+References: <fe6868726b897fb7e89058d8e45985141260ed68.1581494174.git.michal.simek@xilinx.com>
+ <CAK8P3a1kjK=fqJiPWPOG19pBEX+khAgVyMC-7AqT4BiH8dDn8g@mail.gmail.com>
+ <6c931ed2-b03b-2e38-a10b-2d238e4b7a22@xilinx.com>
+ <CAK8P3a3xxu1wFKdsAHfuy2vpLigbuPR878mq75hh8HR=Tg=7LA@mail.gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <dca4637c-abfc-851f-0a70-873351be1837@xilinx.com>
+Date:   Wed, 12 Feb 2020 10:17:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1654227.8mz0SueHsU@kreacher> <CAPDyKFrcRzDE9=A28uf2sp=zaJpbEGrW5jm3L6CBVVc=GaL-Jg@mail.gmail.com>
-In-Reply-To: <CAPDyKFrcRzDE9=A28uf2sp=zaJpbEGrW5jm3L6CBVVc=GaL-Jg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 12 Feb 2020 10:17:08 +0100
-Message-ID: <CAJZ5v0gGjM2wgBvRAg_Oz1eBNQM8TMY601803miafBiRY5=M0w@mail.gmail.com>
-Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
- latency QoS interface
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAK8P3a3xxu1wFKdsAHfuy2vpLigbuPR878mq75hh8HR=Tg=7LA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(396003)(199004)(189003)(107886003)(53546011)(26005)(44832011)(4326008)(336012)(36756003)(186003)(356004)(6666004)(110136005)(81166006)(31696002)(81156014)(54906003)(316002)(5660300002)(2616005)(8936002)(8676002)(9786002)(478600001)(2906002)(70206006)(426003)(31686004)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR02MB5939;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dc1f9e80-aa87-49fa-baec-08d7af9c69ae
+X-MS-TrafficTypeDiagnostic: BN8PR02MB5939:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BN8PR02MB593966A214B69D2C73CBBB7CC61B0@BN8PR02MB5939.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0311124FA9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /nWeA40JU4eICp7ujsEZb4M4GiWdBswbR+xSJXzbr4UZr06h/IMPztyJOtr0ZiHCw7dOXfvp6Kz6uiZbUvzhLf3TUVX3dVLOvulP3/qR9gk/1GqYUnEjfE9ulyWAuCBT5kjkpeqKyfYNrw88bnKg3cM6uQQl5EGwYZA+RgNBCAS8QXxsFhyA7Xxrxf3opmSF4R9OzvjyjmmDnfy9uoHL1tU0lAPrSILfQjZNYa6ye0DePesBHYMQfZwxbkNqjc8XQqyGnBu5JxeJ5z4iS6E9dtcAl09EK7S/x39hGoWzQY8BICAlmB5c2sZURpClO9F6Gmk+HQIdSqXFcGx0xEWrvJC57ltg5tgCjqz+9pFmKQZ0i2qZprkNbK5VJI7mwpUgXHWrnOl+JNawteVVmoWn9mqZ95Ed0hO/Ki07YnnXkbl1fxCaYe3DqFi8LvCq+0IR
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 09:17:41.7290
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc1f9e80-aa87-49fa-baec-08d7af9c69ae
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5939
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 9:38 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Wed, 12 Feb 2020 at 00:39, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > Hi All,
-> >
-> > This series of patches is based on the observation that after commit
-> > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
-> > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
-> > code dedicated to the handling of global PM QoS classes in general.  That code
-> > takes up space and adds overhead in vain, so it is better to get rid of it.
-> >
-> > Moreover, with that unuseful code removed, the interface for adding QoS
-> > requests for CPU latency becomes inelegant and confusing, so it is better to
-> > clean it up.
-> >
-> > Patches [01/28-12/28] do the first part described above, which also includes
-> > some assorted cleanups of the core PM QoS code that doesn't go away.
-> >
-> > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
-> > "define stubs, migrate users, change the API proper" manner), patches
-> > [26-27/28] update the general comments and documentation to match the code
-> > after the previous changes and the last one makes the CPU latency QoS depend
-> > on CPU_IDLE (because cpuidle is the only user of its target value today).
-> >
-> > The majority of the patches in this series don't change the functionality of
-> > the code at all (at least not intentionally).
-> >
-> > Please refer to the changelogs of individual patches for details.
-> >
-> > Thanks!
->
-> A big thanks for cleaning this up! The PM_QOS_CPU_DMA_LATENCY and
-> friends, has been annoying me for a long time. This certainly makes
-> the code far better and more understandable!
->
-> I have looked through the series and couldn't find any obvious
-> mistakes, so feel free to add:
->
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+On 12. 02. 20 9:45, Arnd Bergmann wrote:
+> On Wed, Feb 12, 2020 at 9:42 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>>
+>> On 12. 02. 20 9:38, Arnd Bergmann wrote:
+>>> On Wed, Feb 12, 2020 at 8:56 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>>>>
+>>>> Generated files are also checked by sparse that's why add newline
+>>>> to remove sparse (C=1) warning:
+>>>> ./arch/microblaze/include/generated/uapi/asm/unistd_32.h:438:45:
+>>>> warning: no newline at end of file
+>>>>
+>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>>> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
+>>>
+>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>>
+>>> The patch looks good, but if you don't mind respinning it, could respin
+>>> it to do the same thing for all architectures at once? I see that  some
+>>> already have it, but most don't.
+>>
+>> I have not a problem to do so. I expect that this can be taken via your
+>> tree that I can create only one patch. If this should go via
+>> architectures tree would be better to create separate one.
+> 
+> Yes, I can take that into the asm-generic tree, or maybe you can just send it
+> to Andrew Morton.
 
-Thanks for the review, much appreciated!
+v2 sent.
 
-> Note, the review tag also means, that's fine for you to pick the mmc
-> patch via your tree.
-
-Thank you!
+M
