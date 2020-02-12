@@ -2,141 +2,118 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583DFC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12578C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E842168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C812168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:04:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7uaTfcr"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fxlFMUw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgBLTCl (ORCPT
+        id S1728912AbgBLTEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:02:41 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40163 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLTCl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:02:41 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so3827067wmi.5;
-        Wed, 12 Feb 2020 11:02:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p3lNgk+TYooq4tXMdxoYh8fTZhSP4S6HBRdG87ZYQ1k=;
-        b=H7uaTfcrBsVbqs44lge/QIOCNu1WdwpdmethH5sH6JGwFFWQHriQFanmEH+wz0DvvI
-         VWhrANErbzaUIKrkUbcDpM/rneF+XYI1tLlcyYTTz1hu5CoKK3U+IXpGwrTtXVedLwUV
-         uMeTq5iMDmpKtNNt8HqC46nTpjAoEgJzgmh+F8F348lqz0fVe8mLNtnPkoyMPCxuRRb/
-         12yoiStxh1B+Fg1FcV+AYCcwBwcwT8wLlIaXnu88KoRs6FJ8DkFadei8bsBSHNUkzmUt
-         vKh4CzMf1vaXbCHsN0MVeopNRT9lIx1/T7SCCQVGtbtBryWUH9W/fGKL5sX+D6yX/7re
-         GfOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=p3lNgk+TYooq4tXMdxoYh8fTZhSP4S6HBRdG87ZYQ1k=;
-        b=sTVRuXb8z9uPRLFDAGSKbOULQmYwpPh6diuiRqBOF5Hi9mU9TDCBMgdd4+Bnbbk8i0
-         Erg9CKUoTKwdzes4gwYmKGG5wkTjYD36rzvhL/AccYl9Num1iuug35hLAcKs7595Rsh7
-         LahL4EmfDItVGmlByMjXBA/eXQleh3U4TsDSCGeqt8wm1s7swGxHedJbDQURIMoqaVMp
-         OSeF5n5gsmaz8WE3VJarjw+8JmTNIHrUMLrOhKuZ3tOg4ytHQ2uLvx5tPFZgFWGv+77Z
-         tkQeArC2/wwyjyKJrA/UsEvxoN3gNihT6dr4o7AgPWwMOhDMu4NMcG/WYD59BF7tCF3i
-         zFlQ==
-X-Gm-Message-State: APjAAAUfEE7Nr/f6pxjpmO5klfbc+5ljADtG+TB0vdweVZLBSCnA2dYf
-        p02bUTiL/krxQcgJqEdQLMopzLPgaqA=
-X-Google-Smtp-Source: APXvYqz0kyCzLSP31LckMOpCvUHvngByIqX7uN5Tx3o8wOzMKxisaUMQKGFFho2Amo1/AGeJ1oRGoQ==
-X-Received: by 2002:a1c:2089:: with SMTP id g131mr467303wmg.63.1581534155701;
-        Wed, 12 Feb 2020 11:02:35 -0800 (PST)
-Received: from [192.168.1.35] (78.red-88-21-202.staticip.rima-tde.net. [88.21.202.78])
-        by smtp.gmail.com with ESMTPSA id n3sm1685295wrs.8.2020.02.12.11.02.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 11:02:35 -0800 (PST)
-Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
- kvm_flush_remote_tlbs()
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20200207223520.735523-1-peterx@redhat.com>
- <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
- <20200212163004.cpd33ux4zslfc3es@lantea.localdomain>
- <66e0a38c-a7f5-dcd1-d06b-b317588fad7a@redhat.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Autocrypt: addr=f4bug@amsat.org; keydata=
- mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
- u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
- HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
- YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
- ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
- dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
- ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
- Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
- HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
- Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
- YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
- klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
- jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
- 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
- loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
- sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
- JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
- 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
- K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
- n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
- CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <26c57acc-cec4-9f61-a98e-25c49d5f43e6@amsat.org>
-Date:   Wed, 12 Feb 2020 20:02:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <66e0a38c-a7f5-dcd1-d06b-b317588fad7a@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 12 Feb 2020 14:04:05 -0500
+Received: from mail-eopbgr40058.outbound.protection.outlook.com ([40.107.4.58]:45470
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727279AbgBLTEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 14:04:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4MosG+wUcopBb2+16J2wXCLSGEh/+yVfa7RZusVZWvpspokhNpOY3KA8FwNuV3gWmUz+92FTx+cfkeeSFvSjA+K11MoDnj8suPndDe1GFQ6uVIOWLmmB6zQVBQrH4Bi25Noe+EGUlA5ZQPxfGy4igjWTIlgiUjlibYb6vzv9CF6gUqoU4gRjMbUm94hBq8qQev5u7pNYYUZTPbO3njSNPKz4EjYjFrtDBqnFHFq5lRIPaOLXHMbYfW7OJjByJar297t8So5qi/LWUusnQVANobVccIzOkj8zJHirr3oFYvuDdwQYlitHhesINgJH4sC6aZ21PyzvMh8rW5MDiEOQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BupAzrf4hRlps4RyCb3qPGDq4kdNSbPzlOsPfbwnxB8=;
+ b=g9FV35Y96R5xcbesw7wdJcIGstT80IM60d/mu2bcT4lkZEBGtYvMQqhcRB8RozU+wY98nR6NA+JImX3P11dq2bbis9DL2pHAPyjaMWKJkeqV+uGfUsl8AQl+dZvuXy0I20sazBXzVPEusi8N0PdA3rIHYag3oRE4twKlxqhNuvsvR82POOCoOE0LhMKolgMtUsmKYXQcwpLA3DRY1MV+CMJ72vC1XUb9i4aXIT16QULRYwF1asp7Q4146rfyii5vdK3WOfgU9fKUO30aXat1C967cN59sW+l/tP9XOgHLZTZO2klZf0PH0Sg5zZbbAUgShIaKc/bd9oMGUZvRyIxxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BupAzrf4hRlps4RyCb3qPGDq4kdNSbPzlOsPfbwnxB8=;
+ b=fxlFMUw4SydKipALbsp2Dc8oRtl6iO2J25Jb8KV/2pXPqfWekXINEYsUBfOLIZx2edq/Et9e6cYrNM3SXEvt6ZXtO6Hm3xYEs03A3DcqCMUIAP6o7nO/sQrh584IuZ1y2r/JzDPV61uTtgW4gacd3DEIV8d/7b50CJ1uMBkujLk=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3743.eurprd04.prod.outlook.com (52.134.16.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Wed, 12 Feb 2020 19:04:01 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
+ 19:04:01 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v6 9/9] crypto: caam - add crypto_engine support for HASH
+ algorithms
+Thread-Topic: [PATCH v6 9/9] crypto: caam - add crypto_engine support for HASH
+ algorithms
+Thread-Index: AQHV4c23DLQNOiVYCkuTVfZUIsa9Ug==
+Date:   Wed, 12 Feb 2020 19:04:00 +0000
+Message-ID: <VI1PR0402MB348598008AC64EAAFF970087981B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1581530124-9135-1-git-send-email-iuliana.prodan@nxp.com>
+ <1581530124-9135-10-git-send-email-iuliana.prodan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [84.117.251.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8443e5f1-db68-4752-5d3e-08d7afee5223
+x-ms-traffictypediagnostic: VI1PR0402MB3743:|VI1PR0402MB3743:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3743DE1D58F1C5F72340287E981B0@VI1PR0402MB3743.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0311124FA9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(199004)(189003)(186003)(26005)(4326008)(91956017)(7696005)(478600001)(76116006)(44832011)(9686003)(4744005)(55016002)(64756008)(66476007)(66946007)(6636002)(8676002)(54906003)(110136005)(5660300002)(81166006)(8936002)(66556008)(66446008)(86362001)(52536014)(2906002)(33656002)(316002)(53546011)(81156014)(6506007)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3743;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QYOWl9Mnt9lzeXJ/OM2XKXkLNrwGIf11C4NDNDik3q1+QX917Mdwj42f8EXLLop9XECsURFfG4M68Pk+gttATW9i26ZbamV3keJ2jaG8ZFdaVJAJH/kD2WC/mwr1Qtgg96fZVQJyNGbqBe0fPP2cyybgIXey1raY51vfDeUBsOppybdtabSloma3Go1/IVHYMQv6edqcvHTx+7Iw0ru21ytJ/r5LsG2NXnSs4pnrfjSw/q9+0I5sFjCZt79br1jX1zEA/FfSDsDoc6k6Q7ekOme7+4ruupVG1lvIL58zGQOUBxzZQTHyqZ1zZapGKoJEttM6wqam0d7EdE86J5jpnmkebvSPhAiwJ0w1ukx5HsUQQrkZG7XGvrZPQtw5Q9YjeX6qS/I73Jj45QIkeG8p+dlfzMGcXH2dNOxM3g22KCAe4Ah5PNBnDVICR5ka23B1
+x-ms-exchange-antispam-messagedata: E0No7jsPQLYMRBEGZ0z5F2qmadF2D//V6yVywXHmYzBIR7OiQ7fneC7u3QRGcb31CFQD2ns53ik7Nzy6zMwt2FL5B+UTTHq8ZGl/U1xqFUuEDskC6UhanEpe2kk5kdJUhc1984ojIfpzPyCPp3hunw==
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8443e5f1-db68-4752-5d3e-08d7afee5223
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 19:04:00.9812
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DauUF3Coz08QYE53HK6OzvNv2UEy78eHsugYgC5vVjLoAgZUfVKkQEbyPYaPxdqzREJXOarjzqKIt8vZ/4yP6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3743
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 5:40 PM, Paolo Bonzini wrote:
-> On 12/02/20 17:30, Paul Burton wrote:
->> Hi Paolo,
->>
->> On Wed, Feb 12, 2020 at 01:25:30PM +0100, Paolo Bonzini wrote:
->>> MIPS folks, I see that arch/mips/kvm/mmu.c uses pud_index, so it's not
->>> clear to me if it's meant to only work if CONFIG_PGTABLE_LEVELS=4 or
->>> it's just bit rot.  Should I add a "depends on PGTABLE_LEVEL=4" to
->>> arch/mips/Kconfig?
->>
->> I'm no expert on this bit of code, but I'm pretty sure the systems
->> KVM/VZ has been used on the most internally had PGTABLE_LEVEL=3.
->>
->> I suspect this is actually a regression from commit 31168f033e37 ("mips:
->> drop __pXd_offset() macros that duplicate pXd_index() ones"). Whilst
->> that commit is correct that pud_index() & __pud_offset() are the same
->> when pud_index() is actually provided, it doesn't take into account the
->> __PAGETABLE_PUD_FOLDED case. There __pud_offset() was available but
->> would always evaluate to zero, whereas pud_index() isn't defined...
-> 
-> Ok, I'll try to whip out a patch that handles __PAGETABLE_PUD_FOLDED.
-> On the other hand this makes me worry about how much KVM is being tested
-> by people that care about MIPS (even just compile-tested).
-
-FYI last time James confirmed he tested QEMU was in 2017:
-https://www.mail-archive.com/qemu-devel@nongnu.org/msg477133.html
-
-At the end of 2019 he orphaned the QEMU part:
-https://www.mail-archive.com/qemu-devel@nongnu.org/msg667240.html
-and dropped the kernel maintainance:
-https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/commit/?id=9c48c48cd499
+On 2/12/2020 7:56 PM, Iuliana Prodan wrote:=0A=
+> Add crypto_engine support for HASH algorithms, to make use of=0A=
+> the engine queue.=0A=
+> The requests, with backlog flag, will be listed into crypto-engine=0A=
+> queue and processed by CAAM when free.=0A=
+> Only the backlog request are sent to crypto-engine since the others=0A=
+> can be handled by CAAM, if free, especially since JR has up to 1024=0A=
+> entries (more than the 10 entries from crypto-engine).=0A=
+> =0A=
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
+=0A=
