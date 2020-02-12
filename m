@@ -2,152 +2,127 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2259C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA666C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B0A206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F80A20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:54:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GlzZFuHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgBLIxw (ORCPT
+        id S1728701AbgBLIy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:53:52 -0500
-Received: from mga12.intel.com ([192.55.52.136]:5613 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbgBLIxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:53:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 00:53:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="226740960"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Feb 2020 00:53:37 -0800
-Received: from [10.125.252.164] (abudanko-mobl.ccr.corp.intel.com [10.125.252.164])
-        by linux.intel.com (Postfix) with ESMTP id 25BB9580409;
-        Wed, 12 Feb 2020 00:53:28 -0800 (PST)
-Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        oprofile-list@lists.sf.net, Andy Lutomirski <luto@amacapital.net>
-References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
- <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
- <64cab472-806e-38c4-fb26-0ffbee485367@tycho.nsa.gov>
- <05297eff-8e14-ccdf-55a4-870c64516de8@linux.intel.com>
- <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
- <537bdb28-c9e4-f44f-d665-25250065a6bb@linux.intel.com>
- <63d9700f-231d-7973-5307-3e56a48c54cb@linux.intel.com>
- <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <2e38c33d-f085-1320-8cc2-45f74b6ad86d@linux.intel.com>
-Date:   Wed, 12 Feb 2020 11:53:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 03:54:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43992 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728534AbgBLIy3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 03:54:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581497668;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=b86iE6BxA4OzviDRaOusy5saIH2IrYs+ZfbxDb3OuWI=;
+        b=GlzZFuHS33VmlykFgkvo66oek3XJM4DV2Y8A7q0U2iehJg6Rfrd/HFJXCUJwFaqw0YPegW
+        smb+DNg23TGtws8rwkESXfjOfuf23LFOoFmd1aXCtH+wkGRVUnQ1QQIEOkPPo035UkfoUB
+        5Xh1AfB0kw9b5rkgjPx1s0yS+Pbup58=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-6_6tteevMuG1hUBHC_f7yw-1; Wed, 12 Feb 2020 03:54:23 -0500
+X-MC-Unique: 6_6tteevMuG1hUBHC_f7yw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C57FC10054E3;
+        Wed, 12 Feb 2020 08:54:21 +0000 (UTC)
+Received: from [10.72.13.111] (ovpn-13-111.pek2.redhat.com [10.72.13.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A26E5C1B2;
+        Wed, 12 Feb 2020 08:53:52 +0000 (UTC)
+Subject: Re: [PATCH v2 1/5] virtio-mmio: add notify feature for per-queue
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Zha Bin <zhabin@linux.alibaba.com>,
+        virtio-dev@lists.oasis-open.org, slp@redhat.com,
+        jing2.liu@linux.intel.com, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
+        gerry@linux.alibaba.com
+References: <cover.1581305609.git.zhabin@linux.alibaba.com>
+ <8a4ea95d6d77a2814aaf6897b5517353289a098e.1581305609.git.zhabin@linux.alibaba.com>
+ <20200211062205-mutt-send-email-mst@kernel.org>
+ <ef613d3a-0372-64f3-7644-2e88cc9d4355@redhat.com>
+ <20200212024158-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d4eb9cde-5d06-3df9-df28-15378a9c6929@redhat.com>
+Date:   Wed, 12 Feb 2020 16:53:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200212024158-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
 
-On 22.01.2020 17:07, Stephen Smalley wrote:
-> On 1/22/20 5:45 AM, Alexey Budankov wrote:
+On 2020/2/12 =E4=B8=8B=E5=8D=884:18, Michael S. Tsirkin wrote:
+> On Wed, Feb 12, 2020 at 11:39:54AM +0800, Jason Wang wrote:
+>> On 2020/2/11 =E4=B8=8B=E5=8D=887:33, Michael S. Tsirkin wrote:
+>>> On Mon, Feb 10, 2020 at 05:05:17PM +0800, Zha Bin wrote:
+>>>> From: Liu Jiang<gerry@linux.alibaba.com>
+>>>>
+>>>> The standard virtio-mmio devices use notification register to signal
+>>>> backend. This will cause vmexits and slow down the performance when =
+we
+>>>> passthrough the virtio-mmio devices to guest virtual machines.
+>>>> We proposed to update virtio over MMIO spec to add the per-queue
+>>>> notify feature VIRTIO_F_MMIO_NOTIFICATION[1]. It can allow the VMM t=
+o
+>>>> configure notify location for each queue.
+>>>>
+>>>> [1]https://lkml.org/lkml/2020/1/21/31
+>>>>
+>>>> Signed-off-by: Liu Jiang<gerry@linux.alibaba.com>
+>>>> Co-developed-by: Zha Bin<zhabin@linux.alibaba.com>
+>>>> Signed-off-by: Zha Bin<zhabin@linux.alibaba.com>
+>>>> Co-developed-by: Jing Liu<jing2.liu@linux.intel.com>
+>>>> Signed-off-by: Jing Liu<jing2.liu@linux.intel.com>
+>>>> Co-developed-by: Chao Peng<chao.p.peng@linux.intel.com>
+>>>> Signed-off-by: Chao Peng<chao.p.peng@linux.intel.com>
+>>> Hmm. Any way to make this static so we don't need
+>>> base and multiplier?
+>> E.g page per vq?
 >>
->> On 21.01.2020 21:27, Alexey Budankov wrote:
->>>
->>> On 21.01.2020 20:55, Alexei Starovoitov wrote:
->>>> On Tue, Jan 21, 2020 at 9:31 AM Alexey Budankov
->>>> <alexey.budankov@linux.intel.com> wrote:
->>>>>
->>>>>
->>>>> On 21.01.2020 17:43, Stephen Smalley wrote:
->>>>>> On 1/20/20 6:23 AM, Alexey Budankov wrote:
->>>>>>>
-<SNIP>
->>>>>>> Introduce CAP_PERFMON capability designed to secure system performance
->>>>>>
->>>>>> Why _noaudit()?  Normally only used when a permission failure is non-fatal to the operation.  Otherwise, we want the audit message.
->>
->> So far so good, I suggest using the simplest version for v6:
->>
->> static inline bool perfmon_capable(void)
->> {
->>     return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
->> }
->>
->> It keeps the implementation simple and readable. The implementation is more
->> performant in the sense of calling the API - one capable() call for CAP_PERFMON
->> privileged process.
->>
->> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and unprivileged processes,
->> but this bloating also advertises and leverages using more secure CAP_PERFMON
->> based approach to use perf_event_open system call.
-> 
-> I can live with that.  We just need to document that when you see both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process, try only allowing CAP_PERFMON first and see if that resolves the issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus CAP_DAC_OVERRIDE.
+>> Thanks
+> Problem is, is page size well defined enough?
+> Are there cases where guest and host page sizes differ?
+> I suspect there might be.
 
-I am trying to reproduce this double logging with CAP_PERFMON.
-I am using the refpolicy version with enabled perf_event tclass [1], in permissive mode.
-When running perf stat -a I am observing this AVC audit messages:
 
-type=AVC msg=audit(1581496695.666:8691): avc:  denied  { open } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
-type=AVC msg=audit(1581496695.666:8691): avc:  denied  { kernel } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
-type=AVC msg=audit(1581496695.666:8691): avc:  denied  { cpu } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
-type=AVC msg=audit(1581496695.666:8692): avc:  denied  { write } for  pid=2779 comm="perf" scontext=user_u:user_r:user_systemd_t tcontext=user_u:user_r:user_systemd_t tclass=perf_event permissive=1
+Right, so it looks better to keep base and multiplier, e.g for vDPA.
 
-However there is no capability related messages around. I suppose my refpolicy should 
-be modified somehow to observe capability related AVCs.
 
-Could you please comment or clarify on how to enable caps related AVCs in order
-to test the concerned logging.
+>
+> But I also think this whole patch is unproven. Is someone actually
+> working on QEMU code to support pass-trough of virtio-pci
+> as virtio-mmio for nested guests? What's the performance
+> gain like?
 
-Thanks,
-Alexey
 
----
-[1] https://github.com/SELinuxProject/refpolicy.git
+I don't know.
+
+Thanks
+
+
+>
+> -- MST
+
