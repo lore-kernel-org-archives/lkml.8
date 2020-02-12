@@ -2,64 +2,64 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7810C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0E3C352A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872822082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D992086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 01:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TywLaxWt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QCm27dC/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgBLBwH (ORCPT
+        id S1728355AbgBLBwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 20:52:07 -0500
+        Tue, 11 Feb 2020 20:52:12 -0500
 Received: from esa1.hgst.iphmx.com ([68.232.141.245]:60368 "EHLO
         esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728259AbgBLBwA (ORCPT
+        with ESMTP id S1728281AbgBLBv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 20:52:00 -0500
+        Tue, 11 Feb 2020 20:51:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1581472320; x=1613008320;
+  t=1581472317; x=1613008317;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/GlgOKcxd7uoN0nxIQqstOE4PEIJ6PWJbqedHD+Oytw=;
-  b=TywLaxWtcawEJiUG1zujYJLEMn16/vo6Y4K4qCagzhSX0mX4HwN7dgSH
-   Dhicc72BTEdsBjZZYeQSEu/15ePua4ld5NOlP9hP/LdC+2G7nSHe89QbS
-   3c3iMOUNqrAXK9CZGyuNjCHahwho/1JfD9lziUggcwZbn6YsPF4YYxvL3
-   HnBGKcW2XzMtrGoqjmoYHf6OhDpgOfeZ+PMbUoMHhqLDHIydwwjs/tKGg
-   hpon37c5ND1mFmOinfwAvFzd+U1yRTb1HCHUaVk0h4i+zNPF4HALPUtXd
-   dDUMrJizD1hqdLVLSFLxLZLpiwHbYLl1AV0y5A/S2MkDzsakcbzFNtRkw
-   A==;
-IronPort-SDR: J3hiKazOrAZydERvu8BzxWIusauk9431jGDNOYju4OGLA5Ql5gjOfcgS88V1Bra+WQtH0Z07Xv
- h49ZYwoMq6tF0GIrPmvKmb0Ji+cc0FfsKGfQkeHF3qb+BjUXDrRtMKUmq/p+gTLY19WtlpXH+r
- FR4HX8G7lIDyufFy21V65eg3UUBycdWKeNVPu0Oy8aSdbQRX37OO78RhCUHrhAdvVB/XbzWIni
- 3L+6CjKMwuPp1ODOq+NGHyanoCwW/RplJ3lzYM5K68qjcZlxLVkTvbRxdtWctwwvmsve+9NiSo
- QCs=
+  bh=1HeLrodGOFdZtxytsnxaWhw187K4Ea3d/+LDZfjUZL4=;
+  b=QCm27dC/7GvbB5LECXQjsMto156GDeEXRTiNYGyET+2zzZQNmqn2/+si
+   4YPozgHkaYR2E/8HFo1+epUZAPgdQddx//CvBGEnFJWirEWcp/a12dSrk
+   De8PSL+7P60H0vjzB0YR3uYw6ldzerLwxMi2nLRqHnnJJZDpR2aTVtTnJ
+   QdKuEql3WjDwMPfBWxR8lS50phrTC+sEk+JDGh0qJJYe4DaSWLBc2Vefl
+   NkrVrk4edKHDC92m3Zb87egGHbhR+0RMWi17rpDnM2E3Qf6POSyaCKp6X
+   Q4TKvRzDSfG4M2osjj4TCMKEchH/xndj0b1SWka/fTDv/r1tOTzhVkVtv
+   w==;
+IronPort-SDR: D2H1zjPQWLZYMjznn9eWtsEKw2B9jXGi283DodyOR2uROZVMrc/he97TBxmm1PtybY6ckMqVSp
+ 8f1RPzuCvefMpFsyuNELefZu5YRA2unRVnYU29Uyy0M8wOyg9gxHqY12LZ5OBbIa54rPOaYxS+
+ Xmp+tT7z/UeF4iKfYkyuIF7++ZHOHaZpH1vgrlK3E3YS8glJT5G8FmhUnyi8bPdcYWLOLB04Ly
+ xML4g2uYXiekOGTyXxd0MdInZCU/lXhPQs9TqnKC/9tyF8dDqU6OJ2ZWzdx1zyP4FElt1OBGlX
+ 2KU=
 X-IronPort-AV: E=Sophos;i="5.70,428,1574092800"; 
-   d="scan'208";a="237648958"
+   d="scan'208";a="237648952"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Feb 2020 09:51:57 +0800
-IronPort-SDR: b4vxK2MFEYY3X80xe5nZZcekA+0kCJnVNxmzLVQkvLQCvpL0seR+YhKshwzFjl4/Fk8+mD/MWm
- 6WuLHPfThZay9ryyetPXDFNMve8OooZJBJpd+ZiIR7U2H1JLmm05vuWLQNsDkN8SdftxcJvYPs
- GucdLRBOoIZQDwT5aEoDWl0a5/ceXvbuc+XeZ3jK8LoG6HGyKScTy48nXVMdbi0tGd25dbHDjz
- l1n5/yV142qBcPkEZm3wpeaskFg1uzW+ojOjBn9FofR/9J3zitzyoUINbBXqidX+vw9aaS7E1Q
- y2K6y7JWM/KDTu2gMj17t8Qc
+  by ob1.hgst.iphmx.com with ESMTP; 12 Feb 2020 09:51:56 +0800
+IronPort-SDR: jpXRQNXAXvRiz4NbkKeJ3MAbOrWnFukueg5TRxieEBTLrVum23UoNRol70ks4RhA96SstVkYn7
+ I2XU4s8+YEvntb/u/Ylgp9GBxD8uY5JJFzgy++xFHsI2Ic7kBZjzatrQD43+mgEv2+2G87I510
+ sJxFXgkDpiRCFkBOksqMWEYLzagkqNJLnk+nW+nkLaek1LQrTZ4THRw79ZFrEAN/lXQASC7AwA
+ KNMaVOaDg7DyD6IRz5b1tzBgOjeR/6nzX6Nbp79q5Pzer6/g4O2A4q8sMXthFX86qg5+I6xGdk
+ +YXmiYo17O9buWbJMDqiAiE3
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 17:44:47 -0800
-IronPort-SDR: XZ75HwAnE+P9lENVdrLEHufZnVd6QXvw4PlHcN8S93gGExvO48x/WJUDn7MTDuO4bI3wHgW50H
- MHBVvZ/q9OyOCP1bQeXi05EnwfKB2KyHKZKc8L3G4TR/jKpXN79tL6Th63k3XWkQeBpFt9AOF3
- SEIe85g8xUgf3X3SwO0AgKgB+dvhbSnLE6NyLtvSL9DVjs1hzxGRjW5TV9KKZ8sAmq97ysAaPm
- /GVm534nwwLYp7sxcnV8n7047rUNFyaBfryyFT4r6L036dFrzNANTj2QC4QSg1gVrFbdZg1suP
- SNU=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 17:44:46 -0800
+IronPort-SDR: i4ACyt6r8IbxBuEzVyp5U/fLIyUJy0RnYoH4e3Bdt8gku+4JVeINRgrA5Ok6dbb/n93gYxA0VC
+ fKJv/n+m3NaPXIUvjpI3fLGCu5n1qPR/v48O6CoQFRME56iKZaDZPqxWngVFlrU2ZKQjpkL01G
+ uK74udGZ6hKWa5djsZprleP8i3DkZj8v1794sslt8UFGnTYNzqb9WEm1mwUGayDh6L0u3g7Jah
+ iUjb4twK+FTv2bSdVsYK6KXPZ8e4sFECLp5ciaiQUKadDFiWbX1CKoLNqOeD88GZzXjj7ruooH
+ QGY=
 WDCIronportException: Internal
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 11 Feb 2020 17:51:57 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 11 Feb 2020 17:51:56 -0800
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
@@ -81,9 +81,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincent Chen <vincent.chen@sifive.com>
-Subject: [PATCH v8 10/11] irqchip/sifive-plic: Initialize the plic handler when cpu comes online
-Date:   Tue, 11 Feb 2020 17:48:21 -0800
-Message-Id: <20200212014822.28684-11-atish.patra@wdc.com>
+Subject: [PATCH v8 08/11] RISC-V: Add SBI HSM extension
+Date:   Tue, 11 Feb 2020 17:48:19 -0800
+Message-Id: <20200212014822.28684-9-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200212014822.28684-1-atish.patra@wdc.com>
 References: <20200212014822.28684-1-atish.patra@wdc.com>
@@ -94,116 +94,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, plic threshold and priority are only initialized once in the
-beginning. However, threshold can be set to disabled if cpu is marked
-offline with cpu hotplug feature. This will not allow to change the
-irq affinity to a cpu that just came online.
+SBI specification defines HSM extension that allows to start/stop a hart
+by a supervisor anytime. The specification is available at
 
-Add plic specific cpu hotplug callback and initialize the per cpu handler
-when cpu comes online.
+https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+
+Implement SBI HSM extension.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- drivers/irqchip/irq-sifive-plic.c | 34 ++++++++++++++++++++++++-------
- include/linux/cpuhotplug.h        |  1 +
- 2 files changed, 28 insertions(+), 7 deletions(-)
+ arch/riscv/include/asm/sbi.h    | 15 +++++++++++
+ arch/riscv/kernel/Makefile      |  3 +++
+ arch/riscv/kernel/cpu_ops_sbi.c | 48 +++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/sbi.c         |  3 ++-
+ 4 files changed, 68 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/kernel/cpu_ops_sbi.c
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 0aca5807a119..9b564b19f4bf 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2018 Christoph Hellwig
-  */
- #define pr_fmt(fmt) "plic: " fmt
-+#include <linux/cpu.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-@@ -55,6 +56,8 @@
- #define     CONTEXT_THRESHOLD		0x00
- #define     CONTEXT_CLAIM		0x04
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index d55d8090ab5c..0981a0c97eda 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -26,6 +26,7 @@ enum sbi_ext_id {
+ 	SBI_EXT_TIME = 0x54494D45,
+ 	SBI_EXT_IPI = 0x735049,
+ 	SBI_EXT_RFENCE = 0x52464E43,
++	SBI_EXT_HSM = 0x48534D,
+ };
  
-+#define	PLIC_DISABLE_THRESHOLD		0xffffffff
-+
- static void __iomem *plic_regs;
+ enum sbi_ext_base_fid {
+@@ -56,6 +57,19 @@ enum sbi_ext_rfence_fid {
+ 	SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
+ };
  
- struct plic_handler {
-@@ -208,6 +211,26 @@ static int plic_find_hart_id(struct device_node *node)
- 	return -1;
- }
- 
-+static void plic_handler_init(struct plic_handler *handler, u32 threshold)
-+{
-+	irq_hw_number_t hwirq;
++enum sbi_ext_hsm_fid {
++	SBI_EXT_HSM_HART_START = 0,
++	SBI_EXT_HSM_HART_STOP,
++	SBI_EXT_HSM_HART_STATUS,
++};
 +
-+	/* priority must be > threshold to trigger an interrupt */
-+	writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
-+	for (hwirq = 1; hwirq < plic_irqdomain->hwirq_max; hwirq++)
-+		plic_toggle(handler, hwirq, 0);
-+}
++enum sbi_hsm_hart_status {
++	SBI_HSM_HART_STATUS_AVAILABLE = 0,
++	SBI_HSM_HART_STATUS_NOT_AVAILABLE,
++	SBI_HSM_HART_STATUS_START_PENDING,
++	SBI_HSM_HART_STATUS_STOP_PENDING,
++};
 +
-+static int plic_starting_cpu(unsigned int cpu)
-+{
-+	u32 threshold = 0;
-+	struct plic_handler *handler = per_cpu_ptr(&plic_handlers, cpu);
-+
-+	plic_handler_init(handler, threshold);
-+
-+	return 0;
-+}
-+
- static int __init plic_init(struct device_node *node,
- 		struct device_node *parent)
+ #define SBI_SPEC_VERSION_DEFAULT	0x1
+ #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
+ #define SBI_SPEC_VERSION_MAJOR_MASK	0x7f
+@@ -130,6 +144,7 @@ static inline unsigned long sbi_minor_version(void)
  {
-@@ -243,9 +266,7 @@ static int __init plic_init(struct device_node *node,
- 	for (i = 0; i < nr_contexts; i++) {
- 		struct of_phandle_args parent;
- 		struct plic_handler *handler;
--		irq_hw_number_t hwirq;
- 		int cpu, hartid;
--		u32 threshold = 0;
+ 	return sbi_spec_version & SBI_SPEC_VERSION_MINOR_MASK;
+ }
++int sbi_err_map_linux_errno(int err);
+ #else /* CONFIG_RISCV_SBI */
+ /* stubs for code that is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
+ void sbi_set_timer(uint64_t stime_value);
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index f81a6ff88005..a0be34b96846 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -44,5 +44,8 @@ obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
+ obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
+ obj-$(CONFIG_RISCV_SBI)		+= sbi.o
++ifeq ($(CONFIG_RISCV_SBI), y)
++obj-$(CONFIG_SMP) += cpu_ops_sbi.o
++endif
  
- 		if (of_irq_parse_one(node, i, &parent)) {
- 			pr_err("failed to parse parent for context %d.\n", i);
-@@ -279,7 +300,7 @@ static int __init plic_init(struct device_node *node,
- 		handler = per_cpu_ptr(&plic_handlers, cpu);
- 		if (handler->present) {
- 			pr_warn("handler already present for context %d.\n", i);
--			threshold = 0xffffffff;
-+			plic_handler_init(handler, PLIC_DISABLE_THRESHOLD);
- 			goto done;
- 		}
+ clean:
+diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
+new file mode 100644
+index 000000000000..9bdb60e0a4df
+--- /dev/null
++++ b/arch/riscv/kernel/cpu_ops_sbi.c
+@@ -0,0 +1,48 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * HSM extension and cpu_ops implementation.
++ *
++ * Copyright (c) 2020 Western Digital Corporation or its affiliates.
++ */
++
++#include <linux/init.h>
++#include <linux/mm.h>
++#include <asm/sbi.h>
++#include <asm/smp.h>
++
++static int sbi_hsm_hart_stop(void)
++{
++	struct sbiret ret;
++
++	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
++
++	if (ret.error)
++		return sbi_err_map_linux_errno(ret.error);
++	else
++		return 0;
++}
++
++static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
++		       unsigned long priv)
++{
++	struct sbiret ret;
++
++	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
++			      hartid, saddr, priv, 0, 0, 0);
++	if (ret.error)
++		return sbi_err_map_linux_errno(ret.error);
++	else
++		return 0;
++}
++
++static int sbi_hsm_hart_get_status(unsigned long hartid)
++{
++	struct sbiret ret;
++
++	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
++			      hartid, 0, 0, 0, 0, 0);
++	if (ret.error)
++		return sbi_err_map_linux_errno(ret.error);
++	else
++		return ret.value;
++}
+diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+index cd0f68aeac70..45ad49269f2c 100644
+--- a/arch/riscv/kernel/sbi.c
++++ b/arch/riscv/kernel/sbi.c
+@@ -47,7 +47,7 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
+ }
+ EXPORT_SYMBOL(sbi_ecall);
  
-@@ -291,13 +312,12 @@ static int __init plic_init(struct device_node *node,
- 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
+-static int sbi_err_map_linux_errno(int err)
++int sbi_err_map_linux_errno(int err)
+ {
+ 	switch (err) {
+ 	case SBI_SUCCESS:
+@@ -64,6 +64,7 @@ static int sbi_err_map_linux_errno(int err)
+ 		return -ENOTSUPP;
+ 	};
+ }
++EXPORT_SYMBOL(sbi_err_map_linux_errno);
  
- done:
--		/* priority must be > threshold to trigger an interrupt */
--		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
--		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
--			plic_toggle(handler, hwirq, 0);
- 		nr_handlers++;
- 	}
- 
-+	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
-+				  "irqchip/sifive/plic:starting",
-+				  plic_starting_cpu, NULL);
- 	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
- 		nr_irqs, nr_handlers, nr_contexts);
- 	set_handle_irq(plic_handle_irq);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index e51ee772b9f5..5360e03db08c 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -100,6 +100,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_ARMADA_XP_STARTING,
- 	CPUHP_AP_IRQ_BCM2836_STARTING,
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
-+	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
- 	CPUHP_AP_MICROCODE_LOADER,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
+ #ifdef CONFIG_RISCV_SBI_V01
+ /**
 -- 
 2.24.0
 
