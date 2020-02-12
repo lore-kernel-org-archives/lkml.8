@@ -2,110 +2,122 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEDCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61647C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0D6206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CEB206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:44:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cWoX+K1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgBLHni (ORCPT
+        id S1728414AbgBLHo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:43:38 -0500
-Received: from outbound-smtp53.blacknight.com ([46.22.136.237]:43227 "EHLO
-        outbound-smtp53.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727669AbgBLHni (ORCPT
+        Wed, 12 Feb 2020 02:44:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34088 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728294AbgBLHo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:43:38 -0500
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp53.blacknight.com (Postfix) with ESMTPS id 55DD3FAE23
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 07:43:36 +0000 (GMT)
-Received: (qmail 4764 invoked from network); 12 Feb 2020 07:43:36 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Feb 2020 07:43:35 -0000
-Date:   Wed, 12 Feb 2020 07:43:33 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, shakeelb@google.com,
-        yang.shi@linux.alibaba.com
-Subject: Re: [RFC Patch] mm/vmscan.c: not inherit classzone_idx from previous
- reclaim
-Message-ID: <20200212074333.GM3466@techsingularity.net>
-References: <20200209074145.31389-1-richardw.yang@linux.intel.com>
- <20200211104223.GL3466@techsingularity.net>
- <20200212022554.GA7855@richard>
+        Wed, 12 Feb 2020 02:44:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581493465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g67JW6PCjzPFY0JeUKVhTRxxURvlw/u8govktNjV/gc=;
+        b=cWoX+K1G7pEnkhLIg0ZwMo8/IRQN/XBVWlI2aLNQ65VWQUgjfUnPyUhIn/eOeVG6213OOV
+        X7AoNaVkkRTV0uxCHRN7r2HrtI3cvLrkuvFD/4fn6sKTGo5w3C4goZpA3oI581h/ukLyAi
+        2BiL1YxlCSpY0PMnMzQ2QW9O2eTmYyA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-nsW27BvuNVOmyyrGdKdybQ-1; Wed, 12 Feb 2020 02:44:23 -0500
+X-MC-Unique: nsW27BvuNVOmyyrGdKdybQ-1
+Received: by mail-wr1-f69.google.com with SMTP id 90so473025wrq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 23:44:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g67JW6PCjzPFY0JeUKVhTRxxURvlw/u8govktNjV/gc=;
+        b=BX44wS/Qy3nXOubV6Kv/CW/Ww0C6KnaentRHC1S2TGxmRGj/H5WLA69jqUch3mNdni
+         OFLaM/j/YigwAjhLlNZ/BHYUlxyFiFopFe5kmqgajilIbhWnLtuCy+xh+xRptWW2bby3
+         5bGXSq8IQhmutKFPGPlqnHMakaLK7EgUgcN201rXAMGKoF9QXi+5MF0qcA1780MZ5sao
+         CeV87mWmKoQYf+kmZbngllcIOxIlE0s7DSYiHLC5ueUseCd5NH+tz+S6K+oR3jPl7QuU
+         q+AXMBRGRK8bkYIvwj52Q3BdDKGfBvsC6PYdK+bvBRPRBIWLolnnrYBTn5ll9nwwTSQh
+         j2YQ==
+X-Gm-Message-State: APjAAAXSsvxm1bENtDgh30W9IxcPH0TFY9cjKFWnaaxolB6KrmVq2xOJ
+        xjGPtVcvsjwkNAdR+QGNHUAqLFN8dhfg3qt1ULWlj/XxurdkV1TPbN2qtzQZhtqme1cAaB5vMtN
+        jCjHwYlPjgLNh4ivh6I15Yx8/
+X-Received: by 2002:a1c:4e01:: with SMTP id g1mr10562974wmh.12.1581493462598;
+        Tue, 11 Feb 2020 23:44:22 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyRHiPRH64HlUiSRMYtcJAOFfNmBT5P+vp6Nwrf0t8K92gPacb6XCWJ/IyVdUV+r6f8oytxyg==
+X-Received: by 2002:a1c:4e01:: with SMTP id g1mr10562225wmh.12.1581493454694;
+        Tue, 11 Feb 2020 23:44:14 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
+        by smtp.gmail.com with ESMTPSA id r3sm8820670wrn.34.2020.02.11.23.44.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2020 23:44:14 -0800 (PST)
+Subject: Re: [PATCH] KVM: x86: do not reset microcode version on INIT or RESET
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1581444279-10033-1-git-send-email-pbonzini@redhat.com>
+ <20200211223837.GC21526@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <988c9422-52d2-f544-c703-b3ec6274e2be@redhat.com>
+Date:   Wed, 12 Feb 2020 08:44:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200212022554.GA7855@richard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211223837.GC21526@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:25:55AM +0800, Wei Yang wrote:
-> On Tue, Feb 11, 2020 at 10:42:23AM +0000, Mel Gorman wrote:
-> >On Sun, Feb 09, 2020 at 03:41:45PM +0800, Wei Yang wrote:
-> >> Before commit e716f2eb24de ("mm, vmscan: prevent kswapd sleeping
-> >> prematurely due to mismatched classzone_idx"), classzone_idx could have
-> >> two possibilities on a new loop based on whether there is a wakeup
-> >> during reclaiming:
-> >> 
-> >>   * 0 if no wakeup
-> >>   * the classzone_idx request by wakeup
-> >> 
-> >> As described in the changelog, this commit is willing to change the
-> >> first case to (MAX_NR_ZONES - 1) to avoid some premature sleep. But it
-> >> does not achieve the goal.
-> >> 
-> >> There are two versions of kswapd_classzone_idx() since this change:
-> >> 
-> >>   * commit e716f2eb24de ("mm, vmscan: prevent kswapd sleeping
-> >>     prematurely due to mismatched classzone_idx")
-> >>   * commit dffcac2cb88e ("mm/vmscan.c: prevent useless kswapd loops")
-> >> 
-> >> Both of them would return the classzone_idx we passed as the 2nd
-> >> parameter when (pgdat->kswapd_classzone_idx == MAX_NR_ZONES). This
-> >> means if there is no wakeup during reclaiming, we would use
-> >> classzone_idx in previous round to sleep.
-> >> 
-> >
-> >This is somewhat intended.
-> >
-> >> This patch fixes the logic by using (MAX_NR_ZONES - 1) for the first
-> >> case.
-> >> 
-> >
-> >Ok, what is the user-visible impact that is fixed by this patch or is
-> >this based on code review only? Please describe the test case exactly
-> >and the before and after results. I ask because this area is a magnet for
-> >regressions and intuitive ideas often lead to counter-intuitive results.
-> >
+On 11/02/20 23:38, Sean Christopherson wrote:
+> On Tue, Feb 11, 2020 at 07:04:39PM +0100, Paolo Bonzini wrote:
+>> The microcode version should be set just once, since it is essentially
+>> a CPU feature; so do it on vCPU creation rather than reset.
+> I wouldn't call it a CPU feature, CPU features generally can't be
+> arbitrarily changed while running.
+
+That was true of CPUID bits too until microcode started adding and
+removing them, but I see your point. :)  What I was trying to convey as
+"CPU feature" is that KVM will not change it arbitrarily when running;
+it can only change as a result of userspace actions, KVM_SET_MSRS in
+this case.  But yes, I will improve the text based on your version:
+
+---
+Do not initialize the microcode version at RESET or INIT, only on vCPU
+creation.   Microcode updates are not lost during INIT, and exact
+behavior across a warm RESET is not specified by the architecture.
+
+Since we do not support a microcode update directly from the hypervisor,
+but only as a result of userspace setting the microcode version MSR,
+it's simpler for userspace if we do nothing in KVM and let userspace
+emulate behavior for RESET as it sees fit.
+---
+
+Thanks,
+
+Paolo
+
+> I'd prefer to have a changelog that
+> at least somewhat ties the change to hardware behavior. 
 > 
-> This is based on code review only. I know your concern. This is an area more
-> like art then engineering :-)
+>   Do not initialize the microcode version at RESET or INIT.   Microcode
+>   updates are not lost during INIT, and exact behavior across a warm RESET
+>   is microarchitectural, i.e. defer to userspace to emulate behavior for
+>   RESET as it sees fit.
 > 
+> For the code:
 
-Then I'm afraid that until there is a corner case identified and a
-description of the impact it's
-
-Nacked-by: Mel Gorman <mgorman@techsingularity.net>
-
-> Would you mind sharing some idea why we intend to inherit the classzone_idx?
-> And for kswapd_order, we would restart at 0 if no wakeup during reclaim.
-> 
-
-Broadly speaking it was driven by cases whereby kswapd either a) fell
-asleep prematurely and there were many stalls in direct reclaim before
-kswapd recovered, b) stalls in direct reclaim immediately after kswapd went
-to sleep or c) kswapd reclaimed for lower zones and went to sleep while
-parallel tasks were direct reclaiming in higher zones or higher orders.
-
--- 
-Mel Gorman
-SUSE Labs
