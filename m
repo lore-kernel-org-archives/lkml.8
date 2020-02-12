@@ -2,189 +2,231 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9BAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3D0C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B912073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSr3J5Wf"
+	by mail.kernel.org (Postfix) with ESMTP id B554C2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBLKR4 (ORCPT
+        id S1727721AbgBLKSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:17:56 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33389 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgBLKRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:17:55 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u6so1527360wrt.0;
-        Wed, 12 Feb 2020 02:17:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RiLSOzSQqH2K+5mtqWU1/VvgqTQPm8zs0bfN/OnhddU=;
-        b=dSr3J5WfjlyUPVN3WpQTYigWQcsG4nTnY53SFJgDeAQI/u+Aq/dZuLAQ7IrWa0YqLF
-         hIjlMf653h/9uixMCu9Tr0tfcxkEWbUNLKNwRCpzsP3PGCT8T6ykrtk3Sbs2wH+jLbm3
-         AGZbSYwwxjbch+iRlfC3nVFSFFurQdFlNcVjaiHLPtnh0Be3HeePPqxkrpV37IDFkxGz
-         VeTJ4T3MLnsQJWzviJxiqunZbeTJWGKD+MsQksoVQKvcIOnmPwcT6C56nFlCk3t4/P2X
-         xWuseD2i6niZGCns+WUKl4/PYIt+7NhHdt55z3jxl9lRXvfavbHM2+WCPxOW14v1HwXe
-         dm2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=RiLSOzSQqH2K+5mtqWU1/VvgqTQPm8zs0bfN/OnhddU=;
-        b=X1EY3WB5Z2S9RvcmxgrVG4n0MhYhn4E96Kps29LG61aBzAs4Bs4eN+mIbGRcZjk2BX
-         O5HCargBGO5dkiCMf8kfwdlBNFOXb5vwi+haiJG10WaQhYwUkZP41jWc4O9UxG5ci9KS
-         ac3AP8XO9LJS+VRFLGE3am/M4H2wWaAd5YCOUfegtwJxHrtY00L5HM7kCxMuv9hQ+1hE
-         tN3hMp6iJ65inrTPbO0UdNQZvjJM8sNfw5U8GFnQyr1bHYaR02xDSMzlxmhPqGkndukZ
-         8b3rZfKPkhNleUcM7dLkjSLV0wkjyVnMiqLUdGc3sbfpEj4xbzK4hCqMJSVfQnHpyWop
-         8ULA==
-X-Gm-Message-State: APjAAAU96lUMatEdfTRN83+oXUcqsS/cqNxuezs78LP3UAjGN2quvOsX
-        aKAbX1pttode5NZUjQHYBkGOqvB1
-X-Google-Smtp-Source: APXvYqy0ppUWHrV4RDKzHlCLXDa/ghFxU/rzeve20LS85XvsmSSgh0TaXxY+2AXb4ZG5uzEbzy6nSg==
-X-Received: by 2002:a5d:4a8c:: with SMTP id o12mr14027627wrq.43.1581502672272;
-        Wed, 12 Feb 2020 02:17:52 -0800 (PST)
-Received: from ziggy.stardust ([37.223.145.31])
-        by smtp.gmail.com with ESMTPSA id d16sm41220wrg.27.2020.02.12.02.17.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 02:17:51 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: mt8173: add arm,no-tick-in-suspend in timer
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200212060536.156890-1-hsinyi@chromium.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b9d6be0d-a0ea-e0cc-8c87-338fa7e6df0b@gmail.com>
-Date:   Wed, 12 Feb 2020 11:17:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 05:18:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50780 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727054AbgBLKSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:18:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6439DAC46;
+        Wed, 12 Feb 2020 10:18:05 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 575C81E0E01; Wed, 12 Feb 2020 11:18:04 +0100 (CET)
+Date:   Wed, 12 Feb 2020 11:18:04 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: fix long time stall from mm_populate
+Message-ID: <20200212101804.GD25573@quack2.suse.cz>
+References: <20200211001958.170261-1-minchan@kernel.org>
+ <20200211011021.GP8731@bombadil.infradead.org>
+ <20200211035004.GA242563@google.com>
+ <20200211035412.GR8731@bombadil.infradead.org>
+ <20200211042536.GB242563@google.com>
+ <20200211122323.GS8731@bombadil.infradead.org>
+ <20200211163404.GC242563@google.com>
+ <20200211172803.GA7778@bombadil.infradead.org>
+ <20200211175731.GA185752@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200212060536.156890-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211175731.GA185752@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/02/2020 07:05, Hsin-Yi Wang wrote:
-> Arch timer stops during system suspend. Add arm,no-tick-in-suspend
-> property in timer.
+On Tue 11-02-20 09:57:31, Minchan Kim wrote:
+> On Tue, Feb 11, 2020 at 09:28:03AM -0800, Matthew Wilcox wrote:
+> > On Tue, Feb 11, 2020 at 08:34:04AM -0800, Minchan Kim wrote:
+> > > On Tue, Feb 11, 2020 at 04:23:23AM -0800, Matthew Wilcox wrote:
+> > > > On Mon, Feb 10, 2020 at 08:25:36PM -0800, Minchan Kim wrote:
+> > > > > On Mon, Feb 10, 2020 at 07:54:12PM -0800, Matthew Wilcox wrote:
+> > > > > > On Mon, Feb 10, 2020 at 07:50:04PM -0800, Minchan Kim wrote:
+> > > > > > > On Mon, Feb 10, 2020 at 05:10:21PM -0800, Matthew Wilcox wrote:
+> > > > > > > > On Mon, Feb 10, 2020 at 04:19:58PM -0800, Minchan Kim wrote:
+> > > > > > > > >       filemap_fault
+> > > > > > > > >         find a page form page(PG_uptodate|PG_readahead|PG_writeback)
+> > > > > > > > 
+> > > > > > > > Uh ... That shouldn't be possible.
+> > > > > > > 
+> > > > > > > Please see shrink_page_list. Vmscan uses PG_reclaim to accelerate
+> > > > > > > page reclaim when the writeback is done so the page will have both
+> > > > > > > flags at the same time and the PG reclaim could be regarded as
+> > > > > > > PG_readahead in fault conext.
+> > > > > > 
+> > > > > > What part of fault context can make that mistake?  The snippet I quoted
+> > > > > > below is from page_cache_async_readahead() where it will clearly not
+> > > > > > make that mistake.  There's a lot of code here; please don't presume I
+> > > > > > know all the areas you're talking about.
+> > > > > 
+> > > > > Sorry about being not clear. I am saying  filemap_fault ->
+> > > > > do_async_mmap_readahead
+> > > > > 
+> > > > > Let's assume the page is hit in page cache and vmf->flags is !FAULT_FLAG
+> > > > > TRIED so it calls do_async_mmap_readahead. Since the page has PG_reclaim
+> > > > > and PG_writeback by shrink_page_list, it goes to 
+> > > > > 
+> > > > > do_async_mmap_readahead
+> > > > >   if (PageReadahead(page))
+> > > > >     fpin = maybe_unlock_mmap_for_io();
+> > > > >     page_cache_async_readahead
+> > > > >       if (PageWriteback(page))
+> > > > >         return;
+> > > > >       ClearPageReadahead(page); <- doesn't reach here until the writeback is clear
+> > > > >       
+> > > > > So, mm_populate will repeat the loop until the writeback is done.
+> > > > > It's my just theory but didn't comfirm it by the testing.
+> > > > > If I miss something clear, let me know it.
+> > > > 
+> > > > Ah!  Surely the right way to fix this is ...
+> > > 
+> > > I'm not sure it's right fix. Actually, I wanted to remove PageWriteback check
+> > > in page_cache_async_readahead because I don't see corelation. Why couldn't we
+> > > do readahead if the marker page is PG_readahead|PG_writeback design PoV?
+> > > Only reason I can think of is it makes *a page* will be delayed for freeing
+> > > since we removed PG_reclaim bit, which would be over-optimization for me.
+> > 
+> > You're confused.  Because we have a shortage of bits in the page flags,
+> > we use the same bit for both PageReadahead and PageReclaim.  That doesn't
+> > mean that a page marked as PageReclaim should be treated as PageReadahead.
 > 
-> This is a follow up for d8ec7595a013
-> ("clocksource/drivers/arm_arch_timer: Don't assume clock runs in
-> suspend")
-> 
+> My point is why we couldn't do readahead if the marker page is under PG_writeback.
 
-pushed to v5.6-next/dts64
+Well, as far as I'm reading the code, this shouldn't usually happen -
+PageReadahead is set on a page that the preread into memory. Once it is
+used for the first time (either by page fault or normal read), readahead
+logic triggers starting further readahead and PageReadahead gets cleared.
 
-Thanks!
+What could happen though is that the page gets written into (say just a few
+bytes). That would keep PageReadahead set although the page will become
+dirty and can later be written back. I don't find not triggering writeback in
+this case too serious though since it should be very rare.
 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+So I'd be OK with the change Matthew suggested although I'd prefer if we
+had this magic "!PageWriteback && PageReadahead" test in some helper
+function (like page_should_trigger_readahead()?) with a good comment explaining
+the details.
+
+> It was there for a long time and you were adding one more so I was curious what's
+> reasoning comes from. Let me find why PageWriteback check in
+> page_cache_async_readahead from the beginning.
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 8b4e806d5119..1a9ad90bd7a6 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -331,6 +331,7 @@ timer {
->  			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->  			     <GIC_PPI 10
->  			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +		arm,no-tick-in-suspend;
->  	};
->  
->  	soc {
+> 	fe3cba17c4947, mm: share PG_readahead and PG_reclaim
 > 
+> The reason comes from the description
+> 
+>     b) clear PG_readahead => implicit clear of PG_reclaim
+>             one(and only one) page will not be reclaimed in time
+>             it can be avoided by checking PageWriteback(page) in readahead first
+> 
+> The goal was to avoid delay freeing of the page by clearing PG_reclaim.
+> I'm saying that I feel it's over optimization. IOW, it would be okay to
+> lose a page to be accelerated reclaim.
+> 
+> > 
+> > > Other concern is isn't it's racy? IOW, page was !PG_writeback at the check below
+> > > in your snippet but it was under PG_writeback in page_cache_async_readahead and
+> > > then the IO was done before refault reaching the code again. It could be repeated
+> > > *theoretically* even though it's very hard to happen in real practice.
+> > > Thus, I think it would be better to remove PageWriteback check from
+> > > page_cache_async_readahead if we really want to go the approach.
+> > 
+> > PageReclaim is always cleared before PageWriteback.  eg here:
+> > 
+> > void end_page_writeback(struct page *page)
+> > ...
+> >         if (PageReclaim(page)) {
+> >                 ClearPageReclaim(page);
+> >                 rotate_reclaimable_page(page);
+> >         }
+> > 
+> >         if (!test_clear_page_writeback(page))
+> >                 BUG();
+> > 
+> > so if PageWriteback is clear, PageReclaim must already be observable as clear.
+> > 
+> 
+> I'm saying live lock siutation below.
+> It would be hard to trigger since IO is very slow but isn't it possible
+> theoretically?
+> 
+> 
+>                  CPU 1                                                CPU 2
+> mm_populate
+> 1st trial
+>   __get_user_pages
+>     handle_mm_fault
+>       filemap_fault
+>         do_async_mmap_readahead 
+>         if (!PageWriteback(page) && PageReadahead(page)) {
+>           fpin = maybe_unlock_mmap_for_io
+>           page_cache_async_readahead
+>                                                                     set_page_writeback here
+>             if (PageWriteback(page))
+> 	      return; <- hit
+> 
+>                                                                      writeback completed and reclaimed the page
+> 								     ..
+> 								     ondemand readahead allocates new page and mark it to PG_readahead
+> 2nd trial
+>  __get_user_pages
+>     handle_mm_fault
+>       filemap_fault
+>         do_async_mmap_readahead 
+>         if (!PageWriteback(page) && PageReadahead(page)) {
+>           fpin = maybe_unlock_mmap_for_io
+>           page_cache_async_readahead
+>                                                                     set_page_writeback here
+>             if (PageWriteback(page))
+> 	      return; <- hit
+> 
+>                                                                      writeback completed and reclaimed the page
+> 								     ..
+> 								     ondemand readahead allocates new page and mark it to PG_readahead
+> 
+> 3rd trial
+> ..
+> 
+> 
+> Let's consider ra_pages, too as I mentioned. Isn't it another hole to make
+> such live lock if other task suddenly reset it to zero?
+> 
+> void page_cache_async_readahead(..)
+> {
+>         /* no read-ahead */
+>         if (!ra->ra_pages)
+>                 return;
+
+So this is definitively a bug which was already reported previously. I've
+just sent out a patch to fix this which has somehow fallen through the
+cracks.
+
+Now I agree that regardless of this fix and the fix Matthew has proposed,
+mm_populate() would benefit from being more robust like you suggested so
+I'll check that separately (but I'm no expert in that area).
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
