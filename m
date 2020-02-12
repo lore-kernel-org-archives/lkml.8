@@ -2,110 +2,102 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57633C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A1EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0B5F206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=home.nl header.i=@home.nl header.b="C1tZig2y"
+	by mail.kernel.org (Postfix) with ESMTP id AF43720661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgBLIg0 (ORCPT
+        id S1728519AbgBLIiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:36:26 -0500
-Received: from smtpq3.tb.mail.iss.as9143.net ([212.54.42.166]:56332 "EHLO
-        smtpq3.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728462AbgBLIg0 (ORCPT
+        Wed, 12 Feb 2020 03:38:23 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:35611 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728428AbgBLIiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:36:26 -0500
-Received: from [212.54.42.110] (helo=smtp7.tb.mail.iss.as9143.net)
-        by smtpq3.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <karsdejong@home.nl>)
-        id 1j1nVO-0002VA-AH; Wed, 12 Feb 2020 09:36:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=home.nl;
-        s=201809corplgsmtpnl; h=To:Subject:Date:From;
-        bh=OuSzKhfxW8Gje2W8iT3ROQfQieVCxF7/6LjQe5C2nlU=; b=C1tZig2yOeXhiBttMk490YvCX0
-        dpjontyCTTk/xJa/3dIL65DhVpdOJl5etAJlJxJpIPaz33rrpjIsfK4AQFqsys7mUHJ8k6E7s361f
-        4VFIvxmByp2Qyf5nNrThPYAiIlpQZmtbeZJhVuj3wktmZDe+zwOF4wpJ53cm87asc54F09BhOAWq9
-        UNKuaM8R91Dm7zoNYtPn8ZoQrsZX6cWb+E7pn1pdSZA7940UEDqS5NMyL487f9B13ldMXerHc0LLJ
-        Q+kh82B5NlCChuB7Jt4gGza35fScNsVN+Xw9ezZgOJ7PLskAv4PPQj7KSpRwXqxbqfijzj8iT0zWL
-        HsH5ALgQ==;
-Received: from mail-wr1-f48.google.com ([209.85.221.48])
-        by smtp7.tb.mail.iss.as9143.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <karsdejong@home.nl>)
-        id 1j1nVO-0001vK-75; Wed, 12 Feb 2020 09:36:22 +0100
-Received: by mail-wr1-f48.google.com with SMTP id y11so1106568wrt.6;
-        Wed, 12 Feb 2020 00:36:22 -0800 (PST)
-X-Gm-Message-State: APjAAAV3AtQMX4mqcKQ6yTeGknTVyv9+ft5rP0fFnE0vl0SRCBYbDp/r
-        PGE5GiMfgh4prLzfEEZWg7GRysDLsYUagi6WL8s=
-X-Google-Smtp-Source: APXvYqypjRsTG8DHRIbsXdGcPAkCfbey86PfEpUgceAU5FztilErtQJztFGZaFVToi09qUn3H+IsvJz7CZ3ylvF5Cf0=
-X-Received: by 2002:a5d:4d04:: with SMTP id z4mr15132130wrt.157.1581496581870;
- Wed, 12 Feb 2020 00:36:21 -0800 (PST)
+        Wed, 12 Feb 2020 03:38:22 -0500
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MEmIl-1jGJS32slH-00GJ5u for <linux-kernel@vger.kernel.org>; Wed, 12 Feb
+ 2020 09:38:20 +0100
+Received: by mail-qk1-f182.google.com with SMTP id a2so1241151qko.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:38:20 -0800 (PST)
+X-Gm-Message-State: APjAAAWOKBX2xd7Rs1Ln4N24t3Nh/o/a/jQXU8fBUsqFyLsCk9smDCmd
+        yNi3/iy3ZBn59MoY5rEncyKjvhmnAHbCTzrU3T0=
+X-Google-Smtp-Source: APXvYqyYk7YcrJsuGQROcM1Q+7Sr79yC/wr0DfRbtSl7Fh7agtFK3thWNqlFOqrqSc684PPKwzGxufZobo2gdBgTBY4=
+X-Received: by 2002:a05:620a:1530:: with SMTP id n16mr6477563qkk.394.1581496699586;
+ Wed, 12 Feb 2020 00:38:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20200211174126.GA29960@embeddedor> <CAMuHMdV3DY1X3s7fvZz8MpxvqsUZAOivc18f40Ca8kHiZqfqKw@mail.gmail.com>
-In-Reply-To: <CAMuHMdV3DY1X3s7fvZz8MpxvqsUZAOivc18f40Ca8kHiZqfqKw@mail.gmail.com>
-From:   Kars de Jong <karsdejong@home.nl>
-Date:   Wed, 12 Feb 2020 09:36:10 +0100
-X-Gmail-Original-Message-ID: <CACz-3rgCkoJ-Zx_RBTLBH0yOhz36dH+io+VFRgsXNx2qqwKVMQ@mail.gmail.com>
-Message-ID: <CACz-3rgCkoJ-Zx_RBTLBH0yOhz36dH+io+VFRgsXNx2qqwKVMQ@mail.gmail.com>
-Subject: Re: [PATCH] treewide: Replace zero-length arrays with flexible-array member
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
+References: <fe6868726b897fb7e89058d8e45985141260ed68.1581494174.git.michal.simek@xilinx.com>
+In-Reply-To: <fe6868726b897fb7e89058d8e45985141260ed68.1581494174.git.michal.simek@xilinx.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 12 Feb 2020 09:38:03 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1kjK=fqJiPWPOG19pBEX+khAgVyMC-7AqT4BiH8dDn8g@mail.gmail.com>
+Message-ID: <CAK8P3a1kjK=fqJiPWPOG19pBEX+khAgVyMC-7AqT4BiH8dDn8g@mail.gmail.com>
+Subject: Re: [PATCH] microblaze: Fix unistd_32.h generation format
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Stefan Asserhall <stefan.asserhall@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
-X-SourceIP: 209.85.221.48
-X-Authenticated-Sender: karsdejong@home.nl (via SMTP)
-X-Ziggo-spambar: /
-X-Ziggo-spamscore: 0.0
-X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=UJNG4BXy c=1 sm=1 tr=0 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=l697ptgUJYAA:10 a=tBb2bbeoAAAA:8 a=_Wotqz80AAAA:8 a=YMzxVbYnAAAA:20 a=wNy__qbTz1_nECwbz_UA:9 a=QEXdDO2ut3YA:10 a=Oj-tNtZlA1e06AYgeCfH:22 a=buJP51TR1BpY-zbLSsyS:22
-X-Ziggo-Spam-Status: No
+X-Provags-ID: V03:K1:Exq0zEcR4E3c2SEm/Nkna68KFy5bEyX4AzqxeBlwWkcTRSVOu3i
+ V1rDHe1HBjp+0xrLCImTSSlOZ3DapxX9h0HRc94ilYyx47YCtiIJ/OPol//mMwpYcHBgjxs
+ O2NSheR4UZlWn4AUgJrkM0aFv6g42SjY+LxjE4eGXZeY/Aiq6BDqmeJbXc+MGRe41IvuM1d
+ 0Ycb6XiP/3CdW8gd9v73w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BJGm9oCgk18=:CVySYhE5RvWhSgvCttlRRb
+ HE/PZWrFJmvpM8+Sm40s4Zf5sRnMZmig8JNR8EiZQ8YACyoDG8QKTlDjcfQ25IA8IMXeOlBMR
+ OW2vvoy/e0PtBLz6XWofMkfVtkCrLoE2PzZ33xg9KdeOHjpi4fvToP6YRg6tpYxMgBvNWBE34
+ LBxG3dukLhv0jYSZ+OiZDDQr7WNPKe/RfgCqDQIc/ifCdXwoUT1cXLwvEtK9ZDGHYt23N8QPd
+ +b3rQC9WJygb3IMilVsrr8VMoIwvtPj/nr6Eusg6tQaZZ535DQ0QWlWuTWl2M9byXvrQ5iaMu
+ gmsVz5SVBfARLppEOkahPWG0v+FnNXZETW3Jqo69Ajel26KUvQw9Vatkrtpf7Gewd1V9AJ0RW
+ UEoAuJnzgaSuJSzV3zPB6eLpwYqjIuPBJQOZGz3I3d1Ea9wbzDJ4Vvxl0UycnBq66YzivVs9W
+ jbNzmIQ8rkXZc5tDub3BlnhUYwgKDlbs30XXRqt6xsCPT0+AwGssE276lZewxK5MHJ/nDrnJ3
+ GwTQbvqyJvb0aib7GHfjOw7QWj8tV056NTdEu/UfwNJd8DzLJKrZaYewInkO0xMdUz38Gdp1W
+ 4w9DK2lLw7gq2KmIUDEBnzqUO0OrsyDayxNcchnNVpPXAFCL+QZZg/2cWJHbLtzcpT4qtN1qi
+ kL+KgrGNlcEmtlEjZEnrI5mUSbIkB0vp71VGCDGiT/LMV2wRVPixsrmNKfAelYQlXNxH3+v38
+ MSJnAPViDYDv62oQeBkrPRtZW0IpOLANdUtmwOdqo1HgmEXz4L79e+8MLXLFEShvHAiBfSacg
+ V26c6zlGQct+h5awvM1tdlQHm5/yiGR+vAPdYaWdguUh/DkkIM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Op wo 12 feb. 2020 om 09:00 schreef Geert Uytterhoeven <geert@linux-m68k.org>:
+On Wed, Feb 12, 2020 at 8:56 AM Michal Simek <michal.simek@xilinx.com> wrote:
 >
-> Hi Gustavo,
+> Generated files are also checked by sparse that's why add newline
+> to remove sparse (C=1) warning:
+> ./arch/microblaze/include/generated/uapi/asm/unistd_32.h:438:45:
+> warning: no newline at end of file
 >
-> On Tue, Feb 11, 2020 at 10:49 PM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
-> > --- a/arch/m68k/tools/amiga/dmesg.c
-> > +++ b/arch/m68k/tools/amiga/dmesg.c
-> > @@ -34,7 +34,7 @@ struct savekmsg {
-> >      u_long magic2;     /* SAVEKMSG_MAGIC2 */
-> >      u_long magicptr;   /* address of magic1 */
-> >      u_long size;
-> > -    char data[0];
-> > +       char data[];
-> >  };
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+The patch looks good, but if you don't mind respinning it, could respin
+it to do the same thing for all architectures at once? I see that  some
+already have it, but most don't.
+
+> ---
 >
-> JFTR, this file is not really part of the kernel, but supposed to be compiled
-> by an AmigaOS compiler, which may predate the introduction of support
-> for flexible array members.
-
-FYI, there's a reasonably modern toolchain for AmigaOS which can
-compile this just fine (https://github.com/bebbo/amiga-gcc).
-
-> Well, even if you keep it included, I guess the rare users can manage ;-)
-> My binary dates back to 1996, and I have no plans to recompile it.
-
-I did, just to check whether it still worked.
-
-Kind regards,
-
-Kars.
+>  arch/microblaze/kernel/syscalls/syscallhdr.sh | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/microblaze/kernel/syscalls/syscallhdr.sh b/arch/microblaze/kernel/syscalls/syscallhdr.sh
+> index 2e9062a926a3..4f4238433644 100644
+> --- a/arch/microblaze/kernel/syscalls/syscallhdr.sh
+> +++ b/arch/microblaze/kernel/syscalls/syscallhdr.sh
+> @@ -33,4 +33,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+>         printf "#endif\n"
+>         printf "\n"
+>         printf "#endif /* %s */" "${fileguard}"
+> +       printf "\n"
+>  ) > "$out"
+> --
+> 2.25.0
+>
