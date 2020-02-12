@@ -2,156 +2,240 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8BBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F50C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A6E20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dGJf8KsQ"
+	by mail.kernel.org (Postfix) with ESMTP id 0466A20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 09:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgBLJRo (ORCPT
+        id S1728833AbgBLJRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:17:44 -0500
-Received: from mail-eopbgr770044.outbound.protection.outlook.com ([40.107.77.44]:5249
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728150AbgBLJRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:17:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DpEUZtza+bKsveHkdMlO5Dv7hYlSRt7mu5LkWk/6Obl4WsmpYZz7HO51t1ma0++qLthvy8x06ab2ix0nzFmyJdanuUvoCSg013+31of9CAReixDVDgTHvJumr5w7F34F0bsL1QxvQ8EZBpHbSeJtE42wBK7KnlHnBFcYteKIUiawC/Ybi/jPDd5LFHWJKHHSnIMVwVvo37A7Mn0dCCYoo8qMg0QNqgTOkaC8Fftq+5PdTwd2BWTfRlpfDvA1ZjlbOZ33Z7fhfbfG25wcN2BI3JM3d4Kd1ol0kBSpcnHKF9Y//cMPhLhz3gh2WkUSlwQu3rddFxaJo6xxTBrJ7FoZoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UZnk3Kb9YptpUuvWJyaItWWenaWLmlBPQchBNS+WEbg=;
- b=jrAy3knfxQf7M8QzjBDEofPf7/SFZ3sZ2bOpAsiOP+J+/QzGtbqgZEhA8fbS3J3IIkE6v3c8vseHKsxg+iBdKcAS/sDEZZV62sc2SP0eVclebDzTg2B5V4g/Y7RYvv2Cm+xddtY+7uxFRnVurrYeTpt6jFqokAlSD7dnzJ/ImE2LBTXvlHzvr8AI7LHtqK0nsj45csSbw1l3p/gXXCrCgKnfnue3+sv3j35uPR/Q/ugvvbEnzy5L48FEpHPUhV/GGRhxNYFQ9N8Ifu44QwyDthL0N7ifYH8XdsHVPlk3pC58aS1zC0kUs5pbXqZjpN8ABn37V7Fd87yNCAi+cB8muQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=arndb.de smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UZnk3Kb9YptpUuvWJyaItWWenaWLmlBPQchBNS+WEbg=;
- b=dGJf8KsQKAw/3zKwnFxCVmX7YJwGzPT4+9TLAIXpu8ogzWYM+eKDFwCcxz6PXQkyyh7mi/FZ/d9vTSu1SCHBgtGpIML3wc7VVJGIuXAdiRF5LJtflY5phgWJmfv45DuH2PWbKLWm9zNqeCt/8mRI3T/TJYvZ4cVCtDGssO9fFMg=
-Received: from SN4PR0201CA0038.namprd02.prod.outlook.com
- (2603:10b6:803:2e::24) by BN8PR02MB5939.namprd02.prod.outlook.com
- (2603:10b6:408:b4::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23; Wed, 12 Feb
- 2020 09:17:42 +0000
-Received: from BL2NAM02FT052.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by SN4PR0201CA0038.outlook.office365.com
- (2603:10b6:803:2e::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
- Transport; Wed, 12 Feb 2020 09:17:42 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT052.mail.protection.outlook.com (10.152.77.0) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Wed, 12 Feb 2020 09:17:41 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j1o9M-0005Nt-Pm; Wed, 12 Feb 2020 01:17:40 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j1o9H-0005TM-M8; Wed, 12 Feb 2020 01:17:35 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01C9HQsC017676;
-        Wed, 12 Feb 2020 01:17:26 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1j1o98-0005QJ-47; Wed, 12 Feb 2020 01:17:26 -0800
-Subject: Re: [PATCH] microblaze: Fix unistd_32.h generation format
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>
-References: <fe6868726b897fb7e89058d8e45985141260ed68.1581494174.git.michal.simek@xilinx.com>
- <CAK8P3a1kjK=fqJiPWPOG19pBEX+khAgVyMC-7AqT4BiH8dDn8g@mail.gmail.com>
- <6c931ed2-b03b-2e38-a10b-2d238e4b7a22@xilinx.com>
- <CAK8P3a3xxu1wFKdsAHfuy2vpLigbuPR878mq75hh8HR=Tg=7LA@mail.gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <dca4637c-abfc-851f-0a70-873351be1837@xilinx.com>
-Date:   Wed, 12 Feb 2020 10:17:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 04:17:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47802 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728150AbgBLJRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 04:17:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5A7EDAC16;
+        Wed, 12 Feb 2020 09:17:44 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 132C61E0E01; Wed, 12 Feb 2020 10:17:43 +0100 (CET)
+Date:   Wed, 12 Feb 2020 10:17:43 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v6 08/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+Message-ID: <20200212091743.GC25573@quack2.suse.cz>
+References: <20200211001536.1027652-1-jhubbard@nvidia.com>
+ <20200211001536.1027652-9-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3xxu1wFKdsAHfuy2vpLigbuPR878mq75hh8HR=Tg=7LA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(396003)(199004)(189003)(107886003)(53546011)(26005)(44832011)(4326008)(336012)(36756003)(186003)(356004)(6666004)(110136005)(81166006)(31696002)(81156014)(54906003)(316002)(5660300002)(2616005)(8936002)(8676002)(9786002)(478600001)(2906002)(70206006)(426003)(31686004)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR02MB5939;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dc1f9e80-aa87-49fa-baec-08d7af9c69ae
-X-MS-TrafficTypeDiagnostic: BN8PR02MB5939:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN8PR02MB593966A214B69D2C73CBBB7CC61B0@BN8PR02MB5939.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0311124FA9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /nWeA40JU4eICp7ujsEZb4M4GiWdBswbR+xSJXzbr4UZr06h/IMPztyJOtr0ZiHCw7dOXfvp6Kz6uiZbUvzhLf3TUVX3dVLOvulP3/qR9gk/1GqYUnEjfE9ulyWAuCBT5kjkpeqKyfYNrw88bnKg3cM6uQQl5EGwYZA+RgNBCAS8QXxsFhyA7Xxrxf3opmSF4R9OzvjyjmmDnfy9uoHL1tU0lAPrSILfQjZNYa6ye0DePesBHYMQfZwxbkNqjc8XQqyGnBu5JxeJ5z4iS6E9dtcAl09EK7S/x39hGoWzQY8BICAlmB5c2sZURpClO9F6Gmk+HQIdSqXFcGx0xEWrvJC57ltg5tgCjqz+9pFmKQZ0i2qZprkNbK5VJI7mwpUgXHWrnOl+JNawteVVmoWn9mqZ95Ed0hO/Ki07YnnXkbl1fxCaYe3DqFi8LvCq+0IR
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 09:17:41.7290
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc1f9e80-aa87-49fa-baec-08d7af9c69ae
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5939
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211001536.1027652-9-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12. 02. 20 9:45, Arnd Bergmann wrote:
-> On Wed, Feb 12, 2020 at 9:42 AM Michal Simek <michal.simek@xilinx.com> wrote:
->>
->> On 12. 02. 20 9:38, Arnd Bergmann wrote:
->>> On Wed, Feb 12, 2020 at 8:56 AM Michal Simek <michal.simek@xilinx.com> wrote:
->>>>
->>>> Generated files are also checked by sparse that's why add newline
->>>> to remove sparse (C=1) warning:
->>>> ./arch/microblaze/include/generated/uapi/asm/unistd_32.h:438:45:
->>>> warning: no newline at end of file
->>>>
->>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
->>>
->>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>>
->>> The patch looks good, but if you don't mind respinning it, could respin
->>> it to do the same thing for all architectures at once? I see that  some
->>> already have it, but most don't.
->>
->> I have not a problem to do so. I expect that this can be taken via your
->> tree that I can create only one patch. If this should go via
->> architectures tree would be better to create separate one.
+On Mon 10-02-20 16:15:32, John Hubbard wrote:
+> Now that pages are "DMA-pinned" via pin_user_page*(), and unpinned via
+> unpin_user_pages*(), we need some visibility into whether all of this is
+> working correctly.
 > 
-> Yes, I can take that into the asm-generic tree, or maybe you can just send it
-> to Andrew Morton.
+> Add two new fields to /proc/vmstat:
+> 
+>     nr_foll_pin_acquired
+>     nr_foll_pin_released
+> 
+> These are documented in Documentation/core-api/pin_user_pages.rst.
+> They represent the number of pages (since boot time) that have been
+> pinned ("nr_foll_pin_acquired") and unpinned ("nr_foll_pin_released"),
+> via pin_user_pages*() and unpin_user_pages*().
+> 
+> In the absence of long-running DMA or RDMA operations that hold pages
+> pinned, the above two fields will normally be equal to each other.
+> 
+> Also: update Documentation/core-api/pin_user_pages.rst, to remove an
+> earlier (now confirmed untrue) claim about a performance problem with
+> /proc/vmstat.
+> 
+> Also: updated Documentation/core-api/pin_user_pages.rst to rename the
+> new /proc/vmstat entries, to the names listed here.
+> 
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-v2 sent.
+The patch looks good to me now. You can add:
 
-M
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  Documentation/core-api/pin_user_pages.rst | 33 +++++++++++++++++++----
+>  include/linux/mmzone.h                    |  2 ++
+>  mm/gup.c                                  | 13 +++++++++
+>  mm/vmstat.c                               |  2 ++
+>  4 files changed, 45 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core-api/pin_user_pages.rst
+> index 7e5dd8b1b3f2..5c8a5f89756b 100644
+> --- a/Documentation/core-api/pin_user_pages.rst
+> +++ b/Documentation/core-api/pin_user_pages.rst
+> @@ -208,12 +208,35 @@ has the following new calls to exercise the new pin*() wrapper functions:
+>  You can monitor how many total dma-pinned pages have been acquired and released
+>  since the system was booted, via two new /proc/vmstat entries: ::
+>  
+> -    /proc/vmstat/nr_foll_pin_requested
+> -    /proc/vmstat/nr_foll_pin_requested
+> +    /proc/vmstat/nr_foll_pin_acquired
+> +    /proc/vmstat/nr_foll_pin_released
+>  
+> -Those are both going to show zero, unless CONFIG_DEBUG_VM is set. This is
+> -because there is a noticeable performance drop in unpin_user_page(), when they
+> -are activated.
+> +Under normal conditions, these two values will be equal unless there are any
+> +long-term [R]DMA pins in place, or during pin/unpin transitions.
+> +
+> +* nr_foll_pin_acquired: This is the number of logical pins that have been
+> +  acquired since the system was powered on. For huge pages, the head page is
+> +  pinned once for each page (head page and each tail page) within the huge page.
+> +  This follows the same sort of behavior that get_user_pages() uses for huge
+> +  pages: the head page is refcounted once for each tail or head page in the huge
+> +  page, when get_user_pages() is applied to a huge page.
+> +
+> +* nr_foll_pin_released: The number of logical pins that have been released since
+> +  the system was powered on. Note that pages are released (unpinned) on a
+> +  PAGE_SIZE granularity, even if the original pin was applied to a huge page.
+> +  Becaused of the pin count behavior described above in "nr_foll_pin_acquired",
+> +  the accounting balances out, so that after doing this::
+> +
+> +    pin_user_pages(huge_page);
+> +    for (each page in huge_page)
+> +        unpin_user_page(page);
+> +
+> +...the following is expected::
+> +
+> +    nr_foll_pin_released == nr_foll_pin_acquired
+> +
+> +(...unless it was already out of balance due to a long-term RDMA pin being in
+> +place.)
+>  
+>  References
+>  ==========
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 462f6873905a..4bca42eeb439 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -243,6 +243,8 @@ enum node_stat_item {
+>  	NR_DIRTIED,		/* page dirtyings since bootup */
+>  	NR_WRITTEN,		/* page writings since bootup */
+>  	NR_KERNEL_MISC_RECLAIMABLE,	/* reclaimable non-slab kernel pages */
+> +	NR_FOLL_PIN_ACQUIRED,	/* via: pin_user_page(), gup flag: FOLL_PIN */
+> +	NR_FOLL_PIN_RELEASED,	/* pages returned via unpin_user_page() */
+>  	NR_VM_NODE_STAT_ITEMS
+>  };
+>  
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 4d0d94405639..441f7a48f370 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -86,6 +86,8 @@ static __maybe_unused struct page *try_grab_compound_head(struct page *page,
+>  	if (flags & FOLL_GET)
+>  		return try_get_compound_head(page, refs);
+>  	else if (flags & FOLL_PIN) {
+> +		int orig_refs = refs;
+> +
+>  		/*
+>  		 * When pinning a compound page of order > 1 (which is what
+>  		 * hpage_pincount_available() checks for), use an exact count to
+> @@ -104,6 +106,9 @@ static __maybe_unused struct page *try_grab_compound_head(struct page *page,
+>  		if (hpage_pincount_available(page))
+>  			hpage_pincount_add(page, refs);
+>  
+> +		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_ACQUIRED,
+> +				    orig_refs);
+> +
+>  		return page;
+>  	}
+>  
+> @@ -158,6 +163,8 @@ bool __must_check try_grab_page(struct page *page, unsigned int flags)
+>  		 * once, so that the page really is pinned.
+>  		 */
+>  		page_ref_add(page, refs);
+> +
+> +		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_ACQUIRED, 1);
+>  	}
+>  
+>  	return true;
+> @@ -178,6 +185,7 @@ static bool __unpin_devmap_managed_user_page(struct page *page)
+>  
+>  	count = page_ref_sub_return(page, refs);
+>  
+> +	mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED, 1);
+>  	/*
+>  	 * devmap page refcounts are 1-based, rather than 0-based: if
+>  	 * refcount is 1, then the page is free and the refcount is
+> @@ -228,6 +236,8 @@ void unpin_user_page(struct page *page)
+>  
+>  	if (page_ref_sub_and_test(page, refs))
+>  		__put_page(page);
+> +
+> +	mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED, 1);
+>  }
+>  EXPORT_SYMBOL(unpin_user_page);
+>  
+> @@ -2259,6 +2269,9 @@ static int record_subpages(struct page *page, unsigned long addr,
+>  static void put_compound_head(struct page *page, int refs, unsigned int flags)
+>  {
+>  	if (flags & FOLL_PIN) {
+> +		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED,
+> +				    refs);
+> +
+>  		if (hpage_pincount_available(page))
+>  			hpage_pincount_sub(page, refs);
+>  		else
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 78d53378db99..c9c0d71f917f 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1168,6 +1168,8 @@ const char * const vmstat_text[] = {
+>  	"nr_dirtied",
+>  	"nr_written",
+>  	"nr_kernel_misc_reclaimable",
+> +	"nr_foll_pin_acquired",
+> +	"nr_foll_pin_released",
+>  
+>  	/* enum writeback_stat_item counters */
+>  	"nr_dirty_threshold",
+> -- 
+> 2.25.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
