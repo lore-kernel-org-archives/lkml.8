@@ -2,94 +2,123 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B64BC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8E4C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5668F217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581543783;
-	bh=/5bgUjnXfKX/YnWj2CVZ6tzhbOUyGqaE9iljMsoLSUs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wYrL05JTJoUcTSkofyA9Zu9u2EAOJ9VxlB2xHbuUsAhEMXpDiKLNMhmUID5nDTdVw
-	 lMLaK2FgRjle9AOVfdjJRh01JXDGdxUM9BXZNu+vrmJBP3YaMNdsB24d3dKdDYrehM
-	 Zkd5HLTO94OVsM6mvviHuXGGX3ic/BV5u4YRkce8=
+	by mail.kernel.org (Postfix) with ESMTP id 5B9602168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbgBLVnC (ORCPT
+        id S1729158AbgBLVsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:43:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727692AbgBLVnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:43:02 -0500
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74AD424685
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 21:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581543781;
-        bh=/5bgUjnXfKX/YnWj2CVZ6tzhbOUyGqaE9iljMsoLSUs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Do9dVLKHn+WmiWvVm5KO1giK1zzBjXFPv4K+0KaPaAU+ZFrJMbe3xrdYLXsMD33YT
-         HT5tMqSNvg8QkYnRPtiJswNABvk53TkuOMS9PFoWqhT46b6TsoN0KZCIMozqIyV4K8
-         NqvZraXBlBMH2RxKnUB6a9FkfLoo3qPSZvOOkYtM=
-Received: by mail-wm1-f54.google.com with SMTP id s10so4008383wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:43:01 -0800 (PST)
-X-Gm-Message-State: APjAAAUgiHuW6NRh5Bqf+w3bXSRynjsQuXfJK0NblsTOr9gayHea1OzC
-        HedqGcNdV+ZbZ1L4wZEHDbSQkgP9//wZvMjRqJeIEA==
-X-Google-Smtp-Source: APXvYqx80blFuMGO5xbOx9jMb15X8saJRfGQ59bhxN5COt5T4RVqjZzy0EMpurQDrd8Sxj4YjZioVGr2wj1eLccaOos=
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr1155941wml.138.1581543779800;
- Wed, 12 Feb 2020 13:42:59 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211135256.24617-1-joro@8bytes.org> <20200211135256.24617-39-joro@8bytes.org>
-In-Reply-To: <20200211135256.24617-39-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 12 Feb 2020 13:42:48 -0800
-X-Gmail-Original-Message-ID: <CALCETrVRmg88xY0s4a2CONXQ3fgvCKXpW2eYJRJGhqQLneoGqQ@mail.gmail.com>
-Message-ID: <CALCETrVRmg88xY0s4a2CONXQ3fgvCKXpW2eYJRJGhqQLneoGqQ@mail.gmail.com>
-Subject: Re: [PATCH 38/62] x86/sev-es: Handle instruction fetches from user-space
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
+        Wed, 12 Feb 2020 16:48:33 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:59594 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbgBLVsc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 16:48:32 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1zrt-0001QL-Ry; Wed, 12 Feb 2020 14:48:25 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j1zrr-0007IE-Re; Wed, 12 Feb 2020 14:48:25 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
+        <87v9odlxbr.fsf@x220.int.ebiederm.org>
+        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
+        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+        <87v9obipk9.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
+        <20200212200335.GO23230@ZenIV.linux.org.uk>
+        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+        <20200212203833.GQ23230@ZenIV.linux.org.uk>
+        <20200212204124.GR23230@ZenIV.linux.org.uk>
+        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+Date:   Wed, 12 Feb 2020 15:46:29 -0600
+In-Reply-To: <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+        (Linus Torvalds's message of "Wed, 12 Feb 2020 13:02:40 -0800")
+Message-ID: <87lfp7h422.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1j1zrr-0007IE-Re;;;mid=<87lfp7h422.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19ygjuB60Kb6N9Sok9ZifBaf15XLQkzcfs=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
+Linus Torvalds <torvalds@linux-foundation.org> writes:
+
+> On Wed, Feb 12, 2020 at 12:41 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>>
+>> On Wed, Feb 12, 2020 at 08:38:33PM +0000, Al Viro wrote:
+>> >
+>> > Wait, I thought the whole point of that had been to allow multiple
+>> > procfs instances for the same userns?  Confused...
+>>
+>> s/userns/pidns/, sorry
 >
-> From: Joerg Roedel <jroedel@suse.de>
+> Right, but we still hold the ref to it here...
 >
-> When a #VC exception is triggered by user-space the instruction
-> decoder needs to read the instruction bytes from user addresses.
-> Enhance es_fetch_insn_byte() to safely fetch kernel and user
-> instruction bytes.
+> [ Looks more ]
+>
+> Oooh. No we don't. Exactly because we don't hold the lock, only the
+> rcu lifetime, the ref can go away from under us. I see what your
+> concern is.
+>
+> Ouch, this is more painful than I expected - the code flow looked so
+> simple. I really wanted to avoid a new lock during process shutdown,
+> because that has always been somewhat painful.
 
-I realize that this is a somewhat arbitrary point in the series to
-complain about this, but: the kernel already has infrastructure to
-decode and fix up an instruction-based exception.  See
-fixup_umip_exception().  Please refactor code so that you can share
-the same infrastructure rather than creating an entirely new thing.
+The good news is proc_flush_task isn't exactly called from process exit.
+proc_flush_task is called during zombie clean up. AKA release_task.
 
-FWIW, the fixup_umip_exception() code seems to have much more robust
-segment handling than yours :)
+So proc_flush_task isn't called with any locks held, and it is
+called in a context where it can sleep.
 
---Andy
+Further after proc_flush_task does it's thing the code goes
+and does "write_lock_irq(&task_list_lock);"
+
+So the code is definitely serialized to one processor already.
+
+What would be downside of having a mutex for a list of proc superblocks?
+A mutex that is taken for both reading and writing the list.
+
+Eric
