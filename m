@@ -2,83 +2,171 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A446C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E78AC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA80D2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79B321739
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ievYme6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgBLUrI (ORCPT
+        id S1729157AbgBLUr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:47:08 -0500
-Received: from mga03.intel.com ([134.134.136.65]:27753 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729054AbgBLUqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 15:46:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 12:46:53 -0800
-X-IronPort-AV: E=Sophos;i="5.70,434,1574150400"; 
-   d="scan'208";a="281335112"
-Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 12:46:52 -0800
-From:   Tony Luck <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] x86/mce: Add new "handled" field to "struct mce"
-Date:   Wed, 12 Feb 2020 12:46:50 -0800
-Message-Id: <20200212204652.1489-4-tony.luck@intel.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200212204652.1489-1-tony.luck@intel.com>
-References: <20200212204652.1489-1-tony.luck@intel.com>
+        Wed, 12 Feb 2020 15:47:56 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38578 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbgBLUrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 15:47:55 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p23so4022142edr.5;
+        Wed, 12 Feb 2020 12:47:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ocVi9UeaQe1UnqqnrvLRMbaF86CAckEwz1wjknCQnjg=;
+        b=ievYme6tNhf7wTnSDN1+8dI+y71+GcsRdTmWT5zD0zXgldCLscjL8DmdMrYvoNjapw
+         85Zb5pOcZ0aXklXnT99JoGssExC96kdlzwFffVY+8CEeYWzGHuNbyRCU2339GrdAt2CJ
+         AS3KZEeuArEPSPGIJbH9h5smuPwXNzJgal4nDtzXQ2MgvTLR24NXsua69EQDKEWRTppB
+         hSpfPCAPYSrJ7yUAxoQvRFcaIePuPWDeuppJc4TTUM7PEXyK6pteDYOM0pUNOQOZTEYr
+         zQGWb18rfDzHrGtuP8JY4G6xi9iugXJtcAM5fxyKcdR/gfFZdGUJ1pET7oLRhgv3Pxgp
+         ibmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ocVi9UeaQe1UnqqnrvLRMbaF86CAckEwz1wjknCQnjg=;
+        b=J/bmwOVTFuppIVhNgrnhmo/ZQ3SFAVSY9jLck+8PvL3QnWXN8S79r1BLfTUVtWeACv
+         Ytz7EYumDEeNdGE81TTu/1YFkWU+2Rl2uV8Duq37Ck9d2Q5X6aSErvR02/rI3/Rb+W5O
+         UszJQ8scHE5CRjYVpxoRi48Msq5W35RWxzSdF/hLoR2KyNDAG+LdSs2yaCfgNklOTq82
+         IefL+4eFA44dLR9kda2dv7x25IrNOUWpyf6J4KOnRsAU1HaJMBFDaK1yNfIUKM+oL63L
+         sQjyIYeM4bQicwWjpxTrro7stWswsEH3mK/ysXIH1Jk5LLP1QXHPaNtvA4v0LA7vqyLB
+         Z/KA==
+X-Gm-Message-State: APjAAAWVCy9+BwVzOo/E2X/JD3Ju96MYBQU0rCHk+5yZ/IIosQ6TnEGp
+        qvZZu10INwoz1grRgRCoGjEYrZxZ+Bo20Dp9Z9w=
+X-Google-Smtp-Source: APXvYqySCIIJhmq37z2RmNr9z8yiBAXyw7CW1K6vEWy4ZznnC+5H7VxR1Ka5yEdaSUvZOZLzggXFQJjBnmoRjX7gQ38=
+X-Received: by 2002:a17:906:9501:: with SMTP id u1mr12014650ejx.113.1581540473965;
+ Wed, 12 Feb 2020 12:47:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200212200555.2393-1-f.fainelli@gmail.com>
+In-Reply-To: <20200212200555.2393-1-f.fainelli@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 12 Feb 2020 22:47:43 +0200
+Message-ID: <CA+h21hpG5y1D2d53P7KK6X5uBFxoSQ_iCs3rRAJe61yxfWWAPA@mail.gmail.com>
+Subject: Re: [PATCH net] net: dsa: Treat VLAN ID 0 as PVID untagged
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>, michal.vokac@ysoft.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There can be many different subsystems register on the mce handler
-chain. Add a new bitmask field and define values so that handlers
-can indicate whether they took any action to log or otherwise
-handle an error.
+Hi Florian,
 
-The default handler at the end of the chain can use this information
-to decide whether to print to the console log.
+On Wed, 12 Feb 2020 at 22:06, Florian Fainelli <f.fainelli@gmail.com> wrote=
+:
+>
+> VLAN ID 0 is special by all kinds and is really meant to be the default
+> ingress and egress untagged VLAN. We were not configuring it that way
+> and so we would be ingress untagged but egress tagged.
+>
+> When our devices are interfaced with other link partners such as switch
+> devices, the results would be entirely equipment dependent. Some
+> switches are completely fine with accepting an egress tagged frame with
+> VLAN ID 0 and would send their responses untagged, so everything works,
+> but other devices are not so tolerant and would typically reject a VLAN
+> ID 0 tagged frame.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/include/uapi/asm/mce.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Are you sure that it's not in fact those devices that are not doing
+what they're supposed to? VID 0 should be sent as tagged and no port
+membership checks should be enforced on it.
 
-diff --git a/arch/x86/include/uapi/asm/mce.h b/arch/x86/include/uapi/asm/mce.h
-index 955c2a2e1cf9..99ca07f7b078 100644
---- a/arch/x86/include/uapi/asm/mce.h
-+++ b/arch/x86/include/uapi/asm/mce.h
-@@ -35,8 +35,17 @@ struct mce {
- 	__u64 ipid;		/* MCA_IPID MSR: only valid on SMCA systems */
- 	__u64 ppin;		/* Protected Processor Inventory Number */
- 	__u32 microcode;	/* Microcode revision */
-+	__u32 handled;		/* Bitmap of logging/handling actions */
- };
- 
-+/* handled flag bits */
-+#define	MCE_HANDLED_CEC		BIT(0)
-+#define	MCE_HANDLED_UC		BIT(1)
-+#define	MCE_HANDLED_EXTLOG	BIT(2)
-+#define	MCE_HANDLED_NFIT	BIT(3)
-+#define	MCE_HANDLED_EDAC	BIT(4)
-+#define	MCE_HANDLED_MCELOG	BIT(5)
-+
- #define MCE_GET_RECORD_LEN   _IOR('M', 1, int)
- #define MCE_GET_LOG_LEN      _IOR('M', 2, int)
- #define MCE_GETCLEAR_FLAGS   _IOR('M', 3, int)
--- 
-2.21.1
+>
+> Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implement=
+ation")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Hi all,
+>
+> After looking at all DSA drivers and how they implement port_vlan_add()
+> I think this is the right change to do, but would appreciate if you
+> could test this on your respective platforms to ensure this is not
+> problematic.
 
+I'm pretty sure this is problematic, for the simple reason that with
+this change, DSA is insisting that the default PVID is 0, contrary to
+the bridge core which insists it is 1. And some switches, like the
+Microchip Ocelot/Felix, don't support more than 1 egress-untagged
+VLAN, so adding one of the VIDs 0 or 1 will fail (I don't know the
+exact order off-hand). See 1c44ce560b4d ("net: mscc: ocelot: fix
+vlan_filtering when enslaving to bridge before link is up") for more
+details of how that is going to work.
+
+>
+> Thank you
+>
+>
+>  net/dsa/slave.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+> index 088c886e609e..d3a2782eb94d 100644
+> --- a/net/dsa/slave.c
+> +++ b/net/dsa/slave.c
+> @@ -1100,6 +1100,7 @@ static int dsa_slave_vlan_rx_add_vid(struct net_dev=
+ice *dev, __be16 proto,
+>  {
+>         struct dsa_port *dp =3D dsa_slave_to_port(dev);
+>         struct bridge_vlan_info info;
+> +       u16 flags =3D 0;
+>         int ret;
+>
+>         /* Check for a possible bridge VLAN entry now since there is no
+> @@ -1118,7 +1119,13 @@ static int dsa_slave_vlan_rx_add_vid(struct net_de=
+vice *dev, __be16 proto,
+>                         return -EBUSY;
+>         }
+>
+> -       ret =3D dsa_port_vid_add(dp, vid, 0);
+> +       /* VLAN ID 0 is special and should be the default egress and ingr=
+ess
+> +        * untagged VLAN, make sure it gets programmed as such.
+> +        */
+> +       if (vid =3D=3D 0)
+> +               flags =3D BRIDGE_VLAN_INFO_PVID | BRIDGE_VLAN_INFO_UNTAGG=
+ED;
+
+IEEE 802.1Q-2018, page 247, Table 9-2=E2=80=94Reserved VID values:
+
+The null VID. Indicates that the tag header contains only priority
+information; no VID is
+present in the frame. This VID value shall not be configured as a PVID
+or a member of a VID
+Set, or configured in any FDB entry, or used in any Management operation.
+
+> +
+> +       ret =3D dsa_port_vid_add(dp, vid, flags);
+>         if (ret)
+>                 return ret;
+>
+> --
+> 2.17.1
+>
+
+Is this a test?
+
+Regards,
+-Vladimir
