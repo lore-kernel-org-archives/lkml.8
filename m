@@ -2,78 +2,129 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CFAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5B3C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5ED21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:21:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T/FBzZ1f"
+	by mail.kernel.org (Postfix) with ESMTP id 6CF9A20661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 15:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgBLPVa (ORCPT
+        id S1728386AbgBLPXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:21:30 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48376 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbgBLPV3 (ORCPT
+        Wed, 12 Feb 2020 10:23:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9342 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727519AbgBLPXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 10:21:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kOxp9mEib8PrWpqKIrmfxByXwLZKLOabbiFYit+STus=; b=T/FBzZ1fg4VcMPcvl5h5zyNeuk
-        zlTHtdit3LTaes4nIEkPpGE1fDCfv+JErwZFbOilw5xufCgKrFEurxsKJgwtj82sUZ/j5G9CzJWbU
-        Xn5tdNqwu7aFLopuefh9QNEo+jqql0wGcNLqzklxy1wvzUKq7I30pjfmpeSoBf7z++wbt7j8nMnLv
-        opCT5RVRZ4ne1rCAZVO5upd+FlGmI3lvBJEGNAmSRV3BkLxJGWNTAYFVqaJSw39jq0xRzh6aEl0Ug
-        sOd9WcZKV2O4mChI3z3jt8eDSY4K68bXGdD+v+P5crQsZVSqEYBrmtFdjsWH/fnPXjA6m0ZLE+FpN
-        /5gwcmrA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1tp0-0004Ge-BL; Wed, 12 Feb 2020 15:21:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7F3DF30220B;
-        Wed, 12 Feb 2020 16:19:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8886A2032662E; Wed, 12 Feb 2020 16:21:00 +0100 (CET)
-Date:   Wed, 12 Feb 2020 16:21:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, james.morse@arm.com,
-        catalin.marinas@arm.com, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH 0/8] tracing vs rcu vs nmi
-Message-ID: <20200212152100.GV14897@hirez.programming.kicks-ass.net>
-References: <20200212093210.468391728@infradead.org>
- <20200212100106.GA14914@hirez.programming.kicks-ass.net>
- <20200212105646.GA4017@willie-the-truck>
- <20200212093235.2be06208@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212093235.2be06208@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 12 Feb 2020 10:23:38 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CFJY7m023567
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:23:36 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y4j88d242-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 10:23:36 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 12 Feb 2020 15:23:35 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Feb 2020 15:23:31 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01CFMaOR39584252
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Feb 2020 15:22:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9AE024C046;
+        Wed, 12 Feb 2020 15:23:30 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B18564C05C;
+        Wed, 12 Feb 2020 15:23:29 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.205.134])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Feb 2020 15:23:29 +0000 (GMT)
+Subject: Re: [PATCH v3 0/3] IMA: improve log messages in IMA
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>, joe@perches.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 12 Feb 2020 10:23:29 -0500
+In-Reply-To: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021215-0012-0000-0000-0000038632A3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021215-0013-0000-0000-000021C2B28C
+Message-Id: <1581521009.8515.72.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-12_08:2020-02-11,2020-02-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002120118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 09:32:34AM -0500, Steven Rostedt wrote:
-> I've been trying to get rid of notrace around the kernel, not add more.
+Hi Tushar,
 
-As is abundantly clear, I hope, we really need more this time.
+"in IMA" is redundant in the above Subject line.
 
-You want to trace RCU itself, the concequence is we _MUST_NOT_ trace the
-early NMI code until we can distinguish we're *in* NMI code.
+On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
+> Some files under IMA prefix the log statement with the respective file
+> names and not with the string "ima". This is not consistent with the rest
+> of the IMA files.
+> 
+> The function process_buffer_measurement() does not have log messages for
+> failure conditions.
+> 
+> The #define for formatting log messages, pr_fmt, is duplicated in the
+> files under security/integrity.
+> 
+> This patchset addresses the above issues.
 
-There really is no 2 way about it; and I'm not going to wait until some
-poor sucker trips over it.
+The cover letter should provide a summary of the problem(s) being
+addressed by the individual patches, not a repetition of the
+individual patch descriptions.
+
+Mimi
+
+> 
+> Tushar Sugandhi (3):
+>   add log prefix to ima_mok.c, ima_asymmetric_keys.c, ima_queue_keys.c
+>   add log message to process_buffer_measurement failure conditions
+>   add module name and base name prefix to log statements
+> 
+>  security/integrity/digsig.c                  | 2 --
+>  security/integrity/digsig_asymmetric.c       | 2 --
+>  security/integrity/evm/evm_crypto.c          | 2 --
+>  security/integrity/evm/evm_main.c            | 2 --
+>  security/integrity/evm/evm_secfs.c           | 2 --
+>  security/integrity/ima/Makefile              | 6 +++---
+>  security/integrity/ima/ima_asymmetric_keys.c | 2 --
+>  security/integrity/ima/ima_crypto.c          | 2 --
+>  security/integrity/ima/ima_fs.c              | 2 --
+>  security/integrity/ima/ima_init.c            | 2 --
+>  security/integrity/ima/ima_kexec.c           | 1 -
+>  security/integrity/ima/ima_main.c            | 5 +++--
+>  security/integrity/ima/ima_policy.c          | 2 --
+>  security/integrity/ima/ima_queue.c           | 2 --
+>  security/integrity/ima/ima_queue_keys.c      | 2 --
+>  security/integrity/ima/ima_template.c        | 2 --
+>  security/integrity/ima/ima_template_lib.c    | 2 --
+>  security/integrity/integrity.h               | 6 ++++++
+>  18 files changed, 12 insertions(+), 34 deletions(-)
+> 
+
