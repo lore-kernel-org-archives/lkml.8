@@ -2,131 +2,113 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F707C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28330C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7004420714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE0920714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Ju6xzVVY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MGdrdDKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgBLQmh (ORCPT
+        id S1728715AbgBLQms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:42:37 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45650 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgBLQmh (ORCPT
+        Wed, 12 Feb 2020 11:42:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60174 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728673AbgBLQmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:42:37 -0500
-Received: by mail-qk1-f195.google.com with SMTP id a2so2630232qko.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:42:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lC+Mj++3/YMXsXdmajO0Uv+d9BNYm/4DozkgCzMx0BQ=;
-        b=Ju6xzVVYJuf1V04IsW43lvJOoF0zm1mTaMQ/PSiBynZq6VxAQTaoI3riOkEyS4wYj5
-         gh5Ky9uPnY3nC77nxWhWbxQic03Y6rTivuXjxT+HHMhOZ7uaMDRHzkCxWsYlNoNOYo+8
-         R7GvNf8bZSx7zxJVp5YSGq6iFVr09xiXA9jywKHwnqRVB30qmvGW+tRMI0MkyV3kL8VL
-         phfinaVmeAAbzvJWFrOgl6MFfjkH4Lu39AkI6zDv3t+F/9Hjuffz3i1t0fCyPeAGXUds
-         gXYQ6cfasR0c9iDHo+DTD6lbhf4qTFZWsbhW4XKnMOprjGKkrHP2D6dhSVnK35OXS4V7
-         pWFw==
+        Wed, 12 Feb 2020 11:42:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581525766;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1adZyTOfR/v6s80ffHMqqXSo2pdemYsunr3oiNOk5/8=;
+        b=MGdrdDKTh7HkDluVDpa/DI2fmmOV3Ub0U4tkw96Fv1vGT+2dYYcVhh2Wz/lyLOAH3bw2om
+        QKo7+N2WVnvvKwy8u5IxNJkvlu7z5wwZL/rCfzoqRzRqTr5bh0WX1FXokhI8L3UoPziCiP
+        0MbpGKtP2Nsuw4zsV+k8v/lsWVwe6ec=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-QUpHotblOvCV6CrWzx77ig-1; Wed, 12 Feb 2020 11:42:44 -0500
+X-MC-Unique: QUpHotblOvCV6CrWzx77ig-1
+Received: by mail-wr1-f70.google.com with SMTP id w6so1034400wrm.16
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:42:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lC+Mj++3/YMXsXdmajO0Uv+d9BNYm/4DozkgCzMx0BQ=;
-        b=rYbRIAZNqYYpxpu69t9VO9Z1Xch0Fj7X/UOmeojnz5T9KVHHmVwYfR0q86zqYDvhnv
-         hsieMW+jrHBzF5HfhqEaKx1YKmVz2bVrcidXQvo4NNskIQx57jvo3dWLt3p5tMJyztTV
-         36FryUV3zlHafIvIGw9C3kGPKiyp3kConNr/6uCgjB0/ClUS6PP83MpZd1/QgiCRGCj+
-         tbJDxDxm08bmP1McYInN7/Mz1NKYzEi2yGmHVfhIvrBEqa9gaa0fwKmcintKMUgr+unX
-         gSklWZZ52vtzeygs76TCHPeScL8BQ0QDgXGVMBSw96B/j9zjK/GMiNb4eEd3zXZrUf+f
-         MA8g==
-X-Gm-Message-State: APjAAAWGbLnKDvY+4MrP8hBJVCbxc3z2YWpTfGm8NAGkCBtt+b7IX2Lp
-        srf3nWtw5zCgrjyxTryBCMiUgQ==
-X-Google-Smtp-Source: APXvYqz7V5yTkuSB9pl1fNnJzdUoKrXHVZQvM+wS9anG9Lq+6SvM0jdgqYqGHETcydHb23ay3CgY1A==
-X-Received: by 2002:a05:620a:c91:: with SMTP id q17mr11958572qki.168.1581525756526;
-        Wed, 12 Feb 2020 08:42:36 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:26be])
-        by smtp.gmail.com with ESMTPSA id v55sm517848qtc.1.2020.02.12.08.42.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1adZyTOfR/v6s80ffHMqqXSo2pdemYsunr3oiNOk5/8=;
+        b=ftnUB65apN492LOxck1kkIY39+GWQ8VUMCgXoaFd6BbrtiN3YbXU8ZiQFHhqSlNh6P
+         Oy22Foai+d2UB2HtJoFjVKiR8EBIObdgWzYjVlI79aLn73eVIryUrb5mw/5J9Zvr7RSk
+         QXQ4CyShIZ2K5JoNe3ReqlDYxZqTm6ops1tSU4y3JnKT28w6uVXv+bcMOpmca4+UgZUK
+         zaaQTFDDztRU2itw/7DiO5s0JQLE2hQqiQ8MU8GV/TFVInsmLfO5GbA4VPK5epeHY0ES
+         3/Cl9YwnVV5kp31MG2I2TCQpEif+kEpuvqU8AX9+710iZ5YU4qcZxMLwf3LwDRQCJrZp
+         gDhQ==
+X-Gm-Message-State: APjAAAVCSGo0A+bnCR1fREuAfce7QgNxpPRsab6ZEnBeerCMdNixf2oe
+        O0K+W4mgMP2L8M6GfYN36/JjoviCBQSf5gVTePwNHPxS7gBBUAlK7T5AA4EjqDjG4PzPhdIy4kK
+        84dZtFwk4UePyhp8awpIkFPI2
+X-Received: by 2002:adf:f6c8:: with SMTP id y8mr15775962wrp.167.1581525755303;
         Wed, 12 Feb 2020 08:42:35 -0800 (PST)
-Date:   Wed, 12 Feb 2020 11:42:35 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200212164235.GB180867@cmpxchg.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
- <CALOAHbC3Bx3E7fwt35zuiHfuC8YyhVWA1tDh2KP+gQJoMtED3w@mail.gmail.com>
+X-Google-Smtp-Source: APXvYqxB0bsei9MGFy/+qFOztBrTBKZisUs5CRha1tPks1V/Cpgkk6GhQwqh67eqtc4RvdpsN+FipA==
+X-Received: by 2002:adf:f6c8:: with SMTP id y8mr15775940wrp.167.1581525755032;
+        Wed, 12 Feb 2020 08:42:35 -0800 (PST)
+Received: from [192.168.178.40] ([151.30.86.140])
+        by smtp.gmail.com with ESMTPSA id w11sm867177wrt.35.2020.02.12.08.42.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 08:42:34 -0800 (PST)
+Subject: Re: [PATCH v2 6/7] KVM: x86/mmu: Rename kvm_mmu->get_cr3() to
+ ->get_guest_cr3_or_eptp()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200207173747.6243-1-sean.j.christopherson@intel.com>
+ <20200207173747.6243-7-sean.j.christopherson@intel.com>
+ <1424348b-7f09-513a-960b-6d15ac3a9ae4@redhat.com>
+ <20200212162816.GB15617@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <de17199e-aff3-b664-73f5-9c88727d064e@redhat.com>
+Date:   Wed, 12 Feb 2020 17:42:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbC3Bx3E7fwt35zuiHfuC8YyhVWA1tDh2KP+gQJoMtED3w@mail.gmail.com>
+In-Reply-To: <20200212162816.GB15617@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 08:25:45PM +0800, Yafang Shao wrote:
-> On Wed, Feb 12, 2020 at 1:55 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > Another variant of this problem was recently observed, where the
-> > kernel violates cgroups' memory.low protection settings and reclaims
-> > page cache way beyond the configured thresholds. It was followed by a
-> > proposal of a modified form of the reverted commit above, that
-> > implements memory.low-sensitive shrinker skipping over populated
-> > inodes on the LRU [1]. However, this proposal continues to run the
-> > risk of attracting disproportionate reclaim pressure to a pool of
-> > still-used inodes,
+On 12/02/20 17:28, Sean Christopherson wrote:
+> On Wed, Feb 12, 2020 at 01:00:59PM +0100, Paolo Bonzini wrote:
+>> On 07/02/20 18:37, Sean Christopherson wrote:
+>>> Rename kvm_mmu->get_cr3() to call out that it is retrieving a guest
+>>> value, as opposed to kvm_mmu->set_cr3(), which sets a host value, and to
+>>> note that it will return L1's EPTP when nested EPT is in use.  Hopefully
+>>> the new name will also make it more obvious that L1's nested_cr3 is
+>>> returned in SVM's nested NPT case.
+>>>
+>>> No functional change intended.
+>>
+>> Should we call it "get_pgd", since that is how Linux calls the top-level
+>> directory?  I always get confused by PUD/PMD, but as long as we only
+>> keep one /p.d/ moniker it should be fine.
 > 
-> Hi Johannes,
-> 
-> If you really think that is a risk, what about bellow additional patch
-> to fix this risk ?
-> 
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 80dddbc..61862d9 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -760,7 +760,7 @@ static bool memcg_can_reclaim_inode(struct inode *inode,
->                 goto out;
-> 
->         cgroup_size = mem_cgroup_size(memcg);
-> -       if (inode->i_data.nrpages + protection >= cgroup_size)
-> +       if (inode->i_data.nrpages)
->                 reclaimable = false;
-> 
->  out:
-> 
-> With this additional patch, we skip all inodes in this memcg until all
-> its page cache pages are reclaimed.
+> Heh, I have the exact same sentiment.  get_pgd() works for me.
 
-Well that's something we've tried and had to revert because it caused
-issues in slab reclaim. See the History part of my changelog.
+Ok, I'll post a patch that uses get_guest_pgd() as soon as I open
+kvm/next for 5.7 material.
 
-> > while not addressing the more generic reclaim
-> > inversion problem outside of a very specific cgroup application.
-> >
-> 
-> But I have a different understanding.  This method works like a
-> knob. If you really care about your workingset (data), you should
-> turn it on (i.e. by using memcg protection to protect them), while
-> if you don't care about your workingset (data) then you'd better
-> turn it off. That would be more flexible.  Regaring your case in the
-> commit log, why not protect your linux git tree with memcg
-> protection ?
+Paolo
 
-I can't imagine a scenario where I *wouldn't* care about my
-workingset, though. Why should it be opt-in, not the default?
