@@ -2,107 +2,137 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEB9C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8930C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A582168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581529915;
-	bh=CxkrovGv+VwPpjoOAvZm2PqQCvnr5Wtoftc21B0UHTk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dYpHNoePIL2kw7SJGYLqPoVxWT+e0B5HObM8htPcsbnlgsLN4zeN1hTwA4Z1SjwJN
-	 aj2FQ05cyMz9YkaANj6oflKWIrKgdWTxP3QFig7bB26ukn3yONm1V5hwQ0F2TMOEth
-	 7fkC4dVcCaSznTFb5xIO3P7Rf22Q0bAO1oYH8fr8=
+	by mail.kernel.org (Postfix) with ESMTP id 8737B217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:52:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YHaxc43Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgBLRvy (ORCPT
+        id S1728846AbgBLRwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:51:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbgBLRvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:51:54 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A0CA20714;
-        Wed, 12 Feb 2020 17:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581529912;
-        bh=CxkrovGv+VwPpjoOAvZm2PqQCvnr5Wtoftc21B0UHTk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fGVjNz4UWtFx6kGkl2XTfCOEiXyadq7bMWbG9TozLizytoCWomtQAEQscEVeIMQMw
-         MGcQLCU/Dvfia1A7iBwQv7rqwg69C4diPpEAHbFLQnkAL0RBpxCTfthen+NscnNRZy
-         2xNscEhefreq/0xFrJqZPllN3C/gI7Qx7PBjzY1c=
-Date:   Wed, 12 Feb 2020 09:51:51 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, pmenzel@molgen.mpg.de,
-        mika.westerberg@linux.intel.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        krzk@kernel.org, stable <stable@vger.kernel.org>
-Subject: Re: [RFT PATCH v2] xhci: Fix memory leak when caching protocol
- extended capability PSI tables
-Message-ID: <20200212175151.GA1872825@kroah.com>
-References: <20d0559f-8d0f-42f5-5ebf-7f658a172161@linux.intel.com>
- <CGME20200211150022eucas1p1774275707908e4ee455291a793da308a@eucas1p1.samsung.com>
- <20200211150158.14475-1-mathias.nyman@linux.intel.com>
- <da2d0387-47f8-e047-0ff8-d971072f9f89@samsung.com>
- <20200211161316.GA1914687@kroah.com>
- <a6eedbbf-ce9f-b9c8-beee-a9c941051aeb@linux.intel.com>
-MIME-Version: 1.0
+        Wed, 12 Feb 2020 12:52:08 -0500
+Received: from mail-vi1eur05on2071.outbound.protection.outlook.com ([40.107.21.71]:6090
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727231AbgBLRwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 12:52:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZoxUxXUGWBshBQgyqp0p2tcRSKXbrzt6/94fJ6Hb1BoWsthzd3kvjMsk54dZW82zIm/0c8l+UgHYQ+uGjApw5RiOHy06y4lCUKpACksGjMFfobFCwEaWpqtQos658usD5nDVqhWXecCbl4hQP8Qlhro17vL6ZpLeeqKNHjkjIbnR03m+sG01kGIYkfyyj/mGUfy2CHpOH+McPDkP1sj7WbzlprECz4iSy2sL9MDWngI4RGy+rFtbWpk7MigsTaQh6g2tMStix8SvatIVI+teoH/O50E/SMQIurmY0/3ASGex4EYwAW6cS6tt7NgMWlOyEMjblk3AE7s7NVzdcvmr7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lOpzw0JJTtcVurpkyE315SMZ90y7tPN20bRRWsfDmDY=;
+ b=SXX69FcoNCBOnuEXtOsZL7mtUBBnfJDpYGgRSFMQ0qSWs/18YtivJ/LRp8HCs7qLEfKFbOw1z/6RQCSNBs2/Off1zC9GXOAAFxJldODxNH3pqnY+W8QGc0Kg8GwdJ39SAtXLVIhCjAPP4eO+s+6E0pVr/oioUo07Uc7C/sc3ux8qwFVwWfZDUFFiW2NPUjsoypGNTByp2fhQmeXVWTwS21xtMNVSzSr36LxgMohroKDZL3DQMzwUNe9qP+Jv6k1GXrnR181zBuQTfKVuVRIJSGIQ1wj08naapDJrjj/D3x9l0uJA2CnsQ+pE58FoSemvS+id8QF1TmJ1F1z9HYcHNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lOpzw0JJTtcVurpkyE315SMZ90y7tPN20bRRWsfDmDY=;
+ b=YHaxc43YySgnvdrIUFUyqgPw6y74nhQIzOibViTbglMB+qWYVLRf3uzz1MTOmlRY25DNCamUX3+6fAPCwzEsfV1L6j9mDaScUOTDwYvgjqVx+wW8ymVC++hfKWhgn6ewYTNNpl5kRsHXNR4NIESJg8vf6xth9CWj9Vn/WBHFeoM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (20.179.5.215) by
+ AM6PR05MB5459.eurprd05.prod.outlook.com (20.177.188.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Wed, 12 Feb 2020 17:52:03 +0000
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::c99f:9130:561f:dea0]) by AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::c99f:9130:561f:dea0%3]) with mapi id 15.20.2729.021; Wed, 12 Feb 2020
+ 17:52:03 +0000
+Date:   Wed, 12 Feb 2020 19:51:59 +0200
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     santosh.shilimkar@oracle.com
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hans Westgaard Ry <hans.westgaard.ry@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] net/rds: Track user mapped pages through special API
+Message-ID: <20200212175159.GD679970@unreal>
+References: <20200212030355.1600749-1-jhubbard@nvidia.com>
+ <20200212030355.1600749-2-jhubbard@nvidia.com>
+ <c0d8d04e-08d1-60ff-ea4c-e6c71f3e118a@oracle.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a6eedbbf-ce9f-b9c8-beee-a9c941051aeb@linux.intel.com>
+In-Reply-To: <c0d8d04e-08d1-60ff-ea4c-e6c71f3e118a@oracle.com>
+X-ClientProxiedBy: AM0PR06CA0058.eurprd06.prod.outlook.com
+ (2603:10a6:208:aa::35) To AM6PR05MB6408.eurprd05.prod.outlook.com
+ (2603:10a6:20b:b8::23)
+MIME-Version: 1.0
+Received: from localhost (2a00:a040:183:2d::2a5) by AM0PR06CA0058.eurprd06.prod.outlook.com (2603:10a6:208:aa::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23 via Frontend Transport; Wed, 12 Feb 2020 17:52:02 +0000
+X-Originating-IP: [2a00:a040:183:2d::2a5]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7c3ffc77-241c-45b9-b379-08d7afe44430
+X-MS-TrafficTypeDiagnostic: AM6PR05MB5459:
+X-Microsoft-Antispam-PRVS: <AM6PR05MB54595FDBF66A31CBFF483365B01B0@AM6PR05MB5459.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0311124FA9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(376002)(346002)(39860400002)(366004)(136003)(199004)(189003)(966005)(16526019)(6916009)(8936002)(81166006)(2906002)(81156014)(6486002)(8676002)(52116002)(186003)(53546011)(9686003)(4326008)(66476007)(66556008)(478600001)(33656002)(33716001)(54906003)(316002)(66946007)(7416002)(86362001)(1076003)(6666004)(5660300002)(6496006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB5459;H:AM6PR05MB6408.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kRypZls59DKPPzfEXkd/wLrInf+w9wUQ6tmBY+lW4VBwRZFcL+HNSTy7gxye3KIeWDLKdSbvspdASM5gvaf28IEGyg9TGKnOHO8Ql+UubZRsvnu0CbawL49lcUOnVpxWKB/KQx6rzB9O1pt5ubnJiIceksV3T4gndH9xbtNIrkcjOMsMezJWi/ZeU5+HrVUqEgvauS96a7s43NoSI7Pg3G9C0WlsdtZwmGr2hR0SXyj5wpffPKaiHBv2uCV176MJt+KvoccuL+Eo2zT6jF8oovwlue/a3QslwcaABCW+XiJ4vXxM2mYm1TDM5kL5KODj6JBzi5d+s9QCwWTupTYt4oSDowVkuasbDMvaN8wtiSErs5UXZldspH+2FIPI5FjMBglCr/KGvPp09h+9hk5rYWbpgWtDaeQqqshuO3z+W+eavDD+3by/KjSG8LBocSPgjN6tOIHseT2TJCiUM5w5KaLp/xux/ywXRnWcf0oNNz0MmZuje3gl8OZC84wyL+M7g2mem2c/BLSSkkx9H/EXAg==
+X-MS-Exchange-AntiSpam-MessageData: z+VV5rgtpNwRGhZYkFqfu7+dNNmdcVG19YHzhjjrIqbcMrf9EO2oOlK65UMFGhf28FchSe9lgku8X2RkmE4cGxtbm+mAL9srHbZHEkK0akzAoFYjrQwY9hrpvRNNpXBkuP2mUw6Qw1WfAuj8ENjS9+mNHpnA9urDITNXvWTY5V4=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c3ffc77-241c-45b9-b379-08d7afe44430
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 17:52:02.9790
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L0PjSxxiQSR1wodXQO3OvbOn+/d28d+tC6rbaNKc2y6z/qhDrvKD9xinnEL7s/8RNxT5sWd3K+DvRQgci5SeAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5459
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 11:01:52AM +0200, Mathias Nyman wrote:
-> On 11.2.2020 18.13, Greg KH wrote:
-> > On Tue, Feb 11, 2020 at 04:12:40PM +0100, Marek Szyprowski wrote:
-> >> Hi Mathias,
-> >>
-> >> On 11.02.2020 16:01, Mathias Nyman wrote:
-> >>> xhci driver assumed that xHC controllers have at most one custom
-> >>> supported speed table (PSI) for all usb 3.x ports.
-> >>> Memory was allocated for one PSI table under the xhci hub structure.
-> >>>
-> >>> Turns out this is not the case, some controllers have a separate
-> >>> "supported protocol capability" entry with a PSI table for each port.
-> >>> This means each usb3 roothub port can in theory support different custom
-> >>> speeds.
-> >>>
-> >>> To solve this, cache all supported protocol capabilities with their PSI
-> >>> tables in an array, and add pointers to the xhci port structure so that
-> >>> every port points to its capability entry in the array.
-> >>>
-> >>> When creating the SuperSpeedPlus USB Device Capability BOS descriptor
-> >>> for the xhci USB 3.1 roothub we for now will use only data from the
-> >>> first USB 3.1 capable protocol capability entry in the array.
-> >>> This could be improved later, this patch focuses resolving
-> >>> the memory leak.
-> >>>
-> >>> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> >>> Reported-by: Sajja Venkateswara Rao <VenkateswaraRao.Sajja@amd.com>
-> >>> Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
-> >>> Cc: stable <stable@vger.kernel.org> # v4.4+
-> >>> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> >>
-> >> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > 
-> > Nice!
-> > 
-> > Should I revert the first and then apply this?
-> > 
-> 
-> Yes, please
+On Wed, Feb 12, 2020 at 09:31:51AM -0800, santosh.shilimkar@oracle.com wrote:
+> On 2/11/20 7:03 PM, John Hubbard wrote:
+> > From: Leon Romanovsky <leonro@mellanox.com>
+> >
+> > Convert net/rds to use the newly introduces pin_user_pages() API,
+> > which properly sets FOLL_PIN. Setting FOLL_PIN is now required for
+> > code that requires tracking of pinned pages.
+> >
+> > Note that this effectively changes the code's behavior: it now
+> > ultimately calls set_page_dirty_lock(), instead of set_page_dirty().
+> > This is probably more accurate.
+> >
+> > As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+> > dealing with a file backed page where we have reference on the inode it
+> > hangs off." [1]
+> >
+> > [1] https://urldefense.com/v3/__https://lore.kernel.org/r/20190723153640.GB720@lst.de__;!!GqivPVa7Brio!OJHuecs9Iup5ig3kQBi_423uMMuskWhBQAdOICrY3UQ_ZfEaxt9ySY7E8y32Q7pk5tByyA$
+> >
+> > Cc: Hans Westgaard Ry <hans.westgaard.ry@oracle.com>
+> > Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+> > Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> > ---
+> Change looks fine to me. Just on safer side, we will try
+> to test this change with regression suite to make sure it
+> works as expected.
 
-Now done, thanks.
+Thanks Santosh,
+I wrote this patch before John's series was merged into the tree,
+but back then, Hans tested it and it worked, hope that it still works. :)
 
-greg k-h
+>
+> For patch itself,
+>
+> Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+>
