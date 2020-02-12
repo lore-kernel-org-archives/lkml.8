@@ -2,80 +2,146 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F56C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED530C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4778220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF26220724
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgBLN47 (ORCPT
+        id S1728202AbgBLN5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:56:59 -0500
-Received: from 8bytes.org ([81.169.241.247]:53924 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbgBLN47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:56:59 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 44D5E20E; Wed, 12 Feb 2020 14:56:57 +0100 (CET)
-Date:   Wed, 12 Feb 2020 14:56:45 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 62/62] x86/sev-es: Add NMI state tracking
-Message-ID: <20200212135645.GK20066@8bytes.org>
-References: <20200211135256.24617-1-joro@8bytes.org>
- <20200211135256.24617-63-joro@8bytes.org>
- <CALCETrWV15+YTGsEwUHBSjT2MYappLANw4fQHjgZgei2UyV1JQ@mail.gmail.com>
+        Wed, 12 Feb 2020 08:57:03 -0500
+Received: from orion.archlinux.org ([88.198.91.70]:38018 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727582AbgBLN5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 08:57:02 -0500
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id A3C6418E506C43;
+        Wed, 12 Feb 2020 13:56:59 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Wed, 12 Feb 2020 13:56:59 +0000 (UTC)
+Message-ID: <5a93677bd6238a9d7928e4fd16a8915faeb5f19e.camel@archlinux.org>
+Subject: Re: [PATCH] HID: logitech-dj: add support for the static device in
+ the Powerplay mat/receiver
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nestor Lopez Casado <nlopezcasad@logitech.com>
+In-Reply-To: <nycvar.YFH.7.76.2002121449191.3144@cbobk.fhfr.pm>
+References: <20200115201811.3271284-1-lains@archlinux.org>
+         <nycvar.YFH.7.76.2002121449191.3144@cbobk.fhfr.pm>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-3P3g5JjKy5potOmOiHOS"
+Date:   Wed, 12 Feb 2020 13:56:58 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWV15+YTGsEwUHBSjT2MYappLANw4fQHjgZgei2UyV1JQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Evolution 3.34.3 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:50:29PM -0800, Andy Lutomirski wrote:
-> On Tue, Feb 11, 2020 at 5:53 AM Joerg Roedel <joro@8bytes.org> wrote:
-> This patch is overcomplicated IMO.  Just do the magic incantation in C
-> from do_nmi or from here:
-> 
->         /*
->          * For ease of testing, unmask NMIs right away.  Disabled by
->          * default because IRET is very expensive.
-> 
-> If you do the latter, you'll need to handle the case where the NMI
-> came from user mode.
-> 
-> The ideal solution is do_nmi, I think.
-> 
-> if (static_cpu_has(X86_BUG_AMD_FORGOT_ABOUT_NMI))
->   sev_es_unmask_nmi();
-> 
-> Feel free to use X86_FEATURE_SEV_ES instead :)
 
-Yeah, I also had that implemented once, but then changed it because I
-thought that nested NMIs do not necessarily call into do_nmi(), which
-would cause NMIs to stay blocked forever. I need to read through the NMI
-entry code again to check if that can really happen.
+--=-3P3g5JjKy5potOmOiHOS
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2020-02-12 at 14:50 +0100, Jiri Kosina wrote:
+> On Wed, 15 Jan 2020, Filipe La=C3=ADns wrote:
+>=20
+> > The Logitech G Powerplay has a lightspeed receiver with a static HID++
+> > device with ID 7 attached to it to. It is used to configure the led on
+> > the mat. For this reason I increased the max number of devices.
+> >=20
+> > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> > ---
+> >  drivers/hid/hid-logitech-dj.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-d=
+j.c
+> > index bb50d6e7745b..79294b873057 100644
+> > --- a/drivers/hid/hid-logitech-dj.c
+> > +++ b/drivers/hid/hid-logitech-dj.c
+> > @@ -16,11 +16,11 @@
+> >  #include <asm/unaligned.h>
+> >  #include "hid-ids.h"
+> > =20
+> > -#define DJ_MAX_PAIRED_DEVICES			6
+> > +#define DJ_MAX_PAIRED_DEVICES			7
+> >  #define DJ_MAX_NUMBER_NOTIFS			8
+> >  #define DJ_RECEIVER_INDEX			0
+> >  #define DJ_DEVICE_INDEX_MIN			1
+> > -#define DJ_DEVICE_INDEX_MAX			6
+> > +#define DJ_DEVICE_INDEX_MAX			7
+> > =20
+> >  #define DJREPORT_SHORT_LENGTH			15
+> >  #define DJREPORT_LONG_LENGTH			32
+> > @@ -980,6 +980,11 @@ static void logi_hidpp_recv_queue_notif(struct hid=
+_device *hdev,
+> >  		break;
+> >  	}
+> > =20
+> > +	/* custom receiver device (eg. powerplay) */
+> > +	if (hidpp_report->device_index =3D=3D 7) {
+> > +		workitem.reports_supported |=3D HIDPP;
+> > +	}
+> > +
+>=20
+> I guess we can't do anything else than to trust Logitech that they will=
+=20
+> not assign conflicting device_index ID in the future to something that=
+=20
+> will not be HID++, right?
+>=20
+> Or is this properly documented somewhere?
+>=20
+> Thanks,
+
+
+CCing Nestor
+
+Yes, we need to trust Logitech on this. There's isn't anything
+documented regarding this AFAIK.
+
+Even if Logitech released a device with index 7 that didn't support
+HID++, it wouldn't be that big of an issue. We would just end up with a
+hidraw node which would export a vendor page report descriptor but the
+device wouldn't actually reply to anything.
 
 Regards,
+Filipe La=C3=ADns
 
-	Joerg
+--=-3P3g5JjKy5potOmOiHOS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl5EBCEACgkQ+JPGdIFq
+qV2nixAApQh5cHidyCP6oi8asHrvYczpnT6bx0zNt8f8GQpzEi8YFdTojMdXe+XG
+wqdXIYmB9EmpKi9IeQYwBPv3BUNB/Rwu47p99UKtytpWofHYFgdjaVCOg1sAA/Xr
+zDtmryCP7OraUC95Ut86KrNx9Ez5wzJ7Jy8N4GxawSFtau9sxzCGotfdCqPKGaJ5
+e+yk/8aioLA4qikMFl1UdDZdYFSr4CgAERheSQm1LciKoHXBty8i3NQYpGmtzeuS
+3xZsgO8gfH6yJ8sW95uet6zUgbbij4kjaFAfkC+zSXNGnxF0luQy5N8ICM99LCUh
+3SoqSQU9auHKF6DipQVSHTsZfF2L69lGK4mWwVN+Guzroh0Oj5NtfuiXUHIyVDYj
+XhYKYCkwxftWOjK3u0u/6YFcVCScz25nEi/vPvTBxjXW6lvq5rg6O5T89zfqB0L/
+R+P1EqwwhfJStSJ2GeqnR0NBAu2CXUw9NAuQ7EBY61hTGFTQANGJMcFb53BA1Buq
+2ut36VnyJHtW8ZDJbPNm5Cp2vkU6PELWIOsRMHLSGjp0BR6xqocI0e2SB51RjZY7
+dSxczOKEc8IeUh4Co2PISwYMfaoEkpu2nwwkz+PYBnG3tisDZRgLP8SDik3tCyYT
+GV6Lpa0ZyiGbjXmrlZYU+p6AnpoXr3rsiG5Bu4Aui9AuZ4/nwjU=
+=h22c
+-----END PGP SIGNATURE-----
+
+--=-3P3g5JjKy5potOmOiHOS--
