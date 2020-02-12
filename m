@@ -2,118 +2,143 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A67C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A544BC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39974206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:12:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="azqcd8cX"
+	by mail.kernel.org (Postfix) with ESMTP id 8309D206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgBLVM5 (ORCPT
+        id S1729133AbgBLVNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:12:57 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45367 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbgBLVM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:12:56 -0500
-Received: by mail-pl1-f194.google.com with SMTP id b22so1414525pls.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:12:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1IJZJYEelASi8ZQCkdIcLDnnIutfG7b5nGAbr7QUKNQ=;
-        b=azqcd8cXw/wi/gh9wa6Ax4h1CZTAj5vm4mi3yCaJwLM15gWZCni5qjGj8emJtZPhnu
-         UgrVTQgxozVXwdWmAIegaw087OBM1ojSCoe02ehql+NPdzCGu573rs61OCyfN2/RJv4U
-         EZpBdv+9iMFYaZCkI0z/f9HY+Igmf0Mx9KdLpYQNBZzoxmDUYjQkPtXPVfQ1rbQ6Pjh/
-         Zg+v7UUi93wOLeMoA84RfzaL8wu6e4mvfJq9FohqMN5pN83PiUwATRXX/mvvho0Q7Y3O
-         YExVodLuAJrSEeo5y9KEa1H5Kp8d7fBV0lZu7k4Cjx9YccvvUadMm0TmMRwP1DGstWsQ
-         tp+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1IJZJYEelASi8ZQCkdIcLDnnIutfG7b5nGAbr7QUKNQ=;
-        b=SyYvzwh8K/QBR43O0lxy5tQi/KJ/Gb54AWqiSjV1CzC0+wY6MmO8xCMWcV3J+5WGTJ
-         7hV46cgMBZy4kMHuGDAFeCaWI6FzHqpiCYvLCxcKdqpJMwxCq259nqCokMP5ffIfY/5z
-         vacCcTg7wMgJBKQDikd0t6vA+FXtP83OSH1gI24fr44eU93zWo3LHMxEyAEpaJYPcjUS
-         zVfVEcx4lHS8bS4Xlj37O7+2HBb3MD+SHWAGL9nGZRYKOoTBI7VXMz/YaehA6qfqQM10
-         U8qguQiO1svXIFUh/gr+yumkaQ/oOJXimuMDrKShntNdoDYz0Fn4T3gh2J6bs6uAn22J
-         b14w==
-X-Gm-Message-State: APjAAAWWs5dlZzSEv6r2lcvinFNsR5RaMABrtqYdzXnxfqU81vl35wOG
-        2Y3QSKGtBIrc/hRtGOt8W32UOQ==
-X-Google-Smtp-Source: APXvYqwxk9TfdMx67X+S3KL1wab9T32loeJ74vF3SfkjOLkK0QpGbJA015F09VCX8lP8Zo84SQDeVw==
-X-Received: by 2002:a17:90b:14e:: with SMTP id em14mr1061865pjb.112.1581541975312;
-        Wed, 12 Feb 2020 13:12:55 -0800 (PST)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id h11sm48295pgk.48.2020.02.12.13.12.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 13:12:54 -0800 (PST)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     arnaud.pouliquen@st.com, s-anna@ti.com, xiaoxiang@xiaomi.com,
-        t-kristo@ti.com, loic.pallardy@st.com, remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] rpmsg: core: Add wildcard match for name service
-Date:   Wed, 12 Feb 2020 14:12:51 -0700
-Message-Id: <20200212211251.32091-2-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200212211251.32091-1-mathieu.poirier@linaro.org>
-References: <20200212211251.32091-1-mathieu.poirier@linaro.org>
+        Wed, 12 Feb 2020 16:13:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:60665 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727420AbgBLVNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 16:13:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 13:13:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,434,1574150400"; 
+   d="scan'208";a="432449589"
+Received: from wendeand-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.52.16])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Feb 2020 13:13:20 -0800
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 0320921D13; Wed, 12 Feb 2020 23:13:17 +0200 (EET)
+Date:   Wed, 12 Feb 2020 23:13:17 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Jacob Chen <cc@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>,
+        Dafna Hirschfeld <dafna3@gmail.com>
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+Message-ID: <20200212211317.GD3087@kekkonen.localdomain>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com>
+ <20190808091406.GQ21370@paasikivi.fi.intel.com>
+ <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
+ <20190815082422.GM6133@paasikivi.fi.intel.com>
+ <20190815131748.GS6133@paasikivi.fi.intel.com>
+ <78856358-1afd-31a7-86dd-22f7d6d7fb05@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78856358-1afd-31a7-86dd-22f7d6d7fb05@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding the capability to supplement the base definition published
-by an rpmsg_driver with a postfix description so that it is possible
-for several entity to use the same service.
+Hi Dafna,
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/rpmsg/rpmsg_core.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+Apologies for the late reply. I learned the mail had got lost due to mail
+server issues.
 
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index e330ec4dfc33..bfd25978fa35 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -399,7 +399,25 @@ ATTRIBUTE_GROUPS(rpmsg_dev);
- static inline int rpmsg_id_match(const struct rpmsg_device *rpdev,
- 				  const struct rpmsg_device_id *id)
- {
--	return strncmp(id->name, rpdev->id.name, RPMSG_NAME_SIZE) == 0;
-+	size_t len = min_t(size_t, strlen(id->name), RPMSG_NAME_SIZE);
-+
-+	/*
-+	 * Allow for wildcard matches.  For example if rpmsg_driver::id_table
-+	 * is:
-+	 *
-+	 * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-+	 *      { .name = "rpmsg-client-sample" },
-+	 *      { },
-+	 * }
-+	 *
-+	 * Then it is possible to support "rpmsg-client-sample*", i.e:
-+	 *	rpmsg-client-sample
-+	 *	rpmsg-client-sample_instance0
-+	 *	rpmsg-client-sample_instance1
-+	 *	...
-+	 *	rpmsg-client-sample_instanceX
-+	 */
-+	return strncmp(id->name, rpdev->id.name, len) == 0;
- }
- 
- /* match rpmsg channel and rpmsg driver */
+On Fri, Jan 31, 2020 at 08:38:34PM +0100, Dafna Hirschfeld wrote:
+> Hi,
+> I (Dafna Hirschfeld) will work in following months with Helen Koike to fix the issues
+> in the TODO file of this driver: drivers/staging/media/rkisp1/TODO
+> 
+> On 15.08.19 15:17, Sakari Ailus wrote:
+> > On Thu, Aug 15, 2019 at 11:24:22AM +0300, Sakari Ailus wrote:
+> > > Hi Helen,
+> > > 
+> > > On Wed, Aug 14, 2019 at 09:58:05PM -0300, Helen Koike wrote:
+> > > 
+> > > ...
+> > > 
+> > > > > > +static int rkisp1_isp_sd_set_fmt(struct v4l2_subdev *sd,
+> > > > > > +				 struct v4l2_subdev_pad_config *cfg,
+> > > > > > +				 struct v4l2_subdev_format *fmt)
+> > > > > > +{
+> > > > > > +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
+> > > > > > +	struct rkisp1_isp_subdev *isp_sd = &isp_dev->isp_sdev;
+> > > > > > +	struct v4l2_mbus_framefmt *mf = &fmt->format;
+> > > > > > +
+> > > > > 
+> > > > > Note that for sub-device nodes, the driver is itself responsible for
+> > > > > serialising the access to its data structures.
+> > > > 
+> > > > But looking at subdev_do_ioctl_lock(), it seems that it serializes the
+> > > > ioctl calls for subdevs, no? Or I'm misunderstanding something (which is
+> > > > most probably) ?
+> > > 
+> > > Good question. I had missed this change --- subdev_do_ioctl_lock() is
+> > > relatively new. But setting that lock is still not possible as the struct
+> 
+> 'the struct' - do you mean the 'vdev' struct allocated in
+> 'v4l2_device_register_subdev_nodes' ?
+
+Yes.
+
+> 
+> > > is allocated in the framework and the device is registered before the
+> 
+> > > driver gets hold of it. It's a good idea to provide the same serialisation
+> > > for subdevs as well.
+> > > 
+> > > I'll get back to this later.
+> > 
+> > The main reason is actually that these ops are also called through the
+> > sub-device kAPI, not only through the uAPI, and the locks are only taken
+> > through the calls via uAPI.
+> 
+> actually it seems that although 'subdev_do_ioctl_lock' exit, I wonder if
+> any subdevice uses that vdev->lock in  subdev_do_ioctl_lock.
+> It is not initialized in v4l2_device_register_subdev_nodes where the vdev is allocated
+> and I wonder if any subdevice actually initialize it somewhere else. For example it is null in this
+> driver and in vimc.
+
+It needs to be set before the video device is registered, so indeed, it
+seems no driver can make use it.
+
+> 
+> > 
+> > So adding the locks to uAPI calls alone would not address the issue.
+> 
+> What I can do is add a mutex to every struct of a subdevice and lock it
+> at the beginning of each subdevice operation.
+> Is this an acceptable solution?
+
+Please do. That's what other drivers do at the moment as well.
+
 -- 
-2.20.1
+Kind regards,
 
+Sakari Ailus
