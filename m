@@ -2,84 +2,132 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF787C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425CCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DB120842
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CFC20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aufRwcQ3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqDTnVdw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbgBLCf6 (ORCPT
+        id S1727785AbgBLCh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:35:58 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:43710 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727584AbgBLCf6 (ORCPT
+        Tue, 11 Feb 2020 21:37:56 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34714 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727584AbgBLCh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:35:58 -0500
-X-UUID: a231252189ff4dc99d5e85772b8aebaa-20200212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=aC80HxRMBV0tY5Zddqx1ty1wteHBFoyprQsy+llvVXw=;
-        b=aufRwcQ3yqp/MZ7WPzqZmxSh5Gf/feSfqjjdJkWrjPCZ2+dDadDMeUbQbq6cOymmyXhBD6WQVe0hYDKDTNjkfAXwsulXHz5rfIuC5TyCcQJAWcmUCcyyfQ6im2s2k7QRFl0+XlNexFmYXDQcKPVP/HcBoWj685riVhv70Nri7Dg=;
-X-UUID: a231252189ff4dc99d5e85772b8aebaa-20200212
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1525769421; Wed, 12 Feb 2020 10:35:49 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Feb 2020 10:34:57 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Feb 2020 10:34:49 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Tue, 11 Feb 2020 21:37:56 -0500
+Received: by mail-pj1-f66.google.com with SMTP id f2so1358941pjq.1;
+        Tue, 11 Feb 2020 18:37:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vv3NHPZnBve5XiluETZotYu+d3bqwg0qJCx+3uhyaM4=;
+        b=LqDTnVdwykUbgj17vRiSu0wFe6uQuLuoNTYxnt1hV1zA7zQJZ3Bu1dEQt4RI34I1TS
+         Or2/lgMlxpcFQzXW463ugd85BrgR6lgMSKBiGhOmWpfD0H1f7PcEbVJhflRk3lwMfWo3
+         x6wskEcFMMckElySxG0JLuRGy9KCJ0rFQPawyC295ueBCdHjobHOguzNBOOR7WlBwRaR
+         OY5syFDOcpl+E49w1qaBDG105le2WjLWE+eQ6YJg8AubgePkguj0UTz+MB/RBxroaW0n
+         lx2EFjfL5QjrX69I8wUKWAO2/nYbY5A1X27OhsVEa2/65vOy8MgC2ffxYouJxHKW6a/V
+         4QZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vv3NHPZnBve5XiluETZotYu+d3bqwg0qJCx+3uhyaM4=;
+        b=pi3XhKiKMuhRhMiKBvNZIWXiz6wOV6ZRzgsw3FWeRcjHsC7MiVi1Ow3Pg6B2g0C2gP
+         bcPwrAPmdR0RI/oFouP6IyhJ/ESsWbmbNeGWqQx0aOCULa/yrQGOTQKBee4ScRQDEmM3
+         x0+/y+Sv7Dvjt64yhU6EVLnfEf4KefbK+kqvCYd4iflQ37ybWimYl3gPoj3QFnp5v0uh
+         lBq4/uZKweUPN5hbnVInwIYArcVMZoDlbvJKx4q95zkoGwai3cZwiC68qOuKYGVJFPQg
+         0oFkL1speeP6KNw8ChYN/QMy2ToB17XlSnAXuKkBMMhrorSL3HgQrEQkkN3pOeViryZ/
+         LKNg==
+X-Gm-Message-State: APjAAAUKXHd75IvVLU9CRT61H9LeUgIYDnqdsUIBAhz2JIrL2pd2Dpaw
+        nzhUAgtql9LjSoewaDH1ud8=
+X-Google-Smtp-Source: APXvYqyuDguANzB58wFOK/4Z7FCp2UtZ0LngNySWG7JX3V31NtSorTHf3Kf9HvxxX7mtQN6BVwdbmw==
+X-Received: by 2002:a17:90a:c388:: with SMTP id h8mr6993554pjt.83.1581475075299;
+        Tue, 11 Feb 2020 18:37:55 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:200::80a4])
+        by smtp.gmail.com with ESMTPSA id d15sm5740978pgn.6.2020.02.11.18.37.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Feb 2020 18:37:54 -0800 (PST)
+Date:   Tue, 11 Feb 2020 18:37:47 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [RESEND,v2,1/1] arm: dts: mediatek: add mt7629 pwm support
-Date:   Wed, 12 Feb 2020 10:35:26 +0800
-Message-ID: <1581474926-28633-2-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581474926-28633-1-git-send-email-sam.shih@mediatek.com>
-References: <1581474926-28633-1-git-send-email-sam.shih@mediatek.com>
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/3] usb: gadget: aspeed: read vhub config from
+ of_device_id
+Message-ID: <20200212023746.GA9834@taoren-ubuntu-R90MNF91>
+References: <20200131222157.20849-1-rentao.bupt@gmail.com>
+ <20200131222157.20849-2-rentao.bupt@gmail.com>
+ <CACPK8Xe0b+zVNqf8v5YXOLkzqDeb4JHqec-bqFpaVFGTwHThhA@mail.gmail.com>
+ <386e905fb705266efcac0c1b3a10053889c7fead.camel@kernel.crashing.org>
+ <20200210190744.GA5346@taoren-ubuntu-R90MNF91>
+ <746b08aabf7ea976a382ad2ca30fa10a095e7ed8.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <746b08aabf7ea976a382ad2ca30fa10a095e7ed8.camel@kernel.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBhZGRzIHB3bSBzdXBwb3J0IGZvciBNVDc2MjkuDQpVc2VkOg0KaHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wYXRjaC8xMTE2MDg1MS8NCg0KQ2hhbmdlIHNpbmNlIHYxOg0KcmVtb3Zl
-IHVudXNlZCBwcm9wZXJ0eSBudW0tcHdtDQoNClNpZ25lZC1vZmYtYnk6IFNhbSBTaGloIDxzYW0u
-c2hpaEBtZWRpYXRlay5jb20+DQotLS0NCiBhcmNoL2FybS9ib290L2R0cy9tdDc2MjkuZHRzaSB8
-IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykNCg0K
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyOS5kdHNpIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvbXQ3NjI5LmR0c2kNCmluZGV4IDg2N2I4ODEwM2I5ZC4uY2UyYTMwYTI0MDE3IDEwMDY0
-NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL210NzYyOS5kdHNpDQpAQCAtMjQxLDYgKzI0MSwyMCBAQA0KIAkJCXN0YXR1cyA9ICJk
-aXNhYmxlZCI7DQogCQl9Ow0KIA0KKwkJcHdtOiBwd21AMTEwMDYwMDAgew0KKwkJCWNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ3NjI5LXB3bSI7DQorCQkJcmVnID0gPDB4MTEwMDYwMDAgMHgxMDAw
-PjsNCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzcgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCisJ
-CQljbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfUFdNX1NFTD4sDQorCQkJCSA8JnBlcmljZmcg
-Q0xLX1BFUklfUFdNX1BEPiwNCisJCQkJIDwmcGVyaWNmZyBDTEtfUEVSSV9QV00xX1BEPjsNCisJ
-CQljbG9jay1uYW1lcyA9ICJ0b3AiLCAibWFpbiIsICJwd20xIjsNCisJCQlhc3NpZ25lZC1jbG9j
-a3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfUFdNX1NFTD47DQorCQkJYXNzaWduZWQtY2xvY2stcGFy
-ZW50cyA9DQorCQkJCQk8JnRvcGNrZ2VuIENMS19UT1BfVU5JVlBMTDJfRDQ+Ow0KKwkJCXN0YXR1
-cyA9ICJkaXNhYmxlZCI7DQorCQl9Ow0KKw0KIAkJaTJjOiBpMmNAMTEwMDcwMDAgew0KIAkJCWNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NjI5LWkyYyIsDQogCQkJCSAgICAgIm1lZGlhdGVrLG10
-MjcxMi1pMmMiOw0KLS0gDQoyLjE3LjENCg==
+On Tue, Feb 11, 2020 at 09:50:42AM +0100, Benjamin Herrenschmidt wrote:
+> On Mon, 2020-02-10 at 11:07 -0800, Tao Ren wrote:
+> > > > This looks generally okay. We should wait for Ben's ack before
+> > > > applying.
+> > > 
+> > > Shouldn't we instead have DT fields indicating those values ?
+> > 
+> > May I ask why we prefer adding dt fields (such as "aspeed,vhub-max-ports"
+> > and "aspeed,vhub-max-endpoints") instead of assigning these values based
+> > on aspeed family? For example, is it to allow users to set a smaller
+> > number of ports/endpoints?
+> 
+> It's not a strong drive but it makes it more convenient to add support
+> to newer revisions if the only differences are those numbers.
 
+Got it. Thanks for the clarify. Will send out v2 patches after more
+testing.
+
+> > 
+> > > Also we should add a DT representation for the various ID/strings of
+> > > the hub itself so manufacturers can customize them.
+> > 
+> > Sure. I will add DT nodes for vendor/product/device IDs/strings. As it's
+> > not directly related to ast2600-support, shall I handle it in a separate
+> > patch? Or I can include the patch in this patch series?
+> 
+> Separate. Thanks !
+
+Will take care of the change once this patch series is accepted.
+
+
+Cheers,
+
+Tao
+> 
+> Cheers,
+> Ben.
+> 
+> 
