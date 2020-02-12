@@ -2,106 +2,90 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEA6C352A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9355C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4CC2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9767A2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="z+tmd1Ba"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="wE6p7gn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgBLDGb (ORCPT
+        id S1727864AbgBLDH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 22:06:31 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39401 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbgBLDG2 (ORCPT
+        Tue, 11 Feb 2020 22:07:29 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37858 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727602AbgBLDH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 22:06:28 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0E90D891AA;
-        Wed, 12 Feb 2020 16:06:26 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1581476786;
-        bh=BS4SIJJXkPfD3uRSfaxuBqFgO6t+gHHcevTuB9owsIE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=z+tmd1BaPSpks5VQvfdyS3YdeIQddbiXVMpVyvByPVuKU9Tpp8k/LZpCuZrAN6qYN
-         S4azscTOe1qdxbho+BJOgQVkZVObciwjZYg8O7YACab+95l8iuVCjbmEIXwXAM5ZPZ
-         yO6qSvuyYv6pPgkyDmnQ0nLB4iOtAfLWcoxOgCGlZJqZy5Oo9vDq7y870AvA+gLXAr
-         2ILKQ6/kubB4ajpkiKSyTx3hkjP677CHe4c/NCyY62YHArwAdwf+i3tF4np9byt/n/
-         X8uH7Nvljg8pzFS3kEIuRTHx53qtHuKbc+Acghv6JEnBpi2nXYuwaWVpYqkPgRFrhg
-         Rp1O66kYOZbDw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e436bb10000>; Wed, 12 Feb 2020 16:06:25 +1300
-Received: from henrys-dl.ws.atlnz.lc (henrys-dl.ws.atlnz.lc [10.33.23.26])
-        by smtp (Postfix) with ESMTP id 9BF0413EED4;
-        Wed, 12 Feb 2020 16:06:25 +1300 (NZDT)
-Received: by henrys-dl.ws.atlnz.lc (Postfix, from userid 1052)
-        id C40CB4E1463; Wed, 12 Feb 2020 16:06:25 +1300 (NZDT)
-From:   Henry Shen <henry.shen@alliedtelesis.co.nz>
-To:     robh+dt@kernel.org, mark.rutland@arm.com,
-        guillaume.ligneul@gmail.com, jdelvare@suse.com, linux@roeck-us.net,
-        trivial@kernel.org, venture@google.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Henry Shen <henry.shen@alliedtelesis.co.nz>
-Subject: [PATCH v2 2/2] hwmon: (lm73) Add support for of_match_table
-Date:   Wed, 12 Feb 2020 16:06:15 +1300
-Message-Id: <20200212030615.28537-3-henry.shen@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200212030615.28537-1-henry.shen@alliedtelesis.co.nz>
-References: <20200212030615.28537-1-henry.shen@alliedtelesis.co.nz>
+        Tue, 11 Feb 2020 22:07:28 -0500
+Received: by mail-ed1-f68.google.com with SMTP id s3so676788edy.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 19:07:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SFLoJ+Iscn8Qb8Jf6d+3iR2+svxKe9mFdKwvUsh5fhM=;
+        b=wE6p7gn51MRK87tVTxdIg0KTgY7b1uGXoMWElvxJiFG4fDFHIox7jf3XfT1A+lguat
+         /wlazP6U6/5qjsr5XlZXf13lV4uRoIpHVVI9TpxM/UsCUy4poALez1jSo6rrE9cnfVgl
+         TXW4QoMlNLiDCJA8z+e8G/tWx9I9Qvj/ku625Ew0vzecoa8+kmqyhN4o4wYojFfW8iQF
+         GiALbzBC+r4wMWzJIGRq5aw2z1gX6VgpQ4Dny4ry1WQuV55aKdrq9EBAnsFr1NSXdu+J
+         FsvQBtl1gXiApXxaebax9SZCalClDyZbdp/T2DmExdEzMtDQ3cf9DHSxA4LLviJcOjQr
+         n5Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SFLoJ+Iscn8Qb8Jf6d+3iR2+svxKe9mFdKwvUsh5fhM=;
+        b=BSPpu9bUfi0Q7Fnz6AO65fOWDu/RrUb22hZl0Q4MRtxjIEy1LZBQ3Gp8I19beRRc28
+         Nt/Ju2yEd9uXvj7V54gdI8R1pghy8BSOFu8IeTrcRMM2Mifdd/DQPI4HV2SkVLLu0XXD
+         wpKhNBUIwxDkV5OLoOHbLZfzg52qgND9eIfXG/idIfpwtPguaB7dLkXC1Vgt5n9+JrA4
+         eQQyMbYWiRHtKXFTbDx0I0g+rK/5rXvlFpeh0ghG+8NDs7h4vQTon9mlc+hfn39koZaL
+         iv/vaUGDU3+Nj4RAoGgn5EX5Z3G3K92YZiFjzT/SmzA1pljq52sdj4AHAXAbm5j7cDBf
+         tQng==
+X-Gm-Message-State: APjAAAWTM2tSEyIH/uWm0gDvujpQ/hIPG2GYXqcK2T5DPcUDE6D2KXw6
+        ncD2iwjdIxtbMCLfjRbnRQClQduhaivBM/iCsVhU
+X-Google-Smtp-Source: APXvYqxDmrFQjx8V0VcmOGrFMs/oVT1r+vBxUCOfebdEY0DJ2CPe2Z5xwZqWoVHs9cbihwVvLdyo1+WzRoz2TnBYYbU=
+X-Received: by 2002:a17:906:22cf:: with SMTP id q15mr8786331eja.77.1581476846571;
+ Tue, 11 Feb 2020 19:07:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <20200207180148.235161-1-smoreland@google.com>
+In-Reply-To: <20200207180148.235161-1-smoreland@google.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 11 Feb 2020 22:07:15 -0500
+Message-ID: <CAHC9VhSiNMEXreCb9=M-Dy=8HOyGRobnBVBMYTHOL1W39dd--w@mail.gmail.com>
+Subject: Re: [PATCH v3] security: selinux: allow per-file labeling for bpffs
+To:     Steven Moreland <smoreland@google.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, keescook@chromium.org,
+        anton@enomsg.org, ccross@android.com, tony.luck@intel.com,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, "Connor O'Brien" <connoro@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the of_match_table.
+On Fri, Feb 7, 2020 at 1:02 PM Steven Moreland <smoreland@google.com> wrote:
+>
+> From: Connor O'Brien <connoro@google.com>
+>
+> Add support for genfscon per-file labeling of bpffs files. This allows
+> for separate permissions for different pinned bpf objects, which may
+> be completely unrelated to each other.
+>
+> Signed-off-by: Connor O'Brien <connoro@google.com>
+> Signed-off-by: Steven Moreland <smoreland@google.com>
+> ---
+>  security/selinux/hooks.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: Henry Shen <henry.shen@alliedtelesis.co.nz>
----
-Change in v2:
-- add missing sign-off
+Merged into selinux/next, thanks.
 
- drivers/hwmon/lm73.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/hwmon/lm73.c b/drivers/hwmon/lm73.c
-index 1eeb9d7de2a0..733c48bf6c98 100644
---- a/drivers/hwmon/lm73.c
-+++ b/drivers/hwmon/lm73.c
-@@ -262,10 +262,20 @@ static int lm73_detect(struct i2c_client *new_clien=
-t,
- 	return 0;
- }
-=20
-+static const struct of_device_id lm73_of_match[] =3D {
-+	{
-+		.compatible =3D "ti,lm73",
-+	},
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, lm73_of_match);
-+
- static struct i2c_driver lm73_driver =3D {
- 	.class		=3D I2C_CLASS_HWMON,
- 	.driver =3D {
- 		.name	=3D "lm73",
-+		.of_match_table =3D lm73_of_match,
- 	},
- 	.probe		=3D lm73_probe,
- 	.id_table	=3D lm73_ids,
---=20
-2.25.0
-
+-- 
+paul moore
+www.paul-moore.com
