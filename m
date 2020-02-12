@@ -2,250 +2,180 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C27C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F8DC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D322C21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2726A21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qWCgfyya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgBLWZ1 (ORCPT
+        id S1729271AbgBLWZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:25:27 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44534 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbgBLWZX (ORCPT
+        Wed, 12 Feb 2020 17:25:39 -0500
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:46227 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729152AbgBLWZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:25:23 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id CE6B929AAE;
-        Wed, 12 Feb 2020 17:25:19 -0500 (EST)
-Date:   Thu, 13 Feb 2020 09:25:19 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 06/18] m68k: Replace setup_irq() by request_irq()
-In-Reply-To: <1941c51a3237c4e9df6d9a5b87615cd1bba572dc.1581478324.git.afzal.mohd.ma@gmail.com>
-Message-ID: <alpine.LNX.2.22.394.2002130912140.8@nippy.intranet>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com> <1941c51a3237c4e9df6d9a5b87615cd1bba572dc.1581478324.git.afzal.mohd.ma@gmail.com>
+        Wed, 12 Feb 2020 17:25:39 -0500
+Received: by mail-lf1-f48.google.com with SMTP id z26so2719837lfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:25:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=P2sufO4LLXac8EpPRG82WEu62FbVXGdtrzG0LXHZeOc=;
+        b=qWCgfyyaZcVlwnASB423iewuwd4fmtQcfKUkenO0oPI3pkWLGoRCTD9Fk/kaJW0CjH
+         //r1Yth+Eqaq0+HtY38lAOhJQ69YyTEGFlnVRffyeb7AmMJdvsL9PELN35JM6nB2cKuy
+         Y3cja1QMzIOqJxVK6+4lAHDuXG02HNegLzdn5G0ycXzutBpdU9qEPbU+H09ZGnSR6wE4
+         X2OqusGjh1VDDNjsn2bsVIA2CLJ30WysxmJKeYafXTNFWGS3dHb7zOqcN1i/V0Ht2GGt
+         KlMAhWNJShkvfwdlVpgEHu7/by0Jkq0c3SCAUr7SFH4lRfVFrFFBqjiUZobk1UOQcN1c
+         90UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=P2sufO4LLXac8EpPRG82WEu62FbVXGdtrzG0LXHZeOc=;
+        b=asHSH9WL1GHxRgu7eSjxCJhyyDr09ve54xf/IszID0jnIYXYfK7p2mzgXWM0y4ED2B
+         HsWr/npaLggJUQCtr2upy2Zb+6jYiNmgB+gW6zn/fzR/OFEysTokVIzrwlsI5IcQl0VA
+         w/rcW2jud6dULurNPkG9rASfZStaScXNrbcquwyZR4qEKAiYGoUHFYQQD4EcuQ8PxWid
+         ZJuWNmFT53yMnXqrZcCc3QQV6s+Kn47GAqTe2hKIq7hLcIwT2ZnGr4px/xmtsWrcN/lB
+         Hz0z5di0gS+7jsCjY7U6fvhbbxzi0BPqtNbk0X+5zKJp3PC2guFdmpFm7ThFjBT5vtTR
+         4slA==
+X-Gm-Message-State: APjAAAW4U1YjJOBmky1Bg4GFjaY6fFbghbA+riohEDSXIF3gkQAW7Uah
+        lPW89ow6VJhbNzivPisgZy8=
+X-Google-Smtp-Source: APXvYqzbSsCCf3UaK7PD3uxjPodMUnmbNyBSe6Xyg4gzlkdOwnEbZsG8gzDBCSwmJ7KSr76ZxQ1kNA==
+X-Received: by 2002:ac2:523c:: with SMTP id i28mr7610773lfl.104.1581546337071;
+        Wed, 12 Feb 2020 14:25:37 -0800 (PST)
+Received: from localhost.localdomain ([5.20.204.163])
+        by smtp.gmail.com with ESMTPSA id 126sm188008lfm.38.2020.02.12.14.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 14:25:36 -0800 (PST)
+From:   andrey.lebedev@gmail.com
+To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: [PATCH v2 2/2] ARM: sun7i: dts: Add LVDS panel support on A20
+Date:   Thu, 13 Feb 2020 00:23:57 +0200
+Message-Id: <20200212222355.17141-2-andrey.lebedev@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200210195633.GA21832@kedthinkpad>
+References: <20200210195633.GA21832@kedthinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020, afzal mohammed wrote:
+From: Andrey Lebedev <andrey@lebedev.lt>
 
-> request_irq() is preferred over setup_irq(). Existing callers of
-> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
-> memory allocators are ready by 'mm_init()'.
-> 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
-> 
-> Hence replace setup_irq() by request_irq().
-> 
-> Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> wherever that has been found, it too has been replaced by free_irq().
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-> ---
-> 
-> Since cc'ing cover letter to all maintainers/reviewers would be too
-> many, refer for cover letter,
->  https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
-> 
->  arch/m68k/68000/timers.c      |  9 ++-------
->  arch/m68k/coldfire/pit.c      |  9 ++-------
->  arch/m68k/coldfire/sltimers.c | 19 +++++--------------
->  arch/m68k/coldfire/timers.c   | 19 +++++--------------
->  4 files changed, 14 insertions(+), 42 deletions(-)
-> 
-> diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
-> index 71ddb4c98726..7a55d664592e 100644
-> --- a/arch/m68k/68000/timers.c
-> +++ b/arch/m68k/68000/timers.c
-> @@ -68,12 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
->  
->  /***************************************************************************/
->  
-> -static struct irqaction m68328_timer_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = hw_tick,
-> -};
-> -
->  /***************************************************************************/
->  
->  static u64 m68328_read_clk(struct clocksource *cs)
-> @@ -106,7 +100,8 @@ void hw_timer_init(irq_handler_t handler)
->  	TCTL = 0;
->  
->  	/* set ISR */
-> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-> +	if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
-> +		pr_err("request_irq() on %s failed\n", "timer");
+Define pins for LVDS channels 0 and 1, configure reset line for tcon0 and
+provide sample LVDS panel, connected to tcon0.
 
-"request_irq() on timer failed" is bad grammar and doesn't convey what 
-went wrong. It could be taken to mean that request_irq() was called 
-because a timer went off.
+Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 45 +++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 3 deletions(-)
 
-Have you considered,
-
-		pr_err("%s: request_irq() failed\n", "timer");
-
-I think that would be more typical of error messages on UNIX. E.g.
-
-$ grep x -- /tmp/foo
-grep: /tmp/foo: No such file or directory
-
->  
->  	/* Restart mode, Enable int, Set clock source */
->  	TCTL = TCTL_OM | TCTL_IRQEN | CLOCK_SOURCE;
-> diff --git a/arch/m68k/coldfire/pit.c b/arch/m68k/coldfire/pit.c
-> index eb6f16b0e2e6..d09e253abe5a 100644
-> --- a/arch/m68k/coldfire/pit.c
-> +++ b/arch/m68k/coldfire/pit.c
-> @@ -111,12 +111,6 @@ static irqreturn_t pit_tick(int irq, void *dummy)
->  
->  /***************************************************************************/
->  
-> -static struct irqaction pit_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = pit_tick,
-> -};
-> -
->  /***************************************************************************/
->  
->  static u64 pit_read_clk(struct clocksource *cs)
-> @@ -156,7 +150,8 @@ void hw_timer_init(irq_handler_t handler)
->  	cf_pit_clockevent.min_delta_ticks = 0x3f;
->  	clockevents_register_device(&cf_pit_clockevent);
->  
-> -	setup_irq(MCF_IRQ_PIT1, &pit_irq);
-> +	if (request_irq(MCF_IRQ_PIT1, pit_tick, IRQF_TIMER, "timer", NULL))
-> +		pr_err("request_irq() on %s failed\n", "timer");
->  
-
-Same here.
-
->  	clocksource_register_hz(&pit_clk, FREQ);
->  }
-> diff --git a/arch/m68k/coldfire/sltimers.c b/arch/m68k/coldfire/sltimers.c
-> index 1b11e7bacab3..2188a21e5413 100644
-> --- a/arch/m68k/coldfire/sltimers.c
-> +++ b/arch/m68k/coldfire/sltimers.c
-> @@ -50,18 +50,14 @@ irqreturn_t mcfslt_profile_tick(int irq, void *dummy)
->  	return IRQ_HANDLED;
->  }
->  
-> -static struct irqaction mcfslt_profile_irq = {
-> -	.name	 = "profile timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = mcfslt_profile_tick,
-> -};
-> -
->  void mcfslt_profile_init(void)
->  {
->  	printk(KERN_INFO "PROFILE: lodging TIMER 1 @ %dHz as profile timer\n",
->  	       PROFILEHZ);
->  
-> -	setup_irq(MCF_IRQ_PROFILER, &mcfslt_profile_irq);
-> +	if (request_irq(MCF_IRQ_PROFILER, mcfslt_profile_tick, IRQF_TIMER,
-> +			"profile timer", NULL))
-> +		pr_err("request_irq() on %s failed\n", "profile timer");
->  
-
-And here.
-
->  	/* Set up TIMER 2 as high speed profile clock */
->  	__raw_writel(MCF_BUSCLK / PROFILEHZ - 1, PA(MCFSLT_STCNT));
-> @@ -92,12 +88,6 @@ static irqreturn_t mcfslt_tick(int irq, void *dummy)
->  	return timer_interrupt(irq, dummy);
->  }
->  
-> -static struct irqaction mcfslt_timer_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = mcfslt_tick,
-> -};
-> -
->  static u64 mcfslt_read_clk(struct clocksource *cs)
->  {
->  	unsigned long flags;
-> @@ -140,7 +130,8 @@ void hw_timer_init(irq_handler_t handler)
->  	mcfslt_cnt = mcfslt_cycles_per_jiffy;
->  
->  	timer_interrupt = handler;
-> -	setup_irq(MCF_IRQ_TIMER, &mcfslt_timer_irq);
-> +	if (request_irq(MCF_IRQ_TIMER, mcfslt_tick, IRQF_TIMER, "timer", NULL))
-> +		pr_err("request_irq() on %s failed\n", "timer");
->  
-
-And so on.
-
->  	clocksource_register_hz(&mcfslt_clk, MCF_BUSCLK);
->  
-> diff --git a/arch/m68k/coldfire/timers.c b/arch/m68k/coldfire/timers.c
-> index 227aa5d13709..f384e92d8b1c 100644
-> --- a/arch/m68k/coldfire/timers.c
-> +++ b/arch/m68k/coldfire/timers.c
-> @@ -82,12 +82,6 @@ static irqreturn_t mcftmr_tick(int irq, void *dummy)
->  
->  /***************************************************************************/
->  
-> -static struct irqaction mcftmr_timer_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = mcftmr_tick,
-> -};
-> -
->  /***************************************************************************/
->  
->  static u64 mcftmr_read_clk(struct clocksource *cs)
-> @@ -134,7 +128,8 @@ void hw_timer_init(irq_handler_t handler)
->  
->  	timer_interrupt = handler;
->  	init_timer_irq();
-> -	setup_irq(MCF_IRQ_TIMER, &mcftmr_timer_irq);
-> +	if (request_irq(MCF_IRQ_TIMER, mcftmr_tick, IRQF_TIMER, "timer", NULL))
-> +		pr_err("request_irq() on %s failed\n", "timer");
->  
->  #ifdef CONFIG_HIGHPROFILE
->  	coldfire_profile_init();
-> @@ -170,12 +165,6 @@ irqreturn_t coldfire_profile_tick(int irq, void *dummy)
->  
->  /***************************************************************************/
->  
-> -static struct irqaction coldfire_profile_irq = {
-> -	.name	 = "profile timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = coldfire_profile_tick,
-> -};
-> -
->  void coldfire_profile_init(void)
->  {
->  	printk(KERN_INFO "PROFILE: lodging TIMER2 @ %dHz as profile timer\n",
-> @@ -188,7 +177,9 @@ void coldfire_profile_init(void)
->  	__raw_writew(MCFTIMER_TMR_ENORI | MCFTIMER_TMR_CLK16 |
->  		MCFTIMER_TMR_RESTART | MCFTIMER_TMR_ENABLE, PA(MCFTIMER_TMR));
->  
-> -	setup_irq(MCF_IRQ_PROFILER, &coldfire_profile_irq);
-> +	if (request_irq(MCF_IRQ_PROFILER, coldfire_profile_tick, IRQF_TIMER,
-> +			"profile timer", NULL))
-> +		pr_err("request_irq() on %s failed\n", "profile timer");
->  }
->  
->  /***************************************************************************/
-> 
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 92b5be97085d..b05fdf8df32e 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -47,6 +47,7 @@
+ #include <dt-bindings/dma/sun4i-a10.h>
+ #include <dt-bindings/clock/sun7i-a20-ccu.h>
+ #include <dt-bindings/reset/sun4i-a10-ccu.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -407,8 +408,8 @@
+ 			compatible = "allwinner,sun7i-a20-tcon";
+ 			reg = <0x01c0c000 0x1000>;
+ 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+-			resets = <&ccu RST_TCON0>;
+-			reset-names = "lcd";
++			resets = <&ccu RST_TCON0>, <&ccu RST_LVDS>;
++			reset-names = "lcd", "lvds";
+ 			clocks = <&ccu CLK_AHB_LCD0>,
+ 				 <&ccu CLK_TCON0_CH0>,
+ 				 <&ccu CLK_TCON0_CH1>;
+@@ -444,6 +445,11 @@
+ 					#size-cells = <0>;
+ 					reg = <1>;
+ 
++					tcon0_out_lvds: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&lvds_in_tcon0>;
++						allwinner,tcon-channel = <0>;
++					};
+ 					tcon0_out_hdmi: endpoint@1 {
+ 						reg = <1>;
+ 						remote-endpoint = <&hdmi_in_tcon0>;
+@@ -686,6 +692,19 @@
+ 			};
+ 		};
+ 
++		lvds_panel: panel@1c16500 {
++			compatible = "panel-lvds";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++
++			port {
++				lvds_in_tcon0: endpoint {
++					remote-endpoint = <&tcon0_out_lvds>;
++				};
++			};
++		};
++
+ 		spi2: spi@1c17000 {
+ 			compatible = "allwinner,sun4i-a10-spi";
+ 			reg = <0x01c17000 0x1000>;
+@@ -872,7 +891,7 @@
+ 			gmac_rgmii_pins: gmac-rgmii-pins {
+ 				pins = "PA0", "PA1", "PA2",
+ 				       "PA3", "PA4", "PA5", "PA6",
+-				        "PA7", "PA8", "PA10",
++					"PA7", "PA8", "PA10",
+ 				       "PA11", "PA12", "PA13",
+ 				       "PA15", "PA16";
+ 				function = "gmac";
+@@ -1162,6 +1181,26 @@
+ 				pins = "PI20", "PI21";
+ 				function = "uart7";
+ 			};
++
++			/omit-if-no-ref/
++			lcd_lvds0_pins: lcd_lvds0_pins {
++				allwinner,pins =
++					"PD0", "PD1", "PD2", "PD3", "PD4",
++					"PD5", "PD6", "PD7", "PD8", "PD9";
++				allwinner,function = "lvds0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			/omit-if-no-ref/
++			lcd_lvds1_pins: lcd_lvds1_pins {
++				allwinner,pins =
++					"PD10", "PD11", "PD12", "PD13", "PD14",
++					"PD15", "PD16", "PD17", "PD18", "PD19";
++				allwinner,function = "lvds1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
+ 		};
+ 
+ 		timer@1c20c00 {
+-- 
+2.20.1
 
