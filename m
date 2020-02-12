@@ -2,200 +2,112 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E5AC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C61C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B73B21739
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A2B21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p9vCGHfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgBLOt0 (ORCPT
+        id S1728388AbgBLOtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:49:26 -0500
-Received: from monster.unsafe.ru ([5.9.28.80]:46690 "EHLO mail.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbgBLOt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:49:26 -0500
-Received: from comp-core-i7-2640m-0182e6 (nat-pool-brq-t.redhat.com [213.175.37.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.unsafe.ru (Postfix) with ESMTPSA id AFA2DC61AB0;
-        Wed, 12 Feb 2020 14:49:22 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 15:49:21 +0100
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs
- instances
-Message-ID: <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
-Mail-Followup-To: "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
- <20200210150519.538333-8-gladkov.alexey@gmail.com>
- <87v9odlxbr.fsf@x220.int.ebiederm.org>
+        Wed, 12 Feb 2020 09:49:55 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46290 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbgBLOtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:49:55 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CEXCK9004249;
+        Wed, 12 Feb 2020 14:49:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=9kz3g8SppE3C8092it7UV1WcnHIeXA9iH/3T2Jic3VM=;
+ b=p9vCGHflG5TyIueboQKKkxf09DlNK3AThJpo9NbBO8eHyNzioRFLTqF5+cCF1aiApO+b
+ ppMrz2mk5ZANaPWk9/CHLQz6+zSl0uvZq/oTdZXm9bcQaQnNaeiQkRr1a5RTQdAnPlU1
+ sUHSG3oItzm5hY+FsAptEfNNgVQhoV6pLI+JU0aCToQ0MUUVjU+dCVjlpBXWfqu/Ontk
+ cm6Trb1hpkdmssDzQR1KaYVi7lyFEO9yKZnMx91UuJP7r0u2mhdZQbnHgb4gcs6XuJaY
+ M3I1fMxoqQqmkInkLztvjiiBuEDo1wNr2JIXa7DNrwP/NDaZHPX3VCp5YIa8d1k1SnoX BQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2y2p3sjrmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Feb 2020 14:49:42 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01CEbAmJ046573;
+        Wed, 12 Feb 2020 14:49:42 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2y4k9frmrd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Feb 2020 14:49:42 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01CEnff8030258;
+        Wed, 12 Feb 2020 14:49:41 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 12 Feb 2020 06:49:40 -0800
+Date:   Wed, 12 Feb 2020 17:49:33 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@inria.fr>,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>
+Subject: Re: [PATCH v2] staging:gasket:gasket_core.c:unified quoted string
+ split across lines in one line
+Message-ID: <20200212144933.GJ1778@kadam>
+References: <20200211200456.GA10351@kaaira-HP-Pavilion-Notebook>
+ <alpine.DEB.2.21.2002112139550.3266@hadrien>
+ <20200212115035.GB21751@kaaira-HP-Pavilion-Notebook>
+ <20200212144424.GI1778@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87v9odlxbr.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200212144424.GI1778@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9528 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0 spamscore=0
+ adultscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002120114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9528 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002120114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 07:36:08PM -0600, Eric W. Biederman wrote:
-> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+On Wed, Feb 12, 2020 at 05:44:24PM +0300, Dan Carpenter wrote:
+> On Wed, Feb 12, 2020 at 05:20:35PM +0530, Kaaira Gupta wrote:
+> > When the driver tries to map a region, but the region has certain
+> > permissions, or when it attempts to open gasket with tgid, or when it
+> > realeases device node;
 > 
-> > This allows to flush dcache entries of a task on multiple procfs mounts
-> > per pid namespace.
-> >
-> > The RCU lock is used because the number of reads at the task exit time
-> > is much larger than the number of procfs mounts.
+> We don't care about any of this information...
 > 
-> A couple of quick comments.
-> 
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Andy Lutomirski <luto@kernel.org>
-> > Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
-> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-> > ---
-> >  fs/proc/base.c                | 20 +++++++++++++++-----
-> >  fs/proc/root.c                | 27 ++++++++++++++++++++++++++-
-> >  include/linux/pid_namespace.h |  2 ++
-> >  include/linux/proc_fs.h       |  2 ++
-> >  4 files changed, 45 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/fs/proc/base.c b/fs/proc/base.c
-> > index 4ccb280a3e79..24b7c620ded3 100644
-> > --- a/fs/proc/base.c
-> > +++ b/fs/proc/base.c
-> > @@ -3133,7 +3133,7 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
-> >  	.permission	= proc_pid_permission,
-> >  };
-> >  
-> > -static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
-> > +static void proc_flush_task_mnt_root(struct dentry *mnt_root, pid_t pid, pid_t tgid)
-> Perhaps just rename things like:
-> > +static void proc_flush_task_root(struct dentry *root, pid_t pid, pid_t tgid)
-> >  {
-> 
-> I don't think the mnt_ prefix conveys any information, and it certainly
-> makes everything longer and more cumbersome.
-> 
-> >  	struct dentry *dentry, *leader, *dir;
-> >  	char buf[10 + 1];
-> > @@ -3142,7 +3142,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
-> >  	name.name = buf;
-> >  	name.len = snprintf(buf, sizeof(buf), "%u", pid);
-> >  	/* no ->d_hash() rejects on procfs */
-> > -	dentry = d_hash_and_lookup(mnt->mnt_root, &name);
-> > +	dentry = d_hash_and_lookup(mnt_root, &name);
-> >  	if (dentry) {
-> >  		d_invalidate(dentry);
-> >  		dput(dentry);
-> > @@ -3153,7 +3153,7 @@ static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
-> >  
-> >  	name.name = buf;
-> >  	name.len = snprintf(buf, sizeof(buf), "%u", tgid);
-> > -	leader = d_hash_and_lookup(mnt->mnt_root, &name);
-> > +	leader = d_hash_and_lookup(mnt_root, &name);
-> >  	if (!leader)
-> >  		goto out;
-> >  
-> > @@ -3208,14 +3208,24 @@ void proc_flush_task(struct task_struct *task)
-> >  	int i;
-> >  	struct pid *pid, *tgid;
-> >  	struct upid *upid;
-> > +	struct dentry *mnt_root;
-> > +	struct proc_fs_info *fs_info;
-> >  
-> >  	pid = task_pid(task);
-> >  	tgid = task_tgid(task);
-> >  
-> >  	for (i = 0; i <= pid->level; i++) {
-> >  		upid = &pid->numbers[i];
-> > -		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
-> > -					tgid->numbers[i].nr);
-> > +
-> > +		rcu_read_lock();
-> > +		list_for_each_entry_rcu(fs_info, &upid->ns->proc_mounts, pidns_entry) {
-> > +			mnt_root = fs_info->m_super->s_root;
-> > +			proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
-> > +		}
-> > +		rcu_read_unlock();
-> > +
-> > +		mnt_root = upid->ns->proc_mnt->mnt_root;
-> > +		proc_flush_task_mnt_root(mnt_root, upid->nr, tgid->numbers[i].nr);
-> 
-> I don't think this following of proc_mnt is needed.  It certainly
-> shouldn't be.  The loop through all of the super blocks should be
-> enough.
+> > the logs are displayed in one line only while the
+> > code has the strings split in two lines which makes it difficult for
+> > developers to search for code based on the log messages. So, this patch
+> > fixes three warnings of 'quoted string split across lines' in
+> > gasket_core.c by merging the strings in one line.
 
-Yes, thanks!
+Another perfectly adequate commit message would be:
 
-> Once this change goes through.  UML can be given it's own dedicated
-> proc_mnt for the initial pid namespace, and proc_mnt can be removed
-> entirely.
+Fix three checkpatch.pl warnings of 'quoted string split across lines'
+in gasket_core.c by merging the strings in one line.
 
-After you deleted the old sysctl syscall we could probably do it.
+Which is imperative.  :)  Hooray!
 
-> Unless something has changed recently UML is the only other user of
-> pid_ns->proc_mnt.  That proc_mnt really only exists to make the loop in
-> proc_flush_task easy to write.
-
-Now I think, is there any way to get rid of proc_mounts or even
-proc_flush_task somehow.
-
-> It also probably makes sense to take the rcu_read_lock() over
-> that entire for loop.
-
-Al Viro pointed out to me that I cannot use rcu locks here :(
-
--- 
-Rgrds, legion
+regards,
+dan carpenter
 
