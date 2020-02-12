@@ -2,254 +2,138 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94227C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C37C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C1820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BADE20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez55nzmn"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="KhSnZJBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgBLQrU (ORCPT
+        id S1728721AbgBLQsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:47:20 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36631 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBLQrU (ORCPT
+        Wed, 12 Feb 2020 11:48:33 -0500
+Received: from UPDC19PA24.eemsg.mail.mil ([214.24.27.199]:51863 "EHLO
+        UPDC19PA24.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgBLQsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:47:20 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so3321933wma.1;
-        Wed, 12 Feb 2020 08:47:17 -0800 (PST)
+        Wed, 12 Feb 2020 11:48:33 -0500
+X-EEMSG-check-017: 58160238|UPDC19PA24_ESA_OUT06.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="58160238"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by UPDC19PA24.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Feb 2020 16:48:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SKa1ymo+xngGE1G8vLfgl5ipgmzkjWe5i0UrcJ3bDbg=;
-        b=ez55nzmnkWrb3vr0b+5+L+ycOVeUN9d3D+SLIAR0TxouAQE1Gbx+THHba3B2V2tBC6
-         Pf9V4VLD1XaHpucds2KmvV9e6wXIwrhn4xRG3vqFSQkkGQXnW1Vrumz/wsrFUcRTmFes
-         ehpHRlGdZaCLJXhPOscGWSI19bXg44OrRehMBiMVqWnV6kKnwzBwYMtcN7oGK5jugVRG
-         cz5iGTm9KndW6u/O7PyF5heOTNl8XgXWGb5NXnxDi3YBJzkcKl2Hq4MKDunlIWznzIjy
-         y+g2XO+QnsvfXrZPkeAXZ3iySAmvLwhniHxsZHpTwfa7kYgUFoY1XTP8PjwdanFLskg6
-         OIWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=SKa1ymo+xngGE1G8vLfgl5ipgmzkjWe5i0UrcJ3bDbg=;
-        b=JyqoNiYhsx16pFBXsnK8UtEmituAHBFvUuCnhyYNX7yhI9Qpg/tJDaP/AD+Iblk5+/
-         Xy57jSXsciPK9fyCPA2TyQa7lPizgZtmu1nv5G5QtDAQf5OcySJz2g2P8vvh+05Lnulq
-         DtCQSpjfZgOZCItkkGQQeEY2FLepvCFXqO5KwaXqgKI7ZaBGMPRQsGhNIdn5prWS1hhj
-         f+8zdR2HEU0lgIo2SZlGc+IAUzKdyMQTQFJ4ckWo7YiqcBA74xW4HzHgNcv0AOrupada
-         7+kLcvVXKfN5/BHoiG5dBcTJZFslV3nf9Gft4eL1dexirXysyUt+Jhs2FzlVtE/3TbCI
-         E/BA==
-X-Gm-Message-State: APjAAAU60c5aWQcf8ZYdYY53MqU9LlNy2peS0G3UMjjVKyysMeNeMUGs
-        FuUvAkfZbewKu+tlxJFawCOrk1Dk
-X-Google-Smtp-Source: APXvYqxU40wrpOGbIh/LNi+TIAmqKs8utMpQWCPonG4hKQ8YbENmX1w/ToLcug8AO0gsvmkWOKBN2Q==
-X-Received: by 2002:a1c:a5c7:: with SMTP id o190mr7684561wme.183.1581526036591;
-        Wed, 12 Feb 2020 08:47:16 -0800 (PST)
-Received: from donizetti.fritz.box ([151.30.86.140])
-        by smtp.gmail.com with ESMTPSA id 16sm1436726wmi.0.2020.02.12.08.47.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 08:47:15 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        rkrcmar@kernel.org
-Subject: [GIT PULL] KVM changes for Linux 5.6-rc2
-Date:   Wed, 12 Feb 2020 17:47:14 +0100
-Message-Id: <20200212164714.7733-1-pbonzini@redhat.com>
-X-Mailer: git-send-email 2.21.0
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1581526105; x=1613062105;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=tqJba1TdlNSFWy2p2EBVa0SyOhsGODwQkBMGLBp66CM=;
+  b=KhSnZJBjgqMsFqms/GGNAXk5CjxelVYRSi6lQjtqTquHfaRw8XXqkz12
+   RmTBMJDsNjB63A84n1HFKiRLShYlyyOOIRAWhY7sl6tRxzbrJ1YunfesC
+   wOlKJYa2n85dCgWz8J/GHhleJe4YZdtobQO7EHLYNP/m4V5Asqj8RS9ll
+   UqkgNShs75V8qPjFPEgNkNfHs4rrHiCt/fspgRm3aE8PEAP6yPYx41d7G
+   BInlH2yPYfWFUC0s2bU0dQo+BrFM21pOy3kJg1KpPlTMp9O47oyd3OUpl
+   KXDFkB1LBKycp4y/OQTMUF3ZNIv5IhAasNR47c0cnp9Z0gKJamjzQdF+L
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="39020809"
+IronPort-PHdr: =?us-ascii?q?9a23=3AJ8zYPhEYsKZP5QIGOVe3Xp1GYnF86YWxBRYc79?=
+ =?us-ascii?q?8ds5kLTJ76pMS9bnLW6fgltlLVR4KTs6sC17OK9f69Ej1bqb+681k8M7V0Hy?=
+ =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
+ =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi5oAnLt8QbgYRuJ6I/xx?=
+ =?us-ascii?q?DUvnZGZuNayH9nKl6Ugxvy/Nq78oR58yRXtfIh9spAXrv/cq8lU7FWDykoPn?=
+ =?us-ascii?q?4s6sHzuhbNUQWA5n0HUmULiRVIGBTK7Av7XpjqrCT3sPd21TSAMs33SbA0Xi?=
+ =?us-ascii?q?mi77tuRRT1hioLKyI1/WfKgcFrkqlVvAyuqAB+w47MYYGaKvx+fr/GfdgHQW?=
+ =?us-ascii?q?ZNR9tdWzBdDo+5aYYAAfABPeJFpIfjoVUAowa1CQ21CO/xzjJEg3n71rA43e?=
+ =?us-ascii?q?s8CwHLxBEuEcwAsHrUr9v7OqkdXu+3w6bUwjvOdO9W1DXn5YTUbhwsr/OBUL?=
+ =?us-ascii?q?RtesTR00kvEAbFg02Np4z5ITyVzuQNvHad7+F9SOyvjnQoqwV1ojexxsYnl4?=
+ =?us-ascii?q?7EhpkIxVDf7ih53IY0KsG4SE58e9KkFoBQuDuAO4t5RcMiXXhltSAnwbMFoZ?=
+ =?us-ascii?q?62ZDUGxZsoyhLFa/GLbpKE7gzsWeqPOzt0mXRoc6+liRmo60iv0Oj8W9Gx0F?=
+ =?us-ascii?q?ZNsyVKjMHBtmsI1xzP8siHTeZ9/lu51TaPyQ/T7uZELFgolaXBMZ4hw6Mwlo?=
+ =?us-ascii?q?EJvUTCGC/2lkL2jLSIeUo44OSo9+Tmbanmpp+bLYN0jB3xMr8ylcClBOQ4Mw?=
+ =?us-ascii?q?wOU3Ca+eS6yrLj4VX0TKhFg/A5iKXUsI3WKd4FqqO2HQNZyJsv5w66Dzi80d?=
+ =?us-ascii?q?QYmXcHLEhCeBKCl4XpIEzBIOvjAPejg1WjjDdrx/fcMr3nGZXCNGLPkLjmfb?=
+ =?us-ascii?q?Zj80Jc0hY8zchD55JIDbEMOO/8VVX3tNPECR85Nxe5w+ngCNV62YMeXXyADr?=
+ =?us-ascii?q?WFP6PVtF+C/vgvLPWUZI8JpDb9LOAo5+LvjX88nF8dYLOp3YENZ3G4BflmLE?=
+ =?us-ascii?q?KZYX3jgtcFD2gGpBYxTOvviFeaSz5ce26yX74g5jE8EI+mC4DDRputgLGa0y?=
+ =?us-ascii?q?e7GZpWZm9CCl+SC3vna4KEW/IUYiKIPsBhiiAEVaSmS4I50xGusgz6xqFoLu?=
+ =?us-ascii?q?rT/S0Yupbj28Zv6+LPkhEy8CR+D96B3GGVU2F0gmQISicy3KB4okxy1EyD0a?=
+ =?us-ascii?q?h3g/xZCNNT/elGXxw1NZ7byOx6BNTyVRzbctiVT1amR82sASstQdIp398Of0?=
+ =?us-ascii?q?F9Fs2mjhDC2SqqHrAUm6WIBJMq6KLc2Wb+J8JmxnbY26kukUMmTtFMNWK4nK?=
+ =?us-ascii?q?5/8RbcB4rTn0WejaaqerwW3DTR+2eb0WqOoEZYXRZ0UaXEW3Afe0TXoc3j6U?=
+ =?us-ascii?q?PaTr+jEqonMgRfxs6YMKdKacPmjU9ARPj9PNTSeWWxm32/BRyQ3LODcJLqe3?=
+ =?us-ascii?q?kB3CXaEEUEiB4c/XKHNQg4GyegrHnTDCJhFV3xeUPg6+p+p22hTk8y0Q6Ka1?=
+ =?us-ascii?q?dt172v+h4a1rSgTKY/17QFtSNpgDJwFU223tXQBpLUqwNnd6JYSdw651hD2C?=
+ =?us-ascii?q?TSsAkretS8LqVnm0QEehVfsETp2BF6TI5HlIxiqnQxzCJ9LqWX1F4HfDSdmd?=
+ =?us-ascii?q?j2PL7/JW718xSiLaXR3xWW1NGV97wP5/U0sVzLswauGU4vtX5g1p0d13qa+4?=
+ =?us-ascii?q?WPDwcIV5/1elg4+gI8pLzAZCQ5oYTO2jkkNaiyry+H0sooLPUqxwzmfNpFNq?=
+ =?us-ascii?q?6AUgjoHIlSHMWqKeo3i3C3YR8eeuNf7qg5O4WhbfTV9rSsObNbgD++jWlBqL?=
+ =?us-ascii?q?t420aI+js0HvXExL4Z0vqY2U2BTD66g1C/5JOk0btYbC0fSzLsgRPvA5RcM+?=
+ =?us-ascii?q?grJ9cG?=
+X-IPAS-Result: =?us-ascii?q?A2BcBADfK0Re/wHyM5BlHQEBAQkBEQUFAYF7gX2BbSASK?=
+ =?us-ascii?q?oQUiQOGZQEBAQEBAQaBEiWJcJBzA1QJAQEBAQEBAQEBNwQBAYRAAoJtOBMCE?=
+ =?us-ascii?q?AEBAQUBAQEBAQUDAQFshUOCOykBgwIBBSMVUQsOCgICJgICVwYBDAYCAQGCY?=
+ =?us-ascii?q?z+CVyWsEIEyhUqDOoE+gQ4qiDCEDnmBB4E4DAOCKDU+hCODOII8IgSWYWRGl?=
+ =?us-ascii?q?2uCRIJPk3wGHIJIiBIFkDaOaJ0+IjeBISsIAhgIIQ+DJ1AYDZ0BIwMwjx+CQ?=
+ =?us-ascii?q?gEB?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Feb 2020 16:48:20 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01CGlOZO118436;
+        Wed, 12 Feb 2020 11:47:24 -0500
+Subject: Re: [PATCH v2 2/6] Add a concept of a "secure" anonymous file
+To:     Daniel Colascione <dancol@google.com>, timmurray@google.com,
+        nosh@google.com, nnk@google.com, lokeshgidra@google.com,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        selinux@vger.kernel.org
+References: <20200211225547.235083-1-dancol@google.com>
+ <20200211225547.235083-3-dancol@google.com>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <6c24ec53-1839-832c-cbfb-8b10b413e7db@tycho.nsa.gov>
+Date:   Wed, 12 Feb 2020 11:49:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200211225547.235083-3-dancol@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 2/11/20 5:55 PM, Daniel Colascione wrote:
+> A secure anonymous file is one we hooked up to its own inode (as
+> opposed to the shared inode we use for non-secure anonymous files). A
+> new selinux hook gives security modules a chance to initialize, label,
+> and veto the creation of these secure anonymous files. Security
+> modules had limit ability to interact with non-secure anonymous files
+> due to all of these files sharing a single inode.
+> 
+> Signed-off-by: Daniel Colascione <dancol@google.com>
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+(please add linux-fsdevel, viro, linux-security-module, 
+jmorris@namei.org, serge@hallyn.com to cc on future versions of this 
+patch since it is a VFS and a LSM change)
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+> --- > diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index 20d8cf194fb7..ba208ce5711d 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -215,6 +215,10 @@
+>    *	Returns 0 if @name and @value have been successfully set,
+>    *	-EOPNOTSUPP if no security attribute is needed, or
+>    *	-ENOMEM on memory allocation failure.
+> + * @inode_init_security_anon:
+> + *      Set up a secure anonymous inode.
+> + *	Returns 0 on success. Returns -EPERM if	the security module denies
+> + *	the creation of this inode.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to c4c3fdc9c43b77f1b99c71d6edda8e20d00c3e2d:
-
-  docs: virt: guest-halt-polling.txt convert to ReST (2020-02-12 14:33:07 +0100)
-
-----------------------------------------------------------------
-A mix of cleanups and bugfixes, some of them slightly more invasive than usual
-but still not worth waiting for 5.7.  On top of this, Mauro converted the
-KVM documentation to rst format, which was very welcome, and Eric ported
-the selftests infrastructure to nested AMD virtualization (which will come
-in handy when adding nested live migration support, as it did for Intel).
-
-----------------------------------------------------------------
-Eric Auger (4):
-      selftests: KVM: Replace get_{gdt,idt}_base() by get_{gdt,idt}()
-      selftests: KVM: AMD Nested test infrastructure
-      selftests: KVM: SVM: Add vmcall test
-      selftests: KVM: Remove unused x86_register enum
-
-Marc Zyngier (1):
-      KVM: Disable preemption in kvm_get_running_vcpu()
-
-Mauro Carvalho Chehab (28):
-      docs: kvm: add arm/pvtime.rst to index.rst
-      docs: virt: convert UML documentation to ReST
-      docs: virt: user_mode_linux.rst: update compiling instructions
-      docs: virt: user_mode_linux.rst: fix URL references
-      docs: virt: convert halt-polling.txt to ReST format
-      docs: virt: Convert msr.txt to ReST format
-      docs: kvm: devices/arm-vgic-its.txt to ReST format
-      docs: kvm: devices/arm-vgit-v3.txt to ReST
-      docs: kvm: convert devices/arm-vgit.txt to ReST
-      docs: kvm: convert devices/mpic.txt to ReST
-      docs: kvm: convert devices/s390_flic.txt to ReST
-      docs: kvm: convert devices/vcpu.txt to ReST
-      docs: kvm: convert devices/vfio.txt to ReST
-      docs: kvm: convert devices/vm.txt to ReST
-      docs: kvm: convert devices/xics.txt to ReST
-      docs: kvm: convert devices/xive.txt to ReST
-      docs: kvm: Convert api.txt to ReST format
-      docs: kvm: convert arm/hyp-abi.txt to ReST
-      docs: kvm: arm/psci.txt: convert to ReST
-      docs: kvm: Convert hypercalls.txt to ReST format
-      docs: kvm: Convert locking.txt to ReST format
-      docs: kvm: Convert mmu.txt to ReST format
-      docs: kvm: Convert nested-vmx.txt to ReST format
-      docs: kvm: Convert ppc-pv.txt to ReST format
-      docs: kvm: Convert s390-diag.txt to ReST format
-      docs: kvm: Convert timekeeping.txt to ReST format
-      docs: kvm: review-checklist.txt: rename to ReST
-      docs: virt: guest-halt-polling.txt convert to ReST
-
-Miaohe Lin (3):
-      KVM: x86: remove duplicated KVM_REQ_EVENT request
-      KVM: apic: reuse smp_wmb() in kvm_make_request()
-      KVM: nVMX: Fix some comment typos and coding style
-
-Oliver Upton (4):
-      KVM: x86: Mask off reserved bit from #DB exception payload
-      KVM: nVMX: Handle pending #DB when injecting INIT VM-exit
-      KVM: x86: Deliver exception payload on KVM_GET_VCPU_EVENTS
-      KVM: nVMX: Emulate MTF when performing instruction emulation
-
-Paolo Bonzini (2):
-      KVM: x86: do not reset microcode version on INIT or RESET
-      KVM: x86: fix WARN_ON check of an unsigned less than zero
-
-Peter Xu (4):
-      KVM: Provide kvm_flush_remote_tlbs_common()
-      KVM: MIPS: Drop flush_shadow_memslot() callback
-      KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
-      KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
-
-Sean Christopherson (6):
-      KVM: x86/mmu: Avoid retpoline on ->page_fault() with TDP
-      KVM: nVMX: Use correct root level for nested EPT shadow page tables
-      KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
-      KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
-      KVM: nVMX: Rename EPTP validity helper and associated variables
-      KVM: nVMX: Drop unnecessary check on ept caps for execute-only
-
- .../guest-halt-polling.rst}                        |   12 +-
- Documentation/virt/index.rst                       |    2 +
- Documentation/virt/kvm/{api.txt => api.rst}        | 3350 ++++++++++++--------
- .../virt/kvm/arm/{hyp-abi.txt => hyp-abi.rst}      |   28 +-
- Documentation/virt/kvm/arm/index.rst               |   12 +
- Documentation/virt/kvm/arm/{psci.txt => psci.rst}  |   46 +-
- .../devices/{arm-vgic-its.txt => arm-vgic-its.rst} |  106 +-
- .../devices/{arm-vgic-v3.txt => arm-vgic-v3.rst}   |  132 +-
- .../kvm/devices/{arm-vgic.txt => arm-vgic.rst}     |   89 +-
- Documentation/virt/kvm/devices/index.rst           |   19 +
- .../virt/kvm/devices/{mpic.txt => mpic.rst}        |   11 +-
- .../kvm/devices/{s390_flic.txt => s390_flic.rst}   |   70 +-
- Documentation/virt/kvm/devices/vcpu.rst            |  114 +
- Documentation/virt/kvm/devices/vcpu.txt            |   76 -
- .../virt/kvm/devices/{vfio.txt => vfio.rst}        |   25 +-
- Documentation/virt/kvm/devices/{vm.txt => vm.rst}  |  206 +-
- .../virt/kvm/devices/{xics.txt => xics.rst}        |   28 +-
- .../virt/kvm/devices/{xive.txt => xive.rst}        |  152 +-
- .../kvm/{halt-polling.txt => halt-polling.rst}     |   90 +-
- .../virt/kvm/{hypercalls.txt => hypercalls.rst}    |  129 +-
- Documentation/virt/kvm/index.rst                   |   16 +
- Documentation/virt/kvm/locking.rst                 |  243 ++
- Documentation/virt/kvm/locking.txt                 |  215 --
- Documentation/virt/kvm/{mmu.txt => mmu.rst}        |   62 +-
- Documentation/virt/kvm/{msr.txt => msr.rst}        |  147 +-
- .../virt/kvm/{nested-vmx.txt => nested-vmx.rst}    |   37 +-
- Documentation/virt/kvm/{ppc-pv.txt => ppc-pv.rst}  |   26 +-
- .../{review-checklist.txt => review-checklist.rst} |    3 +
- .../virt/kvm/{s390-diag.txt => s390-diag.rst}      |   13 +-
- .../virt/kvm/{timekeeping.txt => timekeeping.rst}  |  223 +-
- ...UserModeLinux-HOWTO.txt => user_mode_linux.rst} | 1810 +++++------
- arch/mips/include/asm/kvm_host.h                   |    7 -
- arch/mips/kvm/Kconfig                              |    1 +
- arch/mips/kvm/mips.c                               |   22 +-
- arch/mips/kvm/trap_emul.c                          |   15 +-
- arch/mips/kvm/vz.c                                 |   14 +-
- arch/x86/include/asm/kvm_host.h                    |   17 +-
- arch/x86/include/uapi/asm/kvm.h                    |    1 +
- arch/x86/kvm/lapic.c                               |    3 -
- arch/x86/kvm/mmu.h                                 |   13 +
- arch/x86/kvm/mmu/mmu.c                             |   11 +-
- arch/x86/kvm/mmu/paging_tmpl.h                     |    2 +-
- arch/x86/kvm/svm.c                                 |    3 +-
- arch/x86/kvm/vmx/nested.c                          |  104 +-
- arch/x86/kvm/vmx/nested.h                          |    9 +-
- arch/x86/kvm/vmx/vmx.c                             |   42 +-
- arch/x86/kvm/vmx/vmx.h                             |    3 +
- arch/x86/kvm/x86.c                                 |   44 +-
- include/linux/kvm_host.h                           |   11 +-
- tools/testing/selftests/kvm/Makefile               |    3 +-
- .../selftests/kvm/include/x86_64/processor.h       |   44 +-
- tools/testing/selftests/kvm/include/x86_64/svm.h   |  297 ++
- .../selftests/kvm/include/x86_64/svm_util.h        |   38 +
- tools/testing/selftests/kvm/lib/x86_64/svm.c       |  161 +
- tools/testing/selftests/kvm/lib/x86_64/vmx.c       |    6 +-
- .../testing/selftests/kvm/x86_64/svm_vmcall_test.c |   79 +
- virt/kvm/arm/vgic/vgic-mmio.c                      |   12 -
- virt/kvm/kvm_main.c                                |   22 +-
- 58 files changed, 5036 insertions(+), 3440 deletions(-)
- rename Documentation/{virtual/guest-halt-polling.txt => virt/guest-halt-polling.rst} (91%)
- rename Documentation/virt/kvm/{api.txt => api.rst} (71%)
- rename Documentation/virt/kvm/arm/{hyp-abi.txt => hyp-abi.rst} (79%)
- create mode 100644 Documentation/virt/kvm/arm/index.rst
- rename Documentation/virt/kvm/arm/{psci.txt => psci.rst} (60%)
- rename Documentation/virt/kvm/devices/{arm-vgic-its.txt => arm-vgic-its.rst} (71%)
- rename Documentation/virt/kvm/devices/{arm-vgic-v3.txt => arm-vgic-v3.rst} (77%)
- rename Documentation/virt/kvm/devices/{arm-vgic.txt => arm-vgic.rst} (66%)
- create mode 100644 Documentation/virt/kvm/devices/index.rst
- rename Documentation/virt/kvm/devices/{mpic.txt => mpic.rst} (91%)
- rename Documentation/virt/kvm/devices/{s390_flic.txt => s390_flic.rst} (87%)
- create mode 100644 Documentation/virt/kvm/devices/vcpu.rst
- delete mode 100644 Documentation/virt/kvm/devices/vcpu.txt
- rename Documentation/virt/kvm/devices/{vfio.txt => vfio.rst} (72%)
- rename Documentation/virt/kvm/devices/{vm.txt => vm.rst} (61%)
- rename Documentation/virt/kvm/devices/{xics.txt => xics.rst} (84%)
- rename Documentation/virt/kvm/devices/{xive.txt => xive.rst} (62%)
- rename Documentation/virt/kvm/{halt-polling.txt => halt-polling.rst} (64%)
- rename Documentation/virt/kvm/{hypercalls.txt => hypercalls.rst} (55%)
- create mode 100644 Documentation/virt/kvm/locking.rst
- delete mode 100644 Documentation/virt/kvm/locking.txt
- rename Documentation/virt/kvm/{mmu.txt => mmu.rst} (94%)
- rename Documentation/virt/kvm/{msr.txt => msr.rst} (74%)
- rename Documentation/virt/kvm/{nested-vmx.txt => nested-vmx.rst} (90%)
- rename Documentation/virt/kvm/{ppc-pv.txt => ppc-pv.rst} (91%)
- rename Documentation/virt/kvm/{review-checklist.txt => review-checklist.rst} (95%)
- rename Documentation/virt/kvm/{s390-diag.txt => s390-diag.rst} (90%)
- rename Documentation/virt/kvm/{timekeeping.txt => timekeeping.rst} (85%)
- rename Documentation/virt/uml/{UserModeLinux-HOWTO.txt => user_mode_linux.rst} (74%)
- create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
- create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm_util.h
- create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
- create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+Please document the parameters for the hook as well.
