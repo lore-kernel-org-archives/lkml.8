@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D2CC3B18D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84570C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC562082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C242082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SnUC7w/y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lTq6KvZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgBLESy (ORCPT
+        id S1728192AbgBLESx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:18:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53984 "EHLO
+        Tue, 11 Feb 2020 23:18:53 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53998 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgBLESr (ORCPT
+        with ESMTP id S1728020AbgBLESr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 23:18:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=jC8GtqN7d2PIFCD2G3A5qYYZdOVd9+NyuF2giQfeE+o=; b=SnUC7w/yzeO9wGbmJ2fnvAHg89
-        K5jXSIBNG58NYxIMnIxF21rJkwkCQYrEkore2fZNo1VJUUYPGzVtcNmb30mYaSZpvPQ1y9/HBi30Q
-        ihriKwGl6uluD0O34tdvP28toUE4cDKNstqK9oF1csHhTMaTegIsCdmmbMEWx720j7RKCkLtDCBHl
-        f/tImbi4SOkmns7CSo9mpGgVQ7cdb4s3Occ8ld3mmAe9XLVzNA6svmT5unVEozWJfcFLuqQowPSNN
-        B+zKBDGLCj1zhTKXB6udltcwdAMlV3iQ2t8dhHlyZTvf3EpY/3GJYFEg+B3YuvLEwtecTbcOYSIkL
-        /e4SD9XA==;
+        bh=F5NU3oCRsJ/VRewPgyFmDI/jOyoaYvHI3EnYnqICXs0=; b=lTq6KvZ25CFBn20eSyRhQz+xt4
+        xZ5E0flMQSOELfzqd57XfcPrr/jsPgY5r7h5VGuLF8q8wml2MDikHBD1nkHZxF9oGnyYdmwD/nBOJ
+        5rSiKXMb5QcGERIaLQXM/T9RTt7f8B/4vli/UrD3Y4uEBPB3+vbbi0uGsbBVDvmcJx6IzRE9lSdH3
+        IBqUNVplisHwBmiOyYmef8UmsYF2HfbbPUQasNPZXwcFJfxaTuFUqdY1Z0wwSVA0k60KQ1LbCJzdH
+        E4aajx9ShctTRRA6nl9E05t9s7BupBssLXhxgL+gGIqri1khlJg9vlNER8XmyWjsAcqS0QZMbGckM
+        gIRtseLQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU7-0006op-CJ; Wed, 12 Feb 2020 04:18:47 +0000
+        id 1j1jU7-0006pC-HQ; Wed, 12 Feb 2020 04:18:47 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v2 21/25] mm: Add __page_cache_alloc_order
-Date:   Tue, 11 Feb 2020 20:18:41 -0800
-Message-Id: <20200212041845.25879-22-willy@infradead.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 24/25] mm: Add large page readahead
+Date:   Tue, 11 Feb 2020 20:18:44 -0800
+Message-Id: <20200212041845.25879-25-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
 References: <20200212041845.25879-1-willy@infradead.org>
@@ -55,94 +54,159 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-This new function allows page cache pages to be allocated that are
-larger than an order-0 page.
+If the filesystem supports large pages, allocate larger pages in the
+readahead code when it seems worth doing.  The heuristic for choosing
+larger page sizes will surely need some tuning, but this aggressive
+ramp-up seems good for testing.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- include/linux/pagemap.h | 24 +++++++++++++++++++++---
- mm/filemap.c            | 12 ++++++++----
- 2 files changed, 29 insertions(+), 7 deletions(-)
+ mm/readahead.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 93 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 497197315b73..64a3cf79611f 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -207,15 +207,33 @@ static inline int page_cache_add_speculative(struct page *page, int count)
- 	return __page_cache_add_speculative(page, count);
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 29ca25c8f01e..b582f09aa7e3 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -406,13 +406,96 @@ static int try_context_readahead(struct address_space *mapping,
+ 	return 1;
  }
  
-+static inline gfp_t thp_gfpmask(gfp_t gfp)
++static inline int ra_alloc_page(struct address_space *mapping, pgoff_t offset,
++		pgoff_t mark, unsigned int order, gfp_t gfp)
 +{
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	/* We'd rather allocate smaller pages than stall a page fault */
-+	gfp |= GFP_TRANSHUGE_LIGHT;
-+	gfp &= ~__GFP_DIRECT_RECLAIM;
-+#endif
-+	return gfp;
++	int err;
++	struct page *page = __page_cache_alloc_order(gfp, order);
++
++	if (!page)
++		return -ENOMEM;
++	if (mark - offset < (1UL << order))
++		SetPageReadahead(page);
++	err = add_to_page_cache_lru(page, mapping, offset, gfp);
++	if (err)
++		put_page(page);
++	return err;
 +}
 +
- #ifdef CONFIG_NUMA
--extern struct page *__page_cache_alloc(gfp_t gfp);
-+extern struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order);
- #else
--static inline struct page *__page_cache_alloc(gfp_t gfp)
-+static inline
-+struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
- {
--	return alloc_pages(gfp, 0);
-+	if (order == 0)
-+		return alloc_pages(gfp, 0);
-+	return prep_transhuge_page(alloc_pages(thp_gfpmask(gfp), order));
- }
- #endif
- 
-+static inline struct page *__page_cache_alloc(gfp_t gfp)
++#define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
++
++static unsigned long page_cache_readahead_order(struct address_space *mapping,
++		struct file_ra_state *ra, struct file *file, unsigned int order)
 +{
-+	return __page_cache_alloc_order(gfp, 0);
++	struct readahead_control rac = {
++		.mapping = mapping,
++		.file = file,
++		.start = ra->start,
++		.nr_pages = 0,
++	};
++	unsigned int old_order = order;
++	pgoff_t offset = ra->start;
++	pgoff_t limit = (i_size_read(mapping->host) - 1) >> PAGE_SHIFT;
++	pgoff_t mark = offset + ra->size - ra->async_size;
++	int err = 0;
++	gfp_t gfp = readahead_gfp_mask(mapping);
++
++	limit = min(limit, offset + ra->size - 1);
++
++	/* Grow page size up to PMD size */
++	if (order < PMD_ORDER) {
++		order += 2;
++		if (order > PMD_ORDER)
++			order = PMD_ORDER;
++		while ((1 << order) > ra->size)
++			order--;
++	}
++
++	/* If size is somehow misaligned, fill with order-0 pages */
++	while (!err && offset & ((1UL << old_order) - 1)) {
++		err = ra_alloc_page(mapping, offset++, mark, 0, gfp);
++		if (!err)
++			rac.nr_pages++;
++	}
++
++	while (!err && offset & ((1UL << order) - 1)) {
++		err = ra_alloc_page(mapping, offset, mark, old_order, gfp);
++		if (!err)
++			rac.nr_pages += 1UL << old_order;
++		offset += 1UL << old_order;
++	}
++
++	while (!err && offset <= limit) {
++		err = ra_alloc_page(mapping, offset, mark, order, gfp);
++		if (!err)
++			rac.nr_pages += 1UL << order;
++		offset += 1UL << order;
++	}
++
++	if (offset > limit) {
++		ra->size += offset - limit - 1;
++		ra->async_size += offset - limit - 1;
++	}
++
++	read_pages(&rac, NULL);
++
++	/*
++	 * If there were already pages in the page cache, then we may have
++	 * left some gaps.  Let the regular readahead code take care of this
++	 * situation.
++	 */
++	if (err)
++		return ra_submit(ra, mapping, file);
++	return 0;
 +}
 +
- static inline struct page *page_cache_alloc(struct address_space *x)
- {
- 	return __page_cache_alloc(mapping_gfp_mask(x));
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 3204293f9b58..1061463a169e 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -941,24 +941,28 @@ int add_to_page_cache_lru(struct page *page, struct address_space *mapping,
- EXPORT_SYMBOL_GPL(add_to_page_cache_lru);
- 
- #ifdef CONFIG_NUMA
--struct page *__page_cache_alloc(gfp_t gfp)
-+struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
- {
- 	int n;
- 	struct page *page;
- 
-+	if (order > 0)
-+		gfp = thp_gfpmask(gfp);
-+
- 	if (cpuset_do_page_mem_spread()) {
- 		unsigned int cpuset_mems_cookie;
- 		do {
- 			cpuset_mems_cookie = read_mems_allowed_begin();
- 			n = cpuset_mem_spread_node();
--			page = __alloc_pages_node(n, gfp, 0);
-+			page = __alloc_pages_node(n, gfp, order);
-+			prep_transhuge_page(page);
- 		} while (!page && read_mems_allowed_retry(cpuset_mems_cookie));
- 
- 		return page;
- 	}
--	return alloc_pages(gfp, 0);
-+	return prep_transhuge_page(alloc_pages(gfp, order));
- }
--EXPORT_SYMBOL(__page_cache_alloc);
-+EXPORT_SYMBOL(__page_cache_alloc_order);
- #endif
- 
  /*
+  * A minimal readahead algorithm for trivial sequential/random reads.
+  */
+ static unsigned long
+ ondemand_readahead(struct address_space *mapping,
+ 		   struct file_ra_state *ra, struct file *filp,
+-		   bool hit_readahead_marker, pgoff_t offset,
++		   struct page *page, pgoff_t offset,
+ 		   unsigned long req_size)
+ {
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+@@ -451,7 +534,7 @@ ondemand_readahead(struct address_space *mapping,
+ 	 * Query the pagecache for async_size, which normally equals to
+ 	 * readahead size. Ramp it up and use it as the new readahead size.
+ 	 */
+-	if (hit_readahead_marker) {
++	if (page) {
+ 		pgoff_t start;
+ 
+ 		rcu_read_lock();
+@@ -520,7 +603,12 @@ ondemand_readahead(struct address_space *mapping,
+ 		}
+ 	}
+ 
+-	return ra_submit(ra, mapping, filp);
++	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) || !page ||
++	    !(mapping->host->i_sb->s_type->fs_flags & FS_LARGE_PAGES))
++		return ra_submit(ra, mapping, filp);
++
++	return page_cache_readahead_order(mapping, ra, filp,
++						compound_order(page));
+ }
+ 
+ /**
+@@ -555,7 +643,7 @@ void page_cache_sync_readahead(struct address_space *mapping,
+ 	}
+ 
+ 	/* do read-ahead */
+-	ondemand_readahead(mapping, ra, filp, false, offset, req_size);
++	ondemand_readahead(mapping, ra, filp, NULL, offset, req_size);
+ }
+ EXPORT_SYMBOL_GPL(page_cache_sync_readahead);
+ 
+@@ -602,7 +690,7 @@ page_cache_async_readahead(struct address_space *mapping,
+ 		return;
+ 
+ 	/* do read-ahead */
+-	ondemand_readahead(mapping, ra, filp, true, offset, req_size);
++	ondemand_readahead(mapping, ra, filp, page, offset, req_size);
+ }
+ EXPORT_SYMBOL_GPL(page_cache_async_readahead);
+ 
 -- 
 2.25.0
 
