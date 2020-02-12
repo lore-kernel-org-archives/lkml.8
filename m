@@ -2,84 +2,278 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D30C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0208C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949AD24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vr6SxS8t"
+	by mail.kernel.org (Postfix) with ESMTP id 8551E24649
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581543368;
+	bh=IGMr7KyijKAhvtQ7au4BmWQc34YdNXWE2DhYvRkAZYA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=AWtRLaJI33r1RpfmuUCsoLGqSLgMPZczbTxEGuCHcg7hLiVLtLf2uYz5nrFgI0+85
+	 +T5viIi12rCGVq82q0ia3yN8MFqF19uIFNJL2D9x1Fy2xbL9J6m/TVSUGGr/i/j1yY
+	 tmn7iBxHnsAxHUWdh8ZkKDWZem2axnA5iPg00suw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgBLVgG (ORCPT
+        id S1729176AbgBLVgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:36:06 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47472 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727692AbgBLVgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:36:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=/O4SAh4DehJhEI3V66WwmmKNKSXbvZl4XVQ7/dH/7wI=; b=Vr6SxS8tSPBOeGSFhTc1LJkekZ
-        Ck24Hcyo8FtXYZ0rrJU2rytadHZtksyZnCGUtaqrW60JwLWACmyVwk1eBpW31iGmXiwLU0XN0ozLz
-        qnYS5qrcQvvlO/IejUbd+vy49cF3aReZeQ2pb6V0z+3mM6wRk5ecTjnl9SWkdyQv8DIxMCKFwLH4g
-        URNTc4ESZgkrQzdrgozOx0MjkbZr8woVAAKL3jasV9bXoEs71oSp6p1nVO/GriuDky4aKxgfEx8ZB
-        hGE28mArnoiiVzeEE4f1DqHmPJUbra/p/hObKpgzlUJjZhaiLJRTV59DbEOK/IP+r7v4/L/Fx/yWm
-        esiNEB5Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1zfv-0001GX-6O; Wed, 12 Feb 2020 21:36:03 +0000
-Subject: Re: [PATCH] linux/pipe_fs_i.h: fix kernel-doc warnings after @wait
- was split
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <0956ab21-9b9a-4d1e-fe43-b853d1602781@infradead.org>
- <CAHk-=wjU6YdzhdhevAJ8od96RWvvqtV+h3TWvJ3QcSNrQJbMMg@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0ce3caf2-9209-0968-e78a-f8e067a78ca0@infradead.org>
-Date:   Wed, 12 Feb 2020 13:36:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 16:36:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727947AbgBLVgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 16:36:07 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0416424671;
+        Wed, 12 Feb 2020 21:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581543366;
+        bh=IGMr7KyijKAhvtQ7au4BmWQc34YdNXWE2DhYvRkAZYA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=biKeEXQeWxt1TYSH8+4FkYE3IwFWS+76BPWqvcNRVKHcCfWw/1bqJaMkA1T9vkNNV
+         wEMXcKxtCHLa5u4Zob0XdP1yqs0C+SCox5mUPCzFDzK0PH6W3J4MO4wTPZuGWZFIAe
+         n9p5vOlPuC3HjZhTepqAGIxcXJ9BKLVXfkx2gxrw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 530AE3522725; Wed, 12 Feb 2020 13:36:04 -0800 (PST)
+Date:   Wed, 12 Feb 2020 13:36:04 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Marco Elver <elver@google.com>, andreyknvl@google.com,
+        glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>, Jan Kara <jack@suse.cz>,
+        Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH v2 5/5] kcsan: Introduce ASSERT_EXCLUSIVE_BITS(var, mask)
+Message-ID: <20200212213604.GR2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200211160423.138870-1-elver@google.com>
+ <20200211160423.138870-5-elver@google.com>
+ <29718fab-0da5-e734-796c-339144ac5080@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjU6YdzhdhevAJ8od96RWvvqtV+h3TWvJ3QcSNrQJbMMg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29718fab-0da5-e734-796c-339144ac5080@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 11:57 AM, Linus Torvalds wrote:
-> On Sun, Feb 9, 2020 at 7:36 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> Fix kernel-doc warnings in struct pipe_inode_info after @wait was
->> split into @rd_wait and @wr_wait.
+On Tue, Feb 11, 2020 at 01:41:14PM -0800, John Hubbard wrote:
+> On 2/11/20 8:04 AM, Marco Elver wrote:
+> > This introduces ASSERT_EXCLUSIVE_BITS(var, mask).
+> > ASSERT_EXCLUSIVE_BITS(var, mask) will cause KCSAN to assume that the
+> > following access is safe w.r.t. data races (however, please see the
+> > docbook comment for disclaimer here).
+> > 
+> > For more context on why this was considered necessary, please see:
+> >   http://lkml.kernel.org/r/1580995070-25139-1-git-send-email-cai@lca.pw
+> > 
+> > In particular, before this patch, data races between reads (that use
+> > @mask bits of an access that should not be modified concurrently) and
+> > writes (that change ~@mask bits not used by the readers) would have been
+> > annotated with "data_race()" (or "READ_ONCE()"). However, doing so would
+> > then hide real problems: we would no longer be able to detect harmful
+> > races between reads to @mask bits and writes to @mask bits.
+> > 
+> > Therefore, by using ASSERT_EXCLUSIVE_BITS(var, mask), we accomplish:
+> > 
+> >   1. Avoid proliferation of specific macros at the call sites: by
+> >      including a single mask in the argument list, we can use the same
+> >      macro in a wide variety of call sites, regardless of how and which
+> >      bits in a field each call site actually accesses.
+> > 
+> >   2. The existing code does not need to be modified (although READ_ONCE()
+> >      may still be advisable if we cannot prove that the data race is
+> >      always safe).
+> > 
+> >   3. We catch bugs where the exclusive bits are modified concurrently.
+> > 
+> >   4. We document properties of the current code.
 > 
-> Thanks, applied.
 > 
-> I've considered adding some doc building to my basic tests, but it is
-> (a) somewhat slow and (b) has always been very noisy.
+> API looks good to me. (I'm not yet familiar enough with KCSAN to provide
+> any useful review of about the various kcsan*() calls that implement the 
+> new macro.)
 > 
-> And that (b) is why I really don't do it. The reason I require the
-> basic build to be warning-free is that because that way any new
-> warnings stand out. But that's just not the case for docs.
+> btw, it might be helpful for newcomers if you mentioned which tree this
+> is based on. I poked around briefly and failed several times to find one. :)
 > 
-> What do you use to notice new errors? Or is there some trick to make
-> it less noisy?
+> You can add:
+> 
+> Acked-by: John Hubbard <jhubbard@nvidia.com>
 
-It's awfully noisy.  I just do lots of "grep -v" to ignore some messages
-that are always there and then I manually ignore lots of others that are
-not new.  Very little automation.  No magic tricks.
+Queued for testing and further review, thank you both!
 
--- 
-~Randy
+							Thanx, Paul
 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
+> > 
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Qian Cai <cai@lca.pw>
+> > ---
+> > v2:
+> > * Update API documentation to be clearer about how this compares to the
+> >   existing assertions, and update use-cases. [Based on suggestions from
+> >   John Hubbard]
+> > * Update commit message. [Suggestions from John Hubbard]
+> > ---
+> >  include/linux/kcsan-checks.h | 69 ++++++++++++++++++++++++++++++++----
+> >  kernel/kcsan/debugfs.c       | 15 +++++++-
+> >  2 files changed, 77 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
+> > index 4ef5233ff3f04..1b8aac5d6a0b5 100644
+> > --- a/include/linux/kcsan-checks.h
+> > +++ b/include/linux/kcsan-checks.h
+> > @@ -152,9 +152,9 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+> >  #endif
+> >  
+> >  /**
+> > - * ASSERT_EXCLUSIVE_WRITER - assert no other threads are writing @var
+> > + * ASSERT_EXCLUSIVE_WRITER - assert no concurrent writes to @var
+> >   *
+> > - * Assert that there are no other threads writing @var; other readers are
+> > + * Assert that there are no concurrent writes to @var; other readers are
+> >   * allowed. This assertion can be used to specify properties of concurrent code,
+> >   * where violation cannot be detected as a normal data race.
+> >   *
+> > @@ -171,11 +171,11 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+> >  	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
+> >  
+> >  /**
+> > - * ASSERT_EXCLUSIVE_ACCESS - assert no other threads are accessing @var
+> > + * ASSERT_EXCLUSIVE_ACCESS - assert no concurrent accesses to @var
+> >   *
+> > - * Assert that no other thread is accessing @var (no readers nor writers). This
+> > - * assertion can be used to specify properties of concurrent code, where
+> > - * violation cannot be detected as a normal data race.
+> > + * Assert that there are no concurrent accesses to @var (no readers nor
+> > + * writers). This assertion can be used to specify properties of concurrent
+> > + * code, where violation cannot be detected as a normal data race.
+> >   *
+> >   * For example, in a reference-counting algorithm where exclusive access is
+> >   * expected after the refcount reaches 0. We can check that this property
+> > @@ -191,4 +191,61 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+> >  #define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
+> >  	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
+> >  
+> > +/**
+> > + * ASSERT_EXCLUSIVE_BITS - assert no concurrent writes to subset of bits in @var
+> > + *
+> > + * Bit-granular variant of ASSERT_EXCLUSIVE_WRITER(var).
+> > + *
+> > + * Assert that there are no concurrent writes to a subset of bits in @var;
+> > + * concurrent readers are permitted. This assertion captures more detailed
+> > + * bit-level properties, compared to the other (word granularity) assertions.
+> > + * Only the bits set in @mask are checked for concurrent modifications, while
+> > + * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~@mask bits
+> > + * are ignored.
+> > + *
+> > + * Use this for variables, where some bits must not be modified concurrently,
+> > + * yet other bits are expected to be modified concurrently.
+> > + *
+> > + * For example, variables where, after initialization, some bits are read-only,
+> > + * but other bits may still be modified concurrently. A reader may wish to
+> > + * assert that this is true as follows:
+> > + *
+> > + *	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
+> > + *	foo = (READ_ONCE(flags) & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
+> > + *
+> > + *   Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is
+> > + *   assumed to access the masked bits only, and KCSAN optimistically assumes it
+> > + *   is therefore safe, even in the presence of data races, and marking it with
+> > + *   READ_ONCE() is optional from KCSAN's point-of-view. We caution, however,
+> > + *   that it may still be advisable to do so, since we cannot reason about all
+> > + *   compiler optimizations when it comes to bit manipulations (on the reader
+> > + *   and writer side). If you are sure nothing can go wrong, we can write the
+> > + *   above simply as:
+> > + *
+> > + * 	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
+> > + *	foo = (flags & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
+> > + *
+> > + * Another example, where this may be used, is when certain bits of @var may
+> > + * only be modified when holding the appropriate lock, but other bits may still
+> > + * be modified concurrently. Writers, where other bits may change concurrently,
+> > + * could use the assertion as follows:
+> > + *
+> > + *	spin_lock(&foo_lock);
+> > + *	ASSERT_EXCLUSIVE_BITS(flags, FOO_MASK);
+> > + *	old_flags = READ_ONCE(flags);
+> > + *	new_flags = (old_flags & ~FOO_MASK) | (new_foo << FOO_SHIFT);
+> > + *	if (cmpxchg(&flags, old_flags, new_flags) != old_flags) { ... }
+> > + *	spin_unlock(&foo_lock);
+> > + *
+> > + * @var variable to assert on
+> > + * @mask only check for modifications to bits set in @mask
+> > + */
+> > +#define ASSERT_EXCLUSIVE_BITS(var, mask)                                       \
+> > +	do {                                                                   \
+> > +		kcsan_set_access_mask(mask);                                   \
+> > +		__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT);\
+> > +		kcsan_set_access_mask(0);                                      \
+> > +		kcsan_atomic_next(1);                                          \
+> > +	} while (0)
+> > +
+> >  #endif /* _LINUX_KCSAN_CHECKS_H */
+> > diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
+> > index 9bbba0e57c9b3..2ff1961239778 100644
+> > --- a/kernel/kcsan/debugfs.c
+> > +++ b/kernel/kcsan/debugfs.c
+> > @@ -100,8 +100,10 @@ static noinline void microbenchmark(unsigned long iters)
+> >   * debugfs file from multiple tasks to generate real conflicts and show reports.
+> >   */
+> >  static long test_dummy;
+> > +static long test_flags;
+> >  static noinline void test_thread(unsigned long iters)
+> >  {
+> > +	const long CHANGE_BITS = 0xff00ff00ff00ff00L;
+> >  	const struct kcsan_ctx ctx_save = current->kcsan_ctx;
+> >  	cycles_t cycles;
+> >  
+> > @@ -109,16 +111,27 @@ static noinline void test_thread(unsigned long iters)
+> >  	memset(&current->kcsan_ctx, 0, sizeof(current->kcsan_ctx));
+> >  
+> >  	pr_info("KCSAN: %s begin | iters: %lu\n", __func__, iters);
+> > +	pr_info("test_dummy@%px, test_flags@%px\n", &test_dummy, &test_flags);
+> >  
+> >  	cycles = get_cycles();
+> >  	while (iters--) {
+> > +		/* These all should generate reports. */
+> >  		__kcsan_check_read(&test_dummy, sizeof(test_dummy));
+> > -		__kcsan_check_write(&test_dummy, sizeof(test_dummy));
+> >  		ASSERT_EXCLUSIVE_WRITER(test_dummy);
+> >  		ASSERT_EXCLUSIVE_ACCESS(test_dummy);
+> >  
+> > +		ASSERT_EXCLUSIVE_BITS(test_flags, ~CHANGE_BITS); /* no report */
+> > +		__kcsan_check_read(&test_flags, sizeof(test_flags)); /* no report */
+> > +
+> > +		ASSERT_EXCLUSIVE_BITS(test_flags, CHANGE_BITS); /* report */
+> > +		__kcsan_check_read(&test_flags, sizeof(test_flags)); /* no report */
+> > +
+> >  		/* not actually instrumented */
+> >  		WRITE_ONCE(test_dummy, iters);  /* to observe value-change */
+> > +		__kcsan_check_write(&test_dummy, sizeof(test_dummy));
+> > +
+> > +		test_flags ^= CHANGE_BITS; /* generate value-change */
+> > +		__kcsan_check_write(&test_flags, sizeof(test_flags));
+> >  	}
+> >  	cycles = get_cycles() - cycles;
+> >  
+> > 
