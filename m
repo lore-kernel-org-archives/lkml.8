@@ -2,162 +2,150 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A2AC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F8DC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE5220848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CA42173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="u9psciCN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6IULQpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgBLX1E (ORCPT
+        id S1729258AbgBLX1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:27:04 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:41149 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgBLX1D (ORCPT
+        Wed, 12 Feb 2020 18:27:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50649 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgBLX1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:27:03 -0500
-Received: by mail-qv1-f65.google.com with SMTP id s7so1773702qvn.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 15:27:03 -0800 (PST)
+        Wed, 12 Feb 2020 18:27:24 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so4226140wmb.0;
+        Wed, 12 Feb 2020 15:27:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kTNWibF5tbkLobqhHD4V+kFeYgR//KAz2RdK40R6a+4=;
-        b=u9psciCNbDsT6qUbD5ro/cVfFEVW2xyWmVMVMqId/QwrQkrT+KrRh17aDBGPsccKoO
-         zaZKFdBejZJATq6jepTQMoGa41JY57r7F7/HW0ogqkdUwc1prWmv5MFA+scuYp4Nw6Gd
-         vBZ51+AyfLN8Mxdd60G/KDaGGqpT1ZvRRKlOs=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qWWr8Tj/x5Uxzxfr4XDatmqFLDK9WTySpZSm5Bv0Ekw=;
+        b=L6IULQpe2FXdlwNT2BiPLqWq4HKawYV5jKJh49o0/jP5CDMlvCqZK22kL7aN1LDv1f
+         hKnKN29sw2xQ9cpKhAhNHODtLuSVrxF98GiCI8yuByWFJkHjVo8NQDoxUaoIaNnywUTr
+         u7COFa6iqbCTJrkneJKEzzJW+vHp1Aujis9A6v+zMDKgP1FG19mzCGkUMjaez9si8j/G
+         C0+L63IO28L9orTsObc2mFInroI3Ebit6T+cgK6I1LnPHpdj+BzG9+6DRW4CB8uSKpEV
+         Y2xAzXbYQ83NSp123ZJnRj3Fek0lPZywolgT1jcuINgkJIddUKRpWeCNESRM29F01VRs
+         geGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kTNWibF5tbkLobqhHD4V+kFeYgR//KAz2RdK40R6a+4=;
-        b=dULeK6MtFzHSVWVG8o5i96Th0anim0i4UuKF0z8Pga58msX0igcgZnO6sNb80KJCXa
-         f4F6fgYAofEm0kZeQMVz6vLgWUsjOLJp6T6DAa7jei28MWYiN3vTHGIwG8U+JzJqkdF+
-         hbNGn0rVkvvbYsxeBm7cqV2XC9LxE/WJhI9YQvnWMEPu7ICLpfXyhplpZr1Xxup3N9aK
-         29obSCysnOr3BLKE+xDGRixEZCDhSGQEjIi5J9tkp6xqmDLJpxLOFSSLwD6fun1RMADy
-         ZKiMqIEe4Ic7Ng8XXnS9ZgftLmqJ2jVahS9wS+GxsMPD9EOiElvoOdh/femcNW9gg+Wu
-         WTvg==
-X-Gm-Message-State: APjAAAWYBwHyIqw9m6Isn18VVoNqE0PY02gQucr9IalDVrJF3+mDI2pv
-        DJqWTCM9gK9Re4JwDyuEhrLIlA==
-X-Google-Smtp-Source: APXvYqyeP6AQshumUNOlf+Y3b/66Lbbev3nq+A2SD1fAG9TX0YJOSCK6ZNzZtmmvlE6IG+G15uDN7Q==
-X-Received: by 2002:a0c:fe0d:: with SMTP id x13mr9506026qvr.88.1581550022806;
-        Wed, 12 Feb 2020 15:27:02 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d18sm255530qke.75.2020.02.12.15.27.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qWWr8Tj/x5Uxzxfr4XDatmqFLDK9WTySpZSm5Bv0Ekw=;
+        b=IK9v180tWku7cx6K3CmNipqiLnKSe8FR76MxyTEnwzbTrtF33DGahvLDYWtGun1NCL
+         uHMYib67r2bZWLuOAfENhOuBR5CHoO4fMXn0nGkRTUagCbpwDp+bY1Cbp18oDUVMgzam
+         fA2+bnE7ruORyD4mEWV47Y7b0PZGsCZ7FtR7ozyLOQtpgOv8548eCz3dFHo0Lb9xYkl+
+         6XNgo14eEeFRphitJqIeCDcT7e7HaIJd3n06SU8yyHj/R6l4iEQiL7lb9cryqryY8+Fo
+         vWJFZZFpPc+eiwz7mz47joXzLOn/Vtpszbsl5NR+FpDGIetQCmeriYQj2iMhRGT1UFkf
+         nU5Q==
+X-Gm-Message-State: APjAAAXNHbSn4ta53XlqxXN1O5Z3OExKfJBjFnv26/IKeCFfkIXcVdm3
+        P4tCv9nMgAXXMpAfaUo1dus=
+X-Google-Smtp-Source: APXvYqzXjjXmlvG1lFGKwcAfviSyTGoEOxWVrTe8hKiSJsLeartclcgGBa+dNMyFSFP9DmQFyIBtxw==
+X-Received: by 2002:a05:600c:242:: with SMTP id 2mr1463304wmj.2.1581550038818;
+        Wed, 12 Feb 2020 15:27:18 -0800 (PST)
+Received: from giga-mm ([62.68.27.198])
+        by smtp.gmail.com with ESMTPSA id l6sm423504wmg.42.2020.02.12.15.27.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 15:27:02 -0800 (PST)
-Date:   Wed, 12 Feb 2020 18:27:02 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200212232702.GA170680@google.com>
-References: <20200212210139.382424693@infradead.org>
- <20200212210749.971717428@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212210749.971717428@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 12 Feb 2020 15:27:17 -0800 (PST)
+Date:   Thu, 13 Feb 2020 00:27:16 +0100
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Krzysztof Halasa <khalasa@piap.pl>,
+        Russell King <linux@armlinux.org.uk>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Kevin Hilman <khilman@kernel.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>
+Subject: Re: [PATCH 02/18] ARM: replace setup_irq() by request_irq()
+Message-Id: <20200213002716.99258cfd73002fdd4bbd17d9@gmail.com>
+In-Reply-To: <da7d11b6cf808ea95e2d852a2e8cbca3fde28b6f.1581478324.git.afzal.mohd.ma@gmail.com>
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
+        <da7d11b6cf808ea95e2d852a2e8cbca3fde28b6f.1581478324.git.afzal.mohd.ma@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:01:42PM +0100, Peter Zijlstra wrote:
-> To facilitate tracers that need RCU, add some helpers to wrap the
-> magic required.
+Hi!
+
+On Wed, 12 Feb 2020 13:32:43 +0530
+afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+
+> request_irq() is preferred over setup_irq(). Existing callers of
+> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
+> memory allocators are ready by 'mm_init()'.
 > 
-> The problem is that we can call into tracers (trace events and
-> function tracing) while RCU isn't watching and this can happen from
-> any context, including NMI.
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
 > 
-> It is this latter that is causing most of the trouble; we must make
-> sure in_nmi() returns true before we land in anything tracing,
-> otherwise we cannot recover.
+> Hence replace setup_irq() by request_irq().
 > 
-> These helpers are macros because of header-hell; they're placed here
-> because of the proximity to nmi_{enter,exit{().
+> Seldom remove_irq() usage has been observed coupled with setup_irq(),
+> wherever that has been found, it too has been replaced by free_irq().
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/hardirq.h |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
 > 
-> --- a/include/linux/hardirq.h
-> +++ b/include/linux/hardirq.h
-> @@ -89,4 +89,52 @@ extern void irq_exit(void);
->  		arch_nmi_exit();				\
->  	} while (0)
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+
+For the EP93xx part:
+Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+
+> diff --git a/arch/arm/mach-ep93xx/timer-ep93xx.c b/arch/arm/mach-ep93xx/timer-ep93xx.c
+> index de998830f534..0335f3b93340 100644
+> --- a/arch/arm/mach-ep93xx/timer-ep93xx.c
+> +++ b/arch/arm/mach-ep93xx/timer-ep93xx.c
+> @@ -117,13 +117,6 @@ static irqreturn_t ep93xx_timer_interrupt(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
 >  
-> +/*
-> + * Tracing vs RCU
-> + * --------------
-> + *
-> + * tracepoints and function-tracing can happen when RCU isn't watching (idle,
-> + * or early IRQ/NMI entry).
-> + *
-> + * When it happens during idle or early during IRQ entry, tracing will have
-> + * to inform RCU that it ought to pay attention, this is done by calling
-> + * rcu_irq_enter_irqsave().
-> + *
-> + * On NMI entry, we must be very careful that tracing only happens after we've
-> + * incremented preempt_count(), otherwise we cannot tell we're in NMI and take
-> + * the special path.
-> + */
-> +
-> +#define __TR_IRQ	1
-> +#define __TR_NMI	2
-> +
-> +#define trace_rcu_enter()					\
-> +({								\
-> +	unsigned long state = 0;				\
-> +	if (!rcu_is_watching())	{				\
-> +		if (in_nmi()) {					\
-> +			state = __TR_NMI;			\
-> +			rcu_nmi_enter();			\
-> +		} else {					\
-> +			state = __TR_IRQ;			\
-> +			rcu_irq_enter_irqsave();		\
+> -static struct irqaction ep93xx_timer_irq = {
+> -	.name		= "ep93xx timer",
+> -	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
+> -	.handler	= ep93xx_timer_interrupt,
+> -	.dev_id		= &ep93xx_clockevent,
+> -};
+> -
+>  void __init ep93xx_timer_init(void)
+>  {
+>  	/* Enable and register clocksource and sched_clock on timer 4 */
+> @@ -136,7 +129,10 @@ void __init ep93xx_timer_init(void)
+>  			     EP93XX_TIMER4_RATE);
+>  
+>  	/* Set up clockevent on timer 3 */
+> -	setup_irq(IRQ_EP93XX_TIMER3, &ep93xx_timer_irq);
+> +	if (request_irq(IRQ_EP93XX_TIMER3, ep93xx_timer_interrupt,
+> +			IRQF_TIMER | IRQF_IRQPOLL, "ep93xx timer",
+> +			&ep93xx_clockevent))
+> +		pr_err("request_irq() on %s failed\n", "ep93xx timer");
+>  	clockevents_config_and_register(&ep93xx_clockevent,
+>  					EP93XX_TIMER123_RATE,
+>  					1,
 
-Since rcu_irq_enter_irqsave can be called from a tracer context, should those
-be marked with notrace as well? AFAICS, there's no notrace marking on them.
-
-thanks,
-
- - Joel
-
-
-> +		}						\
-> +	}							\
-> +	state;							\
-> +})
-> +
-> +#define trace_rcu_exit(state)					\
-> +do {								\
-> +	switch (state) {					\
-> +	case __TR_IRQ:						\
-> +		rcu_irq_exit_irqsave();				\
-> +		break;						\
-> +	case __TR_NMI:						\
-> +		rcu_nmi_exit();					\
-> +		break;						\
-> +	default:						\
-> +		break;						\
-> +	}							\
-> +} while (0)
-> +
->  #endif /* LINUX_HARDIRQ_H */
-> 
-> 
+-- 
+Alexander Sverdlin.
