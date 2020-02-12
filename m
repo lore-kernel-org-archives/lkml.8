@@ -2,183 +2,107 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D264DC47409
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B149FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45D42086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3132073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBLNJ3 (ORCPT
+        id S1727988AbgBLNLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:09:29 -0500
-Received: from orion.archlinux.org ([88.198.91.70]:58284 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLNJ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:09:28 -0500
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id B2B4C18E485AA2;
-        Wed, 12 Feb 2020 13:09:24 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Wed, 12 Feb 2020 13:09:24 +0000 (UTC)
-Message-ID: <134b6748318f5cc2b50584e58da58e43c99db5b6.camel@archlinux.org>
-Subject: Re: [BUG] Kernel log flooded by message "logitech-djreceiver
- 0003:046D:C53A.000C: logi_dj_hidpp_event: invalid device index:7"
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
-In-Reply-To: <CABXGCsPYaXYFqQfnYWeeOKYq-SCjBvixo-Mme-fGLSB8Kw5H+g@mail.gmail.com>
-References: <CABXGCsMfzj+mpjvuZifzWEKbX7X36v7iMVPampSS6kOc2Hzoow@mail.gmail.com>
-         <2405a741abf0d5fe8f55b5d3de8488e3054cc5e1.camel@archlinux.org>
-         <CABXGCsPYaXYFqQfnYWeeOKYq-SCjBvixo-Mme-fGLSB8Kw5H+g@mail.gmail.com>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-OiDey6S+lvi/aW/6yKbk"
-Date:   Wed, 12 Feb 2020 13:09:22 +0000
+        Wed, 12 Feb 2020 08:11:08 -0500
+Received: from mga11.intel.com ([192.55.52.93]:2442 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726728AbgBLNLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 08:11:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 05:11:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="347513465"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2020 05:11:05 -0800
+Subject: Re: [PATCH v4 0/4] perf tools: Add support for some spe events and
+ precise ip
+To:     Jiri Olsa <jolsa@redhat.com>, James Clark <james.clark@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nd@arm.com
+References: <20200210122509.GA2005279@krava>
+ <20200211140445.21986-1-james.clark@arm.com> <20200212122425.GA194466@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <abac26ad-2b27-0bc7-d1d6-9a92ece3718e@intel.com>
+Date:   Wed, 12 Feb 2020 15:10:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-User-Agent: Evolution 3.34.3 
+In-Reply-To: <20200212122425.GA194466@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/02/20 2:24 pm, Jiri Olsa wrote:
+> On Tue, Feb 11, 2020 at 02:04:41PM +0000, James Clark wrote:
+>> Hi Jirka,
+>>
+>> Oops. I've removed all the changes to evlist.c and evsel.h
+> 
+> hi,
+> it looks ok from my POV, but I don't follow auxtrace that much
+> 
+> Adrian,
+> it's changing some generic bits of the auxtrace framework,
+> could you please check?
 
---=-OiDey6S+lvi/aW/6yKbk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sure, in the next few days.
 
-On Wed, 2020-02-12 at 17:53 +0500, Mikhail Gavrilov wrote:
-> On Mon, 10 Feb 2020 at 17:38, Filipe La=C3=ADns <lains@archlinux.org>
-> wrote:
-> > On Mon, 2020-02-10 at 13:21 +0500, Mikhail Gavrilov wrote:
-> > > Kernel log flooded by message
-> > > logitech-djreceiver 0003:046D:C53A.000C: logi_dj_hidpp_event:
-> > > invalid
-> > > device index:7
-> > > This happens when the mouse is idle.
-> > > And it started since I begin using the mouse pad with Power Play
-> > > technology.
-> > >=20
-> > >=20
-> > > Kernel ver: 5.6 pre RC
-> > > --
-> > > Best Regards,
-> > > Mike Gavrilov.
-> >=20
-> > Hello Mike,
-> >=20
-> > Yes, the Powerplay mat exports a static HID++ 2.0 device with index
-> > 7
-> > to configure the led on the mat. The current code expects devices
-> > to
-> > have a maximum index of 6, which is the maximum index of pairable
-> > devices.
-> >=20
-> > I already submitted a patch adding support for the Logitech G
-> > Powerplay
-> > mat but it wasn't been upstreamed it. I will attach it in case you
-> > want
-> > to try it.
-> >=20
->=20
-> Thanks, I tested the patch for a day and "logitech-djreceiver"
-> messages was not appear anymore and no other regressions are noted.
-> Why this patch wasn't been upstreamed?
+> 
+> thanks,
+> jirka
+> 
+>>
+>>
+>> James
+>>
+>> Tan Xiaojun (4):
+>>   perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+>>   perf tools: Add support for "report" for some spe events
+>>   perf report: Add SPE options to --itrace argument
+>>   perf tools: Support "branch-misses:pp" on arm64
+>>
+>>  tools/perf/Documentation/itrace.txt           |   5 +-
+>>  tools/perf/arch/arm/util/auxtrace.c           |  38 +
+>>  tools/perf/builtin-record.c                   |   5 +
+>>  tools/perf/util/Build                         |   2 +-
+>>  tools/perf/util/arm-spe-decoder/Build         |   1 +
+>>  .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 ++++++
+>>  .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
+>>  .../arm-spe-pkt-decoder.c                     |   0
+>>  .../arm-spe-pkt-decoder.h                     |   2 +
+>>  tools/perf/util/arm-spe.c                     | 756 +++++++++++++++++-
+>>  tools/perf/util/arm-spe.h                     |   3 +
+>>  tools/perf/util/auxtrace.c                    |  13 +
+>>  tools/perf/util/auxtrace.h                    |  14 +-
+>>  13 files changed, 1089 insertions(+), 41 deletions(-)
+>>  create mode 100644 tools/perf/util/arm-spe-decoder/Build
+>>  create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+>>  create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>>  rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
+>>  rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
+>>
+>> -- 
+>> 2.17.1
+>>
+> 
 
-Lack of time I guess.
-
-> Also would be good if "logitech-djreceiver" provides information for
-> upower daemon as how did it happening with unifying receiver and my
-> previous mouse Logitech Zone Touch Mouse T400.
->=20
-> For example:
->=20
-> $ upower --dump
-> Device: /org/freedesktop/UPower/devices/mouse_hidpp_battery_0
->   native-path:          hidpp_battery_0
->   model:                Zone Touch Mouse T400
->   serial:               4026-cf-15-61-0d
->   power supply:         no
->   updated:              Sun 22 Dec 2019 02:41:30 PM +05 (89 seconds
-> ago)
->   has history:          yes
->   has statistics:       yes
->   mouse
->     present:             yes
->     rechargeable:        yes
->     state:               discharging
->     warning-level:       none
->     battery-level:       normal
->     percentage:          55% (should be ignored)
->     icon-name:          'battery-low-symbolic'
->=20
-> Device: /org/freedesktop/UPower/devices/DisplayDevice
->   power supply:         no
->   updated:              Sun 22 Dec 2019 10:58:54 AM +05 (13445
-> seconds ago)
->   has history:          no
->   has statistics:       no
->   unknown
->     warning-level:       none
->     icon-name:          'battery-missing-symbolic'
->=20
-> Daemon:
->   daemon-version:  0.99.11
->   on-battery:      no
->   lid-is-closed:   no
->   lid-is-present:  no
->   critical-action: HybridSleep
->=20
-> https://user-images.githubusercontent.com/200750/71320201-d8a5ea80-24c9-1=
-1ea-9ea9-97100545d294.png
->=20
-> Currently, only sensors show the power charge level, but without
-> "upower" daemon user-friendly indication not available in DE.
->=20
-> $ sensors
-> hidpp_battery_0-hid-3-9
-> Adapter: HID adapter
-> in0:           4.08 V
-
-The new devices only export the battery voltage. We will need to
-calculate the charge level with the charging curve. I tried getting in
-touch with the upower upstream to figure out exactly what is needed in
-upower's side but without luck.
-
-https://gitlab.freedesktop.org/upower/upower/issues/110
-
-Regards,
-Filipe La=C3=ADns
-
---=-OiDey6S+lvi/aW/6yKbk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl5D+QEACgkQ+JPGdIFq
-qV3HMBAArKGAIW6he3UG3r7F90a7B4O6RQtvj7LeHo88H32bCwTIjt17eIbYgcSK
-/1boM5vA6sj+KgD/yNWVHO45KAI2eq4HPVqE219hRgDHmGKn72575ulKdCVJ7o/o
-x8kHEdQASsd44//GzNiaNm9i98n4K4Wq80opDfkSolnkExxPhZQUQWlcbVexDjrs
-+IaL6S9AWs1TPL1oxFZBwwUW6m4ZQDFJCNI+ZI8gGseMvP4K1FN00auO+fSmZqP7
-C/hLMkiYbxrX+QNJMl7eMHBHgv9xbUcIltCKUGtGzcvJjmwW4xpqVGjI1627EDAD
-0Z619vGsRzkOfK/px/3PjTPQiIf1NhRn+5o/LcprRGwIIKW12oGyXmD6RXoiVt7e
-0D1GnIoNCeEczqLJ5920muraFpDseiy7HJGe5Q/PYMZf7jJkL0WLfbSB9ku5wEct
-NdUbM31QHajBwIGctFoUHEQHK8tlwTzhu+udqQWOQtGINH8sS18Wr1PsiJAdawBX
-jAyXK31Ic+LkJD0gIIgbahyIRo9U575m087lAOf0/kBBFu0tPT3vpT2pwNsYpJlU
-DfZYDRNn0ki6ypvbVCIK/ppg42/pi1ufiIPa8davQqXroLidUM2CV+RYsHQjE0Re
-l/Yt9E1mJSvc7LTg5WOHkI+MHOMYPCnOvLiDZ+2PMn/F8LmQau8=
-=wu9z
------END PGP SIGNATURE-----
-
---=-OiDey6S+lvi/aW/6yKbk--
