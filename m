@@ -2,193 +2,94 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28F1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BCCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC8420873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GANCPNe9"
+	by mail.kernel.org (Postfix) with ESMTP id 8C6A820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgBLQEc (ORCPT
+        id S1728792AbgBLQEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:04:32 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41630 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728698AbgBLQEb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:04:31 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so3032180wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:04:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KiqSA/av2ZNWBE7nJHGVa6/1LBWU3I7cZAwdWxWzGmE=;
-        b=GANCPNe9XjsbmeyJHI+SqNuFhFhrU5no91yuB/KbQIxyRrRL2oqnecs84I6PI/QFGs
-         0tOu2a8IbgyAQNajlvF4iGbdZkTzztqH1wn352I4W+zIv3zTlm73NfMid12H8TlJlTz/
-         q4VKWsBQ4W3eQD87vL2C3NiCwHrFZGuhegr5o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KiqSA/av2ZNWBE7nJHGVa6/1LBWU3I7cZAwdWxWzGmE=;
-        b=WKKA9bjkwmR1f2zo6m2SADvWFpUZ3Nj9leSjQZMy1BD2XH8rA0uZMU4BVecEfIse8P
-         IXFWUd5YaYOKOYOGX6ZQWtfFtlP2E8GlWj2ONpMtKQVZzmmYrW8RqnmEVt57/HdZLpSU
-         PHb41j7C2qhyNk+IKfLsOK+IPa/O8+D0lCGegGr+uqN8Wr+p5wjEs060oI+txJxJQb+m
-         1KxYTx1lhulq8AQDlaSH09BsPX5ArbUlBbtVdiXV4TpDC8yhvfY52Yeyffj5rqizIKSa
-         MN32ZbN1B28V1dRkgUbp8QPxBh8Yyac0vRT8kLwzMa+bL4BDY3NzC+v2EiA7ZTzRZG1P
-         tEBg==
-X-Gm-Message-State: APjAAAWU6B8iCXXah3SCzFLAwsCxUdlJW7o1tvv94E2I+TAvJcWb4G4X
-        oe+FZR2QH1yR9cbUq5LLgWAN3A==
-X-Google-Smtp-Source: APXvYqwiFlaR/PcLMnFrEko6dVuZAo41bD1fmgeH/VsTsTT+BFsSRrriqlqG425HJ7hspZN+2aM0cQ==
-X-Received: by 2002:a5d:4b88:: with SMTP id b8mr16010468wrt.343.1581523470287;
-        Wed, 12 Feb 2020 08:04:30 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id b21sm1346559wmd.37.2020.02.12.08.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 08:04:29 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 12 Feb 2020 17:04:27 +0100
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jann Horn <jannh@google.com>, KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-Message-ID: <20200212160427.GA259057@google.com>
-References: <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
- <20200211190943.sysdbz2zuz5666nq@ast-mbp>
- <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
- <20200211201039.om6xqoscfle7bguz@ast-mbp>
- <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
- <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
- <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
- <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
- <20200212024542.gdsafhvqykucdp4h@ast-mbp>
- <ff6dec98-5e33-4603-1b90-e4bff23695cc@iogearbox.net>
+        Wed, 12 Feb 2020 11:04:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33266 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727960AbgBLQEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:04:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id ADFA7AE84;
+        Wed, 12 Feb 2020 16:04:34 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 16:04:31 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [RFC 2/4] sched/numa: replace runnable_load_avg by load_avg
+Message-ID: <20200212160431.GW3420@suse.de>
+References: <20200211174651.10330-1-vincent.guittot@linaro.org>
+ <20200211174651.10330-3-vincent.guittot@linaro.org>
+ <20200212133715.GU3420@suse.de>
+ <CAKfTPtAJE_eDgR8dmScgVbOgS9sQSJg27Mw62Z1htMCmgN_Yew@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <ff6dec98-5e33-4603-1b90-e4bff23695cc@iogearbox.net>
+In-Reply-To: <CAKfTPtAJE_eDgR8dmScgVbOgS9sQSJg27Mw62Z1htMCmgN_Yew@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-Feb 14:27, Daniel Borkmann wrote:
-> On 2/12/20 3:45 AM, Alexei Starovoitov wrote:
-> > On Wed, Feb 12, 2020 at 01:09:07AM +0100, Daniel Borkmann wrote:
-> > > 
-> > > Another approach could be to have a special nop inside call_int_hook()
-> > > macro which would then get patched to avoid these situations. Somewhat
-> > > similar like static keys where it could be defined anywhere in text but
-> > > with updating of call_int_hook()'s RC for the verdict.
-> > 
-> > Sounds nice in theory. I couldn't quite picture how that would look
-> > in the code, so I hacked:
-> > diff --git a/security/security.c b/security/security.c
-> > index 565bc9b67276..ce4bc1e5e26c 100644
-> > --- a/security/security.c
-> > +++ b/security/security.c
-> > @@ -28,6 +28,7 @@
-> >   #include <linux/string.h>
-> >   #include <linux/msg.h>
-> >   #include <net/flow.h>
-> > +#include <linux/jump_label.h>
-> > 
-> >   #define MAX_LSM_EVM_XATTR      2
-> > 
-> > @@ -678,12 +679,26 @@ static void __init lsm_early_task(struct task_struct *task)
-> >    *     This is a hook that returns a value.
-> >    */
-> > 
-> > +#define LSM_HOOK_NAME(FUNC) \
-> > +       DEFINE_STATIC_KEY_FALSE(bpf_lsm_key_##FUNC);
-> > +#include <linux/lsm_hook_names.h>
-> > +#undef LSM_HOOK_NAME
-> > +__diag_push();
-> > +__diag_ignore(GCC, 8, "-Wstrict-prototypes", "");
-> > +#define LSM_HOOK_NAME(FUNC) \
-> > +       int bpf_lsm_call_##FUNC() {return 0;}
-> > +#include <linux/lsm_hook_names.h>
-> > +#undef LSM_HOOK_NAME
-> > +__diag_pop();
-> > +
-> >   #define call_void_hook(FUNC, ...)                              \
-> >          do {                                                    \
-> >                  struct security_hook_list *P;                   \
-> >                                                                  \
-> >                  hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
-> >                          P->hook.FUNC(__VA_ARGS__);              \
-> > +               if (static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
-> > +                      (void)bpf_lsm_call_##FUNC(__VA_ARGS__); \
-> >          } while (0)
-> > 
-> >   #define call_int_hook(FUNC, IRC, ...) ({                       \
-> > @@ -696,6 +711,8 @@ static void __init lsm_early_task(struct task_struct *task)
-> >                          if (RC != 0)                            \
-> >                                  break;                          \
-> >                  }                                               \
-> > +               if (RC == IRC && static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
-> > +                      RC = bpf_lsm_call_##FUNC(__VA_ARGS__); \
+On Wed, Feb 12, 2020 at 04:03:28PM +0100, Vincent Guittot wrote:
+> > Ok, so this is essentially group_is_overloaded.
+> >
+> >
+> > > +     if ((ns->nr_running < ns->weight) ||
+> > > +         ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
+> > > +             return node_has_spare;
+> > > +
+> >
+> > And this is group_has_capacity. What I did was have a common helper
+> > for both NUMA and normal load balancing and translated the fields from
+> > sg_lb_stats and numa_stats into a common helper. This is to prevent them
+> > getting out of sync. The conversion was incomplete in my case but in
+> > principle, both NUMA and CPU load balancing should use common helpers or
+> > they'll get out of sync.
 > 
-> Nit: the `RC == IRC` test could be moved behind the static_branch_unlikely() so
-> that it would be bypassed when not enabled.
+> I fact, I wanted to keep this patch simple and readable for the 1st
+> version in order to not afraid people from reviewing it. That's the
+> main reason I didn't merge it with load_balance but i agree that some
+> common helper function might be possible.
 > 
-> >          } while (0);                                            \
-> >          RC;                                                     \
-> >   })
-> > 
-> > The assembly looks good from correctness and performance points.
-> > union security_list_options can be split into lsm_hook_names.h too
-> > to avoid __diag_ignore. Is that what you have in mind?
-> > I don't see how one can improve call_int_hook() macro without
-> > full refactoring of linux/lsm_hooks.h
-> > imo static_key doesn't have to be there in the first set. We can add this
-> > optimization later.
-> 
-> Yes, like the above diff looks good, and then we'd dynamically attach the program
-> at bpf_lsm_call_##FUNC()'s fexit hook for a direct jump, so all the security_blah()
-> internals could stay as-is which then might also address Jann's concerns wrt
-> concrete annotation as well as potential locking changes inside security_blah().
-> Agree that patching out via static key could be optional but since you were talking
-> about avoiding indirect jumps..
 
-I like this approach as well. Will give it a go and update the
-patches. Thanks a lot for your inputs!
+Makes sense.
 
-- KP
-
+> Also the struct sg_lb_stats has a lot more fields compared to struct numa_stats
 > 
-> Thanks,
-> Daniel
+
+Yes, I considered reusing the same structure and decided against it. I
+simply created a common helper. It's trivial enough to do on top after
+the fact in the name of clarity. Fundamentally it's cosmetic.
+
+> Then, I wonder if we could end up with different rules for numa like
+> taking into account some NUMA specifics metrics to classify the node
+> 
+
+Well, we could but right now they should be the same. As it is, the NUMA
+balancer and load balancer overrule each other. I think the scope for
+changing that without causing regressions is limited.
+
+-- 
+Mel Gorman
+SUSE Labs
