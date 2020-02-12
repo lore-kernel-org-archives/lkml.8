@@ -2,129 +2,110 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0FAC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57633C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825402168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B5F206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="N4szO5XU"
+	dkim=pass (2048-bit key) header.d=home.nl header.i=@home.nl header.b="C1tZig2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgBLIec (ORCPT
+        id S1728510AbgBLIg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:34:32 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46774 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgBLIec (ORCPT
+        Wed, 12 Feb 2020 03:36:26 -0500
+Received: from smtpq3.tb.mail.iss.as9143.net ([212.54.42.166]:56332 "EHLO
+        smtpq3.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728462AbgBLIg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:34:32 -0500
-Received: by mail-il1-f193.google.com with SMTP id t17so989702ilm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:34:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j/svfKaOLhoaBXf9xolfDPb9BbUNyifdFqflAWmeNnU=;
-        b=N4szO5XUPRjGCoUDsNAd9a++zJ/nXsIdAJ5sFtmc2IRUF3NJlEdhuHi3PHX00g/LPC
-         d67VX+gCs+1vWyj2SwCGzhnRKyzp4CQrRz2TbO6csDRhf5FR5Tc+/ZUDiyp4uJYAU7YV
-         kedtxWfeVeCJAqm4hNAxWRwmVc1wi8bKYL6Ew=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j/svfKaOLhoaBXf9xolfDPb9BbUNyifdFqflAWmeNnU=;
-        b=dSl23CAG3NrMhzxLyLxSaKF500iCiWrCUd2Aqp0ccRWSBzjBotsXZedPkJ0AjbXdKS
-         pcDqyXdW1rn604Vd3mrTCSm2VulEqOoRyGqn+jjh3Y9C2gcwa7uWjEKodf4EKielKweh
-         ndW7fSHZ00GtXo21mmLrGx7iLZjiZ35OM1TBqeI54ySgx2G7Crswp4UD1rwWHUUHnW3f
-         b7YY4XcBwcwnjotIXnVDWvH9ucXG6SfyT9qdG2jpSMjoYmKCnyfBJHo/6t8KlQYhoefB
-         F2JnXR5f7pw5IGxHHuu36jRz3QNILO1diNq8bk+FaPL1IrigTeWIuiOnS1J/xceOgjMs
-         X+sA==
-X-Gm-Message-State: APjAAAUfR7CCYDzdO/R4GnU340GbWabS5bcy7VJVf4cNYhwWfvd3VnbF
-        fGlO1KRXSj15qlf4tHajciiQIBNFSGYBLDdRLpiUhw==
-X-Google-Smtp-Source: APXvYqy8h2tyK3hSrA4TOOjqLJYAt5Ufcai/fgsNx+gKoX1dBxHTfHaxCX+V1aWTbwdMgXP0dbZWRfbELgMhToQguG8=
-X-Received: by 2002:a92:89c2:: with SMTP id w63mr9956076ilk.252.1581496471825;
- Wed, 12 Feb 2020 00:34:31 -0800 (PST)
+        Wed, 12 Feb 2020 03:36:26 -0500
+Received: from [212.54.42.110] (helo=smtp7.tb.mail.iss.as9143.net)
+        by smtpq3.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <karsdejong@home.nl>)
+        id 1j1nVO-0002VA-AH; Wed, 12 Feb 2020 09:36:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=home.nl;
+        s=201809corplgsmtpnl; h=To:Subject:Date:From;
+        bh=OuSzKhfxW8Gje2W8iT3ROQfQieVCxF7/6LjQe5C2nlU=; b=C1tZig2yOeXhiBttMk490YvCX0
+        dpjontyCTTk/xJa/3dIL65DhVpdOJl5etAJlJxJpIPaz33rrpjIsfK4AQFqsys7mUHJ8k6E7s361f
+        4VFIvxmByp2Qyf5nNrThPYAiIlpQZmtbeZJhVuj3wktmZDe+zwOF4wpJ53cm87asc54F09BhOAWq9
+        UNKuaM8R91Dm7zoNYtPn8ZoQrsZX6cWb+E7pn1pdSZA7940UEDqS5NMyL487f9B13ldMXerHc0LLJ
+        Q+kh82B5NlCChuB7Jt4gGza35fScNsVN+Xw9ezZgOJ7PLskAv4PPQj7KSpRwXqxbqfijzj8iT0zWL
+        HsH5ALgQ==;
+Received: from mail-wr1-f48.google.com ([209.85.221.48])
+        by smtp7.tb.mail.iss.as9143.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <karsdejong@home.nl>)
+        id 1j1nVO-0001vK-75; Wed, 12 Feb 2020 09:36:22 +0100
+Received: by mail-wr1-f48.google.com with SMTP id y11so1106568wrt.6;
+        Wed, 12 Feb 2020 00:36:22 -0800 (PST)
+X-Gm-Message-State: APjAAAV3AtQMX4mqcKQ6yTeGknTVyv9+ft5rP0fFnE0vl0SRCBYbDp/r
+        PGE5GiMfgh4prLzfEEZWg7GRysDLsYUagi6WL8s=
+X-Google-Smtp-Source: APXvYqypjRsTG8DHRIbsXdGcPAkCfbey86PfEpUgceAU5FztilErtQJztFGZaFVToi09qUn3H+IsvJz7CZ3ylvF5Cf0=
+X-Received: by 2002:a5d:4d04:: with SMTP id z4mr15132130wrt.157.1581496581870;
+ Wed, 12 Feb 2020 00:36:21 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJfpegtUAHPL9tsFB85ZqjAfy0xwz7ATRcCtLbzFBo8=WnCvLw@mail.gmail.com>
- <20200209080918.1562823-1-michael+lkml@stapelberg.ch> <CAJfpegv4iL=bW3TXP3F9w1z6-LUox8KiBmw7UBcWE-0jiK0YsA@mail.gmail.com>
- <CANnVG6kYh6M30mwBHcGeFf=fhqKmWKPeUj2GYbvNgtq0hm=gXQ@mail.gmail.com>
-In-Reply-To: <CANnVG6kYh6M30mwBHcGeFf=fhqKmWKPeUj2GYbvNgtq0hm=gXQ@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 12 Feb 2020 09:34:20 +0100
-Message-ID: <CAJfpegtX0Z3_OZFG50epWGHkW5aOMfYmn61WmqYC67aBmJyDMA@mail.gmail.com>
-Subject: Re: Still a pretty bad time on 5.4.6 with fuse_request_end.
-To:     Michael Stapelberg <michael+lkml@stapelberg.ch>
-Cc:     fuse-devel <fuse-devel@lists.sourceforge.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kyle Sanderson <kyle.leet@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200211174126.GA29960@embeddedor> <CAMuHMdV3DY1X3s7fvZz8MpxvqsUZAOivc18f40Ca8kHiZqfqKw@mail.gmail.com>
+In-Reply-To: <CAMuHMdV3DY1X3s7fvZz8MpxvqsUZAOivc18f40Ca8kHiZqfqKw@mail.gmail.com>
+From:   Kars de Jong <karsdejong@home.nl>
+Date:   Wed, 12 Feb 2020 09:36:10 +0100
+X-Gmail-Original-Message-ID: <CACz-3rgCkoJ-Zx_RBTLBH0yOhz36dH+io+VFRgsXNx2qqwKVMQ@mail.gmail.com>
+Message-ID: <CACz-3rgCkoJ-Zx_RBTLBH0yOhz36dH+io+VFRgsXNx2qqwKVMQ@mail.gmail.com>
+Subject: Re: [PATCH] treewide: Replace zero-length arrays with flexible-array member
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-SourceIP: 209.85.221.48
+X-Authenticated-Sender: karsdejong@home.nl (via SMTP)
+X-Ziggo-spambar: /
+X-Ziggo-spamscore: 0.0
+X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=UJNG4BXy c=1 sm=1 tr=0 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=l697ptgUJYAA:10 a=tBb2bbeoAAAA:8 a=_Wotqz80AAAA:8 a=YMzxVbYnAAAA:20 a=wNy__qbTz1_nECwbz_UA:9 a=QEXdDO2ut3YA:10 a=Oj-tNtZlA1e06AYgeCfH:22 a=buJP51TR1BpY-zbLSsyS:22
+X-Ziggo-Spam-Status: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 8:58 AM Michael Stapelberg
-<michael+lkml@stapelberg.ch> wrote:
-
-> (gdb) p *req->args
-> $5 =3D {
->   nodeid =3D 18446683600620026424,
->   opcode =3D 2167928246,
->   in_numargs =3D 65535,
->   out_numargs =3D 65535,
->   force =3D false,
->   noreply =3D false,
->   nocreds =3D false,
->   in_pages =3D false,
->   out_pages =3D false,
->   out_argvar =3D true,
->   page_zeroing =3D true,
->   page_replace =3D false,
->   in_args =3D {{
->       size =3D 978828800,
->       value =3D 0x2fafce0
->     }, {
->       size =3D 978992728,
->       value =3D 0xffffffff8138efaa <fuse_alloc_forget+26>
->     }, {
->       size =3D 50002688,
->       value =3D 0xffffffff8138635f <fuse_lookup_name+255>
->     }},
->   out_args =3D {{
->       size =3D 570,
->       value =3D 0xffffc90002fafb10
->     }, {
->       size =3D 6876,
->       value =3D 0x3000000001adc
->     }},
->   end =3D 0x1000100000001
-> }
-
-Okay, that looks like rubbish, the request was possibly freed and overwritt=
-en.
-
-> Independently, as a separate test, I have also modified the source like t=
-his:
+Op wo 12 feb. 2020 om 09:00 schreef Geert Uytterhoeven <geert@linux-m68k.org>:
 >
-> bool async;
-> bool async_early =3D req->args->end;
+> Hi Gustavo,
 >
-> if (test_and_set_bit(FR_FINISHED, &req->flags))
-> goto put_request;
+> On Tue, Feb 11, 2020 at 10:49 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+> > --- a/arch/m68k/tools/amiga/dmesg.c
+> > +++ b/arch/m68k/tools/amiga/dmesg.c
+> > @@ -34,7 +34,7 @@ struct savekmsg {
+> >      u_long magic2;     /* SAVEKMSG_MAGIC2 */
+> >      u_long magicptr;   /* address of magic1 */
+> >      u_long size;
+> > -    char data[0];
+> > +       char data[];
+> >  };
 >
-> async =3D req->args->end;
->
-> =E2=80=A6and printed the value of async and async_early. async is true,
-> async_early is false.
+> JFTR, this file is not really part of the kernel, but supposed to be compiled
+> by an AmigaOS compiler, which may predate the introduction of support
+> for flexible array members.
 
-Can you save and print out the value of req->opcode before the
-test_and_set_bit()?
+FYI, there's a reasonably modern toolchain for AmigaOS which can
+compile this just fine (https://github.com/bebbo/amiga-gcc).
 
-Thanks,
-Miklos
+> Well, even if you keep it included, I guess the rare users can manage ;-)
+> My binary dates back to 1996, and I have no plans to recompile it.
+
+I did, just to check whether it still worked.
+
+Kind regards,
+
+Kars.
