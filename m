@@ -2,170 +2,153 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E40AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422A7C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFEC20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:00:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="STO8HDkT"
+	by mail.kernel.org (Postfix) with ESMTP id 193E020873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581516091;
+	bh=k9etYqQgRrkh7cyiZwIyrLs0t114fOpffvtkOo61KWY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=XgJxv6OpeShJR3eZW1491z4VqPPIKpJBkMDZ9JGPK65AV1PqB1G6EewmDeg7XoMvd
+	 +33LoYH04o3R6AduE+r1GtuX0qhs59XGUl95K76yWB4g6I977HYHX+R1KcFIhNRtdM
+	 SUa96MVX/dFbemOCA97ByRe0I9XL//OgU0/FBaJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgBLOAu (ORCPT
+        id S1728214AbgBLOBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:00:50 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35952 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgBLOAu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:00:50 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so2580912wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 06:00:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n3+13tIKTDO43P03qEQWz4Nr4xrTb2HjHzMbiw8Y1no=;
-        b=STO8HDkTM/llblvCu5xNJ5PHGWn5qt5gn4AsCxw2m+xsQo7V4i5WVDv74Gyr1VBvdx
-         oYgR8QHRfs2fscm8j2jjzApk7LiwG8raJ5cbqbvABIrcfcox39IX+0TLnzGHdC5ptLXu
-         hgQyss3zQc0c72APgC8UrAhckZWc6aVwhnLcwSPpE80f7sxdwBcGEdV9bf7pQ0bTUMYi
-         zsIySlxRpgaRfFn8fbENPbnTUuI/bQ4XuLfCrPjFr5aJwiiEL/O+CNtbDOH9/sZE957x
-         9rXciZUl1GXD0P1y0dr4U77pV21uUTuFoJiNE6TR27dw16KaMaNI6goHbs9cu6oK7HhZ
-         u1xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n3+13tIKTDO43P03qEQWz4Nr4xrTb2HjHzMbiw8Y1no=;
-        b=E50WSxI8V93irDiSOtG6hwQWbho3OgzJ30JNJgYPTs25acplkgGzlL917xcDa85jW+
-         lu6Eg4M8fUdq4XXeMXCA3Yc8bUDIrchvGvwicvCnB4gbgJiFDRuu/Ao19ynHfSInR8Qv
-         pCWcBXJS+Tov39dckiTGjnJsydbz2alJ/LqEghmPg3lPNapo/JoNouq7FR9/oE96ZheM
-         gqmVmZd2wmBaLVS+0G9UXPNR4i1tNZS1fwQZb/ZEUs6/+6wYPmmuwiAAu0ZjfzR216t9
-         1uxKTyQdGk+Yvz9zoXzO20+ZmMeV6uWhnsQSPwNIRfJV+u64JbDn/s61bZRRlhyxi1yv
-         idIQ==
-X-Gm-Message-State: APjAAAW9pwMYoYfaUug/TxRZYJbw3lWwBUjuVUhAhOhVKzRKB3Ld65Gw
-        F7LxhiYu5Gv9egEMhZGjQlYv1g==
-X-Google-Smtp-Source: APXvYqxm4ipUGduLevWwoiijnkjuyD6K6bNZolT+FtOLldoOcm0yjRD8ZM1F5mCUyCpm7yhgk6rmUg==
-X-Received: by 2002:a1c:3b09:: with SMTP id i9mr12707947wma.31.1581516048180;
-        Wed, 12 Feb 2020 06:00:48 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id s23sm802694wra.15.2020.02.12.06.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 06:00:46 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     shuah@kernel.org
-Cc:     linux-kselftest@vger.kernel.org, avagin@gmail.com,
-        linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>, Shuah Khan <skhan@kernel.org>
-Subject: [PATCH] selftests: use LDLIBS for libraries instead of LDFLAGS
-Date:   Wed, 12 Feb 2020 14:00:40 +0000
-Message-Id: <20200212140040.126747-1-dima@arista.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 12 Feb 2020 09:01:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgBLOBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:01:30 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEEDB20658;
+        Wed, 12 Feb 2020 14:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581516089;
+        bh=k9etYqQgRrkh7cyiZwIyrLs0t114fOpffvtkOo61KWY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EPX57e7K2CocHRjleSrYsOC4jcMI5oxr+HevHew+S+JLsugZIC+yBlaB/zNAvFapK
+         UZKM6UR6vbTNWupREPcs7S6z357GJD+mZV4emsonCxc74ssTH9I3BK6QzchZrhXNXT
+         P5IrxlIh5dph6VfbTvbebxGRjB9m1vimurMg3Zds=
+Date:   Wed, 12 Feb 2020 08:01:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v4 1/6] PCI: rcar: Preparation for adding endpoint support
+Message-ID: <20200212140127.GA127398@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208183641.6674-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While building selftests, the following errors were observed:
-> tools/testing/selftests/timens'
-> gcc -Wall -Werror -pthread  -lrt -ldl  timens.c  -o tools/testing/selftests/timens/timens
-> /usr/bin/ld: /tmp/ccGy5CST.o: in function `check_config_posix_timers':
-> timens.c:(.text+0x65a): undefined reference to `timer_create'
-> collect2: error: ld returned 1 exit status
+To make the changelog from "git log --oneline" read nicely, the
+subject should begin with a verb, e.g.,
 
-Quoting commit 870f193d48c2 ("selftests: net: use LDLIBS instead of
-LDFLAGS"):
+  PCI: rcar: Move shareable code to a common file
 
-The default Makefile rule looks like:
+On Sat, Feb 08, 2020 at 06:36:36PM +0000, Lad Prabhakar wrote:
+> Prepare for adding endpoint support to rcar controller, there are no
+> functional changes with this patch, a common file is created so that
+> it can be shared with endpoint driver.
 
-$(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
+This commit log doesn't tell us what this patch does.  "Prepare"
+conveys no real information.  It's a giant patch and it's difficult
+to verify that there's no functional change.
 
-When linking is done by gcc itself, no issue, but when it needs to be passed
-to proper ld, only LDLIBS follows and then ld cannot know what libs to link
-with.
+I *think* what you did was move most of the #defines from pcie-rcar.c
+to pcie-rcar.h and most of the code from pcie-rcar.c to
+pcie-rcar-host.c.  And in both case, these were strict *moves* without
+any changes.  If that's the case, please say that explicitly in the
+commit log.
 
-More detail:
-https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+That's good; thanks for making this a separate patch so it's not
+mingled with real changes.
 
-LDFLAGS
-Extra flags to give to compilers when they are supposed to invoke the linker,
-‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
-instead.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  arch/arm64/configs/defconfig            |    2 +-
+>  drivers/pci/controller/Kconfig          |    4 +-
+>  drivers/pci/controller/Makefile         |    2 +-
+>  drivers/pci/controller/pcie-rcar-host.c | 1044 ++++++++++++++++++++++++++
+>  drivers/pci/controller/pcie-rcar.c      | 1229 ++-----------------------------
+>  drivers/pci/controller/pcie-rcar.h      |  126 ++++
+>  6 files changed, 1227 insertions(+), 1180 deletions(-)
+>  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar.h
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index b2f6673..8a1f51d 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -182,7 +182,7 @@ CONFIG_HOTPLUG_PCI=y
+>  CONFIG_HOTPLUG_PCI_ACPI=y
+>  CONFIG_PCI_AARDVARK=y
+>  CONFIG_PCI_TEGRA=y
+> -CONFIG_PCIE_RCAR=y
+> +CONFIG_PCIE_RCAR_HOST=y
+>  CONFIG_PCI_HOST_GENERIC=y
+>  CONFIG_PCI_XGENE=y
+>  CONFIG_PCIE_ALTERA=y
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index f84e5ff..94bb5e9 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -54,12 +54,12 @@ config PCI_RCAR_GEN2
+>  	  There are 3 internal PCI controllers available with a single
+>  	  built-in EHCI/OHCI host controller present on each one.
+>  
+> -config PCIE_RCAR
+> +config PCIE_RCAR_HOST
 
-LDLIBS
-Library flags or names given to compilers when they are supposed to invoke the
-linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
-LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
-variable.
+The config symbol change should be mentioned in the commit log.  In
+general we try to avoid changing config symbols because it's likely to
+confuse people who keep their .config and update their kernel.  But I
+guess your audience is probably pretty small.
 
-While at here, correct other selftests, not only timens ones.
+>  	bool "Renesas R-Car PCIe controller"
 
-Reported-by: Shuah Khan <skhan@kernel.org>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- tools/testing/selftests/futex/functional/Makefile | 2 +-
- tools/testing/selftests/net/Makefile              | 4 ++--
- tools/testing/selftests/rtc/Makefile              | 2 +-
- tools/testing/selftests/timens/Makefile           | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+The description needs to be updated, too.  This is what people will
+see in menuconfig.
 
-diff --git a/tools/testing/selftests/futex/functional/Makefile b/tools/testing/selftests/futex/functional/Makefile
-index 30996306cabc..23207829ec75 100644
---- a/tools/testing/selftests/futex/functional/Makefile
-+++ b/tools/testing/selftests/futex/functional/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- INCLUDES := -I../include -I../../
- CFLAGS := $(CFLAGS) -g -O2 -Wall -D_GNU_SOURCE -pthread $(INCLUDES)
--LDFLAGS := $(LDFLAGS) -pthread -lrt
-+LDLIBS := -lpthread -lrt
- 
- HEADERS := \
- 	../include/futextest.h \
-diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-index b5694196430a..287ae916ec0b 100644
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@ -27,5 +27,5 @@ KSFT_KHDR_INSTALL := 1
- include ../lib.mk
- 
- $(OUTPUT)/reuseport_bpf_numa: LDLIBS += -lnuma
--$(OUTPUT)/tcp_mmap: LDFLAGS += -lpthread
--$(OUTPUT)/tcp_inq: LDFLAGS += -lpthread
-+$(OUTPUT)/tcp_mmap: LDLIBS += -lpthread
-+$(OUTPUT)/tcp_inq: LDLIBS += -lpthread
-diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
-index de9c8566672a..2d93d65723c9 100644
---- a/tools/testing/selftests/rtc/Makefile
-+++ b/tools/testing/selftests/rtc/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- CFLAGS += -O3 -Wl,-no-as-needed -Wall
--LDFLAGS += -lrt -lpthread -lm
-+LDLIBS += -lrt -lpthread -lm
- 
- TEST_GEN_PROGS = rtctest
- 
-diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index e9fb30bd8aeb..b4fd9a934654 100644
---- a/tools/testing/selftests/timens/Makefile
-+++ b/tools/testing/selftests/timens/Makefile
-@@ -2,6 +2,6 @@ TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs exec
- TEST_GEN_PROGS_EXTENDED := gettime_perf
- 
- CFLAGS := -Wall -Werror -pthread
--LDFLAGS := -lrt -ldl
-+LDLIBS := -lrt -ldl
- 
- include ../lib.mk
--- 
-2.25.0
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	help
+> -	  Say Y here if you want PCIe controller support on R-Car SoCs.
+> +	  Say Y here if you want PCIe controller support on R-Car SoCs in host mode.
 
+Wrap this so it fits in 80 columns like the rest of the file.
+
+Bjorn
