@@ -2,127 +2,194 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE12C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900E9C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB1821569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5817921734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iLXIzaiy"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jPaNFYvT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgBLW1W (ORCPT
+        id S1729152AbgBLWaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:27:22 -0500
-Received: from mail-io1-f47.google.com ([209.85.166.47]:37710 "EHLO
-        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgBLW1V (ORCPT
+        Wed, 12 Feb 2020 17:30:09 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:60554 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgBLWaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:27:21 -0500
-Received: by mail-io1-f47.google.com with SMTP id k24so4178189ioc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:27:21 -0800 (PST)
+        Wed, 12 Feb 2020 17:30:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=edt2I3RTLN6ychJeRY9QbcR2ZMw2DB5I2yqN3iENPXM=;
-        b=iLXIzaiyHsE/IhzFXtGEunG40WLt1XbwRtJtZ37nxisPw4UOfQhVHcR4pTNQvLr+j4
-         WMBXN4RMIGdBHVXbxKBOk02OQDUFfxM/S8VAXHg2ZbDyz5uJnEQFQQ6y4kf53K9HGaze
-         A1ajRqaNql2Os0POSjpqXo7TR19uMd2PD/A97TDhHEuCeAJVlkAW0M8EgINdTuLNA871
-         Y9pZl5PWhUhuadzFu1vdM03l09q/qA1A8OeB9zTbonvJh0phbdmf9xKRcDpGmD99OwZj
-         ZJ5ULRoemcknZc8UGFW6Z3PQcirSlmqQINH9ZZAsRZ79DlectxCB3GyFpVPVstTodPLk
-         pIdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=edt2I3RTLN6ychJeRY9QbcR2ZMw2DB5I2yqN3iENPXM=;
-        b=msX08m8kB58wBy33TqP1j6R9onXnKJ9ERQrF56S68wnKsGh7iFqXsxD1QAi6FOc7Cb
-         SMrP1FuZBs2FDmPEz0c+nfbgO+kPpezwahJs1LiTD/Lo1+lhazh90OgAi5Jy1jpVq++p
-         7EPo95YufdRyXaxuJM2yct+50YMNRSiOWZMNFtFvxmMdRCk//5GlRyYOzBwWq4oxhJmB
-         8a0bUPGwfzIrWibEUlEEVONfu05ylikx/cLugkXbqb1IuSQBYfKiPN6Bs0ucnqGQJmLP
-         gAyVxOz+TAY1b89le97zOwP6vmBi6FNR4UanXyx2HHB+dBFP/gwX1T1XAAANvmqvSgsc
-         ZDhw==
-X-Gm-Message-State: APjAAAXBCKQTpMwYc32LMIbbiApY2DKF/MrBCK50kSHKFI54RczxiJ01
-        QXo++3TCCVrQ9s61lsWo8bxawI+m/sfXfiZhEVeTB0KSdiU=
-X-Google-Smtp-Source: APXvYqyP2m7YArG2eKQ+in1Y8KsWY16aMk3DQQbmrK5tyQty0ShKXrchBomO1gm/wBbaf2EjEMdWFY+JAfBUNwmQ4WY=
-X-Received: by 2002:a5d:9157:: with SMTP id y23mr19527487ioq.199.1581546440844;
- Wed, 12 Feb 2020 14:27:20 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1581546609; x=1613082609;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=akTZAV+grlU78dn6Z1+WBBfqhjetJKFVvDp992dKcrc=;
+  b=jPaNFYvT8m18e9L/RTge+9SQE3F06MALzGBxrKR0C1EA23GW/pb/CU69
+   MBCgsMG5wsSnpYtXcZjNaBRAWYonICi50R7mZuI33c1MCo6nkJYOXP5JE
+   mTWQ3qMtFxEdXTrwckCn8GiTQLeXerRiNP+RUsUZavH1mJffcFUFX35a6
+   I=;
+IronPort-SDR: DKuXC4xlCSUIPj9ul8xIp6uhnDILF7QL9Mjam9n2eegP2xSoxYYsOjmjus7iKoOEaZJ/eyhUpH
+ ya6jnGM6gumA==
+X-IronPort-AV: E=Sophos;i="5.70,434,1574121600"; 
+   d="scan'208";a="16326996"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 12 Feb 2020 22:30:06 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 2C554A2197;
+        Wed, 12 Feb 2020 22:30:04 +0000 (UTC)
+Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Feb 2020 22:29:35 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Feb 2020 22:29:35 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Wed, 12 Feb 2020 22:29:35 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 36859400D1; Wed, 12 Feb 2020 22:29:35 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 22:29:35 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <fllinden@amaozn.com>, <benh@kernel.crashing.org>
+Subject: [RFC PATCH v3 00/12] Enable PM hibernation on guest VMs
+Message-ID: <20200212222935.GA3421@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
 MIME-Version: 1.0
-From:   Salman Qazi <sqazi@google.com>
-Date:   Wed, 12 Feb 2020 14:27:09 -0800
-Message-ID: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
-Subject: BLKSECDISCARD ioctl and hung tasks
-To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org
-Cc:     Gwendal Grignou <gwendal@google.com>,
-        Jesse Barnes <jsbarnes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
+I am sending out a v3 version of series of patches that implements guest
+PM hibernation.
+These guests are running on xen hypervisor. The patches had been tested
+against mainstream kernel. EC2 instance hibernation feature is provided
+to the AWS EC2 customers. PM hibernation uses swap space carved out within
+the guest[or can be a separate partition], where hibernation image is
+stored and restored from.
 
-So, here's another issue that we are grappling with, where we have a
-root-cause but don't currently have a good fix for.  BLKSECDISCARD is
-an operation used for securely destroying a subset of the data on a
-device.  Unfortunately, on SSDs, this is an operation with variable
-performance.  It can be O(minutes) in the worst case.  The
-pathological case is when many erase blocks on the flash contain a
-small amount of data that is part of the discard and a large amount of
-data that isn't.  In such cases, the erase blocks have to be copied
-almost in entirety to fresh blocks, in order to erase the sectors to
-be discarded. This can be thought of as a defragmentation operation on
-the drive and can be expected to cost in the same ballpark as
-rewriting most of the contents of the drive.
+Doing guest hibernation does not involve any support from hypervisor and 
+this way guest has complete control over its state. Infrastructure
+restrictions for saving up guest state can be overcome by guest initiated
+hibernation.
 
-Therefore, it is possible for the thread waiting in the IOCTL in
-submit_bio_wait call in blkdev_issue_discard to wait for several
-minutes.  The hung task watchdog is usually configured for 2 minutes,
-and this can expire before the operation finishes.
+This series includes some improvements over RFC series sent last year:
+https://lists.xenproject.org/archives/html/xen-devel/2018-06/msg00823.html
 
-This operation is very important to the security model of Chrome OS
-devices.  Therefore, we would like the kernel to survive this even if
-it takes several minutes.
+Changelog v3:
+1. Feedback from V2
+2. Introduced 2 new patches for xen sched clock offset fix
+3. Fixed pirq shutdown/restore in generic irq subsystem
+4. Split save/restore steal clock patches into 2 for better readability
 
-Three approaches come to mind:
+Changelog v2:
+1. Removed timeout/request present on the ring in xen-blkfront during blkfront freeze
+2. Fixed restoring of PIRQs which was apparently working for 4.9 kernels but not for
+newer kernel. [Legacy irqs were no longer restored after hibernation introduced with
+this commit "020db9d3c1dc0"]
+3. Merged couple of related patches to make the code more coherent and readable
+4. Code refactoring
+5. Sched clock fix when hibernating guest is under heavy CPU load
+Note: Under very rare circumstances we see resume failures with KASLR enabled only
+on xen instances.  We are roughly seeing 3% failures [>1000 runs] when testing with
+various instance sizes and some workload running on each instance. I am currently
+investigating the issue as to confirm if its a xen issue or kernel issue.
+However, it should not hold back anyone from reviewing/accepting these patches.
 
-One approach is to somehow avoid waiting for a single monolithic
-operation and instead wait on bits and pieces of the operation.  These
-can be sized to finish within a reasonable timeframe.  The exact size
-is likely device-specific.  We already split these operations before
-issuing to the device, but the IOCTL thread is waiting for the whole
-rather than the parts. The hung task watchdog only sees the total
-amount of time the thread slept and not the forward progress taking
-place quietly.
+Testing done:
+All testing is done for multiple hibernation cycle for 5.4 kernel on EC2.
 
-Another approach might be to do something in the spirit of the write
-system call: complete the partial operation (whatever the kernel
-thinks is reasonable), adjust the IOCTL argument and have the
-userspace reissue the syscall to continue the operation.  The second
-option should probably be done with a different IOCTL name to avoid
-breaking userspace.
+Testing How to:
+---------------
+Example:
+Set up a file-backed swap space. Swap file size>=Total memory on the system
+sudo dd if=/dev/zero of=/swap bs=$(( 1024 * 1024 )) count=4096 # 4096MiB
+sudo chmod 600 /swap
+sudo mkswap /swap
+sudo swapon /swap
 
-A third approach, which is perhaps more adventurous, is to have a
-notion of forward progress that a thread can export and the hung task
-watchdog can evaluate.  This can take the form of a function pointer
-and an argument.  The result of the function is a monotonically
-decreasing unsigned value.  When this value stops changing, we can
-conclude that the thread is hung.  This can be used in place of
-context switch count for tasks where this function is available.  This
-can potentially solve other similar issues, there is a way to tell if
-there is forward progress, but it is not as straightforward as the
-context switch count.
+Update resume device/resume offset in grub if using swap file:
+resume=/dev/xvda1 resume_offset=200704
 
-What are your thoughts?
+ Execute:
+--------
+sudo pm-hibernate
+OR
+echo disk > /sys/power/state && echo reboot > /sys/power/disk
 
-Thanks in advance,
+Compute resume offset code:
+"
+#!/usr/bin/env python
+import sys
+import array
+import fcntl
 
-Salman
+#swap file
+f = open(sys.argv[1], 'r')
+buf = array.array('L', [0])
+
+#FIBMAP
+ret = fcntl.ioctl(f.fileno(), 0x01, buf)
+print buf[0]
+"
+
+Aleksei Besogonov (1):
+  PM / hibernate: update the resume offset on SNAPSHOT_SET_SWAP_AREA
+
+Anchal Agarwal (4):
+  x86/xen: Introduce new function to map HYPERVISOR_shared_info on
+    Resume
+  genirq: Shutdown irq chips in suspend/resume during hibernation
+  xen: Introduce wrapper for save/restore sched clock offset
+  xen: Update sched clock offset to avoid system instability in
+    hibernation
+
+Munehisa Kamata (7):
+  xen/manage: keep track of the on-going suspend mode
+  xenbus: add freeze/thaw/restore callbacks support
+  x86/xen: add system core suspend and resume callbacks
+  xen-netfront: add callbacks for PM suspend and hibernation support
+  xen-blkfront: add callbacks for PM suspend and hibernation
+  xen/time: introduce xen_{save,restore}_steal_clock
+  x86/xen: save and restore steal clock
+
+ arch/x86/xen/enlighten_hvm.c      |   8 ++
+ arch/x86/xen/suspend.c            |  72 ++++++++++++++++++
+ arch/x86/xen/time.c               |  18 ++++-
+ arch/x86/xen/xen-ops.h            |   3 +
+ drivers/block/xen-blkfront.c      | 119 ++++++++++++++++++++++++++++--
+ drivers/net/xen-netfront.c        |  98 +++++++++++++++++++++++-
+ drivers/xen/events/events_base.c  |   1 +
+ drivers/xen/manage.c              |  73 ++++++++++++++++++
+ drivers/xen/time.c                |  29 +++++++-
+ drivers/xen/xenbus/xenbus_probe.c |  99 ++++++++++++++++++++-----
+ include/linux/irq.h               |   2 +
+ include/xen/xen-ops.h             |   8 ++
+ include/xen/xenbus.h              |   3 +
+ kernel/irq/chip.c                 |   2 +-
+ kernel/irq/internals.h            |   1 +
+ kernel/irq/pm.c                   |  31 +++++---
+ kernel/power/user.c               |   6 +-
+ 17 files changed, 533 insertions(+), 40 deletions(-)
+
+-- 
+2.24.1.AMZN
+
