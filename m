@@ -2,98 +2,73 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4E5C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2356EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADD6206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="E4jQh+u/"
+	by mail.kernel.org (Postfix) with ESMTP id F28DE20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgBLOYk (ORCPT
+        id S1728383AbgBLOYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:24:40 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:26186 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727963AbgBLOYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:24:40 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48Hhjc2VPgz9txMl;
-        Wed, 12 Feb 2020 15:24:36 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=E4jQh+u/; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id vgRppl4aZR85; Wed, 12 Feb 2020 15:24:36 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48Hhjc1JJvz9txMj;
-        Wed, 12 Feb 2020 15:24:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581517476; bh=igqAQ6RyNRhDBT/cqa7dKxQJPcmonCFpfGNLvOYs5Ag=;
-        h=From:Subject:To:Cc:Date:From;
-        b=E4jQh+u/E2Y2/69w0EdD7SYH455XnezpEG1HAgq2DEV4PDSPitdhFI8oyHoI9VzBy
-         R0F1q3WUTgldY3k0NYDh6shv/9PlBFzYD/EvuYk0rvwInhtsnxW251BU6mjk0MGU63
-         2Dz00a7ahBfUa8gYFCt53SmqAN0Sk6MQjMjZ8bEc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 66A498B81A;
-        Wed, 12 Feb 2020 15:24:37 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id j91gDLBU-b-L; Wed, 12 Feb 2020 15:24:37 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2D1F38B80D;
-        Wed, 12 Feb 2020 15:24:37 +0100 (CET)
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't boot
- anymore
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Scott Wood <oss@buserror.net>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Message-ID: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
-Date:   Wed, 12 Feb 2020 14:24:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Wed, 12 Feb 2020 09:24:49 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49015 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbgBLOYs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:24:48 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1j1swX-0006Bj-Uq; Wed, 12 Feb 2020 15:24:46 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1] printk: Declare log_wait as external variable
+References: <20200203131528.52825-1-andriy.shevchenko@linux.intel.com>
+        <20200211124317.x5erhl7kvxj2nq6a@pathway.suse.cz>
+        <20200212013133.GB13208@google.com>
+        <20200212140355.56drih2wfcryjjtl@pathway.suse.cz>
+Date:   Wed, 12 Feb 2020 15:24:44 +0100
+In-Reply-To: <20200212140355.56drih2wfcryjjtl@pathway.suse.cz> (Petr Mladek's
+        message of "Wed, 12 Feb 2020 15:03:55 +0100")
+Message-ID: <8736bfdgsz.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
+On 2020-02-12, Petr Mladek <pmladek@suse.com> wrote:
+> I would prefer to split it:
+>
+>     + printk.c is already too big and would deserve splitting.
+>
+>     + The two different kmgs interfaces are confusing on its
+>       own. IMHO, it will be even more confusing when they
+>       live in one huge source file.
+>
+>
+>> I can take a look at dev_ksmg.c/proc_kmsg.c option, unless
+>> someone else wants to spend their time on this.
+>
+> It would be lovely from my POV. I am only concerned about
+> the lockless printk() stuff. I would prefer to avoid creating
+> too many conflicts in the same merge window. Well, I am
+> not sure how many conflicts there would be. Adding John
+> into CC.
 
-Kernel 5.6-rc1 silently fails on boot.
+I would also love to see these changes. But can we _please_ focus on the
+lockless printk ringbuffer merge first? The patches already exist and
+are (hopefully) being reviewed. I would prefer that such a heavy API
+replacement is done _before_ we start any massive refactoring.
 
-I bisected the problem to commit b6231ea2b3c6 ("soc: fsl: qe: drop 
-broken lazy call of cpm_muram_init()")
-
-I get a bad_page_fault() for an access at address 8 in 
-cpm_muram_alloc_common(), called from cpm_uart_console_setup() via 
-cpm_uart_allocbuf()
-
-Reverting the guilty commit on top of 5.6-rc1 is not trivial.
-
-In your commit text you explain that cpm_muram_init() is called via 
-subsys_initcall. But console init is done before that, so it cannot work.
-
-Do you have a fix for that ?
-
-Thanks
-Christophe
-
-NB: Next time, can you please copy powerpc mailing list when changing 
-such core parts of powerpc CPUs ?
+John Ogness
