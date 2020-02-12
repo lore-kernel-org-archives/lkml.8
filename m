@@ -2,312 +2,209 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD32C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD35FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E3E20661
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D7B2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ENKupNr1"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="nX6c6PT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgBLSEX (ORCPT
+        id S1728753AbgBLSI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:04:23 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:55562 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLSEX (ORCPT
+        Wed, 12 Feb 2020 13:08:29 -0500
+Received: from UPDC19PA21.eemsg.mail.mil ([214.24.27.196]:29108 "EHLO
+        UPDC19PA21.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgBLSI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:04:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581530660; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=scA1WOIhiNQUeDOO5mLotG7uFqAUr6QFX19gy5bzx74=;
-        b=ENKupNr1in2mbm7jeNljlhTxyY7EkvdcgjTtKNdip4oGqYR+tLVW4kOx0Me6EYf6ja92Qu
-        SGFd+Z+NZppRk1tvrYqh3HalwgIQnHIrJAhFytxwCrxLi0rz/lQJCs4DcUSPiqWQYdJs+N
-        dUL0jaLhLkuww/OIdXh7G5uZfa2so3M=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
-        Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v5] clocksource: Add driver for the Ingenic JZ47xx OST
-Date:   Wed, 12 Feb 2020 15:04:08 -0300
-Message-Id: <20200212180408.30872-1-paul@crapouillou.net>
+        Wed, 12 Feb 2020 13:08:28 -0500
+X-EEMSG-check-017: 58311661|UPDC19PA21_ESA_OUT03.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="58311661"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by UPDC19PA21.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Feb 2020 18:08:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1581530903; x=1613066903;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=xdKqfTeS3cUUUdfMBjls18OGCcQWswDazZ6dHFbCVxo=;
+  b=nX6c6PT2WR1w9z2iC8vlncJAoSjxiwCuRHfUrgr8j9x/gD65J6L4oXfF
+   87EizuIdU6niKLWuPrnZBvneZ4VT7/C1xQIKKBXzuKCc424PxDNDTggb0
+   5iCTqJWG8mVlbyIGI3+qQrJ6UVLP5qCyEBRLfQJC6lQqoKL0AQLfJN4jr
+   +b7hA2c++edPXAuDldu6NozqbqcRjraH8jBOJuGemBD47Ic50hzrvkKJa
+   5YCK/xFmhK37LBs3H9DoIdheY7DID7ZCJCbZhJ0De4UtHiJVSwWePAo1j
+   JMWN1AHiVt3ysy8eQL0ngWlA3KBxnJQoETeDpTD5ZcTz/LVkncfAl7rU8
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.70,433,1574121600"; 
+   d="scan'208";a="39029494"
+IronPort-PHdr: =?us-ascii?q?9a23=3A5FJH1RLK9Jdqvt5+o9mcpTZWNBhigK39O0sv0r?=
+ =?us-ascii?q?FitYgXL/z/rarrMEGX3/hxlliBBdydt6sYzbSL+Pm4CSQp2tWojjMrSNR0TR?=
+ =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
+ =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vIxi6twTcu8kZjYd/Nqo8yQ?=
+ =?us-ascii?q?bCr2dVdehR2W5nKlWfkgrm6Myt5pBj6SNQu/wg985ET6r3erkzQKJbAjo7LW?=
+ =?us-ascii?q?07/dXnuhbfQwSB4HscSXgWnQFTAwfZ9hH6X4z+vTX8u+FgxSSVJ8z2TbQzWT?=
+ =?us-ascii?q?S/86dmTQLjhSkbOzIl9mzcl9d9h7xHrh2/uxN/wpbUYICLO/p4YqPdZs4RSW?=
+ =?us-ascii?q?5YUspMSyBNHoawYo0BAOobOeZTspfzqV0AoxCjAQWgHe3ixztNinLwwKY00f?=
+ =?us-ascii?q?kuERve0QI9AdwOvnTaotb7OqgcXu+6zrXHwzrYYvNK2zrw8pTEfgwvrPyOW7?=
+ =?us-ascii?q?97bMrfyVMoFwPAllietJDlMC2N1uQNrWeb6fdrW/+qi2E9rwFxpiagx8cxgY?=
+ =?us-ascii?q?TOnYIa10vE+D5lwIc1OdK4SEl7bcSiEJtLrS6WLYR2QsQ8Q2xxvisx17MIuZ?=
+ =?us-ascii?q?m+fCcQyZQnwQbSa/OGc4iU4hLjSf2eLS1ki3JifbKznw6y/lK9yu34T8W01V?=
+ =?us-ascii?q?FKri1fktbSrHwCyxvT6s2BR/Bg/UmhwS6C2x3c5+xLO0w5lbfXJ4Q/zrM/iJ?=
+ =?us-ascii?q?Yfq1nPEynrk0vslqCWbF8r+u2w5uTiZbXpu4GTOpdvigH7LqQugsu/AfkkMg?=
+ =?us-ascii?q?QWX2iU5+C81Lr78E3lWrpKlPw2krTCsJzAJMQboKC5AwhO0ok99xmzFSum0d?=
+ =?us-ascii?q?QEknkHK1JJYhSHgJTyO17SOvz4CPa/g1C0nDdqwfDJIKHhD43QInXMn7rtZ7?=
+ =?us-ascii?q?Zw51NGxAYtwt1T+YhYBqwZLPL2QEDxtdjYDhEjMwyzxubqEM592Z4FWW+UHq?=
+ =?us-ascii?q?+YML/dsV+P5u41JemMf5UatCzyK/gi+f7ilWU5lkMFfam1wZsXb2i1Hu9jI0?=
+ =?us-ascii?q?Wee3rjnNMBHn0MvgUjV+Hqh1qCUTlcZ3a2Qa0w/C00CIWjDY3bXICinKSB3D?=
+ =?us-ascii?q?unHp1Rfm1GEkqDEWrsd4ifQ/cDcj+SIst4njwBUrihTJUh2g+0uADmzLpnK/?=
+ =?us-ascii?q?Le+jcEupL7yNh1++rTmAku+jNoFcSd1HqNT3pvk2wSQT85wbp/oUt8yliey6?=
+ =?us-ascii?q?R3n/tYFdlL7fNTTgg6LYLcz/B9C93qRg3BedGJSFChQtW8BjE8Vd0xw9gJY0?=
+ =?us-ascii?q?ZyH9WtkArP0DatA78Qj7aLHoA78rrA33jtIMZw03XG27c7j1kgXMRPMXSqhr?=
+ =?us-ascii?q?Jh+AfJAo7EiF+Wl6C3eqQG2y7N9XqMwXCSs0FfVQ56Sb/FUmwHZkvKsdT54V?=
+ =?us-ascii?q?vPQKG2Cbs9KAtByNWCJ7BSatLzl1VGRezjOMzaY22rh2i/GwyExrSWbIrlY2?=
+ =?us-ascii?q?8dxjnSCFAYkwAP+naLLQs+CTm/rGLFEDNuElXvY0D3/OZiqHO7VEg0zwSLb0?=
+ =?us-ascii?q?180rq54BkVheaTS/kLxLILpD8hqyloHFa6x9/ZEdyApxZmfKVaet4y/lFH1W?=
+ =?us-ascii?q?XctwxmMZysNadihkQRcw5vpUPhyw13CplckcgttH4q0A1yKaSY0V9bczOYwI?=
+ =?us-ascii?q?z/Or7MJ2nz+hCvd7DZ2lXE3NmK/acP7ewyq0//swGxCkoi73Jn3sFO03SC4p?=
+ =?us-ascii?q?XKDQwSUY/+U0ss6Rh6qK/VYjMn64PXy3JsK6+0vSHG294zA+sl0Bmgdc9FMK?=
+ =?us-ascii?q?yYDA/yD9EaB8+2JewumlipaA8EPe9L+K43Icymbf2G17CvPOt7gjKmgnpI4J?=
+ =?us-ascii?q?pn3kKP6SV8UOjI0IgBw/2C2QuHTTj83x+dtZXMhY1aaDdaO22lxCztAoIZMr?=
+ =?us-ascii?q?Z3epwGDW6oL+W4wdJxg5OrUHldohrrP1ob3IeMfh2IYhSpxQRN0WwPqGGj3C?=
+ =?us-ascii?q?6/yCZ51Touq/zM8jbJxrHZaBcfOmNNDFJnhFPoLJn828sWR2C0fgMpk12j/k?=
+ =?us-ascii?q?+8yK9F8vcsZ1LPSFtFKnClZ1ppVbG94//bOJ9C?=
+X-IPAS-Result: =?us-ascii?q?A2CNAgCjPkRe/wHyM5BmHAEBAQEBBwEBEQEEBAEBgXuBf?=
+ =?us-ascii?q?YEYVSASKoQUiQOGZQEBAQEBAQaBN4lwkHMDVAkBAQEBAQEBAQErDAQBAYRAA?=
+ =?us-ascii?q?oJtOBMCEAEBAQUBAQEBAQUDAQFshTcMgjspAYMBAQEBAQIBIxURMBALDgQDA?=
+ =?us-ascii?q?wICJgICSQ4GAQwGAgEBgmM/AYJWBSAPq0t1gTKFSoNIgT6BDiqMPnmBB4E4D?=
+ =?us-ascii?q?4JdPoJkAoR1gjwiBI4CiF9kRpdrgkSCT4R+jn4GHJsVjmiIbpRQIjeBISsIA?=
+ =?us-ascii?q?hgIIQ+DJwlHGA2SEIpxIwMwjx4sghcBAQ?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Feb 2020 18:08:00 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01CI71i0156600;
+        Wed, 12 Feb 2020 13:07:01 -0500
+Subject: Re: [PATCH] security: selinux: allow per-file labeling for bpffs
+To:     Steven Moreland <smoreland@google.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     Colin Cross <ccross@android.com>,
+        "Connor O'Brien" <connoro@google.com>, kernel-team@android.com,
+        Eric Paris <eparis@parisplace.org>,
+        Kees Cook <keescook@chromium.org>, anton@enomsg.org,
+        tony.luck@intel.com, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200206165527.211350-1-smoreland@google.com>
+ <91465612-2fb2-5985-ba45-d4d9fcf0f70c@tycho.nsa.gov>
+ <c61fc8f6-55c2-c717-5090-e535b7bdbb4f@tycho.nsa.gov>
+ <CAKLm694DMH0JCpHuT4HgMd4yCNJZPFMpex8iEiRF9kRjPb0d6g@mail.gmail.com>
+ <a8321785-902d-9186-fcf5-ee12a362a207@tycho.nsa.gov>
+ <CAHC9VhQVcgQ7ZKXi+Umm51WNgfNSzNX7Zoe=MyaLo1rRm-uUtA@mail.gmail.com>
+ <CAKLm695ZVCfdTnyA4UjaWeQmP3gGNjk_kMj1YOdV+kAbcvSrBw@mail.gmail.com>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <a8753441-ef0f-09f2-520d-f8ea8eedb2fb@tycho.nsa.gov>
+Date:   Wed, 12 Feb 2020 13:09:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKLm695ZVCfdTnyA4UjaWeQmP3gGNjk_kMj1YOdV+kAbcvSrBw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+On 2/12/20 12:46 PM, Steven Moreland wrote:
+> And I strongly encourage our downstream in the same way :) I try, I
+> try. However, I am a n00b here (thanks for merging "my" first linux
+> patch).
+> 
+> Looking at this code, I was wondering, why isn't SELinux labelling
+> completely orthogonal to the fs type? Is this a measurable
+> memory/performance thing?
 
-OST is the OS Timer, a 64-bit timer/counter with buffered reading.
+If you just mean why don't we turn on SE_SBGENFS for all filesystem 
+types, that's discussed in
+https://github.com/SELinuxProject/selinux-kernel/issues/2
 
-SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
-JZ4780 have a 64-bit OST.
+It isn't always safe so we have been whitelisting the filesystem types 
+that are supported.
 
-This driver will register both a clocksource and a sched_clock to the
-system.
+More generally, labeling in SELinux goes beyond just GENFS; there are 
+the SECURITY_FS_USE_* filesystem labeling behaviors defined by policy 
+and those are also based on fstype, just not hardcoded in the kernel.
 
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
----
-
-Notes:
-    v2: local_irq_save/restore were moved within sched_clock_register
-    v3: Only register as 32-bit clocksource to simplify things
-    v4: - Bypass regmap to read counters.
-        - Use sched_clock_register_new() to avoid having a global pointer to
-    	  the ingenic_ost.
-    	- Don't print error codes in probe, since they will be printed anyway
-    	  if the probe function fails.
-    	- Rebased on 5.6-rc1.
-    v5: Restored global pointer to the ingenic_ost
-
- drivers/clocksource/Kconfig       |   8 ++
- drivers/clocksource/Makefile      |   1 +
- drivers/clocksource/ingenic-ost.c | 189 ++++++++++++++++++++++++++++++
- 3 files changed, 198 insertions(+)
- create mode 100644 drivers/clocksource/ingenic-ost.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index cc909e465823..f2142e6bbea3 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -697,6 +697,14 @@ config INGENIC_TIMER
- 	help
- 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
- 
-+config INGENIC_OST
-+	bool "Clocksource for Ingenic OS Timer"
-+	depends on MIPS || COMPILE_TEST
-+	depends on COMMON_CLK
-+	select MFD_SYSCON
-+	help
-+	  Support for the Operating System Timer of the Ingenic JZ SoCs.
-+
- config MICROCHIP_PIT64B
- 	bool "Microchip PIT64B support"
- 	depends on OF || COMPILE_TEST
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 713686faa549..641ba5383ab5 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
- obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
- obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
- obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
-+obj-$(CONFIG_INGENIC_OST)		+= ingenic-ost.o
- obj-$(CONFIG_INGENIC_TIMER)		+= ingenic-timer.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
-diff --git a/drivers/clocksource/ingenic-ost.c b/drivers/clocksource/ingenic-ost.c
-new file mode 100644
-index 000000000000..029efc2731b4
---- /dev/null
-+++ b/drivers/clocksource/ingenic-ost.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * JZ47xx SoCs TCU Operating System Timer driver
-+ *
-+ * Copyright (C) 2016 Maarten ter Huurne <maarten@treewalker.org>
-+ * Copyright (C) 2020 Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clocksource.h>
-+#include <linux/mfd/ingenic-tcu.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/sched_clock.h>
-+
-+#define TCU_OST_TCSR_MASK	0xffc0
-+#define TCU_OST_TCSR_CNT_MD	BIT(15)
-+
-+#define TCU_OST_CHANNEL		15
-+
-+/*
-+ * The TCU_REG_OST_CNT{L,R} from <linux/mfd/ingenic-tcu.h> are only for the
-+ * regmap; these are for use with the __iomem pointer.
-+ */
-+#define OST_REG_CNTL		0x4
-+#define OST_REG_CNTH		0x8
-+
-+struct ingenic_ost_soc_info {
-+	bool is64bit;
-+};
-+
-+struct ingenic_ost {
-+	void __iomem *regs;
-+	struct clk *clk;
-+
-+	struct clocksource cs;
-+};
-+
-+static struct ingenic_ost *ingenic_ost;
-+
-+static u64 notrace ingenic_ost_read_cntl(void)
-+{
-+	/* Read using __iomem pointer instead of regmap to avoid locking */
-+	return readl(ingenic_ost->regs + OST_REG_CNTL);
-+}
-+
-+static u64 notrace ingenic_ost_read_cnth(void)
-+{
-+	/* Read using __iomem pointer instead of regmap to avoid locking */
-+	return readl(ingenic_ost->regs + OST_REG_CNTH);
-+}
-+
-+static u64 notrace ingenic_ost_clocksource_readl(struct clocksource *cs)
-+{
-+	return ingenic_ost_read_cntl();
-+}
-+
-+static u64 notrace ingenic_ost_clocksource_readh(struct clocksource *cs)
-+{
-+	return ingenic_ost_read_cnth();
-+}
-+
-+static int __init ingenic_ost_probe(struct platform_device *pdev)
-+{
-+	const struct ingenic_ost_soc_info *soc_info;
-+	struct device *dev = &pdev->dev;
-+	struct ingenic_ost *ost;
-+	struct clocksource *cs;
-+	struct regmap *map;
-+	unsigned long rate;
-+	int err;
-+
-+	soc_info = device_get_match_data(dev);
-+	if (!soc_info)
-+		return -EINVAL;
-+
-+	ost = devm_kzalloc(dev, sizeof(*ost), GFP_KERNEL);
-+	if (!ost)
-+		return -ENOMEM;
-+
-+	ingenic_ost = ost;
-+
-+	ost->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ost->regs))
-+		return PTR_ERR(ost->regs);
-+
-+	map = device_node_to_regmap(dev->parent->of_node);
-+	if (!map) {
-+		dev_err(dev, "regmap not found");
-+		return -EINVAL;
-+	}
-+
-+	ost->clk = devm_clk_get(dev, "ost");
-+	if (IS_ERR(ost->clk))
-+		return PTR_ERR(ost->clk);
-+
-+	err = clk_prepare_enable(ost->clk);
-+	if (err)
-+		return err;
-+
-+	/* Clear counter high/low registers */
-+	if (soc_info->is64bit)
-+		regmap_write(map, TCU_REG_OST_CNTL, 0);
-+	regmap_write(map, TCU_REG_OST_CNTH, 0);
-+
-+	/* Don't reset counter at compare value. */
-+	regmap_update_bits(map, TCU_REG_OST_TCSR,
-+			   TCU_OST_TCSR_MASK, TCU_OST_TCSR_CNT_MD);
-+
-+	rate = clk_get_rate(ost->clk);
-+
-+	/* Enable OST TCU channel */
-+	regmap_write(map, TCU_REG_TESR, BIT(TCU_OST_CHANNEL));
-+
-+	cs = &ost->cs;
-+	cs->name	= "ingenic-ost";
-+	cs->rating	= 320;
-+	cs->flags	= CLOCK_SOURCE_IS_CONTINUOUS;
-+	cs->mask	= CLOCKSOURCE_MASK(32);
-+
-+	if (soc_info->is64bit)
-+		cs->read = ingenic_ost_clocksource_readl;
-+	else
-+		cs->read = ingenic_ost_clocksource_readh;
-+
-+	err = clocksource_register_hz(cs, rate);
-+	if (err) {
-+		dev_err(dev, "clocksource registration failed");
-+		clk_disable_unprepare(ost->clk);
-+		return err;
-+	}
-+
-+	if (soc_info->is64bit)
-+		sched_clock_register(ingenic_ost_read_cntl, 32, rate);
-+	else
-+		sched_clock_register(ingenic_ost_read_cnth, 32, rate);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ingenic_ost_suspend(struct device *dev)
-+{
-+	struct ingenic_ost *ost = dev_get_drvdata(dev);
-+
-+	clk_disable(ost->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ingenic_ost_resume(struct device *dev)
-+{
-+	struct ingenic_ost *ost = dev_get_drvdata(dev);
-+
-+	return clk_enable(ost->clk);
-+}
-+
-+static const struct dev_pm_ops __maybe_unused ingenic_ost_pm_ops = {
-+	/* _noirq: We want the OST clock to be gated last / ungated first */
-+	.suspend_noirq = ingenic_ost_suspend,
-+	.resume_noirq  = ingenic_ost_resume,
-+};
-+
-+static const struct ingenic_ost_soc_info jz4725b_ost_soc_info = {
-+	.is64bit = false,
-+};
-+
-+static const struct ingenic_ost_soc_info jz4770_ost_soc_info = {
-+	.is64bit = true,
-+};
-+
-+static const struct of_device_id ingenic_ost_of_match[] = {
-+	{ .compatible = "ingenic,jz4725b-ost", .data = &jz4725b_ost_soc_info, },
-+	{ .compatible = "ingenic,jz4770-ost", .data = &jz4770_ost_soc_info, },
-+	{ }
-+};
-+
-+static struct platform_driver ingenic_ost_driver = {
-+	.driver = {
-+		.name = "ingenic-ost",
-+#ifdef CONFIG_PM_SUSPEND
-+		.pm = &ingenic_ost_pm_ops,
-+#endif
-+		.of_match_table = ingenic_ost_of_match,
-+	},
-+};
-+builtin_platform_driver_probe(ingenic_ost_driver, ingenic_ost_probe);
--- 
-2.25.0
+> 
+> 
+> On Tue, Feb 11, 2020 at 7:17 PM Paul Moore <paul@paul-moore.com> wrote:
+>>
+>> On Thu, Feb 6, 2020 at 1:12 PM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+>>> On 2/6/20 12:41 PM, Steven Moreland wrote:
+>>>> On Thu, Feb 6, 2020 at 9:35 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+>>>>>
+>>>>> On 2/6/20 12:21 PM, Stephen Smalley wrote:
+>>>>>> On 2/6/20 11:55 AM, Steven Moreland wrote:
+>>>>>>> From: Connor O'Brien <connoro@google.com>
+>>>>>>>
+>>>>>>> Add support for genfscon per-file labeling of bpffs files. This allows
+>>>>>>> for separate permissions for different pinned bpf objects, which may
+>>>>>>> be completely unrelated to each other.
+>>>>>>
+>>>>>> Do you want bpf fs to also support userspace labeling of files via
+>>>>>> setxattr()?  If so, you'll want to also add it to
+>>>>>> selinux_is_genfs_special_handling() as well.
+>>>>>>
+>>>>
+>>>> Android doesn't currently have this use case.
+>>>>
+>>>>>> The only caveat I would note here is that it appears that bpf fs
+>>>>>> supports rename, link, unlink, rmdir etc by userspace, which means that
+>>>>>> name-based labeling via genfscon isn't necessarily safe/stable.  See
+>>>>>> https://github.com/SELinuxProject/selinux-kernel/issues/2
+>>>>>>
+>>>>
+>>>> Android restricts ownership of these files to a single process (bpfloader) and
+>>>> so this isn't a concern in our architecture. Is it a concern in general?
+>>>
+>>> I guess if the inodes are pinned in memory, then only the original name
+>>> under which the file is created will be relevant to determining the
+>>> label and subsequent rename/link operations won't have any effect. So as
+>>> long as the bpfloader creates the files with the same names being
+>>> specified in policy, that should line up and be stable for the lifecycle
+>>> of the inode.
+>>>
+>>> The alternative model is to have bpfloader look up a context from the
+>>> userspace file_contexts configuration via selabel_lookup(3) and friends,
+>>> and set it on the file explicitly.  That's what e.g. ueventd does for
+>>> device nodes.  However, one difference here is that you could currently
+>>> only do this via setxattr()/setfilecon() after creating the file so that
+>>> the file would temporarily exist in the default label for bpf fs, if
+>>> that matters.  ueventd can instead use setfscreatecon(3) before creating
+>>> the file so that it is originally created in the right label but that
+>>> requires the filesystem to call security_inode_init_security() from its
+>>> function that originally creates the inode, which tmpfs/devtmpfs does
+>>> but bpf does not.  So you'd have to add that to the bpf filesystem code
+>>> if you wanted to support setfscreatecon(3) on it.
+>>
+>> Considering the relative maturity of bpf, and bpffs, I think it's okay
+>> to take this small step right now, with the understanding that more
+>> work may need to be done, depending on how this is generally adopted
+>> by distros and users (for those of you not following the other thread,
+>> I've merged the v3 draft of this patch).
+>>
+>> However, I've been noticing a trend from the Android folks of tossing
+>> patches over the wall without much thought beyond the Android use
+>> case.  I understand the Android devs have a job to do, and products to
+>> focus on, but I would strongly encourage them to think a bit longer
+>> about more general use cases before submitting patches upstream.
+>>
+>> --
+>> paul moore
+>> www.paul-moore.com
 
