@@ -2,85 +2,144 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5EDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAC7C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C5420873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:01:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RcqtaBtj"
+	by mail.kernel.org (Postfix) with ESMTP id 98E6A20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgBLKB3 (ORCPT
+        id S1729004AbgBLKCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:01:29 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33092 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgBLKB3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:01:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vmVcNp5qMZzdUdSZWSizA+92PAY3N8xDElToXt9qO7s=; b=RcqtaBtjoSUkXiIj/AcVat4N5a
-        5RNdGUDjTDltWOV04YoqWBTWVY6ScTJJl7zSQvvwbHWip8jZOLqI6KirYpqeQB34P+wo6+0aQkMsf
-        koy5kpkUMB5H3LwxseZgp/J4DgvDWplbRsCxdxV34tCe6CioeSUorn1D9JfZWtdyGaqku/9CIKK9g
-        PS8DdE6guOBCllTcj9GwF+4EzZkP+alnSedaO4w4zVYRRiFj7F8kNyCuyNRZIXTqLBtkUzQjqW2ov
-        S34n/4L7+JVhNZPtP8iDvcsBKKMwXVsw9EymHY9JpDpJ2dl+VdyFAqMQiFJXvyUMMsWlz3g/W+iHx
-        7Beoppmg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1opQ-0006Zo-JN; Wed, 12 Feb 2020 10:01:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AAFF7300679;
-        Wed, 12 Feb 2020 10:59:17 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9C8DB2B2A98AF; Wed, 12 Feb 2020 11:01:06 +0100 (CET)
-Date:   Wed, 12 Feb 2020 11:01:06 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, james.morse@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-Cc:     mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH 0/8] tracing vs rcu vs nmi
-Message-ID: <20200212100106.GA14914@hirez.programming.kicks-ass.net>
-References: <20200212093210.468391728@infradead.org>
+        Wed, 12 Feb 2020 05:02:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:58362 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728843AbgBLKCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:02:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 516BF30E;
+        Wed, 12 Feb 2020 02:02:00 -0800 (PST)
+Received: from [10.37.12.187] (unknown [10.37.12.187])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCACC3F68F;
+        Wed, 12 Feb 2020 02:01:56 -0800 (PST)
+Subject: Re: [PATCH v3 7/7] clocksource/drivers/arm_arch_timer: validate
+ arch_timer_rate
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        valentin.schneider@arm.com, rjw@rjwysocki.net
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-8-ionela.voinescu@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <89339501-5ee4-e871-3076-c8b02c6fbf6e@arm.com>
+Date:   Wed, 12 Feb 2020 10:01:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212093210.468391728@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211184542.29585-8-ionela.voinescu@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:32:10AM +0100, Peter Zijlstra wrote:
-> Hi all,
+Hi Ionela, Valentin
+
+On 2/11/20 6:45 PM, Ionela Voinescu wrote:
+> From: Valentin Schneider <valentin.schneider@arm.com>
 > 
-> These here patches are the result of Mathieu and Steve trying to get commit
-> 865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
-> tracepoints") reverted again.
+> Using an arch timer with a frequency of less than 1MHz can result in an
+> incorrect functionality of the system which assumes a reasonable rate.
 > 
-> One of the things discovered is that tracing MUST NOT happen before nmi_enter()
-> or after nmi_exit(). I've only fixed x86, but quickly gone through other
-> architectures and there is definitely more stuff to be fixed (simply grep for
-> nmi_enter in your arch).
+> One example is the use of activity monitors for frequency invariance
+> which uses the rate of the arch timer as the known rate of the constant
+> cycle counter in computing its ratio compared to the maximum frequency
+> of a CPU. For arch timer frequencies less than 1MHz this ratio could
+> end up being 0 which is an invalid value for its use.
+> 
+> Therefore, warn if the arch timer rate is below 1MHz which contravenes
+> the recommended architecture interval of 1 to 50MHz.
+> 
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>   drivers/clocksource/arm_arch_timer.c | 18 +++++++++++++++---
+>   1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index 9a5464c625b4..4faa930eabf8 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -885,6 +885,17 @@ static int arch_timer_starting_cpu(unsigned int cpu)
+>   	return 0;
+>   }
+>   
+> +static int validate_timer_rate(void)
+> +{
+> +	if (!arch_timer_rate)
+> +		return -EINVAL;
+> +
+> +	/* Arch timer frequency < 1MHz can cause trouble */
+> +	WARN_ON(arch_timer_rate < 1000000);
 
-For ARM64:
+I don't see a big value of having a patch just to add one extra warning,
+in a situation which we handle in our code with in 6/7 with:
 
- - apei_claim_sea()
- - __sdei_handler()
- - do_serror()
- - debug_exception_enter() / do_debug_exception()
++	if (!ratio) {
++		pr_err("System timer frequency too low.\n");
++		return -EINVAL;
++	}
 
-all look dodgy.
+Furthermore, the value '100000' here is because of our code and
+calculation in there, so it does not belong to arch timer. Someone
+might ask why it's not 200000 or a define in our header...
+Or questions asking why do you warn when that arch timer and cpu is not
+AMU capable...
+
+> +
+> +	return 0;
+> +}
+> +
+>   /*
+>    * For historical reasons, when probing with DT we use whichever (non-zero)
+>    * rate was probed first, and don't verify that others match. If the first node
+> @@ -900,7 +911,7 @@ static void arch_timer_of_configure_rate(u32 rate, struct device_node *np)
+>   		arch_timer_rate = rate;
+>   
+>   	/* Check the timer frequency. */
+> -	if (arch_timer_rate == 0)
+> +	if (validate_timer_rate())
+>   		pr_warn("frequency not available\n");
+>   }
+>   
+> @@ -1594,9 +1605,10 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+>   	 * CNTFRQ value. This *must* be correct.
+>   	 */
+>   	arch_timer_rate = arch_timer_get_cntfrq();
+> -	if (!arch_timer_rate) {
+> +	ret = validate_timer_rate();
+> +	if (ret) {
+>   		pr_err(FW_BUG "frequency not available.\n");
+> -		return -EINVAL;
+> +		return ret;
+>   	}
+>   
+>   	arch_timer_uses_ppi = arch_timer_select_ppi();
+> 
+
+Lastly, this is arch timer.
+To increase chances of getting merge soon, I would recommend to drop
+the patch from this series.
+
+Regards,
+Lukasz
