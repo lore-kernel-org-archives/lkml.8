@@ -2,97 +2,124 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F125DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C0DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24B12082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588B4206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgBLO07 (ORCPT
+        id S1728139AbgBLO3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:26:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727963AbgBLO06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:26:58 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A455206D7;
-        Wed, 12 Feb 2020 14:26:57 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 09:26:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH 6/8] perf,tracing: Prepare the perf-trace interface for
- RCU changes
-Message-ID: <20200212092655.4ba6cd79@gandalf.local.home>
-In-Reply-To: <20200212094107.951346701@infradead.org>
-References: <20200212093210.468391728@infradead.org>
-        <20200212094107.951346701@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Feb 2020 09:29:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16365 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727851AbgBLO3k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:29:40 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CEOlDh092191
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 09:29:38 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y3wxsufkh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 09:29:38 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 12 Feb 2020 14:29:37 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Feb 2020 14:29:33 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01CEScSX31129976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Feb 2020 14:28:38 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BADD313A15D;
+        Wed, 12 Feb 2020 14:29:32 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D075013A157;
+        Wed, 12 Feb 2020 14:29:31 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.205.134])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Feb 2020 14:29:31 +0000 (GMT)
+Subject: Re: [PATCH v3 3/3] IMA: Add module name and base name prefix to log.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>, joe@perches.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 12 Feb 2020 09:29:30 -0500
+In-Reply-To: <20200211231414.6640-4-tusharsu@linux.microsoft.com>
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+         <20200211231414.6640-4-tusharsu@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021214-4275-0000-0000-000003A071B2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021214-4276-0000-0000-000038B4AD1C
+Message-Id: <1581517770.8515.35.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-12_07:2020-02-11,2020-02-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ suspectscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002120113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020 10:32:16 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> The tracepoint interface will stop providing regular RCU context; make
-> sure we do it ourselves, since perf makes use of regular RCU protected
-> data.
+On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
+> The #define for formatting log messages, pr_fmt, is duplicated in the
+> files under security/integrity.
 > 
-
-Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-
-  ;-)
-
--- Steve
-
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/events/core.c |    5 +++++
->  1 file changed, 5 insertions(+)
+> This change moves the definition to security/integrity/integrity.h and
+> removes the duplicate definitions in the other files under
+> security/integrity. Also, it adds KBUILD_MODNAME and KBUILD_BASENAME prefix
+> to the log messages.
 > 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8950,6 +8950,7 @@ void perf_tp_event(u16 event_type, u64 c
->  {
->  	struct perf_sample_data data;
->  	struct perf_event *event;
-> +	unsigned long rcu_flags;
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+<snip>
+
+> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+> index 73fc286834d7..b1bb4d2263be 100644
+> --- a/security/integrity/integrity.h
+> +++ b/security/integrity/integrity.h
+> @@ -6,6 +6,12 @@
+>   * Mimi Zohar <zohar@us.ibm.com>
+>   */
 >  
->  	struct perf_raw_record raw = {
->  		.frag = {
-> @@ -8961,6 +8962,8 @@ void perf_tp_event(u16 event_type, u64 c
->  	perf_sample_data_init(&data, 0, 0);
->  	data.raw = &raw;
->  
-> +	rcu_flags = trace_rcu_enter();
+> +#ifdef pr_fmt
+> +#undef pr_fmt
+> +#endif
 > +
->  	perf_trace_buf_update(record, event_type);
->  
->  	hlist_for_each_entry_rcu(event, head, hlist_entry) {
-> @@ -8996,6 +8999,8 @@ void perf_tp_event(u16 event_type, u64 c
->  	}
->  
->  	perf_swevent_put_recursion_context(rctx);
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " KBUILD_BASENAME ": " fmt
 > +
-> +	trace_rcu_exit(rcu_flags);
->  }
->  EXPORT_SYMBOL_GPL(perf_tp_event);
->  
-> 
+>  #include <linux/types.h>
+>  #include <linux/integrity.h>
+>  #include <crypto/sha.h>
+
+Joe, Shuah, including the pr_fmt() in integrity/integrity.h not only
+affects the integrity directory but everything below it.  Adding
+KBUILD_BASENAME to pr_fmt() modifies all of the existing IMA and EVM
+kernel messages.  Is that ok or should there be a separate pr_fmt()
+for the subdirectories?
+
+thanks,
+
+Mimi
 
