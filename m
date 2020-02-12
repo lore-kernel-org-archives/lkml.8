@@ -2,129 +2,93 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77126C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77C4C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1C02082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581518522;
-	bh=Ph7c857eirFez6JYBKw+nD34hjDRRznioR/hKPDkqX4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mjDYpnW16RsIDyfY3hdO6Exw9amfmfiN7+KNpR0j1znJk8fl/NVBtdH7OhaXt6o5a
-	 KDke/U9wIxcz2hnNwNCzyjTXQW6w5LADV2SrTJGbCLdRHIZoy0T3bIm13wI/n5aiWk
-	 0Wvcj9N0GATZ5zPQL5FndHrr5kGZv/i2aJitzucI=
+	by mail.kernel.org (Postfix) with ESMTP id 81B8720873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IP/xBWIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgBLOmA (ORCPT
+        id S1728247AbgBLOmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:42:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50940 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 09:42:19 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:53024 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgBLOl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:41:58 -0500
-Received: from localhost.localdomain (unknown [213.195.124.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8020B20873;
-        Wed, 12 Feb 2020 14:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581518518;
-        bh=Ph7c857eirFez6JYBKw+nD34hjDRRznioR/hKPDkqX4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOvgS3FdeuRKRMI2pJPKem39t6r1MDHwwdqyKWnHVLy2sq3/rhTb+KtFPcwtuziRT
-         s3SE2qM/GQ0JkuV03paHVWxkU0p0sjOjcwX8IlTZPjYMvgArMQ9ineWDpQ4J5F1OiE
-         6o+J6+pPVBkqom/N2WnF/iC90v92z5IkNWl+qQ7Y=
-From:   matthias.bgg@kernel.org
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: mediatek: rename scpsys nodes to power-controller
-Date:   Wed, 12 Feb 2020 15:41:45 +0100
-Message-Id: <20200212144145.25407-2-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200212144145.25407-1-matthias.bgg@kernel.org>
-References: <20200212144145.25407-1-matthias.bgg@kernel.org>
+        id S1727092AbgBLOmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:42:19 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Hj5z3w9sz9txMT;
+        Wed, 12 Feb 2020 15:42:15 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=IP/xBWIV; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 0Ney07egoNwa; Wed, 12 Feb 2020 15:42:15 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Hj5z2j1Fz9txMJ;
+        Wed, 12 Feb 2020 15:42:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581518535; bh=bAr/TswE2VMMLEod6DbaygLv0bA44xApmo6eiBQt5Jk=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=IP/xBWIVg6C7582meI+344Quc+xiKXsWItN6OAWoIW8toFDgjZ1/WnTo8jE2wN11m
+         7bXAxtyVtcj9urCyggEQk5hwZgA4Qy1JsuKqNH6cC/0iL7o+254hArKUUI2i2h5ErG
+         mksQxhyyADuNDqTLMJbtTGdGL48y1XiICT34J3aY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CFC528B81A;
+        Wed, 12 Feb 2020 15:42:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id huEqZ1_u6whj; Wed, 12 Feb 2020 15:42:16 +0100 (CET)
+Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A92268B80D;
+        Wed, 12 Feb 2020 15:42:16 +0100 (CET)
+Subject: Re: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't
+ boot anymore
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Wood <oss@buserror.net>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
+Message-ID: <1dee8082-e98e-c767-a8db-405a4fee7b2e@c-s.fr>
+Date:   Wed, 12 Feb 2020 15:42:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg@gmail.com>
 
-The nodes with name scpsys actually implement a power-controller.
-Rename the nodes to match the bindings description.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Le 12/02/2020 à 15:24, Christophe Leroy a écrit :
+> Hi Rasmus,
+> 
 
----
+[...]
 
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 2 +-
- arch/arm64/boot/dts/mediatek/mt6797.dtsi  | 2 +-
- arch/arm64/boot/dts/mediatek/mt7622.dtsi  | 2 +-
- arch/arm64/boot/dts/mediatek/mt8173.dtsi  | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> NB: Next time, can you please copy powerpc mailing list when changing 
+> such core parts of powerpc CPUs ?
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 43307bad3f0d..a00c5caa1915 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -278,7 +278,7 @@ pio: pinctrl@10005000 {
- 		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
--	scpsys: scpsys@10006000 {
-+	scpsys: power-controller@10006000 {
- 		compatible = "mediatek,mt2712-scpsys", "syscon";
- 		#power-domain-cells = <1>;
- 		reg = <0 0x10006000 0 0x1000>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-index 2b2a69c7567f..136ef9527a0d 100644
---- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-@@ -157,7 +157,7 @@ pins1 {
- 		};
- 	};
- 
--	scpsys: scpsys@10006000 {
-+	scpsys: power-controller@10006000 {
- 		compatible = "mediatek,mt6797-scpsys";
- 		#power-domain-cells = <1>;
- 		reg = <0 0x10006000 0 0x1000>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index dac51e98204c..339dc9f88f43 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -230,7 +230,7 @@ pericfg: pericfg@10002000 {
- 		#reset-cells = <1>;
- 	};
- 
--	scpsys: scpsys@10006000 {
-+	scpsys: power-controller@10006000 {
- 		compatible = "mediatek,mt7622-scpsys",
- 			     "syscon";
- 		#power-domain-cells = <1>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 8b4e806d5119..9ab22dac925d 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -436,7 +436,7 @@ pins1 {
- 			};
- 		};
- 
--		scpsys: scpsys@10006000 {
-+		scpsys: power-controller@10006000 {
- 			compatible = "mediatek,mt8173-scpsys";
- 			#power-domain-cells = <1>;
- 			reg = <0 0x10006000 0 0x1000>;
--- 
-2.24.1
+Apologise for that comment, in fact I was part of the recipients so it 
+didn't land in my linuxppc mailbox.
 
+Seems like I missed that series.
