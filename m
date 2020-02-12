@@ -2,129 +2,130 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0349EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7ADC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9EE206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A386206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:23:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QeNjMTZo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oxVdvJbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgBLHV1 (ORCPT
+        id S1728307AbgBLHXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:21:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42890 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgBLHVZ (ORCPT
+        Wed, 12 Feb 2020 02:23:47 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44114 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgBLHXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:21:25 -0500
-Received: by mail-wr1-f66.google.com with SMTP id k11so849870wrd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 23:21:24 -0800 (PST)
+        Wed, 12 Feb 2020 02:23:46 -0500
+Received: by mail-pg1-f196.google.com with SMTP id g3so597824pgs.11;
+        Tue, 11 Feb 2020 23:23:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j+IIIiLxT7RnMEOjFvfDSmF1Bvf4Q7q8NLRdkGyRnxg=;
-        b=QeNjMTZo3cCSAXF10gWV74TGaKosijV1vvCEv1hT0i9ekozYvZBkZgkFI+33j3HDEQ
-         nZwZL09OYeIOXx44Qbg0v/Gt58+vn4pybDIMfL1RvvTnPfCk9anhB3SBsaIJZOivQLB5
-         owvJdHyTAxU5LhftgojFG6mtS/GrAFgRshSz5I/jE8ZSiRRuVceM/Xc+fN2AmtwIaUR+
-         URFZt7MaYYzmsE1ykJQLTZ+kFmq5d8gCGyNEZ0H3FXouFVST3DZX7Isz1SYY+7RySCLD
-         /yGgvufx3ewwWTOgDeFFZKnVjygoOqiI1TKBtcIwDwpSkIWWjqw5hGMIHg2ywyJaNIHt
-         o+FA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=sSs36sQnxGTfCuz7UN6u9y3waBifKuK+zZ5r4rWQl60=;
+        b=oxVdvJbpI1X86ZupSuF4fCCHh+VlIFzg0QuIchF1F8Njm3jM6YS3bgcGYc3tMmJUtj
+         0dY2OWYizLldYRAF3MUfzDF+zSm+bnim1+dDYY2k1a3JvG383nyFfMMLm2yiiFtnIrUb
+         q2/gx7A+fTMuyvZCD4e31RC4BE18ZrXePmBYX5dn4KE0n/Qa45iYJgrQivYVkwmD3yH5
+         iiQH2Yl0JfvPr1YBNks97L97Z3o/f0kE9JGU7wHrjO/X+8G2jQ3IEAYrkEVW2Cc9VEYq
+         ixOxCWE4q5ekznrz1Y8s83snb7YkWP2zWmnQCT8q2CbydlM7y/xyo/+7aWsGElBj22Is
+         ZeYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j+IIIiLxT7RnMEOjFvfDSmF1Bvf4Q7q8NLRdkGyRnxg=;
-        b=hEtUONn7xVcv4QVCdErr/W3ZM4e2NfyncatpmtdX2FKkJbQCXQf4gGIC97OgU9TtdQ
-         GVzUaxyO5uZvq8uX4KdxInzndF2S1O4w88mjzwvWAxo34HCTWLEop2TNanddqlaocfAQ
-         COHlBTNIE0uwWiRBb1btxlgTOKKrd30y8db1bMiIUPMhghvFPdtfS/pUp9hCI3FVc9JZ
-         XJVXXSDMFQVgehYIeUBwrB8E4RXuYdd6VUSjCxswRvr/RU9YIkNygIBfJrdK1bcklfsS
-         OLlOsqepk4I+Df2qazYaBx3wsgR3XymjxrpxpYe8VHDW8ErsF9UcYcEi0OlUCfN/5l/C
-         SwDA==
-X-Gm-Message-State: APjAAAWqTxzdn+51yHY9wiAmPRClk8RmkN6AyCFMLLFNc7owFHUF+WF6
-        TxLTsDUdhxqM26X9kp3TO+yT1NCY8SYjM9DguGLp10jUuBo=
-X-Google-Smtp-Source: APXvYqzpUpjlvlcKF40Lk+CatlRH7dOHAOIBZ0zDk0iL7ftqbPHh3NEkw8sI3vh2QOPtfgXkNnMJoxyn7/yQcxvgiMQ=
-X-Received: by 2002:a5d:65cf:: with SMTP id e15mr13277372wrw.126.1581492083142;
- Tue, 11 Feb 2020 23:21:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=sSs36sQnxGTfCuz7UN6u9y3waBifKuK+zZ5r4rWQl60=;
+        b=Qhf+7eGC3hf9DBcQGiFqVJk/5rhFR6j1drXg201qulv0zHsoFoQaZt554AMtncM8oF
+         eK2ed+LDoyJ1v55F600J/XbmiUCDBbBDLdcpavPoH18kaNpikejflIUzZrg4Ytq3ao7O
+         tT+lKVASrIVvCRE4e+f3OAcilUyWQUikpCVG5oeZ5Z8zfzK71Mfcl4oB1qHMd/AK3kkI
+         OeGUWqWxFzTbokoI7EzPSS0BIxZURBxHDBrceu9TqxQ/qmzTRDLI5g3GVorYN0PGYQgy
+         230YGI2QOmFKvBtOFLFpvsWxaXr4Vw0kL1YBAHQZYDeWumAecZpLQUi7AereTDY3Xj4X
+         Vtsg==
+X-Gm-Message-State: APjAAAXjHGBIwVFt8k3rAX3DzEdR8yIapPO87BmHgAXAvmbtzhzaXob2
+        Yu1iK11oC4+EZx/aQyNVkIdxyvtXgJk=
+X-Google-Smtp-Source: APXvYqwBNgRED6yRsaWlnJLa6J3Vw4BvD2nWSBTOSjouHQDAwr2BAFix1nNzBKQslqhWrzDRlDiVAg==
+X-Received: by 2002:a65:4305:: with SMTP id j5mr11447953pgq.315.1581492226092;
+        Tue, 11 Feb 2020 23:23:46 -0800 (PST)
+Received: from workstation-portable ([103.211.17.79])
+        by smtp.gmail.com with ESMTPSA id r26sm6398986pga.55.2020.02.11.23.23.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 23:23:45 -0800 (PST)
+Date:   Wed, 12 Feb 2020 12:53:39 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Hannes Reinecke <hare@suse.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH 1/2 RESEND] scsi: fcoe: fcoe_ctlr: Pass lockdep expression to
+ RCU lists
+Message-ID: <20200212072339.GH14453@workstation-portable>
 MIME-Version: 1.0
-References: <20200211231421.GA15697@embeddedor>
-In-Reply-To: <20200211231421.GA15697@embeddedor>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 12 Feb 2020 07:21:12 +0000
-Message-ID: <CAKv+Gu_EgbX8r3Vuo5rKDS+WY0wHq4fWhPmZ1NKVAgu-Ybk4pg@mail.gmail.com>
-Subject: Re: [PATCH] efi/apple-properties: Replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020 at 00:11, Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+lport->disc.rports and disc->rports are traversed using
+list_for_each_entry_rcu outside an RCU read-side critical section but
+under the protection of lport->disc.disc_mutex and disc->disc_mutex
+respectively.
 
-Queued in efi/next
+Hence, add corresponding lockdep expression to silence false-positive
+lockdep warnings, and harden RCU lists.
 
-Thanks,
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ drivers/scsi/fcoe/fcoe_ctlr.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> ---
->  drivers/firmware/efi/apple-properties.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
-> index 0e206c9e0d7a..590c9003f3b4 100644
-> --- a/drivers/firmware/efi/apple-properties.c
-> +++ b/drivers/firmware/efi/apple-properties.c
-> @@ -31,7 +31,7 @@ __setup("dump_apple_properties", dump_properties_enable);
->  struct dev_header {
->         u32 len;
->         u32 prop_count;
-> -       struct efi_dev_path path[0];
-> +       struct efi_dev_path path[];
->         /*
->          * followed by key/value pairs, each key and value preceded by u32 len,
->          * len includes itself, value may be empty (in which case its len is 4)
-> @@ -42,7 +42,7 @@ struct properties_header {
->         u32 len;
->         u32 version;
->         u32 dev_count;
-> -       struct dev_header dev_header[0];
-> +       struct dev_header dev_header[];
->  };
->
->  static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
-> --
-> 2.25.0
->
+diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
+index 1791a393795d..0f59992c9cd9 100644
+--- a/drivers/scsi/fcoe/fcoe_ctlr.c
++++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+@@ -2167,7 +2167,8 @@ static void fcoe_ctlr_disc_stop_locked(struct fc_lport *lport)
+ 	struct fc_rport_priv *rdata;
+ 
+ 	mutex_lock(&lport->disc.disc_mutex);
+-	list_for_each_entry_rcu(rdata, &lport->disc.rports, peers) {
++	list_for_each_entry_rcu(rdata, &lport->disc.rports, peers,
++				lockdep_is_held(&lport->disc.disc_mutex)) {
+ 		if (kref_get_unless_zero(&rdata->kref)) {
+ 			fc_rport_logoff(rdata);
+ 			kref_put(&rdata->kref, fc_rport_destroy);
+@@ -2703,7 +2704,8 @@ static unsigned long fcoe_ctlr_vn_age(struct fcoe_ctlr *fip)
+ 
+ 	next_time = jiffies + msecs_to_jiffies(FIP_VN_BEACON_INT * 10);
+ 	mutex_lock(&lport->disc.disc_mutex);
+-	list_for_each_entry_rcu(rdata, &lport->disc.rports, peers) {
++	list_for_each_entry_rcu(rdata, &lport->disc.rports, peers,
++				lockdep_is_held(&lport->disc.disc_mutex)) {
+ 		if (!kref_get_unless_zero(&rdata->kref))
+ 			continue;
+ 		frport = fcoe_ctlr_rport(rdata);
+@@ -3061,7 +3063,8 @@ static void fcoe_ctlr_vn_disc(struct fcoe_ctlr *fip)
+ 	mutex_lock(&disc->disc_mutex);
+ 	callback = disc->pending ? disc->disc_callback : NULL;
+ 	disc->pending = 0;
+-	list_for_each_entry_rcu(rdata, &disc->rports, peers) {
++	list_for_each_entry_rcu(rdata, &disc->rports, peers,
++				lockdep_is_held(&disc->disc_mutex)) {
+ 		if (!kref_get_unless_zero(&rdata->kref))
+ 			continue;
+ 		frport = fcoe_ctlr_rport(rdata);
+-- 
+2.24.1
+
