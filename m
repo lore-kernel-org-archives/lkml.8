@@ -2,101 +2,130 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F78C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1EEC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A162F24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B6824671
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 19:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fIM9sQtU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bJr9lPFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgBLTt4 (ORCPT
+        id S1729048AbgBLTuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:49:56 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40180 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727361AbgBLTtz (ORCPT
+        Wed, 12 Feb 2020 14:50:00 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.179]:34487 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729018AbgBLTt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 14:49:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581536994;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=U+GXIvAMcn/l9xGhAfn01B4ypUvtlhAuMLYkyfgVwcY=;
-        b=fIM9sQtUEZKNa9LeRJ7RIadgaOxd5lTIBt8v/Ag//QH56CpgKzcccMn+bv4hPlm05PAiPP
-        Sdk34PCTT4Zh+Bd7STF+51NzAAL6RWZSSwfLCsEWOhxuB6mURTuYCLqXrokw+tUxYXqr60
-        dtjeJbbxLBYRXzmSOJ/CL+hbGawRmJc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-tJPaTru3NKio2wfOesUvGg-1; Wed, 12 Feb 2020 14:49:52 -0500
-X-MC-Unique: tJPaTru3NKio2wfOesUvGg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81E12800EB2;
-        Wed, 12 Feb 2020 19:49:50 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 01CED60BF4;
-        Wed, 12 Feb 2020 19:49:48 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Ira Weiny <ira.weiny@intel.com>
+        Wed, 12 Feb 2020 14:49:59 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 6C441411A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:49:57 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1y1Fj6jghAGTX1y1FjIuwh; Wed, 12 Feb 2020 13:49:57 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TtzHE9bt3EsnQaUgQbettd2dBBa+zgbK1XhwIh6LAZ8=; b=bJr9lPFUVcqwf7A5m+kbN5zfIQ
+        ZM5QxBS1BMjGSLSBomD228kTD9jX8NFst6tcdo0H8OOBMysEt/yfLe0V3JuZlIKLiMAxVBrf2Jftg
+        aX/AjrSQvqADKCSXHxae5RMnUuB2Dn7nP6PSpaqixfsJFt3vdWqVuMDpNUMp8AcGxA7jCZrdWVw+E
+        BsE7mcIZubgYGTw/aPAM3kxXqxXqAv5w6E+2Vk2CruwQoaw+q5UNpm7N2vw6fZe6q30bsiRxk7CkL
+        VyjaijJHlHZnEEO3nei1AgRqHhQFsOCjMEW/dTKBVIa2Vgd2qYFI0V9O0Di0pWd6QSBNZQsw32X5b
+        RjEGWtQA==;
+Received: from [201.144.174.25] (port=3740 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1y1D-001GNE-QC; Wed, 12 Feb 2020 13:49:56 -0600
+Date:   Wed, 12 Feb 2020 13:52:31 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-References: <20200208193445.27421-1-ira.weiny@intel.com>
-        <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
-        <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Wed, 12 Feb 2020 14:49:48 -0500
-In-Reply-To: <20200211201718.GF12866@iweiny-DESK2.sc.intel.com> (Ira Weiny's
-        message of "Tue, 11 Feb 2020 12:17:18 -0800")
-Message-ID: <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] auxdisplay: charlcd: replace zero-length array with
+ flexible-array member
+Message-ID: <20200212195231.GA2867@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.144.174.25
+X-Source-L: No
+X-Exim-ID: 1j1y1D-001GNE-QC
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.144.174.25]:3740
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 48
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ira Weiny <ira.weiny@intel.com> writes:
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-> On Mon, Feb 10, 2020 at 10:15:47AM -0500, Jeff Moyer wrote:
->> Hi, Ira,
->> 
->> Could you please include documentation patches as part of this series?
->
-> I do have an update to the vfs.rst doc in
->
-> 	fs: Add locking for a dynamic DAX state
->
-> I'm happy to do more but was there something specific you would like to see?
-> Or documentation in xfs perhaps?
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Sorry, I was referring to your statx man page addition.  It would be
-nice if we could find a home for the information in your cover letter,
-too.  Right now, I'm not sure how application developers are supposed to
-figure out how to use the per-inode settings.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
 
-If I read your cover letter correctly, the mount option overrides any
-on-disk setting.  Is that right?  Given that we document the dax mount
-option as "the way to get dax," it may be a good idea to allow for a
-user to selectively disable dax, even when -o dax is specified.  Is that
-possible?
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
--Jeff
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/auxdisplay/charlcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/auxdisplay/charlcd.c b/drivers/auxdisplay/charlcd.c
+index 874c259a8829..c0da3820454b 100644
+--- a/drivers/auxdisplay/charlcd.c
++++ b/drivers/auxdisplay/charlcd.c
+@@ -88,7 +88,7 @@ struct charlcd_priv {
+ 		int len;
+ 	} esc_seq;
+ 
+-	unsigned long long drvdata[0];
++	unsigned long long drvdata[];
+ };
+ 
+ #define charlcd_to_priv(p)	container_of(p, struct charlcd_priv, lcd)
+-- 
+2.25.0
 
