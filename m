@@ -2,97 +2,129 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2808CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0349EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA349206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9EE206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 07:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N5dTeAOF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QeNjMTZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgBLHSi (ORCPT
+        id S1728420AbgBLHV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:18:38 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36887 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbgBLHSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:18:38 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48HWG32zYRz9s1x;
-        Wed, 12 Feb 2020 18:18:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581491916;
-        bh=YP6oEXoQMgXjgZmzhpRJSKK/AIeIsipuyghA52XMHvQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=N5dTeAOFO73OzhjLDVDLthiXphqAPoPX/UMLdYoCrv0rRcU3VsY4pvUn8nLXbf7yy
-         yBEtQn6qO4ItZCI4DB+LI9f84Xez1N6wbjxhhDl/hmyT8y1xsoFxw3AZJ+xVGQ+DKa
-         SrR9pOwqYfrLiSL/8OAfZdMlGpJbe9j/oFOLPUf9YTw7KQYV92EuiHH38RzyXXMQYR
-         uigTIW4Qinoz0vhEDEBxaC2SqilGyUycRM1kmkRC/P8DGE7RZ6lNjLBNIS53LRZRZp
-         y7aZPfhXyiuP3yQ2lbYU6z8afX2QaVg9DraLNO5X/zNqn4RKMnYAld6TisN44mBsHv
-         xQZr7wFAJnAeg==
-Date:   Wed, 12 Feb 2020 18:18:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: linux-next: Fixes tag needs some work in the qcom tree
-Message-ID: <20200212181828.55b99a9e@canb.auug.org.au>
+        Wed, 12 Feb 2020 02:21:27 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42890 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbgBLHVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 02:21:25 -0500
+Received: by mail-wr1-f66.google.com with SMTP id k11so849870wrd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 23:21:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j+IIIiLxT7RnMEOjFvfDSmF1Bvf4Q7q8NLRdkGyRnxg=;
+        b=QeNjMTZo3cCSAXF10gWV74TGaKosijV1vvCEv1hT0i9ekozYvZBkZgkFI+33j3HDEQ
+         nZwZL09OYeIOXx44Qbg0v/Gt58+vn4pybDIMfL1RvvTnPfCk9anhB3SBsaIJZOivQLB5
+         owvJdHyTAxU5LhftgojFG6mtS/GrAFgRshSz5I/jE8ZSiRRuVceM/Xc+fN2AmtwIaUR+
+         URFZt7MaYYzmsE1ykJQLTZ+kFmq5d8gCGyNEZ0H3FXouFVST3DZX7Isz1SYY+7RySCLD
+         /yGgvufx3ewwWTOgDeFFZKnVjygoOqiI1TKBtcIwDwpSkIWWjqw5hGMIHg2ywyJaNIHt
+         o+FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j+IIIiLxT7RnMEOjFvfDSmF1Bvf4Q7q8NLRdkGyRnxg=;
+        b=hEtUONn7xVcv4QVCdErr/W3ZM4e2NfyncatpmtdX2FKkJbQCXQf4gGIC97OgU9TtdQ
+         GVzUaxyO5uZvq8uX4KdxInzndF2S1O4w88mjzwvWAxo34HCTWLEop2TNanddqlaocfAQ
+         COHlBTNIE0uwWiRBb1btxlgTOKKrd30y8db1bMiIUPMhghvFPdtfS/pUp9hCI3FVc9JZ
+         XJVXXSDMFQVgehYIeUBwrB8E4RXuYdd6VUSjCxswRvr/RU9YIkNygIBfJrdK1bcklfsS
+         OLlOsqepk4I+Df2qazYaBx3wsgR3XymjxrpxpYe8VHDW8ErsF9UcYcEi0OlUCfN/5l/C
+         SwDA==
+X-Gm-Message-State: APjAAAWqTxzdn+51yHY9wiAmPRClk8RmkN6AyCFMLLFNc7owFHUF+WF6
+        TxLTsDUdhxqM26X9kp3TO+yT1NCY8SYjM9DguGLp10jUuBo=
+X-Google-Smtp-Source: APXvYqzpUpjlvlcKF40Lk+CatlRH7dOHAOIBZ0zDk0iL7ftqbPHh3NEkw8sI3vh2QOPtfgXkNnMJoxyn7/yQcxvgiMQ=
+X-Received: by 2002:a5d:65cf:: with SMTP id e15mr13277372wrw.126.1581492083142;
+ Tue, 11 Feb 2020 23:21:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IFBkUUGA5O0ongyIYWeX5nz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200211231421.GA15697@embeddedor>
+In-Reply-To: <20200211231421.GA15697@embeddedor>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 12 Feb 2020 07:21:12 +0000
+Message-ID: <CAKv+Gu_EgbX8r3Vuo5rKDS+WY0wHq4fWhPmZ1NKVAgu-Ybk4pg@mail.gmail.com>
+Subject: Re: [PATCH] efi/apple-properties: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IFBkUUGA5O0ongyIYWeX5nz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 12 Feb 2020 at 00:11, Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Hi all,
+Queued in efi/next
 
-In commit
+Thanks,
 
-  a5fccb62cc89 ("soc: qcom: aoss: Read back before triggering the IRQ")
-
-Fixes tag
-
-  Fixes: e91366b0a8f9 ("soc: qcom: aoss: Use wake_up_all() instead of wake_=
-up_interruptible_all()")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-I can't find a matching commit :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/IFBkUUGA5O0ongyIYWeX5nz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5DpsQACgkQAVBC80lX
-0Gyd6wf/XqebfhycbHLm3F73ViAyzz4boUGPtvFzj7G24hwytalUqm919tmzX2wN
-kRLseRCKKTEAUZjYi8tmg+lKsrn2vhIuJqGV2MsLYB1ep4F3GYgnOyiukpWaUp03
-XG0WyMeIrsCZXjSK3YVCwpsUPImcS+W8k3z39r1lmWYVEdrgpwSJEof9MtY0FOLk
-BUmPf27NR1X1sqr4KouKkHs4nNAeGG5x+Cjj2QSU321oqnsXkcfenzdqn3phhFgV
-I4A/C2zVee7GCMrGdIhqUUiO4PIzKTKC7XkJ3DpveaIM0WIgpcC7GWU1XtLbgTs0
-BKV3C+F+LIm09Y2Bt293tI52mIzf7g==
-=GuXM
------END PGP SIGNATURE-----
-
---Sig_/IFBkUUGA5O0ongyIYWeX5nz--
+> ---
+>  drivers/firmware/efi/apple-properties.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
+> index 0e206c9e0d7a..590c9003f3b4 100644
+> --- a/drivers/firmware/efi/apple-properties.c
+> +++ b/drivers/firmware/efi/apple-properties.c
+> @@ -31,7 +31,7 @@ __setup("dump_apple_properties", dump_properties_enable);
+>  struct dev_header {
+>         u32 len;
+>         u32 prop_count;
+> -       struct efi_dev_path path[0];
+> +       struct efi_dev_path path[];
+>         /*
+>          * followed by key/value pairs, each key and value preceded by u32 len,
+>          * len includes itself, value may be empty (in which case its len is 4)
+> @@ -42,7 +42,7 @@ struct properties_header {
+>         u32 len;
+>         u32 version;
+>         u32 dev_count;
+> -       struct dev_header dev_header[0];
+> +       struct dev_header dev_header[];
+>  };
+>
+>  static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
+> --
+> 2.25.0
+>
