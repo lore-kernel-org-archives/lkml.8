@@ -2,185 +2,97 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12258C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7469C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B3320675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55A220675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBLKy5 (ORCPT
+        id S1727950AbgBLKzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:54:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:59136 "EHLO foss.arm.com"
+        Wed, 12 Feb 2020 05:55:41 -0500
+Received: from mx.socionext.com ([202.248.49.38]:59863 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgBLKy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:54:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 201F530E;
-        Wed, 12 Feb 2020 02:54:56 -0800 (PST)
-Received: from localhost (unknown [10.1.198.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B52ED3F68F;
-        Wed, 12 Feb 2020 02:54:55 -0800 (PST)
-Date:   Wed, 12 Feb 2020 10:54:54 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com,
-        sudeep.holla@arm.com, valentin.schneider@arm.com,
-        rjw@rjwysocki.net, peterz@infradead.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] clocksource/drivers/arm_arch_timer: validate
- arch_timer_rate
-Message-ID: <20200212105439.GA3755@arm.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-8-ionela.voinescu@arm.com>
- <89339501-5ee4-e871-3076-c8b02c6fbf6e@arm.com>
- <a24aa6c86e7a565b6269f48d4026bca2@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a24aa6c86e7a565b6269f48d4026bca2@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1725821AbgBLKzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:55:40 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 12 Feb 2020 19:55:38 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id E178E180B68;
+        Wed, 12 Feb 2020 19:55:38 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 12 Feb 2020 19:55:38 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 96A221A01CF;
+        Wed, 12 Feb 2020 19:55:38 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH net v2] net: ethernet: ave: Add capability of rgmii-id mode
+Date:   Wed, 12 Feb 2020 19:55:34 +0900
+Message-Id: <1581504934-19540-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+This allows you to specify the type of rgmii-id that will enable phy
+internal delay in ethernet phy-mode.
 
-On Wednesday 12 Feb 2020 at 10:12:32 (+0000), Marc Zyngier wrote:
-> On 2020-02-12 10:01, Lukasz Luba wrote:
-> > Hi Ionela, Valentin
-> > 
-> > On 2/11/20 6:45 PM, Ionela Voinescu wrote:
-> > > From: Valentin Schneider <valentin.schneider@arm.com>
-> > > 
-> > > Using an arch timer with a frequency of less than 1MHz can result in
-> > > an
-> > > incorrect functionality of the system which assumes a reasonable rate.
-> > > 
-> > > One example is the use of activity monitors for frequency invariance
-> > > which uses the rate of the arch timer as the known rate of the
-> > > constant
-> > > cycle counter in computing its ratio compared to the maximum frequency
-> > > of a CPU. For arch timer frequencies less than 1MHz this ratio could
-> > > end up being 0 which is an invalid value for its use.
-> > > 
-> > > Therefore, warn if the arch timer rate is below 1MHz which contravenes
-> > > the recommended architecture interval of 1 to 50MHz.
-> > > 
-> > > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Marc Zyngier <maz@kernel.org>
-> > > ---
-> > >   drivers/clocksource/arm_arch_timer.c | 18 +++++++++++++++---
-> > >   1 file changed, 15 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/clocksource/arm_arch_timer.c
-> > > b/drivers/clocksource/arm_arch_timer.c
-> > > index 9a5464c625b4..4faa930eabf8 100644
-> > > --- a/drivers/clocksource/arm_arch_timer.c
-> > > +++ b/drivers/clocksource/arm_arch_timer.c
-> > > @@ -885,6 +885,17 @@ static int arch_timer_starting_cpu(unsigned int
-> > > cpu)
-> > >   	return 0;
-> > >   }
-> > >   +static int validate_timer_rate(void)
-> > > +{
-> > > +	if (!arch_timer_rate)
-> > > +		return -EINVAL;
-> > > +
-> > > +	/* Arch timer frequency < 1MHz can cause trouble */
-> > > +	WARN_ON(arch_timer_rate < 1000000);
-> > 
-> > I don't see a big value of having a patch just to add one extra warning,
-> > in a situation which we handle in our code with in 6/7 with:
-> > 
-> > +	if (!ratio) {
-> > +		pr_err("System timer frequency too low.\n");
-> > +		return -EINVAL;
-> > +	}
-> > 
-> > Furthermore, the value '100000' here is because of our code and
-> > calculation in there, so it does not belong to arch timer. Someone
-> > might ask why it's not 200000 or a define in our header...
-> > Or questions asking why do you warn when that arch timer and cpu is not
-> > AMU capable...
-> 
-> Because, as the commit message outlines it, such a frequency is terribly
-> out of spec?
-> 
+This adds all RGMII cases to all of get_pinmode() except LD11, because LD11
+SoC doesn't support RGMII due to the constraint of the hardware. When RGMII
+phy mode is specified in the devicetree for LD11, the driver will abort
+with an error.
 
-Probably it could have been better emphasised in the commit message but,
-yes, [1] specifies a typical range of 1-50Mhz. Therefore, taken
-independently the role of this patch is to warn about an out of spec arch
-timer rate. 
-The link to AMU is here just as an example of a scenario where an out of
-spec rate can affect functionality, but there is no dependency between
-the threshold chosen here and AMU. AMU functionality only assumes the rate
-recommended in the spec.
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+Changes since v1:
+- Add description about LD11 to the commit message
 
-[1] https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf
+ drivers/net/ethernet/socionext/sni_ave.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> > 
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >   /*
-> > >    * For historical reasons, when probing with DT we use whichever
-> > > (non-zero)
-> > >    * rate was probed first, and don't verify that others match. If
-> > > the first node
-> > > @@ -900,7 +911,7 @@ static void arch_timer_of_configure_rate(u32
-> > > rate, struct device_node *np)
-> > >   		arch_timer_rate = rate;
-> > >     	/* Check the timer frequency. */
-> > > -	if (arch_timer_rate == 0)
-> > > +	if (validate_timer_rate())
-> > >   		pr_warn("frequency not available\n");
-> > >   }
-> > >   @@ -1594,9 +1605,10 @@ static int __init
-> > > arch_timer_acpi_init(struct acpi_table_header *table)
-> > >   	 * CNTFRQ value. This *must* be correct.
-> > >   	 */
-> > >   	arch_timer_rate = arch_timer_get_cntfrq();
-> > > -	if (!arch_timer_rate) {
-> > > +	ret = validate_timer_rate();
-> > > +	if (ret) {
-> > >   		pr_err(FW_BUG "frequency not available.\n");
-> > > -		return -EINVAL;
-> > > +		return ret;
-> > >   	}
-> > >     	arch_timer_uses_ppi = arch_timer_select_ppi();
-> > > 
-> > 
-> > Lastly, this is arch timer.
-> > To increase chances of getting merge soon, I would recommend to drop
-> > the patch from this series.
-> 
-> And? It seems to address a potential issue where the time frequency
-> is out of spec, and makes sure we don't end up with additional problems
-> in the AMU code.
-> 
-> On its own, it is perfectly sensible and could be merged as part of this
-> series with my
-> 
-> Acked-by: Marc Zyngier <maz@kernel.org>
-> 
->         M.
+diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
+index b703242..67ddf78 100644
+--- a/drivers/net/ethernet/socionext/sni_ave.c
++++ b/drivers/net/ethernet/socionext/sni_ave.c
+@@ -1810,6 +1810,9 @@ static int ave_pro4_get_pinmode(struct ave_private *priv,
+ 		break;
+ 	case PHY_INTERFACE_MODE_MII:
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		priv->pinmode_val = 0;
+ 		break;
+ 	default:
+@@ -1854,6 +1857,9 @@ static int ave_ld20_get_pinmode(struct ave_private *priv,
+ 		priv->pinmode_val = SG_ETPINMODE_RMII(0);
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		priv->pinmode_val = 0;
+ 		break;
+ 	default:
+@@ -1876,6 +1882,9 @@ static int ave_pxs3_get_pinmode(struct ave_private *priv,
+ 		priv->pinmode_val = SG_ETPINMODE_RMII(arg);
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		priv->pinmode_val = 0;
+ 		break;
+ 	default:
+-- 
+2.7.4
 
-Thanks, Marc! I'll keep this patch here then with some changes in the commit
-message for more clarity and the change in author.
-
-Thank you all,
-Ionela.
-
-> -- 
-> Jazz is not dead. It just smells funny...
