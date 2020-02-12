@@ -2,127 +2,201 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0B9C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81516C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4079620675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5761E20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fGuHm0I/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fQ9k0Btk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBLMcH (ORCPT
+        id S1727665AbgBLMdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:32:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25669 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727640AbgBLMcH (ORCPT
+        Wed, 12 Feb 2020 07:33:39 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57824 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgBLMdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:32:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581510725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jFhBtgSX0/7uUXEHu3xDi09Duj0eAVawgfKR4aU8SAY=;
-        b=fGuHm0I/3TF2njitMa76wN27CuXNV4/uXq3oLtwW75lNibyCAd6qWxlHocSBCdkbUOgeXb
-        cr7u6a9l2q3QGpt8zDpB3+845Ns/bA+auY+6y34KKmk/Ty2KNq6ZLxnHTYP8Rz4fdoUkbk
-        MnKiuhlwIBRWNL9ZXzWOgI9hZjlQRb8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-ihRKIlqtOEqyqolRnIoX4A-1; Wed, 12 Feb 2020 07:32:03 -0500
-X-MC-Unique: ihRKIlqtOEqyqolRnIoX4A-1
-Received: by mail-wm1-f72.google.com with SMTP id a189so665125wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 04:32:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jFhBtgSX0/7uUXEHu3xDi09Duj0eAVawgfKR4aU8SAY=;
-        b=l5dT6oLqJrZP//GGGapAP4zYpT3fVobBjmSr+TTviYcn7/pCEoc+QzgCmf+/Zgll5N
-         Iu6I7JjOmt+lakRjQFdhNqTqnMD8wbz4ExW8jKKRa6T9xX2/ED5GzQLXpj4UX4OlOEi0
-         lVBcRaufKK6MkvumHUEFQwZ1IcYANS5HUyvNUzA7MK5nnQ9c6kVl3cly29LyvHvrSnXi
-         UVfax3sAc2eZ46+mYxsDq1GmuYqyk5/KhpJAmXBUs2dNXfb3s2n1VSvAbH0oUf5RF5JK
-         U0K64bdc4+PpXzG1BABeutlPSHQqNcreB+IkqjCf6T5Y7BI0HKdEqTJsIHY0vXZFIdxF
-         OdHA==
-X-Gm-Message-State: APjAAAU3b26JMMeKmALJ/pG35rxAVIpvKBnfxQDWhamUSs8CkAm8SNR6
-        JMl5w64Gqtn97dMkRf3w8rFTV2fJCY0wPDN+BkN4X1uME7IvBVAMt1uSQyCIvGA9PHYrSbKxYim
-        GcNXj0nqZ+Ui1/5N+k+9NHNFR
-X-Received: by 2002:a5d:6886:: with SMTP id h6mr15144938wru.154.1581510721846;
-        Wed, 12 Feb 2020 04:32:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqybL8KNyituH0wLu6xowOVQevPeXsPTUSxO/YMHGX038NBFDetmNWKvBDmZgdVL2znEi+z6BQ==
-X-Received: by 2002:a5d:6886:: with SMTP id h6mr15144913wru.154.1581510721587;
-        Wed, 12 Feb 2020 04:32:01 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
-        by smtp.gmail.com with ESMTPSA id l15sm453755wrv.39.2020.02.12.04.32.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 04:32:01 -0800 (PST)
-Subject: Re: [PATCH][next] KVM: x86: remove redundant WARN_ON check of an
- unsigned less than zero
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Colin King <colin.king@canonical.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200207231813.786224-1-colin.king@canonical.com>
- <20200208004722.GB15581@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <21975038-ae1a-50a1-7fa0-38a1445abe8d@redhat.com>
-Date:   Wed, 12 Feb 2020 13:32:06 +0100
+        Wed, 12 Feb 2020 07:33:39 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CCXLmU030105;
+        Wed, 12 Feb 2020 06:33:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581510801;
+        bh=K6qgJbEP26dBLKsUCBT4QaNFX+1T9GJLT3p+5OtjdJc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fQ9k0BtkRw75in41sn6sjUZTHDp5MptGKy6A/3EAGQ9+fPf9SKaWV00a395AQIEO8
+         yVW0R5lxS+FaK4tMtQx1Ax+9Tv8x3EMYajIALoUMcvPpbsV+lNfslGin1dzlOqYe0j
+         UTfSadygqQV5UqidUh9JGq5GOsrNqXJRSKOADlA4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CCXLBB042817;
+        Wed, 12 Feb 2020 06:33:21 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
+ Feb 2020 06:33:21 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 12 Feb 2020 06:33:21 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CCXH2C001262;
+        Wed, 12 Feb 2020 06:33:18 -0600
+Subject: Re: dma_mask limited to 32-bits with OF platform device
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>
+CC:     <stefan.wahren@i2se.com>, <afaerber@suse.de>, <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
+ <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
+Date:   Wed, 12 Feb 2020 14:33:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200208004722.GB15581@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/02/20 01:47, Sean Christopherson wrote:
-> On Fri, Feb 07, 2020 at 11:18:13PM +0000, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
+On 12/02/2020 13:37, Robin Murphy wrote:
+> On 2020-02-12 10:49 am, Roger Quadros wrote:
+>> Hi,
 >>
->> The check cpu->hv_clock.system_time < 0 is redundant since system_time
->> is a u64 and hence can never be less than zero. Remove it.
+>> I'd like to understand why of_dma_configure() is limiting the dma and coherent masks
+>> instead of overriding them.
 >>
->> Addresses-Coverity: ("Macro compares unsigned to 0")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  arch/x86/kvm/x86.c | 1 -
->>  1 file changed, 1 deletion(-)
+>> see commits
+>> a5516219b102 ("of/platform: Initialise default DMA masks")
+>> ee7b1f31200d ("of: fix DMA mask generation")
 >>
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index fbabb2f06273..d4967ac47e68 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -2448,7 +2448,6 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
->>  	vcpu->hv_clock.tsc_timestamp = tsc_timestamp;
->>  	vcpu->hv_clock.system_time = kernel_ns + v->kvm->arch.kvmclock_offset;
->>  	vcpu->last_guest_tsc = tsc_timestamp;
->> -	WARN_ON(vcpu->hv_clock.system_time < 0);
+>> In of_platform_device_create_pdata(), we initialize both masks to 32-bits unconditionally,
+>> which is fine to support legacy cases.
+>>
+>>      dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>>          if (!dev->dev.dma_mask)
+>>                  dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+>>
+>> Then in of_dma_configure() we limit it like so.
+>>
+>>          dev->coherent_dma_mask &= mask;
+>>          *dev->dma_mask &= mask;
+>>
+>> This way, legitimate devices which correctly set dma-ranges in DT
+>> will never get a dma_mask above 32-bits at all. How is this expected to work?
 > 
-> Don't know this code well, but @kernel_ns and @v->kvm->arch.kvmclock_offset
-> are both s64, so maybe this was intended and/or desirable?
+> Because these are still just the *default* masks - although drivers are all expected to call dma_set_mask() and friends explicitly nowadays, there are sure to be some out there for 32-bit devices still assuming the default 32-bit masks are in place. Thus if platform code secretly makes them larger, Bad Things ensue. Making them *smaller* where there are platform limitations shouldn't really matter now that we have the bus_dma_limit mechanism working well, but also doesn't do any harm, so it was left in for good measure.
 > 
-> 	WARN_ON((s64)vcpu->hv_clock.system_time < 0);
+> The current paradigm is that the device masks represent the inherent capability of the device as far as the driver knows, and external interconnect constraints are kept separately as private DMA API internals via the bus limit.
+> 
+>> For a test, I added this in dra7.dtsi sata node. (NOTE: CONFIG_ARM_LPAE=y)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index 93aa65c75b45..cd8c6cea23d5 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -571,6 +571,8 @@
+>>           sata: sata@4a141100 {
+>>               compatible = "snps,dwc-ahci";
+>>               reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+>> +            #size-cells = <2>;
+>> +            dma-ranges = <0x00000000 0x00000000 0x10 0x00000000>;
+>>               interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+>>               phys = <&sata_phy>;
+>>               phy-names = "sata-phy";
+>>
+>> ----------------------------- drivers/of/device.c -----------------------------
+>> index e9127db7b067..1072cebad57a 100644
+>> @@ -95,6 +95,7 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+>>       const struct iommu_ops *iommu;
+>>       u64 mask, end;
+>>
+>> +    dev_info(dev, "of_dma_configure\n");
+>>       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>>       if (ret < 0) {
+>>           /*
+>> @@ -123,7 +124,8 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+>>               dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
+>>               return -EINVAL;
+>>           }
+>> -        dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>> +        dev_info(dev, "dma %llx paddr %llx size %llx\n", dma_addr, paddr, size);
+>> +        dev_info(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>>       }
+>>
+>>       /*
+>> @@ -152,6 +154,8 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+>>       mask = DMA_BIT_MASK(ilog2(end) + 1);
+>>       dev->coherent_dma_mask &= mask;
+>>       *dev->dma_mask &= mask;
+>> +
+>> +    dev_info(dev, "end %llx, mask %llx\n", end, mask);
+>>       /* ...but only set bus limit if we found valid dma-ranges earlier */
+>>       if (!ret)
+>>           dev->bus_dma_limit = end;
+>>
+>> And I see.
+>>
+>> [    1.134294]  4a140000.sata: of_platform
+>> [   13.203917] ahci 4a140000.sata: of_dma_configure
+>> [   13.225635] ahci 4a140000.sata: dma 0 paddr 0 size 1000000000
+>> [   13.266178] ahci 4a140000.sata: dma_pfn_offset(0x000000)
+>> [   13.297621] ahci 4a140000.sata: end fffffffff, mask fffffffff
+>> [   13.585499] ahci 4a140000.sata: dma_mask 0xffffffff, coherent_mask 0xffffffff
+>> [   13.599082] ahci 4a140000.sata: setting 64-bit mask ffffffffffffffff
+>>
+>> Truncation of dma_mask and coherent_mask is undesired in this case.
+> 
+> Again, it's only the initial default masks that are truncated, and the driver appropriately replaces them with its 64-bit masks anyway once it probes. However, bus_dma_limit should still reflect that 36-bit upstream constraint, and that's what really matters. If you've found a path through a DMA API implementation which is subsequently failing to respect that limit, that's a bug in that implementation.
+> 
 
-Yes, that's related to the bugfix where kvmclock would get negative.  I
-queued the patch with the (s64) cast added.  Thanks to both of you!
+For now, let's say that we limit dma-ranges to 4GB size. with "dma-ranges = <0x00000000 0x00000000 0x1 0x00000000>;"
+Then, dma_bus_limit is set correctly to 0xffffffff, SATA driver sets masks to 64-bit as IP supports that.
 
-Paolo
+[   13.306847] ahci 4a140000.sata: dma_mask 0xffffffffffffffff, coherent_mask 0xffffffffffffffff, dma_bus_limit 0xffffffff
 
+However, the SATA controller still tries to do DMA above 32-bits.
+dma_alloc() doesn't seem to be taking dma_bus_limit into account?
+
+>> How about fixing it like so?
+>>
+>> -     dev->coherent_dma_mask &= mask;
+>> -    *dev->dma_mask &= mask;
+>> +     dev->coherent_dma_mask = mask;
+>> +     *dev->dma_mask = mask;
+> 
+> As above, making the "32-bit default" larger than 32 bits stands to break 32-bit devices with old drivers, and there's nothing to "fix" at this point anyway.
+> 
+>> Also this comment doesn't make sense anymore?
+>>
+>>          /*
+>>           * Limit coherent and dma mask based on size and default mask
+>>           * set by the driver.
+>>           */
+> 
+> TBH that's never made much sense, unless "driver" was supposed to refer to bus code. Its continued presence is down to inertia more than any other reason :)
+> 
+> Robin.
+
+-- 
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
