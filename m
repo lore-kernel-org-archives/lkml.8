@@ -2,179 +2,150 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41C5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0BBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C1F2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D0C20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKC16U1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgBLLVI (ORCPT
+        id S1728104AbgBLLVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:21:08 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40170 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725821AbgBLLVI (ORCPT
+        Wed, 12 Feb 2020 06:21:17 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37383 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbgBLLVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:21:08 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CBL1Y9070152
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 06:21:07 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tp3mvaj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 06:21:05 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Wed, 12 Feb 2020 11:20:26 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Feb 2020 11:20:24 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01CBKMSP62390412
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Feb 2020 11:20:22 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30C8DA4067;
-        Wed, 12 Feb 2020 11:20:22 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E70CA4075;
-        Wed, 12 Feb 2020 11:20:20 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.199.42.59])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Feb 2020 11:20:19 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        linuxram@us.ibm.com, pratik.sampat@in.ibm.com,
-        psampat@linux.ibm.com, pratik.r.sampat@gmail.com
-Subject: [PATCH v4 2/3] powerpc/powernv: Introduce Self save support
-Date:   Wed, 12 Feb 2020 16:50:12 +0530
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1581505210.git.psampat@linux.ibm.com>
-References: <cover.1581505210.git.psampat@linux.ibm.com>
+        Wed, 12 Feb 2020 06:21:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581506475;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=EN6k1gG4mAwoS9ZHwlbxFwC3ldx82UzJBX4isvQNgEw=;
+        b=HKC16U1FJykVg0fsyBNueWfHcVTbJ/ZdEnkm1Yyg16re+P9XB0fc/NtaIrWDwxO/kJ7mvj
+        D9BAQldaiP41dFFpb8TRb/ZwrOusg7JK+cIKNmbLPXvwJ7H23yu9VojNvvBcBOoGPC/Dcn
+        Cgci14Yl07cqFKfvr3ZabL9gI1Q9it0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-gwgr0YYJP7mtnLTRLnwpnw-1; Wed, 12 Feb 2020 06:21:14 -0500
+X-MC-Unique: gwgr0YYJP7mtnLTRLnwpnw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4F0413E5;
+        Wed, 12 Feb 2020 11:21:11 +0000 (UTC)
+Received: from [10.36.117.92] (ovpn-117-92.ams2.redhat.com [10.36.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C65505C1B0;
+        Wed, 12 Feb 2020 11:21:10 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm: vmpressure: don't need call kfree if kstrndup
+ fails
+To:     Yang Shi <yang.shi@linux.alibaba.com>, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1581398649-125989-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <b47f8f37-fbde-5487-5025-fcb0df7a7e30@redhat.com>
+Date:   Wed, 12 Feb 2020 12:21:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021211-0012-0000-0000-0000038621A2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021211-0013-0000-0000-000021C2A091
-Message-Id: <7fe2bb491799f495e4d9fc54b617235c498119b1.1581505210.git.psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-12_06:2020-02-11,2020-02-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 bulkscore=0 phishscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002120092
+In-Reply-To: <1581398649-125989-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces and leverages the Self save API which OPAL now
-supports.
+On 11.02.20 06:24, Yang Shi wrote:
+> When kstrndup fails (returns NULL) there is no memory is allocated by
+> kmalloc, so no need to call kfree().
 
-Add the new Self Save OPAL API call in the list of OPAL calls.
-Implement the self saving of the SPRs based on the support populated
-while respecting it's preferences.
+"When kstrndup fails, no memory was allocated and we can exit directly."
 
-This implementation allows mixing of support for the SPRs, which
-means that a SPR can be self restored while another SPR be self saved if
-they support and prefer it to be so.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Reviewed-by: Ram Pai <linuxram@us.ibm.com>
----
- arch/powerpc/include/asm/opal-api.h        |  3 ++-
- arch/powerpc/include/asm/opal.h            |  1 +
- arch/powerpc/platforms/powernv/idle.c      | 22 ++++++++++++++++++++++
- arch/powerpc/platforms/powernv/opal-call.c |  1 +
- 4 files changed, 26 insertions(+), 1 deletion(-)
+> 
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+>  mm/vmpressure.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/vmpressure.c b/mm/vmpressure.c
+> index 4bac22f..0590f00 100644
+> --- a/mm/vmpressure.c
+> +++ b/mm/vmpressure.c
+> @@ -371,10 +371,8 @@ int vmpressure_register_event(struct mem_cgroup *memcg,
+>  	int ret = 0;
+>  
+>  	spec_orig = spec = kstrndup(args, MAX_VMPRESSURE_ARGS_LEN, GFP_KERNEL);
+> -	if (!spec) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> +	if (!spec)
+> +		return -ENOMEM;
+>  
+>  	/* Find required level */
+>  	token = strsep(&spec, ",");
+> 
 
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index c1f25a760eb1..1b6e1a68d431 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -214,7 +214,8 @@
- #define OPAL_SECVAR_GET				176
- #define OPAL_SECVAR_GET_NEXT			177
- #define OPAL_SECVAR_ENQUEUE_UPDATE		178
--#define OPAL_LAST				178
-+#define OPAL_SLW_SELF_SAVE_REG			181
-+#define OPAL_LAST				181
- 
- #define QUIESCE_HOLD			1 /* Spin all calls at entry */
- #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9986ac34b8e2..389a85b63805 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -203,6 +203,7 @@ int64_t opal_handle_hmi(void);
- int64_t opal_handle_hmi2(__be64 *out_flags);
- int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
- int64_t opal_unregister_dump_region(uint32_t id);
-+int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
- int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
- int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
- int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index 03fe835aadd1..97aeb45e897b 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -279,6 +279,26 @@ static int pnv_self_save_restore_sprs(void)
- 					if (rc != 0)
- 						return rc;
- 					break;
-+				} else if (preferred & curr_spr.supported_mode
-+					   & SELF_SAVE_STRICT) {
-+					is_initialized = true;
-+					if (curr_spr.spr == SPRN_HMEER &&
-+					    cpu_thread_in_core(cpu) != 0) {
-+						continue;
-+					}
-+					rc = opal_slw_self_save_reg(pir,
-+								curr_spr.spr);
-+					if (rc != 0)
-+						return rc;
-+					switch (curr_spr.spr) {
-+					case SPRN_LPCR:
-+						is_lpcr_self_save = true;
-+						break;
-+					case SPRN_PTCR:
-+						is_ptcr_self_save = true;
-+						break;
-+					}
-+					break;
- 				}
- 				preferred_sprs[index].preferred_mode =
- 					preferred_sprs[index].preferred_mode >>
-@@ -1159,6 +1179,8 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
- 		if (!is_lpcr_self_save)
- 			opal_slw_set_reg(pir, SPRN_LPCR,
- 					 lpcr_val);
-+		else
-+			opal_slw_self_save_reg(pir, SPRN_LPCR);
- 	}
- }
- 
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 5cd0f52d258f..11e0ceb90de0 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
- OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
- OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
- OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
-+OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
- OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
- OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
- OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
+
 -- 
-2.17.1
+Thanks,
+
+David / dhildenb
 
