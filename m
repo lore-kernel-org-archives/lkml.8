@@ -2,101 +2,104 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDEDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8A7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1CD2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QiZXcQk8"
+	by mail.kernel.org (Postfix) with ESMTP id DC6A12073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBLDkP (ORCPT
+        id S1727961AbgBLDkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 22:40:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54155 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727602AbgBLDkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 22:40:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581478813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=S1E0Z0wase8qOv1Belxsp5ny7Z5FV1upA2C64aN98yQ=;
-        b=QiZXcQk8KQqFpS9K79aVdYfmyMyQ3kDb/zjJapiTElPD0h+hcqpTwCFYR7ELaEmvG1TXKN
-        Fax1VffugEcO9Kv82DB94Oy/xmGW9zBe14X8fDl5jqwN0lIpnrstT6/4GfEe+0QNZMq0os
-        epfc1Ja49kNPF4GF5YmBLqW9Ulb13OQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-keUBMm_SOAKZuWyVQWB5tA-1; Tue, 11 Feb 2020 22:40:08 -0500
-X-MC-Unique: keUBMm_SOAKZuWyVQWB5tA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 481CC1005502;
-        Wed, 12 Feb 2020 03:40:07 +0000 (UTC)
-Received: from [10.72.13.111] (ovpn-13-111.pek2.redhat.com [10.72.13.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8C0F8ED1B;
-        Wed, 12 Feb 2020 03:39:56 +0000 (UTC)
-Subject: Re: [PATCH v2 1/5] virtio-mmio: add notify feature for per-queue
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Zha Bin <zhabin@linux.alibaba.com>
-Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com,
-        jing2.liu@linux.intel.com, linux-kernel@vger.kernel.org,
-        qemu-devel@nongnu.org, chao.p.peng@linux.intel.com,
-        gerry@linux.alibaba.com
-References: <cover.1581305609.git.zhabin@linux.alibaba.com>
- <8a4ea95d6d77a2814aaf6897b5517353289a098e.1581305609.git.zhabin@linux.alibaba.com>
- <20200211062205-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ef613d3a-0372-64f3-7644-2e88cc9d4355@redhat.com>
-Date:   Wed, 12 Feb 2020 11:39:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 11 Feb 2020 22:40:16 -0500
+Received: from mga05.intel.com ([192.55.52.43]:25726 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727602AbgBLDkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 22:40:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Feb 2020 19:40:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="380645109"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga004.jf.intel.com with ESMTP; 11 Feb 2020 19:40:11 -0800
+Date:   Wed, 12 Feb 2020 11:19:29 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     mdf@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH v7 2/2] fpga: dfl: fme: add performance reporting support
+Message-ID: <20200212031929.GB5645@hao-dev>
+References: <1581306469-22629-1-git-send-email-hao.wu@intel.com>
+ <1581306469-22629-3-git-send-email-hao.wu@intel.com>
+ <20200210163400.GA21900@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200211062205-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210163400.GA21900@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 04:34:01PM +0000, Will Deacon wrote:
+> Hi,
+> 
+> On Mon, Feb 10, 2020 at 11:47:49AM +0800, Wu Hao wrote:
+> > This patch adds support for performance reporting private feature
+> > for FPGA Management Engine (FME). Now it supports several different
+> > performance counters, including 'basic', 'cache', 'fabric', 'vtd'
+> > and 'vtd_sip'. It allows user to use standard linux tools to access
+> > these performance counters.
+> 
+> I had a quick look at this, and it mostly looks alright to me. Just a few
+> high-level comments/questions:
 
-On 2020/2/11 =E4=B8=8B=E5=8D=887:33, Michael S. Tsirkin wrote:
-> On Mon, Feb 10, 2020 at 05:05:17PM +0800, Zha Bin wrote:
->> From: Liu Jiang<gerry@linux.alibaba.com>
->>
->> The standard virtio-mmio devices use notification register to signal
->> backend. This will cause vmexits and slow down the performance when we
->> passthrough the virtio-mmio devices to guest virtual machines.
->> We proposed to update virtio over MMIO spec to add the per-queue
->> notify feature VIRTIO_F_MMIO_NOTIFICATION[1]. It can allow the VMM to
->> configure notify location for each queue.
->>
->> [1]https://lkml.org/lkml/2020/1/21/31
->>
->> Signed-off-by: Liu Jiang<gerry@linux.alibaba.com>
->> Co-developed-by: Zha Bin<zhabin@linux.alibaba.com>
->> Signed-off-by: Zha Bin<zhabin@linux.alibaba.com>
->> Co-developed-by: Jing Liu<jing2.liu@linux.intel.com>
->> Signed-off-by: Jing Liu<jing2.liu@linux.intel.com>
->> Co-developed-by: Chao Peng<chao.p.peng@linux.intel.com>
->> Signed-off-by: Chao Peng<chao.p.peng@linux.intel.com>
-> Hmm. Any way to make this static so we don't need
-> base and multiplier?
+Hi Will
+
+Thanks a lot for the review! :)
+
+> 
+>   - I would still prefer for the PMU drivers to live under drivers/perf/
+
+Hm.. one possible way is to create a platform device, and introduce a new
+platform device driver under drivers/perf/.
+
+> 
+>   - You should probably give the PMU a better name than "fme%d", for example
+>     "intel_fpga_dfl_fme%d".
+
+Sure. as it's not intel only, so will use "fpga_dfl_fme" or "dfl_fme" instead.
+
+> 
+>   - CPU0 can be hotplugged off on non-x86 systems. How do you cope with
+>     that?
+
+Oh.. then we can't just always return CPU0 for cpumask, have to switch
+to another available cpu. Will add code to handle this case in the next
+version. Thanks!
+
+> 
+>   - readq() will emit 2x32-bit reads on some architectures. What happens
+>     in this case?
+
+64bit counter may increase and carry out of bit31 between 2-32bit reads,
+we probably need some more code (add extra reads?) to handle this case.
 
 
-E.g page per vq?
+Thanks again for these valuable comments, will try to fix all of them in
+the next version. : )
 
-Thanks
+Hao
 
+> 
+> Will
