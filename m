@@ -2,141 +2,159 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66387C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7843C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A63720675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:41:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="stZDqEXz"
+	by mail.kernel.org (Postfix) with ESMTP id 931A420675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgBLLlo (ORCPT
+        id S1728124AbgBLLnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:41:44 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:30898 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgBLLlo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:41:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581507703; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=tIoYrRRSOlI3zyCvTygKC57YOxbVL6cYX+0E0hEni48=; b=stZDqEXzJ3nl9YbOWVpCa17EvhjOnGxOK9dfsz+M/WkJumqsiA8AmM2Rw6gnfn2U9tCGwTPM
- 370v6oB2R13UvQa8Uhn1VGenUQFYiLMcSzVf7UV1z1vA4ok0i6ykF9MIFpTVeY5CBlKf8OWp
- 23P2o9RGR6gFxULHgbRvzCdIdiU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e43e473.7f4a60268df8-smtp-out-n02;
- Wed, 12 Feb 2020 11:41:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 41889C4479C; Wed, 12 Feb 2020 11:41:38 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0524C43383;
-        Wed, 12 Feb 2020 11:41:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0524C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH 1/3] soc: qcom: rpmh: Update dirty flag only when data
- changes
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1580796831-18996-1-git-send-email-mkshah@codeaurora.org>
- <1580796831-18996-2-git-send-email-mkshah@codeaurora.org>
- <CAE=gft6DCqmX8=cHWXNeOjSTuRHL23t7+b_GZOrvUJAPfhVD8A@mail.gmail.com>
- <d95de83d-fbda-5ebf-1b87-126c19f4d604@codeaurora.org>
- <CAE=gft7ESnpS8bYg4hmoAUtsuLiyek1D-AYEL+LWUKe=KubAJw@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <4e54da6a-3418-7f06-818c-7d87443b5253@codeaurora.org>
-Date:   Wed, 12 Feb 2020 17:11:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Wed, 12 Feb 2020 06:43:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:59850 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgBLLnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:43:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF3F130E;
+        Wed, 12 Feb 2020 03:43:08 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F26533F68F;
+        Wed, 12 Feb 2020 03:43:06 -0800 (PST)
+Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
+To:     Hans de Goede <hdegoede@redhat.com>, Roger Quadros <rogerq@ti.com>,
+        axboe@kernel.dk
+Cc:     vigneshr@ti.com, nsekhar@ti.com, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
+References: <20200206111728.6703-1-rogerq@ti.com>
+ <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
+ <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
+ <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
+Date:   Wed, 12 Feb 2020 11:43:06 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft7ESnpS8bYg4hmoAUtsuLiyek1D-AYEL+LWUKe=KubAJw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2/5/2020 11:37 PM, Evan Green wrote:
-> On Tue, Feb 4, 2020 at 8:14 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+On 2020-02-12 11:32 am, Hans de Goede wrote:
+> Hi,
+> 
+> On 2/12/20 12:01 PM, Roger Quadros wrote:
+>> Hi,
 >>
->> On 2/5/2020 6:05 AM, Evan Green wrote:
->>> On Mon, Feb 3, 2020 at 10:14 PM Maulik Shah <mkshah@codeaurora.org> wrote:
->>>> Currently rpmh ctrlr dirty flag is set for all cases regardless
->>>> of data is really changed or not.
+>> On 06/02/2020 13:50, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 2/6/20 12:17 PM, Roger Quadros wrote:
+>>>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
+>>>> Restrict it to 32-bit.
 >>>>
->>>> Add changes to update it when data is updated to new values.
->>>>
->>>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
 >>>> ---
->>>>    drivers/soc/qcom/rpmh.c | 15 +++++++++++----
->>>>    1 file changed, 11 insertions(+), 4 deletions(-)
+>>>>   drivers/ata/ahci_platform.c | 3 +++
+>>>>   1 file changed, 3 insertions(+)
 >>>>
->>>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->>>> index 035091f..c3d6f00 100644
->>>> --- a/drivers/soc/qcom/rpmh.c
->>>> +++ b/drivers/soc/qcom/rpmh.c
->>>> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>>>    existing:
->>>>           switch (state) {
->>>>           case RPMH_ACTIVE_ONLY_STATE:
->>>> -               if (req->sleep_val != UINT_MAX)
->>>> +               if (req->sleep_val != UINT_MAX) {
->>>>                           req->wake_val = cmd->data;
->>>> +                       ctrlr->dirty = true;
->>>> +               }
->>> Don't you need to set dirty = true for ACTIVE_ONLY state always? The
->>> conditional is just saying "if nobody set a sleep vote, then maintain
->>> this vote when we wake back up".
->> The ACTIVE_ONLY vote is cached as wake_val to be apply when wakeup happens.
+>>>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+>>>> index 3aab2e3d57f3..b925dc54cfa5 100644
+>>>> --- a/drivers/ata/ahci_platform.c
+>>>> +++ b/drivers/ata/ahci_platform.c
+>>>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
+>>>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
+>>>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
+>>>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
+>>>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
+>>>> +
+>>>
+>>> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
+>>> is e.g. also used on some exynos devices. So using that to key the
+>>> setting of the 32 bit flag seems wrong to me.
+>>>
+>>> IMHO it would be better to introduce a TI specific compatible
+>>> and use that to match on instead (and also adjust the dts files
+>>> accordingly).
 >>
->> In case value didn't change,wake_val is still same as older value and
->> there is no need to mark the entire cache as dirty.
+>> Thinking further on this I think it is a bad idea to add a special
+>> binding because the IP is not different. It is just that it is
+>> wired differently on the TI SoC so DMA range is limited.
 >>
-> Ah, I see it now. We don't actually cache active_only votes anywhere,
-> since they're one time requests. The sleep/wake votes seem to be the
-> only thing that gets cached.
->
-> I was thinking it might be safer to also set dirty = true just after
-> list_add_tail, since in the non-existing case this is a new batch that
-> RPMh has never seen before and should always be written. But I suppose
-> your checks here should cover that case, since sleep_val and wake_val
-> are initialized to UINT_MAX. If you think the code might evolve, it
-> might still be nice to add it.
-current change seems good.
->
-> While I'm looking at that, why do we have this needless INIT_LIST_HEAD?
->          INIT_LIST_HEAD(&req->list);
->          list_add_tail(&req->list, &ctrlr->cache);
->
-> -Evan
+>> IMO the proper solution is to have the right dma-ranges property in the
+>> device tree. However, SATA platform driver is doing the wrong thing
+>> by overriding the dma masks.
+>> i.e. in ahci_platform_init_host() in libahci_platform.c >
+>>          if (hpriv->cap & HOST_CAP_64) {
+>>                  rc = dma_coerce_mask_and_coherent(dev, 
+>> DMA_BIT_MASK(64));
+>>                  if (rc) {
+>>                          rc = dma_coerce_mask_and_coherent(dev,
+>>                                                            
+>> DMA_BIT_MASK(32));
+>>                          if (rc) {
+>>                                  dev_err(dev, "Failed to enable 64-bit 
+>> DMA.\n");
+>>                                  return rc;
+>>                          }
+>>                          dev_warn(dev, "Enable 32-bit DMA instead of 
+>> 64-bit.\n");
+>>                  }
+>>          }
+>>
+>> This should be removed. Do you agree?
+> 
+> I agree with you in principal, but I'm afraid this might cause 
+> regressions for
+> existing hardware. We only do this if the host has set the CAP_64 flag,
+> this code is quite old, it comes from the following commit:
+> 
+> ###
+>  From cc7a9e27562cd78a1dc885504086fab24addce40 Mon Sep 17 00:00:00 2001
+> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> Date: Thu, 12 Jun 2014 12:40:23 -0500
+> Subject: [PATCH v3] ahci: Check and set 64-bit DMA mask for platform 
+> AHCI driver
+> 
+> The current platform AHCI driver does not set the dma_mask correctly
+> for 64-bit DMA capable AHCI controller. This patch checks the AHCI
+> capability bit and set the dma_mask and coherent_dma_mask accordingly.
+> 
+> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> Tested-by: Suman Tripathi <stripathi@apm.com>
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> ###
+> 
+> Presumably this was added for a reason, I'm guessing this might come
+> from AMD's ARM server chips adventures, but I'm afraid that AHCI support
+> on other (ARM) SoC's has become to rely on this behavior too.
+> 
+> Maybe we can add a check to see if the mask was not already set and skip
+> setting the mask in that case ?
 
-Thanks for pointing this, i will remove this unnecessary INIT in next 
-revision.
+If the device *is* inherently 64-bit capable, then setting 64-bit masks 
+in the driver is correct - if a 64-bit IP block happens to have been 
+integrated with only 32 address bits wired up, but the system has memory 
+above the 32-bit boundary, then that should be described via 
+"dma-ranges", which should then end up being used to further constrain 
+the device masks internally to the DMA API.
 
->
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Robin.
