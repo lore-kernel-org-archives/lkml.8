@@ -2,63 +2,164 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD35C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940F2C3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7614020714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:45:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=scoopta.email header.i=@scoopta.email header.b="MWCn/Pa0"
+	by mail.kernel.org (Postfix) with ESMTP id 6AEDB2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581486445;
+	bh=vfQCzX8Gzst/DyzbbP8Yb9hEeqTup17d6ibCA2atEQk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kYbRGct1bLwZoVbrIj7OHQ4G2/0KIJTHkso6rOiOKntDE0MmC2+wOon9IuosTi08v
+	 ZIO6TbLZI53xYqYpa7o0DmYeptRRe7Wcc273KcTHHJcxuXohEjvWn+wgfIfwZ9TiXE
+	 +zhy1MhLb5FJ9FNr9Asxn9vT519m9VBWBVkgpEa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgBLFpr (ORCPT
+        id S1728135AbgBLFrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 00:45:47 -0500
-Received: from scoopta.email ([198.58.106.30]:35120 "EHLO scoopta.email"
+        Wed, 12 Feb 2020 00:47:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbgBLFpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 00:45:47 -0500
-DKIM-Signature: a=rsa-sha256; b=MWCn/Pa0zxDqxlxOX1MY8bc4GT/DdP0hW9gXWU22aZtfHc6KR5WMYszHtGcZ7McrdVEYTBhPCzjr94+W08n1mWVR0xtPWbUNF6QIwP8XU7U4Ke8OOGGxy82Fkm+krVfQOmFlHVclHiaVN977flxtHU9JKbkKb0T3lP85dsUpYGqsqScyEZvcPN3U/GQkt2GSD+LE+1R6AFSn2o3OoxzBCze7d8w0nlK/SFZyV3n3AIsABs/JwxkTsH5s/zzIsshpz6vKjDI2lIG1ggYSu9iSEdDYFTXTLH2hKjuiqV4kwSftg1k7KNSrxLPzxre9BQajRJoMiRMw9bW9yHNXVOCAdmYcxgKYcXfeQWUuh88kBHMYDYAPjzs8263HdYV2vpr389UyppoW75FyYOasdzEO9jhLTXziCX6YGHzpQAtrzeOyupC/VSq6FJHD6eevVRgEJzObpcLxpmSS+n1OCIpmr6ZnISNqmdKtCmeFD5/kHL71LeOG304BJGMy/HPs3OXU62fQ5Za0adujDjB4amAbTjEB0OxAhd2zHNv/Envy1n78R0XhCZErNFCH3QvcbeskBxsZSH3Apye91EoOmx/NPPd0EvCp99TreDTmUn4OsJKqwJvNQkn/ktG0yB6GzEUMfl9wdrevbO/e1jWDNP2VEos2KQpJiKj0lj3fdGxeoMwejWjePheW4Qa3E+KfOUBfYsVRoGmIorHe2elRvkdMNeKiXJxAH0eOslZxt892CZh8Ae6cPEe9LzPU4O+eWks7IaKo9McvF+4OUl3AaTJILNq4RFAuYJWOzgiXF5A1tDvClO5y55YnqVO+fiN67vOgwKITPhePbTrtzpIDBJcr2g711nE92jjZKp9iH186Fuql/R/pUrK4S4iv7tC7GkAPq9JSvVuo/Scp0J/g1SbbYxYe7oUZzBTg2bmJKXjyLHePsSOGCXeDIFGmoLZKotZe6m1vjE
- qMO2V37z3dY5Xyb39TUwyzP26RNpdKov8UYXwajmtBTUWjjp0+k6g1wJ/erPBvxyUObCBaUhWOn1qkaT9ByVXpeYtcHx6rjPzyDZUPFxuJPI4dpTGjn8omx6+S5IgN6q0QEYsaQFQ7n47F2GGtnDrAP4s2lA0ukSzKZ+szWg4vdXu/ZORMwU3T1UifIAYsuPrxqARpysrnxTCrisffnvN3xwunlmXpKIGTyQar4b7ZSxmPC9CzJPMCf07lgJmZQIMTjxSfHbdT0hQm2kIpmiFFTtI6T5QcqeK65vrpIjXN849YMkEFNdqPcZPkv+cOTd5sVJPV0Jk4wGc/o75yZ2D/+P1sCg9daenSFMjkW6CqgJayr0xiE83gqZW6bxADxzCmi44MxKq/MMAPow==; s=20190906; c=relaxed/relaxed; d=scoopta.email; v=1; bh=UsV02BXq7nmf9pJOt+IZXDyj/YmLSo9ThalTDQSShu4=; h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type;
+        id S1725843AbgBLFrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 00:47:24 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D15620714;
+        Wed, 12 Feb 2020 05:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581486442;
+        bh=vfQCzX8Gzst/DyzbbP8Yb9hEeqTup17d6ibCA2atEQk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=16O0AgpGnIblG8wXcW2EbHRzkj93++0mtvCGjFsyUCV76OVBn3s08Rm0Tzv10tDKX
+         lVogvBzynO1bch/RJ/BUyPtnWFQPHyHktHkoCQZmBDMm5mY+WEzsP8LNaRpna7Nlxp
+         fGy1pIz8XmPZ5U7MkLYBItDm8Mu67V3uwnIqWsJk=
+Date:   Tue, 11 Feb 2020 21:47:20 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v7 6/8] f2fs: Handle casefolding with Encryption
+Message-ID: <20200212054720.GH870@sol.localdomain>
+References: <20200208013552.241832-1-drosen@google.com>
+ <20200208013552.241832-7-drosen@google.com>
 MIME-Version: 1.0
-X-UserIsAuth: true
-Received: from 2600:1700:4810:f9ef:0:0:f0c5:cafe (EHLO [IPv6:2600:1700:4810:f9ef::f0c5:cafe]) ([2600:1700:4810:f9ef:0:0:f0c5:cafe])
-          by scoopta.email (JAMES SMTP Server ) with ESMTPA ID 583260146
-          for <linux-kernel@vger.kernel.org>;
-          Tue, 11 Feb 2020 21:45:47 -0800 (PST)
-Subject: Re: RX 5700 XT Issues
-From:   Scoopta <mlist@scoopta.email>
-To:     linux-kernel@vger.kernel.org
-References: <8e09f86e-b241-971a-ea8c-8948b9e06d20@scoopta.email>
-Message-ID: <3b2eff03-35b0-36f4-21a7-6a117733d4ad@scoopta.email>
-Date:   Tue, 11 Feb 2020 21:45:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-In-Reply-To: <8e09f86e-b241-971a-ea8c-8948b9e06d20@scoopta.email>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208013552.241832-7-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My previous statement doesn't appear to be correct syslog just wasn't
-being flushed despite doing an REISUB. I'm getting a powerplay error.
-Specifically it seems related to
-https://gitlab.freedesktop.org/drm/amd/issues/900
+On Fri, Feb 07, 2020 at 05:35:50PM -0800, Daniel Rosenberg wrote:
+> @@ -173,24 +193,24 @@ static inline bool f2fs_match_name(struct f2fs_dentry_ptr *d,
+>  {
+>  #ifdef CONFIG_UNICODE
+>  	struct inode *parent = d->inode;
+> -	struct super_block *sb = parent->i_sb;
+> -	struct qstr entry;
+> +	unsigned char *name;
+> +	int len;
+>  #endif
+>  
+>  	if (de->hash_code != namehash)
+>  		return false;
+>  
+>  #ifdef CONFIG_UNICODE
+> -	entry.name = d->filename[bit_pos];
+> -	entry.len = de->name_len;
+> +	name = d->filename[bit_pos];
+> +	len = de->name_len;
 
-On 2/11/20 7:13 PM, Scoopta wrote:
-> When playing demanding games my RX 5700 XT will sometimes just stop. All
-> my displays turn off but the system stays responsive. Audio keeps
-> working and I can REISUB no problem, the card just stops. Fans turn off
-> lm-sensors reports N/A as all information on the sensors and my monitors
-> go into power save. syslog is also completely quiet. amdgpu doesn't seem
-> to error or anything so I have no idea how to troubleshoot if this is a
-> hardware issue or if it's a driver issue. I couldn't find a drm or GPU
-> specific list so I'm sending it here. I want to be sure it's not a
-> driver issue or other kernel issue before doing an RMA.
->
+This is missing le16_to_cpu().
+
+>  int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
+>  				const struct qstr *orig_name,
+> +				f2fs_hash_t dentry_hash,
+>  				struct inode *inode, nid_t ino, umode_t mode)
+>  {
+>  	unsigned int bit_pos;
+>  	unsigned int level;
+>  	unsigned int current_depth;
+>  	unsigned long bidx, block;
+> -	f2fs_hash_t dentry_hash;
+>  	unsigned int nbucket, nblock;
+>  	struct page *dentry_page = NULL;
+>  	struct f2fs_dentry_block *dentry_blk = NULL;
+> @@ -632,7 +652,6 @@ int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
+>  
+>  	level = 0;
+>  	slots = GET_DENTRY_SLOTS(new_name->len);
+> -	dentry_hash = f2fs_dentry_hash(dir, new_name, NULL);
+
+Why was the call to f2fs_dentry_hash() moved to the caller, but for
+f2fs_add_inline_entry() a different approach was taken?
+
+> @@ -718,17 +737,19 @@ int f2fs_add_dentry(struct inode *dir, struct fscrypt_name *fname,
+>  				struct inode *inode, nid_t ino, umode_t mode)
+>  {
+>  	struct qstr new_name;
+> +	f2fs_hash_t dentry_hash;
+>  	int err = -EAGAIN;
+>  
+>  	new_name.name = fname_name(fname);
+>  	new_name.len = fname_len(fname);
+>  
+>  	if (f2fs_has_inline_dentry(dir))
+> -		err = f2fs_add_inline_entry(dir, &new_name, fname->usr_fname,
+> +		err = f2fs_add_inline_entry(dir, &new_name, fname,
+>  							inode, ino, mode);
+
+I'm really confused.  Why are you passing around both new_name and fname?
+We already have new_name == fname.disk_name.  So isn't just the
+'struct fscrypt_name' sufficient?
+
+> +static f2fs_hash_t __f2fs_dentry_hash(const struct inode *dir,
+> +				const struct qstr *name_info,
+> +				const struct fscrypt_name *fname)
+>  {
+>  	__u32 hash;
+>  	f2fs_hash_t f2fs_hash;
+> @@ -85,6 +86,11 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
+>  	if (is_dot_dotdot(name_info))
+>  		return 0;
+>  
+> +	if (IS_CASEFOLDED(dir) && IS_ENCRYPTED(dir)) {
+> +		f2fs_hash = fscrypt_fname_siphash(dir, name_info);
+> +		return f2fs_hash;
+> +	}
+
+This is missing cpu_to_le32().
+
+Also, above we have:
+
+        /* encrypted bigname case */
+        if (fname && !fname->disk_name.name)
+                return cpu_to_le32(fname->hash);
+
+That won't work with encrypted+casefolded directories without the key, because
+now sometimes the hash from the no-key name is needed even when the disk_name is
+available.  This will cause a crash in fscrypt_fname_siphash() being called
+without the key.  I think you want:
+
+        if (fname && fname->is_ciphertext_name)
+                return cpu_to_le32(fname->hash);
+
+Can you please write xfstests for encrypt+casefold?
+
+- Eric
