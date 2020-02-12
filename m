@@ -2,173 +2,73 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6DCC352A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0664C35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518EA206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7Q3Gvd2"
+	by mail.kernel.org (Postfix) with ESMTP id 89C4B20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 02:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgBLCps (ORCPT
+        id S1727658AbgBLCuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:45:48 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46838 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgBLCps (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:45:48 -0500
-Received: by mail-pf1-f194.google.com with SMTP id k29so432490pfp.13;
-        Tue, 11 Feb 2020 18:45:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4XsJvZXSh2poOw0ny0DD0U8QzL/E8gANM6N3f870hLw=;
-        b=R7Q3Gvd2nDYBCLMXNS1vwZ0+M9mzlo3zCghlPUswvarbQvL30kk6zl6inWgVLGyASy
-         eVE3HnI/MR/yKUvTyIqbpIOXDNFZpzmDOsXsaraq46Y0ecARv15XKiYROhmCVf38+kbU
-         FqaCxMb6unzp+gUAcoTWEfXdhUWey/OHj7oHwZAEn5fyH3PJzuCT+va3rZJCQAk70XJk
-         H90ouN0z8TEFkBICvIVZDA8O6Szz9IYyzSECSzq0aWShDdMcQ+/7BWlS8SGwkULYjSvu
-         LMKAThnpVFBe5nBAqPejEM0WvRq8Rx2wGL1PslOQtJ6MBeeHQt2Y+kaWPQvRNqRJH2Z0
-         KSzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4XsJvZXSh2poOw0ny0DD0U8QzL/E8gANM6N3f870hLw=;
-        b=gqT7VBKWeygWIsPiNB9zMW7Xj5cdqP+vKkAJYtBOsb17aaLHlBTw2jbTa6EGPPZiMR
-         QG4k7BX/89VgIXFlllvAXeBoq2sqCjEPmoLBZVSqSwCIag/dAhvU2Q7r2DqC62Kz87eV
-         L0e/HnWTeESZnS+ifgpsIjVEmnjAnzLOSiP0sQakF88+rRoG2VHwzKaftWCEzAIScFKX
-         Z36tfuM968ddfy7ItlfzHudDbmCow3rwpdGXKnrYZZfrqakZKCbmfIqrdjZkwMPhaH2A
-         bj19bT6yYsORRsJyCExbzfQW8HhRG10X74lKZ87OgHRytgAg+p6AB/iFzQoSVl0aCIK4
-         T5mg==
-X-Gm-Message-State: APjAAAUPNALH/tggHKw04v7PD/sqqtjlFrZ52j9wCTwzs5obpCckoi7n
-        nU4ck7wm52eUcJex4168yYY=
-X-Google-Smtp-Source: APXvYqzqpZ6Ew8o6WvQIBZA0g9+/hsicYC2YDFE69RecwXpDRWIymv7bvw6BB65CPLE2HrNCYaDdcQ==
-X-Received: by 2002:a63:74b:: with SMTP id 72mr9804384pgh.162.1581475547125;
-        Tue, 11 Feb 2020 18:45:47 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:200::1:aeb4])
-        by smtp.gmail.com with ESMTPSA id c10sm5449516pgj.49.2020.02.11.18.45.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Feb 2020 18:45:46 -0800 (PST)
-Date:   Tue, 11 Feb 2020 18:45:44 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Jann Horn <jannh@google.com>, KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-Message-ID: <20200212024542.gdsafhvqykucdp4h@ast-mbp>
-References: <20200211124334.GA96694@google.com>
- <20200211175825.szxaqaepqfbd2wmg@ast-mbp>
- <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
- <20200211190943.sysdbz2zuz5666nq@ast-mbp>
- <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
- <20200211201039.om6xqoscfle7bguz@ast-mbp>
- <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
- <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
- <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
- <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
+        Tue, 11 Feb 2020 21:50:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727565AbgBLCuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Feb 2020 21:50:01 -0500
+Received: from rorschach.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4449420724;
+        Wed, 12 Feb 2020 02:50:00 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 21:49:58 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: Re: [PATCH] kernel/watchdog: flush all printk nmi buffers when
+ hardlockup detected
+Message-ID: <20200211214958.5d8f4004@rorschach.local.home>
+In-Reply-To: <20200212011551.GA13208@google.com>
+References: <158132813726.1980.17382047082627699898.stgit@buzz>
+        <20200212011551.GA13208@google.com>
+X-Mailer: Claws Mail 3.17.4git76 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
-User-Agent: NeoMutt/20180223
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 01:09:07AM +0100, Daniel Borkmann wrote:
+On Wed, 12 Feb 2020 10:15:51 +0900
+Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+
+> On (20/02/10 12:48), Konstantin Khlebnikov wrote:
+> > 
+> > In NMI context printk() could save messages into per-cpu buffers and
+> > schedule flush by irq_work when IRQ are unblocked. This means message
+> > about hardlockup appears in kernel log only when/if lockup is gone.
+> > 
+> > Comment in irq_work_queue_on() states that remote IPI aren't NMI safe
+> > thus printk() cannot schedule flush work to another cpu.
+> > 
+> > This patch adds simple atomic counter of detected hardlockups and
+> > flushes all per-cpu printk buffers in context softlockup watchdog
+> > at any other cpu when it sees changes of this counter.  
 > 
-> Another approach could be to have a special nop inside call_int_hook()
-> macro which would then get patched to avoid these situations. Somewhat
-> similar like static keys where it could be defined anywhere in text but
-> with updating of call_int_hook()'s RC for the verdict.
+> Petr, could you remind me, why do we do PRINTK_NMI_DIRECT_CONTEXT_MASK
+> only from ftrace?
 
-Sounds nice in theory. I couldn't quite picture how that would look
-in the code, so I hacked:
-diff --git a/security/security.c b/security/security.c
-index 565bc9b67276..ce4bc1e5e26c 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -28,6 +28,7 @@
- #include <linux/string.h>
- #include <linux/msg.h>
- #include <net/flow.h>
-+#include <linux/jump_label.h>
+Could it be because its from ftrace_dump() which can spit out millions
+of lines from NMI context?
 
- #define MAX_LSM_EVM_XATTR      2
-
-@@ -678,12 +679,26 @@ static void __init lsm_early_task(struct task_struct *task)
-  *     This is a hook that returns a value.
-  */
-
-+#define LSM_HOOK_NAME(FUNC) \
-+       DEFINE_STATIC_KEY_FALSE(bpf_lsm_key_##FUNC);
-+#include <linux/lsm_hook_names.h>
-+#undef LSM_HOOK_NAME
-+__diag_push();
-+__diag_ignore(GCC, 8, "-Wstrict-prototypes", "");
-+#define LSM_HOOK_NAME(FUNC) \
-+       int bpf_lsm_call_##FUNC() {return 0;}
-+#include <linux/lsm_hook_names.h>
-+#undef LSM_HOOK_NAME
-+__diag_pop();
-+
- #define call_void_hook(FUNC, ...)                              \
-        do {                                                    \
-                struct security_hook_list *P;                   \
-                                                                \
-                hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
-                        P->hook.FUNC(__VA_ARGS__);              \
-+               if (static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
-+                      (void)bpf_lsm_call_##FUNC(__VA_ARGS__); \
-        } while (0)
-
- #define call_int_hook(FUNC, IRC, ...) ({                       \
-@@ -696,6 +711,8 @@ static void __init lsm_early_task(struct task_struct *task)
-                        if (RC != 0)                            \
-                                break;                          \
-                }                                               \
-+               if (RC == IRC && static_branch_unlikely(&bpf_lsm_key_##FUNC)) \
-+                      RC = bpf_lsm_call_##FUNC(__VA_ARGS__); \
-        } while (0);                                            \
-        RC;                                                     \
- })
-
-The assembly looks good from correctness and performance points.
-union security_list_options can be split into lsm_hook_names.h too
-to avoid __diag_ignore. Is that what you have in mind?
-I don't see how one can improve call_int_hook() macro without
-full refactoring of linux/lsm_hooks.h
-imo static_key doesn't have to be there in the first set. We can add this
-optimization later.
+-- Steve
