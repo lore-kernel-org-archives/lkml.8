@@ -2,145 +2,69 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E27AC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C49C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769EF20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:26:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YpL67d8O"
+	by mail.kernel.org (Postfix) with ESMTP id CEC9F20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 16:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgBLQ0T (ORCPT
+        id S1727923AbgBLQ2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:26:19 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55684 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbgBLQ0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:26:18 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so3004966wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 08:26:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+Oq1AdUw8m9+Ejebod5uLNgdGrkCleSq0Jc+gdcY2Xc=;
-        b=YpL67d8OFfQLpn88KHHeHpPU9M5tKjVFTcgq5WB9ADXua8Vw9eM8D2prp/DJjWvw5x
-         IUn9CPoWMY9ErauDjliaZ0oyal2LyauacKjUhMC9MEyWAKMtuwKlz5y5xltvAr5Xm+4a
-         LxQdRjGor2YzOi0pqFDJ9uvpsP70D/2xy3qaY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+Oq1AdUw8m9+Ejebod5uLNgdGrkCleSq0Jc+gdcY2Xc=;
-        b=toaCCmNzq0TazxIrX913bvEI33KsYvXGpIgduyXjuoiwFxILzb4xrQENPuFHClBaT6
-         T4APdQA2DprxmpgwjufFpfJ7ruXlWNHtIR/hkv073izJHcSnTXfkLuNJmC/N4YyIBpVe
-         HGcEaMVJY8UZ/xIwgROGLuMLJkQQZZ7how9i+Bpcp/Zc6D/S/mHk/ERVNaC0ewYCIGD5
-         O5h40w6cdZXfxbjIlKZH71cnWlOVHvmIFCqwb0L2VHfL3iZ7KnsFN531YLoSm/zcoLZx
-         WMhj0YOgy/2CzI/Dodpc2ydhXjzhIbUOYGRct4GFOP/d3AqAmCG1Jf4/A8TL0u99ZtYA
-         DNDg==
-X-Gm-Message-State: APjAAAUxwa3lpRl3tc+FkSbtuU9ryFOMIqfB4fHGvxTAW/Z/OWB1/6L8
-        Y0xt6dL5jWi0WBUBQ+xcriFvUg==
-X-Google-Smtp-Source: APXvYqz35eTpzE3tOLY8FLLO74LVWtEJvvI50Wec8849cwajczF2fVsNZaWwaW+IbhiJCYa0NkM9Lg==
-X-Received: by 2002:a7b:cab1:: with SMTP id r17mr13425209wml.116.1581524775975;
-        Wed, 12 Feb 2020 08:26:15 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id s8sm1267535wrt.57.2020.02.12.08.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 08:26:15 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 12 Feb 2020 17:26:13 +0100
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jann Horn <jannh@google.com>, KP Singh <kpsingh@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: BPF LSM and fexit [was: [PATCH bpf-next v3 04/10] bpf: lsm: Add
- mutable hooks list for the BPF LSM]
-Message-ID: <20200212162613.GB259057@google.com>
-References: <CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com>
- <20200211190943.sysdbz2zuz5666nq@ast-mbp>
- <CAG48ez2gvo1dA4P1L=ASz7TRfbH-cgLZLmOPmr0NweayL-efLw@mail.gmail.com>
- <20200211201039.om6xqoscfle7bguz@ast-mbp>
- <CAG48ez1qGqF9z7APajFyzjZh82YxFV9sHE64f5kdKBeH9J3YPg@mail.gmail.com>
- <20200211213819.j4ltrjjkuywihpnv@ast-mbp>
- <CAADnVQLsiWgSBXbuxmpkC9TS8d1aQRw2zDHG8J6E=kfcRoXtKQ@mail.gmail.com>
- <1cd10710-a81b-8f9b-696d-aa40b0a67225@iogearbox.net>
- <20200212024542.gdsafhvqykucdp4h@ast-mbp>
- <bee0fd08-b9f2-83e4-2882-475b81c74303@schaufler-ca.com>
+        Wed, 12 Feb 2020 11:28:18 -0500
+Received: from mga09.intel.com ([134.134.136.24]:21720 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726728AbgBLQ2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 11:28:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 08:28:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="237752817"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 12 Feb 2020 08:28:16 -0800
+Date:   Wed, 12 Feb 2020 08:28:16 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/7] KVM: x86/mmu: Rename kvm_mmu->get_cr3() to
+ ->get_guest_cr3_or_eptp()
+Message-ID: <20200212162816.GB15617@linux.intel.com>
+References: <20200207173747.6243-1-sean.j.christopherson@intel.com>
+ <20200207173747.6243-7-sean.j.christopherson@intel.com>
+ <1424348b-7f09-513a-960b-6d15ac3a9ae4@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bee0fd08-b9f2-83e4-2882-475b81c74303@schaufler-ca.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1424348b-7f09-513a-960b-6d15ac3a9ae4@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-Feb 07:52, Casey Schaufler wrote:
-> On 2/11/2020 6:45 PM, Alexei Starovoitov wrote:
-> > On Wed, Feb 12, 2020 at 01:09:07AM +0100, Daniel Borkmann wrote:
-> >> Another approach could be to have a special nop inside call_int_hook()
-> >> macro which would then get patched to avoid these situations. Somewhat
-> >> similar like static keys where it could be defined anywhere in text but
-> >> with updating of call_int_hook()'s RC for the verdict.
+On Wed, Feb 12, 2020 at 01:00:59PM +0100, Paolo Bonzini wrote:
+> On 07/02/20 18:37, Sean Christopherson wrote:
+> > Rename kvm_mmu->get_cr3() to call out that it is retrieving a guest
+> > value, as opposed to kvm_mmu->set_cr3(), which sets a host value, and to
+> > note that it will return L1's EPTP when nested EPT is in use.  Hopefully
+> > the new name will also make it more obvious that L1's nested_cr3 is
+> > returned in SVM's nested NPT case.
+> > 
+> > No functional change intended.
 > 
-> Tell me again why you can't register your BPF hooks like all the
-> other security modules do? You keep reintroducing BPF as a special
-> case, and I don't see why.
+> Should we call it "get_pgd", since that is how Linux calls the top-level
+> directory?  I always get confused by PUD/PMD, but as long as we only
+> keep one /p.d/ moniker it should be fine.
 
-I think we tried to answer this in the discussion we had:
-
- https://lore.kernel.org/bpf/20200123152440.28956-1-kpsingh@chromium.org/T/#meb1eea982e63be0806f9bba58e91160871803752
-
-BPF should not allocate a wrapper (to be statically regsitered at
-init) for each LSM hook and run the programs from within that as this
-implies adding overhead across the board for every hook even if
-it's never used (i.e. no BPF program is attached to the hook).
-
-We can, with the suggestions discussed here, avoid adding unncessary
-overhead for unused hooks. And, as Alexei mentioned, adding overhead
-when not really needed is especially bad for LSM hooks like
-sock_sendmsg.
-
-The other LSMs do not provide dynamic / mutable hooks, so it makes
-sense for them to register the hooks once at load time.
-
-- KP
-
-> > Sounds nice in theory. I couldn't quite picture how that would look
-> > in the code, so I hacked:
-> > diff --git a/security/security.c b/security/security.c
-> > index 565bc9b67276..ce4bc1e5e26c 100644
-> > --- a/security/security.c
-
-[...]
+Heh, I have the exact same sentiment.  get_pgd() works for me.
