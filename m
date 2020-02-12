@@ -2,105 +2,104 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05ECC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC50EC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805C9206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A4C206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dl9lpSma"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JllzjkrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgBLOWi (ORCPT
+        id S1728286AbgBLOXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:22:38 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40879 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgBLOWi (ORCPT
+        Wed, 12 Feb 2020 09:23:34 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40689 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgBLOXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:22:38 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so2684697wmi.5;
-        Wed, 12 Feb 2020 06:22:36 -0800 (PST)
+        Wed, 12 Feb 2020 09:23:33 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so1320608pfh.7;
+        Wed, 12 Feb 2020 06:23:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=f3OlCupjVSpjjJAyiqIlXphKxGd2QdpKN8ivxs447PI=;
-        b=Dl9lpSmatwVOC21E0mjSSB6JBbvrgHOhnt9TJQKurWmEXoJD/j6RCoaQpD0XXLBNPG
-         s/aR2DqI/iJJmcA1mm2lC98j11nV1A63keqbKOERz/00nvFAHQYaKJm9roD/8w9OJbCh
-         stipo5s68ycgLPwKYp9FQin8Uec53elM3Dq3OcJnI4HkI8WvpQW86fAW9gaKiYNMzXkH
-         8jjXjyW/MgKwM8JNe0VwCHunEB7ULx+BmCZlC/J0fyrLci4PdE2Ztq1tDR+GyVl3PrMy
-         DCMBtn/WzSW9wRb8xrb8O4WXsXeh71t2AFZ2apstctwXCbZdky6khu44kw7S6QM+Gt1g
-         CiLg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2CG8ksxxPOqr0AnERJ/PdtG9O/daCfWo5DfUdNbgZas=;
+        b=JllzjkrRB5hg0Jei6ang1AiW8KaPckknGXzSJuwpvLzqlt3vERdsiwP74Qo3BXwspr
+         hR87nSv3mDIl1cgRTrISAy0eQNeyrwQf0JIAggE6iXYzQO/Ce3tBoRWiEZWhLMFwTE6Z
+         tHRD1JoUhop4fVlY8UMyW0HeLIhfoAVHQgG3mdIHDmYb2h21XnwLjBSkLhmrl7DvuLEt
+         GugQr+KTRou6MiXtV6soXwBZfW3H+R2sTIldasINr+OzHTKx+yAaUh93myPq3WY2uOpN
+         XuwRJ4Sc75dPv008QC9S7r5jVkTwGdI09GCvUtWUNbsM6zSuD9eeuzm290qcpIP1ESZ/
+         f/5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=f3OlCupjVSpjjJAyiqIlXphKxGd2QdpKN8ivxs447PI=;
-        b=XeBX/zISSg5hwOwxkvyp0BcoKw2o7TNb2Kswd21U1P6GYlJS2rmwyaObGPerV6eOMy
-         P0LYGK+D5n/8gIKacqS5Loj4NetNZp/UlBdvls3P1uWRyOmyVU59ZZIdqfLQ05sD3Tqm
-         /WuoOr8j+76lHCanvEaaXwGidNkYfRowrBv3egSZ6uJ22lPJ4vbQLc73UHSLpuwaFR6I
-         qwztTzOK1jNYbmknevhJf7+vixIlAMiN3qTqH5CzFFY4xI0k421frhuB5TtghP3NFPzm
-         nfUOBTbkZmiHrXPs+sIgZaUMoqBxZlV4sjXk9Kjxg7ZP1gnYHqbKH5vlcX7aY1ze8gSm
-         9zQQ==
-X-Gm-Message-State: APjAAAWU6DrNVtxW11Fs2sTEQlgPpowZwtYr+fioUL5H+mt9UUhjmWVo
-        rfrtaNqw63I4iWcG21AI7vFkpRS5k9w=
-X-Google-Smtp-Source: APXvYqzrf6YE5hkFqUnWc+nBttuk6honbPrzWg+QT57DKimAG4x961PYYPZNWxLWLqxj0+Q5N9SB4Q==
-X-Received: by 2002:a1c:a78b:: with SMTP id q133mr12733112wme.28.1581517355791;
-        Wed, 12 Feb 2020 06:22:35 -0800 (PST)
-Received: from rdodd-desktop.home (host5-81-121-228.range5-81.btcentralplus.com. [5.81.121.228])
-        by smtp.gmail.com with ESMTPSA id g7sm851625wrq.21.2020.02.12.06.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 06:22:34 -0800 (PST)
-From:   richard.o.dodd@gmail.com
-Cc:     gregkh@linuxfoundation.org, oneukum@suse.com,
-        linux-usb@vger.kernel.org, Richard Dodd <richard.o.dodd@gmail.com>,
-        Marco Zatta <marco@zatta.me>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: Fix novation SourceControl XL after suspend
-Date:   Wed, 12 Feb 2020 14:22:18 +0000
-Message-Id: <20200212142220.36892-1-richard.o.dodd@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200131214036.GA2280058@kroah.com>
-References: <20200131214036.GA2280058@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2CG8ksxxPOqr0AnERJ/PdtG9O/daCfWo5DfUdNbgZas=;
+        b=Ytp8WQSjFYsAc2jT7u7W0J0Vloyj8vdBG7dCbp1NylEWv1i7tvINgTPs9mnYcvDfT9
+         raizbKcup/33TMgfIWtqyllVk6aFEQzJcXLeyO8Ky5lVp7kuHXl4hvkjpPlHyvz8ScPa
+         +goVOfjuhhXRD0phz4k9CoXpAhASS8DCdmNJGxWVUh73YcLZDOH8KMT5cs3flPLINU0g
+         Ol43vKwVwyCWGSTP/bJ7l01ExmMwLGT+zZrIoh5JHrq0mhcfPixizpD+vbuCMH1XNNNG
+         cJW4YIP4aUtyuRmYxrB3KI5wZuyqMnKV5vvFEuc6SkLyx6NkfYiL5i/Wx5WnJ78wGy/s
+         q1gg==
+X-Gm-Message-State: APjAAAXd7F9bUzkEpk6LWOBwyaOR8qmZOnq/7Z7QfLg4PQ5EQ3NrZWCJ
+        q0N8xmmVuEVWaiCICdLgEcuqN+g0ysWuxael57I=
+X-Google-Smtp-Source: APXvYqwwT802Htg8/QLgGZfEl3X3B9sS1Nqnk9ag0wVeXU9UXD0zSNNN+/vGOTk50zGCdWCOveiGwSni6DcNPzpy4uU=
+X-Received: by 2002:a65:5242:: with SMTP id q2mr12353141pgp.74.1581517412831;
+ Wed, 12 Feb 2020 06:23:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200211130054.001bfce9@canb.auug.org.au> <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
+In-Reply-To: <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 12 Feb 2020 16:23:25 +0200
+Message-ID: <CAHp75Ve3oenxkSCr9FC14MErQeN6pwrafemgKUNMwxUDr+aYKA@mail.gmail.com>
+Subject: Re: linux-next: Tree for Feb 11 (drivers/platform/x86/intel_pmc_core.c)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Dodd <richard.o.dodd@gmail.com>
+On Tue, Feb 11, 2020 at 9:32 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 2/10/20 6:00 PM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20200210:
+> >
+>
+> on i386:
+>
+> Function args are reversed (offset and status);
+>
+> ../drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
+> ../drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-conversion]
+>    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
+>                                            ^~~~~~~~
+> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'u32 {aka unsigned int}' but argument is of type 'char *'
+>  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+>              ^~~~~~~~~~~~~~~~~~~~
+> ../drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-conversion]
+>    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
+>                                                      ^~~~~~
+> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'const char *' but argument is of type 'int'
+>  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+>              ^~~~~~~~~~~~~~~~~~~~
 
-Currently, the SourceControl will stay in power-down mode after resuming
-from suspend. This patch resets the device after suspend to power it up.
+Thank you, it should be fixed in today's Linux Next.
 
-Signed-off-by: Richard Dodd <richard.o.dodd@gmail.com>
----
- drivers/usb/core/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index 6b6413073584..3db6c05aaa4b 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -445,6 +445,9 @@ static const struct usb_device_id usb_quirk_list[] = {
- 	/* INTEL VALUE SSD */
- 	{ USB_DEVICE(0x8086, 0xf1a5), .driver_info = USB_QUIRK_RESET_RESUME },
- 
-+	/* novation SoundControl XL */
-+	{ USB_DEVICE(0x1235, 0x0061), .driver_info = USB_QUIRK_RESET_RESUME },
-+
- 	{ }  /* terminating entry must be last */
- };
- 
 -- 
-2.25.0
-
+With Best Regards,
+Andy Shevchenko
