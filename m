@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61A2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBA4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABE92073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D2A20848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 12:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGNH1Y97"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Njhl2GcV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbgBLMCw (ORCPT
+        id S1727894AbgBLMC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:02:52 -0500
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:38091 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgBLMCv (ORCPT
+        Wed, 12 Feb 2020 07:02:56 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43848 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgBLMCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:02:51 -0500
-Received: by mail-pf1-f181.google.com with SMTP id x185so1145163pfc.5;
-        Wed, 12 Feb 2020 04:02:50 -0800 (PST)
+        Wed, 12 Feb 2020 07:02:55 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p11so882776plq.10;
+        Wed, 12 Feb 2020 04:02:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OeRfynpBzWtXBGFTr/hu/iRIhnsICLk8oO4a/pXNvUM=;
-        b=tGNH1Y97PUNad4YgIOadnTlhC6CXUbtHJK4sKjeZvhgSCzEAETT4v890MUPENwf0VN
-         PboD6RHnn7C6QwevJbrYoVDNmhDmPuCTlXdtEdZ3l34GZkGdQFznpg1Fyo7KkX4vZ/va
-         F0lqohfFU6iNkPSM2Vdh4MOm6N9W8ndJ6Lh2/zysegNbrog48hcPPfGlc0PwN0byPp88
-         2rE+IXjldbW80Atbyq6WXWA82E7jKuzItBT3t2+cjwHofkVe8G74WfP13EUnTBhTQVcc
-         ln+Irw7ZFF+yQjRxz06h/JuaKWP4e81+5fUKTNlQQDAo584TO/Cq/5a+mM3QOTz565sS
-         dung==
+        bh=+lhmtQt1MVJK9xZ3yWPAuyRhB8dwTQ3KGnqmxzt5Q64=;
+        b=Njhl2GcVJc85MuxAsuYnc/S2wze/BWKiMAvdqffntHs1o6/InzecM9NGs5pCU9Rhcu
+         1DD11eCLN7L3R4KppLqpxlRSVoJ2h9C1dhYEnO4IQJMpQUCUQyhLNpyzPmOWV6uFEBtH
+         KuV320ccttcx1BmuFJAchRLFgwH3MPagNR2QD2fE7b2kWYUOq6SJb6JEnpiEkJL7idDJ
+         2ml2WoZE0x3rIyGX/iV8GVFe5g8nBHfszUvjMhrbSczzBDE4NLbnDLNMpSNhC9TtC3y6
+         hKWQRG4uvr6GUl9Y5+x8/sOGESLZp8RLziKUcZEuRXclRPYY7mYnRAj9dFFLb6GiYIMg
+         CqSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OeRfynpBzWtXBGFTr/hu/iRIhnsICLk8oO4a/pXNvUM=;
-        b=EDS6oiYzDMJIfUhGGxNPse1NxQSHMKtMwrVEEABICNlF3b/hODxUDOmBC9ak8zRiP3
-         wRXovWbVs5gRB47CRU8KQuJ/ALOb/kO247BSt4ASfzXrc+dzSNUtIjeBK46z/fAyl9FN
-         5GTppyHjJa5lmnKiUi+bDBqOrwNg5VQaA9uAFUrcUfyuutMn7TXso6lLzV8tdz3pArQw
-         Kn6t8aqzvoIhHfUFhhcpSYar5/EL//X03sby2tukONkNYJHNiYL9mbsdCX2x+Nxw5juh
-         A4wxabcF/qZ9Tv6iGbdfD/sw/WGpqChQjyXRlkwvOJ7q4QKY9ps5iOa3/MOAA9wqHRoP
-         03bA==
-X-Gm-Message-State: APjAAAWMP8f0vfrZQbUtjtqAteOyEVsRCt81dcjpoxojHSaSS0qWk2KS
-        kQELvyDdU8Qg7ey7ulVNQJA=
-X-Google-Smtp-Source: APXvYqykrFWZZK7yAd621OzAw6LmdZuA7kEYns7yVXWQwbZc+9A9ujPl3u0+W8v9yseIOg8L2Tlftw==
-X-Received: by 2002:a63:921a:: with SMTP id o26mr12312945pgd.246.1581508970574;
-        Wed, 12 Feb 2020 04:02:50 -0800 (PST)
+        bh=+lhmtQt1MVJK9xZ3yWPAuyRhB8dwTQ3KGnqmxzt5Q64=;
+        b=WKx5ZKniE/c1XrVDhf8rU1u+e/bPsrpeua0E0SRVVzRYS6FlIgxOJpwpMTg4xuf9Tj
+         wr5P8vdd/6O6LkUzG+yb8kZ/8uqOtxRH0NcD9+xCt6ZPiphAGvrN5Uiq7+NTvagCnUUO
+         40Um5LAhto2BxLWKv4O74YUnQavI4b22eEn2o9wnRFcuY5Dce96inirikKJLFsZpq9Xe
+         xJo9ZE60nb+NgZBBp2c2T4gv5fm312GSk+KHcicAGc/RZ9WmwxcvWH1iQrJxL1rE7Tw/
+         pyXV36JGZtiX+hB5m6oSW3ELkWmKCewOTINSSxrkVr8gPCKMgV8vOLALHfPRSysXN7l/
+         UlOw==
+X-Gm-Message-State: APjAAAVaHSCDgs27CZFui/w3l1vqfFqxHoJZ4LCwZ9wc/khKhf2I+RXJ
+        +Io7xYnySWIB+/ImTGkNy68=
+X-Google-Smtp-Source: APXvYqz3C0yH5yZi/l7Q3ooh8TD32j/hTW5czgjHDD02KEGHyP31uaTXQZ7QFwE6beVDPezR+R95WQ==
+X-Received: by 2002:a17:902:8a91:: with SMTP id p17mr7548772plo.75.1581508974861;
+        Wed, 12 Feb 2020 04:02:54 -0800 (PST)
 Received: from localhost.localdomain ([45.114.62.33])
-        by smtp.gmail.com with ESMTPSA id b24sm682448pfo.84.2020.02.12.04.02.47
+        by smtp.gmail.com with ESMTPSA id b24sm682448pfo.84.2020.02.12.04.02.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 04:02:50 -0800 (PST)
+        Wed, 12 Feb 2020 04:02:53 -0800 (PST)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -67,9 +67,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCHv1 1/2] ARM: dts: exynos: Add FSYS2 power domain to Exynos542x
-Date:   Wed, 12 Feb 2020 12:02:36 +0000
-Message-Id: <20200212120237.1332-2-linux.amoon@gmail.com>
+Subject: [PATCHv1 2/2] clk: samsung: exynos542x: Move FSYS2 subsystem clocks to its sub-CMU
+Date:   Wed, 12 Feb 2020 12:02:37 +0000
+Message-Id: <20200212120237.1332-3-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200212120237.1332-1-linux.amoon@gmail.com>
 References: <20200212120237.1332-1-linux.amoon@gmail.com>
@@ -80,55 +80,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a power domain FSYS2 for MMC device present in Exynos542x/5800 SoCs.
+Move FSYS2 clk setting to sub-CMU block to support power domain on/off
+sequences for mmc driver.
 
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- arch/arm/boot/dts/exynos5420.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Note: This patch might be missing some more setting
+as suspend/resume feature is broken.
+I could not resolve this issue at my end, any input or
+suggetion to improve this code.
+---
+ drivers/clk/samsung/clk-exynos5420.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index b672080e7469..2ba8a57303cd 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -210,6 +210,7 @@ mmc_0: mmc@12200000 {
- 			clocks = <&clock CLK_MMC0>, <&clock CLK_SCLK_MMC0>;
- 			clock-names = "biu", "ciu";
- 			fifo-depth = <0x40>;
-+			power-domains = <&fsys2_pd>;
- 			status = "disabled";
- 		};
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index c9e5a1fb6653..3597e8d62445 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -1035,9 +1035,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+ 	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+ 	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
+ 	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
+-	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
+-	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_IP_FSYS, 13, 0, 0),
+-	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
+ 	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
+ 			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+@@ -1258,6 +1255,17 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
+ 	{ DIV2_RATIO0, 0, 0x30 },	/* DIV dout_gscl_blk_300 */
+ };
  
-@@ -222,6 +223,7 @@ mmc_1: mmc@12210000 {
- 			clocks = <&clock CLK_MMC1>, <&clock CLK_SCLK_MMC1>;
- 			clock-names = "biu", "ciu";
- 			fifo-depth = <0x40>;
-+			power-domains = <&fsys2_pd>;
- 			status = "disabled";
- 		};
- 
-@@ -234,6 +236,7 @@ mmc_2: mmc@12220000 {
- 			clocks = <&clock CLK_MMC2>, <&clock CLK_SCLK_MMC2>;
- 			clock-names = "biu", "ciu";
- 			fifo-depth = <0x40>;
-+			power-domains = <&fsys2_pd>;
- 			status = "disabled";
- 		};
- 
-@@ -396,6 +399,13 @@ msc_pd: power-domain@10044120 {
- 			label = "MSC";
- 		};
- 
-+		fsys2_pd: power-domain@10044160 {
-+			compatible = "samsung,exynos4210-pd";
-+			reg = <0x10044160 0x20>;
-+			#power-domain-cells = <0>;
-+			label = "FSYS2";
-+		};
++static const struct samsung_gate_clock exynos5x_fsys2_gate_clks[] __initconst = {
++	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
++	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_IP_FSYS, 13, 0, 0),
++	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
++};
 +
- 		pinctrl_0: pinctrl@13400000 {
- 			compatible = "samsung,exynos5420-pinctrl";
- 			reg = <0x13400000 0x1000>;
++static struct exynos5_subcmu_reg_dump exynos5x_fsys2_suspend_regs[] = {
++	{ GATE_IP_FSYS, 0xff, 0xff },   /* FSYS gates */
++	{ SRC_TOP3, 0, BIT(12) },       /* MUX_ACLK_200_FSYS2_SEL */
++};
++
+ static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
+ 	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9,
+ 	     CLK_SET_RATE_PARENT, 0),
+@@ -1376,12 +1384,21 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
+ 	.pd_name	= "MAU",
+ };
+ 
++static const struct exynos5_subcmu_info exynos5x_fsys2_subcmu = {
++	.gate_clks	= exynos5x_fsys2_gate_clks,
++	.nr_gate_clks	= ARRAY_SIZE(exynos5x_fsys2_gate_clks),
++	.suspend_regs	= exynos5x_fsys2_suspend_regs,
++	.nr_suspend_regs = ARRAY_SIZE(exynos5x_fsys2_suspend_regs),
++	.pd_name	= "FSYS2",
++};
++
+ static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
+ 	&exynos5x_disp_subcmu,
+ 	&exynos5x_gsc_subcmu,
+ 	&exynos5x_g3d_subcmu,
+ 	&exynos5x_mfc_subcmu,
+ 	&exynos5x_mscl_subcmu,
++	&exynos5x_fsys2_subcmu,
+ };
+ 
+ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+@@ -1391,6 +1408,7 @@ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+ 	&exynos5x_mfc_subcmu,
+ 	&exynos5x_mscl_subcmu,
+ 	&exynos5800_mau_subcmu,
++	&exynos5x_fsys2_subcmu,
+ };
+ 
+ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
 -- 
 2.25.0
 
