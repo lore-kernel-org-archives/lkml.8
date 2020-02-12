@@ -2,52 +2,85 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF94C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48582C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D8F20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204132082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lDfQr6Li"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgBLLnU (ORCPT
+        id S1728270AbgBLLnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:43:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:59864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbgBLLnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:43:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D1EF30E;
-        Wed, 12 Feb 2020 03:43:18 -0800 (PST)
-Received: from [10.37.12.187] (unknown [10.37.12.187])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 487C53F68F;
-        Wed, 12 Feb 2020 03:43:14 -0800 (PST)
-Subject: Re: [PATCH v3 7/7] clocksource/drivers/arm_arch_timer: validate
- arch_timer_rate
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com,
-        sudeep.holla@arm.com, valentin.schneider@arm.com,
-        rjw@rjwysocki.net, peterz@infradead.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-8-ionela.voinescu@arm.com>
- <89339501-5ee4-e871-3076-c8b02c6fbf6e@arm.com>
- <a24aa6c86e7a565b6269f48d4026bca2@kernel.org>
- <289c6110-b7ea-1d61-d795-551723263803@arm.com>
- <f01a6384e7297de87a434e83bd1479d8@kernel.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <b7b0f4c6-cf59-e390-a67b-cfe3ff50a61f@arm.com>
-Date:   Wed, 12 Feb 2020 11:43:12 +0000
+        Wed, 12 Feb 2020 06:43:45 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36026 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgBLLnp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:43:45 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so1950700wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:43:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KOvpD7jZ6dU2lykqqwZ1WffWjcj24MrFs0WAUYdtKH4=;
+        b=lDfQr6Liipb++iFWX6iJLPM9MLax/98YrjUMx2NSCP8nRQEJxYPjeazAW44phauv1J
+         zDMSgxErIqX4lltTO8KyGkxULwpxH6e9bJjady6qCsW+AebfdzEjQF+Mcss/P6lo3+OS
+         FF91PfU0aV/URWm4wh3GjSVnh613RzCiGx7tWGzzdRYi6ewXTPYxFjEv1efuDc7Jqwge
+         zn5xpPgaLdj2zpQqUiy9CKCUKgX907JZl8MXHgLWLPzbAIeBDfLt3go9I+tWL4EHPVdP
+         006LMBAjbJpqTAWatWWABjuhtYLmX8EQ7svmcDYwPWKzjX5P+6qeN/fAarriHxmM6Zfn
+         q7rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KOvpD7jZ6dU2lykqqwZ1WffWjcj24MrFs0WAUYdtKH4=;
+        b=uO4U+s5PZCgeBFShxgbKXCVTKRJGffSmIEuJZHJrktdNFAthESSGmRPrLIQMqOFctn
+         OM2zUih5fMfA7dWyHs+Y8UDABPpHwqDzhvd1WbkY9VhsdSGZOy/p7idnHrwCGqGP2zbb
+         xJg/ZN/cvA0YDqCrmgl9fB/PCelpXEqpztZTMmLNNFkPAHyYTgCSeZUuvYTf0OT+oacw
+         1LMrsI5NQ7BkhB/l/oN1WxlHIGKJniqvsm4ktysKLqb7jcIm1dq9YkOe/9zi9TEylQ5h
+         Bs4TrwJ4PaW06QB49gSbXUS5iPMJrr5DdLKyGq0uRB0cQjtlHYt3vCuBIG+g2F5nswPR
+         7d0A==
+X-Gm-Message-State: APjAAAVq9Rv1YYytKuKam/gqBRXfCY7NI8d9s8VXMHTol6dWEbxXRbYr
+        CWE9q3cXrqUTsyBIBkSvUAQgH/pe3nc=
+X-Google-Smtp-Source: APXvYqzE17zeWea41ReY8EYtUfOouJpQCc5O05qfY1oQPGPCmX9DhPfP9NiRKKy53KgUTk1hUJxU6A==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr11846557wmg.167.1581507821024;
+        Wed, 12 Feb 2020 03:43:41 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id q130sm473499wme.19.2020.02.12.03.43.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 03:43:38 -0800 (PST)
+Subject: Re: [PATCH v3 6/6] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
+ documentation
+To:     Adam Serbinski <adam@serbinski.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200212015222.8229-1-adam@serbinski.com>
+ <20200212015222.8229-7-adam@serbinski.com>
+ <579e0ae1-f257-7af3-eac9-c8e3ab3b52c7@linaro.org>
+ <2989c09149976a28d13d4b4eb10b7c7e@serbinski.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <b5c1328a-e3ca-826d-9ff0-f2bbce24ac22@linaro.org>
+Date:   Wed, 12 Feb 2020 11:43:37 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <f01a6384e7297de87a434e83bd1479d8@kernel.org>
+In-Reply-To: <2989c09149976a28d13d4b4eb10b7c7e@serbinski.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -58,115 +91,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2/12/20 11:10 AM, Marc Zyngier wrote:
-> On 2020-02-12 10:55, Lukasz Luba wrote:
->> On 2/12/20 10:12 AM, Marc Zyngier wrote:
->>> On 2020-02-12 10:01, Lukasz Luba wrote:
->>>> Hi Ionela, Valentin
->>>>
->>>> On 2/11/20 6:45 PM, Ionela Voinescu wrote:
->>>>> From: Valentin Schneider <valentin.schneider@arm.com>
->>>>>
->>>>> Using an arch timer with a frequency of less than 1MHz can result 
->>>>> in an
->>>>> incorrect functionality of the system which assumes a reasonable rate.
->>>>>
->>>>> One example is the use of activity monitors for frequency invariance
->>>>> which uses the rate of the arch timer as the known rate of the 
->>>>> constant
->>>>> cycle counter in computing its ratio compared to the maximum frequency
->>>>> of a CPU. For arch timer frequencies less than 1MHz this ratio could
->>>>> end up being 0 which is an invalid value for its use.
->>>>>
->>>>> Therefore, warn if the arch timer rate is below 1MHz which contravenes
->>>>> the recommended architecture interval of 1 to 50MHz.
->>>>>
->>>>> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
->>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>> Cc: Marc Zyngier <maz@kernel.org>
->>>>> ---
->>>>>   drivers/clocksource/arm_arch_timer.c | 18 +++++++++++++++---
->>>>>   1 file changed, 15 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/drivers/clocksource/arm_arch_timer.c 
->>>>> b/drivers/clocksource/arm_arch_timer.c
->>>>> index 9a5464c625b4..4faa930eabf8 100644
->>>>> --- a/drivers/clocksource/arm_arch_timer.c
->>>>> +++ b/drivers/clocksource/arm_arch_timer.c
->>>>> @@ -885,6 +885,17 @@ static int arch_timer_starting_cpu(unsigned 
->>>>> int cpu)
->>>>>       return 0;
->>>>>   }
->>>>>   +static int validate_timer_rate(void)
->>>>> +{
->>>>> +    if (!arch_timer_rate)
->>>>> +        return -EINVAL;
->>>>> +
->>>>> +    /* Arch timer frequency < 1MHz can cause trouble */
->>>>> +    WARN_ON(arch_timer_rate < 1000000);
->>>>
->>>> I don't see a big value of having a patch just to add one extra 
->>>> warning,
->>>> in a situation which we handle in our code with in 6/7 with:
->>>>
->>>> +    if (!ratio) {
->>>> +        pr_err("System timer frequency too low.\n");
->>>> +        return -EINVAL;
->>>> +    }
->>>>
->>>> Furthermore, the value '100000' here is because of our code and
->>>> calculation in there, so it does not belong to arch timer. Someone
->>>> might ask why it's not 200000 or a define in our header...
->>>> Or questions asking why do you warn when that arch timer and cpu is not
->>>> AMU capable...
+On 12/02/2020 11:01, Adam Serbinski wrote:
 >>>
->>> Because, as the commit message outlines it, such a frequency is terribly
->>> out of spec?
+>>> +
+>>> + - qcom,pcm-slot-mapping
+>>> +    Usage: required for pcm interface
 >>
->> I don't see in the RM that < 1MHz is terribly out of spec.
->> 'Frequency
->> Increments at a fixed frequency, typically in the range 1-50MHz.
->> Can support one or more alternative operating modes in which it
->> increments by larger amounts at a
->> lower frequency, typically for power-saving.'
+>> Are these not specific to 8k and 16k mode ?
+>> We should probably list values for both modes here.
 > 
-> Hint: constant apparent frequency.
-> 
->> There is even an example how to operate at 20kHz and increment by 500.
->>
->> I don't know the code if it's supported, thought.
-> 
-> You're completely missing the point, I'm afraid. Nobody has to know that
-> this is happening. For all intent and purposes, the counter has always
-> the same frequency, even if the HW does fewer ticks of larger increments.
+> No, this is just the offset that the audio sample is placed in with 
+> respect to a maximum of 4 slots, 16 bits wide, beginning with the sync 
+> pulse.
 
-Fair enough. As I said I don't know details of that code.
+
+That's not true atleast by the QDSP documentation,
+according to it we will use more slots to transfer at higher sample 
+rate. ex:
+16 kHz data can be transferred using 8 kHz samples in two
+slots.
+
+Also there are 32 slots for each of 4 supported channels for PCM AFE port.
+
 
 > 
-> 
-> [...]
-> 
->>>> Lastly, this is arch timer.
->>>> To increase chances of getting merge soon, I would recommend to drop
->>>> the patch from this series.
->>>
->>> And? It seems to address a potential issue where the time frequency
->>> is out of spec, and makes sure we don't end up with additional problems
->>> in the AMU code.
->>
->> This patch just prints warning, does not change anything in booting or
->> in any code related to AMU.
-> 
-> It seems to solve an issue with an assumption made in the AMU driver,
-> and would help debugging the problem on broken systems. Are you saying
-> that this is not the case and that the AMU code can perfectly cope with
-> the frequency being less than 1MHz?
-
-What I was saying is that patch 6/7 has the code which checks the rate
-and reacts, so it does not need this patch. In case of helping with
-debugging, the patch 6/7 also prints error
-"System timer frequency too low" and bails out.
-The commit message could have better emphasize it.
-
-Regards,
-Lukasz
+> When switching between 8 and 16k sample rate, it is just the sync pulse 
+> rate that is changed. The audio sample will be delivered in the same 
+> slot, just at a different frequency.
