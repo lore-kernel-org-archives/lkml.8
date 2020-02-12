@@ -2,117 +2,117 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF360C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF9AC3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EE521734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZR+9YgBa"
+	by mail.kernel.org (Postfix) with ESMTP id 050EA2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 18:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581531351;
+	bh=kOqJbVCC1I1+rcE3QheAKMQBYpL4dBwVq3+rzFsB9tU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=18o8WA9KZB5L+QoNwuUELSZeq6Zox0MyUQQtAYVP6/5qELeihd6xdBla1SPD5/h36
+	 EKp1AffFscyllA+g+u4DseQuqw3IoB6gvJtCle55GmOXABMlAqIlDGKk95N60RlYiG
+	 RWogLvlPtBdPGBbem/TY0ZEe/b8ikeF6vmZuR7b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgBLSOc (ORCPT
+        id S1728883AbgBLSPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:14:32 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:37452 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgBLSOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:14:32 -0500
-Received: by mail-vk1-f195.google.com with SMTP id b2so791102vkk.4;
-        Wed, 12 Feb 2020 10:14:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CnO+YjEhAA1fR16vRtKkqQ6IaKqDgHiXesjpy2PtN38=;
-        b=ZR+9YgBakxEstBEDPenyc6ChESRa252lsrlSKvqnb3RdE17Tknmw3nDprL82eXvsAT
-         NNgGEdeiP+K41L1y/+LbPA+oqmywkUiWEmw/uKFkoy4FGzBtr5VUzn4aNdDtC2RYFg1W
-         i4ZGB1foaZ+ESxAkGyNrdlTcePmocNnnSmaHZ57iRvEBrolpknswOdsJC0EX7BgP8hUz
-         Kp8iHxZ1bpY314pJ6NCT5NBpuaXnfrNzrDdsDsMcdqKbirrpTk+WFQlntM4QJO+KSZrL
-         4q8HhyQqDzLTs8xH02u0jE/99x3FRK9K7zgtB+1aZoDm8pvn7qb/KqRkH1Jis0sJWwQm
-         z8uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CnO+YjEhAA1fR16vRtKkqQ6IaKqDgHiXesjpy2PtN38=;
-        b=c/rtaCWyPxtqzkjs+Y8+Bc+di4MfUOulz5+sPD7+PBoLakZ7TcA1lOWVLxx0wJs4DW
-         S6r0wzCTJGORHUC+90sPOCaBG1vxTfzI2BAWUgLNIu4kXaCXeIkYFyx5hBcJfHRbEscS
-         zxtmoMxgV0eRUtRHHA8u+cH/GogssfHWaUlikXhdLjB8mT4gglCyvZtJSAD++ESkPTgH
-         fFs27YcYlOgxb2SCxtfB/jHCkjzsXnUFsOh5FEHDW/l1taynD74R+ezy/jYcirdJw/O9
-         1Z6ZP3iJ2nsCi6Anq8AHyNFKCAWvqbvKEV9vkL95dC1IUxaIEPT5AnL0m5RVq2yLZjlx
-         jQVg==
-X-Gm-Message-State: APjAAAXVanQpYuevZH+mTWI3ATa8W7qaBN5ziFZtP4sfyAd9M5JkTKg1
-        DqisqQgwmwTgj51TVhulqo9Dj8Pkqe7IjS3ueb8=
-X-Google-Smtp-Source: APXvYqwo//dw2Lz6KTEw7WfIO4RNGL+6Go6fPHggeMQ4aTz85IGc9hcU42s1bKUl8TDwUZspWcItcXYkgakCnjAu/Gg=
-X-Received: by 2002:a1f:9d16:: with SMTP id g22mr8454036vke.22.1581531270966;
- Wed, 12 Feb 2020 10:14:30 -0800 (PST)
+        Wed, 12 Feb 2020 13:15:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727264AbgBLSPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:15:50 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546BE2073C;
+        Wed, 12 Feb 2020 18:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581531349;
+        bh=kOqJbVCC1I1+rcE3QheAKMQBYpL4dBwVq3+rzFsB9tU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FcMbBJTt7N6Bx+hLXCgOyEiN56/H0SNvmHg8/MkdLDbkI9gXt8cCu4PZcJMcUxvKm
+         LY56E+Ep3Y90MAoTwDNHtDSh4pSM29XsRjbWjfdqMgm9Df3qivGI+hie7vqgnijR2j
+         4GKzQ4SiPmpJzt3Ooi3l1bmxhMW+C7+rOc7KxdT8=
+Subject: Re: [PATCH] selftests: use LDLIBS for libraries instead of LDFLAGS
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kselftest@vger.kernel.org, avagin@gmail.com,
+        linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>, shuah <shuah@kernel.org>
+References: <20200212140040.126747-1-dima@arista.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <db01c4e9-c236-3847-f812-943e4442f048@kernel.org>
+Date:   Wed, 12 Feb 2020 11:15:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20190816083246.169312-1-arul.jeniston@gmail.com>
- <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
- <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
- <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com>
- <alpine.DEB.2.21.1908191752580.2147@nanos.tec.linutronix.de>
- <CACAVd4iRN7=eq_B1+Yb-xcspU-Sg1dmMo_=VtLXXVPkjN1hY5Q@mail.gmail.com>
- <alpine.DEB.2.21.1908191943280.1796@nanos.tec.linutronix.de>
- <CACAVd4jAJ5QcOH=q=Q9kAz20X4_nAc7=vVU_gPWTS1UuiGK-fg@mail.gmail.com>
- <alpine.DEB.2.21.1908201036200.2223@nanos.tec.linutronix.de>
- <CACAVd4jT4Ke7giPmKSzt+Wo3Ro-g9zWDRz_GHaRcs0Nb3_rkBw@mail.gmail.com>
- <CACAVd4gRoQih6f_K7kMzr=AwA_DvP0OksxBKj1bGPsP2F_9sFg@mail.gmail.com>
- <alpine.DEB.2.21.1909051707150.1902@nanos.tec.linutronix.de>
- <CACAVd4hS1i--fxWaarXP2psagW-JmBoLAJRrfu9gkRc49Ja4pg@mail.gmail.com>
- <alpine.DEB.2.21.1909071630000.1902@nanos.tec.linutronix.de>
- <CACAVd4grhGVVSYpwjof5YiS1duZ2_SFjvXtctP+cmR5Actkjyg@mail.gmail.com>
- <alpine.DEB.2.21.1911051100471.17054@nanos.tec.linutronix.de> <CACAVd4geU0aFqvFhNQ4YGHDtLPwcqhubh8hcu4CT7CN+G2zpdA@mail.gmail.com>
-In-Reply-To: <CACAVd4geU0aFqvFhNQ4YGHDtLPwcqhubh8hcu4CT7CN+G2zpdA@mail.gmail.com>
-From:   Arul Jeniston <arul.jeniston@gmail.com>
-Date:   Wed, 12 Feb 2020 23:44:20 +0530
-Message-ID: <CACAVd4iH3e+V3VTJhEOabn46mosL-ntOgjJm_mMjnnwKtcpAjw@mail.gmail.com>
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200212140040.126747-1-dima@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Tglx,
+On 2/12/20 7:00 AM, Dmitry Safonov wrote:
+> While building selftests, the following errors were observed:
+>> tools/testing/selftests/timens'
+>> gcc -Wall -Werror -pthread  -lrt -ldl  timens.c  -o tools/testing/selftests/timens/timens
+>> /usr/bin/ld: /tmp/ccGy5CST.o: in function `check_config_posix_timers':
+>> timens.c:(.text+0x65a): undefined reference to `timer_create'
+>> collect2: error: ld returned 1 exit status
+> 
+> Quoting commit 870f193d48c2 ("selftests: net: use LDLIBS instead of
+> LDFLAGS"):
+> 
+> The default Makefile rule looks like:
+> 
+> $(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
+> 
+> When linking is done by gcc itself, no issue, but when it needs to be passed
+> to proper ld, only LDLIBS follows and then ld cannot know what libs to link
+> with.
+> 
+> More detail:
+> https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+> 
+> LDFLAGS
+> Extra flags to give to compilers when they are supposed to invoke the linker,
+> ‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
+> instead.
+> 
+> LDLIBS
+> Library flags or names given to compilers when they are supposed to invoke the
+> linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
+> LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
+> variable.
+> 
+> While at here, correct other selftests, not only timens ones.
+> 
+> Reported-by: Shuah Khan <skhan@kernel.org>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>   tools/testing/selftests/futex/functional/Makefile | 2 +-
+>   tools/testing/selftests/net/Makefile              | 4 ++--
+>   tools/testing/selftests/rtc/Makefile              | 2 +-
+>   tools/testing/selftests/timens/Makefile           | 2 +-
+>   4 files changed, 5 insertions(+), 5 deletions(-)
+> 
 
-Did you get a chance to update the timerfd man page?
-Our customers are expecting these changes to happen asap.
 
-Regards,
-Arul
+Looks good. Thanks for fixing it quickly.
 
-On Wed, Nov 6, 2019 at 9:08 AM Arul Jeniston <arul.jeniston@gmail.com> wrote:
->
-> hi Tglx,
->
-> Thank you for the update. We have few customers who are waiting for
-> this patch. Please prioritize it.
->
-> Regards,
-> Arul
->
-> On Tue, Nov 5, 2019 at 3:31 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > Arul,
-> >
-> > On Tue, 5 Nov 2019, Arul Jeniston wrote:
-> > > >  So I'm going to send a patch to document that in the manpage.
-> > >
-> > > Did you get a chance to make the manpage patch? if yes, please help us
-> > > by sharing the link where we can find the patch.
-> >
-> > No. I would have Cc'ed you when posting. It's somewhere on my todo list.
-> >
-> > Thanks,
-> >
-> >         tglx
+Please split these into 4 patches and send one for each test.
+
+For timens:
+
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
