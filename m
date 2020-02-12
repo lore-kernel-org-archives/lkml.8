@@ -2,126 +2,132 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D83C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9CFC3B187
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A132173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581541384;
-	bh=7Sd9AozWdi6ADgVh+KdvO22gRmfmYpItxhoTBdpX8UE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qi4jlh9KM+BQMy1HNrLLKq+DKZu9/9K69m1iPGrjyrSj6moIRsyezfpl4UKmnklGD
-	 APUOGbDl4jWK1DodJg3wHDdtCDjVEDI8Q5mrm44jcXO73yT+DRFbQO7zDKqhdb8hS3
-	 LefNtUKiOWSbdZcHvvAfF6ZIkCwdLostJKrJBgXg=
+	by mail.kernel.org (Postfix) with ESMTP id 1564121739
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:08:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pIoxKMcb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgBLVDD (ORCPT
+        id S1729047AbgBLVIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:03:03 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34399 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgBLVDC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:03:02 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x7so4012935ljc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:03:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WySKsoF25f/J4EpIF80nlYeN07mmY9MX1gph6T2llNA=;
-        b=Q58W0NiVVgTX+oNnbx2yak8H3LqZJhOMXKR6Ng/loJu7bqEx0qJqJdUgYoD/Insl5V
-         0bdfWlwpi7ZWdHerxvV1fP32PeO3Q+Sr+beCxumaLAw59xU5UE6TavPtsaLJeIdwxKCP
-         /m8KW47+oG3MYjz8Wo+heg9mc0RztoSq3bL84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WySKsoF25f/J4EpIF80nlYeN07mmY9MX1gph6T2llNA=;
-        b=bkZpF9YN+CqdlVNN23n+glQvC5Jn2zU2KI6KIDCGrMWZPiSG2McnpbX+JjXlRJQeiS
-         z2uApAUrmPHnr9EluV9Td6M9y0na42KbhE94X6yHVE9VUDT4chraSgF0pnCjWPHE5hiI
-         yng2JXsoNwukCi9/uGLbZxoN505QW37HSV9yULiNruijgYT+Pmf21GHtEbybeoopBSNc
-         8RvASLrlXrTk6XBnBJ7aIrW1MuqO8Elhfmc09uWHm/pSYOfEqE0CJTwB84ss+RlAPNmX
-         z/3dGUvABpJTryOJ+9fwjir0eKgBDB02iZWRBqQpG91t9cE71TYdhSMnA8WqdgC9Yj83
-         +Xtw==
-X-Gm-Message-State: APjAAAXsSbjLD5wzbhFOaJkNpXECRytdOUNIlHRfWRTOeVpNikwfRNca
-        xOtQBspK2DKTTwqZj+L58ri1xUqDR5Q=
-X-Google-Smtp-Source: APXvYqw8otmaH52BHdOEB8oYJcqz0F0dkeM1u/raw+KOt70aTUkm09+Yt+9dDhICl6L96Z/kygfqmg==
-X-Received: by 2002:a05:651c:111a:: with SMTP id d26mr8803173ljo.153.1581541379313;
-        Wed, 12 Feb 2020 13:02:59 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id p9sm152018ljg.55.2020.02.12.13.02.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 13:02:57 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id d10so3988272ljl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 13:02:57 -0800 (PST)
-X-Received: by 2002:a2e:97cc:: with SMTP id m12mr8729073ljj.241.1581541376733;
- Wed, 12 Feb 2020 13:02:56 -0800 (PST)
+        Wed, 12 Feb 2020 16:08:07 -0500
+Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:61272
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727138AbgBLVIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 16:08:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hO8D3K6u2kWLscQv3/wT4PFN/9fZqqwvGp14ivhOpH9AL2rXnP/ic2l+K6otRoTcXJkMHupDGJRpdYVvUa7T/UrsAJ04lXO/pconwZM6d4dfIzHOPMqzsLPffkxnaCWhXhG3N88sgFrsafINTunfiYaN0mATnBH8sgXbC9zHe2zRJl4BKC668b6JjgNCbyD3qnDGrTA74OzCQJdNbYYA4bU5HIfjhBlr9YCDwsiSn5njzYd7qjOSYdgQuJ2FlKz0ZI7RAYRZm+Xw7RaAdiA8U6qB6jF5zvMWZBT1lBfnNhfTx9NGSWGgQVHs0oVz8TvepJOrtC193W1SJEG/DWMcGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RUalFHTmreuyimJusmKyrlY0jZ9TCaTplrUE/OhyEow=;
+ b=Q2BoeQ79YMHQHvCVKPfdZeYr1ws/XHTm678Kd3vo+oxtsaWaxYSSM66SwtKZ7e4ow9CcwAXyaQNCUxBkOIBkt11q4e6F85+rn+R+FGf61cnqcNtc5TpGIZwIUqV1wz8R4iJwgyOc0XrVA6LeSFNE4YGpPbpsrQ1ZPoOtZ0/79TX+p91ImwuyuLPrmm0feKAQEtierIjxKgqEX9Jl6k6FX4iykSN+YhYCLIpvOclpxtRiY2vCYabIDLJu1591x8+/rKkUFhVS9tpBCo48DqxeARFzotybuP3Xh3vIETilY2QJ6JS8Zc2AFkLUeGDKzZ9viRf+IwIkLGdqLVTUVM/sAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RUalFHTmreuyimJusmKyrlY0jZ9TCaTplrUE/OhyEow=;
+ b=pIoxKMcbqBoc3wph5VAUSQkdILg95YlMrqcFWWgzikXUtzOQwNeeYb9iBC+IKvpd/pD2WvtB/9QaatOHTF6WlaeMDu3eJixF8oZoCG84jxtjxtmhLf3awnSpo3oviDynPjSmZpZudLmYbI3vnUP9W6TjHxio6NqMtYbRHpfEo1o=
+Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com (52.133.50.141) by
+ AM0PR0402MB3313.eurprd04.prod.outlook.com (52.133.46.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Wed, 12 Feb 2020 21:08:01 +0000
+Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com
+ ([fe80::dc6e:5cc4:dd53:3088]) by AM0PR0402MB3476.eurprd04.prod.outlook.com
+ ([fe80::dc6e:5cc4:dd53:3088%5]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
+ 21:08:01 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Abel Vesa <abel.vesa@nxp.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] clk: imx8mn: add snvs clock
+Thread-Topic: [PATCH v2 0/3] clk: imx8mn: add snvs clock
+Thread-Index: AQHVzD/OjZFqJodHNUiVYUZ4iWuZWA==
+Date:   Wed, 12 Feb 2020 21:08:01 +0000
+Message-ID: <AM0PR0402MB3476CCC69A3726CDF4D7CB0B981B0@AM0PR0402MB3476.eurprd04.prod.outlook.com>
+References: <20200116073718.4475-1-horia.geanta@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [84.117.251.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a9de6f52-f3db-45f7-0fcc-08d7afffa517
+x-ms-traffictypediagnostic: AM0PR0402MB3313:|AM0PR0402MB3313:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0402MB3313AB1CF3565DE9A5EF268C981B0@AM0PR0402MB3313.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 0311124FA9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(366004)(136003)(189003)(199004)(44832011)(9686003)(86362001)(53546011)(7696005)(6506007)(81156014)(478600001)(26005)(55016002)(966005)(8676002)(8936002)(54906003)(110136005)(81166006)(186003)(66556008)(66446008)(66476007)(64756008)(76116006)(66946007)(52536014)(71200400001)(33656002)(4744005)(5660300002)(4326008)(2906002)(7416002)(316002)(6636002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3313;H:AM0PR0402MB3476.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kuuohzxJRwcQnZkEiL3ydaeC9iXwHmEbXKK+ga/cqmhrrlS1ZlDstyKOsa8HlZdDFBm1gI8wq4mcC9AsZ6GH/5Hcx1fq++G82zgMCYxLHd1RLBvU8ZFdzRADTwG11R3zbOmAAzLl4uLuVSujVx04E3JNFj25JP1It3YPlXjeShpNCtM8xy3h3HuGhKWWjdUz0Ync3UitwVJEJg2VPms2qyrlJBfMV90j7DNuUW/NjZ546tl9/PB+jzrDAmKqkRwf0Mq42P6Ij1EJHRbl7+y1FpQzFrmXOs/+5SX/KsOZHw6Clf6lDrxqtrMdcbKiodoSccAu11LqPr6IqqJ5PCjTxbD0fFiYk/+NEtRr067h5nlWnmQ7b8Wfcm5ltwVu8aMBvmPEga6FCfdSJAae6vVQ1Y8XK1lvKVGm8Qh9DmByqSISrdPxXK5LxSq//xd8wC70uUb73LKtXiyqEBa+qL6shYj3VdYkBGxuT5bv2YRqE2c1HxuZU2hj72xO+mtQYtVQs8UHyXL23Tm41Fykevn1LiPjMckc6yQqqO80zQr8kDEF8lda7ZFtNGzPThCg1TSS
+x-ms-exchange-antispam-messagedata: 7pSI2MHIob+fl5dstG4ZWlZ6ITz/TA7gCjIj9kH8zwA1Z4T7LMNneMcCT0ytyNibgx9m62/xxzSfCnpL0KIFQIvkmYVt4DM41ncVmcKAvooV7vd4Ki8l8peHsPwd3Ry6C+Tb/edvCqkjRAC2lMTn4w==
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
- <87v9odlxbr.fsf@x220.int.ebiederm.org> <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
- <87tv3vkg1a.fsf@x220.int.ebiederm.org> <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
- <87v9obipk9.fsf@x220.int.ebiederm.org> <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
- <20200212200335.GO23230@ZenIV.linux.org.uk> <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
- <20200212203833.GQ23230@ZenIV.linux.org.uk> <20200212204124.GR23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200212204124.GR23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 12 Feb 2020 13:02:40 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
-Message-ID: <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9de6f52-f3db-45f7-0fcc-08d7afffa517
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 21:08:01.6458
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YMSVD44gSsc32cajtPbA0WS14tVPvfSiT/eCvpbIDZSVM12Oteloe5BrdoDC0PrTg4v/fXSgAtCArSyPR60Bxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3313
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 12:41 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Wed, Feb 12, 2020 at 08:38:33PM +0000, Al Viro wrote:
-> >
-> > Wait, I thought the whole point of that had been to allow multiple
-> > procfs instances for the same userns?  Confused...
->
-> s/userns/pidns/, sorry
-
-Right, but we still hold the ref to it here...
-
-[ Looks more ]
-
-Oooh. No we don't. Exactly because we don't hold the lock, only the
-rcu lifetime, the ref can go away from under us. I see what your
-concern is.
-
-Ouch, this is more painful than I expected - the code flow looked so
-simple. I really wanted to avoid a new lock during process shutdown,
-because that has always been somewhat painful.
-
-            Linus
+On 1/16/2020 9:37 AM, Horia Geant=E3 wrote:=0A=
+> v2: add commmit message for trivial patch 1/3=0A=
+> =0A=
+> This patch set adds the clock for snvs module on imx8mn.=0A=
+> DT bindings, clk driver are updated accordingly.=0A=
+> DT for imx8mn (snvs-rtc-lp node) is also updated.=0A=
+> =0A=
+> Horia Geant=E3 (3):=0A=
+>   dt-bindings: clock: imx8mn: add SNVS clock=0A=
+>   clk: imx8mn: add SNVS clock to clock tree=0A=
+>   arm64: dts: imx8mn: add clock for snvs rtc node=0A=
+> =0A=
+>  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 1 +=0A=
+>  drivers/clk/imx/clk-imx8mn.c              | 1 +=0A=
+>  include/dt-bindings/clock/imx8mn-clock.h  | 4 +++-=0A=
+>  3 files changed, 5 insertions(+), 1 deletion(-)=0A=
+> =0A=
+Kind reminder.=0A=
+=0A=
+Patch set is here:=0A=
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=3D229047=
+&archive=3Dboth&state=3D*=0A=
+Let me know if I should resend it.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
