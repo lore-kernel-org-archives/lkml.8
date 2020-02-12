@@ -2,122 +2,74 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4995DC3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DBCC352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBAD21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:36:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OBTbLSy3"
+	by mail.kernel.org (Postfix) with ESMTP id ABC1D21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbgBLWgX (ORCPT
+        id S1729267AbgBLWg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:36:23 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:14698 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgBLWgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:36:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1581546982; x=1613082982;
-  h=date:from:to:subject:message-id:mime-version;
-  bh=ZcT5NL3HFOPFbym2IiAARR+k8Y7xo5J+zpygwD2ALWc=;
-  b=OBTbLSy3uAILFo/AKR2w77FqbxDrXMS0XsBY6hCNboXUgPEOEGQNiojN
-   SCwczM2RxJ+CFTGBy0emzyV8tgXCjP1eSguAFPoShKCMJfUGE4RQM2WHq
-   VAWYow1x5lP0lQ1mJ5nFZM2r1AscK5HPOUGEbwBI/HnVOi6pEYW1RWLZv
-   M=;
-IronPort-SDR: RuG58dnJ7bK0jmVNwi+pnsRoVw06xDHGaPsu5B6jHAddTjNNYzGJxuu6rUzhRt+WNLOPfopBFM
- 6yF3lWoXEQ8Q==
-X-IronPort-AV: E=Sophos;i="5.70,434,1574121600"; 
-   d="scan'208";a="16854725"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 12 Feb 2020 22:36:22 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 910E62427DA;
-        Wed, 12 Feb 2020 22:36:14 +0000 (UTC)
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 12 Feb 2020 22:35:52 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 12 Feb 2020 22:35:52 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 12 Feb 2020 22:35:52 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 28812400D1; Wed, 12 Feb 2020 22:35:52 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 22:35:52 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <fllinden@amaozn.com>, <benh@kernel.crashing.org>
-Subject: [RFC PATCH v3 12/12] PM / hibernate: update the resume offset on
- SNAPSHOT_SET_SWAP_AREA
-Message-ID: <20200212223552.GA4609@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+        Wed, 12 Feb 2020 17:36:29 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:39280 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727947AbgBLWg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 17:36:27 -0500
+Received: from p508fd8fe.dip0.t-ipconnect.de ([80.143.216.254] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j20cF-0001ua-8B; Wed, 12 Feb 2020 23:36:19 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Justin Swartz <justin.swartz@risingedge.co.za>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
+Date:   Wed, 12 Feb 2020 23:36:18 +0100
+Message-ID: <3638560.bLjz2vc75D@phil>
+In-Reply-To: <20200114162503.7548-1-justin.swartz@risingedge.co.za>
+References: <20200114162503.7548-1-justin.swartz@risingedge.co.za>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksei Besogonov <cyberax@amazon.com>
+Hi Justin,
 
-The SNAPSHOT_SET_SWAP_AREA is supposed to be used to set the hibernation
-offset on a running kernel to enable hibernating to a swap file.
-However, it doesn't actually update the swsusp_resume_block variable. As
-a result, the hibernation fails at the last step (after all the data is
-written out) in the validation of the swap signature in
-mark_swapfiles().
+Am Dienstag, 14. Januar 2020, 17:25:02 CET schrieb Justin Swartz:
+> The following changes prevent the unrecoverable freezes and rcu_sched
+> stall warnings experienced in each of my attempts to take advantage of
+> lima.
+> 
+> Replace the COMPOSITE_NOGATE definition of aclk_gpu_pre with a
+> COMPOSITE that retains the selection of HDMIPHY as the PLL source, but
+> instead makes uses of the aclk_gpu PLL source gate and parent names
+> defined by mux_pll_src_4plls_p rather than mux_aclk_gpu_pre_p.
+> 
+> Remove the now unused mux_aclk_gpu_pre_p and the four named but also
+> unused definitions (cpll_gpu, gpll_gpu, hdmiphy_gpu and usb480m_gpu)
+> of the aclk_gpu PLL source gate.
+> 
+> Use the correct gate offset for aclk_gpu and aclk_gpu_noc.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 
-Before this patch, the command line processing was the only place where
-swsusp_resume_block was set.
+thanks a lot for diving through the clock controller and fixing the
+issues. I've checked against the TRM as well and the previous state
+was quite wrong and your changes match the hardware manual.
 
-Signed-off-by: Aleksei Besogonov <cyberax@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+I've applied it as fix for 5.6 now.
 
----
-  Changes since V2: None
----
- kernel/power/user.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thanks
+Heiko
 
-diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 77438954cc2b..d396e313cb7b 100644
---- a/kernel/power/user.c
-+++ b/kernel/power/user.c
-@@ -374,8 +374,12 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
- 			if (swdev) {
- 				offset = swap_area.offset;
- 				data->swap = swap_type_of(swdev, offset, NULL);
--				if (data->swap < 0)
-+				if (data->swap < 0) {
- 					error = -ENODEV;
-+				} else {
-+					swsusp_resume_device = swdev;
-+					swsusp_resume_block = offset;
-+				}
- 			} else {
- 				data->swap = -1;
- 				error = -EINVAL;
--- 
-2.24.1.AMZN
 
