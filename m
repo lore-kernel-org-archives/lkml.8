@@ -2,101 +2,90 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A9DC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3490C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0F92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C+Er12Ts"
+	by mail.kernel.org (Postfix) with ESMTP id 9B8452082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581505014;
+	bh=4pZYCUBDsbqAJS8ZCZ6TjAOwz6/YRSffWxenSOtB50U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zGvxdOcDRi/U2qdTSq1RuqUXdCNUl/ciwstwlq/82eT2vcVk80OlpBh5eSqLPj4VJ
+	 +I9wyFlHHwL/TJT8vLvS0VfxdcWTTHGxzDI2q9gstCY0VKKIObwd+65Atzo9ai48p7
+	 9XU0oZOcrpPyk3hKDXFm5UZBOwup2jJUvmOmITnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgBLK4v (ORCPT
+        id S1728042AbgBLK4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:56:51 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:45597 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726135AbgBLK4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:56:50 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581505009; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=TjtUiZ8AZKDj9nYoSWQ3/cgkK6mw6KArwXSKQ2bbv/4=; b=C+Er12Ts1V79SOj9ABs3N0qsY7wxFu65jeQslSxpoGEghcveuI9MeQdpCX7JPpNiSz5WV+5/
- uHvNSLcKSDzmv1cXqT1jab8o3IjQo19CrAZJLS8sRTwn4991jtgAsUSEMMazFNwUYb2cLZbQ
- QilkXhPRXfgA0gOTe1EEmtGkdTE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e43d9ef.7ffa6786fab0-smtp-out-n01;
- Wed, 12 Feb 2020 10:56:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B0CC3C447A3; Wed, 12 Feb 2020 10:56:46 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 12 Feb 2020 05:56:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727594AbgBLK4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:56:52 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 647A0C4479F;
-        Wed, 12 Feb 2020 10:56:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 647A0C4479F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH 2/2] soc: qcom: rpmh-rsc: Log interrupt status when TCS is busy
-Date:   Wed, 12 Feb 2020 16:26:12 +0530
-Message-Id: <1581504972-22632-3-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581504972-22632-1-git-send-email-mkshah@codeaurora.org>
-References: <1581504972-22632-1-git-send-email-mkshah@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id AD1D620675;
+        Wed, 12 Feb 2020 10:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581505012;
+        bh=4pZYCUBDsbqAJS8ZCZ6TjAOwz6/YRSffWxenSOtB50U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QRgU7x7TZli8ZVmDnLJzwtnNVmdWfAHB0Q/qll4v64rUTI4fE8Dojv/BMAco567EH
+         jgUYQ8+QHsY1GFzOLk7bhC8SELeIyM765FUHJr+guMH4xXt2YZUleDsnsYhJNVl5e2
+         2sLuwCG2V2jkGnmXd4wcDg3I1kLckzO67mW9qQQU=
+Date:   Wed, 12 Feb 2020 10:56:46 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, james.morse@arm.com, catalin.marinas@arm.com,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH 0/8] tracing vs rcu vs nmi
+Message-ID: <20200212105646.GA4017@willie-the-truck>
+References: <20200212093210.468391728@infradead.org>
+ <20200212100106.GA14914@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212100106.GA14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lina Iyer <ilina@codeaurora.org>
+On Wed, Feb 12, 2020 at 11:01:06AM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 12, 2020 at 10:32:10AM +0100, Peter Zijlstra wrote:
+> > Hi all,
+> > 
+> > These here patches are the result of Mathieu and Steve trying to get commit
+> > 865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
+> > tracepoints") reverted again.
+> > 
+> > One of the things discovered is that tracing MUST NOT happen before nmi_enter()
+> > or after nmi_exit(). I've only fixed x86, but quickly gone through other
+> > architectures and there is definitely more stuff to be fixed (simply grep for
+> > nmi_enter in your arch).
+> 
+> For ARM64:
+> 
+>  - apei_claim_sea()
+>  - __sdei_handler()
+>  - do_serror()
+>  - debug_exception_enter() / do_debug_exception()
+> 
+> all look dodgy.
 
-To debug issues when TCS is busy, report interrupt status as well. If
-the interrupt line is pending at GIC, then Linux was too busy to process
-the interrupt and if not pending then AOSS was too busy to handle the
-request.
+Hmm, so looks like we need to spinkle some 'notrace' annotations around
+these. Are there are scenarios where you would want NOKPROBE_SYMBOL() but
+*not* 'notrace'? We've already got the former for the debug exception
+handlers and we probably (?) want it for the SDEI stuff too...
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/soc/qcom/rpmh-rsc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 3595e4d..1dc05c3 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -421,8 +421,14 @@ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg)
- 	do {
- 		ret = tcs_write(drv, msg);
- 		if (ret == -EBUSY) {
--			pr_info_ratelimited("DRV:%s TCS Busy, retrying RPMH message send: addr=%#x\n",
--					    drv->name, msg->cmds[0].addr);
-+			bool irq_sts;
-+
-+			irq_get_irqchip_state(drv->irq, IRQCHIP_STATE_PENDING,
-+					      &irq_sts);
-+			pr_info_ratelimited("DRV:%s TCS Busy, retrying RPMH message send: addr=%#x interrupt status=%s\n",
-+					    drv->name, msg->cmds[0].addr,
-+					    irq_sts ?
-+					    "PENDING" : "NOT PENDING");
- 			udelay(10);
- 		}
- 	} while (ret == -EBUSY);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Will
