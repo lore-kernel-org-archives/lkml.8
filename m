@@ -2,257 +2,280 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BA6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFC4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DCA20848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8614620661
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:03:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Szq2nQYz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1n6T4kJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgBLIDN (ORCPT
+        id S1728513AbgBLIDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:03:13 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59110 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgBLIDM (ORCPT
+        Wed, 12 Feb 2020 03:03:23 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34247 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbgBLIDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:03:12 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01C81xBJ095149;
-        Wed, 12 Feb 2020 02:01:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581494519;
-        bh=NMTGmOJTTsRgJdge33dgFYwCOb7FpIs1fPjpfpLUBhM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Szq2nQYzAVvT+ophs58XAJBCUwogpwmwVdiXQghZG5ljD+XDAXj1yQgiCxGUpkaRi
-         HYeV9e4Y8XNBSzCdW3NznHpqDpccIt5dfrPcpmX276vS34FBX1AhfVXo88ZCknfzWh
-         TSGbdN6dZrqBXJOMUYJ4Vv0JZNVu/RQIN0BXLkjw=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01C81xf1023194
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Feb 2020 02:01:59 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
- Feb 2020 02:01:59 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 12 Feb 2020 02:01:59 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01C81taM069601;
-        Wed, 12 Feb 2020 02:01:56 -0600
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-To:     Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-References: <20200211171645.41990-1-tony@atomide.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
-Date:   Wed, 12 Feb 2020 10:02:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 12 Feb 2020 03:03:22 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j4so800351pgi.1;
+        Wed, 12 Feb 2020 00:03:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mh5ve1clOQdwoBlgvdFQOY/xr1cX6ZXuLGLTs9NtboA=;
+        b=n1n6T4kJFtsezqzjNTIJbiRdniLbBs7C7ifuY43SPeXCeKrPCBcJIpIojykSSlc74F
+         6X31qwVyjoQpkgGL7Ss984xf9nq0ejM97+9gH4ERYkslfwcdeDW9Xtrbv2OG1tO9Ocy5
+         Z9dTEYxJbLgFbn8fZ2xm1LsUChLhjeNAMju3xYYIoCGY3WxN7R/J6d/9elf1jJvUXrZb
+         anG+hdr1w695BArD+Zs46e9/kqdwF8t9OVPcH/hTx54BwWhI4o3rwl+wHUDURvdXS1Bf
+         4BOB/Z7NZX2tIGA3AKhmiLolDsw7OiJ5BwiSRDec/vagWEjz4RPfCQ57wxnW6PfnW0Ks
+         8OMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mh5ve1clOQdwoBlgvdFQOY/xr1cX6ZXuLGLTs9NtboA=;
+        b=BnJvJ1N8BB3pA7zPD9LG6Ndgpw5K3F/xraOeyrdLtFPF5sO5T+Vz1EEvyV7bJk3t1X
+         t6Br7i2GQYIp6ctr8g9U5UXdXjzmAuxIs31YRBoMRNG1XRDGZY4yNHhenLfnH6YvFv5L
+         Mrx4DOxsmvzv5xoGoAN+f7KKIPwiQYsPMzVyc2uZNok9TsVDFhj5usDntw/7EYK4e3bW
+         RW3WDqhg2I/iVdHb0eFAw6Ieq8sOOEe/yQwXmJ3lLbNoi0kU0MGb08DuuIn2TS/SrcFZ
+         FYCuVyjebmPwNTdaTymp6WIUkuhZMw8AStmWIxV8kUSE3+Ev2C5dnVeV6kpew0U39rYK
+         3LHA==
+X-Gm-Message-State: APjAAAXAUv6qElHY7WSX0miYa354yFiz6pzngl/j2NCHLZWOrRfISJxi
+        3xCotWx15D3BJy832ruDMxQmWare+0k=
+X-Google-Smtp-Source: APXvYqztRdA51Z5cTO1fj9v1qIKorccJrstXzYWk4VTQxZ/dZfUMeYPgz4nwPxP2vZq5zB+r7JmEhg==
+X-Received: by 2002:a63:ed01:: with SMTP id d1mr10151600pgi.95.1581494601503;
+        Wed, 12 Feb 2020 00:03:21 -0800 (PST)
+Received: from localhost ([106.51.21.91])
+        by smtp.gmail.com with ESMTPSA id g7sm7056749pfq.33.2020.02.12.00.03.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 00:03:21 -0800 (PST)
+Date:   Wed, 12 Feb 2020 13:33:19 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Tom Vaden <tom.vaden@hpe.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 05/18] ia64: replace setup_irq() by request_irq()
+Message-ID: <14bfa52a434351ea6612d514b033e9dbb73a9727.1581478324.git.afzal.mohd.ma@gmail.com>
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200211171645.41990-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+request_irq() is preferred over setup_irq(). Existing callers of
+setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
+memory allocators are ready by 'mm_init()'.
 
+Per tglx[1], setup_irq() existed in olden days when allocators were not
+ready by the time early interrupts were initialized.
 
-On 11/02/2020 19.16, Tony Lindgren wrote:
-> We can have multiple connections on a single McBSP instance configured
-> with audio graph card when using TDM (Time Division Multiplexing). Let's
-> allow that by configuring dais dynamically.
+Hence replace setup_irq() by request_irq().
 
-It is still one DAI...
-If you have multiple codec connected to the same I2S lines, but the
-codecs communicate within different time slots, you still have one DAI
-on the CPU side, but multiple codecs (codec DAIs) with different TDM slot.
+Seldom remove_irq() usage has been observed coupled with setup_irq(),
+wherever that has been found, it too has been replaced by free_irq().
 
-> See Documentation/devicetree/bindings/sound/audio-graph-card.txt and
-> Documentation/devicetree/bindings/graph.txt for more details for
-> multiple endpoints.
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
 
-See the example for 'Multi DAI with DPCM' in audio-graph-card.txt
-The PCM3168a have 2 DAIs: playback and capture, but you can have
-multiple endpoints within a DAI.
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
 
-> I've tested this with droid4 where cpcap pmic and modem voice are both
-> both wired to mcbsp3. I've also tested this on droid4 both with and
-> without the pending modem audio codec driver that is waiting for n_gsm
-> serdev dependencies to clear.
+Since cc'ing cover letter to all maintainers/reviewers would be too
+many, refer for cover letter,
+ https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
 
-What this patch you effectively just creating dummy-dais on top of the
-real McBSP DAI.
-You also rename the DAIs, which might break ams-delta.
+ arch/ia64/kernel/irq_ia64.c | 42 ++++++++++--------------------
+ arch/ia64/kernel/mca.c      | 51 +++++++++++--------------------------
+ 2 files changed, 29 insertions(+), 64 deletions(-)
 
-We still have legacy support in
-omap-twl4030.c
-omap3pandora.c
-osk5912.c
-rx51.c
+diff --git a/arch/ia64/kernel/irq_ia64.c b/arch/ia64/kernel/irq_ia64.c
+index 8e91c86e8072..166a38dae663 100644
+--- a/arch/ia64/kernel/irq_ia64.c
++++ b/arch/ia64/kernel/irq_ia64.c
+@@ -351,11 +351,6 @@ static irqreturn_t smp_irq_move_cleanup_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction irq_move_irqaction = {
+-	.handler =	smp_irq_move_cleanup_interrupt,
+-	.name =		"irq_move"
+-};
+-
+ static int __init parse_vector_domain(char *arg)
+ {
+ 	if (!arg)
+@@ -586,28 +581,15 @@ static irqreturn_t dummy_handler (int irq, void *dev_id)
+ 	return IRQ_NONE;
+ }
+ 
+-static struct irqaction ipi_irqaction = {
+-	.handler =	handle_IPI,
+-	.name =		"IPI"
+-};
+-
+ /*
+  * KVM uses this interrupt to force a cpu out of guest mode
+  */
+-static struct irqaction resched_irqaction = {
+-	.handler =	dummy_handler,
+-	.name =		"resched"
+-};
+-
+-static struct irqaction tlb_irqaction = {
+-	.handler =	dummy_handler,
+-	.name =		"tlb_flush"
+-};
+ 
+ #endif
+ 
+ void
+-ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
++ia64_native_register_percpu_irq(ia64_vector vec, const char *name,
++				irq_handler_t handler)
+ {
+ 	unsigned int irq;
+ 
+@@ -615,8 +597,9 @@ ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
+ 	BUG_ON(bind_irq_vector(irq, vec, CPU_MASK_ALL));
+ 	irq_set_status_flags(irq, IRQ_PER_CPU);
+ 	irq_set_chip(irq, &irq_type_ia64_lsapic);
+-	if (action)
+-		setup_irq(irq, action);
++	if (handler)
++		if (request_irq(irq, handler, 0, name, NULL))
++			pr_err("request_irq() for %s failed", name);
+ 	irq_set_handler(irq, handle_percpu_irq);
+ }
+ 
+@@ -624,9 +607,10 @@ void __init
+ ia64_native_register_ipi(void)
+ {
+ #ifdef CONFIG_SMP
+-	register_percpu_irq(IA64_IPI_VECTOR, &ipi_irqaction);
+-	register_percpu_irq(IA64_IPI_RESCHEDULE, &resched_irqaction);
+-	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, &tlb_irqaction);
++	register_percpu_irq(IA64_IPI_VECTOR, "IPI", handle_IPI);
++	register_percpu_irq(IA64_IPI_RESCHEDULE, "resched", dummy_handler);
++	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, "tlb_flush",
++			    dummy_handler);
+ #endif
+ }
+ 
+@@ -635,10 +619,12 @@ init_IRQ (void)
+ {
+ 	acpi_boot_init();
+ 	ia64_register_ipi();
+-	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL);
++	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL, NULL);
+ #ifdef CONFIG_SMP
+-	if (vector_domain_type != VECTOR_DOMAIN_NONE)
+-		register_percpu_irq(IA64_IRQ_MOVE_VECTOR, &irq_move_irqaction);
++	if (vector_domain_type != VECTOR_DOMAIN_NONE) {
++		register_percpu_irq(IA64_IRQ_MOVE_VECTOR, "irq_move",
++				    smp_irq_move_cleanup_interrupt);
++	}
+ #endif
+ #ifdef CONFIG_PERFMON
+ 	pfm_init_percpu();
+diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
+index bf2cb9294795..f4be4ad7bf0d 100644
+--- a/arch/ia64/kernel/mca.c
++++ b/arch/ia64/kernel/mca.c
+@@ -1766,36 +1766,6 @@ ia64_mca_disable_cpe_polling(char *str)
+ 
+ __setup("disable_cpe_poll", ia64_mca_disable_cpe_polling);
+ 
+-static struct irqaction cmci_irqaction = {
+-	.handler =	ia64_mca_cmc_int_handler,
+-	.name =		"cmc_hndlr"
+-};
+-
+-static struct irqaction cmcp_irqaction = {
+-	.handler =	ia64_mca_cmc_int_caller,
+-	.name =		"cmc_poll"
+-};
+-
+-static struct irqaction mca_rdzv_irqaction = {
+-	.handler =	ia64_mca_rendez_int_handler,
+-	.name =		"mca_rdzv"
+-};
+-
+-static struct irqaction mca_wkup_irqaction = {
+-	.handler =	ia64_mca_wakeup_int_handler,
+-	.name =		"mca_wkup"
+-};
+-
+-static struct irqaction mca_cpe_irqaction = {
+-	.handler =	ia64_mca_cpe_int_handler,
+-	.name =		"cpe_hndlr"
+-};
+-
+-static struct irqaction mca_cpep_irqaction = {
+-	.handler =	ia64_mca_cpe_int_caller,
+-	.name =		"cpe_poll"
+-};
+-
+ /* Minimal format of the MCA/INIT stacks.  The pseudo processes that run on
+  * these stacks can never sleep, they cannot return from the kernel to user
+  * space, they do not appear in a normal ps listing.  So there is no need to
+@@ -2056,18 +2026,23 @@ void __init ia64_mca_irq_init(void)
+ 	 *  Configure the CMCI/P vector and handler. Interrupts for CMC are
+ 	 *  per-processor, so AP CMC interrupts are setup in smp_callin() (smpboot.c).
+ 	 */
+-	register_percpu_irq(IA64_CMC_VECTOR, &cmci_irqaction);
+-	register_percpu_irq(IA64_CMCP_VECTOR, &cmcp_irqaction);
++	register_percpu_irq(IA64_CMC_VECTOR, "cmc_hndlr",
++			    ia64_mca_cmc_int_handler);
++	register_percpu_irq(IA64_CMCP_VECTOR, "cmc_poll",
++			    ia64_mca_cmc_int_caller);
+ 	ia64_mca_cmc_vector_setup();       /* Setup vector on BSP */
+ 
+ 	/* Setup the MCA rendezvous interrupt vector */
+-	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, &mca_rdzv_irqaction);
++	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, "mca_rdzv",
++			    ia64_mca_rendez_int_handler);
+ 
+ 	/* Setup the MCA wakeup interrupt vector */
+-	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, &mca_wkup_irqaction);
++	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, "mca_wkup",
++			    ia64_mca_wakeup_int_handler);
+ 
+ 	/* Setup the CPEI/P handler */
+-	register_percpu_irq(IA64_CPEP_VECTOR, &mca_cpep_irqaction);
++	register_percpu_irq(IA64_CPEP_VECTOR, "cpe_poll",
++			    ia64_mca_cpe_int_caller);
+ }
+ 
+ /*
+@@ -2108,7 +2083,11 @@ ia64_mca_late_init(void)
+ 			if (irq > 0) {
+ 				cpe_poll_enabled = 0;
+ 				irq_set_status_flags(irq, IRQ_PER_CPU);
+-				setup_irq(irq, &mca_cpe_irqaction);
++				if (request_irq(irq, ia64_mca_cpe_int_handler,
++						0, "cpe_hndlr", NULL)) {
++					pr_err("request_irq() on %s failed\n",
++					       "cpe_hndlr");
++				}
+ 				ia64_cpe_irq = irq;
+ 				ia64_mca_register_cpev(cpe_vector);
+ 				IA64_MCA_DEBUG("%s: CPEI/P setup and enabled.\n",
+-- 
+2.24.1
 
-which will break with the renamed DAI. On the other hand I think the
-legacy support can be dropped from them.
-
-I know it was discussed, but can not find the mail:
-Can you brief again on the audio connection?
-Do you have branch with working code?
-
-- Péter
-
-> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Cc: Arthur D. <spinal.by@gmail.com>
-> Cc: Jarkko Nikula <jarkko.nikula@bitmer.com>
-> Cc: Merlijn Wajer <merlijn@wizzup.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  sound/soc/ti/omap-mcbsp-priv.h |  2 +
->  sound/soc/ti/omap-mcbsp.c      | 76 ++++++++++++++++++++++++----------
->  2 files changed, 55 insertions(+), 23 deletions(-)
-> 
-> diff --git a/sound/soc/ti/omap-mcbsp-priv.h b/sound/soc/ti/omap-mcbsp-priv.h
-> --- a/sound/soc/ti/omap-mcbsp-priv.h
-> +++ b/sound/soc/ti/omap-mcbsp-priv.h
-> @@ -262,6 +262,8 @@ struct omap_mcbsp {
->  	struct omap_mcbsp_platform_data *pdata;
->  	struct omap_mcbsp_st_data *st_data;
->  	struct omap_mcbsp_reg_cfg cfg_regs;
-> +	struct snd_soc_dai_driver *dais;
-> +	int dai_count;
->  	struct snd_dmaengine_dai_dma_data dma_data[2];
->  	unsigned int dma_req[2];
->  	int dma_op_mode;
-> diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-> --- a/sound/soc/ti/omap-mcbsp.c
-> +++ b/sound/soc/ti/omap-mcbsp.c
-> @@ -14,6 +14,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_graph.h>
->  #include <sound/core.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
-> @@ -1304,23 +1305,53 @@ static int omap_mcbsp_remove(struct snd_soc_dai *dai)
->  	return 0;
->  }
->  
-> -static struct snd_soc_dai_driver omap_mcbsp_dai = {
-> -	.probe = omap_mcbsp_probe,
-> -	.remove = omap_mcbsp_remove,
-> -	.playback = {
-> -		.channels_min = 1,
-> -		.channels_max = 16,
-> -		.rates = OMAP_MCBSP_RATES,
-> -		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE,
-> -	},
-> -	.capture = {
-> -		.channels_min = 1,
-> -		.channels_max = 16,
-> -		.rates = OMAP_MCBSP_RATES,
-> -		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE,
-> -	},
-> -	.ops = &mcbsp_dai_ops,
-> -};
-> +static int omap_mcbsp_init_dais(struct omap_mcbsp *mcbsp)
-> +{
-> +	struct device_node *np = mcbsp->dev->of_node;
-> +	int i;
-> +
-> +	if (np)
-> +		mcbsp->dai_count = of_graph_get_endpoint_count(np);
-> +
-> +	if (!mcbsp->dai_count)
-> +		mcbsp->dai_count = 1;
-> +
-> +	mcbsp->dais = devm_kcalloc(mcbsp->dev, mcbsp->dai_count,
-> +				   sizeof(*mcbsp->dais), GFP_KERNEL);
-> +	if (!mcbsp->dais)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < mcbsp->dai_count; i++) {
-> +		struct snd_soc_dai_driver *dai = &mcbsp->dais[i];
-> +
-> +		dai->name = devm_kasprintf(mcbsp->dev, GFP_KERNEL, "%s-dai%i",
-> +					   dev_name(mcbsp->dev), i);
-> +
-> +		if (i == 0) {
-> +			dai->probe = omap_mcbsp_probe;
-> +			dai->remove = omap_mcbsp_remove;
-> +			dai->ops = &mcbsp_dai_ops;
-> +		}
-> +		dai->playback.channels_min = 1;
-> +		dai->playback.channels_max = 16;
-> +		dai->playback.rates = OMAP_MCBSP_RATES;
-> +		if (mcbsp->pdata->reg_size == 2)
-> +			dai->playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
-> +		else
-> +			dai->playback.formats = SNDRV_PCM_FMTBIT_S16_LE |
-> +						SNDRV_PCM_FMTBIT_S32_LE;
-> +		dai->capture.channels_min = 1;
-> +		dai->capture.channels_max = 16;
-> +		dai->capture.rates = OMAP_MCBSP_RATES;
-> +		if (mcbsp->pdata->reg_size == 2)
-> +			dai->capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
-> +		else
-> +			dai->capture.formats = SNDRV_PCM_FMTBIT_S16_LE |
-> +					       SNDRV_PCM_FMTBIT_S32_LE;
-> +	}
-> +
-> +	return 0;
-> +}
->  
->  static const struct snd_soc_component_driver omap_mcbsp_component = {
->  	.name		= "omap-mcbsp",
-> @@ -1409,18 +1440,17 @@ static int asoc_mcbsp_probe(struct platform_device *pdev)
->  	mcbsp->dev = &pdev->dev;
->  	platform_set_drvdata(pdev, mcbsp);
->  
-> -	ret = omap_mcbsp_init(pdev);
-> +	ret = omap_mcbsp_init_dais(mcbsp);
->  	if (ret)
->  		return ret;
->  
-> -	if (mcbsp->pdata->reg_size == 2) {
-> -		omap_mcbsp_dai.playback.formats = SNDRV_PCM_FMTBIT_S16_LE;
-> -		omap_mcbsp_dai.capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
-> -	}
-> +	ret = omap_mcbsp_init(pdev);
-> +	if (ret)
-> +		return ret;
->  
->  	ret = devm_snd_soc_register_component(&pdev->dev,
->  					      &omap_mcbsp_component,
-> -					      &omap_mcbsp_dai, 1);
-> +					      mcbsp->dais, mcbsp->dai_count);
->  	if (ret)
->  		return ret;
->  
-> 
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
