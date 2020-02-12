@@ -2,130 +2,80 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9F6C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B44C352A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E302C206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C03B2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 21:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gm7kWnYI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q5RYRX42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgBLV37 (ORCPT
+        id S1729054AbgBLVcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:29:59 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34443 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbgBLV36 (ORCPT
+        Wed, 12 Feb 2020 16:32:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47356 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgBLVcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:29:58 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j16so3482806otl.1;
-        Wed, 12 Feb 2020 13:29:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6EUdtzaj5HeATaXjc8VyFybXqFaOOVdixXXnNM4Bwu8=;
-        b=Gm7kWnYIxvK5ldgUz4g0nVBMQc639uswc6TWHlep6sMqtQ+qujlnjp283SbnnrOPbU
-         b7avqm/swkSzEN9Ep5ayPFEhjB1lKr0rbO+LZ0bGR1mC47DVV3RJ5mtUiJct8Dy/lwHr
-         3JV/DMBqqGEnml0UNFYuKej4E1ULCpr/3MFyEk3OGTwVn6LNgAhJV2yCIcJGcuISfvw1
-         fLV80ZpcvfknDPnc+7UPtii/Iu54o/RXKZra9rrrR57tnQlg77PXMFzjqGbWejck6OXe
-         u9EIa1vIAEzSevFbx3pN/zGWFslWR5FY9NjIQPKkaGkV+8CiA2T9I36/yz5PQiuNDw6e
-         +gOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6EUdtzaj5HeATaXjc8VyFybXqFaOOVdixXXnNM4Bwu8=;
-        b=pTgDhW6FFiakFY0gMc3lfbZK9af6qiKp3OHj7WqtO/e2Xz7D5eeNoh97OQLpxQCUOj
-         92TVKZm+sPoqbOMI78isW9JR2yz9uEXs/1EKkBTURkru4gXZAsZfn/4Ucg6Ge0yei3A1
-         ublo8NilbTmFgQVPxlrIeHhzyLpdX6cGI74dsCQl6d3r8AAVPRmm/HSUSCSUmKd6WC49
-         GzBJQv1efVBoHlFGGNzNx4JTtxYETpftCq+1GdeiigDfVyj2vvuho9JLQa9CPZp+RhQ4
-         JD8uJG8y+BDrWpKDKSAfuuUy/eCoM23LwBpOD0EHdecArPAnHjAj4JU9TDJwyQ/O5GqI
-         7Wgw==
-X-Gm-Message-State: APjAAAVg5AnWGe/hy8gZCuZNOoKT4mRkY3FpkLZMTdOgQQrqWdQX/L0G
-        JdpvikmyFj+/B8bDEtVdYLdDRnh/9O2L7JU3QgE=
-X-Google-Smtp-Source: APXvYqy5luJF34R6oX+y3IwKbEVG0rnSH6Vpc0tpBKh0KsYzhDGd+I9stl5ZEIoqRDlVt8ljiqqVs8QSXHmCsYp2cVU=
-X-Received: by 2002:a9d:6d10:: with SMTP id o16mr11255994otp.28.1581542997421;
- Wed, 12 Feb 2020 13:29:57 -0800 (PST)
+        Wed, 12 Feb 2020 16:32:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=62yXb7kO6TJItSD02Iyixn2SKX2PdulFGZN/QvehXUg=; b=q5RYRX42TPN9Oi7y9IkQKuSF2E
+        tbIRdTFpijBPubabgk+LuJXJ9H5ZsDP33NNlcytmEkzwDsVcQYylkc/knhRDRjk3OeDy2rYfL5kAC
+        xxLJJGqB4RIIq1a76bGWkDNl5jWqy1+m9mB2W4oLzqSn2EnTJtIz80KRAkL29vC28i9sm/EwIbGAH
+        1RLVwsLBvqjN1NmUZF61mcxs81ZgvaqgmSkaWBIexyL8JHIiik38QZZHYDwBeksPu9X1OR8qoAka4
+        jfb1V4ZPWz8NkD67huGn/uuvnj2A1atOBkMmywi9kjW0h2F2NQmgxATQ7g3bG8teJ2A8YJ1Wb8Bk8
+        rpRJbgPw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1zcp-0008Gk-Ci; Wed, 12 Feb 2020 21:32:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E12D300679;
+        Wed, 12 Feb 2020 22:30:59 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6C41920206D70; Wed, 12 Feb 2020 22:32:48 +0100 (CET)
+Date:   Wed, 12 Feb 2020 22:32:48 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Prateek Sood <prsood@codeaurora.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpuset: Make cpuset hotplug synchronous
+Message-ID: <20200212213248.GE14897@hirez.programming.kicks-ass.net>
+References: <1579878449-10164-1-git-send-email-prsood@codeaurora.org>
+ <ee889f30-cb81-e0a8-6068-715ca3399fdd@codeaurora.org>
+ <20200212211832.GC80993@mtj.thefacebook.com>
 MIME-Version: 1.0
-References: <20200212212316.Bluez.v3.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
- <89D0B633-381D-4700-AB33-5F803BCB6E94@holtmann.org> <86D0ACD5-BEF7-45B3-B621-BA2E457AB57B@gmail.com>
-In-Reply-To: <86D0ACD5-BEF7-45B3-B621-BA2E457AB57B@gmail.com>
-From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date:   Wed, 12 Feb 2020 13:29:45 -0800
-Message-ID: <CABBYNZLm_q_WV3nmGVpePXpLsjnkk_zpEm1cYK0ps7H3PM=_kQ@mail.gmail.com>
-Subject: Re: [Bluez PATCH v3] bluetooth: secure bluetooth stack from bluedump attack
-To:     Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Howard Chung <howardchung@google.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212211832.GC80993@mtj.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Howard,
+On Wed, Feb 12, 2020 at 04:18:32PM -0500, Tejun Heo wrote:
+> On Sat, Feb 01, 2020 at 08:33:34AM +0530, Prateek Sood wrote:
+> > Hi Tejun & Peter,
+> > 
+> > Could you please share your feedback on this patch for making
+> > 
+> > cpuset_hotplug_workfn synchronous.
+> 
+> Hey, IIRC, we went back forth with this several times. Unless there's
+> a pressing reason to change, I'd rather leave it alone.
 
-On Wed, Feb 12, 2020 at 7:39 AM Johan Hedberg <johan.hedberg@gmail.com> wrote:
->
-> Hi Marcel,
->
-> On 12. Feb 2020, at 17.19, Marcel Holtmann <marcel@holtmann.org> wrote:
-> >> +            key = hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-> >> +                               hcon->role);
-> >> +
-> >> +            /* If there already exists link key in local host, leave the
-> >> +             * decision to user space since the remote device could be
-> >> +             * legitimate or malicious.
-> >> +             */
-> >> +            if (smp->method == JUST_WORKS && key) {
-> >> +                    err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
-> >> +                                                    hcon->type,
-> >> +                                                    hcon->dst_type, passkey,
-> >> +                                                    1);
-> >> +                    if (err)
-> >> +                            return SMP_UNSPECIFIED;
-> >> +                    set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
-> >> +            }
-> >>      }
-> >
-> > while this looks good, I like to optimize this to only look up the LTK when needed.
+I think I have a similar patch in one of the many in-progress series I
+keep around; IIRC it is the one where I add per-cpu support to
+SCHED_DEADLINE. The hotplug accounting becomes easier if we do this.
 
-I wonder why we don't just call user confirm everytime? That way the
-new policy preference applies to both a new pair or when already
-paired, and we don't have to really do the key lookup here since the
-userspace can do the check if really needed.
-
-> >
-> >       /* comment here */
-> >       if (smp->method != JUST_WORKS)
-> >               goto mackey_and_ltk;
-> >
-> >
-> >       /* and command here */
-> >       if (hci_find_ltk()) {
-> >               mgmt_user_confirm_request()
-> >               ..
-> >       }
-> >
-> > And my preference that we also get an Ack from Johan or Luiz that double checked that this is fine.
->
-> Acked-by: Johan Hedberg <johan.hedberg@intel.com>
->
-> Johan
-
-
-
--- 
-Luiz Augusto von Dentz
+Sadly this series is fairly low on the todo list atm though :/ I have no
+problems keeping it around until such a time though.
