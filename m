@@ -2,178 +2,112 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615B2C352A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC69C35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3997A21569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88AA20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 03:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rHWmzWtD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJmZX2RZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBLDEF (ORCPT
+        id S1727910AbgBLDEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 22:04:05 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17438 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbgBLDED (ORCPT
+        Tue, 11 Feb 2020 22:04:08 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40323 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgBLDEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Feb 2020 22:04:03 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e436b060000>; Tue, 11 Feb 2020 19:03:34 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 11 Feb 2020 19:04:02 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 11 Feb 2020 19:04:02 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Feb
- 2020 03:03:57 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 12 Feb 2020 03:03:57 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e436b1c0002>; Tue, 11 Feb 2020 19:03:57 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Hans Westgaard Ry <hans.westgaard.ry@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 1/1] net/rds: Track user mapped pages through special API
-Date:   Tue, 11 Feb 2020 19:03:55 -0800
-Message-ID: <20200212030355.1600749-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200212030355.1600749-1-jhubbard@nvidia.com>
-References: <20200212030355.1600749-1-jhubbard@nvidia.com>
+        Tue, 11 Feb 2020 22:04:06 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q8so468179pfh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 19:04:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9+ROEe9uWmoG0JMAqzzVnYSI9Saz27W5dlKTyv5qcfY=;
+        b=iJmZX2RZ/wxAjrXPddKP4hLoYxzoUoCOPgHnw51WvCeyrxd87JQqifT/H0H+Hn4wjw
+         coR17eeP2g0txCCLTi252rucXv0msl+yLgO9URNvA/PqtbCTH4j9ggB4DfZISxhWMW6b
+         2Q/B6KYxzVrQpzgRffigYY6k+zrIry08cIbSatNnvT7AXIgSLy6bDNdmDmZgmgFt46XQ
+         46kp3VLilGqsA/sHSc1aeQoVb0TmlFmzezJKlbBC2HW61yKowv38kgSRdAHsTxgxuHxN
+         0GfBgKsZN+BCQzhx3NWnrymI6H9+W3Jd9aCVvaPzrpe9rpHWEOOqSWTD50jbkpCIVh3L
+         lG7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9+ROEe9uWmoG0JMAqzzVnYSI9Saz27W5dlKTyv5qcfY=;
+        b=YO7AiZuzwP5kCWrot4+ODH3YUy+3caz/YY/cVOzV0ZutBEoEU1Df09tWtXCpo5+DFk
+         AsDGHL+Z/2Gf5tMHuVv7u8M7zbg8/Ld9NVkrZ9l4RRCfavLmxDJDYyfPevO0/HQBlMNA
+         ckM+nW67uDMnT8VL8d1hFt+axBK8cD3oHKQLM+MwPBJaF0nzBfC0JcJcLj8sOqiy14vW
+         s4O80ev17Vl6r6el4YETTQ78pbW/eTTbtZqDGqJ4Mvp06ZqYSCJDKbv1684CZH7gId2P
+         r7T+WWCeVdqZVwmCtYnYoys03k+40QCxAniWDnTKyqU+smOczsov5EZ3jguB/i2xnbPK
+         YuMQ==
+X-Gm-Message-State: APjAAAVWx897wXbJXrHyed0ZOvdyWkyE1R8sVw711FiS9a0Awvo7iJVn
+        9Q7kmysxM3vbgMiwkO9DCRs=
+X-Google-Smtp-Source: APXvYqxRRt7P+TBCz+ADgVugIYbkq0VaauGzcxx3XpCD1mhmIlZWG6fYU3EI1TxMW1gPiPJWAKh61A==
+X-Received: by 2002:a63:27c4:: with SMTP id n187mr6557727pgn.305.1581476645647;
+        Tue, 11 Feb 2020 19:04:05 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id u12sm5654332pgr.3.2020.02.11.19.04.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 19:04:04 -0800 (PST)
+Date:   Wed, 12 Feb 2020 12:04:03 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: Re: [PATCH] kernel/watchdog: flush all printk nmi buffers when
+ hardlockup detected
+Message-ID: <20200212030403.GC13208@google.com>
+References: <158132813726.1980.17382047082627699898.stgit@buzz>
+ <20200212011551.GA13208@google.com>
+ <20200211214958.5d8f4004@rorschach.local.home>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581476615; bh=QM57p0FeYJqwPBc6+A6zFYRgdMBVy4hfNVKBmK2wyyQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=rHWmzWtDITCeBrU2kDXdy4QwNdjPqBqpBzTWlwkNmV3J1y7k1/K3hVJhdP5aLMVBd
-         El9kb0zBcQAoEA/FVwxprg2nCADwsvJTAyoJo7EX92QdTYJbChS3ukjFd2qzx2w0if
-         2wHC1fppxb9lnhsNt3tcya7i9SJrOy2jT8zv4Es3IdoPcLrGCo2mIl1ktE9lfYIz4S
-         kuwaguGUTIPtFW0wi3NBZa7I8a4y6e+NYzp3DjraU24femZY2Z/Yl0XD0Pv9xStVkd
-         GBwXQNAclVoYcfIsXS8S7nc5H4+GHeiJlWWi7+MFaAWFOd5KckUxiqy3mXf6binaPg
-         JY+Iz+osS13bg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211214958.5d8f4004@rorschach.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+On (20/02/11 21:49), Steven Rostedt wrote:
+> On Wed, 12 Feb 2020 10:15:51 +0900
+> Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+> 
+> > On (20/02/10 12:48), Konstantin Khlebnikov wrote:
+> > > 
+> > > In NMI context printk() could save messages into per-cpu buffers and
+> > > schedule flush by irq_work when IRQ are unblocked. This means message
+> > > about hardlockup appears in kernel log only when/if lockup is gone.
+> > > 
+> > > Comment in irq_work_queue_on() states that remote IPI aren't NMI safe
+> > > thus printk() cannot schedule flush work to another cpu.
+> > > 
+> > > This patch adds simple atomic counter of detected hardlockups and
+> > > flushes all per-cpu printk buffers in context softlockup watchdog
+> > > at any other cpu when it sees changes of this counter.
+> > 
+> > Petr, could you remind me, why do we do PRINTK_NMI_DIRECT_CONTEXT_MASK
+> > only from ftrace?
+> 
+> Could it be because its from ftrace_dump() which can spit out millions
+> of lines from NMI context?
 
-Convert net/rds to use the newly introduces pin_user_pages() API,
-which properly sets FOLL_PIN. Setting FOLL_PIN is now required for
-code that requires tracking of pinned pages.
+Oh, yes, ftrace printks a lot. But I sort of forgot why don't we do
+the same for "regular" NMIs. So NMIs use per-cpu buffers, expect for
+NMIs which involve ftrace dump. I'm missing something here.
 
-Note that this effectively changes the code's behavior: it now
-ultimately calls set_page_dirty_lock(), instead of set_page_dirty().
-This is probably more accurate.
-
-As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-dealing with a file backed page where we have reference on the inode it
-hangs off." [1]
-
-[1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
-
-Cc: Hans Westgaard Ry <hans.westgaard.ry@oracle.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- net/rds/rdma.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/net/rds/rdma.c b/net/rds/rdma.c
-index 3341eee87bf9..585e6b3b69ce 100644
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -162,10 +162,9 @@ static int rds_pin_pages(unsigned long user_addr, unsi=
-gned int nr_pages,
- 	if (write)
- 		gup_flags |=3D FOLL_WRITE;
-=20
--	ret =3D get_user_pages_fast(user_addr, nr_pages, gup_flags, pages);
-+	ret =3D pin_user_pages_fast(user_addr, nr_pages, gup_flags, pages);
- 	if (ret >=3D 0 && ret < nr_pages) {
--		while (ret--)
--			put_page(pages[ret]);
-+		unpin_user_pages(pages, ret);
- 		ret =3D -EFAULT;
- 	}
-=20
-@@ -300,8 +299,7 @@ static int __rds_rdma_map(struct rds_sock *rs, struct r=
-ds_get_mr_args *args,
- 		 * to release anything.
- 		 */
- 		if (!need_odp) {
--			for (i =3D 0 ; i < nents; i++)
--				put_page(sg_page(&sg[i]));
-+			unpin_user_pages(pages, nr_pages);
- 			kfree(sg);
- 		}
- 		ret =3D PTR_ERR(trans_private);
-@@ -325,7 +323,12 @@ static int __rds_rdma_map(struct rds_sock *rs, struct =
-rds_get_mr_args *args,
- 	if (cookie_ret)
- 		*cookie_ret =3D cookie;
-=20
--	if (args->cookie_addr && put_user(cookie, (u64 __user *)(unsigned long) a=
-rgs->cookie_addr)) {
-+	if (args->cookie_addr &&
-+	    put_user(cookie, (u64 __user *)(unsigned long)args->cookie_addr)) {
-+		if (!need_odp) {
-+			unpin_user_pages(pages, nr_pages);
-+			kfree(sg);
-+		}
- 		ret =3D -EFAULT;
- 		goto out;
- 	}
-@@ -496,9 +499,7 @@ void rds_rdma_free_op(struct rm_rdma_op *ro)
- 			 * is the case for a RDMA_READ which copies from remote
- 			 * to local memory
- 			 */
--			if (!ro->op_write)
--				set_page_dirty(page);
--			put_page(page);
-+			unpin_user_pages_dirty_lock(&page, 1, !ro->op_write);
- 		}
- 	}
-=20
-@@ -515,8 +516,7 @@ void rds_atomic_free_op(struct rm_atomic_op *ao)
- 	/* Mark page dirty if it was possibly modified, which
- 	 * is the case for a RDMA_READ which copies from remote
- 	 * to local memory */
--	set_page_dirty(page);
--	put_page(page);
-+	unpin_user_pages_dirty_lock(&page, 1, true);
-=20
- 	kfree(ao->op_notifier);
- 	ao->op_notifier =3D NULL;
-@@ -944,7 +944,7 @@ int rds_cmsg_atomic(struct rds_sock *rs, struct rds_mes=
-sage *rm,
- 	return ret;
- err:
- 	if (page)
--		put_page(page);
-+		unpin_user_page(page);
- 	rm->atomic.op_active =3D 0;
- 	kfree(rm->atomic.op_notifier);
-=20
---=20
-2.25.0
-
+	-ss
