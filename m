@@ -2,87 +2,78 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADDAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3CDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A727A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A307E20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbgBLKW6 (ORCPT
+        id S1727581AbgBLKYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:22:58 -0500
-Received: from mga07.intel.com ([134.134.136.100]:46280 "EHLO mga07.intel.com"
+        Wed, 12 Feb 2020 05:24:47 -0500
+Received: from mga14.intel.com ([192.55.52.115]:40755 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgBLKW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:22:57 -0500
+        id S1725710AbgBLKYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 05:24:47 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 02:22:56 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 02:24:46 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
-   d="scan'208";a="226820686"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga008.jf.intel.com with ESMTP; 12 Feb 2020 02:22:53 -0800
-Date:   Wed, 12 Feb 2020 18:02:11 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Will Deacon <will@kernel.org>, mdf@kernel.org,
-        mark.rutland@arm.com, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        atull@kernel.org, yilun.xu@intel.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v7 2/2] fpga: dfl: fme: add performance reporting support
-Message-ID: <20200212100211.GA10436@hao-dev>
-References: <1581306469-22629-1-git-send-email-hao.wu@intel.com>
- <1581306469-22629-3-git-send-email-hao.wu@intel.com>
- <20200210163400.GA21900@willie-the-truck>
- <20200212031929.GB5645@hao-dev>
- <20200212053035.GA382718@kroah.com>
+   d="scan'208";a="237671207"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 12 Feb 2020 02:24:43 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j1pCG-000uto-8C; Wed, 12 Feb 2020 12:24:44 +0200
+Date:   Wed, 12 Feb 2020 12:24:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Rajat Jain <rajatja@google.com>, Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        rajatxjain@gmail.com, evgreen@google.com,
+        shobhit.srivastava@intel.com, porselvan.muthukrishnan@intel.com
+Subject: Re:
+Message-ID: <20200212102444.GR10400@smile.fi.intel.com>
+References: <20200211223400.107604-1-rajatja@google.com>
+ <b3397374-0cb8-cf6c-0555-34541a1c108c@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212053035.GA382718@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <b3397374-0cb8-cf6c-0555-34541a1c108c@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 09:30:35PM -0800, Greg KH wrote:
-> On Wed, Feb 12, 2020 at 11:19:29AM +0800, Wu Hao wrote:
-> > On Mon, Feb 10, 2020 at 04:34:01PM +0000, Will Deacon wrote:
-> > > Hi,
-> > > 
-> > > On Mon, Feb 10, 2020 at 11:47:49AM +0800, Wu Hao wrote:
-> > > > This patch adds support for performance reporting private feature
-> > > > for FPGA Management Engine (FME). Now it supports several different
-> > > > performance counters, including 'basic', 'cache', 'fabric', 'vtd'
-> > > > and 'vtd_sip'. It allows user to use standard linux tools to access
-> > > > these performance counters.
-> > > 
-> > > I had a quick look at this, and it mostly looks alright to me. Just a few
-> > > high-level comments/questions:
-> > 
-> > Hi Will
-> > 
-> > Thanks a lot for the review! :)
-> > 
-> > > 
-> > >   - I would still prefer for the PMU drivers to live under drivers/perf/
-> > 
-> > Hm.. one possible way is to create a platform device, and introduce a new
-> > platform device driver under drivers/perf/.
-> 
-> No, do not abuse platform drivers, you have a real device, use it.
+On Wed, Feb 12, 2020 at 11:30:51AM +0200, Jarkko Nikula wrote:
+> On 2/12/20 12:34 AM, Rajat Jain wrote:
 
-Sure, thanks for the comments. Then I don't have any other idea to move code to
-drivers/perf/ directory, so probably only can live with current code.
+> This patch subject is missing from mail subject.
 
-Thanks
-Hao
+> I'm thinking can this be done only once after resume and may other LPSS
+> blocks need the same? I.e. should this be done in drivers/mfd/intel-lpss.c?
+
+On resume we restore the previously saved context, can we be sure that values
+we saved during suspend are correct?
+
+If above won't show any issue, it might be best place to have this quirk
+applied in intel_lpss_suspend() / intel_lpss_resume() callbacks as Jarkko
+suggested.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
