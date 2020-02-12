@@ -2,121 +2,98 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E818C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A90C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C2820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="YTdEmJUk"
+	by mail.kernel.org (Postfix) with ESMTP id 707AA20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 14:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgBLOuN (ORCPT
+        id S1728488AbgBLOvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:50:13 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:56846 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbgBLOuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:50:12 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48HjH61MtRz9tyGJ;
-        Wed, 12 Feb 2020 15:50:10 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=YTdEmJUk; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5RjadGcG7HrB; Wed, 12 Feb 2020 15:50:10 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48HjH604Q1z9tyGH;
-        Wed, 12 Feb 2020 15:50:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581519010; bh=LBWMl894vJ7EAcT3mNEJhOk9WBnw1O2BGFy/5mVsvQI=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=YTdEmJUkUYPjOWKfvbihiULUY/+lpmDckGhtcE2vkeGLUDUqkzK+jEQuQRd1TAS6s
-         7+0PAN2X58D7x8ODTQ1zXc16Kcf3PxXEN1WQgXiihVdoT8z0aNI/GVwlcFFKGKr6eJ
-         bZjG/zfT90wiZp7ReSx9vwD5DUC0NjlQGPgX3Wfk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4DD528B81A;
-        Wed, 12 Feb 2020 15:50:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id BMQgy6qvhP4D; Wed, 12 Feb 2020 15:50:11 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02CC68B80D;
-        Wed, 12 Feb 2020 15:50:10 +0100 (CET)
-Subject: Re: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't
- boot anymore
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Wood <oss@buserror.net>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
-Message-ID: <aee10440-c244-7c93-d3bb-fd29d8a83be4@c-s.fr>
-Date:   Wed, 12 Feb 2020 14:50:10 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Wed, 12 Feb 2020 09:51:03 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49136 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727531AbgBLOvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:51:02 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j1tLl-0006ic-Tu; Wed, 12 Feb 2020 15:50:50 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 89A1D1C202C;
+        Wed, 12 Feb 2020 15:50:49 +0100 (CET)
+Date:   Wed, 12 Feb 2020 14:50:49 -0000
+From:   "tip-bot2 for Yu-cheng Yu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu/xstate: Warn when checking alignment of
+ disabled xfeatures
+Cc:     "Yu-cheng Yu" <yu-cheng.yu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200109211452.27369-4-yu-cheng.yu@intel.com>
+References: <20200109211452.27369-4-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Message-ID: <158151904924.411.12474197700112093867.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/fpu branch of tip:
 
+Commit-ID:     e70b100806d63fb79775858ea92e1a716da46186
+Gitweb:        https://git.kernel.org/tip/e70b100806d63fb79775858ea92e1a716da46186
+Author:        Yu-cheng Yu <yu-cheng.yu@intel.com>
+AuthorDate:    Thu, 09 Jan 2020 13:14:52 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 12 Feb 2020 15:43:34 +01:00
 
-On 02/12/2020 02:24 PM, Christophe Leroy wrote:
-> Hi Rasmus,
-> 
-> Kernel 5.6-rc1 silently fails on boot.
-> 
-> I bisected the problem to commit b6231ea2b3c6 ("soc: fsl: qe: drop 
-> broken lazy call of cpm_muram_init()")
-> 
-> I get a bad_page_fault() for an access at address 8 in 
-> cpm_muram_alloc_common(), called from cpm_uart_console_setup() via 
-> cpm_uart_allocbuf()
-> 
-> Reverting the guilty commit on top of 5.6-rc1 is not trivial.
-> 
-> In your commit text you explain that cpm_muram_init() is called via 
-> subsys_initcall. But console init is done before that, so it cannot work.
-> 
-> Do you have a fix for that ?
-> 
+x86/fpu/xstate: Warn when checking alignment of disabled xfeatures
 
-The following patch allows powerpc 8xx to boot again. Don't know if 
-that's the good place and way to do the fix though.
+An XSAVES component's alignment/offset is meaningful only when the
+feature is enabled. Return zero and WARN_ONCE on checking alignment of
+disabled features.
 
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200109211452.27369-4-yu-cheng.yu@intel.com
 ---
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c 
-b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index 4cabded8390b..341d682ec6eb 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -1351,6 +1351,7 @@ static int __init cpm_uart_console_setup(struct 
-console *co, char *options)
-  		clrbits32(&pinfo->sccp->scc_gsmrl, SCC_GSMRL_ENR | SCC_GSMRL_ENT);
-  	}
+ arch/x86/kernel/fpu/xstate.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-+	cpm_muram_init();
-  	ret = cpm_uart_allocbuf(pinfo, 1);
-
-  	if (ret)
-
----
-Christophe
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index edcaacd..73fe597 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -325,6 +325,13 @@ static int xfeature_is_aligned(int xfeature_nr)
+ 	u32 eax, ebx, ecx, edx;
+ 
+ 	CHECK_XFEATURE(xfeature_nr);
++
++	if (!xfeature_enabled(xfeature_nr)) {
++		WARN_ONCE(1, "Checking alignment of disabled xfeature %d\n",
++			  xfeature_nr);
++		return 0;
++	}
++
+ 	cpuid_count(XSTATE_CPUID, xfeature_nr, &eax, &ebx, &ecx, &edx);
+ 	/*
+ 	 * The value returned by ECX[1] indicates the alignment
