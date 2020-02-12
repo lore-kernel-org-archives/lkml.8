@@ -2,157 +2,147 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9BAC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1E9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9495721569
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF9520714
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 08:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fLOmkqx9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WfuaRNpb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgBLIPl (ORCPT
+        id S1728478AbgBLIRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:15:41 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4542 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728109AbgBLIPk (ORCPT
+        Wed, 12 Feb 2020 03:17:08 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:47096 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728287AbgBLIRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 03:15:40 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01C8E565008026;
-        Wed, 12 Feb 2020 09:15:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=PtC6MNcf5VPs91Jldvobvz5GRjrwYDD84llnPUFRTL0=;
- b=fLOmkqx94vwZALx+mLsgvtHIr0HUe1cy2XPFcoRq/OGj8RfZPNe/0NtjNzT7mjnPzGKs
- fYiiua5hrBMKV3MUONUDB+gRAg6EkgbcQNJ5wTLQ0iQFHIGPILin7PC3at4HRHN1Yyhi
- R3dCv/56cWP8qThjbbPC94tDPiUVPiwPYlKpFK7mK5hI2p8bVd0PENBEDarz8UL2tF9V
- yjHpWrHLGZRq6C7bBBdFJrJACXi+OCwx1pXQfk2MjTS57fxsJxaKNx6XhMG9FWO4w/kN
- P0BGAkLLjJNkC/JNq2XzpInfWM02EPZoXtyEbvcQfOEETYFSgMgDqqFv2KE8PD65eqoJ Tw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1uvdmhmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Feb 2020 09:15:22 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DCCAE10002A;
-        Wed, 12 Feb 2020 09:15:21 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BFBE3220BCC;
-        Wed, 12 Feb 2020 09:15:21 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.46) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Feb
- 2020 09:15:20 +0100
-Subject: Re: [PATCH v4 0/5] remoteproc: Add elf64 support
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Clement Leger <cleger@kalray.eu>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <linux-remoteproc@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
-References: <527785289.2852303.1581062223707.JavaMail.zimbra@kalray.eu>
- <20200210162209.23149-1-cleger@kalray.eu>
- <5b8045be-0942-2ecf-5dba-dad58071f6af@st.com> <20200211231253.GC27770@xps15>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <8fa9ed3c-240f-1b82-913e-a4393013d333@st.com>
-Date:   Wed, 12 Feb 2020 09:15:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 03:17:08 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z26so902564lfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 00:17:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/COCMq4kYFQwNo7dlt3pNHSHIao5E30WwbJduAMidN0=;
+        b=WfuaRNpb70x5eSlaoUfejW1VyAe6RaZsiXlwuoILOQ0Z8gnhYEjVbMQJGFIZO8SzNB
+         L4ciNfM6V50vF4WmFr0ppfMDFy81LwPI7uBTFYpnHK0ldFgLnwY5kLS3ylMhgkefUrTV
+         Zb3mGwKx3wbJMtjmJgv1yw/zjkYE0xIJqE+buP+S9BwbKxaB8ihOo2V+KiV+hnlHaIjV
+         n//Gr5aozFqilmIttVTXKpkf3nDfJ5rSgYPp1Hwmw+4UONOzQOfD4i6u8BwovQefpI+6
+         e9HPveCWnrLgnRr0v7hAG+GSFYlneTh3Jajrm6fdA/RlfU2XsG0hojvv2IJhx6lFEDgF
+         EcQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/COCMq4kYFQwNo7dlt3pNHSHIao5E30WwbJduAMidN0=;
+        b=VzNMnVnee8Vx7JCHRtkSk5xQYComUOyey65F8G6/DDHebW9wFZth2pYzGx2XLhlhLP
+         3o2nI4zGbp0K0hCA7gDfJVW/DH73o1QtCDhNbv0Z6Wof+2Y/9vZuFBefA7heN408JnMr
+         6SphwD/MACYqO8uogLBwBixyXH65V35Uz5VehJ9NxZrsz9UEvdLSGKQ8fvEswGYUZqXb
+         XLxHY7YZ7eB4FdFP7xsXfY3gP3BjT0gqim25or1KNh2fvBSN15V6YADM8eqHtRYm/uPL
+         2NuhqxNAGGxr56/LOkn3OVFEg4FKfboq280AHebhASGp1iqRiz8UuQQun6ERP/JW6+JW
+         Pnpg==
+X-Gm-Message-State: APjAAAWTGJKO5rMCnfQyZGcYC7wgoGp5ZfUOgSy0wRTdUSrC7PMO2sL2
+        u5L+uTkKsm2oFD6/v0f/C8XWW2LSy78QWVK5y7gx3A==
+X-Google-Smtp-Source: APXvYqzbG/yWM/z2IpqImJFwDg1cFh1yyL/6hnywv6K8VG3vc2DbOhecH/DbLkvL9bSTymb9pLMctq01XV4ykLbdjUU=
+X-Received: by 2002:ac2:59dd:: with SMTP id x29mr5973459lfn.95.1581495425465;
+ Wed, 12 Feb 2020 00:17:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211231253.GC27770@xps15>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-12_02:2020-02-11,2020-02-12 signatures=0
+References: <20200211174651.10330-1-vincent.guittot@linaro.org> <20200211210439.GS3420@suse.de>
+In-Reply-To: <20200211210439.GS3420@suse.de>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 12 Feb 2020 09:16:53 +0100
+Message-ID: <CAKfTPtA4h4FQoAEDjVeT4nWJCs5Lk5=9w4VnKq2wgpgJui7Y8w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] remove runnable_load_avg and improve group_classify
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 11 Feb 2020 at 22:04, Mel Gorman <mgorman@suse.de> wrote:
+>
+> On Tue, Feb 11, 2020 at 06:46:47PM +0100, Vincent Guittot wrote:
+> > NUMA load balancing is the last remaining piece of code that uses the
+> > runnable_load_avg of PELT to balance tasks between nodes. The normal
+> > load_balance has replaced it by a better description of the current state
+> > of the group of cpus.  The same policy can be applied to the numa
+> > balancing.
+> >
+> > Once unused, runnable_load_avg can be replaced by a simpler runnable_avg
+> > signal that tracks the waiting time of tasks on rq. Currently, the state
+> > of a group of CPUs is defined thanks to the number of running task and the
+> > level of utilization of rq. But the utilization can be temporarly low
+> > after the migration of a task whereas the rq is still overloaded with
+> > tasks. In such case where tasks were competing for the rq, the
+> > runnable_avg will stay high after the migration.
+> >
+> > Some hackbench results:
+> >
+> > - small arm64 dual quad cores system
+> > hackbench -l (2560/#grp) -g #grp
+> >
+> > grp    tip/sched/core         +patchset              improvement
+> > 1       1,327(+/-10,06 %)     1,247(+/-5,45 %)       5,97 %
+> > 4       1,250(+/- 2,55 %)     1,207(+/-2,12 %)       3,42 %
+> > 8       1,189(+/- 1,47 %)     1,179(+/-1,93 %)       0,90 %
+> > 16      1,221(+/- 3,25 %)     1,219(+/-2,44 %)       0,16 %
+> >
+> > - large arm64 2 nodes / 224 cores system
+> > hackbench -l (256000/#grp) -g #grp
+> >
+> > grp    tip/sched/core         +patchset              improvement
+> > 1      14,197(+/- 2,73 %)     13,917(+/- 2,19 %)     1,98 %
+> > 4       6,817(+/- 1,27 %)      6,523(+/-11,96 %)     4,31 %
+> > 16      2,930(+/- 1,07 %)      2,911(+/- 1,08 %)     0,66 %
+> > 32      2,735(+/- 1,71 %)      2,725(+/- 1,53 %)     0,37 %
+> > 64      2,702(+/- 0,32 %)      2,717(+/- 1,07 %)    -0,53 %
+> > 128     3,533(+/-14,66 %)     3,123(+/-12,47 %)     11,59 %
+> > 256     3,918(+/-19,93 %)     3,390(+/- 5,93 %)     13,47 %
+> >
+>
+> I haven't reviewed this yet because by co-incidence I'm finalising a
+> series that tries to reconcile the load balancer with the NUMA balancer
 
+That's interesting !
+This series has been pending for a while and I have finally been able
+to send it for review.*
 
-On 2/12/20 12:12 AM, Mathieu Poirier wrote:
-> On Tue, Feb 11, 2020 at 04:57:18PM +0100, Arnaud POULIQUEN wrote:
->> Hi Clement,
->>
->> I tested the series on the stm32 platform for remote proc firmwre load: no regression found.
->> I do not test the da_to_va feature as not implemented on stm32 platform.
-> 
-> It would be very interesting if you could test the coredump, that would give us
-> a lot more confidence in the implementation.
-I also tested the coredump generation. LGTM
+> and it has been very tricky to get right.  One aspect though is that
 
-> 
-> Thanks,
-> Mathieu
-> 
->>
->> Regards,
->> Arnaud
->>
->>
->>
->> On 2/10/20 5:22 PM, Clement Leger wrote:
->>> This serie add support for elf64 in remoteproc (elf loader, coredump). 
->>> First two patches modifies the type of len argument (in da_to_va) and
->>> boot_addr in order to allow loading elf64 segment with a u64 size
->>> and a u64 entry point.
->>> Next patch introduce a set of macros to access elf64 and elf32
->>> transparently.
->>> Last two patches are the actual modification in the elf loader and
->>> remoteproc coredump support to add elf64 support.
->>>
->>> Changes from V3:
->>>  - Adapt coredump to elf64 file format
->>>  - Rename remoteproc_elf_loader.h to remoteproc_elf_helpers.h
->>>  - Update copyright year in remoteproc_elf_helpers.h
->>>  - Rename macros elf_hdr_* to elf_get_hdr_* for coherency with elf_hdr_set_*
->>>  - Split elf64 loader patch in 3:
->>>    - boot_addr u64 change
->>>    - remoteproc_elf_helpers.h creation
->>>    - elf64 loading
->>>
->>> Clement Leger (5):
->>>   remoteproc: Use u64 len for da_to_va
->>>   remoteproc: Use u64 type for boot_addr
->>>   remoteproc: Add elf helpers to access elf64 and elf32 fields
->>>   remoteproc: Add elf64 support in elf loader
->>>   remoteproc: Adapt coredump to generate correct elf type
->>>
->>>  Documentation/remoteproc.txt                |   2 +-
->>>  drivers/remoteproc/imx_rproc.c              |  11 +-
->>>  drivers/remoteproc/keystone_remoteproc.c    |   4 +-
->>>  drivers/remoteproc/qcom_q6v5_adsp.c         |   2 +-
->>>  drivers/remoteproc/qcom_q6v5_mss.c          |   2 +-
->>>  drivers/remoteproc/qcom_q6v5_pas.c          |   2 +-
->>>  drivers/remoteproc/qcom_q6v5_wcss.c         |   2 +-
->>>  drivers/remoteproc/qcom_wcnss.c             |   2 +-
->>>  drivers/remoteproc/remoteproc_core.c        |  69 +++++++------
->>>  drivers/remoteproc/remoteproc_elf_helpers.h |  95 ++++++++++++++++++
->>>  drivers/remoteproc/remoteproc_elf_loader.c  | 150 ++++++++++++++++++----------
->>>  drivers/remoteproc/remoteproc_internal.h    |   4 +-
->>>  drivers/remoteproc/st_remoteproc.c          |   2 +-
->>>  drivers/remoteproc/st_slim_rproc.c          |   4 +-
->>>  drivers/remoteproc/wkup_m3_rproc.c          |   4 +-
->>>  include/linux/remoteproc.h                  |   7 +-
->>>  16 files changed, 252 insertions(+), 110 deletions(-)
->>>  create mode 100644 drivers/remoteproc/remoteproc_elf_helpers.h
->>>
+I have been quite conservative in the policy as my main goal was not
+to change all numa policy but mainly to remove the last user of
+runnable_load_avg and i don't expect much behavior changes
+
+> hackbench is generally not long-running enough to detect any performance
+> regressions in NUMA balancing. At least I've never observed it to be a
+> good evaluation for NUMA balancing.
+>
+> > Without the patchset, there is a significant number of time that a CPU has
+> > spare capacity with more than 1 running task. Although this is a valid
+> > case, this is not a state that should often happen when 160 tasks are
+> > competing on 8 cores like for this test. The patchset fixes the situation
+> > by taking into account the runnable_avg, which stays high after the
+> > migration of a task on another CPU.
+> >
+>
+> FWIW, during the rewrite, I ended up moving away from runnable_load to
+> get the load balancer and NUMA balancer to use the same metrics.
+>
+> --
+> Mel Gorman
+> SUSE Labs
