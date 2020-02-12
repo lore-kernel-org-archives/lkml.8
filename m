@@ -6,97 +6,68 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56CBC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D8BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849102082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5192073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgBLL4M convert rfc822-to-8bit (ORCPT
+        id S1728311AbgBLL5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:56:12 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:24062 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728099AbgBLL4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:56:12 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-27-6s1ADMqVNEa4MBw75WIRIA-1; Wed, 12 Feb 2020 11:56:07 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 12 Feb 2020 11:56:06 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 12 Feb 2020 11:56:06 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Robin Murphy' <robin.murphy@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Roger Quadros <rogerq@ti.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "vigneshr@ti.com" <vigneshr@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        =?iso-8859-1?Q?P=E9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
-Subject: RE: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-Thread-Topic: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-Thread-Index: AQHV4Zmb/DqkVgCd3ECs486jc5D8CqgXcftg
-Date:   Wed, 12 Feb 2020 11:56:06 +0000
-Message-ID: <2a527d21087b4f959c7f95895d70b669@AcuMS.aculab.com>
-References: <20200206111728.6703-1-rogerq@ti.com>
- <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
- <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
- <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
- <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-In-Reply-To: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 12 Feb 2020 06:57:24 -0500
+Received: from mga07.intel.com ([134.134.136.100]:52644 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728049AbgBLL5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:57:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 03:57:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,428,1574150400"; 
+   d="scan'208";a="347501773"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 12 Feb 2020 03:57:17 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 12 Feb 2020 13:57:17 +0200
+Date:   Wed, 12 Feb 2020 13:57:17 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/18] platform/x86: intel_scu_ipc: Log more
+ information if SCU IPC command fails
+Message-ID: <20200212115717.GA2667@lahna.fi.intel.com>
+References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
+ <20200211132603.73509-3-mika.westerberg@linux.intel.com>
+ <20200211154138.GE10400@smile.fi.intel.com>
+ <20200212113649.GV2667@lahna.fi.intel.com>
+ <20200212115442.GS10400@smile.fi.intel.com>
 MIME-Version: 1.0
-X-MC-Unique: 6s1ADMqVNEa4MBw75WIRIA-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212115442.GS10400@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy
-> Sent: 12 February 2020 11:43
-...
-> If the device *is* inherently 64-bit capable, then setting 64-bit masks
-> in the driver is correct - if a 64-bit IP block happens to have been
-> integrated with only 32 address bits wired up, but the system has memory
-> above the 32-bit boundary, then that should be described via
-> "dma-ranges", which should then end up being used to further constrain
-> the device masks internally to the DMA API.
+On Wed, Feb 12, 2020 at 01:54:42PM +0200, Andy Shevchenko wrote:
+> > You mean move outside of the lock? This one calls ipc_data_readl()
+> > which should be under the lock.
+> 
+> I meant to move dev_err() out of the lock. The rest of course requires to stay
+> under it.
 
-Given how often this happens (please can I shoot some more
-hardware engineers - he says while compiling some VHDL)
-is it possible to allocate some memory pages that are
-aliases if the address bits over 31 are ignored?
-
-Then (at least some) drivers could to a run-time probe
-reading to the high address and checking the data didn't
-appear in the low address.
-
-Only one such set of pages is needed - access can be locked.
-But they'd need to be reserved early on.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+OK, got it :)
