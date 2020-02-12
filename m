@@ -2,164 +2,110 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940F2C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24977C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEDB2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:47:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581486445;
-	bh=vfQCzX8Gzst/DyzbbP8Yb9hEeqTup17d6ibCA2atEQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kYbRGct1bLwZoVbrIj7OHQ4G2/0KIJTHkso6rOiOKntDE0MmC2+wOon9IuosTi08v
-	 ZIO6TbLZI53xYqYpa7o0DmYeptRRe7Wcc273KcTHHJcxuXohEjvWn+wgfIfwZ9TiXE
-	 +zhy1MhLb5FJ9FNr9Asxn9vT519m9VBWBVkgpEa0=
+	by mail.kernel.org (Postfix) with ESMTP id D51592073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 05:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="c4McV3RO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgBLFrY (ORCPT
+        id S1728168AbgBLFrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 00:47:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbgBLFrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 00:47:24 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D15620714;
-        Wed, 12 Feb 2020 05:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581486442;
-        bh=vfQCzX8Gzst/DyzbbP8Yb9hEeqTup17d6ibCA2atEQk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=16O0AgpGnIblG8wXcW2EbHRzkj93++0mtvCGjFsyUCV76OVBn3s08Rm0Tzv10tDKX
-         lVogvBzynO1bch/RJ/BUyPtnWFQPHyHktHkoCQZmBDMm5mY+WEzsP8LNaRpna7Nlxp
-         fGy1pIz8XmPZ5U7MkLYBItDm8Mu67V3uwnIqWsJk=
-Date:   Tue, 11 Feb 2020 21:47:20 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v7 6/8] f2fs: Handle casefolding with Encryption
-Message-ID: <20200212054720.GH870@sol.localdomain>
-References: <20200208013552.241832-1-drosen@google.com>
- <20200208013552.241832-7-drosen@google.com>
+        Wed, 12 Feb 2020 00:47:31 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45157 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgBLFra (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 00:47:30 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so645682pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 21:47:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6HBUqCa4lDkvWVMth98gkOfMDQFMmsNejhaPRJd9h6k=;
+        b=c4McV3ROy7K7TcNJZ6glqfJoozIqu3Imhuvwv+E6LR3U+3mruX/liResbEQ0Rlql4u
+         VWt/THID8qk44T1vtXxAeK9ZFTX//XLXm6d7Cp9EITy49LHRunvA8LWxXvjSCzqFbF4d
+         FtmE8q1jB13au00SutLTdNFEIpG6jEAQqbEF0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6HBUqCa4lDkvWVMth98gkOfMDQFMmsNejhaPRJd9h6k=;
+        b=i7x8C4DAW1Q3ooy/6RQ3ldgfUK6p47A2/LSaVgg2HStHpP6pgoIktCtfNo8lECVHeF
+         nD3ZZdMxUBoVCJ5Mg3HJV3jZOeAPOXIk13EC0C4gP9Iignrnq2UtajTC6tu4gkmLyisN
+         uUUd3f7QOsTMldGpmeW8wgcb0o3eLmuMJnxuM/N0b3UpNPIp8guBoSKc4het6aJqsf1N
+         vFbNfte18uEk1za5cr9dMFU72tYe5SkVd+7Y5VEHOpwwyoYYzz4sEFhBjA4LxAApTtKw
+         wFab+phSCHQQHCeI2S69objRy562P6iLMceU8JTN66c7aAHqnxa0J+Oj34D5vkPe1t+B
+         T/ow==
+X-Gm-Message-State: APjAAAVAT1/NmZPPdmKP9aJAMWeV1exU9tWdHdks77D3sDfTzzVXzKN5
+        //wCqo2GqwYWZ0GczQAB+cebsYhfJdM=
+X-Google-Smtp-Source: APXvYqw/DN/0FTA1ZksYApAufAix2IStZs/anNdGfJUJ6f2vgfIGbcrigIYK8wZ/9ZVCpNCvP/aFbg==
+X-Received: by 2002:a63:5826:: with SMTP id m38mr10924864pgb.191.1581486449779;
+        Tue, 11 Feb 2020 21:47:29 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-65dc-9b98-63a7-c7a4.static.ipv6.internode.on.net. [2001:44b8:1113:6700:65dc:9b98:63a7:c7a4])
+        by smtp.gmail.com with ESMTPSA id l69sm5969652pgd.1.2020.02.11.21.47.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 21:47:28 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
+        christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
+        bsingharora@gmail.com
+Cc:     Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v6 0/4] KASAN for powerpc64 radix
+Date:   Wed, 12 Feb 2020 16:47:20 +1100
+Message-Id: <20200212054724.7708-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208013552.241832-7-drosen@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 05:35:50PM -0800, Daniel Rosenberg wrote:
-> @@ -173,24 +193,24 @@ static inline bool f2fs_match_name(struct f2fs_dentry_ptr *d,
->  {
->  #ifdef CONFIG_UNICODE
->  	struct inode *parent = d->inode;
-> -	struct super_block *sb = parent->i_sb;
-> -	struct qstr entry;
-> +	unsigned char *name;
-> +	int len;
->  #endif
->  
->  	if (de->hash_code != namehash)
->  		return false;
->  
->  #ifdef CONFIG_UNICODE
-> -	entry.name = d->filename[bit_pos];
-> -	entry.len = de->name_len;
-> +	name = d->filename[bit_pos];
-> +	len = de->name_len;
+Building on the work of Christophe, Aneesh and Balbir, I've ported
+KASAN to 64-bit Book3S kernels running on the Radix MMU.
 
-This is missing le16_to_cpu().
+This provides full inline instrumentation on radix, but does require
+that you be able to specify the amount of physically contiguous memory
+on the system at compile time. More details in patch 4.
 
->  int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
->  				const struct qstr *orig_name,
-> +				f2fs_hash_t dentry_hash,
->  				struct inode *inode, nid_t ino, umode_t mode)
->  {
->  	unsigned int bit_pos;
->  	unsigned int level;
->  	unsigned int current_depth;
->  	unsigned long bidx, block;
-> -	f2fs_hash_t dentry_hash;
->  	unsigned int nbucket, nblock;
->  	struct page *dentry_page = NULL;
->  	struct f2fs_dentry_block *dentry_blk = NULL;
-> @@ -632,7 +652,6 @@ int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
->  
->  	level = 0;
->  	slots = GET_DENTRY_SLOTS(new_name->len);
-> -	dentry_hash = f2fs_dentry_hash(dir, new_name, NULL);
+v6: Rebase on the latest changes in powerpc/merge. Minor tweaks
+      to the documentation. Small tweaks to the header to work
+      with the kasan_late_init() function that Christophe added
+      for 32-bit kasan-vmalloc support.
+    No functional change.
 
-Why was the call to f2fs_dentry_hash() moved to the caller, but for
-f2fs_add_inline_entry() a different approach was taken?
+v5: ptdump support. More cleanups, tweaks and fixes, thanks
+    Christophe. Details in patch 4.
 
-> @@ -718,17 +737,19 @@ int f2fs_add_dentry(struct inode *dir, struct fscrypt_name *fname,
->  				struct inode *inode, nid_t ino, umode_t mode)
->  {
->  	struct qstr new_name;
-> +	f2fs_hash_t dentry_hash;
->  	int err = -EAGAIN;
->  
->  	new_name.name = fname_name(fname);
->  	new_name.len = fname_len(fname);
->  
->  	if (f2fs_has_inline_dentry(dir))
-> -		err = f2fs_add_inline_entry(dir, &new_name, fname->usr_fname,
-> +		err = f2fs_add_inline_entry(dir, &new_name, fname,
->  							inode, ino, mode);
+    I have seen another stack walk splat, but I don't think it's
+    related to the patch set, I think there's a bug somewhere else,
+    probably in stack frame manipulation in the kernel or (more
+    unlikely) in the compiler.
 
-I'm really confused.  Why are you passing around both new_name and fname?
-We already have new_name == fname.disk_name.  So isn't just the
-'struct fscrypt_name' sufficient?
+v4: More cleanups, split renaming out, clarify bits and bobs.
+    Drop the stack walk disablement, that isn't needed. No other
+    functional change.
 
-> +static f2fs_hash_t __f2fs_dentry_hash(const struct inode *dir,
-> +				const struct qstr *name_info,
-> +				const struct fscrypt_name *fname)
->  {
->  	__u32 hash;
->  	f2fs_hash_t f2fs_hash;
-> @@ -85,6 +86,11 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
->  	if (is_dot_dotdot(name_info))
->  		return 0;
->  
-> +	if (IS_CASEFOLDED(dir) && IS_ENCRYPTED(dir)) {
-> +		f2fs_hash = fscrypt_fname_siphash(dir, name_info);
-> +		return f2fs_hash;
-> +	}
+v3: Reduce the overly ambitious scope of the MAX_PTRS change.
+    Document more things, including around why some of the
+    restrictions apply.
+    Clean up the code more, thanks Christophe.
 
-This is missing cpu_to_le32().
+v2: The big change is the introduction of tree-wide(ish)
+    MAX_PTRS_PER_{PTE,PMD,PUD} macros in preference to the previous
+    approach, which was for the arch to override the page table array
+    definitions with their own. (And I squashed the annoying
+    intermittent crash!)
 
-Also, above we have:
+    Apart from that there's just a lot of cleanup. Christophe, I've
+    addressed most of what you asked for and I will reply to your v1
+    emails to clarify what remains unchanged.
 
-        /* encrypted bigname case */
-        if (fname && !fname->disk_name.name)
-                return cpu_to_le32(fname->hash);
-
-That won't work with encrypted+casefolded directories without the key, because
-now sometimes the hash from the no-key name is needed even when the disk_name is
-available.  This will cause a crash in fscrypt_fname_siphash() being called
-without the key.  I think you want:
-
-        if (fname && fname->is_ciphertext_name)
-                return cpu_to_le32(fname->hash);
-
-Can you please write xfstests for encrypt+casefold?
-
-- Eric
