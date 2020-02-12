@@ -2,181 +2,230 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05878C3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D43DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF49720848
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581504781;
-	bh=Pwajte22fjxHiBAlHtssck/Qimw2kttlGORfRLvD6OM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xL6AtBAdjwz0n2UFJtvxNUaQZ1Y1Uc8CxfLXNklhpvtk/jj0SixfDIEIlRmDQy+Ve
-	 9lBUBRaw6d5G2WWxe5BUKBLEm25+G1L7UkfaAQBQjeam97e17CIGTG5DynXUY2Xjuu
-	 zX7VQpB7KCtePhnjf2wgq687qohiX8EcGSWqPNoo=
+	by mail.kernel.org (Postfix) with ESMTP id 2836720675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 10:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="cfEHKyCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbgBLKxB (ORCPT
+        id S1727922AbgBLKxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:53:01 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39519 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgBLKxA (ORCPT
+        Wed, 12 Feb 2020 05:53:36 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32828 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbgBLKxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 05:53:00 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so1457615oty.6;
-        Wed, 12 Feb 2020 02:53:00 -0800 (PST)
+        Wed, 12 Feb 2020 05:53:36 -0500
+Received: by mail-wr1-f67.google.com with SMTP id u6so1680423wrt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 02:53:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iCxaKYylUaTagw0CiACoN5PmGBZhgyb9phU3hhP0tOU=;
+        b=cfEHKyCzPVV+G0Ct3fk+e76eZPGNTeImhNiFGDVimPzL4uYn8zjyFG9WyB0koRR2qN
+         EwMnN8vjUGQ2wbhjgaIjph2vjfhe8yjFmu9ClTKqCx2OtRi5VsZHinaDNjSlIBmgdAxy
+         wxZcB8m80XRXcoyEYhnoHyLx5c4HUKj1j5ketT2WaaEFRPaldEWGCoEuAfq2/3tjkHap
+         8wX1V3Fo/iwSy3etqyDyJk14F8tfP9OcXDnIFVgeOxj2H0AcSvMFus1GiH7Bo5SBr38M
+         +OGCJMD8zbYUhdsAjqZ8LRFVbVVV0cBL4zfH47rlbg/l3/sDFnDyyciz4KUYMzOvm7Ic
+         iHHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xDaTG9CjFB5v08pxicGCnpkVMw06DjcCCmv/DeDv44U=;
-        b=HIUS7iAUkK28kZCD5AEONCrJZT4uY97mXLftnxlSbHOR7DsnTiwn/K6IvMSpN/3qJi
-         KpQZCBxOirR1XFrPnRkJ9xAMMqC7uiXJWywNvp8tIyPNIhXtR4TvacHNK+qOPtge86jU
-         EPlQLUV8Se+oNvdXBvoMcquEeP5dLmKVYHpFUTPap0ZAzfq3W1EuRVfkuPYS140V0Z7l
-         uuqRpNBFQs0RChDrCeY37lCTgf2aSHGyRcZXNybu9/6KWC0vYmMTZ1g+oatetAt9GHjW
-         nMkYBHQdiZcQKpnhddFalnmTsHS5EXZPQXVUing/IyS1WpG8uvqLo+F6f18XReRHx0WV
-         ItcQ==
-X-Gm-Message-State: APjAAAVzqH1JOnGkAp+xEVtEwq1mfXqwKfCgwKSmWEXWun4ImdoxGHei
-        565V2gWgelr6MbF/db2NhvSFWuQU5tGy+HXVghPd54yk
-X-Google-Smtp-Source: APXvYqwlBWTrC37R7VTa9EjcJ61LqHAjx4orj3e8146ySRFGC3hM/aolrQr5MVazU5TX6FEIW3dTsCxbWszSxvggp/s=
-X-Received: by 2002:a05:6830:1651:: with SMTP id h17mr8361894otr.167.1581504779738;
- Wed, 12 Feb 2020 02:52:59 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=iCxaKYylUaTagw0CiACoN5PmGBZhgyb9phU3hhP0tOU=;
+        b=hACIm928ODw4SRoHB7+gW8wEYAtafb641P1Lth+YysnPOXkjjKmtM84Uj25MRRCS9/
+         i3O72bzqAQP78FKqNlWcePrPdoAaj+RkUsQbYY+43rwWzKOXWCi9miitcKwdyC+8w1BN
+         p6hz1lX5/XnaNQKIRawjJSdyrJ2al+Sp+LuHoSB27+nsyAsWCBtBE5lXokj4hOjlPVZJ
+         kWmNEiNDx7LMgCPFT2VHrt58KO2A40xRyilvlZIXSFSOdYa1bs1cbLV0TKzZoTNnEYIs
+         /FHi/AmkBdedzPd7di3huZnqkAeWHwfKF6QjBqzskf4fIRq7GiUNUaxiGPa1jy9Mg7uX
+         ND4g==
+X-Gm-Message-State: APjAAAX+Ocs4ufuSpm8JDCfEbfbzxIVqme3ibv33Ue9z6EVZYfOga8g6
+        HOZ5o1SszV9yLjx+sDHkvO7TpNg9HZ4IGgwi
+X-Google-Smtp-Source: APXvYqxgTVJqQTyquzXfMccEeyNdAmwRbsVgVjP0iCL7Yk3Bd8yKTybDkb7CTMq7CHnJcPN3jls9ZA==
+X-Received: by 2002:a5d:5273:: with SMTP id l19mr15503626wrc.175.1581504812588;
+        Wed, 12 Feb 2020 02:53:32 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id b10sm123284wrw.61.2020.02.12.02.53.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 02:53:30 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com, arnd@arndb.de,
+        akpm@linux-foundation.org
+Cc:     Stefan Asserhall <stefan.asserhall@xilinx.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chris Zankel <chris@zankel.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Helge Deller <deller@gmx.de>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rich Felker <dalias@libc.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+Subject: [PATCH v3] asm-generic: Fix unistd_32.h generation format
+Date:   Wed, 12 Feb 2020 11:53:29 +0100
+Message-Id: <4d32ab4e1fb2edb691d2e1687e8fb303c09fd023.1581504803.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200212104321.43570-1-christian.brauner@ubuntu.com> <20200212104321.43570-8-christian.brauner@ubuntu.com>
-In-Reply-To: <20200212104321.43570-8-christian.brauner@ubuntu.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 12 Feb 2020 11:52:49 +0100
-Message-ID: <CAJZ5v0i+BFg6fEt4UP0vGb=KXBf=iWQcf1cL-2nk-xr=2xZ66w@mail.gmail.com>
-Subject: Re: [PATCH net-next 07/10] drivers/base/power: add dpm_sysfs_change_owner()
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 11:43 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> Add a helper to change the owner of a device's power entries. This
-> needs to happen when the ownership of a device is changed, e.g. when
-> moving network devices between network namespaces.
-> The ownership of a device's power entries is determined based on the
-> ownership of the corresponding kobject, i.e. only if the ownership of a
-> kobject is changed will this function change the ownership of the
-> corresponding sysfs entries.
-> This function will be used to correctly account for ownership changes,
-> e.g. when moving network devices between network namespaces.
->
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> ---
->  drivers/base/core.c        |  4 ++++
->  drivers/base/power/power.h |  2 ++
->  drivers/base/power/sysfs.c | 37 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 43 insertions(+)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 262217287a09..dfaf6d3614fa 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3515,6 +3515,10 @@ int device_change_owner(struct device *dev)
->         if (error)
->                 goto out;
->
-> +       error = dpm_sysfs_change_owner(dev);
-> +       if (error)
-> +               goto out;
-> +
->  #ifdef CONFIG_BLOCK
->         if (sysfs_deprecated && dev->class == &block_class)
->                 goto out;
-> diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
-> index 444f5c169a0b..f68490d0811b 100644
-> --- a/drivers/base/power/power.h
-> +++ b/drivers/base/power/power.h
-> @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
->  extern void pm_qos_sysfs_remove_flags(struct device *dev);
->  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
->  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
-> +extern int dpm_sysfs_change_owner(struct device *dev);
->
->  #else /* CONFIG_PM */
->
-> @@ -88,6 +89,7 @@ static inline void pm_runtime_remove(struct device *dev) {}
->
->  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
->  static inline void dpm_sysfs_remove(struct device *dev) {}
-> +static inline int dpm_sysfs_change_owner(struct device *dev) { return 0; }
->
->  #endif
->
-> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> index d7d82db2e4bc..ce1fd346e854 100644
-> --- a/drivers/base/power/sysfs.c
-> +++ b/drivers/base/power/sysfs.c
-> @@ -684,6 +684,43 @@ int dpm_sysfs_add(struct device *dev)
->         return rc;
->  }
->
-> +int dpm_sysfs_change_owner(struct device *dev)
-> +{
-> +       int rc;
-> +
-> +       if (device_pm_not_required(dev))
-> +               return 0;
-> +
-> +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group);
-> +       if (rc)
-> +               return rc;
-> +
-> +       if (pm_runtime_callbacks_present(dev)) {
-> +               rc = sysfs_group_change_owner(&dev->kobj,
-> +                                             &pm_runtime_attr_group);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +       if (device_can_wakeup(dev)) {
-> +               rc = sysfs_group_change_owner(&dev->kobj,
-> +                                             &pm_wakeup_attr_group);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +       if (dev->power.set_latency_tolerance) {
-> +               rc = sysfs_group_change_owner(&dev->kobj,
-> +                               &pm_qos_latency_tolerance_attr_group);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +       if (dev->power.wakeup && dev->power.wakeup->dev) {
+Generated files are also checked by sparse that's why add newline
+to remove sparse (C=1) warning.
 
-This is related to the device_can_wakeup(dev) condition above (i.e. it
-will never be 'true' if that one is 'false').
+The issue was found on Microblaze and reported like this:
+./arch/microblaze/include/generated/uapi/asm/unistd_32.h:438:45:
+warning: no newline at end of file
 
-LGTM apart from this.
+Mips and PowerPC have it already but let's align with style used by m68k.
 
-> +               rc = device_change_owner(dev->power.wakeup->dev);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +       return 0;
-> +}
-> +
->  int wakeup_sysfs_add(struct device *dev)
->  {
->         return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> --
-> 2.25.0
->
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
+Acked-by: Max Filippov <jcmvbkbc@gmail.com> (xtensa)
+---
+
+Changes in v3:
+- Add notes about mips/ppc and m68 - Max/Geert
+
+Changes in v2:
+- Update also others archs not just microblaze - Arnd
+- Align subject and description to match multiarch change
+
+ arch/alpha/kernel/syscalls/syscallhdr.sh      | 2 +-
+ arch/ia64/kernel/syscalls/syscallhdr.sh       | 2 +-
+ arch/microblaze/kernel/syscalls/syscallhdr.sh | 2 +-
+ arch/mips/kernel/syscalls/syscallhdr.sh       | 3 +--
+ arch/parisc/kernel/syscalls/syscallhdr.sh     | 2 +-
+ arch/powerpc/kernel/syscalls/syscallhdr.sh    | 3 +--
+ arch/sh/kernel/syscalls/syscallhdr.sh         | 2 +-
+ arch/sparc/kernel/syscalls/syscallhdr.sh      | 2 +-
+ arch/xtensa/kernel/syscalls/syscallhdr.sh     | 2 +-
+ 9 files changed, 9 insertions(+), 11 deletions(-)
+
+diff --git a/arch/alpha/kernel/syscalls/syscallhdr.sh b/arch/alpha/kernel/syscalls/syscallhdr.sh
+index e5b99bd2e5e7..1780e861492a 100644
+--- a/arch/alpha/kernel/syscalls/syscallhdr.sh
++++ b/arch/alpha/kernel/syscalls/syscallhdr.sh
+@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/ia64/kernel/syscalls/syscallhdr.sh b/arch/ia64/kernel/syscalls/syscallhdr.sh
+index 0c2d2c748565..f407b6e53283 100644
+--- a/arch/ia64/kernel/syscalls/syscallhdr.sh
++++ b/arch/ia64/kernel/syscalls/syscallhdr.sh
+@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/microblaze/kernel/syscalls/syscallhdr.sh b/arch/microblaze/kernel/syscalls/syscallhdr.sh
+index 2e9062a926a3..a914854f8d9f 100644
+--- a/arch/microblaze/kernel/syscalls/syscallhdr.sh
++++ b/arch/microblaze/kernel/syscalls/syscallhdr.sh
+@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/mips/kernel/syscalls/syscallhdr.sh b/arch/mips/kernel/syscalls/syscallhdr.sh
+index d2bcfa8f4d1a..2e241e713a7d 100644
+--- a/arch/mips/kernel/syscalls/syscallhdr.sh
++++ b/arch/mips/kernel/syscalls/syscallhdr.sh
+@@ -32,6 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
+-	printf "\n"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/parisc/kernel/syscalls/syscallhdr.sh b/arch/parisc/kernel/syscalls/syscallhdr.sh
+index 50242b747d7c..730db288fe54 100644
+--- a/arch/parisc/kernel/syscalls/syscallhdr.sh
++++ b/arch/parisc/kernel/syscalls/syscallhdr.sh
+@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/powerpc/kernel/syscalls/syscallhdr.sh b/arch/powerpc/kernel/syscalls/syscallhdr.sh
+index c0a9a32937f1..02d6751f3be3 100644
+--- a/arch/powerpc/kernel/syscalls/syscallhdr.sh
++++ b/arch/powerpc/kernel/syscalls/syscallhdr.sh
+@@ -32,6 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
+-	printf "\n"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/sh/kernel/syscalls/syscallhdr.sh b/arch/sh/kernel/syscalls/syscallhdr.sh
+index 1de0334e577f..4c0519861e97 100644
+--- a/arch/sh/kernel/syscalls/syscallhdr.sh
++++ b/arch/sh/kernel/syscalls/syscallhdr.sh
+@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/sparc/kernel/syscalls/syscallhdr.sh b/arch/sparc/kernel/syscalls/syscallhdr.sh
+index 626b5740a9f1..cf50a75cc0bb 100644
+--- a/arch/sparc/kernel/syscalls/syscallhdr.sh
++++ b/arch/sparc/kernel/syscalls/syscallhdr.sh
+@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+diff --git a/arch/xtensa/kernel/syscalls/syscallhdr.sh b/arch/xtensa/kernel/syscalls/syscallhdr.sh
+index d37db641ca31..eebfb8a8ace6 100644
+--- a/arch/xtensa/kernel/syscalls/syscallhdr.sh
++++ b/arch/xtensa/kernel/syscalls/syscallhdr.sh
+@@ -32,5 +32,5 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
+ 	printf "#define __NR_syscalls\t%s\n" "${nxt}"
+ 	printf "#endif\n"
+ 	printf "\n"
+-	printf "#endif /* %s */" "${fileguard}"
++	printf "#endif /* %s */\n" "${fileguard}"
+ ) > "$out"
+-- 
+2.25.0
+
