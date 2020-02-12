@@ -2,237 +2,105 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8CFC3B186
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C35C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE03E20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEB420848
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 11:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="acclcE/s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9AsXbA1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgBLLt0 (ORCPT
+        id S1728284AbgBLLtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:49:26 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41065 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgBLLt0 (ORCPT
+        Wed, 12 Feb 2020 06:49:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50229 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727279AbgBLLtc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:49:26 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so1912999wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:49:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cmD9dIl/Cn0kv69K4stIs4I7W2zBHHJK55pAH/ZJ47c=;
-        b=acclcE/sRMCwwwI3qfIXMIEYfQhDwFgFCHLPzR9bw0qstSofqRV0pf3FNFUCUOnvEw
-         Fo4TIP/N8RDU/JMVYtDIo8IGMkICBw0+nH6cYwRz/WHCO7y85ywaYM5vPeCXUR2tdRmw
-         Wb6XW1Sy4xkzhT7ij0woVvGwwK+tYs1yf6HRs=
+        Wed, 12 Feb 2020 06:49:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581508171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JnelCP0BeqCKzB5HUK/Y879g+TjBn3kcCBi0brqpess=;
+        b=A9AsXbA1wEDr7zwDzw2Qa5q2DX8OkC+S/qG0kf8tCKFEmEBNXYx84+9cGSJU2jBgyr+t0m
+        65DoTRfX3zHaLAHXutJyBri6TOkIUeRPr1QAR5XVoPUBkNyyLbRnnkw5ex0pIZsm6lv6Oj
+        T/RIT9zaY6GiYjjwv3EJjnWyaDzJVcQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-HoYJxD8BMWmGx4LcdzvKzQ-1; Wed, 12 Feb 2020 06:49:29 -0500
+X-MC-Unique: HoYJxD8BMWmGx4LcdzvKzQ-1
+Received: by mail-wr1-f69.google.com with SMTP id w6so704255wrm.16
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 03:49:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cmD9dIl/Cn0kv69K4stIs4I7W2zBHHJK55pAH/ZJ47c=;
-        b=RyegCPnY6bEjRmv7UJXWHDQ5RnCH8e8/gZd2bfxjW5rtX4Ob5CE/Y8azC4tt+awUnA
-         7TRzFfMOh4KZ1g3EGUGSq8TjiR5NlBEjtOcPGBJ1ZfyZWYjXS3Ii2NtSH8A+1BZK4J7K
-         2pC9lWIAD5lypbAkZvweiWkQyVpzghTp2Mdtx1TGsnlZOS0ZIxdhL73v6WULjMOcbjpz
-         6bkbu/0KPSRb2RCTupC8yKPsmtSD/F27HPoyGaAUVaxo32b3bD7mYwhUlufKy+vki4mW
-         R8N808vyooIvhGugDmyO2pA2lR1Rk+eKQn+6PaJgANb8nIoIEku1YgU4uyRismRzBQD2
-         uf8w==
-X-Gm-Message-State: APjAAAVoy6wopEK8aDGLhmzmNFEEErjdt04daxzCrPcX3SYxceB3Rdad
-        WYjVxoVHt6ktWWNNzAS+m0o9x/Mo0zDFAGeNBmT65g==
-X-Google-Smtp-Source: APXvYqzGbvkQN17/r8TFahQCuSW2Wlj9TKHmg3ifCvXdV/S5m70bJj2Ia346lmfK3hzvmpBnTFIOfgZmbL4XNZ8LvQU=
-X-Received: by 2002:adf:b605:: with SMTP id f5mr14199856wre.383.1581508162663;
- Wed, 12 Feb 2020 03:49:22 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JnelCP0BeqCKzB5HUK/Y879g+TjBn3kcCBi0brqpess=;
+        b=FhC6joNu3bR+t/g8xXGlEzEmzssRG+oRY0EYZhLoURoAaP1MzmyJ4GI7/J+LoATWR/
+         aUemnLRL5efgVzw1LF1RxD3nrpgiTvFZGjEyEOisyx2yWk6ohx3TDqjL5VAk75+Nq4od
+         T2q7n3BQ1ux/eLdpRFeUeMQJsURYl4LKIvs4lVyle4X9iSzco0rR6Uuor4xOqIyDh4wH
+         /+KpJVEOMZevgelVmlV9zbfh+Bh3uO+UXbc90dC3fubSSfYIRyfQAV9mRNR+YwEgu1bP
+         bRDub2AY78BhlxwLY03XELpkgzSrrIQzzQVLs3Z981Lh8N0LRmXo4VwQ9mWWDshRWF7L
+         XdQA==
+X-Gm-Message-State: APjAAAVEX3Tw6xhp+7ObfOjm31+2oFgiXlQd+dgYsWbT788pEBRcZLEC
+        aAPiJzuhT6Dvk/UYnH8h+VO71JDbw9CSq3LQ8E/XZ2RSJjJN2d86QY8YoFcFrLaVQXLfrywP348
+        K7kM3k3jbJOwZLJbi0sFK4crx
+X-Received: by 2002:a5d:4e91:: with SMTP id e17mr14147906wru.233.1581508168430;
+        Wed, 12 Feb 2020 03:49:28 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzeI48yUIlfasjczSuSSNgiv99/Z58AUwqGUMZMkVGFbIwyZAB7OqaXkxrlubZ3ZIBd8MW2nw==
+X-Received: by 2002:a5d:4e91:: with SMTP id e17mr14147880wru.233.1581508168206;
+        Wed, 12 Feb 2020 03:49:28 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
+        by smtp.gmail.com with ESMTPSA id m9sm318916wrx.55.2020.02.12.03.49.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 03:49:27 -0800 (PST)
+Subject: Re: [PATCH] KVM: x86: remove duplicated KVM_REQ_EVENT request
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linmiaohe <linmiaohe@huawei.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+References: <a95c89cdcdca4749a1ca4d779ebd4a0a@huawei.com>
+ <87h802g42r.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1386ffda-37c7-aef6-2ff4-f2b753b51af1@redhat.com>
+Date:   Wed, 12 Feb 2020 12:49:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <CAOf5uwmPMRq4v9=5-Z=XLH7hATC-AhXQWthfy_uvYTXSo6V+CA@mail.gmail.com>
- <CAOf5uwnRLn7tXFRxjPGASuCnmOwooA4Ytk28Zc+A0kp=UZDQWw@mail.gmail.com>
-In-Reply-To: <CAOf5uwnRLn7tXFRxjPGASuCnmOwooA4Ytk28Zc+A0kp=UZDQWw@mail.gmail.com>
-From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date:   Wed, 12 Feb 2020 12:49:11 +0100
-Message-ID: <CAOf5uwnf6yF0sksjVRRzxLCD8xaMGhUhkOQ8CjwhYy85zcArLw@mail.gmail.com>
-Subject: Re: siimple-framebuffer rockchip persistent logo
-To:     Kever Yang <kever.yang@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87h802g42r.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko and Hans
+On 07/02/20 10:05, Vitaly Kuznetsov wrote:
+> kvm_make_request() from kvm_set_rflags() as it is not an obvious
+> behavior (e.g. why kvm_rip_write() doens't do that and
+> kvm_set_rflags() does ?)
 
-I manage to have the persistent framebuffer but complete working video subsystem
+Because writing RFLAGS can change IF and therefore cause an interrupt to
+be injected.
 
-THe problem is the follow
+Paolo
 
-[    0.116514] rk_iommu ff930300.iommu: attaching to power domain 'pd_vio'
-[    0.116539] rk_iommu ff930300.iommu: adding clock 'aclk_vop0' to
-list of PM clocks
-[    0.116561] rk_iommu ff930300.iommu: adding clock 'hclk_vop0' to
-list of PM clocks
-[    0.116989] rk_iommu ff940300.iommu: attaching to power domain 'pd_vio'
-[    0.117013] rk_iommu ff940300.iommu: adding clock 'aclk_vop1' to
-list of PM clocks
-[    0.117032] rk_iommu ff940300.iommu: adding clock 'hclk_vop1' to
-list of PM clocks
-[    0.117335] rk_iommu ff9a0800.iommu: attaching to power domain 'pd_video'
-[    0.117359] rk_iommu ff9a0800.iommu: adding clock 'aclk_vcodec' to
-list of PM clocks
-[    0.117377] rk_iommu ff9a0800.iommu: adding clock 'hclk_vcodec' to
-list of PM clocks
-[    0.117773] rockchip-pm-domain
-ff730000.power-management:power-controller: Calling pd power off
-[    0.117926] rockchip-pm-domain
-ff730000.power-management:power-controller: Calling power domain off
-[    0.117984] rockchip-pm-domain
-ff730000.power-management:power-controller: Calling pd power off
-[    0.118016] rockchip-pm-domain
-ff730000.power-management:power-controller: Calling power domain off
-
-As you can see the pd_vio domain are off even if simpleframe buffer
-own them. The problem is that the
-rk_iommu is registered before the simple framebuffer. When pd_io
-domain is off everything is done on
-hdmi side
-
-+       chosen {
-+               #address-cells = <2>;
-+               #size-cells = <2>;
-+               ranges;
-+
-+               simplefb_hdmi: framebuffer-lcd0-hdmi {
-+                       compatible = "rockchip,simple-framebuffer",
-+                                    "simple-framebuffer";
-+                       rockchip,pipeline = "rockchip,dw_hdmi";
-+                       clocks = <&cru PCLK_HDMI_CTRL>, <&cru
-SCLK_HDMI_HDCP>, <&cru SCLK_HDMI_CEC>,
-+                                <&cru ACLK_VOP0>, <&cru DCLK_VOP0>,
-<&cru HCLK_VOP0>;
-+                       power-domains = <&power RK3288_PD_VIO>;
-+                       status = "disabled";
-+               };
-+       };
-
-Memory area is automatic injected by the bootloader. Now rk iommu is
-with runtime enable so basically if I understand
-the >sync call will schedule a power off domain if they are not in use.
-
-[    0.118064] vgaarb: loaded
-[    0.118997] SCSI subsystem initialized
-[    0.119213] libata version 3.00 loaded.
-[    0.119499] usbcore: registered new interface driver usbfs
-[    0.119552] usbcore: registered new interface driver hub
-[    0.119617] usbcore: registered new device driver usb
-[    0.121505] pps_core: LinuxPPS API ver. 1 registered
-[    0.121515] pps_core: Software ver. 5.3.6 - Copyright 2005-2007
-Rodolfo Giometti <giometti@linux.it>
-[    0.121539] PTP clock support registered
-[    0.121777] EDAC MC: Ver: 3.0.0
-[    0.125046] clocksource: Switched to clocksource arch_sys_counter
-[    0.930470] simple-framebuffer 7f800000.framebuffer: attaching to
-power domain 'pd_vio'
-[    0.930501] simple-framebuffer 7f800000.framebuffer: adding clock
-'pclk_hdmi_ctrl' to list of PM clocks
-[    0.930523] simple-framebuffer 7f800000.framebuffer: adding clock
-'sclk_hdmi_hdcp' to list of PM clocks
-[    0.930544] simple-framebuffer 7f800000.framebuffer: adding clock
-'sclk_hdmi_cec' to list of PM clocks
-[    0.930564] simple-framebuffer 7f800000.framebuffer: adding clock
-'aclk_vop0' to list of PM clocks
-[    0.930585] simple-framebuffer 7f800000.framebuffer: adding clock
-'dclk_vop0' to list of PM clocks
-[    0.930606] simple-framebuffer 7f800000.framebuffer: adding clock
-'hclk_vop0' to list of PM clocks
-[    0.930642] rockchip-pm-domain
-ff730000.power-management:power-controller: Calling pd power on
-[    0.930746] rockchip-pm-domain
-ff730000.power-management:power-controller: Calling power domain on
-[    0.931083] simple-framebuffer 7f800000.framebuffer: framebuffer at
-0x7f800000, 0x7e9000 bytes, mapped to 0x(ptrval)
-[    0.931101] simple-framebuffer 7f800000.framebuffer:
-format=x8r8g8b8, mode=1920x1080x32, linelength=7680
-[    0.931415] simple-framebuffer 7f800000.framebuffer: fb0: simplefb
-registered!
-
-Here when everything get registered by offcouse the screen went black already
-
-Michael
-
-On Fri, Feb 7, 2020 at 8:14 PM Michael Nazzareno Trimarchi
-<michael@amarulasolutions.com> wrote:
->
-> Hi all
->
-> I move a bit on this
->
-> On Sun, Jan 12, 2020 at 6:16 PM Michael Nazzareno Trimarchi
-> <michael@amarulasolutions.com> wrote:
-> >
-> > Hi Kever
-> >
-> > Trying to have a persistent banner from uboot to linux-kernel. I'm
-> > right now working on linux-rockchip kernel but I think that the
-> > problem is even on mainline
-> >
-> > +               framebuffer: framebuffer@7f800000 {
-> > +                       compatible = "rockchip,simple-framebuffer",
-> > +                                    "simple-framebuffer";
-> > +                       reg = <0x7f800000 (1920 * 1080 * 4)>;
-> > +                       width = <1920>;
-> > +                       height = <1080>;
-> > +                       stride = <(1920 * 4)>;
-> > +                       format = "a8b8g8r8";
-> > +                       clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>,
-> > +                                <&cru SRST_LCDC0_AXI>, <&cru
-> > SRST_LCDC0_AHB>, <&cru SRST_LCDC0_DCLK>,
-> > +                                <&cru ACLK_VOP0>, <&cru HCLK_VOP0>;
-> > +                       status = "okay";
-> > +               };
-> >
->
-> Now I can allocate the parameter using the bootloader and create the
-> right mapping for the simple framebuffer. I don't even understand
-> how sunxi and meson can work if they don't create a reserved memory
-> using no-map. This is fixed on my side so the log is totally clean.
-> I have added the deregister of simple fb and handover to the drm
->
-> Now my boot parameters are:
-> Kernel command line: console=ttyS2,115200n8 root=/dev/mmcblk0p1
-> rootwait pd_ignore_unused clk_ignore_unused
->
-> Still I have display go off on tinker during boot. Any suggestion?
->
-> Michael
->
->
-> > Seems that it get off before I reach the drm registration
-> >
-> > [    2.077495] simple-framebuffer 7f800000.framebuffer: framebuffer at
-> > 0x7f800000, 0x7e9000 bytes, mapped to 0xf0900000
-> > [    2.077519] simple-framebuffer 7f800000.framebuffer:
-> > format=a8b8g8r8, mode=1920x1080x32, linelength=7680
-> > [    2.161225] simple-framebuffer 7f800000.framebuffer: fb0: simplefb
-> > registered!
-> > [    3.433847] fb: switching to rockchip-drm-fb from simple
-> >
-> > I don't find all the clocks and if those are the only think that I
-> > need to stay on. Any suggestion?
-
-
-
--- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
