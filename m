@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF44C352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356E6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15271215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6CE215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 04:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FAdp2tXx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qNLJwgF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgBLESs (ORCPT
+        id S1728261AbgBLETU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:18:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53910 "EHLO
+        Tue, 11 Feb 2020 23:19:20 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53934 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgBLESr (ORCPT
+        with ESMTP id S1727982AbgBLESr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Feb 2020 23:18:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=i7vboR3/DJp/zECAeL6j4GiEm3ZUJFUzH7UtZQ9ZEF0=; b=FAdp2tXxaIowBuCaDAdUtlgPMI
-        REH220rdRzBHCOYiuA1BN9W47EQ538R6k5uZEtBF5gMgY1fSqKoONpkywoiMJYaTBVacuHgS1XX+5
-        /ypXgTWDk74QCFtWDsO33RDqXvZqkbaQIv1735c50gFF7JWhNnPtRp18/lI1u3ogH9s0cZ2nclgDr
-        nXd/qmh9tgn5N2nr2dZndgBL0oz0wuJZVqkOggxHGrl/I0AJqJ+VoKG5i2qF8m4FOVYnsvambdbMt
-        VuFwGES8IyvxbUvH3bpT4T7NR4wNGX10JWVDUqKfgiN2Sh3rQaeZhjpZndaJGkIXb3P9rpzojlF1d
-        Iz4gnKbg==;
+        bh=E2LjqBszgquKpJquZnIE6WmTb8rlYH+KCAsDdBVlwlw=; b=qNLJwgF/rnW8ybxq8FcTESoXmR
+        kVdQKbpxEeeKJQu4bjlaz4jNso3rZZfpN+vBHnd47cUEq2I8jusmAt5TLAumk5so/nas2pJ7J/Y5k
+        eOf8j1QpTmlsBsAsHjljLv+G6VSZh+CGIlvZHd6hNXqBL2DYe0OdSNGoc0ONtr5emMxK1XPxHeVbf
+        0H9JwJFkSY11MVcB+hNkT8blC7dR/PCRxNKR91Qm1BeU3gPD8W7hudcYZZhBMM6Pat4MrZooqucUj
+        aH3/mxaJvgYuCgOx6Qd6GMVTUGgF1bxXVUjbyYpknlqN5J4POdJQ+lLl5MPzOry8xFTjX158hclxi
+        ZgMszcVA==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1jU6-0006n7-Q5; Wed, 12 Feb 2020 04:18:46 +0000
+        id 1j1jU6-0006ng-V3; Wed, 12 Feb 2020 04:18:46 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/25] mm: Introduce thp_order
-Date:   Tue, 11 Feb 2020 20:18:28 -0800
-Message-Id: <20200212041845.25879-9-willy@infradead.org>
+Subject: [PATCH v2 12/25] mm: Add file_offset_of_ helpers
+Date:   Tue, 11 Feb 2020 20:18:32 -0800
+Message-Id: <20200212041845.25879-13-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200212041845.25879-1-willy@infradead.org>
 References: <20200212041845.25879-1-willy@infradead.org>
@@ -54,33 +54,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Like compound_order() except 0 when THP is disabled.
+The page_offset function is badly named for people reading the functions
+which call it.  The natural meaning of a function with this name would
+be 'offset within a page', not 'page offset in bytes within a file'.
+Dave Chinner suggests file_offset_of_page() as a replacement function
+name and I'm also adding file_offset_of_next_page() as a helper for the
+large page work.  Also add kernel-doc for these functions so they show
+up in the kernel API book.
+
+page_offset() is retained as a compatibility define for now.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/huge_mm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/ibm/ibmveth.c |  2 --
+ include/linux/pagemap.h            | 25 ++++++++++++++++++++++---
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 3680ae2d9019..3de788ee25bd 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -233,6 +233,7 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 84121aab7ff1..4cad94ac9bc9 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -978,8 +978,6 @@ static int ibmveth_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+ 	return -EOPNOTSUPP;
+ }
  
- #define hpage_nr_pages(page)	(long)compound_nr(page)
- #define thp_size(page)		page_size(page)
-+#define thp_order(page)		compound_order(page)
- 
- struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
-@@ -288,6 +289,7 @@ static inline struct list_head *page_deferred_list(struct page *page)
- 
- #define hpage_nr_pages(x) 1L
- #define thp_size(x)		PAGE_SIZE
-+#define thp_order(x)		0U
- 
- static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+-#define page_offset(v) ((unsigned long)(v) & ((1 << 12) - 1))
+-
+ static int ibmveth_send(struct ibmveth_adapter *adapter,
+ 			union ibmveth_buf_desc *descs, unsigned long mss)
  {
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 2ec33aabdbf6..497197315b73 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -432,14 +432,33 @@ static inline pgoff_t page_to_pgoff(struct page *page)
+ 	return page_to_index(page);
+ }
+ 
+-/*
+- * Return byte-offset into filesystem object for page.
++/**
++ * file_offset_of_page - File offset of this page.
++ * @page: Page cache page.
++ *
++ * Context: Any context.
++ * Return: The offset of the first byte of this page.
+  */
+-static inline loff_t page_offset(struct page *page)
++static inline loff_t file_offset_of_page(struct page *page)
+ {
+ 	return ((loff_t)page->index) << PAGE_SHIFT;
+ }
+ 
++/* Legacy; please convert callers */
++#define page_offset(page)	file_offset_of_page(page)
++
++/**
++ * file_offset_of_next_page - File offset of the next page.
++ * @page: Page cache page.
++ *
++ * Context: Any context.
++ * Return: The offset of the first byte after this page.
++ */
++static inline loff_t file_offset_of_next_page(struct page *page)
++{
++	return file_offset_of_page(page) + thp_size(page);
++}
++
+ static inline loff_t page_file_offset(struct page *page)
+ {
+ 	return ((loff_t)page_index(page)) << PAGE_SHIFT;
 -- 
 2.25.0
 
