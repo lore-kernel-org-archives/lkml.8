@@ -2,127 +2,85 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AEDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4658320724
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E0221569
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 13:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgBLN7J (ORCPT
+        id S1728245AbgBLN7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:59:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42774 "EHLO mx2.suse.de"
+        Wed, 12 Feb 2020 08:59:44 -0500
+Received: from 8bytes.org ([81.169.241.247]:53960 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbgBLN7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:59:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6F96CAEE0;
-        Wed, 12 Feb 2020 13:59:06 +0000 (UTC)
-Message-ID: <1581515939.21415.5.camel@suse.de>
-Subject: Re: KASAN: use-after-free Read in uvc_probe
-From:   Oliver Neukum <oneukum@suse.de>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     syzbot <syzbot+9a48339b077c5a80b869@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Date:   Wed, 12 Feb 2020 14:58:59 +0100
-In-Reply-To: <20200211153823.GD22612@pendragon.ideasonboard.com>
-References: <000000000000780999059c048dfc@google.com>
-         <1581344006.26936.7.camel@suse.de>
-         <20200210141812.GB4727@pendragon.ideasonboard.com>
-         <1581431490.1580.6.camel@suse.de>
-         <20200211153823.GD22612@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725887AbgBLN7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 08:59:44 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id BE6EC20E; Wed, 12 Feb 2020 14:59:42 +0100 (CET)
+Date:   Wed, 12 Feb 2020 14:59:34 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        Juergen Gross <JGross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [RFC PATCH 00/62] Linux as SEV-ES Guest Support
+Message-ID: <20200212135934.GL20066@8bytes.org>
+References: <20200211135256.24617-1-joro@8bytes.org>
+ <BD48E405-8E3F-4EEE-A72A-8A7EDCB6A376@amacapital.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BD48E405-8E3F-4EEE-A72A-8A7EDCB6A376@amacapital.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 11.02.2020, 17:38 +0200 schrieb Laurent Pinchart:
-> Hi Oliver,
+On Tue, Feb 11, 2020 at 07:48:12PM -0800, Andy Lutomirski wrote:
 > 
-> On Tue, Feb 11, 2020 at 03:31:30PM +0100, Oliver Neukum wrote:
-> > Am Montag, den 10.02.2020, 16:18 +0200 schrieb Laurent Pinchart:
-> > > On Mon, Feb 10, 2020 at 03:13:26PM +0100, Oliver Neukum wrote:
-> > > > Am Montag, den 13.01.2020, 04:24 -0800 schrieb syzbot:
-> > > > > Hello,
-> > > > > 
-> > > > > syzbot found the following crash on:
-> > > > > 
-> > > > > HEAD commit:    ae179410 usb: gadget: add raw-gadget interface
-> > > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=132223fee00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=ad1d751a3a72ae57
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=9a48339b077c5a80b869
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16857325e00000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=142e069ee00000
-> > > > > 
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+9a48339b077c5a80b869@syzkaller.appspotmail.com
-> > > > > 
-> > > > > usb 1-1: New USB device found, idVendor=0bd3, idProduct=0555,  
-> > > > > bcdDevice=69.6a
-> > > > > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> > > > > usb 1-1: config 0 descriptor??
-> > > > > usb 1-1: string descriptor 0 read error: -71
-> > > > > uvcvideo: Found UVC 0.00 device <unnamed> (0bd3:0555)
-> > > > > ==================================================================
-> > > > > BUG: KASAN: use-after-free in uvc_register_terms  
-> > > > > drivers/media/usb/uvc/uvc_driver.c:2038 [inline]
-> > > > > BUG: KASAN: use-after-free in uvc_register_chains  
-> > > > > drivers/media/usb/uvc/uvc_driver.c:2070 [inline]
-> > > > > BUG: KASAN: use-after-free in uvc_probe.cold+0x2193/0x29de  
-> > > > > drivers/media/usb/uvc/uvc_driver.c:2201
-> > > > > Read of size 2 at addr ffff8881d4f1bc2e by task kworker/1:2/94
-> > > > 
-> > > > #syz test: https://github.com/google/kasan.git ae179410
-> > > > 
-> > > > From db844641a5e30f3cfc0ce9cde156b3cc356b6c0c Mon Sep 17 00:00:00 2001
-> > > > From: Oliver Neukum <oneukum@suse.com>
-> > > > Date: Mon, 10 Feb 2020 15:10:36 +0100
-> > > > Subject: [PATCH] UVC: deal with unnamed streams
-> > > > 
-> > > > The pointer can be NULL
-> > > > 
-> > > > Signed-off-by: Oliver Neukum <oneukum@suse.com>
-> > > > ---
-> > > >  drivers/media/usb/uvc/uvc_driver.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> > > > index 99883550375e..26558a89f2fe 100644
-> > > > --- a/drivers/media/usb/uvc/uvc_driver.c
-> > > > +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > > > @@ -2069,7 +2069,8 @@ static int uvc_register_terms(struct uvc_device *dev,
-> > > >  		stream = uvc_stream_by_id(dev, term->id);
-> > > >  		if (stream == NULL) {
-> > > >  			uvc_printk(KERN_INFO, "No streaming interface found "
-> > > > -				   "for terminal %u.", term->id);
-> > > > +				   "for terminal %u.",
-> > > > +				   term->id ? term->id : "(Unnamed)");
-> > > 
-> > > Have you tried compiling this ?
+> 
+> > On Feb 11, 2020, at 5:53 AM, Joerg Roedel <joro@8bytes.org> wrote:
+> 
 > > 
-> > Yes. It does compile. Why?
+> > 
+> >    * Putting some NMI-load on the guest will make it crash usually
+> >      within a minute
 > 
-> Because term->id is a u8, "(Unnamed)" is a const char *, and %u requires
-> an integer. I'm surprised the compiler doesn't complain, but in any
-> case, it's not right :-)
+> Suppose you do CPUID or some MMIO and get #VC. You fill in the GHCB to
+> ask for help. Some time between when you start filling it out and when
+> you do VMGEXIT, you get NMI. If the NMI does its own GHCB access [0],
+> it will clobber the outer #VC’a state, resulting in a failure when
+> VMGEXIT happens. There’s a related failure mode if the NMI is after
+> the VMGEXIT but before the result is read.
 > 
+> I suspect you can fix this by saving the GHCB at the beginning of
+> do_nmi and restoring it at the end. This has the major caveat that it
+> will not work if do_nmi comes from user mode and schedules, but I
+> don’t believe this can happen.
+> 
+> [0] Due to the NMI_COMPLETE catastrophe, there is a 100% chance that
+> this happens.
 
-Oi, damnation, you are right. For some reason I saw a %s there.
+Very true, thank you! You probably saved me a few hours of debugging
+this further :)
+I will implement better handling for nested #VC exceptions, which
+hopefully solves the NMI crashes.
 
-	Sorry
-		Oliver
+Thanks again,
 
+       Joerg
