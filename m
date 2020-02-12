@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46935C3B187
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124C6C3B186
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3FB2082F
+	by mail.kernel.org (Postfix) with ESMTP id DC84021569
 	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 22:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1581545785;
-	bh=nh/fCuQsemp1ev5seT2rEzpA0w2JnCg+BtPxs4P4pjE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZskFyi61mKOR6LU4PqbxC/GMIOO2gyKpBxIZTJ8DxrqJG4ZJlNgVq4MSi8OVOHot9
-	 bzngXnK9WU3+VFyl8cdnkiw00dClOnM+9VemLIAFRDzyvKpg1m0Wybq20UWVbnWh8S
-	 VO1XLHEHFMRIDr4u/rMrpjwShJFWLc8CAM7lnWxc=
+	bh=mdbfZmZxKp4BXiI9nWGzPbce9TpU4KGJbJKBBU2/Dro=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UwoMs5u3ukHcv5zs3GKUSVo642PJNPZ3BxGH7tv7S0q3dq8IeiefVoPK4OL2C87ji
+	 HJfCOkfTRXShYNtx4AEcMSDPrW7fTHWeeSKYibiGI6454gM8w/VyVdWUUgVbe2qMBd
+	 g/NfX3kwZg/CEO1UubKb7CSHEKPI3sJ7DuAAWMbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgBLWQY (ORCPT
+        id S1729191AbgBLWQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:16:24 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36145 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727692AbgBLWQX (ORCPT
+        Wed, 12 Feb 2020 17:16:25 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39002 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbgBLWQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:16:23 -0500
-Received: by mail-pg1-f195.google.com with SMTP id d9so1944193pgu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:16:22 -0800 (PST)
+        Wed, 12 Feb 2020 17:16:24 -0500
+Received: by mail-pg1-f194.google.com with SMTP id j15so1934841pgm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 14:16:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IRbfdGWqcwmnNp2DnvQOXpGpDdlJdzZpC1N7ZpXf7R4=;
-        b=m2+iclFGS8CzBhvrLeUiObRXq+BHsUSMMB7Vj20hZbpVGnjh/++VyGUTYt2woRJvbz
-         L/tFb9D7IjjcHYxbU1p16n0jDAd49fMG5fydr961+y1BEXCfEkYgb+tn1HlwvBfA7Bk6
-         I9/cVK87OWQEVxTu8l4ZyYDMQ3fRJlGRnfAe3+Uf2t0Ncu/tzwbO7i0xk8enb/Cjcv1w
-         YZOPvQVFwN9Joc3PLsZNieDH1S0lhbebYGRgZGijwZTApsCTAiSfFZDmWBpfV/IwAcQj
-         AFrnPWicOYux0+P25+pC2SJAJIkuHnqMOCaXq8aQ1oa0O+S29vcTAOFJYlxuEeemPoyc
-         /RsA==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qaiwdcinbwslO7EdATKJ134QGtzda46/f8mdpO086dY=;
+        b=m6bE/7RqwfLpD1mq61rTzvjRR2ys5Ij1JFM0A0GKtF9HVX0WWCVA77x9kY/KpJrTfU
+         JJSLpjs4+AlmTmCyUIciT3fcM6GnLxXwmzhl7i5raq1xxhDq2f93RnnIqEalWPJlEdwh
+         JIhk6W9WGGsPQrafEVVXH+BhMV99HudisqiAGi0cyG/JwY3bw2cLmzjOK1hH6XJkuSrE
+         YcKEbSinpUKN1NKpgYVsCo3VYMH33kH78gCd/DXZk+cVBUTCGpE6cnYRYOEvElvjvWbo
+         1L9lzfXy4ziL6/Y5k5HXPBcOSqL9FUEBkqFcpzqevigihsGkJimKiYplosv8jbHFaR4e
+         e0/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=IRbfdGWqcwmnNp2DnvQOXpGpDdlJdzZpC1N7ZpXf7R4=;
-        b=fJpAjIRLRLzjyB5TN3IlKUPaDSKAqDb20rbW1gQnTn6thq7Kb2VkyJpBt7hDKxaREv
-         aSRyUzXnhWd6gZh9R+rVmxdrTCLi+lbrCh0C4GZbbxEAb5Xh6ToiZfwlA0X3OYqmUkrO
-         DdjgkHUatx1vRszskpJE7amDS4ICzEILvl7DKLlJppuOHu25+bEOo6ka5PNAG3FDKkx4
-         vyxmzs+87rteOoo2pBy9OZZFZPOCFmqlR9SkK6/3HX8r7sqDO2Cvz1jqLcMKQt9kfU53
-         mvbJuudKEH65bQ7uz3BSjU1ScXtquIIeY5UZThaEs1JPZptzob42HBjexRfT3NDdGDpj
-         o1qQ==
-X-Gm-Message-State: APjAAAVSS9pbTkLN4wsC/tRcYyLwBbCqo+YVcRzgiIWPMxKHiaVXrbiw
-        YMgHXCTavgc/pTPujw2lm+Kn6uxi
-X-Google-Smtp-Source: APXvYqzIIedGxf8nZB9JoeCmITqMhnSUr9gnQJ8hlq9gR2gywKw1M3NDG//Z/TKJd6Spy2jGjOp+xw==
-X-Received: by 2002:aa7:9808:: with SMTP id e8mr14135402pfl.32.1581545781691;
-        Wed, 12 Feb 2020 14:16:21 -0800 (PST)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=qaiwdcinbwslO7EdATKJ134QGtzda46/f8mdpO086dY=;
+        b=dxU9g8MN/6otmrurBFGkdZv0z/w//p/ZKB/OgvoEqwBNa62rFpUL3CCg2tejhTEh74
+         P41trh6D5ATCy0mGafgRRbhRG3E5BWkRjZgzfWMkL9qzMgSe2d+DO5n4qhSSuxM8x5fw
+         GQXaCiCBYr4w7fXIh1yJTKj1k/vLS35UWt/pACZGG1sgmJYgIOQzCF9h/MMD26mtBFox
+         melPWUKvxY2RqbhxfIyoAUzsUBKa6TZtXtPNPlqrXVmBBqsGEvCPxFdMRkbKAjHf3LBs
+         Cx33vbpCNnSBivyfzFXIx/YTyTbzkEIvPH7Fdt79hUjndH7Dk+qNouvkKKN9aE2sA5aj
+         NJyg==
+X-Gm-Message-State: APjAAAWCpgJXQSIRyOlMNNxDENF3R5gCcqYT2TvD6zPpJljiry1SRVR+
+        bJIQAbJ6EGsQ+zmBTjTsCk0=
+X-Google-Smtp-Source: APXvYqxEdmfgRh8AIV8cmXo8MbUCE3MelnAT6e18QMejlP/S1J+YS648UCx0O+NpBLpkC87Z+qw4Wg==
+X-Received: by 2002:a63:c30e:: with SMTP id c14mr15447571pgd.168.1581545783496;
+        Wed, 12 Feb 2020 14:16:23 -0800 (PST)
 Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id o10sm117683pgq.68.2020.02.12.14.16.19
+        by smtp.gmail.com with ESMTPSA id o10sm117683pgq.68.2020.02.12.14.16.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 14:16:20 -0800 (PST)
+        Wed, 12 Feb 2020 14:16:22 -0800 (PST)
 From:   Minchan Kim <minchan@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
@@ -68,10 +68,12 @@ Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
         Josef Bacik <josef@toxicpanda.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
         Minchan Kim <minchan@kernel.org>, Robert Stupp <snazy@gmx.de>
-Subject: [PATCH 1/3] mm: Don't bother dropping mmap_sem for zero size readahead
-Date:   Wed, 12 Feb 2020 14:16:12 -0800
-Message-Id: <20200212221614.215302-1-minchan@kernel.org>
+Subject: [PATCH 2/3] mm: fix long time stall from mm_populate
+Date:   Wed, 12 Feb 2020 14:16:13 -0800
+Message-Id: <20200212221614.215302-2-minchan@kernel.org>
 X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
+In-Reply-To: <20200212221614.215302-1-minchan@kernel.org>
+References: <20200212221614.215302-1-minchan@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,39 +81,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+Basically, fault handler releases mmap_sem before requesting readahead
+and then it is supposed to retry lookup the page from page cache with
+FAULT_FLAG_TRIED so that it avoids the live lock of infinite retry.
 
-When handling a page fault, we drop mmap_sem to start async readahead so
-that we don't block on IO submission with mmap_sem held.  However
-there's no point to drop mmap_sem in case readahead is disabled. Handle
-that case to avoid pointless dropping of mmap_sem and retrying the
-fault. This was actually reported to block mlockall(MCL_CURRENT)
-indefinitely.
+However, what happens if the fault handler find a page from page
+cache and the page has readahead marker but are waiting under
+writeback? Plus one more condition, it happens under mm_populate
+which repeats faulting unless it encounters error. So let's assemble
+conditions below.
 
-Fixes: 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking operations")
-Reported-by: Minchan Kim <minchan@kernel.org>
-Reported-by: Robert Stupp <snazy@gmx.de>
-Reviewed-by: Minchan Kim <minchan@kernel.org>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+__mm_populate
+for (...)
+  get_user_pages(faluty_address)
+    handle_mm_fault
+      filemap_fault
+        find a page form page(PG_uptodate|PG_readahead|PG_writeback)
+	it will return VM_FAULT_RETRY
+  continue with faulty_address
+
+IOW, it will repeat fault retry logic until the page will be written
+back in the long run. It makes big spike latency of several seconds.
+
+This patch solves the issue by turning off fault retry logic in second
+trial.
+
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- mm/filemap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/gup.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 1784478270e1..5bffaa2176cd 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2416,7 +2416,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
- 	pgoff_t offset = vmf->pgoff;
+diff --git a/mm/gup.c b/mm/gup.c
+index 1b521e0ac1de..b3f825092abf 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1196,6 +1196,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 	struct vm_area_struct *vma = NULL;
+ 	int locked = 0;
+ 	long ret = 0;
++	bool tried = false;
  
- 	/* If we don't want any read-ahead, don't bother */
--	if (vmf->vma->vm_flags & VM_RAND_READ)
-+	if (vmf->vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
- 		return fpin;
- 	if (ra->mmap_miss > 0)
- 		ra->mmap_miss--;
+ 	end = start + len;
+ 
+@@ -1226,14 +1227,18 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 		 * double checks the vma flags, so that it won't mlock pages
+ 		 * if the vma was already munlocked.
+ 		 */
+-		ret = populate_vma_page_range(vma, nstart, nend, &locked);
++		ret = populate_vma_page_range(vma, nstart, nend,
++						tried ? NULL : &locked);
+ 		if (ret < 0) {
+ 			if (ignore_errors) {
+ 				ret = 0;
+ 				continue;	/* continue at next VMA */
+ 			}
+ 			break;
+-		}
++		} else if (ret == 0)
++			tried = true;
++		else
++			tried = false;
+ 		nend = nstart + ret * PAGE_SIZE;
+ 		ret = 0;
+ 	}
 -- 
 2.25.0.225.g125e21ebc7-goog
 
