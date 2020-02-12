@@ -2,103 +2,182 @@ Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85832C2BA83
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58271C2BA83
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADAE2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:31:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BtezE3UK"
+	by mail.kernel.org (Postfix) with ESMTP id 378C320873
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 17:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgBLRbC (ORCPT
+        id S1728861AbgBLRbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:31:02 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38223 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbgBLRbC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:31:02 -0500
-Received: by mail-vs1-f68.google.com with SMTP id r18so2030375vso.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 09:31:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XgpctoHh6dg1wxvj3BzSThVl8kpcEhXa3sNGXPcFbT4=;
-        b=BtezE3UKOP32S7Hgi6uAZOCn9BCk1YLzZTI/31neMRdDIAastd/PkKexEg5uWIeSlq
-         /hFI/msrF2GQcVhisW/RaJNrJGmFkKA4SeD0lHwdM4ey9ghkS/K+yx90I62OEmTesdwF
-         xzMU/2Mq+v9/Okdl/2mUjBYKqE6P9vJw2KVomx5TFhjbaK/lu0Q6tw2rFDTRVzvD2KxL
-         boPGPbPxe+RpyEehZt6ohw9y9NodMcdQmgyDLVMfAAlCQ41OBvoUAldOafMsvbSOhhvM
-         Ujf9+E+XNGlSxbjxgY5T1BHWqvckIdfOYnsyRjOxsWx6G6V+xqkaOcye9xpAB/GIw4Zn
-         EW+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XgpctoHh6dg1wxvj3BzSThVl8kpcEhXa3sNGXPcFbT4=;
-        b=BTtNqvPUhg+LpmzaHm/rHRHIwky3dnp2bqcXfZr32ZREQgpIAl4Zvc3i87VoSCYcKN
-         KJa+ywz+S5k4tPtt59375NEhAFYpZ13pUObnzYoI2zR60iyTt/GUrabPp+XgjijhZ5L7
-         BeE50TnXAv7sgkymTjZ0Vsnj1Jpq3Jm0zj3QMZAPkXnlfqaPkTzTgm93i1C6ap4EP1EY
-         +Ix59rKLD1wpuaWLNdl0EYDBDrZOP+aFzBCEyK57EDpGHAduHD5kMJy7hW9H2w3uUCBb
-         QWxNqWNAZeA8xt02WarocaMPQ/BkY1R0N0vvH01QuGHEzo8wP1IBZ0jzHGtv8zhgxz3v
-         2emg==
-X-Gm-Message-State: APjAAAWnG2x7CvzcO63KuiWkEjSYjjbcQ3aK56vyZPA9ria1uu0abH6G
-        OoIoLYU0kaBLgEAMLgS4deu54gb1omr6Wgo4AyQZzA==
-X-Google-Smtp-Source: APXvYqyjKo/YFw4KoPFfCCWJOIKf5+SsU5ZWgCMmPdEkaicagM609YliueP7WkCTKw6TDAOHNRXlU3z7/h7iIoQqHFg=
-X-Received: by 2002:a67:f4d2:: with SMTP id s18mr12516774vsn.15.1581528660711;
- Wed, 12 Feb 2020 09:31:00 -0800 (PST)
+        Wed, 12 Feb 2020 12:31:12 -0500
+Received: from mga03.intel.com ([134.134.136.65]:13379 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726982AbgBLRbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 12:31:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 09:31:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="266748103"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Feb 2020 09:31:09 -0800
+Received: from [10.125.249.51] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 588665803DA;
+        Wed, 12 Feb 2020 09:31:06 -0800 (PST)
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v5_3/3=5d_perf_x86=3a_Exposing_an_Uncore_u?=
+ =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, bgregg@netflix.com, alexander.antonov@intel.com
+References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
+ <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
+ <20200211171544.GA1933705@kroah.com>
+ <20200211184200.GA302770@tassilo.jf.intel.com>
+ <20200211185759.GA1941673@kroah.com>
+ <25dca8dd-c52d-676d-ffe4-90f3a6ddc915@linux.intel.com>
+ <20200211201427.GA1975593@kroah.com>
+From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
+Message-ID: <7a697574-aa76-3eda-d504-1ec72bcb6353@linux.intel.com>
+Date:   Wed, 12 Feb 2020 20:31:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200128184934.77625-1-samitolvanen@google.com> <20200128184934.77625-10-samitolvanen@google.com>
- <6f62b3c0-e796-e91c-f53b-23bd80fcb065@arm.com> <20200210175214.GA23318@willie-the-truck>
- <20200210180327.GB20840@lakrids.cambridge.arm.com> <20200210180740.GA24354@willie-the-truck>
- <20200210182431.GC20840@lakrids.cambridge.arm.com> <20200211095401.GA8560@willie-the-truck>
-In-Reply-To: <20200211095401.GA8560@willie-the-truck>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 12 Feb 2020 09:30:49 -0800
-Message-ID: <CABCJKucpq=zu7ikf+Q-f-v+6T-cbQCEb1setiZfFvHa8iw3erg@mail.gmail.com>
-Subject: Re: [PATCH v7 09/11] arm64: disable SCS for hypervisor code
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200211201427.GA1975593@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 1:54 AM Will Deacon <will@kernel.org> wrote:
-> Thanks, I missed that. It's annoying that we'll end up needing /both/
-> -ffixed-x18 *and* the save/restore around guest transitions, but if we
-> actually want to use SCS for the VHE code then I see that it will be
-> required.
+On 11.02.2020 23:14, Greg KH wrote:
+> On Tue, Feb 11, 2020 at 02:59:21PM -0500, Liang, Kan wrote:
+>>
+>> On 2/11/2020 1:57 PM, Greg KH wrote:
+>>> On Tue, Feb 11, 2020 at 10:42:00AM -0800, Andi Kleen wrote:
+>>>> On Tue, Feb 11, 2020 at 09:15:44AM -0800, Greg KH wrote:
+>>>>> On Tue, Feb 11, 2020 at 07:15:49PM +0300, roman.sudarikov@linux.intel.com wrote:
+>>>>>> +static ssize_t skx_iio_mapping_show(struct device *dev,
+>>>>>> +				struct device_attribute *attr, char *buf)
+>>>>>> +{
+>>>>>> +	struct pmu *pmu = dev_get_drvdata(dev);
+>>>>>> +	struct intel_uncore_pmu *uncore_pmu =
+>>>>>> +		container_of(pmu, struct intel_uncore_pmu, pmu);
+>>>>>> +
+>>>>>> +	struct dev_ext_attribute *ea =
+>>>>>> +		container_of(attr, struct dev_ext_attribute, attr);
+>>>>>> +	long die = (long)ea->var;
+>>>>>> +
+>>>>>> +	return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
+>>>>> If "0000:" is always the "prefix" of the output of this file, why have
+>>>>> it at all as you always know it is there?
+>>
+>> I think Roman only test with BIOS configured as single-segment. So he
+>> hard-code the segment# here.
+>>
+>> I'm not sure if Roman can do some test with multiple-segment BIOS. If not, I
+>> think we should at least print a warning here.
+>>
+>>>>> What is ever going to cause that to change?
+>>>> I think it's just to make it a complete PCI address.
+>>> Is that what this really is?  If so, it's not a "complete" pci address,
+>>> is it?  If it is, use the real pci address please.
+>> I think we don't need a complete PCI address here. The attr is to disclose
+>> the mapping information between die and PCI BUS. Segment:BUS should be good
+>> enough.
+> "good enough" for today, but note that you can not change the format of
+> the data in the file in the future, you would have to create a new file.
+> So I suggest at least try to future-proof it as much as possible if you
+> _know_ this could change.
 >
-> Sami -- can you restore -ffixed-x18 and then try the function attribute
-> as suggested by James, please?
+> Just use the full pci address, there's no reason not to, otherwise it's
+> just confusing.
+>
+> thanks,
+>
+> greg k-h
+Hi Greg,
 
-Sure. Adding __noscs to __hyp_text and not filtering out any of the
-flags in the Makefile appears to work. I'll update this in the next
-version.
+Yes, the "Segment:Bus" pair is enough to distinguish between different 
+Root ports.
+Please see the changes below which are to address all previous comments.
 
-Sami
+Thanks,
+Roman
+
+diff --git a/arch/x86/events/intel/uncore_snbep.c 
+b/arch/x86/events/intel/uncore_snbep.c
+index 96fca1ac22a4..f805fbdbbe81 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3616,15 +3616,22 @@ skx_iio_mapping_visible(struct kobject *kobj, 
+struct attribute *attr, int die)
+  static ssize_t skx_iio_mapping_show(struct device *dev,
+                  struct device_attribute *attr, char *buf)
+  {
++    struct pci_bus *bus = NULL;
+      struct pmu *pmu = dev_get_drvdata(dev);
+      struct intel_uncore_pmu *uncore_pmu =
+          container_of(pmu, struct intel_uncore_pmu, pmu);
++    int pmu_idx = uncore_pmu->pmu_idx;
+
+      struct dev_ext_attribute *ea =
+          container_of(attr, struct dev_ext_attribute, attr);
+      long die = (long)ea->var;
+
+-    return sprintf(buf, "0000:%02x\n", skx_iio_stack(uncore_pmu, die));
++    do {
++        bus = pci_find_next_bus(bus);
++    } while (pmu_idx--);
++
++    return sprintf(buf, "%04x:%02x\n", pci_domain_nr(bus),
++                       skx_iio_stack(uncore_pmu, die));
+  }
+
+  static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
+@@ -3691,10 +3698,7 @@ static int skx_iio_get_topology(struct 
+intel_uncore_type *type)
+      return 0;
+  }
+
+-static struct attribute *uncore_empry_attr;
+-
+  static struct attribute_group skx_iio_mapping_group = {
+-    .attrs        = &uncore_empry_attr,
+      .is_visible    = skx_iio_mapping_visible,
+  };
+
+@@ -3729,7 +3733,8 @@ static int skx_iio_set_mapping(struct 
+intel_uncore_type *type)
+          return -ENOMEM;
+      }
+      for (die = 0; die < uncore_max_dies(); die++) {
+-        sprintf(buf, "node%ld", die);
++        sprintf(buf, "die%ld", die);
++        sysfs_attr_init(&eas[die].attr.attr);
+          eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
+          if (!eas[die].attr.attr.name) {
+              ret = -ENOMEM;
+@@ -3752,6 +3757,7 @@ static int skx_iio_set_mapping(struct 
+intel_uncore_type *type)
+      kfree(eas);
+      kfree(attrs);
+      kfree(type->topology);
++    type->attr_update = NULL;
+
+      return ret;
+  }
