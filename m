@@ -2,243 +2,199 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784D6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55532C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4AC218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEE22465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:32:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="i97VZd/9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ga73dFyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgBMJaW (ORCPT
+        id S1729717AbgBMJcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:30:22 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16426 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729586AbgBMJaW (ORCPT
+        Thu, 13 Feb 2020 04:32:31 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:49585 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729586AbgBMJca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:30:22 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01D9UKNB081546
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 04:30:20 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4j875px1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 04:30:20 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 13 Feb 2020 09:30:08 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 13 Feb 2020 09:30:04 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01D9T9lq50266442
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 09:29:09 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E4A3AA4054;
-        Thu, 13 Feb 2020 09:30:03 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9CE46A4062;
-        Thu, 13 Feb 2020 09:30:03 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.71])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Feb 2020 09:30:03 +0000 (GMT)
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
- crashes in KVM guests after reboot
-To:     =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-References: <20200107042401-mutt-send-email-mst@kernel.org>
- <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
- <20200107065434-mutt-send-email-mst@kernel.org>
- <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
- <20200120012724-mutt-send-email-mst@kernel.org>
- <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
- <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
- <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
- <20200206171349-mutt-send-email-mst@kernel.org>
- <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
- <20200207025806-mutt-send-email-mst@kernel.org>
- <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
- <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
- <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
- <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
- <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
- <50a79c3491ac483583c97df2fac29e2c3248fdea.camel@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Thu, 13 Feb 2020 10:30:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 04:32:30 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id A87D921B10;
+        Thu, 13 Feb 2020 04:32:29 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 13 Feb 2020 04:32:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Ey3EA7WUbbmeV5n7kMrMdCyyznD
+        m0vTJDaAlruj1gnU=; b=i97VZd/9GNZAjtj0WAWujKBQruiZpr1fTGGLbz4a/fY
+        VcI6L0ybzMktkKLNLcv3UyargfMn3461dAQQGPehyyccrTJepn3WBxYrDpCnYC4L
+        0Rappd73ZbAOE40lBPG1yMxr8K+mzcnB39nEBQGTkxMgLWaAXttqiiwVA93HSm8s
+        j4pnZM+gnp0xSxaNycu1vDVDep1t+T2cYb3/LiPQBnNUzwnKstOeSkoGoux2jW/G
+        pP0IS7+IKgPpG2sKl5wXcpVbr9WLjPPX1J3lVA5qqbMB/Pgfxy2D9mw4Db8Bl1v/
+        MfLS3aU9Lo2f2CoWF8womYpJ4Lz4A2tmXXcyMScweSQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Ey3EA7
+        WUbbmeV5n7kMrMdCyyznDm0vTJDaAlruj1gnU=; b=ga73dFyEur3SUiHoZPXxEq
+        ooM3ogcq2Py7YtMDoKHRBaruljpqDDA+c+6d2IN8ObstCm92Nsq84yn4hs8Qpr66
+        fuah3qIkWvYaxPLX6y0C8UA9AbpYgcHKhaFnmfoKPqinczRwjw09G/dNosvv+iQi
+        I2h2SQPznox/JyEdiboUeV1bBtkREPcG+VidrnT3eKLHt97TfShe2ENAH3Zh19BA
+        s0ivsodWXVhwpvcYFsR/nXRq5DM3ewCTQK2TM8BCDZMUpWXDSmFPDO12zl2Y2v1R
+        p45Hn7aqKLuJqduEo0Ayj5x69dqspWJead5bZshzJhAWrbcrV+ytATqi9GSC9Vbw
+        ==
+X-ME-Sender: <xms:qxdFXo-4l7Jkp6yPfyCoZmBNZhsX4BqulMV_9APzxAEMZloqkBxRuA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieekgddtgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:qxdFXn5--rb8WCpLWjgAi7hNbEBgCs5aP4S2UTzsdhzwhMpIl9csQw>
+    <xmx:qxdFXtNvwbipmmOo5uURGeSFtcZ9DGMkPv8lfz3eogKIkAjFCsJ4NQ>
+    <xmx:qxdFXp5PJG-EM99-7nSJXVckqPLfwh0jjK_-vwPfXbPtaraADyP7TA>
+    <xmx:rRdFXv63GIF_XLfsRA_K-2lufdf0HVUHnLcjf2fq1RCVFJ-Ptv3A_g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A7A633280063;
+        Thu, 13 Feb 2020 04:32:27 -0500 (EST)
+Date:   Thu, 13 Feb 2020 10:32:26 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     andrey.lebedev@gmail.com
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: Re: [PATCH v2 1/2] ARM: sun7i: Support LVDS output on Allwinner A20
+Message-ID: <20200213093226.7zpd4wmogad7mhus@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200212222355.17141-1-andrey.lebedev@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <50a79c3491ac483583c97df2fac29e2c3248fdea.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021309-0008-0000-0000-000003527267
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021309-0009-0000-0000-00004A731ADA
-Message-Id: <8fbbfb49-99d1-7fee-e713-d6d5790fe866@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-13_01:2020-02-12,2020-02-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
- malwarescore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- suspectscore=2 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130074
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ehooxt5uoooo37qf"
+Content-Disposition: inline
+In-Reply-To: <20200212222355.17141-1-andrey.lebedev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--ehooxt5uoooo37qf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 12.02.20 17:34, Eugenio Pérez wrote:
-> On Tue, 2020-02-11 at 14:13 +0100, Christian Borntraeger wrote:
->>
->> On 11.02.20 14:04, Eugenio Pérez wrote:
->>> On Mon, 2020-02-10 at 12:01 +0100, Christian Borntraeger wrote:
->>>> On 10.02.20 10:47, Eugenio Perez Martin wrote:
->>>>> Hi Christian.
->>>>>
->>>>> I'm not able to reproduce the failure with eccb852f1fe6bede630e2e4f1a121a81e34354ab commit. Could you add more
->>>>> data?
->>>>> Your configuration (libvirt or qemu line), and host's dmesg output if any?
->>>>>
->>>>> Thanks!
->>>>
->>>> If it was not obvious, this is on s390x, a big endian system.
->>>>
->>>
->>> Hi Christian. Thank you very much for your fast responses.
->>>
->>> Could you try this patch on top of eccb852f1fe6bede630e2e4f1a121a81e34354ab?
->>
->> I still get 
->> [   43.665145] Guest moved used index from 0 to 289
->> after some reboots.
->>
->>
->>> Thanks!
->>>
->>> From 71d0f9108a18aa894cc0c0c1c7efbad39f465a27 Mon Sep 17 00:00:00 2001
->>> From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <
->>> eperezma@redhat.com>
->>> Date: Tue, 11 Feb 2020 13:19:10 +0100
->>> Subject: [PATCH] vhost: fix return value of vhost_get_vq_desc
->>>
->>> Before of the batch change, it was the chain's head. Need to keep that
->>> way or we will not be able to free a chain of descriptors.
->>>
->>> Fixes: eccb852f1fe6 ("vhost: batching fetches")
->>> ---
->>>  drivers/vhost/vhost.c | 3 +--
->>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->>> index b5a51b1f2e79..fc422c3e5c08 100644
->>> --- a/drivers/vhost/vhost.c
->>> +++ b/drivers/vhost/vhost.c
->>> @@ -2409,12 +2409,11 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
->>>  			*out_num += ret;
->>>  		}
->>>  
->>> -		ret = desc->id;
->>> -
->>>  		if (!(desc->flags & VRING_DESC_F_NEXT))
->>>  			break;
->>>  	}
->>>  
->>> +	ret = vq->descs[vq->first_desc].id;
->>>  	vq->first_desc = i + 1;
->>>  
->>>  	return ret;
->>>
-> 
-> Sorry, still not able to reproduce the issue.
-> 
-> Could we try to disable all the vhost features?
-> 
-> Thanks!
-> 
-> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> index 661088ae6dc7..08f6d2ccb697 100644
-> --- a/drivers/vhost/vhost.h
-> +++ b/drivers/vhost/vhost.h
-> @@ -250,11 +250,11 @@ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
->         } while (0)
->  
->  enum {
-> -       VHOST_FEATURES = (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) |
-> -                        (1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
-> -                        (1ULL << VIRTIO_RING_F_EVENT_IDX) |
-> -                        (1ULL << VHOST_F_LOG_ALL) |
-> -                        (1ULL << VIRTIO_F_ANY_LAYOUT) |
-> +       VHOST_FEATURES = /* (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) | */
-> +                        /* (1ULL << VIRTIO_RING_F_INDIRECT_DESC) | */
-> +                        /* (1ULL << VIRTIO_RING_F_EVENT_IDX) | */
-> +                        /* (1ULL << VHOST_F_LOG_ALL) | */
-> +                        /* (1ULL << VIRTIO_F_ANY_LAYOUT) | */
->                          (1ULL << VIRTIO_F_VERSION_1)
->  };
-> 
+Hi,
 
+The prefix of your title should be "drm/sun4i: tcon:" instead of "ARM:
+sun7i:"
 
-I still get  guest crashes with this on top of eccb852f1fe6. (The patch did not
-apply, I had to manually comment out these things)
+The latter would be if you were modifying files under arch/arm, but
+you're modifying files in (drivers/gpu/)drm/sun4i :)
 
+On Thu, Feb 13, 2020 at 12:23:55AM +0200, andrey.lebedev@gmail.com wrote:
+> From: Andrey Lebedev <andrey@lebedev.lt>
+>
+> A20 SoC (found in Cubieboard 2 among others) requires different LVDS set
+> up procedure than A33. Timing controller (tcon) driver only implements
+> sun6i-style procedure, that doesn't work on A20 (sun7i).
+>
+> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 95 ++++++++++++++++++++----------
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h | 14 +++++
+>  2 files changed, 77 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index c81cdce6ed55..e4c605ca685e 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -114,46 +114,73 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+>  	}
+>  }
+>
+> +static void sun6i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
+> +				      const struct drm_encoder *encoder)
+> +{
+> +	u8 val;
+> +
+> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +		     SUN6I_TCON0_LVDS_ANA0_C(2) |
+> +		     SUN6I_TCON0_LVDS_ANA0_V(3) |
+> +		     SUN6I_TCON0_LVDS_ANA0_PD(2) |
+> +		     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
+> +	udelay(2);
+> +
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_MB,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_MB);
+> +	udelay(2);
+> +
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
+> +
+> +	if (sun4i_tcon_get_pixel_depth(encoder) == 18)
+> +		val = 7;
+> +	else
+> +		val = 0xf;
+> +
+> +	regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
+> +			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
+> +
+> +}
+> +
+> +static void sun4i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
+> +				      const struct drm_encoder *encoder)
+> +{
+> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +		     SUN4I_TCON0_LVDS_ANA0_CK_EN |
+> +		     SUN4I_TCON0_LVDS_ANA0_REG_V |
+> +		     SUN4I_TCON0_LVDS_ANA0_REG_C |
+> +		     SUN4I_TCON0_LVDS_ANA0_EN_MB |
+> +		     SUN4I_TCON0_LVDS_ANA0_PD |
+> +		     SUN4I_TCON0_LVDS_ANA0_DCHS);
+> +
+> +	udelay(2); /* delay at least 1200 ns */
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
+> +			   SUN4I_TCON0_LVDS_ANA1_INIT,
+> +			   SUN4I_TCON0_LVDS_ANA1_INIT);
+> +	udelay(1); /* delay at least 120 ns */
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
+> +			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
+> +			   SUN4I_TCON0_LVDS_ANA1_UPDATE);
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			   SUN4I_TCON0_LVDS_ANA0_EN_MB,
+> +			   SUN4I_TCON0_LVDS_ANA0_EN_MB);
+> +}
+> +
+> +
+
+Patches should contain only one logical change, so ideally this should
+be two patches: one to create the function pointer and fill it for the
+A31 style setup, the other one to add support for the A20.
+
+Also, you should have only a single line between the two functions and
+the second should come before the first (alphabetical ordering).
+
+Maxime
+
+--ehooxt5uoooo37qf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkUXqgAKCRDj7w1vZxhR
+xZQGAQDUTFCN6+DkjlsVNmEY9E37DqXjqwoTNETsi+iwh7cWKAEA4Ii/GwiF0rQJ
+YESBk436xBgh02h3ajh1wbBeS2l9tgM=
+=VT2S
+-----END PGP SIGNATURE-----
+
+--ehooxt5uoooo37qf--
