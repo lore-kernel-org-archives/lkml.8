@@ -2,57 +2,56 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E121DC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22C1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD24217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91042073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609523;
-	bh=ZYqFd2UMqZljpxCmE2ZW4VaxsnEOsTXis5PLPV4k+ww=;
+	s=default; t=1581609527;
+	bh=sV3ED1FNeSxFHSiNHHFaSzZXwtXmvQp1WCZUfFNtHww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eon1VZqi5cOHQ1Q34GxC3/ZhFTzrYdlW+DtlHSa/eW5SIxdT5J2EVkyB9kqI4tfAV
-	 hB95FFi4YBcsfKpXbJMhGx11wQ4FjMYZK1bTkarD96GvW3Okc51aNahDs87s8wPrgC
-	 hCMKD22yYl7Nn590QJxZIDcPUloy2w5SOxyy/HUk=
+	b=YbU23NGVa1irm5aozUiGxpBhdOhklrerLAf62rKkw/QajXYRWJk60p+HK+MN2eE66
+	 DxCEHmtlMHgvDqqIPDMcnfM+B6Wd1onMBrFkKs/3UGQwD+3Lzbqaei8y9dHB6DW/az
+	 l3hPfnyP2jh/SWjQMXWIL/zbUjC0bHEUtBAkFpaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgBMPZG (ORCPT
+        id S1729026AbgBMP6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35196 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:58:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgBMPXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:37 -0500
+        id S1728905AbgBMPZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:04 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E78E8246B8;
-        Thu, 13 Feb 2020 15:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49EEC20848;
+        Thu, 13 Feb 2020 15:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607417;
-        bh=ZYqFd2UMqZljpxCmE2ZW4VaxsnEOsTXis5PLPV4k+ww=;
+        s=default; t=1581607504;
+        bh=sV3ED1FNeSxFHSiNHHFaSzZXwtXmvQp1WCZUfFNtHww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lY0XwyYsaJUToaDC/t+ceYj2TesirK7W7KXkbzXRQhG9xknvAHTXmrRs0Mwts+wbd
-         g4B+N7gWmMC+UE93ZaVnx7qz5QzghBE/LmcDtVUtOgXvUUOtE8EhRMEAo4h3hsaViF
-         0NgnKTZa1I2bHas2LYiywYvoqEGfQi580mRqwLE8=
+        b=ff7ZuiEVJkCqga68ctKTJ6RpVTrt+Clg2MsTVz3TcPcHYT+Ikxil2cE8qPS9WcJbl
+         Vt3tYFpS42rhipc9BP4MAjdzqWOYvLEh9o7gQn9sS/m5YOjZTi0OWjF2J4fyZvqXhL
+         FiE/KBK4avxEjHQwMKWfK1876TebGqSIAnEX0AqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 024/116] lib/test_kasan.c: fix memory leak in kmalloc_oob_krealloc_more()
-Date:   Thu, 13 Feb 2020 07:19:28 -0800
-Message-Id: <20200213151852.240664549@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 061/173] ftrace: Protect ftrace_graph_hash with ftrace_sync
+Date:   Thu, 13 Feb 2020 07:19:24 -0800
+Message-Id: <20200213151949.194902699@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,39 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 3e21d9a501bf99aee2e5835d7f34d8c823f115b5 upstream.
+[ Upstream commit 54a16ff6f2e50775145b210bcd94d62c3c2af117 ]
 
-In case memory resources for _ptr2_ were allocated, release them before
-return.
+As function_graph tracer can run when RCU is not "watching", it can not be
+protected by synchronize_rcu() it requires running a task on each CPU before
+it can be freed. Calling schedule_on_each_cpu(ftrace_sync) needs to be used.
 
-Notice that in case _ptr1_ happens to be NULL, krealloc() behaves
-exactly like kmalloc().
+Link: https://lore.kernel.org/r/20200205131110.GT2935@paulmck-ThinkPad-P72
 
-Addresses-Coverity-ID: 1490594 ("Resource leak")
-Link: http://lkml.kernel.org/r/20200123160115.GA4202@embeddedor
-Fixes: 3f15801cdc23 ("lib: add kasan test module")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org
+Fixes: b9b0c831bed26 ("ftrace: Convert graph filter to use hash tables")
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_kasan.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/ftrace.c | 11 +++++++++--
+ kernel/trace/trace.h  |  2 ++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -124,6 +124,7 @@ static noinline void __init kmalloc_oob_
- 	if (!ptr1 || !ptr2) {
- 		pr_err("Allocation failed\n");
- 		kfree(ptr1);
-+		kfree(ptr2);
- 		return;
- 	}
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index dd9fdb52e24ad..8974ecbcca3cb 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5419,8 +5419,15 @@ ftrace_graph_release(struct inode *inode, struct file *file)
  
+ 		mutex_unlock(&graph_lock);
+ 
+-		/* Wait till all users are no longer using the old hash */
+-		synchronize_sched();
++		/*
++		 * We need to do a hard force of sched synchronization.
++		 * This is because we use preempt_disable() to do RCU, but
++		 * the function tracers can be called where RCU is not watching
++		 * (like before user_exit()). We can not rely on the RCU
++		 * infrastructure to do the synchronization, thus we must do it
++		 * ourselves.
++		 */
++		schedule_on_each_cpu(ftrace_sync);
+ 
+ 		free_ftrace_hash(old_hash);
+ 	}
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 99af95e294d8d..c4c61ebb8d054 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -883,6 +883,7 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+ 	 * Have to open code "rcu_dereference_sched()" because the
+ 	 * function graph tracer can be called when RCU is not
+ 	 * "watching".
++	 * Protected with schedule_on_each_cpu(ftrace_sync)
+ 	 */
+ 	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
+ 
+@@ -935,6 +936,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ 	 * Have to open code "rcu_dereference_sched()" because the
+ 	 * function graph tracer can be called when RCU is not
+ 	 * "watching".
++	 * Protected with schedule_on_each_cpu(ftrace_sync)
+ 	 */
+ 	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+ 						 !preemptible());
+-- 
+2.20.1
+
 
 
