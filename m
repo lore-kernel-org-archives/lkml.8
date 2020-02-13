@@ -2,52 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00EBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1A420661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B7A20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607767;
-	bh=FmEnygodiDT/cOjpfwNRp3RTu4B00Q6jdwa2zKa5C4Y=;
+	s=default; t=1581607771;
+	bh=+QVZnJtxlSCcPybvmNQSvwJeR8KZBx8DCb6YD5bcGNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iw41oAqg/aOLibGNv0ntPCQPj7XdcrT3mCgjL9y7pBWJxqllUuvKRwXGaCbXWkvIb
-	 Y3ej7cxNFKzKqF2baXeDTDkXuIMighvU48O97UEB8zsAeH++OyU6vj9tWFNHOtlOfs
-	 g+65uO4ukyEUf/9eMZxk2UkM9dtsIAmwDiDVgr0M=
+	b=en7C2pI82ygrQVOghb6kOt2hNJO2EudpERsKSGIHqg+0/irEzxxHgM8/2iN0NG8ax
+	 xxodP+9Tg70YuG/NP5Zr8AxPjiwBZ9EQb6s/VlzAhGrX9+19dRxgoL2sV8ceKkNF0W
+	 /UjSuPH4EwPCxrRdFoQMzt5Mjq64a0FDgHJ5wf24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387860AbgBMP31 (ORCPT
+        id S1728558AbgBMP3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgBMP0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:38 -0500
+        id S1727845AbgBMP0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:41 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE0FB2467D;
-        Thu, 13 Feb 2020 15:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E8562467C;
+        Thu, 13 Feb 2020 15:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607597;
-        bh=FmEnygodiDT/cOjpfwNRp3RTu4B00Q6jdwa2zKa5C4Y=;
+        s=default; t=1581607599;
+        bh=+QVZnJtxlSCcPybvmNQSvwJeR8KZBx8DCb6YD5bcGNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JABsgaKncGRcPo2H4A3mtAJkll4HulWk33hiuDz/lxUiQhxzEc7n6DdT8+/st3iPx
-         vC7IIWCObpZsOLDUKExsFfdnqSOu2rYQicQpSQ90ujcwtazCtOE/AukIklLliYvGhu
-         EFxeuZrNel+GyXWD1JYZlvzAsA1vkBXcHcs8IdMo=
+        b=E7kmCvv6bl9qp7HAyNL/NQF04SxodMHOs1HOuz+FAGdWVHjXc/rvDeMPxFdC8pdBI
+         dI7qrOa8jldOWvo/nYbVFc7LFEI6YKx1vF0FkHHZ0ERGGhFjA4GIvE8OEpHjUrr0bi
+         Tl4J+CYhYE1aSL0aXOwQG8pmmw+kTLk58Rjv2P2w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 15/52] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Thu, 13 Feb 2020 07:20:56 -0800
-Message-Id: <20200213151817.196344386@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/52] spi: spi-mem: Add extra sanity checks on the op param
+Date:   Thu, 13 Feb 2020 07:20:59 -0800
+Message-Id: <20200213151818.209846675@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,36 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
 
-commit 924491f2e476f7234d722b24171a4daff61bbe13 upstream.
+commit 380583227c0c7f52383b0cd5c0e2de93ed31d553 upstream
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-we return EIO to applications without even trying to recover.
+Some combinations are simply not valid and should be rejected before
+the op is passed to the SPI controller driver.
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Add an spi_mem_check_op() helper and use it in spi_mem_exec_op() and
+spi_mem_supports_op() to make sure the spi-mem operation is valid.
 
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable <stable@vger.kernel.org> # 4.19
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/spi/spi-mem.c | 54 ++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 48 insertions(+), 6 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3089,6 +3089,11 @@ static struct nfs4_state *nfs4_do_open(s
- 			exception.retry = 1;
- 			continue;
- 		}
-+		if (status == -NFS4ERR_EXPIRED) {
-+			nfs4_schedule_lease_recovery(server->nfs_client);
-+			exception.retry = 1;
-+			continue;
-+		}
- 		if (status == -EAGAIN) {
- 			/* We must have found a delegation */
- 			exception.retry = 1;
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index eb72dba71d832..cc3d425aae56c 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -12,6 +12,8 @@
+ 
+ #include "internals.h"
+ 
++#define SPI_MEM_MAX_BUSWIDTH		4
++
+ /**
+  * spi_controller_dma_map_mem_op_data() - DMA-map the buffer attached to a
+  *					  memory operation
+@@ -149,6 +151,44 @@ static bool spi_mem_default_supports_op(struct spi_mem *mem,
+ }
+ EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+ 
++static bool spi_mem_buswidth_is_valid(u8 buswidth)
++{
++	if (hweight8(buswidth) > 1 || buswidth > SPI_MEM_MAX_BUSWIDTH)
++		return false;
++
++	return true;
++}
++
++static int spi_mem_check_op(const struct spi_mem_op *op)
++{
++	if (!op->cmd.buswidth)
++		return -EINVAL;
++
++	if ((op->addr.nbytes && !op->addr.buswidth) ||
++	    (op->dummy.nbytes && !op->dummy.buswidth) ||
++	    (op->data.nbytes && !op->data.buswidth))
++		return -EINVAL;
++
++	if (spi_mem_buswidth_is_valid(op->cmd.buswidth) ||
++	    spi_mem_buswidth_is_valid(op->addr.buswidth) ||
++	    spi_mem_buswidth_is_valid(op->dummy.buswidth) ||
++	    spi_mem_buswidth_is_valid(op->data.buswidth))
++		return -EINVAL;
++
++	return 0;
++}
++
++static bool spi_mem_internal_supports_op(struct spi_mem *mem,
++					 const struct spi_mem_op *op)
++{
++	struct spi_controller *ctlr = mem->spi->controller;
++
++	if (ctlr->mem_ops && ctlr->mem_ops->supports_op)
++		return ctlr->mem_ops->supports_op(mem, op);
++
++	return spi_mem_default_supports_op(mem, op);
++}
++
+ /**
+  * spi_mem_supports_op() - Check if a memory device and the controller it is
+  *			   connected to support a specific memory operation
+@@ -166,12 +206,10 @@ EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+  */
+ bool spi_mem_supports_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ {
+-	struct spi_controller *ctlr = mem->spi->controller;
+-
+-	if (ctlr->mem_ops && ctlr->mem_ops->supports_op)
+-		return ctlr->mem_ops->supports_op(mem, op);
++	if (spi_mem_check_op(op))
++		return false;
+ 
+-	return spi_mem_default_supports_op(mem, op);
++	return spi_mem_internal_supports_op(mem, op);
+ }
+ EXPORT_SYMBOL_GPL(spi_mem_supports_op);
+ 
+@@ -196,7 +234,11 @@ int spi_mem_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	u8 *tmpbuf;
+ 	int ret;
+ 
+-	if (!spi_mem_supports_op(mem, op))
++	ret = spi_mem_check_op(op);
++	if (ret)
++		return ret;
++
++	if (!spi_mem_internal_supports_op(mem, op))
+ 		return -ENOTSUPP;
+ 
+ 	if (ctlr->mem_ops) {
+-- 
+2.20.1
+
 
 
