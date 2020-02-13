@@ -2,138 +2,99 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C63C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57C6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CBD206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEB0206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610216;
-	bh=Gi9ebtMb2Q5vhKZz7X3sWbVYF8tVSZIOTg4mf8KPW1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bRgI5bw/my6gboUYuRfLPTEugoIu2ka/O5ar0VtX2URFPxVuFdph5+FcVDwrvKqzw
-	 W+Oj8AgS61oPYwAYCAPqSS3c07yqv0pNCi24ljhP1bdsckwdNxSvRVjk3W023zuLIw
-	 Bwb+AHZLDkis3z8OXpk727kS+Q86223NmrE4Zd5M=
+	s=default; t=1581610220;
+	bh=ab0r9IfkDtKpMoh/GQIVN/80yR8gGf7AoyAWkiwtcGA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=giciP/o3A+PnvWqpCwCoI1lZOXCGdPSkpoV4e0wn2FTEylqKmU+3NGIIWR1r6pjiR
+	 ZXpDtALQmMs/jkPrl5ivsPfS7lEa15LlD/NC6E/HFZ+X6UUNeEaft7N6qrdKgi/f49
+	 /W8SwOxovfhE95q7JVrttpA69INJuh3EB7t8Dtj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgBMQKQ (ORCPT
+        id S1728031AbgBMPWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:10:16 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38248 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbgBMQKM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:10:12 -0500
-Received: by mail-pg1-f196.google.com with SMTP id d6so3342105pgn.5;
-        Thu, 13 Feb 2020 08:10:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pq11CdZh/9XaCS2yx9ETIUzoQiiQH3AvcCT4xTpvaUA=;
-        b=sWRi8JkG3eqgk7nYzzCq3g4geT4pLP2PJ9omUKVGOIaunOMZt8UIBIhdTR5L1TI1ZO
-         x52gdvaEIg8jbdYjBvdi/RVpVA2EQ76hJayBSsLcALFp/EX5JipRePqVn+Hj6kj2sEgv
-         SoqU4Lnwyx5bpOjvhLKr5XB1+pWrCD5CAzUpOaZc138RIdsX/RxO0YTaAJaC9GuNLlnC
-         Eb6FMeQDDW+DidWlsfjBT/poNEma7IMO4wjPxFXR822xU+Y/hPU6ghlCa4XjjoXhwXat
-         LpDjWTQxeAKpj2c1Zz8/t+UNsZluPqlGBwrRxDbaZtlHOKWm6iXZoUOMm5BVU+zuYTnQ
-         wddg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pq11CdZh/9XaCS2yx9ETIUzoQiiQH3AvcCT4xTpvaUA=;
-        b=oZ369WJI59w9b5leY7BLMS0Ml6DKMlnYeqLMPLyUd0897DHR6jwBLX7JQEYqlrkTyH
-         pFR55pvrNNSyt3AgJSdETkXyKKvr5qQl6Sy/GsMuqtVrw7TLU9vs1CxvrvqteCJphc2o
-         txS28Ys4Tb5HKeY2//RM0pFXitGf2Wn5gTgogZESLoG5g3lRB9Fxm83p16Ybyon4cTn6
-         KGtV7Uid55INPRg70SdlKQ9NHKSshEujMzSTH4MuQXkxW4QmR07hQhIktDGHqH8Z9g0p
-         xigF9zmJ2Mc9Dlnqxy4z3Re39opaqADWpRoFrbgr2hKty9XVUn4Zlg5/wVDs/3F8GNZK
-         oQYg==
-X-Gm-Message-State: APjAAAUAja5tiqwfMQHy6cMqlaNJU9gxnuvpyZUMeYM7wUIw91ckizl0
-        qmuC4TL+4GxIKhJ6CEjatko=
-X-Google-Smtp-Source: APXvYqzI8Oi7TMhvonZcBalSovnuh/KcHK3T3FsCigFd9iMjc8lbR8SSmiARPrOMJIbUzzMyLep+UQ==
-X-Received: by 2002:a63:7152:: with SMTP id b18mr19069004pgn.232.1581610211399;
-        Thu, 13 Feb 2020 08:10:11 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id q12sm3404444pfh.158.2020.02.13.08.10.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 08:10:10 -0800 (PST)
-Date:   Thu, 13 Feb 2020 08:10:07 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [PATCH v4 2/8] mm: introduce external memory hinting API
-Message-ID: <20200213161007.GA24649@google.com>
-References: <20200212233946.246210-1-minchan@kernel.org>
- <20200212233946.246210-3-minchan@kernel.org>
- <CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com>
+        Thu, 13 Feb 2020 10:22:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727940AbgBMPW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:29 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B99DA246A3;
+        Thu, 13 Feb 2020 15:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607348;
+        bh=ab0r9IfkDtKpMoh/GQIVN/80yR8gGf7AoyAWkiwtcGA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cAZagJP9z7Cu3v0afPMoPbt9d+FYIHDTeHQtycNRnsuU2DXiSS2CyqMmfAzADzhpP
+         Fa+S/P5mhROd7Q41rXXLq6QO7X+5XvBe14oO/tEIUSzxl1YRpcQ7wJDsqolu923zlH
+         xeUNwjtCTKHemZ4pftxTssfChWvECiX17Sdbk1wA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yurii Monakov <monakov.y@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 20/91] PCI: keystone: Fix link training retries initiation
+Date:   Thu, 13 Feb 2020 07:19:37 -0800
+Message-Id: <20200213151829.461773737@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
+References: <20200213151821.384445454@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jann,
+From: Yurii Monakov <monakov.y@gmail.com>
 
-On Thu, Feb 13, 2020 at 03:08:59PM +0100, Jann Horn wrote:
-> On Thu, Feb 13, 2020 at 12:40 AM Minchan Kim <minchan@kernel.org> wrote:
-> > To solve the issue, this patch introduces a new syscall process_madvise(2).
-> > It uses pidfd of an external process to give the hint.
-> [...]
-> > +       mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
-> > +       if (IS_ERR_OR_NULL(mm)) {
-> > +               ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
-> > +               goto release_task;
-> > +       }
-> > +
-> > +       ret = do_madvise(task, start, len_in, behavior);
-> 
-> When you're accessing another task, you should ensure that the other
-> task doesn't gain new privileges by executing a setuid binary in the
-> middle of being accessed. mm_access() does that for you; it holds the
-> ->cred_guard_mutex while it is looking up the task's ->mm and doing
-> the security check. mm_access() then returns you an mm pointer that
-> you're allowed to access without worrying about such things; an
-> mm_struct never gains privileges, since a setuid execution creates a
-> fresh mm_struct. However, the task may still execute setuid binaries
-> and such things.
-> 
-> This means that after you've looked up the mm with mm_access(), you
-> have to actually *use* that pointer. You're not allowed to simply read
-> task->mm yourself.
-> 
-> Therefore, I think you should:
-> 
->  - change patch 1/8 ("mm: pass task to do_madvise") to also pass an
-> mm_struct* to do_madvise (but keep the task_struct* for patch 4/8)
->  - in this patch, pass the mm_struct* from mm_access() into do_madvise()
->  - drop patch 3/8 ("mm: validate mm in do_madvise"); it just papers
-> over a symptom without addressing the underlying problem
+[ Upstream commit 6df19872d881641e6394f93ef2938cffcbdae5bb ]
 
-Actually, it was what this patch series was doing until last version
-but I changed it to reduce just *a parameter* to do_madvise.
-And then, this time, I got a good advise I was not familiar.
-I will fix it again.
-Thanks for the review!
+ks_pcie_stop_link() function does not clear LTSSM_EN_VAL bit so
+link training was not triggered more than once after startup.
+In configurations where link can be unstable during early boot,
+for example, under low temperature, it will never be established.
+
+Fixes: 0c4ffcfe1fbc ("PCI: keystone: Add TI Keystone PCIe driver")
+Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Andrew Murray <andrew.murray@arm.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/host/pci-keystone-dw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/host/pci-keystone-dw.c b/drivers/pci/host/pci-keystone-dw.c
+index 6153853ca9c31..988e7e7350c74 100644
+--- a/drivers/pci/host/pci-keystone-dw.c
++++ b/drivers/pci/host/pci-keystone-dw.c
+@@ -450,7 +450,7 @@ void ks_dw_pcie_initiate_link_train(struct keystone_pcie *ks_pcie)
+ 	/* Disable Link training */
+ 	val = readl(ks_pcie->va_app_base + CMD_STATUS);
+ 	val &= ~LTSSM_EN_VAL;
+-	writel(LTSSM_EN_VAL | val,  ks_pcie->va_app_base + CMD_STATUS);
++	writel(val,  ks_pcie->va_app_base + CMD_STATUS);
+ 
+ 	/* Initiate Link Training */
+ 	val = readl(ks_pcie->va_app_base + CMD_STATUS);
+-- 
+2.20.1
+
+
+
