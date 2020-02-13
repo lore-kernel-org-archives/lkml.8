@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A969AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D665C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6C3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441FC217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608247;
-	bh=IJpjRiOLbSqEhtq0ENmlYXhXJ9LGqGQS8O/WZpPfKdU=;
+	s=default; t=1581608251;
+	bh=mRN16gy+86886KrXaqWW/kvDoKgPKYfm3OlmM+N+Obk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A51A2gTbavRfDnPQ0XvcH9V1B27k9R6ac2eibQODvMoFcVwW7zxsvPoiXJEalg4bu
-	 +xgq5Mj35kfrYaIY4COhdecKSot73+KlOt87x9NaciF08whKulassmWLTzdb2fsXB5
-	 qnwpP+WbUYfAnp6tjV8xzmrw4W3fd9y2RQV8U+WM=
+	b=AHQOEWMda5f+do1tignwIW1HVvvaF0wSQ3lrYIOBNRF3LTQ9gIC0csC4QzqarJ95p
+	 iUFc3Q7VMmsBF2YVQSSWmJemDI7FNrLaIqIx0abq0/e9YQBi5wM8rsVsZvzGKDlVT0
+	 nITo3wBcPJsQnoadRmom7zBLmuO6hW0CcV587Qtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387854AbgBMP3Z (ORCPT
+        id S2387845AbgBMP3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46334 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbgBMP0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:38 -0500
+        id S2387608AbgBMP0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:36 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 155762467C;
-        Thu, 13 Feb 2020 15:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B18222C2;
+        Thu, 13 Feb 2020 15:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607597;
-        bh=IJpjRiOLbSqEhtq0ENmlYXhXJ9LGqGQS8O/WZpPfKdU=;
+        s=default; t=1581607595;
+        bh=mRN16gy+86886KrXaqWW/kvDoKgPKYfm3OlmM+N+Obk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gjAdfSbKjTzFXIvB91i3tRmrBdF6GEByRIjJ51KObT8ENZ0ZOU9QUwFE5dDXX06No
-         1AcIxA1WTZdNEnCCVI1z18iohT+uHGmhV3HLLu4lneXrKN18AV1m02sM71Q/A0cAHb
-         o5q1rmRHL4mM0B1IJFgNSwFRImdf1UwQF8zgceOI=
+        b=fAETyESshAOZGrpGaFvya+k+YJYYGcTFmch6NMVVgC4GLB8cp1ExEYg/ZQvggNi3r
+         v0d8B+HJSeH119Ahw/t5lylSeSOFTMEpjLp15kUqvcpbJj2rwhQhZlh2ydW7/AGSkm
+         jK9yEE0sLHholgz/DE6+lwKqOg5IABWYa4un8dSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 14/52] NFS/pnfs: Fix pnfs_generic_prepare_to_resend_writes()
-Date:   Thu, 13 Feb 2020 07:20:55 -0800
-Message-Id: <20200213151816.832087433@linuxfoundation.org>
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 29/52] powerpc/pseries/vio: Fix iommu_table use-after-free refcount warning
+Date:   Thu, 13 Feb 2020 07:21:10 -0800
+Message-Id: <20200213151822.007654746@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,118 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 
-commit 221203ce6406273cf00e5c6397257d986c003ee6 upstream.
+commit aff8c8242bc638ba57247ae1ec5f272ac3ed3b92 upstream.
 
-Instead of making assumptions about the commit verifier contents, change
-the commit code to ensure we always check that the verifier was set
-by the XDR code.
+Commit e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to
+iommu_table") missed an iommu_table allocation in the pseries vio code.
+The iommu_table is allocated with kzalloc and as a result the associated
+kref gets a value of zero. This has the side effect that during a DLPAR
+remove of the associated virtual IOA the iommu_tce_table_put() triggers
+a use-after-free underflow warning.
 
-Fixes: f54bcf2ecee9 ("pnfs: Prepare for flexfiles by pulling out common code")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Call Trace:
+[c0000002879e39f0] [c00000000071ecb4] refcount_warn_saturate+0x184/0x190
+(unreliable)
+[c0000002879e3a50] [c0000000000500ac] iommu_tce_table_put+0x9c/0xb0
+[c0000002879e3a70] [c0000000000f54e4] vio_dev_release+0x34/0x70
+[c0000002879e3aa0] [c00000000087cfa4] device_release+0x54/0xf0
+[c0000002879e3b10] [c000000000d64c84] kobject_cleanup+0xa4/0x240
+[c0000002879e3b90] [c00000000087d358] put_device+0x28/0x40
+[c0000002879e3bb0] [c0000000007a328c] dlpar_remove_slot+0x15c/0x250
+[c0000002879e3c50] [c0000000007a348c] remove_slot_store+0xac/0xf0
+[c0000002879e3cd0] [c000000000d64220] kobj_attr_store+0x30/0x60
+[c0000002879e3cf0] [c0000000004ff13c] sysfs_kf_write+0x6c/0xa0
+[c0000002879e3d10] [c0000000004fde4c] kernfs_fop_write+0x18c/0x260
+[c0000002879e3d60] [c000000000410f3c] __vfs_write+0x3c/0x70
+[c0000002879e3d80] [c000000000415408] vfs_write+0xc8/0x250
+[c0000002879e3dd0] [c0000000004157dc] ksys_write+0x7c/0x120
+[c0000002879e3e20] [c00000000000b278] system_call+0x5c/0x68
+
+Further, since the refcount was always zero the iommu_tce_table_put()
+fails to call the iommu_table release function resulting in a leak.
+
+Fix this issue be initilizing the iommu_table kref immediately after
+allocation.
+
+Fixes: e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to iommu_table")
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1579558202-26052-1-git-send-email-tyreld@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/direct.c   |    4 ++--
- fs/nfs/nfs3xdr.c  |    5 ++++-
- fs/nfs/nfs4xdr.c  |    5 ++++-
- fs/nfs/pnfs_nfs.c |    7 +++----
- fs/nfs/write.c    |    4 +++-
- 5 files changed, 16 insertions(+), 9 deletions(-)
+ arch/powerpc/platforms/pseries/vio.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -261,10 +261,10 @@ static int nfs_direct_cmp_commit_data_ve
- 					 data->ds_commit_index);
+--- a/arch/powerpc/platforms/pseries/vio.c
++++ b/arch/powerpc/platforms/pseries/vio.c
+@@ -1195,6 +1195,8 @@ static struct iommu_table *vio_build_iom
+ 	if (tbl == NULL)
+ 		return NULL;
  
- 	/* verifier not set so always fail */
--	if (verfp->committed < 0)
-+	if (verfp->committed < 0 || data->res.verf->committed <= NFS_UNSTABLE)
- 		return 1;
++	kref_init(&tbl->it_kref);
++
+ 	of_parse_dma_window(dev->dev.of_node, dma_window,
+ 			    &tbl->it_index, &offset, &size);
  
--	return nfs_direct_cmp_verf(verfp, &data->verf);
-+	return nfs_direct_cmp_verf(verfp, data->res.verf);
- }
- 
- /**
---- a/fs/nfs/nfs3xdr.c
-+++ b/fs/nfs/nfs3xdr.c
-@@ -2380,6 +2380,7 @@ static int nfs3_xdr_dec_commit3res(struc
- 				   void *data)
- {
- 	struct nfs_commitres *result = data;
-+	struct nfs_writeverf *verf = result->verf;
- 	enum nfs_stat status;
- 	int error;
- 
-@@ -2392,7 +2393,9 @@ static int nfs3_xdr_dec_commit3res(struc
- 	result->op_status = status;
- 	if (status != NFS3_OK)
- 		goto out_status;
--	error = decode_writeverf3(xdr, &result->verf->verifier);
-+	error = decode_writeverf3(xdr, &verf->verifier);
-+	if (!error)
-+		verf->committed = NFS_FILE_SYNC;
- out:
- 	return error;
- out_status:
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -4439,11 +4439,14 @@ static int decode_write_verifier(struct
- 
- static int decode_commit(struct xdr_stream *xdr, struct nfs_commitres *res)
- {
-+	struct nfs_writeverf *verf = res->verf;
- 	int status;
- 
- 	status = decode_op_hdr(xdr, OP_COMMIT);
- 	if (!status)
--		status = decode_write_verifier(xdr, &res->verf->verifier);
-+		status = decode_write_verifier(xdr, &verf->verifier);
-+	if (!status)
-+		verf->committed = NFS_FILE_SYNC;
- 	return status;
- }
- 
---- a/fs/nfs/pnfs_nfs.c
-+++ b/fs/nfs/pnfs_nfs.c
-@@ -30,12 +30,11 @@ EXPORT_SYMBOL_GPL(pnfs_generic_rw_releas
- /* Fake up some data that will cause nfs_commit_release to retry the writes. */
- void pnfs_generic_prepare_to_resend_writes(struct nfs_commit_data *data)
- {
--	struct nfs_page *first = nfs_list_entry(data->pages.next);
-+	struct nfs_writeverf *verf = data->res.verf;
- 
- 	data->task.tk_status = 0;
--	memcpy(&data->verf.verifier, &first->wb_verf,
--	       sizeof(data->verf.verifier));
--	data->verf.verifier.data[0]++; /* ensure verifier mismatch */
-+	memset(&verf->verifier, 0, sizeof(verf->verifier));
-+	verf->committed = NFS_UNSTABLE;
- }
- EXPORT_SYMBOL_GPL(pnfs_generic_prepare_to_resend_writes);
- 
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1814,6 +1814,7 @@ static void nfs_commit_done(struct rpc_t
- 
- static void nfs_commit_release_pages(struct nfs_commit_data *data)
- {
-+	const struct nfs_writeverf *verf = data->res.verf;
- 	struct nfs_page	*req;
- 	int status = data->task.tk_status;
- 	struct nfs_commit_info cinfo;
-@@ -1840,7 +1841,8 @@ static void nfs_commit_release_pages(str
- 
- 		/* Okay, COMMIT succeeded, apparently. Check the verifier
- 		 * returned by the server against all stored verfs. */
--		if (!nfs_write_verifier_cmp(&req->wb_verf, &data->verf.verifier)) {
-+		if (verf->committed > NFS_UNSTABLE &&
-+		    !nfs_write_verifier_cmp(&req->wb_verf, &verf->verifier)) {
- 			/* We have a match */
- 			if (req->wb_page)
- 				nfs_inode_remove_request(req);
 
 
