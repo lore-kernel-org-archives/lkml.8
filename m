@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C554C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB50C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B80217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8E620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607976;
-	bh=jE12QJnNI/wGp1XIGMy/Ylfgsb7mQfWbb/QWSHlwhHA=;
+	s=default; t=1581607979;
+	bh=vF3vpiJfV5jRF2elPwqFz17RlyJWH7ft1gujGBsgYYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2djhiFSCb527b84AdjlHx9DNwIX46kwe41pM+nXghbES5J31z7k0pd2hDrudBgTQ1
-	 7ujsGEePqS3K7acu4Mu0t0Uhj/13sml0hI99rSKbumuVDN2CGECi5JSLq2URxaDjnK
-	 ti38743tDaXZ1pGPI/JNBHWkrQnjvjxllQZ2qzMg=
+	b=Q7ejjKaSN9rYSekQJzdb1J4HTYQjNdsWizB1E5LEKfJayc+vkQ7CC6fColN0X1vkx
+	 nz+zzm76XTsgU8/LBtVYStgvHSIKPl84MDHFIHu58kLTA/VgoJSfwFCCYjEZzqZo2c
+	 m8+2bwaSOm2dVUXDyTvdboQMcotlZJ6dBuipJKBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgBMPcz (ORCPT
+        id S2388004AbgBMPc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387796AbgBMP2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:49 -0500
+        id S1728414AbgBMP2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:50 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94ACC206DB;
-        Thu, 13 Feb 2020 15:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5CEA2465D;
+        Thu, 13 Feb 2020 15:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607728;
-        bh=jE12QJnNI/wGp1XIGMy/Ylfgsb7mQfWbb/QWSHlwhHA=;
+        s=default; t=1581607730;
+        bh=vF3vpiJfV5jRF2elPwqFz17RlyJWH7ft1gujGBsgYYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KxsNzGfMlnDgmV4PcVhn/5dy9qJxASCzWx2Qip2cbb6bjumRmOtY9PEKj5gVhkJgk
-         do3a0ikLun7AvB0mWFrv0l9Ag0GzY6YqlGNrZISzMrv/y459x4zxtIJFoJG5y5wczs
-         SzGmD4SnFK2rrU2zY5ZLWinIQrzQvgwQHFq1tpSg=
+        b=q6SMki5fdIEjMBYyqlA9N0M94YdYG4F93C5eP7TLMnK8CYqK5aP8KERV1vwbbmaxy
+         7itek2APbzpOZMSQSg/JfvTHYyMOsG28872D4LYoqh11wE51ENIIuBpIAz3QcRZSvo
+         0gmLgQiom5wQyTAnomf9K44PgpGAlWtNTFJ0RHdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.5 059/120] ARM: dts: am43xx: add support for clkout1 clock
-Date:   Thu, 13 Feb 2020 07:20:55 -0800
-Message-Id: <20200213151921.661142852@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 5.5 051/120] watchdog: qcom: Use platform_get_irq_optional() for bark irq
+Date:   Thu, 13 Feb 2020 07:20:47 -0800
+Message-Id: <20200213151919.340210137@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,97 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb upstream.
+commit e0b4f4e0cf7fa9d62628d4249c765ec18dffd143 upstream.
 
-clkout1 clock node and its generation tree was missing. Add this based
-on the data on TRM and PRCM functional spec.
+platform_get_irq() prints an error message when the interrupt
+is not available. So on platforms where bark interrupt is
+not specified, following error message is observed on SDM845.
 
-commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
-reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
-clkout1 clock") which is needed for the ov2659 camera sensor clock
-definition hence it is being re-applied here.
+[    2.975888] qcom_wdt 17980000.watchdog: IRQ index 0 not found
 
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "clkout1-*ck" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
+This is also seen on SC7180, SM8150 SoCs as well.
+Fix this by using platform_get_irq_optional() instead.
 
-Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Tested-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 36375491a4395654 ("watchdog: qcom: support pre-timeout when the bark irq is available")
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20191213064934.4112-1-saiprakash.ranjan@codeaurora.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/am43xx-clocks.dtsi |   54 +++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ drivers/watchdog/qcom-wdt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -704,6 +704,60 @@
- 		ti,bit-shift = <8>;
- 		reg = <0x2a48>;
- 	};
-+
-+	clkout1_osc_div_ck: clkout1-osc-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&sys_clkin_ck>;
-+		ti,bit-shift = <20>;
-+		ti,max-div = <4>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-+			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-+			 <&dpll_mpu_m2_ck>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_mux_ck>;
-+		ti,bit-shift = <4>;
-+		ti,max-div = <8>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_pre_div_ck>;
-+		ti,bit-shift = <8>;
-+		ti,max-div = <32>;
-+		ti,index-power-of-two;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_mux_ck: clkout1-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
-+			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
-+		ti,bit-shift = <16>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_ck: clkout1-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&clkout1_mux_ck>;
-+		ti,bit-shift = <23>;
-+		reg = <0x4100>;
-+	};
- };
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -246,7 +246,7 @@ static int qcom_wdt_probe(struct platfor
+ 	}
  
- &prcm {
+ 	/* check if there is pretimeout support */
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq > 0) {
+ 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+ 				       IRQF_TRIGGER_RISING,
 
 
