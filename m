@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B366C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3921C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5405F20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD9320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608196;
-	bh=5kwNS4XKm3AZXsdFsl8F+9R4Dv3SzGpFpihSZp9kgfE=;
+	s=default; t=1581608199;
+	bh=PQCTp41WTY/o2WQQBvdSyRvnyuictcDvRR7gqd/A5J8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JrmjrCYtV4Ci4aMTwSpQqfrEP2pV7yGMyODDxfTGubwmMlNycmfdDMc4z1I4TTVAl
-	 MJtoNHNpZnbVQnmsv4m8c5DVjl7tqzphXuu9Kt0mONsB8xI0pV7x9sXEPLs+d4jAF1
-	 N4+ifBbiYtCVWM8asgYYuish9UW2mIQbjzIEaWVg=
+	b=IvABynDXTrjzYYPyhUZfGFYrcISTTq2+rU2+9WUeNeMe030XxVD62U/50hnxsSQtS
+	 z/qigd6CFoh4jowJm2E1ih8sX3pZJKSjGy1iXEKA7c9mwcnBR7+/nErjp7FbMy2NTR
+	 J3MbJZBKMUByDd/XtYkj00memFLfxW1H3QOEI5KQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387922AbgBMPaT (ORCPT
+        id S2387913AbgBMPaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728464AbgBMP1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:12 -0500
+        id S2387689AbgBMP1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:10 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B5EF2465D;
-        Thu, 13 Feb 2020 15:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C7A72468D;
+        Thu, 13 Feb 2020 15:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607631;
-        bh=5kwNS4XKm3AZXsdFsl8F+9R4Dv3SzGpFpihSZp9kgfE=;
+        s=default; t=1581607629;
+        bh=PQCTp41WTY/o2WQQBvdSyRvnyuictcDvRR7gqd/A5J8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1PdQKhQKYTtJQG++pb8OYIIxxSB98dLD3yJR0vS9/oWHO4cUfHW6Nfh1GqauAG4xH
-         O28K0BDaBZ2BeWNNrwFpc3hjzaRFqj7Z1NdfK05zfBJnKKDgt2PQgWMGg+o6GHaUsJ
-         DrZvtGJPf/ZRoB1pN0h1d8pvXc+DiAgWUfce8QWI=
+        b=ZrJTbGTMz5Mv2jjSx0wu9zPwMTNFm/cuo4UyrdX+IfHJFpwr57uVSGkDIP7Qa1skt
+         rmBt8bsQfQraJ24pTRYolaj3CduGc1tk+/qrXKJYpdPMdt0nEog4kl8cO3c1ajAZjz
+         ypCLxMVQGcGntBz4PnAcsIZtj6kIEeJYrzyKclWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
+        stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 32/96] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Thu, 13 Feb 2020 07:20:39 -0800
-Message-Id: <20200213151851.414866295@linuxfoundation.org>
+Subject: [PATCH 5.4 29/96] NFS/pnfs: Fix pnfs_generic_prepare_to_resend_writes()
+Date:   Thu, 13 Feb 2020 07:20:36 -0800
+Message-Id: <20200213151850.282369070@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,36 +60,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 924491f2e476f7234d722b24171a4daff61bbe13 upstream.
+commit 221203ce6406273cf00e5c6397257d986c003ee6 upstream.
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-we return EIO to applications without even trying to recover.
+Instead of making assumptions about the commit verifier contents, change
+the commit code to ensure we always check that the verifier was set
+by the XDR code.
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: f54bcf2ecee9 ("pnfs: Prepare for flexfiles by pulling out common code")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/nfs/direct.c   |    4 ++--
+ fs/nfs/nfs3xdr.c  |    5 ++++-
+ fs/nfs/nfs4xdr.c  |    5 ++++-
+ fs/nfs/pnfs_nfs.c |    7 +++----
+ fs/nfs/write.c    |    4 +++-
+ 5 files changed, 16 insertions(+), 9 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(s
- 			exception.retry = 1;
- 			continue;
- 		}
-+		if (status == -NFS4ERR_EXPIRED) {
-+			nfs4_schedule_lease_recovery(server->nfs_client);
-+			exception.retry = 1;
-+			continue;
-+		}
- 		if (status == -EAGAIN) {
- 			/* We must have found a delegation */
- 			exception.retry = 1;
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -245,10 +245,10 @@ static int nfs_direct_cmp_commit_data_ve
+ 					 data->ds_commit_index);
+ 
+ 	/* verifier not set so always fail */
+-	if (verfp->committed < 0)
++	if (verfp->committed < 0 || data->res.verf->committed <= NFS_UNSTABLE)
+ 		return 1;
+ 
+-	return nfs_direct_cmp_verf(verfp, &data->verf);
++	return nfs_direct_cmp_verf(verfp, data->res.verf);
+ }
+ 
+ /**
+--- a/fs/nfs/nfs3xdr.c
++++ b/fs/nfs/nfs3xdr.c
+@@ -2338,6 +2338,7 @@ static int nfs3_xdr_dec_commit3res(struc
+ 				   void *data)
+ {
+ 	struct nfs_commitres *result = data;
++	struct nfs_writeverf *verf = result->verf;
+ 	enum nfs_stat status;
+ 	int error;
+ 
+@@ -2350,7 +2351,9 @@ static int nfs3_xdr_dec_commit3res(struc
+ 	result->op_status = status;
+ 	if (status != NFS3_OK)
+ 		goto out_status;
+-	error = decode_writeverf3(xdr, &result->verf->verifier);
++	error = decode_writeverf3(xdr, &verf->verifier);
++	if (!error)
++		verf->committed = NFS_FILE_SYNC;
+ out:
+ 	return error;
+ out_status:
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4316,11 +4316,14 @@ static int decode_write_verifier(struct
+ 
+ static int decode_commit(struct xdr_stream *xdr, struct nfs_commitres *res)
+ {
++	struct nfs_writeverf *verf = res->verf;
+ 	int status;
+ 
+ 	status = decode_op_hdr(xdr, OP_COMMIT);
+ 	if (!status)
+-		status = decode_write_verifier(xdr, &res->verf->verifier);
++		status = decode_write_verifier(xdr, &verf->verifier);
++	if (!status)
++		verf->committed = NFS_FILE_SYNC;
+ 	return status;
+ }
+ 
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -31,12 +31,11 @@ EXPORT_SYMBOL_GPL(pnfs_generic_rw_releas
+ /* Fake up some data that will cause nfs_commit_release to retry the writes. */
+ void pnfs_generic_prepare_to_resend_writes(struct nfs_commit_data *data)
+ {
+-	struct nfs_page *first = nfs_list_entry(data->pages.next);
++	struct nfs_writeverf *verf = data->res.verf;
+ 
+ 	data->task.tk_status = 0;
+-	memcpy(&data->verf.verifier, &first->wb_verf,
+-	       sizeof(data->verf.verifier));
+-	data->verf.verifier.data[0]++; /* ensure verifier mismatch */
++	memset(&verf->verifier, 0, sizeof(verf->verifier));
++	verf->committed = NFS_UNSTABLE;
+ }
+ EXPORT_SYMBOL_GPL(pnfs_generic_prepare_to_resend_writes);
+ 
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1837,6 +1837,7 @@ static void nfs_commit_done(struct rpc_t
+ 
+ static void nfs_commit_release_pages(struct nfs_commit_data *data)
+ {
++	const struct nfs_writeverf *verf = data->res.verf;
+ 	struct nfs_page	*req;
+ 	int status = data->task.tk_status;
+ 	struct nfs_commit_info cinfo;
+@@ -1864,7 +1865,8 @@ static void nfs_commit_release_pages(str
+ 
+ 		/* Okay, COMMIT succeeded, apparently. Check the verifier
+ 		 * returned by the server against all stored verfs. */
+-		if (!nfs_write_verifier_cmp(&req->wb_verf, &data->verf.verifier)) {
++		if (verf->committed > NFS_UNSTABLE &&
++		    !nfs_write_verifier_cmp(&req->wb_verf, &verf->verifier)) {
+ 			/* We have a match */
+ 			if (req->wb_page)
+ 				nfs_inode_remove_request(req);
 
 
