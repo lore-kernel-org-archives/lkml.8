@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB4AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C96C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F96F218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE864218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607845;
-	bh=40X2VdGonfWmgF+ikD7j+Wn4OLsduyC9ad/HuIe6jxs=;
+	s=default; t=1581607848;
+	bh=f1s+YvCK7KWxdlT3jqyahDQ8NHLzxmyGOCafi62aq2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPP9VYECAqvwGFBoM8NTG7yKjMik6ERb2yVGHEGiVcIaqcVMvZ/ATN1b1mG+qp4VG
-	 nkM2GTRR9B6nHqf3nfy7vphumR6ftvCaF8Ly0UHAEaiTKmCErIgNWRtV2AwYB4j6jq
-	 oX9s49Xo9u0TZI89n/dG18E8Ik4QECOkClQeuNE4=
+	b=mZWOUv+E9wGi8yAJL3/l7GMJBCSnzgoZlEkgoGa16U+uGYB9ZnPLmXppzhpRiAP5y
+	 Eum8XH1dYPAX7sBB1UOiTuLc+m1I//5FV5ss/FL8n2uF9ACwJZR15ZZOxPwt+bIhgu
+	 KBtz51gDf/iJ5UWpBUffdstyxfa/PJFRk+vdqLMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgBMPan (ORCPT
+        id S1729781AbgBMPaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50878 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729413AbgBMP1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:30 -0500
+        id S1729419AbgBMP1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:31 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7DA218AC;
-        Thu, 13 Feb 2020 15:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CEDD2467D;
+        Thu, 13 Feb 2020 15:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607649;
-        bh=40X2VdGonfWmgF+ikD7j+Wn4OLsduyC9ad/HuIe6jxs=;
+        s=default; t=1581607650;
+        bh=f1s+YvCK7KWxdlT3jqyahDQ8NHLzxmyGOCafi62aq2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uIgXavhwB0p4bULugk+fgsujiELfhCZaAGPYNgNTGp5tNzKcImp2EoAr2WsywOuMq
-         L1duArNZNBdGKFvZfmHh2wRXJ8UP3pelwSt8ho77IZB21ZZmcKemGAgtY8Vkh2jLlG
-         2GW1HKQpckq8zbL2oSxgGIyvreHOyJMVIao0065k=
+        b=2leppSWDdG6Ul5tL5/eifwARXlp/vpXk8wHuZ6fFXW4e0A6lBI+he45VZUOlAKOka
+         bPTzWcedr/E9itZWykEL0Fz+q5cS+QgB7NzH25Bvne7L/+syAbmMOH7G3fzgFJ3uB+
+         /IzrhK0J2I7WGzI3aVG2OzlCc0STO17UJS4bzE20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo van Lil <inguin@gmx.de>,
-        Peter Rosin <peda@axentia.se>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.4 43/96] ARM: dts: at91: Reenable UART TX pull-ups
-Date:   Thu, 13 Feb 2020 07:20:50 -0800
-Message-Id: <20200213151855.836470376@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 5.4 45/96] arm64: dts: renesas: r8a77990: ebisu: Remove clkout-lr-synchronous from sound
+Date:   Thu, 13 Feb 2020 07:20:52 -0800
+Message-Id: <20200213151856.738483541@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,224 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ingo van Lil <inguin@gmx.de>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-commit 9d39d86cd4af2b17b970d63307daad71f563d207 upstream.
+commit bf2b74ce9b33a2edd6ba1930ce60a71830790910 upstream.
 
-Pull-ups for SAM9 UART/USART TX lines were disabled in a previous
-commit. However, several chips in the SAM9 family require pull-ups to
-prevent the TX lines from falling (and causing an endless break
-condition) when the transceiver is disabled.
+rcar_sound doesn't support clkout-lr-synchronous in upstream.
+It was supported under out-of-tree rcar_sound.
+upstream rcar_sound is supporting
+	- clkout-lr-synchronous
+	+ clkout-lr-asynchronous
 
->From the SAM9G20 datasheet, 32.5.1: "To prevent the TXD line from
-falling when the USART is disabled, the use of an internal pull up
-is mandatory.". This commit reenables the pull-ups for all chips having
-that sentence in their datasheets.
-
-Fixes: 5e04822f7db5 ("ARM: dts: at91: fixes uart pinctrl, set pullup on rx, clear pullup on tx")
-Signed-off-by: Ingo van Lil <inguin@gmx.de>
-Cc: Peter Rosin <peda@axentia.se>
-Link: https://lore.kernel.org/r/20191203142147.875227-1-inguin@gmx.de
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/87mubt3tux.wl-kuninori.morimoto.gx@renesas.com
+Fixes: 56629fcba94c698d ("arm64: dts: renesas: ebisu: Enable Audio")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/at91sam9260.dtsi |   12 ++++++------
- arch/arm/boot/dts/at91sam9261.dtsi |    6 +++---
- arch/arm/boot/dts/at91sam9263.dtsi |    6 +++---
- arch/arm/boot/dts/at91sam9g45.dtsi |    8 ++++----
- arch/arm/boot/dts/at91sam9rl.dtsi  |    8 ++++----
- 5 files changed, 20 insertions(+), 20 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -187,7 +187,7 @@
- 				usart0 {
- 					pinctrl_usart0: usart0-0 {
- 						atmel,pins =
--							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 5 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
+--- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+@@ -636,7 +636,6 @@
+ 	/* audio_clkout0/1/2/3 */
+ 	#clock-cells = <1>;
+ 	clock-frequency = <12288000 11289600>;
+-	clkout-lr-synchronous;
  
-@@ -221,7 +221,7 @@
- 				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
--							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -239,7 +239,7 @@
- 				usart2 {
- 					pinctrl_usart2: usart2-0 {
- 						atmel,pins =
--							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -257,7 +257,7 @@
- 				usart3 {
- 					pinctrl_usart3: usart3-0 {
- 						atmel,pins =
--							<AT91_PIOB 10 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 10 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 11 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -275,7 +275,7 @@
- 				uart0 {
- 					pinctrl_uart0: uart0-0 {
- 						atmel,pins =
--							<AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_NONE
-+							<AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_PULL_UP
- 							 AT91_PIOA 30 AT91_PERIPH_B AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
-@@ -283,7 +283,7 @@
- 				uart1 {
- 					pinctrl_uart1: uart1-0 {
- 						atmel,pins =
--							<AT91_PIOB 12 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
---- a/arch/arm/boot/dts/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/at91sam9261.dtsi
-@@ -329,7 +329,7 @@
- 				usart0 {
- 					pinctrl_usart0: usart0-0 {
- 						atmel,pins =
--							<AT91_PIOC 8 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOC 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOC 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -347,7 +347,7 @@
- 				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
--							<AT91_PIOC 12 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOC 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOC 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -365,7 +365,7 @@
- 				usart2 {
- 					pinctrl_usart2: usart2-0 {
- 						atmel,pins =
--							<AT91_PIOC 14 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOC 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOC 15 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -183,7 +183,7 @@
- 				usart0 {
- 					pinctrl_usart0: usart0-0 {
- 						atmel,pins =
--							<AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOA 27 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -201,7 +201,7 @@
- 				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
--							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOD 1 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -219,7 +219,7 @@
- 				usart2 {
- 					pinctrl_usart2: usart2-0 {
- 						atmel,pins =
--							<AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOD 3 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -556,7 +556,7 @@
- 				usart0 {
- 					pinctrl_usart0: usart0-0 {
- 						atmel,pins =
--							<AT91_PIOB 19 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 19 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 18 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -574,7 +574,7 @@
- 				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
--							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 5 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -592,7 +592,7 @@
- 				usart2 {
- 					pinctrl_usart2: usart2-0 {
- 						atmel,pins =
--							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -610,7 +610,7 @@
- 				usart3 {
- 					pinctrl_usart3: usart3-0 {
- 						atmel,pins =
--							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
- 							 AT91_PIOB 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
---- a/arch/arm/boot/dts/at91sam9rl.dtsi
-+++ b/arch/arm/boot/dts/at91sam9rl.dtsi
-@@ -682,7 +682,7 @@
- 				usart0 {
- 					pinctrl_usart0: usart0-0 {
- 						atmel,pins =
--							<AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -721,7 +721,7 @@
- 				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
--							<AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -744,7 +744,7 @@
- 				usart2 {
- 					pinctrl_usart2: usart2-0 {
- 						atmel,pins =
--							<AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
- 
-@@ -767,7 +767,7 @@
- 				usart3 {
- 					pinctrl_usart3: usart3-0 {
- 						atmel,pins =
--							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOB 1 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
- 					};
+ 	status = "okay";
  
 
 
