@@ -2,166 +2,252 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431F7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE236C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B31F21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:41:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="TXSRdQd4"
+	by mail.kernel.org (Postfix) with ESMTP id 979A6206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgBMRli (ORCPT
+        id S1727967AbgBMRmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:41:38 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45498 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbgBMRlh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:41:37 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d9so4974538qte.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:41:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=n7XLB3De9y8fDweg4sVo1HIei92EsSOSp6olL3m2rA0=;
-        b=TXSRdQd4gB7ygGVkMnNcWH1/8H7IyjERTR0Ipv2h8SzF9HNHNqmWemY6uqbxlegg2H
-         0GPulidfBFq2SQNrI3li4Ljh6VKgBeqU1akUcyqyvL+pVR2DIBtnprRLMAqyJjQu2eHt
-         koXozCM9wx1/7908sXDp5Bny0Jad2riXDGqQCLx5g2H6BtUoQR09f8PDYw/B34i3sG66
-         8w3++dpJWbbs6g6qQ4LXSQVI4ACjr61ES3exwLULmPh46MK+yXWZHYP7PSO67WlAVoYY
-         /iQpl2g1yrDTXnGYyL0i/doSjzxWIofqOrbH3+xGu032AMpOXlP2IXQdqKgALuukdTWX
-         36dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n7XLB3De9y8fDweg4sVo1HIei92EsSOSp6olL3m2rA0=;
-        b=Qa3yZavX7/0P9NEbo2H2YyB3IaduyQREsfDHXwssq9xkn7L3LlDGou7p3bmLO/0DMp
-         3/QwVJfLzcCoREBZ6B22YFS2L8i9h6R/tBKVhE5PFyPBwAX+OoPUrreXoOw5yDbLOxuL
-         37XzbsJebDTbd4oYBXRjqgXKXcK98ifm6iN0rynClqEPIteNtTabwIjm8pCVjMZUKBpj
-         bkLg9sJv3Mpev55Tk4111SGaKSolUoJ3k6vUjU3E7yKLos1suQo0GmDJFvyQhdusTWYg
-         j7OFrB5VGlkuUjd4dnEWDqMdj1Zx5t+IaF8LlEH6P+6tUfqBVNWcgyIsqt8aLT7+pVU7
-         ZQ/w==
-X-Gm-Message-State: APjAAAVhdwwIRYXch3KqMIBen7VEl0jsZ9bznlqS5DTc9ZvB9p6FZccy
-        IeoXcVZUwxMK0kJaVhC9j9TLCw==
-X-Google-Smtp-Source: APXvYqwc1KYhA4yblPN0VOSVJqv64+Z87UnJQRaVgc4qlzLNtf3h0dmdsmAbDm3GQ7bvj9xO45D/aw==
-X-Received: by 2002:ac8:5448:: with SMTP id d8mr12379205qtq.205.1581615696561;
-        Thu, 13 Feb 2020 09:41:36 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::d837])
-        by smtp.gmail.com with ESMTPSA id b84sm1695676qkg.90.2020.02.13.09.41.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 09:41:35 -0800 (PST)
-Date:   Thu, 13 Feb 2020 12:41:35 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200213174135.GC208501@cmpxchg.org>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200130170020.GZ24244@dhcp22.suse.cz>
- <20200203215201.GD6380@cmpxchg.org>
- <20200211164753.GQ10636@dhcp22.suse.cz>
- <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213132317.GA208501@cmpxchg.org>
- <20200213154627.GD31689@dhcp22.suse.cz>
+        Thu, 13 Feb 2020 12:42:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:51516 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgBMRmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:42:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEC80328;
+        Thu, 13 Feb 2020 09:42:13 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D31293F6CF;
+        Thu, 13 Feb 2020 09:42:12 -0800 (PST)
+Subject: Re: [PATCH] x86/resctrl: Preserve CDP enable over cpuhp
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+References: <20200212185359.163111-1-james.morse@arm.com>
+ <8aab67d7-c13e-19f1-9bec-85b7cca55146@intel.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <720c9253-d590-82d5-2338-7f577a71b791@arm.com>
+Date:   Thu, 13 Feb 2020 17:42:11 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213154627.GD31689@dhcp22.suse.cz>
+In-Reply-To: <8aab67d7-c13e-19f1-9bec-85b7cca55146@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 04:46:27PM +0100, Michal Hocko wrote:
-> On Thu 13-02-20 08:23:17, Johannes Weiner wrote:
-> > On Thu, Feb 13, 2020 at 08:40:49AM +0100, Michal Hocko wrote:
-> > > On Wed 12-02-20 12:08:26, Johannes Weiner wrote:
-> > > > On Tue, Feb 11, 2020 at 05:47:53PM +0100, Michal Hocko wrote:
-> > > > > Unless I am missing something then I am afraid it doesn't. Say you have a
-> > > > > default systemd cgroup deployment (aka deeper cgroup hierarchy with
-> > > > > slices and scopes) and now you want to grant a reclaim protection on a
-> > > > > leaf cgroup (or even a whole slice that is not really important). All the
-> > > > > hierarchy up the tree has the protection set to 0 by default, right? You
-> > > > > simply cannot get that protection. You would need to configure the
-> > > > > protection up the hierarchy and that is really cumbersome.
-> > > > 
-> > > > Okay, I think I know what you mean. Let's say you have a tree like
-> > > > this:
-> > > > 
-> > > >                           A
-> > > >                          / \
-> > > >                         B1  B2
-> > > >                        / \   \
-> > > >                       C1 C2   C3
-> > > > 
-> > > > and there is no actual delegation point - everything belongs to the
-> > > > same user / trust domain. C1 sets memory.low to 10G, but its parents
-> > > > set nothing. You're saying we should honor the 10G protection during
-> > > > global and limit reclaims anywhere in the tree?
-> > > 
-> > > No, only in the C1 which sets the limit, because that is the woriking
-> > > set we want to protect.
-> > > 
-> > > > Now let's consider there is a delegation point at B1: we set up and
-> > > > trust B1, but not its children. What effect would the C1 protection
-> > > > have then? Would we ignore it during global and A reclaim, but honor
-> > > > it when there is B1 limit reclaim?
-> > > 
-> > > In the scheme with the inherited protection it would act as the gate
-> > > and require an explicit low limit setup defaulting to 0 if none is
-> > > specified.
-> > > 
-> > > > Doing an explicit downward propagation from the root to C1 *could* be
-> > > > tedious, but I can't think of a scenario where it's completely
-> > > > impossible. Especially because we allow proportional distribution when
-> > > > the limit is overcommitted and you don't have to be 100% accurate.
-> > > 
-> > > So let's see how that works in practice, say a multi workload setup
-> > > with a complex/deep cgroup hierachies (e.g. your above example). No
-> > > delegation point this time.
-> > > 
-> > > C1 asks for low=1G while using 500M, C3 low=100M using 80M.  B1 and
-> > > B2 are completely independent workloads and the same applies to C2 which
-> > > doesn't ask for any protection at all? C2 uses 100M. Now the admin has
-> > > to propagate protection upwards so B1 low=1G, B2 low=100M and A low=1G,
-> > > right? Let's say we have a global reclaim due to external pressure that
-> > > originates from outside of A hierarchy (it is not overcommited on the
-> > > protection).
-> > > 
-> > > Unless I miss something C2 would get a protection even though nobody
-> > > asked for it.
-> > 
-> > Good observation, but I think you spotted an unintentional side effect
-> > of how I implemented the "floating protection" calculation rather than
-> > a design problem.
-> > 
-> > My patch still allows explicit downward propagation. So if B1 sets up
-> > 1G, and C1 explicitly claims those 1G (low>=1G, usage>=1G), C2 does
-> > NOT get any protection. There is no "floating" protection left in B1
-> > that could get to C2.
+Hi Reinette,
+
+On 12/02/2020 22:53, Reinette Chatre wrote:
+> On 2/12/2020 10:53 AM, James Morse wrote:
+>> Resctrl assumes that all cpus are online when the filesystem is
 > 
-> Yeah, the saturated protection works reasonably AFAICS.
+> Please take care throughout to use CPU/CPUs
 
-Hm, Tejun raises a good point though: even if you could direct memory
-protection down to one targeted leaf, you can't do the same with IO or
-CPU. Those follow non-conserving weight distribution, and whatever you
-allocate to a certain level is available at that level - if one child
-doesn't consume it, the other children can.
+Capitals, sure. (or did I miss a plural somewhere...)
 
-And we know that controlling memory without controlling IO doesn't
-really work in practice. The sibling with less memory allowance will
-just page more.
 
-So the question becomes: is this even a legit usecase? If every other
-resource is distributed on a level-by-level method already, does it
-buy us anything to make memory work differently?
+>> mounted, and that cpus remember their CDP-enabled state over cpu
+>> hotplug.
+>>
+>> This goes wrong when resctrl's CDP-enabled state changes while all
+>> the cpus in a domain are offline.
+>>
+>> When a domain comes online, enable (or disable!) CDP to match resctrl's
+>> current setting.
+>>
+>> Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
+>> Signed-off-by: James Morse <james.morse@arm.com>
+>>
+>> ---
+>>
+>> Seen on a 'Intel(R) Xeon(R) Gold 5120T CPU @ 2.20GHz' from lenovo, taking
+>> all the cores in one package offline, umount/mount to toggle CDP then
+>> bringing them back: the first core to come online still has the old
+>> CDP state.
+>>
+>> This will get called more often than is desirable (worst:3/domain)
+>> but this is better than on every cpu in the domain. Unless someone
+>> can spot a better place to hook it in?
+> 
+> From what I can tell this solution is indeed called for every CPU, and
+> more so, for every capable resource associated with each CPU:
+> resctrl_online_cpu() is called for each CPU and it in turn runs ...
+> 
+> for_each_capable_rdt_resource(r)
+>         domain_add_cpu()
+> 
+> ... from where the new code is called.
+
+Indeed, but the domain_reconfigure_cdp() is after:
+
+|	d = rdt_find_domain(r, id, &add_pos);
+[...]
+|	if (d) {
+|		cpumask_set_cpu(cpu, &d->cpu_mask);
+|		return;
+|	}
+
+Any second CPU that comes through domain_add_cpu() will find the domain created by the
+first, and add itself to d->cpu_mask. Only the first CPU gets to allocate a domain and
+reset the ctrlvals, and now reconfigure cdp.
+
+
+It is called for each capable resource in that domain, so once for each of the
+BOTH/CODE/DATA caches. I can't spot anywhere to hook this in that is only called once per
+really-exists domain. I guess passing the resource, to try and filter out the duplicates
+fixes the 3x.
+
+(MPAM does some origami with all this to merge the BOTH/CODE/DATA stuff for what becomes
+the arch code interface to resctrl.)
+
+
+>> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+>> index 89049b343c7a..1210cb65e6d3 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/core.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+>> @@ -541,6 +541,25 @@ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_domain *d)
+>>  	return 0;
+>>  }
+>>  
+>> +/* resctrl's use of CDP may have changed while this domain slept */
+>> +static void domain_reconfigure_cdp(void)
+>> +{
+>> +	bool cdp_enable;
+>> +	struct rdt_resource *r;
+> 
+> (Please note that this area uses reverse-fir tree ordering.)
+> 
+>> +
+>> +	lockdep_assert_held(&rdtgroup_mutex);
+>> +
+>> +	r = &rdt_resources_all[RDT_RESOURCE_L2];
+>> +	cdp_enable = !r->alloc_enabled;
+> 
+> This logic can become confusing. Also remember that L2 or L3 resources
+> supporting allocation are not required to support CDP. There are
+> existing products that support allocation without supporting CDP.
+
+Ah, yes. So on a non-CDP-capable system, we try to disable CDP because it wasn't enabled.
+Oops.
+
+
+> The
+> goal is to configure CDP correctly on a resource that supports CDP and
+> for that there are the L2DATA, L2CODE, L3DATA, and L3CODE resources.> These resources have their "alloc_capable" set if they support CDP and
+> "alloc_enabled" set when CDP is enabled.
+> 
+> Would it be possible to have a helper to correctly enable/disable CDP> only for resources that support CDP?
+
+(Making CDP a global property which the arch code then enables it on the resources that
+support it when resctrl switches to its odd/even mode? Sounds like a great idea!)
+
+
+> This helper could have "cpu" in its
+> name to distinguish it from the other system-wide helpers.
+
+(not domain? I thought this MSR was somehow the same register on all the CPUs in a package)
+
+
+>> +	if (r->alloc_capable)
+>> +		l2_qos_cfg_update(&cdp_enable);
+> 
+> Since this will run on any system that supports L2 allocation it will
+> attempt to disable CDP on a system that does not support CDP. I do not
+> think this is the right thing to do.
+
+Yup, I'd forgotten it was optional as it is supported on both machines I've seen.
+
+Changing it to use one of the CODE/DATA versions would take that into account.
+It becomes:
+
+	r_cdp = &rdt_resources_all[RDT_RESOURCE_L3CODE];
+	if (r_cdp->alloc_capable)
+		l3_qos_cfg_update(&r_cdp->alloc_enabled);
+
+
+>> @@ -578,6 +597,8 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+>>  	d->id = id;
+>>  	cpumask_set_cpu(cpu, &d->cpu_mask);
+>>  
+>> +	domain_reconfigure_cdp();
+>> +
+> 
+> domain_add_cpu() is called for each resource associated with each CPU.
+> It seems that this reconfiguration could be moved up to
+> resctrl_online_cpu() and not be run as many times. (One hint that this
+> could be done is that this new function is not using any of the
+> parameters passed from resctrl_online_cpu() to domain_add_cpu().)
+
+Moving it above domain_add_cpu()'s bail-out for online-ing to an existing domain causes it
+to run per-cpu instead. This was the only spot I could find that 'knows' this is a new
+domain, thus it might need that MSR re-sycing.
+
+Yes, none of the arguments are used as CDP-enabled really ought to be a global system
+property.
+
+
+> The re-configuring of CDP would still be done for each CPU as it comes
+> online.
+
+I don't think that happens, surely per-cpu is worse than 3x per-domain.
+
+
+>> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+>> index 181c992f448c..29c92d3e93f5 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+>> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+>> @@ -602,4 +602,7 @@ void __check_limbo(struct rdt_domain *d, bool force_free);
+>>  bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+>>  bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
+>>  
+>> +void l3_qos_cfg_update(void *arg);
+>> +void l2_qos_cfg_update(void *arg);
+>> +
+> 
+> The new helper could be located in this same area with all the other CDP
+> related functions and it will just be the one helper exported.
+
+... I think you're describing adding:
+
+void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
+{
+	struct rdt_resource *r_cdp;
+
+	lockdep_assert_held(&rdtgroup_mutex);
+
+	if (r->rid != RDT_RESOURCE_L2 && r->rid != RDT_RESOURCE_L3)
+		return;
+
+	r_cdp = &rdt_resources_all[RDT_RESOURCE_L2CODE];
+	if (r_cdp->alloc_capable)
+		l2_qos_cfg_update(&r_cdp->alloc_enabled);
+
+	r_cdp = &rdt_resources_all[RDT_RESOURCE_L3CODE];
+	if (r_cdp->alloc_capable)
+		l3_qos_cfg_update(&r_cdp->alloc_enabled);
+}
+
+to rdtgroup.c and using that from core.c?
+
+I think domain in the name is important to hint you only need to call it once per domain,
+as set_cache_qos_cfg() does today.
+
+
+
+Thanks,
+
+James
