@@ -2,79 +2,103 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B221C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329FEC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13FD24649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019E0218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581593930;
+	bh=WtrY112A2RghlYtdoVfwx6fYgQy60lACbzr8hKJEDi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TTzDU50rxYu95abXhDKNNAJ4tPbMj4HGN23jce+CKLd5CXQWtD8qf7tbw63oeFVCd
+	 yfC6lNiXmgo0UsG2u3zfYa2Dp8R+UJaD/yLx2JA1NU3kOAAlZmODSxGm+g7BQdI8nN
+	 a8P+6JbMc1jp0Uo0VZoTOifLsf1yEtJ3cu688L2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgBMLin (ORCPT
+        id S1729953AbgBMLit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:38:43 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40484 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729428AbgBMLin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:38:43 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BF4C799AEFB5401D0311;
-        Thu, 13 Feb 2020 19:38:40 +0800 (CST)
-Received: from euler.huawei.com (10.175.104.193) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 13 Feb 2020 19:38:30 +0800
-From:   Hongbo Yao <yaohongbo@huawei.com>
-To:     <paulmck@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <yaohongbo@huawei.com>,
-        <chenzhou10@huawei.com>, <dave@stgolabs.net>,
-        <josh@joshtriplett.org>
-Subject: [PATCH RESEND -next] torture: avoid build error without CONFIG_RCU_TORTURE_TEST
-Date:   Thu, 13 Feb 2020 19:53:13 +0800
-Message-ID: <20200213115313.4794-1-yaohongbo@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Feb 2020 06:38:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:45430 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729854AbgBMLit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:38:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EC491FB;
+        Thu, 13 Feb 2020 03:38:48 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D795B3F6CF;
+        Thu, 13 Feb 2020 03:38:47 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:38:46 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 4/4] ASoC: simple-card: Add support for codec-to-codec
+ dai_links
+Message-ID: <20200213113846.GB4333@sirena.org.uk>
+References: <20200213061147.29386-1-samuel@sholland.org>
+ <20200213061147.29386-5-samuel@sholland.org>
+ <1jpneialqa.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.193]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
+Content-Disposition: inline
+In-Reply-To: <1jpneialqa.fsf@starbuckisacylon.baylibre.com>
+X-Cookie: Academicians care, that's who.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If TORTURE_TEST=y(selected by TORTURE_LOCK_TEST) and RCU_TORTURE_TEST=n,
-the following error is seen while building kernel/torture.c
 
-kernel/torture.c: In function torture_onoff:
-kernel/torture.c:239:3: error: implicit declaration of function
-rcutorture_sched_setaffinity; did you mean __NR_ia32_sched_setaffinity?
-[-Werror=implicit-function-declaration]
-   rcutorture_sched_setaffinity(current->pid, cpumask_of(0));
+--/NkBOFFp2J2Af1nK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Using sched_setaffnity() instead of rcutorture_sched_setaffinity() to
-avoid the error.
+On Thu, Feb 13, 2020 at 10:18:53AM +0100, Jerome Brunet wrote:
+> On Thu 13 Feb 2020 at 07:11, Samuel Holland <samuel@sholland.org> wrote:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: bc3db9afb849 ("EXP: rcutorture hack to force CPU hotplug onto CPU 0")
-Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
----
- kernel/torture.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > +- codec-to-codec			: Indicates a codec-to-codec
+> > dai-link.
 
-diff --git a/kernel/torture.c b/kernel/torture.c
-index b29adec50e01..834214cbd1cd 100644
---- a/kernel/torture.c
-+++ b/kernel/torture.c
-@@ -236,7 +236,7 @@ torture_onoff(void *arg)
- 			schedule_timeout_interruptible(HZ / 10);
- 			continue;
- 		}
--		rcutorture_sched_setaffinity(current->pid, cpumask_of(0));
-+		sched_setaffinity(current->pid, cpumask_of(0));
- 		cpu = (torture_random(&rand) >> 4) % (maxcpu + 1);
- 		if (!torture_offline(cpu,
- 				     &n_offline_attempts, &n_offline_successes,
--- 
-2.17.1
+> I wonder if such property could be viewed as a Linux implementation
+> detail ?
 
+Yes, it is.
+
+> Should the card figure out the codec-to-codec links on its own or is it
+> something generic enough to put in DT ?
+
+We should be able to figure it out by ourselves, we already have a link
+between two CODECs - we should be able to infer that it is in fact a
+link between two CODECs with the information we already have, probably
+by looking at the two devices that are referenced.
+
+--/NkBOFFp2J2Af1nK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5FNUUACgkQJNaLcl1U
+h9AQ3Af/XaLbts6WjJP/3bk73GDv0QmGgaskQL8b6m1D39K+JlBEpJFtRFU8dbwI
+lRAtiipudev/YrYxB1zTgCbspo7bZ+p9X+lKGs3duT/Mbu/S19AJXn1oczaI9bSr
+ry8cckwgoWfaT5KEgf32ZKhLPL2RYOGUfxK8YD3V2SVj74QapjdY3S4cOWFYCGSy
+G9RP0+ReSirSQ9p4MFiA3zxj5lLgNHnCoMkVrIUktLtLfbE9T6vyW0eZhc0+9wXC
+td2NQln5v755wOwxzGvfZ0hmO1Zil4FZEoCCdGT/izv7joqZaB18lG/XVlBCHQbn
+Sm25vTaxFqSe2wL3vQlqmRW5BEYsTQ==
+=eGwg
+-----END PGP SIGNATURE-----
+
+--/NkBOFFp2J2Af1nK--
