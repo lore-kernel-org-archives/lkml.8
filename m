@@ -2,120 +2,162 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E076BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC15C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B772A218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3399B24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LHpZ9IKv"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="fd7eAB7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgBMNWS (ORCPT
+        id S1730032AbgBMNXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:22:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31550 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729973AbgBMNWO (ORCPT
+        Thu, 13 Feb 2020 08:23:21 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35567 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729674AbgBMNXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:22:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581600133;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=5EatEPQudpiUKbeJ4n/F+XA+cWPrST5Nenz3vPabTag=;
-        b=LHpZ9IKvXzXYASnGfFoU1fvtTLlfrr4/KmvfVnAWrSxOyHdnHwj4M+PbDC3yYyXy/W9s94
-        FSCEh+Q72XWD1M0/egbOOL1xkcn0tclUk//hSh4lGhgD3bLXcYJniQVjQonZFUG9kgb5mZ
-        tg4p/RsCVP9+skOc5O6lQwpsus1Tfmg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-201-VFNE9Dm_M5aACxdNPrO6Cg-1; Thu, 13 Feb 2020 08:22:09 -0500
-X-MC-Unique: VFNE9Dm_M5aACxdNPrO6Cg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38C901005502;
-        Thu, 13 Feb 2020 13:22:08 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-39.ams2.redhat.com [10.36.117.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5163660BF4;
-        Thu, 13 Feb 2020 13:22:05 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 992CD3EC25; Thu, 13 Feb 2020 14:22:04 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 4/4] drm/virtio: batch display query.
-Date:   Thu, 13 Feb 2020 14:22:03 +0100
-Message-Id: <20200213132203.23441-5-kraxel@redhat.com>
-In-Reply-To: <20200213132203.23441-1-kraxel@redhat.com>
-References: <20200213132203.23441-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Thu, 13 Feb 2020 08:23:20 -0500
+Received: by mail-qt1-f195.google.com with SMTP id n17so4332331qtv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 05:23:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HF11zg8VhmODSLvrm5fXTfTQXLWL6ILILD4NNstRYp8=;
+        b=fd7eAB7reY05ia7xvwEb3tqhBP6ogKTnBo5phcgaV2UtplZOXERpcbUYR/6vM7jeOC
+         6lk3a49mmWTp3IeaCfGyZNAN7Vc0yOfAJnEOK1avYkFQY7V+wq4hhICL2J0rNk7HnMUX
+         AWxb1+/CI0/6y5w84TynH62CppBwHffHp7fF5SAreV9cJ9ChsRoGpviJSrRPy/aqTunU
+         UnOe0GJo/8zYkP1GN2HDaqxXzokFrGpzuG2PWtRRbfmlScULYiONwe5IYMU4QylziFJ3
+         kPMzsSZ/DLE1A19alQgRaH3HzZ5vWU1/3/Sxbatb8S3cBqaxkuI2aDKvvlMsZxwllpdP
+         CYeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HF11zg8VhmODSLvrm5fXTfTQXLWL6ILILD4NNstRYp8=;
+        b=QUY91+CWQ2wlnHJM4NOLkv3Ogd+dmFbyLIzha50XgYEr+vPMTNHJxnNVQWhl5LKggC
+         OuQzZsjrTdMjz6WwzZislySFGhR+4IcIXpxeymce0n7j6L2mSaXHk4RN3ZQYd3MhuTKj
+         jr9TBeQOgxLiL5FSBDK0Hf6cVTGWr1IP4CdPoGo898L3pwYtmCclXbp7gYansa9VdC78
+         eyrON/WZOhHSyba3qGSf/3rw2r5t/HfhPJqKM5YfXgDySDHX2LCIkZO7NA9Ucjz0wdPz
+         uHr2Ao6Q6JXntjaOjDyl2xeUQDfHR8UPAAh6TyrKp7c9motDcFIk6gHGjv7EAF15YC45
+         Ctpw==
+X-Gm-Message-State: APjAAAXv7tWcxGsjfzZYAQtNkxUHth/BkDeMeoNvRWTnuzYjvyzxUfPy
+        +l/yr/vMqZaK9JAshGs2gkn6jQ==
+X-Google-Smtp-Source: APXvYqztyM9wu0eJZLn4MfZpIlFLjoe12bBDZu5ErSW2KL2UGAaNfQkgeAR+W+nz2rlAliJ1unsqXQ==
+X-Received: by 2002:ac8:130c:: with SMTP id e12mr11576944qtj.233.1581600199440;
+        Thu, 13 Feb 2020 05:23:19 -0800 (PST)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id b12sm1320245qkl.0.2020.02.13.05.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 05:23:18 -0800 (PST)
+Date:   Thu, 13 Feb 2020 08:23:17 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200213132317.GA208501@cmpxchg.org>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200130170020.GZ24244@dhcp22.suse.cz>
+ <20200203215201.GD6380@cmpxchg.org>
+ <20200211164753.GQ10636@dhcp22.suse.cz>
+ <20200212170826.GC180867@cmpxchg.org>
+ <20200213074049.GA31689@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213074049.GA31689@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move virtio_gpu_notify() to higher-level functions for
-virtio_gpu_cmd_get_display_info() and virtio_gpu_cmd_get_edids().
+On Thu, Feb 13, 2020 at 08:40:49AM +0100, Michal Hocko wrote:
+> On Wed 12-02-20 12:08:26, Johannes Weiner wrote:
+> > On Tue, Feb 11, 2020 at 05:47:53PM +0100, Michal Hocko wrote:
+> > > Unless I am missing something then I am afraid it doesn't. Say you have a
+> > > default systemd cgroup deployment (aka deeper cgroup hierarchy with
+> > > slices and scopes) and now you want to grant a reclaim protection on a
+> > > leaf cgroup (or even a whole slice that is not really important). All the
+> > > hierarchy up the tree has the protection set to 0 by default, right? You
+> > > simply cannot get that protection. You would need to configure the
+> > > protection up the hierarchy and that is really cumbersome.
+> > 
+> > Okay, I think I know what you mean. Let's say you have a tree like
+> > this:
+> > 
+> >                           A
+> >                          / \
+> >                         B1  B2
+> >                        / \   \
+> >                       C1 C2   C3
+> > 
+> > and there is no actual delegation point - everything belongs to the
+> > same user / trust domain. C1 sets memory.low to 10G, but its parents
+> > set nothing. You're saying we should honor the 10G protection during
+> > global and limit reclaims anywhere in the tree?
+> 
+> No, only in the C1 which sets the limit, because that is the woriking
+> set we want to protect.
+> 
+> > Now let's consider there is a delegation point at B1: we set up and
+> > trust B1, but not its children. What effect would the C1 protection
+> > have then? Would we ignore it during global and A reclaim, but honor
+> > it when there is B1 limit reclaim?
+> 
+> In the scheme with the inherited protection it would act as the gate
+> and require an explicit low limit setup defaulting to 0 if none is
+> specified.
+> 
+> > Doing an explicit downward propagation from the root to C1 *could* be
+> > tedious, but I can't think of a scenario where it's completely
+> > impossible. Especially because we allow proportional distribution when
+> > the limit is overcommitted and you don't have to be 100% accurate.
+> 
+> So let's see how that works in practice, say a multi workload setup
+> with a complex/deep cgroup hierachies (e.g. your above example). No
+> delegation point this time.
+> 
+> C1 asks for low=1G while using 500M, C3 low=100M using 80M.  B1 and
+> B2 are completely independent workloads and the same applies to C2 which
+> doesn't ask for any protection at all? C2 uses 100M. Now the admin has
+> to propagate protection upwards so B1 low=1G, B2 low=100M and A low=1G,
+> right? Let's say we have a global reclaim due to external pressure that
+> originates from outside of A hierarchy (it is not overcommited on the
+> protection).
+> 
+> Unless I miss something C2 would get a protection even though nobody
+> asked for it.
 
-virtio_gpu_config_changed_work_func() and virtio_gpu_init() will
-batch commands and notify only once per update
+Good observation, but I think you spotted an unintentional side effect
+of how I implemented the "floating protection" calculation rather than
+a design problem.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_kms.c | 2 ++
- drivers/gpu/drm/virtio/virtgpu_vq.c  | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+My patch still allows explicit downward propagation. So if B1 sets up
+1G, and C1 explicitly claims those 1G (low>=1G, usage>=1G), C2 does
+NOT get any protection. There is no "floating" protection left in B1
+that could get to C2.
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 4009c2f97d08..8fd7acef960f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -44,6 +44,7 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
- 		if (vgdev->has_edid)
- 			virtio_gpu_cmd_get_edids(vgdev);
- 		virtio_gpu_cmd_get_display_info(vgdev);
-+		virtio_gpu_notify(vgdev);
- 		drm_helper_hpd_irq_event(vgdev->ddev);
- 		events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
- 	}
-@@ -205,6 +206,7 @@ int virtio_gpu_init(struct drm_device *dev)
- 	if (vgdev->has_edid)
- 		virtio_gpu_cmd_get_edids(vgdev);
- 	virtio_gpu_cmd_get_display_info(vgdev);
-+	virtio_gpu_notify(vgdev);
- 	wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
- 			   5 * HZ);
- 	return 0;
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 778b7acf2f7f..f5740d7b67be 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -774,7 +774,6 @@ int virtio_gpu_cmd_get_display_info(struct virtio_gpu_device *vgdev)
- 	vgdev->display_info_pending = true;
- 	cmd_p->type = cpu_to_le32(VIRTIO_GPU_CMD_GET_DISPLAY_INFO);
- 	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
--	virtio_gpu_notify(vgdev);
- 	return 0;
- }
- 
-@@ -902,7 +901,6 @@ int virtio_gpu_cmd_get_edids(struct virtio_gpu_device *vgdev)
- 		cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_GET_EDID);
- 		cmd_p->scanout = cpu_to_le32(scanout);
- 		virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
--		virtio_gpu_notify(vgdev);
- 	}
- 
- 	return 0;
--- 
-2.18.2
+However, to calculate the float, I'm using the utilized protection
+counters (children_low_usage) to determine what is "claimed". Mostly
+for convenience because they were already there. In your example, C1
+is only utilizing 500M of its protection, leaving 500M in the float
+that will go toward C2. I agree that's undesirable.
 
+But it's fixable by adding a hierarchical children_low counter that
+tracks the static configuration, and using that to calculate floating
+protection instead of the dynamic children_low_usage.
+
+That way you can propagate protection from A to C1 without it spilling
+to anybody else unintentionally, regardless of how much B1 and C1 are
+actually *using*.
+
+Does that sound reasonable?
