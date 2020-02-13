@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3052FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8780DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0604C2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F32324670
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607828;
-	bh=uXHAlkeBHn3E/t2VnFzPT+P6qV46bbGDPnOCUUOx6Ek=;
+	s=default; t=1581607830;
+	bh=0Wyzm8prTXdxcC5qKMuthwEvTdxOmhJ2ohgnlYe8qGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m17J6KZvqQL3RVcpcBVZvjFZqrm2uyoyOJ1rHMmT9WxEc2GWG2zPTUy3kSEqgK0FW
-	 iRvXb7A3jTg2GZrZSVe/ksEoKsl6GTfG9gUGYKtxMGIRCgmI9AEyrLCQfocJXrld9M
-	 18JXIIt/yAY++LAPdx/dwsPJdUV9Erxldzn+Urqw=
+	b=psW9uVxtFr2G69g5E1pSg4IwWZ30nhvz3c3H77A6MusGdPwc39/B1PuY+WscL1+EQ
+	 h2HzMWfrR9gVAmZsSmt+HKXdftuT2kX158KddNFDFwNCcgVB8P8u+R8oCeqTp1WzP6
+	 thBj6AwrSX9N4g/hfDxUZRMYQe8s+qMUAZ8lC5EI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387952AbgBMPa1 (ORCPT
+        id S2387960AbgBMPa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49766 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbgBMP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:18 -0500
+        id S1729360AbgBMP1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:19 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58CDC206DB;
-        Thu, 13 Feb 2020 15:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B75924676;
+        Thu, 13 Feb 2020 15:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607637;
-        bh=uXHAlkeBHn3E/t2VnFzPT+P6qV46bbGDPnOCUUOx6Ek=;
+        s=default; t=1581607638;
+        bh=0Wyzm8prTXdxcC5qKMuthwEvTdxOmhJ2ohgnlYe8qGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OKf/qOYuj5usB24G7qjSmXKeG+HO2X/2Jh6nh1M+QHbuaf3Zf45unCgsDH/7ePKC2
-         f1Uu2PkZJ6MRW8CzW2f+1JvYfr0ROIEQDlaq5sKXrJeXFc0FeLZp+m6QdAQxocENQX
-         E3lH8VWx+SQk3R44TfhFDYI81VL/15RYnup7+bzE=
+        b=OgGmTP7QYcDr+iKJYS8Cb5W1FQBv+lIs6Oyffc+o+mD8c4xgef5SxQl7ZJSeN/SJo
+         xfubhQYDFShLV0vYK3GafsBTIf6mys5BGVsXhbozMroVFMs/94hMS2vi8+WB+j6MAf
+         d/69td3WSUSHonM56AltCOCeDKASifKlyjcffR3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: [PATCH 5.4 24/96] selftests/bpf: Test freeing sockmap/sockhash with a socket in it
-Date:   Thu, 13 Feb 2020 07:20:31 -0800
-Message-Id: <20200213151848.506659123@linuxfoundation.org>
+        Jakub Sitnicki <jakub@cloudflare.com>
+Subject: [PATCH 5.4 26/96] bpf, sockmap: Check update requirements after locking
+Date:   Thu, 13 Feb 2020 07:20:33 -0800
+Message-Id: <20200213151849.209731823@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,106 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-commit 5d3919a953c3c96c02fc7a337f8376cde43ae31f upstream.
+commit 85b8ac01a421791d66c3a458a7f83cfd173fe3fa upstream.
 
-Commit 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during tear
-down") introduced sleeping issues inside RCU critical sections and while
-holding a spinlock on sockmap/sockhash tear-down. There has to be at least
-one socket in the map for the problem to surface.
+It's currently possible to insert sockets in unexpected states into
+a sockmap, due to a TOCTTOU when updating the map from a syscall.
+sock_map_update_elem checks that sk->sk_state == TCP_ESTABLISHED,
+locks the socket and then calls sock_map_update_common. At this
+point, the socket may have transitioned into another state, and
+the earlier assumptions don't hold anymore. Crucially, it's
+conceivable (though very unlikely) that a socket has become unhashed.
+This breaks the sockmap's assumption that it will get a callback
+via sk->sk_prot->unhash.
 
-This adds a test that triggers the warnings for broken locking rules. Not a
-fix per se, but rather tooling to verify the accompanying fixes. Run on a
-VM with 1 vCPU to reproduce the warnings.
+Fix this by checking the (fixed) sk_type and sk_protocol without the
+lock, followed by a locked check of sk_state.
 
-Fixes: 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during tear down")
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Unfortunately it's not possible to push the check down into
+sock_(map|hash)_update_common, since BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB
+run before the socket has transitioned from TCP_SYN_RECV into
+TCP_ESTABLISHED.
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200206111652.694507-4-jakub@cloudflare.com
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Link: https://lore.kernel.org/bpf/20200207103713.28175-1-lmb@cloudflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/bpf/prog_tests/sockmap_basic.c |   74 +++++++++++++++++
- 1 file changed, 74 insertions(+)
+ net/core/sock_map.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2020 Cloudflare
-+
-+#include "test_progs.h"
-+
-+static int connected_socket_v4(void)
-+{
-+	struct sockaddr_in addr = {
-+		.sin_family = AF_INET,
-+		.sin_port = htons(80),
-+		.sin_addr = { inet_addr("127.0.0.1") },
-+	};
-+	socklen_t len = sizeof(addr);
-+	int s, repair, err;
-+
-+	s = socket(AF_INET, SOCK_STREAM, 0);
-+	if (CHECK_FAIL(s == -1))
-+		goto error;
-+
-+	repair = TCP_REPAIR_ON;
-+	err = setsockopt(s, SOL_TCP, TCP_REPAIR, &repair, sizeof(repair));
-+	if (CHECK_FAIL(err))
-+		goto error;
-+
-+	err = connect(s, (struct sockaddr *)&addr, len);
-+	if (CHECK_FAIL(err))
-+		goto error;
-+
-+	repair = TCP_REPAIR_OFF_NO_WP;
-+	err = setsockopt(s, SOL_TCP, TCP_REPAIR, &repair, sizeof(repair));
-+	if (CHECK_FAIL(err))
-+		goto error;
-+
-+	return s;
-+error:
-+	perror(__func__);
-+	close(s);
-+	return -1;
-+}
-+
-+/* Create a map, populate it with one socket, and free the map. */
-+static void test_sockmap_create_update_free(enum bpf_map_type map_type)
-+{
-+	const int zero = 0;
-+	int s, map, err;
-+
-+	s = connected_socket_v4();
-+	if (CHECK_FAIL(s == -1))
-+		return;
-+
-+	map = bpf_create_map(map_type, sizeof(int), sizeof(int), 1, 0);
-+	if (CHECK_FAIL(map == -1)) {
-+		perror("bpf_create_map");
-+		goto out;
-+	}
-+
-+	err = bpf_map_update_elem(map, &zero, &s, BPF_NOEXIST);
-+	if (CHECK_FAIL(err)) {
-+		perror("bpf_map_update");
-+		goto out;
-+	}
-+
-+out:
-+	close(map);
-+	close(s);
-+}
-+
-+void test_sockmap_basic(void)
-+{
-+	if (test__start_subtest("sockmap create_update_free"))
-+		test_sockmap_create_update_free(BPF_MAP_TYPE_SOCKMAP);
-+	if (test__start_subtest("sockhash create_update_free"))
-+		test_sockmap_create_update_free(BPF_MAP_TYPE_SOCKHASH);
-+}
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -417,14 +417,16 @@ static int sock_map_update_elem(struct b
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (!sock_map_sk_is_suitable(sk) ||
+-	    sk->sk_state != TCP_ESTABLISHED) {
++	if (!sock_map_sk_is_suitable(sk)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+ 
+ 	sock_map_sk_acquire(sk);
+-	ret = sock_map_update_common(map, idx, sk, flags);
++	if (sk->sk_state != TCP_ESTABLISHED)
++		ret = -EOPNOTSUPP;
++	else
++		ret = sock_map_update_common(map, idx, sk, flags);
+ 	sock_map_sk_release(sk);
+ out:
+ 	fput(sock->file);
+@@ -740,14 +742,16 @@ static int sock_hash_update_elem(struct
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (!sock_map_sk_is_suitable(sk) ||
+-	    sk->sk_state != TCP_ESTABLISHED) {
++	if (!sock_map_sk_is_suitable(sk)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+ 
+ 	sock_map_sk_acquire(sk);
+-	ret = sock_hash_update_common(map, key, sk, flags);
++	if (sk->sk_state != TCP_ESTABLISHED)
++		ret = -EOPNOTSUPP;
++	else
++		ret = sock_hash_update_common(map, key, sk, flags);
+ 	sock_map_sk_release(sk);
+ out:
+ 	fput(sock->file);
 
 
