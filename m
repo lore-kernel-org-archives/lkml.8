@@ -2,52 +2,51 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482A7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4283C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 106C020675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B58217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609071;
-	bh=Zi/+svdB314w3vuCLrXRPBgVaAAgjY+wKkxhPngHbGM=;
+	s=default; t=1581609077;
+	bh=CEnA5KxjyFqr6S2JVJaG4x3AfLs3XLduoz3lLlq/M3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HRvlqCOGo1ELAoBIhPLlIfW74djgggLbq5ozTfLDxY6gQ7B/DW8IuDgEHQiC1ftHv
-	 QDfN4yH+3kybobqtb3aMYqxI1LbmX42bAEsQubABB6w8xyJjh5p+U+EvxWHRnK7hfW
-	 4/zWl+xtXM8rfpu3y5ImmEWOz2//Iia0Fmw/CeRU=
+	b=0FPwJffJm3YXRkUknEA/9wwkx0NxMqkP6ld3ObTnHmG7Jmx8dOxEk7ePy7VROMV1+
+	 jY7gJXDs+SO0YSrZoouuikoPvmme2qsdCF0Cbhtf1OXYxu0AHB4cQ6a+v2GmoPXTdo
+	 VKl+n3UkpiODzk+xA88GeZ8+eozc3k5LPCQ2X4/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387614AbgBMPvH (ORCPT
+        id S2388043AbgBMPvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:51:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44600 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:51:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387536AbgBMP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:20 -0500
+        id S2387524AbgBMP0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:18 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D149520661;
-        Thu, 13 Feb 2020 15:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA7DC20661;
+        Thu, 13 Feb 2020 15:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607579;
-        bh=Zi/+svdB314w3vuCLrXRPBgVaAAgjY+wKkxhPngHbGM=;
+        s=default; t=1581607578;
+        bh=CEnA5KxjyFqr6S2JVJaG4x3AfLs3XLduoz3lLlq/M3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4I8qRxtX2MdDUKTJB6D9V0LB75/YVJ6wTTEcR11G7rVQ7S0RwGzTdCtXlkOpdxoI
-         bESINRSJ5mwEHUgWYI5mVFT9egDeh/QIZGVdppKtV5bpmKZGOisvtJZSRjAWXFKo9N
-         GrwpdrFGJIq/YGPoARQYIyjIqot63wOHf6awQjXE=
+        b=rx9aE3Ak63G2zOIf/htoEHiIBeMtlgVcu0TTcQAtm5FhuLw0lZxr35y1rf89Oy45l
+         XF2xaenOv6dMj4GjmIgT8Mv7NuO+z6Mmalc+KmwB47rOsIxwogUJ6CHdYhmlduMgrY
+         X+V8j1SvYjUT4LubKld5dx1RiEnNzPvhXny2UDgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qing Xu <m1s5p6688@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 170/173] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
-Date:   Thu, 13 Feb 2020 07:21:13 -0800
-Message-Id: <20200213152013.870606772@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4.14 167/173] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+Date:   Thu, 13 Feb 2020 07:21:10 -0800
+Message-Id: <20200213152013.193132676@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,40 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qing Xu <m1s5p6688@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
+commit 805f635703b2562b5ddd822c62fc9124087e5dd5 upstream.
 
-mwifiex_ret_wmm_get_status() calls memcpy() without checking the
-destination size.Since the source is given from remote AP which
-contains illegal wmm elements , this may trigger a heap buffer
-overflow.
-Fix it by putting the length check before calling memcpy().
+The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
+one set of users must be wrong.  Replace them by the correct enum IDs.
 
-Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/marvell/mwifiex/wmm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index 7fba4d940131c..a13b05ec8fc03 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -976,6 +976,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
- 				    "WMM Parameter Set Count: %d\n",
- 				    wmm_param_ie->qos_info_bitmap & mask);
- 
-+			if (wmm_param_ie->vend_hdr.len + 2 >
-+				sizeof(struct ieee_types_wmm_parameter))
-+				break;
-+
- 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
- 			       wmm_ie, wmm_param_ie,
- 			       wmm_param_ie->vend_hdr.len + 2);
--- 
-2.20.1
-
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+@@ -2325,7 +2325,7 @@ static const struct pinmux_cfg_reg pinmu
+ 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
+ 		/* IP0_11_8 [4] */
+ 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
+-		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
++		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
+ 		FN_PWM4_B,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP0_7_5 [3] */
+@@ -2367,7 +2367,7 @@ static const struct pinmux_cfg_reg pinmu
+ 		FN_TS_SDAT0_A,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP1_10_8 [3] */
+-		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
++		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
+ 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
+ 		/* IP1_7_5 [3] */
+ 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
 
 
