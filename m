@@ -2,54 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A687C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0C2C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C1120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277D320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609270;
-	bh=bZLNbdWM+R++4x+FGREdTx1p1LRAKEtoH6Ebaj6xYDs=;
+	s=default; t=1581609275;
+	bh=RkvVxjVniafEYFLD5/3Du9E96eZyu/XJaraLUL93oyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lg+NWe0ShLJf3DXc1JtvobuLPagYOSYtRxiphdZchdZGq0k9zeoEJ5XSXH2HkQZby
-	 ptnsUhIREpcezFRcFMUGdV6VIM8GxF+XoF+BWuDST2j/72Pp0a5KZkIDvDY9O7eR+S
-	 8SBpJOPy4gzoeMK7xFBNay5QWk3mmdscdV026BWg=
+	b=R8SnMYzpyaiA6yTQQ348N1HmckYmqvciClPYoFJaX4MDygxBYqzfCPV5FwN0UTrTC
+	 T7MVHiWXuTIFpksaSnjR64aYvNhW5BDtVbaASh9uPYCw63uPa1W/E0AulUr6/XYBwV
+	 osGwkKh4Rz1PL4MAxzv/zRXYTxqva++CigUB/9yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgBMPy2 (ORCPT
+        id S1729098AbgBMPZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:54:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42754 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgBMPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:53 -0500
+        id S1728584AbgBMPYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:07 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 419032469A;
-        Thu, 13 Feb 2020 15:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD7DA20848;
+        Thu, 13 Feb 2020 15:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607553;
-        bh=bZLNbdWM+R++4x+FGREdTx1p1LRAKEtoH6Ebaj6xYDs=;
+        s=default; t=1581607445;
+        bh=RkvVxjVniafEYFLD5/3Du9E96eZyu/XJaraLUL93oyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZN+teDUUD5CpKKzCS/SeJHWwQ0aUZ0oW0AlwfacNW3tjPEVnH4owCzqVsaU4IW+G8
-         GaKoju7AjxEmqOB16/22M69HUK85AiUOIF8iqx4OoX/oodPV0CF7BmRWOCWq+nyuaa
-         ZtHcmB3+bmzQRmjamNpK/QDEFyJGrTt5hsVBIbME=
+        b=z8/FOZNP65GGBcPrMSw6L6IJ23ogCszPMMuajbNYu4I+HbSOPeuDl6WvpFhucS+8o
+         NL/Fs8ynGv6NUU5K/gRH/BwmSdYZhI12cVv9y2tUU5iIsRivCUH9HhnYVyb+ALMZOv
+         xKWkdxSPLzudeJpELsdejofXyfcfcC8RWOCC9G8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.14 137/173] cifs: fail i/o on soft mounts if sessionsetup errors out
-Date:   Thu, 13 Feb 2020 07:20:40 -0800
-Message-Id: <20200213152006.417267003@linuxfoundation.org>
+        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 087/116] drm/dp_mst: Remove VCPI while disabling topology mgr
+Date:   Thu, 13 Feb 2020 07:20:31 -0800
+Message-Id: <20200213151916.429278047@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,51 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Wayne Lin <Wayne.Lin@amd.com>
 
-commit b0dd940e582b6a60296b9847a54012a4b080dc72 upstream.
+[ Upstream commit 64e62bdf04ab8529f45ed0a85122c703035dec3a ]
 
-RHBZ: 1579050
+[Why]
 
-If we have a soft mount we should fail commands for session-setup
-failures (such as the password having changed/ account being deleted/ ...)
-and return an error back to the application.
+This patch is trying to address the issue observed when hotplug DP
+daisy chain monitors.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+e.g.
+src-mstb-mstb-sst -> src (unplug) mstb-mstb-sst -> src-mstb-mstb-sst
+(plug in again)
 
+Once unplug a DP MST capable device, driver will call
+drm_dp_mst_topology_mgr_set_mst() to disable MST. In this function,
+it cleans data of topology manager while disabling mst_state. However,
+it doesn't clean up the proposed_vcpis of topology manager.
+If proposed_vcpi is not reset, once plug in MST daisy chain monitors
+later, code will fail at checking port validation while trying to
+allocate payloads.
+
+When MST capable device is plugged in again and try to allocate
+payloads by calling drm_dp_update_payload_part1(), this
+function will iterate over all proposed virtual channels to see if
+any proposed VCPI's num_slots is greater than 0. If any proposed
+VCPI's num_slots is greater than 0 and the port which the
+specific virtual channel directed to is not in the topology, code then
+fails at the port validation. Since there are stale VCPI allocations
+from the previous topology enablement in proposed_vcpi[], code will fail
+at port validation and reurn EINVAL.
+
+[How]
+
+Clean up the data of stale proposed_vcpi[] and reset mgr->proposed_vcpis
+to NULL while disabling mst in drm_dp_mst_topology_mgr_set_mst().
+
+Changes since v1:
+*Add on more details in commit message to describe the issue which the
+patch is trying to fix
+
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+[added cc to stable]
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191205090043.7580-1-Wayne.Lin@amd.com
+Cc: <stable@vger.kernel.org> # v3.17+
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -257,9 +257,14 @@ smb2_reconnect(__le16 smb2_command, stru
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 17aedaaf364c1..8b1d497b7f99f 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2042,6 +2042,7 @@ static bool drm_dp_get_vc_payload_bw(int dp_link_bw,
+ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool mst_state)
+ {
+ 	int ret = 0;
++	int i = 0;
+ 	struct drm_dp_mst_branch *mstb = NULL;
+ 
+ 	mutex_lock(&mgr->lock);
+@@ -2106,10 +2107,21 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 		/* this can fail if the device is gone */
+ 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
+ 		ret = 0;
++		mutex_lock(&mgr->payload_lock);
+ 		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
+ 		mgr->payload_mask = 0;
+ 		set_bit(0, &mgr->payload_mask);
++		for (i = 0; i < mgr->max_payloads; i++) {
++			struct drm_dp_vcpi *vcpi = mgr->proposed_vcpis[i];
++
++			if (vcpi) {
++				vcpi->vcpi = 0;
++				vcpi->num_slots = 0;
++			}
++			mgr->proposed_vcpis[i] = NULL;
++		}
+ 		mgr->vcpi_mask = 0;
++		mutex_unlock(&mgr->payload_lock);
  	}
  
- 	rc = cifs_negotiate_protocol(0, tcon->ses);
--	if (!rc && tcon->ses->need_reconnect)
-+	if (!rc && tcon->ses->need_reconnect) {
- 		rc = cifs_setup_session(0, tcon->ses, nls_codepage);
--
-+		if ((rc == -EACCES) && !tcon->retry) {
-+			rc = -EHOSTDOWN;
-+			mutex_unlock(&tcon->ses->session_mutex);
-+			goto failed;
-+		}
-+	}
- 	if (rc || !tcon->need_reconnect) {
- 		mutex_unlock(&tcon->ses->session_mutex);
- 		goto out;
-@@ -301,6 +306,7 @@ out:
- 	case SMB2_SET_INFO:
- 		rc = -EAGAIN;
- 	}
-+failed:
- 	unload_nls(nls_codepage);
- 	return rc;
- }
+ out_unlock:
+-- 
+2.20.1
+
 
 
