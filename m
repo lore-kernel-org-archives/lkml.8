@@ -2,57 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182DBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3209C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60A2217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A181B2467D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609334;
-	bh=56b4QelP62Qj6qy1lyC1qDTrZBpCEENYWK7uHYYMPUM=;
+	s=default; t=1581609336;
+	bh=GA+fYb+0DRK+VeQeKUaCgGZFbiP+DH5OSDA2JxVANdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zp+VGKnj9ydDEmHswG/HSpmTgyXJm00mhJrvMJMZIbpJYepouJugBOP4DdzhJT0pj
-	 I6iW2ahkiGcgrAuccMECz+Ex9n9UocipBStRFyrR6LpTeB5Upici2fryYmIoUA61QJ
-	 W7UtKvRr2k6WXVxUfu3+OpJ3Yje26nsK80sQKyDw=
+	b=dS4CXJCwactKi/TAHC9kytoa55e1p8V0gGg80iFu4Nf45pdRGvfvU6fKB3jLP1lCi
+	 Ojq2OAY1gzoc8nNR84W/eWOxAsH+cRL0lWv+OoGa/RaEgJIVQAgMzbDzOack7eowqw
+	 FJHP8sFLhseiBr4Ld/KzCwh6pM1ahU5XMbFU2pnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388019AbgBMPzd (ORCPT
+        id S1727794AbgBMPZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:55:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728542AbgBMPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:38 -0500
+        id S1728579AbgBMPYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:02 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945F424690;
-        Thu, 13 Feb 2020 15:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3C8B24689;
+        Thu, 13 Feb 2020 15:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607537;
-        bh=56b4QelP62Qj6qy1lyC1qDTrZBpCEENYWK7uHYYMPUM=;
+        s=default; t=1581607442;
+        bh=GA+fYb+0DRK+VeQeKUaCgGZFbiP+DH5OSDA2JxVANdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPBhsOwKySDeyTssWBsouzvkNnLoFtWts+8QaCmfnRDs8GMF2X4fUK8BAMsIV2u15
-         Sd1v4CSVPXmUG3pbtmAFLR4esw9oYIZQ5nxaXcGBeJj0fRZaIO4MdemytvS17IFg3I
-         g4UlwsDri5I0zr0J7bf2mhY8jDPHHREjsuM1wbBo=
+        b=uNpASP8xRP3mG9JurpiRGAMYaiGyGMfWfo2Ty6FeaNP4H4pkI5TXvyG0NN2ByFO8y
+         TaQ0+H6e3Gf9Aa0PeH37hm7NhxjCn2wJ0Re1UpoMAlHt7vnkEmeBz9iWy+6C/RVooF
+         TE0dwy8Q9pUqp19s2sMm/3wTA5TU3dVHf0WVKzOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 096/173] scsi: ufs: Recheck bkops level if bkops is disabled
-Date:   Thu, 13 Feb 2020 07:19:59 -0800
-Message-Id: <20200213151957.157886640@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 063/116] NFC: pn544: Adjust indentation in pn544_hci_check_presence
+Date:   Thu, 13 Feb 2020 07:20:07 -0800
+Message-Id: <20200213151907.366539693@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,55 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Asutosh Das <asutoshd@codeaurora.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 24366c2afbb0539fb14eff330d4e3a5db5c0a3ef upstream.
+commit 5080832627b65e3772a35d1dced68c64e2b24442 upstream.
 
-bkops level should be rechecked upon receiving an exception.  Currently the
-level is being cached and never updated.
+Clang warns
 
-Update bkops each time the level is checked.  Also do not use the cached
-bkops level value if it is disabled and then enabled.
+../drivers/nfc/pn544/pn544.c:696:4: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
+                 ^
+../drivers/nfc/pn544/pn544.c:692:3: note: previous statement is here
+                if (target->nfcid1_len != 4 && target->nfcid1_len != 7 &&
+                ^
+1 warning generated.
 
-Fixes: afdfff59a0e0 (scsi: ufs: handle non spec compliant bkops behaviour by device)
-Link: https://lore.kernel.org/r/1574751214-8321-2-git-send-email-cang@qti.qualcomm.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+Fixes: da052850b911 ("NFC: Add pn544 presence check for different targets")
+Link: https://github.com/ClangBuiltLinux/linux/issues/814
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nfc/pn544/pn544.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4812,6 +4812,7 @@ static int ufshcd_disable_auto_bkops(str
+--- a/drivers/nfc/pn544/pn544.c
++++ b/drivers/nfc/pn544/pn544.c
+@@ -704,7 +704,7 @@ static int pn544_hci_check_presence(stru
+ 		    target->nfcid1_len != 10)
+ 			return -EOPNOTSUPP;
  
- 	hba->auto_bkops_enabled = false;
- 	trace_ufshcd_auto_bkops_state(dev_name(hba->dev), "Disabled");
-+	hba->is_urgent_bkops_lvl_checked = false;
- out:
- 	return err;
- }
-@@ -4836,6 +4837,7 @@ static void ufshcd_force_reset_auto_bkop
- 		hba->ee_ctrl_mask &= ~MASK_EE_URGENT_BKOPS;
- 		ufshcd_disable_auto_bkops(hba);
- 	}
-+	hba->is_urgent_bkops_lvl_checked = false;
- }
- 
- static inline int ufshcd_get_bkops_status(struct ufs_hba *hba, u32 *status)
-@@ -4882,6 +4884,7 @@ static int ufshcd_bkops_ctrl(struct ufs_
- 		err = ufshcd_enable_auto_bkops(hba);
- 	else
- 		err = ufshcd_disable_auto_bkops(hba);
-+	hba->urgent_bkops_lvl = curr_status;
- out:
- 	return err;
- }
+-		 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
++		return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
+ 				     PN544_RF_READER_CMD_ACTIVATE_NEXT,
+ 				     target->nfcid1, target->nfcid1_len, NULL);
+ 	} else if (target->supported_protocols & (NFC_PROTO_JEWEL_MASK |
 
 
