@@ -2,52 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0609AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E38C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1DBE217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB032073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608256;
-	bh=TaFRYpriDM/AUHejBc6XrY0Ki68FPo4gvMOXwfY6+CA=;
+	s=default; t=1581608261;
+	bh=Y74Xd+mVklbZULUCpaI/t71V7iNTRldQmCAkpffYaHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPkJPBNoJE+8q+TARWCzzpIkQ6QvwnoLDVxXtdWNvbdukjMeBhJtB5HsR7zFEXbuQ
-	 wYA309qiX6uJJmPVNv4SUocGaG/FqQYYj+NaLae2+8acjlx9UlXOrOl9bX6RRtRdLA
-	 6+t2rqEXjizt1P5Zde3xbADAzWMdVh05hCy84XVQ=
+	b=L0Yzp545hoKVoxg6TBPUoe7tROT1bvCk6c8kBfMmDQo469idN428g7htamJGc4XGm
+	 8Rdn2BaA/0WZu6g/xR8rgma7hfnQogAfMwMnl2aCSFjRc5ZCfJ+cq3Jqd9j/D4jhbf
+	 RFG9lk2a+F9qpwuOBqOERWUf6Ku5N2Ott3V1jtLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgBMPhg (ORCPT
+        id S1729089AbgBMPhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:37:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:37:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387836AbgBMP3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:23 -0500
+        id S1729715AbgBMP3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:22 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF042168B;
-        Thu, 13 Feb 2020 15:29:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7E34206DB;
+        Thu, 13 Feb 2020 15:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607762;
-        bh=TaFRYpriDM/AUHejBc6XrY0Ki68FPo4gvMOXwfY6+CA=;
+        bh=Y74Xd+mVklbZULUCpaI/t71V7iNTRldQmCAkpffYaHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EAtT/UsdaUiAYbWSkMMm2b10nvtIf0s80U3yXBmIk3rylfWjR3I8jwNpj5iEbgFJH
-         OpI28jjxKI2Bd3/qmW8LA52T6ZqqfOGRsM7Wi36olUOe7A3CyWTomZmOUiIDmZlpaA
-         PpHm3SqiD8UfKNAdLm5nTMfIU/J/1DFgPteUX6sI=
+        b=b0e6+fb333fnkQIeJHYlR6os5HXHO2Hg3gEbvZwImTUeLv9TM0E/otZ0Ec0nmEFC7
+         aheElmu+DDlcE/BXLTyz12f1r66EjidYH/Sn0ELiS1IYO8MIPJMABWJoF+afno6e2f
+         sayme/ewpJcwJRk24JVyAJex4ji4QQUxH096Is8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 5.5 109/120] pinctrl: baytrail: Allocate IRQ chip dynamic
-Date:   Thu, 13 Feb 2020 07:21:45 -0800
-Message-Id: <20200213151937.249913134@linuxfoundation.org>
+        stable@vger.kernel.org, Qing Xu <m1s5p6688@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 118/120] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
+Date:   Thu, 13 Feb 2020 07:21:54 -0800
+Message-Id: <20200213151939.700519401@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,71 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-commit 539d8bde72c22d760013bf81436d6bb94eb67aed upstream.
+[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
 
-Keeping the IRQ chip definition static shares it with multiple instances
-of the GPIO chip in the system. This is bad and now we get this warning
-from GPIO library:
+mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
+the destination size may trigger a buffer overflower,
+which a local user could use to cause denial of service
+or the execution of arbitrary code.
+Fix it by putting the length check before calling memcpy().
 
-"detected irqchip that is shared with multiple gpiochips: please fix the driver."
-
-Hence, move the IRQ chip definition from being driver static into the struct
-intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
-
-Fixes: 9f573b98ca50 ("pinctrl: baytrail: Update irq chip operations")
-Depends-on: ca8a958e2acb ("pinctrl: baytrail: Pass irqchip when adding gpiochip")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -107,6 +107,7 @@ struct byt_gpio_pin_context {
- 
- struct byt_gpio {
- 	struct gpio_chip chip;
-+	struct irq_chip irqchip;
- 	struct platform_device *pdev;
- 	struct pinctrl_dev *pctl_dev;
- 	struct pinctrl_desc pctl_desc;
-@@ -1395,15 +1396,6 @@ static int byt_irq_type(struct irq_data
- 	return 0;
- }
- 
--static struct irq_chip byt_irqchip = {
--	.name		= "BYT-GPIO",
--	.irq_ack	= byt_irq_ack,
--	.irq_mask	= byt_irq_mask,
--	.irq_unmask	= byt_irq_unmask,
--	.irq_set_type	= byt_irq_type,
--	.flags		= IRQCHIP_SKIP_SET_WAKE,
--};
--
- static void byt_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_data *data = irq_desc_get_irq_data(desc);
-@@ -1551,8 +1543,15 @@ static int byt_gpio_probe(struct byt_gpi
- 	if (irq_rc && irq_rc->start) {
- 		struct gpio_irq_chip *girq;
- 
-+		vg->irqchip.name = "BYT-GPIO",
-+		vg->irqchip.irq_ack = byt_irq_ack,
-+		vg->irqchip.irq_mask = byt_irq_mask,
-+		vg->irqchip.irq_unmask = byt_irq_unmask,
-+		vg->irqchip.irq_set_type = byt_irq_type,
-+		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE,
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 98f942b797f7b..a7968a84aaf88 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -2884,6 +2884,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
+ 			vs_param_set->header.len =
+ 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
+ 				& 0x00FF) + 2);
++			if (le16_to_cpu(vs_param_set->header.len) >
++				MWIFIEX_MAX_VSIE_LEN) {
++				mwifiex_dbg(priv->adapter, ERROR,
++					    "Invalid param length!\n");
++				break;
++			}
 +
- 		girq = &gc->irq;
--		girq->chip = &byt_irqchip;
-+		girq->chip = &vg->irqchip;
- 		girq->init_hw = byt_gpio_irq_init_hw;
- 		girq->parent_handler = byt_gpio_irq_handler;
- 		girq->num_parents = 1;
+ 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
+ 			       le16_to_cpu(vs_param_set->header.len));
+ 			*buffer += le16_to_cpu(vs_param_set->header.len) +
+-- 
+2.20.1
+
 
 
