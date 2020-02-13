@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6A2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912A4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E047120661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA3F20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608719;
-	bh=ykTPePhQ0hHddIuGcVzpNHQS8K4ncWoU9fS/eVv0JTs=;
+	s=default; t=1581608721;
+	bh=dFdzzarvAnU4bC10RLMRXRLW9GdfSigpZSNr4TdWn1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+y657Dh4w9Dh0FKdMdXJtlBiNB6Ni2VpATQrtd6eHcFSj7mMgiEV88MQjffGbkXL
-	 cKIdiipIz665nk+p4NVbcD4TGk3HR6gTyE6iHzvv0JcG+bi3fUQCo5ju2gb8OMUcct
-	 ILpdneXVKrvQapuql2ZkYhRrbfK/GCH17Yp6mnzM=
+	b=sVKDUW5YPT4totPSHLBWUYLfLUQVbuTmLm4J8HZ76kDcsdGQYjuLIVgJ8KAkgMAZE
+	 MzTVtDNsIuAL6unCz1eSt8mXPZvkRTOQoBdY3hF4f0O0DL1zjkt7UPJ28VMlMa0zUH
+	 5KONJc6Fjv8vyIW0tl/2kXqvB8VRWYjXSGxJSIJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbgBMPpS (ORCPT
+        id S1729899AbgBMPpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:45:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51104 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:45:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbgBMP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729430AbgBMP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:27:33 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CACAE20661;
-        Thu, 13 Feb 2020 15:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75133206DB;
+        Thu, 13 Feb 2020 15:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607651;
-        bh=ykTPePhQ0hHddIuGcVzpNHQS8K4ncWoU9fS/eVv0JTs=;
+        s=default; t=1581607652;
+        bh=dFdzzarvAnU4bC10RLMRXRLW9GdfSigpZSNr4TdWn1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7jdKUAd4oFtswdvmpi5uzd0GRXXu3SdiKK6HCzZDlM6MEC++oo0aav121tka1Fbh
-         O9AQn2CcAcVfv+uKtkZ35ISvUnQkjytKDNj/QZCASwUzfrdb4R2+Xs8iUMnnkhdqrL
-         vAiJetIiU2PlBR2d69Tduk20NeZtL1ruVSp1WQVA=
+        b=qJyxAa0OjY2vK8+Gr8WpRfKsLAbFD9TLRQN/R1Sam5zk24ZV7S2rdIoCaeYtK0G+N
+         8k9t0xERikiIk0WwqwVgtXS9ygVmyIflb8tS7Uyopbronfi17mEFbBQvNCjF4S3MBd
+         hs4SqKj7p4qElTppwXYAjt6Jt4mXbEgsaL5jmnvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 56/96] powerpc/papr_scm: Fix leaking bus_desc.provider_name in some paths
-Date:   Thu, 13 Feb 2020 07:21:03 -0800
-Message-Id: <20200213151901.020531511@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 5.4 65/96] arm64: cpufeature: Fix the type of no FP/SIMD capability
+Date:   Thu, 13 Feb 2020 07:21:12 -0800
+Message-Id: <20200213151904.029786736@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -59,44 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vaibhav Jain <vaibhav@linux.ibm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 5649607a8d0b0e019a4db14aab3de1e16c3a2b4f upstream.
+commit 449443c03d8cfdacf7313e17779a2594ebf87e6d upstream.
 
-String 'bus_desc.provider_name' allocated inside
-papr_scm_nvdimm_init() will leaks in case call to
-nvdimm_bus_register() fails or when papr_scm_remove() is called.
+The NO_FPSIMD capability is defined with scope SYSTEM, which implies
+that the "absence" of FP/SIMD on at least one CPU is detected only
+after all the SMP CPUs are brought up. However, we use the status
+of this capability for every context switch. So, let us change
+the scope to LOCAL_CPU to allow the detection of this capability
+as and when the first CPU without FP is brought up.
 
-This minor patch ensures that 'bus_desc.provider_name' is freed in
-error path for nvdimm_bus_register() as well as in papr_scm_remove().
+Also, the current type allows hotplugged CPU to be brought up without
+FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
+up. Fix both of these issues by changing the capability to
+BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
 
-Fixes: b5beae5e224f ("powerpc/pseries: Add driver for PAPR SCM regions")
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200122155140.120429-1-vaibhav@linux.ibm.com
+Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/papr_scm.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/cpufeature.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -342,6 +342,7 @@ static int papr_scm_nvdimm_init(struct p
- 	p->bus = nvdimm_bus_register(NULL, &p->bus_desc);
- 	if (!p->bus) {
- 		dev_err(dev, "Error creating nvdimm bus %pOF\n", p->dn);
-+		kfree(p->bus_desc.provider_name);
- 		return -ENXIO;
- 	}
- 
-@@ -498,6 +499,7 @@ static int papr_scm_remove(struct platfo
- 
- 	nvdimm_bus_unregister(p->bus);
- 	drc_pmem_unbind(p);
-+	kfree(p->bus_desc.provider_name);
- 	kfree(p);
- 
- 	return 0;
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1367,7 +1367,7 @@ static const struct arm64_cpu_capabiliti
+ 	{
+ 		/* FP/SIMD is not implemented */
+ 		.capability = ARM64_HAS_NO_FPSIMD,
+-		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
+ 		.min_field_value = 0,
+ 		.matches = has_no_fpsimd,
+ 	},
 
 
