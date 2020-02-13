@@ -5,52 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C77DC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5555AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29BE8217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287B8218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609565;
-	bh=8m95RymEldAFxdMNFNOh5ebIIqj+Gyn1fmABkibbhcY=;
+	s=default; t=1581609568;
+	bh=UcB75R57FiRoBTEkAPF5DZwDBQVw/QCjV4Ivyvlae5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VyJQz1Z3MnN+rK4rzrosP467RAZ4vptLheIjWiHUqWgOjmL5TvdtjQsIkGLw1iB9M
-	 xhDc55tK/GGkLIdgV4ojqvEQ+xDvRjFbgIvKTqYW4N5wrR6jwnD+BeWNFtqzg6yhS2
-	 9WiTQiAmsdCD1wMhp6f+K08Zs97+jLLlX/cllqdg=
+	b=ZP+kzrujW669LDOT7EcXkaxkLGItYeS7V8dC8A9lhJxuTwNXQhaKZHfzyXnR0b14c
+	 MDGYAOFga47njAkct4jBW9Er3/8ZDBLC/2h5ekmFlNQqqu9zD/BzJmBl3wkZhAtv3K
+	 TDhoac1EqwgEadKUIdSEnpE6aOzqmFDX/hzW+ufQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgBMPYy (ORCPT
+        id S1730086AbgBMP71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:24:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:59:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbgBMPX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:29 -0500
+        id S1727978AbgBMPYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:54 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2693F24689;
-        Thu, 13 Feb 2020 15:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C22C3246AD;
+        Thu, 13 Feb 2020 15:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607408;
-        bh=8m95RymEldAFxdMNFNOh5ebIIqj+Gyn1fmABkibbhcY=;
+        s=default; t=1581607492;
+        bh=UcB75R57FiRoBTEkAPF5DZwDBQVw/QCjV4Ivyvlae5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qqp4Ds2eSKaMe01ZDQHWVv++O4+QxUMhOuGoAjjinxWlLGaGa9wq0HKW/GwNW/Xfh
-         wqtb+hAFnnFFfE4C6h9/kCMuQscioChobqAgMBxKMUQR1LuY/WnWu+T+o2WSaCZyqG
-         1gvN6e3UtMzDbHXnrf5FQMEhJV0v57xiy9mqV0sQ=
+        b=jqmScfUcyiA0i3CkOBM6RqDPwPAeeueUZFO3nH4U4QfFEyIut9Yb/9UZjQdRzQx1m
+         Wh8u6ZLWkllKla5vdkJL3wZB9YzbEe0rxaw/cQkt5qm24BtJpjFb0GmgM0xFqrWaMe
+         +Gg3sI8RKpnc8FZIoMi8K3MBsLv6BnJNabOw3KHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hyunchul Lee <cheol.lee@lge.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 028/116] ubifs: Change gfp flags in page allocation for bulk read
-Date:   Thu, 13 Feb 2020 07:19:32 -0800
-Message-Id: <20200213151853.797208951@linuxfoundation.org>
+Subject: [PATCH 4.14 043/173] mmc: sdhci-of-at91: fix memleak on clk_get failure
+Date:   Thu, 13 Feb 2020 07:19:06 -0800
+Message-Id: <20200213151944.811844803@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,53 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hyunchul Lee <cheol.lee@lge.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-[ Upstream commit 480a1a6a3ef6fb6be4cd2f37b34314fbf64867dd ]
+[ Upstream commit a04184ce777b46e92c2b3c93c6dcb2754cb005e1 ]
 
-In low memory situations, page allocations for bulk read
-can kill applications for reclaiming memory, and print an
-failure message when allocations are failed.
-Because bulk read is just an optimization, we don't have
-to do these and can stop page allocations.
+sdhci_alloc_host() does its work not using managed infrastructure, so
+needs explicit free on error path. Add it where needed.
 
-Though this siutation happens rarely, add __GFP_NORETRY
-to prevent from excessive memory reclaim and killing
-applications, and __GFP_WARN to suppress this failure
-message.
-
-For this, Use readahead_gfp_mask for gfp flags when
-allocating pages.
-
-Signed-off-by: Hyunchul Lee <cheol.lee@lge.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Cc: <stable@vger.kernel.org>
+Fixes: bb5f8ea4d514 ("mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/b2a44d5be2e06ff075f32477e466598bb0f07b36.1577961679.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ubifs/file.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-of-at91.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-index b4fbeefba246a..f2e6162f8e656 100644
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -721,6 +721,7 @@ static int ubifs_do_bulk_read(struct ubifs_info *c, struct bu_info *bu,
- 	int err, page_idx, page_cnt, ret = 0, n = 0;
- 	int allocate = bu->buf ? 0 : 1;
- 	loff_t isize;
-+	gfp_t ra_gfp_mask = readahead_gfp_mask(mapping) & ~__GFP_FS;
+diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+index 564e7be21e068..1dadd460cc8fb 100644
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -331,19 +331,22 @@ static int sdhci_at91_probe(struct platform_device *pdev)
+ 	priv->mainck = devm_clk_get(&pdev->dev, "baseclk");
+ 	if (IS_ERR(priv->mainck)) {
+ 		dev_err(&pdev->dev, "failed to get baseclk\n");
+-		return PTR_ERR(priv->mainck);
++		ret = PTR_ERR(priv->mainck);
++		goto sdhci_pltfm_free;
+ 	}
  
- 	err = ubifs_tnc_get_bu_keys(c, bu);
- 	if (err)
-@@ -782,8 +783,7 @@ static int ubifs_do_bulk_read(struct ubifs_info *c, struct bu_info *bu,
+ 	priv->hclock = devm_clk_get(&pdev->dev, "hclock");
+ 	if (IS_ERR(priv->hclock)) {
+ 		dev_err(&pdev->dev, "failed to get hclock\n");
+-		return PTR_ERR(priv->hclock);
++		ret = PTR_ERR(priv->hclock);
++		goto sdhci_pltfm_free;
+ 	}
  
- 		if (page_offset > end_index)
- 			break;
--		page = find_or_create_page(mapping, page_offset,
--					   GFP_NOFS | __GFP_COLD);
-+		page = find_or_create_page(mapping, page_offset, ra_gfp_mask);
- 		if (!page)
- 			break;
- 		if (!PageUptodate(page))
+ 	priv->gck = devm_clk_get(&pdev->dev, "multclk");
+ 	if (IS_ERR(priv->gck)) {
+ 		dev_err(&pdev->dev, "failed to get multclk\n");
+-		return PTR_ERR(priv->gck);
++		ret = PTR_ERR(priv->gck);
++		goto sdhci_pltfm_free;
+ 	}
+ 
+ 	ret = sdhci_at91_set_clks_presets(&pdev->dev);
 -- 
 2.20.1
 
