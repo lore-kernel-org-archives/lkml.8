@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1897AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ED0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11BE20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20B024671
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607583;
-	bh=M5+WmZfYFjMAhpEf/odKM+rmScY+N3ONcS/HbaSrJQs=;
+	s=default; t=1581607588;
+	bh=axkzjAVqLhMmmBO+eVTMGQ/6LdJuBAFn24vBXIHaDHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSifxgGI2fst3Y+BRLpTc3fXXUWbpa2HVC0gOmS6ndh+orVkn4+29R7NTfhcBa13F
-	 fM1wPSSpwdY4VcznxD0YdRUTuJjgfK6wSy2OyfvWGu7yIHqCuUuQ+sRjBpbFBsQabr
-	 IPJTbjkAe17hBbFb2kdiwG0aaQ0E4irayIlLxZ/A=
+	b=G9Sv8/scJ92E8PQns6WlH3MaUyx+tW5/Xt73zkw25H3i+zIhQCHwAcnvzYHObtlzL
+	 K5OWEwXCG2Lwb0dKqbJ4puP7Hp7Fm+Oq33o0fUXu4BwPHNbeqR3qfZN6QfLfRGAryc
+	 41xuLpmcpxcME6i7TbqBEb5fkrMj6HfioJkDKk2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387539AbgBMP0W (ORCPT
+        id S2387565AbgBMP02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37896 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:26:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728704AbgBMPY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:28 -0500
+        id S1728771AbgBMPYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:47 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC399246A3;
-        Thu, 13 Feb 2020 15:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88D7424693;
+        Thu, 13 Feb 2020 15:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607467;
-        bh=M5+WmZfYFjMAhpEf/odKM+rmScY+N3ONcS/HbaSrJQs=;
+        s=default; t=1581607486;
+        bh=axkzjAVqLhMmmBO+eVTMGQ/6LdJuBAFn24vBXIHaDHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVt/u2NnlRTPW+5mLK1X09LPqUhSbrrGguZncC1VPtta+MNL5P1n4mvQnpSgSosPM
-         wSJNJ4o6Q6DPgqfu0Rfc2goNEbRbCsRSD9cw+z9rLcEj29dqsEugDccJq1rraiSlkH
-         ySiUBC9zlkSjwwzQ+di8qa5Vnfcdk/Z7MURCTeY4=
+        b=2cWEcezUVI0LlL6R1WjFHRmccGTiNWoJ35yLppHaSSEWbEueS61V4Jdbb1hVriJFR
+         o7MlcC2E4oHMYAeV0vGuknwfouzLEgqaslkiJIV+7CLr9Z1XJ0TGdbqa3Tl8KGVJ0q
+         c8tpfde8a/XVLqbBGp7apTBIbCCg4OHYNjZ8z44s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.9 104/116] rtc: cmos: Stop using shared IRQ
-Date:   Thu, 13 Feb 2020 07:20:48 -0800
-Message-Id: <20200213151922.649518172@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 4.14 017/173] rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect
+Date:   Thu, 13 Feb 2020 07:18:40 -0800
+Message-Id: <20200213151937.337219002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,79 +58,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: David Howells <dhowells@redhat.com>
 
-commit b6da197a2e9670df6f07e6698629e9ce95ab614e upstream.
+[ Upstream commit 5273a191dca65a675dc0bcf3909e59c6933e2831 ]
 
-As reported by Guilherme G. Piccoli:
+When a call is disconnected, the connection pointer from the call is
+cleared to make sure it isn't used again and to prevent further attempted
+transmission for the call.  Unfortunately, there might be a daemon trying
+to use it at the same time to transmit a packet.
 
----8<---8<---8<---
+Fix this by keeping call->conn set, but setting a flag on the call to
+indicate disconnection instead.
 
-The rtc-cmos interrupt setting was changed in the commit 079062b28fb4
-("rtc: cmos: prevent kernel warning on IRQ flags mismatch") in order
-to allow shared interrupts; according to that commit's description,
-some machine got kernel warnings due to the interrupt line being shared
-between rtc-cmos and other hardware, and rtc-cmos didn't allow IRQ sharing
-that time.
+Remove also the bits in the transmission functions where the conn pointer is
+checked and a ref taken under spinlock as this is now redundant.
 
-After the aforementioned commit though it was observed a huge increase
-in lost HPET interrupts in some systems, observed through the following
-kernel message:
-
-[...] hpet1: lost 35 rtc interrupts
-
-After investigation, it was narrowed down to the shared interrupts
-usage when having the kernel option "irqpoll" enabled. In this case,
-all IRQ handlers are called for non-timer interrupts, if such handlers
-are setup in shared IRQ lines. The rtc-cmos IRQ handler could be set to
-hpet_rtc_interrupt(), which will produce the kernel "lost interrupts"
-message after doing work - lots of readl/writel to HPET registers, which
-are known to be slow.
-
-Although "irqpoll" is not a default kernel option, it's used in some contexts,
-one being the kdump kernel (which is an already "impaired" kernel usually
-running with 1 CPU available), so the performance burden could be considerable.
-Also, the same issue would happen (in a shorter extent though) when using
-"irqfixup" kernel option.
-
-In a quick experiment, a virtual machine with uptime of 2 minutes produced
->300 calls to hpet_rtc_interrupt() when "irqpoll" was set, whereas without
-sharing interrupts this number reduced to 1 interrupt. Machines with more
-hardware than a VM should generate even more unnecessary HPET interrupts
-in this scenario.
-
----8<---8<---8<---
-
-After looking into the rtc-cmos driver history and DSDT table from
-the Microsoft Surface 3, we may notice that Hans de Goede submitted
-a correct fix (see dependency below). Thus, we simply revert
-the culprit commit.
-
-Fixes: 079062b28fb4 ("rtc: cmos: prevent kernel warning on IRQ flags mismatch")
-Depends-on: a1e23a42f1bd ("rtc: cmos: Do not assume irq 8 for rtc when there are no legacy irqs")
-Reported-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200123131437.28157-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 8d94aa381dab ("rxrpc: Calls shouldn't hold socket refs")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/rtc/rtc-cmos.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rxrpc/ar-internal.h |    1 +
+ net/rxrpc/call_object.c |    4 ++--
+ net/rxrpc/conn_client.c |    3 +--
+ net/rxrpc/conn_object.c |    4 ++--
+ net/rxrpc/output.c      |   26 +++++++++-----------------
+ 5 files changed, 15 insertions(+), 23 deletions(-)
 
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -730,7 +730,7 @@ cmos_do_probe(struct device *dev, struct
- 			rtc_cmos_int_handler = cmos_interrupt;
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -451,6 +451,7 @@ enum rxrpc_call_flag {
+ 	RXRPC_CALL_SEND_PING,		/* A ping will need to be sent */
+ 	RXRPC_CALL_PINGING,		/* Ping in process */
+ 	RXRPC_CALL_RETRANS_TIMEOUT,	/* Retransmission due to timeout occurred */
++	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
+ };
  
- 		retval = request_irq(rtc_irq, rtc_cmos_int_handler,
--				IRQF_SHARED, dev_name(&cmos_rtc.rtc->dev),
-+				0, dev_name(&cmos_rtc.rtc->dev),
- 				cmos_rtc.rtc);
- 		if (retval < 0) {
- 			dev_dbg(dev, "IRQ %d is already in use\n", rtc_irq);
+ /*
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -505,7 +505,7 @@ void rxrpc_release_call(struct rxrpc_soc
+ 
+ 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
+ 
+-	if (conn)
++	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		rxrpc_disconnect_call(call);
+ 
+ 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++) {
+@@ -639,6 +639,7 @@ static void rxrpc_rcu_destroy_call(struc
+ {
+ 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
+ 
++	rxrpc_put_connection(call->conn);
+ 	rxrpc_put_peer(call->peer);
+ 	kfree(call->rxtx_buffer);
+ 	kfree(call->rxtx_annotations);
+@@ -660,7 +661,6 @@ void rxrpc_cleanup_call(struct rxrpc_cal
+ 
+ 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
+ 	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
+-	ASSERTCMP(call->conn, ==, NULL);
+ 
+ 	/* Clean up the Rx/Tx buffer */
+ 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++)
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -762,9 +762,9 @@ void rxrpc_disconnect_client_call(struct
+ 	struct rxrpc_net *rxnet = rxrpc_net(sock_net(&call->socket->sk));
+ 
+ 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
+-	call->conn = NULL;
+ 
+ 	spin_lock(&conn->channel_lock);
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+ 
+ 	/* Calls that have never actually been assigned a channel can simply be
+ 	 * discarded.  If the conn didn't get used either, it will follow
+@@ -863,7 +863,6 @@ out:
+ 	spin_unlock(&rxnet->client_conn_cache_lock);
+ out_2:
+ 	spin_unlock(&conn->channel_lock);
+-	rxrpc_put_connection(conn);
+ 	_leave("");
+ 	return;
+ 
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -163,6 +163,8 @@ void __rxrpc_disconnect_call(struct rxrp
+ 
+ 	_enter("%d,%x", conn->debug_id, call->cid);
+ 
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
++
+ 	if (rcu_access_pointer(chan->call) == call) {
+ 		/* Save the result of the call so that we can repeat it if necessary
+ 		 * through the channel, whilst disposing of the actual call record.
+@@ -207,9 +209,7 @@ void rxrpc_disconnect_call(struct rxrpc_
+ 	__rxrpc_disconnect_call(conn, call);
+ 	spin_unlock(&conn->channel_lock);
+ 
+-	call->conn = NULL;
+ 	conn->idle_timestamp = jiffies;
+-	rxrpc_put_connection(conn);
+ }
+ 
+ /*
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -96,7 +96,7 @@ static size_t rxrpc_fill_out_ack(struct
+  */
+ int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping)
+ {
+-	struct rxrpc_connection *conn = NULL;
++	struct rxrpc_connection *conn;
+ 	struct rxrpc_ack_buffer *pkt;
+ 	struct msghdr msg;
+ 	struct kvec iov[2];
+@@ -106,18 +106,14 @@ int rxrpc_send_ack_packet(struct rxrpc_c
+ 	int ret;
+ 	u8 reason;
+ 
+-	spin_lock_bh(&call->lock);
+-	if (call->conn)
+-		conn = rxrpc_get_connection_maybe(call->conn);
+-	spin_unlock_bh(&call->lock);
+-	if (!conn)
++	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		return -ECONNRESET;
+ 
+ 	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
+-	if (!pkt) {
+-		rxrpc_put_connection(conn);
++	if (!pkt)
+ 		return -ENOMEM;
+-	}
++
++	conn = call->conn;
+ 
+ 	msg.msg_name	= &call->peer->srx.transport;
+ 	msg.msg_namelen	= call->peer->srx.transport_len;
+@@ -204,7 +200,6 @@ int rxrpc_send_ack_packet(struct rxrpc_c
+ 	}
+ 
+ out:
+-	rxrpc_put_connection(conn);
+ 	kfree(pkt);
+ 	return ret;
+ }
+@@ -214,20 +209,18 @@ out:
+  */
+ int rxrpc_send_abort_packet(struct rxrpc_call *call)
+ {
+-	struct rxrpc_connection *conn = NULL;
++	struct rxrpc_connection *conn;
+ 	struct rxrpc_abort_buffer pkt;
+ 	struct msghdr msg;
+ 	struct kvec iov[1];
+ 	rxrpc_serial_t serial;
+ 	int ret;
+ 
+-	spin_lock_bh(&call->lock);
+-	if (call->conn)
+-		conn = rxrpc_get_connection_maybe(call->conn);
+-	spin_unlock_bh(&call->lock);
+-	if (!conn)
++	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		return -ECONNRESET;
+ 
++	conn = call->conn;
++
+ 	msg.msg_name	= &call->peer->srx.transport;
+ 	msg.msg_namelen	= call->peer->srx.transport_len;
+ 	msg.msg_control	= NULL;
+@@ -255,7 +248,6 @@ int rxrpc_send_abort_packet(struct rxrpc
+ 	ret = kernel_sendmsg(conn->params.local->socket,
+ 			     &msg, iov, 1, sizeof(pkt));
+ 
+-	rxrpc_put_connection(conn);
+ 	return ret;
+ }
+ 
 
 
