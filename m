@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DF3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A722C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C74020656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E691F206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610155;
-	bh=Bzhi6lde7OpuvdLPjVRGmFwvB5ok4FRpi36AmEcxJis=;
+	s=default; t=1581610162;
+	bh=9W9fDx/JQzv1ID2zg5J16xrPyezITT+LM//09W5EwM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6ezxkUDdZI8k82MH1q+EssFwHbs/DSopuAy/yKs6gGwFMl6A/lsb0CJqhgTPmGNY
-	 fZnpXfc/3D8yyPRcjvUab/kP6FLK7csL587EoLsJclg8ti8w5z2LjZQ/RkQYnRyPb6
-	 TeACom1atXo32r7/ASlnwADJMZg87y83gcZO74wI=
+	b=M1PmENT/A0skYjgKOJxhh7NjqqBCmJjMBfUZ6djrjwe9mHnzEwwk+X5Bluu6ELlq0
+	 0pYQUNbk12qEdcDyj9bPlvtfGnJpxewdzpdvk1pX6jiYmzgRhpe38pEvn2QYhZXHmV
+	 xZejCnrq37uHvoxu/tzGhaLECTntBcKGI9ZsX1jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388466AbgBMQJN (ORCPT
+        id S1728137AbgBMPWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:09:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:22:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgBMPWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:50 -0500
+        id S1727934AbgBMPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:38 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94D3E24699;
-        Thu, 13 Feb 2020 15:22:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC04620848;
+        Thu, 13 Feb 2020 15:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607369;
-        bh=Bzhi6lde7OpuvdLPjVRGmFwvB5ok4FRpi36AmEcxJis=;
+        s=default; t=1581607357;
+        bh=9W9fDx/JQzv1ID2zg5J16xrPyezITT+LM//09W5EwM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kpj1E1KsrUGftVC1TP/x+kJsmU6B0BOVUeLogJrvQtDAdik0oqAFrO399rLfZUxwd
-         BFVTojHBgrMS6yATU3gRzZvENRO2rXt3MblbSdeZZrjI37tI+ON/whvhsp9JiQJp9T
-         VJ4tkRaUS+1QC0aUXrnWw1+fjhRpLc0746f6AVn4=
+        b=CmiKJB3ClCKaIoghV0a8IF3AmW9p//NMrCkmGhNIGr6my9ThUYrdyXmAZlgbr9l9q
+         WYx6sLa8CEwU6F8zCIp4RIM3Cmeyq6Of/23ep5tH7sbQPc+epgR5FRJ7302aWTejo6
+         EYf4ENGPpmPTvofAP8QbZhV01w4RC9xHv/psWupU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 43/91] KVM: x86: Protect MSR-based index computations in fixed_msr_to_seg_unit() from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:20:00 -0800
-Message-Id: <20200213151838.314721719@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 4.4 25/91] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
+Date:   Thu, 13 Feb 2020 07:19:42 -0800
+Message-Id: <20200213151831.379688414@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,55 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 25a5edea71b7c154b6a0b8cec14c711cafa31d26 upstream.
+commit dabf6b36b83a18d57e3d4b9d50544ed040d86255 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in fixed_msr_to_seg_unit().
-This function contains index computations based on the
-(attacker-controlled) MSR number.
+There's an OF helper called of_dma_is_coherent(), which checks if a
+device has a "dma-coherent" property to see if the device is coherent
+for DMA.
 
-Fixes: de9aef5e1ad6 ("KVM: MTRR: introduce fixed_mtrr_segment table")
+But on some platforms devices are coherent by default, and on some
+platforms it's not possible to update existing device trees to add the
+"dma-coherent" property.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+So add a Kconfig symbol to allow arch code to tell
+of_dma_is_coherent() that devices are coherent by default, regardless
+of the presence of the property.
+
+Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
+when the system has a coherent cache.
+
+Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
+Cc: stable@vger.kernel.org # v3.16+
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mtrr.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/powerpc/Kconfig |    1 +
+ drivers/of/Kconfig   |    4 ++++
+ drivers/of/address.c |    6 +++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/mtrr.c
-+++ b/arch/x86/kvm/mtrr.c
-@@ -17,6 +17,7 @@
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -93,6 +93,7 @@ config PPC
+ 	select BINFMT_ELF
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select OF
++	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
+ 	select OF_EARLY_FLATTREE
+ 	select OF_RESERVED_MEM
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -112,4 +112,8 @@ config OF_OVERLAY
+ 	  While this option is selected automatically when needed, you can
+ 	  enable it manually to improve device tree unit test coverage.
+ 
++config OF_DMA_DEFAULT_COHERENT
++	# arches should select this if DMA is coherent by default for OF devices
++	bool
++
+ endif # OF
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -1009,12 +1009,16 @@ EXPORT_SYMBOL_GPL(of_dma_get_range);
+  * @np:	device node
+  *
+  * It returns true if "dma-coherent" property was found
+- * for this device in DT.
++ * for this device in the DT, or if DMA is coherent by
++ * default for OF devices on the current platform.
   */
+ bool of_dma_is_coherent(struct device_node *np)
+ {
+ 	struct device_node *node = of_node_get(np);
  
- #include <linux/kvm_host.h>
-+#include <linux/nospec.h>
- #include <asm/mtrr.h>
- 
- #include "cpuid.h"
-@@ -202,11 +203,15 @@ static bool fixed_msr_to_seg_unit(u32 ms
- 		break;
- 	case MSR_MTRRfix16K_80000 ... MSR_MTRRfix16K_A0000:
- 		*seg = 1;
--		*unit = msr - MSR_MTRRfix16K_80000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix16K_80000,
-+			MSR_MTRRfix16K_A0000 - MSR_MTRRfix16K_80000 + 1);
- 		break;
- 	case MSR_MTRRfix4K_C0000 ... MSR_MTRRfix4K_F8000:
- 		*seg = 2;
--		*unit = msr - MSR_MTRRfix4K_C0000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix4K_C0000,
-+			MSR_MTRRfix4K_F8000 - MSR_MTRRfix4K_C0000 + 1);
- 		break;
- 	default:
- 		return false;
++	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
++		return true;
++
+ 	while (node) {
+ 		if (of_property_read_bool(node, "dma-coherent")) {
+ 			of_node_put(node);
 
 
