@@ -6,248 +6,111 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DCDC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF17C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2136224676
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F272467C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581611750;
-	bh=AHrdtqygZRgQqzjx3AFeufRO7ffnVboJ7SHm2nO5puY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JKDwvjBaKmijANeYz9DFoDYZzPVe1JKabRC1hSoD1NCrwkHuivR2dksLb1yOj1N+W
-	 Kv7R++wqY0cp9FbzQKZqD5hHVChF+SEC9vxkqlzmYBjiWJry4LrLqTXV5Xkgy+bTU7
-	 kk4gmk0kNtHgPXbl+JKwjZf8lv45pe0q/DvhRlUQ=
+	s=default; t=1581611804;
+	bh=qxgd1KoWgwQhLdRpie6lYxmtTPiOZxdQRYO1bpF6/hw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uCkBlVd9+TESx3uHnkKAXXSOGbbyL7I9ZeqA+yCAX9NhczwMZw79ORbOKC13lNdee
+	 YYpGbqyoFvSACaNIva4UtxZSzrBQVBzrxfKFXzz2qnQUT3OpjCUc/x4SmLPeO1j866
+	 tagXUCCIAno4ZnIZMkm6m75UtqzJosNKj6X3isBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgBMQft (ORCPT
+        id S1728839AbgBMQgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:35:49 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44211 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728580AbgBMQft (ORCPT
+        Thu, 13 Feb 2020 11:36:43 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43114 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbgBMQgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:35:49 -0500
-Received: by mail-oi1-f195.google.com with SMTP id d62so6356212oia.11;
-        Thu, 13 Feb 2020 08:35:47 -0800 (PST)
+        Thu, 13 Feb 2020 11:36:43 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r11so7455101wrq.10;
+        Thu, 13 Feb 2020 08:36:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TDXzjfcGCJhPOQkjevaE1t+2oC5AHKQw1IBxSjGZvLs=;
-        b=LEIMz+rHy/mVh9woHIAjbwPdNMCvROwQFG9nXG3A1nwk0CUKm36Gj1nupaG9dqR9yS
-         1YA2pTsWMFhL9dC1dMaCSJ236Bw+1hD/QGDMZ8rF7u1Ee+LaA9pCyY0CovlRjprVvNzF
-         HSQLdnbqf7kAPq5zVjpct2N2yqxYMhaWHvmKZ1XV9Vutp+1vcLQQzX2DmNbxEkP7C7uU
-         CSEmoL6tax0JEOGVb0kZvhmQgLAX/j2wzeZH1R3IaCcS/NjdQqv5NTdQcDCSR321XdOZ
-         sXZd/rz9YViVS+/+YLrJvb5PatbIN5Dre2DVX5iUiKCkuCDqEiKP3lgMXP9+6q5E1j0F
-         ZXEw==
-X-Gm-Message-State: APjAAAUbWTv0+CDLedb2IXqyH2XoavZ0siTybW9Oc7eRETBazwZItvQQ
-        txR4RfPMBO26/nlNjUaZo+PM2GU0JNkUVjYOQ1tFaayc
-X-Google-Smtp-Source: APXvYqzAKudWPe9TDsIkvPBSoeOlVb+sSKdzxwx9WgFgr5/oWSBbZyHH7zfrTVof5O23aIYgU+f6ymjOFC5OfvKSSbs=
-X-Received: by 2002:aca:bfc2:: with SMTP id p185mr3624641oif.57.1581611746549;
- Thu, 13 Feb 2020 08:35:46 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lmfQ+P5qqT40a5iQ7iRjjbaHXUizOe4fBlQ/eH9eBdY=;
+        b=JoXI0owAkqa1H5x46j1rZrU5kxHCsFBSU9MBo11uXqO8D2bugzi2X287cc6d7LrUVc
+         aZbFFlLr5mHXkAzGS/k+G0cy4vfwAucxS2WFTlcOGKLN4fsebCDsKGD3x9LDbcLsn0H5
+         vxMcaLH4loj3EnA/t9eA6M9YOxQiLIctWJBgPiA7z7l2tEKLoo9NW6c3OPMQQ+ih1H4p
+         ef+9OnHzAH2qY6DMp+70V13tYVaFG31bi3uq+n8hBvLuH3BLwpHpmhwXFVZ1bX6yHCeq
+         weTIekdbtdbRHB/aqU9oZVhqSt8SxtxKsNP5fplose9c06z5meuHadKSDpLZlt6OgV03
+         sGuw==
+X-Gm-Message-State: APjAAAUmVVnWo1f7uPbkiJrL+brZY3c3uMQf2Q+Y9OBo6ZWsMHSP/HfR
+        Gt0qh3IPCWarQS4dyGAdwqo=
+X-Google-Smtp-Source: APXvYqx9OeOJFs7+oXJ+VHrtubnIYIroyeFz0+EmF8royFusQStAvQZ+cr2PQiveNWcbVmmpP2Nk5A==
+X-Received: by 2002:adf:c453:: with SMTP id a19mr22819198wrg.341.1581611799518;
+        Thu, 13 Feb 2020 08:36:39 -0800 (PST)
+Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
+        by smtp.gmail.com with ESMTPSA id b11sm3567835wrx.89.2020.02.13.08.36.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 08:36:38 -0800 (PST)
+Date:   Thu, 13 Feb 2020 17:36:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200213163636.GH31689@dhcp22.suse.cz>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200130170020.GZ24244@dhcp22.suse.cz>
+ <20200203215201.GD6380@cmpxchg.org>
+ <20200211164753.GQ10636@dhcp22.suse.cz>
+ <20200212170826.GC180867@cmpxchg.org>
+ <20200213074049.GA31689@dhcp22.suse.cz>
+ <20200213135348.GF88887@mtj.thefacebook.com>
+ <20200213154731.GE31689@dhcp22.suse.cz>
+ <20200213155249.GI88887@mtj.thefacebook.com>
 MIME-Version: 1.0
-References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net>
- <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
- <878sl6j4fd.fsf@riseup.net> <CAJZ5v0jNFMwqSwSones91WgDwGqusyY1nEMDKAYuSZiLjH61dw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jNFMwqSwSones91WgDwGqusyY1nEMDKAYuSZiLjH61dw@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 13 Feb 2020 17:35:35 +0100
-Message-ID: <CAJZ5v0iMvzFGbuYsOo+AkWAqUbkQVT-FHsTDbStPiNenw783LQ@mail.gmail.com>
-Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
- latency QoS interface
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213155249.GI88887@mtj.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:34 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Feb 13, 2020 at 9:07 AM Francisco Jerez <currojerez@riseup.net> wrote:
-> >
-> > "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> >
-> > > On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
-> > >>
-> > >> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
-> > >>
-> > >> > Hi All,
-> > >> >
-> > >> > This series of patches is based on the observation that after commit
-> > >> > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
-> > >> > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
-> > >> > code dedicated to the handling of global PM QoS classes in general.  That code
-> > >> > takes up space and adds overhead in vain, so it is better to get rid of it.
-> > >> >
-> > >> > Moreover, with that unuseful code removed, the interface for adding QoS
-> > >> > requests for CPU latency becomes inelegant and confusing, so it is better to
-> > >> > clean it up.
-> > >> >
-> > >> > Patches [01/28-12/28] do the first part described above, which also includes
-> > >> > some assorted cleanups of the core PM QoS code that doesn't go away.
-> > >> >
-> > >> > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
-> > >> > "define stubs, migrate users, change the API proper" manner), patches
-> > >> > [26-27/28] update the general comments and documentation to match the code
-> > >> > after the previous changes and the last one makes the CPU latency QoS depend
-> > >> > on CPU_IDLE (because cpuidle is the only user of its target value today).
-> > >> >
-> > >> > The majority of the patches in this series don't change the functionality of
-> > >> > the code at all (at least not intentionally).
-> > >> >
-> > >> > Please refer to the changelogs of individual patches for details.
-> > >> >
-> > >> > Thanks!
-> > >>
-> > >> Hi Rafael,
-> > >>
-> > >> I believe some of the interfaces removed here could be useful in the
-> > >> near future.
-> > >
-> > > I disagree.
-> > >
-> > >>  It goes back to the energy efficiency- (and IGP graphics
-> > >> performance-)improving series I submitted a while ago [1].  It relies on
-> > >> some mechanism for the graphics driver to report an I/O bottleneck to
-> > >> CPUFREQ, allowing it to make a more conservative trade-off between
-> > >> energy efficiency and latency, which can greatly reduce the CPU package
-> > >> energy usage of IO-bound applications (in some graphics benchmarks I've
-> > >> seen it reduced by over 40% on my ICL laptop), and therefore also allows
-> > >> TDP-bound applications to obtain a reciprocal improvement in throughput.
-> > >>
-> > >> I'm not particularly fond of the global PM QoS interfaces TBH, it seems
-> > >> like an excessively blunt hammer to me, so I can very much relate to the
-> > >> purpose of this series.  However the finer-grained solution I've
-> > >> implemented has seen some push-back from i915 and CPUFREQ devs due to
-> > >> its complexity, since it relies on task scheduler changes in order to
-> > >> track IO bottlenecks per-process (roughly as suggested by Peter Zijlstra
-> > >> during our previous discussions), pretty much in the spirit of PELT but
-> > >> applied to IO utilization.
-> > >>
-> > >> With that in mind I was hoping we could take advantage of PM QoS as a
-> > >> temporary solution [2], by introducing a global PM QoS class similar but
-> > >> with roughly converse semantics to PM_QOS_CPU_DMA_LATENCY, allowing
-> > >> device drivers to report a *lower* bound on CPU latency beyond which PM
-> > >> shall not bother to reduce latency if doing so would have negative
-> > >> consequences on the energy efficiency and/or parallelism of the system.
-> > >
-> > > So I really don't quite see how that could be responded to, by cpuidle
-> > > say.  What exactly do you mean by "reducing latency" in particular?
-> > >
-> >
-> > cpuidle wouldn't necessarily have to do anything about it since it would
-> > be intended merely as a hint that a device in the system other than the
-> > CPU has a bottleneck.  It could provide a lower bound for the wake-up
-> > latency of the idle states that may be considered by cpuidle.  It seems
-> > to me like it could be useful when a program can tell from the
-> > characteristics of the workload that a latency reduction below a certain
-> > time bound wouldn't materially affect the performance of the system
-> > (e.g. if you have 20 ms to render a GPU-bound frame, you may not care at
-> > all about the CPU taking a fraction of a millisecond more to wake up a
-> > few times each frame).
->
-> Well, this is not how cpuidle works.
->
-> What it does is to try to find the deepest idle state that makes sense
-> to let the CPU go into given all of the constraints etc.  IOW it never
-> tries to reduce the latency, it looks how far it can go with possible
-> energy savings given a specific latency limit (or no limit at all).
->
-> > For cpufreq I was planning to have it influence a time parameter of the
-> > utilization averaging done by the governor, which would allow it to have
-> > a more optimal response in the long term (in the sense of lowering the
-> > energy cost of performing the same work in the specified timeframe),
-> > even if such a large time parameter wouldn't normally be considered
-> > appropriate for utilization averaging due to latency concerns.
->
-> So this is fine in the schedutil case in principle, it but would not
-> work with HWP, because that doesn't take the scheduler's utilization
-> metrics into account.
->
-> To cover the HWP case you need to influence the min and max frequency
-> limits, realistically.
->
-> > >> Of course one would expect the current PM_QOS_CPU_DMA_LATENCY upper
-> > >> bound to take precedence over the new lower bound in cases where the
-> > >> former is in conflict with the latter.
-> > >
-> > > So that needs to be done on top of this series.
-> > >
-> > >> I can think of several alternatives to that which don't involve
-> > >> temporarily holding off your clean-up,
-> > >
-> > > The cleanup goes in.  Please work on top of it.
-> > >
-> >
-> > Hopefully we can come up with an alternative in that case.  TBH I'd love
-> > to see your clean-up go in too, but global PM QoS seemed fairly
-> > appealing as a way to split up my work so it could be reviewed
-> > incrementally, even though I'm aiming for a finer-grained solution than
-> > that.
->
-> Well, so "global PM QoS" really means a struct struct
-> pm_qos_constraints object with a global reader of its target_value.
->
-> Of course, pm_qos_update_target() is not particularly convenient to
-> use, so you'd need to wrap it into an _add/update/remove_request()
-> family of functions along the lines of the cpu_latency_qos_*() ones I
-> suppose and you won't need the _apply() thing.
->
-> > >> but none of them sound particularly exciting:
-> > >>
-> > >>  1/ Use an interface specific to CPUFREQ, pretty much like the one
-> > >>     introduced in my original submission [1].
-> > >
-> > > It uses frequency QoS already today, do you really need something else?
-> > >
-> >
-> > Yes.  I don't see how frequency QoS could be useful for this as-is,
-> > unless we're willing to introduce code in every device driver that takes
-> > advantage of this and have them monitor the utilization of every CPU in
-> > the system, so they can calculate an appropriate max frequency
-> > constraint -- One which we can be reasonably certain won't hurt the
-> > long-term performance of the CPU cores these constraints are being
-> > placed on.
->
-> I'm not really sure if I understand you correctly.
->
-> The frequency QoS in cpufreq is a way to influence the min and max
-> freq limits used by it for each CPU.  That is done in a couple of
-> places like store_max/min_perf_pct() in intel_pstate or
-> processor_set_cur_state() (I guess the latter would be close to what
-> you think about, but the other way around - you seem to want to
-> influence the min and not the max).
+On Thu 13-02-20 10:52:49, Tejun Heo wrote:
+> Hello,
+> 
+> On Thu, Feb 13, 2020 at 04:47:31PM +0100, Michal Hocko wrote:
+> > Well, I would tend to agree but I can see an existing cgroup hierarchy
+> > imposed by systemd and that is more about "logical" organization of
+> > processes based on their purpose than anything resembling resources.
+> > So what can we do about that to make it all work?
+> 
+> systemd right now isn't configuring any resource control by default,
+> so I'm not sure why it is relevant in this discussion.
 
-It looks like *I* got this part the other way around. :-/
+AFAIK systemd already offers knobs to configure resource controls [1].
+Besides that we are talking about memcg features which are available only
+unified hieararchy and that is what systemd is using already.
 
-I think that your use case is almost equivalent to the thermal
-pressure one, so you'd want to limit the max and so that would be
-something similar to store_max_perf_pct() with its input side hooked
-up to a QoS list.
+> You gotta
+> change the layout to configure resource control no matter what and
+> it's pretty easy to do. systemd folks are planning to integrate higher
+> level resource control features, so my expectation is that the default
+> layout is gonna change as it develops.
 
-But it looks like that QoS list would rather be of a "reservation"
-type, so a request added to it would mean something like "leave this
-fraction of power that appears to be available to the CPU subsystem
-unused, because I need it for a different purpose".  And in principle
-there might be multiple requests in there at the same time and those
-"reservations" would add up.  So that would be a kind of "limited sum"
-QoS type which wasn't even there before my changes.
+Do you have any pointers to those discussions? I am not really following
+systemd development.
 
-A user of that QoS list might then do something like
+Anyway, I am skeptical that systemd can do anything much more clever
+than placing cgroups with a resource control under the root cgroup. At
+least not without some tagging which workloads are somehow related.
 
-ret = cpu_power_reserve_add(1, 4);
+That being said, I do not really blame systemd here. We are not making
+their life particularly easy TBH.
 
-meaning that it wants 25% of the "potential" CPU power to be not
-utilized by CPU performance scaling and that could affect the
-scheduler through load modifications (kind of along the thermal
-pressure patchset discussed some time ago) and HWP (as well as the
-non-HWP intel_pstate by preventing turbo frequencies from being used
-etc).
+[1] https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html
+-- 
+Michal Hocko
+SUSE Labs
