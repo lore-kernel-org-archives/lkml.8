@@ -2,55 +2,57 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916C9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D6F24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B22C24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609258;
-	bh=yRnA6JdzSxs+BXzyZy2xTQIqsLKnilJe/TavlJFPZ/s=;
+	s=default; t=1581609263;
+	bh=mPnSoR/YyvQL2wOzJz4i83uyE95FR0NBKs0Au3JO9XM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcUc/K1OtrfOdvhiZGBh3w/NFSR7awzitxqUcPKtRF8UvHA9eRkYPX51vCCqqfidi
-	 I/noHsNEFd2CAo+EOuVfE94z7CGf2gklfdD4QWN/H8n82xc0iP866mRq+V+0kw0TqK
-	 347zp2BobUBxBM/L8s5TbhHEQNAS43Zzq6m/7N90=
+	b=Mk1I4HiIEf5gZL31oyaxsN0CU5wvWR4yJAPFeGiAW1Mmiu61aK8Wyn9ZVRnC/CxjA
+	 3wmA7velmzsfFMUwdd684kj0gbD3v75rmXI6fDvUdh0NMPxCyelhG2aawAiJskENUz
+	 eRGY7Ms+4IplpS1HjJ3NVDo9V0MFL/m+qZqd7uLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgBMPZ5 (ORCPT
+        id S2388263AbgBMPyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:54:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbgBMPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:12 -0500
+        id S1728371AbgBMPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:55 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 270AC246B8;
-        Thu, 13 Feb 2020 15:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90ACE24693;
+        Thu, 13 Feb 2020 15:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607451;
-        bh=yRnA6JdzSxs+BXzyZy2xTQIqsLKnilJe/TavlJFPZ/s=;
+        s=default; t=1581607554;
+        bh=mPnSoR/YyvQL2wOzJz4i83uyE95FR0NBKs0Au3JO9XM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlVuJeG+RsefnrF9AeHYRDBiaOvTIYtUH8jgNP5e/gSSHEP12itGthqToxcKpPyhc
-         FohIW9UyEiraXMGIqk3fAqA/jWHKEIWM3wyGjBAteJoZG500nyisT25n4cJZu3JK/B
-         mf88udR6/wGrRNVlCRh4HXaYKfY8Pi1iL//kJ1tM=
+        b=2CR4C+6RuC+eEzihfNcifoqGbo/Fdb/yT0LkCgDWIoVF6A+CfQlm7x0Fl7U0tYZj3
+         b4FSE8IHSyit5pvt67JInJrtsGBku8NKcTBRFUqv3BiN0C/viZ1RwcwQIsVcb4+YoU
+         GVAyJTeAavNQwHrps51CYY45IQKjLYie02Ky6m/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Meyer <thomas@m3y3r.de>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 078/116] NFS: Fix bool initialization/comparison
-Date:   Thu, 13 Feb 2020 07:20:22 -0800
-Message-Id: <20200213151913.139663516@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 139/173] perf/core: Fix mlock accounting in perf_mmap()
+Date:   Thu, 13 Feb 2020 07:20:42 -0800
+Message-Id: <20200213152006.863124046@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,113 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Meyer <thomas@m3y3r.de>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit 6089dd0d731028531fb1148be9fd33274ff90da4 ]
+commit 003461559ef7a9bd0239bae35a22ad8924d6e9ad upstream.
 
-Bool initializations should use true and false. Bool tests don't need
-comparisons.
+Decreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
+a perf ring buffer may lead to an integer underflow in locked memory
+accounting. This may lead to the undesired behaviors, such as failures in
+BPF map creation.
 
-Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Address this by adjusting the accounting logic to take into account the
+possibility that the amount of already locked memory may exceed the
+current limit.
+
+Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
+Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200123181146.2238074-1-songliubraving@fb.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/nfs/callback_proc.c |  2 +-
- fs/nfs/dir.c           | 10 +++++-----
- fs/nfs/nfs4client.c    |  2 +-
- fs/nfs/pnfs.c          |  2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ kernel/events/core.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index 9d7537446260b..0d4a56c77a1a9 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -419,7 +419,7 @@ static bool referring_call_exists(struct nfs_client *clp,
- 				  uint32_t nrclists,
- 				  struct referring_call_list *rclists)
- {
--	bool status = 0;
-+	bool status = false;
- 	int i, j;
- 	struct nfs4_session *session;
- 	struct nfs4_slot_table *tbl;
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 5936c54ac5fdb..2c6e64dce2bdb 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -289,7 +289,7 @@ int nfs_readdir_search_for_pos(struct nfs_cache_array *array, nfs_readdir_descri
- 	desc->cache_entry_index = index;
- 	return 0;
- out_eof:
--	desc->eof = 1;
-+	desc->eof = true;
- 	return -EBADCOOKIE;
- }
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5441,7 +5441,15 @@ accounting:
+ 	 */
+ 	user_lock_limit *= num_online_cpus();
  
-@@ -343,7 +343,7 @@ int nfs_readdir_search_for_cookie(struct nfs_cache_array *array, nfs_readdir_des
- 	if (array->eof_index >= 0) {
- 		status = -EBADCOOKIE;
- 		if (*desc->dir_cookie == array->last_cookie)
--			desc->eof = 1;
-+			desc->eof = true;
- 	}
- out:
- 	return status;
-@@ -812,7 +812,7 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
- 		ent = &array->array[i];
- 		if (!dir_emit(desc->ctx, ent->string.name, ent->string.len,
- 		    nfs_compat_user_ino64(ent->ino), ent->d_type)) {
--			desc->eof = 1;
-+			desc->eof = true;
- 			break;
- 		}
- 		desc->ctx->pos++;
-@@ -824,7 +824,7 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
- 			ctx->duped = 1;
- 	}
- 	if (array->eof_index >= 0)
--		desc->eof = 1;
-+		desc->eof = true;
+-	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
++	user_locked = atomic_long_read(&user->locked_vm);
++
++	/*
++	 * sysctl_perf_event_mlock may have changed, so that
++	 *     user->locked_vm > user_lock_limit
++	 */
++	if (user_locked > user_lock_limit)
++		user_locked = user_lock_limit;
++	user_locked += user_extra;
  
- 	nfs_readdir_release_array(desc->page);
- out:
-@@ -925,7 +925,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 		if (res == -EBADCOOKIE) {
- 			res = 0;
- 			/* This means either end of directory */
--			if (*desc->dir_cookie && desc->eof == 0) {
-+			if (*desc->dir_cookie && !desc->eof) {
- 				/* Or that the server has 'lost' a cookie */
- 				res = uncached_readdir(desc);
- 				if (res == 0)
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 1ec6dd4f3e2e4..3ee60c5332179 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -847,7 +847,7 @@ nfs4_find_client_sessionid(struct net *net, const struct sockaddr *addr,
- 
- 	spin_lock(&nn->nfs_client_lock);
- 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
--		if (nfs4_cb_match_client(addr, clp, minorversion) == false)
-+		if (!nfs4_cb_match_client(addr, clp, minorversion))
- 			continue;
- 
- 		if (!nfs4_has_session(clp))
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 0e008db16b169..c3abf92adfb7d 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1436,7 +1436,7 @@ pnfs_lseg_range_match(const struct pnfs_layout_range *ls_range,
- 	if ((range->iomode == IOMODE_RW &&
- 	     ls_range->iomode != IOMODE_RW) ||
- 	    (range->iomode != ls_range->iomode &&
--	     strict_iomode == true) ||
-+	     strict_iomode) ||
- 	    !pnfs_lseg_range_intersecting(ls_range, range))
- 		return 0;
- 
--- 
-2.20.1
-
+ 	if (user_locked > user_lock_limit)
+ 		extra = user_locked - user_lock_limit;
 
 
