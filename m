@@ -2,269 +2,387 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B94EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E773C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10823222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB62222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CMUoUcZt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvgDCrN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgBML6V (ORCPT
+        id S1729913AbgBMMAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:58:21 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:14788 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729531AbgBML6V (ORCPT
+        Thu, 13 Feb 2020 07:00:01 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55035 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgBMMAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:58:21 -0500
-X-UUID: ba38d3bd9f724868a8ec3a028bb1f1fb-20200213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=YIOQed25AlA4dtC3yOjlvliYV3ftRursuflJgK3TH+I=;
-        b=CMUoUcZt1FeH8CIBa2pCz6bR0dOxl9RSElyPJz77ldaGHzrJ+rwH51q7UawXT8BzKBODKOBugoMoYXHLBJurXTPpA/zy1uuqAem0+/wmjI3tdSfEu1A6QloVS8OUj6yZfQo4lMqp2BgOqlC4NhEqgUXx5OgrVMI7zQQ8dU2pToM=;
-X-UUID: ba38d3bd9f724868a8ec3a028bb1f1fb-20200213
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1063954608; Thu, 13 Feb 2020 19:58:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 13 Feb 2020 19:58:14 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 13 Feb 2020 19:57:08 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH v2] mm/page_owner: print greatest memory consumer when OOM panic occurs
-Date:   Thu, 13 Feb 2020 19:58:13 +0800
-Message-ID: <20200213115813.15611-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 13 Feb 2020 07:00:01 -0500
+Received: by mail-pj1-f65.google.com with SMTP id dw13so2292970pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 04:00:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xnv9vcJaJ4RlveRKToDkYvSVpq7pujagpdh/v4epNFU=;
+        b=MvgDCrN6Rt30rPxtVLP6viebK9w3JJ359bCVm42oY401byO1RpR1SfyVW1fORNChy1
+         xT/CgOuKHsn6gU8qSn7pR9o/y3HRWLevdwEi2DUcq5eMtUDU2e/lPsnhYUVtuSl33wxu
+         68DxPa+lSNwqgFHa5SqImkj1C0tHnulKnghv0fHz4C0fu3X8wK6nm8K4eXlXZG8BPBur
+         U80udLDF2WT2KWlw11aajMcdsVwgrbIKjY+hsUlVG6fsjDQ/+GfLD20lMPms5wj65cAP
+         FBZ/40HMh/Ma9CIqfqWVL0tjQCpK/PrIm5P8ApVcMMqYMlBqXjdzuTUg7qkp0tQ8Fz7z
+         yLeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xnv9vcJaJ4RlveRKToDkYvSVpq7pujagpdh/v4epNFU=;
+        b=tKksojxykBE5tfp8h0weUH8lyavc0hlRwnK9YU1Mf1ORWt27BdIasfPNLiWB8kNNbM
+         rt7Rg4hVMHU9OM8mb1ItMVQqh95UhHmSBMrok15EyzmIvO4AAx0x4ifIVQULfgo7OoqH
+         1YxAH1ax42aVAUIfoByUtZD8dNQSQMPd1IVo1Ex+4fLu3aUYOF7wmVJB13DizYYnPQg4
+         VV2gXibCUi9Dmr+Vy0GrTKlZAXhiNgF8cOlcYuPKyj8DrXkVFAnW6FzgwIDofCG/Lc5U
+         beAI0qTodkRkhNHZ0523AFqjUwFW09wgOZEgApsdnaTVWvPggucJUyPmZG5Ri88D6Dl8
+         6/RQ==
+X-Gm-Message-State: APjAAAVJHdy9T2cjZkWkReqKQExtGPCf95ahVHF6AXRxdUNDmpHH2KSG
+        mEXOYMhiP9tBnP3y3e3SxAw=
+X-Google-Smtp-Source: APXvYqzzsUDvn0Nu0CrpQv0rcR200zqrZ1/2L0Iww16mmu5xqpE9XiMfM9AxTfZmf9GzYoZDWf9MeA==
+X-Received: by 2002:a17:90a:8a8f:: with SMTP id x15mr4879055pjn.87.1581595200123;
+        Thu, 13 Feb 2020 04:00:00 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id e4sm2797045pgg.94.2020.02.13.03.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 03:59:59 -0800 (PST)
+Date:   Thu, 13 Feb 2020 20:59:57 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
+Message-ID: <20200213115957.GC36551@google.com>
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <20200128161948.8524-3-john.ogness@linutronix.de>
+ <20200213090757.GA36551@google.com>
+ <87v9oarfg4.fsf@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9oarfg4.fsf@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCB3YXMgcG9zdGVkIGluIDIwMTkvMTIvMjMgWzFdIGFuZCBuYWNrZWQgYnkgUWlh
-biBDYWkgWzJdDQpiZWNhdXNlIFFpYW4gdGhvdWdodCB0aGlzIGFwcHJvYWNoIGlzIG5vdCBhIGdl
-bmVyYWwgc29sdXRpb24gYW5kIGl0DQp3b3JrcyBvbmx5IGZvciBzb21lIHNwZWNpYWwgY2FzZXMu
-DQoNClRoYW5rcyBmb3IgUWlhbidzIGNvbW1lbnQgYnV0IEkgdGhpbmsgdGhlIHBhdGNoIHByb3Zp
-ZGVzIGFuIGltcG9ydGFudA0KYW5kIHN0cmFpZ2h0Zm9yd2FyZCBpbmZvcm1hdGlvbiB0aGF0IGlz
-IG5vdCBwcmludGVkIGluIGN1cnJlbnQgT09NDQpsb2cgLSB0aGUgZ3JlYXRlc3QgbWVtb3J5IGNv
-bnN1bWVyIHNvIGl0IGxvb2tzIGxpa2UgZm9yIHNvbWUgc3BlY2lhbA0KY2FzZXMuIEkgZGVjaWRl
-IHRvIHJlcG9zdCB0aGlzIHBhdGNoIGFuZCBzZWUgaWYgaXQgaXMgcG9zc2libGUgdG8NCnJlY29u
-c2lkZXIgdGhpcyBhcHByb2FjaC4NCg0KV2UgaGF2ZSBzZWVuIGRpZmZlcmVudCB0eXBlcyBvZiBP
-T00gcGFuaWNzOg0KYSkgT09NIHBhbmljcyBhcmUgY2F1c2VkIGJ5IG1lbW9yeSBmcmFnbWVudGF0
-aW9uLiAodW5hYmxlIHRvDQogIGFsbG9jYXRlIGEgbGFyZ2UgY29udGlndW91cyBtZW1vcnkpIFsz
-LCA0XS4NCmIpIEFibm9ybWFsIHNsYWIgdXNhZ2UsIHdlIGhhdmUgdG8gcmVwcm9kdWNlIHRoZSBp
-c3N1ZSB3aXRoDQogIENPTkZJR19LTUVNTEVBSy4NCmMpIEEgcGFpbmZ1bCBPT00gcGFuaWM6IGV2
-ZXJ5IG51bWJlciBpbiBPT00gcmVwb3J0IGxvb2tzIGZpbmUgYnV0IE9PTQ0KICBwYW5pYyBvY2N1
-cnMgYW5kIGl0IGlzIG5vdCBhIG1lbW9yeSBmcmFnbWVudGF0aW9uIGlzc3VlLiBXZSB3aWxsIHVz
-ZQ0KICBDT05GSUdfUEFHRV9PV05FUiBhbmQgcmVwcm9kdWNlIHRoaXMgY2FzZSwgYnV0IGl0IHRh
-a2VzIGEgbG90IG9mDQogIHRpbWUgdG8gZG8gcmVwcm9kdWNlIHRoZSBpc3N1ZS4gKHRoZSBtb3Rp
-dmF0aW9uIG9mIHRoaXMgcGF0Y2gpDQoNCkZvciAoYiwgYyksIEkgYXNzdW1lIHRoYXQga25vd2lu
-ZyB0aGUgZ3JlYXRlc3QgbWVtb3J5IGNvbnN1bWVyIGlzIHVzZWZ1bCwNCnNvIEkgYXBwbGllZCB0
-aGUgcGF0Y2ggYW5kIGNvbGxlY3RlZCBpbnRlcm5hbCB0ZXN0IGRhdGEgc2luY2UgMjAxOS81LA0K
-dGhlIHJlc3VsdCBzaG93cyB0aGF0IHRoZSBpbmZvcm1hdGlvbiBpcyB1c2VmdWwgaW4gOC8zOSBP
-T00gcGFuaWMNCnJlcG9ydHMuDQoNClRoZXJlIGFyZSBhbHJlYWR5IG1hbnkgdXNlZnVsIG51bWJl
-cnMgaW4gdGhlIE9PTSBrZXJuZWwgcmVwb3J0LCB0aGlzDQpwYXRjaCBpcyB0cnlpbmcgdG8gYWRk
-ICJ0aGUgZ3JlYXRlc3QgbWVtb3J5IGNvbnN1bWVyIiB0byB0aGUgcmVwb3J0Lg0KTGlrZSBRaWFu
-J3MgY29tbWVudCwgaXQgaXMgInNpdHVhdGlvbmFsIiBidXQgSSB0aGluayBpdCBjYW4gaW1wcm92
-ZSB0aGUNCk9PTSByZXBvcnQuDQoNClRoYW5rcyBhZ2FpbiBmb3IgUWlhbidzIGNvbW1lbnQuIEkg
-aG9wZSBJIG1hZGUgUWlhbidzIHBvaW50IGNsZWFyIGVub3VnaC4NCg0KWzFdIGh0dHBzOi8vbGtt
-bC5vcmcvbGttbC8yMDE5LzEyLzIzLzE4NQ0KWzJdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5
-LzEyLzI5LzEwMjMNClszXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8xMS8xOC8xMQ0KWzRd
-IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4LzExLzEvMTI1MQ0KDQpNb3RpdmF0aW9uOg0KLS0t
-LS0tLS0tLS0NCg0KV2hlbiBkZWJ1ZyB3aXRoIGEgT09NIGtlcm5lbCBwYW5pYywgaXQgaXMgZGlm
-ZmljdWx0IHRvIGtub3cgdGhlDQptZW1vcnkgYWxsb2NhdGVkIGJ5IGtlcm5lbCBkcml2ZXJzIGJ5
-IHVzaW5nIGFsbG9jX3BhZ2VzKCkgb3Igdm1hbGxvYygpDQpieSBjaGVja2luZyB0aGUgTWVtLUlu
-Zm8gb3IgTm9kZS9ab25lIGluZm8uIEZvciBleGFtcGxlOg0KDQogIE1lbS1JbmZvOg0KICBhY3Rp
-dmVfYW5vbjo1MTQ0IGluYWN0aXZlX2Fub246MTYxMjAgaXNvbGF0ZWRfYW5vbjowDQogICBhY3Rp
-dmVfZmlsZTowIGluYWN0aXZlX2ZpbGU6MCBpc29sYXRlZF9maWxlOjANCiAgIHVuZXZpY3RhYmxl
-OjAgZGlydHk6MCB3cml0ZWJhY2s6MCB1bnN0YWJsZTowDQogICBzbGFiX3JlY2xhaW1hYmxlOjcz
-OSBzbGFiX3VucmVjbGFpbWFibGU6NDQyNDY5DQogICBtYXBwZWQ6NTM0IHNobWVtOjIxMDUwIHBh
-Z2V0YWJsZXM6MjEgYm91bmNlOjANCiAgIGZyZWU6MTQ4MDggZnJlZV9wY3A6MzM4OSBmcmVlX2Nt
-YTo4MTI4DQoNCiAgTm9kZSAwIGFjdGl2ZV9hbm9uOjIwNTc2a0IgaW5hY3RpdmVfYW5vbjo2NDQ4
-MGtCIGFjdGl2ZV9maWxlOjBrQg0KICBpbmFjdGl2ZV9maWxlOjBrQiB1bmV2aWN0YWJsZTowa0Ig
-aXNvbGF0ZWQoYW5vbik6MGtCIGlzb2xhdGVkKGZpbGUpOjBrQg0KICBtYXBwZWQ6MjEzNmtCIGRp
-cnR5OjBrQiB3cml0ZWJhY2s6MGtCIHNobWVtOjg0MjAwa0Igc2htZW1fdGhwOiAwa0INCiAgc2ht
-ZW1fcG1kbWFwcGVkOiAwa0IgYW5vbl90aHA6IDBrQiB3cml0ZWJhY2tfdG1wOjBrQiB1bnN0YWJs
-ZTowa0INCiAgYWxsX3VuciBlY2xhaW1hYmxlPyB5ZXMNCg0KICBOb2RlIDAgRE1BIGZyZWU6MTQ0
-NzZrQiBtaW46MjE1MTJrQiBsb3c6MjY4ODhrQiBoaWdoOjMyMjY0a0INCiAgcmVzZXJ2ZWRfaGln
-aGF0b21pYzowS0IgYWN0aXZlX2Fub246MGtCIGluYWN0aXZlX2Fub246MGtCDQogIGFjdGl2ZV9m
-aWxlOiAwa0IgaW5hY3RpdmVfZmlsZTowa0IgdW5ldmljdGFibGU6MGtCIHdyaXRlcGVuZGluZzow
-a0INCiAgcHJlc2VudDoxMDQ4NTc2a0IgbWFuYWdlZDo5NTI3MzZrQiBtbG9ja2VkOjBrQiBrZXJu
-ZWxfc3RhY2s6MGtCDQogIHBhZ2V0YWJsZXM6MGtCIGJvdW5jZTowa0IgZnJlZV9wY3A6MjcxNmtC
-IGxvY2FsX3BjcDowa0IgZnJlZV9jbWE6MGtCDQoNClRoZSBpbmZvcm1hdGlvbiBhYm92ZSB0ZWxs
-cyB1cyB0aGUgbWVtb3J5IHVzYWdlIG9mIHRoZSBrbm93biBtZW1vcnkNCmNhdGVnb3JpZXMgYW5k
-IHdlIGNhbiBjaGVjayB0aGUgYWJub3JtYWwgbGFyZ2UgbnVtYmVycy4gSG93ZXZlciwgaWYgYQ0K
-bWVtb3J5IGxlYWthZ2UgY2Fubm90IGJlIG9ic2VydmVkIGluIHRoZSBjYXRlZ29yaWVzIGFib3Zl
-LCB3ZSBuZWVkIHRvDQpyZXByb2R1Y2UgdGhlIGlzc3VlIHdpdGggQ09ORklHX1BBR0VfT1dORVIu
-DQoNCkl0IGlzIHBvc3NpYmxlIHRvIHJlYWQgdGhlIHBhZ2Ugb3duZXIgaW5mb3JtYXRpb24gZnJv
-bSBjb3JlZHVtcCBmaWxlcy4NCkhvd2V2ZXIsIGNvcmVkdW1wIGZpbGVzIG1heSBub3QgYWx3YXlz
-IGJlIGF2YWlsYWJsZSwgc28gbXkgYXBwcm9hY2ggaXMNCnRvIHByaW50IG91dCB0aGUgZ3JlYXRl
-c3QgcGFnZSBjb25zdW1lciB3aGVuIE9PTSBrZXJuZWwgcGFuaWMgb2NjdXJzLg0KDQpUaGUgaGV1
-cmlzdGljIGFwcHJvYWNoIGFzc3VtZXMgdGhhdCB0aGUgT09NIGtlcm5lbCBwYW5pYyBpcyBjYXVz
-ZWQgYnkNCmEgc2luZ2xlIGJhY2t0cmFjZS4gVGhlIGFzc3VtcHRpb24gaXMgbm90IGFsd2F5cyB0
-cnVlIGJ1dCBpdCB3b3JrcyBpbg0KbWFueSBjYXNlcyBkdXJpbmcgb3VyIHRlc3QuDQoNCldlIGhh
-dmUgdGVzdGVkIHRoaXMgaGV1cmlzdGljIGFwcHJvYWNoIHNpbmNlIDIwMTkvNSBvbiBhbmRyb2lk
-IGRldmljZXMuDQpJbiAzOSBpbnRlcm5hbCBPT00ga2VybmVsIHBhbmljIHJlcG9ydHM6DQoNCjMx
-LzM5OiBjYW4gYmUgYW5hbHl6ZWQgYnkgdXNpbmcgZXhpc3RpbmcgaW5mb3JtYXRpb24NCjgvMzk6
-IG5lZWQgcGFnZSBvd25lciBmb3JtYXRpb24gYW5kIHRoZSBoZXVyaXN0aWMgYXBwcm9hY2ggaW4g
-dGhpcyBwYXRjaA0KcHJpbnRzIHRoZSBjb3JyZWN0IGJhY2t0cmFjZXMgb2YgYWJub3JtYWwgbWVt
-b3J5IGFsbG9jYXRpb25zLiBObyBuZWVkIHRvDQpyZXByb2R1Y2UgdGhlIGlzc3Vlcy4NCg0KT3V0
-cHV0Og0KLS0tLS0tLQ0KDQpUaGlzIG91dHB1dCBiZWxvdyBpcyBnZW5lcmF0ZWQgYnkgYSBkdW1t
-eSBpbmZpbml0ZQ0Ka21hbGxvYygyMDQ4LCBHRlBfS0VSTkVMKSBsb29wIG9uIFFFTVUgd2l0aCAy
-MDQ4TUIgRFJBTS4NCg0KWyAgIDEyLjkyODg3OF0gT09NOiBncmVhdGVzdCBtZW1vcnkgY29uc3Vt
-ZXI6IDQzMTM3NiBwYWdlcyBhcmUgYWxsb2NhdGVkIGZyb206DQpbICAgMTIuOTI5MTEyXSAgcHJl
-cF9uZXdfcGFnZSsweDUwLzB4MTgwDQpbICAgMTIuOTI5MjIwXSAgZ2V0X3BhZ2VfZnJvbV9mcmVl
-bGlzdCsweDIwYy8weDI0OA0KWyAgIDEyLjkyOTMzMF0gIF9fYWxsb2NfcGFnZXNfbm9kZW1hc2sr
-MHgxNTgvMHgyNTQNClsgICAxMi45Mjk0MzNdICBhbGxvY19wYWdlc19jdXJyZW50KzB4MTA0LzB4
-MTkwDQpbICAgMTIuOTI5NTI2XSAgYWxsb2Nfc2xhYl9wYWdlKzB4MTFjLzB4NDY0DQpbICAgMTIu
-OTMwMDQzXSAgYWxsb2NhdGVfc2xhYisweDg4LzB4NGFjDQpbICAgMTIuOTMwMTMzXSAgX19fc2xh
-Yl9hbGxvYysweDFhMC8weDMxNA0KWyAgIDEyLjkzMDIxN10gIGttZW1fY2FjaGVfYWxsb2MrMHgy
-NDQvMHgyNTANClsgICAxMi45MzAzMTddICBtZW1pbmZvX3Byb2Nfc2hvdysweDFjLzB4MjANClsg
-ICAxMi45MzA0MTJdICBzZXFfcmVhZCsweDFkOC8weDQ3NA0KWyAgIDEyLjkzMDQ5MF0gIHByb2Nf
-cmVnX3JlYWQrMHg4NC8weGYwDQpbICAgMTIuOTMwNTcyXSAgX192ZnNfcmVhZCsweDQ0LzB4MTZj
-DQpbICAgMTIuOTMwNjQ2XSAgdmZzX3JlYWQrMHhiOC8weDE1NA0KWyAgIDEyLjkzMDcxN10gIGtz
-eXNfcmVhZCsweDcwLzB4ZDgNClsgICAxMi45MzA3ODhdICBfX2FybTY0X3N5c19yZWFkKzB4MTgv
-MHgyMA0KWyAgIDEyLjkzMDg3NF0gIGVsMF9zdmNfY29tbW9uKzB4OTgvMHgxNTANClsgICAxMi45
-MzE2NjhdIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBTeXN0ZW0gaXMgZGVhZGxvY2tlZCBv
-biBtZW1vcnkNCg0KQ2hhbmdlIHNpbmNlIHYxOg0KUmVwbGFjZSAibGFyZ2VzdCIgd2l0aCAiZ3Jl
-YXRlc3QiDQoNCkNjOiBRaWFuIENhaSA8Y2FpQGxjYS5wdz4NCkNjOiBNaWNoYWwgSG9ja28gPG1o
-b2Nrb0BzdXNlLmNvbT4NCg0KU2lnbmVkLW9mZi1ieTogTWlsZXMgQ2hlbiA8bWlsZXMuY2hlbkBt
-ZWRpYXRlay5jb20+DQotLS0NCiBpbmNsdWRlL2xpbnV4L29vbS5oIHwgICAxICsNCiBtbS9vb21f
-a2lsbC5jICAgICAgIHwgICA0ICsrDQogbW0vcGFnZV9vd25lci5jICAgICB8IDEzNSArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwg
-MTQwIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvb29tLmggYi9p
-bmNsdWRlL2xpbnV4L29vbS5oDQppbmRleCBjNjk2YzI2NWYwMTkuLjk5ZjU3MjRkMjFkMyAxMDA2
-NDQNCi0tLSBhL2luY2x1ZGUvbGludXgvb29tLmgNCisrKyBiL2luY2x1ZGUvbGludXgvb29tLmgN
-CkBAIC0xMjEsNiArMTIxLDcgQEAgZXh0ZXJuIGJvb2wgb29tX2tpbGxlcl9kaXNhYmxlKHNpZ25l
-ZCBsb25nIHRpbWVvdXQpOw0KIGV4dGVybiB2b2lkIG9vbV9raWxsZXJfZW5hYmxlKHZvaWQpOw0K
-IA0KIGV4dGVybiBzdHJ1Y3QgdGFza19zdHJ1Y3QgKmZpbmRfbG9ja190YXNrX21tKHN0cnVjdCB0
-YXNrX3N0cnVjdCAqcCk7DQorZXh0ZXJuIHZvaWQgcmVwb3J0X2dyZWF0ZXN0X3BhZ2VfY29uc3Vt
-ZXIodm9pZCk7DQogDQogLyogc3lzY3RscyAqLw0KIGV4dGVybiBpbnQgc3lzY3RsX29vbV9kdW1w
-X3Rhc2tzOw0KZGlmZiAtLWdpdCBhL21tL29vbV9raWxsLmMgYi9tbS9vb21fa2lsbC5jDQppbmRl
-eCBkZmMzNTc2MTRlNTYuLjkwY2FlMjlkMDIyMyAxMDA2NDQNCi0tLSBhL21tL29vbV9raWxsLmMN
-CisrKyBiL21tL29vbV9raWxsLmMNCkBAIC00Myw2ICs0Myw3IEBADQogI2luY2x1ZGUgPGxpbnV4
-L2t0aHJlYWQuaD4NCiAjaW5jbHVkZSA8bGludXgvaW5pdC5oPg0KICNpbmNsdWRlIDxsaW51eC9t
-bXVfbm90aWZpZXIuaD4NCisjaW5jbHVkZSA8bGludXgvb25jZS5oPg0KIA0KICNpbmNsdWRlIDxh
-c20vdGxiLmg+DQogI2luY2x1ZGUgImludGVybmFsLmgiDQpAQCAtMTEwMSw2ICsxMTAyLDkgQEAg
-Ym9vbCBvdXRfb2ZfbWVtb3J5KHN0cnVjdCBvb21fY29udHJvbCAqb2MpDQogCWlmICghb2MtPmNo
-b3Nlbikgew0KIAkJZHVtcF9oZWFkZXIob2MsIE5VTEwpOw0KIAkJcHJfd2FybigiT3V0IG9mIG1l
-bW9yeSBhbmQgbm8ga2lsbGFibGUgcHJvY2Vzc2VzLi4uXG4iKTsNCisjaWZkZWYgQ09ORklHX1BB
-R0VfT1dORVINCisJCURPX09OQ0UocmVwb3J0X2dyZWF0ZXN0X3BhZ2VfY29uc3VtZXIpOw0KKyNl
-bmRpZg0KIAkJLyoNCiAJCSAqIElmIHdlIGdvdCBoZXJlIGR1ZSB0byBhbiBhY3R1YWwgYWxsb2Nh
-dGlvbiBhdCB0aGUNCiAJCSAqIHN5c3RlbSBsZXZlbCwgd2UgY2Fubm90IHN1cnZpdmUgdGhpcyBh
-bmQgd2lsbCBlbnRlcg0KZGlmZiAtLWdpdCBhL21tL3BhZ2Vfb3duZXIuYyBiL21tL3BhZ2Vfb3du
-ZXIuYw0KaW5kZXggMThlY2RlOWY0NWIyLi5lMTQ5N2I5ZWNhMDIgMTAwNjQ0DQotLS0gYS9tbS9w
-YWdlX293bmVyLmMNCisrKyBiL21tL3BhZ2Vfb3duZXIuYw0KQEAgLTEwLDYgKzEwLDggQEANCiAj
-aW5jbHVkZSA8bGludXgvbWlncmF0ZS5oPg0KICNpbmNsdWRlIDxsaW51eC9zdGFja2RlcG90Lmg+
-DQogI2luY2x1ZGUgPGxpbnV4L3NlcV9maWxlLmg+DQorI2luY2x1ZGUgPGxpbnV4L3N0YWNrdHJh
-Y2UuaD4NCisjaW5jbHVkZSA8bGludXgvaGFzaHRhYmxlLmg+DQogDQogI2luY2x1ZGUgImludGVy
-bmFsLmgiDQogDQpAQCAtMTksMTIgKzIxLDE2IEBADQogICovDQogI2RlZmluZSBQQUdFX09XTkVS
-X1NUQUNLX0RFUFRIICgxNikNCiANCisjZGVmaW5lIE9PTV9IQU5ETEVfSEFTSF9CSVRTCTEwDQor
-DQogc3RydWN0IHBhZ2Vfb3duZXIgew0KIAl1bnNpZ25lZCBzaG9ydCBvcmRlcjsNCiAJc2hvcnQg
-bGFzdF9taWdyYXRlX3JlYXNvbjsNCiAJZ2ZwX3QgZ2ZwX21hc2s7DQogCWRlcG90X3N0YWNrX2hh
-bmRsZV90IGhhbmRsZTsNCiAJZGVwb3Rfc3RhY2tfaGFuZGxlX3QgZnJlZV9oYW5kbGU7DQorCXN0
-cnVjdCBobGlzdF9ub2RlIG5vZGU7DQorCXVuc2lnbmVkIGxvbmcgcGFnZV9jb3VudDsgLyogbnVt
-YmVyIG9mIHBhZ2VzIHBvaW50cyB0byB0aGlzIGhhbmRsZSAqLw0KIH07DQogDQogc3RhdGljIGJv
-b2wgcGFnZV9vd25lcl9lbmFibGVkID0gZmFsc2U7DQpAQCAtMzMsNiArMzksOCBAQCBERUZJTkVf
-U1RBVElDX0tFWV9GQUxTRShwYWdlX293bmVyX2luaXRlZCk7DQogc3RhdGljIGRlcG90X3N0YWNr
-X2hhbmRsZV90IGR1bW15X2hhbmRsZTsNCiBzdGF0aWMgZGVwb3Rfc3RhY2tfaGFuZGxlX3QgZmFp
-bHVyZV9oYW5kbGU7DQogc3RhdGljIGRlcG90X3N0YWNrX2hhbmRsZV90IGVhcmx5X2hhbmRsZTsN
-CitzdGF0aWMgREVGSU5FX0hBU0hUQUJMRShvb21faGFuZGxlX2hhc2gsIE9PTV9IQU5ETEVfSEFT
-SF9CSVRTKTsNCitzdGF0aWMgc3RydWN0IHBhZ2Vfb3duZXIgKm1vc3RfcmVmZXJlbmNlZF9wYWdl
-X293bmVyOw0KIA0KIHN0YXRpYyB2b2lkIGluaXRfZWFybHlfYWxsb2NhdGVkX3BhZ2VzKHZvaWQp
-Ow0KIA0KQEAgLTQ4LDYgKzU2LDU3IEBAIHN0YXRpYyBpbnQgX19pbml0IGVhcmx5X3BhZ2Vfb3du
-ZXJfcGFyYW0oY2hhciAqYnVmKQ0KIH0NCiBlYXJseV9wYXJhbSgicGFnZV9vd25lciIsIGVhcmx5
-X3BhZ2Vfb3duZXJfcGFyYW0pOw0KIA0KK3N0YXRpYyBzdHJ1Y3QgaGxpc3RfaGVhZCAqZ2V0X2J1
-Y2tldChkZXBvdF9zdGFja19oYW5kbGVfdCBoYW5kbGUpDQorew0KKwl1bnNpZ25lZCBsb25nIGhh
-c2g7DQorDQorCWhhc2ggPSBoYXNoX2xvbmcoaGFuZGxlLCBPT01fSEFORExFX0hBU0hfQklUUyk7
-DQorCXJldHVybiAmb29tX2hhbmRsZV9oYXNoW2hhc2hdOw0KK30NCisNCisvKg0KKyAqIGxvb2t1
-cCBhIHBhZ2Vfb3duZXIgaW4gdGhlIGhhc2ggYnVja2V0DQorICovDQorc3RhdGljIHN0cnVjdCBw
-YWdlX293bmVyICpsb29rdXBfcGFnZV9vd25lcihkZXBvdF9zdGFja19oYW5kbGVfdCBoYW5kbGUs
-DQorCQkJCQkJc3RydWN0IGhsaXN0X2hlYWQgKmIpDQorew0KKwlzdHJ1Y3QgcGFnZV9vd25lciAq
-cGFnZV9vd25lcjsNCisNCisJaGxpc3RfZm9yX2VhY2hfZW50cnkocGFnZV9vd25lciwgYiwgbm9k
-ZSkgew0KKwkJaWYgKHBhZ2Vfb3duZXItPmhhbmRsZSA9PSBoYW5kbGUpDQorCQkJcmV0dXJuIHBh
-Z2Vfb3duZXI7DQorCX0NCisNCisJcmV0dXJuIE5VTEw7DQorfQ0KKw0KKy8qDQorICogSW5jcmVh
-c2UgdGhlIHBhZ2Vfb3duZXItPnBhZ2VfY291bnQgaW4gdGhlIGhhbmRsZV9oYXNoIGJ5ICgxIDw8
-IG9yZGVyKQ0KKyAqLw0KK3N0YXRpYyB2b2lkIGluY3JlYXNlX2hhbmRsZV9jb3VudChzdHJ1Y3Qg
-cGFnZV9vd25lciAqcGFnZV9vd25lcikNCit7DQorCXN0cnVjdCBobGlzdF9oZWFkICpidWNrZXQ7
-DQorCXN0cnVjdCBwYWdlX293bmVyICpvd25lcjsNCisNCisJYnVja2V0ID0gZ2V0X2J1Y2tldChw
-YWdlX293bmVyLT5oYW5kbGUpOw0KKw0KKwlvd25lciA9IGxvb2t1cF9wYWdlX293bmVyKHBhZ2Vf
-b3duZXItPmhhbmRsZSwgYnVja2V0KTsNCisNCisJaWYgKCFvd25lcikgew0KKwkJb3duZXIgPSBw
-YWdlX293bmVyOw0KKwkJaGxpc3RfYWRkX2hlYWQoJnBhZ2Vfb3duZXItPm5vZGUsIGJ1Y2tldCk7
-DQorCX0NCisNCisJLyogaW5jcmVhc2UgcGFnZSBjb3VudGVyICovDQorCW93bmVyLT5wYWdlX2Nv
-dW50ICs9ICgxIDw8IG93bmVyLT5vcmRlcik7DQorDQorCS8qIHVwZGF0ZSBtb3N0X3JlZmVyZW5j
-ZWRfcGFnZV9vd25lciAqLw0KKwlpZiAoIW1vc3RfcmVmZXJlbmNlZF9wYWdlX293bmVyKQ0KKwkJ
-bW9zdF9yZWZlcmVuY2VkX3BhZ2Vfb3duZXIgPSBvd25lcjsNCisJaWYgKG1vc3RfcmVmZXJlbmNl
-ZF9wYWdlX293bmVyLT5wYWdlX2NvdW50IDwgb3duZXItPnBhZ2VfY291bnQpDQorCQltb3N0X3Jl
-ZmVyZW5jZWRfcGFnZV9vd25lciA9IG93bmVyOw0KK30NCisNCiBzdGF0aWMgYm9vbCBuZWVkX3Bh
-Z2Vfb3duZXIodm9pZCkNCiB7DQogCXJldHVybiBwYWdlX293bmVyX2VuYWJsZWQ7DQpAQCAtMTcy
-LDYgKzIzMSw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBfX3NldF9wYWdlX293bmVyX2hhbmRsZShz
-dHJ1Y3QgcGFnZSAqcGFnZSwNCiAJCXBhZ2Vfb3duZXItPm9yZGVyID0gb3JkZXI7DQogCQlwYWdl
-X293bmVyLT5nZnBfbWFzayA9IGdmcF9tYXNrOw0KIAkJcGFnZV9vd25lci0+bGFzdF9taWdyYXRl
-X3JlYXNvbiA9IC0xOw0KKwkJcGFnZV9vd25lci0+cGFnZV9jb3VudCA9IDA7DQogCQlfX3NldF9i
-aXQoUEFHRV9FWFRfT1dORVIsICZwYWdlX2V4dC0+ZmxhZ3MpOw0KIAkJX19zZXRfYml0KFBBR0Vf
-RVhUX09XTkVSX0FMTE9DQVRFRCwgJnBhZ2VfZXh0LT5mbGFncyk7DQogDQpAQCAtMjE2LDYgKzI3
-Niw3IEBAIHZvaWQgX19zcGxpdF9wYWdlX293bmVyKHN0cnVjdCBwYWdlICpwYWdlLCB1bnNpZ25l
-ZCBpbnQgb3JkZXIpDQogCWZvciAoaSA9IDA7IGkgPCAoMSA8PCBvcmRlcik7IGkrKykgew0KIAkJ
-cGFnZV9vd25lciA9IGdldF9wYWdlX293bmVyKHBhZ2VfZXh0KTsNCiAJCXBhZ2Vfb3duZXItPm9y
-ZGVyID0gMDsNCisJCXBhZ2Vfb3duZXItPnBhZ2VfY291bnQgPSAwOw0KIAkJcGFnZV9leHQgPSBw
-YWdlX2V4dF9uZXh0KHBhZ2VfZXh0KTsNCiAJfQ0KIH0NCkBAIC0yMzYsNiArMjk3LDcgQEAgdm9p
-ZCBfX2NvcHlfcGFnZV9vd25lcihzdHJ1Y3QgcGFnZSAqb2xkcGFnZSwgc3RydWN0IHBhZ2UgKm5l
-d3BhZ2UpDQogCW5ld19wYWdlX293bmVyLT5sYXN0X21pZ3JhdGVfcmVhc29uID0NCiAJCW9sZF9w
-YWdlX293bmVyLT5sYXN0X21pZ3JhdGVfcmVhc29uOw0KIAluZXdfcGFnZV9vd25lci0+aGFuZGxl
-ID0gb2xkX3BhZ2Vfb3duZXItPmhhbmRsZTsNCisJbmV3X3BhZ2Vfb3duZXItPnBhZ2VfY291bnQg
-PSBuZXdfcGFnZV9vd25lci0+cGFnZV9jb3VudDsNCiANCiAJLyoNCiAJICogV2UgZG9uJ3QgY2xl
-YXIgdGhlIGJpdCBvbiB0aGUgb2xkcGFnZSBhcyBpdCdzIGdvaW5nIHRvIGJlIGZyZWVkDQpAQCAt
-NjE1LDYgKzY3Nyw3OSBAQCBzdGF0aWMgdm9pZCBpbml0X3BhZ2VzX2luX3pvbmUocGdfZGF0YV90
-ICpwZ2RhdCwgc3RydWN0IHpvbmUgKnpvbmUpDQogCQlwZ2RhdC0+bm9kZV9pZCwgem9uZS0+bmFt
-ZSwgY291bnQpOw0KIH0NCiANCitzdGF0aWMgdm9pZCBfX3JlcG9ydF9ncmVhdGVzdF9wYWdlX2Nv
-bnN1bWVyKHN0cnVjdCBwYWdlX293bmVyICpwYWdlX293bmVyKQ0KK3sNCisJdW5zaWduZWQgbG9u
-ZyAqZW50cmllcyA9IE5VTEw7DQorCXVuc2lnbmVkIGludCBucl9lbnRyaWVzOw0KKw0KKwlucl9l
-bnRyaWVzID0gc3RhY2tfZGVwb3RfZmV0Y2gocGFnZV9vd25lci0+aGFuZGxlLCAmZW50cmllcyk7
-DQorCXByX2luZm8oIk9PTTogZ3JlYXRlc3QgbWVtb3J5IGNvbnN1bWVyOiAlbHUgcGFnZXMgYXJl
-IGFsbG9jYXRlZCBmcm9tOlxuIiwNCisJCQlwYWdlX293bmVyLT5wYWdlX2NvdW50KTsNCisJc3Rh
-Y2tfdHJhY2VfcHJpbnQoZW50cmllcywgbnJfZW50cmllcywgMCk7DQorfQ0KKw0KK3ZvaWQgcmVw
-b3J0X2dyZWF0ZXN0X3BhZ2VfY29uc3VtZXIodm9pZCkNCit7DQorCXVuc2lnbmVkIGxvbmcgcGZu
-Ow0KKwlzdHJ1Y3QgcGFnZSAqcGFnZTsNCisJc3RydWN0IHBhZ2VfZXh0ICpwYWdlX2V4dDsNCisJ
-c3RydWN0IHBhZ2Vfb3duZXIgKnBhZ2Vfb3duZXI7DQorCWRlcG90X3N0YWNrX2hhbmRsZV90IGhh
-bmRsZTsNCisNCisJcGZuID0gbWluX2xvd19wZm47DQorDQorCWlmICghc3RhdGljX2JyYW5jaF91
-bmxpa2VseSgmcGFnZV9vd25lcl9pbml0ZWQpKQ0KKwkJcmV0dXJuOw0KKw0KKwkvKiBGaW5kIGEg
-dmFsaWQgUEZOIG9yIHRoZSBzdGFydCBvZiBhIE1BWF9PUkRFUl9OUl9QQUdFUyBhcmVhICovDQor
-CXdoaWxlICghcGZuX3ZhbGlkKHBmbikgJiYgKHBmbiAmIChNQVhfT1JERVJfTlJfUEFHRVMgLSAx
-KSkgIT0gMCkNCisJCXBmbisrOw0KKw0KKwkvKiBGaW5kIGFuIGFsbG9jYXRlZCBwYWdlICovDQor
-CWZvciAoOyBwZm4gPCBtYXhfcGZuOyBwZm4rKykgew0KKwkJaWYgKChwZm4gJiAoTUFYX09SREVS
-X05SX1BBR0VTIC0gMSkpID09IDAgJiYgIXBmbl92YWxpZChwZm4pKSB7DQorCQkJcGZuICs9IE1B
-WF9PUkRFUl9OUl9QQUdFUyAtIDE7DQorCQkJY29udGludWU7DQorCQl9DQorDQorCQlpZiAoIXBm
-bl92YWxpZF93aXRoaW4ocGZuKSkNCisJCQljb250aW51ZTsNCisNCisJCXBhZ2UgPSBwZm5fdG9f
-cGFnZShwZm4pOw0KKwkJaWYgKFBhZ2VCdWRkeShwYWdlKSkgew0KKwkJCXVuc2lnbmVkIGxvbmcg
-ZnJlZXBhZ2Vfb3JkZXIgPSBwYWdlX29yZGVyX3Vuc2FmZShwYWdlKTsNCisNCisJCQlpZiAoZnJl
-ZXBhZ2Vfb3JkZXIgPCBNQVhfT1JERVIpDQorCQkJCXBmbiArPSAoMVVMIDw8IGZyZWVwYWdlX29y
-ZGVyKSAtIDE7DQorCQkJY29udGludWU7DQorCQl9DQorDQorCQlpZiAoUGFnZVJlc2VydmVkKHBh
-Z2UpKQ0KKwkJCWNvbnRpbnVlOw0KKw0KKwkJcGFnZV9leHQgPSBsb29rdXBfcGFnZV9leHQocGFn
-ZSk7DQorCQlpZiAodW5saWtlbHkoIXBhZ2VfZXh0KSkNCisJCQljb250aW51ZTsNCisNCisJCWlm
-ICghdGVzdF9iaXQoUEFHRV9FWFRfT1dORVJfQUxMT0NBVEVELCAmcGFnZV9leHQtPmZsYWdzKSkN
-CisJCQljb250aW51ZTsNCisNCisJCXBhZ2Vfb3duZXIgPSBnZXRfcGFnZV9vd25lcihwYWdlX2V4
-dCk7DQorDQorCQlpZiAoIUlTX0FMSUdORUQocGZuLCAxIDw8IHBhZ2Vfb3duZXItPm9yZGVyKSkN
-CisJCQljb250aW51ZTsNCisNCisJCWhhbmRsZSA9IFJFQURfT05DRShwYWdlX293bmVyLT5oYW5k
-bGUpOw0KKwkJaWYgKCFoYW5kbGUpDQorCQkJY29udGludWU7DQorDQorCQlpbmNyZWFzZV9oYW5k
-bGVfY291bnQocGFnZV9vd25lcik7DQorCX0NCisNCisJX19yZXBvcnRfZ3JlYXRlc3RfcGFnZV9j
-b25zdW1lcihtb3N0X3JlZmVyZW5jZWRfcGFnZV9vd25lcik7DQorfQ0KKw0KKw0KIHN0YXRpYyB2
-b2lkIGluaXRfem9uZXNfaW5fbm9kZShwZ19kYXRhX3QgKnBnZGF0KQ0KIHsNCiAJc3RydWN0IHpv
-bmUgKnpvbmU7DQotLSANCjIuMTguMA0K
+On (20/02/13 10:42), John Ogness wrote:
+> On 2020-02-13, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+> >> -	while (user->seq == log_next_seq) {
+> >> +	if (!prb_read_valid(prb, user->seq, r)) {
+> >>  		if (file->f_flags & O_NONBLOCK) {
+> >>  			ret = -EAGAIN;
+> >>  			logbuf_unlock_irq();
+> >> @@ -890,30 +758,26 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
+> >>  
+> >>  		logbuf_unlock_irq();
+> >>  		ret = wait_event_interruptible(log_wait,
+> >> -					       user->seq != log_next_seq);
+> >> +					prb_read_valid(prb, user->seq, r));
+> >>  		if (ret)
+> >>  			goto out;
+> >>  		logbuf_lock_irq();
+> >>  	}
+> >>  
+> >> -	if (user->seq < log_first_seq) {
+> >> -		/* our last seen message is gone, return error and reset */
+> >> -		user->idx = log_first_idx;
+> >> -		user->seq = log_first_seq;
+> >> +	if (user->seq < r->info->seq) {
+> >> +		/* the expected message is gone, return error and reset */
+> >> +		user->seq = r->info->seq;
+> >>  		ret = -EPIPE;
+> >>  		logbuf_unlock_irq();
+> >>  		goto out;
+> >>  	}
+> >
+> > Sorry, why doesn't this do something like
+> >
+> > 	if (user->seq < prb_first_seq(prb)) {
+> > 		/* the expected message is gone, return error and reset */
+> > 		user->seq = prb_first_seq(prb);
+> > 		ret = -EPIPE;
+> > 		...
+> > 	}
+> 
+> Here prb_read_valid() was successful, so a record _was_ read. The
+> kerneldoc for the prb_read_valid() says:
 
+Hmm, yeah. That's true.
+
+OK, something weird...
+
+I ran some random printk-pressure test (mostly printks from IRQs;
++ some NMI printk-s, but they are routed through nmi printk-safe
+buffers; + some limited number of printk-safe printk-s, routed
+via printk-safe buffer (so, once again, IRQ); + user-space
+journalctl -f syslog reader), and after the test 'cat /dev/kmsg'
+is terminally broken
+
+[..]
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+cat /dev/kmsg
+cat: /dev/kmsg: Broken pipe
+[..]
+
+dmesg works. Reading from /dev/kmsg - doesn't; it did work, however,
+before the test.
+
+So I printed seq numbers from devksmg read to a seq buffer and dumped
+it via procfs, just seq numbers before we adjust user->seq (set to
+r->seq) and after
+
++                       offt += snprintf(BUF + offt,
++                                       sizeof(BUF) - offt,
++                                       "%s: devkmsg_read() error %llu %llu %llu\n",
++                                       current->comm,
++                                       user->seq,
++                                       r->info->seq,
++                                       prb_first_seq(prb));
+
+
+...
+systemd-journal: devkmsg_read() error 1979235 1979236 1979236
+systemd-journal: corrected seq 1979236 1979236
+systemd-journal: devkmsg_read() error 1979237 1979243 1979243
+systemd-journal: corrected seq 1979243 1979243
+systemd-journal: devkmsg_read() error 1979244 1979250 1979250
+systemd-journal: corrected seq 1979250 1979250
+systemd-journal: devkmsg_read() error 1979251 1979257 1979257
+systemd-journal: corrected seq 1979257 1979257
+systemd-journal: devkmsg_read() error 1979258 1979265 1979265
+systemd-journal: corrected seq 1979265 1979265
+systemd-journal: devkmsg_read() error 1979266 1979272 1979272
+systemd-journal: corrected seq 1979272 1979272
+systemd-journal: devkmsg_read() error 1979272 1979273 1979273
+systemd-journal: corrected seq 1979273 1979273
+systemd-journal: devkmsg_read() error 1979274 1979280 1979280
+systemd-journal: corrected seq 1979280 1979280
+systemd-journal: devkmsg_read() error 1979281 1982465 1980933
+systemd-journal: corrected seq 1982465 1982465
+cat: devkmsg_read() error 1980987 1982531 1980987
+cat: corrected seq 1982531 1982531
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981015 1982563 1981015
+cat: corrected seq 1982563 1982563
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981080 1982633 1981080
+cat: corrected seq 1982633 1982633
+cat: devkmsg_read() error 1981095 1982652 1981095
+cat: corrected seq 1982652 1982652
+cat: devkmsg_read() error 1981095 1982652 1981095
+cat: corrected seq 1982652 1982652
+cat: devkmsg_read() error 1981095 1982652 1981095
+cat: corrected seq 1982652 1982652
+cat: devkmsg_read() error 1981095 1982652 1981095
+cat: corrected seq 1982652 1982652
+cat: devkmsg_read() error 1981095 1982652 1981095
+cat: corrected seq 1982652 1982652
+cat: devkmsg_read() error 1981095 1982652 1981095
+cat: corrected seq 1982652 1982652
+cat: devkmsg_read() error 1981095 1982652 1981095
+cat: corrected seq 1982652 1982652
+...
+
+
+What's up with that user->seq counter?
+
+	-ss
