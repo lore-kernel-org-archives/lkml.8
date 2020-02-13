@@ -5,30 +5,30 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1506EC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E598C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DA620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C5521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="u9J9GAIU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="O6E89Kl1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgBMAul (ORCPT
+        id S1729378AbgBMAuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:50:41 -0500
-Received: from gateway36.websitewelcome.com ([192.185.197.22]:29734 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729185AbgBMAul (ORCPT
+        Wed, 12 Feb 2020 19:50:54 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.202]:24195 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729185AbgBMAuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:50:41 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 0E43C400E11C8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 17:40:08 -0600 (CST)
+        Wed, 12 Feb 2020 19:50:54 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 3087154AC6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:50:53 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 22KSjnDtVXVkQ22KSjBJ3t; Wed, 12 Feb 2020 18:26:04 -0600
+        id 22iTjCJK8AGTX22iTjOS4t; Wed, 12 Feb 2020 18:50:53 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,24 +36,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2HOG+cF7ErJztCRrMubk72Din9WB7LDLWJbqEyt+viM=; b=u9J9GAIUzcqfmlHrz79BfTJzza
-        EJBQ2QdrMwZQvbxY5cJQ5jdGAJNE4Sx6YoQ/18ICDomD02e6toNy9fHpv35S8GtcKgOHeixWnAPGF
-        +vQ9px9QKTRLr0IAmJDetOwqRgLtw91xf93931DZyi6xZrA44KDBZ1y33mH2BTte7zjBnumQf+HKe
-        2NuRJOVBzRmNx3Mbbe7dyfeDpj/+AeJ9sS+3q9tHoGxm0zl64ZFGnoyftpD+twjKvKRXrl2raXec/
-        fFIYAHuOLILWoXZXRaED6v3eUfDjvp64OVdKpS3F/CM58ZpBZxSRtnmhlk5laiVuV0u/ARVf/ossR
-        2wThmoZQ==;
-Received: from [200.68.141.42] (port=21527 helo=embeddedor)
+        bh=oNtS80ALTefLju8sXnhUYyqruAR8Cl5rZOZKlDdi3/o=; b=O6E89Kl1z/UOh3gllATe8Wi3cR
+        x/TDcLBjptHyATw2n2/d70Tr9OQ6VklUFJ3eo1Dch4M/zLSE3I86K4Z0l6QofCllkVSMqjzWASmgb
+        mwO7JjC7vu/UR8xY4HZbrhTQv86mqRvXFBL/mpmKOXR6cWHbyz9qEk3s7M/Jq+VIbh1lQ3JAW2fAa
+        g00iYXlgXl4PSG+tjDrntzMx2Lnkzp95Ydn0Llxu3ctF2XvNAbFqYBatLgJWt9CqJ/ATAcf/xiRII
+        H4X74kdy9YqbtQ6XiZ1gi3NjY7Q2CSLPjW5wSXLL7FvRpazRxUu3ospLuWRT2i6Oyt9RwDmv78VGa
+        4dlntZ9w==;
+Received: from [200.68.141.42] (port=17629 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j22KQ-003ZSf-AU; Wed, 12 Feb 2020 18:26:02 -0600
-Date:   Wed, 12 Feb 2020 18:26:00 -0600
+        id 1j22iQ-003lou-MG; Wed, 12 Feb 2020 18:50:51 -0600
+Date:   Wed, 12 Feb 2020 18:50:48 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] Input: gpio_keys - replace zero-length array with
- flexible-array member
-Message-ID: <20200213002600.GA31916@embeddedor.com>
+Subject: [PATCH] PCI: hv: Replace zero-length array with flexible-array member
+Message-ID: <20200213005048.GA9662@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -66,13 +72,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.141.42
 X-Source-L: No
-X-Exim-ID: 1j22KQ-003ZSf-AU
+X-Exim-ID: 1j22iQ-003lou-MG
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:21527
+X-Source-Sender: (embeddedor) [200.68.141.42]:17629
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 35
+X-Email-Count: 73
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -110,22 +116,40 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/input/keyboard/gpio_keys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pci-hyperv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 1f56d53454b2..53c9ff338dea 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -55,7 +55,7 @@ struct gpio_keys_drvdata {
- 	struct input_dev *input;
- 	struct mutex disable_lock;
- 	unsigned short *keymap;
--	struct gpio_button_data data[0];
-+	struct gpio_button_data data[];
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 9977abff92fc..be957268f9d6 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -260,7 +260,7 @@ struct pci_packet {
+ 				int resp_packet_size);
+ 	void *compl_ctxt;
+ 
+-	struct pci_message message[0];
++	struct pci_message message[];
  };
  
  /*
+@@ -296,7 +296,7 @@ struct pci_bus_d0_entry {
+ struct pci_bus_relations {
+ 	struct pci_incoming_message incoming;
+ 	u32 device_count;
+-	struct pci_function_description func[0];
++	struct pci_function_description func[];
+ } __packed;
+ 
+ struct pci_q_res_req_response {
+@@ -508,7 +508,7 @@ struct hv_dr_work {
+ struct hv_dr_state {
+ 	struct list_head list_entry;
+ 	u32 device_count;
+-	struct pci_function_description func[0];
++	struct pci_function_description func[];
+ };
+ 
+ enum hv_pcichild_state {
 -- 
 2.23.0
 
