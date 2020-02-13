@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05E1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED8BC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936E42073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C4A20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610105;
-	bh=wp6DlfLy2ZTgy4xURGFu8rOf9ZQEUYuUErnKGeDGjD0=;
+	s=default; t=1581610108;
+	bh=R4qi8/bgh7+4Guu0GaXMWgMf20w69Ml8MImhr3b/5J0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=stXdyqYfe6hJU4ij5l90yvOvE1jcIQumuGj4bAF+PNC7AfT4CfgqmBZ1IQt0uMFp0
-	 61ciRqdmBLqeKwTrYTHTorUqcQF7LVl6r4uUEdW41AwKGykCj9cfhn9f1SuzMgMoni
-	 9pXL03SGAiBvLbVy64ZXD6dzWBm4dwOACG5svi3c=
+	b=JJCjO2U4y+NRNX/f/AVfIMxsEhv4JiEendLgp8ZMOZmc/06cI1+NpGSHTObfJLziC
+	 VIr1zFTB4qoDQmhrUOPJ/n0DfyuQxSxIpIY9eqvkvG+CR3narm8kXq9d/xk7mwvCGz
+	 MeDnvGCN1M9FCqUSgIVTZdZA1q8V2UXHBCHhqY5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgBMPXF (ORCPT
+        id S1728741AbgBMQI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:08:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbgBMPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:48 -0500
+        id S1728252AbgBMPXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:06 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79C1B24689;
-        Thu, 13 Feb 2020 15:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68D82469A;
+        Thu, 13 Feb 2020 15:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607367;
-        bh=wp6DlfLy2ZTgy4xURGFu8rOf9ZQEUYuUErnKGeDGjD0=;
+        s=default; t=1581607385;
+        bh=R4qi8/bgh7+4Guu0GaXMWgMf20w69Ml8MImhr3b/5J0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R44F5IEPkMirMtfXlTHS1lS6at7epN8mdDDIJSmtt55qFN44i3M+2PTstRKOV7Iu0
-         YKVMVYuNLk+2daNnK1+JW7WYG1IU9pLbzPIS67dfshtnkDiaRk4f93XeO6OW4qahlt
-         7jS7pYToi/c0fTVSpoYrh8rSQtEF2YLCNiWGLhIk=
+        b=rMeAIwTBUbgWBHAJhTFEWyd4BR2AwLxb/eMvNRisDhxRThl21fr2dC+JTq1wu4SRC
+         xSCRgpc7pWzUiY0lBY4iyrQMLp5NFvI68kUqcvOp9faUckeNzxwOrfsOa6uwdqlqGm
+         MrdGYMrXQIDJ4BWyJogRgRgVqNupS0mx9lrJNI7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 40/91] KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:57 -0800
-Message-Id: <20200213151837.086387403@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.4 77/91] clocksource: Prevent double add_timer_on() for watchdog_timer
+Date:   Thu, 13 Feb 2020 07:20:34 -0800
+Message-Id: <20200213151852.309100561@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,50 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit 8c86405f606ca8508b8d9280680166ca26723695 upstream.
+commit febac332a819f0e764aa4da62757ba21d18c182b upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in ioapic_read_indirect().
-This function contains index computations based on the
-(attacker-controlled) IOREGSEL register.
+Kernel crashes inside QEMU/KVM are observed:
 
-Fixes: a2c118bfab8b ("KVM: Fix bounds checking in ioapic indirect register reads (CVE-2013-1798)")
+  kernel BUG at kernel/time/timer.c:1154!
+  BUG_ON(timer_pending(timer) || !timer->function) in add_timer_on().
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
+At the same time another cpu got:
+
+  general protection fault: 0000 [#1] SMP PTI of poinson pointer 0xdead000000000200 in:
+
+  __hlist_del at include/linux/list.h:681
+  (inlined by) detach_timer at kernel/time/timer.c:818
+  (inlined by) expire_timers at kernel/time/timer.c:1355
+  (inlined by) __run_timers at kernel/time/timer.c:1686
+  (inlined by) run_timer_softirq at kernel/time/timer.c:1699
+
+Unfortunately kernel logs are badly scrambled, stacktraces are lost.
+
+Printing the timer->function before the BUG_ON() pointed to
+clocksource_watchdog().
+
+The execution of clocksource_watchdog() can race with a sequence of
+clocksource_stop_watchdog() .. clocksource_start_watchdog():
+
+expire_timers()
+ detach_timer(timer, true);
+  timer->entry.pprev = NULL;
+ raw_spin_unlock_irq(&base->lock);
+ call_timer_fn
+  clocksource_watchdog()
+
+					clocksource_watchdog_kthread() or
+					clocksource_unbind()
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_stop_watchdog();
+					 del_timer(&watchdog_timer);
+					 watchdog_running = 0;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_start_watchdog();
+					 add_timer_on(&watchdog_timer, ...);
+					 watchdog_running = 1;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+  spin_lock(&watchdog_lock);
+  add_timer_on(&watchdog_timer, ...);
+   BUG_ON(timer_pending(timer) || !timer->function);
+    timer_pending() -> true
+    BUG()
+
+I.e. inside clocksource_watchdog() watchdog_timer could be already armed.
+
+Check timer_pending() before calling add_timer_on(). This is sufficient as
+all operations are synchronized by watchdog_lock.
+
+Fixes: 75c5158f70c0 ("timekeeping: Update clocksource with stop_machine")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lore.kernel.org/r/158048693917.4378.13823603769948933793.stgit@buzz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/ioapic.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/time/clocksource.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -74,13 +74,14 @@ static unsigned long ioapic_read_indirec
- 	default:
- 		{
- 			u32 redir_index = (ioapic->ioregsel - 0x10) >> 1;
--			u64 redir_content;
-+			u64 redir_content = ~0ULL;
- 
--			if (redir_index < IOAPIC_NUM_PINS)
--				redir_content =
--					ioapic->redirtbl[redir_index].bits;
--			else
--				redir_content = ~0ULL;
-+			if (redir_index < IOAPIC_NUM_PINS) {
-+				u32 index = array_index_nospec(
-+					redir_index, IOAPIC_NUM_PINS);
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -272,8 +272,15 @@ static void clocksource_watchdog(unsigne
+ 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(cpu_online_mask);
+-	watchdog_timer.expires += WATCHDOG_INTERVAL;
+-	add_timer_on(&watchdog_timer, next_cpu);
 +
-+				redir_content = ioapic->redirtbl[index].bits;
-+			}
- 
- 			result = (ioapic->ioregsel & 0x1) ?
- 			    (redir_content >> 32) & 0xffffffff :
++	/*
++	 * Arm timer if not already pending: could race with concurrent
++	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
++	 */
++	if (!timer_pending(&watchdog_timer)) {
++		watchdog_timer.expires += WATCHDOG_INTERVAL;
++		add_timer_on(&watchdog_timer, next_cpu);
++	}
+ out:
+ 	spin_unlock(&watchdog_lock);
+ }
 
 
