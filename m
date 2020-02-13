@@ -2,127 +2,121 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811B1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F0AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AC6206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8F7206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="y4z9797W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgBMRhS (ORCPT
+        id S1728847AbgBMRhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:37:18 -0500
-Received: from mga05.intel.com ([192.55.52.43]:45921 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgBMRhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:37:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 09:37:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="227305266"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 13 Feb 2020 09:37:17 -0800
-Date:   Thu, 13 Feb 2020 09:37:17 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 30/61] KVM: x86: Handle MPX CPUID adjustment in VMX code
-Message-ID: <20200213173717.GB18610@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-31-sean.j.christopherson@intel.com>
- <4ff69a7e-acdb-40fd-d717-3b2829f20154@intel.com>
+        Thu, 13 Feb 2020 12:37:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36270 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728192AbgBMRho (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:37:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so7721352wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:37:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Zvz2XeVTIF+ueC8ZSbcXCfTRm4NOaCnXy121PGkk+Yg=;
+        b=y4z9797WK5rw61o0bHX20MVMCzpPi8e1XV3NNiGnUzy/usayLB7afqaJPX9RbfFN8d
+         DTHjeJKKl0pf+6s56FBO6zp7C85vj8QTq9rii/FdwUiZoqKNj2guPNqtyP8wgQNOtmdv
+         UmaS7phuNaxUHCjYa2YlwmNpOzXz4C8VUr6ecOtZfSqBYOmP7+4uubq2yIunsJr3QiXl
+         LX8W4qZbMWDrTV7lJnlgFd0vCm3XBm13uk9eSp8VTYshLUJcLJ6P1lfAfGOL5EPZQvVi
+         OimW08hzSH5ujRFZxkJhUKNViVxC/yetGRK+uJ2pXq3g+0gHCPA1imWM3FBb0b/dl8fF
+         KtLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Zvz2XeVTIF+ueC8ZSbcXCfTRm4NOaCnXy121PGkk+Yg=;
+        b=WiLkS4Ky3mg77xCtFAorkrI7X+GbqkZSpap3FqIi7mWPmszDE5wzR4MH8K1inod1ys
+         fbXAdQI4dXihiX6C+aC/iTTM7UbC8t/65w7XmcIfVH8S7Vc2QrNidd/fXVDxe1UKgOP0
+         Rc/7pqToFagsipwXG8esVL+Q3QvpiXVI6ce+ahgAIrXteKpvQ9BUdEP6yPSgf3fZXhLJ
+         UfI1XT74VprAIovH3gdSTC9tOgz7drpLCuhM8MaIgtUdiFoguMYoy9CvH5PWqli+zm6G
+         mHYFNFHKPBPbs335IEXc5ddJhZxcJPe7fLmrORhnUK93I6Nhw2OnnGA+fb3Pry5H9Rro
+         eXHg==
+X-Gm-Message-State: APjAAAUhXaHl4NjgQNbWr1ZCtFiowePh6sxeqyd/9dMrAIE7Kx45uIjA
+        mtUr3LGIkJUHA1HpjTfQ+Zf8dw==
+X-Google-Smtp-Source: APXvYqykC+mTy5IPmmZi7PPVz1FJbeRW+wBfOOUQU58sYIdkyHAaUT8ZIB+UlNf0ucjzIZv+uzieOg==
+X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr7314496wmf.56.1581615463076;
+        Thu, 13 Feb 2020 09:37:43 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id y185sm4054871wmg.2.2020.02.13.09.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 09:37:42 -0800 (PST)
+References: <20200213155159.3235792-1-jbrunet@baylibre.com> <20200213155159.3235792-2-jbrunet@baylibre.com> <20200213171830.GH4333@sirena.org.uk>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/9] ASoC: core: allow a dt node to provide several components
+In-reply-to: <20200213171830.GH4333@sirena.org.uk>
+Date:   Thu, 13 Feb 2020 18:37:41 +0100
+Message-ID: <1j4kvufkwq.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ff69a7e-acdb-40fd-d717-3b2829f20154@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:51:08PM +0800, Xiaoyao Li wrote:
-> On 2/2/2020 2:51 AM, Sean Christopherson wrote:
-> >Move the MPX CPUID adjustments into VMX to eliminate an instance of the
-> >undesirable "unsigned f_* = *_supported ? F(*) : 0" pattern in the
-> >common CPUID handling code.
-> >
-> >Note, VMX must manually check for kernel support via
-> >boot_cpu_has(X86_FEATURE_MPX).
-> 
-> Why must?
 
-do_cpuid_7_mask() runs the CPUID result through cpuid_mask(), which masks
-features based on boot_cpu_data, i.e. clears bits for features that are
-supported by hardware but unsupported/disabled by the kernel.
+On Thu 13 Feb 2020 at 18:18, Mark Brown <broonie@kernel.org> wrote:
 
-vmx_set_supported_cpuid() needs to to query boot_cpu_has() to preserve the
-"supported by kernel" check provided by cpuid_mask().
+> On Thu, Feb 13, 2020 at 04:51:51PM +0100, Jerome Brunet wrote:
+>
+>> At the moment, querying the dai_name will stop of the first component
+>> matching the dt node. This does not allow a device (single dt node) to
+>> provide several ASoC components which could then be used through DT.
+>
+>> This change let the search go on if the xlate function of the component
+>> returns an error, giving the possibility to another component to match
+>> and return the dai_name.
+>
+> My first question here would be why you'd want to do that rather than
+> combine everything into a single component since the hardware seems to
+> be doing that anyway.  Hopefully the rest of the series will answer this
+> but it'd be good in the changelog here.
 
-> 
-> >No functional change intended.
-> >
-> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >---
-> >  arch/x86/kvm/cpuid.c   |  3 +--
-> >  arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++--
-> >  2 files changed, 13 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> >index cb5870a323cc..09e24d1d731c 100644
-> >--- a/arch/x86/kvm/cpuid.c
-> >+++ b/arch/x86/kvm/cpuid.c
-> >@@ -340,7 +340,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
-> >  static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
-> >  {
-> >  	unsigned f_invpcid = kvm_x86_ops->invpcid_supported() ? F(INVPCID) : 0;
-> >-	unsigned f_mpx = kvm_mpx_supported() ? F(MPX) : 0;
-> >  	unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
-> >  	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
-> >  	unsigned f_la57;
-> >@@ -349,7 +348,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
-> >  	/* cpuid 7.0.ebx */
-> >  	const u32 kvm_cpuid_7_0_ebx_x86_features =
-> >  		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
-> >-		F(BMI2) | F(ERMS) | f_invpcid | F(RTM) | f_mpx | F(RDSEED) |
-> >+		F(BMI2) | F(ERMS) | f_invpcid | F(RTM) | 0 /*MPX*/ | F(RDSEED) |
-> >  		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
-> >  		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
-> >  		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | f_intel_pt;
-> >diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> >index 3ff830e2258e..143193fc178e 100644
-> >--- a/arch/x86/kvm/vmx/vmx.c
-> >+++ b/arch/x86/kvm/vmx/vmx.c
-> >@@ -7106,8 +7106,18 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> >  static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
-> >  {
-> >-	if (entry->function == 1 && nested)
-> >-		entry->ecx |= feature_bit(VMX);
-> >+	switch (entry->function) {
-> >+	case 0x1:
-> >+		if (nested)
-> >+			cpuid_entry_set(entry, X86_FEATURE_VMX);
-> >+		break;
-> >+	case 0x7:
-> >+		if (boot_cpu_has(X86_FEATURE_MPX) && kvm_mpx_supported())
-> >+			cpuid_entry_set(entry, X86_FEATURE_MPX);
-> >+		break;
-> >+	default:
-> >+		break;
-> >+	}
-> >  }
-> >  static void vmx_request_immediate_exit(struct kvm_vcpu *vcpu)
-> >
-> 
+Hi Mark,
+
+Sorry if I was not clear enough.
+
+This HW is messy. It is indeed one monolithic device which
+provides several functions/sub-devices/components
+
+I tried several approaches:
+
+* Just 1 component: This was ugly because the part that is present only on 1
+SoC variant, I needed to reconstruct the dai, widget, route and control
+table which involved a fair amount of useless copies.
+
+* A lot of devices (and components) with syscon: This ended up being even
+  uglier, difficult to work with since it did not really reflected the
+  actual HW.
+
+The solution proposed here is just one device with 3 possible
+components (groups):
+* The CPU producers a associated path
+* The HDMI control
+* The Internal DAC control
+
+The impact on ASoC is rather small, the driver reflect quite well what
+the HW is and, with a sound-dai-cell=2, it fairly simple in DT as well.
+
+Do you think there is something wrong with a linux device providing
+several ASoC components ?
