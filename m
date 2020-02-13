@@ -2,88 +2,130 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41180C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC000C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162BD22314
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581624010;
-	bh=KnHHKVe1n67O5ZYl7TzEtlRCPIGA53LFZUcP+UZsmYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oYnYjPnnB/dHR5cts51mQUFAsKsHvcl0XRWZ58fp+plHIgNsyTa0wdkKQ28zUSXoB
-	 iHijaJdpRSxEz/p7Dh3OiKG+G7f8aKx8FBVPZepqWfIDif6vwbjpndxSb5Yjp61JlG
-	 981TpVI1OJ3+9SGbnOpCv/vxJkIb1WMdeGd4o2zE=
+	by mail.kernel.org (Postfix) with ESMTP id A99B420659
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge5DB+gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgBMUAJ (ORCPT
+        id S2387414AbgBMUAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:00:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgBMUAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:00:09 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C481921734;
-        Thu, 13 Feb 2020 20:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581624008;
-        bh=KnHHKVe1n67O5ZYl7TzEtlRCPIGA53LFZUcP+UZsmYQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oqoOKlMQBYw9F9M+411L6xVqQwUVwuJhMEWjAlE313tBT8KpWqsV3XMSSnB5e7Br8
-         DNkECUcNMjr9j4gYT7Uthte8mJ95tYe52py1tC/NDCGKwnPPXjWuayrTR+DFx8Uh1L
-         aqYU0b094x2ZJiTMkfxhKzY7LmoGcgZZiYkQVFqk=
-Date:   Thu, 13 Feb 2020 12:00:08 -0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, Scott Wood <oss@buserror.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: cpm_uart: call cpm_muram_init before registering
- console
-Message-ID: <20200213200008.GB3815621@kroah.com>
-References: <20200213114342.21712-1-linux@rasmusvillemoes.dk>
+        Thu, 13 Feb 2020 15:00:25 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51547 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727910AbgBMUAY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:00:24 -0500
+Received: by mail-pj1-f66.google.com with SMTP id fa20so2845891pjb.1;
+        Thu, 13 Feb 2020 12:00:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7zNWtKUJHoek7tX6KN5yHzkwTD50SXdtF49klgds63w=;
+        b=Ge5DB+gxR4EOP+lTDQ3adyNCo1HDVCkNwHphQnRwHHDD0wylg0usLBGFpUWtcVW8Ee
+         98bVBeqTN7ygFyAutPvD7/LOQ8A5uooRuUig3lvoVm+SI6nMRiyAxve6n/2JEQ3jvwai
+         s/7PQE8D+tZvDE80ZQYWmwzn+SGbqyHiK+w1qOo2RwSz4JRiJDTKr0fpess2GX6978u1
+         bNfOvOa+/gDi++23dku389FH8YsqWeMF3EMIsWae0/xRR7Agy9fafajAAIkBxQ5MnEDV
+         WQmFcgS751Cyg1Zic+ieNOycvG4clAFsA8OTrPuz7vIOgTKgpb5c/+dH+2coTXIiSsMf
+         Hh5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7zNWtKUJHoek7tX6KN5yHzkwTD50SXdtF49klgds63w=;
+        b=VoXJBtDwq1kiQTSxozlegHeqI0qfB/b6u32uTNJCvafDuwbJ7SEh/deda8THzSWOse
+         d3n+BapWMALry+U2GfNToZHfl7+k5K5146wz1o84dF6Nfoehs5kQ/IGZvAVKrUt2AFJM
+         SYnymzsw0wDXhCXoJD1LntswyzW7UHc85juX8dXiiu12ss7f7ntfz4hjsYVFHg0RBMwa
+         ScNA8vc9gnLtmnUfc5+UziUTSQIN4YAJZEbrYtxd03fVOLFEaWLYrVSnjX3/3U/uHkVg
+         6hoUWxeXpzyjZr4SgfKdDjiQm6w9oRKOUR8Rr1V2nNswfbY/kfrYSiGwFbaWbESkGXJj
+         MbMA==
+X-Gm-Message-State: APjAAAUy4gN+x3SkbvWGVIgDUiyaJrlZMJfL//C2YW+JbrT8r033ksw4
+        XV6H8NHjfn1uMtu6QUviYoc=
+X-Google-Smtp-Source: APXvYqxrbb7grYzIdTdSfic9sPeYzOOlTp0B0yWzUqe5aLDoN7IoykLfytqJ3FVK6jUh17KuriOfVQ==
+X-Received: by 2002:a17:902:a588:: with SMTP id az8mr15533441plb.123.1581624023960;
+        Thu, 13 Feb 2020 12:00:23 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id z29sm4378794pgc.21.2020.02.13.12.00.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2020 12:00:23 -0800 (PST)
+Subject: Re: WARNING in dev_change_net_namespace
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com>
+Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, dsahern@gmail.com,
+        hawk@kernel.org, jiri@mellanox.com, johannes.berg@intel.com,
+        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <000000000000c54420059e4f08ff@google.com>
+ <878sl6fh2a.fsf@x220.int.ebiederm.org>
+ <4802635e-0ef1-b96c-e596-fa83cd597e20@gmail.com>
+Message-ID: <a116fc12-92ea-7609-1d60-4fd90939141a@gmail.com>
+Date:   Thu, 13 Feb 2020 12:00:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213114342.21712-1-linux@rasmusvillemoes.dk>
+In-Reply-To: <4802635e-0ef1-b96c-e596-fa83cd597e20@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:43:42PM +0100, Rasmus Villemoes wrote:
-> Christophe reports that powerpc 8xx silently fails to 5.6-rc1. It turns
-> out I was wrong about nobody relying on the lazy initialization of the
-> cpm/qe muram in commit b6231ea2b3c6 (soc: fsl: qe: drop broken lazy
-> call of cpm_muram_init()).
-> 
-> Rather than reinstating the somewhat dubious lazy call (initializing a
-> currently held spinlock, and implicitly doing a GFP_KERNEL under that
-> spinlock), make sure that cpm_muram_init() is called early enough - I
-> thought the calls from the subsys_initcalls were good enough, but when
-> used by console drivers, that's obviously not the
-> case. cpm_muram_init() is safe to call twice (there's an early return
-> if it is already initialized), so keep the call from cpm_init() - in
-> case SERIAL_CPM_CONSOLE=n.
-> 
-> Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Fixes: b6231ea2b3c6 (soc: fsl: qe: drop broken lazy call of cpm_muram_init())
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
-> 
-> Christophe, can I get you to add a formal Tested-by?
-> 
-> I'm not sure which tree this should go through.
 
-I can take it, thanks.
 
-greg k-h
+On 2/13/20 11:57 AM, Eric Dumazet wrote:
+> 
+> 
+> On 2/13/20 11:00 AM, Eric W. Biederman wrote:
+>> syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com> writes:
+>>
+>>> Hello,
+>>
+>> Has someone messed up the network device kobject support.
+>> I don't have the exact same code as listed here so I may
+>> be misreading things.  But the only WARN_ON I see in
+>> dev_change_net_namespaces is from kobject_rename.
+>>
+>> It is not supposed to be possible for that to fail.
+> 
+> Well, this code is attempting kmalloc() calls, so can definitely fail.
+> 
+> syzbot is using fault injection to force few kmalloc() to return NULL
+
+[  533.360275][T24839] FAULT_INJECTION: forcing a failure.
+[  533.360275][T24839] name failslab, interval 1, probability 0, space 0, times 0
+[  533.418952][T24839] CPU: 0 PID: 24839 Comm: syz-executor.4 Not tainted 5.6.0-rc1-syzkaller #0
+[  533.427669][T24839] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+[  533.437873][T24839] Call Trace:
+[  533.441188][T24839]  dump_stack+0x1fb/0x318
+[  533.445677][T24839]  should_fail+0x4b8/0x660
+[  533.450125][T24839]  __should_failslab+0xb9/0xe0
+[  533.454913][T24839]  ? kzalloc+0x21/0x40
+[  533.459000][T24839]  should_failslab+0x9/0x20
+[  533.463524][T24839]  __kmalloc+0x7a/0x340
+[  533.467698][T24839]  kzalloc+0x21/0x40
+[  533.471604][T24839]  kobject_rename+0x12f/0x4d0
+[  533.476399][T24839]  ? sysfs_rename_link_ns+0x179/0x1b0
+[  533.481782][T24839]  device_rename+0x16d/0x190
+[  533.486380][T24839]  dev_change_net_namespace+0x1375/0x16b0
+[  533.492550][T24839]  ? ns_capable+0x91/0xf0
+[  533.496900][T24839]  ? netlink_ns_capable+0xcf/0x100
+[  533.502038][T24839]  ? rtnl_link_get_net_capable+0x136/0x280
+[  533.508470][T24839]  do_setlink+0x196/0x3880
+[  533.512943][T24839]  ? __kasan_check_read+0x11/0x20
+[  533.517992][T24839]  rtnl_newlink+0x1509/0x1c00
+
