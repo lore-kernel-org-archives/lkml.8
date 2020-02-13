@@ -2,202 +2,250 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78C1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC125C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B04217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934F3206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FFwuMx4A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0TWta1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgBMSQC (ORCPT
+        id S1728033AbgBMSRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:16:02 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40531 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbgBMSQC (ORCPT
+        Thu, 13 Feb 2020 13:17:38 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43036 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgBMSRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:16:02 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so7833813wmi.5;
-        Thu, 13 Feb 2020 10:15:58 -0800 (PST)
+        Thu, 13 Feb 2020 13:17:38 -0500
+Received: by mail-pg1-f196.google.com with SMTP id u12so3172759pgb.10;
+        Thu, 13 Feb 2020 10:17:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5d94ISfAMJsY5/JXuqSKAmxNkAX3S4dFJmeeR7ypVcE=;
-        b=FFwuMx4A91uPXpKY8nsucsQTEpphwr5zhH4Oya1D86W+RXvdwACsmlSXhLSexF0NcM
-         P9TfFve1ePZB9zAXpfXPJ6pnLIJKiI+vsVdmHMDavStLweUfRWnrTV2MIgQDt/tnTttP
-         FrQGvuDP4LCuIFD2h2Vv6QvQSiEUUKhJF+QkXD2j/s44KWLYBWsxLrHYeZer3Z2y0aqz
-         RPfiBuphdNVtBahhcdlpnYEKEr+vLrCy1lGJ7aAqfiw6nTeNt7IO1eXjEYH3eL7LBRNt
-         K3XIt4YNATmo1Grnqf9PsgDq8/IUaIU45JRkPVo0FI0rVzdZ8pPphyr8n0oNjdxNyj3b
-         ddBQ==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=b85HmoU7b97JK+C46GgyWlG+CYZE3kmiSc0PmiJHXGE=;
+        b=a0TWta1TDimDQB+xdv8tqJoFlhkrn5vM5Al0M7oRU61KYuHwxjCpUM0SrasNVvPLkN
+         ESwy8jKjiu6uCK8bk9K41MQX87bi6raF1VD84w2R2JbM6Uz8ji0EniNhssnIa0dVtJrr
+         /NhNcDAhSONOutSOrM52IaZF3mbfobk1aX/7IbeHrFRBGM5ro3124ikma370fwv5WaZM
+         xp7vII/Q3oeByPVe7vgZDOB6mZohzh0vTXFvmtjhW+z+mhuZbUa0hI4imp+alPnllrzP
+         zpIP7xPMbRFuXPAs5TDSgy64uupxDBMjJWLdY2zJNSabzXtPfsskoa88FDCjs1ELJZPj
+         GsoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5d94ISfAMJsY5/JXuqSKAmxNkAX3S4dFJmeeR7ypVcE=;
-        b=FvdB8EnUmFTmZ1mf0u3am5f8gDVm280Gtjq4EvHabNxV3kpszc46SBMX+Cph1oe98W
-         /rGaS2V16P9XvgCCtqx1/fmnKWtgjYvcaM1d6vwmvERGuOZkYGfcPzeio2dxeq1M+p3x
-         ylhCWxVJQwEI4eFwx15dSCRz6iL+7C9bnbyo4EKe9dueurM2F45PNvozPtr5HlbzS2Qb
-         kDj2U/9h0W/06IDo/ZxbxQTCofFE3My9MhtgkULDg3uspDa4DBdDI+jM5ywDS0oHHXUi
-         QRoNAY1XthNmoxKaQcZy25MjE4nZKRRwoGQbUafjejpT0+wczXRthuqlgXHmOL9dTJ0g
-         OGig==
-X-Gm-Message-State: APjAAAX7UbfGvjuQLt42V+PhJxrTEpIhC4UngJNtM6Q2g94IhoxoluGF
-        gOuNDPSCTCp5xlSbp384rYw=
-X-Google-Smtp-Source: APXvYqxqFNSHf02vz4/vAuR4WVy3yZSGsTnLODcDrddSPmiG/KsfyeRBrRl06AzAZBFk2cOx947e8g==
-X-Received: by 2002:a1c:4e05:: with SMTP id g5mr6927099wmh.152.1581617758127;
-        Thu, 13 Feb 2020 10:15:58 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id y12sm3896731wmj.6.2020.02.13.10.15.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 10:15:56 -0800 (PST)
-Date:   Thu, 13 Feb 2020 19:15:55 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Olof Johansson <olof@lixom.net>, linux-tegra@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v4 0/5] memory: Introduce memory controller mini-framework
-Message-ID: <20200213181555.GB1006063@ulmo>
-References: <20200213163959.819733-1-thierry.reding@gmail.com>
- <9841eb35-65e4-632a-ceff-bb2ba3b11bb0@arm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=b85HmoU7b97JK+C46GgyWlG+CYZE3kmiSc0PmiJHXGE=;
+        b=bZKSueg3cSl0NocSoR4Oqd+eb/Sk7n09zN7ekuYhObzfAuDJhmyz8+oFlXRS1vNFO6
+         kCyG1up1/Ds4PcanVxtVWUi+RvRfJ94GZnsmQFv/0ZBtj/Wl9Fq8RYNfJqwj+GYWNk4n
+         01Yhnp9Wn8qIEF3pcjmZIhpRyeIp647q4ap5fF0Rq6KqZDPKcZaaqWpQbYJyrCkvG38T
+         ugEHf68UszRZJBladJ0pQcS7T4aXwCMd//kYYDdxqudd24I6UwDczlO7zTv61JOpQVUK
+         u5+nQYj4UwiEoe2sctLMrKQ3HnkHQWMmM7yKHVCiZKuCScaLWAAgD4ECOVBBPUeJCqNf
+         pl5A==
+X-Gm-Message-State: APjAAAXwdr4i+VxRw61FQBVD980djs/eg2yUb5L1WPoBIQonInOH2CfP
+        WSlvthopDyjOfMV+lzIDWSNjZKah
+X-Google-Smtp-Source: APXvYqzxwMzYDpBdfER5tYXW3VkmPB2Owoa+PYfJsoqruXWXXCQLCeVhn3yomrW93IkcQGEeQLm9nQ==
+X-Received: by 2002:a63:931e:: with SMTP id b30mr17477267pge.200.1581617857265;
+        Thu, 13 Feb 2020 10:17:37 -0800 (PST)
+Received: from ziggy.stardust ([37.223.145.31])
+        by smtp.gmail.com with ESMTPSA id i6sm3949441pgm.93.2020.02.13.10.17.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2020 10:17:36 -0800 (PST)
+Subject: Re: [resend PATCH v6 01/12] dt-bindings: display: mediatek: Add mmsys
+ binding description
+To:     CK Hu <ck.hu@mediatek.com>, matthias.bgg@kernel.org
+Cc:     mark.rutland@arm.com, rdunlap@infradead.org, airlied@linux.ie,
+        mturquette@baylibre.com, dri-devel@lists.freedesktop.org,
+        laurent.pinchart@ideasonboard.com, ulrich.hecht+renesas@gmail.com,
+        linux-clk@vger.kernel.org, drinkcat@chromium.org, wens@csie.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        frank-w@public-files.de, sean.wang@mediatek.com,
+        robh+dt@kernel.org, linux-mediatek@lists.infradead.org,
+        hsinyi@chromium.org, linux-arm-kernel@lists.infradead.org,
+        mbrugger@suse.com, sboyd@kernel.org, sean.wang@kernel.org,
+        linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
+        enric.balletbo@collabora.com
+References: <20191207224740.24536-1-matthias.bgg@kernel.org>
+ <20191207224740.24536-2-matthias.bgg@kernel.org>
+ <1575868373.7013.4.camel@mtksdaap41>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <77c9dd91-8f51-499b-3b1a-f5966f2ed35d@gmail.com>
+Date:   Thu, 13 Feb 2020 19:17:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
-Content-Disposition: inline
-In-Reply-To: <9841eb35-65e4-632a-ceff-bb2ba3b11bb0@arm.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <1575868373.7013.4.camel@mtksdaap41>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ZfOjI3PrQbgiZnxM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 13, 2020 at 05:23:23PM +0000, Robin Murphy wrote:
-> [+ Maxime]
->=20
-> On 13/02/2020 4:39 pm, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > Hi,
-> >=20
-> > this set of patches adds a new binding that allows device tree nodes to
-> > explicitly define the DMA parent for a given device. This supplements
-> > the existing interconnect bindings and is useful to disambiguate in the
-> > case where a device has multiple paths to system memory. Beyond that it
-> > can also be useful when there aren't any actual interconnect paths that
-> > can be controlled, so in simple cases this can serve as a simpler
-> > variant of interconnect paths.
->=20
-> Isn't that still squarely the intent of the "dma-mem" binding, though? i.=
-e.
-> it's not meant to be a 'real' interconnect provider, but a very simple way
-> to encode DMA parentage piggybacked onto a more general binding (with the
-> *option* of being a full-blown interconnect if it wants to, but certainly=
- no
-> expectation).
+On 09/12/2019 06:12, CK Hu wrote:
+> Hi, Matthias:
+> 
+> On Sat, 2019-12-07 at 23:47 +0100, matthias.bgg@kernel.org wrote:
+>> From: Matthias Brugger <mbrugger@suse.com>
+>>
+>> The MediaTek DRM has a block called mmsys, which sets
+>> the routing and enalbes the different blocks.
+>> This patch adds one line for the mmsys bindings description.
+>>
+>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+>> ---
+>>  .../display/mediatek/mediatek,disp.txt        | 28 ++++++++++---------
+>>  1 file changed, 15 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+>> index 8469de510001..c71c8a4b73ff 100644
+>> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+>> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+>> @@ -27,20 +27,22 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+>>  
+>>  Required properties (all function blocks):
+>>  - compatible: "mediatek,<chip>-disp-<function>", one of
+>> -	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
+>> -	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
+>> -	"mediatek,<chip>-disp-wdma"  - write DMA
+>> -	"mediatek,<chip>-disp-color" - color processor
+>> -	"mediatek,<chip>-disp-aal"   - adaptive ambient light controller
+>> -	"mediatek,<chip>-disp-gamma" - gamma correction
+>> -	"mediatek,<chip>-disp-merge" - merge streams from two RDMA sources
+>> -	"mediatek,<chip>-disp-split" - split stream to two encoders
+>> -	"mediatek,<chip>-disp-ufoe"  - data compression engine
+>> -	"mediatek,<chip>-dsi"        - DSI controller, see mediatek,dsi.txt
+>> -	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
+>> -	"mediatek,<chip>-disp-mutex" - display mutex
+>> -	"mediatek,<chip>-disp-od"    - overdrive
+>> +	"mediatek,<chip>-disp-ovl"		- overlay (4 layers, blending, csc)
+> 
+> This patch conflicts with 5.5-rc, please resend this patch base on
+> 5.5-rc1.
+> 
+>> +	"mediatek,<chip>-disp-rdma"		- read DMA / line buffer
+>> +	"mediatek,<chip>-disp-wdma"		- write DMA
+>> +	"mediatek,<chip>-disp-color"		- color processor
+>> +	"mediatek,<chip>-disp-aal"		- adaptive ambient light controller
+>> +	"mediatek,<chip>-disp-gamma"		- gamma correction
+>> +	"mediatek,<chip>-disp-merge"		- merge streams from two RDMA sources
+>> +	"mediatek,<chip>-disp-split"		- split stream to two encoders
+>> +	"mediatek,<chip>-disp-ufoe"		- data compression engine
+>> +	"mediatek,<chip>-dsi"			- DSI controller, see mediatek,dsi.txt
+>> +	"mediatek,<chip>-dpi"			- DPI controller, see mediatek,dpi.txt
+>> +	"mediatek,<chip>-disp-mutex"		- display mutex
+>> +	"mediatek,<chip>-disp-od"		- overdrive
+>> +	"mediatek,<chip>-mmsys", "syscon"	- provide clocks and components management
+>>    the supported chips are mt2701, mt2712 and mt8173.
+> 
+> The original binding document for mmsys is in [1], I think we should not
+> define it in duplicate. Maybe you could remove the original document.
+> 
+> [1]
+> https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/mediatek/mediatek%2Cmmsys.txt
 
-The way that this works on Tegra is that we want to describe multiple
-interconnect paths. A typical device will have a read and a write memory
-client, which can be separately "tuned". Both of these paths will target
-system memory, so they would both technically be "dma-mem" paths. But
-that would make it impossible to treat them separately elsewhere.
+I think we should keep it, as it describes some requirements that are otherwise
+lost. I'll adapt the  mmsys description and add a hint to it, like we do for dsi
+and dpi.
 
-So we could choose any of them to be the "dma-mem" path, but then we
-need to be very careful about defining which one that is, so that
-drivers know how to look them up, which is also not really desirable.
+Regards,
+Matthias
 
-One other things we could do is to duplicate one of the entries, so that
-we'd have "read", "write" and "dma-mem" interconnect paths, with
-"dma-mem" referencing the same path as "read" or "write". That doesn't
-sound *too* bad, but it's still a bit of a hack. Having an explicit
-description for this sounds much clearer and less error prone to me.
-
-Thierry
-
-> > One other case where this is useful is to describe the relationship
-> > between devices such as the memory controller and an IOMMU, for example.
-> > On Tegra186 and later, the memory controller is programmed with a set of
-> > stream IDs that are to be associated with each memory client. This
-> > programming needs to happen before translations through the IOMMU start,
-> > otherwise the used stream IDs may deviate from the expected values. The
-> > memory-controllers property is used in this case to ensure that the
-> > memory controller driver has been probed (and hence has programmed the
-> > stream ID mappings) before the IOMMU becomes available.
-> >=20
-> > Patch 1 introduces the memory controller bindings, both from the
-> > perspective of the provider and the consumer. Patch 2 makes use of a
-> > memory-controllers property to determine the DMA parent for the purpose
-> > of setting up DMA masks (based on the dma-ranges property of the DMA
-> > parent). Patch 3 introduces a minimalistic framework that is used to
-> > register memory controllers with along with a set of helpers to look up
-> > the memory controller from device tree.
-> >=20
-> > An example of how to register a memory controller is shown in patch 4
-> > for Tegra186 (and later) and finally the ARM SMMU driver is extended to
-> > become a consumer of an (optional) memory controller. As described
-> > above, the goal is to defer probe as long as the memory controller has
-> > not yet programmed the stream ID mappings.
-> >=20
-> > Thierry
-> >=20
-> > Thierry Reding (5):
-> >    dt-bindings: Add memory controller bindings
-> >    of: Use memory-controllers property for DMA parent
-> >    memory: Introduce memory controller mini-framework
-> >    memory: tegra186: Register as memory controller
-> >    iommu: arm-smmu: Get reference to memory controller
-> >=20
-> >   .../bindings/memory-controllers/consumer.yaml |  14 +
-> >   .../memory-controllers/memory-controller.yaml |  32 +++
-> >   drivers/iommu/arm-smmu.c                      |  11 +
-> >   drivers/iommu/arm-smmu.h                      |   2 +
-> >   drivers/memory/Makefile                       |   1 +
-> >   drivers/memory/core.c                         | 248 ++++++++++++++++++
-> >   drivers/memory/tegra/tegra186.c               |   9 +-
-> >   drivers/of/address.c                          |  25 +-
-> >   include/linux/memory-controller.h             |  34 +++
-> >   9 files changed, 366 insertions(+), 10 deletions(-)
-> >   create mode 100644 Documentation/devicetree/bindings/memory-controlle=
-rs/consumer.yaml
-> >   create mode 100644 Documentation/devicetree/bindings/memory-controlle=
-rs/memory-controller.yaml
-> >   create mode 100644 drivers/memory/core.c
-> >   create mode 100644 include/linux/memory-controller.h
-> >=20
-
---ZfOjI3PrQbgiZnxM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5FklsACgkQ3SOs138+
-s6GcqA//Q5OUVYrdcTeux/f0EWBv1/pwht0ee1aUsnP4Um8quhAz+gMOpMLLq0Tr
-Lxv4wuLKKSd59BfF48NUk7fU91iMLKJTzT1yBxSWvsEc0MIfUPre8PalEToob4oj
-TfLrNwEulquUL4aUAEdXUzfpSibr+2cf0Vf0oQMXDIj4TQ5LNc8WtRssWU/joa1Z
-jTNrXQ8B0+gA9KXf9/5jA4tzsrFfpxaVQ2oiPBJTxaBS6a1VSGhCfk64Fv1Xezv6
-NIffcn67mdt2rtI59Pz1YTVEgUqG9E47S+9qwqfgtcRvqE2UoiPHGoOpOevDI2El
-LO/muVw5xyROk4X23lhbH9q1IZ8wDefRP0Nt2e5/Fgi1jj899n3GBpFrp4tLIZQ4
-OKzxA/yoHOfWqPQkYmE8LY9OZZKYv5vX1E0l7aY7OR78rUpc0oXPptkedP1JVHnX
-It3t3YvecvstIl0UxC67b9OlZC4h2kPzqlqF3fc0xOdV1eeLI1G58UzC8phSfoEo
-qCOps57BTHR2i4BMXirkvKkb5bbDhGA3qrgX068xGIsw4SDvnQ7y4c5SFTqybqql
-eplj55UYCk+JP85/gJ6+sXjEqAnyMIdv6lnGCxmfncIXheSDw0c/D8t00IzpovmO
-PX1pak4k8xe0Ub8R6Vg9HRM0IsCSQ8lDrt/whJVWXKU1M74PJlM=
-=gwzY
------END PGP SIGNATURE-----
-
---ZfOjI3PrQbgiZnxM--
+> 
+> Regards,
+> CK
+> 
+>> +
+>>  - reg: Physical base address and length of the function block register space
+>>  - interrupts: The interrupt signal from the function block (required, except for
+>>    merge and split function blocks).
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
