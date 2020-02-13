@@ -2,308 +2,95 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACBCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE73C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D95217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bpvxWkhV"
+	by mail.kernel.org (Postfix) with ESMTP id 500B4222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgBMLrP (ORCPT
+        id S1729794AbgBMLuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:47:15 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30867 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727059AbgBMLrP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:47:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581594434;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VrWnGqqwBxjz6lDUPr1v80TiFd7C+Cunt0cqiT1oD0s=;
-        b=bpvxWkhVQl6l3/r0v5zGGPfJEClCbeHKmytXMgWRdWhMWoeeP9RV8p8ij3oHzeVA2UJ2kf
-        MCCED3tZU72+Odlvk7BPdCu6E5a999+mdtd0XMOfZxS3bhAgwqGkjKAD4ACvsqHYov1BoJ
-        ubKucWu2zYvvZP+F386kXjPJjylWb0s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-UO6wRuJNMNej8OiklcNbTA-1; Thu, 13 Feb 2020 06:47:08 -0500
-X-MC-Unique: UO6wRuJNMNej8OiklcNbTA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3119B8018AE;
-        Thu, 13 Feb 2020 11:47:07 +0000 (UTC)
-Received: from gondolin (ovpn-117-100.ams2.redhat.com [10.36.117.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE69D5C13F;
-        Thu, 13 Feb 2020 11:46:56 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 12:46:54 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [PATCH 3/7] vfio/pci: Introduce VF token
-Message-ID: <20200213124654.76128d29.cohuck@redhat.com>
-In-Reply-To: <158146234273.16827.10591457733122265139.stgit@gimli.home>
-References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-        <158146234273.16827.10591457733122265139.stgit@gimli.home>
-Organization: Red Hat GmbH
+        Thu, 13 Feb 2020 06:50:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:45544 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgBMLuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:50:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A767E1FB;
+        Thu, 13 Feb 2020 03:50:20 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA2403F6CF;
+        Thu, 13 Feb 2020 03:50:19 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:50:16 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cgroup/cpuset: Fix a race condition when reading cpuset.*
+Message-ID: <20200213115015.hkd6uqwfjosxjfpm@e107158-lin.cambridge.arm.com>
+References: <20200211141554.24181-1-qais.yousef@arm.com>
+ <20200212221543.GL80993@mtj.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200212221543.GL80993@mtj.thefacebook.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 16:05:42 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
+Hi Tejun
 
-> If we enable SR-IOV on a vfio-pci owned PF, the resulting VFs are not
-> fully isolated from the PF.  The PF can always cause a denial of
-> service to the VF, if not access data passed through the VF directly.
-> This is why vfio-pci currently does not bind to PFs with SR-IOV enabled
-> and does not provide access itself to enabling SR-IOV on a PF.  The
-> IOMMU grouping mechanism might allow us a solution to this lack of
-> isolation, however the deficiency isn't actually in the DMA path, so
-> much as the potential cooperation between PF and VF devices.  Also,
-> if we were to force VFs into the same IOMMU group as the PF, we severely
-> limit the utility of having independent drivers managing PFs and VFs
-> with vfio.
+On 02/12/20 17:15, Tejun Heo wrote:
+> On Tue, Feb 11, 2020 at 02:15:54PM +0000, Qais Yousef wrote:
+> > LTP cpuset_hotplug_test.sh was failing with the following error message
+> > 
+> > 	cpuset_hotplug 1 TFAIL: root group's cpus isn't expected(Result: 0-5, Expect: 0,2-5).
+> > 
+> > Which is due to a race condition between cpu hotplug operation and
+> > reading cpuset.cpus file.
+> > 
+> > When a cpu is onlined/offlined, cpuset schedules a workqueue to sync its
+> > internal data structures with the new values. If a read happens during
+> > this window, the user will read a stale value, hence triggering the
+> > failure above.
+> > 
+> > To fix the issue make sure cpuset_wait_for_hotplug() is called before
+> > allowing any value to be read, hence forcing the synchronization to
+> > happen before the read.
+> > 
+> > I ran 500 iterations with this fix applied with no failure triggered.
+> > 
+> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
 > 
-> Therefore we introduce the concept of a VF token.  The token is
-> implemented as a UUID and represents a shared secret which must be set
-> by the PF driver and used by the VF drivers in order to access a vfio
-> device file descriptor for the VF.  The ioctl to set the VF token will
-> be provided in a later commit, this commit implements the underlying
-> infrastructure.  The concept here is to augment the string the user
-> passes to match a device within a group in order to retrieve access to
-> the device descriptor.  For example, rather than passing only the PCI
-> device name (ex. "0000:03:00.0") the user would also pass a vf_token
-> UUID (ex. "2ab74924-c335-45f4-9b16-8569e5b08258").  The device match
-> string therefore becomes:
+> Hello, Qais. I just applied a patch which makes the operation
+> synchronous. Can you see whether the problem is gone on the
+> cgroup/for-next branch?
 > 
-> "0000:03:00.0 vf_token=2ab74924-c335-45f4-9b16-8569e5b08258"
-> 
-> This syntax is expected to be extensible to future options as well, with
-> the standard being:
-> 
-> "$DEVICE_NAME $OPTION1=$VALUE1 $OPTION2=$VALUE2"
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
 
-Is this designed to be an AND condition? (I read it as such.)
+I ran 500 iterations of cpuset_hotplug_test.sh on the branch, it passed.
 
-> 
-> The device name must be first and option=value pairs are separated by
-> spaces.
-> 
-> The vf_token option is only required for VFs where the PF device is
-> bound to vfio-pci.  There is no change for PFs using existing host
-> drivers.
-> 
-> Note that in order to protect existing VF users, not only is it required
-> to set a vf_token on the PF before VFs devices can be accessed, but also
-> if there are existing VF users, (re)opening the PF device must also
-> provide the current vf_token as authentication.  This is intended to
-> prevent a VF driver starting with a trusted PF driver and later being
-> replaced by an unknown driver.  A vf_token is not required to open the
-> PF device when none of the VF devices are in use by vfio-pci drivers.
-> 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c         |  127 +++++++++++++++++++++++++++++++++++
->  drivers/vfio/pci/vfio_pci_private.h |    8 ++
->  2 files changed, 134 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 2ec6c31d0ab0..26aea9ac4863 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -466,6 +466,35 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
->  		vfio_pci_set_power_state(vdev, PCI_D3hot);
->  }
->  
-> +static struct pci_driver vfio_pci_driver;
-> +
-> +static void vfio_pci_vf_token_user_add(struct vfio_pci_device *vdev, int val)
+I also cherry-picked commit 6426bfb1d5f0 ("cpuset: Make cpuset hotplug synchronous")
+into v5.6-rc1 and ran 100 iterations and it passed too.
 
-Suggestion: call this _user_modify(), and have _user_add() and
-_user_remove() as wrappers. That said, ...
+While investigating the problem, I could reproduce it all the way back to v5.0.
+Stopped there so earlier versions could still have the problem.
 
-> +{
-> +	struct pci_dev *physfn = pci_physfn(vdev->pdev);
-> +	struct vfio_device *pf_dev;
-> +	struct vfio_pci_device *pf_vdev;
-> +
-> +	if (!vdev->pdev->is_virtfn)
-> +		return;
-> +
-> +	pf_dev = vfio_device_get_from_dev(&physfn->dev);
-> +	if (!pf_dev)
-> +		return;
-> +
-> +	if (pci_dev_driver(physfn) != &vfio_pci_driver) {
-> +		vfio_device_put(pf_dev);
-> +		return;
-> +	}
-> +
-> +	pf_vdev = vfio_device_data(pf_dev);
-> +
-> +	mutex_lock(&pf_vdev->vf_token->lock);
-> +	pf_vdev->vf_token->users += val;
+Do you think it's worth porting the change to stable trees? Admittedly the
+problem should be benign, but it did trigger an LTP failure.
 
-...is this expected to always be >= 0? If yes, it looks like a bug if
-this is called with val==-n for n > users.
+I can check 4.19 and 4.14 stable trees (which at least in Android world are
+still relevant) if you agree it makes sense to put a fix in stable.
 
-> +	mutex_unlock(&pf_vdev->vf_token->lock);
-> +
-> +	vfio_device_put(pf_dev);
-> +}
-> +
->  static void vfio_pci_release(void *device_data)
->  {
->  	struct vfio_pci_device *vdev = device_data;
-> @@ -475,6 +504,7 @@ static void vfio_pci_release(void *device_data)
->  	if (!(--vdev->refcnt)) {
->  		vfio_spapr_pci_eeh_release(vdev->pdev);
->  		vfio_pci_disable(vdev);
-> +		vfio_pci_vf_token_user_add(vdev, -1);
->  	}
->  
->  	mutex_unlock(&vdev->reflck->lock);
-> @@ -493,6 +523,7 @@ static int vfio_pci_open(void *device_data)
->  	mutex_lock(&vdev->reflck->lock);
->  
->  	if (!vdev->refcnt) {
-> +		vfio_pci_vf_token_user_add(vdev, 1);
->  		ret = vfio_pci_enable(vdev);
->  		if (ret)
->  			goto error;
-> @@ -1278,11 +1309,86 @@ static void vfio_pci_request(void *device_data, unsigned int count)
->  	mutex_unlock(&vdev->igate);
->  }
->  
-> +#define VF_TOKEN_ARG "vf_token="
-> +
-> +/* Called with vdev->vf_token->lock */
-> +static int vfio_pci_vf_token_match(struct vfio_pci_device *vdev, char *opts)
-> +{
-> +	char *token;
-> +	uuid_t uuid;
-> +	int ret;
-> +
-> +	if (!opts)
-> +		return -EINVAL;
-> +
-> +	token = strstr(opts, VF_TOKEN_ARG);
-> +	if (!token)
-> +		return -EINVAL;
-> +
-> +	token += strlen(VF_TOKEN_ARG);
-> +
-> +	ret = uuid_parse(token, &uuid);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!uuid_equal(&uuid, &vdev->vf_token->uuid))
-> +		return -EACCES;
-> +
-> +	return 0;
-> +}
-> +
->  static int vfio_pci_match(void *device_data, char *buf)
->  {
->  	struct vfio_pci_device *vdev = device_data;
-> +	char *opts;
-> +
-> +	opts = strchr(buf, ' ');
-> +	if (opts) {
-> +		*opts = 0;
-> +		opts++;
-> +	}
-> +
-> +	if (strcmp(pci_name(vdev->pdev), buf))
-> +		return 0; /* No match */
+Thanks
 
-Up to here, this function is fine; but below, it gets a bit hard to
-follow...
-
-> +
-> +	if (vdev->pdev->is_virtfn) {
-> +		struct pci_dev *physfn = pci_physfn(vdev->pdev);
-> +		struct vfio_device *pf_dev;
-> +		int ret = 0;
-> +
-> +		pf_dev = vfio_device_get_from_dev(&physfn->dev);
-> +		if (pf_dev) {
-> +			if (pci_dev_driver(physfn) == &vfio_pci_driver) {
-> +				struct vfio_pci_device *pf_vdev =
-> +						vfio_device_data(pf_dev);
-> +
-> +				mutex_lock(&pf_vdev->vf_token->lock);
-> +				ret = vfio_pci_vf_token_match(pf_vdev, opts);
-> +				mutex_unlock(&pf_vdev->vf_token->lock);
-> +			}
-> +
-> +			vfio_device_put(pf_dev);
-> +
-> +			if (ret)
-> +				return -EACCES;
-> +		}
-> +	}
-
-If we are a VF, and the PF is bound to vfio, pass whatever stuff other
-than the device name that was passed in to an opaque match function.
-
->  
-> -	return !strcmp(pci_name(vdev->pdev), buf);
-> +	if (vdev->vf_token) {
-> +		int ret = 0;
-> +
-> +		mutex_lock(&vdev->vf_token->lock);
-> +
-> +		if (vdev->vf_token->users)
-> +			ret = vfio_pci_vf_token_match(vdev, opts);
-> +
-> +		mutex_unlock(&vdev->vf_token->lock);
-> +
-> +		if (ret)
-> +			return -EACCES;
-> +	}
-
-If we have a VF token with users, pass whatever stuff other than the
-device name that was passed in to an opaque match function.
-
-What about the following instead:
-
-- parse the passed-in string into device name and key/value pairs
-- maybe reject anything with an unknown key
-- check the device name
-- if we're a VF with the PF bound to vfio, require a VF token to be
-  specified and pass it to a token match function
-- if we have a VF token with users, require a VF token to be specified
-  and pass it to a token match function
-
-My main gripes with the current code are:
-- key=value parsing is done in the match function for vf_token
-- it looks hard to extend the list of supported key/value pairs
-- I don't see a good way to find out (as the user) _why_ the VF isn't
-  matching
-
-
-> +
-> +	return 1; /* Match */
->  }
-
-(...)
-
+--
+Qais Yousef
