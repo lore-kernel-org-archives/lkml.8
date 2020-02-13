@@ -2,103 +2,109 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A64C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08D9C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05644217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FCD2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581572635;
-	bh=4syaKUKu77FngS2/xeaFk/gtszZv6o9gBJ+A5aYg8KU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uQ8bM2aiT76VO50Kt2tFVRV7CSblM7xE8uVZrrDTFts9y2tT8gAwdNM7oKUbu5dZe
-	 w79iBkWkrbMk9x6TS1zSHRV/7umbrP2H4egeM/oIrNhasCpFkayN+0DGTqP+7UDBG7
-	 MkUGhJQrHOnJlFtPomPWaKaqwGGiQIMXdNlLyoeE=
+	s=default; t=1581572637;
+	bh=MeLA6KBsKMNopTpVt73O8Wl7j6vH4TfNZlX2CyoSvrA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=o7VfifYcM4MPPJ+0KkCDczeSQ1GAt7H58fLUe+qlTOZ/Jlgu7BabXgDifRTwvXDKB
+	 bdS487jdvC68oek1nqiCyOsex51oAKg9fTQfcmWgNpnxW1ZSUbNoy7tFl0CthnzY1H
+	 /CVb4dpDE9hdCWlTa841WxGUv60jYFDWyPoDmaos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgBMFny (ORCPT
+        id S1729699AbgBMFn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 00:43:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57422 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 00:43:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgBMFnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 00:43:53 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725773AbgBMFnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 00:43:55 -0500
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CEC220873;
-        Thu, 13 Feb 2020 05:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA8724676
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 05:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581572633;
-        bh=4syaKUKu77FngS2/xeaFk/gtszZv6o9gBJ+A5aYg8KU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RMT4njs9CqOEjaxrgfxN4wrm4Uhh6yv/5opMDMKEcFVMDRrz2yQbvzd3Cwfe7WGL5
-         2PHPd0Q7VIzWPMHxRDU5SmLfuRPft18+xurNzc1Kn+7wln6WeOQ7+Bmb/yRt9d/WyK
-         PNYEc8J6a3Kya+FiJPg82yFvjKLc1YHh/CuL2jkY=
-Date:   Thu, 13 Feb 2020 13:43:45 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Jacky Bai <ping.bai@nxp.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "info@metux.net" <info@metux.net>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "git@andred.net" <git@andred.net>, Abel Vesa <abel.vesa@nxp.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 1/4] ARM: imx: use device_initcall for imx_soc_device_init
-Message-ID: <20200213054344.GM11096@dragon>
-References: <1579167145-1480-1-git-send-email-peng.fan@nxp.com>
- <1579167145-1480-2-git-send-email-peng.fan@nxp.com>
- <AM7PR04MB6981B45633536729EBEB427487310@AM7PR04MB6981.eurprd04.prod.outlook.com>
- <AM0PR04MB448103B7C47B9AA5621A731A88310@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        s=default; t=1581572634;
+        bh=MeLA6KBsKMNopTpVt73O8Wl7j6vH4TfNZlX2CyoSvrA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tQMa4cy5y61Eqk2HT4RhEU9VuwdcKmwmLV+Pm9dxWTPAgh9MYuU7dVQnXUxZ6Wux+
+         vU0nBwtQNGI/ps/3y0l8NVCzoimDaot739BC7xRFDHA1CrZZaxhPkyNd4Uk3cUJsEa
+         qbP/QS7COcKS5XVFIhtTOXEk2C2TyXgbaXJgMsxY=
+Received: by mail-wm1-f49.google.com with SMTP id a6so5157458wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 21:43:53 -0800 (PST)
+X-Gm-Message-State: APjAAAXmy+vRXocsm/oW/lNRbDBEgY41zA831DDp+6krg1TZC+xc7mVh
+        n2QfCOBi//+kyQ5TRNb5eI2a729XP3wwHqnx1ft7tA==
+X-Google-Smtp-Source: APXvYqyqUoW3kfb8cYofHM8mbkBfIsE5YpgIUhk/mRvexUuzH11inVRX40a4Ns/fahBVe21U0vz1KAbXBJxlE849bAY=
+X-Received: by 2002:a1c:bb82:: with SMTP id l124mr3454795wmf.176.1581572632244;
+ Wed, 12 Feb 2020 21:43:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB448103B7C47B9AA5621A731A88310@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1581555616.git.ashish.kalra@amd.com>
+In-Reply-To: <cover.1581555616.git.ashish.kalra@amd.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 12 Feb 2020 21:43:41 -0800
+X-Gmail-Original-Message-ID: <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
+Message-ID: <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
+Subject: Re: [PATCH 00/12] SEV Live Migration Patchset.
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 08:15:54AM +0000, Peng Fan wrote:
-> > > Subject: [RFC 1/4] ARM: imx: use device_initcall for
-> > > imx_soc_device_init
-> > >
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > This is preparation to move imx_soc_device_init to drivers/soc/imx/
-> > >
-> > > There is no reason to must put dt devices under /sys/devices/soc0,
-> > > they could also be under /sys/devices/platform, so we could pass NULL
-> > > as parent when calling of_platform_default_populate.
-> > >
-> > 
-> > This change will impact various internal test case & userspace lib, I think.
-> > Need to ask test team & other developer to double check the impact.
-> 
-> /sys/devices/soc0 is still there, the patchset only moves
-> the platform devices which under /sys/devices/soc0 to /sys/devices/platform
+On Wed, Feb 12, 2020 at 5:14 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+>
+> From: Ashish Kalra <ashish.kalra@amd.com>
+>
+> This patchset adds support for SEV Live Migration on KVM/QEMU.
 
-Jacky's concern still stands, as there are many user spaces which will be
-broken and need update.
+I skimmed this all and I don't see any description of how this all works.
 
-> In this way, we aligned with ARM64. And simplify arch code by moving
-> the code to drivers/soc/imx. In future, considering more cleanup,
-> we could merge the code to soc-imx8.c, since they share similar
-> silicon rev ocotp logic.
+Does any of this address the mess in svm_register_enc_region()?  Right
+now, when QEMU (or a QEMU alternative) wants to allocate some memory
+to be used for guest encrypted pages, it mmap()s some memory and the
+kernel does get_user_pages_fast() on it.  The pages are kept pinned
+for the lifetime of the mapping.  This is not at all okay.  Let's see:
 
-Though this is a good thing from maintenance point of view, we do not
-want to break user spaces.
+ - The memory is pinned and it doesn't play well with the Linux memory
+management code.  You just wrote a big patch set to migrate the pages
+to a whole different machines, but we apparently can't even migrate
+them to a different NUMA node or even just a different address.  And
+good luck swapping it out.
 
-Shawn
+ - The memory is still mapped in the QEMU process, and that mapping is
+incoherent with actual guest access to the memory.  It's nice that KVM
+clflushes it so that, in principle, everything might actually work,
+but this is gross.  We should not be exposing incoherent mappings to
+userspace.
+
+Perhaps all this fancy infrastructure you're writing for migration and
+all this new API surface could also teach the kernel how to migrate
+pages from a guest *to the same guest* so we don't need to pin pages
+forever.  And perhaps you could put some thought into how to improve
+the API so that it doesn't involve nonsensical incoherent mappings.
+
+(To be blunt: if I had noticed how the SEV code worked before it was
+merged, I would have NAKed it.  It's too late now to retroactively
+remove it from the kernel, but perhaps we could try not to pile more
+complexity on top of the unfortunate foundation we have.)
