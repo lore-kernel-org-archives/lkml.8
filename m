@@ -2,130 +2,150 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC000C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084C6C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99B420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C676520659
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge5DB+gx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jgFLIUgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgBMUAZ (ORCPT
+        id S1728738AbgBMUA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:00:25 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51547 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgBMUAY (ORCPT
+        Thu, 13 Feb 2020 15:00:59 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:58380 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgBMUA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:00:24 -0500
-Received: by mail-pj1-f66.google.com with SMTP id fa20so2845891pjb.1;
-        Thu, 13 Feb 2020 12:00:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7zNWtKUJHoek7tX6KN5yHzkwTD50SXdtF49klgds63w=;
-        b=Ge5DB+gxR4EOP+lTDQ3adyNCo1HDVCkNwHphQnRwHHDD0wylg0usLBGFpUWtcVW8Ee
-         98bVBeqTN7ygFyAutPvD7/LOQ8A5uooRuUig3lvoVm+SI6nMRiyAxve6n/2JEQ3jvwai
-         s/7PQE8D+tZvDE80ZQYWmwzn+SGbqyHiK+w1qOo2RwSz4JRiJDTKr0fpess2GX6978u1
-         bNfOvOa+/gDi++23dku389FH8YsqWeMF3EMIsWae0/xRR7Agy9fafajAAIkBxQ5MnEDV
-         WQmFcgS751Cyg1Zic+ieNOycvG4clAFsA8OTrPuz7vIOgTKgpb5c/+dH+2coTXIiSsMf
-         Hh5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7zNWtKUJHoek7tX6KN5yHzkwTD50SXdtF49klgds63w=;
-        b=VoXJBtDwq1kiQTSxozlegHeqI0qfB/b6u32uTNJCvafDuwbJ7SEh/deda8THzSWOse
-         d3n+BapWMALry+U2GfNToZHfl7+k5K5146wz1o84dF6Nfoehs5kQ/IGZvAVKrUt2AFJM
-         SYnymzsw0wDXhCXoJD1LntswyzW7UHc85juX8dXiiu12ss7f7ntfz4hjsYVFHg0RBMwa
-         ScNA8vc9gnLtmnUfc5+UziUTSQIN4YAJZEbrYtxd03fVOLFEaWLYrVSnjX3/3U/uHkVg
-         6hoUWxeXpzyjZr4SgfKdDjiQm6w9oRKOUR8Rr1V2nNswfbY/kfrYSiGwFbaWbESkGXJj
-         MbMA==
-X-Gm-Message-State: APjAAAUy4gN+x3SkbvWGVIgDUiyaJrlZMJfL//C2YW+JbrT8r033ksw4
-        XV6H8NHjfn1uMtu6QUviYoc=
-X-Google-Smtp-Source: APXvYqxrbb7grYzIdTdSfic9sPeYzOOlTp0B0yWzUqe5aLDoN7IoykLfytqJ3FVK6jUh17KuriOfVQ==
-X-Received: by 2002:a17:902:a588:: with SMTP id az8mr15533441plb.123.1581624023960;
-        Thu, 13 Feb 2020 12:00:23 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id z29sm4378794pgc.21.2020.02.13.12.00.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2020 12:00:23 -0800 (PST)
-Subject: Re: WARNING in dev_change_net_namespace
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com>
-Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dsahern@gmail.com,
-        hawk@kernel.org, jiri@mellanox.com, johannes.berg@intel.com,
-        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-References: <000000000000c54420059e4f08ff@google.com>
- <878sl6fh2a.fsf@x220.int.ebiederm.org>
- <4802635e-0ef1-b96c-e596-fa83cd597e20@gmail.com>
-Message-ID: <a116fc12-92ea-7609-1d60-4fd90939141a@gmail.com>
-Date:   Thu, 13 Feb 2020 12:00:21 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 15:00:58 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJrhqu135470;
+        Thu, 13 Feb 2020 20:00:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=qnXvCz+6kkBoPYOIM0/jTaDZgIKo/FzttVj0aM4nTps=;
+ b=jgFLIUgTANvySdJiTiSOWLLDtmwnL6d4K6je3f2CKN4kA7dJay9VEC0JeJ0NhnWZgfjG
+ ROrzJBY9xmtJ31PFsxqeXNXn+lmQhWrrg/xAbqf69bnU+MlxycyrGZvGUb6hp6CgIqbY
+ TnfAaKrUx1V0n8dqbZaVpir1xWDrmglcMWW1PTZ5QWkmrEvuhNh1040ZMUCFZzyI9PKj
+ MPaGC+UEJkrIAH7CO4BqCjTMX+IVPOJ3Ep1Ro5bH0Q+J0sF2zq/QNRlvVx2hSqY/W0Hn
+ np0PBc/Y2/VgRDIOpayGGjBRjB27edstidqdfmLuXmv9Mw5BubELnKQvGyWpwZ725IsZ Kg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2y2p3svrvw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 20:00:44 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJw3oV022714;
+        Thu, 13 Feb 2020 19:58:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2y4k80gv0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 19:58:43 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01DJwflD021036;
+        Thu, 13 Feb 2020 19:58:41 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Feb 2020 11:58:41 -0800
+Date:   Thu, 13 Feb 2020 11:58:39 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+Message-ID: <20200213195839.GG6870@magnolia>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
+ <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
+ <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
+ <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
+ <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <4802635e-0ef1-b96c-e596-fa83cd597e20@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002130139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/13/20 11:57 AM, Eric Dumazet wrote:
+On Thu, Feb 13, 2020 at 11:05:13AM -0800, Ira Weiny wrote:
+> On Thu, Feb 13, 2020 at 11:01:57AM -0800, 'Ira Weiny' wrote:
+> > On Wed, Feb 12, 2020 at 02:49:48PM -0500, Jeff Moyer wrote:
+> > > Ira Weiny <ira.weiny@intel.com> writes:
+> > > 
+>  
+> [snip]
 > 
+> > > Given that we document the dax mount
+> > > option as "the way to get dax," it may be a good idea to allow for a
+> > > user to selectively disable dax, even when -o dax is specified.  Is that
+> > > possible?
+> > 
+> > Not with this patch set.  And I'm not sure how that would work.  The idea was
+> > that -o dax was simply an override for users who were used to having their
+> > entire FS be dax.  We wanted to depreciate the use of "-o dax" in general.  The
+> > individual settings are saved so I don't think it makes sense to ignore the -o
+> > dax in favor of those settings.  Basically that would IMO make the -o dax
+> > useless.
 > 
-> On 2/13/20 11:00 AM, Eric W. Biederman wrote:
->> syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com> writes:
->>
->>> Hello,
->>
->> Has someone messed up the network device kobject support.
->> I don't have the exact same code as listed here so I may
->> be misreading things.  But the only WARN_ON I see in
->> dev_change_net_namespaces is from kobject_rename.
->>
->> It is not supposed to be possible for that to fail.
-> 
-> Well, this code is attempting kmalloc() calls, so can definitely fail.
-> 
-> syzbot is using fault injection to force few kmalloc() to return NULL
+> Oh and I forgot to mention that setting 'dax' on the root of the FS basically
+> provides '-o dax' functionality by default with the ability to "turn it off"
+> for files.
 
-[  533.360275][T24839] FAULT_INJECTION: forcing a failure.
-[  533.360275][T24839] name failslab, interval 1, probability 0, space 0, times 0
-[  533.418952][T24839] CPU: 0 PID: 24839 Comm: syz-executor.4 Not tainted 5.6.0-rc1-syzkaller #0
-[  533.427669][T24839] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-[  533.437873][T24839] Call Trace:
-[  533.441188][T24839]  dump_stack+0x1fb/0x318
-[  533.445677][T24839]  should_fail+0x4b8/0x660
-[  533.450125][T24839]  __should_failslab+0xb9/0xe0
-[  533.454913][T24839]  ? kzalloc+0x21/0x40
-[  533.459000][T24839]  should_failslab+0x9/0x20
-[  533.463524][T24839]  __kmalloc+0x7a/0x340
-[  533.467698][T24839]  kzalloc+0x21/0x40
-[  533.471604][T24839]  kobject_rename+0x12f/0x4d0
-[  533.476399][T24839]  ? sysfs_rename_link_ns+0x179/0x1b0
-[  533.481782][T24839]  device_rename+0x16d/0x190
-[  533.486380][T24839]  dev_change_net_namespace+0x1375/0x16b0
-[  533.492550][T24839]  ? ns_capable+0x91/0xf0
-[  533.496900][T24839]  ? netlink_ns_capable+0xcf/0x100
-[  533.502038][T24839]  ? rtnl_link_get_net_capable+0x136/0x280
-[  533.508470][T24839]  do_setlink+0x196/0x3880
-[  533.512943][T24839]  ? __kasan_check_read+0x11/0x20
-[  533.517992][T24839]  rtnl_newlink+0x1509/0x1c00
+Please don't further confuse FS_XFLAG_DAX and S_DAX.  They are two
+separate flags with two separate behaviors:
 
+FS_XFLAG_DAX is a filesystem inode metadata flag.
+
+Setting FS_XFLAG_DAX on a directory causes all files and directories
+created within that directory to inherit FS_XFLAG_DAX.
+
+Mounting with -o dax causes all files and directories created to have
+FS_XFLAG_DAX set regardless of the parent's status.
+
+The FS_XFLAG_DAX can be get and set via the fs[g]etxattr ioctl.
+
+-------
+
+S_DAX is the flag that controls the IO path in the kernel for a given
+inode.
+
+Loading a file inode into the kernel (via _iget) with FS_XFLAG_DAX set
+or creating a file inode that inherits FS_XFLAG_DAX causes the incore
+inode to have the S_DAX flag set if the storage device supports it.
+
+Files with S_DAX set use the dax IO paths through the kernel.
+
+The S_DAX flag can be queried via statx.
+
+--D
+
+> Ira
+> 
+> > 
+> > Ira
+> > 
