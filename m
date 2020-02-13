@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60872C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3198C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CE4206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97C82073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609998;
-	bh=lbxSGU59kmdmmuKS911zLdpcn6ZObIXNyQT2hHgEQDs=;
+	s=default; t=1581610001;
+	bh=kt0Bz0bPpo/l/zqQOhZV+pT2pslamunyf4gkPOCt2Pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CeqQgmWxlYcuCuYgSTncI2Baxg0STMAFyJQqQLUaSWAK2ekzqZvzZYdZ17461KU8P
-	 QmwUXeP2cZrd/Ih3Q9EOzDHRKGBR2MZvNMYhsSvuD/tkEGDfLcg0DmW6PtqFB8Q0rk
-	 7fhcf4PvQH8daAQsy4eC2hQTsGyGIsJDq5jr0XKc=
+	b=d5JOaYA+H/rq2rFxoAF+wO6NQ64zzRLVqLqyQdSojIYKGPg9C0rftzScA7FYNBnlc
+	 mYOlDkBht7IClk3YB66BNWzZq5NxxG940+GuXx8HNxsrp2tbxNac+1qcs97z7T3ZLj
+	 3wSLv9BJS1zaVJFb6wXFeYBmmCZiDprOJOARtb60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgBMQGh (ORCPT
+        id S1730396AbgBMQGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:06:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:06:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbgBMPXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728419AbgBMPXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:23:35 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18BE8246B1;
-        Thu, 13 Feb 2020 15:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 754A724689;
+        Thu, 13 Feb 2020 15:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607415;
-        bh=lbxSGU59kmdmmuKS911zLdpcn6ZObIXNyQT2hHgEQDs=;
+        s=default; t=1581607414;
+        bh=kt0Bz0bPpo/l/zqQOhZV+pT2pslamunyf4gkPOCt2Pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=du58Y1/TTa5iiEAibexsqWsSFZSqgNxxHZr7+RW91exslW5dMnkriwZdTScP0xtkV
-         3L9TQfSMHQcwfU4m21vLDzPcbov13CWRSVjNtOkGV/APU7I2Mow5ubuyVkBVCkeMCT
-         Jc8tnIbcm215mP3r2DdaA4IJPd7tIBi69W72qat4=
+        b=S1CJnLWihWLhKH59VkDxnZX+gkvoqFzMd2ct+JLfqZ3NkpAjRcDgTDKwo74jT1oCB
+         NQHIVCTtgSHGY0s76/VhAWKHhDreHMVfIivI9Nyf3rkNqjp6hlqB3Oat3s2o8xE16r
+         crzLWqjMzf33+9jfirxb68cJPHI6dhd2gc58jHEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 021/116] ALSA: dummy: Fix PCM format loop in proc output
-Date:   Thu, 13 Feb 2020 07:19:25 -0800
-Message-Id: <20200213151851.123743279@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.9 020/116] usb: gadget: f_ecm: Use atomic_t to track in-flight request
+Date:   Thu, 13 Feb 2020 07:19:24 -0800
+Message-Id: <20200213151850.786299257@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -58,33 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-commit 2acf25f13ebe8beb40e97a1bbe76f36277c64f1e upstream.
+commit d710562e01c48d59be3f60d58b7a85958b39aeda upstream.
 
-The loop termination for iterating over all formats should contain
-SNDRV_PCM_FORMAT_LAST, not less than it.
+Currently ecm->notify_req is used to flag when a request is in-flight.
+ecm->notify_req is set to NULL and when a request completes it is
+subsequently reset.
 
-Fixes: 9b151fec139d ("ALSA: dummy - Add debug proc file")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200201080530.22390-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This is fundamentally buggy in that the unbind logic of the ECM driver will
+unconditionally free ecm->notify_req leading to a NULL pointer dereference.
+
+Fixes: da741b8c56d6 ("usb ethernet gadget: split CDC Ethernet function")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/drivers/dummy.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/function/f_ecm.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/sound/drivers/dummy.c
-+++ b/sound/drivers/dummy.c
-@@ -925,7 +925,7 @@ static void print_formats(struct snd_dum
- {
- 	int i;
+--- a/drivers/usb/gadget/function/f_ecm.c
++++ b/drivers/usb/gadget/function/f_ecm.c
+@@ -56,6 +56,7 @@ struct f_ecm {
+ 	struct usb_ep			*notify;
+ 	struct usb_request		*notify_req;
+ 	u8				notify_state;
++	atomic_t			notify_count;
+ 	bool				is_open;
  
--	for (i = 0; i < SNDRV_PCM_FORMAT_LAST; i++) {
-+	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
- 		if (dummy->pcm_hw.formats & (1ULL << i))
- 			snd_iprintf(buffer, " %s", snd_pcm_format_name(i));
+ 	/* FIXME is_open needs some irq-ish locking
+@@ -384,7 +385,7 @@ static void ecm_do_notify(struct f_ecm *
+ 	int				status;
+ 
+ 	/* notification already in flight? */
+-	if (!req)
++	if (atomic_read(&ecm->notify_count))
+ 		return;
+ 
+ 	event = req->buf;
+@@ -424,10 +425,10 @@ static void ecm_do_notify(struct f_ecm *
+ 	event->bmRequestType = 0xA1;
+ 	event->wIndex = cpu_to_le16(ecm->ctrl_id);
+ 
+-	ecm->notify_req = NULL;
++	atomic_inc(&ecm->notify_count);
+ 	status = usb_ep_queue(ecm->notify, req, GFP_ATOMIC);
+ 	if (status < 0) {
+-		ecm->notify_req = req;
++		atomic_dec(&ecm->notify_count);
+ 		DBG(cdev, "notify --> %d\n", status);
  	}
+ }
+@@ -452,17 +453,19 @@ static void ecm_notify_complete(struct u
+ 	switch (req->status) {
+ 	case 0:
+ 		/* no fault */
++		atomic_dec(&ecm->notify_count);
+ 		break;
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
++		atomic_set(&ecm->notify_count, 0);
+ 		ecm->notify_state = ECM_NOTIFY_NONE;
+ 		break;
+ 	default:
+ 		DBG(cdev, "event %02x --> %d\n",
+ 			event->bNotificationType, req->status);
++		atomic_dec(&ecm->notify_count);
+ 		break;
+ 	}
+-	ecm->notify_req = req;
+ 	ecm_do_notify(ecm);
+ }
+ 
+@@ -909,6 +912,11 @@ static void ecm_unbind(struct usb_config
+ 
+ 	usb_free_all_descriptors(f);
+ 
++	if (atomic_read(&ecm->notify_count)) {
++		usb_ep_dequeue(ecm->notify, ecm->notify_req);
++		atomic_set(&ecm->notify_count, 0);
++	}
++
+ 	kfree(ecm->notify_req->buf);
+ 	usb_ep_free_request(ecm->notify, ecm->notify_req);
+ }
 
 
