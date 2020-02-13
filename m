@@ -2,51 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7018C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C7CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A271D206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62194206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610226;
-	bh=QVTMlH3x/XufSgrUByrIR90YJd9Pgm7gaU+w7qCgZC8=;
+	s=default; t=1581610233;
+	bh=1Iizuofl1M9QTJuqeATp+FLhwr0NT7Oa3L7BrSWjUnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MqWpzohD+4wy2MuxMMDE5ljlXZkAFisuAxmv7/YCEyUR9Tbx4Jv5KTdEIpgVhPfR4
-	 XV75GY42Vc98bujdUgXqRrpjRabu7oTnw3CWduYDncId1eC6t9JpAlBPSPljLpVShQ
-	 sVAhONfYLcv6nXTMnF4XM0TEmEcfewGipBFce5o0=
+	b=x6OB5IzzE3ie1rIOqQU7LcaBwKQHzdUVGVqZSrh/Sl5yYM66XD6lEuMjvtWHqdvMh
+	 3IeHu8khyXl81dMB12wyxcQPWy4CNPHdDw/nUtWacgDqxcaZJFWksacTwdgrdPq1pT
+	 7bj8u8Y/hQgVBNbIKGO5JW2A1uxWjR/1M5u8jUqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgBMQKZ (ORCPT
+        id S1727742AbgBMQKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:10:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60388 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:10:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728006AbgBMPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:38 -0500
+        id S1728003AbgBMPWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:37 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29DB024690;
-        Thu, 13 Feb 2020 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB20024689;
+        Thu, 13 Feb 2020 15:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607357;
-        bh=QVTMlH3x/XufSgrUByrIR90YJd9Pgm7gaU+w7qCgZC8=;
+        s=default; t=1581607355;
+        bh=1Iizuofl1M9QTJuqeATp+FLhwr0NT7Oa3L7BrSWjUnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xJoQotKvfQuPIru/1LGxRiePF+8SPdCRNiTZ66i5vQgmanw/z6/Lld3M6dwvtEzpM
-         03L/V9HF4uvCfm/W2A+9ChUyc1dU3DVLok5SgI8Gn5D/WdLgorDjPCLtCacWlOLx1v
-         6qAgAK2uGqsdg4nWOfu965LkcYo2Da9EKmXv6WgU=
+        b=SFOr7qY51QvB8lHooFAGSknunz24tPiQurPIfa0G4QwXUkaF2cK+OSHezfZDgvq/Z
+         z0o2gmmAKW1/9e32el0nLOfk4Xw6rn1RjzLPVjGkLbs46LilriZwZWVkrfdJOdzgDN
+         hTx3AVpxkEqNErrOBHamjhYCzfkIrfhh2MBfH4vc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
-Subject: [PATCH 4.4 24/91] Revert "ovl: modify ovl_permission() to do checks on two inodes"
-Date:   Thu, 13 Feb 2020 07:19:41 -0800
-Message-Id: <20200213151830.964687032@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 22/91] scsi: qla2xxx: Fix mtcp dump collection failure
+Date:   Thu, 13 Feb 2020 07:19:39 -0800
+Message-Id: <20200213151830.210127935@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -59,95 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+From: Quinn Tran <qutran@marvell.com>
 
-This reverts commit b24be4acd17a8963a29b2a92e1d80b9ddf759c95 which is commit
-c0ca3d70e8d3cf81e2255a217f7ca402f5ed0862 upstream.
+commit 641e0efddcbde52461e017136acd3ce7f2ef0c14 upstream.
 
-Commit b24be4acd17a ("ovl: modify ovl_permission() to do checks on two
-inodes") (stable kernel  id) breaks r/w access in overlayfs when setting
-ACL to files, in 4.4 stable kernel. There is an available reproducer in
-[1].
+MTCP dump failed due to MB Reg 10 was picking garbage data from stack
+memory.
 
-To reproduce the issue :
-$./make-overlay.sh
-$./test.sh
-st_mode is 100644
-open failed: -1
-cat: /tmp/overlay/animal: Permission denied <---- Breaks access
--rw-r--r-- 1 jo jo 0 Oct 11 09:57 /tmp/overlay/animal
-
-There are two options to fix this; (a) backport commit ce31513a9114
-("ovl: copyattr after setting POSIX ACL") to 4.4 or (b) revert offending
-commit b24be4acd17a ("ovl: modify ovl_permission() to do checks on two
-inodes"). Following option (a) entails high risk of regression since
-commit ce31513a9114 ("ovl: copyattr after setting POSIX ACL") has many
-dependencies on other commits that need to be backported too (~18
-commits).
-
-This patch proceeds with reverting commit b24be4acd17a ("ovl: modify
-ovl_permission() to do checks on two inodes").  The reverted commit is
-associated with CVE-2018-16597, however the test-script provided in [3]
-shows that 4.4 kernel is  NOT affected by this cve and therefore it's
-safe to revert it.
-
-The offending commit was introduced upstream in v4.8-rc1. At this point
-had nothing to do with any CVE.  It was related with CVE-2018-16597 as
-it was the fix for bug [2]. Later on it was backported to stable 4.4.
-
-The test-script [3] tests whether 4.4 kernel is affected by
-CVE-2018-16597. It tests the reproducer found in [2] plus a few more
-cases. The correct output of the script is failure with "Permission
-denied" when a normal user tries to overwrite root owned files.  For
-more details please refer to [4].
-
-[1] https://gist.github.com/thomas-holmes/711bcdb28e2b8e6d1c39c1d99d292af7
-[2] https://bugzilla.suse.com/show_bug.cgi?id=1106512#c0
-[3] https://launchpadlibrarian.net/459694705/test_overlay_permission.sh
-[4] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1851243
-
-Signed-off-by: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+Fixes: 81178772b636a ("[SCSI] qla2xxx: Implemetation of mctp.")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191217220617.28084-14-hmadhani@marvell.com
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/overlayfs/inode.c |   13 -------------
- 1 file changed, 13 deletions(-)
 
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -9,7 +9,6 @@
+---
+ drivers/scsi/qla2xxx/qla_mbx.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -5455,9 +5455,8 @@ qla2x00_dump_mctp_data(scsi_qla_host_t *
+ 	mcp->mb[7] = LSW(MSD(req_dma));
+ 	mcp->mb[8] = MSW(addr);
+ 	/* Setting RAM ID to valid */
+-	mcp->mb[10] |= BIT_7;
+ 	/* For MCTP RAM ID is 0x40 */
+-	mcp->mb[10] |= 0x40;
++	mcp->mb[10] = BIT_7 | 0x40;
  
- #include <linux/fs.h>
- #include <linux/slab.h>
--#include <linux/cred.h>
- #include <linux/xattr.h>
- #include "overlayfs.h"
- 
-@@ -92,7 +91,6 @@ int ovl_permission(struct inode *inode,
- 	struct ovl_entry *oe;
- 	struct dentry *alias = NULL;
- 	struct inode *realinode;
--	const struct cred *old_cred;
- 	struct dentry *realdentry;
- 	bool is_upper;
- 	int err;
-@@ -145,18 +143,7 @@ int ovl_permission(struct inode *inode,
- 			goto out_dput;
- 	}
- 
--	/*
--	 * Check overlay inode with the creds of task and underlying inode
--	 * with creds of mounter
--	 */
--	err = generic_permission(inode, mask);
--	if (err)
--		goto out_dput;
--
--	old_cred = ovl_override_creds(inode->i_sb);
- 	err = __inode_permission(realinode, mask);
--	revert_creds(old_cred);
--
- out_dput:
- 	dput(alias);
- 	return err;
+ 	mcp->out_mb |= MBX_10|MBX_8|MBX_7|MBX_6|MBX_5|MBX_4|MBX_3|MBX_2|MBX_1|
+ 	    MBX_0;
 
 
