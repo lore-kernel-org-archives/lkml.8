@@ -2,60 +2,56 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29219C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43716C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D0D24649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C0B20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608894;
-	bh=nmvu67hqN0sZtyXAZ4ufGG9T4v6SmKu2ldauLxBO0As=;
+	s=default; t=1581608897;
+	bh=yrSeCG0uOthnJMH+3IwbUqpd3QyT4TGEU1r7Ewtx6oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nttodWDDXwng51+cs0v38YY5Qvtxe23l6wKZfcOG+oxd53GHxwUKBLqg1agVtb6p0
-	 VR2eRTG5yVE1Fbz0GgVLLCCsIdA1TL12WCfCwOxw+gaVxn4ktcD6wFRSVpri1f0mYW
-	 tzztUYnIfP9orrMh7Mvx+xayusXyz1w6EyrYbTGs=
+	b=DWiboBoN+rJwZLHlKAVHctX+aHe3ibfiG3tONy8iWWiMJd/F9lp3Eg+9XXlxD5tfW
+	 j0LTlX9zVNT+jNpZXPGZVukuLcgropo1e7JEMr07K2+S3c618AQWHKf/qiUMwPz+DO
+	 kUKcU12c3Kg1Vr/a2yurqgdRERzhySWFcC4S2lvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbgBMPsM (ORCPT
+        id S2388024AbgBMPsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:48:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:48:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbgBMP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728096AbgBMP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:26:58 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8EB620661;
-        Thu, 13 Feb 2020 15:26:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DD5E24676;
+        Thu, 13 Feb 2020 15:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607617;
-        bh=nmvu67hqN0sZtyXAZ4ufGG9T4v6SmKu2ldauLxBO0As=;
+        bh=yrSeCG0uOthnJMH+3IwbUqpd3QyT4TGEU1r7Ewtx6oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2mmhjTXZTu4TNqYC1LgMQa/WQ1lz0LgPNQbjxnDUBnLUCUSZMVywmMDN0IcpVgjT
-         az5tftS0j2eOggE8I8cQfDgx1441Z3Z1p/92Z5D1XXQMOLzgM+gjUifV96FCyRIELT
-         KUPIyWxQ3UoplhNmCJwbcMKLo97k1ajaucmBdN7E=
+        b=zkePcH6oYtfy0D1FDTHHzLWuR+72Zm+maQHZszpyjZJaYASKK4AUz1rltUPhtdVkV
+         pRJfAjrQqvUKlLhckQGPwJh8fHVaVtaUDQQHZm9qCyLp6UeWIZ/sHVnAtnl2sOgB0E
+         Znao6EuEVjLQIiKdL3THzMSCwf25lgk26CKAGifo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 01/96] ASoC: pcm: update FE/BE trigger order based on the command
-Date:   Thu, 13 Feb 2020 07:20:08 -0800
-Message-Id: <20200213151839.476856295@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 10/96] RDMA/cma: Fix unbalanced cm_id reference count during address resolve
+Date:   Thu, 13 Feb 2020 07:20:17 -0800
+Message-Id: <20200213151843.267090680@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,185 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit acbf27746ecfa96b290b54cc7f05273482ea128a ]
+commit b4fb4cc5ba83b20dae13cef116c33648e81d2f44 upstream.
 
-Currently, the trigger orders SND_SOC_DPCM_TRIGGER_PRE/POST
-determine the order in which FE DAI and BE DAI are triggered.
-In the case of SND_SOC_DPCM_TRIGGER_PRE, the FE DAI is
-triggered before the BE DAI and in the case of
-SND_SOC_DPCM_TRIGGER_POST, the BE DAI is triggered before
-the FE DAI. And this order remains the same irrespective of the
-trigger command.
+Below commit missed the AF_IB and loopback code flow in
+rdma_resolve_addr().  This leads to an unbalanced cm_id refcount in
+cma_work_handler() which puts the refcount which was not incremented prior
+to queuing the work.
 
-In the case of the SOF driver, during playback, the FW
-expects the BE DAI to be triggered before the FE DAI during
-the START trigger. The BE DAI trigger handles the starting of
-Link DMA and so it must be started before the FE DAI is started
-to prevent xruns during pause/release. This can be addressed
-by setting the trigger order for the FE dai link to
-SND_SOC_DPCM_TRIGGER_POST. But during the STOP trigger,
-the FW expects the FE DAI to be triggered before the BE DAI.
-Retaining the same order during the START and STOP commands,
-results in FW error as the DAI component in the FW is still
-active.
+A call trace is observed with such code flow:
 
-The issue can be fixed by mirroring the trigger order of
-FE and BE DAI's during the START and STOP trigger. So, with the
-trigger order set to SND_SOC_DPCM_TRIGGER_PRE, the FE DAI will be
-trigger first during SNDRV_PCM_TRIGGER_START/STOP/RESUME
-and the BE DAI will be triggered first during the
-STOP/SUSPEND/PAUSE commands. Conversely, with the trigger order
-set to SND_SOC_DPCM_TRIGGER_POST, the BE DAI will be triggered
-first during the SNDRV_PCM_TRIGGER_START/STOP/RESUME commands
-and the FE DAI will be triggered first during the
-SNDRV_PCM_TRIGGER_STOP/SUSPEND/PAUSE commands.
+ BUG: unable to handle kernel NULL pointer dereference at (null)
+ [<ffffffff96b67e16>] __mutex_lock_slowpath+0x166/0x1d0
+ [<ffffffff96b6715f>] mutex_lock+0x1f/0x2f
+ [<ffffffffc0beabb5>] cma_work_handler+0x25/0xa0
+ [<ffffffff964b9ebf>] process_one_work+0x17f/0x440
+ [<ffffffff964baf56>] worker_thread+0x126/0x3c0
 
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191104224812.3393-2-ranjani.sridharan@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Hence, hold the cm_id reference when scheduling the resolve work item.
+
+Fixes: 722c7b2bfead ("RDMA/{cma, core}: Avoid callback on rdma_addr_cancel()")
+Link: https://lore.kernel.org/r/20200126142652.104803-2-leon@kernel.org
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/soc-pcm.c | 95 ++++++++++++++++++++++++++++++++-------------
- 1 file changed, 68 insertions(+), 27 deletions(-)
+ drivers/infiniband/core/cma.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index d07026a846b9c..8712a91e0e3ea 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -2297,42 +2297,81 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
- }
- EXPORT_SYMBOL_GPL(dpcm_be_dai_trigger);
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -3091,6 +3091,7 @@ static int cma_resolve_loopback(struct r
+ 	rdma_addr_get_sgid(&id_priv->id.route.addr.dev_addr, &gid);
+ 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, &gid);
  
-+static int dpcm_dai_trigger_fe_be(struct snd_pcm_substream *substream,
-+				  int cmd, bool fe_first)
-+{
-+	struct snd_soc_pcm_runtime *fe = substream->private_data;
-+	int ret;
-+
-+	/* call trigger on the frontend before the backend. */
-+	if (fe_first) {
-+		dev_dbg(fe->dev, "ASoC: pre trigger FE %s cmd %d\n",
-+			fe->dai_link->name, cmd);
-+
-+		ret = soc_pcm_trigger(substream, cmd);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
-+		return ret;
-+	}
-+
-+	/* call trigger on the frontend after the backend. */
-+	ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_dbg(fe->dev, "ASoC: post trigger FE %s cmd %d\n",
-+		fe->dai_link->name, cmd);
-+
-+	ret = soc_pcm_trigger(substream, cmd);
-+
-+	return ret;
-+}
-+
- static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
- {
- 	struct snd_soc_pcm_runtime *fe = substream->private_data;
--	int stream = substream->stream, ret;
-+	int stream = substream->stream;
-+	int ret = 0;
- 	enum snd_soc_dpcm_trigger trigger = fe->dai_link->trigger[stream];
++	atomic_inc(&id_priv->refcount);
+ 	cma_init_resolve_addr_work(work, id_priv);
+ 	queue_work(cma_wq, &work->work);
+ 	return 0;
+@@ -3117,6 +3118,7 @@ static int cma_resolve_ib_addr(struct rd
+ 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, (union ib_gid *)
+ 		&(((struct sockaddr_ib *) &id_priv->id.route.addr.dst_addr)->sib_addr));
  
- 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_FE;
- 
- 	switch (trigger) {
- 	case SND_SOC_DPCM_TRIGGER_PRE:
--		/* call trigger on the frontend before the backend. */
--
--		dev_dbg(fe->dev, "ASoC: pre trigger FE %s cmd %d\n",
--				fe->dai_link->name, cmd);
--
--		ret = soc_pcm_trigger(substream, cmd);
--		if (ret < 0) {
--			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
--			goto out;
-+		switch (cmd) {
-+		case SNDRV_PCM_TRIGGER_START:
-+		case SNDRV_PCM_TRIGGER_RESUME:
-+		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+			ret = dpcm_dai_trigger_fe_be(substream, cmd, true);
-+			break;
-+		case SNDRV_PCM_TRIGGER_STOP:
-+		case SNDRV_PCM_TRIGGER_SUSPEND:
-+		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+			ret = dpcm_dai_trigger_fe_be(substream, cmd, false);
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
- 		}
--
--		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
- 		break;
- 	case SND_SOC_DPCM_TRIGGER_POST:
--		/* call trigger on the frontend after the backend. */
--
--		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
--		if (ret < 0) {
--			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
--			goto out;
-+		switch (cmd) {
-+		case SNDRV_PCM_TRIGGER_START:
-+		case SNDRV_PCM_TRIGGER_RESUME:
-+		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+			ret = dpcm_dai_trigger_fe_be(substream, cmd, false);
-+			break;
-+		case SNDRV_PCM_TRIGGER_STOP:
-+		case SNDRV_PCM_TRIGGER_SUSPEND:
-+		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+			ret = dpcm_dai_trigger_fe_be(substream, cmd, true);
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
- 		}
--
--		dev_dbg(fe->dev, "ASoC: post trigger FE %s cmd %d\n",
--				fe->dai_link->name, cmd);
--
--		ret = soc_pcm_trigger(substream, cmd);
- 		break;
- 	case SND_SOC_DPCM_TRIGGER_BESPOKE:
- 		/* bespoke trigger() - handles both FE and BEs */
-@@ -2341,10 +2380,6 @@ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
- 				fe->dai_link->name, cmd);
- 
- 		ret = soc_pcm_bespoke_trigger(substream, cmd);
--		if (ret < 0) {
--			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
--			goto out;
--		}
- 		break;
- 	default:
- 		dev_err(fe->dev, "ASoC: invalid trigger cmd %d for %s\n", cmd,
-@@ -2353,6 +2388,12 @@ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
- 		goto out;
- 	}
- 
-+	if (ret < 0) {
-+		dev_err(fe->dev, "ASoC: trigger FE cmd: %d failed: %d\n",
-+			cmd, ret);
-+		goto out;
-+	}
-+
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
--- 
-2.20.1
-
++	atomic_inc(&id_priv->refcount);
+ 	cma_init_resolve_addr_work(work, id_priv);
+ 	queue_work(cma_wq, &work->work);
+ 	return 0;
 
 
