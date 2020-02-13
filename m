@@ -2,162 +2,73 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE743C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA397C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9827A217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FAD206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IAjHsCPX"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="WD21nl2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgBMSvB (ORCPT
+        id S1728130AbgBMSwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:51:01 -0500
-Received: from gateway34.websitewelcome.com ([192.185.148.196]:22165 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727433AbgBMSvB (ORCPT
+        Thu, 13 Feb 2020 13:52:14 -0500
+Received: from mail-pg1-f174.google.com ([209.85.215.174]:39001 "EHLO
+        mail-pg1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgBMSwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:51:01 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 4FAE6ECE9BD
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 12:51:00 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2JZkj6erUXVkQ2JZkjUamO; Thu, 13 Feb 2020 12:51:00 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=T7nae/cQQpsPFTp+fQB1X1mfe56DykBNtXR9BGxwUJE=; b=IAjHsCPXdMZt+5WNJcqD+P7TIP
-        7+R15R+sJUQkw9qT8j7G+LFiVAxHM9fzq8n5chUMuZO/1zeCSL9OAFMVT97WQG0Xo54MMJ/hbst0K
-        eh9SwkUJUe8WNfyXlbfvzCjqdvCTACrKHHfcDIXYorm5KjplB6NZzYLHLe/K1W54SuIGiOfEQvkmc
-        vtnQg/f1K/tvS2jinwVDPYcFaUYvyrG5eJNnNGpTUbS6yBc/SryF8Blaqy5kea3mcSNJ/EUgztXs8
-        Gq4Exh4jgTzVHLR1jpwahpQajQrwoTt649HZykaNeAI4HairJsnsIx+YsHcqWivaUnXEbZuZTJ7YG
-        3FVpMlxQ==;
-Received: from [200.68.140.15] (port=10057 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2JZj-000fEB-VN; Thu, 13 Feb 2020 12:51:00 -0600
-Subject: Re: [PATCH] IB/core: Replace zero-length array with flexible-array
- member
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200213183715.GA19636@embeddedor>
- <20200213183850.GM31668@ziepe.ca>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <ad526791-a9d2-fa69-e989-5c74c3cfc704@embeddedor.com>
-Date:   Thu, 13 Feb 2020 12:53:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 13:52:14 -0500
+Received: by mail-pg1-f174.google.com with SMTP id j15so3586040pgm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:52:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=fhZFg8LTdvZwHsW3ZofVRs07iAKz9GzQpl7hqklnVdo=;
+        b=WD21nl2sCcyIyrvgV7IH4R5vJGA2IezVE9insgrlrYtwiNwhFoils+MnT6eM7kNs4g
+         5bDAVtzY33TE2Dl53s/TJQ/S/OhkzPA7Jv9TZ5heQNjFAqm6GZ0Kr0DjD2E2HVxWWYm0
+         gEoJ6AVwbo0WPeXyKCqfzpJjcxnwCh957sAJXEd8Fn0CSWuw8n1MK+yWqu9/7ZCLzSb1
+         zdH2LZFJonFyPh2qAojMqCjobhEJmOZMGitftTsiugvQGrfLfA/bJ8jQoaKLxdbe6fb6
+         5qjb01IdzxQ432NzQ8rRIvIWqTZ2w93o0EshP58ftGjurROeYbW9OxocBraqziIE3qg2
+         W3qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=fhZFg8LTdvZwHsW3ZofVRs07iAKz9GzQpl7hqklnVdo=;
+        b=et0JV2ydmZrANgj1u7CJR7e4irPr0z0kx4Bszop5PNaFVGeTpq8yo8dGCuiD8fNNxS
+         bQxUGe0exqmc1DQVDX96xTuGKtSra9LCywhUFryAljBfsiCoHKiDAGAIiWC3ExMFX+o3
+         5bx7tZOdbpcAa7WQFHTWb0Y/RAPpwUa0oy2hiC8Rq7FdghquEo+uH1XOqV6byl8U347R
+         vivR4ULrXiPmwYvznt09rWSS+yH3nEefPlfjVzZEkDBikXbbZ2GPDeepK57EdoYZy6ab
+         JNO030ck8FnCUBEuU/+04u6SWMPbPGNcoIDTGcv+jNF20f6HgPJdEQaqhPiR5Uryq+RG
+         Jk6A==
+X-Gm-Message-State: APjAAAUdwwCh+h8kD+heeUsxnrVVS0qQ7vvvp44Lz2lUve18T764At6r
+        C9dLOn07mCpvkIY1ZZ405LkWOsxEevmdMiCh
+X-Google-Smtp-Source: APXvYqySrOnTGtY7+9DITehe3Meo7s084GaA+6N+nsJP5kacBuLgycbMeZZYgExDf3vDCEP9ZAH+xQ==
+X-Received: by 2002:a63:520a:: with SMTP id g10mr17908361pgb.298.1581619930792;
+        Thu, 13 Feb 2020 10:52:10 -0800 (PST)
+Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.176])
+        by smtp.gmail.com with ESMTPSA id c11sm3982890pfo.170.2020.02.13.10.52.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 10:52:10 -0800 (PST)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
+Date:   Fri, 14 Feb 2020 00:22:05 +0530
+To:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: staging: board: disabled driver
+Message-ID: <20200213185205.GA26906@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-In-Reply-To: <20200213183850.GM31668@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.15
-X-Source-L: No
-X-Exim-ID: 1j2JZj-000fEB-VN
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [200.68.140.15]:10057
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/13/20 12:38, Jason Gunthorpe wrote:
-
-> 
-> Any reason to skip these two?
-> 
-> drivers/infiniband/core/mad_priv.h:     u8 mad[0];
-> drivers/infiniband/core/mad_priv.h:     u8 data[0];
-> 
-> And may as well touch these in the subsystem headers too:
-> 
-> include/rdma/ib_fmr_pool.h:     u64                 page_list[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/ib_verbs.h:        u8      real_sz[0];
-> include/rdma/opa_vnic.h:        char *dev_priv[0];
-> include/rdma/rdmavt_mr.h:       struct rvt_segarray *map[0];    /* the segments */
-> include/rdma/rdmavt_qp.h:       struct rvt_sge sg_list[0];
-> 
-> ?
-
-OK. Let me tweak my script a bit to catch all of those.
-
-Thanks for the feedback.
---
-Gustavo
+I made some changes in board.h and other files under board to remove the MACRO using conditions. I did git log --oneline "file path" to get the logs, but turned out the driver was disabled. Hence on seeing it's KConfig file I found STAGING_BOARd and searched it in device drivers in menuconfig. I found that OF_ADDRESS-> OF-> X86_INTEL_CE were disabled as well. But I couldn't find X86_INTEL_CE under the device drivers.What should I do about it? Is there a way around or should I look at other drivers than board?
+Thanks for your time!
