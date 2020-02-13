@@ -2,81 +2,110 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CBFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B6EC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A93222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35B12073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NKrKyZFg"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iOpxFbUB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgBMLEY (ORCPT
+        id S1729801AbgBMLFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:04:24 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44568 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729588AbgBMLEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:04:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581591862;
+        Thu, 13 Feb 2020 06:05:23 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:50462 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729557AbgBMLFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:05:23 -0500
+Received: from zn.tnic (p200300EC2F07F600746843EFEB191E44.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f600:7468:43ef:eb19:1e44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 334EB1EC0CAA;
+        Thu, 13 Feb 2020 12:05:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581591921;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OZ4tlf6//wOCBIAt4m6Y7TpUBEEEO0ab5g+2/3VhPeM=;
-        b=NKrKyZFgm1oSFo4+x8wnnkOFFMoDHX79NlKeWjus1RWolPkGc8cRrasG8RNwQQmHwo6sti
-        +ia/TNTGstSuxK9TqzeuW9oUemEr9UIkheTCVZSrgU7dMhFJc7GQuuIspJQ08IR00QymsZ
-        6j+0fw2yg9z6WBZ3+a+L1ZFew2NzZms=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-1H5askKAP-Wy3PBWUAbB9A-1; Thu, 13 Feb 2020 06:04:18 -0500
-X-MC-Unique: 1H5askKAP-Wy3PBWUAbB9A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 943A0107ACC4;
-        Thu, 13 Feb 2020 11:04:16 +0000 (UTC)
-Received: from gondolin (ovpn-117-100.ams2.redhat.com [10.36.117.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E94B5DA7B;
-        Thu, 13 Feb 2020 11:04:11 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 12:04:08 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [PATCH 2/7] vfio/pci: Implement match ops
-Message-ID: <20200213120408.15cd1d48.cohuck@redhat.com>
-In-Reply-To: <158146233422.16827.5520548241096752615.stgit@gimli.home>
-References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-        <158146233422.16827.5520548241096752615.stgit@gimli.home>
-Organization: Red Hat GmbH
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=QxZQZm32jCMDX4unKZfixNUHgtvoBLsEoMQK1TCXr7M=;
+        b=iOpxFbUBMXVHTFwtpXT0hhrD4TbzbNXg731SF2bxQsLn/GQ/UWJK1fbmZ2ctfV4d49J4rX
+        WGT1psOSmXRDjKNBYxOb+vTvnNBnSsMAda7vxjV/38ZA6QNrXXuZyOH1+lLaGaWWtqPj8i
+        bf5rPO7x1jrI66kT/jz5ol4/MTxvm8g=
+Date:   Thu, 13 Feb 2020 12:05:12 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>,
+        John Garry <john.garry@huawei.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] EDAC/mc: Fixes for mci device removal
+Message-ID: <20200213110512.GH31799@zn.tnic>
+References: <20200212120340.4764-1-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200212120340.4764-1-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 16:05:34 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
-
-> This currently serves the same purpose as the default implementation
-> but will be expanded for additional functionality.
+On Wed, Feb 12, 2020 at 01:03:36PM +0100, Robert Richter wrote:
+> This series is a split of
 > 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c |    8 ++++++++
->  1 file changed, 8 insertions(+)
+>  [v2] EDAC/mc: Fix use-after-free and memleaks during device removal
+>  https://lore.kernel.org/patchwork/patch/1190002/
+> 
+> in smaller patches to better handle stable backports.
+> 
+> Patch #1 helps to ease backports of patch #2 to 5.3 and earlier
+> kernels, see patch descriptions of both for details.
+> 
+> Patch #2 is the smallest possible fix to address use-after-free and
+> memleak issues aimed for backports.
+> 
+> Patch #3 is another small patch that is split off for stable. This
+> fixes code already commited to stable trees.
+> 
+> Patch #4 is the all remaining code containing the rework of the mci
+> device removal. Resulting code is the same as in v2 except for the
+> changes outlined for v3:
+> 
+> v3:
+>  * split patch into smaller pieces to ease backports,
+>  * removed edac_remove_sysfs_mci_device() in edac_mc_free(), at this
+>    point the mci device is always unregistered
+> 
+> Robert Richter (4):
+>   Revert parts of "EDAC/mc_sysfs: Make debug messages consistent"
+>   EDAC/mc: Fix use-after-free and memleaks during device removal
+>   EDAC/sysfs: Remove csrow objects on errors
+>   EDAC/mc: Change mci device removal to use put_device()
+> 
+>  drivers/edac/edac_mc.c       |  20 +++----
+>  drivers/edac/edac_mc_sysfs.c | 100 +++++++++++++----------------------
+>  drivers/edac/edac_module.h   |   1 -
+>  3 files changed, 48 insertions(+), 73 deletions(-)
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Thanks, first three (1+2 squashed) pushed here:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git/log/?h=edac-urgent
+
+@John: if you could run them one more time on your machines, that would
+be great!
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
