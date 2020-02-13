@@ -2,102 +2,207 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F62FC3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB601C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778352073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7072073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MRNT606Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGLXKhFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgBMJym (ORCPT
+        id S1729699AbgBMJzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:54:42 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49588 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729440AbgBMJym (ORCPT
+        Thu, 13 Feb 2020 04:55:39 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39318 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729532AbgBMJzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:54:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581587681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ez44N34m1PHTjtAxByIbkjxOsH6Q8Xfjl62Un4eIlPE=;
-        b=MRNT606QWflaL85Ok9xCt16vX7+7rckREsN17pDO8D0VL6skVH98zPOhmuWxmi+AB9+f20
-        FP89iMn8VBM8UK+d2HpgN4jOHEfX2tujkwVzt7D8k3LIvhNz6nC1/5ImIcoXQpkv+vqVyo
-        ruyWlmVrB+k9+4WRsNVFVakbfjvSHhA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-VFZp81C1PWyMM5rgKF0cOg-1; Thu, 13 Feb 2020 04:54:39 -0500
-X-MC-Unique: VFZp81C1PWyMM5rgKF0cOg-1
-Received: by mail-wr1-f71.google.com with SMTP id w6so2111019wrm.16
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:54:39 -0800 (PST)
+        Thu, 13 Feb 2020 04:55:39 -0500
+Received: by mail-lj1-f194.google.com with SMTP id o15so5848627ljg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:55:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=KVPyYo0pJTGCUkEFsuiM96kKjpjdNQqLwNQNRYIv3YU=;
+        b=GGLXKhFvfIi4xDE8UvvxTqrcs6o0ExnNkRLNQouavkV55412qBGknsUHssh6E4HZ0z
+         ewmMjouol7CTrlsClIn1v88r+olp7jgWbJYRwUUM2eSkDNnNq+l0rTg7crP0aF44IOvN
+         Wt4dfTaeTtmMhgWfIsJTgnBeNRTN2OiPi8mmlavk5ko/079b7+NC0MhLhjUJqMsWmKEk
+         6ssDJuF2OtWBELDqJ8nN/Gul1ZURIf5bsteC0HyNhNY8b01teE7RPm9F/lB7XvYRSVC+
+         iXmieVrDtBuhPhhXhQ4VzgqOwPJp98p9tYEyo1jPtzFyDKoKM6I4hTk3gNGnyJh5eySp
+         Yuww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ez44N34m1PHTjtAxByIbkjxOsH6Q8Xfjl62Un4eIlPE=;
-        b=H3nTZ86raiIokM2DwKDnG1iKMVWMYSWOqlsVmqhvjnRZAx8cxpVqo8+W2PPrBgKUux
-         fxBcqiWSvp7AKVwSOj+q6iy454u+Ij18xaesgsXUgbHcVaLw+ZCehnApcEsawdRDFQZm
-         /UY0irQvkcxSuRxSFnng9V0BA/5GCogaYC9lgycEECLWwrfmDwK18Sg6KQyH3UaRBnnW
-         UJrluro2b0DmqbRdYNubM+iAZA2aeJXAKR+SinV9DpeE/uIqwA5HiP6YjlVu31RH/p85
-         ppgxoIm9I/pcpBEDS24ylXGK6XOn8hDy2xbgal9UvCLG3YVrHGXGIsXKW2ShX86hmWAt
-         szxQ==
-X-Gm-Message-State: APjAAAWgnHI9jxO18GG/GMrzSbE+CwmC7Ev2jvtsBP11Oo4vcAG5F7wx
-        RseZenIauBo3UAG1rET8CA8ZnUdCW93azAC0ISbXD0kQDS96+jHdVoggGFJdmJh2/mOIU5PZmZK
-        dEgMTcRMRFnI5iou1AOeFrGFl
-X-Received: by 2002:a7b:c318:: with SMTP id k24mr5213062wmj.54.1581587678272;
-        Thu, 13 Feb 2020 01:54:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz4Fq3M8a40Fwp+Pl2CcItRt8aHeoE6SL80Nlz6KbnNbOf6qcxWgFwi+XXod3UC9586V1UZ+Q==
-X-Received: by 2002:a7b:c318:: with SMTP id k24mr5213036wmj.54.1581587678038;
-        Thu, 13 Feb 2020 01:54:38 -0800 (PST)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id k16sm2259120wru.0.2020.02.13.01.54.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2020 01:54:37 -0800 (PST)
-Subject: Re: [PATCH] KVM: x86: enable -Werror
-To:     Joe Perches <joe@perches.com>, linmiaohe <linmiaohe@huawei.com>,
-        Linus Walleij <linux.walleij@sterricsson.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <12259a951c5e47359c46f7875e758d41@huawei.com>
- <71b3bf53c0fc3c68b10368092022e3bf2cffc506.camel@perches.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <249ec0c0-10fb-52df-0c81-2ec28ecae32b@redhat.com>
-Date:   Thu, 13 Feb 2020 10:54:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <71b3bf53c0fc3c68b10368092022e3bf2cffc506.camel@perches.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KVPyYo0pJTGCUkEFsuiM96kKjpjdNQqLwNQNRYIv3YU=;
+        b=AmUhpUcRhaE0iAoGredsBW1B0sUs1kmvuVr8ys3RIZ/A/RFF5YaSW51ftQ8KlE/RwV
+         DdtO8PDCkurOOjq3JWjWNFAs7U8VlvwLukvnKQPQg7/I2+gX/8C5xOU+JEFozdu0imeR
+         lWVlbflJPv/YAc0KxSJDOcuIQ75XHJSuUSM75v9Z5/rKpmWVvQUda7PA22Dp+9+VkeQk
+         UsfuxqYTda/j7E6ViB2ab+aRpFMRZ/aHgy5OYpSC9z2Smze1WypYC8hGPrD2CqcDlONK
+         bufPvEAFOKc9SNMT4GyJcH1Tp2qz98t9cdm0OzUmqHLKE+aQH45YStr2kC1wR4FA4ZoL
+         plcg==
+X-Gm-Message-State: APjAAAVRE9rcZw9am43Oq1FtxDExlIAcTizeaNcrlqH8BhderfHprn8l
+        uEdllm1e3ZZVvJ7+3WBnfk0adg==
+X-Google-Smtp-Source: APXvYqz7QQxIxHUlskZ0NzCArlLosaGbwrV2OU/si4MoNKHi3oir3CxiMvlT7K0HiQQGlWku23mvtA==
+X-Received: by 2002:a2e:a37c:: with SMTP id i28mr10413925ljn.118.1581587736280;
+        Thu, 13 Feb 2020 01:55:36 -0800 (PST)
+Received: from localhost.localdomain ([94.155.124.210])
+        by smtp.gmail.com with ESMTPSA id v5sm1090684ljk.67.2020.02.13.01.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 01:55:35 -0800 (PST)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        stable@vger.kernel.org
+Subject: [PATCH] venus: cache vb payload to be used by clock scaling
+Date:   Thu, 13 Feb 2020 11:55:14 +0200
+Message-Id: <20200213095514.30290-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/02/20 04:31, Joe Perches wrote:
-> On Thu, 2020-02-13 at 01:40 +0000, linmiaohe wrote:
->> Paolo Bonzini <pbonzini@redhat.com> wrote:
->>> Avoid more embarrassing mistakes.  At least those that the compiler can catch.
->>>
->>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->>> ---
-> 
-> I think adding -Werror is a bad idea as new versions of compilers can
-> create additional compilation warnings and break builds in the
-> future.
-Seems like cargo culting (in the reverse) to me.  We can cross the
-bridge when we get there.
+Instead of iterate over previously queued buffers in clock
+scaling code do cache the payload in instance context structure
+for later use when calculating new clock rate.
 
-Paolo
+This will avoid to use spin locks during buffer list iteration
+in clock_scaling.
+
+This fixes following kernel Oops:
+
+ Unable to handle kernel paging request at virtual address deacfffffffffd6c
+ Mem abort info:
+   ESR = 0x96000004
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000004
+   CM = 0, WnR = 0
+ [deacfffffffffd6c] address between user and kernel address ranges
+ Internal error: Oops: 96000004 [#1] PREEMPT SMP
+ CPU: 7 PID: 5763 Comm: V4L2DecoderThre Tainted: G S      W         5.4.11 #8
+ pstate: 20400009 (nzCv daif +PAN -UAO)
+ pc : load_scale_v4+0x4c/0x2bc [venus_core]
+ lr : session_process_buf+0x18c/0x1c0 [venus_core]
+ sp : ffffffc01376b8d0
+ x29: ffffffc01376b8d0 x28: ffffff80cf1b0220
+ x27: ffffffc01376bba0 x26: ffffffd8f562b2d8
+ x25: ffffff80cf1b0220 x24: 0000000000000005
+ x23: ffffffd8f5620d98 x22: ffffff80ca01c800
+ x21: ffffff80cf1b0000 x20: ffffff8149490080
+ x19: ffffff8174b2c010 x18: 0000000000000000
+ x17: 0000000000000000 x16: ffffffd96ee3a0dc
+ x15: 0000000000000026 x14: 0000000000000026
+ x13: 00000000000055ac x12: 0000000000000001
+ x11: deacfffffffffd6c x10: dead000000000100
+ x9 : ffffff80ca01cf28 x8 : 0000000000000026
+ x7 : 0000000000000000 x6 : ffffff80cdd899c0
+ x5 : ffffff80cdd899c0 x4 : 0000000000000008
+ x3 : ffffff80ca01cf28 x2 : ffffff80ca01cf28
+ x1 : ffffff80d47ffc00 x0 : ffffff80cf1b0000
+ Call trace:
+  load_scale_v4+0x4c/0x2bc [venus_core]
+  session_process_buf+0x18c/0x1c0 [venus_core]
+  venus_helper_vb2_buf_queue+0x7c/0xf0 [venus_core]
+  __enqueue_in_driver+0xe4/0xfc [videobuf2_common]
+  vb2_core_qbuf+0x15c/0x338 [videobuf2_common]
+  vb2_qbuf+0x78/0xb8 [videobuf2_v4l2]
+  v4l2_m2m_qbuf+0x80/0xf8 [v4l2_mem2mem]
+  v4l2_m2m_ioctl_qbuf+0x2c/0x38 [v4l2_mem2mem]
+  v4l_qbuf+0x48/0x58
+  __video_do_ioctl+0x2b0/0x39c
+  video_usercopy+0x394/0x710
+  video_ioctl2+0x38/0x48
+  v4l2_ioctl+0x6c/0x80
+  do_video_ioctl+0xb00/0x2874
+  v4l2_compat_ioctl32+0x5c/0xcc
+  __se_compat_sys_ioctl+0x100/0x2074
+  __arm64_compat_sys_ioctl+0x20/0x2c
+  el0_svc_common+0xa4/0x154
+  el0_svc_compat_handler+0x2c/0x38
+  el0_svc_compat+0x8/0x10
+ Code: eb0a013f 54000200 aa1f03e8 d10e514b (b940016c)
+ ---[ end trace e11304b46552e0b9 ]---
+
+Cc: stable@vger.kernel.org # v5.5+
+Fixes: c0e284ccfeda ("media: venus: Update clock scaling")
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ drivers/media/platform/qcom/venus/core.h    |  1 +
+ drivers/media/platform/qcom/venus/helpers.c | 20 +++++++++++++-------
+ 2 files changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 11585fb3cae3..2f661af7f873 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -344,6 +344,7 @@ struct venus_inst {
+ 	unsigned int subscriptions;
+ 	int buf_count;
+ 	struct venus_ts_metadata tss[VIDEO_MAX_FRAME];
++	unsigned long payloads[VIDEO_MAX_FRAME];
+ 	u64 fps;
+ 	struct v4l2_fract timeperframe;
+ 	const struct venus_format *fmt_out;
+diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+index a172f1ac0b35..32f8fb8d7f33 100644
+--- a/drivers/media/platform/qcom/venus/helpers.c
++++ b/drivers/media/platform/qcom/venus/helpers.c
+@@ -544,18 +544,13 @@ static int scale_clocks_v4(struct venus_inst *inst)
+ 	struct venus_core *core = inst->core;
+ 	const struct freq_tbl *table = core->res->freq_tbl;
+ 	unsigned int num_rows = core->res->freq_tbl_size;
+-	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
+ 	struct device *dev = core->dev;
+ 	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
+ 	unsigned long filled_len = 0;
+-	struct venus_buffer *buf, *n;
+-	struct vb2_buffer *vb;
+ 	int i, ret;
+ 
+-	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
+-		vb = &buf->vb.vb2_buf;
+-		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
+-	}
++	for (i = 0; i < inst->num_input_bufs; i++)
++		filled_len = max(filled_len, inst->payloads[i]);
+ 
+ 	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
+ 		return 0;
+@@ -1289,6 +1284,15 @@ int venus_helper_vb2_buf_prepare(struct vb2_buffer *vb)
+ }
+ EXPORT_SYMBOL_GPL(venus_helper_vb2_buf_prepare);
+ 
++static void cache_payload(struct venus_inst *inst, struct vb2_buffer *vb)
++{
++	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
++	unsigned int idx = vbuf->vb2_buf.index;
++
++	if (vbuf->vb2_buf.type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
++		inst->payloads[idx] = vb2_get_plane_payload(vb, 0);
++}
++
+ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
+ {
+ 	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+@@ -1300,6 +1304,8 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
+ 
+ 	v4l2_m2m_buf_queue(m2m_ctx, vbuf);
+ 
++	cache_payload(inst, vb);
++
+ 	if (inst->session_type == VIDC_SESSION_TYPE_ENC &&
+ 	    !(inst->streamon_out && inst->streamon_cap))
+ 		goto unlock;
+-- 
+2.17.1
 
