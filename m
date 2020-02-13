@@ -2,51 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC1BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1A4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092C6217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8332073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609287;
-	bh=2IxQKgMwkp6kqKujbIj3ytnQTTCdHJONx8Zpa1knna4=;
+	s=default; t=1581609293;
+	bh=T8sAqA4upVLNUrxAG8sQJk9Le/ePo3ZgUbOsKHbdoFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PZhGuG1NN6eUv5/Y8PpRqhvOAOEQA/gPRvjViO+M8zb7dsdz1/PXp0EYL4qvodqHM
-	 NgRyC+d7vJKTS8yRTirHyyL9Vug0f/7uxCDB4jtzFrr9nIbIYz2DaLXUZ/ziFKaJCr
-	 CgJnNuIwaQARsCB2r3JZIAHK1hAhL7NTOjTV2zhk=
+	b=IncGWyCPVoF8hu7SFiJyhy0iYxtz38aK9J2olmuFhtENAIs1SwN7HYHKQmiwDFiGm
+	 K5JD/CJqVsrtdinZ4le2A5XbOZWtvH6EOZK1QZDumC44vvR7E7tp5jMi18ys+MWsiz
+	 zrLamicbMs9CQziksQYfVozTakqWKLIJDFRySek0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgBMPyq (ORCPT
+        id S1729473AbgBMPyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:54:46 -0500
+        Thu, 13 Feb 2020 10:54:52 -0500
 Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgBMPZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:49 -0500
+        id S1729062AbgBMPZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:46 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B28A620848;
-        Thu, 13 Feb 2020 15:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134322469C;
+        Thu, 13 Feb 2020 15:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607548;
-        bh=2IxQKgMwkp6kqKujbIj3ytnQTTCdHJONx8Zpa1knna4=;
+        s=default; t=1581607546;
+        bh=T8sAqA4upVLNUrxAG8sQJk9Le/ePo3ZgUbOsKHbdoFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nicNUWYl+fo7uMohmkgwORhITPQQRwCrbJesC0vEPnWv2ghHeW7J/yW4XmOsQmijK
-         DfD7CtZRvJJwKBZbQEnEkPuAAWQ8fX4TfFm1hhl8PoHmpmclCCD/0OK9tNyrnwcsAq
-         fjftnBT2n8iBWrFGdFuBJSSkEc67TReFziLW/BKo=
+        b=klH/Njj5CleKpS1ymI5QP4Qj4OH62zZNXBO0DrKEPGdOeFRuboutcUp7raePjrOwH
+         rzhEE4UGO42HuhKA/VlloR4qKelnXOBpzsMcVG7A1gbKZwdFNSXKvcMIg0YegKF/9Z
+         T6tYjQmsdh/1a3CVBSv32jo3z6QIuAlxHPJJbC7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 112/173] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
-Date:   Thu, 13 Feb 2020 07:20:15 -0800
-Message-Id: <20200213152000.754463274@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Boris Brezillon <boris.brezillon@free-electrons.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 126/173] drm: atmel-hlcdc: enable clock before configuring timing engine
+Date:   Thu, 13 Feb 2020 07:20:29 -0800
+Message-Id: <20200213152004.081277899@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,34 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit de34d7084edd069dac5aa010cfe32bd8c4619fa6 ]
+[ Upstream commit 2c1fb9d86f6820abbfaa38a6836157c76ccb4e7b ]
 
-The 7445 switch clocking profiles do not allow us to run the IMP port at
-2Gb/sec in a way that it is reliable and consistent. Make sure that the
-setting is only applied to the 7278 family.
+Changing pixel clock source without having this clock source enabled
+will block the timing engine and the next operations after (in this case
+setting ATMEL_HLCDC_CFG(5) settings in atmel_hlcdc_crtc_mode_set_nofb()
+will fail). It is recomended (although in datasheet this is not present)
+to actually enabled pixel clock source before doing any changes on timing
+enginge (only SAM9X60 datasheet specifies that the peripheral clock and
+pixel clock must be enabled before using LCD controller).
 
-Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1a396789f65a ("drm: add Atmel HLCDC Display Controller support")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: <stable@vger.kernel.org> # v4.0+
+Link: https://patchwork.freedesktop.org/patch/msgid/1576672109-22707-3-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -137,7 +137,9 @@ static void bcm_sf2_imp_setup(struct dsa
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+index d73281095faca..976109c20d493 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+@@ -79,7 +79,11 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 	struct videomode vm;
+ 	unsigned long prate;
+ 	unsigned int cfg;
+-	int div;
++	int div, ret;
++
++	ret = clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
++	if (ret)
++		return;
  
- 		/* Force link status for IMP port */
- 		reg = core_readl(priv, offset);
--		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
-+		reg |= (MII_SW_OR | LINK_STS);
-+		if (priv->type == BCM7278_DEVICE_ID)
-+			reg |= GMII_SPEED_UP_2G;
- 		core_writel(priv, reg, offset);
+ 	vm.vfront_porch = adj->crtc_vsync_start - adj->crtc_vdisplay;
+ 	vm.vback_porch = adj->crtc_vtotal - adj->crtc_vsync_end;
+@@ -138,6 +142,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 			   ATMEL_HLCDC_VSPSU | ATMEL_HLCDC_VSPHO |
+ 			   ATMEL_HLCDC_GUARDTIME_MASK | ATMEL_HLCDC_MODE_MASK,
+ 			   cfg);
++
++	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
+ }
  
- 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+ static enum drm_mode_status
+-- 
+2.20.1
+
 
 
