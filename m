@@ -2,126 +2,130 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF2C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9D5C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04F3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23407217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgBMWEz (ORCPT
+        id S1728062AbgBMWFC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:04:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 17:05:02 -0500
+Received: from mga03.intel.com ([134.134.136.65]:59918 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgBMWEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:04:54 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8CE02168B;
-        Thu, 13 Feb 2020 22:04:52 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 17:04:51 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200213170451.690c4e5c@gandalf.local.home>
-In-Reply-To: <20200213215004.GM2935@paulmck-ThinkPad-P72>
-References: <20200212210749.971717428@infradead.org>
-        <20200212232005.GC115917@google.com>
-        <20200213082716.GI14897@hirez.programming.kicks-ass.net>
-        <20200213135138.GB2935@paulmck-ThinkPad-P72>
-        <20200213164031.GH14914@hirez.programming.kicks-ass.net>
-        <20200213185612.GG2935@paulmck-ThinkPad-P72>
-        <20200213204444.GA94647@google.com>
-        <20200213205442.GK2935@paulmck-ThinkPad-P72>
-        <20200213211930.GG170680@google.com>
-        <20200213163800.5c51a5f1@gandalf.local.home>
-        <20200213215004.GM2935@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727519AbgBMWFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:05:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:05:01 -0800
+X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
+   d="scan'208";a="227391043"
+Received: from unknown (HELO localhost) ([10.252.53.8])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:04:58 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Michel =?utf-8?Q?D=C3=A4nzer?= <michel@daenzer.net>,
+        clang-built-linux@googlegroups.com,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [Intel-gfx] [PATCH v2] drm/i915: Disable -Wtautological-constant-out-of-range-compare
+In-Reply-To: <20200213214812.GA7980@ubuntu-m2-xlarge-x86>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200211050808.29463-1-natechancellor@gmail.com> <20200211061338.23666-1-natechancellor@gmail.com> <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net> <20200211203935.GA16176@ubuntu-m2-xlarge-x86> <f3a6346b-2abf-0b6a-3d84-66e12f700b2b@daenzer.net> <20200212170734.GA16396@ubuntu-m2-xlarge-x86> <d81a2cfe-79b6-51d4-023e-0960c0593856@daenzer.net> <877e0qy2n8.fsf@intel.com> <20200213214812.GA7980@ubuntu-m2-xlarge-x86>
+Date:   Fri, 14 Feb 2020 00:05:24 +0200
+Message-ID: <87mu9mw3bv.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 13:50:04 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Thu, 13 Feb 2020, Nathan Chancellor <natechancellor@gmail.com> wrote:
+> On Thu, Feb 13, 2020 at 04:37:15PM +0200, Jani Nikula wrote:
+>> On Wed, 12 Feb 2020, Michel Dänzer <michel@daenzer.net> wrote:
+>> > On 2020-02-12 6:07 p.m., Nathan Chancellor wrote:
+>> >> On Wed, Feb 12, 2020 at 09:52:52AM +0100, Michel Dänzer wrote:
+>> >>> On 2020-02-11 9:39 p.m., Nathan Chancellor wrote:
+>> >>>> On Tue, Feb 11, 2020 at 10:41:48AM +0100, Michel Dänzer wrote:
+>> >>>>> On 2020-02-11 7:13 a.m., Nathan Chancellor wrote:
+>> >>>>>> A recent commit in clang added -Wtautological-compare to -Wall, which is
+>> >>>>>> enabled for i915 so we see the following warning:
+>> >>>>>>
+>> >>>>>> ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
+>> >>>>>> result of comparison of constant 576460752303423487 with expression of
+>> >>>>>> type 'unsigned int' is always false
+>> >>>>>> [-Wtautological-constant-out-of-range-compare]
+>> >>>>>>         if (unlikely(remain > N_RELOC(ULONG_MAX)))
+>> >>>>>>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+>> >>>>>>
+>> >>>>>> This warning only happens on x86_64 but that check is relevant for
+>> >>>>>> 32-bit x86 so we cannot remove it.
+>> >>>>>
+>> >>>>> That's suprising. AFAICT N_RELOC(ULONG_MAX) works out to the same value
+>> >>>>> in both cases, and remain is a 32-bit value in both cases. How can it be
+>> >>>>> larger than N_RELOC(ULONG_MAX) on 32-bit (but not on 64-bit)?
+>> >>>>>
+>> >>>>
+>> >>>> Hi Michel,
+>> >>>>
+>> >>>> Can't this condition be true when UINT_MAX == ULONG_MAX?
+>> >>>
+>> >>> Oh, right, I think I was wrongly thinking long had 64 bits even on 32-bit.
+>> >>>
+>> >>>
+>> >>> Anyway, this suggests a possible better solution:
+>> >>>
+>> >>> #if UINT_MAX == ULONG_MAX
+>> >>> 	if (unlikely(remain > N_RELOC(ULONG_MAX)))
+>> >>> 		return -EINVAL;
+>> >>> #endif
+>> >>>
+>> >>>
+>> >>> Or if that can't be used for some reason, something like
+>> >>>
+>> >>> 	if (unlikely((unsigned long)remain > N_RELOC(ULONG_MAX)))
+>> >>> 		return -EINVAL;
+>> >>>
+>> >>> should silence the warning.
+>> >> 
+>> >> I do like this one better than the former.
+>> >
+>> > FWIW, one downside of this one compared to all alternatives (presumably)
+>> > is that it might end up generating actual code even on 64-bit, which
+>> > always ends up skipping the return.
+>> 
+>> I like this better than the UINT_MAX == ULONG_MAX comparison because
+>> that creates a dependency on the type of remain.
+>> 
+>> Then again, a sufficiently clever compiler could see through the cast,
+>> and flag the warning anyway...
+>
+> Would you prefer a patch that adds that cast rather than silencing the
+> warning outright? It does appear to work for clang.
 
-> On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
-> > [ Added Masami ]
-> > 
-> > On Thu, 13 Feb 2020 16:19:30 -0500
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> >   
-> > > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:  
-> > > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:    
-> > > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
-> > > > > [...]     
-> > > > > > > > It might well be that I could make these functions be NMI-safe, but
-> > > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
-> > > > > > > > So, before looking into that, I have a question.  Given these proposed
-> > > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
-> > > > > > > > to just use in_nmi()?    
-> > > > > > > 
-> > > > > > > That _should_ already be the case today. That is, if we end up in a
-> > > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.    
-> > > > > > 
-> > > > > > So something like this, then?  This is untested, probably doesn't even
-> > > > > > build, and could use some careful review from both Peter and Steve,
-> > > > > > at least.  As in the below is the second version of the patch, the first
-> > > > > > having been missing a couple of important "!" characters.    
-> > > > > 
-> > > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
-> > > > > outside, that makes it build now. Updated below is Paul's diff. I also added
-> > > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
-> > > > > asymmetric.    
-> > > > 
-> > > > My compiler complained about the static and the __always_inline, so I
-> > > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
-> > > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
-> > > > rcu_nmi_enter()?    
-> > > 
-> > > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
-> > > allowing it on exit (from a code reading standpoint) so my reaction was to
-> > > add it to both, but we could probably keep that as a separate
-> > > patch/discussion since it is slightly unrelated to the patch.. Sorry to
-> > > confuse the topic.
-> > >  
-> > 
-> > rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
-> > c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
-> > kprobe_int3_handler()")
-> > 
-> > The issue was that we must not allow anything in do_int3() call kprobe
-> > code before kprobe_int3_handler() is called. Because ist_enter() (in
-> > do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
-> > nothing to do with it being RCU nor NMI, but because it was simply
-> > called in do_int3().
-> > 
-> > Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
-> > to why rcu_nmi_enter() would probably be useful, like below:  
-> 
-> Thank you, Steve!  Could I please have your Signed-off-by for this?
+I'd take the cast.
 
-Sure, but it was untested ;-)
+If that fails for whatever reason, per-file
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+CFLAGS_gem/i915_gem_execbuffer.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
 
-I'd like a Reviewed-by from Masami though.
+over subdir-ccflags-y would be preferrable I think.
 
--- Steve
+BR,
+Jani.
 
 
+
+>
+> Cheers,
+> Nathan
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
