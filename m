@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22D6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64274C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB2220661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3763720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608555;
-	bh=qvBnAU59iaz2bSUSla1OP9QwwdKedb4s6k3Y0PMnntM=;
+	s=default; t=1581608562;
+	bh=xe3r34Is/TdpWklCLdm6X5UfJDrx1AOcYQjschZd5Nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggZoLrLINEn/nb3d/KgpDrV0Wl2L8/M/TWAZ0XrbD6GUkxVdbqCyLhUMukLL3Uqss
-	 4jQXkSP2fA51zJh9cPY/oxgtAtoHJ4N0wb3QSXHiKQwFYAEguz0xjLLLD15OCsCvEJ
-	 pjjWy/Y+N63Ub5fbL9nUV1VFy0jBt+1hxymjILso=
+	b=t04gnK//6D9fo6GnzrRMYnEOaEgAQ1QyaVoNSIiuTRiiX7XviN7R/WUMgp/CG1+ny
+	 peG9yrHwssLwxkCEP4XBdJSacJtrbiZHTFyQiB9O9ve4Q2rtc8Uuesq0Ld2Na17vY7
+	 z2bOn8Isu8//jzLhcpjrCOnrb24Km0W1/7M00QxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387509AbgBMPme (ORCPT
+        id S1729860AbgBMPml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:42:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54842 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:42:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729584AbgBMP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:12 -0500
+        id S1729580AbgBMP2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:10 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5979E2168B;
-        Thu, 13 Feb 2020 15:28:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDFA620661;
+        Thu, 13 Feb 2020 15:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607692;
-        bh=qvBnAU59iaz2bSUSla1OP9QwwdKedb4s6k3Y0PMnntM=;
+        s=default; t=1581607689;
+        bh=xe3r34Is/TdpWklCLdm6X5UfJDrx1AOcYQjschZd5Nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upCu77I56irHJkik3ZQHXdTHLD6gdyvPpXZDf2WTqEDsAzV5rsfHYNo2EFr63ESaQ
-         ces2h8Q2L99aJMaVjcTctgtKoFKiGqCar6ZRcM3U740CfKE4rQg+JIutjDN97wJ6Hm
-         XqsyP5bRuX1nmBLKUyESjiKm3b2L4ociXtlq1e0g=
+        b=wnbN9hHUTOjaLWiMcFf9TlohxvykUdpmvy2h7UbQNeNriMkD+YVqJMyU+jpZJRf+1
+         SRHQ+YkxG1Z+AlYQHIZBuATLWA4NAinH9U8z0chloakexAzYhREe0VHwELsQyBoGaj
+         ShudrgyDpHZ252UXLSP/KxTWAqw8X8LSq4UTgBdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.5 014/120] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
-Date:   Thu, 13 Feb 2020 07:20:10 -0800
-Message-Id: <20200213151906.648052496@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.5 027/120] NFSv4.x recover from pre-mature loss of openstateid
+Date:   Thu, 13 Feb 2020 07:20:23 -0800
+Message-Id: <20200213151911.293201740@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,52 +59,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-commit 8c386cc817878588195dde38e919aa6ba9409d58 upstream.
+commit d826e5b827641ae1bebb33d23a774f4e9bb8e94f upstream.
 
-In the implementation of pci_iov_add_virtfn() the allocated virtfn is
-leaked if pci_setup_device() fails. The error handling is not calling
-pci_stop_and_remove_bus_device(). Change the goto label to failed2.
+Ever since the commit 0e0cb35b417f, it's possible to lose an open stateid
+while retrying a CLOSE due to ERR_OLD_STATEID. Once that happens,
+operations that require openstateid fail with EAGAIN which is propagated
+to the application then tests like generic/446 and generic/168 fail with
+"Resource temporarily unavailable".
 
-Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
-Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Instead of returning this error, initiate state recovery when possible to
+recover the open stateid and then try calling nfs4_select_rw_stateid()
+again.
+
+Fixes: 0e0cb35b417f ("NFSv4: Handle NFS4ERR_OLD_STATEID in CLOSE/OPEN_DOWNGRADE")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/iov.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/nfs/nfs42proc.c |   36 ++++++++++++++++++++++++++++--------
+ fs/nfs/nfs4proc.c  |    2 ++
+ fs/nfs/pnfs.c      |    2 --
+ 3 files changed, 30 insertions(+), 10 deletions(-)
 
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -186,10 +186,10 @@ int pci_iov_add_virtfn(struct pci_dev *d
- 	sprintf(buf, "virtfn%u", id);
- 	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
- 	if (rc)
--		goto failed2;
-+		goto failed1;
- 	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
- 	if (rc)
--		goto failed3;
-+		goto failed2;
+--- a/fs/nfs/nfs42proc.c
++++ b/fs/nfs/nfs42proc.c
+@@ -61,8 +61,11 @@ static int _nfs42_proc_fallocate(struct
  
- 	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
+ 	status = nfs4_set_rw_stateid(&args.falloc_stateid, lock->open_context,
+ 			lock, FMODE_WRITE);
+-	if (status)
++	if (status) {
++		if (status == -EAGAIN)
++			status = -NFS4ERR_BAD_STATEID;
+ 		return status;
++	}
  
-@@ -197,11 +197,10 @@ int pci_iov_add_virtfn(struct pci_dev *d
+ 	res.falloc_fattr = nfs_alloc_fattr();
+ 	if (!res.falloc_fattr)
+@@ -287,8 +290,11 @@ static ssize_t _nfs42_proc_copy(struct f
+ 	} else {
+ 		status = nfs4_set_rw_stateid(&args->src_stateid,
+ 				src_lock->open_context, src_lock, FMODE_READ);
+-		if (status)
++		if (status) {
++			if (status == -EAGAIN)
++				status = -NFS4ERR_BAD_STATEID;
+ 			return status;
++		}
+ 	}
+ 	status = nfs_filemap_write_and_wait_range(file_inode(src)->i_mapping,
+ 			pos_src, pos_src + (loff_t)count - 1);
+@@ -297,8 +303,11 @@ static ssize_t _nfs42_proc_copy(struct f
  
- 	return 0;
+ 	status = nfs4_set_rw_stateid(&args->dst_stateid, dst_lock->open_context,
+ 				     dst_lock, FMODE_WRITE);
+-	if (status)
++	if (status) {
++		if (status == -EAGAIN)
++			status = -NFS4ERR_BAD_STATEID;
+ 		return status;
++	}
  
--failed3:
--	sysfs_remove_link(&dev->dev.kobj, buf);
- failed2:
--	pci_stop_and_remove_bus_device(virtfn);
-+	sysfs_remove_link(&dev->dev.kobj, buf);
- failed1:
-+	pci_stop_and_remove_bus_device(virtfn);
- 	pci_dev_put(dev);
- failed0:
- 	virtfn_remove_bus(dev->bus, bus);
+ 	status = nfs_sync_inode(dst_inode);
+ 	if (status)
+@@ -546,8 +555,11 @@ static int _nfs42_proc_copy_notify(struc
+ 	status = nfs4_set_rw_stateid(&args->cna_src_stateid, ctx, l_ctx,
+ 				     FMODE_READ);
+ 	nfs_put_lock_context(l_ctx);
+-	if (status)
++	if (status) {
++		if (status == -EAGAIN)
++			status = -NFS4ERR_BAD_STATEID;
+ 		return status;
++	}
+ 
+ 	status = nfs4_call_sync(src_server->client, src_server, &msg,
+ 				&args->cna_seq_args, &res->cnr_seq_res, 0);
+@@ -618,8 +630,11 @@ static loff_t _nfs42_proc_llseek(struct
+ 
+ 	status = nfs4_set_rw_stateid(&args.sa_stateid, lock->open_context,
+ 			lock, FMODE_READ);
+-	if (status)
++	if (status) {
++		if (status == -EAGAIN)
++			status = -NFS4ERR_BAD_STATEID;
+ 		return status;
++	}
+ 
+ 	status = nfs_filemap_write_and_wait_range(inode->i_mapping,
+ 			offset, LLONG_MAX);
+@@ -994,13 +1009,18 @@ static int _nfs42_proc_clone(struct rpc_
+ 
+ 	status = nfs4_set_rw_stateid(&args.src_stateid, src_lock->open_context,
+ 			src_lock, FMODE_READ);
+-	if (status)
++	if (status) {
++		if (status == -EAGAIN)
++			status = -NFS4ERR_BAD_STATEID;
+ 		return status;
+-
++	}
+ 	status = nfs4_set_rw_stateid(&args.dst_stateid, dst_lock->open_context,
+ 			dst_lock, FMODE_WRITE);
+-	if (status)
++	if (status) {
++		if (status == -EAGAIN)
++			status = -NFS4ERR_BAD_STATEID;
+ 		return status;
++	}
+ 
+ 	res.dst_fattr = nfs_alloc_fattr();
+ 	if (!res.dst_fattr)
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3239,6 +3239,8 @@ static int _nfs4_do_setattr(struct inode
+ 		nfs_put_lock_context(l_ctx);
+ 		if (status == -EIO)
+ 			return -EBADF;
++		else if (status == -EAGAIN)
++			goto zero_stateid;
+ 	} else {
+ zero_stateid:
+ 		nfs4_stateid_copy(&arg->stateid, &zero_stateid);
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1998,8 +1998,6 @@ lookup_again:
+ 			trace_pnfs_update_layout(ino, pos, count,
+ 					iomode, lo, lseg,
+ 					PNFS_UPDATE_LAYOUT_INVALID_OPEN);
+-			if (status != -EAGAIN)
+-				goto out_unlock;
+ 			spin_unlock(&ino->i_lock);
+ 			nfs4_schedule_stateid_recovery(server, ctx->state);
+ 			pnfs_clear_first_layoutget(lo);
 
 
