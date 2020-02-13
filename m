@@ -2,208 +2,149 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2F5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F52C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D9E2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE1E24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="s740qDpr"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rmDCMt8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgBMPwH (ORCPT
+        id S1729913AbgBMPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:52:07 -0500
-Received: from mail-am6eur05on2089.outbound.protection.outlook.com ([40.107.22.89]:52160
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387553AbgBMPwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:52:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WwKGxwjq2mdjBmhyCT+b6zakkOCkomtfy3Y/uM2DBTS3ioL9I5yW4dvNkm/VUJ6PGT/bvbly2WhsM4ieMy9ZSz+PpSMEcT9zb6i9PcOGcN+EPH85rqD4U92dg3+Qvr0f0MAMaCl7Yfw/zI35T/ebslXJ/b7i9i0iILmL7CVJdjo3s41Kk0oq2mFit8mjpYxZoYQ47BxGSsp56gsxcJ23t/nYJYSzyOboeQOkt6KNsCpY6u6WyIQcunjMsvBGdgiPdLJ5rsovpf8uwxOlNWcjHZfKOod1dCpKw1KowCqeIcEtpQGUk/r4GRvFT2RIQqgVGiydNXZg39gBxYShIUi9PQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=//KczrXwWXzK/7f9S1HusaFzzirPOtrPtbT6BJ3ZVP8=;
- b=KcK0k92se9Kg9mX5BrF7jnmdJqkGlnI0nbU6GjFZFyohRwzoJL4wF8MCsm1UfdWQifzy53664zr8AEXcPe4gJXstzX46l4HCM5jCwbv4INv7k4XxD/janNX9aH/4YqcCe4eSq+NOLwXo/jcWM36zuWBngN7LN1xMP9Hq/G+RvSXyXTapPsJasR7lXzTnNnWkGcCzbgl4uewc45YOJf3fDNUTS6Qt/p0d8RG+CziT5cUAXNA4awpQrvZRUiBYw1461JieuJD1RazOfCpwyI3e7HSsBzIaVLAo6ZJkbYxPpx2TstCcFOtNOwFFi3DEjY2gGOlGlUIkeoRR+OljIQdGgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=//KczrXwWXzK/7f9S1HusaFzzirPOtrPtbT6BJ3ZVP8=;
- b=s740qDprh5u7bKpsTMgKULs9Gj6fu2FR0mzaCdJc1xewYjjo9VKmO6Xp6mQuRTyZ0Vrjq/0HMcO4uR/mqbyu0efhivnl49OdDc4OIIVjfMHUgjVXUT6yJgPX0UytWKUqLpIGkwWZCgwAe4M5dJqW1kzFmBTFun3wYDX04IPd1os=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB3278.eurprd05.prod.outlook.com (10.170.239.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Thu, 13 Feb 2020 15:51:59 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2729.025; Thu, 13 Feb 2020
- 15:51:58 +0000
-Date:   Thu, 13 Feb 2020 11:51:54 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, tiwei.bie@intel.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com
-Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
-Message-ID: <20200213155154.GX4271@mellanox.com>
-References: <20200210035608.10002-1-jasowang@redhat.com>
- <20200210035608.10002-4-jasowang@redhat.com>
- <20200211134746.GI4271@mellanox.com>
- <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
- <20200212125108.GS4271@mellanox.com>
- <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
- <20200213134128.GV4271@mellanox.com>
- <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
- <20200213150542.GW4271@mellanox.com>
- <20200213103714-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200213103714-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR15CA0020.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Thu, 13 Feb 2020 10:52:10 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45777 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729876AbgBMPwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:52:09 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g3so7274150wrs.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:52:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qRSNHxPBZ1IexXWr4sAA9opPLPtOEFKsiR173BgPSbE=;
+        b=rmDCMt8johXf39HuPfvbW10KGlsza5f82dM90WRh/o8esX8OkRNxItKTtPH80Aw7PK
+         w6hwn7YXoxCrjoydoLYw8KB+l8rFn0HuY1RWsVR55UzJk4jRrYmR0OqOv9+dllAqoqYI
+         IUfZtCwBYWOyibEPrFjbOgM10K11SHeVgTIQpGfnGO+gTk83bitTdzbao0Hgi3r5l3QQ
+         a1WcFJOjDtt1x0Fyxqw2UUXZYfxowjJxu3tleaFrPidLlZzONnLFrhPM+kmdV1h3aYm0
+         VscLAall4oZEcfJFTKX3LM8+AuGIbObycMU9LRQADS9nEzZrQVzTo3ETriJPaan58JVT
+         NeFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qRSNHxPBZ1IexXWr4sAA9opPLPtOEFKsiR173BgPSbE=;
+        b=FmdOj/vsxNgBcvhNZmHS3KZhmVA6RC+LeE/iTMuZRz5TYXiJwfKcmfO8wODUm0UbVC
+         J61ZtP/jTygVgwemDmnut+ut8Z37xYTjBdyLribjaurKdBVY3MOGnc5BgaWVlnQUygnC
+         HrOEKYHTc7Z0O5KJ0Nd81trfskXuNf0G5JAFWALnj4LnP/dw6z3n4m321ydfXLTHoPz2
+         YR7P2U9PU6xiOrheyox5mXAoeLxi4rFDYURmAvZyrgy5veIgq8GMJJpJoEGgmoeaiWNH
+         UldMbj3oTxt/xl6/oKT4EASTDLZ/jLJdUxLHZXRXHBtmnZS45hSfE8dud3cGKzXTWC5u
+         tiiQ==
+X-Gm-Message-State: APjAAAVey0ww2Zn41Bn0gu4NjxutIfbCakjKo3RdQ3Xep9D2FL4vjpN6
+        XRXhqfS/BX7D0w0FB6zbEQz/Pw+6RIs=
+X-Google-Smtp-Source: APXvYqzaEZ72W0WraKrTyInOswcFFpztUeMtekBYMK7/Qvo39kr8aI6aa2+adZuUr6wwgRuldPDSzw==
+X-Received: by 2002:adf:dd51:: with SMTP id u17mr21617587wrm.290.1581609127423;
+        Thu, 13 Feb 2020 07:52:07 -0800 (PST)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id e1sm3319814wrt.84.2020.02.13.07.52.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 07:52:06 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 0/9] ASoC: meson: gx: add audio output support
+Date:   Thu, 13 Feb 2020 16:51:50 +0100
+Message-Id: <20200213155159.3235792-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR15CA0020.namprd15.prod.outlook.com (2603:10b6:208:1b4::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23 via Frontend Transport; Thu, 13 Feb 2020 15:51:58 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j2GmQ-0005eB-SB; Thu, 13 Feb 2020 11:51:54 -0400
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1f81508b-e3b9-41c0-6e98-08d7b09ca87a
-X-MS-TrafficTypeDiagnostic: VI1PR05MB3278:|VI1PR05MB3278:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB327810783AA414DF6A22D69ACF1A0@VI1PR05MB3278.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 031257FE13
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(136003)(39860400002)(396003)(199004)(189003)(7416002)(1076003)(9786002)(4326008)(2616005)(9746002)(36756003)(478600001)(86362001)(33656002)(66476007)(81156014)(8936002)(52116002)(8676002)(26005)(66946007)(316002)(81166006)(5660300002)(186003)(66556008)(2906002)(6916009)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3278;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VDrOmCQPbhG6OMaA30BTqTP/4l7SRhA4OM9iPTfxKcaIo6L77coKcFcOgoBUXpDN+Lc8MQOA2aM11/T4vlfTb36xiLOuy/CdzBR0oFwIkL+IvkYRuqqZpeFZd8z8LvbjSmafLwchhzoaNisejZQCDTwRH5M3HarbDxwOrHR1yJuypZXz9BCEyovOZXrR9kD47m9sn44s+1XZePHPGEZd8YpEP0jKcUv9uCO6d8CHWTYxVHR1x7zDgaUTEbyj0wN1kgbNkKc9Ikjf50viyA/Zk3OlOmu5mFNWkHaUnBUzgLqrbpA62VBTovzUXRkCmBCA4PlYYSj5XRqVD0DPmELKjIRIy/4h9FC2Il11QTIehfViRQS9gYMWHdRepRSHabS+vllAlEKTQcrqE4z96x1nRaNvT/DXbholOGH2yHA74G2g2fI38a4SZ8Pcl79s0xYRRZOYqYq78dmiBXuKpG/SvE68a87N68RkTwnP8/IGEH0KNT68Rc5DI3BEijMnbwni
-X-MS-Exchange-AntiSpam-MessageData: Qh++IUh2Ir+bpDxJTgnzfj+6h+Ord0RqJxQLFngvzxjrnAuzqjXJPbo+F9UBsZafY5hSfeZ3n+Bm+4+dnA99yjdNqtFKGOAAkdSRHnbVHiv0H+BnaPWsJD/RtGS+GrDC9klDfAaxGrbxsj/tw2k5Sg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f81508b-e3b9-41c0-6e98-08d7b09ca87a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 15:51:58.5916
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tDA8g3Wn8CQpdW0mHz1caFOR6pJjN6jMUZXPolgv0Bf0JxHqdm3bAf6WLAxqS/rEe8FEZrPuoNPt9lmO+jYh+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3278
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:41:06AM -0500, Michael S. Tsirkin wrote:
-> On Thu, Feb 13, 2020 at 11:05:42AM -0400, Jason Gunthorpe wrote:
-> > On Thu, Feb 13, 2020 at 10:58:44PM +0800, Jason Wang wrote:
-> > > 
-> > > On 2020/2/13 下午9:41, Jason Gunthorpe wrote:
-> > > > On Thu, Feb 13, 2020 at 11:34:10AM +0800, Jason Wang wrote:
-> > > > 
-> > > > > >    You have dev, type or
-> > > > > > class to choose from. Type is rarely used and doesn't seem to be used
-> > > > > > by vdpa, so class seems the right choice
-> > > > > > 
-> > > > > > Jason
-> > > > > Yes, but my understanding is class and bus are mutually exclusive. So we
-> > > > > can't add a class to a device which is already attached on a bus.
-> > > > While I suppose there are variations, typically 'class' devices are
-> > > > user facing things and 'bus' devices are internal facing (ie like a
-> > > > PCI device)
-> > > 
-> > > 
-> > > Though all vDPA devices have the same programming interface, but the
-> > > semantic is different. So it looks to me that use bus complies what
-> > > class.rst said:
-> > > 
-> > > "
-> > > 
-> > > Each device class defines a set of semantics and a programming interface
-> > > that devices of that class adhere to. Device drivers are the
-> > > implementation of that programming interface for a particular device on
-> > > a particular bus.
-> > > 
-> > > "
-> > 
-> > Here we are talking about the /dev/XX node that provides the
-> > programming interface. All the vdpa devices have the same basic
-> > chardev interface and discover any semantic variations 'in band'
-> > 
-> > > > So why is this using a bus? VDPA is a user facing object, so the
-> > > > driver should create a class vhost_vdpa device directly, and that
-> > > > driver should live in the drivers/vhost/ directory.
-> > >  
-> > > This is because we want vDPA to be generic for being used by different
-> > > drivers which is not limited to vhost-vdpa. E.g in this series, it allows
-> > > vDPA to be used by kernel virtio drivers. And in the future, we will
-> > > probably introduce more drivers in the future.
-> > 
-> > I don't see how that connects with using a bus.
-> > 
-> > Every class of virtio traffic is going to need a special HW driver to
-> > enable VDPA, that special driver can create the correct vhost side
-> > class device.
-> 
-> That's just a ton of useless code duplication, and a good chance
-> to have minor variations in implementations confusing
-> userspace.
+This patchset adds support for the i2s and spdif audio outputs of the
+amlogic GX SoC family, such the S905, S905X/D, S912 and S805X. These SoCs
+are used by a fair amount of boards actively maintained upstream.
 
-What? Why? This is how almost every user of the driver core works.
+This was tested on:
+ * amlogic s912 q200
+ * libretech s805x-ac (frite)
+ * libretech s905x-cc (potato)
+ * libretech s905d-pc (tartiflette)
 
-I don't see how you get any duplication unless the subsystem core is
-badly done wrong.
+This could also possibly support meson8 32bits SoCs but I have not tested
+it myself and it could require some further tweaks.
 
-The 'class' is supposed to provide all the library functions to remove
-this duplication. Instead of plugging the HW driver in via some bus
-scheme every subsystem has its own 'ops' that the HW driver provides
-to the subsystem's class via subsystem_register()
+The audio subsystem found on these SoCs has now been dropped in the newer
+designs. All recent SoCs families (like g12a and sm1) derive from the AXG
+audio architecture.
 
-This is the *standard* pattern to use the driver core.
+Jerome Brunet (9):
+  ASoC: core: allow a dt node to provide several components
+  ASoC: meson: g12a: extract codec-to-codec utils
+  ASoC: meson: aiu: add audio output dt-bindings
+  ASoC: meson: aiu: add i2s and spdif support
+  ASoC: meson: aiu: add hdmi codec control support
+  ASoC: meson: aiu: add internal dac codec control support
+  ASoC: meson: axg: extract sound card utils
+  ASoC: meson: gx: add sound card dt-binding documentation
+  ASoC: meson: gx: add sound card support
 
-This is almost there, it just has this extra bus part to convey the HW
-ops instead of directly.
+ .../bindings/sound/amlogic,aiu.yaml           | 111 +++++
+ .../bindings/sound/amlogic,gx-sound-card.yaml | 113 +++++
+ include/dt-bindings/sound/meson-aiu.h         |  18 +
+ sound/soc/meson/Kconfig                       |  24 ++
+ sound/soc/meson/Makefile                      |  15 +
+ sound/soc/meson/aiu-acodec-ctrl.c             | 205 +++++++++
+ sound/soc/meson/aiu-codec-ctrl.c              | 152 +++++++
+ sound/soc/meson/aiu-encoder-i2s.c             | 324 ++++++++++++++
+ sound/soc/meson/aiu-encoder-spdif.c           | 209 +++++++++
+ sound/soc/meson/aiu-fifo-i2s.c                | 153 +++++++
+ sound/soc/meson/aiu-fifo-spdif.c              | 186 ++++++++
+ sound/soc/meson/aiu-fifo.c                    | 223 ++++++++++
+ sound/soc/meson/aiu-fifo.h                    |  50 +++
+ sound/soc/meson/aiu.c                         | 390 +++++++++++++++++
+ sound/soc/meson/aiu.h                         |  91 ++++
+ sound/soc/meson/axg-card.c                    | 403 ++----------------
+ sound/soc/meson/g12a-tohdmitx.c               | 219 ++--------
+ sound/soc/meson/gx-card.c                     | 141 ++++++
+ sound/soc/meson/meson-card-utils.c            | 385 +++++++++++++++++
+ sound/soc/meson/meson-card.h                  |  55 +++
+ sound/soc/meson/meson-codec-glue.c            | 149 +++++++
+ sound/soc/meson/meson-codec-glue.h            |  32 ++
+ sound/soc/soc-core.c                          |   8 +
+ 23 files changed, 3104 insertions(+), 552 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,aiu.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml
+ create mode 100644 include/dt-bindings/sound/meson-aiu.h
+ create mode 100644 sound/soc/meson/aiu-acodec-ctrl.c
+ create mode 100644 sound/soc/meson/aiu-codec-ctrl.c
+ create mode 100644 sound/soc/meson/aiu-encoder-i2s.c
+ create mode 100644 sound/soc/meson/aiu-encoder-spdif.c
+ create mode 100644 sound/soc/meson/aiu-fifo-i2s.c
+ create mode 100644 sound/soc/meson/aiu-fifo-spdif.c
+ create mode 100644 sound/soc/meson/aiu-fifo.c
+ create mode 100644 sound/soc/meson/aiu-fifo.h
+ create mode 100644 sound/soc/meson/aiu.c
+ create mode 100644 sound/soc/meson/aiu.h
+ create mode 100644 sound/soc/meson/gx-card.c
+ create mode 100644 sound/soc/meson/meson-card-utils.c
+ create mode 100644 sound/soc/meson/meson-card.h
+ create mode 100644 sound/soc/meson/meson-codec-glue.c
+ create mode 100644 sound/soc/meson/meson-codec-glue.h
 
-> Instead, each device implement the same interface, and then
-> vhost sits on top.
+-- 
+2.24.1
 
-Sure, but plugging in via ops/etc not via a bus and another struct
-device.
-
-> That bus is exactly what Greg KH proposed. There are other ways
-> to solve this I guess but this bikeshedding is getting tiring.
-
-This discussion was for a different goal, IMHO.
-
-> Come on it's an internal kernel interface, if we feel
-> it was a wrong direction to take we can change our minds later.
-> Main thing is getting UAPI right.
-
-This discussion started because the refcounting has been busted up in
-every version posted so far. It is not bikeshedding when these bugs
-are actually being caused by trying to abuse the driver core and
-shoehorn in a bus that isn't needed when a class is the correct thing
-to use.
-
-Jason
