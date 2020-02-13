@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0FEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA0BC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D266620656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A78320656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610244;
-	bh=mrU7RCK5WEhJt8eYqqolSqzoo9dFvW8eoP0dTn9M3zI=;
+	s=default; t=1581610252;
+	bh=7iRLkMqeUOIng/6kDFjMOUlzItOiz44rI7yMpIfPZKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWTG0hFfJio+AG14lihUTUUDXjbVzqwzD8Fw5d1SdHUbxm5MEBJdy1PBfA3m6x45Y
-	 Cd5eBTX05T3CsW8D009pv/ZMsdsMnqd+vs0uWmIq/BBTgo7BrBtJeNNynk/zAttcT8
-	 phkgAy/Zr4WrIjsE5o7Ea5a8VWRP/u0cRriMYUYo=
+	b=IpqH7Z7/e5JTkYve38JmqPB9Zh9P5EWrPcz34Q37VnJ15/zgEvS7IIGwac95JK/NG
+	 pK6xxSSQL3uruLDWLeGP53l8/cQrlFLDu8/1gayyv8PECRcij0de9/QkIoe9wgdQ7z
+	 BevrovaTT2LGB7XPu19d3K/jY0bxziqePDwHLBOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgBMQKo (ORCPT
+        id S1729072AbgBMQKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:10:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:10:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbgBMPWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:35 -0500
+        id S1727965AbgBMPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:33 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DED2324690;
-        Thu, 13 Feb 2020 15:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0529246B3;
+        Thu, 13 Feb 2020 15:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607354;
-        bh=mrU7RCK5WEhJt8eYqqolSqzoo9dFvW8eoP0dTn9M3zI=;
+        s=default; t=1581607350;
+        bh=7iRLkMqeUOIng/6kDFjMOUlzItOiz44rI7yMpIfPZKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z8InTUvTHoABgIaLOhIIP+9ebIgC7SLeVPuOAzyxDDPA4GWj31uN1CT9Say471/Jf
-         xinSPo/rpFxl/WXlqWRzpWawA63RWdC+BXpi9EdqJ0Tfk5k5QiJbbhirlJa9o6cHIH
-         GLvmNlzP6ps0XX+WrV0haBkutl8kU7YQtlhV1/nQ=
+        b=ERxc6ygM5DESoGtqsL4EfYyGyzETYaAuBUbsps3jsA//WfWAJ1Nj6IBwm0nmpT+x8
+         tVIDeyyTJFPVZuG6RogXsL7FI9rj30OKNNVEwoUAmDGk6FcgUbuRi5+0jpSHP/I5rs
+         meu+muUK45CcLFuhI1fZ+Nw0LxzIS0+WGB08+WLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 36/91] KVM: x86: Protect DR-based index computations from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:53 -0800
-Message-Id: <20200213151835.471940017@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.4 31/91] btrfs: set trans->drity in btrfs_commit_transaction
+Date:   Thu, 13 Feb 2020 07:19:48 -0800
+Message-Id: <20200213151833.609714922@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,65 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit ea740059ecb37807ba47b84b33d1447435a8d868 upstream.
+commit d62b23c94952e78211a383b7d90ef0afbd9a3717 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in __kvm_set_dr() and
-kvm_get_dr().
-Both kvm_get_dr() and kvm_set_dr() (a wrapper of __kvm_set_dr()) are
-exported symbols so KVM should tream them conservatively from a security
-perspective.
+If we abort a transaction we have the following sequence
 
-Fixes: 020df0794f57 ("KVM: move DR register access handling into generic code")
+if (!trans->dirty && list_empty(&trans->new_bgs))
+	return;
+WRITE_ONCE(trans->transaction->aborted, err);
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+The idea being if we didn't modify anything with our trans handle then
+we don't really need to abort the whole transaction, maybe the other
+trans handles are fine and we can carry on.
+
+However in the case of create_snapshot we add a pending_snapshot object
+to our transaction and then commit the transaction.  We don't actually
+modify anything.  sync() behaves the same way, attach to an existing
+transaction and commit it.  This means that if we have an IO error in
+the right places we could abort the committing transaction with our
+trans->dirty being not set and thus not set transaction->aborted.
+
+This is a problem because in the create_snapshot() case we depend on
+pending->error being set to something, or btrfs_commit_transaction
+returning an error.
+
+If we are not the trans handle that gets to commit the transaction, and
+we're waiting on the commit to happen we get our return value from
+cur_trans->aborted.  If this was not set to anything because sync() hit
+an error in the transaction commit before it could modify anything then
+cur_trans->aborted would be 0.  Thus we'd return 0 from
+btrfs_commit_transaction() in create_snapshot.
+
+This is a problem because we then try to do things with
+pending_snapshot->snap, which will be NULL because we didn't create the
+snapshot, and then we'll get a NULL pointer dereference like the
+following
+
+"BUG: kernel NULL pointer dereference, address: 00000000000001f0"
+RIP: 0010:btrfs_orphan_cleanup+0x2d/0x330
+Call Trace:
+ ? btrfs_mksubvol.isra.31+0x3f2/0x510
+ btrfs_mksubvol.isra.31+0x4bc/0x510
+ ? __sb_start_write+0xfa/0x200
+ ? mnt_want_write_file+0x24/0x50
+ btrfs_ioctl_snap_create_transid+0x16c/0x1a0
+ btrfs_ioctl_snap_create_v2+0x11e/0x1a0
+ btrfs_ioctl+0x1534/0x2c10
+ ? free_debug_processing+0x262/0x2a3
+ do_vfs_ioctl+0xa6/0x6b0
+ ? do_sys_open+0x188/0x220
+ ? syscall_trace_enter+0x1f8/0x330
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x4a/0x1b0
+
+In order to fix this we need to make sure anybody who calls
+commit_transaction has trans->dirty set so that they properly set the
+trans->transaction->aborted value properly so any waiters know bad
+things happened.
+
+This was found while I was running generic/475 with my modified
+fsstress, it reproduced within a few runs.  I ran with this patch all
+night and didn't see the problem again.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/btrfs/transaction.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -53,6 +53,7 @@
- #include <linux/pvclock_gtod.h>
- #include <linux/kvm_irqfd.h>
- #include <linux/irqbypass.h>
-+#include <linux/nospec.h>
- #include <trace/events/kvm.h>
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -1814,6 +1814,14 @@ int btrfs_commit_transaction(struct btrf
+ 	struct btrfs_inode *btree_ino = BTRFS_I(root->fs_info->btree_inode);
+ 	int ret;
  
- #define CREATE_TRACE_POINTS
-@@ -873,9 +874,11 @@ static u64 kvm_dr6_fixed(struct kvm_vcpu
- 
- static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
++	/*
++	 * Some places just start a transaction to commit it.  We need to make
++	 * sure that if this commit fails that the abort code actually marks the
++	 * transaction as failed, so set trans->dirty to make the abort code do
++	 * the right thing.
++	 */
++	trans->dirty = true;
 +
- 	switch (dr) {
- 	case 0 ... 3:
--		vcpu->arch.db[dr] = val;
-+		vcpu->arch.db[array_index_nospec(dr, size)] = val;
- 		if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP))
- 			vcpu->arch.eff_db[dr] = val;
- 		break;
-@@ -912,9 +915,11 @@ EXPORT_SYMBOL_GPL(kvm_set_dr);
- 
- int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
-+
- 	switch (dr) {
- 	case 0 ... 3:
--		*val = vcpu->arch.db[dr];
-+		*val = vcpu->arch.db[array_index_nospec(dr, size)];
- 		break;
- 	case 4:
- 		/* fall through */
+ 	/* Stop the commit early if ->aborted is set */
+ 	if (unlikely(ACCESS_ONCE(cur_trans->aborted))) {
+ 		ret = cur_trans->aborted;
 
 
