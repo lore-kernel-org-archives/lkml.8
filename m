@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521ECC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88B3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4D22073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4D62073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608322;
-	bh=dHeL7CXV9VZmIwpyozwNJgQsEYNVcPDI375P/GphZS8=;
+	s=default; t=1581608327;
+	bh=n9qPfzZareJWROB5S1i2u8Q8pzKf0P4hrNCvkAWh3w0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wuby38v7mfhab+dxpdDeDDFRQ+YZtzZ9O+VAT/AGraznti7W1H+iKCAoumhIcvsOe
-	 EumZDLbysWUnQ/3ErJCZ5q+Wf2Y4yRDKOhlKmKJQp0IdrdumHBsjQbO/r+2soqXump
-	 tex3ZmO+1aJfUJWNW4mnEyygCyOjRBp5fl6hZPmY=
+	b=0ZP5esst44dPCjW+yntlZ6qjW3Inqy/0VmAvn5BnS9SXZpdo8qDbzHNR7MUFpzJZm
+	 sp5/FwV6+dIwzkmjJ1jmKn5h9Gnu/ZQ2vHbMu6G++meiyoEAJ5jGsVZah58FUkqvOP
+	 5l+cUV2kGO5o8pNOwskuGD0ACx/qQYkJ3NjANr9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgBMPil (ORCPT
+        id S1729770AbgBMPiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:38:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:38:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbgBMP3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729670AbgBMP3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:29:12 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 571EA24670;
-        Thu, 13 Feb 2020 15:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 137B3218AC;
+        Thu, 13 Feb 2020 15:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607752;
-        bh=dHeL7CXV9VZmIwpyozwNJgQsEYNVcPDI375P/GphZS8=;
+        s=default; t=1581607751;
+        bh=n9qPfzZareJWROB5S1i2u8Q8pzKf0P4hrNCvkAWh3w0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7id/n/caYU4kpKbyRpEzebwD+eJeYfXRmSY4q3KDc/Lo6H685cZAITt5cly0ufau
-         RDu1DG07FERyGRoM/z8xyfdesCUGjrq1SS5V9JoGZRK929nAXKKHoYpTnqsNfI94VQ
-         1r4JFxytS4owOldJECALgCtvmQCNj1u6dc5QHGZ0=
+        b=wUOCVgr/h168DEixxlbkmEx+UI97j8o6inlZ7TrZ9Y578onM+55vzLRyej8p2eQHI
+         pKyWxeSMExO8BZrebVcjBB1BXVgb6+0p8vdgDr/h6hhVUHn0ONgHyQUwGWphfI1AVB
+         vOhQK7mr1ZH2I3C+dNIhiz989B7vWl1B8EInNX8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Nilsson <jesper.nilsson@axis.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 096/120] crypto: artpec6 - return correct error code for failed setkey()
-Date:   Thu, 13 Feb 2020 07:21:32 -0800
-Message-Id: <20200213151933.339239596@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.5 094/120] mtd: sharpslpart: Fix unsigned comparison to zero
+Date:   Thu, 13 Feb 2020 07:21:30 -0800
+Message-Id: <20200213151932.657671950@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -61,34 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit b828f905904cd76424230c69741a4cabb0174168 upstream.
+commit f33113b542219448fa02d77ca1c6f4265bd7f130 upstream.
 
-->setkey() is supposed to retun -EINVAL for invalid key lengths, not -1.
+The unsigned variable log_num is being assigned a return value
+from the call to sharpsl_nand_get_logical_num that can return
+-EINVAL.
 
-Fixes: a21eb94fc4d3 ("crypto: axis - add ARTPEC-6/7 crypto accelerator driver")
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Lars Persson <lars.persson@axis.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Lars Persson <lars.persson@axis.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Detected using Coccinelle:
+./drivers/mtd/parsers/sharpslpart.c:207:6-13: WARNING: Unsigned expression compared with zero: log_num > 0
+
+Fixes: 8a4580e4d298 ("mtd: sharpslpart: Add sharpslpart partition parser")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/axis/artpec6_crypto.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/parsers/sharpslpart.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/axis/artpec6_crypto.c
-+++ b/drivers/crypto/axis/artpec6_crypto.c
-@@ -1251,7 +1251,7 @@ static int artpec6_crypto_aead_set_key(s
+--- a/drivers/mtd/parsers/sharpslpart.c
++++ b/drivers/mtd/parsers/sharpslpart.c
+@@ -165,10 +165,10 @@ static int sharpsl_nand_get_logical_num(
  
- 	if (len != 16 && len != 24 && len != 32) {
- 		crypto_aead_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -1;
-+		return -EINVAL;
- 	}
+ static int sharpsl_nand_init_ftl(struct mtd_info *mtd, struct sharpsl_ftl *ftl)
+ {
+-	unsigned int block_num, log_num, phymax;
++	unsigned int block_num, phymax;
++	int i, ret, log_num;
+ 	loff_t block_adr;
+ 	u8 *oob;
+-	int i, ret;
  
- 	ctx->key_length = len;
+ 	oob = kzalloc(mtd->oobsize, GFP_KERNEL);
+ 	if (!oob)
 
 
