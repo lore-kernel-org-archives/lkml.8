@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B44CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13515C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA05206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E225E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="leHI3ZAn"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="D2KwX3UV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgBMSAK (ORCPT
+        id S1728105AbgBMSAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:00:10 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52973 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727608AbgBMSAH (ORCPT
+        Thu, 13 Feb 2020 13:00:13 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40018 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbgBMSAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:00:07 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so7268785wmc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:00:06 -0800 (PST)
+        Thu, 13 Feb 2020 13:00:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t3so7818838wru.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:00:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yW0jgXQz7fRClRh+H+UBu4xpGoCVJNVpLNtJDmiQHCo=;
-        b=leHI3ZAnR0hc1CPEh523zBYIvdhDhGl+lUf9k+14RWWhuDXSIireK2PDjHb65FvML1
-         ptuRaVvfpP0ukdogPOTE41+jwKEoZYKTOZ4l1VtM51bYmXT5Wd391SU2O1EeOphuTH1Q
-         nOcM6yO5WGVyDFx3PCgW3l66xUwCfL6fygjLF/8umf903UcJi8wCfVvaQfBF3jcIlg/L
-         08NbS6w4i+irgZeRQEN7jVh6rOWvTa+4NPcgeZ+NKYscwCWySrC2A6WuzL+WXkq4BQwk
-         ho8wFD3GNgIJ4fVODC3SKHmMRFMpoT/Mk8+mql/ZP78rDo8XiadSzmKPJzDEaiE7kPff
-         I5fA==
+        bh=XXo3L4k48aibe+yP/A4EY8XTS9o1G2cK7ZyRw33XEt8=;
+        b=D2KwX3UVhNBaSMtlGygi7ujusj8mKB5CcFanw7hjeEE722YbtHnWTNV13eGfVuFNic
+         abEz7lOczVoEbxhOBIjwjHChdsNNJ83vitHq0RgebeASzJqg5/iVqBkCGex1dvQODZ6F
+         SBZNsy/HbodwmxtTnB0YGepG07xMUnGSS+u5BDsJAXOya+C134E/cC1GTaIbMsGIp9w6
+         v8olvCtghXvcl102ZRlwUmPAav21tepYq5Ogeq6AZQTkK1uoV7/ddYtGfqVcL4c5uza3
+         J9SyiO8c6oKS64EbROwk8eV2Pl+ttxALeDPsbZ+xvL6E4tiXuiZdEesuLxpdaQEc5iiN
+         h86A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yW0jgXQz7fRClRh+H+UBu4xpGoCVJNVpLNtJDmiQHCo=;
-        b=PbRV6NpmOldqQmRHYupS83ZU30Y+ptJhn3UVe237hTJQXmpoOls2kfFIw7B3aIdsRE
-         Qr5llquDDvRG3cQh6t6XQvWxPFIKE600NFy81A91Kx08Co5cTKS4e3T3gmuOtfQzvWTb
-         XEYYFGtW1tfdql9TC3WmQREfrRGI/5aVKv8UHxlXCNFo1SI7sr4VJ8K5jo4mabwmILsB
-         iUt6s6eLa5jMfwOh636UeRgx8YIdTgSqKbFePy5IGY3nqgcwcIAEzgcjZLprV+qPUCMJ
-         +v1mn1KTCDVV/ZwAAZrUpZadIjgN73ff1OPIicQcSSU/1K1CfjRxZVA7vY30Z5+d+ecK
-         ZeJg==
-X-Gm-Message-State: APjAAAUJiSI3bKmJr+FGhAELFS+nHFu2DSMubSECZ/r+gzpoVOsej0NH
-        XIqw+hUFAGFC513LHrse5QV8xr7oVjA=
-X-Google-Smtp-Source: APXvYqyE3jb4mWwz79E0W8X+lrylXGFOk5ZjRVEQzAqMjPyr15hrfMPtVV5AqWvMPvY+9GQ49Fk3eA==
-X-Received: by 2002:a05:600c:2187:: with SMTP id e7mr6898896wme.11.1581616805696;
-        Thu, 13 Feb 2020 10:00:05 -0800 (PST)
+        bh=XXo3L4k48aibe+yP/A4EY8XTS9o1G2cK7ZyRw33XEt8=;
+        b=DjX+4KJv7P1aDnxPuzudvk6mLEafMSsWtXO35LTu4UVlbP6pB0SpUxn8ajXpt4U1DE
+         eHFaqXrThoZF/kuYDWb/DyyPS3xFPd3X/8xJ7Dxi4mHmY8aAkuubLdmByTjtSdRJ7V1Z
+         2xv5Xz/wHUrORQnL34QQXwMlkrMRN5ywPinWsx5BMlSVpBEEOO5E+gV6czUdPUW1XN/B
+         xMBZfBnhCXgBz+azTfgzznvXjJ5nsvLodT9muc8a/a+Z76I4eY6GOgfMrUovBqK5wF9l
+         VYLdt7kSM3ROt3UTKbSgaHbElgGF3VGk9jOHdR0R9poOqGj4vift4360IiZdyAnk1aUr
+         7zZg==
+X-Gm-Message-State: APjAAAUvxAdH8BDBVoPaUN/3cfOY6z9t80UULdRGuc398/1KxY3Jv4MZ
+        tjoNaka6dLHniEJmRzfeZvPujmQxwWE=
+X-Google-Smtp-Source: APXvYqyUsqTefNHa+WG1XIxQNt/pUPg/0tXe6oyOXxhPFPWFFV3tAT2SQrkX7z4Jz6q1Z1ekN+sbRg==
+X-Received: by 2002:a05:6000:10c:: with SMTP id o12mr23253172wrx.106.1581616810553;
+        Thu, 13 Feb 2020 10:00:10 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id z11sm3630089wrv.96.2020.02.13.10.00.04
+        by smtp.gmail.com with ESMTPSA id z11sm3630089wrv.96.2020.02.13.10.00.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 10:00:05 -0800 (PST)
+        Thu, 13 Feb 2020 10:00:10 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -63,9 +63,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         linux-watchdog@vger.kernel.org
-Subject: [PATCH 1/2] watchdog: Check WDOG_STOP_ON_REBOOT in reboot notifier
-Date:   Thu, 13 Feb 2020 17:59:57 +0000
-Message-Id: <20200213175958.105914-2-dima@arista.com>
+Subject: [PATCH 2/2] watchdog/uapi: Add WDIOS_{RUN,STOP}_ON_REBOOT
+Date:   Thu, 13 Feb 2020 17:59:58 +0000
+Message-Id: <20200213175958.105914-3-dima@arista.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213175958.105914-1-dima@arista.com>
 References: <20200213175958.105914-1-dima@arista.com>
@@ -92,68 +92,69 @@ generate vmcore. Just before reboot watchdog's timeout is increased
 to some good-enough value (3 mins). That keeps watchdog always running
 and guarantees that VM doesn't stuck.
 
-As a preparation to move the watchdog's decision to stop on reboot or
-not in userspace, allow WDOG_STOP_ON_REBOOT to be set during runtime,
-not only on driver's probing. Always register reboot notifier and check
-WDOG_STOP_ON_REBOOT inside it (on actual reboot).
+Provide new WDIOS_RUN_ON_REBOOT and WDIOS_STOP_ON_REBOOT ioctl options
+to set up strategy on reboot.
 
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/watchdog/watchdog_core.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/watchdog/watchdog_dev.c | 12 ++++++++++++
+ include/linux/watchdog.h        |  6 ++++++
+ include/uapi/linux/watchdog.h   |  3 ++-
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
-index 861daf4f37b2..ebf80ff3e8ce 100644
---- a/drivers/watchdog/watchdog_core.c
-+++ b/drivers/watchdog/watchdog_core.c
-@@ -153,6 +153,10 @@ static int watchdog_reboot_notifier(struct notifier_block *nb,
- 	struct watchdog_device *wdd;
- 
- 	wdd = container_of(nb, struct watchdog_device, reboot_nb);
-+
-+	if (!test_bit(WDOG_STOP_ON_REBOOT, &wdd->status))
-+		return NOTIFY_DONE;
-+
- 	if (code == SYS_DOWN || code == SYS_HALT) {
- 		if (watchdog_active(wdd)) {
- 			int ret;
-@@ -254,17 +258,14 @@ static int __watchdog_register_device(struct watchdog_device *wdd)
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 8b5c742f24e8..c854cd0245db 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -753,6 +753,18 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
  		}
- 	}
- 
--	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
--		wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
--
--		ret = register_reboot_notifier(&wdd->reboot_nb);
--		if (ret) {
--			pr_err("watchdog%d: Cannot register reboot notifier (%d)\n",
--			       wdd->id, ret);
--			watchdog_dev_unregister(wdd);
--			ida_simple_remove(&watchdog_ida, id);
--			return ret;
--		}
-+	wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
-+	ret = register_reboot_notifier(&wdd->reboot_nb);
-+	if (ret) {
-+		pr_err("watchdog%d: Cannot register reboot notifier (%d)\n",
-+				wdd->id, ret);
-+		watchdog_dev_unregister(wdd);
-+		ida_simple_remove(&watchdog_ida, id);
-+		return ret;
- 	}
- 
- 	if (wdd->ops->restart) {
-@@ -321,9 +322,7 @@ static void __watchdog_unregister_device(struct watchdog_device *wdd)
- 	if (wdd->ops->restart)
- 		unregister_restart_handler(&wdd->restart_nb);
- 
--	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status))
--		unregister_reboot_notifier(&wdd->reboot_nb);
--
-+	unregister_reboot_notifier(&wdd->reboot_nb);
- 	watchdog_dev_unregister(wdd);
- 	ida_simple_remove(&watchdog_ida, wdd->id);
+ 		if (val & WDIOS_ENABLECARD)
+ 			err = watchdog_start(wdd);
++
++		if (val & WDIOS_RUN_ON_REBOOT) {
++			if (val & WDIOS_STOP_ON_REBOOT) {
++				err = -EINVAL;
++				break;
++			}
++			watchdog_run_on_reboot(wdd);
++			err = 0;
++		} else if (val & WDIOS_STOP_ON_REBOOT) {
++			watchdog_stop_on_reboot(wdd);
++			err = 0;
++		}
+ 		break;
+ 	case WDIOC_KEEPALIVE:
+ 		if (!(wdd->info->options & WDIOF_KEEPALIVEPING)) {
+diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+index 417d9f37077a..9e2ca7754631 100644
+--- a/include/linux/watchdog.h
++++ b/include/linux/watchdog.h
+@@ -150,6 +150,12 @@ static inline void watchdog_stop_on_reboot(struct watchdog_device *wdd)
+ 	set_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
  }
+ 
++/* Use the following function to keep the watchdog running on reboot */
++static inline void watchdog_run_on_reboot(struct watchdog_device *wdd)
++{
++	clear_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
++}
++
+ /* Use the following function to stop the watchdog when unregistering it */
+ static inline void watchdog_stop_on_unregister(struct watchdog_device *wdd)
+ {
+diff --git a/include/uapi/linux/watchdog.h b/include/uapi/linux/watchdog.h
+index b15cde5c9054..bf19a5d3c987 100644
+--- a/include/uapi/linux/watchdog.h
++++ b/include/uapi/linux/watchdog.h
+@@ -53,6 +53,7 @@ struct watchdog_info {
+ #define	WDIOS_DISABLECARD	0x0001	/* Turn off the watchdog timer */
+ #define	WDIOS_ENABLECARD	0x0002	/* Turn on the watchdog timer */
+ #define	WDIOS_TEMPPANIC		0x0004	/* Kernel panic on temperature trip */
+-
++#define	WDIOS_RUN_ON_REBOOT	0x0008	/* Keep watchdog enabled on reboot */
++#define	WDIOS_STOP_ON_REBOOT	0x0010	/* Turn off the watchdog on reboot */
+ 
+ #endif /* _UAPI_LINUX_WATCHDOG_H */
 -- 
 2.25.0
 
