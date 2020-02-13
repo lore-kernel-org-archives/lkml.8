@@ -2,148 +2,89 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EF0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC749C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A3020848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC1F2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgBMLNd (ORCPT
+        id S1729845AbgBMLSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:13:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:45162 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgBMLNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:13:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC9DF1FB;
-        Thu, 13 Feb 2020 03:13:31 -0800 (PST)
-Received: from [10.1.195.32] (e112269-lin.cambridge.arm.com [10.1.195.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4F513F6CF;
-        Thu, 13 Feb 2020 03:13:30 -0800 (PST)
-Subject: Re: [PATCH v2] drm/panfrost: Don't try to map on error faults
-To:     Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20200212202236.13095-1-robh@kernel.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <9c0a0ac7-69fe-c799-c273-81e7a8cba2c7@arm.com>
-Date:   Thu, 13 Feb 2020 11:13:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 06:18:07 -0500
+Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:35152 "EHLO
+        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729526AbgBMLSH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:18:07 -0500
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id E33D61C27FB
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:18:04 +0000 (GMT)
+Received: (qmail 6488 invoked from network); 13 Feb 2020 11:18:04 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 13 Feb 2020 11:18:04 -0000
+Date:   Thu, 13 Feb 2020 11:18:02 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 08/11] sched/numa: Bias swapping tasks based on their
+ preferred node
+Message-ID: <20200213111802.GW3466@techsingularity.net>
+References: <20200212093654.4816-1-mgorman@techsingularity.net>
+ <20200212093654.4816-9-mgorman@techsingularity.net>
+ <20200213103108.GG14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200212202236.13095-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200213103108.GG14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/2020 20:22, Rob Herring wrote:
-> From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+On Thu, Feb 13, 2020 at 11:31:08AM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 12, 2020 at 09:36:51AM +0000, Mel Gorman wrote:
+> > When swapping tasks for NUMA balancing, it is preferred that tasks move
+> > to or remain on their preferred node. When considering an imbalance,
+> > encourage tasks to move to their preferred node and discourage tasks from
+> > moving away from their preferred node.
 > 
-> If the exception type isn't a translation fault, don't try to map and
-> instead go straight to a terminal fault.
-> 
-> Otherwise, we can get flooded by kernel warnings and further faults.
-> 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> I rewrote this some simplifying the code and somewhat following Steven's 
-> suggested. Still not using defines though. No defines here was good 
-> enough before IMO.
-
-Heresy! It's a good thing you're not writing kbase code - there you
-(seemingly) need to pick a #define which is as long as possible, but
-then still wrap the code to avoid the 80 character limit... For
-example[1]. Although shifting the code right might get you extra bonus
-points, deep nesting seems to be encouraged! ;)
-
-[1]
-https://gitlab.freedesktop.org/panfrost/mali_kbase/blob/master/driver/product/kernel/drivers/gpu/arm/midgard/backend/gpu/mali_kbase_js_backend.c#L156
-
-> 
-> Only compile tested.
-
-I've done some quick testing on a Firefly RK3288. But I don't have any
-(handy) tests to trigger non-TRANSLATION_FAULT MMU faults.
-
-Reviewed-by: Steven Price <steven.price@arm.com>
-
-Thanks,
-
-Steve
-
-> 
->  drivers/gpu/drm/panfrost/panfrost_mmu.c | 44 +++++++++++--------------
->  1 file changed, 19 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> index 763cfca886a7..4f2836bd9215 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -596,33 +596,27 @@ static irqreturn_t panfrost_mmu_irq_handler_thread(int irq, void *data)
->  		source_id = (fault_status >> 16);
->  
->  		/* Page fault only */
-> -		if ((status & mask) == BIT(i)) {
-> -			WARN_ON(exception_type < 0xC1 || exception_type > 0xC4);
-> -
-> +		ret = -1;
-> +		if ((status & mask) == BIT(i) && (exception_type & 0xF8) == 0xC0)
->  			ret = panfrost_mmu_map_fault_addr(pfdev, i, addr);
-> -			if (!ret) {
-> -				mmu_write(pfdev, MMU_INT_CLEAR, BIT(i));
-> -				status &= ~mask;
-> -				continue;
-> -			}
-> -		}
->  
-> -		/* terminal fault, print info about the fault */
-> -		dev_err(pfdev->dev,
-> -			"Unhandled Page fault in AS%d at VA 0x%016llX\n"
-> -			"Reason: %s\n"
-> -			"raw fault status: 0x%X\n"
-> -			"decoded fault status: %s\n"
-> -			"exception type 0x%X: %s\n"
-> -			"access type 0x%X: %s\n"
-> -			"source id 0x%X\n",
-> -			i, addr,
-> -			"TODO",
-> -			fault_status,
-> -			(fault_status & (1 << 10) ? "DECODER FAULT" : "SLAVE FAULT"),
-> -			exception_type, panfrost_exception_name(pfdev, exception_type),
-> -			access_type, access_type_name(pfdev, fault_status),
-> -			source_id);
-> +		if (ret)
-> +			/* terminal fault, print info about the fault */
-> +			dev_err(pfdev->dev,
-> +				"Unhandled Page fault in AS%d at VA 0x%016llX\n"
-> +				"Reason: %s\n"
-> +				"raw fault status: 0x%X\n"
-> +				"decoded fault status: %s\n"
-> +				"exception type 0x%X: %s\n"
-> +				"access type 0x%X: %s\n"
-> +				"source id 0x%X\n",
-> +				i, addr,
-> +				"TODO",
-> +				fault_status,
-> +				(fault_status & (1 << 10) ? "DECODER FAULT" : "SLAVE FAULT"),
-> +				exception_type, panfrost_exception_name(pfdev, exception_type),
-> +				access_type, access_type_name(pfdev, fault_status),
-> +				source_id);
->  
->  		mmu_write(pfdev, MMU_INT_CLEAR, mask);
->  
+> Wasn't there an issue for workloads that span multiple nodes?
 > 
 
+Sortof, yes -- specifically workloads that could not fit inside a node
+for whatever reason.
+
+> Say a 4 node system with 2 warehouses? Then each JVM will want 2 nodes,
+> instead of a single node, and strong preferred node stuff makes it
+> difficult to achieve this.
+> 
+> I forgot how we dealt with these cases, just something I worry about
+> when reading this.
+
+We deal with it in task_numa_migrate() by considering nodes other
+than the preferred node for placement -- see "Look at other nodes in
+these cases" followed by a sched_setnuma if the preferred node doesn't
+match.
+
+We do not do any special casing as such in task_numa_compare other than
+finding the best improvement so we can pick a task belonging to a group
+spanning multiple nodes with or without this patch. A workload spanning
+multiple nodes in itself does not justify a full search if it can be
+avoided.
+
+-- 
+Mel Gorman
+SUSE Labs
