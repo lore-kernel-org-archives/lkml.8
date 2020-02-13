@@ -2,94 +2,86 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A58FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66CFC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C0124685
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F8024671
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581598862;
+	bh=twEumPvnyw2Pl8YhKty+VCE7JIjeaqEqyiFe8s6/Jiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ba7ucvzB/YG6lylzOqp8BrLfv3RKickbt+wvjqw6vFk87hTsZz56PrSqYtAu+E7zs
+	 nEHiM5VoxOkeqnJva8iHiS0g8WD4zDNOPFJGmSilW1zeGdROPLqBYDP9dqeMhHfV2B
+	 eGrldvTJ9rUvCdE7N2CpdzztMkDK7/zreQ0B35iY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgBMM7V (ORCPT
+        id S1729950AbgBMNBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:59:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:46336 "EHLO foss.arm.com"
+        Thu, 13 Feb 2020 08:01:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbgBMM7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 07:59:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B69091FB;
-        Thu, 13 Feb 2020 04:59:20 -0800 (PST)
-Received: from localhost (unknown [10.1.198.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 580063F6CF;
-        Thu, 13 Feb 2020 04:59:20 -0800 (PST)
-Date:   Thu, 13 Feb 2020 12:59:18 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        lukasz.luba@arm.com, rjw@rjwysocki.net, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] cpufreq: add function to get the hardware max
- frequency
-Message-ID: <20200213125918.GA2397@arm.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-6-ionela.voinescu@arm.com>
- <b63a4a47-99e5-9c71-73be-740aedde4714@arm.com>
+        id S1729673AbgBMNBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 08:01:01 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 756A22168B;
+        Thu, 13 Feb 2020 13:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581598859;
+        bh=twEumPvnyw2Pl8YhKty+VCE7JIjeaqEqyiFe8s6/Jiw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rdaYpEblbV5tf4L5crHu8c9hTW6RG99Pj+wh/ptP2xU3F5rsjtOaLgHAkzCOD3elZ
+         wVOieW3iowVEUn4ShEkxHTU/BkwBokzRkVY8HJOvjcvmMm40xSUpiZVVBKck0Cupsi
+         aOQpXMPk0690MiFckldJ7NjYe7UEVf7uLnYcNjRU=
+Date:   Thu, 13 Feb 2020 05:00:59 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
+        dave.jiang@intel.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH v12 2/4] uacce: add uacce driver
+Message-ID: <20200213130059.GA3361459@kroah.com>
+References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
+ <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
+ <20200210233711.GA1787983@kroah.com>
+ <20200213091509.v7ebvtot6rvlpfjt@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b63a4a47-99e5-9c71-73be-740aedde4714@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213091509.v7ebvtot6rvlpfjt@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 13 Feb 2020 at 11:59:56 (+0000), Valentin Schneider wrote:
-> On 2/11/20 6:45 PM, Ionela Voinescu wrote:
-> > +/**
-> > + * cpufreq_get_hw_max_freq - get the max hardware frequency of the CPU
-> > + * @cpu: CPU number
-> > + *
-> > + * The default return value is the max_freq field of cpuinfo.
-> > + */
-> > +__weak unsigned int cpufreq_get_hw_max_freq(unsigned int cpu)
-> > +{
-> > +	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > +	unsigned int ret_freq = 0;
-> > +
-> > +	if (policy) {
-> > +		ret_freq = policy->cpuinfo.max_freq;
-> > +		cpufreq_cpu_put(policy);
+On Thu, Feb 13, 2020 at 05:15:10PM +0800, Herbert Xu wrote:
+> On Mon, Feb 10, 2020 at 03:37:11PM -0800, Greg Kroah-Hartman wrote:
+> >
+> > Looks much saner now, thanks for all of the work on this:
+> > 
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > Or am I supposed to take this in my tree?  If so, I can, but I need an
+> > ack for the crypto parts.
 > 
-> What about intel_pstate / turbo stuff? IIRC one of Giovanni's issues was that
-> turbo freq is not always reported as the max freq. Dunno if we can do
-> anything about it; at the very least maybe document the caveat?
->
+> I can take this series through the crypto tree if that's fine with
+> you.
 
-Okay, I can add details in the description in regards to potential
-reasons to overwrite this function. But basically this is one of the
-reasons for making this a weak function. The best information we can
-generically get for maximum hardware frequency is cpuinfo.max_freq.
-But if platforms have the possibility to obtain this differently from
-either hardware or firmware they can overwrite this.
+Please do, thanks!
 
-Thanks,
-Ionela.
-
-> > +	}
-> > +
-> > +	return ret_freq;
-> > +}
-> > +EXPORT_SYMBOL(cpufreq_get_hw_max_freq);
-> > +
-> >  static unsigned int __cpufreq_get(struct cpufreq_policy *policy)
-> >  {
-> >  	if (unlikely(policy_is_inactive(policy)))
-> 
+greg k-h
