@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C4BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A68FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A1A218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D6C2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607859;
-	bh=AyhCAYMCFmAmAbmoLSWttuf0ENfoysuc6lyikTyu6s8=;
+	s=default; t=1581607865;
+	bh=qtD4kttmnNspxcI9KmmiufATSWlPGV+r4mNd/jnyryw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfYF6gSzfxJfJE0Y3PrYhqlkWhvaVnMBC/NXFx2pPGmiTx85ChD8jQ4cZQdCNaN2X
-	 98r3yHzNGA82tgtjqBgYrkTCtHn1ietJJEaJ7yGDphwSM6awD9J3G84OGckVK7Y11C
-	 4GOMAfvhdLSA1tALNKe6nDeQ9CGsX1m5arVHN+oI=
+	b=wCf1ZWVwTkkziJRlqtaE5sF1kTfbH3K5x/LkcSgv0YKgUvpnRzP2Y50NxkeHxmjD4
+	 2qJ0viM2fGDA6GVnAA0M4TBIonnpNocxotHMoatBQ0JfrASLs8Vl8PqdsKBm6vN24L
+	 loeYtAh5LUCdowF9uHpFgaQGFiC4A9L9iAYw0ATc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgBMPa6 (ORCPT
+        id S2388002AbgBMPbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729461AbgBMP1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:37 -0500
+        id S1729483AbgBMP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:43 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C45206DB;
-        Thu, 13 Feb 2020 15:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64014222C2;
+        Thu, 13 Feb 2020 15:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607656;
-        bh=AyhCAYMCFmAmAbmoLSWttuf0ENfoysuc6lyikTyu6s8=;
+        s=default; t=1581607662;
+        bh=qtD4kttmnNspxcI9KmmiufATSWlPGV+r4mNd/jnyryw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F75vBHSMyJi0jGqD4w8thP55R8raG/uDuPB07EA6TigtQ5Pn4sgdrZR/nsHAiEc0W
-         5lQ54OLOEB4KWaAJsutwOIBTMmwzCs99jMWWBJb+W4cKqySVQBvmdqPlT692FxIwNo
-         e608Xat84c14UmrC+GXKoYxf5her94YFsamBj5Bc=
+        b=eYXf8AMP0v49S4lFWNaVjz7UJzcnwgmngwtglpSUwVXl/dscV2UL/VJxE2wxw365R
+         Slih14ANWQI3fn7Uo/DQSRHQtm/kgs7zwqwjTfAupZPXMSRWH9XjS5Zbtldk7dbM3o
+         c+Gy2QuIqZEpGcrOjH909kAzlsttdkLQCczFmlt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 72/96] KVM: arm64: pmu: Fix chained SW_INCR counters
-Date:   Thu, 13 Feb 2020 07:21:19 -0800
-Message-Id: <20200213151906.522641270@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Smythies <dsmythies@telus.net>,
+        Qais Yousef <qais.yousef@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 5.4 64/96] sched/uclamp: Fix a bug in propagating uclamp value in new cgroups
+Date:   Thu, 13 Feb 2020 07:21:11 -0800
+Message-Id: <20200213151903.707374301@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -59,87 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Auger <eric.auger@redhat.com>
+From: Qais Yousef <qais.yousef@arm.com>
 
-commit aa76829171e98bd75a0cc00b6248eca269ac7f4f upstream.
+commit 7226017ad37a888915628e59a84a2d1e57b40707 upstream.
 
-At the moment a SW_INCR counter always overflows on 32-bit
-boundary, independently on whether the n+1th counter is
-programmed as CHAIN.
+When a new cgroup is created, the effective uclamp value wasn't updated
+with a call to cpu_util_update_eff() that looks at the hierarchy and
+update to the most restrictive values.
 
-Check whether the SW_INCR counter is a 64b counter and if so,
-implement the 64b logic.
+Fix it by ensuring to call cpu_util_update_eff() when a new cgroup
+becomes online.
 
-Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200124142535.29386-4-eric.auger@redhat.com
+Without this change, the newly created cgroup uses the default
+root_task_group uclamp values, which is 1024 for both uclamp_{min, max},
+which will cause the rq to to be clamped to max, hence cause the
+system to run at max frequency.
+
+The problem was observed on Ubuntu server and was reproduced on Debian
+and Buildroot rootfs.
+
+By default, Ubuntu and Debian create a cpu controller cgroup hierarchy
+and add all tasks to it - which creates enough noise to keep the rq
+uclamp value at max most of the time. Imitating this behavior makes the
+problem visible in Buildroot too which otherwise looks fine since it's a
+minimal userspace.
+
+Fixes: 0b60ba2dd342 ("sched/uclamp: Propagate parent clamps")
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Doug Smythies <dsmythies@telus.net>
+Link: https://lore.kernel.org/lkml/000701d5b965$361b6c60$a2524520$@net/
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/pmu.c |   43 ++++++++++++++++++++++++++++++-------------
- 1 file changed, 30 insertions(+), 13 deletions(-)
+ kernel/sched/core.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/virt/kvm/arm/pmu.c
-+++ b/virt/kvm/arm/pmu.c
-@@ -480,28 +480,45 @@ static void kvm_pmu_perf_overflow(struct
-  */
- void kvm_pmu_software_increment(struct kvm_vcpu *vcpu, u64 val)
- {
-+	struct kvm_pmu *pmu = &vcpu->arch.pmu;
- 	int i;
--	u64 type, enable, reg;
--
--	if (val == 0)
--		return;
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7090,6 +7090,12 @@ static int cpu_cgroup_css_online(struct
  
- 	if (!(__vcpu_sys_reg(vcpu, PMCR_EL0) & ARMV8_PMU_PMCR_E))
- 		return;
- 
--	enable = __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
-+	/* Weed out disabled counters */
-+	val &= __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
+ 	if (parent)
+ 		sched_online_group(tg, parent);
 +
- 	for (i = 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
-+		u64 type, reg;
++#ifdef CONFIG_UCLAMP_TASK_GROUP
++	/* Propagate the effective uclamp value for the new group */
++	cpu_util_update_eff(css);
++#endif
 +
- 		if (!(val & BIT(i)))
- 			continue;
--		type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i)
--		       & ARMV8_PMU_EVTYPE_EVENT;
--		if ((type == ARMV8_PMUV3_PERFCTR_SW_INCR)
--		    && (enable & BIT(i))) {
--			reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
-+
-+		/* PMSWINC only applies to ... SW_INC! */
-+		type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i);
-+		type &= ARMV8_PMU_EVTYPE_EVENT;
-+		if (type != ARMV8_PMUV3_PERFCTR_SW_INCR)
-+			continue;
-+
-+		/* increment this even SW_INC counter */
-+		reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
-+		reg = lower_32_bits(reg);
-+		__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = reg;
-+
-+		if (reg) /* no overflow on the low part */
-+			continue;
-+
-+		if (kvm_pmu_pmc_is_chained(&pmu->pmc[i])) {
-+			/* increment the high counter */
-+			reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) + 1;
- 			reg = lower_32_bits(reg);
--			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = reg;
--			if (!reg)
--				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i);
-+			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) = reg;
-+			if (!reg) /* mark overflow on the high counter */
-+				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i + 1);
-+		} else {
-+			/* mark overflow on low counter */
-+			__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i);
- 		}
- 	}
+ 	return 0;
  }
+ 
 
 
