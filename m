@@ -2,129 +2,83 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AA1C3B190
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDBAC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9FC218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463C821734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgBMWde (ORCPT
+        id S1727794AbgBMWfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:33:34 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37940 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgBMWde (ORCPT
+        Thu, 13 Feb 2020 17:35:03 -0500
+Received: from 9.mo178.mail-out.ovh.net ([46.105.75.45]:41276 "EHLO
+        9.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgBMWfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:33:34 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id C34D529587E
-Received: by earth.universe (Postfix, from userid 1000)
-        id AD82F3C0C83; Thu, 13 Feb 2020 23:33:29 +0100 (CET)
-Date:   Thu, 13 Feb 2020 23:33:29 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-i2c@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH v3 2/2] arm64: tegra: add unit address to nodes under
- i2c-tunnel
-Message-ID: <20200213223329.7onm5k6elqhrn7ty@earth.universe>
-References: <20200213214656.9801-1-dafna.hirschfeld@collabora.com>
- <20200213214656.9801-2-dafna.hirschfeld@collabora.com>
+        Thu, 13 Feb 2020 17:35:03 -0500
+X-Greylist: delayed 4199 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 17:35:02 EST
+Received: from player715.ha.ovh.net (unknown [10.108.42.192])
+        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 64A3D903E6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:47:55 +0100 (CET)
+Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
+        (Authenticated sender: steve@sk2.org)
+        by player715.ha.ovh.net (Postfix) with ESMTPSA id E5037F2A64BB;
+        Thu, 13 Feb 2020 17:47:44 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH 0/6] docs: sysctl/kernel.rst rework
+Date:   Thu, 13 Feb 2020 18:46:55 +0100
+Message-Id: <20200213174701.3200366-1-steve@sk2.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="isksol5hrgo6yufk"
-Content-Disposition: inline
-In-Reply-To: <20200213214656.9801-2-dafna.hirschfeld@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 10073144994123304325
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrieekgddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffogggtgfesthekredtredtjeenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejudehrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---isksol5hrgo6yufk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
 
-On Thu, Feb 13, 2020 at 10:46:56PM +0100, Dafna Hirschfeld wrote:
-> add unit address to the nodes bq24735, smart-battery
->=20
-> This fixes the warning:
-> 'bq24735', 'smart-battery' do not match any of the
-> regexes: '^.*@[0-9a-f]+$', 'pinctrl-[0-9]+'
->=20
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> ---
+A recent discussion about differences in the "panic" description in
+sysctl/kernel.rst led me to look into completing that file, and it
+turned out that more work was needed than documenting "panic". This
+patch series is the first batch, making the resulting documentation
+hopefully nicer and more accurate. It doesn't add fields that are
+present in 5.5 but not documented, that's the subject of another
+series of patches I haven't started working on yet...
 
-While fixing the node names, it makes sense to also
-use device class instead of name as mentioned in
-Documentation/devicetree/bindings/writing-bindings.txt
+Regards,
 
->  arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/=
-boot/dts/nvidia/tegra132-norrin.dts
-> index a0385a386a3f..a19171f6f0f7 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-> @@ -767,7 +767,7 @@
-> =20
->  				google,remote-bus =3D <0>;
-> =20
-> -				charger: bq24735 {
-> +				charger: bq24735@9 {
+Stephen
 
-charger: charger@9 {
 
->  					compatible =3D "ti,bq24735";
->  					reg =3D <0x9>;
->  					interrupt-parent =3D <&gpio>;
-> @@ -778,7 +778,7 @@
->  							GPIO_ACTIVE_HIGH>;
->  				};
-> =20
-> -				battery: smart-battery {
-> +				battery: smart-battery@b {
+Stephen Kitt (6):
+  docs: pretty up sysctl/kernel.rst
+  docs: merge debugging-modules.txt into sysctl/kernel.rst
+  docs: drop l2cr from sysctl/kernel.rst
+  docs: add missing IPC documentation in sysctl/kernel.rst
+  docs: document stop-a in sysctl/kernel.rst
+  docs: document panic fully in sysctl/kernel.rst
 
-battery: battery@b {
+ Documentation/admin-guide/sysctl/kernel.rst | 1026 ++++++++++---------
+ Documentation/debugging-modules.txt         |   22 -
+ 2 files changed, 530 insertions(+), 518 deletions(-)
+ delete mode 100644 Documentation/debugging-modules.txt
 
->  					compatible =3D "sbs,sbs-battery";
->  					reg =3D <0xb>;
->  					battery-name =3D "battery";
 
--- Sebastian
+base-commit: 359c92c02bfae1a6f1e8e37c298e518fd256642c
+-- 
+2.24.1
 
---isksol5hrgo6yufk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5FzrYACgkQ2O7X88g7
-+pofkhAAoMoK8pmU5IM+7SKEC/t6gCHl3ZFxdr779uaNe2+xXryagiKWvr9VRlG3
-9Qwf9HcECBHc09tSQ5UMdCrxvPdWE3vCzAtar3K7KCAsKt0J0chJNkM2gXmXm2p/
-YODX06XMl604eMwz9XAWbBfZS/tEcfdRPb2s3r+vfBFm5ANNfdgCqI0ieCGzbnJO
-4RsIKDagTObQ3YdRgi7I4DLuCMuKyDXOapAESTOHxgm7ngb1UDENN9zg2ljCIqDX
-NbwOUsApIBPqETfrQBK2qCEuLLcVQVEB45/aWX2+8VJLX7EMgUvf07OcGVhOiwF8
-7ii38FQxRJwrECcPvcP0oKHAey6Mm9W4vf6iHQdXstZM/G0BCHMjYzuQeR285xO/
-1EgeoZzPNl0+x2Cl+rTXc32x3D64Zbhn2IPf47VcxQfxAb5ZzJCi6syax3q/ot1l
-TYDxc7IRsOCp5KlDJEG6BjZvjg+l4o9naKQ5sKwIDpz9vaFDi3vCgERU5i74FQbC
-3dyD1ycsPCmK9fTkKCKOBlcPaiXNMJ8xVMM1z9SZMYXix/ewMLZ//nb5BF1Hn8hx
-wilUATeajQI/WyI6/0E9Whw+zKDwQoLfUefa72lCEBdDMIV75ud+hcreoTZFTFN2
-J7KM/jLltPiBmyelrzBNMLQaIq/cAI6c2LG/B1O7Io5xmmSJRy8=
-=QPMO
------END PGP SIGNATURE-----
-
---isksol5hrgo6yufk--
