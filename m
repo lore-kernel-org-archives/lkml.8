@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABED6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D387C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA92217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63939222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608009;
-	bh=g3V5GqFuvHm9hAAo7i5DEoNIqNDkI0QlDyTVfPLRz8E=;
+	s=default; t=1581608011;
+	bh=F72EiyA+IiELPNaODgNRBv6WEF9RdIqrmfKes5y6Osw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=omQC+6DI25Mf8ORxQ+eDZvgtb2VpOl74iL948Tqf5RzoB5MkyHJXA/+/ofUU6eoxH
-	 j6Pxbtlh3Pc3rOmxBjX11hDyspmiaoT9E9inF5/8vMS2ev68MkW9F9g6z2rkezNhJY
-	 QxdZmmR5NuirvEv+zAWd/esEzqY7AZnBHPqJS5KE=
+	b=WxY7Ptwi6kOSdWWszDnJ9v/bzDYmoaiicHX6jl+3GZiSa5KgAFvb270H+cAxyWF0z
+	 G6Jb/L7c9nIYcqdS36peX8PG4SNUnNVxkutKpTUp+srpsb4jxZ7kjsCt3iDcA72GEE
+	 BxyRDxqsXk2d2HaqMmubcQV2hn29LX48zZgFJD/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387671AbgBMPd2 (ORCPT
+        id S1729905AbgBMPda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:33:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58226 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:33:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729643AbgBMP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:00 -0500
+        id S1728493AbgBMP3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:01 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFC2206DB;
+        by mail.kernel.org (Postfix) with ESMTPSA id E37D72168B;
         Thu, 13 Feb 2020 15:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607740;
-        bh=g3V5GqFuvHm9hAAo7i5DEoNIqNDkI0QlDyTVfPLRz8E=;
+        s=default; t=1581607741;
+        bh=F72EiyA+IiELPNaODgNRBv6WEF9RdIqrmfKes5y6Osw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13PcozQb7/k8W98A0PF4/v5vcELgzXcnAfug7+E+Rfm/9b3Ja5zJN/z5JQk9yyml3
-         mbGuZwSD6iz2iBKLBZE0vIdQIULEzP9vbgxpQdyrytneEqVYIs4owdAyo0nhI0Tyyy
-         RA/EGMYuUEyp2lHPts2CwcceY+eGWcyn+3zsNMPg=
+        b=IuhORwr3y1m6/mV+gL0+tq9KUvVTv3FJns8J82CKcFfsoTZT/8XtLPx3UkOMWnYDI
+         j8Fro1EVKlX5cBI3X02e9dcs6XJdvr6UtEL/bIy5g0OJKHU2RAp8K4JxeagvlUhJ4s
+         tgJNQVwE6aeDsvqJ5QYphq+bGM6EV9HPBkcSGxEM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.5 076/120] ARM: at91: pm: use of_device_id array to find the proper shdwc node
-Date:   Thu, 13 Feb 2020 07:21:12 -0800
-Message-Id: <20200213151927.081639499@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH 5.5 077/120] KVM: arm/arm64: vgic-its: Fix restoration of unmapped collections
+Date:   Thu, 13 Feb 2020 07:21:13 -0800
+Message-Id: <20200213151927.406402983@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,48 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-commit ec6e618c8c018c1361d77789a100a5f6f6317178 upstream.
+commit 8c58be34494b7f1b2adb446e2d8beeb90e5de65b upstream.
 
-Use of_device_id array to find the proper shdwc compatibile node.
-SAM9X60's shdwc changes were not integrated when
-commit eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
-was integrated.
+Saving/restoring an unmapped collection is a valid scenario. For
+example this happens if a MAPTI command was sent, featuring an
+unmapped collection. At the moment the CTE fails to be restored.
+Only compare against the number of online vcpus if the rdist
+base is set.
 
-Fixes: eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Link: https://lore.kernel.org/r/1576062248-18514-3-git-send-email-claudiu.beznea@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: ea1ad53e1e31a ("KVM: arm64: vgic-its: Collection table save/restore")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20191213094237.19627-1-eric.auger@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-at91/pm.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ virt/kvm/arm/vgic/vgic-its.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -691,6 +691,12 @@ static void __init at91_pm_use_default_m
- 		soc_pm.data.suspend_mode = AT91_PM_ULP0;
- }
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -2475,7 +2475,8 @@ static int vgic_its_restore_cte(struct v
+ 	target_addr = (u32)(val >> KVM_ITS_CTE_RDBASE_SHIFT);
+ 	coll_id = val & KVM_ITS_CTE_ICID_MASK;
  
-+static const struct of_device_id atmel_shdwc_ids[] = {
-+	{ .compatible = "atmel,sama5d2-shdwc" },
-+	{ .compatible = "microchip,sam9x60-shdwc" },
-+	{ /* sentinel. */ }
-+};
-+
- static void __init at91_pm_modes_init(void)
- {
- 	struct device_node *np;
-@@ -700,7 +706,7 @@ static void __init at91_pm_modes_init(vo
- 	    !at91_is_pm_mode_active(AT91_PM_ULP1))
- 		return;
+-	if (target_addr >= atomic_read(&kvm->online_vcpus))
++	if (target_addr != COLLECTION_NOT_MAPPED &&
++	    target_addr >= atomic_read(&kvm->online_vcpus))
+ 		return -EINVAL;
  
--	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-shdwc");
-+	np = of_find_matching_node(NULL, atmel_shdwc_ids);
- 	if (!np) {
- 		pr_warn("%s: failed to find shdwc!\n", __func__);
- 		goto ulp1_default;
+ 	collection = find_collection(its, coll_id);
 
 
