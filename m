@@ -2,76 +2,131 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7526C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8935C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8E72173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581554432;
-	bh=cA1gOmp/WG/NJPPQ1nAoYRdKnHntIrtAzRhM5D1qD/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EZGvnviCxK2TEMhkSDr9O8pS51VKiYBOGOLkW+rgGbGcP8EFjAbLnU34atF5+bJCy
-	 ZjeWdhWxBq2dG/7DZv9ZRqTJk+KMIKjIZGb3RVAi2HjsxABwIAMdfV8/Zk2BNLecm/
-	 Z1yyBb7n2fLZt5bSLApvqyUbIwm+7wHUVWUEA2HM=
+	by mail.kernel.org (Postfix) with ESMTP id 72FAA21739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jiL7Ay02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbgBMAkc (ORCPT
+        id S1729284AbgBMAod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:40:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgBMAkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:40:31 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B3B21739;
-        Thu, 13 Feb 2020 00:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581554430;
-        bh=cA1gOmp/WG/NJPPQ1nAoYRdKnHntIrtAzRhM5D1qD/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OWQV9mNm+62BA94AOEKL0fsBzam24Reo6ckuX6ztHx8kA2aCauJTiSFUFzU9Ud7DK
-         3GDPeaKzIb36FTViI1426Gee8aexHgOCKv3BFh/a0pAQ5TSxleCgCAa7sIzcz3OeZl
-         X0JvXAjCSTB5ATKt2IypKFGXEfrTsP8zt1b0Kl8U=
-Date:   Wed, 12 Feb 2020 16:40:29 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     zzyiwei@google.com
-Cc:     rostedt@goodmis.org, mingo@redhat.com, elder@kernel.org,
-        federico.vaga@cern.ch, tony.luck@intel.com, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, tglx@linutronix.de,
-        yamada.masahiro@socionext.com, paul.walmsley@sifive.com,
-        linux-kernel@vger.kernel.org, prahladk@google.com,
-        joelaf@google.com, android-kernel@google.com
-Subject: Re: [PATCH v2] Add gpu memory tracepoints
-Message-ID: <20200213004029.GA2500609@kroah.com>
-References: <20200213003259.128938-1-zzyiwei@google.com>
+        Wed, 12 Feb 2020 19:44:33 -0500
+Received: from gateway36.websitewelcome.com ([192.185.197.22]:17129 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729103AbgBMAod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 19:44:33 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id C3B544015AE37
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 17:58:34 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 22cIjc82cEfyq22cIjlmD7; Wed, 12 Feb 2020 18:44:30 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nAVrME3jdk2U+h1Uo0cXDIxJq+JDl6p8marnSwhWtzU=; b=jiL7Ay02nwKzHTQ+GYESXgdNC8
+        y42tmFVVv2EFr8Rdaqwm/y7XoNgVl3P8KKj8J+hOtTs3/jwPCDRJrk7lfKq9Tk38ct7kAL057Q2+V
+        daN2eajzGtkMQrQuNp3gKd0sQd6019iRF7DqqP1KUFhzuN2Q4tkJHqLYPtATQomnCp1Kv1BRI0lXX
+        f+9DaOo8TJf8gIMuY+cLXVx+pLAbbjgnwKRkLqetf73DsJ2iL1hyoTzrjfGjq9I1aRyhrVtRYoQxo
+        CZRGm4Mb376ere/O+dYwUzaIWBiYYg0sqxzx4lqc06EKgWaV8f1S4gQsiO6FhPkSynHj7tYZDPqM0
+        iV6in4hA==;
+Received: from [200.68.141.42] (port=1177 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j22cG-003j8p-Kx; Wed, 12 Feb 2020 18:44:29 -0600
+Date:   Wed, 12 Feb 2020 18:44:26 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] serial: 8250_pci: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200213004426.GA7886@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213003259.128938-1-zzyiwei@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.42
+X-Source-L: No
+X-Exim-ID: 1j22cG-003j8p-Kx
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.42]:1177
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 59
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 04:32:59PM -0800, zzyiwei@google.com wrote:
-> From: Yiwei Zhang <zzyiwei@google.com>
-> 
-> This change adds the below gpu memory tracepoint:
-> gpu_mem/gpu_mem_total: track global or process gpu memory total counters
-> 
-> Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-If this helps gpu drivers wean themselves off of debugfs, I am all for
-it:
-	Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Thanks for doing this.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-greg k-h
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/tty/serial/8250/8250_pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+index 939685fed396..0804469ff052 100644
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -53,7 +53,7 @@ struct serial_private {
+ 	unsigned int		nr;
+ 	struct pci_serial_quirk	*quirk;
+ 	const struct pciserial_board *board;
+-	int			line[0];
++	int			line[];
+ };
+ 
+ static const struct pci_device_id pci_use_msi[] = {
+-- 
+2.23.0
+
