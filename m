@@ -2,54 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC2EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363CCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177A120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022F220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609374;
-	bh=p8cD7wYDh+Z1T66YAJXu20TxPoEcVP8J4XSrr6VskDs=;
+	s=default; t=1581609377;
+	bh=nGq0rymzF1adUybtnImcccFG/sb+UsgjBTZgG8TZMe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TV7XPtCWv9HtXrVSUTV3n9ePXRWz9yx2zhmxHuHliJu3pLrJVLkYvrhH/k/fE9L0J
-	 5QGKykGUThLF2VqeZza5agTNR5igLOtV7MAvzB/7hYqyw4AK/HOHESB/9q+oAHRpHG
-	 1408ZepTF+z5lUP6iNIZPv1YouyAsag/CPHyjJKo=
+	b=zwOuXdpsX6ku8G4dc3OCpKgVbHiKI4yH+Gq+LSPqj1uZUJHPK4P0s9PY84+aS/Qjb
+	 WUPm/pt2bGHzIgEPlwd9wQUfblBGt6OSSJS9Nd/4xijvtlRR92CVexZZ7+8B9zyJoy
+	 kT7OdebeE3jiEYbZTuKZcJT0VTHCkIOMTcWDPQnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbgBMPZ3 (ORCPT
+        id S1730022AbgBMP4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:56:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbgBMPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:54 -0500
+        id S1729014AbgBMPZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:28 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AE4E24690;
-        Thu, 13 Feb 2020 15:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED1F1246B1;
+        Thu, 13 Feb 2020 15:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607433;
-        bh=p8cD7wYDh+Z1T66YAJXu20TxPoEcVP8J4XSrr6VskDs=;
+        s=default; t=1581607528;
+        bh=nGq0rymzF1adUybtnImcccFG/sb+UsgjBTZgG8TZMe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xocKHBl7wi+bCsF7i39IxCxlJKECJl6JRwAdwPt0PQXoTkaIhNPdtQRjidn25Yws3
-         ng/MdqDekEAkv9uBozmtZNBZwaVO/nZPH4KEw6Ot2Epjxp6vG5CPAL+vKBMSoVUstj
-         9h4aV5MYlNXSMOSGsOZrXn/pkKoSKzrO3krFgAvU=
+        b=IRk3+8vhXn/s3Kzl52db5ZQ6Sz/1b6WGjTSuNqkhEueGz/VL4uoY5qKmpchomNser
+         fbw5l++pVkdhlfyTGuy2tnl0ufwXBESCKnekw7nhiu9bgShFNy3JfFm7dAiQ50M+H5
+         pH7YdsSWwlo/CpQFHgAY2CZOUX9tb30qMQbR+WX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.9 068/116] nfsd: fix delay timer on 32-bit architectures
-Date:   Thu, 13 Feb 2020 07:20:12 -0800
-Message-Id: <20200213151909.332090680@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.14 098/173] ext2: Adjust indentation in ext2_fill_super
+Date:   Thu, 13 Feb 2020 07:20:01 -0800
+Message-Id: <20200213151957.595854450@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,40 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 2561c92b12f4f4e386d453556685f75775c0938b upstream.
+commit d9e9866803f7b6c3fdd35d345e97fb0b2908bbbc upstream.
 
-The nfsd4_cb_layout_done() function takes a 'time_t' value,
-multiplied by NSEC_PER_SEC*2 to get a nanosecond value.
+Clang warns:
 
-This works fine on 64-bit architectures, but on 32-bit, any
-value over 1 second results in a signed integer overflow
-with unexpected results.
+../fs/ext2/super.c:1076:3: warning: misleading indentation; statement is
+not part of the previous 'if' [-Wmisleading-indentation]
+        sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
+        ^
+../fs/ext2/super.c:1074:2: note: previous statement is here
+        if (EXT2_BLOCKS_PER_GROUP(sb) == 0)
+        ^
+1 warning generated.
 
-Cast one input to a 64-bit type in order to produce the
-same result that we have on 64-bit architectures, regarless
-of the type of nfsd4_lease.
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-Fixes: 6b9b21073d3b ("nfsd: give up on CB_LAYOUTRECALLs after two lease periods")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 41f04d852e35 ("[PATCH] ext2: fix mounts at 16T")
+Link: https://github.com/ClangBuiltLinux/linux/issues/827
+Link: https://lore.kernel.org/r/20191218031930.31393-1-natechancellor@gmail.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4layouts.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext2/super.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -680,7 +680,7 @@ nfsd4_cb_layout_done(struct nfsd4_callba
+--- a/fs/ext2/super.c
++++ b/fs/ext2/super.c
+@@ -1077,9 +1077,9 @@ static int ext2_fill_super(struct super_
  
- 		/* Client gets 2 lease periods to return it */
- 		cutoff = ktime_add_ns(task->tk_start,
--					 nn->nfsd4_lease * NSEC_PER_SEC * 2);
-+					 (u64)nn->nfsd4_lease * NSEC_PER_SEC * 2);
- 
- 		if (ktime_before(now, cutoff)) {
- 			rpc_delay(task, HZ/100); /* 10 mili-seconds */
+ 	if (EXT2_BLOCKS_PER_GROUP(sb) == 0)
+ 		goto cantfind_ext2;
+- 	sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
+- 				le32_to_cpu(es->s_first_data_block) - 1)
+- 					/ EXT2_BLOCKS_PER_GROUP(sb)) + 1;
++	sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
++				le32_to_cpu(es->s_first_data_block) - 1)
++					/ EXT2_BLOCKS_PER_GROUP(sb)) + 1;
+ 	db_count = (sbi->s_groups_count + EXT2_DESC_PER_BLOCK(sb) - 1) /
+ 		   EXT2_DESC_PER_BLOCK(sb);
+ 	sbi->s_group_desc = kmalloc (db_count * sizeof (struct buffer_head *), GFP_KERNEL);
 
 
