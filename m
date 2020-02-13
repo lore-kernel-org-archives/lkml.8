@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A820DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9609DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A89D2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA2C2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609219;
-	bh=dQDLL5v0B2uWONqaxaUpBsOW51lVw8D4m2aJaCr6JpU=;
+	s=default; t=1581609221;
+	bh=NTGbum1SsITiuvjgE69WjCAGMFofLTIVmCGgTl6xZ/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KlNbpS7rPNSlh/qnK1qNKaC3ztw70oWs1gSBaZUpCjXvfNJsDRKZAr2Qwhgv+nDbv
-	 uaYIdNt8VywElSM3P7k7yLoRpFdGmVwaxOrUp4/7/SGpr7sR3yQc4lascJZlVpGV2s
-	 9JyLWqLXgn5CiKxiN/yC4QQtoIH4uCvDi5DFFnsU=
+	b=1eBaGjbWkBmB/AX8+Rom97iXS8qGcnH1cugaQna/ha0O2hoKW5f2tkzLXjUFG+3e7
+	 f7x4nVWgtSowpvLCywYDxySgGo9b2DfOTCqaagkFHrM4gEHdAtwKj+w3q0Ov3kMlBZ
+	 i+lKlZEH875B1F9hNZtohTBEHdMDkpu9KCsBCOtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388195AbgBMPxi (ORCPT
+        id S2388212AbgBMPxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:53:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43248 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:53:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387497AbgBMP0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387500AbgBMP0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:26:02 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FB382469A;
+        by mail.kernel.org (Postfix) with ESMTPSA id E431220848;
         Thu, 13 Feb 2020 15:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607561;
-        bh=dQDLL5v0B2uWONqaxaUpBsOW51lVw8D4m2aJaCr6JpU=;
+        s=default; t=1581607562;
+        bh=NTGbum1SsITiuvjgE69WjCAGMFofLTIVmCGgTl6xZ/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bneKyTcRl340ESn4W+RiMVdsD0H1qfJjy8Aj/Tz81GIS7+NWuAbV3kDVprzImKCQn
-         AJHDV3XKxKTl+jxl2cKnuE62HSaDe3mC58cl+YcuvpFt+Vp18PVOvnVnXf9GwlzC41
-         x4Kvbl12OWmxOS5/t7ITMsOtXumfCZD2ZcfEa6To=
+        b=XVzuA9S/YzQnaJw542uZ+gVrJdpQoeXFiJcelyewRq9QtK5ZqpBS2eclHbraJn9vs
+         EI3WklnIkhDaxk7UXwVXoUGyc5noqNXHNggDVro6m/lPtex1nR/S07GerYEXCDsqiv
+         zbx0WYs3kwJ5E7QW7J/PDNMI0fuul9Qn+KCMF1q0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 134/173] KVM: Use vcpu-specific gva->hva translation when querying host page size
-Date:   Thu, 13 Feb 2020 07:20:37 -0800
-Message-Id: <20200213152005.766626332@linuxfoundation.org>
+Subject: [PATCH 4.14 135/173] KVM: Play nice with read-only memslots when querying host page size
+Date:   Thu, 13 Feb 2020 07:20:38 -0800
+Message-Id: <20200213152006.042928040@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -63,81 +63,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit f9b84e19221efc5f493156ee0329df3142085f28 ]
+[ Upstream commit 42cde48b2d39772dba47e680781a32a6c4b7dc33 ]
 
-Use kvm_vcpu_gfn_to_hva() when retrieving the host page size so that the
-correct set of memslots is used when handling x86 page faults in SMM.
+Avoid the "writable" check in __gfn_to_hva_many(), which will always fail
+on read-only memslots due to gfn_to_hva() assuming writes.  Functionally,
+this allows x86 to create large mappings for read-only memslots that
+are backed by HugeTLB mappings.
 
-Fixes: 54bf36aac520 ("KVM: x86: use vcpu-specific functions to read/write/translate GFNs")
+Note, the changelog for commit 05da45583de9 ("KVM: MMU: large page
+support") states "If the largepage contains write-protected pages, a
+large pte is not used.", but "write-protected" refers to pages that are
+temporarily read-only, e.g. read-only memslots didn't even exist at the
+time.
+
+Fixes: 4d8b81abc47b ("KVM: introduce readonly memslot")
 Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+[Redone using kvm_vcpu_gfn_to_memslot_prot. - Paolo]
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu.c       | 6 +++---
- include/linux/kvm_host.h | 2 +-
- virt/kvm/kvm_main.c      | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index c0b0135ef07f0..e5af08b581320 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -1165,12 +1165,12 @@ static bool mmu_gfn_lpage_is_disallowed(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	return __mmu_gfn_lpage_is_disallowed(gfn, level, slot);
- }
- 
--static int host_mapping_level(struct kvm *kvm, gfn_t gfn)
-+static int host_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	unsigned long page_size;
- 	int i, ret = 0;
- 
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 
- 	for (i = PT_PAGE_TABLE_LEVEL; i <= PT_MAX_HUGEPAGE_LEVEL; ++i) {
- 		if (page_size >= KVM_HPAGE_SIZE(i))
-@@ -1220,7 +1220,7 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
- 	if (unlikely(*force_pt_level))
- 		return PT_PAGE_TABLE_LEVEL;
- 
--	host_level = host_mapping_level(vcpu->kvm, large_gfn);
-+	host_level = host_mapping_level(vcpu, large_gfn);
- 
- 	if (host_level == PT_PAGE_TABLE_LEVEL)
- 		return host_level;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 7668c68ddb5b3..30376715a6070 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -695,7 +695,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
- int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
- bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn);
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
- void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
- 
- struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index deff4b3eb9722..609903481e39b 100644
+index 609903481e39b..745ee09083dd5 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -1277,14 +1277,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
- }
- EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
- 
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn)
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	struct vm_area_struct *vma;
- 	unsigned long addr, size;
+@@ -1284,7 +1284,7 @@ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
  
  	size = PAGE_SIZE;
  
--	addr = gfn_to_hva(kvm, gfn);
-+	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
+-	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
++	addr = kvm_vcpu_gfn_to_hva_prot(vcpu, gfn, NULL);
  	if (kvm_is_error_hva(addr))
  		return PAGE_SIZE;
  
