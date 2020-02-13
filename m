@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76F8C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B187C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884A620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D90820873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581600752;
-	bh=fTCzzUrO88UazzkZGS/Q5j8W2DSe0ezgCf/HD8KIu4o=;
+	s=default; t=1581600755;
+	bh=FSop/MJPA2CnwJmV2tVANpVmiTHpp/pkpUyb/F1khfs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=NKxAZgNtCxYl6yfP1aO3VmZ+8DyA2eZQeG7wHWiXg3DBvXDQXZe5rGXRClMkgbHyc
-	 n46kdFJO8AVD8T9GzWX1hu9WCKrBgqWXciLckzUBKbzHNF3R0EUQyHVmlFxSCtJ6VT
-	 rE3sH8ES4UoOz2mGnj4OqpIU1VaW2MF6HOw+iB8c=
+	b=xOSKBVLQjZJwuTXtTK17h2/fSZ+DYri8k/5sce1Qs7z/g/76d3tOCLZ5zBmuvicxJ
+	 vuLl+Y7HQ1Vp/S3IoW9OLT7UyEt6pV37ImwEd59Y4WFfd4QT1GH9aS1uGrRb1F0JRQ
+	 yZ2Y1c5AXMFfLMRunviJ4dgmREF9LSBQLRvjctUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgBMNcb (ORCPT
+        id S1730052AbgBMNce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:32:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:46694 "EHLO foss.arm.com"
+        Thu, 13 Feb 2020 08:32:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:46702 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729588AbgBMNcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:32:31 -0500
+        id S1729588AbgBMNcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 08:32:33 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E3E81063;
-        Thu, 13 Feb 2020 05:32:31 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FEFC1FB;
+        Thu, 13 Feb 2020 05:32:33 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5DD83F6CF;
-        Thu, 13 Feb 2020 05:32:30 -0800 (PST)
-Date:   Thu, 13 Feb 2020 13:32:29 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14AE33F6CF;
+        Thu, 13 Feb 2020 05:32:32 -0800 (PST)
+Date:   Thu, 13 Feb 2020 13:32:31 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spidev_test: Use perror() only if errno is not 0" to the spi tree
-In-Reply-To: <1581567368-8055-3-git-send-email-yangtiezhu@loongson.cn>
-Message-Id: <applied-1581567368-8055-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: Applied "spi: spidev_test: Check input_tx and input_file first after parse options" to the spi tree
+In-Reply-To: <1581567368-8055-2-git-send-email-yangtiezhu@loongson.cn>
+Message-Id: <applied-1581567368-8055-2-git-send-email-yangtiezhu@loongson.cn>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,7 +49,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spidev_test: Use perror() only if errno is not 0
+   spi: spidev_test: Check input_tx and input_file first after parse options
 
 has been applied to the spi tree at
 
@@ -74,59 +74,48 @@ to this mail.
 Thanks,
 Mark
 
-From 470a072e12200576788dc622d58894609feae2d7 Mon Sep 17 00:00:00 2001
+From 1f3c36328a487059beebd1f7be042e3b7abf7d34 Mon Sep 17 00:00:00 2001
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Thu, 13 Feb 2020 12:16:07 +0800
-Subject: [PATCH] spi: spidev_test: Use perror() only if errno is not 0
+Date: Thu, 13 Feb 2020 12:16:06 +0800
+Subject: [PATCH] spi: spidev_test: Check input_tx and input_file first after
+ parse options
 
-It is better to use perror() only if errno is not 0, it should use printf()
-when errno is 0, otherwise there exists redudant ": Success".
-
-E.g. without this patch:
-
-$ ./spidev_test -p 1234 --input test.bin
-only one of -p and --input may be selected: Success
-Aborted (core dumped)
-
-With this patch:
-
-$ ./spidev_test -p 1234 --input test.bin
-only one of -p and --input may be selected
-Aborted (core dumped)
+It is better to check input_tx and input_file first after parse options.
+Otherwise, it will do some useless operations when both -p and --input
+are selected.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/1581567368-8055-3-git-send-email-yangtiezhu@loongson.cn
+Link: https://lore.kernel.org/r/1581567368-8055-2-git-send-email-yangtiezhu@loongson.cn
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- tools/spi/spidev_test.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/spi/spidev_test.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/spi/spidev_test.c b/tools/spi/spidev_test.c
-index 5866178cdcc9..27967dd90f8f 100644
+index 113b1e1d62ca..5866178cdcc9 100644
 --- a/tools/spi/spidev_test.c
 +++ b/tools/spi/spidev_test.c
-@@ -13,6 +13,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <errno.h>
- #include <getopt.h>
- #include <fcntl.h>
- #include <time.h>
-@@ -26,7 +27,11 @@
+@@ -404,6 +404,9 @@ int main(int argc, char *argv[])
  
- static void pabort(const char *s)
- {
--	perror(s);
-+	if (errno != 0)
-+		perror(s);
-+	else
-+		printf("%s\n", s);
+ 	parse_opts(argc, argv);
+ 
++	if (input_tx && input_file)
++		pabort("only one of -p and --input may be selected");
 +
- 	abort();
- }
+ 	fd = open(device, O_RDWR);
+ 	if (fd < 0)
+ 		pabort("can't open device");
+@@ -445,9 +448,6 @@ int main(int argc, char *argv[])
+ 	printf("bits per word: %d\n", bits);
+ 	printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
  
+-	if (input_tx && input_file)
+-		pabort("only one of -p and --input may be selected");
+-
+ 	if (input_tx)
+ 		transfer_escaped_string(fd, input_tx);
+ 	else if (input_file)
 -- 
 2.20.1
 
