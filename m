@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F295C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54886C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C8320675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29297217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608135;
-	bh=IzQ6xyG7OVKJTpEyVdt5ZW6WXPzpifb6DD9cEoFHN8k=;
+	s=default; t=1581608139;
+	bh=Wsgst0ju19D/IyonbwPY+OOZ91mtaatbv2Vwm4gfyG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hkhHxrkVX1iyCvZhM1DntqJXdz2sEmQs+0Psb/tRW6dIoygqlxdfnQ81qQOzi4wy1
-	 ptkrlZbtOtGH9eFvW67v6V2xdPRMki5uHKbYgYURvwHS0xQEX4W97e/4i6FuQnAstT
-	 96umfZ5KsZYxA22ZdOtAxbsnYZpb0cr+h5f3iWBU=
+	b=FPh+v03Ai94lih7QMLf84xcq4wlE8CyQhRzhGgAvU+/ekMhJ5Ic0gglTdWu7xUdMW
+	 i5O05gAjLGMsEH2xmXt12yWtxzsNW9EieCMatK3XJeaJW4/rY96eVPqmlWplIooJO2
+	 RGZyB2PSjlaMCUL3LHynym448My/uPrxCtDtEBCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgBMPbp (ORCPT
+        id S2388032AbgBMPbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54180 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729545AbgBMP2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:04 -0500
+        id S1728122AbgBMP2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:01 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25A0C218AC;
-        Thu, 13 Feb 2020 15:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8DF324670;
+        Thu, 13 Feb 2020 15:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607684;
-        bh=IzQ6xyG7OVKJTpEyVdt5ZW6WXPzpifb6DD9cEoFHN8k=;
+        s=default; t=1581607681;
+        bh=Wsgst0ju19D/IyonbwPY+OOZ91mtaatbv2Vwm4gfyG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nsuev0SURuq5ouMWOLcCTD7/RVA8h7XLFpAZY8wzSXr/nqN5m3KmwKFaQp/ZRJ5iA
-         xiLAR3djwDmU8u5h5Nm3wTWntJes3CZ8eJawdWbxuWmV3Cp02sUDpEn06NNMFqIUGq
-         mZV2zrmUcmeT4lgrbR1yFop4YBMf0rm3CzstMhhk=
+        b=DFpAQHpCn18UOFM3icqobAhvdetNJtsWbWklo6Swjg4DsWm1RRk0zJkBlIzGszVXi
+         1V2ENMfHuC6Hc7jcqA8r0uWJoRmuBhmbjO1xaAWXHirXMx5HLhSocLk28O/iadviVp
+         +W26gAK9B1P0BmN8pbdVjQtzvm/ysxuv8U/Lbi3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Guralnik <michaelgur@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
+        stable@vger.kernel.org, Danit Goldberg <danitg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 008/120] RDMA/uverbs: Verify MR access flags
-Date:   Thu, 13 Feb 2020 07:20:04 -0800
-Message-Id: <20200213151904.370359735@linuxfoundation.org>
+Subject: [PATCH 5.5 003/120] IB/mlx5: Return the administrative GUID if exists
+Date:   Thu, 13 Feb 2020 07:19:59 -0800
+Message-Id: <20200213151902.446410775@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,35 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Guralnik <michaelgur@mellanox.com>
+From: Danit Goldberg <danitg@mellanox.com>
 
-commit ca95c1411198c2d87217c19d44571052cdc94725 upstream.
+commit 4bbd4923d1f5627b0c47a9d7dfb5cc91224cfe0c upstream.
 
-Verify that MR access flags that are passed from user are all supported
-ones, otherwise an error is returned.
+A user can change the operational GUID (a.k.a affective GUID) through
+link/infiniband. Therefore it is preferred to return the currently set
+GUID if it exists instead of the operational.
 
-Fixes: 4fca03778351 ("IB/uverbs: Move ib_access_flags and ib_read_counters_flags to uapi")
-Link: https://lore.kernel.org/r/1578506740-22188-6-git-send-email-yishaih@mellanox.com
-Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+This way the PF can query which VF GUID will be set in the next bind.  In
+order to align with MAC address, zero is returned if administrative GUID
+is not set.
+
+For example, before setting administrative GUID:
+ $ ip link show
+ ib0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 4092 qdisc mq state UP mode DEFAULT group default qlen 256
+ link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+ vf 0     link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff,
+ spoof checking off, NODE_GUID 00:00:00:00:00:00:00:00, PORT_GUID 00:00:00:00:00:00:00:00, link-state auto, trust off, query_rss off
+
+Then:
+
+ $ ip link set ib0 vf 0 node_guid 11:00:af:21:cb:05:11:00
+ $ ip link set ib0 vf 0 port_guid 22:11:af:21:cb:05:11:00
+
+After setting administrative GUID:
+ $ ip link show
+ ib0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 4092 qdisc mq state UP mode DEFAULT group default qlen 256
+ link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+ vf 0     link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff,
+ spoof checking off, NODE_GUID 11:00:af:21:cb:05:11:00, PORT_GUID 22:11:af:21:cb:05:11:00, link-state auto, trust off, query_rss off
+
+Fixes: 9c0015ef0928 ("IB/mlx5: Implement callbacks for getting VFs GUID attributes")
+Link: https://lore.kernel.org/r/20200116120048.12744-1-leon@kernel.org
+Signed-off-by: Danit Goldberg <danitg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/rdma/ib_verbs.h |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/mlx5/ib_virt.c |   28 ++++++++++++----------------
+ include/linux/mlx5/driver.h          |    5 +++++
+ 2 files changed, 17 insertions(+), 16 deletions(-)
 
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -4300,6 +4300,9 @@ static inline int ib_check_mr_access(int
- 	    !(flags & IB_ACCESS_LOCAL_WRITE))
- 		return -EINVAL;
- 
-+	if (flags & ~IB_ACCESS_SUPPORTED)
-+		return -EINVAL;
-+
- 	return 0;
+--- a/drivers/infiniband/hw/mlx5/ib_virt.c
++++ b/drivers/infiniband/hw/mlx5/ib_virt.c
+@@ -164,8 +164,10 @@ static int set_vf_node_guid(struct ib_de
+ 	in->field_select = MLX5_HCA_VPORT_SEL_NODE_GUID;
+ 	in->node_guid = guid;
+ 	err = mlx5_core_modify_hca_vport_context(mdev, 1, 1, vf + 1, in);
+-	if (!err)
++	if (!err) {
+ 		vfs_ctx[vf].node_guid = guid;
++		vfs_ctx[vf].node_guid_valid = 1;
++	}
+ 	kfree(in);
+ 	return err;
  }
+@@ -185,8 +187,10 @@ static int set_vf_port_guid(struct ib_de
+ 	in->field_select = MLX5_HCA_VPORT_SEL_PORT_GUID;
+ 	in->port_guid = guid;
+ 	err = mlx5_core_modify_hca_vport_context(mdev, 1, 1, vf + 1, in);
+-	if (!err)
++	if (!err) {
+ 		vfs_ctx[vf].port_guid = guid;
++		vfs_ctx[vf].port_guid_valid = 1;
++	}
+ 	kfree(in);
+ 	return err;
+ }
+@@ -208,20 +212,12 @@ int mlx5_ib_get_vf_guid(struct ib_device
+ {
+ 	struct mlx5_ib_dev *dev = to_mdev(device);
+ 	struct mlx5_core_dev *mdev = dev->mdev;
+-	struct mlx5_hca_vport_context *rep;
+-	int err;
++	struct mlx5_vf_context *vfs_ctx = mdev->priv.sriov.vfs_ctx;
+ 
+-	rep = kzalloc(sizeof(*rep), GFP_KERNEL);
+-	if (!rep)
+-		return -ENOMEM;
++	node_guid->guid =
++		vfs_ctx[vf].node_guid_valid ? vfs_ctx[vf].node_guid : 0;
++	port_guid->guid =
++		vfs_ctx[vf].port_guid_valid ? vfs_ctx[vf].port_guid : 0;
+ 
+-	err = mlx5_query_hca_vport_context(mdev, 1, 1, vf+1, rep);
+-	if (err)
+-		goto ex;
+-
+-	port_guid->guid = rep->port_guid;
+-	node_guid->guid = rep->node_guid;
+-ex:
+-	kfree(rep);
+-	return err;
++	return 0;
+ }
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -461,6 +461,11 @@ struct mlx5_vf_context {
+ 	int	enabled;
+ 	u64	port_guid;
+ 	u64	node_guid;
++	/* Valid bits are used to validate administrative guid only.
++	 * Enabled after ndo_set_vf_guid
++	 */
++	u8	port_guid_valid:1;
++	u8	node_guid_valid:1;
+ 	enum port_state_policy	policy;
+ };
  
 
 
