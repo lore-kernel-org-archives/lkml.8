@@ -2,117 +2,88 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F60C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD16C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD56C218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99033218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JMV5ecx9"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="WaNoUJKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgBMOJ2 (ORCPT
+        id S1730194AbgBMOKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:09:28 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41368 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729957AbgBMOJ2 (ORCPT
+        Thu, 13 Feb 2020 09:10:49 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45796 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730132AbgBMOKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:09:28 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so5647773otc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 06:09:26 -0800 (PST)
+        Thu, 13 Feb 2020 09:10:48 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e18so6707694ljn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 06:10:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4nw33WMxyw6QKvLrJuL4ZGQuHIvhtKY96hrtTChK5+k=;
-        b=JMV5ecx9htpNi/FbHm837TWxQQnIS6MVyND+7+89vN4DdcJcTh4Gh4bRtl65ipvEjN
-         EEHs4NTVx7M4oasK/DXdft+jw/aFsnnd0U95KdIgaWn6KiJkQMEl1dva2kskv2Q7A7ZF
-         GK1/tnTUCRzZ/HxVdt6Xr7GAuMCUM299X8jjMXD2V6dOwV5W1/zk2CbvKlxK2fy7jQ2u
-         FBok0zxVLa/eP6cevo1zALXoniqhlQwS3zBWhvsGPSVsSlbiBEk/JZYamujGtpRl0/E5
-         TFh3Ndm7Ude+Y5TPcbUAN+tW/kabbK0oyXMXeJLp5BzmsfDmB7mqHVuPb2VH1uJiHu+0
-         pJ0Q==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5uuw5VB1crC2RtuhzMZXUp9a6S2yRCWA3BqEb1joj7w=;
+        b=WaNoUJKz4mohQBxuF4aFQZbMebf0zDm0pXdHvDk6F8zWcaHQAVyXVDmTqyiyRKGco0
+         TBiJwCy82N6TDxTD/xD+Gm/GraQMWMgE4MN1ferm/Fx0wO7Bg70/iYY83lpZiLwMaUSv
+         YZ2Q4EC7R09YWoR8K2EHUR2HNycnNy89BUIMTQY9Gq5vzA9E/YTzftWnKRzY5dgKacxo
+         A2nL1XiHU9wydJwCPRtQLinO00vWwW3e+rG1IYnJHP+mZpfCj7nUWb7m8RHQJGm6qgQX
+         SeuhCnivW2+Ty9ifcoK0OlySRwdxwHFWcsMsZ+iVmIB9LBcjW3uOsUgpNvkgf3l0Hm0w
+         n/0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4nw33WMxyw6QKvLrJuL4ZGQuHIvhtKY96hrtTChK5+k=;
-        b=BSnv2+vsGiKFqREuU4YDyNaVjW8E6Q7pBgobs9I1JZLDiHytigGMNsdADyX6fDQXS/
-         hN8OtY/mUnwZBwwT5pY+FTssar2RJgFfK17jME3zkDGe0IdAGaRLLewxa3PCvH8jw7Lo
-         p65XL24l1+CBKrTNDFNRZ8s1EDHLGzcoZouvG0Kyca+9VhMtpX8cR640iJc/ubPKEHFq
-         MkXdU5UgP9aAKs142jj4lgYFWT7/BvxeGafZVWnd0KHk9z112WyuNxSqAJaqnpUfZtTC
-         ZPUMGeljd9xrUUR3p2R6oXAgdHAm6rhvJ/eUKEAPouOa6y+omzKOXJV84Vg1c7OK0UY2
-         GcEg==
-X-Gm-Message-State: APjAAAWqLQwIrzfFuC24S5/7NtII5Z38OJjLMIKAPytU1GbfTADZqsfA
-        DqhEgHVE/9wD4iNbi+knelVnLk206Sy113hudv13uw==
-X-Google-Smtp-Source: APXvYqzs69ilwTt7mpNYz5FifCXRctI+mL576v4dQGuxV30QGmONxcX//NJyceEQjiY2JgsqWK+0BKXq9WztgI5XJac=
-X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr13199499oti.32.1581602965935;
- Thu, 13 Feb 2020 06:09:25 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5uuw5VB1crC2RtuhzMZXUp9a6S2yRCWA3BqEb1joj7w=;
+        b=YTbOHyqXNGp6HxUYW8NnLIutL2qp8YNpW5qTLbrOtQeBTXTyuPOvy/2FfuGqtYkJ86
+         W+bSchpIKzej6ZtvI9jaihc/N//HcT+OXJ6/oDqUmXLGkPTzq2lgObCw5aGydqqubB3t
+         QaqMy3Lk5HAA66dAcAJabqdvaS6ouVkGhtsvCh2YzbV8s85drBP57+JOFsuK0p872s61
+         6JowNw8OsjMHSLd2JTB52rqzQqhI1bwrM1nMSabL08AToN8Ojn0XVZcIuk+yMxievOC6
+         Z9jGrPS1iDhHbBZGs8ilUQWKbeqRXcBwKsK58eX3T37qg6BDbprrA6XjqQ/8F7fsy5u3
+         vTiw==
+X-Gm-Message-State: APjAAAWbVQom8BjILvyfTNTFDD+1trXM3CzJax5LdBuiwttTXti+kfxM
+        HYAAq3076LxEFTVT6JB0Rh2h9w==
+X-Google-Smtp-Source: APXvYqx1hls1kSmZ4MnFS5qpOx2IsToARKVnISthSeQjnQGn2/e3ilt3jan9a3LpAHVf6dwHWo7KAQ==
+X-Received: by 2002:a2e:b0c9:: with SMTP id g9mr11578372ljl.134.1581603046071;
+        Thu, 13 Feb 2020 06:10:46 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id x29sm1671116lfg.45.2020.02.13.06.10.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 06:10:45 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id ACAC3100F25; Thu, 13 Feb 2020 17:11:07 +0300 (+03)
+Date:   Thu, 13 Feb 2020 17:11:07 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/25] mm: Allow hpages to be arbitrary order
+Message-ID: <20200213141107.ftfnenli72eburei@box>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-7-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200212233946.246210-1-minchan@kernel.org> <20200212233946.246210-3-minchan@kernel.org>
-In-Reply-To: <20200212233946.246210-3-minchan@kernel.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 13 Feb 2020 15:08:59 +0100
-Message-ID: <CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/8] mm: introduce external memory hinting API
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212041845.25879-7-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:40 AM Minchan Kim <minchan@kernel.org> wrote:
-> To solve the issue, this patch introduces a new syscall process_madvise(2).
-> It uses pidfd of an external process to give the hint.
-[...]
-> +       mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
-> +       if (IS_ERR_OR_NULL(mm)) {
-> +               ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
-> +               goto release_task;
-> +       }
-> +
-> +       ret = do_madvise(task, start, len_in, behavior);
+On Tue, Feb 11, 2020 at 08:18:26PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Remove the assumption in hpage_nr_pages() that compound pages are
+> necessarily PMD sized.  The return type needs to be signed as we need
+> to use the negative value, eg when calling update_lru_size().
 
-When you're accessing another task, you should ensure that the other
-task doesn't gain new privileges by executing a setuid binary in the
-middle of being accessed. mm_access() does that for you; it holds the
-->cred_guard_mutex while it is looking up the task's ->mm and doing
-the security check. mm_access() then returns you an mm pointer that
-you're allowed to access without worrying about such things; an
-mm_struct never gains privileges, since a setuid execution creates a
-fresh mm_struct. However, the task may still execute setuid binaries
-and such things.
+But should it be long?
+Any reason to use macros instead of inline function?
 
-This means that after you've looked up the mm with mm_access(), you
-have to actually *use* that pointer. You're not allowed to simply read
-task->mm yourself.
-
-Therefore, I think you should:
-
- - change patch 1/8 ("mm: pass task to do_madvise") to also pass an
-mm_struct* to do_madvise (but keep the task_struct* for patch 4/8)
- - in this patch, pass the mm_struct* from mm_access() into do_madvise()
- - drop patch 3/8 ("mm: validate mm in do_madvise"); it just papers
-over a symptom without addressing the underlying problem
+-- 
+ Kirill A. Shutemov
