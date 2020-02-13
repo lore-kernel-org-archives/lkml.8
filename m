@@ -2,87 +2,137 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70940C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D74AC3B18D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475ED21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1888821734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:27:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rXaw+VQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgBMSYk (ORCPT
+        id S1727845AbgBMS1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:24:40 -0500
-Received: from 5.mo173.mail-out.ovh.net ([46.105.40.148]:55886 "EHLO
-        5.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbgBMSYk (ORCPT
+        Thu, 13 Feb 2020 13:27:02 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34828 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbgBMS1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:24:40 -0500
-X-Greylist: delayed 2120 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 13:24:39 EST
-Received: from player715.ha.ovh.net (unknown [10.108.57.38])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 899E6130301
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:49:18 +0100 (CET)
-Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
-        (Authenticated sender: steve@sk2.org)
-        by player715.ha.ovh.net (Postfix) with ESMTPSA id 71AF0F2A6770;
-        Thu, 13 Feb 2020 17:49:02 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH 6/6] docs: document panic fully in sysctl/kernel.rst
-Date:   Thu, 13 Feb 2020 18:47:01 +0100
-Message-Id: <20200213174701.3200366-7-steve@sk2.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200213174701.3200366-1-steve@sk2.org>
-References: <20200213174701.3200366-1-steve@sk2.org>
+        Thu, 13 Feb 2020 13:27:00 -0500
+Received: by mail-oi1-f194.google.com with SMTP id b18so6796484oie.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:27:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HpDOVVwQMoKUWV1DWVonUPFvZBLp80J0wZPDxMAaRfY=;
+        b=rXaw+VQU+BjuhG30DscKYH7MHhb9UTyRb7apt36HoQ8vdfEazZoV8TpMsYehOANm0i
+         Ad49SZMMYnTxNsI7UYPu9i/7tKY+5XCh/fe8Z1IbV33TjJwh5imPo0ja1SnmDxIPKhfn
+         q+yfBnL9eDiFLTnNzbTpbFj5XyBowu9DqukeqXcR2zJ2l+nDzbWibmPHahu0Rvx6B7gV
+         LCizkUaCHYg1paEJYE6UMN3g7C1a9UI3LSbC0Pj+VY65RbvSvZZ46MAz9Lzu1ZR9HI0C
+         k+JHaH7IVx36F/8pTOY+F3F7OSNAfYTrt+U8MtfhYkDEjbioFaldj1Q3VG7lIVd6c1/G
+         sjUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HpDOVVwQMoKUWV1DWVonUPFvZBLp80J0wZPDxMAaRfY=;
+        b=K1SR6CTrktaFtUvelEnmn9cXmBlQqWeAyIllBSLdaQpWtx3eTtqUUPFH9Gb2cS4BBy
+         OkECQh/NUGx+gkdVLU/ef6Y63tbnUTEgT59l8GuPpxfB1Kl/tmmxsAXerxph3isHjSil
+         fln0/dfIq/krjV3fzzKOR7WEOTdOG6DgYJSMGXdQ50349U5AH3+gy+fTDT6O2HFEiaEl
+         5A2OnxZS7fi4XfyTPhb6Sq0baiFbt6HzHIOVLBcx6VT1PZPhMnABRJWUimRxtfGnuAXf
+         mJidgKYy75EY6uJTWqKqag9Itj2JoWPr3ISgQ/OSvSnlQtFzxBpyxvRYF5djhmJly4pA
+         OM1g==
+X-Gm-Message-State: APjAAAUMajNiXQvEHlYlBQPTGhfHczpoVVKyD+et/vlRTOw3v1Ho91BR
+        dLc5sj3d4cbSd3T9CDTwLTdXC8jGBoUwIbDoo5mq2kDXa/w=
+X-Google-Smtp-Source: APXvYqxht5FHJenXXKFjAcL0FoNd3tudfWztDG42KiVuUkVg02EE/Iivz69tviiGm0uxN1GdKP8BzvtNR9xEopXkwfI=
+X-Received: by 2002:aca:4c9:: with SMTP id 192mr4016542oie.105.1581618420229;
+ Thu, 13 Feb 2020 10:27:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 10096507416016735621
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrieekgddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffojghfgggtgfesthekredtredtjeenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejudehrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158155490379.3343782.10305190793306743949.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <x498sl677cf.fsf@segfault.boston.devel.redhat.com>
+In-Reply-To: <x498sl677cf.fsf@segfault.boston.devel.redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 13 Feb 2020 10:26:49 -0800
+Message-ID: <CAPcyv4i8xNEsdX=8c2+ehf24U2AFcc-sKmAPS9UoVvm8z0aRng@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] mm/memremap_pages: Introduce memremap_compat_align()
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The description of panic doesn’t cover all the supported scenarios;
-this patch fixes that, describing the three possibilities (no reboot,
-immediate reboot, reboot after a delay).
+On Thu, Feb 13, 2020 at 8:58 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > The "sub-section memory hotplug" facility allows memremap_pages() users
+> > like libnvdimm to compensate for hardware platforms like x86 that have a
+> > section size larger than their hardware memory mapping granularity.  The
+> > compensation that sub-section support affords is being tolerant of
+> > physical memory resources shifting by units smaller (64MiB on x86) than
+> > the memory-hotplug section size (128 MiB). Where the platform
+> > physical-memory mapping granularity is limited by the number and
+> > capability of address-decode-registers in the memory controller.
+> >
+> > While the sub-section support allows memremap_pages() to operate on
+> > sub-section (2MiB) granularity, the Power architecture may still
+> > require 16MiB alignment on "!radix_enabled()" platforms.
+> >
+> > In order for libnvdimm to be able to detect and manage this per-arch
+> > limitation, introduce memremap_compat_align() as a common minimum
+> > alignment across all driver-facing memory-mapping interfaces, and let
+> > Power override it to 16MiB in the "!radix_enabled()" case.
+> >
+> > The assumption / requirement for 16MiB to be a viable
+> > memremap_compat_align() value is that Power does not have platforms
+> > where its equivalent of address-decode-registers never hardware remaps a
+> > persistent memory resource on smaller than 16MiB boundaries. Note that I
+> > tried my best to not add a new Kconfig symbol, but header include
+> > entanglements defeated the #ifndef memremap_compat_align design pattern
+> > and the need to export it defeats the __weak design pattern for arch
+> > overrides.
+> >
+> > Based on an initial patch by Aneesh.
+>
+> I have just a couple of questions.
+>
+> First, can you please add a comment above the generic implementation of
+> memremap_compat_align describing its purpose, and why a platform might
+> want to override it?
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Sure, how about:
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index a792345ac6db..7ee4685861ea 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -562,9 +562,15 @@ The default is 65534.
- panic
- =====
- 
--The value in this file represents the number of seconds the kernel
--waits before rebooting on a panic. When you use the software watchdog,
--the recommended setting is 60.
-+The value in this file determines the behaviour of the kernel on a
-+panic:
-+
-+* if zero, the kernel will loop forever;
-+* if negative, the kernel will reboot immediately;
-+* if positive, the kernel will reboot after the corresponding number
-+  of seconds.
-+
-+When you use the software watchdog, the recommended setting is 60.
- 
- 
- panic_on_io_nmi
--- 
-2.24.1
+/*
+ * The memremap() and memremap_pages() interfaces are alternately used
+ * to map persistent memory namespaces. These interfaces place different
+ * constraints on the alignment and size of the mapping (namespace).
+ * memremap() can map individual PAGE_SIZE pages. memremap_pages() can
+ * only map subsections (2MB), and at least one architecture (PowerPC)
+ * the minimum mapping granularity of memremap_pages() is 16MB.
+ *
+ * The role of memremap_compat_align() is to communicate the minimum
+ * arch supported alignment of a namespace such that it can freely
+ * switch modes without violating the arch constraint. Namely, do not
+ * allow a namespace to be PAGE_SIZE aligned since that namespace may be
+ * reconfigured into a mode that requires SUBSECTION_SIZE alignment.
+ */
 
+> Second, I will take it at face value that the power architecture
+> requires a 16MB alignment, but it's not clear to me why mmu_linear_psize
+> was chosen to represent that.  What's the relationship, there, and can
+> we please have a comment explaining it?
+
+Aneesh, can you help here?
