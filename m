@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246C6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F2AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF8E24671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2C120675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607923;
-	bh=WQYTaSRBExE6PaosO5v/KWzCmYCtSkS2DD6iHQlv0Ng=;
+	s=default; t=1581607928;
+	bh=NP6AoYlELGfUFoRjR5wWantuWYyunVPz11smvM2VwE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ffpif7J//A95E5d7W1OE/jLLCGqrZB9Qm/ED5BTVaGRAbM3wTDr633EFAdagLRAOK
-	 aDv0QCxJ8tJ4a38DFwv1lRgjdSU+tOty2KuwGhnv9GmgWr2KgzUs7AX5lEYhs1RsKl
-	 15ddOopfU/vdevmUZ8wMUcHkK8E8cv9TY8P5Oo24=
+	b=gE4xX8Ss4spsdmTtiWXR76DoTvHwvA0LXgSDM6f3NS8pKmQPiVOJesakcCLDtavWA
+	 Pd33PbVkMeSb3C669VCtCSiNIRmuZtb/KmwmJPTg8G4vCx/d4PMENFseM9nO8TlqHU
+	 1re0eRYcl4L5onrGkeW0UDob4j+Xus4JNsoZrqbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbgBMPcC (ORCPT
+        id S2388117AbgBMPcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54938 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbgBMP2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:15 -0500
+        id S1729603AbgBMP2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D39D206DB;
-        Thu, 13 Feb 2020 15:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D80A24670;
+        Thu, 13 Feb 2020 15:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607694;
-        bh=WQYTaSRBExE6PaosO5v/KWzCmYCtSkS2DD6iHQlv0Ng=;
+        s=default; t=1581607696;
+        bh=NP6AoYlELGfUFoRjR5wWantuWYyunVPz11smvM2VwE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gHX8idXLwhT1ad7e6Xjd75NaPO2SFAlJrydspHlSx5x7CUlgE3YH8/pMgksuV6CKC
-         Y1zE6cqo6IGn7D+t11dU/l/bqPGeDRBxo1LuNSHktbcg73i6bcDyV1g1fDW0lNi9Sp
-         3uq+vKVSYFIpO0lNF7O0GkdpamFFCO7FbYzdFlUY=
+        b=rgURrOadyeLoNwA8gjaQjigWj66wkillDYUSp9D7AV8r4Kfl66TQJVv88+KrGeV9j
+         8/QFrjHyUfKHvorKMIUVB+8ErXR0/Zq8LoGjfDHOFCFWoVmpuzZk5qZ1MfSy+uBBvY
+         hKwSjAwf7hwbF2aoQi3s8Vkowtukk3i2EAzY6pNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Meyer <dmeyer@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        stable@vger.kernel.org, Dongdong Liu <liudongdong3@huawei.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.5 017/120] PCI/switchtec: Fix vep_vector_number ioread width
-Date:   Thu, 13 Feb 2020 07:20:13 -0800
-Message-Id: <20200213151907.873573308@linuxfoundation.org>
+Subject: [PATCH 5.5 020/120] PCI/AER: Initialize aer_fifo
+Date:   Thu, 13 Feb 2020 07:20:16 -0800
+Message-Id: <20200213151909.046374640@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,34 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Dongdong Liu <liudongdong3@huawei.com>
 
-commit 9375646b4cf03aee81bc6c305aa18cc80b682796 upstream.
+commit d95f20c4f07020ebc605f3b46af4b6db9eb5fc99 upstream.
 
-vep_vector_number is actually a 16 bit register which should be read with
-ioread16() instead of ioread32().
+Previously we did not call INIT_KFIFO() for aer_fifo.  This leads to
+kfifo_put() sometimes returning 0 (queue full) when in fact it is not.
 
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-Link: https://lore.kernel.org/r/20200106190337.2428-3-logang@deltatee.com
-Reported-by: Doug Meyer <dmeyer@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+It is easy to reproduce the problem by using aer-inject:
+
+  $ aer-inject -s :82:00.0 multiple-corr-nonfatal
+
+The content of the multiple-corr-nonfatal file is as below:
+
+  AER
+  COR RCVR
+  HL 0 1 2 3
+  AER
+  UNCOR POISON_TLP
+  HL 4 5 6 7
+
+Fixes: 27c1ce8bbed7 ("PCI/AER: Use kfifo for tracking events instead of reimplementing it")
+Link: https://lore.kernel.org/r/1579767991-103898-1-git-send-email-liudongdong3@huawei.com
+Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/switch/switchtec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/aer.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1276,7 +1276,7 @@ static int switchtec_init_isr(struct swi
- 	if (nvecs < 0)
- 		return nvecs;
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1445,6 +1445,7 @@ static int aer_probe(struct pcie_device
+ 		return -ENOMEM;
  
--	event_irq = ioread32(&stdev->mmio_part_cfg->vep_vector_number);
-+	event_irq = ioread16(&stdev->mmio_part_cfg->vep_vector_number);
- 	if (event_irq < 0 || event_irq >= nvecs)
- 		return -EFAULT;
+ 	rpc->rpd = port;
++	INIT_KFIFO(rpc->aer_fifo);
+ 	set_service_data(dev, rpc);
  
+ 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
 
 
