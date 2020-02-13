@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC42BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2CCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B908C2465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E161218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607569;
-	bh=YWwsiAPRyvw4xteGMCEmiUmKRJ6fxQY1oH9OoFfKU2E=;
+	s=default; t=1581607578;
+	bh=LDwsagcPvncREaWRkphZJJ11vcxiGs5VBaB88r8yZBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MdzY6iJH9jS1mGdyNJM6lVvHrutRm42DlDohiMnoDBgzG0MU7T2b9vlAVSnSchcu+
-	 t65JOtJBrIUkhVfjCeX7JngcHxNLYRHik/+uPU6fH7N0+0iIFt5o8TFa/V36YASk5i
-	 ReMuEr7lCYmxokN2Y09iC1waqk9HvAtorDR/fWLY=
+	b=1qHNxJzdmxoa3Z78pJZsv654EyQwMyn7twWRyWEwGnJyAOcS2OhwCuStQXDJ6QVzf
+	 +LmEMAw/uVyHqMhpO/6h8RXW9q29iNzDPAUImplVM2WQoYKyhuBIOjUv12098i5wYH
+	 Ajy5ZXa9O03kbYCDkvGNIiI9XJdrMd1HhYGkmKjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgBMP0J (ORCPT
+        id S2387521AbgBMP0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:26:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbgBMPYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:20 -0500
+        id S1728209AbgBMPY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:27 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76A7024690;
-        Thu, 13 Feb 2020 15:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8390820848;
+        Thu, 13 Feb 2020 15:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607459;
-        bh=YWwsiAPRyvw4xteGMCEmiUmKRJ6fxQY1oH9OoFfKU2E=;
+        s=default; t=1581607466;
+        bh=LDwsagcPvncREaWRkphZJJ11vcxiGs5VBaB88r8yZBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O0oPFy+zMy6a8bLqrQAvfGBm5cp2SveK03FzoZHBC+paz1g/1KEnuiz+/zD611S3j
-         oVZKrsKs2450hnHq6x/kvwi9elx1qK3nCmZUywj1+qRW6aEACJBi+kPZphHDTnuxQj
-         GR+jltXJCIR48rHXgVg/Q0MLtYKgKDpClhDT44Xc=
+        b=iNqGoTnroNlka0HwiDU2MhteuulY6VKI7vG4CYBomnoN+h4YQ1pchM+yFN0wXVrGc
+         WtyIfadIHhNZtJm/REe6DP1Vu8qEWuF41sg7GwdLSQFDcJfVSpHmVIe+Dmg+9b84vZ
+         X0odJQSfmuVozJMJAElNbwLYm1Qzk5Po6zjWvouk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 108/116] tools/power/acpi: fix compilation error
-Date:   Thu, 13 Feb 2020 07:20:52 -0800
-Message-Id: <20200213151924.000331679@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.9 102/116] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Date:   Thu, 13 Feb 2020 07:20:46 -0800
+Message-Id: <20200213151922.089222431@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -59,50 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-commit 1985f8c7f9a42a651a9750d6fcadc74336d182df upstream.
+commit 924491f2e476f7234d722b24171a4daff61bbe13 upstream.
 
-If we compile tools/acpi target in the top source directory, we'd get a
-compilation error showing as bellow:
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
+we return EIO to applications without even trying to recover.
 
-	# make tools/acpi
-	  DESCEND  power/acpi
-	  DESCEND  tools/acpidbg
-	  CC       tools/acpidbg/acpidbg.o
-	Assembler messages:
-	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
-			tools/acpidbg/acpidbg.o: No such file or directory
-	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
-			power/acpi/tools/acpidbg/acpidbg.o' failed
-	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
-			acpidbg.o] Error 1
-	Makefile:19: recipe for target 'acpidbg' failed
-	make[2]: *** [acpidbg] Error 2
-	Makefile:54: recipe for target 'acpi' failed
-	make[1]: *** [acpi] Error 2
-	Makefile:1607: recipe for target 'tools/acpi' failed
-	make: *** [tools/acpi] Error 2
-
-Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/power/acpi/Makefile.config |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -18,7 +18,7 @@ include $(srctree)/../../scripts/Makefil
- 
- OUTPUT=$(srctree)/
- ifeq ("$(origin O)", "command line")
--	OUTPUT := $(O)/power/acpi/
-+	OUTPUT := $(O)/tools/power/acpi/
- endif
- #$(info Determined 'OUTPUT' to be $(OUTPUT))
- 
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2916,6 +2916,11 @@ static struct nfs4_state *nfs4_do_open(s
+ 			exception.retry = 1;
+ 			continue;
+ 		}
++		if (status == -NFS4ERR_EXPIRED) {
++			nfs4_schedule_lease_recovery(server->nfs_client);
++			exception.retry = 1;
++			continue;
++		}
+ 		if (status == -EAGAIN) {
+ 			/* We must have found a delegation */
+ 			exception.retry = 1;
 
 
