@@ -2,78 +2,100 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78616C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3528DC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FD7222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581589758;
-	bh=C+n8gkGa1BrkuFQo4Be8BYQ2BPP8MlNxfJQPsD8YUac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O9IzVv9cMcJnmpffjJe1LVLzjBdxtbIe8L/01gVlgGnedJ4P/cTp07HDY1W7dq76u
-	 7ZpTCOoq8bf7oszWa/0ZllXD4/9Q0GSgc3um7mO1g88acULJATGci6YboVfp/U2K6H
-	 zlVzlO5dh8kxBFizHEfk9a3DxXMuUfKOqdb+MzU8=
+	by mail.kernel.org (Postfix) with ESMTP id 0D7E824676
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:30:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pYQ3iGUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgBMK3R (ORCPT
+        id S1729675AbgBMKaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:29:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgBMK3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:29:17 -0500
-Received: from localhost (unknown [106.201.58.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83E320873;
-        Thu, 13 Feb 2020 10:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581589756;
-        bh=C+n8gkGa1BrkuFQo4Be8BYQ2BPP8MlNxfJQPsD8YUac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KIgwxVl4CVgxmncvBodw4ff3mLXhjEUUoiQZEiL1ht9+bdPeXNFToVgf2/tACq4rS
-         9QAciZqn5Ck6g0vX0Z6SVQwpaspLdGNybti1ZfXSFQMchWKJjkh3pf8F0/nnt1pKc2
-         3wsb8b0VfSa6Vi97kLXZmyeGg+MLpn8sye+RApRY=
-Date:   Thu, 13 Feb 2020 15:59:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Subject: Re: [PATCH v2 0/5] soundwire: stream: fix state machines and
- transitions
-Message-ID: <20200213102911.GE2618@vkoul-mobl>
-References: <20200114235227.14502-1-pierre-louis.bossart@linux.intel.com>
+        Thu, 13 Feb 2020 05:30:22 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52688 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgBMKaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:30:22 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01DAU0ic101320;
+        Thu, 13 Feb 2020 04:30:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581589800;
+        bh=R98a9SMu5+eMeNYgNMcwCYKDHkQAW3h7Sh9JpzS1HH8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pYQ3iGUH3kWGYdlbtTIeH6xKsUJ2vKa/0sh3w2A3E1yz1TXlfOISpy3LatJUQl+PQ
+         lOQqMo4Md4ocehc24lodfZaIYJFDj34XxSmimIqJMzx1djMbTBFP1lK0R3KHYlKfTV
+         igt6A/JYGWI5AqysnGY1FmESBIP3eyRtRuCAnD0s=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01DAU0F1080260
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Feb 2020 04:30:00 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
+ Feb 2020 04:29:59 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 13 Feb 2020 04:29:59 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DATtZs019005;
+        Thu, 13 Feb 2020 04:29:56 -0600
+Subject: Re: [PATCH v5 3/3] drm: bridge: cdns-mhdp: add j721e wrapper
+To:     Yuti Amonkar <yamonkar@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>
+CC:     <praneeth@ti.com>, <jsarha@ti.com>, <mparab@cadence.com>,
+        <sjakhade@cadence.com>
+References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
+ <1581481604-24499-4-git-send-email-yamonkar@cadence.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <42a2db9b-b1ad-55be-5631-669b6bfae9a7@ti.com>
+Date:   Thu, 13 Feb 2020 12:29:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114235227.14502-1-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <1581481604-24499-4-git-send-email-yamonkar@cadence.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-01-20, 17:52, Pierre-Louis Bossart wrote:
-> The existing stream support works fine with simple cases, but does not
-> map well with ALSA transitions for underflows/resume where prepare()
-> can be called multiple times. Concurrency with multiple devices per
-> links or multiple streams enabled on the same link also needs to be
-> fixed.
+On 12/02/2020 06:26, Yuti Amonkar wrote:
+> Add j721e wrapper for mhdp, which sets up the clock and data muxes.
 > 
-> These patches are the result of hours of validation on the Intel side
-> and should benefit other implementations since there is nothing
-> hardware-specific. The Intel-specific changes being reviewed do depend
-> on those stream changes though to be functional.
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>   drivers/gpu/drm/bridge/Kconfig           | 12 ++++
+>   drivers/gpu/drm/bridge/Makefile          |  3 +
+>   drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 14 +++++
+>   drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
+>   drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 79 ++++++++++++++++++++++++
+>   drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 55 +++++++++++++++++
+>   6 files changed, 164 insertions(+)
+>   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+>   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
 
-Applied, thanks
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+
+  Tomi
 
 -- 
-~Vinod
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
