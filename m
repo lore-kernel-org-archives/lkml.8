@@ -2,56 +2,53 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88A9C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB86C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03A92168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F151D24687
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607664;
-	bh=aVRBNsjbkGq2j5Vekvmr/nzCQ0znuGbtHlWs8JYHqpU=;
+	s=default; t=1581607676;
+	bh=/jv1ZXq8Zj4eDdVZ2I8QdmuuudjD7LfalAizUJphtBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ekSJvmIRVlJnkY7XD3lzoJLHjgcriJa3TimuPqA0nHrMAoi7oA7HXiYqAYpEH4K45
-	 LSLE6KmojmIR6khGGsyNgyKVcV8VdtqlXa6wnECXJA4sxgQ1Rks3JbqFnlCZfKkZQs
-	 cOoVIeWxoEzuMfTj+txbEIquX21np698bwAvrG7A=
+	b=eNe1zfF2Ij+v9Nn6BNbiq82CHfQ/Rz/NTLNtymsIU3FI4OhHdiYpdSFajh3gECItj
+	 D3t4e4+da8Cz3SZdl4jcttPdK3MVHUrUsxPvjBXD2ANJ/lKtKiZxk0Ehe2q3CxloHJ
+	 aLw7PspDtmCe7/X38BbKTGs5hxSomjV3fXAA59Mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbgBMP1o (ORCPT
+        id S1729507AbgBMP1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387471AbgBMPZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:36 -0500
+        id S2387478AbgBMPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:38 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FC42469A;
-        Thu, 13 Feb 2020 15:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3838F24693;
+        Thu, 13 Feb 2020 15:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607535;
-        bh=aVRBNsjbkGq2j5Vekvmr/nzCQ0znuGbtHlWs8JYHqpU=;
+        s=default; t=1581607538;
+        bh=/jv1ZXq8Zj4eDdVZ2I8QdmuuudjD7LfalAizUJphtBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SflEVo70ipZ27ucIeSodR4IZjMzJbkXf0V8V2FFm5mBtA82bvBo5H3fkDnQLata21
-         ShDSdG/Za1aBJnWLY6Q3MygyRuwg8xkFBztO6pH+uW7fiDEaRLbc0Lgos9V+gAvhYc
-         nXOqqLVMhChJU8yGUSplIHG4YZXEALIIhqaVa4bY=
+        b=FgOj6e6Htcio2NgNn+zqeiYOpg/groHSI7ZIZbfjxugNCIlzu7IZWustXI5PBITTT
+         0tyU+9wwcLcNRgFHxJ4jcfUElOGqh6jPO20VJ0JIRtU7XcMryT7rywEQRloIOnhlnF
+         eluCM1YZ5SJPscgbXJy3mQY3lX2wJ4yfnRUX2M1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 093/173] scsi: qla2xxx: Fix the endianness of the qla82xx_get_fw_size() return type
-Date:   Thu, 13 Feb 2020 07:19:56 -0800
-Message-Id: <20200213151956.517930283@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.14 097/173] phy: qualcomm: Adjust indentation in read_poll_timeout
+Date:   Thu, 13 Feb 2020 07:20:00 -0800
+Message-Id: <20200213151957.349664147@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -64,60 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 3f5f7335e5e234e340b48ecb24c2aba98a61f934 upstream.
+commit a89806c998ee123bb9c0f18526e55afd12c0c0ab upstream.
 
-Since qla82xx_get_fw_size() returns a number in CPU-endian format, change
-its return type from __le32 into u32. This patch does not change any
-functionality.
+Clang warns:
 
-Fixes: 9c2b297572bf ("[SCSI] qla2xxx: Support for loading Unified ROM Image (URI) format firmware file.")
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Quinn Tran <qutran@marvell.com>
-Cc: Martin Wilck <mwilck@suse.com>
-Cc: Daniel Wagner <dwagner@suse.de>
-Cc: Roman Bolshakov <r.bolshakov@yadro.com>
-Link: https://lore.kernel.org/r/20191219004905.39586-1-bvanassche@acm.org
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:83:4: warning:
+misleading indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+                 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
+                 ^
+../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:80:3: note: previous
+statement is here
+                if (readl_relaxed(addr) & mask)
+                ^
+1 warning generated.
+
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+Fixes: 1de990d8a169 ("phy: qcom: Add driver for QCOM APQ8064 SATA PHY")
+Link: https://github.com/ClangBuiltLinux/linux/issues/816
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_nx.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-apq8064-sata.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/qla2xxx/qla_nx.c
-+++ b/drivers/scsi/qla2xxx/qla_nx.c
-@@ -1605,8 +1605,7 @@ qla82xx_get_bootld_offset(struct qla_hw_
- 	return (u8 *)&ha->hablob->fw->data[offset];
- }
+--- a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
++++ b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
+@@ -88,7 +88,7 @@ static int read_poll_timeout(void __iome
+ 		if (readl_relaxed(addr) & mask)
+ 			return 0;
  
--static __le32
--qla82xx_get_fw_size(struct qla_hw_data *ha)
-+static u32 qla82xx_get_fw_size(struct qla_hw_data *ha)
- {
- 	struct qla82xx_uri_data_desc *uri_desc = NULL;
+-		 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
++		usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
+ 	} while (!time_after(jiffies, timeout));
  
-@@ -1617,7 +1616,7 @@ qla82xx_get_fw_size(struct qla_hw_data *
- 			return cpu_to_le32(uri_desc->size);
- 	}
- 
--	return cpu_to_le32(*(u32 *)&ha->hablob->fw->data[FW_SIZE_OFFSET]);
-+	return get_unaligned_le32(&ha->hablob->fw->data[FW_SIZE_OFFSET]);
- }
- 
- static u8 *
-@@ -1808,7 +1807,7 @@ qla82xx_fw_load_from_blob(struct qla_hw_
- 	}
- 
- 	flashaddr = FLASH_ADDR_START;
--	size = (__force u32)qla82xx_get_fw_size(ha) / 8;
-+	size = qla82xx_get_fw_size(ha) / 8;
- 	ptr64 = (u64 *)qla82xx_get_fw_offs(ha);
- 
- 	for (i = 0; i < size; i++) {
+ 	return (readl_relaxed(addr) & mask) ? 0 : -ETIMEDOUT;
 
 
