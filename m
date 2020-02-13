@@ -2,146 +2,117 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88943C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DB6C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E84124671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gkeAxQFI"
+	by mail.kernel.org (Postfix) with ESMTP id 60D3F20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581600720;
+	bh=Y/3200Xe91pK1588PjJBG4y3ejf01YSeXXgdUWVo2ug=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=eE8YJ3ytbYebOpjZzWsJGA/jfF/46a9DnOS/dGHDmC40gLldTAytzjLy2A84kvbQn
+	 RqVbQtTu2Zmf7ZJ2H+HgutgLz+GoysrzfGoWU0pgm+fgSvIgFVjhpsmsuvjrtHJ8B8
+	 jzqPwjiVBiq+LTaCRGjBl0iNs16dYjq8pOcqQpU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgBMNbO (ORCPT
+        id S1730021AbgBMNb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:31:14 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41564 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729901AbgBMNbO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:31:14 -0500
-Received: by mail-qt1-f194.google.com with SMTP id l21so4327589qtr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 05:31:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6IEsHZFJMl+23M5QA2AtPWKaUyyo+qqKit+87XlJBO0=;
-        b=gkeAxQFIpHpyzTIC3whxvisNtVOvDwblwDIpJbaPHNg/E4RjUx5n8JhypSbffNf4ry
-         sintmd28BiLxOu7NXwjG7L0wctnXJE/TVbYuxjywfhwFY03i8Ud0dBzefxR3zFSz/0EA
-         KN3FjRn17k+uz6APqhThy5ntuBhS+2epjjE9o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6IEsHZFJMl+23M5QA2AtPWKaUyyo+qqKit+87XlJBO0=;
-        b=mBHoX13nu/sKdMYD0rqKBjFY9OSanEOcB6KyHjdwsybFXaGGtShAiB9LMzswR4CavH
-         rrEAoXkbHMW9rqsoxjcYZg5VcGCA7OKRszaBlssXQ3KP2YiDvcGS1XkOyQOmuHPyBKWv
-         G8vFUwzSP6gk843/XOiiTIGhUBVcuRiPCLsJmF8lfgOJnpm52Vuz6KTcU83e9nUTGodC
-         R3qy6AA15W31/qOeODEbtgzgHVZuwwydWYOQjq4e3d2/RqhAe3Dz5QFWkRDrlIeDk6H5
-         ki9rhBQzsbwc3nJOYSH8TgEMK+nRDFQ+OoZWBKptoMklQDiRvmWpTdB1EGG9IzwszKkB
-         2z3w==
-X-Gm-Message-State: APjAAAUrzzj3xYQsGoO3jz73bpyODKdHfpLgt1TMnru6aoEi6Y0oMiHm
-        4fU+Tu0LpLclvrhUIY8t5fxW4A==
-X-Google-Smtp-Source: APXvYqwTQnhKtvKsYa980wB+b4XcSVoocXslNvbt1WCbkDhze4zkq4QcXoTQPOph+ZpQwUcdntx6uw==
-X-Received: by 2002:ac8:1205:: with SMTP id x5mr11622616qti.238.1581600673220;
-        Thu, 13 Feb 2020 05:31:13 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v78sm1341896qkb.48.2020.02.13.05.31.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 05:31:12 -0800 (PST)
-Date:   Thu, 13 Feb 2020 08:31:12 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200213133112.GD170680@google.com>
-References: <20200212210139.382424693@infradead.org>
- <20200212210749.971717428@infradead.org>
- <20200212232005.GC115917@google.com>
- <20200213082716.GI14897@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213082716.GI14897@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Feb 2020 08:31:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:46636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729901AbgBMNb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 08:31:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F861FB;
+        Thu, 13 Feb 2020 05:31:58 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E74B73F6CF;
+        Thu, 13 Feb 2020 05:31:57 -0800 (PST)
+Date:   Thu, 13 Feb 2020 13:31:56 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, stable@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: codec2codec: avoid invalid/double-free of pcm runtime" to the asoc tree
+In-Reply-To: <20200213061147.29386-2-samuel@sholland.org>
+Message-Id: <applied-20200213061147.29386-2-samuel@sholland.org>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:27:16AM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 12, 2020 at 06:20:05PM -0500, Joel Fernandes wrote:
-> > On Wed, Feb 12, 2020 at 10:01:42PM +0100, Peter Zijlstra wrote:
-> 
-> > > +#define trace_rcu_enter()					\
-> > > +({								\
-> > > +	unsigned long state = 0;				\
-> > > +	if (!rcu_is_watching())	{				\
-> > > +		if (in_nmi()) {					\
-> > > +			state = __TR_NMI;			\
-> > > +			rcu_nmi_enter();			\
-> > > +		} else {					\
-> > > +			state = __TR_IRQ;			\
-> > > +			rcu_irq_enter_irqsave();		\
-> > 
-> > I think this can be simplified. You don't need to rely on in_nmi() here. I
-> > believe for NMI's, you can just call rcu_irq_enter_irqsave() and that should
-> > be sufficient to get RCU watching. Paul can correct me if I'm wrong, but I am
-> > pretty sure that would work.
-> > 
-> > In fact, I think a better naming for rcu_irq_enter_irqsave() pair could be
-> > (in the first patch):
-> > 
-> > rcu_ensure_watching_begin();
-> > rcu_ensure_watching_end();
-> 
-> So I hadn't looked deeply into rcu_irq_enter(), it seems to call
-> rcu_nmi_enter_common(), but with @irq=true.
-> 
-> What exactly is the purpose of that @irq argument, and how much will it
-> hurt to lie there? Will it come apart if we have @irq != !in_nmi()
-> for example?
+The patch
 
-At least rcu_dynticks_task_exit() and rcu_cleanup_after_idle() seem to be
-safe regardless of IRQ or NMI. If they are safe either way, we should
-probably get look into removing @irq. But I'm not fully sure and looking
-forward to Paul's thought on that.. I would love for us to simplify that as
-well if possible.
+   ASoC: codec2codec: avoid invalid/double-free of pcm runtime
 
-> There is a comment in there that says ->dynticks_nmi_nesting ought to be
-> odd only if we're in NMI. The only place that seems to care is
-> rcu_nmi_exit_common(), and that does indeed do something different for
-> IRQs vs NMIs.
+has been applied to the asoc tree at
 
-I know a bit about the counters. I had previously unified it and it passed
-RCU torture testing etc. (Didn't get merge as Paul wanted it done slightly
-done differently) : https://lore.kernel.org/patchwork/patch/1120022/ . I am
-planning to get back to finishing that soon.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
 
-About the comment on dynticks_nmi_nesting and counters, you mean this comment
-right? The odd value of '1' is just to catch the outer most handler. We need
-to enter/exit the EQS (extended QS) state only from the outermost handler. I
-believe that would work regardless whether it is NMI and IRQ that are
-nesting. If IRQs could nest within other IRQs in Linux, then that could also
-very well have used the odd/ even trick.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-	/*
-	 * If idle from RCU viewpoint, atomically increment ->dynticks
-	 * to mark non-idle and increment ->dynticks_nmi_nesting by one.
-	 * Otherwise, increment ->dynticks_nmi_nesting by two.  This means
-	 * if ->dynticks_nmi_nesting is equal to one, we are guaranteed
-	 * to be in the outermost NMI handler that interrupted an RCU-idle
-	 * period (observation due to Andy Lutomirski).
-	 */
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-thanks,
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
- - Joel
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From b6570fdb96edf45bcf71884bd2644bd73d348d1a Mon Sep 17 00:00:00 2001
+From: Samuel Holland <samuel@sholland.org>
+Date: Thu, 13 Feb 2020 00:11:44 -0600
+Subject: [PATCH] ASoC: codec2codec: avoid invalid/double-free of pcm runtime
+
+The PCM runtime was freed during PMU in the case that the event hook
+encountered an error. However, it is also unconditionally freed during
+PMD. Avoid a double-free by dropping the call to kfree in the PMU hook.
+
+Fixes: a72706ed8208 ("ASoC: codec2codec: remove ephemeral variables")
+Cc: stable@vger.kernel.org
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Link: https://lore.kernel.org/r/20200213061147.29386-2-samuel@sholland.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/soc-dapm.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index bc20ad9abf8b..8b24396675ec 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -3916,9 +3916,6 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
+ 	runtime->rate = params_rate(params);
+ 
+ out:
+-	if (ret < 0)
+-		kfree(runtime);
+-
+ 	kfree(params);
+ 	return ret;
+ }
+-- 
+2.20.1
 
