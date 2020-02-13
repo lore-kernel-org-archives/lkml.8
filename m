@@ -2,129 +2,142 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7750C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C05C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7957921734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:52:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jf/taqfs"
+	by mail.kernel.org (Postfix) with ESMTP id 64CB120714
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581555244;
+	bh=4uvldRuyIv1cDszKDs6APHQYKSaXNPxB+JSUbcUjM54=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0WTq61Nbkq6PUBmI5xnBq0s5Hbl2OB6/1gyD8cFA5I504srTPXZLXmnoRUMs1jyz5
+	 x/+S+zh5X7NSNj2QVKPHR0ZNjSDi59bUNquVCmp4cXHZq4iBawoqYdG/c5u2qNS/L3
+	 vvLVas1R81zX9b6P4Ty2gIX1Pq9MJtQ0NYOaRcKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbgBMAwZ (ORCPT
+        id S1729345AbgBMAyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:52:25 -0500
-Received: from gateway34.websitewelcome.com ([192.185.148.196]:16183 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729103AbgBMAwZ (ORCPT
+        Wed, 12 Feb 2020 19:54:03 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35750 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgBMAyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:52:25 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id DE30037814C
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:52:24 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 22jwj6je7RP4z22jwjYK6b; Wed, 12 Feb 2020 18:52:24 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5757znZEcKNE8shq95boWLVSi/ziQ21brLl/oUcyXoM=; b=jf/taqfsOGtyyeJF8aKUd1ZDIN
-        vePbajlrmHcxYxPBVSHOWFUHMxIjTvIZFCADlnKzCQYe6i38c0TWW1iBT3KJ+TgF+4qGxM24DRHgS
-        7RR0gEZfC0xTRSZGIai/DiQDymW7ZngJb3IdzhyojB8eNXnOt3kMBhwX1p21pFVuwWC3aDPUc10ZJ
-        u59hiQroxBDv4LOfDLZ88VRfwxB+vjoHZZKxDqzG3RD8bn+BzcbCp7rmTf2y6sfCKfj/uutAgGKdS
-        GPI5+md7Agd7BY5019sTYEd0XJ/X++B2TykqhBOWOkKy4kMsxZ+LDw2D7APnj1K2VZmWoh686LEHI
-        sworcfag==;
-Received: from [200.68.141.42] (port=21707 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j22jv-003mS8-1n; Wed, 12 Feb 2020 18:52:23 -0600
-Date:   Wed, 12 Feb 2020 18:52:21 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] PCI: Replace zero-length array with flexible-array member
-Message-ID: <20200213005221.GA10532@embeddedor.com>
+        Wed, 12 Feb 2020 19:54:03 -0500
+Received: by mail-ed1-f68.google.com with SMTP id f8so4688143edv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:54:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kqI0VbPVaJfcsCTXac52W5YMJCYaSOj7FaTDjIsxYoQ=;
+        b=RRc0XamveMQXj/q8pfpDyw3+6RSQiI77zx4rXZCf1ovpx19fhSLX9IAuu7EAbdT6D5
+         hRgPzQzTBFhOQsMCJ5pC8fUtChqlceueXHqMOFdtZldjIC/GLh+J70scUbbfpK2vng/u
+         uee+XaR52NHzT1hMiW+QFymxjV6nraNw8Kd1U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kqI0VbPVaJfcsCTXac52W5YMJCYaSOj7FaTDjIsxYoQ=;
+        b=pPXekIKvTbVSoVZc1j6WLs6YBjjjyyE76Rwefw8LbWcwUa458URMVdx7460HGrCHOU
+         tXMwAz9YkVmyD+noQpOfe1quLbAiiwmZn6YMMZGXpU0j2LuRmsgWy8oJrGvEvtvHMbNF
+         /uUHo5leORIdnj55+FPsJhddzu/iZtycEjEVcHQAaOXmdCrdgY3P6eCQtbtWzqqxBpiH
+         fmMuazWuYVAP0/7ayMDpyu9ELVCimvqQ8kQtrfFYsdzrjt+y0pHMwplwNPZOd9H2Snnz
+         huOvgx9Pto0WNUbhHsJqA5QVhGfcTBUDeCKdioClu3a5tiNgeByoJPQUOJ418kpbY/gP
+         JFvA==
+X-Gm-Message-State: APjAAAXqJKN7F78t9psJ61sT5ofujSHvjBcek9SR7OUXFtWKPi874O/Z
+        K59nPdIGFapruwivyyh7uj7OPyDOdSA=
+X-Google-Smtp-Source: APXvYqzHc9rhoVauUKlqDn6DCyTBgb0EI1BSmYtmI68fEm4MLldtCRjaOW6LmclOAMUd+1fKq/SF0g==
+X-Received: by 2002:a17:906:d927:: with SMTP id rn7mr14016716ejb.283.1581555239665;
+        Wed, 12 Feb 2020 16:53:59 -0800 (PST)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
+        by smtp.gmail.com with ESMTPSA id qh18sm50663ejb.23.2020.02.12.16.53.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 16:53:59 -0800 (PST)
+Received: by mail-wr1-f48.google.com with SMTP id y11so4609081wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:53:59 -0800 (PST)
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr9459753ljb.150.1581554910763;
+ Wed, 12 Feb 2020 16:48:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.42
-X-Source-L: No
-X-Exim-ID: 1j22jv-003mS8-1n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:21707
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 76
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
+ <87v9odlxbr.fsf@x220.int.ebiederm.org> <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+ <87tv3vkg1a.fsf@x220.int.ebiederm.org> <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+ <87v9obipk9.fsf@x220.int.ebiederm.org> <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
+ <20200212200335.GO23230@ZenIV.linux.org.uk> <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+ <20200212203833.GQ23230@ZenIV.linux.org.uk> <20200212204124.GR23230@ZenIV.linux.org.uk>
+ <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com> <87lfp7h422.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87lfp7h422.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 12 Feb 2020 16:48:14 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+Message-ID: <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Wed, Feb 12, 2020 at 1:48 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> The good news is proc_flush_task isn't exactly called from process exit.
+> proc_flush_task is called during zombie clean up. AKA release_task.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Yeah, that at least avoids some of the nasty locking while dying debug problems.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+But the one I was more worried about was actually the lock contention
+issue with lots of processes. The lock is basically a single global
+lock in many situations - yes, it's technically per-ns, but in a lot
+of cases you really only have one namespace anyway.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+And we've had problems with global locks in this area before, notably
+the one you call out:
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+> Further after proc_flush_task does it's thing the code goes
+> and does "write_lock_irq(&task_list_lock);"
 
-This issue was found with the help of Coccinelle.
+Yeah, so it's not introducing a new issue, but it is potentially
+making something we already know is bad even worse.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> What would be downside of having a mutex for a list of proc superblocks?
+> A mutex that is taken for both reading and writing the list.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/pci/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's what the original patch actually was, and I was hoping we could
+avoid that thing.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d828ca835a98..3217b8cdb1e0 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1521,7 +1521,7 @@ EXPORT_SYMBOL(pci_restore_state);
- 
- struct pci_saved_state {
- 	u32 config_space[16];
--	struct pci_cap_saved_data cap[0];
-+	struct pci_cap_saved_data cap[];
- };
- 
- /**
--- 
-2.23.0
+An rwsem would be possibly better, since most cases by far are likely
+about reading.
 
+And yes, I'm very aware of the task_list_lock, but it's literally why
+I don't want to make a new one.
+
+I'm _hoping_ we can some day come up with something better than task_list_lock.
+
+            Linus
