@@ -2,55 +2,57 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA067C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB84C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F73217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E872224671
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609326;
-	bh=wgQjZs1ddBRdFqlffXn/FGMRtYF9eRuUuRtsGAyWpRA=;
+	s=default; t=1581609329;
+	bh=JdALmsiywCD2BFX6W6dVfGn7Z1QGgaQsG+lNDNWS+4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QryfaQaF1WbVmwTUUQ/DWiPmEXpIZsKiqACYr0ZQsaJL00wg645JsX7Y5M7sBYDno
-	 SRMaU5D93+P4Oc1qy0fZ1WKV2j7Ok/lbbacJ2QXrmbDsfUcbdATozbgypSvm8OOUSQ
-	 FNHmmMg9bhnr7dRsRdTb1cfUAmb+Qe7FnhlgSZ5U=
+	b=Rxw9xmVXpE8QxQLWrJeG7oGu+S8LvZab3xvMfZQOWVHbwEAmUj06jB9jzSJOVC8qW
+	 OLn+b8LdIPqHNQjfQi/93Dbcge9xcghMHDx0nRueDvq6VYYpXnqJl/BifJi1k+QrSJ
+	 QgngxMmPHYFAAEGYLqY4y1jWnZQgVcA1GRz8VMIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387480AbgBMPZj (ORCPT
+        id S2387658AbgBMPz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:55:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387394AbgBMPYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:03 -0500
+        id S2387481AbgBMPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:39 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F56124691;
-        Thu, 13 Feb 2020 15:24:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D494624689;
+        Thu, 13 Feb 2020 15:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607442;
-        bh=wgQjZs1ddBRdFqlffXn/FGMRtYF9eRuUuRtsGAyWpRA=;
+        s=default; t=1581607539;
+        bh=JdALmsiywCD2BFX6W6dVfGn7Z1QGgaQsG+lNDNWS+4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=diOZUEQ/KR35p6RatyNcpEPo58RwAk5PSk39MTSwrdJtsGYM1w4qkAMnL/jbXTMkQ
-         TOXYojUR5HefEgHZMyNyhh18a0HwP4VI5HRQbkVKA1Ey1FAdjfTpHLvqOX2zB/5WRh
-         KnziuG7keqHjlTRXw0jLVMGCON1BBxaNg5wXO/o0=
+        b=PrNHnnXrEobxd7faik/tDK4MghIgpIW8X+MURwxiDxfCvfwBKzYrG0Vg8iNX/L/ED
+         vOQctlzJtM1fe5mx8+n4VHqwKmOGDkFkJ+soppOFMIBaMe7TBIBqimA949MSkwul2r
+         yiYNcTtQN7kqbeX7VwBQU9wOfDAmxRyRf3v77GRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 064/116] ppp: Adjust indentation into ppp_async_input
-Date:   Thu, 13 Feb 2020 07:20:08 -0800
-Message-Id: <20200213151907.888503397@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 088/173] KVM: x86: Protect MSR-based index computations in fixed_msr_to_seg_unit() from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:51 -0800
+Message-Id: <20200213151955.343558256@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,61 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 08cbc75f96029d3092664213a844a5e25523aa35 upstream.
+commit 25a5edea71b7c154b6a0b8cec14c711cafa31d26 upstream.
 
-Clang warns:
+This fixes a Spectre-v1/L1TF vulnerability in fixed_msr_to_seg_unit().
+This function contains index computations based on the
+(attacker-controlled) MSR number.
 
-../drivers/net/ppp/ppp_async.c:877:6: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-                                ap->rpkt = skb;
-                                ^
-../drivers/net/ppp/ppp_async.c:875:5: note: previous statement is here
-                                if (!skb)
-                                ^
-1 warning generated.
+Fixes: de9aef5e1ad6 ("KVM: MTRR: introduce fixed_mtrr_segment table")
 
-This warning occurs because there is a space before the tab on this
-line. Clean up this entire block's indentation so that it is consistent
-with the Linux kernel coding style and clang no longer warns.
-
-Fixes: 6722e78c9005 ("[PPP]: handle misaligned accesses")
-Link: https://github.com/ClangBuiltLinux/linux/issues/800
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ppp/ppp_async.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/x86/kvm/mtrr.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ppp/ppp_async.c
-+++ b/drivers/net/ppp/ppp_async.c
-@@ -878,15 +878,15 @@ ppp_async_input(struct asyncppp *ap, con
- 				skb = dev_alloc_skb(ap->mru + PPP_HDRLEN + 2);
- 				if (!skb)
- 					goto nomem;
-- 				ap->rpkt = skb;
-- 			}
-- 			if (skb->len == 0) {
-- 				/* Try to get the payload 4-byte aligned.
-- 				 * This should match the
-- 				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
-- 				 * process_input_packet, but we do not have
-- 				 * enough chars here to test buf[1] and buf[2].
-- 				 */
-+				ap->rpkt = skb;
-+			}
-+			if (skb->len == 0) {
-+				/* Try to get the payload 4-byte aligned.
-+				 * This should match the
-+				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
-+				 * process_input_packet, but we do not have
-+				 * enough chars here to test buf[1] and buf[2].
-+				 */
- 				if (buf[0] != PPP_ALLSTATIONS)
- 					skb_reserve(skb, 2 + (buf[0] & 1));
- 			}
+--- a/arch/x86/kvm/mtrr.c
++++ b/arch/x86/kvm/mtrr.c
+@@ -202,11 +202,15 @@ static bool fixed_msr_to_seg_unit(u32 ms
+ 		break;
+ 	case MSR_MTRRfix16K_80000 ... MSR_MTRRfix16K_A0000:
+ 		*seg = 1;
+-		*unit = msr - MSR_MTRRfix16K_80000;
++		*unit = array_index_nospec(
++			msr - MSR_MTRRfix16K_80000,
++			MSR_MTRRfix16K_A0000 - MSR_MTRRfix16K_80000 + 1);
+ 		break;
+ 	case MSR_MTRRfix4K_C0000 ... MSR_MTRRfix4K_F8000:
+ 		*seg = 2;
+-		*unit = msr - MSR_MTRRfix4K_C0000;
++		*unit = array_index_nospec(
++			msr - MSR_MTRRfix4K_C0000,
++			MSR_MTRRfix4K_F8000 - MSR_MTRRfix4K_C0000 + 1);
+ 		break;
+ 	default:
+ 		return false;
 
 
