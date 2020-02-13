@@ -2,150 +2,120 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084C6C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235F9C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C676520659
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0088024671
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jgFLIUgT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/k7RAPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgBMUA7 (ORCPT
+        id S1728381AbgBMUD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:00:59 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:58380 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgBMUA6 (ORCPT
+        Thu, 13 Feb 2020 15:03:57 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38190 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727797AbgBMUD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:00:58 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJrhqu135470;
-        Thu, 13 Feb 2020 20:00:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=qnXvCz+6kkBoPYOIM0/jTaDZgIKo/FzttVj0aM4nTps=;
- b=jgFLIUgTANvySdJiTiSOWLLDtmwnL6d4K6je3f2CKN4kA7dJay9VEC0JeJ0NhnWZgfjG
- ROrzJBY9xmtJ31PFsxqeXNXn+lmQhWrrg/xAbqf69bnU+MlxycyrGZvGUb6hp6CgIqbY
- TnfAaKrUx1V0n8dqbZaVpir1xWDrmglcMWW1PTZ5QWkmrEvuhNh1040ZMUCFZzyI9PKj
- MPaGC+UEJkrIAH7CO4BqCjTMX+IVPOJ3Ep1Ro5bH0Q+J0sF2zq/QNRlvVx2hSqY/W0Hn
- np0PBc/Y2/VgRDIOpayGGjBRjB27edstidqdfmLuXmv9Mw5BubELnKQvGyWpwZ725IsZ Kg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2y2p3svrvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 20:00:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJw3oV022714;
-        Thu, 13 Feb 2020 19:58:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2y4k80gv0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 19:58:43 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01DJwflD021036;
-        Thu, 13 Feb 2020 19:58:41 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Feb 2020 11:58:41 -0800
-Date:   Thu, 13 Feb 2020 11:58:39 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-Message-ID: <20200213195839.GG6870@magnolia>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
- <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
- <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
- <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
- <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
+        Thu, 13 Feb 2020 15:03:57 -0500
+Received: by mail-pl1-f195.google.com with SMTP id t6so2767242plj.5;
+        Thu, 13 Feb 2020 12:03:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UQjjHQDgj0q56YxtAxLxiwd0e2dsyqGtwVu7Hq/6ZWw=;
+        b=N/k7RAPUDfZEcoyOkB0wvxfvhSGMwEJU6wxiChP5OO/yVwjVpZSN4JI1eSaUSVN8tm
+         YWl7fRqn0MB9brNk7Q8MrlT3MuSh0O5S2tMwW1GuWZwUX7bLucomFKem3FwgSSZVxSUM
+         3El9OGIyK8kX91tlZixUZ644/ZIACx51O1h+vgyCKLQEvDPLFbI1o8TI6mRiLIq/ghOS
+         cPkbQzKAqvAv68Ca21w/lSp3RuPJiuDzIydBeXAUD8I9EaeqO+cINsvI0ZnCC1j3wbuM
+         0b5jUyJ3Z0Kgx9pTtQVVTCJeUVhzy9Rd8AHueHSUlND7MsdoNAkvK+xuNeDdiqONsk3s
+         L4GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UQjjHQDgj0q56YxtAxLxiwd0e2dsyqGtwVu7Hq/6ZWw=;
+        b=UUowp87HkcsiRrWEvW2Q8d0FbqZnOQc0WuQ8VmWeGN/FZ8wzNFC3Gyh7Kznl1VE0MB
+         loqj8YiYgHqkzQVloeP1nZpKSG3G48j4y6QfRBqyJ8WX7NFnSQ/CvkY0e/y2qQkVohY4
+         4HZi0McdyD/Zo6ZgtF2vV8nql85rD/eHMg9IibPSff3G0wuIvsvSV+tvdLDNZBhQNCR0
+         JnJ72TDoWL27IYRXXRbo+KgN6U87xY6ZwQ+q/hTm/BP7EgzM3nrSr6WqBhvQMAHwTxzP
+         6z8VJajBs3UWZkJXxH4x/rLhOIqzpEAiSrk/xb6WgOMzmj/RguBqv6ZcKmkSU8YCkntW
+         fbOg==
+X-Gm-Message-State: APjAAAVi4ZSPMxx/Da88DCq7F0i99ZhF5UEbl8MNiWumCPMz0fjWyC61
+        2qVK8fuB6Zq2kJ91HduO1lQ=
+X-Google-Smtp-Source: APXvYqxK3k8dw4bEbots2NbHpnsfrrHqX2qUwnysFEa+wzONL/xB3/2+U19TyNmfD+4AoiDn7+9nGA==
+X-Received: by 2002:a17:90a:a88d:: with SMTP id h13mr6597270pjq.55.1581624236430;
+        Thu, 13 Feb 2020 12:03:56 -0800 (PST)
+Received: from localhost ([100.118.89.211])
+        by smtp.gmail.com with ESMTPSA id w25sm4126396pfi.106.2020.02.13.12.03.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 12:03:55 -0800 (PST)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Fritz Koenig <frkoenig@google.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm/dpu: fix BGR565 vs RGB565 confusion
+Date:   Thu, 13 Feb 2020 12:01:35 -0800
+Message-Id: <20200213200137.745029-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002130139
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:05:13AM -0800, Ira Weiny wrote:
-> On Thu, Feb 13, 2020 at 11:01:57AM -0800, 'Ira Weiny' wrote:
-> > On Wed, Feb 12, 2020 at 02:49:48PM -0500, Jeff Moyer wrote:
-> > > Ira Weiny <ira.weiny@intel.com> writes:
-> > > 
->  
-> [snip]
-> 
-> > > Given that we document the dax mount
-> > > option as "the way to get dax," it may be a good idea to allow for a
-> > > user to selectively disable dax, even when -o dax is specified.  Is that
-> > > possible?
-> > 
-> > Not with this patch set.  And I'm not sure how that would work.  The idea was
-> > that -o dax was simply an override for users who were used to having their
-> > entire FS be dax.  We wanted to depreciate the use of "-o dax" in general.  The
-> > individual settings are saved so I don't think it makes sense to ignore the -o
-> > dax in favor of those settings.  Basically that would IMO make the -o dax
-> > useless.
-> 
-> Oh and I forgot to mention that setting 'dax' on the root of the FS basically
-> provides '-o dax' functionality by default with the ability to "turn it off"
-> for files.
+From: Rob Clark <robdclark@chromium.org>
 
-Please don't further confuse FS_XFLAG_DAX and S_DAX.  They are two
-separate flags with two separate behaviors:
+The component order between the two was swapped, resulting in incorrect
+color when games with 565 visual hit the overlay path instead of GPU
+composition.
 
-FS_XFLAG_DAX is a filesystem inode metadata flag.
+Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Setting FS_XFLAG_DAX on a directory causes all files and directories
-created within that directory to inherit FS_XFLAG_DAX.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
+index 24ab6249083a..6f420cc73dbd 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
+@@ -255,13 +255,13 @@ static const struct dpu_format dpu_format_map[] = {
+ 
+ 	INTERLEAVED_RGB_FMT(RGB565,
+ 		0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
+-		C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
++		C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
+ 		false, 2, 0,
+ 		DPU_FETCH_LINEAR, 1),
+ 
+ 	INTERLEAVED_RGB_FMT(BGR565,
+ 		0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
+-		C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
++		C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
+ 		false, 2, 0,
+ 		DPU_FETCH_LINEAR, 1),
+ 
+-- 
+2.24.1
 
-Mounting with -o dax causes all files and directories created to have
-FS_XFLAG_DAX set regardless of the parent's status.
-
-The FS_XFLAG_DAX can be get and set via the fs[g]etxattr ioctl.
-
--------
-
-S_DAX is the flag that controls the IO path in the kernel for a given
-inode.
-
-Loading a file inode into the kernel (via _iget) with FS_XFLAG_DAX set
-or creating a file inode that inherits FS_XFLAG_DAX causes the incore
-inode to have the S_DAX flag set if the storage device supports it.
-
-Files with S_DAX set use the dax IO paths through the kernel.
-
-The S_DAX flag can be queried via statx.
-
---D
-
-> Ira
-> 
-> > 
-> > Ira
-> > 
