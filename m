@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1990C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C4BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCBE218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A1A218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607856;
-	bh=eA2xG7o/gojCA1Jlfncc6S6XqFxRCP2rOYoV6DMyWws=;
+	s=default; t=1581607859;
+	bh=AyhCAYMCFmAmAbmoLSWttuf0ENfoysuc6lyikTyu6s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjx+I0xWUOfGIuhqXptpJ6YrfyKS4xX+0ALCA9J3Ug+ubCkQumus9HorFC0ycyhcJ
-	 GvYsGSppcfa4Rw1XWxod3KigpR8aMey95d9W0Wgmkj7Z/bMcVjlB4z31mhdzqdY9/r
-	 pKEM2+Y7SVx7JU1qEYgux8AqFPh9o0+0P4aC/LEI=
+	b=BfYF6gSzfxJfJE0Y3PrYhqlkWhvaVnMBC/NXFx2pPGmiTx85ChD8jQ4cZQdCNaN2X
+	 98r3yHzNGA82tgtjqBgYrkTCtHn1ietJJEaJ7yGDphwSM6awD9J3G84OGckVK7Y11C
+	 4GOMAfvhdLSA1tALNKe6nDeQ9CGsX1m5arVHN+oI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgBMPa4 (ORCPT
+        id S1729812AbgBMPa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729450AbgBMP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:36 -0500
+        id S1729461AbgBMP1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:37 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9228524685;
-        Thu, 13 Feb 2020 15:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C45206DB;
+        Thu, 13 Feb 2020 15:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607655;
-        bh=eA2xG7o/gojCA1Jlfncc6S6XqFxRCP2rOYoV6DMyWws=;
+        s=default; t=1581607656;
+        bh=AyhCAYMCFmAmAbmoLSWttuf0ENfoysuc6lyikTyu6s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAgKL7Ibq+qEObgz82l392ieSs3SfJPkiaxIPL+GYFaI+Fk2I9d6r22MbWxmEfgTM
-         f/rP2fnnRkBO3JKhp1AM7usRIoSnKKBHqtWJ41QYu1MJa02OioOME0Y45xjjOd8BI+
-         H1PdeBiJp68Xmrnw326Scu+1epvMKbACvOMGwzYg=
+        b=F75vBHSMyJi0jGqD4w8thP55R8raG/uDuPB07EA6TigtQ5Pn4sgdrZR/nsHAiEc0W
+         5lQ54OLOEB4KWaAJsutwOIBTMmwzCs99jMWWBJb+W4cKqySVQBvmdqPlT692FxIwNo
+         e608Xat84c14UmrC+GXKoYxf5her94YFsamBj5Bc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Beata Michalska <beata.michalska@linaro.org>,
-        James Morse <james.morse@arm.com>,
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
         Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 70/96] KVM: arm: Make inject_abt32() inject an external abort instead
-Date:   Thu, 13 Feb 2020 07:21:17 -0800
-Message-Id: <20200213151905.657123366@linuxfoundation.org>
+Subject: [PATCH 5.4 72/96] KVM: arm64: pmu: Fix chained SW_INCR counters
+Date:   Thu, 13 Feb 2020 07:21:19 -0800
+Message-Id: <20200213151906.522641270@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -61,57 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-commit 21aecdbd7f3ab02c9b82597dc733ee759fb8b274 upstream.
+commit aa76829171e98bd75a0cc00b6248eca269ac7f4f upstream.
 
-KVM's inject_abt64() injects an external-abort into an aarch64 guest.
-The KVM_CAP_ARM_INJECT_EXT_DABT is intended to do exactly this, but
-for an aarch32 guest inject_abt32() injects an implementation-defined
-exception, 'Lockdown fault'.
+At the moment a SW_INCR counter always overflows on 32-bit
+boundary, independently on whether the n+1th counter is
+programmed as CHAIN.
 
-Change this to external abort. For non-LPAE we now get the documented:
-| Unhandled fault: external abort on non-linefetch (0x008) at 0x9c800f00
-and for LPAE:
-| Unhandled fault: synchronous external abort (0x210) at 0x9c800f00
+Check whether the SW_INCR counter is a 64b counter and if so,
+implement the 64b logic.
 
-Fixes: 74a64a981662a ("KVM: arm/arm64: Unify 32bit fault injection")
-Reported-by: Beata Michalska <beata.michalska@linaro.org>
-Signed-off-by: James Morse <james.morse@arm.com>
+Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200121123356.203000-3-james.morse@arm.com
+Link: https://lore.kernel.org/r/20200124142535.29386-4-eric.auger@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/aarch32.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ virt/kvm/arm/pmu.c |   43 ++++++++++++++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 13 deletions(-)
 
---- a/virt/kvm/arm/aarch32.c
-+++ b/virt/kvm/arm/aarch32.c
-@@ -15,6 +15,10 @@
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_hyp.h>
- 
-+#define DFSR_FSC_EXTABT_LPAE	0x10
-+#define DFSR_FSC_EXTABT_nLPAE	0x08
-+#define DFSR_LPAE		BIT(9)
-+
- /*
-  * Table taken from ARMv8 ARM DDI0487B-B, table G1-10.
+--- a/virt/kvm/arm/pmu.c
++++ b/virt/kvm/arm/pmu.c
+@@ -480,28 +480,45 @@ static void kvm_pmu_perf_overflow(struct
   */
-@@ -182,10 +186,10 @@ static void inject_abt32(struct kvm_vcpu
- 	/* Give the guest an IMPLEMENTATION DEFINED exception */
- 	is_lpae = (vcpu_cp15(vcpu, c2_TTBCR) >> 31);
- 	if (is_lpae) {
--		*fsr = 1 << 9 | 0x34;
-+		*fsr = DFSR_LPAE | DFSR_FSC_EXTABT_LPAE;
- 	} else {
--		/* Surprise! DFSR's FS[4] lives in bit 10 */
--		*fsr = BIT(10) | 0x4; /* 0x14 */
-+		/* no need to shuffle FS[4] into DFSR[10] as its 0 */
-+		*fsr = DFSR_FSC_EXTABT_nLPAE;
+ void kvm_pmu_software_increment(struct kvm_vcpu *vcpu, u64 val)
+ {
++	struct kvm_pmu *pmu = &vcpu->arch.pmu;
+ 	int i;
+-	u64 type, enable, reg;
+-
+-	if (val == 0)
+-		return;
+ 
+ 	if (!(__vcpu_sys_reg(vcpu, PMCR_EL0) & ARMV8_PMU_PMCR_E))
+ 		return;
+ 
+-	enable = __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
++	/* Weed out disabled counters */
++	val &= __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
++
+ 	for (i = 0; i < ARMV8_PMU_CYCLE_IDX; i++) {
++		u64 type, reg;
++
+ 		if (!(val & BIT(i)))
+ 			continue;
+-		type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i)
+-		       & ARMV8_PMU_EVTYPE_EVENT;
+-		if ((type == ARMV8_PMUV3_PERFCTR_SW_INCR)
+-		    && (enable & BIT(i))) {
+-			reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
++
++		/* PMSWINC only applies to ... SW_INC! */
++		type = __vcpu_sys_reg(vcpu, PMEVTYPER0_EL0 + i);
++		type &= ARMV8_PMU_EVTYPE_EVENT;
++		if (type != ARMV8_PMUV3_PERFCTR_SW_INCR)
++			continue;
++
++		/* increment this even SW_INC counter */
++		reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
++		reg = lower_32_bits(reg);
++		__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = reg;
++
++		if (reg) /* no overflow on the low part */
++			continue;
++
++		if (kvm_pmu_pmc_is_chained(&pmu->pmc[i])) {
++			/* increment the high counter */
++			reg = __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) + 1;
+ 			reg = lower_32_bits(reg);
+-			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) = reg;
+-			if (!reg)
+-				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i);
++			__vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) = reg;
++			if (!reg) /* mark overflow on the high counter */
++				__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i + 1);
++		} else {
++			/* mark overflow on low counter */
++			__vcpu_sys_reg(vcpu, PMOVSSET_EL0) |= BIT(i);
+ 		}
  	}
  }
- 
 
 
