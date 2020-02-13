@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20350C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5ED0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6ABF20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CB420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610097;
-	bh=mQIBlK+zHeQZrDw2/w1JteBA5tl5pdyppA55xoJLPxQ=;
+	s=default; t=1581610102;
+	bh=SreRQhHSqcIYopXsz/O5ppSA86D6+Wdr7qSmaLyvUf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYFuIrrwaONiuu/zhkUi+ezUFqjHigQsjPOsvQ/03fMUmhScDMdbEql6h/Npt2Wj7
-	 2qtbIYudHTzMpOxQhHcX7IZ/nct15DLpKG+ytirtyFpCy2X/zBiCNafbnQZzQvftZI
-	 6mC70Zkt7bwJIOEO0G+Ed/yViPgAKQT3TO5PnwAY=
+	b=gE7riK00aK0HDnGxZTbIWACVspEs0ob5z/xyQwat0SwHs2ksifAzQkwH7IuPOPtXG
+	 e0cGA2RCS9v1BOtNhpPMlmcbOkiZzVdfgnE5W3o6R4LBMg4+H7i1gxA7EDWa0GA/Jq
+	 ZfeuqsLdEqlvHFmgYEo6y95vr8tPiN0zt1om/L3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgBMQIP (ORCPT
+        id S1728275AbgBMPXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:08:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:23:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728287AbgBMPXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:11 -0500
+        id S1728129AbgBMPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:48 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F0A4246A3;
-        Thu, 13 Feb 2020 15:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5FBE20848;
+        Thu, 13 Feb 2020 15:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607390;
-        bh=mQIBlK+zHeQZrDw2/w1JteBA5tl5pdyppA55xoJLPxQ=;
+        s=default; t=1581607367;
+        bh=SreRQhHSqcIYopXsz/O5ppSA86D6+Wdr7qSmaLyvUf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICGXXjWhgVC4QJ9KCNo3Z3aVGZrJQO0eovP3j+F/RqLaNhwML6SfrFk6np6fOPZof
-         G0VccoKNNb1ZOc52vvHulGAxqcssooA70FqZI28/GQ8AdIefjCAJWnxT590NaKZFSt
-         2sl9HZaWILpI3DaRMG0OMlbDH8ayt4eZl3i/Klt0=
+        b=zLkI2Zy3ER9PkGFhoa8gdWaLiUrT2qzNuLqvtM54CKUlpMIiHGCKXXQREyX+IFXQK
+         UKcSyawZFYiOScRnqNNFYIBbw0RH7V6L/+2gPknPj4eg8jiRHNHPJ69COpIYnbwxtE
+         Wahf4KwBJjobuW/f/jzE5rax2iTAnJF733yfrkHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 78/91] perf/core: Fix mlock accounting in perf_mmap()
-Date:   Thu, 13 Feb 2020 07:20:35 -0800
-Message-Id: <20200213151852.717231523@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.4 56/91] mfd: da9062: Fix watchdog compatible string
+Date:   Thu, 13 Feb 2020 07:20:13 -0800
+Message-Id: <20200213151843.437731657@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,51 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 003461559ef7a9bd0239bae35a22ad8924d6e9ad upstream.
+commit 1112ba02ff1190ca9c15a912f9269e54b46d2d82 upstream.
 
-Decreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
-a perf ring buffer may lead to an integer underflow in locked memory
-accounting. This may lead to the undesired behaviors, such as failures in
-BPF map creation.
+The watchdog driver compatible is "dlg,da9062-watchdog" and not
+"dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
+fwnode. As result the watchdog driver can't parse the devicetree.
 
-Address this by adjusting the accounting logic to take into account the
-possibility that the amount of already locked memory may exceed the
-current limit.
-
-Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
-Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Link: https://lkml.kernel.org/r/20200123181146.2238074-1-songliubraving@fb.com
+Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/mfd/da9062-core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4887,7 +4887,15 @@ accounting:
- 	 */
- 	user_lock_limit *= num_online_cpus();
- 
--	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
-+	user_locked = atomic_long_read(&user->locked_vm);
-+
-+	/*
-+	 * sysctl_perf_event_mlock may have changed, so that
-+	 *     user->locked_vm > user_lock_limit
-+	 */
-+	if (user_locked > user_lock_limit)
-+		user_locked = user_lock_limit;
-+	user_locked += user_extra;
- 
- 	if (user_locked > user_lock_limit)
- 		extra = user_locked - user_lock_limit;
+--- a/drivers/mfd/da9062-core.c
++++ b/drivers/mfd/da9062-core.c
+@@ -142,7 +142,7 @@ static const struct mfd_cell da9062_devs
+ 		.name		= "da9062-watchdog",
+ 		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
+ 		.resources	= da9062_wdt_resources,
+-		.of_compatible  = "dlg,da9062-wdt",
++		.of_compatible  = "dlg,da9062-watchdog",
+ 	},
+ 	{
+ 		.name		= "da9062-thermal",
 
 
