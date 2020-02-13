@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD0AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3969EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129C120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C0B20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608735;
-	bh=a6S/Ctwi/fQhvqd2WWpcyA6s5pF5QmUGAjiq/hWnE4w=;
+	s=default; t=1581608737;
+	bh=xtM+YC0fsXmRTgOGiXE3QIqZjxM4PwqTDLgPxouqRsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+LG6Kk26CncRahxyBRg+KaRMojeTB3tKpu1LSPOAJiyW0aDKt3e6afO330upBu3m
-	 TgEPylUwz3Y/dYrBFg4SeCaqjQiQMYKp+hJHo0KX1bwpHEj9aDr7j9KGmInVzHbgqs
-	 qEv6Q+Db5b59q9itkFTA4kqK2bZLU2/KQhBg/tRo=
+	b=qcW0usqEd9R/nfr7ug8Lbm3PpxDO2vDsyWZlAaZkBlfFxeusXZGuHGLeCF8XUBZxS
+	 EEnL/HEUu7JEYbCJVDCRVB5rT604icMEqaoJC0HBZ/wKJGB3moGRVvpa/WIrNGS7NY
+	 0HdqWIDqAeoN14MiitrABlODtRYS4AF7KWbfPIjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgBMPpd (ORCPT
+        id S1729538AbgBMPpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:45:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:45:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbgBMP12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:28 -0500
+        id S1729398AbgBMP11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:27 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D7220661;
-        Thu, 13 Feb 2020 15:27:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DFBE2168B;
+        Thu, 13 Feb 2020 15:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607646;
-        bh=a6S/Ctwi/fQhvqd2WWpcyA6s5pF5QmUGAjiq/hWnE4w=;
+        s=default; t=1581607647;
+        bh=xtM+YC0fsXmRTgOGiXE3QIqZjxM4PwqTDLgPxouqRsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJBjy2f5ALl62mpm6mbeW8i4vR4sN68xldkJK40A3+71WyoQFU2APRoH3uwgg32xT
-         cnzPYmUOQXXpf+8FwFgJDHqw85SUYPmm5PxTv5xON0udkfV5h0q64ZAUdrTm+MOEg4
-         iTfJ8lcisdX8dhwznFuGFTc+wuJ887wHbkdFHk68=
+        b=sI5SUgUK0KIkpc+zFJpDXygJUVJrMQB7TzrbxZ2jViK9WQ1JOzC4MSPeKN8260Bhi
+         fUYLc5t98bcp0qMnc2qz2DRpJbmRT2CXNOu/2Iustj9PYpFs5uohN4X2XqeOdnqwwI
+         s+gIcdla8CorPAUBPPjp+PxwAiiCeOZOC6P1pJZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 5.4 39/96] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-Date:   Thu, 13 Feb 2020 07:20:46 -0800
-Message-Id: <20200213151854.433113250@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.4 40/96] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date:   Thu, 13 Feb 2020 07:20:47 -0800
+Message-Id: <20200213151854.799686466@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,32 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 7980dff398f86a618f502378fa27cf7e77449afa upstream.
+commit 5e0c94d3aeeecc68c573033f08d9678fecf253bd upstream.
 
-Add a missing property to GMAC node so that multicast filtering works
-correctly.
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
-Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Fix this by taking a copy of the structure.
+
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel_mid_powerbtn.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -77,6 +77,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = < 32 >;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&apbclk>;
- 			clock-names = "stmmaceth";
- 			max-speed = <100>;
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_
+ 
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
+ 
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
 
 
