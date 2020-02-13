@@ -2,80 +2,84 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E690C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5BEC47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B15206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5EF2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:20:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yamZkqpn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgBMQTU (ORCPT
+        id S1728611AbgBMQUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:19:20 -0500
-Received: from os.inf.tu-dresden.de ([141.76.48.99]:51834 "EHLO
-        os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727675AbgBMQTU (ORCPT
+        Thu, 13 Feb 2020 11:20:05 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55850 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727675AbgBMQUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:19:20 -0500
-Received: from [2002:8d4c:3001:48::120:84]
-        by os.inf.tu-dresden.de with esmtpsa (TLS1.3:TLS_AES_128_GCM_SHA256:128) (Exim 4.93.0.3)
-        id 1j2HCw-0004Br-Lm; Thu, 13 Feb 2020 17:19:18 +0100
-Subject: Re: Remove WQ_CPU_INTENSIVE flag from unbound wq's
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
-        Song Liu <song@kernel.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org
-References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
- <20200213153645.GA11313@redhat.com>
-From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Message-ID: <82715589-8b59-5cfd-a32f-1e57871327fe@os.inf.tu-dresden.de>
-Date:   Thu, 13 Feb 2020 17:19:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 13 Feb 2020 11:20:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581610802; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=zvvISmkod8AHsh7UjrYeGbpLfDZzM5JquD/5OioWC1M=;
+        b=yamZkqpnf2uFWWjK9a2OjcPgxGfvfIHED5144hxBDQyFcNZaHmlXRCmsdAmuDdckD6YQtr
+        jVyLjweZPAEZAeA3hTWvrjZlK3W6Jwd1bT/IF6CojgsRORZLY9cfZdcBA1a5hujZoS+LTQ
+        2drNgAZuRxMeZY18FKRFydN9JfzaI8s=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>
+Cc:     od@zcrc.me, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v2 1/2] clk: ingenic/jz4770: Exit with error if CGU init failed
+Date:   Thu, 13 Feb 2020 13:19:51 -0300
+Message-Id: <20200213161952.37460-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20200213153645.GA11313@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Exit jz4770_cgu_init() if the 'cgu' pointer we get is NULL, since the
+pointer is passed as argument to functions later on.
 
+Fixes: 7a01c19007ad ("clk: Add Ingenic jz4770 CGU driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
 
-On 13/02/2020 16:36, Mike Snitzer wrote:
-> On Thu, Feb 13 2020 at  9:18am -0500,
-> Maksym Planeta <mplaneta@os.inf.tu-dresden.de> wrote:
-> 
->> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
->> unbound wq. I remove this flag from places where unbound queue is
->> allocated. This is supposed to improve code readability.
->>
->> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
->>
->> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-> 
-> What the Documentation says aside, have you cross referenced with the
-> code?  And/or have you done benchmarks to verify no changes?
-> 
+Notes:
+    v2: Added Fixes: tag
 
-It seems so from the code. Although, I'm not 100% confident. I did not 
-run benchmarks, instead I relied that on the assumption that 
-documentation is correct.
+ drivers/clk/ingenic/jz4770-cgu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Thanks,
-> Mike
-> 
-
+diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
+index 956dd653a43d..c051ecba5cf8 100644
+--- a/drivers/clk/ingenic/jz4770-cgu.c
++++ b/drivers/clk/ingenic/jz4770-cgu.c
+@@ -432,8 +432,10 @@ static void __init jz4770_cgu_init(struct device_node *np)
+ 
+ 	cgu = ingenic_cgu_new(jz4770_cgu_clocks,
+ 			      ARRAY_SIZE(jz4770_cgu_clocks), np);
+-	if (!cgu)
++	if (!cgu) {
+ 		pr_err("%s: failed to initialise CGU\n", __func__);
++		return;
++	}
+ 
+ 	retval = ingenic_cgu_register_clocks(cgu);
+ 	if (retval)
 -- 
-Regards,
-Maksym Planeta
+2.25.0
+
