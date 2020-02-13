@@ -2,28 +2,27 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D873FC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A01AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E762073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2B72073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgBMJv7 (ORCPT
+        id S1729874AbgBMJwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:51:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41218 "EHLO mx2.suse.de"
+        Thu, 13 Feb 2020 04:52:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41202 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729805AbgBMJv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:51:57 -0500
+        id S1729632AbgBMJv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:51:58 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 381B5B240;
-        Thu, 13 Feb 2020 09:51:56 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id D016FB1F2;
+        Thu, 13 Feb 2020 09:51:54 +0000 (UTC)
 From:   Petr Mladek <pmladek@suse.com>
 To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -31,9 +30,9 @@ To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         John Ogness <john.ogness@linutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] printk: Correctly set CON_CONSDEV even when preferred console was not registered
-Date:   Thu, 13 Feb 2020 10:51:33 +0100
-Message-Id: <20200213095133.23176-4-pmladek@suse.com>
+Subject: [PATCH v4 2/3] printk: Fix preferred console selection with multiple matches
+Date:   Thu, 13 Feb 2020 10:51:32 +0100
+Message-Id: <20200213095133.23176-3-pmladek@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200213095133.23176-1-pmladek@suse.com>
 References: <20200213095133.23176-1-pmladek@suse.com>
@@ -44,83 +43,169 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-CON_CONSDEV flag was historically used to put/keep the preferred console
-first in console_drivers list. Where the preferred console is the last
-on the command line.
+In the following circumstances, the rule of selecting the console
+corresponding to the last "console=" entry on the command line as
+the preferred console (CON_CONSDEV, ie, /dev/console) fails. This
+is a specific example, but it could happen with different consoles
+that have a similar name aliasing mechanism.
 
-The ordering is important only when opening /dev/console:
+  - The kernel command line has both console=tty0 and console=ttyS0
+    in that order (the latter with speed etc... arguments).
+    This is common with some cloud setups such as Amazon Linux.
 
-  + tty_kopen()
-    + tty_lookup_driver()
-      + console_device()
+  - add_preferred_console is called early to register "uart0". In
+    our case that happens from acpi_parse_spcr() on arm64 since the
+    "enable_console" argument is true on that architecture. This causes
+    "uart0" to become entry 0 of the console_cmdline array.
 
-The flag was originally an implementation detail. But it was later
-made accessible from userspace via /proc/consoles. It was used,
-for example, by the tool "showconsole" to show the real tty
-accessible via /dev/console, see
-https://github.com/bitstreamout/showconsole
+Now, because of the above, what happens is:
 
-Now, the current code sets CON_CONSDEV only for the preferred
-console or when a fallback console is added. The flag is not
-set when the preferred console is defined on the command line
-but it is not registered from some reasons.
+  - add_preferred_console is called by the cmdline parsing for tty0
+    and ttyS0 respectively, thus occupying entries 1 and 2 of the
+    console_cmdline array (since this happens after ACPI SPCR parsing).
+    At that point preferred_console is set to 2 as expected.
 
-Simple solution is to set CON_CONSDEV flag for the first
-registered console. It will work most of the time because:
+  - When the tty layer kicks in, it will call register_console for tty0.
+    This will match entry 1 in console_cmdline array. It isn't our
+    preferred console but because it's our only console at this point,
+    it will end up "first" in the consoles list.
 
-  + Most real consoles have console->device defined.
+  - When 8250 probes the actual serial port later on, it calls
+    register_console for ttyS0. At that point the loop in register_console
+    tries to match it with the entries in the console_cmdline array.
+    Ideally this should match ttyS0 in entry 2, which is preferred, causing
+    it to be inserted first and to replace tty0 as CONSDEV. However, 8250
+    provides a "match" hook in its struct console, and that hook will match
+    "uart" as an alias to "ttyS". So we match uart0 at entry 0 in the array
+    which is not the preferred console and will not match entry 2 which is
+    since we break out of the loop on the first match. As a result,
+    we don't set CONSDEV and don't insert it first, but second in
+    the console list.
 
-  + Boot consoles are removed in printk_late_init().
+    As a result, we end up with tty0 remaining first in the array, and thus
+    /dev/console going there instead of the last user specified one which
+    is ttyS0.
 
-  + unregister_console() moves CON_CONSDEV flag to the next
-    console.
-
-Clean solution would require checking con->device when the
-preferred console is registered and in unregister_console().
-
-Conclusion:
-
-Use the simple solution for now. It is better than the current
-state and good enough.
-
-The clean solution is not worth it. It would complicate the already
-complicated code without too much gain. Instead the code would deserve
-a complete rewrite.
+This tentative fix register_console() to scan first for consoles
+specified on the command line, and only if none is found, to then
+scan for consoles specified by the architecture.
 
 Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-[pmladek@suse.com: Correct reasoning in the commit message, comment update.]
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- include/linux/console.h | 2 +-
- kernel/printk/printk.c  | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ kernel/printk/console_cmdline.h |  1 +
+ kernel/printk/printk.c          | 29 ++++++++++++++++++-----------
+ 2 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/console.h b/include/linux/console.h
-index f33016b3a401..57ae2dedb51f 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -134,7 +134,7 @@ static inline int con_debug_leave(void)
-  */
- 
- #define CON_PRINTBUFFER	(1)
--#define CON_CONSDEV	(2) /* Last on the command line */
-+#define CON_CONSDEV	(2) /* Preferred console, /dev/console */
- #define CON_ENABLED	(4)
- #define CON_BOOT	(8)
- #define CON_ANYTIME	(16) /* Safe to call when cpu is offline */
+diff --git a/kernel/printk/console_cmdline.h b/kernel/printk/console_cmdline.h
+index 11f19c466af5..3ca74ad391d6 100644
+--- a/kernel/printk/console_cmdline.h
++++ b/kernel/printk/console_cmdline.h
+@@ -6,6 +6,7 @@ struct console_cmdline
+ {
+ 	char	name[16];			/* Name of the driver	    */
+ 	int	index;				/* Minor dev. to use	    */
++	bool	user_specified;			/* Specified by command line vs. platform */
+ 	char	*options;			/* Options for the driver   */
+ #ifdef CONFIG_A11Y_BRAILLE_CONSOLE
+ 	char	*brl_options;			/* Options for braille driver */
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index f76ef3f0efca..cf0ceacdae2f 100644
+index 0ebcdf53e75d..f76ef3f0efca 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -2788,6 +2788,8 @@ void register_console(struct console *newcon)
- 		console_drivers = newcon;
- 		if (newcon->next)
- 			newcon->next->flags &= ~CON_CONSDEV;
-+		/* Ensure this flag is always set for the head of the list */
-+		newcon->flags |= CON_CONSDEV;
- 	} else {
- 		newcon->next = console_drivers->next;
- 		console_drivers->next = newcon;
+@@ -2116,7 +2116,7 @@ asmlinkage __visible void early_printk(const char *fmt, ...)
+ #endif
+ 
+ static int __add_preferred_console(char *name, int idx, char *options,
+-				   char *brl_options)
++				   char *brl_options, bool user_specified)
+ {
+ 	struct console_cmdline *c;
+ 	int i;
+@@ -2131,6 +2131,8 @@ static int __add_preferred_console(char *name, int idx, char *options,
+ 		if (strcmp(c->name, name) == 0 && c->index == idx) {
+ 			if (!brl_options)
+ 				preferred_console = i;
++			if (user_specified)
++				c->user_specified = true;
+ 			return 0;
+ 		}
+ 	}
+@@ -2140,6 +2142,7 @@ static int __add_preferred_console(char *name, int idx, char *options,
+ 		preferred_console = i;
+ 	strlcpy(c->name, name, sizeof(c->name));
+ 	c->options = options;
++	c->user_specified = user_specified;
+ 	braille_set_options(c, brl_options);
+ 
+ 	c->index = idx;
+@@ -2194,7 +2197,7 @@ static int __init console_setup(char *str)
+ 	idx = simple_strtoul(s, NULL, 10);
+ 	*s = 0;
+ 
+-	__add_preferred_console(buf, idx, options, brl_options);
++	__add_preferred_console(buf, idx, options, brl_options, true);
+ 	console_set_on_cmdline = 1;
+ 	return 1;
+ }
+@@ -2215,7 +2218,7 @@ __setup("console=", console_setup);
+  */
+ int add_preferred_console(char *name, int idx, char *options)
+ {
+-	return __add_preferred_console(name, idx, options, NULL);
++	return __add_preferred_console(name, idx, options, NULL, false);
+ }
+ 
+ bool console_suspend_enabled = true;
+@@ -2636,7 +2639,7 @@ early_param("keep_bootcon", keep_bootcon_setup);
+  * Care need to be taken with consoles that are statically
+  * enabled such as netconsole
+  */
+-static int try_enable_new_console(struct console *newcon)
++static int try_enable_new_console(struct console *newcon, bool user_specified)
+ {
+ 	struct console_cmdline *c;
+ 	int i;
+@@ -2644,6 +2647,8 @@ static int try_enable_new_console(struct console *newcon)
+ 	for (i = 0, c = console_cmdline;
+ 	     i < MAX_CMDLINECONSOLES && c->name[0];
+ 	     i++, c++) {
++		if (c->user_specified != user_specified)
++			continue;
+ 		if (!newcon->match ||
+ 		    newcon->match(newcon, c->name, c->index, c->options) != 0) {
+ 			/* default matching */
+@@ -2673,9 +2678,10 @@ static int try_enable_new_console(struct console *newcon)
+ 
+ 	/*
+ 	 * Some consoles, such as pstore and netconsole, can be enabled even
+-	 * without matching.
++	 * without matching. Accept the pre-enabled consoles only when match()
++	 * and setup() had a change to be called.
+ 	 */
+-	if (newcon->flags & CON_ENABLED)
++	if (newcon->flags & CON_ENABLED && c->user_specified ==	user_specified)
+ 		return 0;
+ 
+ 	return -ENOENT;
+@@ -2752,11 +2758,12 @@ void register_console(struct console *newcon)
+ 		}
+ 	}
+ 
+-	/*
+-	 * See if this console matches one we selected on
+-	 * the command line or if it was statically enabled
+-	 */
+-	err = try_enable_new_console(newcon);
++	/* See if this console matches one we selected on the command line */
++	err = try_enable_new_console(newcon, true);
++
++	/* If not, try to match against the platform default(s) */
++	if (err == -ENOENT)
++		err = try_enable_new_console(newcon, false);
+ 
+ 	/* printk() messages are not printed to the Braille console. */
+ 	if (err || newcon->flags & CON_BRL)
 -- 
 2.16.4
 
