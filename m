@@ -2,122 +2,70 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B06C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAEDC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E6F217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:55:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T2c6lkei"
+	by mail.kernel.org (Postfix) with ESMTP id 59C4C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgBMXz3 (ORCPT
+        id S1728031AbgBMX4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 18:55:29 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59313 "EHLO ozlabs.org"
+        Thu, 13 Feb 2020 18:56:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727571AbgBMXz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 18:55:28 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727594AbgBMX4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 18:56:02 -0500
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48JYKn3XnWz9sP7;
-        Fri, 14 Feb 2020 10:55:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581638126;
-        bh=ceZrviBRKVvu16rikYXya7GUmEF2cpSJLZgrV4mGZ48=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T2c6lkeiqF5WAjfkeAAD2z/zIlGnUth0EGniAKaxgD+ta/drcI2YVJ1HlqJAhlfsD
-         Cy1JUFafJnf4UB93yDCES4t4XnxYZAbLiC1aspTMJVMY7zfCc0OEFJfx/LNTUbgqJI
-         8c4BLlr+uYkkgXnqmjFbT5LDK5I1OYLI7/ZqBX8wCOY/9sSNxHj2qonUaAWLDhVDz9
-         Vs9fS7OEv1aG5EbUfkIO1hRdjfLQQXUNtP7cyk6LRZVFOqMSaywcOFEkeP2w31xYOe
-         BUM8jckrvd94vdupKZ6JHgDFhh1Da2bym/7JPe+LBfH1b5o2q81oKLNy3uxJHTyUHI
-         OQ3P+Uftfg57A==
-Date:   Fri, 14 Feb 2020 10:55:19 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: linux-next: manual merge of the staging tree with the
- char-misc.current tree
-Message-ID: <20200214105519.70a7f6a2@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id DAEF1217BA;
+        Thu, 13 Feb 2020 23:56:00 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 18:55:59 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213185559.65e9f520@oasis.local.home>
+In-Reply-To: <20200213225853.GB112239@google.com>
+References: <20200212210749.971717428@infradead.org>
+        <20200212232005.GC115917@google.com>
+        <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+        <20200213135138.GB2935@paulmck-ThinkPad-P72>
+        <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+        <20200213185612.GG2935@paulmck-ThinkPad-P72>
+        <20200213204444.GA94647@google.com>
+        <20200213205442.GK2935@paulmck-ThinkPad-P72>
+        <20200213211930.GG170680@google.com>
+        <20200213214859.GL2935@paulmck-ThinkPad-P72>
+        <20200213225853.GB112239@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Smlk6vsDS=3NJbDff6Y_bIp";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Smlk6vsDS=3NJbDff6Y_bIp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 13 Feb 2020 17:58:53 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-Hi all,
+> Oh ok, it was a fair question. Seems Steve nailed it, only the
+> rcu_nmi_enter() needs NOKPROBE, although as you mentioned in the other
+> thread, it would be good to get Masami's eyes on it since he introduced the
+> NOKPROBE.
 
-Today's linux-next merge of the staging tree got a conflict in:
+Note, I did go and verify that the issue still exists, and the NOKPROBE
+looks to still be needed. But as you stated, because Masami added the
+NOKPROBE I'd feel more comfortable with him looking over my explanation.
 
-  MAINTAINERS
-
-between commit:
-
-  95ba79e89c10 ("MAINTAINERS: remove unnecessary ':' characters")
-
-from the char-misc.current tree and commit:
-
-  caa6772db4c1 ("Staging: remove wusbcore and UWB from the kernel tree.")
-
-from the staging tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index a9a93de6223c,9a4c715d1e50..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -17118,12 -17089,7 +17113,7 @@@ S:	Maintaine
-  F:	drivers/usb/common/ulpi.c
-  F:	include/linux/ulpi/
- =20
-- ULTRA-WIDEBAND (UWB) SUBSYSTEM
-- L:	devel@driverdev.osuosl.org
-- S:	Obsolete
-- F:	drivers/staging/uwb/
--=20
- -UNICODE SUBSYSTEM:
- +UNICODE SUBSYSTEM
-  M:	Gabriel Krisman Bertazi <krisman@collabora.com>
-  L:	linux-fsdevel@vger.kernel.org
-  S:	Supported
-
---Sig_/Smlk6vsDS=3NJbDff6Y_bIp
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5F4ecACgkQAVBC80lX
-0GwF0Af7BTU7MS3/iSpXfR9yrTShmRmfCQIzpFBUoa0L5RH3mNftnKSt8eAX6pPV
-wiJUbjzrQCk/tNYUUPAXA9as7iMxfJkNvDZqXZJ7SSmlHqeiBPyBLQ6Lr4a0Oen0
-y394k+owPGdyeFhUp2xDqc2l+7w9/sdzuwdHnrhg7I0Bi/Sntv7KucRxkhWuOL7E
-RGwGvYof2TKYSYKbDE0ZBOjxOJQ7XCzt2wxBDwp6uxNwKIu7qZAI/i+CY6zyP8h4
-eGBryc2Kc7prfDO0Mt24zzg7lhjV0Z65mwxIM5JAmRB9EvnCd2FDhgk02GmxJSsW
-A9ejDaHFqngsLhYfxjQILhul0kGWGA==
-=RN28
------END PGP SIGNATURE-----
-
---Sig_/Smlk6vsDS=3NJbDff6Y_bIp--
+-- Steve
