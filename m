@@ -2,95 +2,99 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEF5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC948C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7F72073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A27222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581588249;
+	bh=Z6nftmq7JNaTrmiiMEw1a3aSpCEEwo051FSLj6v+n1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ydji+0FL3zHodjrh0st25dkwFuRv0KBhjg66K6ukw8gtr5ZUWyJIPqdPingFUpEku
+	 KLri3/qtYOwalcVIritGJ/w9cbKwvW4RaZF6I6JGCjBf5XSaw443hC6jPvOqtXM2Hp
+	 ZgfiuvBhdvwZxclYOigSv0eUD81cZDRCm286hlIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgBMKAF (ORCPT
+        id S1729717AbgBMKEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:00:05 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:48531 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729531AbgBMKAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:00:05 -0500
-Received: from [192.168.178.45] ([109.104.45.70]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MGyl3-1jFfgV0HC7-00E8DN; Thu, 13 Feb 2020 10:59:48 +0100
-Subject: Re: [PATCH] ARM: bcm2835_defconfig: add minimal support for Raspberry
- Pi4
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <CGME20200212102022eucas1p1c49daf15d3e63eda9a56124bc4eafb57@eucas1p1.samsung.com>
- <20200212102009.17428-1-m.szyprowski@samsung.com>
- <a1d66025baa13b2276b12405544fc7107aac8d6c.camel@suse.de>
- <5adcb2de-3570-9c4d-5e5b-726b94fb2029@samsung.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <916c0113-9910-26cd-3720-15399fde507b@i2se.com>
-Date:   Thu, 13 Feb 2020 10:59:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 13 Feb 2020 05:04:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729440AbgBMKEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:04:08 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 996C42073C;
+        Thu, 13 Feb 2020 10:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581588248;
+        bh=Z6nftmq7JNaTrmiiMEw1a3aSpCEEwo051FSLj6v+n1s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1ca9dCV5da4xBo9tGQNQvbCi2Madj6+NmjnrM2KG7PGrC0nrxjRGScqZJ+AAqeytd
+         PaMwy2pwiLwyG764P9qIyiAMZd1CMdWDTfzC7E6iZ4DHq8iiGszguSEG/XqhgKy+qh
+         4PMKuvIlDoX+GqYLV0h+3vLBLrFry+Fis/i4q81Q=
+Date:   Thu, 13 Feb 2020 10:04:03 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        arnd@arndb.de,
+        Stefan Asserhall load and store 
+        <stefan.asserhall@xilinx.com>, Boqun Feng <boqun.feng@gmail.com>,
+        paulmck@kernel.org
+Subject: Re: [PATCH 7/7] microblaze: Do atomic operations by using exclusive
+ ops
+Message-ID: <20200213100403.GA1405@willie-the-truck>
+References: <cover.1581522136.git.michal.simek@xilinx.com>
+ <ba3047649af07dadecf1a52e7d815db8f068eb24.1581522136.git.michal.simek@xilinx.com>
+ <20200212155500.GB14973@hirez.programming.kicks-ass.net>
+ <4b46b33e-14ad-7097-f0db-2915ac772f15@xilinx.com>
+ <20200213085849.GL14897@hirez.programming.kicks-ass.net>
+ <20200213091651.GA14946@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <5adcb2de-3570-9c4d-5e5b-726b94fb2029@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:rqjER1Wpxcp48iehpHocS30UWq5iynTkVomtysQANDNAsxQUZBr
- dpG3OaBTB/7yXyaPOULjiyFytd/2r48rtEt52nhmdVwrYdmJOoirHVd7MchHYtFRr7Y00gi
- 5ErUxFr/yw4yv3YsuIMklWSjllbk5ohw+Sv8VeE5QsRBC4kDpp/Ck4JXGluZY0StD5xyV7P
- LaZo/d6mNLiZZuX8hNVkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yn/y25ko+sQ=:YBuWtfcDihwiPv5UiEgeWY
- jlFhaWYcVsFAfdHx5jBoBUsOOUghY+Eys6ivMNx3FQeaffWvEeWMMRG59zWPnpR5YqMoRUQbt
- NpYqHR2yUadaSWgLI5CW2H9rOHI8FVuE+hSvtt6FhFTlP6BlbqNlhl2935J93m2hCLAIGjg1E
- TjmBFmxq6700QQTt+kUUUbtMqst7dT13JxJJlodaIv5JUQ0xPx/y9g87nEUN+49LJ62sfEUkC
- cyeuG6U7Zh8SmC+kF2ZQfKBJujfROi34DYMHF3JWrVe4NMfukhJ8KiS37Z58XlXPr99CQwUH2
- 4TfTC2GzjYfXQ4apGzqciPfqqC9QyeO4LMicxdBmcdgDtr4diOMs30PvPhWvFCaQow4bJ/RaD
- VgfXZ1vFgC5/Fo+orsheeYfYkX0aHHOqmqrAUl32DKb7JYinKAvuWINkJ3LMVcNvCwCT0C4Gx
- Zmo5Xeca0odMP8jZaQHShEh89IUE2TXTLkxKGoPvjDmJyS+6lZRz3R2Vh5sKJb5Ql1rXAwdBK
- 7zTYNTZHkTZ4F7Z/x7erJ9LKn1mZv3LpT2uZHdWOr+M7x90L9NYhn9r0uKFL3ZFS7xKcsYLYW
- LZyG8GC28T8FWMv00i8IWS0mC8x+oyBXB5O1oBcDKqiQK6CMbmGkr/KIK19NaTOVcTUM1YD85
- SrOI0ajNQVxmCmrpFLPnnaCsyyAeTDvGwSDpac58HvNXSx2tPPNeMNBMCaK/PyGMumbGlAVMh
- CicEIcSBivprYSwdWuY1OJ9pPgFI7hNs2VV3TaYdv055qjXjhSAq9U8zVuJ9b6/3ZGsVDH6lq
- neGrgMY1FV3+tGsWkrMTGurrs22zKA69eECG4QzMtf+FxmcDzqlgPvYSmIZijp5qHZ4fYKK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213091651.GA14946@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+On Thu, Feb 13, 2020 at 10:16:51AM +0100, Peter Zijlstra wrote:
+> On Thu, Feb 13, 2020 at 09:58:49AM +0100, Peter Zijlstra wrote:
+> 
+> > The thing is, your bog standard LL/SC _SHOULD_ fail the SC if someone
+> > else does a regular store to the same variable. See the example in
+> > Documentation/atomic_t.txt.
+> > 
+> > That is, a competing SW/SWI should result in the interconnect responding
+> > with something other than EXOKAY, the SWX should fail and MSR[C] <- 1.
+> 
+> The thing is; we have code that relies on this behaviour. There are a
+> few crusty SMP archs that sorta-kinda limp along (mostly by disabling
+> some of the code and praying the rest doesn't trigger too often), but we
+> really should not allow more broken SMP archs.
 
-On 13.02.20 08:35, Marek Szyprowski wrote:
-> Hi Nicolas
->
-> On 12.02.2020 19:31, Nicolas Saenz Julienne wrote:
->> Hi Marek,
->> On Wed, 2020-02-12 at 11:20 +0100, Marek Szyprowski wrote:
->>> Add drivers for the minimal set of devices needed to boot Raspberry Pi4
->>> board.
->>>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Just so you know, the amount of support on the RPi4 you might be able to get
->> updating bcm2835_defconfig's config is very limited. Only 1GB of ram and no
->> PCIe (so no USBs).
-> Yes, I know. A lots of core features is missing: SMP, HIGHMEM, LPAE, PCI 
-> and so on, but having a possibility to boot RPi4 with this defconfig 
-> increases the test coverage.
+I did find this in the linked pdf:
 
-in case you want to increase test coverage, we better enable all
-Raspberry Pi 4 relevant hardware parts (hwrng, thermal, PCI ...). This
-is what we did for older Pi boards.
+  | If the store [swx] is successful, the sequence of instructions from
+  | the semaphore load to the semaphore store appear to be executed
+  | atomically - no other device modified the semaphore location between
+  | the read and the update.
 
-SMP, HIGHMEM, LPAE are different and shouldn't be enabled in
-bcm2835_defconfig from my PoV.
+which sounds like we're ok, although it could be better worded.
 
-Best regards
-Stefan
+One part I haven't figured out is what happens if you take an interrupt
+between the lwx and the swx and whether you can end up succeeding thanks
+to somebody else's reservation. Also, the manual is silent about the
+interaction with TLB invalidation and just refers to "address" when
+talking about the reservation. What happens if a user thread triggers
+CoW while another is in the middle of a lwx/swx?
 
+Will
