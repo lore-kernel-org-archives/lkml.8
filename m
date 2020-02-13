@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7144AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3FCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D58D2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06342073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609941;
-	bh=sliaj5BSkKa6BZ89HC0XulnKCqnhPE0kdzLJ7gX9zqw=;
+	s=default; t=1581609947;
+	bh=Vhtu+GJd61zC6VEPXpl3uRiKHP47EvSOLhiqTowZbW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=px9RULiZ8TuizU6jAVlFaoWfhPMGQAzjsKk0Ubtusjt7wss72SPDvUdA9DUYfAKvt
-	 O5cZD+0gtxXDDHuo52TtVAK2CkM3ad3y+kuHD+AECMa2eAZHgXp6+L+hVs3yK99IhJ
-	 GPp+GEOTvIcc/a5JzclC8h0jBI9jduMrf4VvM/uI=
+	b=wUoLGG/SiF8bPzt9UMDTBo3LkUfmNaXb3I4E2B7a/maIunmE/0RtA4ETF4w5rzf+N
+	 l4t4Y3EKZwPbAHlLbmmK5HxW7gyx59Zbtjp5CHAppI2a/rF009hAygH9UXV5mphx1q
+	 c2d7MftggTavgXJBF1iPn/t57xjslrPMR76B8g8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgBMQFf (ORCPT
+        id S1730331AbgBMQFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:05:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35768 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgBMPXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:48 -0500
+        id S1728473AbgBMPXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:46 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F3F246AD;
-        Thu, 13 Feb 2020 15:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDDAC24690;
+        Thu, 13 Feb 2020 15:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607427;
-        bh=sliaj5BSkKa6BZ89HC0XulnKCqnhPE0kdzLJ7gX9zqw=;
+        s=default; t=1581607425;
+        bh=Vhtu+GJd61zC6VEPXpl3uRiKHP47EvSOLhiqTowZbW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zWurs5Pm1yQcJifqY5/ddtDSfB8A1fU3ElLIU0+Mi0Aeq94ZcTmq2Oyij2mX8Jlhy
-         uF4WKdeKsRZYIiRTkp3bQrDKqY0V+OCUVJ6I7EMsny0QD97/biYm90ywz0spT5/LL9
-         8Uy3IHXIe+9YMM7E5PseSO1YRdfxCj5PlxUJyKB0=
+        b=jQJY2IipXAzSlnHUly93KVW5IGOQukTWPNq1m8NyfrlxVIM4JlG8XSpvMgxPUsoYp
+         jOmmy3iBpZNbUtcP8YqI1bOV6DdHCXrx5tII3BoOzQMyBdJFKVySLE99UNrDtbLq4c
+         Km94hRvbpVY/wVYNN5Sc2SE6VhVEFvWRhe8OdTpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 042/116] mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
-Date:   Thu, 13 Feb 2020 07:19:46 -0800
-Message-Id: <20200213151859.367219337@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 039/116] crypto: picoxcell - adjust the position of tasklet_init and fix missed tasklet_kill
+Date:   Thu, 13 Feb 2020 07:19:43 -0800
+Message-Id: <20200213151858.326928796@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -61,35 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 65b1aae0d9d5962faccc06bdb8e91a2a0b09451c upstream.
+commit 7f8c36fe9be46862c4f3c5302f769378028a34fa upstream.
 
-We called rcu_read_lock(), so we need to call rcu_read_unlock() before
-we return.
+Since tasklet is needed to be initialized before registering IRQ
+handler, adjust the position of tasklet_init to fix the wrong order.
 
-Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
-Cc: stable@vger.kernel.org
-Cc: huangwen <huangwenabc@gmail.com>
-Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Besides, to fix the missed tasklet_kill, this patch adds a helper
+function and uses devm_add_action to kill the tasklet automatically.
+
+Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/picoxcell_crypto.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-@@ -274,6 +274,7 @@ static int mwifiex_process_country_ie(st
+--- a/drivers/crypto/picoxcell_crypto.c
++++ b/drivers/crypto/picoxcell_crypto.c
+@@ -1632,6 +1632,11 @@ static bool spacc_is_compatible(struct p
+ 	return false;
+ }
  
- 	if (country_ie_len >
- 	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
-+		rcu_read_unlock();
- 		mwifiex_dbg(priv->adapter, ERROR,
- 			    "11D: country_ie_len overflow!, deauth AP\n");
- 		return -EINVAL;
++static void spacc_tasklet_kill(void *data)
++{
++	tasklet_kill(data);
++}
++
+ static int spacc_probe(struct platform_device *pdev)
+ {
+ 	int i, err, ret = -EINVAL;
+@@ -1674,6 +1679,14 @@ static int spacc_probe(struct platform_d
+ 		return -ENXIO;
+ 	}
+ 
++	tasklet_init(&engine->complete, spacc_spacc_complete,
++		     (unsigned long)engine);
++
++	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
++			      &engine->complete);
++	if (ret)
++		return ret;
++
+ 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
+ 			     engine->name, engine)) {
+ 		dev_err(engine->dev, "failed to request IRQ\n");
+@@ -1736,8 +1749,6 @@ static int spacc_probe(struct platform_d
+ 	INIT_LIST_HEAD(&engine->completed);
+ 	INIT_LIST_HEAD(&engine->in_progress);
+ 	engine->in_flight = 0;
+-	tasklet_init(&engine->complete, spacc_spacc_complete,
+-		     (unsigned long)engine);
+ 
+ 	platform_set_drvdata(pdev, engine);
+ 
 
 
