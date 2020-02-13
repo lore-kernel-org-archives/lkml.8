@@ -2,239 +2,153 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE896C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60215C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829C721734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A9D21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:24:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PjV7/0LD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1+rKNlfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgBMJYQ (ORCPT
+        id S1729728AbgBMJYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:24:16 -0500
-Received: from outbound-smtp62.blacknight.com ([46.22.136.251]:51295 "EHLO
-        outbound-smtp62.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726545AbgBMJYQ (ORCPT
+        Thu, 13 Feb 2020 04:24:40 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:39151 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729526AbgBMJYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:24:16 -0500
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp62.blacknight.com (Postfix) with ESMTPS id 3CE0AFA839
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:24:13 +0000 (GMT)
-Received: (qmail 25173 invoked from network); 13 Feb 2020 09:24:13 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 13 Feb 2020 09:24:13 -0000
-Date:   Thu, 13 Feb 2020 09:24:10 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [RFC 2/4] sched/numa: replace runnable_load_avg by load_avg
-Message-ID: <20200213092410.GV3466@techsingularity.net>
-References: <20200211174651.10330-1-vincent.guittot@linaro.org>
- <20200211174651.10330-3-vincent.guittot@linaro.org>
- <20200212133715.GU3420@suse.de>
- <20200212194903.GS3466@techsingularity.net>
- <CAKfTPtDA5GamN4A1SnegYwYCk123TqUDE9EHFbHTgKCMR+yqGQ@mail.gmail.com>
+        Thu, 13 Feb 2020 04:24:40 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 850DE21C46;
+        Thu, 13 Feb 2020 04:24:38 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 13 Feb 2020 04:24:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=XbLU97l4zers+TXWwIjHkBYNF2+
+        +heBtojtr9FpLezA=; b=PjV7/0LD0reTrVkK6LWSxQ0WdqVytHKg8XY8GBdfFYl
+        faOVB0eImMzS+sPwiYd8gcIB0P+8YTq8/HcnjmINXhBHg4GQBMCuqcJ7TtUUhrzz
+        xcIzWL4TI7rqy+frFJyvUJ4Jm9xFIQQ46d+GvFqcHUJMLC4sy8tuTEUoD7fo6zXl
+        jxhC3PvvytQPjpRVz92h4OQwy3yMDiYiKB+zHyD/9lD82xbbXKvlADaoNvF/0A/L
+        jTF9NbaFjUOP9SqtOdaU7dDrAD1oOHnjArwncLlZ6i5wp5kKj3tBpqFZaKATDXIt
+        Ccmg5eL2+7qoUGhd3S5fDSFsHkCjE7pJ4/17hetZN4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=XbLU97
+        l4zers+TXWwIjHkBYNF2++heBtojtr9FpLezA=; b=1+rKNlfiBWv+hI5hu+ir17
+        07IpmVM4Qfr2DyK3HvbMTJx0AJlmv4qOgqHS1VKEp34D4f0r+K+lx91VPG5h13yR
+        wvfHQVIDb5kfHImBteY32tTwlskuZaVBQOwVAT23nehkbTfUm9518nSXpfYD7klZ
+        6De8+39R0CxJYol8EAb2yvrLUXb5vgaq312Wz8wWnBXLvCwi8WsEV1L1CqC66R16
+        RAwMIO2uqnmxA7dBOs4fcwfgJMkzPA/8bQbLRHMtOxGBE9xpPr8OamNs6BOVMR+n
+        vCZsJlE0HD6SsIhXZMClLqaWqzf50I2LnyXGIvnY290XJnDDzW1SNHpZ8GSwPDBw
+        ==
+X-ME-Sender: <xms:0xVFXj22SZmBgqAM5__VL5EDX_HzDF5eagYmKhtZ-r2MGcR2TCEyjg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieekgddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epohhpvghnvhgrrhhiohdrohhrghenucfkphepledtrdekledrieekrdejieenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestg
+    gvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:0xVFXjXaLhA9EEJu49IXEi3mwe-qNFYRbmzmzXBp7PfNxdcB86Rlig>
+    <xmx:0xVFXg_k7LVErab3Mh3Nd7qpb7JA1mnfp9gNUR2hirm1L6oirqXolQ>
+    <xmx:0xVFXr2Wul32-43UW-C_2afEbUX_onNzK4s-lutcpmq3eFO09X9NBg>
+    <xmx:1hVFXrJqD8tus2qi4NqZXuM_CWWC46tlFjT3bRKPudimKEByCUpx8g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 87FB03280062;
+        Thu, 13 Feb 2020 04:24:35 -0500 (EST)
+Date:   Thu, 13 Feb 2020 10:24:33 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Support LVDS output on Allwinner A20
+Message-ID: <20200213092433.sc2rs7el63mwvf3y@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200211072004.46tbqixn5ftilxae@gilmour.lan>
+ <20200211204828.GA4361@kedthinkpad>
+ <20200212125345.j6e3txfjqekuxh2s@gilmour.lan>
+ <20200212224653.GA19494@kedthinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="idvbhwndshxupoi2"
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtDA5GamN4A1SnegYwYCk123TqUDE9EHFbHTgKCMR+yqGQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200212224653.GA19494@kedthinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:05:35AM +0100, Vincent Guittot wrote:
-> > And I was wrong. I worried that the conflict with the load balancer would
-> > be a problem when I wrote this comment.  That was based on finding that
-> > I had to account for the load balancer when using capacity to decide
-> > whether an idle CPU can be used. When I didn't, performance went to
-> > hell but thought that maybe you had somehow avoided the same problem.
-> > Unfortunately, testing indicates that the same, or similar, problem is
-> > here.
+
+--idvbhwndshxupoi2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Feb 13, 2020 at 12:46:53AM +0200, Andrey Lebedev wrote:
+> On Wed, Feb 12, 2020 at 01:53:45PM +0100, Maxime Ripard wrote:
+> > > > Side question, this will need some DT changes too, right?
+> > >
+> > > Hm, I agree. I think it would be reasonable to include LVDS0/1 pins
 > >
-> > This is specjbb running two JVMs on a 2-socket Haswell machine with 48
-> > cores in total. This is just your first two patches, I have found that
-> 
-> thanks for the test results. Unfortunately i haven't specjbb to
-> analyse the metrics and study what is going wrong
-> 
+> > That, but most importantly, the reset and clocks for the LVDS
+> > block. Also from looking at it, I'm not entirely sure that the TCON1
+> > has a LVDS output
+>
+> I also have impression that LVDS is only supported on TCON0, but that's
+> mostly from this comment in sun4i_lvds.c:
+>
+> 	/* The LVDS encoder can only work with the TCON channel 0 */
 
-That's fine. There will be alternative tests that show a similar
-problem. I generally like specjbb because it's more predictable than
-others while still being complex enough from a scheduler perspective to be
-interesting.
+No, that's a separate thing.
 
-> > Note that how it reaches the point where the node is almost utilised
-> > ( near tput-12) that performance drops.  Graphing mpstat on a per-node
-> > basis shows there is imbalance in the CPU utilisation between nodes.
-> 
-> ok. So the has_spare_capacity condition that i added in
-> load_too_imbalanced() is probably to aggressive although the goal was
-> to let task moving on their preferred node
-> 
+Internally the TCON has two channels, one connected to panels type of
+display (LVDS, Parallel, etc), the second one connected to TV outputs
+(HDMI, composite).
 
-Yes. It's a "fun" challenge to balance compute capacity, memory bandwidth
-and memory locality. The patch on top I posted yesterday had a error
-but fortunately I caught it last night after one test showed surprising
-results. The corrected version is below. With it, the degree to which
-both CPU load balance and NUMA balancing allows an imbalance between two
-nodes to exist is controlled from one common function. It appears to work
-but I want more than one test to complete before I bet money on it.
+But then, on some SoCs like the A20, you have two TCON's too. As far
+as I could see, only the first TCON can use LVDS, but I'm not
+definitive.
 
-The one test is close to performance-neutral even though 4-socket shows
-more system CPU usage than I'd like. This is still an improvement given
-that the two balancers now make decisions based on the same metrics
-without regressing (yet). I'll continue looking at how both of our series
-can play nice together but so far, this is what I think is needed after
-patch 2 of your series;
+Allwinner seems to allow panels to only be tied to TCON0 in the BSP,
+so I guess we can assume that.
 
---8<--
-sched/numa: Use similar logic to the load balancer for moving between domains with spare capacity
+> > do you have a board when you have been able to test it?
+>
+> Yes, I have the hardware (Cubieboard 2) at hand, but I cannot change the
+> any physical connections on it. FWIW, it is https://openvario.org, the
+> device we are (painfully) trying to upgrade from old kernel-3.4 with
+> proprietary mali drivers to contemporary software.
 
-The standard load balancer generally tries to keep the number of running
-tasks or idle CPUs balanced between NUMA domains. The NUMA balancer allows
-tasks to move if there is spare capacity but this causes a conflict and
-utilisation between NUMA nodes gets badly skewed. This patch uses similar
-logic between the NUMA balancer and load balancer when deciding if a task
-migrating to its preferred node can use an idle CPU.
+What painpoints do you have?
 
-Signed-off-by: Mel Gorman <mgorman@suse.com>
----
- kernel/sched/fair.c | 76 +++++++++++++++++++++++++++++++----------------------
- 1 file changed, 45 insertions(+), 31 deletions(-)
+> > > and sample (but disabled) lvds panel,
+> >
+> > That's good for the sake of the example, but it shouldn't be in the
+> > same patch, it won't be merged.
+>
+> I jave just submitted version 2 of the patches - set of 2 patches this
+> time. Addressed your comments, please take a look.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 52e74b53d6e7..5a34752b8dbe 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1520,6 +1520,7 @@ struct task_numa_env {
- 
- static unsigned long cpu_load(struct rq *rq);
- static unsigned long cpu_util(int cpu);
-+static inline long adjust_numa_imbalance(int imbalance, int src_nr_running);
- 
- static inline enum
- numa_type numa_classify(unsigned int imbalance_pct,
-@@ -1594,11 +1595,6 @@ static bool load_too_imbalanced(long src_load, long dst_load,
- 	long orig_src_load, orig_dst_load;
- 	long src_capacity, dst_capacity;
- 
--
--	/* If dst node has spare capacity, there is no real load imbalance */
--	if (env->dst_stats.node_type == node_has_spare)
--		return false;
--
- 	/*
- 	 * The load is corrected for the CPU capacity available on each node.
- 	 *
-@@ -1757,19 +1753,37 @@ static void task_numa_compare(struct task_numa_env *env,
- static void task_numa_find_cpu(struct task_numa_env *env,
- 				long taskimp, long groupimp)
- {
--	long src_load, dst_load, load;
- 	bool maymove = false;
- 	int cpu;
- 
--	load = task_h_load(env->p);
--	dst_load = env->dst_stats.load + load;
--	src_load = env->src_stats.load - load;
--
- 	/*
--	 * If the improvement from just moving env->p direction is better
--	 * than swapping tasks around, check if a move is possible.
-+	 * If dst node has spare capacity, then check if there is an
-+	 * imbalance that would be overruled by the load balancer.
- 	 */
--	maymove = !load_too_imbalanced(src_load, dst_load, env);
-+	if (env->dst_stats.node_type == node_has_spare) {
-+		unsigned int imbalance;
-+		int src_running, dst_running;
-+
-+		/* Would movement cause an imbalance? */
-+		src_running = env->src_stats.nr_running - 1;
-+		dst_running = env->src_stats.nr_running + 1;
-+		imbalance = max(0, dst_running - src_running);
-+		imbalance = adjust_numa_imbalance(imbalance, src_running);
-+
-+		/* Use idle CPU if there is no imbalance */
-+		if (!imbalance)
-+			maymove = true;
-+	} else {
-+		long src_load, dst_load, load;
-+		/*
-+		 * If the improvement from just moving env->p direction is better
-+		 * than swapping tasks around, check if a move is possible.
-+		 */
-+		load = task_h_load(env->p);
-+		dst_load = env->dst_stats.load + load;
-+		src_load = env->src_stats.load - load;
-+		maymove = !load_too_imbalanced(src_load, dst_load, env);
-+	}
- 
- 	for_each_cpu(cpu, cpumask_of_node(env->dst_nid)) {
- 		/* Skip this CPU if the source task cannot migrate */
-@@ -8700,6 +8714,21 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
- 	}
- }
- 
-+static inline long adjust_numa_imbalance(int imbalance, int src_nr_running)
-+{
-+	unsigned int imbalance_min;
-+
-+	/*
-+	 * Allow a small imbalance based on a simple pair of communicating
-+	 * tasks that remain local when the source domain is almost idle.
-+	 */
-+	imbalance_min = 2;
-+	if (src_nr_running <= imbalance_min)
-+		return 0;
-+
-+	return imbalance;
-+}
-+
- /**
-  * calculate_imbalance - Calculate the amount of imbalance present within the
-  *			 groups of a given sched_domain during load balance.
-@@ -8796,24 +8825,9 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 		}
- 
- 		/* Consider allowing a small imbalance between NUMA groups */
--		if (env->sd->flags & SD_NUMA) {
--			unsigned int imbalance_min;
--
--			/*
--			 * Compute an allowed imbalance based on a simple
--			 * pair of communicating tasks that should remain
--			 * local and ignore them.
--			 *
--			 * NOTE: Generally this would have been based on
--			 * the domain size and this was evaluated. However,
--			 * the benefit is similar across a range of workloads
--			 * and machines but scaling by the domain size adds
--			 * the risk that lower domains have to be rebalanced.
--			 */
--			imbalance_min = 2;
--			if (busiest->sum_nr_running <= imbalance_min)
--				env->imbalance = 0;
--		}
-+		if (env->sd->flags & SD_NUMA)
-+			env->imbalance = adjust_numa_imbalance(env->imbalance,
-+						busiest->sum_nr_running);
- 
- 		return;
- 	}
--- 
-Mel Gorman
-SUSE Labs
+I will, thanks!
+Maxime
+
+--idvbhwndshxupoi2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkUV0QAKCRDj7w1vZxhR
+xUjlAQDtP35dyCa1eG2rSVZWUhNVB5ES5QtTp0Jg/SggFeiJ6gD8DeYNvUKtzf3R
+c7ZWlhAmKKf1V1zA/Xmg+D1ch/lX9A8=
+=IlPs
+-----END PGP SIGNATURE-----
+
+--idvbhwndshxupoi2--
