@@ -2,100 +2,93 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB0DC3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFE1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9133821734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5862821734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581585400;
+	bh=GiebtmJpNzAk9Qikj9svaXnffKSNLaoVx4iZEJ1f9R8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N7CbmNE/YMFCmh/+m0B8Tk9htxyg6vr2Vft2x59cZ51pv33Zm3UKUWgOaUyBpXgaT
+	 tjGTplZaR91hGU5O3C7a+f1o7/Q1Yd3uunYpDRcgYjAitVEWWn9GDymoRtv8X/wNN3
+	 8cqwEo2MewJTgFmFjZu5bNmWDZNLmRHNZYVeW6NI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgBMJQO (ORCPT
+        id S1729802AbgBMJQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:16:14 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37825 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729532AbgBMJQN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:16:13 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2AbQ-000802-Sl; Thu, 13 Feb 2020 10:16:08 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2AbP-0005qx-BI; Thu, 13 Feb 2020 10:16:07 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v6 0/4] leds: trigger: implement a tty trigger
-Date:   Thu, 13 Feb 2020 10:15:56 +0100
-Message-Id: <20200213091600.554-1-uwe@kleine-koenig.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 13 Feb 2020 04:16:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729531AbgBMJQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:16:39 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4556620848;
+        Thu, 13 Feb 2020 09:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581585398;
+        bh=GiebtmJpNzAk9Qikj9svaXnffKSNLaoVx4iZEJ1f9R8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tl6c66Z/muXXGGsR8OFmt//7oEMoFMLpSOdMqTmIZMcSapkUUhJ5KhzDiPIeGnuRs
+         s6L05Zr2yBZTqQxPgrTxwf/vJZuS09jUreCa650odBkGyci7sfrn50FK2D+S/FgaEJ
+         hzkiirULO+oY9fiFM996uGnX90vfzqRz2rcR9e4g=
+Date:   Thu, 13 Feb 2020 09:16:33 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] iommu/arm-smmu: fix the module name to be consistent
+ with older kernel
+Message-ID: <20200213091633.GA849@willie-the-truck>
+References: <1581467841-25397-1-git-send-email-leoyang.li@nxp.com>
+ <20200212104902.GA3664@willie-the-truck>
+ <CADRPPNQ-FcA-xdjp02ybsYeU9UFxCZU5dpf0wHThTmLHcjovCQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADRPPNQ-FcA-xdjp02ybsYeU9UFxCZU5dpf0wHThTmLHcjovCQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Wed, Feb 12, 2020 at 01:59:46PM -0600, Li Yang wrote:
+> On Wed, Feb 12, 2020 at 4:50 AM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Tue, Feb 11, 2020 at 06:37:20PM -0600, Li Yang wrote:
+> > > Commit cd221bd24ff5 ("iommu/arm-smmu: Allow building as a module")
+> > > introduced a side effect that changed the module name from arm-smmu to
+> > > arm-smmu-mod.  This breaks the users of kernel parameters for the driver
+> > > (e.g. arm-smmu.disable_bypass).  This patch changes the module name back
+> > > to be consistent.
+> > >
+> > > Signed-off-by: Li Yang <leoyang.li@nxp.com>
+> > > ---
+> > >  drivers/iommu/Makefile                          | 4 ++--
+> > >  drivers/iommu/{arm-smmu.c => arm-smmu-common.c} | 0
+> > >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > >  rename drivers/iommu/{arm-smmu.c => arm-smmu-common.c} (100%)
+> >
+> > Can't we just override MODULE_PARAM_PREFIX instead of renaming the file?
+> 
+> I can do that.  But on the other hand, the "mod" in the module name
+> arm-smmu-mod.ko seems to be redundant and looks a little bit weird.
+> Wouldn't it be cleaner to make it just arm-smmu.ko?
 
-Hello,
+I just didn't fancy renaming the file because it's a pain for backports
+and why does the name of the module matter?
 
-This is v6 of my quest to introduce ledtriggers for UARTs. The previous
-series is available at
-
-	http://lore.kernel.org/r/20191219093947.15502-1-u.kleine-koenig@pengutronix.de
-
-The changes compared to that are that parsing of the dev parameter is
-more strict and that I set brightness directly from the kworker instead
-of using led_blink_set_oneshot which makes use of another kworker. (Both
-requested by Pavel Machek.)
-
-For the former I introduced a new helper kstrtodev_t() in the spirit of
-kstrtoul() to implement the stricter parsing (instead of the lax one
-using plain sscanf() in v5).
-
-Best regards
-Uwe
-
-Uwe Kleine-König (4):
-  lib: new helper kstrtodev_t()
-  tty: rename tty_kopen() and add new function tty_kopen_shared()
-  tty: new helper function tty_get_icount()
-  leds: trigger: implement a tty trigger
-
- .../ABI/testing/sysfs-class-led-trigger-tty   |   6 +
- drivers/leds/trigger/Kconfig                  |   7 +
- drivers/leds/trigger/Makefile                 |   1 +
- drivers/leds/trigger/ledtrig-tty.c            | 159 ++++++++++++++++++
- drivers/staging/speakup/spk_ttyio.c           |   2 +-
- drivers/tty/tty_io.c                          |  87 +++++++---
- include/linux/kdev_t.h                        |   2 +
- include/linux/kernel.h                        |   1 +
- include/linux/tty.h                           |   7 +-
- lib/kstrtox.c                                 |  46 +++++
- 10 files changed, 293 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-led-trigger-tty
- create mode 100644 drivers/leds/trigger/ledtrig-tty.c
-
-
-base-commit: 0bf999f9c5e74c7ecf9dafb527146601e5c848b9
--- 
-2.24.0
-
+Will
