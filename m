@@ -2,53 +2,51 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22C1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91407C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91042073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688402073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609527;
-	bh=sV3ED1FNeSxFHSiNHHFaSzZXwtXmvQp1WCZUfFNtHww=;
+	s=default; t=1581609532;
+	bh=od7zeOreRAXcHWXUSpsD6viNKergL7vkryhJ+LZGCng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbU23NGVa1irm5aozUiGxpBhdOhklrerLAf62rKkw/QajXYRWJk60p+HK+MN2eE66
-	 DxCEHmtlMHgvDqqIPDMcnfM+B6Wd1onMBrFkKs/3UGQwD+3Lzbqaei8y9dHB6DW/az
-	 l3hPfnyP2jh/SWjQMXWIL/zbUjC0bHEUtBAkFpaA=
+	b=qJ+imuvVNWRomONV2V9EAJm99oKSFhLSOBrv/eO2yPAKCZbZE2i/9ZLGCW4ebL15F
+	 F6P4UwvYSNzR/tN52cUSrgDvSNkQXYUYi/3GJ/sHejeYp22SvapHnKHVN9RMIxP81D
+	 nIc+OuNIM9BAmdGp4yI8K/Ii3ASkcKR4AD16dCnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgBMP6q (ORCPT
+        id S1729970AbgBMP6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:58:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:58:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbgBMPZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:04 -0500
+        id S1728425AbgBMPZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:02 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49EEC20848;
-        Thu, 13 Feb 2020 15:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A7224690;
+        Thu, 13 Feb 2020 15:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607504;
-        bh=sV3ED1FNeSxFHSiNHHFaSzZXwtXmvQp1WCZUfFNtHww=;
+        s=default; t=1581607501;
+        bh=od7zeOreRAXcHWXUSpsD6viNKergL7vkryhJ+LZGCng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ff7ZuiEVJkCqga68ctKTJ6RpVTrt+Clg2MsTVz3TcPcHYT+Ikxil2cE8qPS9WcJbl
-         Vt3tYFpS42rhipc9BP4MAjdzqWOYvLEh9o7gQn9sS/m5YOjZTi0OWjF2J4fyZvqXhL
-         FiE/KBK4avxEjHQwMKWfK1876TebGqSIAnEX0AqE=
+        b=DUieTuUfgaPPQwPUHb2PA4v/3hCz8pH9mzg7jHqdyI/HrWwJdA11pu+6+/2er2AMx
+         VLR+03l9l1N3UV8fOUSNjc9eizJ3G1bjiVVaTSo7ZV3A9TJeZeUWDAos0k6DX3qcBC
+         onewE+voS6WpVT5386cOi4w33VzKzxU9aJ4TVKhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 061/173] ftrace: Protect ftrace_graph_hash with ftrace_sync
-Date:   Thu, 13 Feb 2020 07:19:24 -0800
-Message-Id: <20200213151949.194902699@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.14 029/173] irqdomain: Fix a memory leak in irq_domain_push_irq()
+Date:   Thu, 13 Feb 2020 07:18:52 -0800
+Message-Id: <20200213151940.940633671@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -61,71 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Kevin Hao <haokexin@gmail.com>
 
-[ Upstream commit 54a16ff6f2e50775145b210bcd94d62c3c2af117 ]
+commit 0f394daef89b38d58c91118a2b08b8a1b316703b upstream.
 
-As function_graph tracer can run when RCU is not "watching", it can not be
-protected by synchronize_rcu() it requires running a task on each CPU before
-it can be freed. Calling schedule_on_each_cpu(ftrace_sync) needs to be used.
+Fix a memory leak reported by kmemleak:
+unreferenced object 0xffff000bc6f50e80 (size 128):
+  comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
+  hex dump (first 32 bytes):
+    00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
+    00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
+  backtrace:
+    [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
+    [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
+    [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
+    [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
+    [<00000000d43eca75>] really_probe+0xdc/0x320
+    [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
+    [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
+    [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
+    [<0000000079d4db41>] __device_attach+0xe4/0x140
+    [<00000000883bbda9>] device_initial_probe+0x18/0x20
+    [<000000003be59ef6>] bus_probe_device+0x98/0xa0
+    [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
+    [<00000000870934ce>] process_one_work+0x1c8/0x470
+    [<00000000e3cce570>] worker_thread+0x1f8/0x428
+    [<000000005d64975e>] kthread+0xfc/0x128
+    [<00000000f0eaa764>] ret_from_fork+0x10/0x18
 
-Link: https://lore.kernel.org/r/20200205131110.GT2935@paulmck-ThinkPad-P72
-
+Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: b9b0c831bed26 ("ftrace: Convert graph filter to use hash tables")
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lore.kernel.org/r/20200120043547.22271-1-haokexin@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/trace/ftrace.c | 11 +++++++++--
- kernel/trace/trace.h  |  2 ++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ kernel/irq/irqdomain.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index dd9fdb52e24ad..8974ecbcca3cb 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5419,8 +5419,15 @@ ftrace_graph_release(struct inode *inode, struct file *file)
- 
- 		mutex_unlock(&graph_lock);
- 
--		/* Wait till all users are no longer using the old hash */
--		synchronize_sched();
-+		/*
-+		 * We need to do a hard force of sched synchronization.
-+		 * This is because we use preempt_disable() to do RCU, but
-+		 * the function tracers can be called where RCU is not watching
-+		 * (like before user_exit()). We can not rely on the RCU
-+		 * infrastructure to do the synchronization, thus we must do it
-+		 * ourselves.
-+		 */
-+		schedule_on_each_cpu(ftrace_sync);
- 
- 		free_ftrace_hash(old_hash);
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1538,6 +1538,7 @@ int irq_domain_push_irq(struct irq_domai
+ 	if (rv) {
+ 		/* Restore the original irq_data. */
+ 		*root_irq_data = *child_irq_data;
++		kfree(child_irq_data);
+ 		goto error;
  	}
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 99af95e294d8d..c4c61ebb8d054 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -883,6 +883,7 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- 	 * Have to open code "rcu_dereference_sched()" because the
- 	 * function graph tracer can be called when RCU is not
- 	 * "watching".
-+	 * Protected with schedule_on_each_cpu(ftrace_sync)
- 	 */
- 	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
  
-@@ -935,6 +936,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
- 	 * Have to open code "rcu_dereference_sched()" because the
- 	 * function graph tracer can be called when RCU is not
- 	 * "watching".
-+	 * Protected with schedule_on_each_cpu(ftrace_sync)
- 	 */
- 	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
- 						 !preemptible());
--- 
-2.20.1
-
 
 
