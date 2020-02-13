@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EF2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7827C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F00A20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B28A20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608488;
-	bh=qNVJvkLk5QY4zMFf9zWqo7r205XJykyNObIRHrwIBPo=;
+	s=default; t=1581608492;
+	bh=K+s38cj5BHIKmV+617PonKL6SoRCkEgPvgG0+Aam/6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmtYgseW3LIUaDgc9KZ46a76w0to8wBhnktUSAsf9oN5yruhjfKLtfOvtfTPsHg7K
-	 xnC/nN7ldoSEJG/oZmJX7hmMI5LBI1eqpPWjzHH9vf6hGeKrM5gpNgyUiEC3dY7aOP
-	 o/QLpSGzl5wajE2qYKbCCUmUeiyF82NGVu//pTK0=
+	b=uQGJ0BcI6TIRutVvu5a/nv5s9ZgGQWka8LKGllXlA4wC+dd6CAeZIrVuKX/v306Bn
+	 OebXC4ucSY8F7xihKIQBVLSmVniaaTuWUjcMloEkWVQ440crlvlIqhilYfOwwvqGPA
+	 NgGkk1KL1oudhrW4EuRwyeeEwDHh+E0U3Djloj84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgBMPl2 (ORCPT
+        id S2387718AbgBMP2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:41:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56152 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387725AbgBMP2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:34 -0500
+        id S1728619AbgBMPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:55 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE4D42168B;
-        Thu, 13 Feb 2020 15:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 360B1246A4;
+        Thu, 13 Feb 2020 15:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607713;
-        bh=qNVJvkLk5QY4zMFf9zWqo7r205XJykyNObIRHrwIBPo=;
+        s=default; t=1581607555;
+        bh=K+s38cj5BHIKmV+617PonKL6SoRCkEgPvgG0+Aam/6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eSdhd21AsrVeBhBUaZ+REaI2tMFdnzhL7z43zMczyMMYYTx+/7hnyC7F2aH9Bx77R
-         w9nYGJ9S1BQbeVWQOlbBNxOZAQrIvcEALG6e2LvVrRSRhmfAWfWXz8s1v9HLdUtk0o
-         pqENeUCrUB1DNqxacNHEf8LLz1STEZ0xxhILv6FY=
+        b=WWqS6glmpMKny5sNxnwf7CgsAxhBQjIqBowz9TDlJ01oj+RNAi0eSlFaaaBp8BFeH
+         wee4LrgZCN0JysxSvVymlf/wl9aQNP8EfeHYzS3iZEPYRKzs3HqTz8lX3AWB73bvlu
+         Ha2xxZeMDcyN33jJUYj6voDJEmIadOLLJRuZ3JKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steven Clarkson <sc@lambdal.com>,
-        Borislav Petkov <bp@suse.de>, linux-acpi@vger.kernel.org,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 035/120] x86/boot: Handle malformed SRAT tables during early ACPI parsing
-Date:   Thu, 13 Feb 2020 07:20:31 -0800
-Message-Id: <20200213151913.733845018@linuxfoundation.org>
+Subject: [PATCH 4.14 140/173] rxrpc: Fix service call disconnection
+Date:   Thu, 13 Feb 2020 07:20:43 -0800
+Message-Id: <20200213152007.050589400@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,49 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Clarkson <sc@lambdal.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 2b73ea3796242608b4ccf019ff217156c92e92fe ]
+[ Upstream commit b39a934ec72fa2b5a74123891f25273a38378b90 ]
 
-Break an infinite loop when early parsing of the SRAT table is caused
-by a subtable with zero length. Known to affect the ASUS WS X299 SAGE
-motherboard with firmware version 1201 which has a large block of
-zeros in its SRAT table. The kernel could boot successfully on this
-board/firmware prior to the introduction of early parsing this table or
-after a BIOS update.
+The recent patch that substituted a flag on an rxrpc_call for the
+connection pointer being NULL as an indication that a call was disconnected
+puts the set_bit in the wrong place for service calls.  This is only a
+problem if a call is implicitly terminated by a new call coming in on the
+same connection channel instead of a terminating ACK packet.
 
- [ bp: Fixup whitespace damage and commit message. Make it return 0 to
-   denote that there are no immovable regions because who knows what
-   else is broken in this BIOS. ]
+In such a case, rxrpc_input_implicit_end_call() calls
+__rxrpc_disconnect_call(), which is now (incorrectly) setting the
+disconnection bit, meaning that when rxrpc_release_call() is later called,
+it doesn't call rxrpc_disconnect_call() and so the call isn't removed from
+the peer's error distribution list and the list gets corrupted.
 
-Fixes: 02a3e3cdb7f1 ("x86/boot: Parse SRAT table and count immovable memory regions")
-Signed-off-by: Steven Clarkson <sc@lambdal.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: linux-acpi@vger.kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206343
-Link: https://lkml.kernel.org/r/CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com
+KASAN finds the issue as an access after release on a call, but the
+position at which it occurs is confusing as it appears to be related to a
+different call (the call site is where the latter call is being removed
+from the error distribution list and either the next or pprev pointer
+points to a previously released call).
+
+Fix this by moving the setting of the flag from __rxrpc_disconnect_call()
+to rxrpc_disconnect_call() in the same place that the connection pointer
+was being cleared.
+
+Fixes: 5273a191dca6 ("rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/acpi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/rxrpc/conn_object.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 25019d42ae937..ef2ad7253cd5e 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -393,7 +393,13 @@ int count_immovable_mem_regions(void)
- 	table = table_addr + sizeof(struct acpi_table_srat);
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index 13b29e491de91..af02328205979 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -163,8 +163,6 @@ void __rxrpc_disconnect_call(struct rxrpc_connection *conn,
  
- 	while (table + sizeof(struct acpi_subtable_header) < table_end) {
-+
- 		sub_table = (struct acpi_subtable_header *)table;
-+		if (!sub_table->length) {
-+			debug_putstr("Invalid zero length SRAT subtable.\n");
-+			return 0;
-+		}
-+
- 		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
- 			struct acpi_srat_mem_affinity *ma;
+ 	_enter("%d,%x", conn->debug_id, call->cid);
+ 
+-	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+-
+ 	if (rcu_access_pointer(chan->call) == call) {
+ 		/* Save the result of the call so that we can repeat it if necessary
+ 		 * through the channel, whilst disposing of the actual call record.
+@@ -209,6 +207,7 @@ void rxrpc_disconnect_call(struct rxrpc_call *call)
+ 	__rxrpc_disconnect_call(conn, call);
+ 	spin_unlock(&conn->channel_lock);
+ 
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+ 	conn->idle_timestamp = jiffies;
+ }
  
 -- 
 2.20.1
