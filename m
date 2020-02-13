@@ -2,81 +2,93 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24BAC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB52C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9949F206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670BA206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:01:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sEQ+8hWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgBMVB0 (ORCPT
+        id S1728204AbgBMVBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:01:26 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42708 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgBMVBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:01:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 18BC8ADE4;
-        Thu, 13 Feb 2020 21:01:24 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id CAE2BDA703; Thu, 13 Feb 2020 22:01:09 +0100 (CET)
-Date:   Thu, 13 Feb 2020 22:01:09 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.9 089/116] btrfs: flush write bio if we loop in
- extent_write_cache_pages
-Message-ID: <20200213210109.GS2902@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200213151842.259660170@linuxfoundation.org>
- <20200213151917.511897953@linuxfoundation.org>
+        Thu, 13 Feb 2020 16:01:42 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:43008 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbgBMVBl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 16:01:41 -0500
+Received: from [10.137.112.97] (unknown [131.107.147.225])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9E23C20B9C02;
+        Thu, 13 Feb 2020 13:01:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E23C20B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1581627700;
+        bh=RlVWb6B2Yj5GqYRUZdm6taeMRNIqKiey+W202nGiIi8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sEQ+8hWw3mCob7DpFUrzstr0mHNKXIzgk7YCHHKxnad3EuL1PSvJ4/EcAn1fifSV4
+         e9DBmztMMlimpTymNMkLXIKDWemAl1hmLs3FCnMQ1As1aazzoK/UalcVXqAsLWWCOK
+         6yf3Faot+AUezvwkOFfltihcEeoEM0ONhClB3vj4=
+Subject: Re: [PATCH v3 2/3] IMA: Add log statements for failure conditions.
+To:     Mimi Zohar <zohar@linux.ibm.com>, joe@perches.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+ <20200211231414.6640-3-tusharsu@linux.microsoft.com>
+ <1581518823.8515.49.camel@linux.ibm.com>
+ <ce89d382-8e8b-71d0-5271-4db83d324f94@linux.microsoft.com>
+ <1581553311.8515.96.camel@linux.ibm.com>
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Message-ID: <c224c5a7-6e77-4ebf-7c91-2ec0c078a6f8@linux.microsoft.com>
+Date:   Thu, 13 Feb 2020 13:01:40 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151917.511897953@linuxfoundation.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <1581553311.8515.96.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:20:33AM -0800, Greg Kroah-Hartman wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
+
+
+On 2020-02-12 4:21 p.m., Mimi Zohar wrote:
+> On Wed, 2020-02-12 at 14:30 -0800, Tushar Sugandhi wrote:
+>>
+>> On 2020-02-12 6:47 a.m., Mimi Zohar wrote:
+>>> Hi Tushar,
+>>>
+>>> Please remove the period at the end of the  Subject line.
+>> Thanks. I will fix it in the next iteration.
+>>>
+>>> On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
+>>>> process_buffer_measurement() does not have log messages for failure
+>>>> conditions.
+>>>>
+>>>> This change adds a log statement in the above function.
+>>>
+>>> I agree some form of notification needs to be added.  The question is
+>>> whether the failure should be audited or a kernel message emitted.
+>>>    IMA emits audit messages (integrity_audit_msg) for a number of
+>>> reasons - on failure to calculate a file hash, invalid policy rules,
+>>> failure to communicate with the TPM, signature verification errors,
+>>> etc.
+>> I believe both IMA audit messages and kernel message should be emitted -
+>> for better discoverability and diagnosability.
 > 
-> [ Upstream commit 96bf313ecb33567af4cb53928b0c951254a02759 ]
-
-This commit does not exist in my tree, the correct upstream commit of
-the backported patch should be 42ffb0bf584ae5b6b38f72259af1e0ee417ac77f.
-
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -4060,6 +4060,14 @@ static int extent_write_cache_pages(struct extent_io_tree *tree,
->  		 */
->  		scanned = 1;
->  		index = 0;
-> +
-> +		/*
-> +		 * If we're looping we could run into a page that is locked by a
-> +		 * writer and that writer could be waiting on writeback for a
-> +		 * page in our current bio, and thus deadlock, so flush the
-> +		 * write bio here.
-> +		 */
-> +		flush_write_bio(data);
-
-This has been modified to apply, flush_write_bio does not return a value
-in 4.9, perhaps this led to the different commit id.
+> Like file measurement failures, failure to measure a key or the boot
+> command line should be audited as well.  For debugging purposes, you
+> could make this message pr_devel.
+Ok. I will change this to pr_devel in next iteration.
+> 
+> Mimi
+> 
