@@ -2,55 +2,57 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279C0C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D53C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EF72073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7363F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609108;
-	bh=p5Vka3MWRnnxWQWS9554okQybQol3sSg6zPQmh524Rw=;
+	s=default; t=1581609111;
+	bh=ekNF1XJ/qYgMN/nUl8sbw+VuaMbnXSJOcrNAXY7nZHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFSGBZuWZeM0HwehTNRjQ6lToEcU6eIvdF0MzkmaZyRjo7VjPfNEVa21LckeIgbIq
-	 473Yls+gRC+xXqO7F0KCBZaQIPQbDdlLTQrfDl7Jz8NHBHmMPuuLZqGDcIuM+KjHnI
-	 DvTdSpCaISQYqAu8UYu5tzXq0dvfo20zQuacfF9c=
+	b=X5ee1NSh2Ul77TxwbUtRl29NsjzVWH6VV9U8LvE73IHptnpSQcmAsfudGllDJwD9m
+	 ovjZU9OMnA7jXbYsGRuqVgTkPYZLkcdRPLOdrwijHNd2l4QOnf0cxnRUGNa1ua2uux
+	 3jwlt28VA/c8qgalijRi4uKJy9DsQDqhG4VqE9ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgBMP0L (ORCPT
+        id S1729540AbgBMPvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbgBMPYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:23 -0500
+        id S1728735AbgBMP0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:10 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC49C246B8;
-        Thu, 13 Feb 2020 15:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5424218AC;
+        Thu, 13 Feb 2020 15:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607462;
-        bh=p5Vka3MWRnnxWQWS9554okQybQol3sSg6zPQmh524Rw=;
+        s=default; t=1581607569;
+        bh=ekNF1XJ/qYgMN/nUl8sbw+VuaMbnXSJOcrNAXY7nZHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YC7Y4I2rxCAJjfmqvlpOlqpWVNh5nW9fDapWGm6Dj/RBGpaPOV0Oxm76m5BR7tAK+
-         LSNQfugA+K5FcIsLokWjyxan7XB50AVdFEfk4zGOed+iaAjwA+xImewJQvBJwhDnTj
-         fYMaqWGkB42uQ6v56z5/9swR3tu9lkk/1y6T+AQQ=
+        b=P9v7fv18oVA2fC+hLp8hTKZHuHtH64QujlwKs5DrufvT26b4CobVvmEueOLUznu61
+         fz/IcSYbyZDL7pzcpvN7Z2lFi15083ByHpyg+9zTOGhJHQdL3NPsBoYvz3VBIagUjp
+         bN2ZViApimxR5aMb2X+pclRIJlDGiPxMElQp8t4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qing Xu <m1s5p6688@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 113/116] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
-Date:   Thu, 13 Feb 2020 07:20:57 -0800
-Message-Id: <20200213151925.781939440@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 4.14 162/173] arm64: cpufeature: Fix the type of no FP/SIMD capability
+Date:   Thu, 13 Feb 2020 07:21:05 -0800
+Message-Id: <20200213152012.031049106@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,40 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qing Xu <m1s5p6688@gmail.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
+commit 449443c03d8cfdacf7313e17779a2594ebf87e6d upstream.
 
-mwifiex_ret_wmm_get_status() calls memcpy() without checking the
-destination size.Since the source is given from remote AP which
-contains illegal wmm elements , this may trigger a heap buffer
-overflow.
-Fix it by putting the length check before calling memcpy().
+The NO_FPSIMD capability is defined with scope SYSTEM, which implies
+that the "absence" of FP/SIMD on at least one CPU is detected only
+after all the SMP CPUs are brought up. However, we use the status
+of this capability for every context switch. So, let us change
+the scope to LOCAL_CPU to allow the detection of this capability
+as and when the first CPU without FP is brought up.
 
-Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Also, the current type allows hotplugged CPU to be brought up without
+FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
+up. Fix both of these issues by changing the capability to
+BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
+
+Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/marvell/mwifiex/wmm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/kernel/cpufeature.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index 9843560e784fe..c93fcafbcc7a6 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -980,6 +980,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
- 				    "WMM Parameter Set Count: %d\n",
- 				    wmm_param_ie->qos_info_bitmap & mask);
- 
-+			if (wmm_param_ie->vend_hdr.len + 2 >
-+				sizeof(struct ieee_types_wmm_parameter))
-+				break;
-+
- 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
- 			       wmm_ie, wmm_param_ie,
- 			       wmm_param_ie->vend_hdr.len + 2);
--- 
-2.20.1
-
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1103,7 +1103,7 @@ static const struct arm64_cpu_capabiliti
+ 	{
+ 		/* FP/SIMD is not implemented */
+ 		.capability = ARM64_HAS_NO_FPSIMD,
+-		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
+ 		.min_field_value = 0,
+ 		.matches = has_no_fpsimd,
+ 	},
 
 
