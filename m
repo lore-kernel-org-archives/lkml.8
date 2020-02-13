@@ -2,140 +2,102 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CF2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D965C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB48222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8ED24671
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HS53ME2s"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YBDWZ7Vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgBMSiy (ORCPT
+        id S1728496AbgBMSjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:38:54 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41323 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgBMSiy (ORCPT
+        Thu, 13 Feb 2020 13:39:16 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:47082 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgBMSjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:38:54 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d11so6649208qko.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:38:52 -0800 (PST)
+        Thu, 13 Feb 2020 13:39:16 -0500
+Received: by mail-qv1-f67.google.com with SMTP id y2so3060141qvu.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:39:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=a17QWj1zniloH0REZJQUIegjN8HppvvQ+Ig6IzvF8do=;
-        b=HS53ME2sfLQ5VWlmQANMJdrBmx0YnJNiUMA7+sYbLWdM67TxCv9cA5TwNEhoOEzy2N
-         Xdhvd2tHSOTJgXuzlGMrSDjTEv5NMD9FID/8cLUU5H51lti55aEctLL4ZS4g4jLzuYVD
-         G/pNRSioNCUxQyijxi3JTvu1W55/ZMVUChV0vU0ukefKNwYJU67rE7bN7zDYx1zdIpYk
-         3wH+UITUQcYaCznD5H9e/aeqyRwH5ft2N3B353eOVZh6m2e9S+bcnlcthB5Xxfl6SkyN
-         BIRJ0OLhITI6SevmBiyjqq4WZ/Ut7Ptph47R/7zGXnJ4NAlBZ+qS6d2mhRR84pE/SOO9
-         c+Vw==
+        bh=ckZLVESfEdYWN9scXv4QPDAyT2tf1XCLtTQVFWSOkak=;
+        b=YBDWZ7Vjv/V8lXoR2mBZRvRi/ceb+/qigcPTiv0Rc4HmE0bQMoDmskrHRs+kVLHUuK
+         WDqVZl8aQ5nbXSYtXpUZq2C26c8sXgjTs/PyMKLoYU1sdLrZ8lxFEUaKWWviQ+QNaGmK
+         cSWkcMZSlHZdJZCwZk3OE4E9K68A6yoRpkeEY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a17QWj1zniloH0REZJQUIegjN8HppvvQ+Ig6IzvF8do=;
-        b=GxxNGCdnGZcMSRT7LWT9DnEov3HNbhJLES12nY7QYglM+IBmqeMHotZqeXoTv7cPQk
-         8C/FINH7Ol7RJLjFQdCN+1psiZJfTImNfK6lZ7lZk1DJGV1orQAKXUVxsmLyOZzwbi6K
-         PCcFsZC6CBUGMFO6rz/zPUMmUqbi8eYb6subk9skAQcUFRv0nCsaMussoTNJk+bgN/lr
-         R6GMdbXBoxQmzIr/9/Fhf/81f70TkXtHnxo1Uilu6dx3Ybr6Hci8pvyU1yJYua9U/MN6
-         znTkAQgZ4MbXZ6hHzcGpH0e/ffVG/S9OU14OYXUXtDWqFtSw24iJoemG7VE7ZfqneqC9
-         1XtQ==
-X-Gm-Message-State: APjAAAU/cF62jfJodf6cQ8090EgCsj5nlsgGpN3yL7SKIGv5EK19o06L
-        5HCEQS7qsX+ou0g1rMZzoU1Ivw==
-X-Google-Smtp-Source: APXvYqxICfpcsXGiYMyltui3Hcrstw2xAu4flS/uLpnLoszxAn48DbC69Blmv74LyCm9/sceySctrg==
-X-Received: by 2002:a05:620a:b89:: with SMTP id k9mr16825057qkh.185.1581619131625;
-        Thu, 13 Feb 2020 10:38:51 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id k15sm1665277qkk.103.2020.02.13.10.38.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 10:38:51 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j2JNy-00029Y-KR; Thu, 13 Feb 2020 14:38:50 -0400
-Date:   Thu, 13 Feb 2020 14:38:50 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] IB/core: Replace zero-length array with flexible-array
- member
-Message-ID: <20200213183850.GM31668@ziepe.ca>
-References: <20200213183715.GA19636@embeddedor>
+        bh=ckZLVESfEdYWN9scXv4QPDAyT2tf1XCLtTQVFWSOkak=;
+        b=gIrnME/uqtWGg+xrxZ6W5oxLE8B05THPjg7j22mB9P4iR51JnVeWcmXuOPoXo8vnwC
+         tfFgZu70igfyYHPMTKJnMbaBgJRzPnFGAsGyNtT5CaAGqfZDHzHjKKRibzmFtHX4t9GQ
+         On+dPDLZOLw9SUAOeldq80UTzbhVJbgiROVwY0wQHPjKMZppK6h8hVtb6I/ON9rn4Eyr
+         QYnE7ta4tAqZ4vX7n4W2s/itvZBDMJUlgp6d4mmD+OZvsko2N52LQrXdW4D/1w+V4k4D
+         /i2Lb22WvC18hEbYWPLx7jV1uMhy9P77mYSE2IVFYSnIJrgD8BxoB8IWM/Focf7iAvuE
+         +DYw==
+X-Gm-Message-State: APjAAAXj6+1hY+BppEADQrI3rLHQtrBbZFTJCb+oM4EiolyXBhXASTMU
+        QhuQinNepvvH2WbHuWYt8QCbkQ==
+X-Google-Smtp-Source: APXvYqzHsVALJUWy/T7m4VimAf8+AVDbsjkwQvzvwe13sun3om/9nuVR4fubbIzWUDJvK8agPQGKeg==
+X-Received: by 2002:a05:6214:524:: with SMTP id x4mr25320787qvw.4.1581619154824;
+        Thu, 13 Feb 2020 10:39:14 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id x197sm1768089qkb.28.2020.02.13.10.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 10:39:14 -0800 (PST)
+Date:   Thu, 13 Feb 2020 13:39:14 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213183914.GB207225@google.com>
+References: <20200212210139.382424693@infradead.org>
+ <20200212210749.971717428@infradead.org>
+ <20200212232702.GA170680@google.com>
+ <20200213082814.GJ14897@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213183715.GA19636@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213082814.GJ14897@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:37:15PM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Thu, Feb 13, 2020 at 09:28:14AM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 12, 2020 at 06:27:02PM -0500, Joel Fernandes wrote:
+> > On Wed, Feb 12, 2020 at 10:01:42PM +0100, Peter Zijlstra wrote:
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> > > +#define trace_rcu_enter()					\
+> > > +({								\
+> > > +	unsigned long state = 0;				\
+> > > +	if (!rcu_is_watching())	{				\
+> > > +		if (in_nmi()) {					\
+> > > +			state = __TR_NMI;			\
+> > > +			rcu_nmi_enter();			\
+> > > +		} else {					\
+> > > +			state = __TR_IRQ;			\
+> > > +			rcu_irq_enter_irqsave();		\
+> > 
+> > Since rcu_irq_enter_irqsave can be called from a tracer context, should those
+> > be marked with notrace as well? AFAICS, there's no notrace marking on them.
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/infiniband/core/cache.c     | 2 +-
->  drivers/infiniband/core/cm.c        | 4 ++--
->  drivers/infiniband/core/multicast.c | 2 +-
->  drivers/infiniband/core/sa_query.c  | 2 +-
->  4 files changed, 5 insertions(+), 5 deletions(-)
+> It should work, these functions are re-entrant (as are IRQs / NMIs) and
+> Steve wants to be able to trace RCU itself.
 
-Any reason to skip these two?
+Hoping there are no recursion scenarios possible, but that sounds good to me. thanks,
 
-drivers/infiniband/core/mad_priv.h:     u8 mad[0];
-drivers/infiniband/core/mad_priv.h:     u8 data[0];
+ - Joel
 
-And may as well touch these in the subsystem headers too:
-
-include/rdma/ib_fmr_pool.h:     u64                 page_list[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/ib_verbs.h:        u8      real_sz[0];
-include/rdma/opa_vnic.h:        char *dev_priv[0];
-include/rdma/rdmavt_mr.h:       struct rvt_segarray *map[0];    /* the segments */
-include/rdma/rdmavt_qp.h:       struct rvt_sge sg_list[0];
-
-?
-
-Jason
