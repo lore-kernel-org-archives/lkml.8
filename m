@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87913C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFB6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDBC218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877C8206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607799;
-	bh=/CemN1ycka/MJsyzYlUU88+mA6n3Ug1qud/dFE15e/0=;
+	s=default; t=1581607801;
+	bh=p6JrbT3CgbN40TmXB28kT1XvH8v/sceqsNnGlOEqp48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eCF/d1geb2qBr1ITQdLNQ0LhN5MUKlaqP/2OSkBtbmYXjTMPVrnoUvl7CQmgnO/Ah
-	 LnwgdGYkjeOw2VPbpce10KrTyHAkIxmoJKKA3673PK0bSOkXkJJh9QyXT3DMLZwYTQ
-	 R5a8u75e4Ynm3S4/d5VJKg50xD1yH2obq6wMCThw=
+	b=zF2zo0P7lu57sWFRnZZBUkdJ8Ou3baGulZ1jqz89kioMBOMo48K66+xTXq2yIIl9S
+	 5trtCsJMYRrjXwpTMnN86r8WPcgf78e8S7lppYVKiv0GDC3HxD/0eeRbcspNcSFSl8
+	 yZMZWrFqoYGxZzro/PEILOlntHaQs+c4xZGHB4dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgBMP36 (ORCPT
+        id S1729741AbgBMPaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387420AbgBMP07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:59 -0500
+        id S2387638AbgBMP1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:01 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6775D24671;
-        Thu, 13 Feb 2020 15:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87D824676;
+        Thu, 13 Feb 2020 15:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607619;
-        bh=/CemN1ycka/MJsyzYlUU88+mA6n3Ug1qud/dFE15e/0=;
+        s=default; t=1581607620;
+        bh=p6JrbT3CgbN40TmXB28kT1XvH8v/sceqsNnGlOEqp48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZhif5vGj3YcE+nCJzszOAY9y4UV6Sf8KVZ/yjPNR8cwGhxMGEZQ7oCFkPVbqKGUh
-         dJjInSjwO86uLYGj8315kLIE4Ai4PkSuc+C3/ITGsJJyJorHWECKtWSuahUUu71Zt3
-         1ApWXPZPF/eFXi5k8qRbx6gCkF5VndiooimSN3VI=
+        b=132T4Gls7UQ1PjAnW172ogKLcv1RGC9EgH5PKoDsdehieiKFotHQMvOFVYEbUUfhB
+         lr2z/6LYaI9ECjJxJ5L+C7dv6U3p1SL0RsIH6Mj8k6rbiewnXnN6EGPposiHbmaS+I
+         WIUqOr7Y2P9CnTBbNY3xs0a8V0n33CGKwyepWnvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        stable@vger.kernel.org, Wesley Sheng <wesley.sheng@microchip.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.4 13/96] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
-Date:   Thu, 13 Feb 2020 07:20:20 -0800
-Message-Id: <20200213151844.419804126@linuxfoundation.org>
+Subject: [PATCH 5.4 15/96] PCI/switchtec: Use dma_set_mask_and_coherent()
+Date:   Thu, 13 Feb 2020 07:20:22 -0800
+Message-Id: <20200213151845.371550113@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,52 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Wesley Sheng <wesley.sheng@microchip.com>
 
-commit 8c386cc817878588195dde38e919aa6ba9409d58 upstream.
+commit aa82130a22f77c1aa5794703730304d035a0c1f4 upstream.
 
-In the implementation of pci_iov_add_virtfn() the allocated virtfn is
-leaked if pci_setup_device() fails. The error handling is not calling
-pci_stop_and_remove_bus_device(). Change the goto label to failed2.
+Use dma_set_mask_and_coherent() instead of dma_set_coherent_mask() as the
+Switchtec hardware fully supports 64bit addressing and we should set both
+the streaming and coherent masks the same.
 
-Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
-Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+[logang@deltatee.com: reworked commit message]
+Fixes: aff614c6339c ("switchtec: Set DMA coherent mask")
+Link: https://lore.kernel.org/r/20200106190337.2428-2-logang@deltatee.com
+Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/iov.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/pci/switch/switchtec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -187,10 +187,10 @@ int pci_iov_add_virtfn(struct pci_dev *d
- 	sprintf(buf, "virtfn%u", id);
- 	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1349,7 +1349,7 @@ static int switchtec_init_pci(struct swi
  	if (rc)
--		goto failed2;
-+		goto failed1;
- 	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+ 		return rc;
+ 
+-	rc = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
++	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
  	if (rc)
--		goto failed3;
-+		goto failed2;
+ 		return rc;
  
- 	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
- 
-@@ -198,11 +198,10 @@ int pci_iov_add_virtfn(struct pci_dev *d
- 
- 	return 0;
- 
--failed3:
--	sysfs_remove_link(&dev->dev.kobj, buf);
- failed2:
--	pci_stop_and_remove_bus_device(virtfn);
-+	sysfs_remove_link(&dev->dev.kobj, buf);
- failed1:
-+	pci_stop_and_remove_bus_device(virtfn);
- 	pci_dev_put(dev);
- failed0:
- 	virtfn_remove_bus(dev->bus, bus);
 
 
