@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C2C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7046EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2F220661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4952620661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608768;
-	bh=AzyPehGb52ECJ+zdCScD6NmW/QG6jNq0X+C2XumulvU=;
+	s=default; t=1581608770;
+	bh=Qm0xSLfvbGM27e3fE+H72stdknaIeAyPzTwdgyCF8Zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0N2P5YaaZQ4FqnlS0YtVq+ZW/2RL4khXUrfLE+I9vYAa9FZKMIZ4hFLLHnZalQFQh
-	 Tfa4cpKDQZCduJg4zzY5zib0wOUHIfuSG5PkyofqeSvUIcdALA8WULorEH1jmO2Wcw
-	 o569WH+jl3e142JZ9ugjcYKTHShLePy3u7H1rtLw=
+	b=i/LQuOn3Htb6DWcfdm2S/TKgZ2f2/INDtkOmYWcTZcuTVgbY8v84JbW2yLE4oZYky
+	 aY4IafQ7uLjjLwyXG7wXDHJzKj5sUZyjMwThRC95MSdyhwZhJ7JuTOhSxBptnlVH08
+	 HYM9L35w76eKEC65x2+KieNe3FQavCLQ59icsB14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgBMPqH (ORCPT
+        id S2387458AbgBMPqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:46:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:46:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgBMP1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:21 -0500
+        id S1729376AbgBMP1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:20 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 241042468D;
-        Thu, 13 Feb 2020 15:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCD7B24688;
+        Thu, 13 Feb 2020 15:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607641;
-        bh=AzyPehGb52ECJ+zdCScD6NmW/QG6jNq0X+C2XumulvU=;
+        s=default; t=1581607640;
+        bh=Qm0xSLfvbGM27e3fE+H72stdknaIeAyPzTwdgyCF8Zw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UD9RkW9ZPiByenwQGM5HJNouJp1Kw4K5aUAfD9URzEiDlqb40CM6aEUaoYLqujZ7e
-         sXI9klPcv34wAX3PmUxyBuwTUfSHP05LEObI9hLT0W2+IE8Pa9ruxvFjq1YLvDc97M
-         uwGwz8/+NQEldGUcK8KcFvQXPt6tG5/RgZVJnZd4=
+        b=2IvL2G7fQaZL1o7Po45erV/lVgSsPC9CrgTvuDtK3LsV3HIv6Xd9uPhVzaIwnwKr4
+         P+SDlJcS+Pfx90mfI/aeq0IcvuLXw68Qh8RzS0CDcTSGI4xx4p7vjubw6Dd+IhDHeZ
+         22KIwjbMlu+VP+mhXIGOF66DHhtEtyXBgi+wwyIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 5.4 47/96] ARM: dts: meson8: use the actual frequency for the GPUs 182.1MHz OPP
-Date:   Thu, 13 Feb 2020 07:20:54 -0800
-Message-Id: <20200213151857.588130768@linuxfoundation.org>
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 5.4 37/96] rtc: cmos: Stop using shared IRQ
+Date:   Thu, 13 Feb 2020 07:20:44 -0800
+Message-Id: <20200213151853.571492440@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,38 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit fe634a7a9a57fb736e39fb71aa9adc6448a90f94 upstream.
+commit b6da197a2e9670df6f07e6698629e9ce95ab614e upstream.
 
-The clock setup on Meson8 cannot achieve a Mali frequency of exactly
-182.15MHz. The vendor driver uses "FCLK_DIV7 / 2" for this frequency,
-which translates to 2550MHz / 7 / 2 = 182142857Hz.
-Update the GPU operating point to that specific frequency to not confuse
-myself when comparing the frequency from the .dts with the actual clock
-rate on the system.
+As reported by Guilherme G. Piccoli:
 
-Fixes: 7d3f6b536e72c9 ("ARM: dts: meson8: add the Mali-450 MP6 GPU")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+---8<---8<---8<---
+
+The rtc-cmos interrupt setting was changed in the commit 079062b28fb4
+("rtc: cmos: prevent kernel warning on IRQ flags mismatch") in order
+to allow shared interrupts; according to that commit's description,
+some machine got kernel warnings due to the interrupt line being shared
+between rtc-cmos and other hardware, and rtc-cmos didn't allow IRQ sharing
+that time.
+
+After the aforementioned commit though it was observed a huge increase
+in lost HPET interrupts in some systems, observed through the following
+kernel message:
+
+[...] hpet1: lost 35 rtc interrupts
+
+After investigation, it was narrowed down to the shared interrupts
+usage when having the kernel option "irqpoll" enabled. In this case,
+all IRQ handlers are called for non-timer interrupts, if such handlers
+are setup in shared IRQ lines. The rtc-cmos IRQ handler could be set to
+hpet_rtc_interrupt(), which will produce the kernel "lost interrupts"
+message after doing work - lots of readl/writel to HPET registers, which
+are known to be slow.
+
+Although "irqpoll" is not a default kernel option, it's used in some contexts,
+one being the kdump kernel (which is an already "impaired" kernel usually
+running with 1 CPU available), so the performance burden could be considerable.
+Also, the same issue would happen (in a shorter extent though) when using
+"irqfixup" kernel option.
+
+In a quick experiment, a virtual machine with uptime of 2 minutes produced
+>300 calls to hpet_rtc_interrupt() when "irqpoll" was set, whereas without
+sharing interrupts this number reduced to 1 interrupt. Machines with more
+hardware than a VM should generate even more unnecessary HPET interrupts
+in this scenario.
+
+---8<---8<---8<---
+
+After looking into the rtc-cmos driver history and DSDT table from
+the Microsoft Surface 3, we may notice that Hans de Goede submitted
+a correct fix (see dependency below). Thus, we simply revert
+the culprit commit.
+
+Fixes: 079062b28fb4 ("rtc: cmos: prevent kernel warning on IRQ flags mismatch")
+Depends-on: a1e23a42f1bd ("rtc: cmos: Do not assume irq 8 for rtc when there are no legacy irqs")
+Reported-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200123131437.28157-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/meson8.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-cmos.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -129,8 +129,8 @@
- 	gpu_opp_table: gpu-opp-table {
- 		compatible = "operating-points-v2";
+--- a/drivers/rtc/rtc-cmos.c
++++ b/drivers/rtc/rtc-cmos.c
+@@ -850,7 +850,7 @@ cmos_do_probe(struct device *dev, struct
+ 			rtc_cmos_int_handler = cmos_interrupt;
  
--		opp-182150000 {
--			opp-hz = /bits/ 64 <182150000>;
-+		opp-182142857 {
-+			opp-hz = /bits/ 64 <182142857>;
- 			opp-microvolt = <1150000>;
- 		};
- 		opp-318750000 {
+ 		retval = request_irq(rtc_irq, rtc_cmos_int_handler,
+-				IRQF_SHARED, dev_name(&cmos_rtc.rtc->dev),
++				0, dev_name(&cmos_rtc.rtc->dev),
+ 				cmos_rtc.rtc);
+ 		if (retval < 0) {
+ 			dev_dbg(dev, "IRQ %d is already in use\n", rtc_irq);
 
 
