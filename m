@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A72C3B18F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A86C3B191
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39B4218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733DF217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgBMWF1 (ORCPT
+        id S1728242AbgBMWFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:05:27 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58160 "EHLO
+        Thu, 13 Feb 2020 17:05:04 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60834 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgBMWFH (ORCPT
+        with ESMTP id S1728051AbgBMWFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:05:07 -0500
+        Thu, 13 Feb 2020 17:05:03 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 9838aecf9c4dd2d0; Thu, 13 Feb 2020 23:05:04 +0100
+ id fc8c1af34e20b89f; Thu, 13 Feb 2020 23:05:01 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Len Brown <len.brown@intel.com>,
@@ -30,9 +30,9 @@ Cc:     Len Brown <len.brown@intel.com>,
         Zhang Rui <rui.zhang@intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 3/9] intel_idle: Relocate definitions of cpuidle callbacks
-Date:   Thu, 13 Feb 2020 23:00:26 +0100
-Message-ID: <2912140.PDVJEUYNKe@kreacher>
+Subject: [PATCH 8/9] intel_idle: Define CPUIDLE_FLAG_TLB_FLUSHED as BIT(16)
+Date:   Thu, 13 Feb 2020 23:03:51 +0100
+Message-ID: <15991455.PHIGOLi8R1@kreacher>
 In-Reply-To: <2960689.qre192dJKD@kreacher>
 References: <2960689.qre192dJKD@kreacher>
 MIME-Version: 1.0
@@ -45,197 +45,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Move the definitions of intel_idle() and intel_idle_s2idle() before
-the definitions of cpuidle_state structures referring to them to
-avoid having to use additional declarations of them (and drop those
-declarations).
+Use the BIT() macro for defining CPUIDLE_FLAG_TLB_FLUSHED instead of
+the hex bit encoding of the same value.
 
-No functional impact.
+No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/idle/intel_idle.c | 154 ++++++++++++++++++++++------------------------
- 1 file changed, 75 insertions(+), 79 deletions(-)
+ drivers/idle/intel_idle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 5adc058c705d..e0332d567735 100644
+index 9575615c8f4a..de1367d996c5 100644
 --- a/drivers/idle/intel_idle.c
 +++ b/drivers/idle/intel_idle.c
-@@ -83,10 +83,6 @@ struct idle_cpu {
- 
- static const struct idle_cpu *icpu;
- static struct cpuidle_device __percpu *intel_idle_cpuidle_devices;
--static int intel_idle(struct cpuidle_device *dev,
--			struct cpuidle_driver *drv, int index);
--static void intel_idle_s2idle(struct cpuidle_device *dev,
--			      struct cpuidle_driver *drv, int index);
- static struct cpuidle_state *cpuidle_state_table;
+@@ -101,7 +101,7 @@ static unsigned int mwait_substates __initdata;
+  * If this flag is set, SW flushes the TLB, so even if the
+  * HW doesn't do the flushing, this flag is safe to use.
+  */
+-#define CPUIDLE_FLAG_TLB_FLUSHED	0x10000
++#define CPUIDLE_FLAG_TLB_FLUSHED	BIT(16)
  
  /*
-@@ -112,6 +108,81 @@ static struct cpuidle_state *cpuidle_state_table;
- #define flg2MWAIT(flags) (((flags) >> 24) & 0xFF)
- #define MWAIT2flg(eax) ((eax & 0xFF) << 24)
- 
-+/**
-+ * intel_idle - Ask the processor to enter the given idle state.
-+ * @dev: cpuidle device of the target CPU.
-+ * @drv: cpuidle driver (assumed to point to intel_idle_driver).
-+ * @index: Target idle state index.
-+ *
-+ * Use the MWAIT instruction to notify the processor that the CPU represented by
-+ * @dev is idle and it can try to enter the idle state corresponding to @index.
-+ *
-+ * If the local APIC timer is not known to be reliable in the target idle state,
-+ * enable one-shot tick broadcasting for the target CPU before executing MWAIT.
-+ *
-+ * Optionally call leave_mm() for the target CPU upfront to avoid wakeups due to
-+ * flushing user TLBs.
-+ *
-+ * Must be called under local_irq_disable().
-+ */
-+static __cpuidle int intel_idle(struct cpuidle_device *dev,
-+				struct cpuidle_driver *drv, int index)
-+{
-+	struct cpuidle_state *state = &drv->states[index];
-+	unsigned long eax = flg2MWAIT(state->flags);
-+	unsigned long ecx = 1; /* break on interrupt flag */
-+	bool uninitialized_var(tick);
-+	int cpu = smp_processor_id();
-+
-+	/*
-+	 * leave_mm() to avoid costly and often unnecessary wakeups
-+	 * for flushing the user TLB's associated with the active mm.
-+	 */
-+	if (state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
-+		leave_mm(cpu);
-+
-+	if (!static_cpu_has(X86_FEATURE_ARAT) && !lapic_timer_always_reliable) {
-+		/*
-+		 * Switch over to one-shot tick broadcast if the target C-state
-+		 * is deeper than C1.
-+		 */
-+		if ((eax >> MWAIT_SUBSTATE_SIZE) & MWAIT_CSTATE_MASK) {
-+			tick = true;
-+			tick_broadcast_enter();
-+		} else {
-+			tick = false;
-+		}
-+	}
-+
-+	mwait_idle_with_hints(eax, ecx);
-+
-+	if (!static_cpu_has(X86_FEATURE_ARAT) && tick)
-+		tick_broadcast_exit();
-+
-+	return index;
-+}
-+
-+/**
-+ * intel_idle_s2idle - Ask the processor to enter the given idle state.
-+ * @dev: cpuidle device of the target CPU.
-+ * @drv: cpuidle driver (assumed to point to intel_idle_driver).
-+ * @index: Target idle state index.
-+ *
-+ * Use the MWAIT instruction to notify the processor that the CPU represented by
-+ * @dev is idle and it can try to enter the idle state corresponding to @index.
-+ *
-+ * Invoked as a suspend-to-idle callback routine with frozen user space, frozen
-+ * scheduler tick and suspended scheduler clock on the target CPU.
-+ */
-+static __cpuidle void intel_idle_s2idle(struct cpuidle_device *dev,
-+					struct cpuidle_driver *drv, int index)
-+{
-+	unsigned long eax = flg2MWAIT(drv->states[index].flags);
-+	unsigned long ecx = 1; /* break on interrupt flag */
-+
-+	mwait_idle_with_hints(eax, ecx);
-+}
-+
- /*
-  * States are indexed by the cstate number,
-  * which is also the index into the MWAIT hint array.
-@@ -891,81 +962,6 @@ static struct cpuidle_state dnv_cstates[] = {
- 		.enter = NULL }
- };
- 
--/**
-- * intel_idle - Ask the processor to enter the given idle state.
-- * @dev: cpuidle device of the target CPU.
-- * @drv: cpuidle driver (assumed to point to intel_idle_driver).
-- * @index: Target idle state index.
-- *
-- * Use the MWAIT instruction to notify the processor that the CPU represented by
-- * @dev is idle and it can try to enter the idle state corresponding to @index.
-- *
-- * If the local APIC timer is not known to be reliable in the target idle state,
-- * enable one-shot tick broadcasting for the target CPU before executing MWAIT.
-- *
-- * Optionally call leave_mm() for the target CPU upfront to avoid wakeups due to
-- * flushing user TLBs.
-- *
-- * Must be called under local_irq_disable().
-- */
--static __cpuidle int intel_idle(struct cpuidle_device *dev,
--				struct cpuidle_driver *drv, int index)
--{
--	struct cpuidle_state *state = &drv->states[index];
--	unsigned long eax = flg2MWAIT(state->flags);
--	unsigned long ecx = 1; /* break on interrupt flag */
--	bool uninitialized_var(tick);
--	int cpu = smp_processor_id();
--
--	/*
--	 * leave_mm() to avoid costly and often unnecessary wakeups
--	 * for flushing the user TLB's associated with the active mm.
--	 */
--	if (state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
--		leave_mm(cpu);
--
--	if (!static_cpu_has(X86_FEATURE_ARAT) && !lapic_timer_always_reliable) {
--		/*
--		 * Switch over to one-shot tick broadcast if the target C-state
--		 * is deeper than C1.
--		 */
--		if ((eax >> MWAIT_SUBSTATE_SIZE) & MWAIT_CSTATE_MASK) {
--			tick = true;
--			tick_broadcast_enter();
--		} else {
--			tick = false;
--		}
--	}
--
--	mwait_idle_with_hints(eax, ecx);
--
--	if (!static_cpu_has(X86_FEATURE_ARAT) && tick)
--		tick_broadcast_exit();
--
--	return index;
--}
--
--/**
-- * intel_idle_s2idle - Ask the processor to enter the given idle state.
-- * @dev: cpuidle device of the target CPU.
-- * @drv: cpuidle driver (assumed to point to intel_idle_driver).
-- * @index: Target idle state index.
-- *
-- * Use the MWAIT instruction to notify the processor that the CPU represented by
-- * @dev is idle and it can try to enter the idle state corresponding to @index.
-- *
-- * Invoked as a suspend-to-idle callback routine with frozen user space, frozen
-- * scheduler tick and suspended scheduler clock on the target CPU.
-- */
--static __cpuidle void intel_idle_s2idle(struct cpuidle_device *dev,
--					struct cpuidle_driver *drv, int index)
--{
--	unsigned long eax = flg2MWAIT(drv->states[index].flags);
--	unsigned long ecx = 1; /* break on interrupt flag */
--
--	mwait_idle_with_hints(eax, ecx);
--}
--
- static const struct idle_cpu idle_cpu_nehalem = {
- 	.state_table = nehalem_cstates,
- 	.auto_demotion_disable_flags = NHM_C1_AUTO_DEMOTE | NHM_C3_AUTO_DEMOTE,
+  * MWAIT takes an 8-bit "hint" in EAX "suggesting"
 -- 
 2.16.4
 
