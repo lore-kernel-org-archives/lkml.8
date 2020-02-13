@@ -2,127 +2,120 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CECAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C77FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19561218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F96218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="d/kPtkI1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B/JO0TEx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgBMMrl (ORCPT
+        id S1729966AbgBMMsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:47:41 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:40306 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbgBMMrk (ORCPT
+        Thu, 13 Feb 2020 07:48:03 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34050 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729934AbgBMMsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 07:47:40 -0500
-Received: by mail-ua1-f66.google.com with SMTP id g13so2200916uab.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 04:47:39 -0800 (PST)
+        Thu, 13 Feb 2020 07:48:03 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x7so6448590ljc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 04:48:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9oy1TQ4c1/kXbmr4BqUIxSWOruEHkmefnsn2cXhY8GI=;
-        b=d/kPtkI1Bf+wOmHtFluHQL9zwvFpmUqimDwOEHVuDq+h3190eH+3fmlMnouS7EVOe6
-         i8tmfqAlcls2SSnlKqmGPnK1pp6AaXe/waW/T4ol169mqsa1+9rJtvKA/G8++BG60MNB
-         uMyjapfqvO/CzlKxOO6dm8IQiZtKhQO6lNWTblhv5pYSjncM/tqhTBKKjWM8TnEw4npD
-         asAx0Ccjcw8s6WwNcyLM2mc40Fy7pcutNwqoxRdMax7I0ZmttnepA5ZDmtWNaTiJnqfi
-         VH9IfyRpKjwvLbUfdCqmUBfi46DPNZny932JGl+i6Ujk/0SIIX7vGYCneIRFeE4J/gJ8
-         dnVw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ozcJGd45GZHFrAOdAe8Frh6X5osTbMchVYGqh4Wj1Fs=;
+        b=B/JO0TEx2I6E6Km70y+FfnCM3t+xURsU2UCYhNCSFbBsLyLKy26Buw12qgXWn9UpeP
+         ITahbw266K0QszVx7+MyMU4r7trYXejORoyp/E44C6dbjjLCLqPeQcqK5z5Z7EHTF/O/
+         PH5oCl8TZbZ8XpAdnpy7zPCsVTIh/qeFFDEOoUn8gimId5GzLKQTSXLxgGWSW+RHddGt
+         3QP22AmkRVTzLMUZsHhTO1tdTzO7RdwlJnUQ6W/drRdyMlilByJp6xrnObOagjeVfWaP
+         2QXzzMKf3w5+jltwy1qoQY7RN+VpAULo8W6wsHbS9JFGSDGkxThyo47tqlWunQ9ZXgD6
+         k5Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9oy1TQ4c1/kXbmr4BqUIxSWOruEHkmefnsn2cXhY8GI=;
-        b=HQ5PfJcE5uo0kjgiuOQZ7Dt9Kd5C8mqbx17V1XIWBGxf8+md4dFoFEH4ZhmDZd5+Sa
-         Mabs0BO7i7O8blZhugPu7/USpbSKzJw4dCZmHjyDoYCIYX+lMbWdouNGqHqt/h4gJmy6
-         oWECH5axCeHP6a02nO9dOe0FrAsmktOBPy2MNdnqt8lHVE9Tw1Vl9HxU3t5pm1d/hJrK
-         FQbzfb7wzISF59yK2uuSS68H3e8x/WkH8T3gtjpIaVCip0m/Jt5WDpyYaCXhfaOmhp83
-         UpmkaiT5O+xFpehWVhbIpaOvxnbJef+k1ZHRX4e0KuMDAicnvLKdAH4CuMqd3twNr7fh
-         WQWA==
-X-Gm-Message-State: APjAAAVVbTZ83mm2naXPySuouOVPgqyLrfzLQ0a0sW5/GvHrvEgoz89M
-        Pi2GAJT913i6OqFRfFWg+q4hlCNYJniQaTpEimNA8A==
-X-Google-Smtp-Source: APXvYqzFeC0tJWAgAkTgwCcBVMOqPtaNCrUrLZOWi/RTrU5OwHVOiE/AUbue8lYQF7NptbC17slU6AV+U+pkZzXHUcc=
-X-Received: by 2002:ab0:1849:: with SMTP id j9mr6881047uag.77.1581598058351;
- Thu, 13 Feb 2020 04:47:38 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ozcJGd45GZHFrAOdAe8Frh6X5osTbMchVYGqh4Wj1Fs=;
+        b=mlHC5OqXZpMUMOmi6tUv4oiLQiBkpxf3cUWRQJsOJ3c37zYlMbV8cjUQHLeVvYEqBu
+         ozOn3ovSKn79oetCD6m3/K0cUzB/TAzujUTj2aLcLCB5Y54S10BDrVNzRp4Kr3SCMbuH
+         fILdtdFlsXVPUDd/EF22eepMDHk3pESGCaHOR5piec0h7DcJ3R0hCh94uITixjVvesMI
+         oGvkVwP0r8YRLzMqfwDL4kAgr0l311j/hQQYgU0aPefoKKYSLRAr1WhrtUD+6ezIAY9T
+         0ETe2DII0OHLhWRkaZ8y7fJJJ4RvgRwDMwaD2t0C3UkQIfSSoYySIieHstlRZeTgWDsy
+         XraA==
+X-Gm-Message-State: APjAAAXsaSVmF2k1d0pvOrU7N67h27gy/EWHTR57Y+eXBQUYwp6v0lol
+        3ibUBALI6o9sLyvvBw1hDZnQZw==
+X-Google-Smtp-Source: APXvYqwUJi048wT/Yp5QqvS8Zhw9mcyVtQ1iP9VeSnCknwW2zckQ1bFjaEdLBgw53TlhJMNk+DoHcg==
+X-Received: by 2002:a2e:548:: with SMTP id 69mr11541731ljf.67.1581598081439;
+        Thu, 13 Feb 2020 04:48:01 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id z205sm1216137lfa.52.2020.02.13.04.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 04:48:00 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] irqchip: vic: Support cascaded VIC in device tree
+Date:   Thu, 13 Feb 2020 13:47:57 +0100
+Message-Id: <20200213124757.35385-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org> <1580250967-4386-6-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1580250967-4386-6-git-send-email-thara.gopinath@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 13 Feb 2020 18:17:26 +0530
-Message-ID: <CAHLCerM1SeZWZa3-1bjtZHS-d1d9=yKGDt=ZQTpbYqPZFBGwkg@mail.gmail.com>
-Subject: Re: [Patch v9 5/8] sched/fair: update cpu_capacity to reflect thermal pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>, qperret@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>, corbet@lwn.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 4:06 AM Thara Gopinath
-<thara.gopinath@linaro.org> wrote:
->
-> cpu_capacity initially reflects the maximum possible capacity of a cpu.
-> Thermal pressure on a cpu means this maximum possible capacity is
-> unavailable due to thermal events. This patch subtracts the average thermal
-> pressure for a cpu from its maximum possible capacity so that cpu_capacity
-> reflects the actual maximum currently available capacity.
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->
-> v8->v9:
->         - Use thermal_load_avg to read rq->avg_thermal.load_avg.
->
->  kernel/sched/fair.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 5f58c03..d879077 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7753,8 +7753,15 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
->         if (unlikely(irq >= max))
->                 return 1;
->
-> +       /*
-> +        * avg_rt.util avg and avg_dl.util track binary signals
+When transitioning some elder platforms to device tree it
+becomes necessary to cascade VIC IRQ chips off another
+interrupt controller.
 
-For avg_rt, s/util avg/util_avg/
-For avg_dl, s/util/util_avg/    ?
+Tested with the cascaded VIC on the Integrator/AP attached
+logic module IM-PD1.
 
-> +        * (running and not running) with weights 0 and 1024 respectively.
-> +        * avg_thermal.load_avg tracks thermal pressure and the weighted
-> +        * average uses the actual delta max capacity(load).
-> +        */
->         used = READ_ONCE(rq->avg_rt.util_avg);
->         used += READ_ONCE(rq->avg_dl.util_avg);
-> +       used += thermal_load_avg(rq);
->
->         if (unlikely(used >= max))
->                 return 1;
-> --
-> 2.1.4
->
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/irqchip/irq-vic.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/irqchip/irq-vic.c b/drivers/irqchip/irq-vic.c
+index f3f20a3cff50..caff21b4bac6 100644
+--- a/drivers/irqchip/irq-vic.c
++++ b/drivers/irqchip/irq-vic.c
+@@ -509,9 +509,7 @@ static int __init vic_of_init(struct device_node *node,
+ 	void __iomem *regs;
+ 	u32 interrupt_mask = ~0;
+ 	u32 wakeup_mask = ~0;
+-
+-	if (WARN(parent, "non-root VICs are not supported"))
+-		return -EINVAL;
++	int parent_irq = 0;
+ 
+ 	regs = of_iomap(node, 0);
+ 	if (WARN_ON(!regs))
+@@ -519,11 +517,14 @@ static int __init vic_of_init(struct device_node *node,
+ 
+ 	of_property_read_u32(node, "valid-mask", &interrupt_mask);
+ 	of_property_read_u32(node, "valid-wakeup-mask", &wakeup_mask);
++	parent_irq = of_irq_get(node, 0);
++	if (parent_irq < 0)
++		parent_irq = 0;
+ 
+ 	/*
+ 	 * Passing 0 as first IRQ makes the simple domain allocate descriptors
+ 	 */
+-	__vic_init(regs, 0, 0, interrupt_mask, wakeup_mask, node);
++	__vic_init(regs, parent_irq, 0, interrupt_mask, wakeup_mask, node);
+ 
+ 	return 0;
+ }
+-- 
+2.23.0
+
