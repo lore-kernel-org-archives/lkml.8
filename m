@@ -2,52 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B0BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9BEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194D420661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2695E24649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608654;
-	bh=rRVGBJoAk4p4b9bDiH9vGGzq0KWGMCjQPhZI4jrpP8U=;
+	s=default; t=1581608656;
+	bh=7pTrDl4Glr3gTU6VkEdKIMfPGLAXrN9ECWaFuKi4I4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1wXkxuxMYnHJy7kLz4UMbwx+vIwgxb1RzyiZx9YR3OfDfHynQNtqjnFLI5ElrGr7v
-	 ALypgVvB90K5UlHjBy+Euuytgfw1ubmanvoh63T5HuE7ETM/KmbO0f5rIuDAY7oJhK
-	 USKUupi3zPaJBPeBj69j4fpz2wC3r0n2XAnjpS40=
+	b=Z+LHdj/hx4cqYsjwVMxW5tCmxKpX9Bv4k66tvcqoz4SfKwPLlJi4bq0IeH2eG/6h9
+	 MCOspEktnQXk4zPHifzc7PSwyEFGcss7betHd0SCpPKEQpyKUZJa+X/4FQEfMGQmVV
+	 c7lcsbnIZgwsLlE0BWf6BsoInEaTKwreoBSeX9ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387876AbgBMPoN (ORCPT
+        id S1729555AbgBMPoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:44:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbgBMP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728877AbgBMP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:27:45 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF36224670;
-        Thu, 13 Feb 2020 15:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99649206DB;
+        Thu, 13 Feb 2020 15:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607665;
-        bh=rRVGBJoAk4p4b9bDiH9vGGzq0KWGMCjQPhZI4jrpP8U=;
+        s=default; t=1581607663;
+        bh=7pTrDl4Glr3gTU6VkEdKIMfPGLAXrN9ECWaFuKi4I4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uUn2bypk6DAnv9HmuFoKttHAMaxbB+QSZgEp2y6ZDIQFS0rFVNFsHJbDxMAFXT+zG
-         thDgl+5IpSvOQ6GO9y5vGheXzqylvo5FswpInl2cMrsmBQNMWAkXgLmlu3+pFVyPFB
-         G/tTdlJqHI7AIq7P2BsRFsoS6bAt8y8zy6XLLCnQ=
+        b=S+0dk9/1K6Z5cwTScYc2s2cF74EhopEayHbQLv0aNtGGxV5Jsj/1YBN4lRUx7I4nP
+         1+hwIUb+uYkpxYYCsXuNxoE3je5VMHxvR39tMjMpi5h2CUyVbt16QYEJVVtUYooew/
+         1eFt+bQZUWWTcFwuNWg1lhLIseZ7h8xwJeWwHnfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.4 85/96] selinux: revert "stop passing MAY_NOT_BLOCK to the AVC upon follow_link"
-Date:   Thu, 13 Feb 2020 07:21:32 -0800
-Message-Id: <20200213151911.147099125@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 75/96] mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
+Date:   Thu, 13 Feb 2020 07:21:22 -0800
+Message-Id: <20200213151907.725499694@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,94 +60,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <sds@tycho.nsa.gov>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 1a37079c236d55fb31ebbf4b59945dab8ec8764c upstream.
+commit 0e7ca83e82d021c928dadf4c13c137d57337540d upstream.
 
-This reverts commit e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK
-to the AVC upon follow_link"). The correct fix is to instead fall
-back to ref-walk if audit is required irrespective of the specific
-audit data type.  This is done in the next commit.
+Clang warns:
 
-Fixes: e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK to the AVC upon follow_link")
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+../drivers/mtd/nand/onenand/onenand_base.c:1269:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        while (!ret) {
+        ^
+../drivers/mtd/nand/onenand/onenand_base.c:1266:2: note: previous
+statement is here
+        if (column + thislen > writesize)
+        ^
+1 warning generated.
+
+This warning occurs because there is a space before the tab of the while
+loop. There are spaces at the beginning of a lot of the lines in this
+block, remove them so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+Fixes: a8de85d55700 ("[MTD] OneNAND: Implement read-while-load")
+Link: https://github.com/ClangBuiltLinux/linux/issues/794
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/selinux/avc.c         |   24 ++++++++++++++++++++++--
- security/selinux/hooks.c       |    5 +++--
- security/selinux/include/avc.h |    5 +++++
- 3 files changed, 30 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/onenand/onenand_base.c |   82 ++++++++++++++++----------------
+ 1 file changed, 41 insertions(+), 41 deletions(-)
 
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -862,8 +862,9 @@ static int avc_update_node(struct selinu
- 	 * permissive mode that only appear when in enforcing mode.
- 	 *
- 	 * See the corresponding handling in slow_avc_audit(), and the
--	 * logic in selinux_inode_permission for the MAY_NOT_BLOCK flag,
--	 * which is transliterated into AVC_NONBLOCKING.
-+	 * logic in selinux_inode_follow_link and selinux_inode_permission
-+	 * for the VFS MAY_NOT_BLOCK flag, which is transliterated into
-+	 * AVC_NONBLOCKING for avc_has_perm_noaudit().
- 	 */
- 	if (flags & AVC_NONBLOCKING)
- 		return 0;
-@@ -1203,6 +1204,25 @@ int avc_has_perm(struct selinux_state *s
- 	if (rc2)
- 		return rc2;
- 	return rc;
-+}
-+
-+int avc_has_perm_flags(struct selinux_state *state,
-+		       u32 ssid, u32 tsid, u16 tclass, u32 requested,
-+		       struct common_audit_data *auditdata,
-+		       int flags)
-+{
-+	struct av_decision avd;
-+	int rc, rc2;
-+
-+	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested,
-+				  (flags & MAY_NOT_BLOCK) ? AVC_NONBLOCKING : 0,
-+				  &avd);
-+
-+	rc2 = avc_audit(state, ssid, tsid, tclass, requested, &avd, rc,
-+			auditdata, flags);
-+	if (rc2)
-+		return rc2;
-+	return rc;
- }
+--- a/drivers/mtd/nand/onenand/onenand_base.c
++++ b/drivers/mtd/nand/onenand/onenand_base.c
+@@ -1248,44 +1248,44 @@ static int onenand_read_ops_nolock(struc
  
- u32 avc_policy_seqno(struct selinux_state *state)
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3008,8 +3008,9 @@ static int selinux_inode_follow_link(str
- 	if (IS_ERR(isec))
- 		return PTR_ERR(isec);
+ 	stats = mtd->ecc_stats;
  
--	return avc_has_perm(&selinux_state,
--			    sid, isec->sid, isec->sclass, FILE__READ, &ad);
-+	return avc_has_perm_flags(&selinux_state,
-+				  sid, isec->sid, isec->sclass, FILE__READ, &ad,
-+				  rcu ? MAY_NOT_BLOCK : 0);
- }
+- 	/* Read-while-load method */
++	/* Read-while-load method */
  
- static noinline int audit_inode_permission(struct inode *inode,
---- a/security/selinux/include/avc.h
-+++ b/security/selinux/include/avc.h
-@@ -153,6 +153,11 @@ int avc_has_perm(struct selinux_state *s
- 		 u32 ssid, u32 tsid,
- 		 u16 tclass, u32 requested,
- 		 struct common_audit_data *auditdata);
-+int avc_has_perm_flags(struct selinux_state *state,
-+		       u32 ssid, u32 tsid,
-+		       u16 tclass, u32 requested,
-+		       struct common_audit_data *auditdata,
-+		       int flags);
+- 	/* Do first load to bufferRAM */
+- 	if (read < len) {
+- 		if (!onenand_check_bufferram(mtd, from)) {
++	/* Do first load to bufferRAM */
++	if (read < len) {
++		if (!onenand_check_bufferram(mtd, from)) {
+ 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
+- 			ret = this->wait(mtd, FL_READING);
+- 			onenand_update_bufferram(mtd, from, !ret);
++			ret = this->wait(mtd, FL_READING);
++			onenand_update_bufferram(mtd, from, !ret);
+ 			if (mtd_is_eccerr(ret))
+ 				ret = 0;
+- 		}
+- 	}
++		}
++	}
  
- int avc_has_extended_perms(struct selinux_state *state,
- 			   u32 ssid, u32 tsid, u16 tclass, u32 requested,
+ 	thislen = min_t(int, writesize, len - read);
+ 	column = from & (writesize - 1);
+ 	if (column + thislen > writesize)
+ 		thislen = writesize - column;
+ 
+- 	while (!ret) {
+- 		/* If there is more to load then start next load */
+- 		from += thislen;
+- 		if (read + thislen < len) {
++	while (!ret) {
++		/* If there is more to load then start next load */
++		from += thislen;
++		if (read + thislen < len) {
+ 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
+- 			/*
+- 			 * Chip boundary handling in DDP
+- 			 * Now we issued chip 1 read and pointed chip 1
++			/*
++			 * Chip boundary handling in DDP
++			 * Now we issued chip 1 read and pointed chip 1
+ 			 * bufferram so we have to point chip 0 bufferram.
+- 			 */
+- 			if (ONENAND_IS_DDP(this) &&
+- 			    unlikely(from == (this->chipsize >> 1))) {
+- 				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
+- 				boundary = 1;
+- 			} else
+- 				boundary = 0;
+- 			ONENAND_SET_PREV_BUFFERRAM(this);
+- 		}
+- 		/* While load is going, read from last bufferRAM */
+- 		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
++			 */
++			if (ONENAND_IS_DDP(this) &&
++			    unlikely(from == (this->chipsize >> 1))) {
++				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
++				boundary = 1;
++			} else
++				boundary = 0;
++			ONENAND_SET_PREV_BUFFERRAM(this);
++		}
++		/* While load is going, read from last bufferRAM */
++		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
+ 
+ 		/* Read oob area if needed */
+ 		if (oobbuf) {
+@@ -1301,24 +1301,24 @@ static int onenand_read_ops_nolock(struc
+ 			oobcolumn = 0;
+ 		}
+ 
+- 		/* See if we are done */
+- 		read += thislen;
+- 		if (read == len)
+- 			break;
+- 		/* Set up for next read from bufferRAM */
+- 		if (unlikely(boundary))
+- 			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
+- 		ONENAND_SET_NEXT_BUFFERRAM(this);
+- 		buf += thislen;
++		/* See if we are done */
++		read += thislen;
++		if (read == len)
++			break;
++		/* Set up for next read from bufferRAM */
++		if (unlikely(boundary))
++			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
++		ONENAND_SET_NEXT_BUFFERRAM(this);
++		buf += thislen;
+ 		thislen = min_t(int, writesize, len - read);
+- 		column = 0;
+- 		cond_resched();
+- 		/* Now wait for load */
+- 		ret = this->wait(mtd, FL_READING);
+- 		onenand_update_bufferram(mtd, from, !ret);
++		column = 0;
++		cond_resched();
++		/* Now wait for load */
++		ret = this->wait(mtd, FL_READING);
++		onenand_update_bufferram(mtd, from, !ret);
+ 		if (mtd_is_eccerr(ret))
+ 			ret = 0;
+- 	}
++	}
+ 
+ 	/*
+ 	 * Return success, if no ECC failures, else -EBADMSG
 
 
