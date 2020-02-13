@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99269C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14CCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70529217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B1B206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610122;
-	bh=svokSrK7kVNmOrytj2njsk+sYgD1W2lHgIFlctzhohg=;
+	s=default; t=1581610124;
+	bh=mI6jafeU6zIiuC+1CW1GrQ6YSAm34TlC8SVlyGH4GoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ac1ODZY2BcDKNlt4iIcgekv7QuvZFIcToYrF+iQnDTsxQDVH9zN8CHzftmyvZ38J6
-	 hxlPVzZQtCZqu0llZOmETKwm9CdSuwB6ag/D+z0jCEth53fE0cBEjwyqLhqI2z3szH
-	 OIlSoPD5i0MrZGOJJ6DJvkJ+FAelgiLExBHd2yKU=
+	b=LK3kIAjtlZ0kaaBjBz2O5LUsfAz2Pw0ZV7nZ35PWIVo5qm4Y89hil5ejFbcXqTHqF
+	 B/zyIp6Gi76YYjI0E4PfXhH0ahhriVUzupF872mOzDi64W2qgxkbHC0sd7G0PGGZJV
+	 v7OoX3T/v/U6OCU275OoSiUxeTdBO0rpa8Rzdgpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbgBMQIl (ORCPT
+        id S1730349AbgBMQIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:08:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:08:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbgBMPXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728219AbgBMPXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:23:01 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DF2324689;
-        Thu, 13 Feb 2020 15:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F9424699;
+        Thu, 13 Feb 2020 15:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607380;
-        bh=svokSrK7kVNmOrytj2njsk+sYgD1W2lHgIFlctzhohg=;
+        s=default; t=1581607381;
+        bh=mI6jafeU6zIiuC+1CW1GrQ6YSAm34TlC8SVlyGH4GoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YpqTFGTnfG/3uKmkhuver+yHDsobRHA/2Fx7SO63fr9kf08p+w+r7sOgtuJOIb38A
-         8h+lHcY+viBLBgsviWloe0jvurlynwaaPa04raBe1/Nje+ToPzmVLQZSnpK9kGfN5K
-         4gDSJNxKJWrN0gt33bjuSW/mLwgPE3ppW9eZDhLg=
+        b=UMzqvqBtZN5jmGrO2OdiKU1cnryTB7EZxdEMjEyMdyZv+xwIiF4yg3Ldn4NKchEch
+         DrmaFxHYk+CiI0mJtbqduwpTG6zhcTBiQaiHQ/06z/W1mQrr69dC5AWGX2o05YPhs9
+         +01bJwIOgLREN0JIKl0V1UuwbXamZPCsDcwE5f8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
+        stable@vger.kernel.org, Thomas Meyer <thomas@m3y3r.de>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 60/91] NFS: Fix memory leaks and corruption in readdir
-Date:   Thu, 13 Feb 2020 07:20:17 -0800
-Message-Id: <20200213151845.258799357@linuxfoundation.org>
+Subject: [PATCH 4.4 61/91] NFS: Fix bool initialization/comparison
+Date:   Thu, 13 Feb 2020 07:20:18 -0800
+Message-Id: <20200213151845.653541388@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,85 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Thomas Meyer <thomas@m3y3r.de>
 
-[ Upstream commit 4b310319c6a8ce708f1033d57145e2aa027a883c ]
+[ Upstream commit 6089dd0d731028531fb1148be9fd33274ff90da4 ]
 
-nfs_readdir_xdr_to_array() must not exit without having initialised
-the array, so that the page cache deletion routines can safely
-call nfs_readdir_clear_array().
-Furthermore, we should ensure that if we exit nfs_readdir_filler()
-with an error, we free up any page contents to prevent a leak
-if we try to fill the page again.
+Bool initializations should use true and false. Bool tests don't need
+comparisons.
 
-Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
-Cc: stable@vger.kernel.org # v2.6.37+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/dir.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ fs/nfs/callback_proc.c |  2 +-
+ fs/nfs/dir.c           | 10 +++++-----
+ fs/nfs/nfs4client.c    |  2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+index 807eb6ef4f916..6f4f68967c310 100644
+--- a/fs/nfs/callback_proc.c
++++ b/fs/nfs/callback_proc.c
+@@ -368,7 +368,7 @@ static bool referring_call_exists(struct nfs_client *clp,
+ 				  uint32_t nrclists,
+ 				  struct referring_call_list *rclists)
+ {
+-	bool status = 0;
++	bool status = false;
+ 	int i, j;
+ 	struct nfs4_session *session;
+ 	struct nfs4_slot_table *tbl;
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index c690a1c0c4e5f..5fae07590c3a9 100644
+index 5fae07590c3a9..e2927aeb092d0 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -169,6 +169,17 @@ typedef struct {
- 	unsigned int	eof:1;
- } nfs_readdir_descriptor_t;
- 
-+static
-+void nfs_readdir_init_array(struct page *page)
-+{
-+	struct nfs_cache_array *array;
-+
-+	array = kmap_atomic(page);
-+	memset(array, 0, sizeof(struct nfs_cache_array));
-+	array->eof_index = -1;
-+	kunmap_atomic(array);
-+}
-+
- /*
-  * The caller is responsible for calling nfs_readdir_release_array(page)
-  */
-@@ -202,6 +213,7 @@ void nfs_readdir_clear_array(struct page *page)
- 	array = kmap_atomic(page);
- 	for (i = 0; i < array->size; i++)
- 		kfree(array->array[i].string.name);
-+	array->size = 0;
- 	kunmap_atomic(array);
- }
- 
-@@ -622,6 +634,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 	int status = -ENOMEM;
- 	unsigned int array_size = ARRAY_SIZE(pages);
- 
-+	nfs_readdir_init_array(page);
-+
- 	entry.prev_cookie = 0;
- 	entry.cookie = desc->last_cookie;
- 	entry.eof = 0;
-@@ -642,8 +656,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 		status = PTR_ERR(array);
- 		goto out_label_free;
- 	}
--	memset(array, 0, sizeof(struct nfs_cache_array));
--	array->eof_index = -1;
-+
-+	array = kmap(page);
- 
- 	status = nfs_readdir_alloc_pages(pages, array_size);
- 	if (status < 0)
-@@ -698,6 +712,7 @@ int nfs_readdir_filler(nfs_readdir_descriptor_t *desc, struct page* page)
- 	unlock_page(page);
+@@ -289,7 +289,7 @@ int nfs_readdir_search_for_pos(struct nfs_cache_array *array, nfs_readdir_descri
+ 	desc->cache_entry_index = index;
  	return 0;
-  error:
-+	nfs_readdir_clear_array(page);
- 	unlock_page(page);
- 	return ret;
+ out_eof:
+-	desc->eof = 1;
++	desc->eof = true;
+ 	return -EBADCOOKIE;
  }
+ 
+@@ -343,7 +343,7 @@ int nfs_readdir_search_for_cookie(struct nfs_cache_array *array, nfs_readdir_des
+ 	if (array->eof_index >= 0) {
+ 		status = -EBADCOOKIE;
+ 		if (*desc->dir_cookie == array->last_cookie)
+-			desc->eof = 1;
++			desc->eof = true;
+ 	}
+ out:
+ 	return status;
+@@ -791,7 +791,7 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
+ 		ent = &array->array[i];
+ 		if (!dir_emit(desc->ctx, ent->string.name, ent->string.len,
+ 		    nfs_compat_user_ino64(ent->ino), ent->d_type)) {
+-			desc->eof = 1;
++			desc->eof = true;
+ 			break;
+ 		}
+ 		desc->ctx->pos++;
+@@ -803,7 +803,7 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
+ 			ctx->duped = 1;
+ 	}
+ 	if (array->eof_index >= 0)
+-		desc->eof = 1;
++		desc->eof = true;
+ 
+ 	nfs_readdir_release_array(desc->page);
+ out:
+@@ -905,7 +905,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 		if (res == -EBADCOOKIE) {
+ 			res = 0;
+ 			/* This means either end of directory */
+-			if (*desc->dir_cookie && desc->eof == 0) {
++			if (*desc->dir_cookie && !desc->eof) {
+ 				/* Or that the server has 'lost' a cookie */
+ 				res = uncached_readdir(desc);
+ 				if (res == 0)
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index dac20f31f01f8..92895f41d9a0f 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -751,7 +751,7 @@ nfs4_find_client_sessionid(struct net *net, const struct sockaddr *addr,
+ 
+ 	spin_lock(&nn->nfs_client_lock);
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+-		if (nfs4_cb_match_client(addr, clp, minorversion) == false)
++		if (!nfs4_cb_match_client(addr, clp, minorversion))
+ 			continue;
+ 
+ 		if (!nfs4_has_session(clp))
 -- 
 2.20.1
 
