@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99728C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3FBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A5D20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1845920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608942;
-	bh=laid7J5sQfr4zc5dfFYayIFp5SqBhYxHplp0Qg+Sfbc=;
+	s=default; t=1581608949;
+	bh=ml6QscKtm4bBJ/vUH8hmDsJo0+uiqHtRTEA2EJWmucA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOFpi29nwdqG8jSpz5qtGJ4vsReEW2EoGeKFbyWBgq2v2JbdafLurSKebaLzO+tpf
-	 TtWdR2k0nl9kdTK1HaGl/YkHK1GKqbk1p6+l7KD9v94bCg1bHvpFCX78NdtVX47x24
-	 uOVO5SbtSRVCSJa+XNoMn7BKiteXUTTMQCKBt/II=
+	b=0T1so5ns8UW5S/BJ5xL6TaP3shBcHSK8h7gZnVDNVVntB0GTnZrHeRRGw9dRjP5tx
+	 z6xy86DOFdj/HQMfTCZ1CN1hLVMLfugFrFJJZWpzd8dt7e5M8dsrgtHBxzmqB1PtZe
+	 TB3DZR9jAfSbuAoypbjxpRtaMTrs0l6o9K0RUWi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgBMPtB (ORCPT
+        id S1729024AbgBMPtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:49:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47346 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:49:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387635AbgBMP0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:49 -0500
+        id S1729241AbgBMP0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:47 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A29222C2;
-        Thu, 13 Feb 2020 15:26:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49C02465D;
+        Thu, 13 Feb 2020 15:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607608;
-        bh=laid7J5sQfr4zc5dfFYayIFp5SqBhYxHplp0Qg+Sfbc=;
+        s=default; t=1581607606;
+        bh=ml6QscKtm4bBJ/vUH8hmDsJo0+uiqHtRTEA2EJWmucA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=abyzlmzA1QFx2MplJJWFt8EmZkFY1UAhg85frjDhNIkPNib0YpQ2MKbe5q7s/1vu0
-         EZ+Hj3HZAfrV3yDEY1fvfyjDmj8s3BINrJnUZ68u5vZZx8PCQoCnw0tc6+iF/btIh7
-         gmUO0XzY7UvsgjeqjteY6POrWcxNZXl4kTJgnPYA=
+        b=ZwdlC02cjEy/lqDDTN+q4qnBuoJSw+5pOUD6OeDB+/bGElD7QNp0BZm3ZXXLFMqRg
+         Z8VArg+APvmfDSDRJ/r2B6n5MGjHTPoDfmgnm/H5n6Ttbw4wf7IWdAb2u6o3jHM+Ei
+         DAIABEwSGxQ2mJBJKWjtkznCsMqLsw3Y46qIJv7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        stable@vger.kernel.org, Qing Xu <m1s5p6688@gmail.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/52] libertas: make lbs_ibss_join_existing() return error code on rates overflow
-Date:   Thu, 13 Feb 2020 07:21:30 -0800
-Message-Id: <20200213151829.946401006@linuxfoundation.org>
+Subject: [PATCH 4.19 46/52] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
+Date:   Thu, 13 Feb 2020 07:21:27 -0800
+Message-Id: <20200213151828.881124833@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Stange <nstange@suse.de>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit 1754c4f60aaf1e17d886afefee97e94d7f27b4cb ]
+[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
 
-Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
-descriptor") introduced a bounds check on the number of supplied rates to
-lbs_ibss_join_existing() and made it to return on overflow.
+mwifiex_ret_wmm_get_status() calls memcpy() without checking the
+destination size.Since the source is given from remote AP which
+contains illegal wmm elements , this may trigger a heap buffer
+overflow.
+Fix it by putting the length check before calling memcpy().
 
-However, the aforementioned commit doesn't set the return value accordingly
-and thus, lbs_ibss_join_existing() would return with zero even though it
-failed.
-
-Make lbs_ibss_join_existing return -EINVAL in case the bounds check on the
-number of supplied rates fails.
-
-Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
-Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/cfg.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/marvell/mwifiex/wmm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
-index 68985d7663491..4e3de684928bf 100644
---- a/drivers/net/wireless/marvell/libertas/cfg.c
-+++ b/drivers/net/wireless/marvell/libertas/cfg.c
-@@ -1786,6 +1786,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
- 		if (rates_max > MAX_RATES) {
- 			lbs_deb_join("invalid rates");
- 			rcu_read_unlock();
-+			ret = -EINVAL;
- 			goto out;
- 		}
- 		rates = cmd.bss.rates;
+diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
+index 64916ba15df5d..429ea2752e6aa 100644
+--- a/drivers/net/wireless/marvell/mwifiex/wmm.c
++++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
+@@ -977,6 +977,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
+ 				    "WMM Parameter Set Count: %d\n",
+ 				    wmm_param_ie->qos_info_bitmap & mask);
+ 
++			if (wmm_param_ie->vend_hdr.len + 2 >
++				sizeof(struct ieee_types_wmm_parameter))
++				break;
++
+ 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
+ 			       wmm_ie, wmm_param_ie,
+ 			       wmm_param_ie->vend_hdr.len + 2);
 -- 
 2.20.1
 
