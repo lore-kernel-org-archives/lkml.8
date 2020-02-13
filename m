@@ -2,217 +2,259 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F214CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD11C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D6224650
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408C1218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:43:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="o8B+D7eX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EmmPIq3b"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B5LlPfBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbgBMJnJ (ORCPT
+        id S1729838AbgBMJnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:43:09 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:38995 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729440AbgBMJnI (ORCPT
+        Thu, 13 Feb 2020 04:43:11 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37089 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729440AbgBMJnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:43:08 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4EE0721F8E;
-        Thu, 13 Feb 2020 04:43:07 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 13 Feb 2020 04:43:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=mraLXR1UzZtD3bIaM15nHcYWwvQ
-        LOE+cfoM1QmqErKE=; b=o8B+D7eXShRldG2XErB+8R+Wmqoa06qXCcf+BnBa+AI
-        LfZQQggfxmWFW2+GvwCiMvpwdgs/LQOahAJEvCP914588AkZ2QwYON0CeEvZw0b9
-        ZSNvXrrTJgptXcVYe4UU9iwNX0Pwwu0JVddpUNY1Sfm2yQ5SJNTPSGQXSxvAttPN
-        j4QmaFnLP1SG82MWk3PRx+SaiKvXzdgnj4+ae764VkzGA2b+ItNFBRsOnXEztnTc
-        nkRhbVOdJGqUJk1B1tNOI4BavCXfPjSjnX5UYn6n+FKYLWwQ3IityLC4SL14xteK
-        MA/CzvK+882O5ccKpsZh9kJxsa3HWcV0JeFvEI+esYw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=mraLXR
-        1UzZtD3bIaM15nHcYWwvQLOE+cfoM1QmqErKE=; b=EmmPIq3bT5Ve+6LefZTiyh
-        ejdDpz0Gj/W0/zIjZyfBTR8R2I/f/WRHLVAETa9iBQCYFxtuWUrpUjJPykSpfLor
-        pOop7sY58AOcNFzt2rFXI+WFExCYMflVMD90R7veW2dl8Y9oxvgaqar0e1a2pFAZ
-        NOMhvAI+wLylBGRsjyJXU1/LIzed8WJNa7OUXMVh9nRgvFv8wOkNXyODC2+oujWD
-        np8bGTGFbeHISNe9Sb7O6AH7k8CUrLr59iNdGvKGoNr1EBq2ux82fp/1Fv9/RcyU
-        N2ttnu+pSkE6WjsWtiNDqAAmFvPgGGOlk8W87aIlEyB5Y/5o0ZA14M511vMvx/dg
-        ==
-X-ME-Sender: <xms:KhpFXtJtYSwlwPuc5Kr4nCDqhdgJJVJ0VrNNpNjAyv6OBKJeBtMiYA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieekgddtiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:KhpFXnaeMp-s2_3W8oVdM_ywlRLPR8QA95LPnZPSLsJRv2yJBuiTRA>
-    <xmx:KhpFXu1zfEq1wI8irD8HTXkfb80zvWzZ5USE7loNaDMDkStaNrYKWg>
-    <xmx:KhpFXvlzNXl5PT-Xy2KwTz5Q0BbznCtjyz6tlCkUcY2CPwh88Hvscw>
-    <xmx:KxpFXpIoVcx1b4i_yvT630G23TUOI1KHxqWj0N8Rzmzj6swj-LxRTg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2C73D3280063;
-        Thu, 13 Feb 2020 04:43:06 -0500 (EST)
-Date:   Thu, 13 Feb 2020 10:43:04 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     andrey.lebedev@gmail.com
-Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
+        Thu, 13 Feb 2020 04:43:09 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so2131935plz.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:43:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=iWu/QSz7Eja04sifvqVzX17vMjMTVW+/pXoDLb+iIrE=;
+        b=B5LlPfBbU24Kkv2Q4BpY0EMSO/3YN6MlfeR+ABnGaRbjDEwG2AAREj1T+GhpNJWfqs
+         f/cY+vOTqmihCPKo58NJtAZ4YiJ8iEkp4zQ6kI+r5Um7lXFVb9UUzDvtlMT6IST74of9
+         T+uPjRcs6y+YFl5izwi7iVyMFQQWV61azMIHZYGEWNoYxGLo4cGrH7BfzJ/F1zBDqEc/
+         Mvkz/tEQ6FL8dpuFpaEt7KiOplTuARl6H+ouIpTox13roeI2EytBgGAN5BsYKDPmOwUB
+         oye6lo3R8AcYMkPWekQfXEOgQOS1NewvaS494lpHEr2GQLZdMf/FX+cfkJgPODK8eoqS
+         Ytbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=iWu/QSz7Eja04sifvqVzX17vMjMTVW+/pXoDLb+iIrE=;
+        b=dtz1AQagKTT35DGIyqu3VGunH7/JKOWu2zlN50i+E6VRF/y+jJkl9cJ13zRWBgipjG
+         b7ALmYPlh5MW8fmRJWHJvly6ygVxm9vfXeb+ooSvHM2ojty5joaaiI1fuvgMl393dk0x
+         UiS9XZUgEBycBqA2yExHoQnPubGAg7QPf4dNQ2/WxyYkHPDYzpA1dcH2/Wvt1JAaqBFL
+         lYaaMeckvHgUZuPXz7AqAMJYn75c+r7lmFYI/SOYMJbjlGqBFVA76IMS+O3YxmvepcZJ
+         GEwlAh2+gv7rE7Pz0REQYILFFSuq1WII7jXRo+enRktK2MCjOxWRmehfqtIW0YoK1HhH
+         rDPw==
+X-Gm-Message-State: APjAAAW3XKIMjzsfMMgz1UoU3+Zm13HxjoJZxeAXD0cDOfL8e1E/Rx8g
+        r/II1BbkHxuI+VJtSww8NUHOuw==
+X-Google-Smtp-Source: APXvYqylNpwu9++FIvk/aaFj9S+Uwnf6MciaZTrLNhqZhyF98LIe9cCzIHtb6YGNjqysPRQsN/R1JA==
+X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr12722133plp.21.1581586988826;
+        Thu, 13 Feb 2020 01:43:08 -0800 (PST)
+Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
+        by smtp.gmail.com with ESMTPSA id 3sm2310277pfi.13.2020.02.13.01.42.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 01:43:08 -0800 (PST)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
-Subject: Re: [PATCH v2 2/2] ARM: sun7i: dts: Add LVDS panel support on A20
-Message-ID: <20200213094304.hf3glhgmquypxpyf@gilmour.lan>
-References: <20200210195633.GA21832@kedthinkpad>
- <20200212222355.17141-2-andrey.lebedev@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zztmkqxcnfnc34uw"
-Content-Disposition: inline
-In-Reply-To: <20200212222355.17141-2-andrey.lebedev@gmail.com>
+        Coresight ML <coresight@lists.linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v4 3/5] perf cs-etm: Correct synthesizing instruction samples
+Date:   Thu, 13 Feb 2020 17:42:02 +0800
+Message-Id: <20200213094204.2568-4-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200213094204.2568-1-leo.yan@linaro.org>
+References: <20200213094204.2568-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When 'etm->instructions_sample_period' is less than
+'tidq->period_instructions', the function cs_etm__sample() cannot handle
+this case properly with its logic.
 
---zztmkqxcnfnc34uw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Let's see below flow as an example:
 
-On Thu, Feb 13, 2020 at 12:23:57AM +0200, andrey.lebedev@gmail.com wrote:
-> From: Andrey Lebedev <andrey@lebedev.lt>
->
-> Define pins for LVDS channels 0 and 1, configure reset line for tcon0 and
-> provide sample LVDS panel, connected to tcon0.
->
-> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+- If we set itrace option '--itrace=i4', then function cs_etm__sample()
+  has variables with initialized values:
 
-And this prefix should be ARM: dts: sun7i ;)
+  tidq->period_instructions = 0
+  etm->instructions_sample_period = 4
 
-> ---
->  arch/arm/boot/dts/sun7i-a20.dtsi | 45 +++++++++++++++++++++++++++++---
->  1 file changed, 42 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-> index 92b5be97085d..b05fdf8df32e 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -47,6 +47,7 @@
->  #include <dt-bindings/dma/sun4i-a10.h>
->  #include <dt-bindings/clock/sun7i-a20-ccu.h>
->  #include <dt-bindings/reset/sun4i-a10-ccu.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->
->  / {
->  	interrupt-parent = <&gic>;
-> @@ -407,8 +408,8 @@
->  			compatible = "allwinner,sun7i-a20-tcon";
->  			reg = <0x01c0c000 0x1000>;
->  			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-> -			resets = <&ccu RST_TCON0>;
-> -			reset-names = "lcd";
-> +			resets = <&ccu RST_TCON0>, <&ccu RST_LVDS>;
-> +			reset-names = "lcd", "lvds";
->  			clocks = <&ccu CLK_AHB_LCD0>,
->  				 <&ccu CLK_TCON0_CH0>,
->  				 <&ccu CLK_TCON0_CH1>;
-> @@ -444,6 +445,11 @@
->  					#size-cells = <0>;
->  					reg = <1>;
->
-> +					tcon0_out_lvds: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&lvds_in_tcon0>;
-> +						allwinner,tcon-channel = <0>;
-> +					};
+- When the first packet is coming:
 
-A new line here would be nice
+  packet->instr_count = 10; the number of instructions executed in this
+  packet is 10, thus update period_instructions as below:
 
->  					tcon0_out_hdmi: endpoint@1 {
->  						reg = <1>;
->  						remote-endpoint = <&hdmi_in_tcon0>;
-> @@ -686,6 +692,19 @@
->  			};
->  		};
->
-> +		lvds_panel: panel@1c16500 {
-> +			compatible = "panel-lvds";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +
-> +			port {
-> +				lvds_in_tcon0: endpoint {
-> +					remote-endpoint = <&tcon0_out_lvds>;
-> +				};
-> +			};
-> +		};
-> +
+  tidq->period_instructions = 0 + 10 = 10
+  instrs_over = 10 - 4 = 6
+  offset = 10 - 6 - 1 = 3
+  tidq->period_instructions = instrs_over = 6
 
-There's no point in creating that panel.
+- When the second packet is coming:
 
->  		spi2: spi@1c17000 {
->  			compatible = "allwinner,sun4i-a10-spi";
->  			reg = <0x01c17000 0x1000>;
-> @@ -872,7 +891,7 @@
->  			gmac_rgmii_pins: gmac-rgmii-pins {
->  				pins = "PA0", "PA1", "PA2",
->  				       "PA3", "PA4", "PA5", "PA6",
-> -				        "PA7", "PA8", "PA10",
-> +					"PA7", "PA8", "PA10",
->  				       "PA11", "PA12", "PA13",
->  				       "PA15", "PA16";
->  				function = "gmac";
-> @@ -1162,6 +1181,26 @@
->  				pins = "PI20", "PI21";
->  				function = "uart7";
->  			};
-> +
-> +			/omit-if-no-ref/
-> +			lcd_lvds0_pins: lcd_lvds0_pins {
+  packet->instr_count = 10; in the second pass, assume 10 instructions
+  in the trace sample again:
 
-underscores in the node names will create a dtc warning at
-compilation, you should use lcd-lvds0-pins instead.
+  tidq->period_instructions = 6 + 10 = 16
+  instrs_over = 16 - 4 = 12
+  offset = 10 - 12 - 1 = -3  -> the negative value
+  tidq->period_instructions = instrs_over = 12
 
-> +				allwinner,pins =
-> +					"PD0", "PD1", "PD2", "PD3", "PD4",
-> +					"PD5", "PD6", "PD7", "PD8", "PD9";
-> +				allwinner,function = "lvds0";
-> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+So after handle these two packets, there have below issues:
 
-Those properties are deprecated and should be replaced by pins and
-functions. allwinner,drive and allwinner,pull are at their default
-values and can be dropped.
+The first issue is that cs_etm__instr_addr() returns the address within
+the current trace sample of the instruction related to offset, so the
+offset is supposed to be always unsigned value.  But in fact, function
+cs_etm__sample() might calculate a negative offset value (in handling
+the second packet, the offset is -3) and pass to cs_etm__instr_addr()
+with u64 type with a big positive integer.
 
-This will create a spurious warning message for TCON1, since we
-adjusted the driver to tell it supports LVDS, but there's no LVDS
-reset line, so we need to make it finer grained.
+The second issue is it only synthesizes 2 samples for sample period = 4.
+In theory, every packet has 10 instructions so the two packets have
+total 20 instructions, 20 instructions should generate 5 samples
+(4 x 5 = 20).  This is because cs_etm__sample() only calls once
+cs_etm__synth_instruction_sample() to generate instruction sample per
+range packet.
 
-Maybe adding a tcon0 / tcon1 compatible? Chen-Yu, any thought?
+This patch fixes the logic in function cs_etm__sample(); the basic
+idea for handling coming packet is:
 
-Maxime
+- To synthesize the first instruction sample, it combines the left
+  instructions from the previous packet and the head of the new
+  packet; then generate continuous samples with sample period;
+- At the tail of the new packet, if it has the rest instructions,
+  these instructions will be left for the sequential sample.
 
---zztmkqxcnfnc34uw
-Content-Type: application/pgp-signature; name="signature.asc"
+Suggested-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/cs-etm.c | 87 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 70 insertions(+), 17 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index b2f31390126a..4b7d6c36ce3c 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1356,9 +1356,12 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+ 	int ret;
+ 	u8 trace_chan_id = tidq->trace_chan_id;
+-	u64 instrs_executed = tidq->packet->instr_count;
++	u64 instrs_prev;
+ 
+-	tidq->period_instructions += instrs_executed;
++	/* Get instructions remainder from previous packet */
++	instrs_prev = tidq->period_instructions;
++
++	tidq->period_instructions += tidq->packet->instr_count;
+ 
+ 	/*
+ 	 * Record a branch when the last instruction in
+@@ -1376,26 +1379,76 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 		 * TODO: allow period to be defined in cycles and clock time
+ 		 */
+ 
+-		/* Get number of instructions executed after the sample point */
+-		u64 instrs_over = tidq->period_instructions -
+-			etm->instructions_sample_period;
++		/*
++		 * Below diagram demonstrates the instruction samples
++		 * generation flows:
++		 *
++		 *    Instrs     Instrs       Instrs       Instrs
++		 *   Sample(n)  Sample(n+1)  Sample(n+2)  Sample(n+3)
++		 *    |            |            |            |
++		 *    V            V            V            V
++		 *   --------------------------------------------------
++		 *            ^                                  ^
++		 *            |                                  |
++		 *         Period                             Period
++		 *    instructions(Pi)                   instructions(Pi')
++		 *
++		 *            |                                  |
++		 *            \---------------- -----------------/
++		 *                             V
++		 *                 tidq->packet->instr_count
++		 *
++		 * Instrs Sample(n...) are the synthesised samples occurring
++		 * every etm->instructions_sample_period instructions - as
++		 * defined on the perf command line.  Sample(n) is being the
++		 * last sample before the current etm packet, n+1 to n+3
++		 * samples are generated from the current etm packet.
++		 *
++		 * tidq->packet->instr_count represents the number of
++		 * instructions in the current etm packet.
++		 *
++		 * Period instructions (Pi) contains the the number of
++		 * instructions executed after the sample point(n) from the
++		 * previous etm packet.  This will always be less than
++		 * etm->instructions_sample_period.
++		 *
++		 * When generate new samples, it combines with two parts
++		 * instructions, one is the tail of the old packet and another
++		 * is the head of the new coming packet, to generate
++		 * sample(n+1); sample(n+2) and sample(n+3) consume the
++		 * instructions with sample period.  After sample(n+3), the rest
++		 * instructions will be used by later packet and it is assigned
++		 * to tidq->period_instructions for next round calculation.
++		 */
+ 
+ 		/*
+-		 * Calculate the address of the sampled instruction (-1 as
+-		 * sample is reported as though instruction has just been
+-		 * executed, but PC has not advanced to next instruction)
++		 * Get the initial offset into the current packet instructions;
++		 * entry conditions ensure that instrs_prev is less than
++		 * etm->instructions_sample_period.
+ 		 */
+-		u64 offset = (instrs_executed - instrs_over - 1);
+-		u64 addr = cs_etm__instr_addr(etmq, trace_chan_id,
+-					      tidq->packet, offset);
++		u64 offset = etm->instructions_sample_period - instrs_prev;
++		u64 addr;
+ 
+-		ret = cs_etm__synth_instruction_sample(
+-			etmq, tidq, addr, etm->instructions_sample_period);
+-		if (ret)
+-			return ret;
++		while (tidq->period_instructions >=
++				etm->instructions_sample_period) {
++			/*
++			 * Calculate the address of the sampled instruction (-1
++			 * as sample is reported as though instruction has just
++			 * been executed, but PC has not advanced to next
++			 * instruction)
++			 */
++			addr = cs_etm__instr_addr(etmq, trace_chan_id,
++						  tidq->packet, offset - 1);
++			ret = cs_etm__synth_instruction_sample(
++				etmq, tidq, addr,
++				etm->instructions_sample_period);
++			if (ret)
++				return ret;
+ 
+-		/* Carry remaining instructions into next sample period */
+-		tidq->period_instructions = instrs_over;
++			offset += etm->instructions_sample_period;
++			tidq->period_instructions -=
++				etm->instructions_sample_period;
++		}
+ 	}
+ 
+ 	if (etm->sample_branches) {
+-- 
+2.17.1
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkUaKAAKCRDj7w1vZxhR
-xWvqAQDWlCEogDZ5hH+fBXPvo6T5UizTKCW8akmEaSCXi1OH0AEAuYrejnkpB02Z
-OIBbgDk1XuTQW5eT8yzabddVdXyjego=
-=IugG
------END PGP SIGNATURE-----
-
---zztmkqxcnfnc34uw--
