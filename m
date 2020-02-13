@@ -2,106 +2,86 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D695C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAEFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCA720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608642;
-	bh=k18fCyvygydurWZoNMpe3VqRFRDrEMWorv4kxA8wwew=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XCz7/Ud/4SZu6UtoLHnK1S3B5iQoniG+dbosO2c3lOQun6EaTpnotp7CWYjVwWt5O
-	 5m5fpdwxz5YZ0KHG6p4h2y7ZSHqQdtX16mpjqG8I9d2xAICAd5jFJ3PyELkTr8SHF2
-	 H5xpJDvKE2jiIHvubW2bwl87UE8aeAL/ssUzoMgM=
+	by mail.kernel.org (Postfix) with ESMTP id A7BCA20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="h1O9Lk/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387838AbgBMPoC (ORCPT
+        id S2387849AbgBMPoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728693AbgBMP1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:47 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27BB92168B;
-        Thu, 13 Feb 2020 15:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607666;
-        bh=k18fCyvygydurWZoNMpe3VqRFRDrEMWorv4kxA8wwew=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZrLHa0EPAZwFSA/AQXrArqFrdX+OS4fb9n1FCSWx4NL8Z25J2JzeFZVFEEabetyo8
-         Ulmg1AWKez2dzEmt29lPBcWx5qdJchmlWgZIcOuu0gaaoOgew/wVNOffjphoNZF8u1
-         +nI9q1TreEivemR5l9Hy0ea1aKXbATMoqfh0KdAw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5.4 87/96] pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
-Date:   Thu, 13 Feb 2020 07:21:34 -0800
-Message-Id: <20200213151911.803802391@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
-References: <20200213151839.156309910@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Feb 2020 10:44:05 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34848 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728441AbgBMPoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:44:00 -0500
+Received: by mail-lf1-f68.google.com with SMTP id z18so4605696lfe.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:43:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=K6511DdGifH8XUHZx9YT0KbpkCqEo3UTWf5Na2Wavuk=;
+        b=h1O9Lk/39Nx/ytmuPKvu48NGNZk+XUil67BnaQeOVqW/Cxkpqv48zOF9nGwuUWlurM
+         xa/u43X71SKX6da2a5fB2v7S6PgQbQBl2ssMQ94F9rVUv8LKIUdVh9zDvGRo4D5v6+nh
+         LuEjK1SL9jGH9n9oTsRgAnTMwm6XTkEOF5/XYPKhJ4cpujsioAoAN8FERx3YESyPw37h
+         9NEXptd6Gt16Vof39x76tD1yi5FL8D3RgfFYOqkR73ihPA21YsLTzKCgkmtI+79zgECg
+         sL1BpHotERgS2c80OI6FTeoS+pGgJOQg0Eiig6Hakw1DtvSJOGUrK1sCxYJwoULIUzjm
+         1cnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K6511DdGifH8XUHZx9YT0KbpkCqEo3UTWf5Na2Wavuk=;
+        b=pf6BEmtts+wFxMn5xrr77xu7wY5xCIAAFi5yRA0nVhS5Df+9Pd+LnXAiJiRC/TpEdU
+         NudUEv4fklwulkk/UP2k1cy8Pc8A1bkw42FQUUEU1gIHIHsYLXWePL1gPfaCHHPLyQvB
+         FsHkDqX2b2LnqNnztfL0YM4ETHV0jjcvryw2AgFsshu1OsHng2h/8TAWSD/oGbsKL8lI
+         2kHUnXOvt/BYc3JXIGJQz2/u5mKyK4Iw/7yTFVGdt9CZelXVv0Fw8mEAPIykgxow3Kuh
+         qApeTupSego72NIIFT7PXgM0jGx/DbQ+QmUZlXZaIoVB0ZbrIhlNTiizyE/crtX83TOe
+         fx0w==
+X-Gm-Message-State: APjAAAVXRH7x1KNxaFXfGEriG0vtn4rNO+ySByTrD+PapkfFQrmUasax
+        phSW4gun5PNbNVkSzu405zSoVQ==
+X-Google-Smtp-Source: APXvYqxrBJSTTk3KS21AJKxD2y7eTX8gC2feRkJ1tSpYCm6mG9Y6yhHM7jH/gQZsD+JKdEUN74SLWA==
+X-Received: by 2002:a19:cb17:: with SMTP id b23mr9726567lfg.201.1581608638158;
+        Thu, 13 Feb 2020 07:43:58 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id u16sm1695370ljo.22.2020.02.13.07.43.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 07:43:57 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id C4400100F25; Thu, 13 Feb 2020 18:44:19 +0300 (+03)
+Date:   Thu, 13 Feb 2020 18:44:19 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/25] fs: Make page_mkwrite_check_truncate thp-aware
+Message-ID: <20200213154419.szxgd5tv2tjxmlz7@box>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-12-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212041845.25879-12-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Feb 11, 2020 at 08:18:31PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> If the page is compound, check the appropriate indices and return the
+> appropriate sizes.
 
-commit a34cd9dfd03fa9ec380405969f1d638bc63b8d63 upstream.
+Is it guarnteed that the page is never called on tail page?
 
-R-Car Gen3 Hardware Manual Errata for Rev. 2.00 of October 24, 2019
-changed the configuration bits for drive and bias control for the
-DU_DOTCLKIN3 pin on R-Car M3-N, to match the same pin on R-Car H3.
-Update the driver to reflect this.
-
-After this, the handling of drive and bias control for the various
-DU_DOTCLKINx pins is consistent across all of the R-Car H3, M3-W,
-M3-W+, and M3-N SoCs.
-
-Fixes: 86c045c2e4201e94 ("pinctrl: sh-pfc: r8a77965: Replace DU_DOTCLKIN2 by DU_DOTCLKIN3")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191113101653.28428-1-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-@@ -5984,7 +5984,7 @@ static const struct pinmux_drive_reg pin
- 		{ PIN_DU_DOTCLKIN1,    0, 2 },	/* DU_DOTCLKIN1 */
- 	} },
- 	{ PINMUX_DRIVE_REG("DRVCTRL12", 0xe6060330) {
--		{ PIN_DU_DOTCLKIN3,   28, 2 },	/* DU_DOTCLKIN3 */
-+		{ PIN_DU_DOTCLKIN3,   24, 2 },	/* DU_DOTCLKIN3 */
- 		{ PIN_FSCLKST,        20, 2 },	/* FSCLKST */
- 		{ PIN_TMS,             4, 2 },	/* TMS */
- 	} },
-@@ -6240,8 +6240,8 @@ static const struct pinmux_bias_reg pinm
- 		[31] = PIN_DU_DOTCLKIN1,	/* DU_DOTCLKIN1 */
- 	} },
- 	{ PINMUX_BIAS_REG("PUEN3", 0xe606040c, "PUD3", 0xe606044c) {
--		[ 0] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
--		[ 1] = SH_PFC_PIN_NONE,
-+		[ 0] = SH_PFC_PIN_NONE,
-+		[ 1] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
- 		[ 2] = PIN_FSCLKST,		/* FSCLKST */
- 		[ 3] = PIN_EXTALR,		/* EXTALR*/
- 		[ 4] = PIN_TRST_N,		/* TRST# */
-
-
+-- 
+ Kirill A. Shutemov
