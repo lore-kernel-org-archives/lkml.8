@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7190EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8C6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D742469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6DC246B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607554;
-	bh=usdD7E2v7ryHJezLF4KmGqTvXV8BRUodlwhHkqQprBU=;
+	s=default; t=1581607559;
+	bh=GnbcFCki+GpOvyTW/7oFyQksBt67GS7u47CLJkCeKj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/gnofWW5gMsW9ke9Fyjfq+BKL9z202E/WyIb5snoUylf2Zw5Ky2E05AklPk73NH9
-	 n/lXpG4+1aL/d5zrJ973sl2D3NMpdOppMo4fW9ik7n1oQEgs6SeJft+cZAdO9d7V+K
-	 SSJgrcxrVRtZ1vHNLf87BayZFpk9ZaveRIeT1JGw=
+	b=ZDlI6FIibzTLyiJpesw6De3+YAiQoqZkBNv19zNvUMSR7ZK7DXMdEtBB0yIKAlFVt
+	 gux40/HMoiYXasYj/KaGt6C1sSBKHzbvFqrbAxvUgqjxh1Rx360JmDeYdIgojh/dDe
+	 iUuQ0Kt6zQlv3ePgtG57eaoyLY9bW/DSoeWT+UzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgBMPZx (ORCPT
+        id S1729143AbgBMPZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728592AbgBMPYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:07 -0500
+        id S1728618AbgBMPYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:14 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCFD24691;
-        Thu, 13 Feb 2020 15:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1066B246C0;
+        Thu, 13 Feb 2020 15:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607447;
-        bh=usdD7E2v7ryHJezLF4KmGqTvXV8BRUodlwhHkqQprBU=;
+        s=default; t=1581607453;
+        bh=GnbcFCki+GpOvyTW/7oFyQksBt67GS7u47CLJkCeKj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cah7D5CUzIx/h3sZ2MXiiGDZXnIaxJIAhe8K3/IySsnVzJcV9n+vOCG61lH3L+Uka
-         zaWnFP94M4NBL0jhBz/68KxKj7le1Z2/Z+7vZRPnPYGsT1aNc14ZYeNx8fbEbWZJWY
-         3hSvX5kbbvCSvD8pOCFoM/SuEMpMC3gOGa2tFIjA=
+        b=tHOgX1Szi4rAFB5IQ8626rRlhQJuAurNY8L+JCc6LKVFJ7+OeU3TcAIJwP3a70zAm
+         fEFpAd0G0Jd48tbJB9OBqEkPSEhjqN7RBEpw10c04+KLdouzVphF3ZkzrPT0GEQutC
+         PB+eTACbspIOFtlNLxTvQzBvt1gDxP+Ixve2+f0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 089/116] btrfs: flush write bio if we loop in extent_write_cache_pages
-Date:   Thu, 13 Feb 2020 07:20:33 -0800
-Message-Id: <20200213151917.511897953@linuxfoundation.org>
+Subject: [PATCH 4.9 081/116] Btrfs: fix assertion failure on fsync with NO_HOLES enabled
+Date:   Thu, 13 Feb 2020 07:20:25 -0800
+Message-Id: <20200213151914.306329468@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -61,104 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 96bf313ecb33567af4cb53928b0c951254a02759 ]
+[ Upstream commit 0ccc3876e4b2a1559a4dbe3126dda4459d38a83b ]
 
-There exists a deadlock with range_cyclic that has existed forever.  If
-we loop around with a bio already built we could deadlock with a writer
-who has the page locked that we're attempting to write but is waiting on
-a page in our bio to be written out.  The task traces are as follows
+Back in commit a89ca6f24ffe4 ("Btrfs: fix fsync after truncate when
+no_holes feature is enabled") I added an assertion that is triggered when
+an inline extent is found to assert that the length of the (uncompressed)
+data the extent represents is the same as the i_size of the inode, since
+that is true most of the time I couldn't find or didn't remembered about
+any exception at that time. Later on the assertion was expanded twice to
+deal with a case of a compressed inline extent representing a range that
+matches the sector size followed by an expanding truncate, and another
+case where fallocate can update the i_size of the inode without adding
+or updating existing extents (if the fallocate range falls entirely within
+the first block of the file). These two expansion/fixes of the assertion
+were done by commit 7ed586d0a8241 ("Btrfs: fix assertion on fsync of
+regular file when using no-holes feature") and commit 6399fb5a0b69a
+("Btrfs: fix assertion failure during fsync in no-holes mode").
+These however missed the case where an falloc expands the i_size of an
+inode to exactly the sector size and inline extent exists, for example:
 
-  PID: 1329874  TASK: ffff889ebcdf3800  CPU: 33  COMMAND: "kworker/u113:5"
-   #0 [ffffc900297bb658] __schedule at ffffffff81a4c33f
-   #1 [ffffc900297bb6e0] schedule at ffffffff81a4c6e3
-   #2 [ffffc900297bb6f8] io_schedule at ffffffff81a4ca42
-   #3 [ffffc900297bb708] __lock_page at ffffffff811f145b
-   #4 [ffffc900297bb798] __process_pages_contig at ffffffff814bc502
-   #5 [ffffc900297bb8c8] lock_delalloc_pages at ffffffff814bc684
-   #6 [ffffc900297bb900] find_lock_delalloc_range at ffffffff814be9ff
-   #7 [ffffc900297bb9a0] writepage_delalloc at ffffffff814bebd0
-   #8 [ffffc900297bba18] __extent_writepage at ffffffff814bfbf2
-   #9 [ffffc900297bba98] extent_write_cache_pages at ffffffff814bffbd
+ $ mkfs.btrfs -f -O no-holes /dev/sdc
+ $ mount /dev/sdc /mnt
 
-  PID: 2167901  TASK: ffff889dc6a59c00  CPU: 14  COMMAND:
-  "aio-dio-invalid"
-   #0 [ffffc9003b50bb18] __schedule at ffffffff81a4c33f
-   #1 [ffffc9003b50bba0] schedule at ffffffff81a4c6e3
-   #2 [ffffc9003b50bbb8] io_schedule at ffffffff81a4ca42
-   #3 [ffffc9003b50bbc8] wait_on_page_bit at ffffffff811f24d6
-   #4 [ffffc9003b50bc60] prepare_pages at ffffffff814b05a7
-   #5 [ffffc9003b50bcd8] btrfs_buffered_write at ffffffff814b1359
-   #6 [ffffc9003b50bdb0] btrfs_file_write_iter at ffffffff814b5933
-   #7 [ffffc9003b50be38] new_sync_write at ffffffff8128f6a8
-   #8 [ffffc9003b50bec8] vfs_write at ffffffff81292b9d
-   #9 [ffffc9003b50bf00] ksys_pwrite64 at ffffffff81293032
+ $ xfs_io -f -c "pwrite -S 0xab 0 1096" /mnt/foobar
+ wrote 1096/1096 bytes at offset 0
+ 1 KiB, 1 ops; 0.0002 sec (4.448 MiB/sec and 4255.3191 ops/sec)
 
-I used drgn to find the respective pages we were stuck on
+ $ xfs_io -c "falloc 1096 3000" /mnt/foobar
+ $ xfs_io -c "fsync" /mnt/foobar
+ Segmentation fault
 
-page_entry.page 0xffffea00fbfc7500 index 8148 bit 15 pid 2167901
-page_entry.page 0xffffea00f9bb7400 index 7680 bit 0 pid 1329874
+ $ dmesg
+ [701253.602385] assertion failed: len == i_size || (len == fs_info->sectorsize && btrfs_file_extent_compression(leaf, extent) != BTRFS_COMPRESS_NONE) || (len < i_size && i_size < fs_info->sectorsize), file: fs/btrfs/tree-log.c, line: 4727
+ [701253.602962] ------------[ cut here ]------------
+ [701253.603224] kernel BUG at fs/btrfs/ctree.h:3533!
+ [701253.603503] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+ [701253.603774] CPU: 2 PID: 7192 Comm: xfs_io Tainted: G        W         5.0.0-rc8-btrfs-next-45 #1
+ [701253.604054] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+ [701253.604650] RIP: 0010:assfail.constprop.23+0x18/0x1a [btrfs]
+ (...)
+ [701253.605591] RSP: 0018:ffffbb48c186bc48 EFLAGS: 00010286
+ [701253.605914] RAX: 00000000000000de RBX: ffff921d0a7afc08 RCX: 0000000000000000
+ [701253.606244] RDX: 0000000000000000 RSI: ffff921d36b16868 RDI: ffff921d36b16868
+ [701253.606580] RBP: ffffbb48c186bcf0 R08: 0000000000000000 R09: 0000000000000000
+ [701253.606913] R10: 0000000000000003 R11: 0000000000000000 R12: ffff921d05d2de18
+ [701253.607247] R13: ffff921d03b54000 R14: 0000000000000448 R15: ffff921d059ecf80
+ [701253.607769] FS:  00007f14da906700(0000) GS:ffff921d36b00000(0000) knlGS:0000000000000000
+ [701253.608163] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [701253.608516] CR2: 000056087ea9f278 CR3: 00000002268e8001 CR4: 00000000003606e0
+ [701253.608880] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ [701253.609250] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ [701253.609608] Call Trace:
+ [701253.609994]  btrfs_log_inode+0xdfb/0xe40 [btrfs]
+ [701253.610383]  btrfs_log_inode_parent+0x2be/0xa60 [btrfs]
+ [701253.610770]  ? do_raw_spin_unlock+0x49/0xc0
+ [701253.611150]  btrfs_log_dentry_safe+0x4a/0x70 [btrfs]
+ [701253.611537]  btrfs_sync_file+0x3b2/0x440 [btrfs]
+ [701253.612010]  ? do_sysinfo+0xb0/0xf0
+ [701253.612552]  do_fsync+0x38/0x60
+ [701253.612988]  __x64_sys_fsync+0x10/0x20
+ [701253.613360]  do_syscall_64+0x60/0x1b0
+ [701253.613733]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ [701253.614103] RIP: 0033:0x7f14da4e66d0
+ (...)
+ [701253.615250] RSP: 002b:00007fffa670fdb8 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
+ [701253.615647] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f14da4e66d0
+ [701253.616047] RDX: 000056087ea9c260 RSI: 000056087ea9c260 RDI: 0000000000000003
+ [701253.616450] RBP: 0000000000000001 R08: 0000000000000020 R09: 0000000000000010
+ [701253.616854] R10: 000000000000009b R11: 0000000000000246 R12: 000056087ea9c260
+ [701253.617257] R13: 000056087ea9c240 R14: 0000000000000000 R15: 000056087ea9dd10
+ (...)
+ [701253.619941] ---[ end trace e088d74f132b6da5 ]---
 
-As you can see the kworker is waiting for bit 0 (PG_locked) on index
-7680, and aio-dio-invalid is waiting for bit 15 (PG_writeback) on index
-8148.  aio-dio-invalid has 7680, and the kworker epd looks like the
-following
+Updating the assertion again to allow for this particular case would result
+in a meaningless assertion, plus there is currently no risk of logging
+content that would result in any corruption after a log replay if the size
+of the data encoded in an inline extent is greater than the inode's i_size
+(which is not currently possibe either with or without compression),
+therefore just remove the assertion.
 
-  crash> struct extent_page_data ffffc900297bbbb0
-  struct extent_page_data {
-    bio = 0xffff889f747ed830,
-    tree = 0xffff889eed6ba448,
-    extent_locked = 0,
-    sync_io = 0
-  }
-
-Probably worth mentioning as well that it waits for writeback of the
-page to complete while holding a lock on it (at prepare_pages()).
-
-Using drgn I walked the bio pages looking for page
-0xffffea00fbfc7500 which is the one we're waiting for writeback on
-
-  bio = Object(prog, 'struct bio', address=0xffff889f747ed830)
-  for i in range(0, bio.bi_vcnt.value_()):
-      bv = bio.bi_io_vec[i]
-      if bv.bv_page.value_() == 0xffffea00fbfc7500:
-	  print("FOUND IT")
-
-which validated what I suspected.
-
-The fix for this is simple, flush the epd before we loop back around to
-the beginning of the file during writeout.
-
-Fixes: b293f02e1423 ("Btrfs: Add writepages support")
 CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/tree-log.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 37a28e2369b91..1372d3e5d90bb 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4060,6 +4060,14 @@ static int extent_write_cache_pages(struct extent_io_tree *tree,
- 		 */
- 		scanned = 1;
- 		index = 0;
-+
-+		/*
-+		 * If we're looping we could run into a page that is locked by a
-+		 * writer and that writer could be waiting on writeback for a
-+		 * page in our current bio, and thus deadlock, so flush the
-+		 * write bio here.
-+		 */
-+		flush_write_bio(data);
- 		goto retry;
- 	}
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 7ee573cddde96..f79682937faf4 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4443,13 +4443,8 @@ static int btrfs_log_trailing_hole(struct btrfs_trans_handle *trans,
+ 					struct btrfs_file_extent_item);
  
+ 		if (btrfs_file_extent_type(leaf, extent) ==
+-		    BTRFS_FILE_EXTENT_INLINE) {
+-			len = btrfs_file_extent_inline_len(leaf,
+-							   path->slots[0],
+-							   extent);
+-			ASSERT(len == i_size);
++		    BTRFS_FILE_EXTENT_INLINE)
+ 			return 0;
+-		}
+ 
+ 		len = btrfs_file_extent_num_bytes(leaf, extent);
+ 		/* Last extent goes beyond i_size, no need to log a hole. */
 -- 
 2.20.1
 
