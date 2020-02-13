@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0669AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878412073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD592073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbgBMHaL (ORCPT
+        id S1729871AbgBMHaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:30:11 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:40442 "EHLO
+        Thu, 13 Feb 2020 02:30:14 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:56179 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbgBMHaL (ORCPT
+        with ESMTP id S1729831AbgBMHaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:30:11 -0500
+        Thu, 13 Feb 2020 02:30:12 -0500
 Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id EF4B6CECD1;
-        Thu, 13 Feb 2020 08:39:32 +0100 (CET)
+        by mail.holtmann.org (Postfix) with ESMTPSA id DC5FECECD2;
+        Thu, 13 Feb 2020 08:39:33 +0100 (CET)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] Bluetooth: hci_intel: Replace zero-length array with
+Subject: Re: [PATCH] Bluetooth: hci_uart: Replace zero-length array with
  flexible-array member
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200212193119.GA27048@embeddedor>
-Date:   Thu, 13 Feb 2020 08:30:08 +0100
+In-Reply-To: <20200212193019.GA26196@embeddedor>
+Date:   Thu, 13 Feb 2020 08:30:10 +0100
 Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-Message-Id: <FF0626D1-A20C-4CD8-BD3A-40DD30366B76@holtmann.org>
-References: <20200212193119.GA27048@embeddedor>
+Message-Id: <7DE955F9-3CCA-4E51-811F-C6AB2663D2A1@holtmann.org>
+References: <20200212193019.GA26196@embeddedor>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,7 +75,7 @@ Hi Gustavo,
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
-> drivers/bluetooth/hci_intel.c | 2 +-
+> drivers/bluetooth/hci_ag6xx.c | 2 +-
 > 1 file changed, 1 insertion(+), 1 deletion(-)
 
 patch has been applied to bluetooth-next tree.
