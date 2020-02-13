@@ -2,202 +2,138 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BEDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C63C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D37A20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CBD206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610211;
-	bh=aKg390r3hekGnPo2Ut1o2ukP/NrxVwBAvUswlCD4hPo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHJ9M1wRMcYelY26PBg+AKHARdtKJUOF8jDB4HUpmMhaQG2BczReLDmyJ6qp3bx3q
-	 izJAOVIBVHJC9/YCnD+eG89BX6SiRRsM6U/tRgkYk7V0+1qWRhd2ekgnw3I7Izksio
-	 8HNT7vT4rpEG/I3G1HqwHTuQFceubNmujW83OVBw=
+	s=default; t=1581610216;
+	bh=Gi9ebtMb2Q5vhKZz7X3sWbVYF8tVSZIOTg4mf8KPW1E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bRgI5bw/my6gboUYuRfLPTEugoIu2ka/O5ar0VtX2URFPxVuFdph5+FcVDwrvKqzw
+	 W+Oj8AgS61oPYwAYCAPqSS3c07yqv0pNCi24ljhP1bdsckwdNxSvRVjk3W023zuLIw
+	 Bwb+AHZLDkis3z8OXpk727kS+Q86223NmrE4Zd5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgBMQKH (ORCPT
+        id S1730424AbgBMQKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:10:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgBMPWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:40 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1539624690;
-        Thu, 13 Feb 2020 15:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607359;
-        bh=aKg390r3hekGnPo2Ut1o2ukP/NrxVwBAvUswlCD4hPo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/KFUI+DDR7uSmmyz0tM/DuLzV9wLnQI/MmqbqS78PjrQmGHchn+Q66BexXhP4GyF
-         3Hr3fkeuT23Cj8+mtB3Fy6lbdAfcw80gLavxAlDa5pFZ9fcCkJ7THVQmkxVx319MQc
-         9ebSqLKIYNLnMcZ6IvL7//EzhOYMF5XytxqobHa0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 27/91] padata: Remove broken queue flushing
-Date:   Thu, 13 Feb 2020 07:19:44 -0800
-Message-Id: <20200213151832.123934030@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
-References: <20200213151821.384445454@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Feb 2020 11:10:16 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38248 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728034AbgBMQKM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 11:10:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d6so3342105pgn.5;
+        Thu, 13 Feb 2020 08:10:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pq11CdZh/9XaCS2yx9ETIUzoQiiQH3AvcCT4xTpvaUA=;
+        b=sWRi8JkG3eqgk7nYzzCq3g4geT4pLP2PJ9omUKVGOIaunOMZt8UIBIhdTR5L1TI1ZO
+         x52gdvaEIg8jbdYjBvdi/RVpVA2EQ76hJayBSsLcALFp/EX5JipRePqVn+Hj6kj2sEgv
+         SoqU4Lnwyx5bpOjvhLKr5XB1+pWrCD5CAzUpOaZc138RIdsX/RxO0YTaAJaC9GuNLlnC
+         Eb6FMeQDDW+DidWlsfjBT/poNEma7IMO4wjPxFXR822xU+Y/hPU6ghlCa4XjjoXhwXat
+         LpDjWTQxeAKpj2c1Zz8/t+UNsZluPqlGBwrRxDbaZtlHOKWm6iXZoUOMm5BVU+zuYTnQ
+         wddg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pq11CdZh/9XaCS2yx9ETIUzoQiiQH3AvcCT4xTpvaUA=;
+        b=oZ369WJI59w9b5leY7BLMS0Ml6DKMlnYeqLMPLyUd0897DHR6jwBLX7JQEYqlrkTyH
+         pFR55pvrNNSyt3AgJSdETkXyKKvr5qQl6Sy/GsMuqtVrw7TLU9vs1CxvrvqteCJphc2o
+         txS28Ys4Tb5HKeY2//RM0pFXitGf2Wn5gTgogZESLoG5g3lRB9Fxm83p16Ybyon4cTn6
+         KGtV7Uid55INPRg70SdlKQ9NHKSshEujMzSTH4MuQXkxW4QmR07hQhIktDGHqH8Z9g0p
+         xigF9zmJ2Mc9Dlnqxy4z3Re39opaqADWpRoFrbgr2hKty9XVUn4Zlg5/wVDs/3F8GNZK
+         oQYg==
+X-Gm-Message-State: APjAAAUAja5tiqwfMQHy6cMqlaNJU9gxnuvpyZUMeYM7wUIw91ckizl0
+        qmuC4TL+4GxIKhJ6CEjatko=
+X-Google-Smtp-Source: APXvYqzI8Oi7TMhvonZcBalSovnuh/KcHK3T3FsCigFd9iMjc8lbR8SSmiARPrOMJIbUzzMyLep+UQ==
+X-Received: by 2002:a63:7152:: with SMTP id b18mr19069004pgn.232.1581610211399;
+        Thu, 13 Feb 2020 08:10:11 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id q12sm3404444pfh.158.2020.02.13.08.10.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 08:10:10 -0800 (PST)
+Date:   Thu, 13 Feb 2020 08:10:07 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v4 2/8] mm: introduce external memory hinting API
+Message-ID: <20200213161007.GA24649@google.com>
+References: <20200212233946.246210-1-minchan@kernel.org>
+ <20200212233946.246210-3-minchan@kernel.org>
+ <CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+Hi Jann,
 
-[ Upstream commit 07928d9bfc81640bab36f5190e8725894d93b659 ]
+On Thu, Feb 13, 2020 at 03:08:59PM +0100, Jann Horn wrote:
+> On Thu, Feb 13, 2020 at 12:40 AM Minchan Kim <minchan@kernel.org> wrote:
+> > To solve the issue, this patch introduces a new syscall process_madvise(2).
+> > It uses pidfd of an external process to give the hint.
+> [...]
+> > +       mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
+> > +       if (IS_ERR_OR_NULL(mm)) {
+> > +               ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
+> > +               goto release_task;
+> > +       }
+> > +
+> > +       ret = do_madvise(task, start, len_in, behavior);
+> 
+> When you're accessing another task, you should ensure that the other
+> task doesn't gain new privileges by executing a setuid binary in the
+> middle of being accessed. mm_access() does that for you; it holds the
+> ->cred_guard_mutex while it is looking up the task's ->mm and doing
+> the security check. mm_access() then returns you an mm pointer that
+> you're allowed to access without worrying about such things; an
+> mm_struct never gains privileges, since a setuid execution creates a
+> fresh mm_struct. However, the task may still execute setuid binaries
+> and such things.
+> 
+> This means that after you've looked up the mm with mm_access(), you
+> have to actually *use* that pointer. You're not allowed to simply read
+> task->mm yourself.
+> 
+> Therefore, I think you should:
+> 
+>  - change patch 1/8 ("mm: pass task to do_madvise") to also pass an
+> mm_struct* to do_madvise (but keep the task_struct* for patch 4/8)
+>  - in this patch, pass the mm_struct* from mm_access() into do_madvise()
+>  - drop patch 3/8 ("mm: validate mm in do_madvise"); it just papers
+> over a symptom without addressing the underlying problem
 
-The function padata_flush_queues is fundamentally broken because
-it cannot force padata users to complete the request that is
-underway.  IOW padata has to passively wait for the completion
-of any outstanding work.
-
-As it stands flushing is used in two places.  Its use in padata_stop
-is simply unnecessary because nothing depends on the queues to
-be flushed afterwards.
-
-The other use in padata_replace is more substantial as we depend
-on it to free the old pd structure.  This patch instead uses the
-pd->refcnt to dynamically free the pd structure once all requests
-are complete.
-
-Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/padata.c | 46 ++++++++++++----------------------------------
- 1 file changed, 12 insertions(+), 34 deletions(-)
-
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 282b489a286db..bb632033e6887 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -33,6 +33,8 @@
- 
- #define MAX_OBJ_NUM 1000
- 
-+static void padata_free_pd(struct parallel_data *pd);
-+
- static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
- {
- 	int cpu, target_cpu;
-@@ -300,6 +302,7 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	struct padata_serial_queue *squeue;
- 	struct parallel_data *pd;
- 	LIST_HEAD(local_list);
-+	int cnt;
- 
- 	local_bh_disable();
- 	squeue = container_of(serial_work, struct padata_serial_queue, work);
-@@ -309,6 +312,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	list_replace_init(&squeue->serial.list, &local_list);
- 	spin_unlock(&squeue->serial.lock);
- 
-+	cnt = 0;
-+
- 	while (!list_empty(&local_list)) {
- 		struct padata_priv *padata;
- 
-@@ -318,9 +323,12 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 		list_del_init(&padata->list);
- 
- 		padata->serial(padata);
--		atomic_dec(&pd->refcnt);
-+		cnt++;
- 	}
- 	local_bh_enable();
-+
-+	if (atomic_sub_and_test(cnt, &pd->refcnt))
-+		padata_free_pd(pd);
- }
- 
- /**
-@@ -443,8 +451,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	setup_timer(&pd->timer, padata_reorder_timer, (unsigned long)pd);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
--	atomic_set(&pd->refcnt, 0);
--	pd->pinst = pinst;
-+	atomic_set(&pd->refcnt, 1);
- 	spin_lock_init(&pd->lock);
- 
- 	return pd;
-@@ -468,31 +475,6 @@ static void padata_free_pd(struct parallel_data *pd)
- 	kfree(pd);
- }
- 
--/* Flush all objects out of the padata queues. */
--static void padata_flush_queues(struct parallel_data *pd)
--{
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct padata_serial_queue *squeue;
--
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
--		pqueue = per_cpu_ptr(pd->pqueue, cpu);
--		flush_work(&pqueue->work);
--	}
--
--	del_timer_sync(&pd->timer);
--
--	if (atomic_read(&pd->reorder_objects))
--		padata_reorder(pd);
--
--	for_each_cpu(cpu, pd->cpumask.cbcpu) {
--		squeue = per_cpu_ptr(pd->squeue, cpu);
--		flush_work(&squeue->work);
--	}
--
--	BUG_ON(atomic_read(&pd->refcnt) != 0);
--}
--
- static void __padata_start(struct padata_instance *pinst)
- {
- 	pinst->flags |= PADATA_INIT;
-@@ -506,10 +488,6 @@ static void __padata_stop(struct padata_instance *pinst)
- 	pinst->flags &= ~PADATA_INIT;
- 
- 	synchronize_rcu();
--
--	get_online_cpus();
--	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
- 
- /* Replace the internal control structure with a new one. */
-@@ -530,8 +508,8 @@ static void padata_replace(struct padata_instance *pinst,
- 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
- 		notification_mask |= PADATA_CPU_SERIAL;
- 
--	padata_flush_queues(pd_old);
--	padata_free_pd(pd_old);
-+	if (atomic_dec_and_test(&pd_old->refcnt))
-+		padata_free_pd(pd_old);
- 
- 	if (notification_mask)
- 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
--- 
-2.20.1
-
-
-
+Actually, it was what this patch series was doing until last version
+but I changed it to reduce just *a parameter* to do_madvise.
+And then, this time, I got a good advise I was not familiar.
+I will fix it again.
+Thanks for the review!
