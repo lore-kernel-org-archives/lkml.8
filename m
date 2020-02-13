@@ -2,92 +2,95 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32D7C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E868DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21CE24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581593824;
-	bh=KoMi3mqOQE1OFyVlsv0WPVN9MqomVPafDTkEPW+lwaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0jCKIPSK5g6YdFQv+8gtbs9g+MoJov+GVQrdiwnV7ERRS04ortVRspOPdnJ6p/2l/
-	 nnaWw6RyRx8tElnLwpY9OMDUlQ48IDfclXfI9PvLu/my4CyXyNnFo6hjArAPKxkE6d
-	 93zEJMzbhiXAz46KPlwqRQ9FuvobHdK+0Ak35x6c=
+	by mail.kernel.org (Postfix) with ESMTP id BFD37217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgBMLhE (ORCPT
+        id S1729852AbgBMLiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:37:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:45350 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgBMLhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:37:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B9201FB;
-        Thu, 13 Feb 2020 03:37:03 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4F8C3F6CF;
-        Thu, 13 Feb 2020 03:37:02 -0800 (PST)
-Date:   Thu, 13 Feb 2020 11:37:01 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Samuel Holland <samuel@sholland.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/4] ASoC: codec2codec: avoid invalid/double-free of pcm
- runtime
-Message-ID: <20200213113701.GA4333@sirena.org.uk>
-References: <20200213061147.29386-1-samuel@sholland.org>
- <20200213061147.29386-2-samuel@sholland.org>
- <1jr1yyannl.fsf@starbuckisacylon.baylibre.com>
+        Thu, 13 Feb 2020 06:38:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51673 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgBMLiA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:38:00 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j2CoR-0008Dp-Bg; Thu, 13 Feb 2020 12:37:43 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E2B141013A6; Thu, 13 Feb 2020 12:37:42 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dan Williams <dan.j.williams@intel.com>, mingo@redhat.com
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        kbuild test robot <lkp@intel.com>, vishal.l.verma@intel.com,
+        hch@lst.de, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, x86@kernel.org
+Subject: Re: [PATCH v4 5/6] x86/numa: Provide a range-to-target_node lookup facility
+In-Reply-To: <157966230092.2508551.3905721944859436879.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157966227494.2508551.7206194169374588977.stgit@dwillia2-desk3.amr.corp.intel.com> <157966230092.2508551.3905721944859436879.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 13 Feb 2020 12:37:42 +0100
+Message-ID: <874kvu3egp.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
-In-Reply-To: <1jr1yyannl.fsf@starbuckisacylon.baylibre.com>
-X-Cookie: Academicians care, that's who.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dan Williams <dan.j.williams@intel.com> writes:
+> +/**
+> + * numa_move_memblk - Move one numa_memblk from one numa_meminfo to another
+> + * @dst: numa_meminfo to move block to
+> + * @idx: Index of memblk to remove
+> + * @src: numa_meminfo to remove memblk from
+> + *
+> + * If @dst is non-NULL add it at the @dst->nr_blks index and increment
+> + * @dst->nr_blks, then remove it from @src.
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is not correct. It's suggesting that these operations are only
+happening when @dst is non-NULL. Remove is unconditional though.
 
-On Thu, Feb 13, 2020 at 09:37:18AM +0100, Jerome Brunet wrote:
+Also this is called with &numa_reserved_meminfo as @dst argument, which is:
 
-> This brings another question/problem:
-> A link which has failed in PMU, could try in PMD to hw_free/shutdown a
-> dai which has not gone through startup/hw_params, right ?
+> +static struct numa_meminfo numa_reserved_meminfo __initdata_numa;
 
-I think so, yes.
+So how would @dst ever be NULL?
+ 
+> + */
+> +static void __init numa_move_memblk(struct numa_meminfo *dst, int idx,
+> +		struct numa_meminfo *src)
+> +{
+> +	if (dst) {
+> +		memcpy(&dst->blk[dst->nr_blks], &src->blk[idx],
+> +				sizeof(struct numa_memblk));
+> +		dst->nr_blks++;
+> +	}
+> +	numa_remove_memblk_from(idx, src);
+> +}
 
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
+...
 
------BEGIN PGP SIGNATURE-----
+> -		/* make sure all blocks are inside the limits */
+> +		/* move / save reserved memory ranges */
+> +		if (!memblock_overlaps_region(&memblock.memory,
+> +					bi->start, bi->end - bi->start)) {
+> +			numa_move_memblk(&numa_reserved_meminfo, i--, mi);
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5FNNoACgkQJNaLcl1U
-h9Anuwf/SQT6ubriSIEq1TwGCzPNYCbx2WjOhRIjTbtNwtmezyCgzCOThrEEuRZh
-VjvYkn7VqZBgoHsh43+vqiwtI3eLXwrX02o4izW1srdqfh2ZDAMmHH37qf8zfYmv
-S7bC9gDSY8sFOjSevEKgk6MC/3h60PKK0Q7FWc/A1B8Fqo5ZaoeuYrMqw0x2yQVI
-1DRTlhVoOKIQ+tjKIPmRwTt1KyJi9FlhN5oW2hEpIpMOK34jnVyKBMHESopGF6tT
-fFPPHWKfZlxP8SkwtcYsH1xxrZC5LwlPA8haNBQAtniDaVG+PlndvoN69UfBudPw
-s7tJfn+2MEXC0NEJzXukYpwwHkuu1A==
-=r51Q
------END PGP SIGNATURE-----
+Thanks,
 
---qMm9M+Fa2AknHoGS--
+        tglx
