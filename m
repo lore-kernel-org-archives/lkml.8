@@ -2,159 +2,338 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13515C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4166BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E225E217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="D2KwX3UV"
+	by mail.kernel.org (Postfix) with ESMTP id 0D90E218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgBMSAN (ORCPT
+        id S1728152AbgBMSAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:00:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40018 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbgBMSAM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:00:12 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t3so7818838wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:00:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XXo3L4k48aibe+yP/A4EY8XTS9o1G2cK7ZyRw33XEt8=;
-        b=D2KwX3UVhNBaSMtlGygi7ujusj8mKB5CcFanw7hjeEE722YbtHnWTNV13eGfVuFNic
-         abEz7lOczVoEbxhOBIjwjHChdsNNJ83vitHq0RgebeASzJqg5/iVqBkCGex1dvQODZ6F
-         SBZNsy/HbodwmxtTnB0YGepG07xMUnGSS+u5BDsJAXOya+C134E/cC1GTaIbMsGIp9w6
-         v8olvCtghXvcl102ZRlwUmPAav21tepYq5Ogeq6AZQTkK1uoV7/ddYtGfqVcL4c5uza3
-         J9SyiO8c6oKS64EbROwk8eV2Pl+ttxALeDPsbZ+xvL6E4tiXuiZdEesuLxpdaQEc5iiN
-         h86A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XXo3L4k48aibe+yP/A4EY8XTS9o1G2cK7ZyRw33XEt8=;
-        b=DjX+4KJv7P1aDnxPuzudvk6mLEafMSsWtXO35LTu4UVlbP6pB0SpUxn8ajXpt4U1DE
-         eHFaqXrThoZF/kuYDWb/DyyPS3xFPd3X/8xJ7Dxi4mHmY8aAkuubLdmByTjtSdRJ7V1Z
-         2xv5Xz/wHUrORQnL34QQXwMlkrMRN5ywPinWsx5BMlSVpBEEOO5E+gV6czUdPUW1XN/B
-         xMBZfBnhCXgBz+azTfgzznvXjJ5nsvLodT9muc8a/a+Z76I4eY6GOgfMrUovBqK5wF9l
-         VYLdt7kSM3ROt3UTKbSgaHbElgGF3VGk9jOHdR0R9poOqGj4vift4360IiZdyAnk1aUr
-         7zZg==
-X-Gm-Message-State: APjAAAUvxAdH8BDBVoPaUN/3cfOY6z9t80UULdRGuc398/1KxY3Jv4MZ
-        tjoNaka6dLHniEJmRzfeZvPujmQxwWE=
-X-Google-Smtp-Source: APXvYqyUsqTefNHa+WG1XIxQNt/pUPg/0tXe6oyOXxhPFPWFFV3tAT2SQrkX7z4Jz6q1Z1ekN+sbRg==
-X-Received: by 2002:a05:6000:10c:: with SMTP id o12mr23253172wrx.106.1581616810553;
-        Thu, 13 Feb 2020 10:00:10 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id z11sm3630089wrv.96.2020.02.13.10.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 10:00:10 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-Subject: [PATCH 2/2] watchdog/uapi: Add WDIOS_{RUN,STOP}_ON_REBOOT
-Date:   Thu, 13 Feb 2020 17:59:58 +0000
-Message-Id: <20200213175958.105914-3-dima@arista.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213175958.105914-1-dima@arista.com>
-References: <20200213175958.105914-1-dima@arista.com>
+        Thu, 13 Feb 2020 13:00:37 -0500
+Received: from mga14.intel.com ([192.55.52.115]:61895 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727754AbgBMSAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:00:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 10:00:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
+   d="scan'208";a="432745837"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Feb 2020 10:00:35 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j2Imw-000FiL-KJ; Fri, 14 Feb 2020 02:00:34 +0800
+Date:   Fri, 14 Feb 2020 02:00:05 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:core/objtool] BUILD SUCCESS
+ dc4197236c20e761f2007c641afd193f81a00a74
+Message-ID: <5e458ea5.bPHQonCbbOOS0UhZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many watchdog drivers use watchdog_stop_on_reboot() helper in order
-to stop the watchdog on system reboot. Unfortunately, this logic is
-coded in driver's probe function and doesn't allows user to decide what
-to do during shutdown/reboot.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/objtool
+branch HEAD: dc4197236c20e761f2007c641afd193f81a00a74  objtool: Add relocation check for alternative sections
 
-On the other side, Xen and Qemu watchdog drivers (xen_wdt and i6300esb)
-may be configured to either send NMI or turn off/reboot VM as
-the watchdog action. As the kernel may stuck at any state, sending NMIs
-can't reliably reboot the VM.
+elapsed time: 2886m
 
-At Arista, we benefited from the following set-up: the emulated watchdogs
-trigger VM reset and softdog is set to catch less severe conditions to
-generate vmcore. Just before reboot watchdog's timeout is increased
-to some good-enough value (3 mins). That keeps watchdog always running
-and guarantees that VM doesn't stuck.
+configs tested: 275
+configs skipped: 0
 
-Provide new WDIOS_RUN_ON_REBOOT and WDIOS_STOP_ON_REBOOT ioctl options
-to set up strategy on reboot.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+sparc                            allyesconfig
+riscv                               defconfig
+s390                          debug_defconfig
+riscv                          rv32_defconfig
+s390                                defconfig
+mips                             allmodconfig
+um                                  defconfig
+nios2                         10m50_defconfig
+riscv                             allnoconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                          rsk7269_defconfig
+sh                            titan_defconfig
+nds32                               defconfig
+sh                                allnoconfig
+xtensa                       common_defconfig
+powerpc                           allnoconfig
+c6x                              allyesconfig
+microblaze                      mmu_defconfig
+powerpc                             defconfig
+sparc64                          allmodconfig
+alpha                               defconfig
+microblaze                    nommu_defconfig
+parisc                              defconfig
+s390                             alldefconfig
+sparc64                           allnoconfig
+i386                              allnoconfig
+ia64                                defconfig
+riscv                    nommu_virt_defconfig
+h8300                       h8s-sim_defconfig
+ia64                              allnoconfig
+mips                      fuloong2e_defconfig
+xtensa                          iss_defconfig
+s390                             allmodconfig
+um                             i386_defconfig
+m68k                             allmodconfig
+powerpc                       ppc64_defconfig
+csky                                defconfig
+ia64                             allyesconfig
+s390                             allyesconfig
+i386                                defconfig
+sparc64                             defconfig
+openrisc                 simple_smp_defconfig
+nios2                         3c120_defconfig
+mips                              allnoconfig
+parisc                           allyesconfig
+i386                             alldefconfig
+i386                             allyesconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+c6x                        evmc6678_defconfig
+openrisc                    or1ksim_defconfig
+nds32                             allnoconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allyesconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+x86_64               randconfig-a001-20200213
+x86_64               randconfig-a002-20200213
+x86_64               randconfig-a003-20200213
+i386                 randconfig-a001-20200213
+i386                 randconfig-a002-20200213
+i386                 randconfig-a003-20200213
+x86_64               randconfig-a001-20200212
+x86_64               randconfig-a002-20200212
+x86_64               randconfig-a003-20200212
+i386                 randconfig-a001-20200212
+i386                 randconfig-a002-20200212
+i386                 randconfig-a003-20200212
+alpha                randconfig-a001-20200212
+m68k                 randconfig-a001-20200212
+nds32                randconfig-a001-20200212
+parisc               randconfig-a001-20200212
+riscv                randconfig-a001-20200212
+alpha                randconfig-a001-20200213
+m68k                 randconfig-a001-20200213
+mips                 randconfig-a001-20200213
+nds32                randconfig-a001-20200213
+parisc               randconfig-a001-20200213
+riscv                randconfig-a001-20200213
+c6x                  randconfig-a001-20200213
+h8300                randconfig-a001-20200213
+microblaze           randconfig-a001-20200213
+nios2                randconfig-a001-20200213
+sparc64              randconfig-a001-20200213
+c6x                  randconfig-a001-20200212
+h8300                randconfig-a001-20200212
+microblaze           randconfig-a001-20200212
+nios2                randconfig-a001-20200212
+sparc64              randconfig-a001-20200212
+c6x                  randconfig-a001-20200211
+h8300                randconfig-a001-20200211
+microblaze           randconfig-a001-20200211
+nios2                randconfig-a001-20200211
+sparc64              randconfig-a001-20200211
+csky                 randconfig-a001-20200213
+openrisc             randconfig-a001-20200213
+s390                 randconfig-a001-20200213
+sh                   randconfig-a001-20200213
+xtensa               randconfig-a001-20200213
+csky                 randconfig-a001-20200212
+openrisc             randconfig-a001-20200212
+s390                 randconfig-a001-20200212
+sh                   randconfig-a001-20200212
+xtensa               randconfig-a001-20200212
+x86_64               randconfig-b001-20200212
+x86_64               randconfig-b002-20200212
+x86_64               randconfig-b003-20200212
+i386                 randconfig-b001-20200212
+i386                 randconfig-b002-20200212
+i386                 randconfig-b003-20200212
+x86_64               randconfig-b001-20200213
+x86_64               randconfig-b002-20200213
+x86_64               randconfig-b003-20200213
+i386                 randconfig-b001-20200213
+i386                 randconfig-b002-20200213
+i386                 randconfig-b003-20200213
+x86_64               randconfig-b001-20200211
+x86_64               randconfig-b002-20200211
+x86_64               randconfig-b003-20200211
+i386                 randconfig-b001-20200211
+i386                 randconfig-b002-20200211
+i386                 randconfig-b003-20200211
+x86_64               randconfig-c001-20200212
+x86_64               randconfig-c002-20200212
+x86_64               randconfig-c003-20200212
+i386                 randconfig-c001-20200212
+i386                 randconfig-c002-20200212
+i386                 randconfig-c003-20200212
+x86_64               randconfig-c001-20200213
+x86_64               randconfig-c002-20200213
+x86_64               randconfig-c003-20200213
+i386                 randconfig-c001-20200213
+i386                 randconfig-c002-20200213
+i386                 randconfig-c003-20200213
+x86_64               randconfig-c001-20200211
+x86_64               randconfig-c002-20200211
+x86_64               randconfig-c003-20200211
+i386                 randconfig-c001-20200211
+i386                 randconfig-c002-20200211
+i386                 randconfig-c003-20200211
+x86_64               randconfig-d001-20200212
+x86_64               randconfig-d002-20200212
+x86_64               randconfig-d003-20200212
+i386                 randconfig-d001-20200212
+i386                 randconfig-d002-20200212
+i386                 randconfig-d003-20200212
+x86_64               randconfig-d001-20200213
+x86_64               randconfig-d002-20200213
+x86_64               randconfig-d003-20200213
+i386                 randconfig-d001-20200213
+i386                 randconfig-d002-20200213
+i386                 randconfig-d003-20200213
+x86_64               randconfig-d001-20200211
+x86_64               randconfig-d002-20200211
+x86_64               randconfig-d003-20200211
+i386                 randconfig-d001-20200211
+i386                 randconfig-d002-20200211
+i386                 randconfig-d003-20200211
+x86_64               randconfig-e001-20200213
+x86_64               randconfig-e002-20200213
+x86_64               randconfig-e003-20200213
+i386                 randconfig-e001-20200213
+i386                 randconfig-e002-20200213
+i386                 randconfig-e003-20200213
+x86_64               randconfig-e001-20200212
+x86_64               randconfig-e002-20200212
+x86_64               randconfig-e003-20200212
+i386                 randconfig-e001-20200212
+i386                 randconfig-e002-20200212
+i386                 randconfig-e003-20200212
+x86_64               randconfig-f001-20200213
+x86_64               randconfig-f002-20200213
+x86_64               randconfig-f003-20200213
+i386                 randconfig-f001-20200213
+i386                 randconfig-f002-20200213
+i386                 randconfig-f003-20200213
+x86_64               randconfig-f001-20200212
+x86_64               randconfig-f002-20200212
+x86_64               randconfig-f003-20200212
+i386                 randconfig-f001-20200212
+i386                 randconfig-f002-20200212
+i386                 randconfig-f003-20200212
+x86_64               randconfig-f001-20200211
+x86_64               randconfig-f002-20200211
+x86_64               randconfig-f003-20200211
+i386                 randconfig-f001-20200211
+i386                 randconfig-f002-20200211
+i386                 randconfig-f003-20200211
+x86_64               randconfig-g001-20200213
+x86_64               randconfig-g002-20200213
+x86_64               randconfig-g003-20200213
+i386                 randconfig-g001-20200213
+i386                 randconfig-g002-20200213
+i386                 randconfig-g003-20200213
+x86_64               randconfig-g001-20200212
+x86_64               randconfig-g002-20200212
+x86_64               randconfig-g003-20200212
+i386                 randconfig-g001-20200212
+i386                 randconfig-g002-20200212
+i386                 randconfig-g003-20200212
+x86_64               randconfig-g001-20200211
+x86_64               randconfig-g002-20200211
+x86_64               randconfig-g003-20200211
+i386                 randconfig-g001-20200211
+i386                 randconfig-g002-20200211
+i386                 randconfig-g003-20200211
+x86_64               randconfig-h001-20200212
+x86_64               randconfig-h002-20200212
+x86_64               randconfig-h003-20200212
+i386                 randconfig-h001-20200212
+i386                 randconfig-h002-20200212
+i386                 randconfig-h003-20200212
+x86_64               randconfig-h001-20200213
+x86_64               randconfig-h002-20200213
+x86_64               randconfig-h003-20200213
+i386                 randconfig-h001-20200213
+i386                 randconfig-h002-20200213
+i386                 randconfig-h003-20200213
+arc                  randconfig-a001-20200212
+arm                  randconfig-a001-20200212
+arm64                randconfig-a001-20200212
+ia64                 randconfig-a001-20200212
+powerpc              randconfig-a001-20200212
+sparc                randconfig-a001-20200212
+arc                  randconfig-a001-20200211
+arm                  randconfig-a001-20200211
+arm64                randconfig-a001-20200211
+ia64                 randconfig-a001-20200211
+powerpc              randconfig-a001-20200211
+sparc                randconfig-a001-20200211
+arc                  randconfig-a001-20200213
+arm                  randconfig-a001-20200213
+arm64                randconfig-a001-20200213
+ia64                 randconfig-a001-20200213
+powerpc              randconfig-a001-20200213
+sparc                randconfig-a001-20200213
+riscv                            allmodconfig
+riscv                            allyesconfig
+s390                              allnoconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sparc                               defconfig
+sparc64                          allyesconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
- drivers/watchdog/watchdog_dev.c | 12 ++++++++++++
- include/linux/watchdog.h        |  6 ++++++
- include/uapi/linux/watchdog.h   |  3 ++-
- 3 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 8b5c742f24e8..c854cd0245db 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -753,6 +753,18 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
- 		}
- 		if (val & WDIOS_ENABLECARD)
- 			err = watchdog_start(wdd);
-+
-+		if (val & WDIOS_RUN_ON_REBOOT) {
-+			if (val & WDIOS_STOP_ON_REBOOT) {
-+				err = -EINVAL;
-+				break;
-+			}
-+			watchdog_run_on_reboot(wdd);
-+			err = 0;
-+		} else if (val & WDIOS_STOP_ON_REBOOT) {
-+			watchdog_stop_on_reboot(wdd);
-+			err = 0;
-+		}
- 		break;
- 	case WDIOC_KEEPALIVE:
- 		if (!(wdd->info->options & WDIOF_KEEPALIVEPING)) {
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index 417d9f37077a..9e2ca7754631 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -150,6 +150,12 @@ static inline void watchdog_stop_on_reboot(struct watchdog_device *wdd)
- 	set_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
- }
- 
-+/* Use the following function to keep the watchdog running on reboot */
-+static inline void watchdog_run_on_reboot(struct watchdog_device *wdd)
-+{
-+	clear_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
-+}
-+
- /* Use the following function to stop the watchdog when unregistering it */
- static inline void watchdog_stop_on_unregister(struct watchdog_device *wdd)
- {
-diff --git a/include/uapi/linux/watchdog.h b/include/uapi/linux/watchdog.h
-index b15cde5c9054..bf19a5d3c987 100644
---- a/include/uapi/linux/watchdog.h
-+++ b/include/uapi/linux/watchdog.h
-@@ -53,6 +53,7 @@ struct watchdog_info {
- #define	WDIOS_DISABLECARD	0x0001	/* Turn off the watchdog timer */
- #define	WDIOS_ENABLECARD	0x0002	/* Turn on the watchdog timer */
- #define	WDIOS_TEMPPANIC		0x0004	/* Kernel panic on temperature trip */
--
-+#define	WDIOS_RUN_ON_REBOOT	0x0008	/* Keep watchdog enabled on reboot */
-+#define	WDIOS_STOP_ON_REBOOT	0x0010	/* Turn off the watchdog on reboot */
- 
- #endif /* _UAPI_LINUX_WATCHDOG_H */
--- 
-2.25.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
