@@ -2,288 +2,142 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4FBC3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E64FC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15981218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1425D218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="AguTaT5/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tEK2VNcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgBMKtd (ORCPT
+        id S1729838AbgBMKuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:49:33 -0500
-Received: from mail-dm6nam12on2116.outbound.protection.outlook.com ([40.107.243.116]:16865
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbgBMKtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:49:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YW/PwMa52T0oYrIcDDZd7rlEfEcA/10wp1mkupv9S56ap/vubkShC/ulo1Ly6smdHUJSel/DlNATKh5gi+I5tm+Cqz8NQfQ6J67I7a3kLspdkaiWJ2+jSRR9CqgVkXmN4qLDIxT5ksX6IQV7z8Cw3TU6eEr1a6EIP9g1u82vDdLGlvVC5Rz/K0UWOiSgRiuNz9UBJUznBQLO09sPfSstwFniu4CqweKzQwtRPGG4MyVCCjvcL+4pnufP7cwqLdOKTeEi1yGvV5ymYnFHDdhgh36ce9rJSeRqjb+Naxhh0SqPGi5PFPz/ApYOL+N+1ryGLZyjxRjfzEPnnaJV2/Ggwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y1Pde1onGSDd1PxjH1H32ne5Udn8C2FJsVfS3sYkU/E=;
- b=OozOi6oyrd8nvlA9MY+IqoUDR5e70RT3k7WOxY/dw+JiFty59ZEn6IplfrS8qfjlDiujQWOB462Ib7PR/fLWRl9VqPCPCTjYPdbNgHANIeJjaI2mv9Pu8U2Y3DdpoB7Tu9PHlEYSAC2N76UJ2eMPnb/8iITrfJOQxoVqjrMI2PNQ0KTG3Oh+BrLYtXDpoRz1TJyjl3h50r9uoufJYNf0qAJna+3ZGxz+fKNMz9R8BwePxFJRObqwbmaQxEBPNhSYnZAYTJoBBiFq8xWDBNc0FMEoheSIuY5/xiF+wVs1IeLxnxhsBzO2N56/hywCHnnIZbkHf3uLVOzYFbhF2jL0Cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fortanix.com; dmarc=pass action=none header.from=fortanix.com;
- dkim=pass header.d=fortanix.com; arc=none
+        Thu, 13 Feb 2020 05:50:11 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35244 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729494AbgBMKuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:50:11 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q8so6052687ljb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 02:50:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector2-fortanix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y1Pde1onGSDd1PxjH1H32ne5Udn8C2FJsVfS3sYkU/E=;
- b=AguTaT5/bzgv7ENfoEpw00Pz/vNeRz9N8J5TiU5NVYDQtn60kG5NQPjsAWVLPJzQkN4vJbP2KP8jxYzhrszXZwJvUFEbp4deq8RjJPwoSinoV8ziUE4sHd9pWd2We/KwwisVPAeqZITXi/iyhbu5I4BJ3SX2ejdScvMuhb8My6A=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jethro@fortanix.com; 
-Received: from BYAPR11MB3734.namprd11.prod.outlook.com (20.178.239.29) by
- BYAPR11MB2743.namprd11.prod.outlook.com (52.135.227.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Thu, 13 Feb 2020 10:49:27 +0000
-Received: from BYAPR11MB3734.namprd11.prod.outlook.com
- ([fe80::180:d484:4d3f:fd99]) by BYAPR11MB3734.namprd11.prod.outlook.com
- ([fe80::180:d484:4d3f:fd99%7]) with mapi id 15.20.2729.025; Thu, 13 Feb 2020
- 10:49:27 +0000
-Subject: Re: [PATCH v26 13/22] x86/sgx: Add provisioning
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
- <20200209212609.7928-14-jarkko.sakkinen@linux.intel.com>
-From:   Jethro Beekman <jethro@fortanix.com>
-Message-ID: <91744cc7-b50c-ffe2-1875-aba9174f7535@fortanix.com>
-Date:   Thu, 13 Feb 2020 11:49:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200209212609.7928-14-jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LNXP265CA0078.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::18) To BYAPR11MB3734.namprd11.prod.outlook.com
- (2603:10b6:a03:fe::29)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fXD3NUgPbItg+EdbT8uLMEndhqABRKbmudYKP6OTeTY=;
+        b=tEK2VNcvvP/Fs8a1XfdgXwXHAOHziWPxDjtTpPnfs0njU9+Z6xURNs5tbTbgsTdhSW
+         et1ExI+S25xMn8ikhaf6LY2hQYaT/rUBAXh1BHPIKTWBgP7ZSeNgtHjVcK9ZngzHSOkl
+         vPICzA2jGI8DmbzYqLApFKFoX975IEB1MmG03dvR6DqsTw7rGYzIyY7gZGZwa3eXqkRW
+         Utt1Bo/TtLIjbpDEJRtVBZLLo/SjZ8ZsTMh293ElsFy4pLGm3jN0cnVO6dFG0fGRgW89
+         k74WVlE/X7pNhpyUq9Px0DDsLB3Tl8hTxC+lLpMRpidtjejTf/TJCdh/B/pKLIA2JUfQ
+         v7qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fXD3NUgPbItg+EdbT8uLMEndhqABRKbmudYKP6OTeTY=;
+        b=aHYhm5MglvIegtr5M0ta1L3mUJWM8TL5D61hZIVr6ZJwqLz8JMVI5CruTM4363WFPe
+         C49uLh4jQOS/XrxSzhO1fbTUzsWzxqgxZ9Mh6UKbDYRoKA+GfFZUAAk7Tdh1S9p2KGyN
+         ssQNfe9UHsVcKxjJTqjnYpl5aBLfzDiJ09CQpcXmo139mJ24wiqDLtKZginNqzHM0LJD
+         9ibrsXICAwXJrNA/L4REp5vEdaH0KRVFBwccNtsWACpKsvwp33ZfsC0JyPOh1syBO0WB
+         vIf+CWXKWvWtqTX69SUGfmTU3f/7L2803+CQVviOJTFI01ZwuTqyoetVga0j0xScQjrp
+         sS0w==
+X-Gm-Message-State: APjAAAWbXKkz65B/ayYeiG9kAn/rDlWQLdDYNwHIMqlyJ/IsLtFa2HgG
+        1BB3QlHR+LZBp/kXczB731jX4NIfuyGGvlWTtj8mqcInOP4=
+X-Google-Smtp-Source: APXvYqyMQjetx0saudaTZFe7piFiYoReolaCxitIUPkUXnWVRMTfqYurmvJRIyNi0I8RKA/8Fczfx3OYaZFvTZVl6Ig=
+X-Received: by 2002:a2e:8e91:: with SMTP id z17mr10501916ljk.13.1581591007651;
+ Thu, 13 Feb 2020 02:50:07 -0800 (PST)
 MIME-Version: 1.0
-Received: from [10.195.0.226] (212.61.132.179) by LNXP265CA0078.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:76::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Thu, 13 Feb 2020 10:49:23 +0000
-X-Originating-IP: [212.61.132.179]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b8d8335c-4733-4c13-7717-08d7b0726599
-X-MS-TrafficTypeDiagnostic: BYAPR11MB2743:
-X-Microsoft-Antispam-PRVS: <BYAPR11MB27430463C36AF47BDB950739AA1A0@BYAPR11MB2743.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 031257FE13
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39830400003)(396003)(366004)(376002)(136003)(346002)(199004)(189003)(66476007)(86362001)(66946007)(31696002)(36756003)(52116002)(5660300002)(4326008)(6486002)(31686004)(26005)(316002)(508600001)(66556008)(53546011)(16576012)(16526019)(186003)(956004)(81156014)(7416002)(81166006)(8676002)(2906002)(8936002)(2616005)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB2743;H:BYAPR11MB3734.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fortanix.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hiNSRlLldMAHPIvzB+5xoMs6gFXxbQO/YJwJYRj6eX5TsxZCwXoB9MmbCHUaE6560W5rH02UV1U+yhkT1LjaKj7U008PMVkcqmehfxbOudf3tBJ+AT7UT/VNkFY8f3v8ZOcI5PVvaEFyJb9/k+Fo3NLyJBSBGxeOoCj9t+EvOaamm4f2SSqQ+af1a0nqLbGxwEp50lwk3T5QS5sHJ3fH1UEDvCfv3UUkUUxXFGbtQgBPIkNUDTxRtaL3hdY1o68GVoS4kmz+Bg5nTOPn9XEHxTX4A8EiZk6jdp2slkdNdrqtCTaNutE7HWnAZENEWClCBJxqBTCGJylmKZBkiH8wA9xHHOxez+5SFrGhpsDu/Ex0SJ+i5fUkkTkjrVcd08LHXnGzeI75X3VO4iaklPH8SGQfgl3/zrQHPCMVBkca8TSlH38NuZjjjHC5rf3xdzZ6
-X-MS-Exchange-AntiSpam-MessageData: hYbdBlg7QSnNP8BokeXYkYFFcHTiCOHsFJXNSCkADRcdu3jQZn03PxcdRa7ItdqyHDLxQPR6mCL3jIjWh+JkkTpwtT9gayvOgTUO515fTLqGVHtC7mfmu8vMDIXzWwIAkMuZGtNsaQB7qLlgtOP5Jg==
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8d8335c-4733-4c13-7717-08d7b0726599
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 10:49:27.7608
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kpVITXddMKjM8owSmF4uMhtA3HnUCM3ulGdoUN8ubhQk2uIpOZBmURbme+7JatvUq1WIUIXMJiXzl0h23oOI4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2743
+References: <1654227.8mz0SueHsU@kreacher> <CAP245DXY2MsV6rf95QdATTXXZWoYYLFBO3QxQgkg=44Fw0cLNA@mail.gmail.com>
+ <CAJZ5v0i5thgrdGNQ+a1tuw=CGa8PAhHt19GoDpC8KLLjNVoQLQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i5thgrdGNQ+a1tuw=CGa8PAhHt19GoDpC8KLLjNVoQLQ@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 13 Feb 2020 16:19:56 +0530
+Message-ID: <CAP245DUGieaBgN6NCOpjbZtWsX5Bext1S4NqySYXK_H6Go5FgA@mail.gmail.com>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
+ latency QoS interface
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch and 22/22 contain the following email header:
+On Thu, Feb 13, 2020 at 3:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Feb 13, 2020 at 8:10 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> >
+> > On Wed, Feb 12, 2020 at 5:09 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > >
+> > > Hi All,
+> > >
+> > > This series of patches is based on the observation that after commit
+> > > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
+> > > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
+> > > code dedicated to the handling of global PM QoS classes in general.  That code
+> > > takes up space and adds overhead in vain, so it is better to get rid of it.
+> > >
+> > > Moreover, with that unuseful code removed, the interface for adding QoS
+> > > requests for CPU latency becomes inelegant and confusing, so it is better to
+> > > clean it up.
+> > >
+> > > Patches [01/28-12/28] do the first part described above, which also includes
+> > > some assorted cleanups of the core PM QoS code that doesn't go away.
+> > >
+> > > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
+> > > "define stubs, migrate users, change the API proper" manner), patches
+> > > [26-27/28] update the general comments and documentation to match the code
+> > > after the previous changes and the last one makes the CPU latency QoS depend
+> > > on CPU_IDLE (because cpuidle is the only user of its target value today).
+> > >
+> > > The majority of the patches in this series don't change the functionality of
+> > > the code at all (at least not intentionally).
+> > >
+> > > Please refer to the changelogs of individual patches for details.
+> >
+> > Hi Rafael,
+> >
+> > Nice cleanup to the code and docs.
+> >
+> > I've reviewed the series, and briefly tested it by setting latencies
+> > from userspace. Can we not remove the debugfs interface? It is a quick
+> > way to check the global cpu latency clamp on the system from userspace
+> > without setting up tracepoints or writing a program to read
+> > /dev/cpu_dma_latency.
+>
+> Come on.
+>
+> What about in Python?
+>
+> #!/usr/bin/env python
+> import numpy as np
+>
+> if __name__ == '__main__':
+>     f = open("/dev/cpu_dma_latency", "r")
+>     print(np.fromfile(f, dtype=np.int32, count=1))
+>     f.close()
+>
+> And probably you can do it in at least 20 different ways. :-)
 
-Content-Type: text/plain; charset=a
+Indeed, I can, just not as straightforward as "cat /debugfs/filename"
+when you don't have python or perl in your buildroot initramfs.
 
-git am doesn't like this.
+Some hexdump/od acrobatics will yield the value, I guess.
 
---
-Jethro Beekman | Fortanix
-
-On 2020-02-09 22:26, Jarkko Sakkinen wrote:
-> In order to provide a mechanism for devilering provisoning rights:
-> 
-> 1. Add a new device file /dev/sgx/provision that works as a token for
->    allowing an enclave to have the provisioning privileges.
-> 2. Add a new ioctl called SGX_IOC_ENCLAVE_SET_ATTRIBUTE that accepts the
->    following data structure:
-> 
->    struct sgx_enclave_set_attribute {
->            __u64 addr;
->            __u64 attribute_fd;
->    };
-> 
-> A daemon could sit on top of /dev/sgx/provision and send a file
-> descriptor of this file to a process that needs to be able to provision
-> enclaves.
-> 
-> The way this API is used is straight-forward. Lets assume that dev_fd is
-> a handle to /dev/sgx/enclave and prov_fd is a handle to
-> /dev/sgx/provision.  You would allow SGX_IOC_ENCLAVE_CREATE to
-> initialize an enclave with the PROVISIONKEY attribute by
-> 
-> params.addr = <enclave address>;
-> params.token_fd = prov_fd;
-> 
-> ioctl(dev_fd, SGX_IOC_ENCLAVE_SET_ATTRIBUTE, &params);
-> 
-> Cc: linux-security-module@vger.kernel.org
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/include/uapi/asm/sgx.h  | 11 ++++++++
->  arch/x86/kernel/cpu/sgx/driver.c | 14 ++++++++++
->  arch/x86/kernel/cpu/sgx/driver.h |  2 ++
->  arch/x86/kernel/cpu/sgx/ioctl.c  | 47 ++++++++++++++++++++++++++++++++
->  4 files changed, 74 insertions(+)
-> 
-> diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-> index 5edb08ab8fd0..57d0d30c79b3 100644
-> --- a/arch/x86/include/uapi/asm/sgx.h
-> +++ b/arch/x86/include/uapi/asm/sgx.h
-> @@ -25,6 +25,8 @@ enum sgx_page_flags {
->  	_IOWR(SGX_MAGIC, 0x01, struct sgx_enclave_add_pages)
->  #define SGX_IOC_ENCLAVE_INIT \
->  	_IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
-> +#define SGX_IOC_ENCLAVE_SET_ATTRIBUTE \
-> +	_IOW(SGX_MAGIC, 0x03, struct sgx_enclave_set_attribute)
->  
->  /**
->   * struct sgx_enclave_create - parameter structure for the
-> @@ -63,4 +65,13 @@ struct sgx_enclave_init {
->  	__u64 sigstruct;
->  };
->  
-> +/**
-> + * struct sgx_enclave_set_attribute - parameter structure for the
-> + *				      %SGX_IOC_ENCLAVE_SET_ATTRIBUTE ioctl
-> + * @attribute_fd:	file handle of the attribute file in the securityfs
-> + */
-> +struct sgx_enclave_set_attribute {
-> +	__u64 attribute_fd;
-> +};
-> +
->  #endif /* _UAPI_ASM_X86_SGX_H */
-> diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
-> index b4aa7b9f8376..d90114cec1c3 100644
-> --- a/arch/x86/kernel/cpu/sgx/driver.c
-> +++ b/arch/x86/kernel/cpu/sgx/driver.c
-> @@ -150,6 +150,13 @@ static struct miscdevice sgx_dev_enclave = {
->  	.fops = &sgx_encl_fops,
->  };
->  
-> +static struct miscdevice sgx_dev_provision = {
-> +	.minor = MISC_DYNAMIC_MINOR,
-> +	.name = "provision",
-> +	.nodename = "sgx/provision",
-> +	.fops = &sgx_provision_fops,
-> +};
-> +
->  int __init sgx_drv_init(void)
->  {
->  	unsigned int eax, ebx, ecx, edx;
-> @@ -190,5 +197,12 @@ int __init sgx_drv_init(void)
->  		return ret;
->  	}
->  
-> +	ret = misc_register(&sgx_dev_provision);
-> +	if (ret) {
-> +		pr_err("Creating /dev/sgx/provision failed with %d.\n", ret);
-> +		misc_deregister(&sgx_dev_enclave);
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
-> diff --git a/arch/x86/kernel/cpu/sgx/driver.h b/arch/x86/kernel/cpu/sgx/driver.h
-> index e4063923115b..72747d01c046 100644
-> --- a/arch/x86/kernel/cpu/sgx/driver.h
-> +++ b/arch/x86/kernel/cpu/sgx/driver.h
-> @@ -23,6 +23,8 @@ extern u64 sgx_attributes_reserved_mask;
->  extern u64 sgx_xfrm_reserved_mask;
->  extern u32 sgx_xsave_size_tbl[64];
->  
-> +extern const struct file_operations sgx_provision_fops;
-> +
->  long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg);
->  
->  int sgx_drv_init(void);
-> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
-> index 83513cdfd1c0..262001df3ae4 100644
-> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
-> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-> @@ -663,6 +663,50 @@ static long sgx_ioc_enclave_init(struct sgx_encl *encl, void __user *arg)
->  	return ret;
->  }
->  
-> +/**
-> + * sgx_ioc_enclave_set_attribute - handler for %SGX_IOC_ENCLAVE_SET_ATTRIBUTE
-> + * @filep:	open file to /dev/sgx
-> + * @arg:	userspace pointer to a struct sgx_enclave_set_attribute instance
-> + *
-> + * Mark the enclave as being allowed to access a restricted attribute bit.
-> + * The requested attribute is specified via the attribute_fd field in the
-> + * provided struct sgx_enclave_set_attribute.  The attribute_fd must be a
-> + * handle to an SGX attribute file, e.g. “/dev/sgx/provision".
-> + *
-> + * Failure to explicitly request access to a restricted attribute will cause
-> + * sgx_ioc_enclave_init() to fail.  Currently, the only restricted attribute
-> + * is access to the PROVISION_KEY.
-> + *
-> + * Note, access to the EINITTOKEN_KEY is disallowed entirely.
-> + *
-> + * Return: 0 on success, -errno otherwise
-> + */
-> +static long sgx_ioc_enclave_set_attribute(struct sgx_encl *encl,
-> +					  void __user *arg)
-> +{
-> +	struct sgx_enclave_set_attribute params;
-> +	struct file *attribute_file;
-> +	int ret;
-> +
-> +	if (copy_from_user(&params, arg, sizeof(params)))
-> +		return -EFAULT;
-> +
-> +	attribute_file = fget(params.attribute_fd);
-> +	if (!attribute_file)
-> +		return -EINVAL;
-> +
-> +	if (attribute_file->f_op != &sgx_provision_fops) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	encl->allowed_attributes |= SGX_ATTR_PROVISIONKEY;
-> +	ret = 0;
-> +
-> +out:
-> +	fput(attribute_file);
-> +	return ret;
-> +}
->  
->  long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
->  {
-> @@ -686,6 +730,9 @@ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
->  	case SGX_IOC_ENCLAVE_INIT:
->  		ret = sgx_ioc_enclave_init(encl, (void __user *)arg);
->  		break;
-> +	case SGX_IOC_ENCLAVE_SET_ATTRIBUTE:
-> +		ret = sgx_ioc_enclave_set_attribute(encl, (void __user *)arg);
-> +		break;
->  	default:
->  		ret = -ENOIOCTLCMD;
->  		break;
-> 
+> Also note that "echo the_debugfs_thing" does the equivalent, but the
+> conversion takes place in the kernel.  Is it really a good idea to
+> carry the whole debugfs interface because of that one conversion?
+>
+> > Except for patch 01/28 removing the debugfs interface, please feel to add my
+> >
+> > Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+>
+> Thanks!
