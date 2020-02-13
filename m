@@ -2,143 +2,89 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB5BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09322C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3865217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B56217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="sZorrvgN"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jQNVpjI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbgBMKkZ (ORCPT
+        id S1729820AbgBMKo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:40:25 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:16332 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbgBMKkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:40:24 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48JChP5r4pz9vCQf;
-        Thu, 13 Feb 2020 11:40:21 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=sZorrvgN; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id eq5fshwkQBVW; Thu, 13 Feb 2020 11:40:21 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48JChP4myJz9vCQZ;
-        Thu, 13 Feb 2020 11:40:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581590421; bh=KX/Bf+44urcJ+M7SRbj0cLc9DnYSDfuYYz2j2RUtDIo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=sZorrvgNZs/DTsuS53wt8WvSgGCpj97AGtw1XpGSHVpVxMGjMzmpEBKxu2D4v07OX
-         zVfw60DRealJF3FMpiR4gDj5eDvU9Yi8ivuXuDeG1IU4FxoIfg9u+TgmmioEpVIhge
-         IF44jXccQd+bLWpv4KaEi9/5sZa7uw9YEFMscOZA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C9EA58B83E;
-        Thu, 13 Feb 2020 11:40:22 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id N2rjANNu6E0L; Thu, 13 Feb 2020 11:40:22 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 369BF8B835;
-        Thu, 13 Feb 2020 11:40:22 +0100 (CET)
-Subject: Re: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't
- boot anymore
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Scott Wood <oss@buserror.net>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
- <f67f7566-24f2-9c71-36be-2e55ec436097@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <f68d7a21-63b6-07a1-09de-5e66f422dcae@c-s.fr>
-Date:   Thu, 13 Feb 2020 10:40:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 13 Feb 2020 05:44:28 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:40541 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729428AbgBMKo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:44:27 -0500
+Received: from [IPv6:2001:983:e9a7:1:517b:ad10:523d:fa83]
+ ([IPv6:2001:983:e9a7:1:517b:ad10:523d:fa83])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 2ByqjB60V8i432ByrjM5VF; Thu, 13 Feb 2020 11:44:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1581590665; bh=znoeVGPWcgXKmZofUTt2zSdIbzQOMwdopbuwo+ykg2A=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=jQNVpjI6UolEqtCXTvVooGH726Fu8djAzkpMH+aEd5XZLt4t+I9wJ5TFgV+adcm6A
+         loNkpwSi5asYPoXsMqrr6M0hPzdI4rX8d1dqVF4oeuFQP4FWFLweCdBLBWQ2FTiJ3F
+         3hTLwjl3IlHQgPfzH5ISiIV7CBZciPPAHVJtmJyJHJTaWEhibulDiiqdeJ6n3wwwtg
+         PHSlumklZViLPruxKM7KDxYTySgSqH4W/On14p+MoHz+zh5cTZuIFfwvXGxwVJZF4k
+         q6gthB63vMS1YLypjy7x1yQagwDJBv9umBXeFMZRziB/9AfRQ0mll4ii+BGEVTKlOR
+         +fMnxixi/4Bfg==
+Subject: Re: [PATCH] MAINTAINERS: Add dt-binding files for Venus
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>
+References: <20200113145424.4867-1-stanimir.varbanov@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <fa84da43-5954-6b32-17d6-a6c8c01fa93e@xs4all.nl>
+Date:   Thu, 13 Feb 2020 11:44:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <f67f7566-24f2-9c71-36be-2e55ec436097@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200113145424.4867-1-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPOXmvHkmKKXq7IFeCItCHp8c6HRtuq7/ipAds/K1gUHVXsPqOTcTRWgkkXM49z7SuiSmu6yFH9lJxnUyrY+cjvOr7FE6ojdcV6twCUFoC/Zmre9Sjz8
+ f4Hua40lQDoO6A2Mm45taNIbyHy5KDLeSoHFc0eMmqYIit5Mm9/B2KQchV+sryYRsR3fa5efRRIV3MCTqVxoBUnNLPsQyCmKZyV7dQyXLr5EuGWDl6vQMQsk
+ nFVfiB5eujfgD6ZlCrOojMUYt02O72W6ze1WN6FSQXf+ad4ciM7G7kGVjzoz4qPZaO0QWAuRHwouGFHeWCQOvSdFYLuOG8aS7BOpxNYJr8eqx6e6G7U4JCJ6
+ wixLeJhbgMMkCoUkc9sr6FkssJs8QiCBjT3ghQdHWXjGu4uhc9DaNB3wZxiABPZ4cwxceU1E8Bm+NWt2NMDiDTq/3lxkocgwqoWH66xE6iDaMZIhNOE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/13/2020 07:45 AM, Rasmus Villemoes wrote:
-> On 12/02/2020 15.24, Christophe Leroy wrote:
->> Hi Rasmus,
->>
->> Kernel 5.6-rc1 silently fails on boot.
->>
->> I bisected the problem to commit b6231ea2b3c6 ("soc: fsl: qe: drop
->> broken lazy call of cpm_muram_init()")
->>
->> I get a bad_page_fault() for an access at address 8 in
->> cpm_muram_alloc_common(), called from cpm_uart_console_setup() via
->> cpm_uart_allocbuf()
+On 1/13/20 3:54 PM, Stanimir Varbanov wrote:
+> Adds a path to devicetree dt-binding files.
 > 
-> Sorry about that. But I'm afraid I don't see what I could have done
-> differently - the patch series, including b6231ea2b3c6, has been in
-> -next since 20191210, both you and ppc-dev were cc'ed on the entire
-> series (last revision sent November 28). And I've been dogfooding the
-> patches on both arm- and ppc-derived boards ever since (but obviously
-> only for a few cpus).
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-Yes, this patch series should have ringed a bell in my head, looks like 
-I'm the one who introduced this 4 years ago through commit 4d486e008379 
-("soc/fsl/qe: fix Oops on CPM1 (and likely CPM2)")
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-But I had completely forgotten that patch until I did some git blame 
-this morning on this lazy call.
-
-
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->> Reverting the guilty commit on top of 5.6-rc1 is not trivial.
->>
->> In your commit text you explain that cpm_muram_init() is called via
->> subsys_initcall. But console init is done before that, so it cannot work.
-> 
-> No, but neither did the code I removed seem to work - how does doing
-> spin_lock_init on a held spinlock, and then unlocking it, work? Is
-> everything-spinlock always a no-op in your configuration? And even so,
-> I'd think a GFP_KERNEL allocation under spin_lock_irqsave() would
-> trigger some splat somewhere?
-> 
-> Please note I'm not claiming my patch is not at fault, it clearly is, I
-> just want to try to understand how I could have been wrong about the
-> "nobody can have been relying on it" part.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 983d3c97edd1..8c97d1e7ea50 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13732,6 +13732,7 @@ L:	linux-arm-msm@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+>  F:	drivers/media/platform/qcom/venus/
+> +F:	Documentation/devicetree/bindings/media/*venus*
+>  
+>  QUALCOMM WCN36XX WIRELESS DRIVER
+>  M:	Kalle Valo <kvalo@codeaurora.org>
 > 
 
-It seems spin_lock_init() does just nothing.
-spin_lock_irqsave() just disable IRQs and increases preempt_count.
-spin_lock_irqrestore() restore IRQ state, decreace preempt_count and 
-call preempt_schedule if preempt_count reaches 0.
-
-Maybe with some debugging options like DEBUG_ATOMIC_SLEEP could detect it ?
-
->> Do you have a fix for that ?
-> 
-> Not right now, but I'll have a look. It's true that the patch probably
-> doesn't revert cleanly, but it shouldn't be hard to add back those few
-> lines in the appropriate spot, with a big fat comment that this does
-> something very fishy (at least as a temporary measure if we don't find a
-> proper solution soonish).
-> 
-
-Thanks
-Christophe
