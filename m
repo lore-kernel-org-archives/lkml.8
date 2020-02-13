@@ -2,131 +2,112 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C860C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E0DC352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4035021734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12CE20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="yIfGe0d+"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="QwUP5Ymp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbgBMAqQ (ORCPT
+        id S1729333AbgBMAsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:46:16 -0500
-Received: from gateway30.websitewelcome.com ([50.116.127.1]:20860 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729103AbgBMAqQ (ORCPT
+        Wed, 12 Feb 2020 19:48:00 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45963 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgBMAr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:46:16 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 19BFF46F94
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:46:15 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 22dzj0i8u8vkB22dzjydZ8; Wed, 12 Feb 2020 18:46:15 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2k/Xb8a2fDrkoyzsGwiAIoqGmPNbrHA6FyZhs9nImKY=; b=yIfGe0d+wONjzMqxZcAmrcWG1p
-        kZqRkAK8B+OX1goUjWqyQ6BexEa9IbHT7yBdX2ijLrZ/dONn4o/+hJZRpDMJMn5/1LN25rUkmG0yv
-        7/48BWJbrPKMzyWGh75+G8gFa5r+KbOxRLwNP+WLnoxagfFIRuTqWQFTpXoUuYDnhs6E9cqSU2K8M
-        OEQNFB7vMS2MFy+cXVLOo/g83xId5QucKym6K+wJaJ+h0q5xEshrNT/h/LY0rF9diDNoem5zBUhTe
-        hi9zQDiO1Bd4YeCAh25GmLzWTXPxQjoEK/LjYbphNHh16sXBzhO/3jMAap/7r1nxFc6+LrqNhVM/c
-        KenBMlPw==;
-Received: from [200.68.141.42] (port=5279 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j22dx-003jrm-7s; Wed, 12 Feb 2020 18:46:13 -0600
-Date:   Wed, 12 Feb 2020 18:46:11 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] serial: sc16is7xx: Replace zero-length array with
- flexible-array member
-Message-ID: <20200213004611.GA8748@embeddedor.com>
+        Wed, 12 Feb 2020 19:47:59 -0500
+Received: by mail-pl1-f193.google.com with SMTP id b22so1600151pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:47:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jh/fY28bFcd7/L9cFsQkhcdCpmkjY9Ls0EJJsmxHbno=;
+        b=QwUP5YmpF0cywwIr+qqbXA8X8QjSa5/SMryDRo1Jmcg58ari7q9lz42nXW6NmnSWb0
+         AXCu4fiU33C4y8T28zSV0Qmm1knIZnwmQqe7wJ5n4BeCkX8RDy+wtRfO9RQhv0y+nsbZ
+         29TRSP46434x8xNKLi22b57LNpH44rIGdMKSs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jh/fY28bFcd7/L9cFsQkhcdCpmkjY9Ls0EJJsmxHbno=;
+        b=BpgLoKGY3OW7bcuTqakojmvi2FmLS4+Y0qy99TV2t8SX2vKcja/EE9sCbvPO1h3En0
+         o7cvraQdg0pxIFRHvSEavEz+qHWRK7hfC6LS75SZvov4CyftB7aP42OYWqcVZYlR5ekP
+         zz1dyGjZqTA7+kQHAgPz0uWnHykXBA6kL3g6yBpvT6KrnO3G9Ln6h3r+GMSoCSURzKFd
+         wW0LpgXvXQ6pzrsNiDRb9+JcBLh7E0Vue80jXqYHX2vvAm3+LeJoKmfvz2jOEn5LtRai
+         DSTek9E4uSAU/+vBdbPJZ/qatpChR5KcET38TE0ICmD/VAUjFhoT26uWPU6LnRBmQRB/
+         9CVw==
+X-Gm-Message-State: APjAAAUdrzDMUoa4b+uYU81t/IiIz33FYqTsVUJsTGnN72gf6YyFCuD4
+        wsocj3W6wHp4Irsu0+ESn7cLd4LPmdw=
+X-Google-Smtp-Source: APXvYqzTc2qiS1kuq5ADzvkss9L6yK8qP1IIPA8eq7f36ELS9X5Fs2jbKo2Gb97ZIjxebSzszwP4Qg==
+X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr1992942pjn.117.1581554878778;
+        Wed, 12 Feb 2020 16:47:58 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-f1ea-0ab5-027b-8841.static.ipv6.internode.on.net. [2001:44b8:1113:6700:f1ea:ab5:27b:8841])
+        by smtp.gmail.com with ESMTPSA id u126sm399077pfu.182.2020.02.12.16.47.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 16:47:58 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
+        christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
+        bsingharora@gmail.com
+Cc:     Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v7 0/4] KASAN for powerpc64 radix
+Date:   Thu, 13 Feb 2020 11:47:48 +1100
+Message-Id: <20200213004752.11019-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.42
-X-Source-L: No
-X-Exim-ID: 1j22dx-003jrm-7s
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:5279
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 63
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Building on the work of Christophe, Aneesh and Balbir, I've ported
+KASAN to 64-bit Book3S kernels running on the Radix MMU.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+This provides full inline instrumentation on radix, but does require
+that you be able to specify the amount of physically contiguous memory
+on the system at compile time. More details in patch 4.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+v7: Tweaks from Christophe, fix issues detected by snowpatch.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+v6: Rebase on the latest changes in powerpc/merge. Minor tweaks
+      to the documentation. Small tweaks to the header to work
+      with the kasan_late_init() function that Christophe added
+      for 32-bit kasan-vmalloc support.
+    No functional change.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+v5: ptdump support. More cleanups, tweaks and fixes, thanks
+    Christophe. Details in patch 4.
 
-This issue was found with the help of Coccinelle.
+    I have seen another stack walk splat, but I don't think it's
+    related to the patch set, I think there's a bug somewhere else,
+    probably in stack frame manipulation in the kernel or (more
+    unlikely) in the compiler.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+v4: More cleanups, split renaming out, clarify bits and bobs.
+    Drop the stack walk disablement, that isn't needed. No other
+    functional change.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/tty/serial/sc16is7xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v3: Reduce the overly ambitious scope of the MAX_PTRS change.
+    Document more things, including around why some of the
+    restrictions apply.
+    Clean up the code more, thanks Christophe.
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 7d3ae31cc720..06e8071d5601 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -329,7 +329,7 @@ struct sc16is7xx_port {
- 	struct task_struct		*kworker_task;
- 	struct kthread_work		irq_work;
- 	struct mutex			efr_lock;
--	struct sc16is7xx_one		p[0];
-+	struct sc16is7xx_one		p[];
- };
- 
- static unsigned long sc16is7xx_lines;
--- 
-2.23.0
+v2: The big change is the introduction of tree-wide(ish)
+    MAX_PTRS_PER_{PTE,PMD,PUD} macros in preference to the previous
+    approach, which was for the arch to override the page table array
+    definitions with their own. (And I squashed the annoying
+    intermittent crash!)
+
+    Apart from that there's just a lot of cleanup. Christophe, I've
+    addressed most of what you asked for and I will reply to your v1
+    emails to clarify what remains unchanged.
 
