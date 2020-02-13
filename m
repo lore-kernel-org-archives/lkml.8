@@ -2,132 +2,119 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10037C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0D4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F39206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8935206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TGWs1xno"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obj7tBtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgBMRMf (ORCPT
+        id S1728113AbgBMRPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:12:35 -0500
-Received: from gateway20.websitewelcome.com ([192.185.58.11]:16091 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728138AbgBMRMe (ORCPT
+        Thu, 13 Feb 2020 12:15:37 -0500
+Received: from mail-lj1-f170.google.com ([209.85.208.170]:42465 "EHLO
+        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgBMRPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:12:34 -0500
-X-Greylist: delayed 1454 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 12:12:33 EST
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 70917400CF46F
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:34:39 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2Hf0jMxYIRP4z2Hf1joPvt; Thu, 13 Feb 2020 10:48:19 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Bs8CD4elab7gEoHuomTzKuiJhB+d5B0XV8i9tY3kOnI=; b=TGWs1xnovy+EkuZTu7TgLh61rH
-        3X0KXbhMSv2Skcn4fGWRroyZvNy8nKiC7KMz3XSPHAu01+Y4eLgqam6R13VoLe3Ik9LcI6MOHVzWi
-        /vDInhraxjL9DNLBIjgX74wV3X+tqzhJ3qCmjlCUgtcnU/9ui85zsdCF8yk4bonvNBwXZGfvdruc/
-        b/FWTw+d31qoOCrYQkwMkxCGXJk+ZaFgUrbPfuo1DFd16I0lNhzeSMVjvJTnJDoT0r/6xpvI0yIEd
-        yntLgDn0C420260oVgPob7V03H2AktZl4yTkA2Ctmze9huxGZiwuT4A3pHT5fJllAHFdtumnS5h1O
-        kzHwt+eQ==;
-Received: from [200.68.140.15] (port=22021 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2Hez-003zOt-J2; Thu, 13 Feb 2020 10:48:17 -0600
-Date:   Thu, 13 Feb 2020 10:50:54 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] crypto: img-hash - Replace zero-length array with
- flexible-array member
-Message-ID: <20200213165054.GA11109@embeddedor>
+        Thu, 13 Feb 2020 12:15:36 -0500
+Received: by mail-lj1-f170.google.com with SMTP id d10so7493245ljl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:15:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/ZgnOA2RdYtHkbQdDxZ4YJyDdLwvDtzxs2Sj136XFtk=;
+        b=obj7tBtrmvKlOHKhtyTYC09hT6nbkdjmpEN7XYnGuuciKphxb5wkIxq/x7JAWuvnq9
+         wRl9dDJQ+RIyfFTd1pXN4zIkwraBNbYiW7Y6X6h8ZZtkBhfTp95iktaVQrvtsHuy66yT
+         Nn7kezc+1iYATMKNa2V03UcGN++jZcVYi0onzJERai/ahzUOaHpepbC7mTJkPzQOXvxL
+         EL9KZZ75ud6DO9s8+U+8ZOTVvxmM+fXyDXkh+/lg9LgyUqpYd0pSaLIQRnxdb0eXy3lo
+         yNb7BpKysQYP5KwCrFAXqbCs9s3GbfCCk+OLQXpbmoUawKXSER39co0gZNhED13sKljt
+         rzRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/ZgnOA2RdYtHkbQdDxZ4YJyDdLwvDtzxs2Sj136XFtk=;
+        b=unNw06PKZ8TIqhXKAIYqDhSG3lHDBIvsmtQA1Kw3cPn6pHQSPdENnliZUqdWV6hMPe
+         DjZAXuIVlFBsUdyZcsodS0yKiiBXaVnYDkiLV6W3hIagqeuLctJZ5dT9xYSCpnc1dNqU
+         xh7fgyGp88ZMzkat2pOclFe61oyuiL6lcLezOMwFQQiiwmrT8A9HMdNC6f9DI5GituWA
+         eZ8NnaKCLllxbCD1v/wcPiTvnjq+U1e/mmsJcoQagZF9nwoBAoq0/EWqnPahBsZZTgQF
+         GeyBbv4MOHIL6VRs1/DXR1QqjuPxKY02HOffk6qshxtUREyyqWWpbqMivGz14oIz+v/1
+         Wshg==
+X-Gm-Message-State: APjAAAXckonvkKmEJbb0bXpA2rlZTMAi23GqU/fffg992xReOT9S3rvT
+        YXGjuvEXKMEqL5MHIA2iSRWh1ImGEFbWfCwXXVjclQ==
+X-Google-Smtp-Source: APXvYqzJ78Hp+J0EQOUH7hmwCA6ls2xSoGkR+p3ZYGSQevYWjXtzfJblxbeqTO0P8uf32WdUMdXjL5e/b1QEEU8BVsQ=
+X-Received: by 2002:a2e:96c6:: with SMTP id d6mr11906253ljj.4.1581614134958;
+ Thu, 13 Feb 2020 09:15:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.15
-X-Source-L: No
-X-Exim-ID: 1j2Hez-003zOt-J2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.15]:22021
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200212133715.GU3420@suse.de> <20200212194903.GS3466@techsingularity.net>
+ <CAKfTPtDA5GamN4A1SnegYwYCk123TqUDE9EHFbHTgKCMR+yqGQ@mail.gmail.com>
+ <20200213131658.9600-1-hdanton@sina.com> <20200213134655.GX3466@techsingularity.net>
+ <20200213150026.GB6541@lorien.usersys.redhat.com> <20200213151430.GY3466@techsingularity.net>
+ <CAKfTPtDjKW45QyXnF7Pu42AP48mNbDWTUttMSoDgDzOO5GSfnA@mail.gmail.com>
+ <20200213163437.GZ3466@techsingularity.net> <CAKfTPtD8k-LMaXz_MNmxeW5aXDO4ZZ6j=gwCRTRU89OJ9nUEGw@mail.gmail.com>
+ <20200213170220.GA3466@techsingularity.net>
+In-Reply-To: <20200213170220.GA3466@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 13 Feb 2020 18:15:23 +0100
+Message-ID: <CAKfTPtB7W9x3YmYGH48DW=qnap+ZPq6to0sonovkmc-wAD1sVQ@mail.gmail.com>
+Subject: Re: [RFC 2/4] sched/numa: replace runnable_load_avg by load_avg
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, 13 Feb 2020 at 18:02, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Thu, Feb 13, 2020 at 05:38:31PM +0100, Vincent Guittot wrote:
+> > > > Your test doesn't explicitly ensure that the 1 condition is met
+> > > >
+> > > > That being said, I'm not sure it's really a wrong thing ? I mean
+> > > > load_balance will probably try to pull back some tasks on src but as
+> > > > long as it is not a task with dst node as preferred node, it should
+> > > > not be that harmfull
+> > >
+> > > My thinking was that if source has as many or more running tasks than
+> > > the destination *after* the move that it's not harmful and does not add
+> > > work for the load balancer.
+> >
+> > load_balancer will see an imbalance but fbq_classify_group/queue
+> > should be there to prevent from pulling back tasks that are on the
+> > preferred node but only other tasks
+> >
+>
+> Yes, exactly. Between fbq_classify and migrate_degrades_locality, I'm
+> expecting that the load balancer will only override NUMA balancing when
+> there is no better option. When the imbalance check, I want to avoid
+> the situation where NUMA balancing moves a task for locality, LB pulls
+> it back for balance, NUMA retries the move etc because it's stupid. The
+> locality matters but being continually dequeue/enqueue is unhelpful.
+>
+> While there might be grounds for relaxing the degree an imbalance is
+> allowed across SD domains, I am avoiding looking in that direction again
+> until the load balancer and NUMA balancer stop overriding each other for
+> silly reasons (or the NUMA balancer fighting itself which can happen).
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+make sense
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/crypto/img-hash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/crypto/img-hash.c b/drivers/crypto/img-hash.c
-index 25d5227f74a1..0e25fc3087f3 100644
---- a/drivers/crypto/img-hash.c
-+++ b/drivers/crypto/img-hash.c
-@@ -103,7 +103,7 @@ struct img_hash_request_ctx {
- 	struct ahash_request	fallback_req;
- 
- 	/* Zero length buffer must remain last member of struct */
--	u8 buffer[0] __aligned(sizeof(u32));
-+	u8 buffer[] __aligned(sizeof(u32));
- };
- 
- struct img_hash_ctx {
--- 
-2.25.0
-
+>
+> --
+> Mel Gorman
+> SUSE Labs
