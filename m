@@ -2,125 +2,281 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D177C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447BDC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F403020848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207D1217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581627480;
+	bh=NA5HGcHsaCJY9zwrOM54lMapt9PWMu1wTwWsBW5/7go=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=DUdLOmug4ukUO3viVHkGNCmmY00XGfXXgh5gef6HtYJTpOR8N9K924KW0NPDJcQQ6
+	 epGKxuNofSbyANfF1uVNH+ADh6crwe+2UgHPzGmpzooPM/wxBxS3EQdRY4QkVD/3gF
+	 1HMGP+Szil5I+hLo97lHit/V0J8QmIQSfxN6JSK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgBMUzu (ORCPT
+        id S1728275AbgBMU57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:55:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40474 "EHLO mx2.suse.de"
+        Thu, 13 Feb 2020 15:57:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:53506 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbgBMUzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:55:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 78273ADE4;
-        Thu, 13 Feb 2020 20:55:47 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 43650DA703; Thu, 13 Feb 2020 21:55:33 +0100 (CET)
-Date:   Thu, 13 Feb 2020 21:55:33 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.9 083/116] btrfs: free block groups after freeing fs
- trees
-Message-ID: <20200213205533.GR2902@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200213151842.259660170@linuxfoundation.org>
- <20200213151915.106400155@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151915.106400155@linuxfoundation.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+        id S1727669AbgBMU57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:57:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED6A71FB;
+        Thu, 13 Feb 2020 12:57:57 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F6873F6CF;
+        Thu, 13 Feb 2020 12:57:57 -0800 (PST)
+Date:   Thu, 13 Feb 2020 20:57:55 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: gx: add sound card support" to the asoc tree
+In-Reply-To:  <20200213155159.3235792-10-jbrunet@baylibre.com>
+Message-Id:  <applied-20200213155159.3235792-10-jbrunet@baylibre.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:20:27AM -0800, Greg Kroah-Hartman wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
-> 
-> [ Upstream commit 4e19443da1941050b346f8fc4c368aa68413bc88 ]
-> 
-> Sometimes when running generic/475 we would trip the
-> WARN_ON(cache->reserved) check when free'ing the block groups on umount.
-> This is because sometimes we don't commit the transaction because of IO
-> errors and thus do not cleanup the tree logs until at umount time.
-> 
-> These blocks are still reserved until they are cleaned up, but they
-> aren't cleaned up until _after_ we do the free block groups work.  Fix
-> this by moving the free after free'ing the fs roots, that way all of the
-> tree logs are cleaned up and we have a properly cleaned fs.  A bunch of
-> loops of generic/475 confirmed this fixes the problem.
-> 
-> CC: stable@vger.kernel.org # 4.9+
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> Reviewed-by: David Sterba <dsterba@suse.com>
-> Signed-off-by: David Sterba <dsterba@suse.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/btrfs/disk-io.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-> index eab5a9065f093..439b5f5dc3274 100644
-> --- a/fs/btrfs/disk-io.c
-> +++ b/fs/btrfs/disk-io.c
-> @@ -3864,6 +3864,15 @@ void close_ctree(struct btrfs_root *root)
->  	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
->  	free_root_pointers(fs_info, true);
->  
-> +	/*
-> +	 * We must free the block groups after dropping the fs_roots as we could
-> +	 * have had an IO error and have left over tree log blocks that aren't
-> +	 * cleaned up until the fs roots are freed.  This makes the block group
-> +	 * accounting appear to be wrong because there's pending reserved bytes,
-> +	 * so make sure we do the block group cleanup afterwards.
-> +	 */
-> +	btrfs_free_block_groups(fs_info);
+The patch
 
-Something's wrong here.  The patch 4e19443da1 moves the
-btrfs_free_block_groups() call and the stable backport lacks the "-"
-line. However the patch applies cleanly on 4.9.213.
+   ASoC: meson: gx: add sound card support
 
-3855         btrfs_free_block_groups(fs_info);
-^^^^
+has been applied to the asoc tree at
 
-3856
-3857         /*
-3858          * we must make sure there is not any read request to
-3859          * submit after we stopping all workers.
-3860          */
-3861         invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
-3862         btrfs_stop_all_workers(fs_info);
-3863
-3864         clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
-3865         free_root_pointers(fs_info, 1);
-3866
-3867         /*
-3868          * We must free the block groups after dropping the fs_roots as we could
-3869          * have had an IO error and have left over tree log blocks that aren't
-3870          * cleaned up until the fs roots are freed.  This makes the block group
-3871          * accounting appear to be wrong because there's pending reserved bytes,
-3872          * so make sure we do the block group cleanup afterwards.
-3873          */
-3874         btrfs_free_block_groups(fs_info);
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-The first one should not be there.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From e37a0c313a0f8ba0b8de9c30db98fbc77bd8d446 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 13 Feb 2020 16:51:59 +0100
+Subject: [PATCH] ASoC: meson: gx: add sound card support
+
+Add support for the sound card used on the amlogic GX SoC family
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200213155159.3235792-10-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/meson/Kconfig   |   7 ++
+ sound/soc/meson/Makefile  |   2 +
+ sound/soc/meson/gx-card.c | 141 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 150 insertions(+)
+ create mode 100644 sound/soc/meson/gx-card.c
+
+diff --git a/sound/soc/meson/Kconfig b/sound/soc/meson/Kconfig
+index 347fa78e309a..22d2af75b59e 100644
+--- a/sound/soc/meson/Kconfig
++++ b/sound/soc/meson/Kconfig
+@@ -101,6 +101,13 @@ config SND_MESON_CARD_UTILS
+ config SND_MESON_CODEC_GLUE
+ 	tristate
+ 
++config SND_MESON_GX_SOUND_CARD
++	tristate "Amlogic GX Sound Card Support"
++	select SND_MESON_CARD_UTILS
++	imply SND_MESON_AIU
++	help
++	  Select Y or M to add support for the GXBB/GXL SoC sound card
++
+ config SND_MESON_G12A_TOHDMITX
+ 	tristate "Amlogic G12A To HDMI TX Control Support"
+ 	select REGMAP_MMIO
+diff --git a/sound/soc/meson/Makefile b/sound/soc/meson/Makefile
+index bef2b72fd7a7..f9c90c391498 100644
+--- a/sound/soc/meson/Makefile
++++ b/sound/soc/meson/Makefile
+@@ -21,6 +21,7 @@ snd-soc-meson-axg-spdifout-objs := axg-spdifout.o
+ snd-soc-meson-axg-pdm-objs := axg-pdm.o
+ snd-soc-meson-card-utils-objs := meson-card-utils.o
+ snd-soc-meson-codec-glue-objs := meson-codec-glue.o
++snd-soc-meson-gx-sound-card-objs := gx-card.o
+ snd-soc-meson-g12a-tohdmitx-objs := g12a-tohdmitx.o
+ 
+ obj-$(CONFIG_SND_MESON_AIU) += snd-soc-meson-aiu.o
+@@ -37,4 +38,5 @@ obj-$(CONFIG_SND_MESON_AXG_SPDIFOUT) += snd-soc-meson-axg-spdifout.o
+ obj-$(CONFIG_SND_MESON_AXG_PDM) += snd-soc-meson-axg-pdm.o
+ obj-$(CONFIG_SND_MESON_CARD_UTILS) += snd-soc-meson-card-utils.o
+ obj-$(CONFIG_SND_MESON_CODEC_GLUE) += snd-soc-meson-codec-glue.o
++obj-$(CONFIG_SND_MESON_GX_SOUND_CARD) += snd-soc-meson-gx-sound-card.o
+ obj-$(CONFIG_SND_MESON_G12A_TOHDMITX) += snd-soc-meson-g12a-tohdmitx.o
+diff --git a/sound/soc/meson/gx-card.c b/sound/soc/meson/gx-card.c
+new file mode 100644
+index 000000000000..7b01dcb73e5e
+--- /dev/null
++++ b/sound/soc/meson/gx-card.c
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++//
++// Copyright (c) 2020 BayLibre, SAS.
++// Author: Jerome Brunet <jbrunet@baylibre.com>
++
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <sound/soc.h>
++#include <sound/soc-dai.h>
++
++#include "meson-card.h"
++
++struct gx_dai_link_i2s_data {
++	unsigned int mclk_fs;
++};
++
++/*
++ * Base params for the codec to codec links
++ * Those will be over-written by the CPU side of the link
++ */
++static const struct snd_soc_pcm_stream codec_params = {
++	.formats = SNDRV_PCM_FMTBIT_S24_LE,
++	.rate_min = 5525,
++	.rate_max = 192000,
++	.channels_min = 1,
++	.channels_max = 8,
++};
++
++static int gx_card_i2s_be_hw_params(struct snd_pcm_substream *substream,
++				    struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct meson_card *priv = snd_soc_card_get_drvdata(rtd->card);
++	struct gx_dai_link_i2s_data *be =
++		(struct gx_dai_link_i2s_data *)priv->link_data[rtd->num];
++
++	return meson_card_i2s_set_sysclk(substream, params, be->mclk_fs);
++}
++
++static const struct snd_soc_ops gx_card_i2s_be_ops = {
++	.hw_params = gx_card_i2s_be_hw_params,
++};
++
++static int gx_card_parse_i2s(struct snd_soc_card *card,
++			     struct device_node *node,
++			     int *index)
++{
++	struct meson_card *priv = snd_soc_card_get_drvdata(card);
++	struct snd_soc_dai_link *link = &card->dai_link[*index];
++	struct gx_dai_link_i2s_data *be;
++
++	/* Allocate i2s link parameters */
++	be = devm_kzalloc(card->dev, sizeof(*be), GFP_KERNEL);
++	if (!be)
++		return -ENOMEM;
++	priv->link_data[*index] = be;
++
++	/* Setup i2s link */
++	link->ops = &gx_card_i2s_be_ops;
++	link->dai_fmt = meson_card_parse_daifmt(node, link->cpus->of_node);
++
++	of_property_read_u32(node, "mclk-fs", &be->mclk_fs);
++
++	return 0;
++}
++
++static int gx_card_cpu_identify(struct snd_soc_dai_link_component *c,
++				char *match)
++{
++	if (of_device_is_compatible(c->of_node, DT_PREFIX "aiu")) {
++		if (strstr(c->dai_name, match))
++			return 1;
++	}
++
++	/* dai not matched */
++	return 0;
++}
++
++static int gx_card_add_link(struct snd_soc_card *card, struct device_node *np,
++			    int *index)
++{
++	struct snd_soc_dai_link *dai_link = &card->dai_link[*index];
++	struct snd_soc_dai_link_component *cpu;
++	int ret;
++
++	cpu = devm_kzalloc(card->dev, sizeof(*cpu), GFP_KERNEL);
++	if (!cpu)
++		return -ENOMEM;
++
++	dai_link->cpus = cpu;
++	dai_link->num_cpus = 1;
++
++	ret = meson_card_parse_dai(card, np, &dai_link->cpus->of_node,
++				   &dai_link->cpus->dai_name);
++	if (ret)
++		return ret;
++
++	if (gx_card_cpu_identify(dai_link->cpus, "FIFO"))
++		ret = meson_card_set_fe_link(card, dai_link, np, true);
++	else
++		ret = meson_card_set_be_link(card, dai_link, np);
++
++	if (ret)
++		return ret;
++
++	/* Check if the cpu is the i2s encoder and parse i2s data */
++	if (gx_card_cpu_identify(dai_link->cpus, "I2S Encoder"))
++		ret = gx_card_parse_i2s(card, np, index);
++
++	/* Or apply codec to codec params if necessary */
++	else if (gx_card_cpu_identify(dai_link->cpus, "CODEC CTRL"))
++		dai_link->params = &codec_params;
++
++	return ret;
++}
++
++static const struct meson_card_match_data gx_card_match_data = {
++	.add_link = gx_card_add_link,
++};
++
++static const struct of_device_id gx_card_of_match[] = {
++	{
++		.compatible = "amlogic,gx-sound-card",
++		.data = &gx_card_match_data,
++	}, {}
++};
++MODULE_DEVICE_TABLE(of, gx_card_of_match);
++
++static struct platform_driver gx_card_pdrv = {
++	.probe = meson_card_probe,
++	.remove = meson_card_remove,
++	.driver = {
++		.name = "gx-sound-card",
++		.of_match_table = gx_card_of_match,
++	},
++};
++module_platform_driver(gx_card_pdrv);
++
++MODULE_DESCRIPTION("Amlogic GX ALSA machine driver");
++MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
+
