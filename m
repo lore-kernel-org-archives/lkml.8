@@ -2,135 +2,112 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5428C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D35C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87A020848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE9F20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="krwQ6sIK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZPAygbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgBMJm4 (ORCPT
+        id S1729797AbgBMJnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:42:56 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45409 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729440AbgBMJmz (ORCPT
+        Thu, 13 Feb 2020 04:43:04 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42324 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729440AbgBMJnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:42:55 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so2784665pfg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:42:54 -0800 (PST)
+        Thu, 13 Feb 2020 04:43:04 -0500
+Received: by mail-pg1-f196.google.com with SMTP id w21so2788396pgl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:43:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GZ5nyXgOdQJHZ2cR30e/+vtSPLvl2FoSgBANtMAsC3w=;
-        b=krwQ6sIKq1EtFX9uJx37mA/JlSIdFZBp9pSRKe0hxbRsdNfhL+NWHJ/7btNCGQ06h5
-         ckpj1vPA072BGG8kAahDKoqZtN8u16iEypF7iTJwlJb7aMZ93KNoKUjBdWkO1gZkWTCd
-         gfmJtVTGe8p5gWV3vg4fTtTcOtOn21+oXXjiz859yYzqHoNSteC53vrut/mpj8BlrKVf
-         i0zurWflO9wJe9xzrhWEJKeF1JfTz/EsQgLnPccNQdZ2RD91oHGuiCq7ZyIlaLyUKL7g
-         7kuTD/tXHWvB/+lQPXIoNI1qMyJMAs/eGC0zBd9yalzwNNDJwCxcVBv6XGRgA0WlztUV
-         zV3Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=NoGUqRpq1F77wcdshkLX1E0mBsPP95pWUoHQOnOvrik=;
+        b=PZPAygbXf35pGVvey68bGizPw7g3pQJ2BxVMk8RCqukzpbiRkFrrEVDHzhPxDT1v8O
+         BmdBCCzhGg1mqmMXi233FUZVYwx7iFvzRSfs3KvjJkoS7U1SBzHT7vIBlPC3i5J5+ne+
+         JiexY8XFovWpYjZ1D8yF82T6x6H31LpdWePek5DStlFYOG7dtaXmaDYn+oti8Z75dzVo
+         tP/y8TNe4vsT1EN5KQFVqs27BVb2oz/8eX22GDnEDLKbVkNRZL6/iYRMKvPKK0afSH1O
+         rZnTueO7A+YCp2knuxwjglDR342/ujy4FQgTDLNvyio/xY+hKV7giUM+IjTnEb9z+h0z
+         ozXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GZ5nyXgOdQJHZ2cR30e/+vtSPLvl2FoSgBANtMAsC3w=;
-        b=BptkE26NnSpiuF+e6a+4i+r9c2EoHGiSa48aEfJKCZ9u1uKZ9gAqlUf2yYStwpkk96
-         ZOegdWpDbfrUrJ/CqZXDAgA264VTGyIkifU/6WyEopkQxS6bq74cDFBvgbU8SeZAwBKJ
-         4TuKMBjHj5Y3yQBl7gI1MBS2djuTA4RsGWwSfF55gvajsFPrJDOyCvQvW3tHkJaPokB+
-         Z1n6UcCPhLSgp6qsqI5IRIiwJ6L1IahQmz9EDXPI5kqjTO6oZlZi2GAm66JfJcQfVSrR
-         IlYBcXB3pdpOGDjr2/WUurQSyDwlV3vl2qQVqqf481XtF09S2bIwjgxK/fokmxlhSiA+
-         0h/Q==
-X-Gm-Message-State: APjAAAVyITSnt+eaT0NufBeIFCnHrE0NviNELE73GyD6oauoQlBAu50t
-        cUwlx+2xjHUs+dJ34e03UfkY1Q==
-X-Google-Smtp-Source: APXvYqwwFnhUMc3e+nIoi46LQxwZ/BKqxx5Qc3gbVTYD2Yj6SMe+VVEZ1UYEjQ7mExqzjyNoMkXzUg==
-X-Received: by 2002:aa7:9205:: with SMTP id 5mr13196607pfo.213.1581586974535;
-        Thu, 13 Feb 2020 01:42:54 -0800 (PST)
-Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id 3sm2310277pfi.13.2020.02.13.01.42.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 01:42:54 -0800 (PST)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 2/5] perf cs-etm: Continuously record last branch
-Date:   Thu, 13 Feb 2020 17:42:01 +0800
-Message-Id: <20200213094204.2568-3-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200213094204.2568-1-leo.yan@linaro.org>
-References: <20200213094204.2568-1-leo.yan@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=NoGUqRpq1F77wcdshkLX1E0mBsPP95pWUoHQOnOvrik=;
+        b=Xu0sf2QYpTQ386ylNN/cldzCevVINzqaWHu5GoWGw1XoRkgtSTnEaN9F8bsfdEf/ZU
+         9HEOE0bH2/S8v3a/1qmTSzg26qnmFe43ZQBuRakfYTb++IfP8+jtPOlO+iGw4U3Lxhuf
+         V4YnGhnmwqxYV31dIb4OV3gUj4v3JiNCnALf8Re+yeMqdLNnhT2xUi7sW/Gdnlw4gft/
+         OKx3tsqF1vPb1a7GNrDiF5LsQUj+Nax2PM3jIGLarMkXHbMhKs8fU5unU2Hz4GAB91ek
+         unIKGZYbUgNetvRrEffhMsnRr4xUWsEghanNqlF0cOpE2pLCZiQcHLMk2VniJ364jdtP
+         vatw==
+X-Gm-Message-State: APjAAAW3ySREXV1GNjlPAQ3yCqF1B7dZ61jCna91jzO1ptXf46Xmxnkd
+        Spu+1lpTJ2PLBbw2QeDMMbD4QQ==
+X-Google-Smtp-Source: APXvYqyb/1C2ZIIlDPuaXok56IVD4v4T9EnKvkkqKbl8eWGafz0TN3Sk1x1XXOZucUcEJGpMrGaO5A==
+X-Received: by 2002:a62:52d0:: with SMTP id g199mr12680304pfb.241.1581586983496;
+        Thu, 13 Feb 2020 01:43:03 -0800 (PST)
+Received: from [10.149.0.118] ([45.135.186.75])
+        by smtp.gmail.com with ESMTPSA id w26sm2421887pfj.119.2020.02.13.01.42.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Feb 2020 01:43:02 -0800 (PST)
+Subject: Re: [PATCH v12 2/4] uacce: add uacce driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
+        dave.jiang@intel.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
+ <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
+ <20200210233711.GA1787983@kroah.com>
+ <20200213091509.v7ebvtot6rvlpfjt@gondor.apana.org.au>
+From:   zhangfei <zhangfei.gao@linaro.org>
+Message-ID: <19f2e7b7-d3fc-681e-270c-2e8650df1ac8@linaro.org>
+Date:   Thu, 13 Feb 2020 17:42:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200213091509.v7ebvtot6rvlpfjt@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every time synthesize instruction sample, the last branch recording
-will be reset.  This is fine if the instruction period is big enough,
-for example if use the option '--itrace=i100000', the last branch
-array is reset for every sample with 100000 instructions per period;
-before generate the next instruction sample, there has the sufficient
-packets coming to fill the last branch array.
 
-On the other hand, if set a very small period, the packets will be
-significantly reduced between two continuous instruction samples, thus
-the last branch array is almost empty for new instruction sample by
-frequently resetting.
 
-To allow the last branches to work properly for any instruction periods,
-this patch avoids to reset the last branch for every instruction sample
-and only reset it when flush the trace data.  The last branches will
-be reset only for two cases, one is for trace starting, another case
-is for discontinuous trace; other cases can keep recording last branches
-for continuous instruction samples.
+On 2020/2/13 下午5:15, Herbert Xu wrote:
+> On Mon, Feb 10, 2020 at 03:37:11PM -0800, Greg Kroah-Hartman wrote:
+>> Looks much saner now, thanks for all of the work on this:
+>>
+>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>
+>> Or am I supposed to take this in my tree?  If so, I can, but I need an
+>> ack for the crypto parts.
+> I can take this series through the crypto tree if that's fine with
+> you.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
----
- tools/perf/util/cs-etm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Thanks Herbert
+That's a good idea, otherwise there may be build issue if taken separately.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 84f30c2de185..b2f31390126a 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1170,9 +1170,6 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 			"CS ETM Trace: failed to deliver instruction event, error %d\n",
- 			ret);
- 
--	if (etm->synth_opts.last_branch)
--		cs_etm__reset_last_branch_rb(tidq);
--
- 	return ret;
- }
- 
-@@ -1485,6 +1482,10 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- swap_packet:
- 	cs_etm__packet_swap(etm, tidq);
- 
-+	/* Reset last branches after flush the trace */
-+	if (etm->synth_opts.last_branch)
-+		cs_etm__reset_last_branch_rb(tidq);
-+
- 	return err;
- }
- 
--- 
-2.17.1
+By the way, the latest v13 is on v5.6-rc1
+https://lkml.org/lkml/2020/2/11/54
 
+Thanks
