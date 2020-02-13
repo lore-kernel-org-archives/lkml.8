@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A2DC3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DCBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EAC20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C3320661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608586;
-	bh=X/HxYEGkzOyCx1UWSmnVMY8V7OZ+LRSGbtAvaH+Zfso=;
+	s=default; t=1581608593;
+	bh=JlPOFG2Dfl0ScRZaq+loHRP1Q0SDK9iFvbCKI1AeBV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KbtmGfXtSCWTh9+CJZwyYILeOgqM2ncNUMDi3dI1MZsMdRgu8C6814lXQr8eOqLh/
-	 JJadHicR4WLpHdzQLIknzk2+6q9HS/kSXU6iKhVLZ/N8+bdJD3tdquBtYXeAGVA4c3
-	 Kmq/JxwqafDrgTttMf1rnzEiKi5SXchDUzOOHqec=
+	b=MpAY83NikOcFOdGTwcuXhqvFSW6QVtGGSEb75PBEZfpS6idKOb/NLizqrMuzvhHSQ
+	 ZohmDKThNyfdPhTyrnrhlRAbJH/LOgKQn4gpSx6L9DctQ+8qbH+T0JDrmU9i28+Wy/
+	 YR346exX+aRHoy5EtPUmWe3qQzwqMPxcyj0RIe7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387730AbgBMPnF (ORCPT
+        id S1729530AbgBMPnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:43:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53844 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:43:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729530AbgBMP2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728332AbgBMP2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:28:00 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B39D206DB;
-        Thu, 13 Feb 2020 15:27:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E56F24677;
+        Thu, 13 Feb 2020 15:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607679;
-        bh=X/HxYEGkzOyCx1UWSmnVMY8V7OZ+LRSGbtAvaH+Zfso=;
+        s=default; t=1581607680;
+        bh=JlPOFG2Dfl0ScRZaq+loHRP1Q0SDK9iFvbCKI1AeBV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1beVZ+f0BQyJz7hTpPaTOnZTdbkozeBpxGwYMNqIzJejg8G0C5jgHiP8VU3AhsCH
-         Tnsfo0D5YPVThX9rb771RO1upflGXYW1F3+uvdFKQw9M9/CTGnTEwYixuxMxWRnt8c
-         10FY+UWbQqbMwpCcwF/iALFKiPCY06DJm/KKGSKk=
+        b=fYoyb+cf0qrxqL8kC4nRacuN2hulHYjy3kkiK31VDRZkPkO9iTpsCaLIyw+o/NgMH
+         b0Sr09Bh9sR9dnwPR3d9vDBWXi76q/p7oVTcOoKnOkskvSOceOTTvrTpwby5CZz5ME
+         AE6XOJuMvPOlHBOHPvbO9fldOST7oyZ5v0TxuSXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Sergey Gorenko <sergeygo@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 011/120] RDMA/cma: Fix unbalanced cm_id reference count during address resolve
-Date:   Thu, 13 Feb 2020 07:20:07 -0800
-Message-Id: <20200213151905.332258945@linuxfoundation.org>
+Subject: [PATCH 5.5 002/120] IB/srp: Never use immediate data if it is disabled by a user
+Date:   Thu, 13 Feb 2020 07:19:58 -0800
+Message-Id: <20200213151901.999623265@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,55 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Sergey Gorenko <sergeygo@mellanox.com>
 
-commit b4fb4cc5ba83b20dae13cef116c33648e81d2f44 upstream.
+commit 0fbb37dd82998b5c83355997b3bdba2806968ac7 upstream.
 
-Below commit missed the AF_IB and loopback code flow in
-rdma_resolve_addr().  This leads to an unbalanced cm_id refcount in
-cma_work_handler() which puts the refcount which was not incremented prior
-to queuing the work.
+Some SRP targets that do not support specification SRP-2, put the garbage
+to the reserved bits of the SRP login response.  The problem was not
+detected for a long time because the SRP initiator ignored those bits. But
+now one of them is used as SRP_LOGIN_RSP_IMMED_SUPP. And it causes a
+critical error on the target when the initiator sends immediate data.
 
-A call trace is observed with such code flow:
+The ib_srp module has a use_imm_date parameter to enable or disable
+immediate data manually. But it does not help in the above case, because
+use_imm_date is ignored at handling the SRP login response. The problem is
+definitely caused by a bug on the target side, but the initiator's
+behavior also does not look correct.  The initiator should not use
+immediate data if use_imm_date is disabled by a user.
 
- BUG: unable to handle kernel NULL pointer dereference at (null)
- [<ffffffff96b67e16>] __mutex_lock_slowpath+0x166/0x1d0
- [<ffffffff96b6715f>] mutex_lock+0x1f/0x2f
- [<ffffffffc0beabb5>] cma_work_handler+0x25/0xa0
- [<ffffffff964b9ebf>] process_one_work+0x17f/0x440
- [<ffffffff964baf56>] worker_thread+0x126/0x3c0
+This commit adds an additional checking of use_imm_date at the handling of
+SRP login response to avoid unexpected use of immediate data.
 
-Hence, hold the cm_id reference when scheduling the resolve work item.
-
-Fixes: 722c7b2bfead ("RDMA/{cma, core}: Avoid callback on rdma_addr_cancel()")
-Link: https://lore.kernel.org/r/20200126142652.104803-2-leon@kernel.org
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 882981f4a411 ("RDMA/srp: Add support for immediate data")
+Link: https://lore.kernel.org/r/20200115133055.30232-1-sergeygo@mellanox.com
+Signed-off-by: Sergey Gorenko <sergeygo@mellanox.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cma.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/ulp/srp/ib_srp.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -3118,6 +3118,7 @@ static int cma_resolve_loopback(struct r
- 	rdma_addr_get_sgid(&id_priv->id.route.addr.dev_addr, &gid);
- 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, &gid);
- 
-+	atomic_inc(&id_priv->refcount);
- 	cma_init_resolve_addr_work(work, id_priv);
- 	queue_work(cma_wq, &work->work);
- 	return 0;
-@@ -3144,6 +3145,7 @@ static int cma_resolve_ib_addr(struct rd
- 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, (union ib_gid *)
- 		&(((struct sockaddr_ib *) &id_priv->id.route.addr.dst_addr)->sib_addr));
- 
-+	atomic_inc(&id_priv->refcount);
- 	cma_init_resolve_addr_work(work, id_priv);
- 	queue_work(cma_wq, &work->work);
- 	return 0;
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -2546,7 +2546,8 @@ static void srp_cm_rep_handler(struct ib
+ 	if (lrsp->opcode == SRP_LOGIN_RSP) {
+ 		ch->max_ti_iu_len = be32_to_cpu(lrsp->max_ti_iu_len);
+ 		ch->req_lim       = be32_to_cpu(lrsp->req_lim_delta);
+-		ch->use_imm_data  = lrsp->rsp_flags & SRP_LOGIN_RSP_IMMED_SUPP;
++		ch->use_imm_data  = srp_use_imm_data &&
++			(lrsp->rsp_flags & SRP_LOGIN_RSP_IMMED_SUPP);
+ 		ch->max_it_iu_len = srp_max_it_iu_len(target->cmd_sg_cnt,
+ 						      ch->use_imm_data,
+ 						      target->max_it_iu_size);
 
 
