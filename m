@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68ADC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79018C47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0A720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AED320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608542;
-	bh=egsv0F3QI165Kw4Zy5KRqStiuf+/g6ZG+gWYqu5O9EA=;
+	s=default; t=1581608545;
+	bh=vNPMprNZO85pdHOgUqQWKIPreakOIp/WAWMve8AOrFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TdU3mSrBV2vJqpj3GFSW6CSYCZAdgsE5UaEBEn6Ilhrk3aNM9fTU5l5+mE/L+ANmv
-	 m3DXi+x3cpcR9/HvDf+ezTWAylgC01B31IOoIu/seaVe4KjQntcAlCzMnlgJUxkuN1
-	 oDeNq0NDyZX2SsJkinj+qf85p9hKCuALDPiE2cWA=
+	b=UpmMfruLiXpxw08Y/DbQkaJyH3uuu+9C/ZRCJVRHgaTbEoP99+7jHzrcqPkNRl+8Q
+	 atqFR0LyydsKPNTHdbbvtjMpf5U3uFXHl5hhuQKrvDzHdvhF4k2ScjeK1Ie6F5CT73
+	 x8QuqDrKpf+5W27sNmWxxa4YKKYCcmYJapcgFzAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgBMPmV (ORCPT
+        id S1729590AbgBMP2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:42:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbgBMP2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:17 -0500
+        id S1729074AbgBMPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:48 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C22E120661;
-        Thu, 13 Feb 2020 15:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73D4824690;
+        Thu, 13 Feb 2020 15:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607696;
-        bh=egsv0F3QI165Kw4Zy5KRqStiuf+/g6ZG+gWYqu5O9EA=;
+        s=default; t=1581607547;
+        bh=vNPMprNZO85pdHOgUqQWKIPreakOIp/WAWMve8AOrFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kRjs4jL69pyuq2VgIEa1gzJ2+1JoWluYdSFROUDu9KPP3I0PQ79g5h2xhxnBYp0y6
-         5ouPRXXE+KWd9djGvfKILj9Eg80hZ8MJeO45Jp4ueaLCixNvfSEzWQwm1m2vWjgq7X
-         jRng+DCSwGPn9dYn1rA4ek59dafZBIM3SsGcNdb8=
+        b=qN8ZLqmAq72TM4lG6AZ+77NXLtGPDt6dXdCqRPDRMWzPqer7fNYumy2sRo0ALeME7
+         i7FLCj1ZuVOK+0zeKdwCnQ4ex8bUmgoSJnGZV/pVvZXlFn46vDHdnQf53Hvyn81tsK
+         NoUItGZBfYzwLnabjNxUWk+GKAjtZSmXe6zBmLXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avraham Stern <avraham.stern@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 021/120] iwlwifi: mvm: avoid use after free for pmsr request
-Date:   Thu, 13 Feb 2020 07:20:17 -0800
-Message-Id: <20200213151909.416453795@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.14 110/173] mfd: da9062: Fix watchdog compatible string
+Date:   Thu, 13 Feb 2020 07:20:13 -0800
+Message-Id: <20200213152000.320557764@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,64 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Avraham Stern <avraham.stern@intel.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit cc4255eff523f25187bb95561642941de0e57497 upstream.
+commit 1112ba02ff1190ca9c15a912f9269e54b46d2d82 upstream.
 
-When a FTM request is aborted, the driver sends the abort command to
-the fw and waits for a response. When the response arrives, the driver
-calls cfg80211_pmsr_complete() for that request.
-However, cfg80211 frees the requested data immediately after sending
-the abort command, so this may lead to use after free.
+The watchdog driver compatible is "dlg,da9062-watchdog" and not
+"dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
+fwnode. As result the watchdog driver can't parse the devicetree.
 
-Fix it by clearing the request data in the driver when the abort
-command arrives and ignoring the fw notification that will come
-afterwards.
-
-Signed-off-by: Avraham Stern <avraham.stern@intel.com>
-Fixes: fc36ffda3267 ("iwlwifi: mvm: support FTM initiator")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/mfd/da9062-core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-@@ -8,6 +8,7 @@
-  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
-  * Copyright (C) 2018 Intel Corporation
-  * Copyright (C) 2019 Intel Corporation
-+ * Copyright (C) 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -30,6 +31,7 @@
-  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
-  * Copyright (C) 2018 Intel Corporation
-  * Copyright (C) 2019 Intel Corporation
-+ * Copyright (C) 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -389,6 +391,8 @@ void iwl_mvm_ftm_abort(struct iwl_mvm *m
- 	if (req != mvm->ftm_initiator.req)
- 		return;
- 
-+	iwl_mvm_ftm_reset(mvm);
-+
- 	if (iwl_mvm_send_cmd_pdu(mvm, iwl_cmd_id(TOF_RANGE_ABORT_CMD,
- 						 LOCATION_GROUP, 0),
- 				 0, sizeof(cmd), &cmd))
-@@ -502,7 +506,6 @@ void iwl_mvm_ftm_range_resp(struct iwl_m
- 	lockdep_assert_held(&mvm->mutex);
- 
- 	if (!mvm->ftm_initiator.req) {
--		IWL_ERR(mvm, "Got FTM response but have no request?\n");
- 		return;
- 	}
- 
+--- a/drivers/mfd/da9062-core.c
++++ b/drivers/mfd/da9062-core.c
+@@ -257,7 +257,7 @@ static const struct mfd_cell da9062_devs
+ 		.name		= "da9062-watchdog",
+ 		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
+ 		.resources	= da9062_wdt_resources,
+-		.of_compatible  = "dlg,da9062-wdt",
++		.of_compatible  = "dlg,da9062-watchdog",
+ 	},
+ 	{
+ 		.name		= "da9062-thermal",
 
 
