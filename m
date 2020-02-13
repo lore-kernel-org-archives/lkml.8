@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B187C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26849C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D90820873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC55A24649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581600755;
-	bh=FSop/MJPA2CnwJmV2tVANpVmiTHpp/pkpUyb/F1khfs=;
+	s=default; t=1581600758;
+	bh=EFtAJBxdlavaQ6ZPvkkTjOtqsA0ktSE5x3+2AQi+5d4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=xOSKBVLQjZJwuTXtTK17h2/fSZ+DYri8k/5sce1Qs7z/g/76d3tOCLZ5zBmuvicxJ
-	 vuLl+Y7HQ1Vp/S3IoW9OLT7UyEt6pV37ImwEd59Y4WFfd4QT1GH9aS1uGrRb1F0JRQ
-	 yZ2Y1c5AXMFfLMRunviJ4dgmREF9LSBQLRvjctUE=
+	b=rPRkiaTsXzCSFXRv5L6hFPVX42+CIFESo2DBtwE6O/2W96q+h+AtDX/HZHs2t2sjb
+	 s5OpHRhyKntprkezwcggk33dugkkRyhXKmTvXviWJUzA7Ug3F9vQ+3tsSW6/H8pkQX
+	 IkJOzriHNVJzQm9LyYGrQM2M1JpKd6RocKBBD6R4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbgBMNce (ORCPT
+        id S1730063AbgBMNch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:32:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:46702 "EHLO foss.arm.com"
+        Thu, 13 Feb 2020 08:32:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:46706 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729588AbgBMNcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:32:33 -0500
+        id S1729588AbgBMNcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 08:32:36 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FEFC1FB;
-        Thu, 13 Feb 2020 05:32:33 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3147106F;
+        Thu, 13 Feb 2020 05:32:35 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14AE33F6CF;
-        Thu, 13 Feb 2020 05:32:32 -0800 (PST)
-Date:   Thu, 13 Feb 2020 13:32:31 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67B343F6CF;
+        Thu, 13 Feb 2020 05:32:35 -0800 (PST)
+Date:   Thu, 13 Feb 2020 13:32:33 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spidev_test: Check input_tx and input_file first after parse options" to the spi tree
-In-Reply-To: <1581567368-8055-2-git-send-email-yangtiezhu@loongson.cn>
-Message-Id: <applied-1581567368-8055-2-git-send-email-yangtiezhu@loongson.cn>
+Subject: Applied "spi: spidev_test: Remove break after exit statement" to the spi tree
+In-Reply-To: <1581567368-8055-1-git-send-email-yangtiezhu@loongson.cn>
+Message-Id: <applied-1581567368-8055-1-git-send-email-yangtiezhu@loongson.cn>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,7 +49,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spidev_test: Check input_tx and input_file first after parse options
+   spi: spidev_test: Remove break after exit statement
 
 has been applied to the spi tree at
 
@@ -74,48 +74,34 @@ to this mail.
 Thanks,
 Mark
 
-From 1f3c36328a487059beebd1f7be042e3b7abf7d34 Mon Sep 17 00:00:00 2001
+From 020bd6c48ebd864d42b5b551a87a323e443918a6 Mon Sep 17 00:00:00 2001
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Thu, 13 Feb 2020 12:16:06 +0800
-Subject: [PATCH] spi: spidev_test: Check input_tx and input_file first after
- parse options
+Date: Thu, 13 Feb 2020 12:16:05 +0800
+Subject: [PATCH] spi: spidev_test: Remove break after exit statement
 
-It is better to check input_tx and input_file first after parse options.
-Otherwise, it will do some useless operations when both -p and --input
-are selected.
+When call print_usage() in parse_opts(), it will exit directly.
+Since break is not useful after exit statement, remove it.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/1581567368-8055-2-git-send-email-yangtiezhu@loongson.cn
+Link: https://lore.kernel.org/r/1581567368-8055-1-git-send-email-yangtiezhu@loongson.cn
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- tools/spi/spidev_test.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/spi/spidev_test.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/tools/spi/spidev_test.c b/tools/spi/spidev_test.c
-index 113b1e1d62ca..5866178cdcc9 100644
+index 3559e7646256..113b1e1d62ca 100644
 --- a/tools/spi/spidev_test.c
 +++ b/tools/spi/spidev_test.c
-@@ -404,6 +404,9 @@ int main(int argc, char *argv[])
- 
- 	parse_opts(argc, argv);
- 
-+	if (input_tx && input_file)
-+		pabort("only one of -p and --input may be selected");
-+
- 	fd = open(device, O_RDWR);
- 	if (fd < 0)
- 		pabort("can't open device");
-@@ -445,9 +448,6 @@ int main(int argc, char *argv[])
- 	printf("bits per word: %d\n", bits);
- 	printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
- 
--	if (input_tx && input_file)
--		pabort("only one of -p and --input may be selected");
--
- 	if (input_tx)
- 		transfer_escaped_string(fd, input_tx);
- 	else if (input_file)
+@@ -283,7 +283,6 @@ static void parse_opts(int argc, char *argv[])
+ 			break;
+ 		default:
+ 			print_usage(argv[0]);
+-			break;
+ 		}
+ 	}
+ 	if (mode & SPI_LOOP) {
 -- 
 2.20.1
 
