@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479CAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924D8C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD0A20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B32217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608113;
-	bh=w0rrRyZ+jPMONEFYLs65CSWCUG+nlGZXw8KPBFUYgsI=;
+	s=default; t=1581608114;
+	bh=bTaM9z7UZIreCdFbopgJgFvaS0Ot1vVV2fi3Qq0RXyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oWMcmkKs4cTUp0V/SkWDv1+P0LLZBKtZBFQlox92mGzZywzALJMZ+dXFpLlSHI5Eb
-	 KWNXejk2fp5XlA1gbboGrOMHCf1Xkkaa7sB70bwe5DrJodBR4Vyob//hVHVHQ4R96p
-	 ySFEuytaPKSFMcSy3EOQSskJQ1UqCyZEjkNLeML8=
+	b=sTzkyhuOtKn4iG2xmd+9T8NxZT0nK28ddHEA9niv0Oc3iTjL9aoZ9W9+6q7VclQPq
+	 DdW1gDnXoJV9cKXY+/3hqfV4tv0oQAvwL07w4RMZ0rAgoSqZCb/Pb5S3fRa0txkVN1
+	 lHYDrVDRz0UcsjqpXLt0YwKmufH9yNeeuD8xJRI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388106AbgBMPcG (ORCPT
+        id S2388099AbgBMPcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54998 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbgBMP2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:16 -0500
+        id S1728534AbgBMP2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:15 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 872A02168B;
-        Thu, 13 Feb 2020 15:28:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5B1D222C2;
+        Thu, 13 Feb 2020 15:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607695;
-        bh=w0rrRyZ+jPMONEFYLs65CSWCUG+nlGZXw8KPBFUYgsI=;
+        bh=bTaM9z7UZIreCdFbopgJgFvaS0Ot1vVV2fi3Qq0RXyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/PczHMGpTpOm1gmbz6v+Xwl4QAk/kUaRZbr2ukrVgOIVssPblYy158U9nlTQGy4h
-         kgiG+j/scKk0eZIuK8488RkpX+723cNgsUz1vh6pa4C/KN/yo319wT+IaPk7x+gT13
-         Ui8+99wf3cMQDkXLdhKFHNoDDxvnh8NvzLVDwPFc=
+        b=E23BcBPFrxOT81eMgPny7ruAJ4lKINFN14LnQXpMy5ndYMz/6DsAARyUNHF0dnqLf
+         YAGx56I+qnj+VLx9fRYd781BK+Y/r8xTHtR3AUuDhtOij5PQppY9dpvrMs/ByIo9nh
+         mBHAivrL9tzsbZ0RXdJxrH5KwjDWRRPcTDk1hu1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.5 019/120] PCI: Dont disable bridge BARs when assigning bus resources
-Date:   Thu, 13 Feb 2020 07:20:15 -0800
-Message-Id: <20200213151908.743071905@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Ziswiler <marcel@ziswiler.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.5 018/120] PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
+Date:   Thu, 13 Feb 2020 07:20:14 -0800
+Message-Id: <20200213151908.294986420@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,111 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
 
-commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
+commit 21a92676e1fe292acb077b13106b08c22ed36b14 upstream.
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+Fix AFI_PEX2_CTRL reg offset for Tegra30 by moving it from the Tegra20
+SoC struct where it erroneously got added. This fixes the AFI_PEX2_CTRL
+reg offset being uninitialised subsequently failing to bring up the
+third PCIe port.
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
-
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
-
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
-
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
-
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/setup-bus.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pci-tegra.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1803,12 +1803,18 @@ again:
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
- 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
-@@ -2055,12 +2061,18 @@ again:
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
- 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra
+ 	.num_ports = 2,
+ 	.ports = tegra20_pcie_ports,
+ 	.msi_base_shift = 0,
+-	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
+@@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra
+ 	.num_ports = 3,
+ 	.ports = tegra30_pcie_ports,
+ 	.msi_base_shift = 8,
++	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
 
 
