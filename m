@@ -2,185 +2,153 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04670C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CA6C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A37217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="FqFjEPBA"
+	by mail.kernel.org (Postfix) with ESMTP id 72BC6206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581630607;
+	bh=z7XTTA1gpt/NMcJGgthNL7upjf7P5eWCXBDPQCouBwk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=rwmOHhbvHNujUXOBBpjb1pGwYwiC1+Cmu6Uw1cE3kYxR+oSttVhmPHFX1+PDKRaWL
+	 2V/Qk8s6MIIs0bhm6QgP2wHA/Sc6r/FQ7FepQkeji7rTFKmVGtB0hbqUH3zjUdDaYX
+	 qJ4wDiQYekjm07N0rLDDMYXfag6mSWsgjxIoSJG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgBMVtv (ORCPT
+        id S1728859AbgBMVuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:49:51 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38544 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbgBMVtv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:49:51 -0500
-Received: by mail-ed1-f68.google.com with SMTP id p23so8694989edr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:49:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CIr8PnObM5ymwiwL1EiMYkctE0asXfoeHqvExzLeSc4=;
-        b=FqFjEPBAWPA+rQxGxDZQVc/+KDC775ecwL3/+FaBoa2038OKUe3oN6g8shGj/YRVtO
-         kRm/wFg1uwYyzuvE14fQXQ/6hccJfwRgO3aVKboiJnszaYINoRpEp4EArtkScaku61pv
-         QZ6TB6Ttwea8tpsUi/cKCopeKQgLK3GqQTdzhfnRTdTRXeGrihMjkHplbG+dbDWPPg8u
-         EotRIFc6D/ah43gjEO73ItC+Y45grJMPIZ36X9aHuxaoapr80EM/gJKOUsD9kMnu1vJr
-         YN+eSSyvvyTL2Fyf5YZg/7zFE2QFdGsBJ87am0k5EsyuLu8LGmzWJZqAFQG8z9n1hf0k
-         nCnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CIr8PnObM5ymwiwL1EiMYkctE0asXfoeHqvExzLeSc4=;
-        b=X8mtwc5g/qiJ7175KrMDo4vrGGQJH0lL4oWP6WQXEIV/kxS2alwYGGmWFv672bsAE4
-         YZfYnjcvIWJ24c6d7LN1zxq9c77lD20kqwajxLif1od68x8x8+dKuitBhcCCLH6thmf1
-         hgkgxMZ1dSvut6cNnfOiD5hYpbNSuYr7Ai8+3T3kp4BG6f4dKO9JhhlyNMtdPJc9pYb8
-         yNJ86/2xsxcA7byecCmoAyTR5rwXZYyHNpX5Ch57DfqKWmfbAsfojtNCXXL0kEohQEUd
-         PmEFkG2zYJkM2w8FaB563H428fN3rG3NTnkKVDDkpTwumbgkRZRH+tZvqu4AqlhMbL6k
-         Mwlg==
-X-Gm-Message-State: APjAAAVhrvsZn+G8Mw8veFp83yxemEPlF1i9vUW9XP+iDdkV1Ilgsvam
-        Vgun/+xddfjcjW/cpDNt+/M2IG+HJ9XFvioKSx+w
-X-Google-Smtp-Source: APXvYqzSQm4JJnSM2NwbsgUln1Ol3jVku13aQhiI2KX5XKlMiqINrDBjs9ZRBvvzwBRwGvS0GSsKMYn/KfzBkhIn7o0=
-X-Received: by 2002:a17:906:9352:: with SMTP id p18mr17616846ejw.95.1581630589598;
- Thu, 13 Feb 2020 13:49:49 -0800 (PST)
+        Thu, 13 Feb 2020 16:50:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727778AbgBMVuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 16:50:06 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905D5217BA;
+        Thu, 13 Feb 2020 21:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581630605;
+        bh=z7XTTA1gpt/NMcJGgthNL7upjf7P5eWCXBDPQCouBwk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=sx0VjtJuNV1G5VXaCLWPabdqbpIGLKELzTe6qoyjQwOdxV/el36pV1WqLnO9nihfr
+         NqI+q5ssCxOoKSIcMvtVqMTJN/Oe19+uYkfBsiEg9EOgx65QmD8TQBhQSa9b4w9kJX
+         tXM4JHU35gUYFD/SghrlkkGw8Aigux3lw6nufwog=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3EB113520B69; Thu, 13 Feb 2020 13:50:04 -0800 (PST)
+Date:   Thu, 13 Feb 2020 13:50:04 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213215004.GM2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200212210749.971717428@infradead.org>
+ <20200212232005.GC115917@google.com>
+ <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+ <20200213135138.GB2935@paulmck-ThinkPad-P72>
+ <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+ <20200213185612.GG2935@paulmck-ThinkPad-P72>
+ <20200213204444.GA94647@google.com>
+ <20200213205442.GK2935@paulmck-ThinkPad-P72>
+ <20200213211930.GG170680@google.com>
+ <20200213163800.5c51a5f1@gandalf.local.home>
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
- <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
- <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca> <CAHC9VhSVN3mNb5enhLR1hY+ekiAyiYWbehrwd_zN7kz13dF=1w@mail.gmail.com>
- <20200205235056.e5365xtgz7rbese2@madcap2.tricolour.ca>
-In-Reply-To: <20200205235056.e5365xtgz7rbese2@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 13 Feb 2020 16:49:38 -0500
-Message-ID: <CAHC9VhTM6MDHLcBfwJ_9DCroG0VA-meO770ihjn1sVy6=0JrHw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213163800.5c51a5f1@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 5, 2020 at 6:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-02-05 18:05, Paul Moore wrote:
-> > On Thu, Jan 30, 2020 at 2:28 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-01-22 16:29, Paul Moore wrote:
-> > > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > >
-> > > > > Track the parent container of a container to be able to filter and
-> > > > > report nesting.
-> > > > >
-> > > > > Now that we have a way to track and check the parent container of a
-> > > > > container, modify the contid field format to be able to report that
-> > > > > nesting using a carrat ("^") separator to indicate nesting.  The
-> > > > > original field format was "contid=<contid>" for task-associated records
-> > > > > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
-> > > > > records.  The new field format is
-> > > > > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
-> > > >
-> > > > Let's make sure we always use a comma as a separator, even when
-> > > > recording the parent information, for example:
-> > > > "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
-> > >
-> > > The intent here is to clearly indicate and separate nesting from
-> > > parallel use of several containers by one netns.  If we do away with
-> > > that distinction, then we lose that inheritance accountability and
-> > > should really run the list through a "uniq" function to remove the
-> > > produced redundancies.  This clear inheritance is something Steve was
-> > > looking for since tracking down individual events/records to show that
-> > > inheritance was not aways feasible due to rolled logs or search effort.
+On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
+> [ Added Masami ]
+> 
+> On Thu, 13 Feb 2020 16:19:30 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:
+> > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:  
+> > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
+> > > > [...]   
+> > > > > > > It might well be that I could make these functions be NMI-safe, but
+> > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
+> > > > > > > So, before looking into that, I have a question.  Given these proposed
+> > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
+> > > > > > > to just use in_nmi()?  
+> > > > > > 
+> > > > > > That _should_ already be the case today. That is, if we end up in a
+> > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.  
+> > > > > 
+> > > > > So something like this, then?  This is untested, probably doesn't even
+> > > > > build, and could use some careful review from both Peter and Steve,
+> > > > > at least.  As in the below is the second version of the patch, the first
+> > > > > having been missing a couple of important "!" characters.  
+> > > > 
+> > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
+> > > > outside, that makes it build now. Updated below is Paul's diff. I also added
+> > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> > > > asymmetric.  
+> > > 
+> > > My compiler complained about the static and the __always_inline, so I
+> > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
+> > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
+> > > rcu_nmi_enter()?  
+> > 
+> > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
+> > allowing it on exit (from a code reading standpoint) so my reaction was to
+> > add it to both, but we could probably keep that as a separate
+> > patch/discussion since it is slightly unrelated to the patch.. Sorry to
+> > confuse the topic.
 > >
-> > Perhaps my example wasn't clear.  I'm not opposed to the little
-> > carat/hat character indicating a container's parent, I just think it
-> > would be good to also include a comma *in*addition* to the carat/hat.
->
-> Ah, ok.  Well, I'd offer that it would be slightly shorter, slightly
-> less cluttered and having already written the parser in userspace, I
-> think the parser would be slightly simpler.
->
-> I must admit, I was a bit puzzled by your snippet of code that was used
-> as a prefix to the next item rather than as a postfix to the given item.
->
-> Can you say why you prefer the comma in addition?
+> 
+> rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
+> c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
+> kprobe_int3_handler()")
+> 
+> The issue was that we must not allow anything in do_int3() call kprobe
+> code before kprobe_int3_handler() is called. Because ist_enter() (in
+> do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
+> nothing to do with it being RCU nor NMI, but because it was simply
+> called in do_int3().
+> 
+> Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
+> to why rcu_nmi_enter() would probably be useful, like below:
 
-Generally speaking, I believe that a single delimiter is both easier
-for the eyes to parse, and easier/safer for machines to parse as well.
-In this particular case I think of the comma as a delimiter and the
-carat as a modifier, reusing the carat as a delimiter seems like a bad
-idea to me.
+Thank you, Steve!  Could I please have your Signed-off-by for this?
 
-> > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > index ef8e07524c46..68be59d1a89b 100644
-> > > > > --- a/kernel/audit.c
-> > > > > +++ b/kernel/audit.c
-> > > >
-> > > > > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
-> > > > >                 audit_netns_contid_add(new->net_ns, contid);
-> > > > >  }
-> > > > >
-> > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
-> > > >
-> > > > If we need a forward declaration, might as well just move it up near
-> > > > the top of the file with the rest of the declarations.
-> > >
-> > > Ok.
-> > >
-> > > > > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
-> > > > > +{
-> > > > > +       struct audit_contobj *cont = NULL, *prcont = NULL;
-> > > > > +       int h;
-> > > >
-> > > > It seems safer to pass the audit container ID object and not the u64.
-> > >
-> > > It would also be faster, but in some places it isn't available such as
-> > > for ptrace and signal targets.  This also links back to the drop record
-> > > refcounts to hold onto the contobj until process exit, or signal
-> > > delivery.
-> > >
-> > > What we could do is to supply two potential parameters, a contobj and/or
-> > > a contid, and have it use the contobj if it is valid, otherwise, use the
-> > > contid, as is done for names and paths supplied to audit_log_name().
-> >
-> > Let's not do multiple parameters, that begs for misuse, let's take the
-> > wrapper function route:
-> >
-> >  func a(int id) {
-> >    // important stuff
-> >  }
-> >
-> >  func ao(struct obj) {
-> >    a(obj.id);
-> >  }
-> >
-> > ... and we can add a comment that you *really* should be using the
-> > variant that passes an object.
->
-> I was already doing that where it available, and dereferencing the id
-> for the call.  But I see an advantage to having both parameters supplied
-> to the function, since it saves us the trouble of dereferencing it,
-> searching for the id in the hash list and re-locating the object if the
-> object is already available.
+							Thanx, Paul
 
-I strongly prefer we not do multiple parameters for the same "thing";
-I would much rather do the wrapper approach as described above.  I
-would also like to see us use the audit container ID object as much as
-possible, using a bare integer should be a last resort.
-
--- 
-paul moore
-www.paul-moore.com
+> -- Steve
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 1694a6b57ad8..e2c9e3e2f480 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -846,6 +846,12 @@ void rcu_nmi_enter(void)
+>  {
+>  	rcu_nmi_enter_common(false);
+>  }
+> +/*
+> + * On x86, All functions in do_int3() must be marked NOKPROBE before
+> + * kprobe_int3_handler() is called. ist_enter() which is called in do_int3()
+> + * before kprobe_int3_handle() happens to call rcu_nmi_enter() in which case
+> + * rcu_nmi_enter() must be marked NOKRPOBE.
+> + */
+>  NOKPROBE_SYMBOL(rcu_nmi_enter);
+>  
+>  /**
