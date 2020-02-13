@@ -2,216 +2,133 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2DCC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EEEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9EC421739
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBB421739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C1VSERI1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5gjSkst"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgBMAiO (ORCPT
+        id S1729435AbgBMAiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:38:14 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44387 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729190AbgBMAiN (ORCPT
+        Wed, 12 Feb 2020 19:38:19 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42937 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729190AbgBMAiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:38:13 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so4559502wrx.11
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:38:12 -0800 (PST)
+        Wed, 12 Feb 2020 19:38:18 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so2923640lfl.9;
+        Wed, 12 Feb 2020 16:38:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uu9p1NHkE2MkYSqLVKem4JSGakNOnN3LkVvsdFKxSS0=;
-        b=C1VSERI1Zhn2+zwNq4GK6omW9Pu8n04thGggoaimCH1HofOfRHUCOQ5eRuXLOKllFc
-         RX9W6HYCh+X9U4q+03sYtLor09rSeoyf+ckAi45iIrgRkMtyJ3kibvnFsEqp1eDBlTfS
-         mVMLsY3zEFVRNDD+XeN5jD4tizPm7byE3GOwlkb74Wkh7GebPOjUPkIZ44B8cGktU+J5
-         apRTM6MlGFpSrFIFlPyktFh92vU1H4Y/SVS01GeIKVbPKR5M9wObqBORQb9PgTcZCBXe
-         Dxbzv2zhc8mDcI2DbOKhVb7TLu4fn4zJMQ06LjAnab5mTAb2GUkRaqil7WQ3dRCt7VQd
-         6lOA==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6VRuFj0c+RR5xGzAmKGNr9wl5GP6aspxRb/bDjcgieY=;
+        b=f5gjSkstyjpmmV0lR8bqdecWRblXCrc8SK+pqqiIvk4L8waZccX8O8Y2eXLGk1BipN
+         /8F0C5FiwVi3ioV0P7WogpfxpTPsL+rGSwXur6oI0ZP7Mo9BW8ybW25/31MXeFO5RLJK
+         B/SdA5qd8e91eeIO75Pd70nqGWpmeqFzAudoND0ASAW2UCNaCQjIsRz/Yryr8KcD87ez
+         BfpvIeo58sbR5q4fqd2VMAAAyvL7pqDsdrxhbtNhYNyK74SEFzdC+a13iFpTIyWOEAVX
+         5Fc08Scru4ZzRuysCghFScaiH0R2QIUvUJiqeiebsGnQhs5LtGXwL4KQbVIDVBe0VGb7
+         La+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uu9p1NHkE2MkYSqLVKem4JSGakNOnN3LkVvsdFKxSS0=;
-        b=qmbHXsnD9jv/W4bndgA9/HjHBw+TbY+CdBRTY2e4hZdKoyIG8UxqeWztlafP3b1TqN
-         RI1ZtzrUaFmBC+hWdBWh6IcnfJS+qTTMV/wo7/C7smumgT3qUH+o96bf6jH12ivwjhCg
-         OUb/adU6l3ve91W7AmrkQqRNq8knEExn4iD7v0Gkjp823pIyo6ZBdkZ0vwzTktig3aaM
-         oc5sSKPjcteBGh/sVh/6yRSrXfe19/CGO/wePgwpOplFnDDZT9Kj5+Q4t37VAvM/hY61
-         wuc/0k9+c7pn4whe3Q0nbPUAlBXxasE1WW7I8CyZO9QIh8j0n+BKjjcPLH+CG89HnV62
-         ORrQ==
-X-Gm-Message-State: APjAAAWIIThoYtOJonqnSNukq6LiFFDNjXVnly4ik1PudnOOHgYY53Kd
-        +XRnfzABDzOS0s4ysHQE+lqE3VEos0Fep1GwlVVGYw==
-X-Google-Smtp-Source: APXvYqz7SKVv+770ZaFi2dowLu+8kazlXKxtMl134e8KL6iEs1D3IFyj0n8c6LkAkAZ7K4ZgRmQZxxhDp/pwxZbULu0=
-X-Received: by 2002:adf:81e3:: with SMTP id 90mr17109059wra.23.1581554291169;
- Wed, 12 Feb 2020 16:38:11 -0800 (PST)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6VRuFj0c+RR5xGzAmKGNr9wl5GP6aspxRb/bDjcgieY=;
+        b=h+sseUF7MJxQZGlHEgGNnpgV5n0Nny9muBtF1yXHLCEPnZj7EFexp9koI1V7Oe/kkN
+         Iw/zHjncIz4HF17l2xtG6vffEZHZzMCeUEhUFnJzJPJE93CuBMVNXpb/bzQLlyhesqmZ
+         /7C2qxJjNo4AqHJTHYKU2kdOj4zjcHQZm4nG34kilhxPT7udBrYkIN6q5a96jft61nPb
+         70FHx5jdQUt5+BHGBxkc7O+dWgZAF1D7/cGpFUN0vq2/SMwf15kpzQZbNXGNlfAMu0C6
+         YhBXgOCd3jNQ8JeDoQEv5fNwianUE2576/UR/QmHJ1qoEEvD+i0CDvwSWNFABm8IwX5R
+         UTQA==
+X-Gm-Message-State: APjAAAV/bu+mNx2CK3MkwDYFh98ukthsAMqFtZBCvSydgoN/KxtbMoF7
+        jEYRrOhMGblBb2O/xwIr3SXYwOLd
+X-Google-Smtp-Source: APXvYqyU2LIzu076BOgfOGAG4BemY1o4JaSFhiUPuO8enMLHjXtwsBkhKTntzqtE6LCiWewr6uPTRQ==
+X-Received: by 2002:a19:4208:: with SMTP id p8mr7938370lfa.160.1581554295984;
+        Wed, 12 Feb 2020 16:38:15 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id b17sm287671lfp.15.2020.02.12.16.38.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 16:38:15 -0800 (PST)
+Subject: Re: [PATCH v9 00/17] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+Message-ID: <0a62d941-ddf7-4c9f-3897-2209eab994cf@gmail.com>
+Date:   Thu, 13 Feb 2020 03:38:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200210225806.249297-1-trishalfonso@google.com> <13b0ea0caff576e7944e4f9b91560bf46ac9caf0.camel@sipsolutions.net>
-In-Reply-To: <13b0ea0caff576e7944e4f9b91560bf46ac9caf0.camel@sipsolutions.net>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Wed, 12 Feb 2020 16:37:59 -0800
-Message-ID: <CAKFsvUKaixKXbUqvVvjzjkty26GS+Ckshg2t7-+erqiN2LVS-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] UML: add support for KASAN under x86_64
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200212235134.12638-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 12:21 AM Johannes Berg
-<johannes@sipsolutions.net> wrote:
->
-> Hi,
->
-> Looks very nice! Some questions/comments below:
->
-> > Depends on Constructor support in UML and is based off of
-> > "[RFC PATCH] um: implement CONFIG_CONSTRUCTORS for modules"
-> > (https://patchwork.ozlabs.org/patch/1234551/)
->
-> I guess I should resend this as a proper patch then. Did you test
-> modules? I can try (later) too.
->
-I have not tested modules - you might want to test modules before
-sending it at a proper patch. I just know that it works for the
-purposes of this KASAN project.
+13.02.2020 02:51, Dmitry Osipenko пишет:
+> Hello,
+> 
+> This series does the following:
+> 
+>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+>      into common drivers/cpuidle/ directory.
+> 
+>   2. Enables CPU cluster power-down idling state on Tegra30.
+> 
+> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+> and of the Tegra's arch code in general. Please apply, thanks!
+> 
+> !!!WARNING!!! This series was made on top of the cpufreq patches [1]. But it
+>               should be fine as long as Thierry Reding would pick up this and
+>               the cpufreq patchsets via the Tegra tree, otherwise there will
+>               one minor merge-conflict.
+> 
+> [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=158206
+> 
+> Changelog:
+> 
+> v9: - Added acks from Peter De Schrijver.
+> 
+>     - Added tested-by from Peter Geis, Jasper Korten and David Heidelberg
+>       who tested these patches on Ouya, TF300T and Nexus 7 devices.
 
-> > The location of the KASAN shadow memory, starting at
-> > KASAN_SHADOW_OFFSET, can be configured using the
-> > KASAN_SHADOW_OFFSET option. UML uses roughly 18TB of address
-> > space, and KASAN requires 1/8th of this.
->
-> That also means if I have say 512MB memory allocated for UML, KASAN will
-> use an *additional* 64, unlike on a "real" system, where KASAN will take
-> about 1/8th of the available physical memory, right?
->
-Currently, the amount of shadow memory allocated is a constant based
-on the amount of user space address space in x86_64 since this is the
-host architecture I have focused on.
+I forgot to mention that both cpufreq and cpuidle patchsets were also
+tested on AC100 by Nicolas Chauvet and I forgot to ask for the explicit
+t-b. Nicolas, thank you very much for all the testing of the
+grate-kernel! Please feel free to give yours t-b :)
 
-> > +     help
-> > +       This is the offset at which the ~2.25TB of shadow memory is
-> > +       initialized
->
-> Maybe that should say "mapped" instead of "initialized", since there are
-> relatively few machines on which it could actually all all be used?
->
-Valid point!
+>     - Temporarily dropped the "cpuidle: tegra: Support CPU cluster power-down
+>       state on Tegra30" patch because Michał Mirosław reported that it didn't
+>       work well on his TF300T. After some testing we found that changing
+>       a way in which firmware performs L2 cache maintenance helps, but later
+>       on we also found that the current v9 series works just fine without the
+>       extra firmware changes using recent linux-next and the reason why v8
+>       didn't work before is still unknown (need more testing). So I decided
+>       that it will be better to postpone the dropped patch until we know for
+>       sure that it works well for everyone in every possible configuration.
 
-> > +// used in kasan_mem_to_shadow to divide by 8
-> > +#define KASAN_SHADOW_SCALE_SHIFT 3
->
-> nit: use /* */ style comments
->
-Will do
-
-> > +#define KASAN_SHADOW_START (KASAN_SHADOW_OFFSET)
-> > +#define KASAN_SHADOW_END (KASAN_SHADOW_START + KASAN_SHADOW_SIZE)
-> > +
-> > +#ifdef CONFIG_KASAN
-> > +void kasan_init(void);
-> > +#else
-> > +static inline void kasan_init(void) { }
-> > +#endif /* CONFIG_KASAN */
-> > +
-> > +void kasan_map_memory(void *start, unsigned long len);
-> > +void kasan_unpoison_shadow(const void *address, size_t size);
-> > +
-> > +#endif /* __ASM_UM_KASAN_H */
-> > diff --git a/arch/um/kernel/Makefile b/arch/um/kernel/Makefile
-> > index 5aa882011e04..875e1827588b 100644
-> > --- a/arch/um/kernel/Makefile
-> > +++ b/arch/um/kernel/Makefile
-> > @@ -8,6 +8,28 @@
-> >  # kernel.
-> >  KCOV_INSTRUMENT                := n
-> >
-> > +# The way UMl deals with the stack causes seemingly false positive KASAN
-> > +# reports such as:
-> > +# BUG: KASAN: stack-out-of-bounds in show_stack+0x15e/0x1fb
-> > +# Read of size 8 at addr 000000006184bbb0 by task swapper/1
-> > +# ==================================================================
-> > +# BUG: KASAN: stack-out-of-bounds in dump_trace+0x141/0x1c5
-> > +# Read of size 8 at addr 0000000071057eb8 by task swapper/1
-> > +# ==================================================================
-> > +# BUG: KASAN: stack-out-of-bounds in get_wchan+0xd7/0x138
-> > +# Read of size 8 at addr 0000000070e8fc80 by task systemd/1
-> > +#
-> > +# With these files removed from instrumentation, those reports are
-> > +# eliminated, but KASAN still repeatedly reports a bug on syscall_stub_data:
-> > +# ==================================================================
-> > +# BUG: KASAN: stack-out-of-bounds in syscall_stub_data+0x299/0x2bf
-> > +# Read of size 128 at addr 0000000071457c50 by task swapper/1
->
-> So that's actually something to fix still? Just trying to understand,
-> I'll test it later.
->
-Yes, I have not found a fix for these issues yet and even with these
-few files excluded from instrumentation, the syscall_stub_data error
-occurs(unless CONFIG_STACK is disabled, but CONFIG_STACK is enabled by
-default when using gcc to compile). It is unclear whether this is a
-bug that KASAN has found in UML or it is a mismatch of KASAN error
-detection on UML.
-
-> > -extern int printf(const char *msg, ...);
-> > -static void early_print(void)
-> > +#ifdef CONFIG_KASAN
-> > +void kasan_init(void)
-> >  {
-> > -     printf("I'm super early, before constructors\n");
-> > +     kasan_map_memory((void *)KASAN_SHADOW_START, KASAN_SHADOW_SIZE);
->
-> Heh, you *actually* based it on my patch, in git terms, not just in code
-> terms. I think you should just pick up the few lines that you need from
-> that patch and squash them into this one, I just posted that to
-> demonstrate more clearly what I meant :-)
->
-I did base this on your patch. I figured it was more likely to get
-merged before this patch anyway. To clarify, do you want me to include
-your constructors patch with this one as a patchset?
-
-> > +/**
-> > + * kasan_map_memory() - maps memory from @start with a size of @len.
->
-> I think the () shouldn't be there?
->
-Okay!
-
-> > +void kasan_map_memory(void *start, size_t len)
-> > +{
-> > +     if (mmap(start,
-> > +              len,
-> > +              PROT_READ|PROT_WRITE,
-> > +              MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE|MAP_NORESERVE,
-> > +              -1,
-> > +              0) == MAP_FAILED)
-> > +             os_info("Couldn't allocate shadow memory %s", strerror(errno));
->
-> If that fails, can we even continue?
->
-Probably not, but with this executing before main(), what is the best
-way to have an error occur? Or maybe there's a way we can just
-continue without KASAN enabled and print to the console that KASAN
-failed to initialize?
-
-> johannes
->
-
--- 
-Patricia Alfonso
+Michał, please let me know if you'll spot any problems with the recent
+version of the patches and please feel free to give yours t-b if it
+works well.
