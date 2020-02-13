@@ -2,147 +2,78 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB7CC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8E9C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53BB20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BEZPNvbe"
+	by mail.kernel.org (Postfix) with ESMTP id 1F02020659
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgBMTjK (ORCPT
+        id S1728199AbgBMTj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:39:10 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41115 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMTjK (ORCPT
+        Thu, 13 Feb 2020 14:39:27 -0500
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:13065 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726282AbgBMTj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:39:10 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l21so5278937qtr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:39:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XlaiOyPoTQiX3Vuk5cpUfnsu7dczUQOtR8OVBPBHL2Q=;
-        b=BEZPNvbeyYNK/rkYNeYs+pAx9VhBbGgIK42BBDiaeEZQFWkmSyPpZf/3OD6811cvPm
-         MqFJoj9UFOrc+TNfmDilBfGC7JPw0kjXWKlPPNHAdyoYEZ955JrWn57xcemXy7p0gbtZ
-         UWXdPAHWkS0HzgAPzlSKOonk6c+Qkd3lbZbjyWccVMfcUtrj55lP4L2Dw+0tsRo5hosR
-         PsVHq+JPLxr1mS9wHSEOdM0wBaB89bLYeBqUpOLbHDcpLQtYWjj5vw3yWdAhmkU9qiUZ
-         7vdMLPiOvTuOprkvmTnZP2hRpY+GuWq7Tp2BwmktG1K8xAxVJlo/yDkvxe8+53Wac5++
-         DCXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XlaiOyPoTQiX3Vuk5cpUfnsu7dczUQOtR8OVBPBHL2Q=;
-        b=Xb3ncrQWGmravpZr7HnDiOPdFppQgPX93h5dPfTm41iMygOvg0BU0M1N7ezLTCXncn
-         9P2Kq0PmDovgVckZk1LcONOaVoDWskvqW6WwtTUgOfPwUVhr7CXHVv/CFLZY3Zf1j+de
-         ZMipyM0oc0LAUsYgt/Cz++lKfZo1rjO0D/PfOF1r5LFZHkWFIxqF74Qp3S7OJKBbAtnp
-         iYjWG5e2xVa+mCo0B7rzW02enA+cVVftINnb/Kj2thH37WNDUWkBNri05AkHspLZxipj
-         gl1xtNtdBMKFKh0/m+qXGePpwJUymPlMix9B73fmhyCJ8BkkfJvHpDNrQfehVYxKX96m
-         xs4w==
-X-Gm-Message-State: APjAAAWkgmEKEvbWScq0UvXxUxdQsuwVSt0RdRH5f6GU8wcnGhyGsPK6
-        GAhGMXfg4jMyFnKsOpPKKUcwwg==
-X-Google-Smtp-Source: APXvYqwdCn3xpD8M/ltW22e01Lqu/Bk5XB2h0dxgimBO3jE4MuDUsgahgPTI/qTunQumZxzuwjp0sg==
-X-Received: by 2002:ac8:1ac1:: with SMTP id h1mr13069458qtk.255.1581622749372;
-        Thu, 13 Feb 2020 11:39:09 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id d18sm1847436qke.75.2020.02.13.11.39.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 11:39:08 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j2KKK-0005Oy-Bd; Thu, 13 Feb 2020 15:39:08 -0400
-Date:   Thu, 13 Feb 2020 15:39:08 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        gcwilson@linux.ibm.com
-Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
-Message-ID: <20200213193908.GP31668@ziepe.ca>
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
- <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
- <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
- <20200213183508.GL31668@ziepe.ca>
- <b424faea-33a7-8e5a-caac-f322fad68118@linux.ibm.com>
- <20200213191108.GO31668@ziepe.ca>
- <1e301947-a8f3-0b7d-d86c-5bfe04a68a75@linux.ibm.com>
+        Thu, 13 Feb 2020 14:39:26 -0500
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 13 Feb 2020 11:39:26 -0800
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 13 Feb 2020 11:39:26 -0800
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 4E32648CE; Thu, 13 Feb 2020 11:39:26 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:39:26 -0800
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v5 2/2] pwm: core: Convert period and duty cycle to u64
+Message-ID: <20200213193926.GA20183@codeaurora.org>
+References: <cover.1581533161.git.gurus@codeaurora.org>
+ <f7986df5d54b2bb84ee14e80d0c1225444608f32.1581533161.git.gurus@codeaurora.org>
+ <20200213101802.owpluhixtpor3qi3@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1e301947-a8f3-0b7d-d86c-5bfe04a68a75@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213101802.owpluhixtpor3qi3@pengutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:15:03PM -0500, Stefan Berger wrote:
-> On 2/13/20 2:11 PM, Jason Gunthorpe wrote:
-> > On Thu, Feb 13, 2020 at 02:04:12PM -0500, Stefan Berger wrote:
-> > > On 2/13/20 1:35 PM, Jason Gunthorpe wrote:
-> > > > On Thu, Feb 13, 2020 at 01:20:12PM -0500, Stefan Berger wrote:
-> > > > 
-> > > > > I don't want side effects for the TPM 1.2 case here, so I am only modifying
-> > > > > the flag for the case where the new TPM 2 is being used.  Here's the code
-> > > > > where it shows the effect.
-> > > > I'm surprised this driver is using AUTO_STARTUP, it was intended for
-> > > > embedded cases where their is no firmware to boot the TPM.
-> > > The TIS is also using it on any device.
-> > TIS is a generic driver, and can run on TPMs without firmware
-> > support. It doesn't know either way
+On Thu, Feb 13, 2020 at 11:18:02AM +0100, Uwe Kleine-König wrote:
+> Hello,
 > 
-> The following drivers are all using it:
+> On Wed, Feb 12, 2020 at 10:54:08AM -0800, Guru Das Srinagesh wrote:
+> > @@ -305,8 +305,8 @@ struct pwm_chip {
+> >   * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
+> >   */
+> >  struct pwm_capture {
+> > -	unsigned int period;
+> > -	unsigned int duty_cycle;
+> > +	u64 period;
+> > +	u64 duty_cycle;
+> >  };
 > 
+> Is this last hunk a separate change?
 > 
-> drivers/char/tpm/st33zp24/st33zp24.c, line 493
-> drivers/char/tpm/tpm-interface.c, line 374
-> drivers/char/tpm/tpm_crb.c, line 421
-> drivers/char/tpm/tpm_ftpm_tee.c, line 184
-> drivers/char/tpm/tpm_i2c_atmel.c, line 139
-> drivers/char/tpm/tpm_i2c_infineon.c, line 602
-> drivers/char/tpm/tpm_i2c_nuvoton.c, line 465
-> drivers/char/tpm/tpm_tis_core.c, line 917
-> drivers/char/tpm/tpm_vtpm_proxy.c, line 435
-> 
-> https://elixir.bootlin.com/linux/latest/ident/TPM_OPS_AUTO_STARTUP
+> Otherwise looks fine.
 
-These are all general purpose drivers.
+Hi Uwe,
 
-Though perhaps vtpm_proxy shouldn't include it, not sure.
+No, this is very much a part of the change and not a separate one.
 
-> > > > Chips using AUTO_STARTUP are basically useless for PCRs/etc.
-> > > > 
-> > > > I'd expect somthing called vtpm to have been started and PCRs working
-> > > > before Linux is started??
-> > > Yes, there's supposed to be firmware.
-> > > 
-> > > I only see one caller to tpm2_get_cc_attrs_tbl(chip), which is necessary to
-> > > call. This caller happens to be in tpm2_auto_startup.
-> > That seems to be a mistake, proper startup of the driver should never
-> > require auto_startup.
-> 
-> Is this IBM vTPM driver special that it should do things differently than
-> all those drivers listed above? From looking at the code is seems it is to
-> be set for the TPM 2.0 case.
+If things look good to you, could you please add an Acked-by or
+Reviewed-by tag to the patches so that they get accepted by Thierry?
 
-Any driver that knows the TPM must be started prior to Linux
-booting should not use the flag.  vtpm drivers in general would seem
-to be the case where we can make this statement.
+Thank you.
 
-If it was mandatory then it would not be a flag the driver has to specify.
-
-Jason
+Guru Das.
