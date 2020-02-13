@@ -2,52 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D27C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7761C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E85206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928982168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607747;
-	bh=s6WyXlkqkJJoA4AGYykZcRV99QIRMY1VCq8VUkANtx4=;
+	s=default; t=1581607752;
+	bh=tJt9/r+HD8XZQ+jPWZSzkRHlhQNGebvbX5zkirhzIQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OrfKZRdB+IVWaTzRVTt7jUwnfg7Pva0gJNgyNgVsy02Tl2G3EkFcA4YY/qY6ueB8Z
-	 +/o4MsW79uG0XEYoDR745SVHRAEe6HR95Gw4xY8kJZjUkknrw2V8dUYRBn9bMFA5OW
-	 qNEz4I+0miYycnoH1iHb35zrYcVlandRVRJpwjNg=
+	b=aU5VUlo/UKfQvpphyFAKSDPodOBkEEfQs0vSRfZIucN08eSdu9HK25MpOSANE4iez
+	 qs7YFkttWG0zQxJxTS42W6kROMCIYiM95p2ZodsS4Oam8AOJgTacNRcs/w/FoTNmtp
+	 W8K8fRXKYuDNH6d5vB1IPc3x5MiITB6qILqdlgh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387532AbgBMP3G (ORCPT
+        id S1729672AbgBMP3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45164 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbgBMP0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:24 -0500
+        id S2387543AbgBMP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:26 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 436FF20661;
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EF1206DB;
         Thu, 13 Feb 2020 15:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607584;
-        bh=s6WyXlkqkJJoA4AGYykZcRV99QIRMY1VCq8VUkANtx4=;
+        s=default; t=1581607585;
+        bh=tJt9/r+HD8XZQ+jPWZSzkRHlhQNGebvbX5zkirhzIQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDZVW1g36qud2vWmEhjRVf+NwaKZjYg8mTeIyUopSpQwlggB4u3/eOu4TVfabJUhT
-         qgP7qsP/aV8WzSo72NVURE6IfhPLDvz1USnSuEbKN0FeO4aSrRHVcAHTUg7uisQLcR
-         jlv4XBbSD3UGZZX9wYk2l1zd6vNYi495X2L/0vSs=
+        b=Te40h5fs3raIehYxqF/SFcpCoxvA6ftTGbJlZ22pxNbmDUmK0WhYnS0tWVxXAWIBM
+         w7TTcsi2p0Vj4gBL5ZRLrKbuyZFs3EdTRUWY42boYVVOpGtAUqvGMn0InK8V85sEXc
+         mjaMEzpSczetmVgzvrldy8Mgd1YcM40FSrmvdWVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 11/52] PCI: Dont disable bridge BARs when assigning bus resources
-Date:   Thu, 13 Feb 2020 07:20:52 -0800
-Message-Id: <20200213151815.640369900@linuxfoundation.org>
+        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/52] hv_sock: Remove the accept port restriction
+Date:   Thu, 13 Feb 2020 07:20:43 -0800
+Message-Id: <20200213151811.534631865@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,111 +60,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
+[ Upstream commit c742c59e1fbd022b64d91aa9a0092b3a699d653c ]
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+Currently, hv_sock restricts the port the guest socket can accept
+connections on. hv_sock divides the socket port namespace into two parts
+for server side (listening socket), 0-0x7FFFFFFF & 0x80000000-0xFFFFFFFF
+(there are no restrictions on client port namespace). The first part
+(0-0x7FFFFFFF) is reserved for sockets where connections can be accepted.
+The second part (0x80000000-0xFFFFFFFF) is reserved for allocating ports
+for the peer (host) socket, once a connection is accepted.
+This reservation of the port namespace is specific to hv_sock and not
+known by the generic vsock library (ex: af_vsock). This is problematic
+because auto-binds/ephemeral ports are handled by the generic vsock
+library and it has no knowledge of this port reservation and could
+allocate a port that is not compatible with hv_sock (and legitimately so).
+The issue hasn't surfaced so far because the auto-bind code of vsock
+(__vsock_bind_stream) prior to the change 'VSOCK: bind to random port for
+VMADDR_PORT_ANY' would start walking up from LAST_RESERVED_PORT (1023) and
+start assigning ports. That will take a large number of iterations to hit
+0x7FFFFFFF. But, after the above change to randomize port selection, the
+issue has started coming up more frequently.
+There has really been no good reason to have this port reservation logic
+in hv_sock from the get go. Reserving a local port for peer ports is not
+how things are handled generally. Peer ports should reflect the peer port.
+This fixes the issue by lifting the port reservation, and also returns the
+right peer port. Since the code converts the GUID to the peer port (by
+using the first 4 bytes), there is a possibility of conflicts, but that
+seems like a reasonable risk to take, given this is limited to vsock and
+that only applies to all local sockets.
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
-
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
-
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
-
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
-
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-bus.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ net/vmw_vsock/hyperv_transport.c | 68 +++++---------------------------
+ 1 file changed, 9 insertions(+), 59 deletions(-)
 
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1820,12 +1820,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 70350dc673669..db6ca51228d2f 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -144,28 +144,15 @@ struct hvsock {
+  ****************************************************************************
+  * The only valid Service GUIDs, from the perspectives of both the host and *
+  * Linux VM, that can be connected by the other end, must conform to this   *
+- * format: <port>-facb-11e6-bd58-64006a7986d3, and the "port" must be in    *
+- * this range [0, 0x7FFFFFFF].                                              *
++ * format: <port>-facb-11e6-bd58-64006a7986d3.                              *
+  ****************************************************************************
+  *
+  * When we write apps on the host to connect(), the GUID ServiceID is used.
+  * When we write apps in Linux VM to connect(), we only need to specify the
+  * port and the driver will form the GUID and use that to request the host.
+  *
+- * From the perspective of Linux VM:
+- * 1. the local ephemeral port (i.e. the local auto-bound port when we call
+- * connect() without explicit bind()) is generated by __vsock_bind_stream(),
+- * and the range is [1024, 0xFFFFFFFF).
+- * 2. the remote ephemeral port (i.e. the auto-generated remote port for
+- * a connect request initiated by the host's connect()) is generated by
+- * hvs_remote_addr_init() and the range is [0x80000000, 0xFFFFFFFF).
+  */
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
+-#define MAX_LISTEN_PORT			((u32)0x7FFFFFFF)
+-#define MAX_VM_LISTEN_PORT		MAX_LISTEN_PORT
+-#define MAX_HOST_LISTEN_PORT		MAX_LISTEN_PORT
+-#define MIN_HOST_EPHEMERAL_PORT		(MAX_HOST_LISTEN_PORT + 1)
+-
+ /* 00000000-facb-11e6-bd58-64006a7986d3 */
+ static const uuid_le srv_id_template =
+ 	UUID_LE(0x00000000, 0xfacb, 0x11e6, 0xbd, 0x58,
+@@ -188,33 +175,6 @@ static void hvs_addr_init(struct sockaddr_vm *addr, const uuid_le *svr_id)
+ 	vsock_addr_init(addr, VMADDR_CID_ANY, port);
+ }
+ 
+-static void hvs_remote_addr_init(struct sockaddr_vm *remote,
+-				 struct sockaddr_vm *local)
+-{
+-	static u32 host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
+-	struct sock *sk;
+-
+-	vsock_addr_init(remote, VMADDR_CID_ANY, VMADDR_PORT_ANY);
+-
+-	while (1) {
+-		/* Wrap around ? */
+-		if (host_ephemeral_port < MIN_HOST_EPHEMERAL_PORT ||
+-		    host_ephemeral_port == VMADDR_PORT_ANY)
+-			host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
+-
+-		remote->svm_port = host_ephemeral_port++;
+-
+-		sk = vsock_find_connected_socket(remote, local);
+-		if (!sk) {
+-			/* Found an available ephemeral port */
+-			return;
+-		}
+-
+-		/* Release refcnt got in vsock_find_connected_socket */
+-		sock_put(sk);
+-	}
+-}
+-
+ static void hvs_set_channel_pending_send_size(struct vmbus_channel *chan)
+ {
+ 	set_channel_pending_send_size(chan,
+@@ -342,12 +302,7 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+ 	if_type = &chan->offermsg.offer.if_type;
+ 	if_instance = &chan->offermsg.offer.if_instance;
+ 	conn_from_host = chan->offermsg.offer.u.pipe.user_def[0];
+-
+-	/* The host or the VM should only listen on a port in
+-	 * [0, MAX_LISTEN_PORT]
+-	 */
+-	if (!is_valid_srv_id(if_type) ||
+-	    get_port_by_srv_id(if_type) > MAX_LISTEN_PORT)
++	if (!is_valid_srv_id(if_type))
+ 		return;
+ 
+ 	hvs_addr_init(&addr, conn_from_host ? if_type : if_instance);
+@@ -371,6 +326,13 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+ 
+ 		new->sk_state = TCP_SYN_SENT;
+ 		vnew = vsock_sk(new);
 +
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
-@@ -2066,12 +2072,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
- 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
++		hvs_addr_init(&vnew->local_addr, if_type);
 +
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
++		/* Remote peer is always the host */
++		vsock_addr_init(&vnew->remote_addr,
++				VMADDR_CID_HOST, VMADDR_PORT_ANY);
++		vnew->remote_addr.svm_port = get_port_by_srv_id(if_instance);
+ 		hvs_new = vnew->trans;
+ 		hvs_new->chan = chan;
+ 	} else {
+@@ -410,8 +372,6 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+ 		sk->sk_ack_backlog++;
  
+ 		hvs_addr_init(&vnew->local_addr, if_type);
+-		hvs_remote_addr_init(&vnew->remote_addr, &vnew->local_addr);
+-
+ 		hvs_new->vm_srv_id = *if_type;
+ 		hvs_new->host_srv_id = *if_instance;
+ 
+@@ -716,16 +676,6 @@ static bool hvs_stream_is_active(struct vsock_sock *vsk)
+ 
+ static bool hvs_stream_allow(u32 cid, u32 port)
+ {
+-	/* The host's port range [MIN_HOST_EPHEMERAL_PORT, 0xFFFFFFFF) is
+-	 * reserved as ephemeral ports, which are used as the host's ports
+-	 * when the host initiates connections.
+-	 *
+-	 * Perform this check in the guest so an immediate error is produced
+-	 * instead of a timeout.
+-	 */
+-	if (port > MAX_HOST_LISTEN_PORT)
+-		return false;
+-
+ 	if (cid == VMADDR_CID_HOST)
+ 		return true;
+ 
+-- 
+2.20.1
+
 
 
