@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED787C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81F7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C575C24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8AE246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607354;
-	bh=rtLQcPZqnQKwqCaqbtXIO+mWXwJMcPmASYGn38H54u4=;
+	s=default; t=1581607356;
+	bh=/QIIiKLLOME+T7VODOcXDaeNjirLEVsJBrE5ZbWR8rE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CpM7IhlR/GhxGmDBhRoDty87ntCS8dxKaCkHg6MY/cE+xuB8RmDQE6Ja73yEQz3A0
-	 NbxpoeZjb4M8pEeirSr1KlSLcJSZp8iXCM95qvpq/xtk5zcfOEljhHp7E0kWruL1Ga
-	 gtYwR4rRU0h4M+gZqYpXcoLYh6HnfbTWVwmHRko8=
+	b=IYjAO6wi9dt7pmqy1P2/pe8GI26yKb0BdS84CryOERPUvbb05VMBV1eCjkPgOpO8j
+	 LZpY1bQSvA27kERuktX59jwc9Y2gUaWPLIt8TKeyjPbR7l6sZAtngHhihkgvY2aTE6
+	 okQzZsSM41Pdbr5X9NZxmbAp7cg33U58hZ2kTLG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgBMPWe (ORCPT
+        id S1727998AbgBMPWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:22:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgBMPW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:27 -0500
+        id S1727946AbgBMPWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:30 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E04C246A4;
-        Thu, 13 Feb 2020 15:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623CF20848;
+        Thu, 13 Feb 2020 15:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607345;
-        bh=rtLQcPZqnQKwqCaqbtXIO+mWXwJMcPmASYGn38H54u4=;
+        s=default; t=1581607349;
+        bh=/QIIiKLLOME+T7VODOcXDaeNjirLEVsJBrE5ZbWR8rE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gu6NIvYB6czj2fmkut2NyIdKzoNFKExHaZzn9EUuhhnI8AxTcZh7RumYyvqnzpG/l
-         0QqFSXtopl73bVDn4eXeBsg67YHyzpJfYrYrG/mjohBUiPEfiokp2Lu1qrSfeBIEkj
-         FTkfkI71MGid9qVFJEFyjshxOMGVJSqHE7NRrg+0=
+        b=ztp24As1fHNL7tzIHze/A8ve3RivyaamQuUor7EvgRpgVaEt37bUONnIwXI3K/rf1
+         SUKznvBjO9YOG+bj+om7a7ZJqsByhJIm6CQnht9rkOkzrEhtBRvYvsYWCaQYQYRLCM
+         DWYwTm9XGFwcwb6vThbV/jEBh+vkWVnaiB6v+Uwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 06/91] net: hsr: fix possible NULL deref in hsr_handle_frame()
-Date:   Thu, 13 Feb 2020 07:19:23 -0800
-Message-Id: <20200213151823.886278352@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 29/91] crypto: api - Fix race condition in crypto_spawn_alg
+Date:   Thu, 13 Feb 2020 07:19:46 -0800
+Message-Id: <20200213151832.831143978@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,62 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 2b5b8251bc9fe2f9118411f037862ee17cf81e97 ]
+commit 73669cc556462f4e50376538d77ee312142e8a8a upstream.
 
-hsr_port_get_rcu() can return NULL, so we need to be careful.
+The function crypto_spawn_alg is racy because it drops the lock
+before shooting the dying algorithm.  The algorithm could disappear
+altogether before we shoot it.
 
-general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-CPU: 1 PID: 10249 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-RIP: 0010:hsr_addr_is_self+0x86/0x330 net/hsr/hsr_framereg.c:44
-Code: 04 00 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 e8 6b ff 94 f9 4c 89 f2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 75 02 00 00 48 8b 43 30 49 39 c6 49 89 47 c0 0f
-RSP: 0018:ffffc90000da8a90 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87e0cc33
-RDX: 0000000000000006 RSI: ffffffff87e035d5 RDI: 0000000000000000
-RBP: ffffc90000da8b20 R08: ffff88808e7de040 R09: ffffed1015d2707c
-R10: ffffed1015d2707b R11: ffff8880ae9383db R12: ffff8880a689bc5e
-R13: 1ffff920001b5153 R14: 0000000000000030 R15: ffffc90000da8af8
-FS:  00007fd7a42be700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32338000 CR3: 00000000a928c000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- hsr_handle_frame+0x1c5/0x630 net/hsr/hsr_slave.c:31
- __netif_receive_skb_core+0xfbc/0x30b0 net/core/dev.c:5099
- __netif_receive_skb_one_core+0xa8/0x1a0 net/core/dev.c:5196
- __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5312
- process_backlog+0x206/0x750 net/core/dev.c:6144
- napi_poll net/core/dev.c:6582 [inline]
- net_rx_action+0x508/0x1120 net/core/dev.c:6650
- __do_softirq+0x262/0x98c kernel/softirq.c:292
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
- </IRQ>
+This patch fixes it by moving the shooting into the locked section.
 
-Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6bfd48096ff8 ("[CRYPTO] api: Added spawns")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/hsr/hsr_slave.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/net/hsr/hsr_slave.c
-+++ b/net/hsr/hsr_slave.c
-@@ -30,6 +30,8 @@ static rx_handler_result_t hsr_handle_fr
+---
+ crypto/algapi.c   |   16 +++++-----------
+ crypto/api.c      |    3 +--
+ crypto/internal.h |    1 -
+ 3 files changed, 6 insertions(+), 14 deletions(-)
+
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -663,22 +663,16 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+ static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+ {
+ 	struct crypto_alg *alg;
+-	struct crypto_alg *alg2;
  
- 	rcu_read_lock(); /* hsr->node_db, hsr->ports */
- 	port = hsr_port_get_rcu(skb->dev);
-+	if (!port)
-+		goto finish_pass;
+ 	down_read(&crypto_alg_sem);
+ 	alg = spawn->alg;
+-	alg2 = alg;
+-	if (alg2)
+-		alg2 = crypto_mod_get(alg2);
+-	up_read(&crypto_alg_sem);
+-
+-	if (!alg2) {
+-		if (alg)
+-			crypto_shoot_alg(alg);
+-		return ERR_PTR(-EAGAIN);
++	if (alg && !crypto_mod_get(alg)) {
++		alg->cra_flags |= CRYPTO_ALG_DYING;
++		alg = NULL;
+ 	}
++	up_read(&crypto_alg_sem);
  
- 	if (hsr_addr_is_self(port->hsr, eth_hdr(skb)->h_source)) {
- 		/* Directly kill frames sent by ourselves */
+-	return alg;
++	return alg ?: ERR_PTR(-EAGAIN);
+ }
+ 
+ struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -355,13 +355,12 @@ static unsigned int crypto_ctxsize(struc
+ 	return len;
+ }
+ 
+-void crypto_shoot_alg(struct crypto_alg *alg)
++static void crypto_shoot_alg(struct crypto_alg *alg)
+ {
+ 	down_write(&crypto_alg_sem);
+ 	alg->cra_flags |= CRYPTO_ALG_DYING;
+ 	up_write(&crypto_alg_sem);
+ }
+-EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+ 
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask)
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -87,7 +87,6 @@ void crypto_alg_tested(const char *name,
+ void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
+ 			  struct crypto_alg *nalg);
+ void crypto_remove_final(struct list_head *list);
+-void crypto_shoot_alg(struct crypto_alg *alg);
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask);
+ void *crypto_create_tfm(struct crypto_alg *alg,
 
 
