@@ -2,142 +2,122 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC892C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F61C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2CC24649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DDF217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581573342;
+	bh=oZ9NJ9UTROJIGFfOVsLmAcHJvG9pvWM/bv++TCCy3jU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0oV4ZOCVwOYBzyiOWesmTZtB74kCeMXkQbpvH/R4qkrP24XirOX7CR0XJ/88AS6ql
+	 uwHZA4TJpIFUbsr9b6ZVO9CZ6Ffn4CF8rBjrMnNflbNpnxh6ku6nIgbIqopQcLjH0H
+	 6rfkZfFeP6/LvzpyShjz5SogocXjUhZsz9F7xIks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgBMFzh (ORCPT
+        id S1729726AbgBMFzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 00:55:37 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49902 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgBMFzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 00:55:36 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j27TD-00Bp5a-8k; Thu, 13 Feb 2020 05:55:27 +0000
-Date:   Thu, 13 Feb 2020 05:55:27 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs
- instances
-Message-ID: <20200213055527.GS23230@ZenIV.linux.org.uk>
-References: <87v9obipk9.fsf@x220.int.ebiederm.org>
- <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
- <20200212200335.GO23230@ZenIV.linux.org.uk>
- <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
- <20200212203833.GQ23230@ZenIV.linux.org.uk>
- <20200212204124.GR23230@ZenIV.linux.org.uk>
- <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
- <87lfp7h422.fsf@x220.int.ebiederm.org>
- <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
- <87pnejf6fz.fsf@x220.int.ebiederm.org>
+        Thu, 13 Feb 2020 00:55:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgBMFzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 00:55:40 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F2E21734;
+        Thu, 13 Feb 2020 05:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581573340;
+        bh=oZ9NJ9UTROJIGFfOVsLmAcHJvG9pvWM/bv++TCCy3jU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LMIw2GOxI3U9lWOZpw7HxZ3wNRZBsRdvXa9/MZ3X4jk0NYycb5YQw05av1gUcosNL
+         kr1aUKrJidbaVsj8Jxy63uipawGGazrbaodc+uGUKglcP+m8WIsOWsY3r4vnZkXFTg
+         8Se2hzuMy23llWJ3M9COociqKPGHdVCZMwVbHh50=
+Date:   Thu, 13 Feb 2020 13:55:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Jacky Bai <ping.bai@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "info@metux.net" <info@metux.net>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "git@andred.net" <git@andred.net>, Abel Vesa <abel.vesa@nxp.com>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 1/4] ARM: imx: use device_initcall for imx_soc_device_init
+Message-ID: <20200213055532.GN11096@dragon>
+References: <1579167145-1480-1-git-send-email-peng.fan@nxp.com>
+ <1579167145-1480-2-git-send-email-peng.fan@nxp.com>
+ <AM7PR04MB6981B45633536729EBEB427487310@AM7PR04MB6981.eurprd04.prod.outlook.com>
+ <AM0PR04MB448103B7C47B9AA5621A731A88310@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200213054344.GM11096@dragon>
+ <AM0PR04MB448134507B4F957C06F1315A881A0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87pnejf6fz.fsf@x220.int.ebiederm.org>
+In-Reply-To: <AM0PR04MB448134507B4F957C06F1315A881A0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:37:52PM -0600, Eric W. Biederman wrote:
-
-> I think I have an alternate idea that could work.  Add some extra code
-> into proc_task_readdir, that would look for dentries that no longer
-> point to tasks and d_invalidate them.  With the same logic probably
-> being called from a few more places as well like proc_pid_readdir,
-> proc_task_lookup, and proc_pid_lookup.
+On Thu, Feb 13, 2020 at 05:47:41AM +0000, Peng Fan wrote:
+> > Subject: Re: [RFC 1/4] ARM: imx: use device_initcall for imx_soc_device_init
+> > 
+> > On Fri, Jan 17, 2020 at 08:15:54AM +0000, Peng Fan wrote:
+> > > > > Subject: [RFC 1/4] ARM: imx: use device_initcall for
+> > > > > imx_soc_device_init
+> > > > >
+> > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > >
+> > > > > This is preparation to move imx_soc_device_init to
+> > > > > drivers/soc/imx/
+> > > > >
+> > > > > There is no reason to must put dt devices under /sys/devices/soc0,
+> > > > > they could also be under /sys/devices/platform, so we could pass
+> > > > > NULL as parent when calling of_platform_default_populate.
+> > > > >
+> > > >
+> > > > This change will impact various internal test case & userspace lib, I think.
+> > > > Need to ask test team & other developer to double check the impact.
+> > >
+> > > /sys/devices/soc0 is still there, the patchset only moves the platform
+> > > devices which under /sys/devices/soc0 to /sys/devices/platform
+> > 
+> > Jacky's concern still stands, as there are many user spaces which will be
+> > broken and need update.
 > 
-> We could even optimize it and have a process died flag we set in the
-> superblock.
+> The soc device itself still under /sys/devices/soc0, the soc_id/revision still there.
+> It is just the platform devices moved to /sys/devices/platform.
 > 
-> That would would batch up the freeing work until the next time someone
-> reads from proc in a way that would create more dentries.  So it would
-> prevent dentries from reaped zombies from growing without bound.
+> When I confirm with Jacky before, his concern is soc_id/revision will be
+> moved. But this is not true, they are still there as before.
 > 
-> Hmm.  Given the existence of proc_fill_cache it would really be a good
-> idea if readdir and lookup performed some of the freeing work as well.
-> As on readdir we always populate the dcache for all of the directory
-> entries.
+> > 
+> > > In this way, we aligned with ARM64. And simplify arch code by moving
+> > > the code to drivers/soc/imx. In future, considering more cleanup, we
+> > > could merge the code to soc-imx8.c, since they share similar silicon
+> > > rev ocotp logic.
+> > 
+> > Though this is a good thing from maintenance point of view, we do not want
+> > to break user spaces.
+> 
+> Actually not break user spaces, since this is RFC, I not expect this be merged.
+> If you agree, I could post normal V1 patchset.
 
-First of all, that won't do a damn thing when nobody is accessing
-given superblock.  What's more, readdir in root of that procfs instance
-is not enough - you need it in task/ of group leader.
+Okay.  You send formal patches, and we get them into linux-next to see
+if people will complain any breakage.
 
-What I don't understand is the insistence on getting those dentries
-via dcache lookups.  _IF_ we are willing to live with cacheline
-contention (on ->d_lock of root dentry, if nothing else), why not
-do the following:
-	* put all dentries of such directories ([0-9]* and [0-9]*/task/*)
-into a list anchored in task_struct; have non-counting reference to
-task_struct stored in them (might simplify part of get_proc_task() users,
-BTW - avoids pid-to-task_struct lookups if we have a dentry and not just
-the inode; many callers do)
-	* have ->d_release() remove from it (protecting per-task_struct lock
-nested outside of all ->d_lock)
-	* on exit:
-	lock the (per-task_struct) list
-	while list is non-empty
-		pick the first dentry
-		remove from the list
-		sb = dentry->d_sb
-		try to bump sb->s_active (if non-zero, that is).
-		if failed
-			continue // move on to the next one - nothing to do here
-		grab ->d_lock
-		res = handle_it(dentry, &temp_list)
-		drop ->d_lock
-		unlock the list
-		if (!list_empty(&temp_list))
-			shrink_dentry_list(&temp_list)
-		if (res)
-			d_invalidate(dentry)
-			dput(dentry)
-		deactivate_super(sb)
-		lock the list
-	unlock the list
-
-handle_it(dentry, temp_list) // ->d_lock held; that one should be in dcache.c
-	if ->d_count is negative // unlikely
-		return 0;
-	if ->d_count is positive,
-		increment ->d_count
-		return 1;
-	// OK, it's still alive, but ->d_count is 0
-	__d_drop	// equivalent of d_invalidate in this case
-	if not on a shrink list // otherwise it's not our headache
-		if on lru list
-			d_lru_del
-		d_shrink_add dentry to temp_list
-	return 0;
-
-And yeah, that'll dirty ->s_active for each procfs superblock that
-has dentry for our process present in dcache.  On exit()...
+Shawn
