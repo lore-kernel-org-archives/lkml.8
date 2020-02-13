@@ -2,89 +2,67 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF93C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73165C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B234218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E85222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581601711;
+	bh=/IHqvSUkvs0D3yRKY8By6Mz5f1a+ORpk6w/6mSnRabE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dMe5tPLx/KBVX5i2hTLJsDeK3r7duTfSxPG7/TkBnpm3P/ONXHZF5o72YNLx0j8j1
+	 nCT3xMjek/y7o8JVSnRS1Jsi0A0L8I4QYxfAc71GIqYVu7iCdodVcDVO0DbG/XgIBA
+	 45au/9G2VEwilfROshE0OhS7AGevysl9q0CEQps8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbgBMNq7 (ORCPT
+        id S1730112AbgBMNsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:46:59 -0500
-Received: from outbound-smtp42.blacknight.com ([46.22.139.226]:50400 "EHLO
-        outbound-smtp42.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730076AbgBMNq7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:46:59 -0500
-Received: from mail.blacknight.com (unknown [81.17.254.10])
-        by outbound-smtp42.blacknight.com (Postfix) with ESMTPS id 6111DD69
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:46:57 +0000 (GMT)
-Received: (qmail 24842 invoked from network); 13 Feb 2020 13:46:57 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 13 Feb 2020 13:46:57 -0000
-Date:   Thu, 13 Feb 2020 13:46:55 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [RFC 2/4] sched/numa: replace runnable_load_avg by load_avg
-Message-ID: <20200213134655.GX3466@techsingularity.net>
-References: <20200211174651.10330-1-vincent.guittot@linaro.org>
- <20200211174651.10330-3-vincent.guittot@linaro.org>
- <20200212133715.GU3420@suse.de>
- <20200212194903.GS3466@techsingularity.net>
- <CAKfTPtDA5GamN4A1SnegYwYCk123TqUDE9EHFbHTgKCMR+yqGQ@mail.gmail.com>
- <20200213131658.9600-1-hdanton@sina.com>
+        Thu, 13 Feb 2020 08:48:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729953AbgBMNsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 08:48:30 -0500
+Received: from localhost (unknown [106.201.58.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6366217F4;
+        Thu, 13 Feb 2020 13:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581601709;
+        bh=/IHqvSUkvs0D3yRKY8By6Mz5f1a+ORpk6w/6mSnRabE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C+zaM2sdYl5E/4jZrsJTTk/z36kElAu2W/FSAchIBvkMCqkgdkT7L3o9cSBdApCU9
+         Z2Nob6jLdrxK4DEY1JTBCIFJH8AqLy5nHBapyQBpyespZigNqI7mYTweWrduyenEfn
+         y1GqU++GENV7EU0KsTdgDizP7gyd36plWGD15oN4=
+Date:   Thu, 13 Feb 2020 19:18:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     dave.jiang@intel.com, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] dmaengine: idxd: remove set but not used variable
+ 'group'
+Message-ID: <20200213134825.GG2618@vkoul-mobl>
+References: <20200211135335.55924-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213131658.9600-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211135335.55924-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:16:58PM +0800, Hillf Danton wrote:
-> > -	load = task_h_load(env->p);
-> > -	dst_load = env->dst_stats.load + load;
-> > -	src_load = env->src_stats.load - load;
-> > -
-> >  	/*
-> > -	 * If the improvement from just moving env->p direction is better
-> > -	 * than swapping tasks around, check if a move is possible.
-> > +	 * If dst node has spare capacity, then check if there is an
-> > +	 * imbalance that would be overruled by the load balancer.
-> >  	 */
-> > -	maymove = !load_too_imbalanced(src_load, dst_load, env);
-> > +	if (env->dst_stats.node_type == node_has_spare) {
-> > +		unsigned int imbalance;
-> > +		int src_running, dst_running;
-> > +
-> > +		/* Would movement cause an imbalance? */
-> > +		src_running = env->src_stats.nr_running - 1;
-> > +		dst_running = env->src_stats.nr_running + 1;
-> > +		imbalance = max(0, dst_running - src_running);
+On 11-02-20, 21:53, YueHaibing wrote:
+> drivers/dma/idxd/sysfs.c: In function engine_group_id_store:
+> drivers/dma/idxd/sysfs.c:419:29: warning: variable group set but not used [-Wunused-but-set-variable]
 > 
-> Have trouble working out why 2 is magician again to make your test data nicer :P
-> 
+> It is not used, so remove it.
 
-This is calculating what the nr_running would be after the move and
-checking if an imbalance exists after the move forcing the load balancer
-to intervene.
+Applied, thanks
 
 -- 
-Mel Gorman
-SUSE Labs
+~Vinod
