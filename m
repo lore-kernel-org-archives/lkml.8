@@ -2,130 +2,226 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1ADC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7ADC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F1920675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950B620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608462;
-	bh=21MFFf//RtKaIZLcaKrDCdFNzKFVWXXoj5VMt6EwnhE=;
+	s=default; t=1581608467;
+	bh=7FjNszEGcyqwFNDRE5D8/DfailREOXD8wf+cbYYTG3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1AJIR03XS36O4thqvO7BVrDXiqv9jqeTWTdKcyqSCZKFJe08qaFa6gojC4+Dpcdww
-	 ihalV/ghC5EwDU5y+BB5yPMCQnDWNvLXXsx94nB1v//uCBreKmQWgwP+s9D8qC+eNH
-	 ZDMyhsAFiRyj5eCT36nDSoYoJUIBXcu8FB1hNOsA=
+	b=1mCAECKGk5zLQkHK5jUcFnSSIw7WWoJIvTRvR0SAD0OODnjQQVpCBF8xWrL3pikNL
+	 HySAQN4ly3rpN0CsYvfTuQxjPNuVu2lBzVS/axfm5W53QPkDhzfyZYagNCiwMlHplB
+	 QJ7RO+VKYn5TYc1fZC7QsSs4gCkcMYUok4FZAUww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgBMPlB (ORCPT
+        id S1729693AbgBMPlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:41:01 -0500
-Received: from conuserg-08.nifty.com ([210.131.2.75]:48168 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbgBMPks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:40:48 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 01DFdZHW005809;
-        Fri, 14 Feb 2020 00:39:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 01DFdZHW005809
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581608377;
-        bh=CfJCXYbZyd9BrXzzHCGYQJ2nq7lm/XIX9LdBbFyn7y0=;
+        Thu, 13 Feb 2020 10:41:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387745AbgBMP2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:38 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6A024676;
+        Thu, 13 Feb 2020 15:28:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607717;
+        bh=7FjNszEGcyqwFNDRE5D8/DfailREOXD8wf+cbYYTG3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HsBBbauoUybEtrfn3+2H3+F41G0+jLVrnwKEsgjcE45ITaP0X56kk+pfz0PvDxtp0
-         C7BqfP6FkxlOTo5PpU0Dbl5q0YcA7mayQ1npkdr7HLjzJ8m1PXwv8TBMoEFgcSHuvl
-         hn1hVn/1fEw/XnOSdsG1bMd34N1CrefL5TKMo1LamM1ILdJG0nANYBx4oEtVHCKfmY
-         oWHC4Oq9MyB0sOfEgOB15ADba8/ZFXSEwami3fhbGycBki9yzERT+iN2Nb7ZH7OW7w
-         z8eKE/t7QLxGqAYV/doWA8/I5Yg+IYhThyO/bWGFLv7tX8LJYOs2qMuno1xRa0vd7W
-         oAAbFf/RfEe+Q==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=8F=AB=D3nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>, amd-gfx@lists.freedesktop.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] drm/radeon: fix build rules of *_reg_safe.h
-Date:   Fri, 14 Feb 2020 00:39:25 +0900
-Message-Id: <20200213153928.28407-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200213153928.28407-1-masahiroy@kernel.org>
-References: <20200213153928.28407-1-masahiroy@kernel.org>
+        b=kvDIwbn5MC0mWPcL3HHCrG/6KcmndYtPHBb3c/J9zY2rGMJ/OP/270Fx6rfo6PuOe
+         HKkRG18FQnU5qTf3n9zkpRe63fszYifemZFTQLY+9hWG1b1dgp4EHpuzHQK9CizXLY
+         xfRULa9IKV8N/Jqzd3slmydoqt55l+6GPipWB4N0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.5 031/120] NFS: Fix fix of show_nfs_errors
+Date:   Thu, 13 Feb 2020 07:20:27 -0800
+Message-Id: <20200213151912.509741343@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+References: <20200213151901.039700531@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if_changed must have FORCE as a prerequisite, and the targets must be
-added to 'targets'.
+From: Trond Myklebust <trondmy@gmail.com>
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+commit 118b6292195cfb86a9f43cb65610fc6d980c65f4 upstream.
+
+Casting a negative value to an unsigned long is not the same as
+converting it to its absolute value.
+
+Fixes: 96650e2effa2 ("NFS: Fix show_nfs_errors macros again")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
+ fs/nfs/nfs4trace.h |   33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
- drivers/gpu/drm/radeon/Makefile | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+--- a/fs/nfs/nfs4trace.h
++++ b/fs/nfs/nfs4trace.h
+@@ -352,7 +352,7 @@ DECLARE_EVENT_CLASS(nfs4_clientid_event,
+ 		),
+ 
+ 		TP_fast_assign(
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__assign_str(dstaddr, clp->cl_hostname);
+ 		),
+ 
+@@ -432,7 +432,8 @@ TRACE_EVENT(nfs4_sequence_done,
+ 			__entry->target_highest_slotid =
+ 					res->sr_target_highest_slotid;
+ 			__entry->status_flags = res->sr_status_flags;
+-			__entry->error = res->sr_status;
++			__entry->error = res->sr_status < 0 ?
++					-res->sr_status : 0;
+ 		),
+ 		TP_printk(
+ 			"error=%ld (%s) session=0x%08x slot_nr=%u seq_nr=%u "
+@@ -640,7 +641,7 @@ TRACE_EVENT(nfs4_state_mgr_failed,
+ 		),
+ 
+ 		TP_fast_assign(
+-			__entry->error = status;
++			__entry->error = status < 0 ? -status : 0;
+ 			__entry->state = clp->cl_state;
+ 			__assign_str(hostname, clp->cl_hostname);
+ 			__assign_str(section, section);
+@@ -659,7 +660,7 @@ TRACE_EVENT(nfs4_xdr_status,
+ 		TP_PROTO(
+ 			const struct xdr_stream *xdr,
+ 			u32 op,
+-			int error
++			u32 error
+ 		),
+ 
+ 		TP_ARGS(xdr, op, error),
+@@ -849,7 +850,7 @@ TRACE_EVENT(nfs4_close,
+ 			__entry->fileid = NFS_FILEID(inode);
+ 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
+ 			__entry->fmode = (__force unsigned int)state->state;
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(args->stateid.seqid);
+ 			__entry->stateid_hash =
+@@ -914,7 +915,7 @@ DECLARE_EVENT_CLASS(nfs4_lock_event,
+ 		TP_fast_assign(
+ 			const struct inode *inode = state->inode;
+ 
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->cmd = cmd;
+ 			__entry->type = request->fl_type;
+ 			__entry->start = request->fl_start;
+@@ -986,7 +987,7 @@ TRACE_EVENT(nfs4_set_lock,
+ 		TP_fast_assign(
+ 			const struct inode *inode = state->inode;
+ 
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->cmd = cmd;
+ 			__entry->type = request->fl_type;
+ 			__entry->start = request->fl_start;
+@@ -1164,7 +1165,7 @@ TRACE_EVENT(nfs4_delegreturn_exit,
+ 		TP_fast_assign(
+ 			__entry->dev = res->server->s_dev;
+ 			__entry->fhandle = nfs_fhandle_hash(args->fhandle);
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(args->stateid->seqid);
+ 			__entry->stateid_hash =
+@@ -1204,7 +1205,7 @@ DECLARE_EVENT_CLASS(nfs4_test_stateid_ev
+ 		TP_fast_assign(
+ 			const struct inode *inode = state->inode;
+ 
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->fileid = NFS_FILEID(inode);
+ 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
+@@ -1306,7 +1307,7 @@ TRACE_EVENT(nfs4_lookupp,
+ 		TP_fast_assign(
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->ino = NFS_FILEID(inode);
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 		),
+ 
+ 		TP_printk(
+@@ -1342,7 +1343,7 @@ TRACE_EVENT(nfs4_rename,
+ 			__entry->dev = olddir->i_sb->s_dev;
+ 			__entry->olddir = NFS_FILEID(olddir);
+ 			__entry->newdir = NFS_FILEID(newdir);
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__assign_str(oldname, oldname->name);
+ 			__assign_str(newname, newname->name);
+ 		),
+@@ -1433,7 +1434,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_stateid_e
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->fileid = NFS_FILEID(inode);
+ 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(stateid->seqid);
+ 			__entry->stateid_hash =
+@@ -1489,7 +1490,7 @@ DECLARE_EVENT_CLASS(nfs4_getattr_event,
+ 			__entry->valid = fattr->valid;
+ 			__entry->fhandle = nfs_fhandle_hash(fhandle);
+ 			__entry->fileid = (fattr->valid & NFS_ATTR_FATTR_FILEID) ? fattr->fileid : 0;
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 		),
+ 
+ 		TP_printk(
+@@ -1536,7 +1537,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_callback_
+ 		),
+ 
+ 		TP_fast_assign(
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->fhandle = nfs_fhandle_hash(fhandle);
+ 			if (!IS_ERR_OR_NULL(inode)) {
+ 				__entry->fileid = NFS_FILEID(inode);
+@@ -1593,7 +1594,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_stateid_c
+ 		),
+ 
+ 		TP_fast_assign(
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->fhandle = nfs_fhandle_hash(fhandle);
+ 			if (!IS_ERR_OR_NULL(inode)) {
+ 				__entry->fileid = NFS_FILEID(inode);
+@@ -1896,7 +1897,7 @@ TRACE_EVENT(nfs4_layoutget,
+ 			__entry->iomode = args->iomode;
+ 			__entry->offset = args->offset;
+ 			__entry->count = args->length;
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(state->stateid.seqid);
+ 			__entry->stateid_hash =
 
-diff --git a/drivers/gpu/drm/radeon/Makefile b/drivers/gpu/drm/radeon/Makefile
-index 9d5d3dc1011f..fda115cefe4d 100644
---- a/drivers/gpu/drm/radeon/Makefile
-+++ b/drivers/gpu/drm/radeon/Makefile
-@@ -4,39 +4,39 @@
- # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
- 
- hostprogs := mkregtable
--clean-files := rn50_reg_safe.h r100_reg_safe.h r200_reg_safe.h rv515_reg_safe.h r300_reg_safe.h r420_reg_safe.h rs600_reg_safe.h r600_reg_safe.h evergreen_reg_safe.h cayman_reg_safe.h
-+targets := rn50_reg_safe.h r100_reg_safe.h r200_reg_safe.h rv515_reg_safe.h r300_reg_safe.h r420_reg_safe.h rs600_reg_safe.h r600_reg_safe.h evergreen_reg_safe.h cayman_reg_safe.h
- 
- quiet_cmd_mkregtable = MKREGTABLE $@
-       cmd_mkregtable = $(obj)/mkregtable $< > $@
- 
--$(obj)/rn50_reg_safe.h: $(src)/reg_srcs/rn50 $(obj)/mkregtable
-+$(obj)/rn50_reg_safe.h: $(src)/reg_srcs/rn50 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/r100_reg_safe.h: $(src)/reg_srcs/r100 $(obj)/mkregtable
-+$(obj)/r100_reg_safe.h: $(src)/reg_srcs/r100 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/r200_reg_safe.h: $(src)/reg_srcs/r200 $(obj)/mkregtable
-+$(obj)/r200_reg_safe.h: $(src)/reg_srcs/r200 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/rv515_reg_safe.h: $(src)/reg_srcs/rv515 $(obj)/mkregtable
-+$(obj)/rv515_reg_safe.h: $(src)/reg_srcs/rv515 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/r300_reg_safe.h: $(src)/reg_srcs/r300 $(obj)/mkregtable
-+$(obj)/r300_reg_safe.h: $(src)/reg_srcs/r300 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/r420_reg_safe.h: $(src)/reg_srcs/r420 $(obj)/mkregtable
-+$(obj)/r420_reg_safe.h: $(src)/reg_srcs/r420 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/rs600_reg_safe.h: $(src)/reg_srcs/rs600 $(obj)/mkregtable
-+$(obj)/rs600_reg_safe.h: $(src)/reg_srcs/rs600 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/r600_reg_safe.h: $(src)/reg_srcs/r600 $(obj)/mkregtable
-+$(obj)/r600_reg_safe.h: $(src)/reg_srcs/r600 $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/evergreen_reg_safe.h: $(src)/reg_srcs/evergreen $(obj)/mkregtable
-+$(obj)/evergreen_reg_safe.h: $(src)/reg_srcs/evergreen $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
--$(obj)/cayman_reg_safe.h: $(src)/reg_srcs/cayman $(obj)/mkregtable
-+$(obj)/cayman_reg_safe.h: $(src)/reg_srcs/cayman $(obj)/mkregtable FORCE
- 	$(call if_changed,mkregtable)
- 
- $(obj)/r100.o: $(obj)/r100_reg_safe.h $(obj)/rn50_reg_safe.h
--- 
-2.17.1
 
