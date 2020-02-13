@@ -2,188 +2,87 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99269C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB87C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69516218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608216;
-	bh=Z0WUW3WebhFnMI1JtileyBhNCkLIzEIlAU4RtOpoYm4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LHwjRQUDGnfN6M3rS9wAHMCnxxnALWo64RWtAB94hoYPxod8pJ2BMZcP/gs31ufxw
-	 iYcsSL3+8q8ljZE/iL57/sixBSrZqJHxboWm/n31q8C5C1wXcaNkQzRuCXSkoDGJzg
-	 DYLhQrLSiOG/Jx98EU10JfzZW4x8/J5D9pvEReL0=
+	by mail.kernel.org (Postfix) with ESMTP id A3A55217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJ5KUCHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgBMPaF (ORCPT
+        id S2387591AbgBMPhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387661AbgBMP1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:05 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 13 Feb 2020 10:37:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45432 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728534AbgBMPg4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:36:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581608215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IwQHI79iQNnLF0R813K4ZfyJ/4oVZzBfHd4LqqijBNs=;
+        b=QJ5KUCHpoHxzmHxMnCNPYpFg6CmWfK8bDzEQWHDGEjfFj6zn4iNSfRaHQrsaK3O5ia9ivp
+        GuMvw39wG0VqVrX6tEKwoiGsKOiinX8bLmMDMWwYWdhZWsPFT0u9Ev0ZVfUBUsFPRrwipq
+        vfXAsJCFyliiu/v6OsXEusODedkdhUY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-421-2EOjsAokOgC2pnOKYZU8tQ-1; Thu, 13 Feb 2020 10:36:51 -0500
+X-MC-Unique: 2EOjsAokOgC2pnOKYZU8tQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE96324684;
-        Thu, 13 Feb 2020 15:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607623;
-        bh=Z0WUW3WebhFnMI1JtileyBhNCkLIzEIlAU4RtOpoYm4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hOSSjnRjeT1HDopMZopXo1WHReZKOF5UtCCus1omaaV1IuQeRHSubMfAYTt3j21sV
-         IcbZMn7epTMifanAjzTIbbD/2Zj03LPQdGrGVrY/bHhFfndA2eUExQHqrFvT4T4fAp
-         N0//Xmje3QuY2+yWEda34/qzWKpJ1lHVYmOJrp2Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Manjunath Patil <manjunath.b.patil@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 05/96] IB/mlx4: Fix leak in id_map_find_del
-Date:   Thu, 13 Feb 2020 07:20:12 -0800
-Message-Id: <20200213151841.069249659@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
-References: <20200213151839.156309910@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3280100550E;
+        Thu, 13 Feb 2020 15:36:49 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A17CD5DA85;
+        Thu, 13 Feb 2020 15:36:46 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 10:36:45 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+Cc:     Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
+        Song Liu <song@kernel.org>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org
+Subject: Re: Remove WQ_CPU_INTENSIVE flag from unbound wq's
+Message-ID: <20200213153645.GA11313@redhat.com>
+References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+On Thu, Feb 13 2020 at  9:18am -0500,
+Maksym Planeta <mplaneta@os.inf.tu-dresden.de> wrote:
 
-commit ea660ad7c1c476fd6e5e3b17780d47159db71dea upstream.
+> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
+> unbound wq. I remove this flag from places where unbound queue is
+> allocated. This is supposed to improve code readability.
+> 
+> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
+> 
+> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
 
-Using CX-3 virtual functions, either from a bare-metal machine or
-pass-through from a VM, MAD packets are proxied through the PF driver.
+What the Documentation says aside, have you cross referenced with the
+code?  And/or have you done benchmarks to verify no changes?
 
-Since the VF drivers have separate name spaces for MAD Transaction Ids
-(TIDs), the PF driver has to re-map the TIDs and keep the book keeping in
-a cache.
-
-Following the RDMA Connection Manager (CM) protocol, it is clear when an
-entry has to evicted from the cache. When a DREP is sent from
-mlx4_ib_multiplex_cm_handler(), id_map_find_del() is called. Similar when
-a REJ is received by the mlx4_ib_demux_cm_handler(), id_map_find_del() is
-called.
-
-This function wipes out the TID in use from the IDR or XArray and removes
-the id_map_entry from the table.
-
-In short, it does everything except the topping of the cake, which is to
-remove the entry from the list and free it. In other words, for the REJ
-case enumerated above, one id_map_entry will be leaked.
-
-For the other case above, a DREQ has been received first. The reception of
-the DREQ will trigger queuing of a delayed work to delete the
-id_map_entry, for the case where the VM doesn't send back a DREP.
-
-In the normal case, the VM _will_ send back a DREP, and id_map_find_del()
-will be called.
-
-But this scenario introduces a secondary leak. First, when the DREQ is
-received, a delayed work is queued. The VM will then return a DREP, which
-will call id_map_find_del(). As stated above, this will free the TID used
-from the XArray or IDR. Now, there is window where that particular TID can
-be re-allocated, lets say by an outgoing REQ. This TID will later be wiped
-out by the delayed work, when the function id_map_ent_timeout() is
-called. But the id_map_entry allocated by the outgoing REQ will not be
-de-allocated, and we have a leak.
-
-Both leaks are fixed by removing the id_map_find_del() function and only
-using schedule_delayed(). Of course, a check in schedule_delayed() to see
-if the work already has been queued, has been added.
-
-Another benefit of always using the delayed version for deleting entries,
-is that we do get a TimeWait effect; a TID no longer in use, will occupy
-the XArray or IDR for CM_CLEANUP_CACHE_TIMEOUT time, without any ability
-of being re-used for that time period.
-
-Fixes: 3cf69cc8dbeb ("IB/mlx4: Add CM paravirtualization")
-Link: https://lore.kernel.org/r/20200123155521.1212288-1-haakon.bugge@oracle.com
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
-Reviewed-by: Rama Nichanamatlu <rama.nichanamatlu@oracle.com>
-Reviewed-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/hw/mlx4/cm.c |   29 +++--------------------------
- 1 file changed, 3 insertions(+), 26 deletions(-)
-
---- a/drivers/infiniband/hw/mlx4/cm.c
-+++ b/drivers/infiniband/hw/mlx4/cm.c
-@@ -186,23 +186,6 @@ out:
- 	kfree(ent);
- }
- 
--static void id_map_find_del(struct ib_device *ibdev, int pv_cm_id)
--{
--	struct mlx4_ib_sriov *sriov = &to_mdev(ibdev)->sriov;
--	struct rb_root *sl_id_map = &sriov->sl_id_map;
--	struct id_map_entry *ent, *found_ent;
--
--	spin_lock(&sriov->id_map_lock);
--	ent = xa_erase(&sriov->pv_id_table, pv_cm_id);
--	if (!ent)
--		goto out;
--	found_ent = id_map_find_by_sl_id(ibdev, ent->slave_id, ent->sl_cm_id);
--	if (found_ent && found_ent == ent)
--		rb_erase(&found_ent->node, sl_id_map);
--out:
--	spin_unlock(&sriov->id_map_lock);
--}
--
- static void sl_id_map_add(struct ib_device *ibdev, struct id_map_entry *new)
- {
- 	struct rb_root *sl_id_map = &to_mdev(ibdev)->sriov.sl_id_map;
-@@ -294,7 +277,7 @@ static void schedule_delayed(struct ib_d
- 	spin_lock(&sriov->id_map_lock);
- 	spin_lock_irqsave(&sriov->going_down_lock, flags);
- 	/*make sure that there is no schedule inside the scheduled work.*/
--	if (!sriov->is_going_down) {
-+	if (!sriov->is_going_down && !id->scheduled_delete) {
- 		id->scheduled_delete = 1;
- 		schedule_delayed_work(&id->timeout, CM_CLEANUP_CACHE_TIMEOUT);
- 	}
-@@ -341,9 +324,6 @@ cont:
- 
- 	if (mad->mad_hdr.attr_id == CM_DREQ_ATTR_ID)
- 		schedule_delayed(ibdev, id);
--	else if (mad->mad_hdr.attr_id == CM_DREP_ATTR_ID)
--		id_map_find_del(ibdev, pv_cm_id);
--
- 	return 0;
- }
- 
-@@ -382,12 +362,9 @@ int mlx4_ib_demux_cm_handler(struct ib_d
- 		*slave = id->slave_id;
- 	set_remote_comm_id(mad, id->sl_cm_id);
- 
--	if (mad->mad_hdr.attr_id == CM_DREQ_ATTR_ID)
-+	if (mad->mad_hdr.attr_id == CM_DREQ_ATTR_ID ||
-+	    mad->mad_hdr.attr_id == CM_REJ_ATTR_ID)
- 		schedule_delayed(ibdev, id);
--	else if (mad->mad_hdr.attr_id == CM_REJ_ATTR_ID ||
--			mad->mad_hdr.attr_id == CM_DREP_ATTR_ID) {
--		id_map_find_del(ibdev, (int) pv_cm_id);
--	}
- 
- 	return 0;
- }
-
+Thanks,
+Mike
 
