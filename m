@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6B8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50678C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7134420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2949F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609504;
-	bh=qryj1/5zCcZu3EilfXkWMgTiTaiwavq8VV7ZrG6NMl8=;
+	s=default; t=1581609510;
+	bh=OkdZYTABMzbqIIb42yLWVF204bmXVHSdwdUlvrKVY6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=var1M8p5yUByXx9klSFXvughMDOrBh7d+gOjpejFiwSBnBHYB5fIMF4Q+dv911sbU
-	 Cqe+n4Q17DmXGmdEVbV90V9Vbd8rNNnO1ecplQyDAIKmOzsnnmLdlWM/7l22ifUigP
-	 rGENuDm4QAkHd+V9O2s3dMQF4n5dkoqKDXDTNitw=
+	b=z/gxt3XblsPhDvsVTazYzG2DMw6cRiKqc1HxBEXfyx6ZWE1B7VxhX//bkGbwlGpKo
+	 esF7MotDmqf6ALKedxNFuUwTuDAj/RzQOH+W72bQSsxkklRE7hTFdaiGnLmqU+PxgY
+	 /myFIopY2aaKKEbx1hQUQJ0roVka5IykTBQWU4sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388198AbgBMP6O (ORCPT
+        id S1729527AbgBMP63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:58:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40286 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:58:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgBMPZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:13 -0500
+        id S1728932AbgBMPZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:11 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 869EE246B1;
-        Thu, 13 Feb 2020 15:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9053224691;
+        Thu, 13 Feb 2020 15:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607512;
-        bh=qryj1/5zCcZu3EilfXkWMgTiTaiwavq8VV7ZrG6NMl8=;
+        s=default; t=1581607510;
+        bh=OkdZYTABMzbqIIb42yLWVF204bmXVHSdwdUlvrKVY6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swB0qy+OfvCiZf0BBQTbtg6+Cbe8k4S6I+zTXlVGng7swK+HrQpZo+8MQfc0Wfhsf
-         IVOubNXW2iB+KZ4SRH/xWHJSEKCRsVDyGH+FYtilxShcygABwUeDnxr5BAReHQahEX
-         6HdSjqrDOPO+VCHuDCTfMtlTmlsW8gPfREFDQ/rA=
+        b=fe8OsWPO1LDBtacMYnf4VCvBP8wS5bMSaZupl3y1sfZX+034DHNwnoZEViJtzGGM5
+         vhx722OKU7zDGLm/oaNuUS7Epk2JxJWbs9Fp77Tps7EgGj5js8BAJRSu4/mBvXJPmP
+         /pC2Ng/6FewTAJQctMlJuVfYqdNazk0meiq8U0N0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerad Simpson <jbsimpson@gmail.com>,
-        Milan Broz <gmazyland@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 056/173] dm crypt: fix benbi IV constructor crash if used in authenticated mode
-Date:   Thu, 13 Feb 2020 07:19:19 -0800
-Message-Id: <20200213151948.043880074@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 4.14 053/173] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
+Date:   Thu, 13 Feb 2020 07:19:16 -0800
+Message-Id: <20200213151947.343068181@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,54 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milan Broz <gmazyland@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 4ea9471fbd1addb25a4d269991dc724e200ca5b5 upstream.
+commit dabf6b36b83a18d57e3d4b9d50544ed040d86255 upstream.
 
-If benbi IV is used in AEAD construction, for example:
-  cryptsetup luksFormat <device> --cipher twofish-xts-benbi --key-size 512 --integrity=hmac-sha256
-the constructor uses wrong skcipher function and crashes:
+There's an OF helper called of_dma_is_coherent(), which checks if a
+device has a "dma-coherent" property to see if the device is coherent
+for DMA.
 
- BUG: kernel NULL pointer dereference, address: 00000014
- ...
- EIP: crypt_iv_benbi_ctr+0x15/0x70 [dm_crypt]
- Call Trace:
-  ? crypt_subkey_size+0x20/0x20 [dm_crypt]
-  crypt_ctr+0x567/0xfc0 [dm_crypt]
-  dm_table_add_target+0x15f/0x340 [dm_mod]
+But on some platforms devices are coherent by default, and on some
+platforms it's not possible to update existing device trees to add the
+"dma-coherent" property.
 
-Fix this by properly using crypt_aead_blocksize() in this case.
+So add a Kconfig symbol to allow arch code to tell
+of_dma_is_coherent() that devices are coherent by default, regardless
+of the presence of the property.
 
-Fixes: ef43aa38063a6 ("dm crypt: add cryptographic data integrity protection (authenticated encryption)")
-Cc: stable@vger.kernel.org # v4.12+
-Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=941051
-Reported-by: Jerad Simpson <jbsimpson@gmail.com>
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
+when the system has a coherent cache.
+
+Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
+Cc: stable@vger.kernel.org # v3.16+
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-crypt.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/powerpc/Kconfig |    1 +
+ drivers/of/Kconfig   |    4 ++++
+ drivers/of/address.c |    6 +++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -485,8 +485,14 @@ static int crypt_iv_essiv_gen(struct cry
- static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
- 			      const char *opts)
- {
--	unsigned bs = crypto_skcipher_blocksize(any_tfm(cc));
--	int log = ilog2(bs);
-+	unsigned bs;
-+	int log;
-+
-+	if (test_bit(CRYPT_MODE_INTEGRITY_AEAD, &cc->cipher_flags))
-+		bs = crypto_aead_blocksize(any_tfm_aead(cc));
-+	else
-+		bs = crypto_skcipher_blocksize(any_tfm(cc));
-+	log = ilog2(bs);
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -225,6 +225,7 @@ config PPC
+ 	select MODULES_USE_ELF_RELA
+ 	select NO_BOOTMEM
+ 	select OF
++	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
+ 	select OF_EARLY_FLATTREE
+ 	select OF_RESERVED_MEM
+ 	select OLD_SIGACTION			if PPC32
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -112,4 +112,8 @@ config OF_OVERLAY
+ config OF_NUMA
+ 	bool
  
- 	/* we need to calculate how far we must shift the sector count
- 	 * to get the cipher block count, we use this shift in _gen */
++config OF_DMA_DEFAULT_COHERENT
++	# arches should select this if DMA is coherent by default for OF devices
++	bool
++
+ endif # OF
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -894,12 +894,16 @@ EXPORT_SYMBOL_GPL(of_dma_get_range);
+  * @np:	device node
+  *
+  * It returns true if "dma-coherent" property was found
+- * for this device in DT.
++ * for this device in the DT, or if DMA is coherent by
++ * default for OF devices on the current platform.
+  */
+ bool of_dma_is_coherent(struct device_node *np)
+ {
+ 	struct device_node *node = of_node_get(np);
+ 
++	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
++		return true;
++
+ 	while (node) {
+ 		if (of_property_read_bool(node, "dma-coherent")) {
+ 			of_node_put(node);
 
 
