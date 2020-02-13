@@ -2,53 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD823C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28890C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73FA217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F2B217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609535;
-	bh=0fMboa7WxTUHjGCoh/82sHfZx5Y+QtkZ922vblYfWTc=;
+	s=default; t=1581609540;
+	bh=6U861f3HlY1jbH9VK2csIX+8uPv8zZrqsBmhEnRUkx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXCNYlesNNDVDx0/5mJ6SrnJoUQb6edgm9eSOLZmVvbvLUUFJ1R85AC96PGKsL7mB
-	 HvGllutfhS8A0aEHHEGI/BJUZ/B57ADNtK1gJeILr52k1gGqcuV8AVfFxopPFM0HSx
-	 4lklcNHD9RferJG+neSJwY8mj4ZUsoKSlP8MkS18=
+	b=ih8GX1euizcQGY46ZPLxEx7tTb4pDNDbKotg9sLT5BWQDM8UN035Du2BO5XpE5OPT
+	 +wI4dYNnzMvHTbce4emVJvstGdGL2DH+FNOnv+6HB9s8PKHSvinoOum8gjbQZUtWBU
+	 XHp9+ceGiyKYb9w2rXqxETO5Hf8Xjh3/Ryoikq/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbgBMP6y (ORCPT
+        id S1728889AbgBMPZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:58:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728895AbgBMPZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:25:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728425AbgBMPXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:36 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6322D246B1;
-        Thu, 13 Feb 2020 15:25:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C26424689;
+        Thu, 13 Feb 2020 15:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607502;
-        bh=0fMboa7WxTUHjGCoh/82sHfZx5Y+QtkZ922vblYfWTc=;
+        s=default; t=1581607416;
+        bh=6U861f3HlY1jbH9VK2csIX+8uPv8zZrqsBmhEnRUkx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0sH5YzjpdL+fKYbDYYVsK+ai6H6f9vCAqeCeCUZbWPRdAPDkzM7FzZVOfX6gblC1v
-         e/35Bn3nKTgEFJ426i64Y0lzUD+U2rmhLMpd//GfjlW+i0oOJSmE1tjG/cSF+MG3c2
-         3z7aMptCxq/s+fvbDeMkg1agvhb3XviP9Icdrqzk=
+        b=oV4dujv9hSFA4Ur+O8tYlduoAmmZtRc9qxkkBKkSeJwhIPfGRzEePsf8lqT33g875
+         keebf8HcJ4tNoAPApY1UMuxUQNstJ7Fl/Q0TVwr8Fzj/wHXY+F3OP/ASBJbbjKIaqY
+         AY7xk2GSYCWjS6C8SaOgYccY18zny+SBhEpdhlKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 050/173] f2fs: fix miscounted block limit in f2fs_statfs_project()
-Date:   Thu, 13 Feb 2020 07:19:13 -0800
-Message-Id: <20200213151946.599757207@linuxfoundation.org>
+        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 4.9 023/116] media: v4l2-rect.h: fix v4l2_rect_map_inside() top/left adjustments
+Date:   Thu, 13 Feb 2020 07:19:27 -0800
+Message-Id: <20200213151851.946150810@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,33 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Helen Koike <helen.koike@collabora.com>
 
-commit acdf2172172a511f97fa21ed0ee7609a6d3b3a07 upstream.
+commit f51e50db4c20d46930b33be3f208851265694f3e upstream.
 
-statfs calculates Total/Used/Avail disk space in block unit,
-so we should translate soft/hard prjquota limit to block unit
-as well.
+boundary->width and boundary->height are sizes relative to
+boundary->left and boundary->top coordinates, but they were not being
+taken into consideration to adjust r->left and r->top, leading to the
+following error:
 
-Below testing result shows the block/inode numbers of
-Total/Used/Avail from df command are all correct afer
-applying this patch.
+Consider the follow as initial values for boundary and r:
 
-[root@localhost quota-tools]\# ./repquota -P /dev/sdb1
+struct v4l2_rect boundary = {
+	.left = 100,
+	.top = 100,
+	.width = 800,
+	.height = 600,
+}
+
+struct v4l2_rect r = {
+	.left = 0,
+	.top = 0,
+	.width = 1920,
+	.height = 960,
+}
+
+calling v4l2_rect_map_inside(&r, &boundary) was modifying r to:
+
+r = {
+	.left = 0,
+	.top = 0,
+	.width = 800,
+	.height = 600,
+}
+
+Which is wrongly outside the boundary rectangle, because:
+
+	v4l2_rect_set_max_size(r, boundary); // r->width = 800, r->height = 600
+	...
+	if (r->left + r->width > boundary->width) // true
+		r->left = boundary->width - r->width; // r->left = 800 - 800
+	if (r->top + r->height > boundary->height) // true
+		r->top = boundary->height - r->height; // r->height = 600 - 600
+
+Fix this by considering top/left coordinates from boundary.
+
+Fixes: ac49de8c49d7 ("[media] v4l2-rect.h: new header with struct v4l2_rect helper functions")
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Cc: <stable@vger.kernel.org>      # for v4.7 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/super.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/media/v4l2-rect.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -918,6 +918,8 @@ static int f2fs_statfs_project(struct su
- 	if (dquot->dq_dqb.dqb_bhardlimit &&
- 			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
- 		limit = dquot->dq_dqb.dqb_bhardlimit;
-+	if (limit)
-+		limit >>= sb->s_blocksize_bits;
+--- a/include/media/v4l2-rect.h
++++ b/include/media/v4l2-rect.h
+@@ -75,10 +75,10 @@ static inline void v4l2_rect_map_inside(
+ 		r->left = boundary->left;
+ 	if (r->top < boundary->top)
+ 		r->top = boundary->top;
+-	if (r->left + r->width > boundary->width)
+-		r->left = boundary->width - r->width;
+-	if (r->top + r->height > boundary->height)
+-		r->top = boundary->height - r->height;
++	if (r->left + r->width > boundary->left + boundary->width)
++		r->left = boundary->left + boundary->width - r->width;
++	if (r->top + r->height > boundary->top + boundary->height)
++		r->top = boundary->top + boundary->height - r->height;
+ }
  
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
+ /**
 
 
