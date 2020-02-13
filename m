@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77241C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B0AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42994217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03272467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609443;
-	bh=c6YHXyVYeo56alttnMPtiq+Xf9OGWRPcr2cFn1Y7gX4=;
+	s=default; t=1581609450;
+	bh=mXZjmtU8ZBPx99jKMMldFF0RvJ/FI5u4/VQBKYH05oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uLgyyYCwI7x4+yA7UO1xF879jyvRpL7JAwO7Ckkck/0+ess2ydw5w7wM3LjxcNDnZ
-	 nOPYRPJNa5PdYczCS+aNUFu/Mg/r9sWBXvb3D2bHFX3oEwgR3SDvPpH5IwNu40VTXo
-	 X3CZEImKsctSO4lL63eztLZqEXN1W8gdZMcjAz64=
+	b=j8UXXGqpFpDQjjdlVsFCc89SCU5cxGmiIj7tNVYN1rRVGW0aV5FW1so4NBEehcXWe
+	 S2EvnUE6BqGaeeF744LR3HDaO41b811iXeulKWZJA8GD6NG9ktyFOeaHfB2eA5Kqxt
+	 3cBPDv290BweUFzD9O1xCA8G4aHSLjxnryUpIAmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387429AbgBMPZR (ORCPT
+        id S1729715AbgBMP53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35604 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:57:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbgBMPXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:45 -0500
+        id S1728965AbgBMPZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:18 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 800B3246B5;
-        Thu, 13 Feb 2020 15:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F0B924690;
+        Thu, 13 Feb 2020 15:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607424;
-        bh=c6YHXyVYeo56alttnMPtiq+Xf9OGWRPcr2cFn1Y7gX4=;
+        s=default; t=1581607518;
+        bh=mXZjmtU8ZBPx99jKMMldFF0RvJ/FI5u4/VQBKYH05oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1xJgtdIfnf5MqkqPH7thUN5qAef2NBcuE68HY2wq+CXBchFBOXnuKgNkD6IHu23QU
-         yEacl/CrX4StDpzhS+11XlAgNHTJjOzKCoTXIyehnBDV4mCfeG15wIeKMCxeHwEOv5
-         g4MCzKveIh6oBtGURYkD5/8fiGL9OyIHCSJM/fkY=
+        b=r9I9WbomZyBwPjM2vYqRJrvFxjzzGsCU7dRDkXexy7CdsBD4wk9fmwRLUsM8E49Ge
+         Qbbiac16NuLiMz/dgQFDtWlA4RMkBH31hDvIx1vgTtEbe02d3/5Wo1fICnuo1vzPD1
+         sQHhrapyAnSMzMhfSbSTNnrg8zqlZpnyy/Q+4TAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 054/116] KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
-Date:   Thu, 13 Feb 2020 07:19:58 -0800
-Message-Id: <20200213151903.928016018@linuxfoundation.org>
+Subject: [PATCH 4.14 083/173] KVM: x86: Protect ioapic_write_indirect() from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:46 -0800
+Message-Id: <20200213151954.297398404@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,44 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 1a978d9d3e72ddfa40ac60d26301b154247ee0bc upstream.
+commit 670564559ca35b439c8d8861fc399451ddf95137 upstream.
 
-Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
-resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
+This fixes a Spectre-v1/L1TF vulnerability in ioapic_write_indirect().
+This function contains index computations based on the
+(attacker-controlled) IOREGSEL register.
 
-Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
+This patch depends on patch
+"KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks".
+
+Fixes: 70f93dae32ac ("KVM: Use temporary variable to shorten lines.")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/ioapic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1766,7 +1766,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 	mutex_unlock(&kvm->lock);
- 
- 	if (!vcore)
--		goto free_vcpu;
-+		goto uninit_vcpu;
- 
- 	spin_lock(&vcore->lock);
- 	++vcore->num_threads;
-@@ -1782,6 +1782,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 
- 	return vcpu;
- 
-+uninit_vcpu:
-+	kvm_vcpu_uninit(vcpu);
- free_vcpu:
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- out:
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -297,6 +297,7 @@ static void ioapic_write_indirect(struct
+ 		ioapic_debug("change redir index %x val %x\n", index, val);
+ 		if (index >= IOAPIC_NUM_PINS)
+ 			return;
++		index = array_index_nospec(index, IOAPIC_NUM_PINS);
+ 		e = &ioapic->redirtbl[index];
+ 		mask_before = e->fields.mask;
+ 		/* Preserve read-only fields */
 
 
