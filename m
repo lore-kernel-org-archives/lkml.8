@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79018C47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527D5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AED320675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240A620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608545;
-	bh=vNPMprNZO85pdHOgUqQWKIPreakOIp/WAWMve8AOrFc=;
+	s=default; t=1581608549;
+	bh=I3F37xw90XR+ITkmYbUSU264wdX9jM9dM/02J2SyJLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UpmMfruLiXpxw08Y/DbQkaJyH3uuu+9C/ZRCJVRHgaTbEoP99+7jHzrcqPkNRl+8Q
-	 atqFR0LyydsKPNTHdbbvtjMpf5U3uFXHl5hhuQKrvDzHdvhF4k2ScjeK1Ie6F5CT73
-	 x8QuqDrKpf+5W27sNmWxxa4YKKYCcmYJapcgFzAM=
+	b=NTRJSjhiyicXbFqW7t9/7k3cSZ9VbcujfGl+YnZiuwQehNPYIz1hw4hWV25Bf6IzT
+	 p2cRWH+RmI6OiII3qD6ly9nCrkUEjbDl4KYDN0zAv4QOaa6y3BjpaAlgni5RM1G44A
+	 BtoavGX1VXH4jTwyPT4vhrDsux3ha9epagm3ToJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgBMP2N (ORCPT
+        id S1729825AbgBMPm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:42:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbgBMPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:48 -0500
+        id S1729585AbgBMP2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:13 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73D4824690;
-        Thu, 13 Feb 2020 15:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F09D024681;
+        Thu, 13 Feb 2020 15:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607547;
-        bh=vNPMprNZO85pdHOgUqQWKIPreakOIp/WAWMve8AOrFc=;
+        s=default; t=1581607693;
+        bh=I3F37xw90XR+ITkmYbUSU264wdX9jM9dM/02J2SyJLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qN8ZLqmAq72TM4lG6AZ+77NXLtGPDt6dXdCqRPDRMWzPqer7fNYumy2sRo0ALeME7
-         i7FLCj1ZuVOK+0zeKdwCnQ4ex8bUmgoSJnGZV/pVvZXlFn46vDHdnQf53Hvyn81tsK
-         NoUItGZBfYzwLnabjNxUWk+GKAjtZSmXe6zBmLXw=
+        b=VglL+DpTtB67KIEuTKV52CvCRbjoyUSuBBkFS5QCsaZPLFOSRowhuix/rTEO6HeKa
+         BGYABPv79hIuijg5diZAlxhe3hU+/8Zfdmt/i8QcopfHWhQ3u4pB7GQdWIoz43T8Fi
+         QwCq49PKgJmk4vDAIhuYKLiKJTTyw0ra+sov7plo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 110/173] mfd: da9062: Fix watchdog compatible string
-Date:   Thu, 13 Feb 2020 07:20:13 -0800
-Message-Id: <20200213152000.320557764@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 015/120] ath10k: pci: Only dump ATH10K_MEM_REGION_TYPE_IOREG when safe
+Date:   Thu, 13 Feb 2020 07:20:11 -0800
+Message-Id: <20200213151907.039722384@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+References: <20200213151901.039700531@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,35 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-commit 1112ba02ff1190ca9c15a912f9269e54b46d2d82 upstream.
+commit d239380196c4e27a26fa4bea73d2bf994c14ec2d upstream.
 
-The watchdog driver compatible is "dlg,da9062-watchdog" and not
-"dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
-fwnode. As result the watchdog driver can't parse the devicetree.
+ath10k_pci_dump_memory_reg() will try to access memory of type
+ATH10K_MEM_REGION_TYPE_IOREG however, if a hardware restart is in progress
+this can crash a system.
 
-Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Individual ioread32() time has been observed to jump from 15-20 ticks to >
+80k ticks followed by a secure-watchdog bite and a system reset.
+
+Work around this corner case by only issuing the read transaction when the
+driver state is ATH10K_STATE_ON.
+
+Tested-on: QCA9988 PCI 10.4-3.9.0.2-00044
+
+Fixes: 219cc084c6706 ("ath10k: add memory dump support QCA9984")
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mfd/da9062-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/pci.c |   19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -257,7 +257,7 @@ static const struct mfd_cell da9062_devs
- 		.name		= "da9062-watchdog",
- 		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
- 		.resources	= da9062_wdt_resources,
--		.of_compatible  = "dlg,da9062-wdt",
-+		.of_compatible  = "dlg,da9062-watchdog",
- 	},
- 	{
- 		.name		= "da9062-thermal",
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1604,11 +1604,22 @@ static int ath10k_pci_dump_memory_reg(st
+ {
+ 	struct ath10k_pci *ar_pci = ath10k_pci_priv(ar);
+ 	u32 i;
++	int ret;
++
++	mutex_lock(&ar->conf_mutex);
++	if (ar->state != ATH10K_STATE_ON) {
++		ath10k_warn(ar, "Skipping pci_dump_memory_reg invalid state\n");
++		ret = -EIO;
++		goto done;
++	}
+ 
+ 	for (i = 0; i < region->len; i += 4)
+ 		*(u32 *)(buf + i) = ioread32(ar_pci->mem + region->start + i);
+ 
+-	return region->len;
++	ret = region->len;
++done:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
+ }
+ 
+ /* if an error happened returns < 0, otherwise the length */
+@@ -1704,7 +1715,11 @@ static void ath10k_pci_dump_memory(struc
+ 			count = ath10k_pci_dump_memory_sram(ar, current_region, buf);
+ 			break;
+ 		case ATH10K_MEM_REGION_TYPE_IOREG:
+-			count = ath10k_pci_dump_memory_reg(ar, current_region, buf);
++			ret = ath10k_pci_dump_memory_reg(ar, current_region, buf);
++			if (ret < 0)
++				break;
++
++			count = ret;
+ 			break;
+ 		default:
+ 			ret = ath10k_pci_dump_memory_generic(ar, current_region, buf);
 
 
