@@ -2,142 +2,131 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E64FC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EABC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1425D218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CA924650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tEK2VNcv"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="j4nIpV63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgBMKuL (ORCPT
+        id S1729862AbgBMKuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:50:11 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35244 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729494AbgBMKuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:50:11 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so6052687ljb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 02:50:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fXD3NUgPbItg+EdbT8uLMEndhqABRKbmudYKP6OTeTY=;
-        b=tEK2VNcvvP/Fs8a1XfdgXwXHAOHziWPxDjtTpPnfs0njU9+Z6xURNs5tbTbgsTdhSW
-         et1ExI+S25xMn8ikhaf6LY2hQYaT/rUBAXh1BHPIKTWBgP7ZSeNgtHjVcK9ZngzHSOkl
-         vPICzA2jGI8DmbzYqLApFKFoX975IEB1MmG03dvR6DqsTw7rGYzIyY7gZGZwa3eXqkRW
-         Utt1Bo/TtLIjbpDEJRtVBZLLo/SjZ8ZsTMh293ElsFy4pLGm3jN0cnVO6dFG0fGRgW89
-         k74WVlE/X7pNhpyUq9Px0DDsLB3Tl8hTxC+lLpMRpidtjejTf/TJCdh/B/pKLIA2JUfQ
-         v7qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fXD3NUgPbItg+EdbT8uLMEndhqABRKbmudYKP6OTeTY=;
-        b=aHYhm5MglvIegtr5M0ta1L3mUJWM8TL5D61hZIVr6ZJwqLz8JMVI5CruTM4363WFPe
-         C49uLh4jQOS/XrxSzhO1fbTUzsWzxqgxZ9Mh6UKbDYRoKA+GfFZUAAk7Tdh1S9p2KGyN
-         ssQNfe9UHsVcKxjJTqjnYpl5aBLfzDiJ09CQpcXmo139mJ24wiqDLtKZginNqzHM0LJD
-         9ibrsXICAwXJrNA/L4REp5vEdaH0KRVFBwccNtsWACpKsvwp33ZfsC0JyPOh1syBO0WB
-         vIf+CWXKWvWtqTX69SUGfmTU3f/7L2803+CQVviOJTFI01ZwuTqyoetVga0j0xScQjrp
-         sS0w==
-X-Gm-Message-State: APjAAAWbXKkz65B/ayYeiG9kAn/rDlWQLdDYNwHIMqlyJ/IsLtFa2HgG
-        1BB3QlHR+LZBp/kXczB731jX4NIfuyGGvlWTtj8mqcInOP4=
-X-Google-Smtp-Source: APXvYqyMQjetx0saudaTZFe7piFiYoReolaCxitIUPkUXnWVRMTfqYurmvJRIyNi0I8RKA/8Fczfx3OYaZFvTZVl6Ig=
-X-Received: by 2002:a2e:8e91:: with SMTP id z17mr10501916ljk.13.1581591007651;
- Thu, 13 Feb 2020 02:50:07 -0800 (PST)
+        Thu, 13 Feb 2020 05:50:24 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:39086 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729511AbgBMKuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:50:24 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48JCvx1tKgz9vBmx;
+        Thu, 13 Feb 2020 11:50:21 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=j4nIpV63; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id lNMaryXYPCfP; Thu, 13 Feb 2020 11:50:21 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48JCvx0Nrhz9vBmv;
+        Thu, 13 Feb 2020 11:50:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581591021; bh=a0AdfaSXewQASk+OQDLMZqVVvGG6bse26JEwu3kkGK8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=j4nIpV63cfg4kmkQx5p0ao6MB3efkedTnFl3cl62wRxJIbdldqXF9DpkDOikDEbp7
+         MmBRHWqrHVH3uv8Syy+RBPHPoefCGrmzJ9qnve2+A4MqE/pXODXXQuWw/Pne5CDRRx
+         7mc3KVJvf2hLZhrwtE33a0vZQlRhywDc6m0/0jOU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6F18E8B840;
+        Thu, 13 Feb 2020 11:50:21 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id dp7BPwOlgiYQ; Thu, 13 Feb 2020 11:50:21 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA4B88B83E;
+        Thu, 13 Feb 2020 11:50:18 +0100 (CET)
+Subject: Re: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't
+ boot anymore
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Wood <oss@buserror.net>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
+ <aee10440-c244-7c93-d3bb-fd29d8a83be4@c-s.fr>
+ <59487f8a-fd2e-703d-d954-d263f756a3a0@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a1b742ab-54ad-1027-f11c-820009c54e8e@c-s.fr>
+Date:   Thu, 13 Feb 2020 11:50:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1654227.8mz0SueHsU@kreacher> <CAP245DXY2MsV6rf95QdATTXXZWoYYLFBO3QxQgkg=44Fw0cLNA@mail.gmail.com>
- <CAJZ5v0i5thgrdGNQ+a1tuw=CGa8PAhHt19GoDpC8KLLjNVoQLQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i5thgrdGNQ+a1tuw=CGa8PAhHt19GoDpC8KLLjNVoQLQ@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 13 Feb 2020 16:19:56 +0530
-Message-ID: <CAP245DUGieaBgN6NCOpjbZtWsX5Bext1S4NqySYXK_H6Go5FgA@mail.gmail.com>
-Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
- latency QoS interface
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <59487f8a-fd2e-703d-d954-d263f756a3a0@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 3:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Feb 13, 2020 at 8:10 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> >
-> > On Wed, Feb 12, 2020 at 5:09 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > Hi All,
-> > >
-> > > This series of patches is based on the observation that after commit
-> > > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
-> > > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
-> > > code dedicated to the handling of global PM QoS classes in general.  That code
-> > > takes up space and adds overhead in vain, so it is better to get rid of it.
-> > >
-> > > Moreover, with that unuseful code removed, the interface for adding QoS
-> > > requests for CPU latency becomes inelegant and confusing, so it is better to
-> > > clean it up.
-> > >
-> > > Patches [01/28-12/28] do the first part described above, which also includes
-> > > some assorted cleanups of the core PM QoS code that doesn't go away.
-> > >
-> > > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
-> > > "define stubs, migrate users, change the API proper" manner), patches
-> > > [26-27/28] update the general comments and documentation to match the code
-> > > after the previous changes and the last one makes the CPU latency QoS depend
-> > > on CPU_IDLE (because cpuidle is the only user of its target value today).
-> > >
-> > > The majority of the patches in this series don't change the functionality of
-> > > the code at all (at least not intentionally).
-> > >
-> > > Please refer to the changelogs of individual patches for details.
-> >
-> > Hi Rafael,
-> >
-> > Nice cleanup to the code and docs.
-> >
-> > I've reviewed the series, and briefly tested it by setting latencies
-> > from userspace. Can we not remove the debugfs interface? It is a quick
-> > way to check the global cpu latency clamp on the system from userspace
-> > without setting up tracepoints or writing a program to read
-> > /dev/cpu_dma_latency.
->
-> Come on.
->
-> What about in Python?
->
-> #!/usr/bin/env python
-> import numpy as np
->
-> if __name__ == '__main__':
->     f = open("/dev/cpu_dma_latency", "r")
->     print(np.fromfile(f, dtype=np.int32, count=1))
->     f.close()
->
-> And probably you can do it in at least 20 different ways. :-)
 
-Indeed, I can, just not as straightforward as "cat /debugfs/filename"
-when you don't have python or perl in your buildroot initramfs.
 
-Some hexdump/od acrobatics will yield the value, I guess.
+Le 13/02/2020 à 10:37, Rasmus Villemoes a écrit :
+> On 12/02/2020 15.50, Christophe Leroy wrote:
+>>
+>>
+>> On 02/12/2020 02:24 PM, Christophe Leroy wrote:
+> 
+>>> In your commit text you explain that cpm_muram_init() is called via
+>>> subsys_initcall. But console init is done before that, so it cannot work.
+>>>
+>>> Do you have a fix for that ?
+>>>
+>>
+>> The following patch allows powerpc 8xx to boot again. Don't know if
+>> that's the good place and way to do the fix though.
+>>
+>> ---
+>> diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+>> b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+>> index 4cabded8390b..341d682ec6eb 100644
+>> --- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+>> +++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+>> @@ -1351,6 +1351,7 @@ static int __init cpm_uart_console_setup(struct
+>> console *co, char *options)
+>>           clrbits32(&pinfo->sccp->scc_gsmrl, SCC_GSMRL_ENR | SCC_GSMRL_ENT);
+>>       }
+>>
+>> +    cpm_muram_init();
+>>       ret = cpm_uart_allocbuf(pinfo, 1);
+>>
+>>       if (ret)
+> 
+> Hmm, that seems to be a somewhat random place, making it hard to see
+> that it is indeed early enough. Would it work to put it inside the
+> console_initcall that registers the cpm console? I.e.
+> 
+> static int __init cpm_uart_console_init(void)
+> {
+> +       cpm_muram_init();
+>          register_console(&cpm_scc_uart_console);
+>          return 0;
+> }
+> 
+> console_initcall(cpm_uart_console_init);
+> 
 
-> Also note that "echo the_debugfs_thing" does the equivalent, but the
-> conversion takes place in the kernel.  Is it really a good idea to
-> carry the whole debugfs interface because of that one conversion?
->
-> > Except for patch 01/28 removing the debugfs interface, please feel to add my
-> >
-> > Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
->
-> Thanks!
+Yes that works too.
+
+Thanks
+Christophe
