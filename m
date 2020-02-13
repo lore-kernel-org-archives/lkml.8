@@ -2,55 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DB0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08DBC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8276020675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E38E20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608145;
-	bh=eOvi2lyam38R3vikiDpoBEPaRqMpYkr9BVA2+dxyxkE=;
+	s=default; t=1581608146;
+	bh=XNDD2meNX5BtVFSvRvL9MggIIc57XvcHUhfEtjDcsms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7c4RJ4ufBFPSCCkhGgepQtQ4tnp2mZeSa6+VPYG2JrPDDpDxTIF9oxpFn3fl02mq
-	 7cRivLOC+OJ85O109USoXL32mi6GxEjBXDUltF8MwrGHO/YVmIK3ZKNve8IYo4XLkr
-	 kTl2Qbgtmd8uGQ6jEDr+MUPtphIG4Cj8JOx7MjSs=
+	b=Uw30KUXchf8HyvjWxve5ZfvxCz8fLtSr/8nvVsvQ+iSnZlfQMzhbEG5Ccs8rq8Nr1
+	 JKW76TwSLdHvdix4fvyilWUicCjS9okGvO59Oz/tn4oXrMQhboMCs60QLw4W0A+aES
+	 xC9pWd/mHIIP6myEia0hZdGMCwL+Hk+uXdJFP7sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388023AbgBMPbe (ORCPT
+        id S2388014AbgBMPbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbgBMP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:59 -0500
+        id S1729524AbgBMP16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:58 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBDD820661;
-        Thu, 13 Feb 2020 15:27:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0A3A20661;
+        Thu, 13 Feb 2020 15:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607679;
-        bh=eOvi2lyam38R3vikiDpoBEPaRqMpYkr9BVA2+dxyxkE=;
+        s=default; t=1581607677;
+        bh=XNDD2meNX5BtVFSvRvL9MggIIc57XvcHUhfEtjDcsms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0cxAT95fSV/foegaXT1g7EYFGg3y+5W+n1hTObl4Zmz7r4uXmpGEqmWiyJkGbanF
-         46lxOSoRlTT6shCjvs2WsIKj022pIyPyX+FeuL9zofV9cSHlkj+/fUhAgm//6a3Er8
-         XLGOcvj695Ft9zA3FIMWlTieyS9AmrHrN9xXpgb4=
+        b=gzyq6GXvYQsCGg7P21Ak+ICWQ3r0VKHG1XceukkSYpzImWU84TxJvztOQAgXFNQCc
+         HTuPS91MJ6CIQZdlFcqg6vgRhlrwepu51FqbYb9utysxKKYtdqTMPUkVw2CSToKmZX
+         +QuSRgDc7rJUiGwdgUa80xEcds5ARgIyR9Yo37JM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gal Pressman <galpress@amazon.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 010/120] RDMA/core: Ensure that rdma_user_mmap_entry_remove() is a fence
-Date:   Thu, 13 Feb 2020 07:20:06 -0800
-Message-Id: <20200213151905.020233871@linuxfoundation.org>
+        stable@vger.kernel.org, Qing Xu <m1s5p6688@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 94/96] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
+Date:   Thu, 13 Feb 2020 07:21:41 -0800
+Message-Id: <20200213151914.100775833@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,39 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-commit 6b3712c0246ca7b2b8fa05eab2362cf267410f7e upstream.
+[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
 
-The set of entry->driver_removed is missing locking, protect it with
-xa_lock() which is held by the only reader.
+mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
+the destination size may trigger a buffer overflower,
+which a local user could use to cause denial of service
+or the execution of arbitrary code.
+Fix it by putting the length check before calling memcpy().
 
-Otherwise readers may continue to see driver_removed = false after
-rdma_user_mmap_entry_remove() returns and may continue to try and
-establish new mmaps.
-
-Fixes: 3411f9f01b76 ("RDMA/core: Create mmap database and cookie helper functions")
-Link: https://lore.kernel.org/r/20200115202041.GA17199@ziepe.ca
-Reviewed-by: Gal Pressman <galpress@amazon.com>
-Acked-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/ib_core_uverbs.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/infiniband/core/ib_core_uverbs.c
-+++ b/drivers/infiniband/core/ib_core_uverbs.c
-@@ -232,7 +232,9 @@ void rdma_user_mmap_entry_remove(struct
- 	if (!entry)
- 		return;
- 
-+	xa_lock(&entry->ucontext->mmap_xa);
- 	entry->driver_removed = true;
-+	xa_unlock(&entry->ucontext->mmap_xa);
- 	kref_put(&entry->ref, rdma_user_mmap_entry_free);
- }
- EXPORT_SYMBOL(rdma_user_mmap_entry_remove);
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 593c594982cb3..59f0651d148bb 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -2886,6 +2886,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
+ 			vs_param_set->header.len =
+ 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
+ 				& 0x00FF) + 2);
++			if (le16_to_cpu(vs_param_set->header.len) >
++				MWIFIEX_MAX_VSIE_LEN) {
++				mwifiex_dbg(priv->adapter, ERROR,
++					    "Invalid param length!\n");
++				break;
++			}
++
+ 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
+ 			       le16_to_cpu(vs_param_set->header.len));
+ 			*buffer += le16_to_cpu(vs_param_set->header.len) +
+-- 
+2.20.1
+
 
 
