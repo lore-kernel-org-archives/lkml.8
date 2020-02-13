@@ -2,169 +2,110 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B4FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36CEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC2D20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C56520661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608802;
-	bh=IKiRD4PfPKvOZQjkkYmUrVouI1LmhqadGfmQqjAuR08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ptYMwkX4kjsOJ09wMF2Ddbg4gCL8j+JM3+fh2HlizC7Fj22Wna9J8XTv/FMJI5qmQ
-	 4iiqkuFuvt5+xxbvHeiNKALMVm5XWiJEH/3rHhSSs+QAzeKzXQOx1Rlr4fZ56xaU0T
-	 Yd2VKQsNba5db1x6JVre6gg98HYU/+q98zKVfFrM=
+	s=default; t=1581608811;
+	bh=qNVJvkLk5QY4zMFf9zWqo7r205XJykyNObIRHrwIBPo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qkwclPdTJ9M9niHiFOyzjuQodNkMrOgafFoWIH3AIpEaup70vLzJVCags4OJv2MSf
+	 d8X7HGvBgc2yeupAHJpLxK6JMMH5aFO8lZXdDkOpYaGMmHSTV4h31DWHFvks+lSJaV
+	 dshUy9cO4FqV+jHPX/dhEmAi7IdtuzJdJbPd774A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387841AbgBMPql (ORCPT
+        id S2387878AbgBMPqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:46:41 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55000 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387782AbgBMPqh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:46:37 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g1so6775345wmh.4;
-        Thu, 13 Feb 2020 07:46:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J8k2mhXdk3Vz02LszhRoEidbhtCkluKhM0hovqHlfY0=;
-        b=nPeFoy2NbPGjoHukBm+3jXkYblH7WcU9FWtgEOlzZSv+X4ud+vA+hWO7uSE3x4wOrp
-         JG8gNe30aE6EIuMSgvIPZCvHryHdIOQRKjBqkJeXRQQNDRoP8+T44VVxViwvBdwyAM28
-         oXvVRqjFFzhJkcFH58wJB8RTCaK3hrlclujuTeSf+ygS1XBeb8gFfzDJQOBeBCRLq/0D
-         TSUQcUWZp7Ym2y9Qh2VTujMFBU6kDdtCWEAGnTBtbCZI8LVvARvVr2tRm9J5yEPNCTDS
-         t8Ax1yQRfRWiQY8FYCi4RWf7NWIpf8yhGQSNGHePT8YB61b0Db41hbALq8rVDQ/mwggG
-         bBvQ==
-X-Gm-Message-State: APjAAAUJB0KEZ5d8ICnIPHlzjLYrMnognz+Uh3OKVcpGFChgxVqy6PCe
-        eoIs/OIQ7HmdCfIWKu9hWeCgLRS+
-X-Google-Smtp-Source: APXvYqxCRc7R8lbPp7soi6Tf8uhzJML2oddqjNP5vBPCY+sYO6/UygTQhV+vkx/KmTbiGRrHuw62Vg==
-X-Received: by 2002:a1c:7205:: with SMTP id n5mr6747383wmc.9.1581608794910;
-        Thu, 13 Feb 2020 07:46:34 -0800 (PST)
-Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
-        by smtp.gmail.com with ESMTPSA id h71sm3825363wme.26.2020.02.13.07.46.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 07:46:33 -0800 (PST)
-Date:   Thu, 13 Feb 2020 16:46:27 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200213154627.GD31689@dhcp22.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200130170020.GZ24244@dhcp22.suse.cz>
- <20200203215201.GD6380@cmpxchg.org>
- <20200211164753.GQ10636@dhcp22.suse.cz>
- <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213132317.GA208501@cmpxchg.org>
+        Thu, 13 Feb 2020 10:46:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729320AbgBMP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:13 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C57D224670;
+        Thu, 13 Feb 2020 15:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607632;
+        bh=qNVJvkLk5QY4zMFf9zWqo7r205XJykyNObIRHrwIBPo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I/RI49Fj0iePnzHFOd2elTDSeOXHDVFQ/YA8TQB1FVeMz0ExNwkBI8hmFYzWqcVTS
+         YKIgBuEU7kgdmWz+cfL6D3neYYVPpap7N6AjzG2bgQ3Z29AgQWa9TPAoShpYIVQQTl
+         rBWRcvsGBvZUi49UventhH9pm7sJqv54kRxL3NoQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Steven Clarkson <sc@lambdal.com>,
+        Borislav Petkov <bp@suse.de>, linux-acpi@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 34/96] x86/boot: Handle malformed SRAT tables during early ACPI parsing
+Date:   Thu, 13 Feb 2020 07:20:41 -0800
+Message-Id: <20200213151852.168079621@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213132317.GA208501@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-02-20 08:23:17, Johannes Weiner wrote:
-> On Thu, Feb 13, 2020 at 08:40:49AM +0100, Michal Hocko wrote:
-> > On Wed 12-02-20 12:08:26, Johannes Weiner wrote:
-> > > On Tue, Feb 11, 2020 at 05:47:53PM +0100, Michal Hocko wrote:
-> > > > Unless I am missing something then I am afraid it doesn't. Say you have a
-> > > > default systemd cgroup deployment (aka deeper cgroup hierarchy with
-> > > > slices and scopes) and now you want to grant a reclaim protection on a
-> > > > leaf cgroup (or even a whole slice that is not really important). All the
-> > > > hierarchy up the tree has the protection set to 0 by default, right? You
-> > > > simply cannot get that protection. You would need to configure the
-> > > > protection up the hierarchy and that is really cumbersome.
-> > > 
-> > > Okay, I think I know what you mean. Let's say you have a tree like
-> > > this:
-> > > 
-> > >                           A
-> > >                          / \
-> > >                         B1  B2
-> > >                        / \   \
-> > >                       C1 C2   C3
-> > > 
-> > > and there is no actual delegation point - everything belongs to the
-> > > same user / trust domain. C1 sets memory.low to 10G, but its parents
-> > > set nothing. You're saying we should honor the 10G protection during
-> > > global and limit reclaims anywhere in the tree?
-> > 
-> > No, only in the C1 which sets the limit, because that is the woriking
-> > set we want to protect.
-> > 
-> > > Now let's consider there is a delegation point at B1: we set up and
-> > > trust B1, but not its children. What effect would the C1 protection
-> > > have then? Would we ignore it during global and A reclaim, but honor
-> > > it when there is B1 limit reclaim?
-> > 
-> > In the scheme with the inherited protection it would act as the gate
-> > and require an explicit low limit setup defaulting to 0 if none is
-> > specified.
-> > 
-> > > Doing an explicit downward propagation from the root to C1 *could* be
-> > > tedious, but I can't think of a scenario where it's completely
-> > > impossible. Especially because we allow proportional distribution when
-> > > the limit is overcommitted and you don't have to be 100% accurate.
-> > 
-> > So let's see how that works in practice, say a multi workload setup
-> > with a complex/deep cgroup hierachies (e.g. your above example). No
-> > delegation point this time.
-> > 
-> > C1 asks for low=1G while using 500M, C3 low=100M using 80M.  B1 and
-> > B2 are completely independent workloads and the same applies to C2 which
-> > doesn't ask for any protection at all? C2 uses 100M. Now the admin has
-> > to propagate protection upwards so B1 low=1G, B2 low=100M and A low=1G,
-> > right? Let's say we have a global reclaim due to external pressure that
-> > originates from outside of A hierarchy (it is not overcommited on the
-> > protection).
-> > 
-> > Unless I miss something C2 would get a protection even though nobody
-> > asked for it.
-> 
-> Good observation, but I think you spotted an unintentional side effect
-> of how I implemented the "floating protection" calculation rather than
-> a design problem.
-> 
-> My patch still allows explicit downward propagation. So if B1 sets up
-> 1G, and C1 explicitly claims those 1G (low>=1G, usage>=1G), C2 does
-> NOT get any protection. There is no "floating" protection left in B1
-> that could get to C2.
+From: Steven Clarkson <sc@lambdal.com>
 
-Yeah, the saturated protection works reasonably AFAICS.
+[ Upstream commit 2b73ea3796242608b4ccf019ff217156c92e92fe ]
+
+Break an infinite loop when early parsing of the SRAT table is caused
+by a subtable with zero length. Known to affect the ASUS WS X299 SAGE
+motherboard with firmware version 1201 which has a large block of
+zeros in its SRAT table. The kernel could boot successfully on this
+board/firmware prior to the introduction of early parsing this table or
+after a BIOS update.
+
+ [ bp: Fixup whitespace damage and commit message. Make it return 0 to
+   denote that there are no immovable regions because who knows what
+   else is broken in this BIOS. ]
+
+Fixes: 02a3e3cdb7f1 ("x86/boot: Parse SRAT table and count immovable memory regions")
+Signed-off-by: Steven Clarkson <sc@lambdal.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: linux-acpi@vger.kernel.org
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206343
+Link: https://lkml.kernel.org/r/CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/boot/compressed/acpi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 25019d42ae937..ef2ad7253cd5e 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -393,7 +393,13 @@ int count_immovable_mem_regions(void)
+ 	table = table_addr + sizeof(struct acpi_table_srat);
  
-> However, to calculate the float, I'm using the utilized protection
-> counters (children_low_usage) to determine what is "claimed". Mostly
-> for convenience because they were already there. In your example, C1
-> is only utilizing 500M of its protection, leaving 500M in the float
-> that will go toward C2. I agree that's undesirable.
-> 
-> But it's fixable by adding a hierarchical children_low counter that
-> tracks the static configuration, and using that to calculate floating
-> protection instead of the dynamic children_low_usage.
-> 
-> That way you can propagate protection from A to C1 without it spilling
-> to anybody else unintentionally, regardless of how much B1 and C1 are
-> actually *using*.
-> 
-> Does that sound reasonable?
-
-Please post a patch and I will think about it more to see whether I can
-see more problems. I am worried this is getting more and more complex
-and harder to wrap head around.
-
-Thanks!
+ 	while (table + sizeof(struct acpi_subtable_header) < table_end) {
++
+ 		sub_table = (struct acpi_subtable_header *)table;
++		if (!sub_table->length) {
++			debug_putstr("Invalid zero length SRAT subtable.\n");
++			return 0;
++		}
++
+ 		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
+ 			struct acpi_srat_mem_affinity *ma;
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
+
+
