@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEC1C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2BBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42935222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F7E2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgBMShP (ORCPT
+        id S1728375AbgBMShS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:37:15 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:46557 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgBMShP (ORCPT
+        Thu, 13 Feb 2020 13:37:18 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:47219 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbgBMShQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:37:15 -0500
-Received: by mail-il1-f200.google.com with SMTP id a2so5428427ill.13
+        Thu, 13 Feb 2020 13:37:16 -0500
+Received: by mail-il1-f198.google.com with SMTP id x69so5403460ill.14
         for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:37:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=+zEG83XJ2KD3tG6iswUl3A3tfv53W4BSz1ckWVsUsPQ=;
-        b=aC9FjPqQ0eLeYXe+xqsP87KeKJpupQ5kVMfBaZtj/bXBBi2zw5dBxWPO4uHIul49TN
-         stnY9+G1nsWhHwVeu0vR49uVX06WMY0DmHDHhfOudA6+o925Nb1pWvhg4j5EE0hg0B6c
-         PCNf/GPx6J64uGAdDZf7i46R3N9CGo68J8MfU9OVW/OJatQAzujLuyKL90t1ElxCxIpz
-         +1ah3MfhxUKNgWJIAoKouWk1qRxP+tZI9lo+p0m64YFDzodUrcXmMe+/M4kaF1LhMTvN
-         38MLs6aEbpoZ0N7ZkU8E1cS8fY7u12QnCOgbLLQgpotGQ1sMvlcVzEcG2BJKtt5zJcZC
-         YFGQ==
-X-Gm-Message-State: APjAAAWeSHgOnf5vhtT3VqGHltWjyReuAQ4A9mFd3nrB06jp+rt8/Dkn
-        ylRf7Qi2X3mf6NNwKeNT53h8o9QTQ/l4gTWYMTrh6iyXeotR
-X-Google-Smtp-Source: APXvYqwpDr8WMrelfAhfG71WD/hHH/92X9e6sc5SsUElMtH1a9tCOfese5BRwU3d5gC8zWRS/1p1mb+RvBAuRPBPZ2UIUfOBbFXM
+        bh=YuPsOWJwIe7j4ErfOTb4wvXqjMiulfvWkaoJ9fXFBIQ=;
+        b=qdU7K4t5cJVmv2CFaG7Dn1RWfUZe912BvIPWeeYh3YisBwOZ4ZB3kmdW0TXR5MzaU8
+         qBD5Al8b/hTfZwL5AzR4U0TrD3ad+MyppAuPpLMgMMHj5XxFAHvMltBu+6PhXN24tPI2
+         AupLBiR6Su2ajrChbA0XMlCgI1c5i3FgtAlfdTf5gLkrtpRm6coQk0X+dqxKal+EqdCT
+         Ua2bO35uECpJ9eSX3KZ928/IbXcEUrl6dVwbGh6kGWhc0Y1wQqkno5oQ7EjkL7lwpGdn
+         MM7LQt8ZTOu9RxqYYgCU6mbYMWKJB7kMx/MX/vHsyM4ls7a3ViGjExHq3HvfoGdJKwlM
+         SNuA==
+X-Gm-Message-State: APjAAAVfcKtCNY12+FY9dbGejLfTrRVJNqplzqRTaNde4dFayF/lLB7h
+        NrQc4e+h/Swkr06nq+kUYWE2/AuFMU7NkPdkY5dkcuRDdKEi
+X-Google-Smtp-Source: APXvYqz89wKEGmaLK6G5YFczowofcRv6LajhASBZD2WVu+tUgjtZe8UMk3YhcJPuKgKKpzWvhZoxXF5tlFlpgkIR6nAbhxPAdw4c
 MIME-Version: 1.0
-X-Received: by 2002:a92:5d03:: with SMTP id r3mr16292873ilb.278.1581619034415;
+X-Received: by 2002:a92:508:: with SMTP id q8mr17057457ile.187.1581619034187;
  Thu, 13 Feb 2020 10:37:14 -0800 (PST)
 Date:   Thu, 13 Feb 2020 10:37:14 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b76960059e7960fc@google.com>
-Subject: memory leak in kcm_sendmsg
-From:   syzbot <syzbot+b039f5699bd82e1fb011@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
-        jslaby@suse.cz, kafai@fb.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, willy@infradead.org, yhs@fb.com
+Message-ID: <000000000000b3eccd059e7960d5@google.com>
+Subject: KASAN: null-ptr-deref Read in do_con_trol
+From:   syzbot <syzbot+70b2d05eec48639a904e@syzkaller.appspotmail.com>
+To:     daniel.vetter@ffwll.ch, ghalat@redhat.com,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        okash.khawaja@gmail.com, oleksandr@redhat.com, sam@ravnborg.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,124 +62,63 @@ syzbot found the following crash on:
 
 HEAD commit:    f2850dd5 Merge tag 'kbuild-fixes-v5.6' of git://git.kernel..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15b6e2a1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2802e33434f4f863
-dashboard link: https://syzkaller.appspot.com/bug?extid=b039f5699bd82e1fb011
+console output: https://syzkaller.appspot.com/x/log.txt?x=16afe07ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=735296e4dd620b10
+dashboard link: https://syzkaller.appspot.com/bug?extid=70b2d05eec48639a904e
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1036aae6e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14a48aa1e00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154ac65ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d296b5e00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b039f5699bd82e1fb011@syzkaller.appspotmail.com
+Reported-by: syzbot+70b2d05eec48639a904e@syzkaller.appspotmail.com
 
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88812166aa00 (size 224):
-  comm "syz-executor252", pid 7098, jiffies 4294946073 (age 7.970s)
-  hex dump (first 32 bytes):
-    00 5f 7e 21 81 88 ff ff 00 00 00 00 00 00 00 00  ._~!............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000344c790c>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000344c790c>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000344c790c>] slab_alloc_node mm/slab.c:3263 [inline]
-    [<00000000344c790c>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3575
-    [<0000000055638a6a>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-    [<00000000e5df7d05>] alloc_skb include/linux/skbuff.h:1051 [inline]
-    [<00000000e5df7d05>] kcm_sendmsg+0x63e/0xa6b net/kcm/kcmsock.c:969
-    [<000000001a13b16a>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000001a13b16a>] sock_sendmsg+0x54/0x70 net/socket.c:672
-    [<0000000051101f49>] ____sys_sendmsg+0x123/0x300 net/socket.c:2343
-    [<000000002286b08d>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
-    [<0000000027623508>] __sys_sendmmsg+0xf4/0x270 net/socket.c:2487
-    [<00000000a5d459c2>] __do_sys_sendmmsg net/socket.c:2516 [inline]
-    [<00000000a5d459c2>] __se_sys_sendmmsg net/socket.c:2513 [inline]
-    [<00000000a5d459c2>] __x64_sys_sendmmsg+0x28/0x30 net/socket.c:2513
-    [<00000000345a6e04>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<00000000e4a592cb>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+==================================================================
+BUG: KASAN: null-ptr-deref in memcpy include/linux/string.h:381 [inline]
+BUG: KASAN: null-ptr-deref in scr_memcpyw include/linux/vt_buffer.h:49 [inline]
+BUG: KASAN: null-ptr-deref in delete_char drivers/tty/vt/vt.c:852 [inline]
+BUG: KASAN: null-ptr-deref in csi_P drivers/tty/vt/vt.c:1985 [inline]
+BUG: KASAN: null-ptr-deref in do_con_trol+0x3b9/0x61b0 drivers/tty/vt/vt.c:2379
+Read of size 4294967294 at addr 0000000000000012 by task syz-executor841/9673
 
-BUG: memory leak
-unreferenced object 0xffff888123b6fa00 (size 512):
-  comm "syz-executor252", pid 7098, jiffies 4294946073 (age 7.970s)
-  hex dump (first 32 bytes):
-    00 00 33 33 00 00 00 02 42 01 0a 80 00 42 86 dd  ..33....B....B..
-    60 00 00 00 00 10 3a ff fe 80 00 00 00 00 00 00  `.....:.........
-  backtrace:
-    [<000000003f7d57be>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<000000003f7d57be>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<000000003f7d57be>] slab_alloc_node mm/slab.c:3263 [inline]
-    [<000000003f7d57be>] kmem_cache_alloc_node_trace+0x161/0x2f0 mm/slab.c:3593
-    [<000000007b27008a>] __do_kmalloc_node mm/slab.c:3615 [inline]
-    [<000000007b27008a>] __kmalloc_node_track_caller+0x38/0x50 mm/slab.c:3630
-    [<00000000b67c7fa9>] __kmalloc_reserve.isra.0+0x40/0xb0 net/core/skbuff.c:142
-    [<0000000084d25a21>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:210
-    [<00000000e5df7d05>] alloc_skb include/linux/skbuff.h:1051 [inline]
-    [<00000000e5df7d05>] kcm_sendmsg+0x63e/0xa6b net/kcm/kcmsock.c:969
-    [<000000001a13b16a>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000001a13b16a>] sock_sendmsg+0x54/0x70 net/socket.c:672
-    [<0000000051101f49>] ____sys_sendmsg+0x123/0x300 net/socket.c:2343
-    [<000000002286b08d>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
-    [<0000000027623508>] __sys_sendmmsg+0xf4/0x270 net/socket.c:2487
-    [<00000000a5d459c2>] __do_sys_sendmmsg net/socket.c:2516 [inline]
-    [<00000000a5d459c2>] __se_sys_sendmmsg net/socket.c:2513 [inline]
-    [<00000000a5d459c2>] __x64_sys_sendmmsg+0x28/0x30 net/socket.c:2513
-    [<00000000345a6e04>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<00000000e4a592cb>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881217e5f00 (size 224):
-  comm "syz-executor252", pid 7098, jiffies 4294946073 (age 7.970s)
-  hex dump (first 32 bytes):
-    00 5e 7e 21 81 88 ff ff 00 00 00 00 00 00 00 00  .^~!............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000344c790c>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000344c790c>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000344c790c>] slab_alloc_node mm/slab.c:3263 [inline]
-    [<00000000344c790c>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3575
-    [<0000000055638a6a>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-    [<00000000e5df7d05>] alloc_skb include/linux/skbuff.h:1051 [inline]
-    [<00000000e5df7d05>] kcm_sendmsg+0x63e/0xa6b net/kcm/kcmsock.c:969
-    [<000000001a13b16a>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000001a13b16a>] sock_sendmsg+0x54/0x70 net/socket.c:672
-    [<0000000051101f49>] ____sys_sendmsg+0x123/0x300 net/socket.c:2343
-    [<000000002286b08d>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
-    [<0000000027623508>] __sys_sendmmsg+0xf4/0x270 net/socket.c:2487
-    [<00000000a5d459c2>] __do_sys_sendmmsg net/socket.c:2516 [inline]
-    [<00000000a5d459c2>] __se_sys_sendmmsg net/socket.c:2513 [inline]
-    [<00000000a5d459c2>] __x64_sys_sendmmsg+0x28/0x30 net/socket.c:2513
-    [<00000000345a6e04>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<00000000e4a592cb>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88812084ae00 (size 512):
-  comm "syz-executor252", pid 7098, jiffies 4294946073 (age 7.970s)
-  hex dump (first 32 bytes):
-    a3 0f 00 00 00 00 00 00 40 00 00 00 00 00 00 00  ........@.......
-    40 00 40 00 00 00 00 00 40 00 40 00 00 00 00 00  @.@.....@.@.....
-  backtrace:
-    [<000000003f7d57be>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<000000003f7d57be>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<000000003f7d57be>] slab_alloc_node mm/slab.c:3263 [inline]
-    [<000000003f7d57be>] kmem_cache_alloc_node_trace+0x161/0x2f0 mm/slab.c:3593
-    [<000000007b27008a>] __do_kmalloc_node mm/slab.c:3615 [inline]
-    [<000000007b27008a>] __kmalloc_node_track_caller+0x38/0x50 mm/slab.c:3630
-    [<00000000b67c7fa9>] __kmalloc_reserve.isra.0+0x40/0xb0 net/core/skbuff.c:142
-    [<0000000084d25a21>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:210
-    [<00000000e5df7d05>] alloc_skb include/linux/skbuff.h:1051 [inline]
-    [<00000000e5df7d05>] kcm_sendmsg+0x63e/0xa6b net/kcm/kcmsock.c:969
-    [<000000001a13b16a>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000001a13b16a>] sock_sendmsg+0x54/0x70 net/socket.c:672
-    [<0000000051101f49>] ____sys_sendmsg+0x123/0x300 net/socket.c:2343
-    [<000000002286b08d>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
-    [<0000000027623508>] __sys_sendmmsg+0xf4/0x270 net/socket.c:2487
-    [<00000000a5d459c2>] __do_sys_sendmmsg net/socket.c:2516 [inline]
-    [<00000000a5d459c2>] __se_sys_sendmmsg net/socket.c:2513 [inline]
-    [<00000000a5d459c2>] __x64_sys_sendmmsg+0x28/0x30 net/socket.c:2513
-    [<00000000345a6e04>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<00000000e4a592cb>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
+CPU: 0 PID: 9673 Comm: syz-executor841 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ __kasan_report.cold+0x5/0x32 mm/kasan/report.c:510
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+ memcpy+0x24/0x50 mm/kasan/common.c:127
+ memcpy include/linux/string.h:381 [inline]
+ scr_memcpyw include/linux/vt_buffer.h:49 [inline]
+ delete_char drivers/tty/vt/vt.c:852 [inline]
+ csi_P drivers/tty/vt/vt.c:1985 [inline]
+ do_con_trol+0x3b9/0x61b0 drivers/tty/vt/vt.c:2379
+ do_con_write.part.0+0xfd9/0x1ef0 drivers/tty/vt/vt.c:2797
+ do_con_write drivers/tty/vt/vt.c:2565 [inline]
+ con_write+0x46/0xd0 drivers/tty/vt/vt.c:3135
+ process_output_block drivers/tty/n_tty.c:595 [inline]
+ n_tty_write+0x40e/0x1080 drivers/tty/n_tty.c:2333
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x496/0x7f0 drivers/tty/tty_io.c:1046
+ __vfs_write+0x8a/0x110 fs/read_write.c:494
+ vfs_write+0x268/0x5d0 fs/read_write.c:558
+ ksys_write+0x14f/0x290 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4404f9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffefa71b898 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004404f9
+RDX: 0000000000000078 RSI: 0000000020000140 RDI: 0000000000000004
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401de0
+R13: 0000000000401e70 R14: 0000000000000000 R15: 0000000000000000
+==================================================================
 
 
 ---
