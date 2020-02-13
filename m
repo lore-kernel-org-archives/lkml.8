@@ -2,66 +2,76 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD477C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A08C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E8620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581604481;
-	bh=mt/wBV75C0JFyp9Jp5NJAMBeePDKaAfR/fqnojQNLA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PsyJGxpBq1wzkqo+SHAyDiEi/R8kkHD41/mO88LqJ5woOwPraiqSlYsV7VeEOrxTT
-	 b8PsWEYj7gjGqWTGo/3TR6S9uJGkay97sucXhoir7Of5ATtG1e8reHd5vlUzGJdL4M
-	 UECizXCk/5hhedyfYPJS2ad+2mSyIWux5F/I2b4I=
+	by mail.kernel.org (Postfix) with ESMTP id CC358218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgBMOel (ORCPT
+        id S1727558AbgBMOgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:34:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 09:36:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:47346 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgBMOek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:34:40 -0500
-Received: from localhost (unknown [106.201.58.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD48024673;
-        Thu, 13 Feb 2020 14:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581604479;
-        bh=mt/wBV75C0JFyp9Jp5NJAMBeePDKaAfR/fqnojQNLA8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uyvSVb57nyYaFp0FTteX2g7KVlTIRAi1q6Yp8rBqBFyBLrZugZvocsrEQpnRO0Wrm
-         BHwmZvHealztvCTSEIXt4liEt7OEQT8/4hvtTWf3liE+ujdrkScy3vD03bV2xPIfw5
-         6n4gohOeD4/OZYU6vs7OzYX3Axb9gfNpVPcCQU6Q=
-Date:   Thu, 13 Feb 2020 20:04:35 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     dave.jiang@intel.com, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] dmaengine: idxd: remove set but not used variable
- 'idxd_cdev'
-Message-ID: <20200213143435.GI2618@vkoul-mobl>
-References: <20200210151855.55044-1-yuehaibing@huawei.com>
+        id S1726300AbgBMOgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:36:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D3771FB;
+        Thu, 13 Feb 2020 06:36:43 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 724E83F68F;
+        Thu, 13 Feb 2020 06:36:42 -0800 (PST)
+Date:   Thu, 13 Feb 2020 14:36:40 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cgroup/cpuset: Fix a race condition when reading cpuset.*
+Message-ID: <20200213143639.6jw2kiadjzyu6unr@e107158-lin.cambridge.arm.com>
+References: <20200211141554.24181-1-qais.yousef@arm.com>
+ <20200212221543.GL80993@mtj.thefacebook.com>
+ <20200213115015.hkd6uqwfjosxjfpm@e107158-lin.cambridge.arm.com>
+ <20200213135645.GG88887@mtj.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200210151855.55044-1-yuehaibing@huawei.com>
+In-Reply-To: <20200213135645.GG88887@mtj.thefacebook.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-02-20, 23:18, YueHaibing wrote:
-> drivers/dma/idxd/cdev.c: In function idxd_cdev_open:
-> drivers/dma/idxd/cdev.c:77:20: warning:
->  variable idxd_cdev set but not used [-Wunused-but-set-variable]
+On 02/13/20 08:56, Tejun Heo wrote:
+> Hello,
+> 
+> On Thu, Feb 13, 2020 at 11:50:16AM +0000, Qais Yousef wrote:
+> > I ran 500 iterations of cpuset_hotplug_test.sh on the branch, it passed.
+> > 
+> > I also cherry-picked commit 6426bfb1d5f0 ("cpuset: Make cpuset hotplug synchronous")
+> > into v5.6-rc1 and ran 100 iterations and it passed too.
+> 
+> Awesome, thanks for verifying.
+> 
+> > While investigating the problem, I could reproduce it all the way back to v5.0.
+> > Stopped there so earlier versions could still have the problem.
+> > 
+> > Do you think it's worth porting the change to stable trees? Admittedly the
+> > problem should be benign, but it did trigger an LTP failure.
+> 
+> I'm afraid not. It's not an issue which would affect actual use cases
+> and there's (as always) some risks involved with backporting it, so
+> the benefit just doesn't seem justifiable here.
 
-Applied, thanks
+Yeah I can't see how a real application would depend on this functionality
+other than for informational reasons. Or testing like in this case.
 
--- 
-~Vinod
+Thanks
+
+--
+Qais Yousef
