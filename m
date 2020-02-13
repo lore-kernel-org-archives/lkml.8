@@ -2,52 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9BEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990F1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2695E24649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646D620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608656;
-	bh=7pTrDl4Glr3gTU6VkEdKIMfPGLAXrN9ECWaFuKi4I4g=;
+	s=default; t=1581608659;
+	bh=nw6wzbezLI20litWW0tClmKxWHbKsyiT45NGefxLg+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+LHdj/hx4cqYsjwVMxW5tCmxKpX9Bv4k66tvcqoz4SfKwPLlJi4bq0IeH2eG/6h9
-	 MCOspEktnQXk4zPHifzc7PSwyEFGcss7betHd0SCpPKEQpyKUZJa+X/4FQEfMGQmVV
-	 c7lcsbnIZgwsLlE0BWf6BsoInEaTKwreoBSeX9ss=
+	b=yOCasAnUEAjDYThMlNfY+5zpRAXUsKpvufVw9iAsGqBCmdGfNoO6Vc4YM8XyEQ6mW
+	 MoDShU0aw34p0PNm5dsH3VkmNAZruaFYKfg3RIkc8nOb5K7uacfR1+rDRg8Hm3SJvH
+	 6jyGYtIB0pREeW6egQIm5WYsAEqgItzMco1UR6ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgBMPoM (ORCPT
+        id S2387865AbgBMPoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:44:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52274 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:44:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728877AbgBMP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728015AbgBMP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:27:45 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99649206DB;
-        Thu, 13 Feb 2020 15:27:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 397E12465D;
+        Thu, 13 Feb 2020 15:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607663;
-        bh=7pTrDl4Glr3gTU6VkEdKIMfPGLAXrN9ECWaFuKi4I4g=;
+        s=default; t=1581607664;
+        bh=nw6wzbezLI20litWW0tClmKxWHbKsyiT45NGefxLg+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+0dk9/1K6Z5cwTScYc2s2cF74EhopEayHbQLv0aNtGGxV5Jsj/1YBN4lRUx7I4nP
-         1+hwIUb+uYkpxYYCsXuNxoE3je5VMHxvR39tMjMpi5h2CUyVbt16QYEJVVtUYooew/
-         1eFt+bQZUWWTcFwuNWg1lhLIseZ7h8xwJeWwHnfI=
+        b=CHH7I1j22553RKEVziruDEzccArQSRR+qTDFUsp6YXs3vxcqm2fBgFFgGEbk80C5r
+         gGij/pPNoCoqxBKWxX/ed4iK9tT0e6XrpwTRO07bUZ3NOGNfRQt0/GJ9FR+TIDpSds
+         g/0ixbtAMQ2IixHa4mFU/KKmF8Fo0lYQ6UDbnnl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 75/96] mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
-Date:   Thu, 13 Feb 2020 07:21:22 -0800
-Message-Id: <20200213151907.725499694@linuxfoundation.org>
+        stable@vger.kernel.org, Guoju Fang <fangguoju@gmail.com>,
+        Shuang Li <psymon@bonuscloud.io>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 84/96] bcache: avoid unnecessary btree nodes flushing in btree_flush_write()
+Date:   Thu, 13 Feb 2020 07:21:31 -0800
+Message-Id: <20200213151910.632750303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,150 +60,231 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Coly Li <colyli@suse.de>
 
-commit 0e7ca83e82d021c928dadf4c13c137d57337540d upstream.
+commit 2aa8c529387c25606fdc1484154b92f8bfbc5746 upstream.
 
-Clang warns:
+the commit 91be66e1318f ("bcache: performance improvement for
+btree_flush_write()") was an effort to flushing btree node with oldest
+btree node faster in following methods,
+- Only iterate dirty btree nodes in c->btree_cache, avoid scanning a lot
+  of clean btree nodes.
+- Take c->btree_cache as a LRU-like list, aggressively flushing all
+  dirty nodes from tail of c->btree_cache util the btree node with
+  oldest journal entry is flushed. This is to reduce the time of holding
+  c->bucket_lock.
 
-../drivers/mtd/nand/onenand/onenand_base.c:1269:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        while (!ret) {
-        ^
-../drivers/mtd/nand/onenand/onenand_base.c:1266:2: note: previous
-statement is here
-        if (column + thislen > writesize)
-        ^
-1 warning generated.
+Guoju Fang and Shuang Li reported that they observe unexptected extra
+write I/Os on cache device after applying the above patch. Guoju Fang
+provideed more detailed diagnose information that the aggressive
+btree nodes flushing may cause 10x more btree nodes to flush in his
+workload. He points out when system memory is large enough to hold all
+btree nodes in memory, c->btree_cache is not a LRU-like list any more.
+Then the btree node with oldest journal entry is very probably not-
+close to the tail of c->btree_cache list. In such situation much more
+dirty btree nodes will be aggressively flushed before the target node
+is flushed. When slow SATA SSD is used as cache device, such over-
+aggressive flushing behavior will cause performance regression.
 
-This warning occurs because there is a space before the tab of the while
-loop. There are spaces at the beginning of a lot of the lines in this
-block, remove them so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+After spending a lot of time on debug and diagnose, I find the real
+condition is more complicated, aggressive flushing dirty btree nodes
+from tail of c->btree_cache list is not a good solution.
+- When all btree nodes are cached in memory, c->btree_cache is not
+  a LRU-like list, the btree nodes with oldest journal entry won't
+  be close to the tail of the list.
+- There can be hundreds dirty btree nodes reference the oldest journal
+  entry, before flushing all the nodes the oldest journal entry cannot
+  be reclaimed.
+When the above two conditions mixed together, a simply flushing from
+tail of c->btree_cache list is really NOT a good idea.
 
-Fixes: a8de85d55700 ("[MTD] OneNAND: Implement read-while-load")
-Link: https://github.com/ClangBuiltLinux/linux/issues/794
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fortunately there is still chance to make btree_flush_write() work
+better. Here is how this patch avoids unnecessary btree nodes flushing,
+- Only acquire c->journal.lock when getting oldest journal entry of
+  fifo c->journal.pin. In rested locations check the journal entries
+  locklessly, so their values can be changed on other cores
+  in parallel.
+- In loop list_for_each_entry_safe_reverse(), checking latest front
+  point of fifo c->journal.pin. If it is different from the original
+  point which we get with locking c->journal.lock, it means the oldest
+  journal entry is reclaim on other cores. At this moment, all selected
+  dirty nodes recorded in array btree_nodes[] are all flushed and clean
+  on other CPU cores, it is unncessary to iterate c->btree_cache any
+  longer. Just quit the list_for_each_entry_safe_reverse() loop and
+  the following for-loop will skip all the selected clean nodes.
+- Find a proper time to quit the list_for_each_entry_safe_reverse()
+  loop. Check the refcount value of orignial fifo front point, if the
+  value is larger than selected node number of btree_nodes[], it means
+  more matching btree nodes should be scanned. Otherwise it means no
+  more matching btee nodes in rest of c->btree_cache list, the loop
+  can be quit. If the original oldest journal entry is reclaimed and
+  fifo front point is updated, the refcount of original fifo front point
+  will be 0, then the loop will be quit too.
+- Not hold c->bucket_lock too long time. c->bucket_lock is also required
+  for space allocation for cached data, hold it for too long time will
+  block regular I/O requests. When iterating list c->btree_cache, even
+  there are a lot of maching btree nodes, in order to not holding
+  c->bucket_lock for too long time, only BTREE_FLUSH_NR nodes are
+  selected and to flush in following for-loop.
+With this patch, only btree nodes referencing oldest journal entry
+are flushed to cache device, no aggressive flushing for  unnecessary
+btree node any more. And in order to avoid blocking regluar I/O
+requests, each time when btree_flush_write() called, at most only
+BTREE_FLUSH_NR btree nodes are selected to flush, even there are more
+maching btree nodes in list c->btree_cache.
+
+At last, one more thing to explain: Why it is safe to read front point
+of c->journal.pin without holding c->journal.lock inside the
+list_for_each_entry_safe_reverse() loop ?
+
+Here is my answer: When reading the front point of fifo c->journal.pin,
+we don't need to know the exact value of front point, we just want to
+check whether the value is different from the original front point
+(which is accurate value because we get it while c->jouranl.lock is
+held). For such purpose, it works as expected without holding
+c->journal.lock. Even the front point is changed on other CPU core and
+not updated to local core, and current iterating btree node has
+identical journal entry local as original fetched fifo front point, it
+is still safe. Because after holding mutex b->write_lock (with memory
+barrier) this btree node can be found as clean and skipped, the loop
+will quite latter when iterate on next node of list c->btree_cache.
+
+Fixes: 91be66e1318f ("bcache: performance improvement for btree_flush_write()")
+Reported-by: Guoju Fang <fangguoju@gmail.com>
+Reported-by: Shuang Li <psymon@bonuscloud.io>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/onenand/onenand_base.c |   82 ++++++++++++++++----------------
- 1 file changed, 41 insertions(+), 41 deletions(-)
+ drivers/md/bcache/journal.c |   80 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 75 insertions(+), 5 deletions(-)
 
---- a/drivers/mtd/nand/onenand/onenand_base.c
-+++ b/drivers/mtd/nand/onenand/onenand_base.c
-@@ -1248,44 +1248,44 @@ static int onenand_read_ops_nolock(struc
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -417,10 +417,14 @@ err:
  
- 	stats = mtd->ecc_stats;
+ /* Journalling */
  
-- 	/* Read-while-load method */
-+	/* Read-while-load method */
++#define nr_to_fifo_front(p, front_p, mask)	(((p) - (front_p)) & (mask))
++
+ static void btree_flush_write(struct cache_set *c)
+ {
+ 	struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
+-	unsigned int i, n;
++	unsigned int i, nr, ref_nr;
++	atomic_t *fifo_front_p, *now_fifo_front_p;
++	size_t mask;
  
-- 	/* Do first load to bufferRAM */
-- 	if (read < len) {
-- 		if (!onenand_check_bufferram(mtd, from)) {
-+	/* Do first load to bufferRAM */
-+	if (read < len) {
-+		if (!onenand_check_bufferram(mtd, from)) {
- 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
-- 			ret = this->wait(mtd, FL_READING);
-- 			onenand_update_bufferram(mtd, from, !ret);
-+			ret = this->wait(mtd, FL_READING);
-+			onenand_update_bufferram(mtd, from, !ret);
- 			if (mtd_is_eccerr(ret))
- 				ret = 0;
-- 		}
-- 	}
-+		}
+ 	if (c->journal.btree_flushing)
+ 		return;
+@@ -433,12 +437,50 @@ static void btree_flush_write(struct cac
+ 	c->journal.btree_flushing = true;
+ 	spin_unlock(&c->journal.flush_write_lock);
+ 
++	/* get the oldest journal entry and check its refcount */
++	spin_lock(&c->journal.lock);
++	fifo_front_p = &fifo_front(&c->journal.pin);
++	ref_nr = atomic_read(fifo_front_p);
++	if (ref_nr <= 0) {
++		/*
++		 * do nothing if no btree node references
++		 * the oldest journal entry
++		 */
++		spin_unlock(&c->journal.lock);
++		goto out;
 +	}
++	spin_unlock(&c->journal.lock);
++
++	mask = c->journal.pin.mask;
++	nr = 0;
+ 	atomic_long_inc(&c->flush_write);
+ 	memset(btree_nodes, 0, sizeof(btree_nodes));
+-	n = 0;
  
- 	thislen = min_t(int, writesize, len - read);
- 	column = from & (writesize - 1);
- 	if (column + thislen > writesize)
- 		thislen = writesize - column;
+ 	mutex_lock(&c->bucket_lock);
+ 	list_for_each_entry_safe_reverse(b, t, &c->btree_cache, list) {
++		/*
++		 * It is safe to get now_fifo_front_p without holding
++		 * c->journal.lock here, because we don't need to know
++		 * the exactly accurate value, just check whether the
++		 * front pointer of c->journal.pin is changed.
++		 */
++		now_fifo_front_p = &fifo_front(&c->journal.pin);
++		/*
++		 * If the oldest journal entry is reclaimed and front
++		 * pointer of c->journal.pin changes, it is unnecessary
++		 * to scan c->btree_cache anymore, just quit the loop and
++		 * flush out what we have already.
++		 */
++		if (now_fifo_front_p != fifo_front_p)
++			break;
++		/*
++		 * quit this loop if all matching btree nodes are
++		 * scanned and record in btree_nodes[] already.
++		 */
++		ref_nr = atomic_read(fifo_front_p);
++		if (nr >= ref_nr)
++			break;
++
+ 		if (btree_node_journal_flush(b))
+ 			pr_err("BUG: flush_write bit should not be set here!");
  
-- 	while (!ret) {
-- 		/* If there is more to load then start next load */
-- 		from += thislen;
-- 		if (read + thislen < len) {
-+	while (!ret) {
-+		/* If there is more to load then start next load */
-+		from += thislen;
-+		if (read + thislen < len) {
- 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
-- 			/*
-- 			 * Chip boundary handling in DDP
-- 			 * Now we issued chip 1 read and pointed chip 1
-+			/*
-+			 * Chip boundary handling in DDP
-+			 * Now we issued chip 1 read and pointed chip 1
- 			 * bufferram so we have to point chip 0 bufferram.
-- 			 */
-- 			if (ONENAND_IS_DDP(this) &&
-- 			    unlikely(from == (this->chipsize >> 1))) {
-- 				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
-- 				boundary = 1;
-- 			} else
-- 				boundary = 0;
-- 			ONENAND_SET_PREV_BUFFERRAM(this);
-- 		}
-- 		/* While load is going, read from last bufferRAM */
-- 		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
-+			 */
-+			if (ONENAND_IS_DDP(this) &&
-+			    unlikely(from == (this->chipsize >> 1))) {
-+				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
-+				boundary = 1;
-+			} else
-+				boundary = 0;
-+			ONENAND_SET_PREV_BUFFERRAM(this);
-+		}
-+		/* While load is going, read from last bufferRAM */
-+		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
- 
- 		/* Read oob area if needed */
- 		if (oobbuf) {
-@@ -1301,24 +1301,24 @@ static int onenand_read_ops_nolock(struc
- 			oobcolumn = 0;
+@@ -454,17 +496,44 @@ static void btree_flush_write(struct cac
+ 			continue;
  		}
  
-- 		/* See if we are done */
-- 		read += thislen;
-- 		if (read == len)
-- 			break;
-- 		/* Set up for next read from bufferRAM */
-- 		if (unlikely(boundary))
-- 			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
-- 		ONENAND_SET_NEXT_BUFFERRAM(this);
-- 		buf += thislen;
-+		/* See if we are done */
-+		read += thislen;
-+		if (read == len)
-+			break;
-+		/* Set up for next read from bufferRAM */
-+		if (unlikely(boundary))
-+			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
-+		ONENAND_SET_NEXT_BUFFERRAM(this);
-+		buf += thislen;
- 		thislen = min_t(int, writesize, len - read);
-- 		column = 0;
-- 		cond_resched();
-- 		/* Now wait for load */
-- 		ret = this->wait(mtd, FL_READING);
-- 		onenand_update_bufferram(mtd, from, !ret);
-+		column = 0;
-+		cond_resched();
-+		/* Now wait for load */
-+		ret = this->wait(mtd, FL_READING);
-+		onenand_update_bufferram(mtd, from, !ret);
- 		if (mtd_is_eccerr(ret))
- 			ret = 0;
-- 	}
-+	}
++		/*
++		 * Only select the btree node which exactly references
++		 * the oldest journal entry.
++		 *
++		 * If the journal entry pointed by fifo_front_p is
++		 * reclaimed in parallel, don't worry:
++		 * - the list_for_each_xxx loop will quit when checking
++		 *   next now_fifo_front_p.
++		 * - If there are matched nodes recorded in btree_nodes[],
++		 *   they are clean now (this is why and how the oldest
++		 *   journal entry can be reclaimed). These selected nodes
++		 *   will be ignored and skipped in the folowing for-loop.
++		 */
++		if (nr_to_fifo_front(btree_current_write(b)->journal,
++				     fifo_front_p,
++				     mask) != 0) {
++			mutex_unlock(&b->write_lock);
++			continue;
++		}
++
+ 		set_btree_node_journal_flush(b);
  
- 	/*
- 	 * Return success, if no ECC failures, else -EBADMSG
+ 		mutex_unlock(&b->write_lock);
+ 
+-		btree_nodes[n++] = b;
+-		if (n == BTREE_FLUSH_NR)
++		btree_nodes[nr++] = b;
++		/*
++		 * To avoid holding c->bucket_lock too long time,
++		 * only scan for BTREE_FLUSH_NR matched btree nodes
++		 * at most. If there are more btree nodes reference
++		 * the oldest journal entry, try to flush them next
++		 * time when btree_flush_write() is called.
++		 */
++		if (nr == BTREE_FLUSH_NR)
+ 			break;
+ 	}
+ 	mutex_unlock(&c->bucket_lock);
+ 
+-	for (i = 0; i < n; i++) {
++	for (i = 0; i < nr; i++) {
+ 		b = btree_nodes[i];
+ 		if (!b) {
+ 			pr_err("BUG: btree_nodes[%d] is NULL", i);
+@@ -497,6 +566,7 @@ static void btree_flush_write(struct cac
+ 		mutex_unlock(&b->write_lock);
+ 	}
+ 
++out:
+ 	spin_lock(&c->journal.flush_write_lock);
+ 	c->journal.btree_flushing = false;
+ 	spin_unlock(&c->journal.flush_write_lock);
 
 
