@@ -2,150 +2,93 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CFFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD8FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FA024676
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:17:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aDm+V9KX"
+	by mail.kernel.org (Postfix) with ESMTP id 77FDC222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:17:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581585450;
+	bh=NV2EcoccPdwUw4SNFQbawZlRnPI4yYMQRsUYIbM/MI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1gWHPc9zS/84kEzQVX/wW9VNewifoXaiCTtSplX03vgqzo+ONKOybB/LcFtPn2mJc
+	 b05ZZd+QCNXpNwNkvtjbVNqU+8SVQU9bpO3DJPj25snFjUpqQoqMNExX9tZ32nr/sB
+	 89r9UcMkjjFp9R3wTtRv7W96QEYrz3nq/ZfTFBFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbgBMJRV (ORCPT
+        id S1729787AbgBMJR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:17:21 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44832 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729662AbgBMJRU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:17:20 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D9GugY083260;
-        Thu, 13 Feb 2020 03:16:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581585416;
-        bh=HD8xpFq6QBHByMPfQUEirTRxNYqt9sNUI9YHw9LUwuA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aDm+V9KX1LvxWGQqO+fXi+inYSFZoo+xo8hTQyEtf4v2AlBfCWq6rE1Zra68n0B0m
-         P8Vn81aGeakUc51CirbhuRjWKomks8vMUK+hfcTzTSJ3WjE37P2m2v9uzaTXv7HU7j
-         UK7tLncslZhU7AUCndEyok7mZeADMXRBZA0TmoR0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D9GuSS062922
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Feb 2020 03:16:56 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 03:16:55 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 03:16:55 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D9Gp4Q021263;
-        Thu, 13 Feb 2020 03:16:52 -0600
-Subject: Re: [PATCH v5 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
- bridge bindings.
-To:     Yuti Amonkar <yamonkar@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>
-CC:     <praneeth@ti.com>, <jsarha@ti.com>, <mparab@cadence.com>,
-        <sjakhade@cadence.com>
-References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
- <1581481604-24499-2-git-send-email-yamonkar@cadence.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <b97283b0-e4a5-4b96-e509-b9b5cdd78991@ti.com>
-Date:   Thu, 13 Feb 2020 11:16:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 04:17:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729609AbgBMJR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:17:29 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC7E521734;
+        Thu, 13 Feb 2020 09:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581585448;
+        bh=NV2EcoccPdwUw4SNFQbawZlRnPI4yYMQRsUYIbM/MI0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KFaWvFnYfd2PhTwWBlSReHfzGLGK6O25//fL+tSECBXPXo94QuZ6/aaAm6c51lva/
+         TefnJt0/OBlDSYX7UYVUOCLnb0a+GZ+cwgj3VYYNrllj/dBdIiQG+BNaS/O/qkj7rQ
+         tJQi1FQ2QBT9/UGxJGKYEd1FWX5HkvpZ4J/EOCWw=
+Date:   Thu, 13 Feb 2020 09:17:24 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: kaslr: Fix build failure with CONFIG_ARCH_RANDOM=n
+Message-ID: <20200213091724.GB849@willie-the-truck>
+References: <20200213042457.17842-1-samuel@sholland.org>
 MIME-Version: 1.0
-In-Reply-To: <1581481604-24499-2-git-send-email-yamonkar@cadence.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213042457.17842-1-samuel@sholland.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/2020 06:26, Yuti Amonkar wrote:
-> Document the bindings used for the Cadence MHDP DPI/DP bridge in
-> yaml format.
+On Wed, Feb 12, 2020 at 10:24:57PM -0600, Samuel Holland wrote:
+> Commit 2e8e1ea88cbc ("arm64: Use v8.5-RNG entropy for KASLR seed")
+> introduced unconditional use of arm64-specific functions exported by
+> asm/archrandom.h. With CONFIG_ARCH_RANDOM=y, this header is transitively
+> included through linux/random.h. However, with CONFIG_ARCH_RANDOM=n,
+> this header is not included, and the kernel fails to build.
 > 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Explicitly include asm/archrandom.h so __early_cpu_has_rndr() and
+> __arm64_rndr() are always available, even when they are just stubs.
+> 
+> Fixes: 2e8e1ea88cbc ("arm64: Use v8.5-RNG entropy for KASLR seed")
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 > ---
->   .../bindings/display/bridge/cdns,mhdp.yaml    | 125 ++++++++++++++++++
->   1 file changed, 125 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+>  arch/arm64/kernel/kaslr.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> new file mode 100644
-> index 000000000000..e7f84ed1d2da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> @@ -0,0 +1,125 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence MHDP bridge
-> +
-> +maintainers:
-> +  - Swapnil Jakhade <sjakhade@cadence.com>
-> +  - Yuti Amonkar <yamonkar@cadence.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cdns,mhdp8546
-> +      - ti,j721e-mhdp8546
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description:
-> +          Register block of mhdptx apb registers upto PHY mapped area(AUX_CONFIG_P).
+> diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+> index 53b8a4ee64ff..91a83104c6e8 100644
+> --- a/arch/arm64/kernel/kaslr.c
+> +++ b/arch/arm64/kernel/kaslr.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/types.h>
+>  
+> +#include <asm/archrandom.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/fixmap.h>
+>  #include <asm/kernel-pgtable.h>
 
-"up to". Add space before (.
+Already queued up in arm64 for-next/fixes:
 
-> +          The AUX and PMA registers are mapped to associated phy driver.
-> +      - description:
-> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: mhdptx
-> +      - const: j721e-intg
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      DP bridge clock, it's used by the IP to know how to translate a number of
-> +      clock cycles into a time (which is used to comply with DP standard timings
-> +      and delays).
-> +
-> +  phys:
-> +    description: Phandle to the DisplyPort phy.
+https://fixes.arm64.dev/
 
-"Display"
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Will
