@@ -2,116 +2,98 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4011AC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD8EC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E642086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:50:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="bBtGLz1C"
+	by mail.kernel.org (Postfix) with ESMTP id 3D7B02086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581623476;
+	bh=Xqbq2haBuZFkDYjZmsV4yATrit/Qz2AEyZkfCyM1khw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YHE8NLOkE+KJqrcYXB7S82NDeLZZ+rPujw8niybwORs0YRkpA1JDElWXehgRi8nyQ
+	 PmRqrPGfavcd15wn648zemcedyYNZ7pkMFI9ZhuZSe0j2peYqAYzefnlnYlIebNhgQ
+	 q5nXQA0ifHVHs//OO7h8anFBqesraD7O8nJcYNZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgBMTu3 (ORCPT
+        id S1728223AbgBMTvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:50:29 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45983 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgBMTu3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:50:29 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d9so5297854qte.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:50:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hzt8XbslsdiswWQVmdnVazMhSDm06KMVCyU2O+0BGmE=;
-        b=bBtGLz1CQrqbjYCYHiFeB2d7GTZWvvTRlXT6WnAOSAM8BsPgGUhHfoMWGo1F5pEge4
-         94c2ZX7MHD2AE3xko/8f0Cg413+93l9guQTeglN7+8GPUDFimVFM8YDsopLWhTlxhETc
-         wDD4bXB3gD+KhSxgeLotPdyM4xq+x66Ny04ax1uRn/rZY7yP62b1tWopbxG66dpU2lfT
-         zkLwChWR6S5Tci/SLOOrGjJiODJv6k1O61CIRPAnZ8GnP6RK/N342IJqxnYzrqpRVAVn
-         RqFVTLJURqT0di56YLJNT1GmapB+AqY2muHVicGzWyGbraOitWrAQOg+S0LOjs+U/nd7
-         enKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hzt8XbslsdiswWQVmdnVazMhSDm06KMVCyU2O+0BGmE=;
-        b=g+++85ToQrwdedgrcsbHqfxOEffild50gFaEc1vNypLv+hM98X+jC+xR6bOLKAMBX/
-         J2UYRatGlT8Cz/10ZOTsBMfVY6+q5o7lCvY58LdnnsQnUGL+adzEF04E0kxBadNgM+nU
-         HG9vDHEAz616h2LSNpAx7lDtg0RsEORh3hWJ+ZD7PXD33EoIJZjbi0rY02mGFtXfyCHG
-         HHfsQIsuV23s1PvrAV7hA8Si0Gp1EePDAVQYQSszq2oPfUxNxViuEk8kenp5jQVZvJxz
-         l+mPduqUj6PER1WtUvsr5O+6O3uSH2Curkr2PZChzpb76IjsZS20qHU7NFswlPapMF/N
-         7BrA==
-X-Gm-Message-State: APjAAAWAjsE+wJpZcz3k44S8PiazGhWn1JEE/QHUYGvyOHVnMnylrB12
-        G4vbeIV3aMjmK+vXmTvsrh6XoQ==
-X-Google-Smtp-Source: APXvYqzaVjNoq4PrtV5wCDMWzHnF/LP90+x7iaI7lc5kEgC2BCXBdlXyjg5EhEOoxDXViT6/M13QHg==
-X-Received: by 2002:ac8:7309:: with SMTP id x9mr17518032qto.338.1581623428031;
-        Thu, 13 Feb 2020 11:50:28 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id t2sm1893885qkc.31.2020.02.13.11.50.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 11:50:27 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j2KVG-0005ah-VX; Thu, 13 Feb 2020 15:50:26 -0400
-Date:   Thu, 13 Feb 2020 15:50:26 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        gcwilson@linux.ibm.com
-Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
-Message-ID: <20200213195026.GQ31668@ziepe.ca>
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
- <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
- <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
- <20200213183508.GL31668@ziepe.ca>
- <b424faea-33a7-8e5a-caac-f322fad68118@linux.ibm.com>
- <20200213191108.GO31668@ziepe.ca>
- <1e301947-a8f3-0b7d-d86c-5bfe04a68a75@linux.ibm.com>
- <20200213193908.GP31668@ziepe.ca>
- <8406ff6d-c24f-0815-25f8-fa9a97dcde8b@linux.ibm.com>
+        Thu, 13 Feb 2020 14:51:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbgBMTvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 14:51:15 -0500
+Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1489206DB;
+        Thu, 13 Feb 2020 19:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581623474;
+        bh=Xqbq2haBuZFkDYjZmsV4yATrit/Qz2AEyZkfCyM1khw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iCiUv1cEhk9VwBol7PtJap7ex5wIeg5ldTR+g0vDrDf4ZXUVibPHJxmw8z0OsPtP4
+         3sDi51kklI4zP5HGQ5GjBfBHOb/TbuhsXDlniCFor44vp8ZUureEQ/Ir07YM2O7TyV
+         sSG00Eyn9qbz3BCSD2kSR7827Jm6gkeT/WqVN19E=
+Date:   Fri, 14 Feb 2020 04:51:06 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Marta Rybczynska <mrybczyn@kalray.eu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH] nvme: fix uninitialized-variable warning
+Message-ID: <20200213195106.GA8256@redsun51.ssa.fujisawa.hgst.com>
+References: <20200107214215.935781-1-arnd@arndb.de>
+ <20200130150451.GA25427@infradead.org>
+ <CAK8P3a0EgfQkrSr77jE12Wm_NKemEZ1rFZLMcVhkAuu1cwOOWQ@mail.gmail.com>
+ <20200130154815.GA2463@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8406ff6d-c24f-0815-25f8-fa9a97dcde8b@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200130154815.GA2463@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:45:49PM -0500, Stefan Berger wrote:
-> > Any driver that knows the TPM must be started prior to Linux
-> > booting should not use the flag.  vtpm drivers in general would seem
-> > to be the case where we can make this statement.
+On Thu, Jan 30, 2020 at 07:48:15AM -0800, Christoph Hellwig wrote:
+> On Thu, Jan 30, 2020 at 04:36:48PM +0100, Arnd Bergmann wrote:
+> > > This one is just gross.  I think we'll need to find some other fix
+> > > that doesn't obsfucate the code as much.
+> > 
+> > Initializing the nvme_result in nvme_features() would do it, as would
+> > setting it in the error path in __nvme_submit_sync_cmd() -- either
+> > way the compiler cannot be confused about whether it is initialized
+> > later on.
 > 
-> Wouldn't this statement apply to all systems, including embedded ones? 
-> Basically all firmwares should implement the CRTM and do the TPM
-> initialization.
+> Given that this is outside the hot path we can just zero the whole
+> structure before submitting the I/O.
 
-It is not mandatory that systems with TPMs start it in the
-firmware. That is only required if the TPM PCR feature is going to be
-used. A TPM can quite happily be used for key storage without FW
-support.
+I think this should be okay:
 
-Arguably this is sort of done wrong. eg if the platform has provided
-TPM information through uEFI or something then we shouldn't try to
-auto start the system TPM. At least for TPM1 detecting a non-started
-TPM was harmless, so nobody really cared. I wonder if TPM2 is much
-different..
-
-But certainly auto startup should *not* be required to have a working
-TPM driver, that is just fundamentally wrong.
-
-Jason
+---
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 7f05deada7f4..4aeed750dab2 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1165,8 +1165,8 @@ static int nvme_identify_ns(struct nvme_ctrl *ctrl,
+ static int nvme_features(struct nvme_ctrl *dev, u8 op, unsigned int fid,
+ 		unsigned int dword11, void *buffer, size_t buflen, u32 *result)
+ {
++	union nvme_result res = { 0 };
+ 	struct nvme_command c;
+-	union nvme_result res;
+ 	int ret;
+ 
+ 	memset(&c, 0, sizeof(c));
+--
