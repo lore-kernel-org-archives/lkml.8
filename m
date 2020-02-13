@@ -2,52 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F72EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED46C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0207E206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05BA20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607634;
-	bh=LDJ2gcdsdapsSCLe6d3TJz1woS6LRNQhKicWstxjU3M=;
+	s=default; t=1581607636;
+	bh=6jiThO6KwAUUZpDdP6OoahcnF7wU3KAVmYKEa7AhWX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p0n+6Vpa7pnEHwqvSS4mvqEbBdtec10M/S/XvH4tkDJ/TlT5/aH1n8ViawfpEk1tA
-	 gu87mnrA32SIamznewsmoOsdulm8YchCp5rlqvlYCDo8WcydnfGWYLYKTtVWCeqti3
-	 DrnQocCGt5GekGJliVUjhT6o7BwWs6405j5AJR/E=
+	b=vUcBOYO9MIBZp0UjHeXGq/lrP9zQVug3bgNHqqvXcplh/JTluF59gyHSoy8YKH8ke
+	 NfnpbOvVkg/6CPDW+r7g/LjZrwtgKRgNZUIv3g3BjtuoWJutzO0ZjA/FWjot9b6UUm
+	 l4+yi3WSJ1iKnaQnlrj9wmWiOEUL0rbJlG+zftQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgBMP1N (ORCPT
+        id S1729335AbgBMP1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40312 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbgBMPZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:14 -0500
+        id S2387424AbgBMPZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:17 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32AE9246B3;
-        Thu, 13 Feb 2020 15:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67D1F246B5;
+        Thu, 13 Feb 2020 15:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607513;
-        bh=LDJ2gcdsdapsSCLe6d3TJz1woS6LRNQhKicWstxjU3M=;
+        s=default; t=1581607516;
+        bh=6jiThO6KwAUUZpDdP6OoahcnF7wU3KAVmYKEa7AhWX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AgzMhJyMhkqLfp+O/Pi/8flbzqIqR8nK+pek0OTUjsihqvTFHnZQrD+ZUIIUp0R3h
-         zh5/803NZgGp/JLkMzF2nStq/YRyhhasnv7wMNdMmHzfS4ZZqBUIn4+nCAAkzMBhWG
-         p65cFfUdG3GkH3P17l+Ar8DNr8XKQ0y/B+BW6SFo=
+        b=bMAR/8UwmibOc30kXCaxCm76btxO5+6ZmiU9yIcQw6E2PnH/FAzhEn14gzJ0oxZno
+         GX5fZmoguO76+bqOpqip5GCbfF3XWmaKbVz+Hj8b+PDMCw/VqJoolXFDdzWpG5ba6i
+         jBKM9EuFg4gZZewHiC2GwEqU5+G4DjJjRBj6oQpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 057/173] padata: Remove broken queue flushing
-Date:   Thu, 13 Feb 2020 07:19:20 -0800
-Message-Id: <20200213151948.275124464@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 080/173] KVM: x86: Protect DR-based index computations from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:43 -0800
+Message-Id: <20200213151953.652740374@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,144 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Marios Pomonis <pomonis@google.com>
 
-[ Upstream commit 07928d9bfc81640bab36f5190e8725894d93b659 ]
+commit ea740059ecb37807ba47b84b33d1447435a8d868 upstream.
 
-The function padata_flush_queues is fundamentally broken because
-it cannot force padata users to complete the request that is
-underway.  IOW padata has to passively wait for the completion
-of any outstanding work.
+This fixes a Spectre-v1/L1TF vulnerability in __kvm_set_dr() and
+kvm_get_dr().
+Both kvm_get_dr() and kvm_set_dr() (a wrapper of __kvm_set_dr()) are
+exported symbols so KVM should tream them conservatively from a security
+perspective.
 
-As it stands flushing is used in two places.  Its use in padata_stop
-is simply unnecessary because nothing depends on the queues to
-be flushed afterwards.
+Fixes: 020df0794f57 ("KVM: move DR register access handling into generic code")
 
-The other use in padata_replace is more substantial as we depend
-on it to free the old pd structure.  This patch instead uses the
-pd->refcnt to dynamically free the pd structure once all requests
-are complete.
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 46 ++++++++++++----------------------------------
- 1 file changed, 12 insertions(+), 34 deletions(-)
+ arch/x86/kvm/x86.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 87540ce72aea6..ef4ba3d664dab 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -34,6 +34,8 @@
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -924,9 +924,11 @@ static u64 kvm_dr6_fixed(struct kvm_vcpu
  
- #define MAX_OBJ_NUM 1000
- 
-+static void padata_free_pd(struct parallel_data *pd);
-+
- static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
  {
- 	int cpu, target_cpu;
-@@ -292,6 +294,7 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	struct padata_serial_queue *squeue;
- 	struct parallel_data *pd;
- 	LIST_HEAD(local_list);
-+	int cnt;
- 
- 	local_bh_disable();
- 	squeue = container_of(serial_work, struct padata_serial_queue, work);
-@@ -301,6 +304,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	list_replace_init(&squeue->serial.list, &local_list);
- 	spin_unlock(&squeue->serial.lock);
- 
-+	cnt = 0;
++	size_t size = ARRAY_SIZE(vcpu->arch.db);
 +
- 	while (!list_empty(&local_list)) {
- 		struct padata_priv *padata;
+ 	switch (dr) {
+ 	case 0 ... 3:
+-		vcpu->arch.db[dr] = val;
++		vcpu->arch.db[array_index_nospec(dr, size)] = val;
+ 		if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP))
+ 			vcpu->arch.eff_db[dr] = val;
+ 		break;
+@@ -963,9 +965,11 @@ EXPORT_SYMBOL_GPL(kvm_set_dr);
  
-@@ -310,9 +315,12 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 		list_del_init(&padata->list);
- 
- 		padata->serial(padata);
--		atomic_dec(&pd->refcnt);
-+		cnt++;
- 	}
- 	local_bh_enable();
-+
-+	if (atomic_sub_and_test(cnt, &pd->refcnt))
-+		padata_free_pd(pd);
- }
- 
- /**
-@@ -435,8 +443,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	setup_timer(&pd->timer, padata_reorder_timer, (unsigned long)pd);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
--	atomic_set(&pd->refcnt, 0);
--	pd->pinst = pinst;
-+	atomic_set(&pd->refcnt, 1);
- 	spin_lock_init(&pd->lock);
- 
- 	return pd;
-@@ -460,31 +467,6 @@ static void padata_free_pd(struct parallel_data *pd)
- 	kfree(pd);
- }
- 
--/* Flush all objects out of the padata queues. */
--static void padata_flush_queues(struct parallel_data *pd)
--{
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct padata_serial_queue *squeue;
--
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
--		pqueue = per_cpu_ptr(pd->pqueue, cpu);
--		flush_work(&pqueue->work);
--	}
--
--	del_timer_sync(&pd->timer);
--
--	if (atomic_read(&pd->reorder_objects))
--		padata_reorder(pd);
--
--	for_each_cpu(cpu, pd->cpumask.cbcpu) {
--		squeue = per_cpu_ptr(pd->squeue, cpu);
--		flush_work(&squeue->work);
--	}
--
--	BUG_ON(atomic_read(&pd->refcnt) != 0);
--}
--
- static void __padata_start(struct padata_instance *pinst)
+ int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
  {
- 	pinst->flags |= PADATA_INIT;
-@@ -498,10 +480,6 @@ static void __padata_stop(struct padata_instance *pinst)
- 	pinst->flags &= ~PADATA_INIT;
- 
- 	synchronize_rcu();
--
--	get_online_cpus();
--	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
- 
- /* Replace the internal control structure with a new one. */
-@@ -522,8 +500,8 @@ static void padata_replace(struct padata_instance *pinst,
- 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
- 		notification_mask |= PADATA_CPU_SERIAL;
- 
--	padata_flush_queues(pd_old);
--	padata_free_pd(pd_old);
-+	if (atomic_dec_and_test(&pd_old->refcnt))
-+		padata_free_pd(pd_old);
- 
- 	if (notification_mask)
- 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
--- 
-2.20.1
-
++	size_t size = ARRAY_SIZE(vcpu->arch.db);
++
+ 	switch (dr) {
+ 	case 0 ... 3:
+-		*val = vcpu->arch.db[dr];
++		*val = vcpu->arch.db[array_index_nospec(dr, size)];
+ 		break;
+ 	case 4:
+ 		/* fall through */
 
 
