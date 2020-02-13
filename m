@@ -2,98 +2,118 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE3AC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAFFC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640FD217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4Fkoj09"
+	by mail.kernel.org (Postfix) with ESMTP id E8894218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgBMTQO (ORCPT
+        id S1728559AbgBMTQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:16:14 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25271 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727720AbgBMTQO (ORCPT
+        Thu, 13 Feb 2020 14:16:20 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9726 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727919AbgBMTQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:16:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581621373;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3SQ+LK7N11bGZ8q1OPiZl9texnQsy+HSMYBO5njmoYo=;
-        b=N4Fkoj09VKw5WjwIbst8XMsYyw8kQqWy/YbHe0/6sluPgRC/o7PGDSoZP2nWrdq3H8jsaa
-        gKokiLuUoNlHNuDAlmtT3RveT4+PyutmESO/MYVak69+yl/9aMvY9774WsAZs/uEYTdVEI
-        LTr5SBmAiLLkOpc/cjmrtnJ0H1hVfGM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-XG0hJnjHPBS9gjBI-CDJyA-1; Thu, 13 Feb 2020 14:16:04 -0500
-X-MC-Unique: XG0hJnjHPBS9gjBI-CDJyA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FB91107ACCC;
-        Thu, 13 Feb 2020 19:16:02 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C5D35C100;
-        Thu, 13 Feb 2020 19:16:01 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 2/4] libnvdimm/namespace: Enforce memremap_compat_align()
-References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Thu, 13 Feb 2020 14:16:00 -0500
-In-Reply-To: <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
-        (Dan Williams's message of "Wed, 12 Feb 2020 16:48:29 -0800")
-Message-ID: <x49o8u25mdr.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 13 Feb 2020 14:16:19 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DJ8nGR072903;
+        Thu, 13 Feb 2020 14:16:15 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y3yw9kh4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 14:16:15 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01DJFG86029223;
+        Thu, 13 Feb 2020 19:16:14 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma02dal.us.ibm.com with ESMTP id 2y5bc0gk0t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 19:16:14 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DJGDFA52691326
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 19:16:13 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB92FB2064;
+        Thu, 13 Feb 2020 19:16:13 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC1E3B205F;
+        Thu, 13 Feb 2020 19:16:13 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Feb 2020 19:16:13 +0000 (GMT)
+Subject: Re: [PATCH 1/3] tpm: of: Handle IBM,vtpm20 case when getting log
+ parameters
+To:     Nayna <nayna@linux.vnet.ibm.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, gcwilson@linux.ibm.com
+References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
+ <20200204132706.3220416-2-stefanb@linux.vnet.ibm.com>
+ <1699b8ee-34d3-1dfd-7102-7dd1b7f6b641@linux.vnet.ibm.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <f40af77b-7427-1690-6bce-745dcaea5fec@linux.ibm.com>
+Date:   Thu, 13 Feb 2020 14:16:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <1699b8ee-34d3-1dfd-7102-7dd1b7f6b641@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_07:2020-02-12,2020-02-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On 2/13/20 12:46 PM, Nayna wrote:
+>
+> On 2/4/20 8:27 AM, Stefan Berger wrote:
+>> From: Stefan Berger <stefanb@linux.ibm.com>
+>>
+>> A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
+>> the device tree. Handle it in the same way as 'IBM,vtpm'.
+>>
+>> The vTPM 2.0's log is written in little endian format so that for this
+>> aspect we can rely on existing code.
+>>
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>> ---
+>>   drivers/char/tpm/eventlog/of.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/char/tpm/eventlog/of.c 
+>> b/drivers/char/tpm/eventlog/of.c
+>> index af347c190819..a9ce66d09a75 100644
+>> --- a/drivers/char/tpm/eventlog/of.c
+>> +++ b/drivers/char/tpm/eventlog/of.c
+>> @@ -51,7 +51,8 @@ int tpm_read_log_of(struct tpm_chip *chip)
+>>        * endian format. For this reason, vtpm doesn't need conversion
+>>        * but physical tpm needs the conversion.
+>>        */
+>> -    if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
+>> +    if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
+>> +        of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+>
+> How about changing this to use of_device_compatible_match() ?
 
-> The pmem driver on PowerPC crashes with the following signature when
-> instantiating misaligned namespaces that map their capacity via
-> memremap_pages().
->
->     BUG: Unable to handle kernel data access at 0xc001000406000000
->     Faulting instruction address: 0xc000000000090790
->     NIP [c000000000090790] arch_add_memory+0xc0/0x130
->     LR [c000000000090744] arch_add_memory+0x74/0x130
->     Call Trace:
->      arch_add_memory+0x74/0x130 (unreliable)
->      memremap_pages+0x74c/0xa30
->      devm_memremap_pages+0x3c/0xa0
->      pmem_attach_disk+0x188/0x770
->      nvdimm_bus_probe+0xd8/0x470
->
-> With the assumption that only memremap_pages() has alignment
-> constraints, enforce memremap_compat_align() for
-> pmem_should_map_pages(), nd_pfn, or nd_dax cases.
->
-> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Cc: Jeff Moyer <jmoyer@redhat.com>
-> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+I can change it.
+
+    Stefan
+
 
