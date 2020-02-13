@@ -2,129 +2,275 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8ADC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE41C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4528A246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojjKqoJq"
+	by mail.kernel.org (Postfix) with ESMTP id E8CE0246AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581607432;
+	bh=/HSKAYtfM+rTPNv7Go2pmGjAX6lhyCcJMStXBSWlkTY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eNuMkj4OzsrYtWwphkIV8PCH7xlBBkyiPrzf9hm6q+RhfDU7SxcVa8omIo4iakhDv
+	 5kM16cptn7pQ2d8GCO+3ZoZoJyU37pYynl81rOnepP30TvF6HRCUDgqe25lqDT7ekM
+	 MrxM9ZEAtIS7IgM2QYXQXzS6gtfi0BO4GBHyyClg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgBMPXt (ORCPT
+        id S1728511AbgBMPXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:49 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40878 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgBMPXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:01 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y1so2463743plp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:23:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mG5Pj3Ga2qn/6UPh/hiM2vYUP7QMzFr/lGer+oLepCc=;
-        b=ojjKqoJqn3YNbRS9pIbai3sOzbP1aYkgdpr7OpIR1y2+KaxVGpme9iesoJCJU3SRhU
-         HAfQ/pbQUu2k4NcORvH4RHD/TgpX9EwAE3ASjn75CwsQ6aifFHMjui0B/keNeiEfBYAm
-         9VxkhZ441f/jNEys8dffVo1BnGSySP3/lfTo111fQACZ4xowTWKgUHPWcGpSloattgia
-         zE46NmTrTYDxxlLpkEth0WCXUsAzom8BBeNY/XXQAwBpEzm6aNRbYbNJ8efaNmdblTej
-         qEP6ATS99mxjh7IbNgoJcGNL4co6kAqB61eQiK4MdYk2h3VWemMGVBmIpbBfcQdfTTz9
-         T1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mG5Pj3Ga2qn/6UPh/hiM2vYUP7QMzFr/lGer+oLepCc=;
-        b=cYlR9xM3q2OqNtaJMKafQj745j/b/K+OijNwmsc8lJrJ3oAF/16EhD7MR4NJe7ciWp
-         o34hpO1OOqKh+EpdRvh+6ZsnQpFLHpCL0jxGNcyDEKwTW+mB+8rPOeHoMctebV5iGnSM
-         CcwUiXbFMGt/IJktvt/Uc0W5pAcJKLt6Qgufx3i51pT98zrRnXihF+hMKIQ4jcqRiFR6
-         pOeWH53ntUwOVG6V5D9RF+9jpgBdMxpsnDJY7bFc3elkrnI1lW13v8hgcI/e+exjjQKN
-         onAprVsLSSXscJZZ0DL1eQRoAOH9mwIYgxzHAn+CeNSwsDKSZpoaGXVFJLmABmT1hg/K
-         /Kqw==
-X-Gm-Message-State: APjAAAXH49vLhXM6Nt22sBbSIovjlpaHbkEJtHjFyXozDpyHyBwnQ+Ck
-        SAPR/gRWqwCe0DVakZ7zQCZ7
-X-Google-Smtp-Source: APXvYqyFO7tCYmZ8k+SqmOtcnU6W7tN/B4ksrngWczKUIT1JduB/3SDAP6TvrlAIs6RKKyY3gUuZ5Q==
-X-Received: by 2002:a17:902:a58a:: with SMTP id az10mr28645091plb.20.1581607380940;
-        Thu, 13 Feb 2020 07:23:00 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id n2sm3561515pgn.71.2020.02.13.07.22.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 07:23:00 -0800 (PST)
-Date:   Thu, 13 Feb 2020 20:52:55 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200213152255.GC15010@mani>
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
- <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
- <20200206165606.GA3894455@kroah.com>
- <20200211191147.GB11908@Mani-XPS-13-9360>
- <20200211192236.GB1962867@kroah.com>
+        Thu, 13 Feb 2020 10:23:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728229AbgBMPXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:04 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EEF2246B1;
+        Thu, 13 Feb 2020 15:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607383;
+        bh=/HSKAYtfM+rTPNv7Go2pmGjAX6lhyCcJMStXBSWlkTY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jk9EKgmIzYBAXVhFP7+OdpQTsA3zj4iRnEglZ66/KJ8hfRLYpiq+62TgTJNFByJjH
+         kE+5Nc6oM1cey17DfBHPv3oynHjhGb1HdpC+tZRCLd2Nv1Sh+Q/aEyIZFjcQ+egDCH
+         2ac2TQbCZtxVA88Emk4Dj4uU/ronDJp8qwVrSpDA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 64/91] btrfs: remove trivial locking wrappers of tree mod log
+Date:   Thu, 13 Feb 2020 07:20:21 -0800
+Message-Id: <20200213151847.037090188@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
+References: <20200213151821.384445454@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211192236.GB1962867@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+From: David Sterba <dsterba@suse.com>
 
-On Tue, Feb 11, 2020 at 11:22:36AM -0800, Greg KH wrote:
-> On Wed, Feb 12, 2020 at 12:41:47AM +0530, Manivannan Sadhasivam wrote:
-> > Hi Greg,
-> > 
-> > On Thu, Feb 06, 2020 at 05:56:06PM +0100, Greg KH wrote:
-> > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
-> > > > +static void mhi_release_device(struct device *dev)
-> > > > +{
-> > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
-> > > > +
-> > > > +	if (mhi_dev->ul_chan)
-> > > > +		mhi_dev->ul_chan->mhi_dev = NULL;
-> > > 
-> > > That looks really odd.  Why didn't you just drop the reference you
-> > > should have grabbed here for this pointer?  You did properly increment
-> > > it when you saved it, right?  :)
-> > > 
-> > 
-> > Well, there is no reference count (kref) exist for mhi_dev.
-> 
-> Then something is wrong with your model :(
-> 
-> You can't save pointers off to things without reference counting, that
-> is going to cause you real problems.  See the coding style document for
-> all the details.
-> 
-> > And we really needed to NULL the mhi_dev to avoid any dangling
-> > reference to it.
-> 
-> Again, that's not how to do this correctly.
-> 
-> > The reason for not having kref is that, each mhi_dev will be used by
-> > maximum of 2 channels only. So thought that refcounting is not needed.
-> > Please correct me if I'm wrong.
-> 
-> Please read section 11 of Documentation/process/coding-style.rst
-> 
+[ Upstream commit b1a09f1ec540408abf3a50d15dff5d9506932693 ]
 
-I have fixed it and will send the next iteration soon.
+The wrappers are trivial and do not bring any extra value on top of the
+plain locking primitives.
 
-Thanks,
-Mani
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/ctree.c | 58 ++++++++++++++++--------------------------------
+ 1 file changed, 19 insertions(+), 39 deletions(-)
 
-> thanks,
-> 
-> greg k-h
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 62caf3bcadf8e..f770488a0723b 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -332,26 +332,6 @@ struct tree_mod_elem {
+ 	struct tree_mod_root old_root;
+ };
+ 
+-static inline void tree_mod_log_read_lock(struct btrfs_fs_info *fs_info)
+-{
+-	read_lock(&fs_info->tree_mod_log_lock);
+-}
+-
+-static inline void tree_mod_log_read_unlock(struct btrfs_fs_info *fs_info)
+-{
+-	read_unlock(&fs_info->tree_mod_log_lock);
+-}
+-
+-static inline void tree_mod_log_write_lock(struct btrfs_fs_info *fs_info)
+-{
+-	write_lock(&fs_info->tree_mod_log_lock);
+-}
+-
+-static inline void tree_mod_log_write_unlock(struct btrfs_fs_info *fs_info)
+-{
+-	write_unlock(&fs_info->tree_mod_log_lock);
+-}
+-
+ /*
+  * Pull a new tree mod seq number for our operation.
+  */
+@@ -371,14 +351,14 @@ static inline u64 btrfs_inc_tree_mod_seq(struct btrfs_fs_info *fs_info)
+ u64 btrfs_get_tree_mod_seq(struct btrfs_fs_info *fs_info,
+ 			   struct seq_list *elem)
+ {
+-	tree_mod_log_write_lock(fs_info);
++	write_lock(&fs_info->tree_mod_log_lock);
+ 	spin_lock(&fs_info->tree_mod_seq_lock);
+ 	if (!elem->seq) {
+ 		elem->seq = btrfs_inc_tree_mod_seq(fs_info);
+ 		list_add_tail(&elem->list, &fs_info->tree_mod_seq_list);
+ 	}
+ 	spin_unlock(&fs_info->tree_mod_seq_lock);
+-	tree_mod_log_write_unlock(fs_info);
++	write_unlock(&fs_info->tree_mod_log_lock);
+ 
+ 	return elem->seq;
+ }
+@@ -420,7 +400,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
+ 	 * anything that's lower than the lowest existing (read: blocked)
+ 	 * sequence number can be removed from the tree.
+ 	 */
+-	tree_mod_log_write_lock(fs_info);
++	write_lock(&fs_info->tree_mod_log_lock);
+ 	tm_root = &fs_info->tree_mod_log;
+ 	for (node = rb_first(tm_root); node; node = next) {
+ 		next = rb_next(node);
+@@ -430,7 +410,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
+ 		rb_erase(node, tm_root);
+ 		kfree(tm);
+ 	}
+-	tree_mod_log_write_unlock(fs_info);
++	write_unlock(&fs_info->tree_mod_log_lock);
+ }
+ 
+ /*
+@@ -441,7 +421,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
+  * operations, or the shifted logical of the affected block for all other
+  * operations.
+  *
+- * Note: must be called with write lock (tree_mod_log_write_lock).
++ * Note: must be called with write lock for fs_info::tree_mod_log_lock.
+  */
+ static noinline int
+ __tree_mod_log_insert(struct btrfs_fs_info *fs_info, struct tree_mod_elem *tm)
+@@ -481,7 +461,7 @@ __tree_mod_log_insert(struct btrfs_fs_info *fs_info, struct tree_mod_elem *tm)
+  * Determines if logging can be omitted. Returns 1 if it can. Otherwise, it
+  * returns zero with the tree_mod_log_lock acquired. The caller must hold
+  * this until all tree mod log insertions are recorded in the rb tree and then
+- * call tree_mod_log_write_unlock() to release.
++ * write unlock fs_info::tree_mod_log_lock.
+  */
+ static inline int tree_mod_dont_log(struct btrfs_fs_info *fs_info,
+ 				    struct extent_buffer *eb) {
+@@ -491,9 +471,9 @@ static inline int tree_mod_dont_log(struct btrfs_fs_info *fs_info,
+ 	if (eb && btrfs_header_level(eb) == 0)
+ 		return 1;
+ 
+-	tree_mod_log_write_lock(fs_info);
++	write_lock(&fs_info->tree_mod_log_lock);
+ 	if (list_empty(&(fs_info)->tree_mod_seq_list)) {
+-		tree_mod_log_write_unlock(fs_info);
++		write_unlock(&fs_info->tree_mod_log_lock);
+ 		return 1;
+ 	}
+ 
+@@ -557,7 +537,7 @@ tree_mod_log_insert_key(struct btrfs_fs_info *fs_info,
+ 	}
+ 
+ 	ret = __tree_mod_log_insert(fs_info, tm);
+-	tree_mod_log_write_unlock(fs_info);
++	write_unlock(&eb->fs_info->tree_mod_log_lock);
+ 	if (ret)
+ 		kfree(tm);
+ 
+@@ -621,7 +601,7 @@ tree_mod_log_insert_move(struct btrfs_fs_info *fs_info,
+ 	ret = __tree_mod_log_insert(fs_info, tm);
+ 	if (ret)
+ 		goto free_tms;
+-	tree_mod_log_write_unlock(fs_info);
++	write_unlock(&eb->fs_info->tree_mod_log_lock);
+ 	kfree(tm_list);
+ 
+ 	return 0;
+@@ -632,7 +612,7 @@ tree_mod_log_insert_move(struct btrfs_fs_info *fs_info,
+ 		kfree(tm_list[i]);
+ 	}
+ 	if (locked)
+-		tree_mod_log_write_unlock(fs_info);
++		write_unlock(&eb->fs_info->tree_mod_log_lock);
+ 	kfree(tm_list);
+ 	kfree(tm);
+ 
+@@ -713,7 +693,7 @@ tree_mod_log_insert_root(struct btrfs_fs_info *fs_info,
+ 	if (!ret)
+ 		ret = __tree_mod_log_insert(fs_info, tm);
+ 
+-	tree_mod_log_write_unlock(fs_info);
++	write_unlock(&fs_info->tree_mod_log_lock);
+ 	if (ret)
+ 		goto free_tms;
+ 	kfree(tm_list);
+@@ -741,7 +721,7 @@ __tree_mod_log_search(struct btrfs_fs_info *fs_info, u64 start, u64 min_seq,
+ 	struct tree_mod_elem *found = NULL;
+ 	u64 index = start >> PAGE_CACHE_SHIFT;
+ 
+-	tree_mod_log_read_lock(fs_info);
++	read_lock(&fs_info->tree_mod_log_lock);
+ 	tm_root = &fs_info->tree_mod_log;
+ 	node = tm_root->rb_node;
+ 	while (node) {
+@@ -769,7 +749,7 @@ __tree_mod_log_search(struct btrfs_fs_info *fs_info, u64 start, u64 min_seq,
+ 			break;
+ 		}
+ 	}
+-	tree_mod_log_read_unlock(fs_info);
++	read_unlock(&fs_info->tree_mod_log_lock);
+ 
+ 	return found;
+ }
+@@ -850,7 +830,7 @@ tree_mod_log_eb_copy(struct btrfs_fs_info *fs_info, struct extent_buffer *dst,
+ 			goto free_tms;
+ 	}
+ 
+-	tree_mod_log_write_unlock(fs_info);
++	write_unlock(&fs_info->tree_mod_log_lock);
+ 	kfree(tm_list);
+ 
+ 	return 0;
+@@ -862,7 +842,7 @@ tree_mod_log_eb_copy(struct btrfs_fs_info *fs_info, struct extent_buffer *dst,
+ 		kfree(tm_list[i]);
+ 	}
+ 	if (locked)
+-		tree_mod_log_write_unlock(fs_info);
++		write_unlock(&fs_info->tree_mod_log_lock);
+ 	kfree(tm_list);
+ 
+ 	return ret;
+@@ -922,7 +902,7 @@ tree_mod_log_free_eb(struct btrfs_fs_info *fs_info, struct extent_buffer *eb)
+ 		goto free_tms;
+ 
+ 	ret = __tree_mod_log_free_eb(fs_info, tm_list, nritems);
+-	tree_mod_log_write_unlock(fs_info);
++	write_unlock(&eb->fs_info->tree_mod_log_lock);
+ 	if (ret)
+ 		goto free_tms;
+ 	kfree(tm_list);
+@@ -1284,7 +1264,7 @@ __tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct extent_buffer *eb,
+ 	unsigned long p_size = sizeof(struct btrfs_key_ptr);
+ 
+ 	n = btrfs_header_nritems(eb);
+-	tree_mod_log_read_lock(fs_info);
++	read_lock(&fs_info->tree_mod_log_lock);
+ 	while (tm && tm->seq >= time_seq) {
+ 		/*
+ 		 * all the operations are recorded with the operator used for
+@@ -1339,7 +1319,7 @@ __tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct extent_buffer *eb,
+ 		if (tm->index != first_tm->index)
+ 			break;
+ 	}
+-	tree_mod_log_read_unlock(fs_info);
++	read_unlock(&fs_info->tree_mod_log_lock);
+ 	btrfs_set_header_nritems(eb, n);
+ }
+ 
+-- 
+2.20.1
+
+
+
