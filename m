@@ -2,330 +2,101 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D324C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE3CC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7512073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A2924650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:03:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEunzPMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgBMPCJ (ORCPT
+        id S1727652AbgBMPDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:02:09 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60288 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgBMPCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:02:08 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 07:02:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="313748558"
-Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by orsmga001.jf.intel.com with ESMTP; 13 Feb 2020 07:02:03 -0800
-From:   roman.sudarikov@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v6 3/3] =?UTF-8?q?perf=20x86:=20Exposing=20an=20Uncore=20u?= =?UTF-8?q?nit=20to=20PMON=20for=20Intel=20Xeon=C2=AE=20server=20platform?=
-Date:   Thu, 13 Feb 2020 18:01:48 +0300
-Message-Id: <20200213150148.5627-4-roman.sudarikov@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200213150148.5627-1-roman.sudarikov@linux.intel.com>
-References: <20200213150148.5627-1-roman.sudarikov@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 13 Feb 2020 10:03:51 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46772 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbgBMPDv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:03:51 -0500
+Received: by mail-pf1-f193.google.com with SMTP id k29so3190454pfp.13;
+        Thu, 13 Feb 2020 07:03:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G1URVlj7Itamof72U88sCTyKrE2tsgoZIU1g2MQTLT4=;
+        b=eEunzPMSbxFG4bweZ0Ndj/87P833Ic9MFPnCSzj55NPcR0ymQ82wsiZqYSb1nk4y8n
+         vnpDpP/RPoawFH2lKT+fH4LIqVcY3vw+XZ6VCFYWIxChO/zfnraDY1s+K2Vu8WxYmGaf
+         p6kt/jZUcpj6P7ZpJdtxdBMtpgOT126Vr4mY5DboJ08lKnkcs7yEah2L6qRnLy2HAFmn
+         pSdCkkgmCIlMOHbVYd62VqCTkmnmn1rTPlIW36YpxbBZMLjgQ2Wqpvfx1S8tGhno5wx4
+         UsaeR6bH6DWuuSJJfZxvFgJ53tyZO1tbQs3rnpCGEKCKyJ36BSJBdlZtxA4O0oLBVawd
+         /bpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G1URVlj7Itamof72U88sCTyKrE2tsgoZIU1g2MQTLT4=;
+        b=mqQ96r49+noN21pbjWWxswiEzHKtRJyhb0y7WXcriuIhDlDQjPGP7l8KXLnxqWsuX/
+         hTG6nJpiHwTMPYFBrRtLzj8GfdLef+d2H4UzxqrSGQs9aa6jFb7RCIkPCmaVVsJEfVwc
+         +V36GJRr55qvX7DXMKLpW6F5Pf0kVFO5wz1Yiu0nBKi0eI6gl76oeukixY3cN1z9RIor
+         JUCOK7PcrHzXXJ01Rmkmk4Z9z/T744D5zV4U09xCNWpU1EAiIM5Hvb8cL6LGSSvNX2GU
+         kgHVyIBU6bAIjOZW+jKECNLF2j5mrkNx16QDjYfteFK1kCh4dxOnWKzuOi4Ah5tTJfKb
+         +uUA==
+X-Gm-Message-State: APjAAAWOOzcYTNx/pSAG64x9PtcsrNUp9sV52Aa4dgD88Yg6LgztmmrL
+        PoKZJbsvpJ1AQpnV1wGD/w==
+X-Google-Smtp-Source: APXvYqy80BcDGxTwmn1WGkdzrAgompUbMy/tI6GtsozghL2Dy+wTbFwgE9Ja9AVRnkewKVx01aOEMQ==
+X-Received: by 2002:a65:4c82:: with SMTP id m2mr17868613pgt.432.1581606229256;
+        Thu, 13 Feb 2020 07:03:49 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee8:f65a:fc5b:5bfd:1ab4:4848])
+        by smtp.gmail.com with ESMTPSA id 11sm3625726pfz.25.2020.02.13.07.03.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 07:03:48 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     bfields@fieldses.org, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] fs: nfsd: nfs4state.c: Use built-in RCU list checking
+Date:   Thu, 13 Feb 2020 20:33:31 +0530
+Message-Id: <20200213150331.5727-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Current version supports a server line starting Intel® Xeon® Processor
-Scalable Family and introduces mapping for IIO Uncore units only.
-Other units can be added on demand.
+list_for_each_entry_rcu() has built-in RCU and lock checking.
 
-IIO stack to PMON mapping is exposed through:
-    /sys/devices/uncore_iio_<pmu_idx>/dieX
-    where dieX is file which holds "Segment:Root Bus" for PCIe root port,
-    which can be monitored by that IIO PMON block.
+Pass cond argument to list_for_each_entry_rcu() to silence
+false lockdep warning when  CONFIG_PROVE_RCU_LIST is enabled
+by default.
 
-Details are explained in Documentation/ABI/testing/sysfs-devices-mapping
-
-Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
- .../ABI/testing/sysfs-devices-mapping         |  33 +++
- arch/x86/events/intel/uncore_snbep.c          | 189 ++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+ fs/nfsd/nfs4state.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-mapping b/Documentation/ABI/testing/sysfs-devices-mapping
-new file mode 100644
-index 000000000000..16f4e900be7b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-devices-mapping
-@@ -0,0 +1,33 @@
-+What:           /sys/devices/uncore_iio_x/dieX
-+Date:           February 2020
-+Contact:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
-+Description:
-+                Each IIO stack (PCIe root port) has its own IIO PMON block, so
-+                each dieX file (where X is die number) holds "Segment:Root Bus"
-+                for PCIe root port, which can be monitored by that IIO PMON
-+                block.
-+                For example, on 4-die Xeon platform with up to 6 IIO stacks per
-+                die and, therefore, 6 IIO PMON blocks per die, the mapping of
-+                IIO PMON block 0 exposes as the following:
-+
-+                $ ls /sys/devices/uncore_iio_0/die*
-+                -r--r--r-- /sys/devices/uncore_iio_0/die0
-+                -r--r--r-- /sys/devices/uncore_iio_0/die1
-+                -r--r--r-- /sys/devices/uncore_iio_0/die2
-+                -r--r--r-- /sys/devices/uncore_iio_0/die3
-+
-+                $ tail /sys/devices/uncore_iio_0/die*
-+                ==> /sys/devices/uncore_iio_0/die0 <==
-+                0000:00
-+                ==> /sys/devices/uncore_iio_0/die1 <==
-+                0000:40
-+                ==> /sys/devices/uncore_iio_0/die2 <==
-+                0000:80
-+                ==> /sys/devices/uncore_iio_0/die3 <==
-+                0000:c0
-+
-+                Which means:
-+                IIO PMU 0 on die 0 belongs to PCI RP on bus 0x00, domain 0x0000
-+                IIO PMU 0 on die 1 belongs to PCI RP on bus 0x40, domain 0x0000
-+                IIO PMU 0 on die 2 belongs to PCI RP on bus 0x80, domain 0x0000
-+                IIO PMU 0 on die 3 belongs to PCI RP on bus 0xc0, domain 0x0000
-\ No newline at end of file
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index ad20220af303..f805fbdbbe81 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -273,6 +273,30 @@
- #define SKX_CPUNODEID			0xc0
- #define SKX_GIDNIDMAP			0xd4
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 369e574c5092..3a80721fe53d 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -4295,7 +4295,8 @@ find_file_locked(struct knfsd_fh *fh, unsigned int hashval)
+ {
+ 	struct nfs4_file *fp;
  
-+/*
-+ * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
-+ * that BIOS programmed. MSR has package scope.
-+ * |  Bit  |  Default  |  Description
-+ * | [63]  |    00h    | VALID - When set, indicates the CPU bus
-+ *                       numbers have been initialized. (RO)
-+ * |[62:48]|    ---    | Reserved
-+ * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(5). (RO)
-+ * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(4). (RO)
-+ * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(3). (RO)
-+ * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(2). (RO)
-+ * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(1). (RO)
-+ * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(0). (RO)
-+ */
-+#define SKX_MSR_CPU_BUS_NUMBER		0x300
-+#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
-+#define BUS_NUM_STRIDE			8
-+
- /* SKX CHA */
- #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
- #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
-@@ -3575,6 +3599,169 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
- 	.read_counter		= uncore_msr_read_counter,
- };
- 
-+static inline u8 skx_iio_stack(struct intel_uncore_pmu *pmu, int die)
-+{
-+	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
-+}
-+
-+static umode_t
-+skx_iio_mapping_visible(struct kobject *kobj, struct attribute *attr, int die)
-+{
-+	struct intel_uncore_pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
-+
-+	//Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
-+	return (!skx_iio_stack(pmu, die) && pmu->pmu_idx) ? 0 : attr->mode;
-+}
-+
-+static ssize_t skx_iio_mapping_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct pci_bus *bus = NULL;
-+	struct pmu *pmu = dev_get_drvdata(dev);
-+	struct intel_uncore_pmu *uncore_pmu =
-+		container_of(pmu, struct intel_uncore_pmu, pmu);
-+	int pmu_idx = uncore_pmu->pmu_idx;
-+
-+	struct dev_ext_attribute *ea =
-+		container_of(attr, struct dev_ext_attribute, attr);
-+	long die = (long)ea->var;
-+
-+	do {
-+		bus = pci_find_next_bus(bus);
-+	} while (pmu_idx--);
-+
-+	return sprintf(buf, "%04x:%02x\n", pci_domain_nr(bus),
-+					   skx_iio_stack(uncore_pmu, die));
-+}
-+
-+static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-+{
-+	u64 msr_value;
-+
-+	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
-+			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
-+		return -ENXIO;
-+
-+	*topology = msr_value;
-+
-+	return 0;
-+}
-+
-+static int die_to_cpu(int die)
-+{
-+	int res = 0, cpu, current_die;
-+	/*
-+	 * Using cpus_read_lock() to ensure cpu is not going down between
-+	 * looking at cpu_online_mask.
-+	 */
-+	cpus_read_lock();
-+	for_each_online_cpu(cpu) {
-+		current_die = topology_logical_die_id(cpu);
-+		if (current_die == die) {
-+			res = cpu;
-+			break;
-+		}
-+	}
-+	cpus_read_unlock();
-+	return res;
-+}
-+
-+static int skx_iio_get_topology(struct intel_uncore_type *type)
-+{
-+	int i, ret;
-+	struct pci_bus *bus = NULL;
-+
-+	/*
-+	 * Verified single-segment environments only; disabled for multiple
-+	 * segment topologies for now except VMD domains.
-+	 * VMD domains start at 0x10000 to not clash with ACPI _SEG domains.
-+	 */
-+	while ((bus = pci_find_next_bus(bus))
-+		&& (!pci_domain_nr(bus) || pci_domain_nr(bus) > 0xffff))
-+		;
-+	if (bus)
-+		return -EPERM;
-+
-+	type->topology = kcalloc(uncore_max_dies(), sizeof(u64), GFP_KERNEL);
-+	if (!type->topology)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < uncore_max_dies(); i++) {
-+		ret = skx_msr_cpu_bus_read(die_to_cpu(i), &type->topology[i]);
-+		if (ret) {
-+			kfree(type->topology);
-+			type->topology = NULL;
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct attribute_group skx_iio_mapping_group = {
-+	.is_visible	= skx_iio_mapping_visible,
-+};
-+
-+const static struct attribute_group *skx_iio_attr_update[] = {
-+	&skx_iio_mapping_group,
-+	NULL,
-+};
-+
-+static int skx_iio_set_mapping(struct intel_uncore_type *type)
-+{
-+	char buf[64];
-+	int ret = 0;
-+	long die;
-+	struct attribute **attrs;
-+	struct dev_ext_attribute *eas;
-+
-+	ret = skx_iio_get_topology(type);
-+	if (ret)
-+		return ret;
-+
-+	// One more for NULL.
-+	attrs = kzalloc((uncore_max_dies() + 1) * sizeof(*attrs), GFP_KERNEL);
-+	if (!attrs) {
-+		kfree(type->topology);
-+		return -ENOMEM;
-+	}
-+
-+	eas = kzalloc(sizeof(*eas) * uncore_max_dies(), GFP_KERNEL);
-+	if (!eas) {
-+		kfree(attrs);
-+		kfree(type->topology);
-+		return -ENOMEM;
-+	}
-+	for (die = 0; die < uncore_max_dies(); die++) {
-+		sprintf(buf, "die%ld", die);
-+		sysfs_attr_init(&eas[die].attr.attr);
-+		eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
-+		if (!eas[die].attr.attr.name) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
-+		eas[die].attr.attr.mode = 0444;
-+		eas[die].attr.show = skx_iio_mapping_show;
-+		eas[die].attr.store = NULL;
-+		eas[die].var = (void *)die;
-+		attrs[die] = &eas[die].attr.attr;
-+	}
-+
-+	skx_iio_mapping_group.attrs = attrs;
-+
-+	return 0;
-+
-+err:
-+	for (; die >= 0; die--)
-+		kfree(eas[die].attr.attr.name);
-+	kfree(eas);
-+	kfree(attrs);
-+	kfree(type->topology);
-+	type->attr_update = NULL;
-+
-+	return ret;
-+}
-+
- static struct intel_uncore_type skx_uncore_iio = {
- 	.name			= "iio",
- 	.num_counters		= 4,
-@@ -3589,6 +3776,8 @@ static struct intel_uncore_type skx_uncore_iio = {
- 	.constraints		= skx_uncore_iio_constraints,
- 	.ops			= &skx_uncore_iio_ops,
- 	.format_group		= &skx_uncore_iio_format_group,
-+	.attr_update		= skx_iio_attr_update,
-+	.set_mapping		= skx_iio_set_mapping,
- };
- 
- enum perf_uncore_iio_freerunning_type_id {
+-	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash) {
++	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
++				lockdep_is_held(&state_lock)) {
+ 		if (fh_match(&fp->fi_fhandle, fh)) {
+ 			if (refcount_inc_not_zero(&fp->fi_ref))
+ 				return fp;
 -- 
-2.19.1
+2.17.1
 
