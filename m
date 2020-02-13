@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C7AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E0C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACE824649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567642073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609513;
-	bh=4jDkkkwBeVMa4abfd+H4pX4Cfqb78F2ZQDXUUkdu5d0=;
+	s=default; t=1581609517;
+	bh=ZlegwmCnAZOuLIiv3fdHyQ4anQ6XQtuPlcFIM1GgWJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rbcw4Pf/TWzdQCdCtIpf2lOqabWKnvc+0jcETjDgKG8w8UsP5JuqftHcJMbDWAiGM
-	 jm/Mby2C1rB5tTaW0zAPKtaSxbbtxwV9jauryTlYDyo3cFpOe6gyJa2fX1FM6Cp/MI
-	 svZxBLmf7BXaRf76obbvsD4uouxiTR+uHEDnXIA4=
+	b=WA1KnpYjdtGVxxTAEoEZa2YBGMx+6yDmw9jFw1pLsnrJ7ogXablGyEfu858ucZYch
+	 SXYy4LHgNN2pmWHXPBW6aMr/K4hYdsVvtloqe/ubbVwY6VV5gBaCcRsrRT92oOhl4s
+	 ttw3OiMzhJSdabWP3Chn2N3VhXLvaDTUtBGRgmQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbgBMP6b (ORCPT
+        id S1728926AbgBMPZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:58:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgBMPZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:11 -0500
+        id S1728433AbgBMPXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:38 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED5D3246B1;
-        Thu, 13 Feb 2020 15:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96957246B1;
+        Thu, 13 Feb 2020 15:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607510;
-        bh=4jDkkkwBeVMa4abfd+H4pX4Cfqb78F2ZQDXUUkdu5d0=;
+        s=default; t=1581607417;
+        bh=ZlegwmCnAZOuLIiv3fdHyQ4anQ6XQtuPlcFIM1GgWJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kRfpaJdjxa8FGKB7+g7YvZRPn71UN3n8oZQ2B7kj1lVpLEyLe9+UCRRwoEU8fIP7R
-         /M/zf61syjWgREyRqJonuYz2WnT/y8qFfp5IdGwk3ka+DxGt2D846q9G73J7xyDSou
-         Zlmemg5DkzphB2Lxx2Vvb+XVlELJnWmq26fPq6sE=
+        b=172NZIM3Y52nIXM+h7wMTcvsNxjYuSLHTEDQzzr8JNsR+UjM8criJn//mvVy/ZKGG
+         onqC6GjjDJ+ZjOu6ktSPDtlhcbVK5jS/SCnTgLPS0WkLDfP1UXOp+7HlHKmwdWnK+J
+         v2pHr0KtjKvUJ3f7ydmVy0ZwTyytb8sIF3zOIjQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 052/173] PM: core: Fix handling of devices deleted during system-wide resume
-Date:   Thu, 13 Feb 2020 07:19:15 -0800
-Message-Id: <20200213151947.041309461@linuxfoundation.org>
+        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 025/116] powerpc/pseries: Advance pfn if section is not present in lmb_is_removable()
+Date:   Thu, 13 Feb 2020 07:19:29 -0800
+Message-Id: <20200213151852.632372374@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,123 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Pingfan Liu <kernelfans@gmail.com>
 
-commit 0552e05fdfea191a2cf3a0abd33574b5ef9ca818 upstream.
+commit fbee6ba2dca30d302efe6bddb3a886f5e964a257 upstream.
 
-If a device is deleted by one of its system-wide resume callbacks
-(for example, because it does not appear to be present or accessible
-any more) along with its children, the resume of the children may
-continue leading to use-after-free errors and other issues
-(potentially).
+In lmb_is_removable(), if a section is not present, it should continue
+to test the rest of the sections in the block. But the current code
+fails to do so.
 
-Namely, if the device's children are resumed asynchronously, their
-resume may have been scheduled already before the device's callback
-runs and so the device may be deleted while dpm_wait_for_superior()
-is being executed for them.  The memory taken up by the parent device
-object may be freed then while dpm_wait() is waiting for the parent's
-resume callback to complete, which leads to a use-after-free.
-Moreover, the resume of the children is really not expected to
-continue after they have been unregistered, so it must be terminated
-right away in that case.
-
-To address this problem, modify dpm_wait_for_superior() to check
-if the target device is still there in the system-wide PM list of
-devices and if so, to increment its parent's reference counter, both
-under dpm_list_mtx which prevents device_del() running for the child
-from dropping the parent's reference counter prematurely.
-
-If the device is not present in the system-wide PM list of devices
-any more, the resume of it cannot continue, so check that again after
-dpm_wait() returns, which means that the parent's callback has been
-completed, and pass the result of that check to the caller of
-dpm_wait_for_superior() to allow it to abort the device's resume
-if it is not there any more.
-
-Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
-Reported-by: Chanho Min <chanho.min@lge.com>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 51925fb3c5c9 ("powerpc/pseries: Implement memory hotplug remove in the kernel")
+Cc: stable@vger.kernel.org # v4.1+
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1578632042-12415-1-git-send-email-kernelfans@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+ arch/powerpc/platforms/pseries/hotplug-memory.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -269,10 +269,38 @@ static void dpm_wait_for_suppliers(struc
- 	device_links_read_unlock(idx);
- }
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -398,8 +398,10 @@ static bool lmb_is_removable(struct of_d
  
--static void dpm_wait_for_superior(struct device *dev, bool async)
-+static bool dpm_wait_for_superior(struct device *dev, bool async)
- {
--	dpm_wait(dev->parent, async);
-+	struct device *parent;
-+
-+	/*
-+	 * If the device is resumed asynchronously and the parent's callback
-+	 * deletes both the device and the parent itself, the parent object may
-+	 * be freed while this function is running, so avoid that by reference
-+	 * counting the parent once more unless the device has been deleted
-+	 * already (in which case return right away).
-+	 */
-+	mutex_lock(&dpm_list_mtx);
-+
-+	if (!device_pm_initialized(dev)) {
-+		mutex_unlock(&dpm_list_mtx);
-+		return false;
-+	}
-+
-+	parent = get_device(dev->parent);
-+
-+	mutex_unlock(&dpm_list_mtx);
-+
-+	dpm_wait(parent, async);
-+	put_device(parent);
-+
- 	dpm_wait_for_suppliers(dev, async);
-+
-+	/*
-+	 * If the parent's callback has deleted the device, attempting to resume
-+	 * it would be invalid, so avoid doing that then.
-+	 */
-+	return device_pm_initialized(dev);
- }
+ 	for (i = 0; i < scns_per_block; i++) {
+ 		pfn = PFN_DOWN(phys_addr);
+-		if (!pfn_present(pfn))
++		if (!pfn_present(pfn)) {
++			phys_addr += MIN_MEMORY_BLOCK_SIZE;
+ 			continue;
++		}
  
- static void dpm_wait_for_consumers(struct device *dev, bool async)
-@@ -551,7 +579,8 @@ static int device_resume_noirq(struct de
- 	if (!dev->power.is_noirq_suspended)
- 		goto Out;
- 
--	dpm_wait_for_superior(dev, async);
-+	if (!dpm_wait_for_superior(dev, async))
-+		goto Out;
- 
- 	if (dev->pm_domain) {
- 		info = "noirq power domain ";
-@@ -691,7 +720,8 @@ static int device_resume_early(struct de
- 	if (!dev->power.is_late_suspended)
- 		goto Out;
- 
--	dpm_wait_for_superior(dev, async);
-+	if (!dpm_wait_for_superior(dev, async))
-+		goto Out;
- 
- 	if (dev->pm_domain) {
- 		info = "early power domain ";
-@@ -823,7 +853,9 @@ static int device_resume(struct device *
- 		goto Complete;
- 	}
- 
--	dpm_wait_for_superior(dev, async);
-+	if (!dpm_wait_for_superior(dev, async))
-+		goto Complete;
-+
- 	dpm_watchdog_set(&wd, dev);
- 	device_lock(dev);
- 
+ 		rc &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
+ 		phys_addr += MIN_MEMORY_BLOCK_SIZE;
 
 
