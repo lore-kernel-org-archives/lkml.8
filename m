@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EBFC3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5572CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B6624671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D33B206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607814;
-	bh=5c5HxMqvkuSCxF9rj1sG0dTkvaPN9Q5K7ejTic2O88c=;
+	s=default; t=1581607816;
+	bh=4QkuN9SGNkBxl20cdT7u0C8UIirhtj0E+SQsTBeZEvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdNvGEmwYprZyvBnxQhjWURVC+kfPUVw/UTYDO82okZZfEU80qCGpym37p/fuvVt+
-	 IIpqI70Lv8S/ubbJSIrSyRo6FwS03R21EpLNRQJKv/xlo3rAYsKcKhJbmSE7dE51eo
-	 4gq3axJumLtHEAruZCBhNSP7cKu5wp6bFmzn8obE=
+	b=dghQAmhT7Jw0m1BPxIc3avNfwxC0IQdFHwP0oqVWJEdOcO9ACTXOti7YirmBmj94W
+	 adW4yABnh5zp0RQ8q7dwHywmQ0Mud7P1lMl5dQ7ib2J2hIvuuDRNxD42y6CS+1FTWF
+	 agOuFn02fqbFZTJLQQkSJw7h3nvRbwh+WKuCMrCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbgBMPaN (ORCPT
+        id S2387910AbgBMPaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387671AbgBMP1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:08 -0500
+        id S2387442AbgBMP1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:10 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B49392465D;
-        Thu, 13 Feb 2020 15:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CC792468E;
+        Thu, 13 Feb 2020 15:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607627;
-        bh=5c5HxMqvkuSCxF9rj1sG0dTkvaPN9Q5K7ejTic2O88c=;
+        s=default; t=1581607630;
+        bh=4QkuN9SGNkBxl20cdT7u0C8UIirhtj0E+SQsTBeZEvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNtQ7qxhHY9lFqCknKr4dyRzRgMq12vncyMvoNmSGQrHtYcl9jMmSGofLm318RWLX
-         64IsA1bq7OBMuXfV2qN6angmtHIk+hBsV4OjBkWzkx7YEGcrJexAXXNi+GeWlHqxFr
-         hyRLUXEV1ilG9vqSd2OHaqfCwFCs4yDBBw6l9Tls=
+        b=je5rftfqqxRKSD1Mvo/4yzzxY0fy4IYFlKKpTsTjcZMjLyM0B6z3d3kJDz2WMmWyg
+         nD1EgsjY8FkC+hNklD0deiOFCWG5rEQBtGRQtUS2nYP59Esgm0JiUFe5VNCc9Qk0Uz
+         XGOzkFWCe9H/eL9HYj5QonmWQYbBaUZ75CnAOzlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.4 18/96] PCI: Dont disable bridge BARs when assigning bus resources
-Date:   Thu, 13 Feb 2020 07:20:25 -0800
-Message-Id: <20200213151846.486334533@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.4 30/96] NFS: Fix fix of show_nfs_errors
+Date:   Thu, 13 Feb 2020 07:20:37 -0800
+Message-Id: <20200213151850.618020764@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,111 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
+commit 118b6292195cfb86a9f43cb65610fc6d980c65f4 upstream.
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+Casting a negative value to an unsigned long is not the same as
+converting it to its absolute value.
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
-
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
-
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
-
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
-
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 96650e2effa2 ("NFS: Fix show_nfs_errors macros again")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/setup-bus.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ fs/nfs/nfs4trace.h |   31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1785,12 +1785,18 @@ again:
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+--- a/fs/nfs/nfs4trace.h
++++ b/fs/nfs/nfs4trace.h
+@@ -352,7 +352,7 @@ DECLARE_EVENT_CLASS(nfs4_clientid_event,
+ 		),
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
+ 		TP_fast_assign(
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__assign_str(dstaddr, clp->cl_hostname);
+ 		),
  
-@@ -2037,12 +2043,18 @@ again:
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+@@ -432,7 +432,8 @@ TRACE_EVENT(nfs4_sequence_done,
+ 			__entry->target_highest_slotid =
+ 					res->sr_target_highest_slotid;
+ 			__entry->status_flags = res->sr_status_flags;
+-			__entry->error = res->sr_status;
++			__entry->error = res->sr_status < 0 ?
++					-res->sr_status : 0;
+ 		),
+ 		TP_printk(
+ 			"error=%ld (%s) session=0x%08x slot_nr=%u seq_nr=%u "
+@@ -566,7 +567,7 @@ TRACE_EVENT(nfs4_xdr_status,
+ 		TP_PROTO(
+ 			const struct xdr_stream *xdr,
+ 			u32 op,
+-			int error
++			u32 error
+ 		),
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
+ 		TP_ARGS(xdr, op, error),
+@@ -756,7 +757,7 @@ TRACE_EVENT(nfs4_close,
+ 			__entry->fileid = NFS_FILEID(inode);
+ 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
+ 			__entry->fmode = (__force unsigned int)state->state;
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(args->stateid.seqid);
+ 			__entry->stateid_hash =
+@@ -821,7 +822,7 @@ DECLARE_EVENT_CLASS(nfs4_lock_event,
+ 		TP_fast_assign(
+ 			const struct inode *inode = state->inode;
  
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->cmd = cmd;
+ 			__entry->type = request->fl_type;
+ 			__entry->start = request->fl_start;
+@@ -893,7 +894,7 @@ TRACE_EVENT(nfs4_set_lock,
+ 		TP_fast_assign(
+ 			const struct inode *inode = state->inode;
+ 
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->cmd = cmd;
+ 			__entry->type = request->fl_type;
+ 			__entry->start = request->fl_start;
+@@ -989,7 +990,7 @@ TRACE_EVENT(nfs4_delegreturn_exit,
+ 		TP_fast_assign(
+ 			__entry->dev = res->server->s_dev;
+ 			__entry->fhandle = nfs_fhandle_hash(args->fhandle);
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(args->stateid->seqid);
+ 			__entry->stateid_hash =
+@@ -1029,7 +1030,7 @@ DECLARE_EVENT_CLASS(nfs4_test_stateid_ev
+ 		TP_fast_assign(
+ 			const struct inode *inode = state->inode;
+ 
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->fileid = NFS_FILEID(inode);
+ 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
+@@ -1131,7 +1132,7 @@ TRACE_EVENT(nfs4_lookupp,
+ 		TP_fast_assign(
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->ino = NFS_FILEID(inode);
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 		),
+ 
+ 		TP_printk(
+@@ -1167,7 +1168,7 @@ TRACE_EVENT(nfs4_rename,
+ 			__entry->dev = olddir->i_sb->s_dev;
+ 			__entry->olddir = NFS_FILEID(olddir);
+ 			__entry->newdir = NFS_FILEID(newdir);
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__assign_str(oldname, oldname->name);
+ 			__assign_str(newname, newname->name);
+ 		),
+@@ -1258,7 +1259,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_stateid_e
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->fileid = NFS_FILEID(inode);
+ 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(stateid->seqid);
+ 			__entry->stateid_hash =
+@@ -1314,7 +1315,7 @@ DECLARE_EVENT_CLASS(nfs4_getattr_event,
+ 			__entry->valid = fattr->valid;
+ 			__entry->fhandle = nfs_fhandle_hash(fhandle);
+ 			__entry->fileid = (fattr->valid & NFS_ATTR_FATTR_FILEID) ? fattr->fileid : 0;
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 		),
+ 
+ 		TP_printk(
+@@ -1361,7 +1362,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_callback_
+ 		),
+ 
+ 		TP_fast_assign(
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->fhandle = nfs_fhandle_hash(fhandle);
+ 			if (!IS_ERR_OR_NULL(inode)) {
+ 				__entry->fileid = NFS_FILEID(inode);
+@@ -1418,7 +1419,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_stateid_c
+ 		),
+ 
+ 		TP_fast_assign(
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->fhandle = nfs_fhandle_hash(fhandle);
+ 			if (!IS_ERR_OR_NULL(inode)) {
+ 				__entry->fileid = NFS_FILEID(inode);
+@@ -1721,7 +1722,7 @@ TRACE_EVENT(nfs4_layoutget,
+ 			__entry->iomode = args->iomode;
+ 			__entry->offset = args->offset;
+ 			__entry->count = args->length;
+-			__entry->error = error;
++			__entry->error = error < 0 ? -error : 0;
+ 			__entry->stateid_seq =
+ 				be32_to_cpu(state->stateid.seqid);
+ 			__entry->stateid_hash =
 
 
