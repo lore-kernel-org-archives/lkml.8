@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0E3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D527C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACD120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD3320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608791;
-	bh=WwMWopCX5Uq8MXSKhvMYkBKWyMFv8TndcuJiHSuffrU=;
+	s=default; t=1581608798;
+	bh=jQfY7XU1tHvH0sV+8wi4VdPGQNr5e3cMW4fXX/ijlL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+x0u34hOL61RRgsw6V8pqmESRwiXOI47Bv6mbUO6bCn70j1QLV7D6e2xqLti+++5
-	 MqJHLCE6iOF8fqkoJKJhMdQlx6zRSjLNQdRQ9MYPxWhXD7uC0xDT3Sd7nm4WNLYJul
-	 cBCAc7mrDGNKUWAR+nE//HToQgcleUh6yB6mErWg=
+	b=sQYfc24WiZ5nSjJ8rqdtOywMpeT0+sC6xCpjDMu4OdCw8nps9T81MQ9PZGHubL1EL
+	 DDbj5P6+1zLQzcsuDr64lVruH0Fy0oSMofbLIApc4eUePzrhRgAe4/ZW5VSJZleuQg
+	 Fv8yBeunH7+3gvRvFgGGvW6TZjG9dOIEEB/fghpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbgBMPqa (ORCPT
+        id S2387797AbgBMPqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:46:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49606 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:46:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729338AbgBMP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:16 -0500
+        id S1729331AbgBMP1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:14 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D5072465D;
-        Thu, 13 Feb 2020 15:27:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A82D24676;
+        Thu, 13 Feb 2020 15:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607635;
-        bh=WwMWopCX5Uq8MXSKhvMYkBKWyMFv8TndcuJiHSuffrU=;
+        s=default; t=1581607634;
+        bh=jQfY7XU1tHvH0sV+8wi4VdPGQNr5e3cMW4fXX/ijlL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nRTgVa2BWkxCjNj5AyJbX26my00Fn/3ZV4yWmOJICHp1/BEIjVhtVMX9aVn0QXprq
-         rgIPIJTml5raVksR0/IMRBh0ch6z/vsBGNnej2UshOtC1OVxSJVt1kNoXc6AvzHyx2
-         bGwSq84FHRLquaOYIlLLVbvtbFFPUwXb1IeXMbKM=
+        b=jPp1XSQlgqE5PxmPB6GXKFyZpMEihQfUKt4mk4GhGrfra607dFHrU2DWVs4rsSlCj
+         KKDbHxFZw3JSj7K6soGg1Ye4CC9lv4+c1WOH9PKsG4r60xwOAFxSQOdsvaSKbLGyU3
+         +v1EJXuLerK4Y3KYTrQ177niDdTHDM0n3QoYpeeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Quentin Monnet <quentin@isovalent.com>
-Subject: [PATCH 5.4 21/96] bpftool: Dont crash on missing xlated program instructions
-Date:   Thu, 13 Feb 2020 07:20:28 -0800
-Message-Id: <20200213151847.358336722@linuxfoundation.org>
+        stable@vger.kernel.org, Dongdong Liu <liudongdong3@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.4 19/96] PCI/AER: Initialize aer_fifo
+Date:   Thu, 13 Feb 2020 07:20:26 -0800
+Message-Id: <20200213151846.722858494@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -61,37 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Dongdong Liu <liudongdong3@huawei.com>
 
-commit d95f1e8b462c4372ac409886070bb8719d8a4d3a upstream.
+commit d95f20c4f07020ebc605f3b46af4b6db9eb5fc99 upstream.
 
-Turns out the xlated program instructions can also be missing if
-kptr_restrict sysctl is set. This means that the previous fix to check the
-jited_prog_insns pointer was insufficient; add another check of the
-xlated_prog_insns pointer as well.
+Previously we did not call INIT_KFIFO() for aer_fifo.  This leads to
+kfifo_put() sometimes returning 0 (queue full) when in fact it is not.
 
-Fixes: 5b79bcdf0362 ("bpftool: Don't crash on missing jited insns or ksyms")
-Fixes: cae73f233923 ("bpftool: use bpf_program__get_prog_info_linear() in prog.c:do_dump()")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Quentin Monnet <quentin@isovalent.com>
-Link: https://lore.kernel.org/bpf/20200206102906.112551-1-toke@redhat.com
+It is easy to reproduce the problem by using aer-inject:
+
+  $ aer-inject -s :82:00.0 multiple-corr-nonfatal
+
+The content of the multiple-corr-nonfatal file is as below:
+
+  AER
+  COR RCVR
+  HL 0 1 2 3
+  AER
+  UNCOR POISON_TLP
+  HL 4 5 6 7
+
+Fixes: 27c1ce8bbed7 ("PCI/AER: Use kfifo for tracking events instead of reimplementing it")
+Link: https://lore.kernel.org/r/1579767991-103898-1-git-send-email-liudongdong3@huawei.com
+Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/bpf/bpftool/prog.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/aer.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -500,7 +500,7 @@ static int do_dump(int argc, char **argv
- 		buf = (unsigned char *)(info->jited_prog_insns);
- 		member_len = info->jited_prog_len;
- 	} else {	/* DUMP_XLATED */
--		if (info->xlated_prog_len == 0) {
-+		if (info->xlated_prog_len == 0 || !info->xlated_prog_insns) {
- 			p_err("error retrieving insn dump: kernel.kptr_restrict set?");
- 			goto err_free;
- 		}
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1387,6 +1387,7 @@ static int aer_probe(struct pcie_device
+ 		return -ENOMEM;
+ 
+ 	rpc->rpd = port;
++	INIT_KFIFO(rpc->aer_fifo);
+ 	set_service_data(dev, rpc);
+ 
+ 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
 
 
