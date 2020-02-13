@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87194C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB4C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571892073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2238B2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609824;
-	bh=6x5qbOEETPkZJggjqxr11f+PDTVt078MYMk8TKzoEa4=;
+	s=default; t=1581609834;
+	bh=O6ewSjpdqXaXHXN1T6gYNrn5uIY08E3PEni/mjKuYKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UoJ8MhDNvj95Fy0I4dUws9lzAcI60sTgsA01m9sLraPIsEZoKBc1OYV/TgIyAHgBf
-	 I4iPiZzhO9mEyeJqr3Z+A7RyHAfXIqdgvXrslezi57RylakvS7wo8ZzKndNc4GzJQ6
-	 Hs5v2v6M3UtMx9gcdnH+Bato9vA4186WUyfUtGJs=
+	b=2eYDou0h5CqoiGtZ3sPw8LUnbEw2i9ltiL+jZpnXdecT2qmyvyGsOyHJVWofDh2kL
+	 +xV647io0GA3yULb0J1dDlgDEHoONvJoLysezs1VeJVLxH9M0McFDorRPUXoi4RaFO
+	 DsKJR/oBIbKdWuJAzhmHZRKTZ0NiQFd4HWwwwC0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgBMQDn (ORCPT
+        id S2388366AbgBMQDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:03:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:03:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728641AbgBMPYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:15 -0500
+        id S1728627AbgBMPYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:13 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0535C24690;
-        Thu, 13 Feb 2020 15:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6952024691;
+        Thu, 13 Feb 2020 15:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607455;
-        bh=6x5qbOEETPkZJggjqxr11f+PDTVt078MYMk8TKzoEa4=;
+        s=default; t=1581607452;
+        bh=O6ewSjpdqXaXHXN1T6gYNrn5uIY08E3PEni/mjKuYKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eOcLoBtngQpEI1bKaAAE8T4WvqcX9NVA1/PZy9VBIRxnSeVau5g/wTO2XMiTB8guQ
-         jeNE09CB/ooEkfYme7qhRyzzmyDaXuiphpCyx+PkQbvUtkFHCPzoWdy5t62OTHG+h6
-         lhe1hRQLuH8ET8zlf3mt7ZCFwdUUuck0kOmj/Q/g=
+        b=pQKGmneAVXGkxaGaNczN/YOnfV6qxJIx2QQPSDQQgAYQKGyF3NDxQMKW50ksXEXq4
+         9N1Oi2xV1yChmzn/g7coet6MkRtrothRBo7CS5Pp4CXf8BJSQL4lHpOQUyin1Mtau2
+         2Pdl+h1fdCjBVo4WPfhoi4Pk6l9D+azO2d988Weg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 084/116] btrfs: remove trivial locking wrappers of tree mod log
-Date:   Thu, 13 Feb 2020 07:20:28 -0800
-Message-Id: <20200213151915.438639490@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 080/116] ext4: fix deadlock allocating crypto bounce page from mempool
+Date:   Thu, 13 Feb 2020 07:20:24 -0800
+Message-Id: <20200213151913.930182058@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -60,215 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit b1a09f1ec540408abf3a50d15dff5d9506932693 ]
+[ Upstream commit 547c556f4db7c09447ecf5f833ab6aaae0c5ab58 ]
 
-The wrappers are trivial and do not bring any extra value on top of the
-plain locking primitives.
+ext4_writepages() on an encrypted file has to encrypt the data, but it
+can't modify the pagecache pages in-place, so it encrypts the data into
+bounce pages and writes those instead.  All bounce pages are allocated
+from a mempool using GFP_NOFS.
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+This is not correct use of a mempool, and it can deadlock.  This is
+because GFP_NOFS includes __GFP_DIRECT_RECLAIM, which enables the "never
+fail" mode for mempool_alloc() where a failed allocation will fall back
+to waiting for one of the preallocated elements in the pool.
+
+But since this mode is used for all a bio's pages and not just the
+first, it can deadlock waiting for pages already in the bio to be freed.
+
+This deadlock can be reproduced by patching mempool_alloc() to pretend
+that pool->alloc() always fails (so that it always falls back to the
+preallocations), and then creating an encrypted file of size > 128 KiB.
+
+Fix it by only using GFP_NOFS for the first page in the bio.  For
+subsequent pages just use GFP_NOWAIT, and if any of those fail, just
+submit the bio and start a new one.
+
+This will need to be fixed in f2fs too, but that's less straightforward.
+
+Fixes: c9af28fdd449 ("ext4 crypto: don't let data integrity writebacks fail with ENOMEM")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20191231181149.47619-1-ebiggers@kernel.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.c | 58 ++++++++++++++++--------------------------------
- 1 file changed, 19 insertions(+), 39 deletions(-)
+ fs/ext4/page-io.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
-index 305deb6e59c36..5e552947666c9 100644
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -331,26 +331,6 @@ struct tree_mod_elem {
- 	struct tree_mod_root old_root;
- };
+diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
+index 0094923e5ebf5..94f60f9d57fd1 100644
+--- a/fs/ext4/page-io.c
++++ b/fs/ext4/page-io.c
+@@ -469,16 +469,25 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
+ 	    nr_to_submit) {
+ 		gfp_t gfp_flags = GFP_NOFS;
  
--static inline void tree_mod_log_read_lock(struct btrfs_fs_info *fs_info)
--{
--	read_lock(&fs_info->tree_mod_log_lock);
--}
--
--static inline void tree_mod_log_read_unlock(struct btrfs_fs_info *fs_info)
--{
--	read_unlock(&fs_info->tree_mod_log_lock);
--}
--
--static inline void tree_mod_log_write_lock(struct btrfs_fs_info *fs_info)
--{
--	write_lock(&fs_info->tree_mod_log_lock);
--}
--
--static inline void tree_mod_log_write_unlock(struct btrfs_fs_info *fs_info)
--{
--	write_unlock(&fs_info->tree_mod_log_lock);
--}
--
- /*
-  * Pull a new tree mod seq number for our operation.
-  */
-@@ -370,14 +350,14 @@ static inline u64 btrfs_inc_tree_mod_seq(struct btrfs_fs_info *fs_info)
- u64 btrfs_get_tree_mod_seq(struct btrfs_fs_info *fs_info,
- 			   struct seq_list *elem)
- {
--	tree_mod_log_write_lock(fs_info);
-+	write_lock(&fs_info->tree_mod_log_lock);
- 	spin_lock(&fs_info->tree_mod_seq_lock);
- 	if (!elem->seq) {
- 		elem->seq = btrfs_inc_tree_mod_seq(fs_info);
- 		list_add_tail(&elem->list, &fs_info->tree_mod_seq_list);
- 	}
- 	spin_unlock(&fs_info->tree_mod_seq_lock);
--	tree_mod_log_write_unlock(fs_info);
-+	write_unlock(&fs_info->tree_mod_log_lock);
- 
- 	return elem->seq;
- }
-@@ -419,7 +399,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
- 	 * anything that's lower than the lowest existing (read: blocked)
- 	 * sequence number can be removed from the tree.
- 	 */
--	tree_mod_log_write_lock(fs_info);
-+	write_lock(&fs_info->tree_mod_log_lock);
- 	tm_root = &fs_info->tree_mod_log;
- 	for (node = rb_first(tm_root); node; node = next) {
- 		next = rb_next(node);
-@@ -429,7 +409,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
- 		rb_erase(node, tm_root);
- 		kfree(tm);
- 	}
--	tree_mod_log_write_unlock(fs_info);
-+	write_unlock(&fs_info->tree_mod_log_lock);
- }
- 
- /*
-@@ -440,7 +420,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
-  * for root replace operations, or the logical address of the affected
-  * block for all other operations.
-  *
-- * Note: must be called with write lock (tree_mod_log_write_lock).
-+ * Note: must be called with write lock for fs_info::tree_mod_log_lock.
-  */
- static noinline int
- __tree_mod_log_insert(struct btrfs_fs_info *fs_info, struct tree_mod_elem *tm)
-@@ -480,7 +460,7 @@ __tree_mod_log_insert(struct btrfs_fs_info *fs_info, struct tree_mod_elem *tm)
-  * Determines if logging can be omitted. Returns 1 if it can. Otherwise, it
-  * returns zero with the tree_mod_log_lock acquired. The caller must hold
-  * this until all tree mod log insertions are recorded in the rb tree and then
-- * call tree_mod_log_write_unlock() to release.
-+ * write unlock fs_info::tree_mod_log_lock.
-  */
- static inline int tree_mod_dont_log(struct btrfs_fs_info *fs_info,
- 				    struct extent_buffer *eb) {
-@@ -490,9 +470,9 @@ static inline int tree_mod_dont_log(struct btrfs_fs_info *fs_info,
- 	if (eb && btrfs_header_level(eb) == 0)
- 		return 1;
- 
--	tree_mod_log_write_lock(fs_info);
-+	write_lock(&fs_info->tree_mod_log_lock);
- 	if (list_empty(&(fs_info)->tree_mod_seq_list)) {
--		tree_mod_log_write_unlock(fs_info);
-+		write_unlock(&fs_info->tree_mod_log_lock);
- 		return 1;
- 	}
- 
-@@ -556,7 +536,7 @@ tree_mod_log_insert_key(struct btrfs_fs_info *fs_info,
- 	}
- 
- 	ret = __tree_mod_log_insert(fs_info, tm);
--	tree_mod_log_write_unlock(fs_info);
-+	write_unlock(&eb->fs_info->tree_mod_log_lock);
- 	if (ret)
- 		kfree(tm);
- 
-@@ -620,7 +600,7 @@ tree_mod_log_insert_move(struct btrfs_fs_info *fs_info,
- 	ret = __tree_mod_log_insert(fs_info, tm);
- 	if (ret)
- 		goto free_tms;
--	tree_mod_log_write_unlock(fs_info);
-+	write_unlock(&eb->fs_info->tree_mod_log_lock);
- 	kfree(tm_list);
- 
- 	return 0;
-@@ -631,7 +611,7 @@ tree_mod_log_insert_move(struct btrfs_fs_info *fs_info,
- 		kfree(tm_list[i]);
- 	}
- 	if (locked)
--		tree_mod_log_write_unlock(fs_info);
-+		write_unlock(&eb->fs_info->tree_mod_log_lock);
- 	kfree(tm_list);
- 	kfree(tm);
- 
-@@ -712,7 +692,7 @@ tree_mod_log_insert_root(struct btrfs_fs_info *fs_info,
- 	if (!ret)
- 		ret = __tree_mod_log_insert(fs_info, tm);
- 
--	tree_mod_log_write_unlock(fs_info);
-+	write_unlock(&fs_info->tree_mod_log_lock);
- 	if (ret)
- 		goto free_tms;
- 	kfree(tm_list);
-@@ -739,7 +719,7 @@ __tree_mod_log_search(struct btrfs_fs_info *fs_info, u64 start, u64 min_seq,
- 	struct tree_mod_elem *cur = NULL;
- 	struct tree_mod_elem *found = NULL;
- 
--	tree_mod_log_read_lock(fs_info);
-+	read_lock(&fs_info->tree_mod_log_lock);
- 	tm_root = &fs_info->tree_mod_log;
- 	node = tm_root->rb_node;
- 	while (node) {
-@@ -767,7 +747,7 @@ __tree_mod_log_search(struct btrfs_fs_info *fs_info, u64 start, u64 min_seq,
- 			break;
- 		}
- 	}
--	tree_mod_log_read_unlock(fs_info);
-+	read_unlock(&fs_info->tree_mod_log_lock);
- 
- 	return found;
- }
-@@ -848,7 +828,7 @@ tree_mod_log_eb_copy(struct btrfs_fs_info *fs_info, struct extent_buffer *dst,
- 			goto free_tms;
- 	}
- 
--	tree_mod_log_write_unlock(fs_info);
-+	write_unlock(&fs_info->tree_mod_log_lock);
- 	kfree(tm_list);
- 
- 	return 0;
-@@ -860,7 +840,7 @@ tree_mod_log_eb_copy(struct btrfs_fs_info *fs_info, struct extent_buffer *dst,
- 		kfree(tm_list[i]);
- 	}
- 	if (locked)
--		tree_mod_log_write_unlock(fs_info);
-+		write_unlock(&fs_info->tree_mod_log_lock);
- 	kfree(tm_list);
- 
- 	return ret;
-@@ -920,7 +900,7 @@ tree_mod_log_free_eb(struct btrfs_fs_info *fs_info, struct extent_buffer *eb)
- 		goto free_tms;
- 
- 	ret = __tree_mod_log_free_eb(fs_info, tm_list, nritems);
--	tree_mod_log_write_unlock(fs_info);
-+	write_unlock(&eb->fs_info->tree_mod_log_lock);
- 	if (ret)
- 		goto free_tms;
- 	kfree(tm_list);
-@@ -1271,7 +1251,7 @@ __tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct extent_buffer *eb,
- 	unsigned long p_size = sizeof(struct btrfs_key_ptr);
- 
- 	n = btrfs_header_nritems(eb);
--	tree_mod_log_read_lock(fs_info);
-+	read_lock(&fs_info->tree_mod_log_lock);
- 	while (tm && tm->seq >= time_seq) {
- 		/*
- 		 * all the operations are recorded with the operator used for
-@@ -1326,7 +1306,7 @@ __tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct extent_buffer *eb,
- 		if (tm->logical != first_tm->logical)
- 			break;
- 	}
--	tree_mod_log_read_unlock(fs_info);
-+	read_unlock(&fs_info->tree_mod_log_lock);
- 	btrfs_set_header_nritems(eb, n);
- }
- 
++		/*
++		 * Since bounce page allocation uses a mempool, we can only use
++		 * a waiting mask (i.e. request guaranteed allocation) on the
++		 * first page of the bio.  Otherwise it can deadlock.
++		 */
++		if (io->io_bio)
++			gfp_flags = GFP_NOWAIT | __GFP_NOWARN;
+ 	retry_encrypt:
+ 		data_page = fscrypt_encrypt_page(inode, page, gfp_flags);
+ 		if (IS_ERR(data_page)) {
+ 			ret = PTR_ERR(data_page);
+-			if (ret == -ENOMEM && wbc->sync_mode == WB_SYNC_ALL) {
+-				if (io->io_bio) {
++			if (ret == -ENOMEM &&
++			    (io->io_bio || wbc->sync_mode == WB_SYNC_ALL)) {
++				gfp_flags = GFP_NOFS;
++				if (io->io_bio)
+ 					ext4_io_submit(io);
+-					congestion_wait(BLK_RW_ASYNC, HZ/50);
+-				}
+-				gfp_flags |= __GFP_NOFAIL;
++				else
++					gfp_flags |= __GFP_NOFAIL;
++				congestion_wait(BLK_RW_ASYNC, HZ/50);
+ 				goto retry_encrypt;
+ 			}
+ 			data_page = NULL;
 -- 
 2.20.1
 
