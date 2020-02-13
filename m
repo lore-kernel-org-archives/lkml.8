@@ -2,87 +2,92 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB87C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CF5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A55217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJ5KUCHp"
+	by mail.kernel.org (Postfix) with ESMTP id 2D9F42073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581608225;
+	bh=WQYTaSRBExE6PaosO5v/KWzCmYCtSkS2DD6iHQlv0Ng=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xEBPHg8RM2IDnN69j3kvxYrMHWz+JVewacpItNB8ZgO4hSFLvj6BbieGtr4qMGQA9
+	 J7svB4l8E1oI1tcJTLMO0cMhRmSKUUY3vIQpmXLcZ2bo6JVkQlGFy//+iKGAtD7UGj
+	 GnA631h5zsHoIp8fjs9PDs96x2p4JY4CyvgxUWwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387591AbgBMPhA (ORCPT
+        id S1728171AbgBMPaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:37:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45432 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728534AbgBMPg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:36:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581608215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IwQHI79iQNnLF0R813K4ZfyJ/4oVZzBfHd4LqqijBNs=;
-        b=QJ5KUCHpoHxzmHxMnCNPYpFg6CmWfK8bDzEQWHDGEjfFj6zn4iNSfRaHQrsaK3O5ia9ivp
-        GuMvw39wG0VqVrX6tEKwoiGsKOiinX8bLmMDMWwYWdhZWsPFT0u9Ev0ZVfUBUsFPRrwipq
-        vfXAsJCFyliiu/v6OsXEusODedkdhUY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-421-2EOjsAokOgC2pnOKYZU8tQ-1; Thu, 13 Feb 2020 10:36:51 -0500
-X-MC-Unique: 2EOjsAokOgC2pnOKYZU8tQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 13 Feb 2020 10:30:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387644AbgBMP1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:01 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3280100550E;
-        Thu, 13 Feb 2020 15:36:49 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A17CD5DA85;
-        Thu, 13 Feb 2020 15:36:46 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 10:36:45 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Cc:     Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
-        Song Liu <song@kernel.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: Remove WQ_CPU_INTENSIVE flag from unbound wq's
-Message-ID: <20200213153645.GA11313@redhat.com>
-References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FA6B20661;
+        Thu, 13 Feb 2020 15:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607621;
+        bh=WQYTaSRBExE6PaosO5v/KWzCmYCtSkS2DD6iHQlv0Ng=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UXGYUYfHbxxfgLTIQZTrB3rukkUvKZxUqkLkcrdV0K7kUeMlGvIwC33E49zRpa6Bt
+         IipoXbtYtpZE4ZbnuQe9+P/BPe3iA2PDEm22v/17rIoenAtYpgj7nPLjERF+AD67Vx
+         NI0cW6TCe6nq1K/DNgQnpO33jw+J1G9OX5qZ4p8E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Doug Meyer <dmeyer@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.4 16/96] PCI/switchtec: Fix vep_vector_number ioread width
+Date:   Thu, 13 Feb 2020 07:20:23 -0800
+Message-Id: <20200213151845.766368950@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13 2020 at  9:18am -0500,
-Maksym Planeta <mplaneta@os.inf.tu-dresden.de> wrote:
+From: Logan Gunthorpe <logang@deltatee.com>
 
-> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
-> unbound wq. I remove this flag from places where unbound queue is
-> allocated. This is supposed to improve code readability.
-> 
-> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
-> 
-> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+commit 9375646b4cf03aee81bc6c305aa18cc80b682796 upstream.
 
-What the Documentation says aside, have you cross referenced with the
-code?  And/or have you done benchmarks to verify no changes?
+vep_vector_number is actually a 16 bit register which should be read with
+ioread16() instead of ioread32().
 
-Thanks,
-Mike
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+Link: https://lore.kernel.org/r/20200106190337.2428-3-logang@deltatee.com
+Reported-by: Doug Meyer <dmeyer@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/pci/switch/switchtec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1276,7 +1276,7 @@ static int switchtec_init_isr(struct swi
+ 	if (nvecs < 0)
+ 		return nvecs;
+ 
+-	event_irq = ioread32(&stdev->mmio_part_cfg->vep_vector_number);
++	event_irq = ioread16(&stdev->mmio_part_cfg->vep_vector_number);
+ 	if (event_irq < 0 || event_irq >= nvecs)
+ 		return -EFAULT;
+ 
+
 
