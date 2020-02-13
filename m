@@ -2,99 +2,108 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FCBC3B18F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04052C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D4B20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RAdpu5qF"
+	by mail.kernel.org (Postfix) with ESMTP id C7D2B222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581632214;
+	bh=+e9m+76mrO7jSP59SV1EVgOykezXV6XmGHrQP0YjdCQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZTlL4DebYBs4kT4hIsjHlNOcvmIuYwzsGNWsTpRLeBr7yaA1sAUhyPFVjsv2ZaRZK
+	 j0k+aHenXOOOShKgbVnC1gwnVMLgAEoRUIIn3NbwR1mGgf6Tfa6J0OIzDhDSjkGova
+	 Zvh8Jol4HK/f4q05/j3g6uZ10Lj+mFz7CJxSVdfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgBMWLV (ORCPT
+        id S1727984AbgBMWQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:11:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26035 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727772AbgBMWLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:11:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581631880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=L8CYIylXszw5T12nzwhCt2wOP17igubFfMw076GDMa8=;
-        b=RAdpu5qFwLkwa57yNe4+SaAIid5CBmLJZZgJ3Dvc+KHjmePuynQXlvrBIBzWomyZAuSeSW
-        fuAtrgmMndVqawuIoplIGGjsRabEPhTRPPP22WQTsWKP/9IEW7iFCsNc2v/xXU37y5Myk8
-        Rs8Eqs7FH7LTyn29SL/rIe0ziOxz+08=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-ClN-4b6NMPa4-IJWdfJHLw-1; Thu, 13 Feb 2020 17:11:04 -0500
-X-MC-Unique: ClN-4b6NMPa4-IJWdfJHLw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 13 Feb 2020 17:16:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726780AbgBMWQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:16:53 -0500
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9746D1005514;
-        Thu, 13 Feb 2020 22:11:03 +0000 (UTC)
-Received: from treble (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFB14272A1;
-        Thu, 13 Feb 2020 22:11:02 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 16:11:00 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     tip-bot2 for Josh Poimboeuf <tip-bot2@linutronix.de>
-Cc:     linux-tip-commits@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Julien Thierry <jthierry@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [tip: core/objtool] objtool: Fail the kernel build on fatal
- errors
-Message-ID: <20200213221100.odwg5gan3dwcpk6g@treble>
-References: <f18c3743de0fef673d49dd35760f26bdef7f6fc3.1581359535.git.jpoimboe@redhat.com>
- <158142525822.411.5401976987070210798.tip-bot2@tip-bot2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <158142525822.411.5401976987070210798.tip-bot2@tip-bot2>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A5382073A;
+        Thu, 13 Feb 2020 22:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581632213;
+        bh=+e9m+76mrO7jSP59SV1EVgOykezXV6XmGHrQP0YjdCQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b0aRASeFB4AC2mh8lrZzpEP6rm0YIteFAHN7v9RhWRfSFAhcX31YbtHsSIkCNLNZV
+         hZV8DNxDEgNkIGrJz1rGLlsTs+Aqq1z62dn4D4EdJfccw6U3kadJ/vyLSWBN5Em022
+         2gB177LSA+V2+VGVTIzfos8xGtLiLfyjiGTISFBY=
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     rostedt@goodmis.org
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] tracing: synth_event_trace fixes
+Date:   Thu, 13 Feb 2020 16:16:42 -0600
+Message-Id: <cover.1581630377.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 12:47:38PM -0000, tip-bot2 for Josh Poimboeuf wrote:
-> The following commit has been merged into the core/objtool branch of tip:
-> 
-> Commit-ID:     644592d328370af4b3e027b7b1ae9f81613782d8
-> Gitweb:        https://git.kernel.org/tip/644592d328370af4b3e027b7b1ae9f81613782d8
-> Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-> AuthorDate:    Mon, 10 Feb 2020 12:32:38 -06:00
-> Committer:     Borislav Petkov <bp@suse.de>
-> CommitterDate: Tue, 11 Feb 2020 13:27:03 +01:00
-> 
-> objtool: Fail the kernel build on fatal errors
-> 
-> When objtool encounters a fatal error, it usually means the binary is
-> corrupt or otherwise broken in some way.  Up until now, such errors were
-> just treated as warnings which didn't fail the kernel build.
-> 
-> However, objtool is now stable enough that if a fatal error is
-> discovered, it most likely means something is seriously wrong and it
-> should fail the kernel build.
-> 
-> Note that this doesn't apply to "normal" objtool warnings; only fatal
-> ones.
+Hi Steve,
 
-Clang still has some toolchain issues which need to be sorted out, so
-upgrading the fatal errors is causing their CI to fail.
+Sorry, it took me some time to get a 32-bit x86 system up and running
+here in order to build and test things on i386.  These patches pass
+both selftests and the synth_event_gen_test testing, although the bug
+where (null) prints after every integer field in the trace output is
+still there and is there even before these or yesterday's patches - I
+have a suspicion it's been there for awhile but nobody looked at
+synthetic event trace output on i386.  In any case, I'm going to
+continue looking into that - it's a weird situation where nothing gets
+put in the final %s in the format string on i386 so shows as (null),
+even though it looks like it's there.  Anyway..
 
-So I think we need to drop this one for now.
+Here are 3 bugfix patches, the first of which fixes the bug seen by
+the test robot, and the other two are patches that fix a couple things
+I noticed when doing the first patch.
 
-Boris, are you able to just drop it or should I send a revert?
+The previous patch I sent, changing u64 to long for the test robot bug
+did fix that problem too, but on i386 systems that would reduce every
+field to 32 bits, which isn't what we want either.  The new patch
+doesn't change the code in synth_event_trace() - it still uses u64
+just like synth_event_trace_array() which takes an array of u64.
+Without any further information such as a format string, I don't know
+of a better way to deal with the varargs version, other than require
+it get passed what it expects, u64 params.
+
+The second patch adds the same endianness fix as for
+trace_event_raw_event_synth(), and the last one just adds back a
+missing check fot synth_event_trace() and synth_event_trace_array().
+
+Thanks,
+
+Tom
+
+The following changes since commit 359c92c02bfae1a6f1e8e37c298e518fd256642c:
+
+  Merge tag 'dax-fixes-5.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm (2020-02-11 16:52:08 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/synth-event-gen-fixes2-v1
+
+Tom Zanussi (3):
+  tracing: Make sure synth_event_trace() example always uses u64
+  tracing: Make synth_event trace functions endian-correct
+  tracing: Check that number of vals matches number of synth  event
+    fields
+
+ kernel/trace/synth_event_gen_test.c | 34 +++++++++----------
+ kernel/trace/trace_events_hist.c    | 68 ++++++++++++++++++++++++++++++++++---
+ 2 files changed, 81 insertions(+), 21 deletions(-)
 
 -- 
-Josh
+2.14.1
 
