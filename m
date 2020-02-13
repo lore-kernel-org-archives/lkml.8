@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D625AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08963C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E0D24649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44F0217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609086;
-	bh=1Cokn1pviuR+T44ILUmue+s8elSDJo3wXVwwfeJefyg=;
+	s=default; t=1581609088;
+	bh=FxYiCaXQskh90KrwG3iV7GTqM8cjabD5+J+amsqs1UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=grM/uwjdmuKU8pKaMm/stFOm4Bs7MiHNHzH6Kj9O9ZXkzGw8fBZsEQwu36EjDuVbx
-	 MLgOFxAY6ROr8w4+5WvDly0s1cb/qrVzVU17aFw5BT6M4fjHjKuslgjJDqJ/Bvs4nE
-	 1TRWYzVZVxSHPC1F0isgm3FxpIfQjYrxF7afuoRE=
+	b=youhNHzShvGddtno3bSHvvPFHRgpeUSy8N99iek9cL6sicdk2fLw06/zmdiA4VcqR
+	 JAe66C/40j3NMMV+Uxvo7txF5WCMeuebXIx3v/NMJbCd8cq23YD8QGDfGWWlEB1Z9O
+	 mWSj+bk+et/dUEo/b+azDifUOmheuKMXPnuNWbCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388159AbgBMPvZ (ORCPT
+        id S1729193AbgBMP0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:51:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:26:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387512AbgBMP0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:15 -0500
+        id S1728693AbgBMPY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:26 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53C5F218AC;
-        Thu, 13 Feb 2020 15:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF26824689;
+        Thu, 13 Feb 2020 15:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607575;
-        bh=1Cokn1pviuR+T44ILUmue+s8elSDJo3wXVwwfeJefyg=;
+        s=default; t=1581607466;
+        bh=FxYiCaXQskh90KrwG3iV7GTqM8cjabD5+J+amsqs1UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TfUL9wh+mM9rCYYq0gkzIPvh/CokTstrZLFeS/RO4X3HYgm17T3r0lfc4nITm1xTB
-         BWkVCh+0M4ohyPbP3U/kAoYS+6hd1wzIu/Fn4mh82QjFq5uPhMfDid6ZRV1cL8RYn2
-         FH62X9Fj+VaRMt9g3oXExaTWkqYN1M8T8PKPcnQk=
+        b=POH54u7Vr79CHJl7fGsj9PiBOiU9VnNHlV4XCWj74sCtITXqGfCpT2LEULk8fu01y
+         EH/EIj5crObIh5NL+z5pa5Ksls0jVXRrFXjFQK+t9M0Y3lagttU/SBu0E98P2OPYW1
+         KP66uN+s4T/Azpjw8mqwZvBTcwr7AUsRRrX3q2ZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 4.14 153/173] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-Date:   Thu, 13 Feb 2020 07:20:56 -0800
-Message-Id: <20200213152010.011238652@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.9 101/116] nfs: NFS_SWAP should depend on SWAP
+Date:   Thu, 13 Feb 2020 07:20:45 -0800
+Message-Id: <20200213151921.815202739@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,32 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 7980dff398f86a618f502378fa27cf7e77449afa upstream.
+commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc upstream.
 
-Add a missing property to GMAC node so that multicast filtering works
-correctly.
+If CONFIG_SWAP=n, it does not make much sense to offer the user the
+option to enable support for swapping over NFS, as that will still fail
+at run time:
 
-Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+    # swapon /swap
+    swapon: /swap: swapon failed: Function not implemented
+
+Fix this by adding a dependency on CONFIG_SWAP.
+
+Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -70,6 +70,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = < 32 >;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&apbclk>;
- 			clock-names = "stmmaceth";
- 			max-speed = <100>;
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -89,7 +89,7 @@ config NFS_V4
+ config NFS_SWAP
+ 	bool "Provide swap over NFS support"
+ 	default n
+-	depends on NFS_FS
++	depends on NFS_FS && SWAP
+ 	select SUNRPC_SWAP
+ 	help
+ 	  This option enables swapon to work on files located on NFS mounts.
 
 
