@@ -2,206 +2,83 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F13C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CDBC352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6E920724
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811B520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:11:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5LdkQic"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9v8ruOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgBMDLj (ORCPT
+        id S1729572AbgBMDLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 12 Feb 2020 22:11:39 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40422 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729333AbgBMDLi (ORCPT
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41984 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgBMDLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 22:11:38 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a142so4314349oii.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:11:37 -0800 (PST)
+        Wed, 12 Feb 2020 22:11:39 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j132so4306185oih.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:11:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8yL7iUZLlDcWI/hz8OXwlSrnW+RQAzQUw/NYymBX6Xg=;
-        b=g5LdkQicWog5B/IhutWPsbAlMBNOVtHT+iHIggE1NmzAkvGYMo3XVtvDzMbvcclAQx
-         HOzLo6ocZ40bWeLZwDMdsITnH6K5hq98fNPzsrucQPhIHZ8gHH9nnTkO2GPuXfoTZHOU
-         ATUVfqfevRboK+XDtxQ04FrHy0dhMwY1aV/wsVo2TcOmVKU8phUlMyXavaxtNRSbu1vr
-         orMRFwi/oE9JgXLqtRVPDR669S7sICwgwS3lB95DReN4nbBWYG9A44HWsHWEVOdNsxHG
-         sODipyUDZgthIOc4Deiama0Rn30E0VJtFz6KJ3hm/Qnx75ZQu9X7RQv8FqQUrd4oyzzo
-         XORA==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=7Jxk3ZsRFc3/YFTDblpD+Mq1gRETolyk9jgC+WBc/KA=;
+        b=C9v8ruOYZJ1gnA9z3smSBpPvTK+zMit6K2kMpLoDrciBoWOsSLSbzsG2sxInd0sIoC
+         rkxTL55WnZK3YLIsZDxrxC0278hMpYbX7buLTwsS1Egxv9LjH62M3G9YwFoEktTwHZdr
+         IeIME5r6sYqEf+NphUV+yXviKsRiMprrklojF8vATIBg0rl8IKxSxGaJRR0L5/CcjHY/
+         rmpI0c3ZxPULgobOi9VLS39OPLSIwrQjD9Z4lJn+HANb2OdIk6OtKFPEgBWyrz3cVQiq
+         Wd++CmXua+rWkMx0pEWQaGteFL3R0SqXDYPnj4UN/BiYJ9Hmx919TjqLrzB6FESS7AyN
+         C+sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=8yL7iUZLlDcWI/hz8OXwlSrnW+RQAzQUw/NYymBX6Xg=;
-        b=PHwYOgqBiPCfQN6U+7dSYcaHcN6mMRWE/xnR7i/J8wsNTImgxX3oD7/J5lD3/SY2c5
-         xjTB35Bifg06hmts9PiOd6HeiyKB0utFj/2ebm2QM+Ru6G1P9fjPunWY0DIA2zh2Pmy9
-         HXHMqoQ9i3nOpBsuRF468u6NmHb8DsGuJBO+DQANMDuw+aua4r/Q3CLXqb2KrXPpvRsf
-         O2Rzz8oGrVVbdEd5rioAkuxClQOvI0zsHS3d1M5tClogJAyAAMGXDX22kxQhyPLy0+2j
-         lCrvFGh26e6oxeXLBLjoTGB41ZHRZeo4Cx5wMMgtcmwoR+RhCwQ5SZ0e9Gu5KlCusybc
-         AQ6Q==
-X-Gm-Message-State: APjAAAUjm8/ty9ygf2mFchQcrNZVzUE3UgVWm/pkYPR32W/LBhleOytQ
-        Hcnqajeo7AtK4dsFzh1SsA==
-X-Google-Smtp-Source: APXvYqwlCkCidibdWZXqORr5Z1LDxXrg1K9Z9Te7n583TI937al7BnaO+AEgibCe5jg2r6ePg2hMkQ==
-X-Received: by 2002:aca:6542:: with SMTP id j2mr1569376oiw.69.1581563497381;
-        Wed, 12 Feb 2020 19:11:37 -0800 (PST)
-Received: from serve.minyard.net ([47.184.136.59])
-        by smtp.gmail.com with ESMTPSA id n25sm317517oic.6.2020.02.12.19.11.36
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=7Jxk3ZsRFc3/YFTDblpD+Mq1gRETolyk9jgC+WBc/KA=;
+        b=ODkXcQT7Zrot/SDO2gFF0eIsLJ7T9yWC1SIF3OtbihlTpVskefdrOndCt+mUgVykVT
+         WehkXTVim3gln4ncKWvrbi0QEjlHs4+TnUfQexnAkYEQ09vXfWeMzpC/MyHeiatqCYlt
+         KpBwChTcVKGZMEsOx3g4rAA2MS1kOHKfiy157jNO1vZfyTww1h/uzeT/QOXqUBCflRsq
+         CX5Ydz2XNR94LPLXjxXNovOw/5F/BwIj/B3ATLpOhVJk0aEYPE34bVXVTKrTRSACnOyI
+         9Jz9ergSt3IXAJ9+fbRHtS4JX/WA2DFswj0OTGh22ZzkpT3/8/3KSRLt44HoCv38ek70
+         TrxQ==
+X-Gm-Message-State: APjAAAXmWG6wQ+zUWXt+Uv3LsoTlpXrxGU71sGdlFxEjnNTaRYwzyu+i
+        fE6qw+KPnBwpPFdLPf2jZInyaxc=
+X-Google-Smtp-Source: APXvYqxvRPrg3Efx6AjL/K8iKSSEeflxng8SctmU7z/7pLjgENpcXgOzuN+ct+nuttO04suXBx9Xyg==
+X-Received: by 2002:aca:b2c5:: with SMTP id b188mr1557327oif.163.1581563498253;
+        Wed, 12 Feb 2020 19:11:38 -0800 (PST)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id u66sm311468oie.17.2020.02.12.19.11.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 19:11:36 -0800 (PST)
+        Wed, 12 Feb 2020 19:11:37 -0800 (PST)
 Received: from t560.minyard.net (unknown [IPv6:2001:470:b8f6:1b:e166:6491:dd75:4196])
-        by serve.minyard.net (Postfix) with ESMTPA id 779C9180054;
+        by serve.minyard.net (Postfix) with ESMTPA id 54FB918004F;
         Thu, 13 Feb 2020 03:11:36 +0000 (UTC)
 From:   minyard@acm.org
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
-Subject: [RFC PATCH 1/2] arm64: Pass registers to all single-step handling routines
-Date:   Wed, 12 Feb 2020 21:11:30 -0600
-Message-Id: <20200213031131.13255-2-minyard@acm.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] arm64 kgdb fixes for single stepping
+Date:   Wed, 12 Feb 2020 21:11:29 -0600
+Message-Id: <20200213031131.13255-1-minyard@acm.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200213031131.13255-1-minyard@acm.org>
-References: <20200213031131.13255-1-minyard@acm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+I got a bug report about using kgdb on arm64, and it turns out it was
+fairly broken.  Patch 2 has a description of what was going on.  I am
+using a Marvell 8100 board.
 
-Get ready to set the SS bit in the MDSCR register in the kernel restore
-handler.
+The following patches fix the problem, but probably not in the
+best way.  They are what I hacked out to show the problems.
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
----
- arch/arm64/include/asm/debug-monitors.h | 4 ++--
- arch/arm64/kernel/debug-monitors.c      | 4 ++--
- arch/arm64/kernel/hw_breakpoint.c       | 6 +++---
- arch/arm64/kernel/kgdb.c                | 6 +++---
- arch/arm64/kernel/probes/kprobes.c      | 4 ++--
- 5 files changed, 12 insertions(+), 12 deletions(-)
+I am not quite sure how this will interact with kprobes and hardware
+breakpoints which use the same code, but they would have been broken,
+too, so this is not making them any worse.
 
-diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-index 7619f473155f..73ce974bf754 100644
---- a/arch/arm64/include/asm/debug-monitors.h
-+++ b/arch/arm64/include/asm/debug-monitors.h
-@@ -111,8 +111,8 @@ void user_rewind_single_step(struct task_struct *task);
- void user_fastforward_single_step(struct task_struct *task);
- 
- void kernel_enable_single_step(struct pt_regs *regs);
--void kernel_disable_single_step(void);
--int kernel_active_single_step(void);
-+void kernel_disable_single_step(struct pt_regs *regs);
-+int kernel_active_single_step(struct pt_regs *regs);
- 
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
- int reinstall_suspended_bps(struct pt_regs *regs);
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index 48222a4760c2..2a0dfd8b1265 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -414,7 +414,7 @@ void kernel_enable_single_step(struct pt_regs *regs)
- }
- NOKPROBE_SYMBOL(kernel_enable_single_step);
- 
--void kernel_disable_single_step(void)
-+void kernel_disable_single_step(struct pt_regs *regs)
- {
- 	WARN_ON(!irqs_disabled());
- 	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
-@@ -422,7 +422,7 @@ void kernel_disable_single_step(void)
- }
- NOKPROBE_SYMBOL(kernel_disable_single_step);
- 
--int kernel_active_single_step(void)
-+int kernel_active_single_step(struct pt_regs *regs)
- {
- 	WARN_ON(!irqs_disabled());
- 	return mdscr_read() & DBG_MDSCR_SS;
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 0b727edf4104..785c9a5060a6 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -682,7 +682,7 @@ static int breakpoint_handler(unsigned long unused, unsigned int esr,
- 		if (*kernel_step != ARM_KERNEL_STEP_NONE)
- 			return 0;
- 
--		if (kernel_active_single_step()) {
-+		if (kernel_active_single_step(regs)) {
- 			*kernel_step = ARM_KERNEL_STEP_SUSPEND;
- 		} else {
- 			*kernel_step = ARM_KERNEL_STEP_ACTIVE;
-@@ -825,7 +825,7 @@ static int watchpoint_handler(unsigned long addr, unsigned int esr,
- 		if (*kernel_step != ARM_KERNEL_STEP_NONE)
- 			return 0;
- 
--		if (kernel_active_single_step()) {
-+		if (kernel_active_single_step(regs)) {
- 			*kernel_step = ARM_KERNEL_STEP_SUSPEND;
- 		} else {
- 			*kernel_step = ARM_KERNEL_STEP_ACTIVE;
-@@ -882,7 +882,7 @@ int reinstall_suspended_bps(struct pt_regs *regs)
- 			toggle_bp_registers(AARCH64_DBG_REG_WCR, DBG_ACTIVE_EL0, 1);
- 
- 		if (*kernel_step != ARM_KERNEL_STEP_SUSPEND) {
--			kernel_disable_single_step();
-+			kernel_disable_single_step(regs);
- 			handled_exception = 1;
- 		} else {
- 			handled_exception = 0;
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 43119922341f..220fe8fd6ace 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -200,8 +200,8 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
- 		/*
- 		 * Received continue command, disable single step
- 		 */
--		if (kernel_active_single_step())
--			kernel_disable_single_step();
-+		if (kernel_active_single_step(linux_regs))
-+			kernel_disable_single_step(linux_regs);
- 
- 		err = 0;
- 		break;
-@@ -221,7 +221,7 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
- 		/*
- 		 * Enable single step handling
- 		 */
--		if (!kernel_active_single_step())
-+		if (!kernel_active_single_step(linux_regs))
- 			kernel_enable_single_step(linux_regs);
- 		err = 0;
- 		break;
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index d1c95dcf1d78..3082dfc3cd99 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -308,7 +308,7 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr)
- 		if (!instruction_pointer(regs))
- 			BUG();
- 
--		kernel_disable_single_step();
-+		kernel_disable_single_step(regs);
- 
- 		if (kcb->kprobe_status == KPROBE_REENTER)
- 			restore_previous_kprobe(kcb);
-@@ -415,7 +415,7 @@ kprobe_single_step_handler(struct pt_regs *regs, unsigned int esr)
- 
- 	if (retval == DBG_HOOK_HANDLED) {
- 		kprobes_restore_local_irqflag(kcb, regs);
--		kernel_disable_single_step();
-+		kernel_disable_single_step(regs);
- 
- 		post_kprobe_handler(kcb, regs);
- 	}
--- 
-2.17.1
 
