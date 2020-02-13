@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFF5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EF3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DB420656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB7620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610255;
-	bh=AfbUs+nud2va6Aa5pGROgC4szYilv6TYCfS4lF1pL+A=;
+	s=default; t=1581610264;
+	bh=JCwYCQrF/9+gly2oGXHpmxKKzSCu44hCe2o+ll4uUws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hMz+ibqXimxFo6BJE/8Taxt2tPCHKzHxY2qy0+VRHjC+zKlTiy4FiV0Ym0fwqr56p
-	 viIfC2Hx6airDbX6V7GXaradCUthfsfpLaYAvg+6Gq/kFYm0cYMNQ0D9IFBmUYaEpN
-	 N+85xbZcTZQ3sgnhJ0V+1tjS3N2XuZ0kPeJesz38=
+	b=Q0L9W5a/UCPOXqQImmRKfHQ7m2CaX9a+E3M3EqYI51Nqd4eNxktNAygd7TPZ04ur+
+	 gTvSzvhu95LXDqLxl0n1siaY2XTXL3WU3ZxfwDvInZwMJsUmUNhQWBMEaqPVrBYoJA
+	 974YzfWStOZDw7ZwEhJj7aWsakSRx2opH+hCAhJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgBMQKy (ORCPT
+        id S1728835AbgBMQLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:10:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60090 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:11:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbgBMPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:33 -0500
+        id S1727939AbgBMPW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:29 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDAD1246A3;
-        Thu, 13 Feb 2020 15:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78B7824691;
+        Thu, 13 Feb 2020 15:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607352;
-        bh=AfbUs+nud2va6Aa5pGROgC4szYilv6TYCfS4lF1pL+A=;
+        s=default; t=1581607347;
+        bh=JCwYCQrF/9+gly2oGXHpmxKKzSCu44hCe2o+ll4uUws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jicbUgSIKv3hTcagI5sIfYJLEjo0YbVn7JQGf7RwANOi3CxO+LhpbYUiwxMxQq0ic
-         5PQq0kx/LqaVia4LLDRu/VpsFYg5RBCp4TtR8YCbT+GZqyIwESe6dH5gbRfR0sWtD6
-         RI+17OV9CPGT6P8Eh3ooey+6qcWJyPiMC1Oz/Mf8=
+        b=QKgTIauwMyhxcYbvqAs2xGfmbGHS3x7PbG9JnVe3uMXYHAfBbfDtckOAk/kNgrY/t
+         YU+1vlB4grzK/DkNgt7lk7rzLHXdq4AyphI9HmpzELIYOIG01/WfXeOP25U8kpgNYr
+         I0k1/cltMWiGbYGArwq43npkvu9+fm3WiceOHNiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 33/91] mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
-Date:   Thu, 13 Feb 2020 07:19:50 -0800
-Message-Id: <20200213151834.516337372@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.4 09/91] tcp: clear tp->segs_{in|out} in tcp_disconnect()
+Date:   Thu, 13 Feb 2020 07:19:26 -0800
+Message-Id: <20200213151825.093839366@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -61,35 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 65b1aae0d9d5962faccc06bdb8e91a2a0b09451c upstream.
+[ Upstream commit 784f8344de750a41344f4bbbebb8507a730fc99c ]
 
-We called rcu_read_lock(), so we need to call rcu_read_unlock() before
-we return.
+tp->segs_in and tp->segs_out need to be cleared in tcp_disconnect().
 
-Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
-Cc: stable@vger.kernel.org
-Cc: huangwen <huangwenabc@gmail.com>
-Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+tcp_disconnect() is rarely used, but it is worth fixing it.
+
+Fixes: 2efd055c53c0 ("tcp: add tcpi_segs_in and tcpi_segs_out to tcp_info")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Marcelo Ricardo Leitner <mleitner@redhat.com>
+Cc: Yuchung Cheng <ycheng@google.com>
+Cc: Neal Cardwell <ncardwell@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/mwifiex/sta_ioctl.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/tcp.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/wireless/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/mwifiex/sta_ioctl.c
-@@ -232,6 +232,7 @@ static int mwifiex_process_country_ie(st
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2273,6 +2273,8 @@ int tcp_disconnect(struct sock *sk, int
+ 	dst_release(sk->sk_rx_dst);
+ 	sk->sk_rx_dst = NULL;
+ 	tcp_saved_syn_free(tp);
++	tp->segs_in = 0;
++	tp->segs_out = 0;
+ 	tp->bytes_acked = 0;
+ 	tp->bytes_received = 0;
  
- 	if (country_ie_len >
- 	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
-+		rcu_read_unlock();
- 		mwifiex_dbg(priv->adapter, ERROR,
- 			    "11D: country_ie_len overflow!, deauth AP\n");
- 		return -EINVAL;
 
 
