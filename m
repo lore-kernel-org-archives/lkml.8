@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99DFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2CAC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53CB20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E435020675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607930;
-	bh=1T+Lv6dwQdwoLEOM6RoG5dOCBu5C2Z81q1Ngfj7iuFk=;
+	s=default; t=1581607933;
+	bh=z/WtUz4AKZSnQtO/cXvJ2xEDaFhOkKkM2eHlX7OLMVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7T5au/oO4gASXRScro/jVWlG8A9Y3DWRhqquSuqM2/BUPLBZUYsjYnlgkSnVZ8AQ
-	 PfRk23i6QqawQTkx1s0pyIl30CFJz5DfUZS+EVG4cBMBCG+ikhiNl7zmXx/ChnVsg8
-	 rA0q5sWmU5oWoWFbYlUI0UUiLMO4NtppU+1J7WmI=
+	b=iIyuhSjNez10RYrsqp0Oc6AgGZGmWkba9Dp5ppKbYHE19lql7/MB4sBeMQgB7rjZT
+	 P9SAJ5W/Rbkc5J06IV5Q3cjW12Kqwimr55WGByrS5F5fDYUPOApG2iBXubPNhjJHYl
+	 beInM12iwMLB8dB/1bOsJ/Sk0i1v2hS/N9R31CQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388136AbgBMPcJ (ORCPT
+        id S1729355AbgBMPcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55690 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729224AbgBMP22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:28 -0500
+        id S1729253AbgBMP2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:30 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE77A24670;
-        Thu, 13 Feb 2020 15:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E432168B;
+        Thu, 13 Feb 2020 15:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607707;
-        bh=1T+Lv6dwQdwoLEOM6RoG5dOCBu5C2Z81q1Ngfj7iuFk=;
+        s=default; t=1581607709;
+        bh=z/WtUz4AKZSnQtO/cXvJ2xEDaFhOkKkM2eHlX7OLMVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r720+GrPFtJM1glCYM7Lt2+/U9HdBPaR0N1TDX1chhtzSbOGSv2DBx15+hOPJVjgu
-         cdaA4UUieeCi0KoFMaPLd6nRE8NH90iiPAc6Dg/HUc+NBjTpK5reA8lHnE1xhsNlMt
-         D6a4Qzarl1R20vOWyExA98bTan+aTgsONNvOCxXs=
+        b=xc3pAlAcObPzKWxu9L5Mkz2TH6WZDPH/cV6uQWa6kvdM24SPG1l9zdf5GY3Q8Yo5o
+         hHnHh2YxCsuKmadkNxrvhSSEnDj86CE9B+M322NNUfNqcS3DNGIany+PLlAp9fD0+n
+         FBAMDUpfGyQnS0AfwbQWcP8QaRKmaOyqQaZC4VX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.5 043/120] netdevsim: fix using uninitialized resources
-Date:   Thu, 13 Feb 2020 07:20:39 -0800
-Message-Id: <20200213151916.309670182@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Taehee Yoo <ap420073@gmail.com>
+Subject: [PATCH 5.5 046/120] netdevsim: use __GFP_NOWARN to avoid memalloc warning
+Date:   Thu, 13 Feb 2020 07:20:42 -0800
+Message-Id: <20200213151917.303017548@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -61,233 +61,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-commit f5cd21605ecd249e5fc715411df22cc1bc877b32 upstream.
+commit 83cf4213bafc4e3c747f0a25ad22cfbf55af7e84 upstream.
 
-When module is being initialized, __init() calls bus_register() and
-driver_register().
-These functions internally create various resources and sysfs files.
-The sysfs files are used for basic operations(add/del device).
-/sys/bus/netdevsim/new_device
-/sys/bus/netdevsim/del_device
-
-These sysfs files use netdevsim resources, they are mostly allocated
-and initialized in ->probe() function, which is nsim_dev_probe().
-But, sysfs files could be executed before ->probe() is finished.
-So, accessing uninitialized data would occur.
-
-Another problem is very similar.
-/sys/bus/netdevsim/new_device internally creates sysfs files.
-/sys/devices/netdevsim<id>/new_port
-/sys/devices/netdevsim<id>/del_port
-
-These sysfs files also use netdevsim resources, they are mostly allocated
-and initialized in creating device routine, which is nsim_bus_dev_new().
-But they also could be executed before nsim_bus_dev_new() is finished.
-So, accessing uninitialized data would occur.
-
-To fix these problems, this patch adds flags, which means whether the
-operation is finished or not.
-The flag variable 'nsim_bus_enable' means whether netdevsim bus was
-initialized or not.
-This is protected by nsim_bus_dev_list_lock.
-The flag variable 'nsim_bus_dev->init' means whether nsim_bus_dev was
-initialized or not.
-This could be used in {new/del}_port_store() with no lock.
+vfnum buffer size and binary_len buffer size is received by user-space.
+So, this buffer size could be too large. If so, kmalloc will internally
+print a warning message.
+This warning message is actually not necessary for the netdevsim module.
+So, this patch adds __GFP_NOWARN.
 
 Test commands:
-    #SHELL1
     modprobe netdevsim
-    while :
-    do
-        echo "1 1" > /sys/bus/netdevsim/new_device
-        echo "1 1" > /sys/bus/netdevsim/del_device
-    done
-
-    #SHELL2
-    while :
-    do
-        echo 1 > /sys/devices/netdevsim1/new_port
-        echo 1 > /sys/devices/netdevsim1/del_port
-    done
+    echo 1 > /sys/bus/netdevsim/new_device
+    echo 1000000000 > /sys/devices/netdevsim1/sriov_numvfs
 
 Splat looks like:
-[   47.508954][ T1008] general protection fault, probably for non-canonical address 0xdffffc0000000021: 0000 I
-[   47.510793][ T1008] KASAN: null-ptr-deref in range [0x0000000000000108-0x000000000000010f]
-[   47.511963][ T1008] CPU: 2 PID: 1008 Comm: bash Not tainted 5.5.0+ #322
-[   47.512823][ T1008] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   47.514041][ T1008] RIP: 0010:__mutex_lock+0x10a/0x14b0
-[   47.514699][ T1008] Code: 08 84 d2 0f 85 7f 12 00 00 44 8b 0d 10 23 65 02 45 85 c9 75 29 49 8d 7f 68 48 b8 00 00 00 0f
-[   47.517163][ T1008] RSP: 0018:ffff888059b4fbb0 EFLAGS: 00010206
-[   47.517802][ T1008] RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[   47.518941][ T1008] RDX: 0000000000000021 RSI: ffffffff85926440 RDI: 0000000000000108
-[   47.519732][ T1008] RBP: ffff888059b4fd30 R08: ffffffffc073fad0 R09: 0000000000000000
-[   47.520729][ T1008] R10: ffff888059b4fd50 R11: ffff88804bb38040 R12: 0000000000000000
-[   47.521702][ T1008] R13: dffffc0000000000 R14: ffffffff871976c0 R15: 00000000000000a0
-[   47.522760][ T1008] FS:  00007fd4be05a740(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
-[   47.523877][ T1008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   47.524627][ T1008] CR2: 0000561c82b69cf0 CR3: 0000000065dd6004 CR4: 00000000000606e0
-[   47.527662][ T1008] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   47.528604][ T1008] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   47.529531][ T1008] Call Trace:
-[   47.529874][ T1008]  ? nsim_dev_port_add+0x50/0x150 [netdevsim]
-[   47.530470][ T1008]  ? mutex_lock_io_nested+0x1380/0x1380
-[   47.531018][ T1008]  ? _kstrtoull+0x76/0x160
-[   47.531449][ T1008]  ? _parse_integer+0xf0/0xf0
-[   47.531874][ T1008]  ? kernfs_fop_write+0x1cf/0x410
-[   47.532330][ T1008]  ? sysfs_file_ops+0x160/0x160
-[   47.532773][ T1008]  ? kstrtouint+0x86/0x110
-[   47.533168][ T1008]  ? nsim_dev_port_add+0x50/0x150 [netdevsim]
-[   47.533721][ T1008]  nsim_dev_port_add+0x50/0x150 [netdevsim]
-[   47.534336][ T1008]  ? sysfs_file_ops+0x160/0x160
-[   47.534858][ T1008]  new_port_store+0x99/0xb0 [netdevsim]
-[   47.535439][ T1008]  ? del_port_store+0xb0/0xb0 [netdevsim]
-[   47.536035][ T1008]  ? sysfs_file_ops+0x112/0x160
-[   47.536544][ T1008]  ? sysfs_kf_write+0x3b/0x180
-[   47.537029][ T1008]  kernfs_fop_write+0x276/0x410
-[   47.537548][ T1008]  ? __sb_start_write+0x215/0x2e0
-[   47.538110][ T1008]  vfs_write+0x197/0x4a0
+[  357.847266][ T1000] WARNING: CPU: 0 PID: 1000 at mm/page_alloc.c:4738 __alloc_pages_nodemask+0x2f3/0x740
+[  357.850273][ T1000] Modules linked in: netdevsim veth openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrx
+[  357.852989][ T1000] CPU: 0 PID: 1000 Comm: bash Tainted: G    B             5.5.0-rc5+ #270
+[  357.854334][ T1000] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  357.855703][ T1000] RIP: 0010:__alloc_pages_nodemask+0x2f3/0x740
+[  357.856669][ T1000] Code: 64 fe ff ff 65 48 8b 04 25 c0 0f 02 00 48 05 f0 12 00 00 41 be 01 00 00 00 49 89 47 0
+[  357.860272][ T1000] RSP: 0018:ffff8880b7f47bd8 EFLAGS: 00010246
+[  357.861009][ T1000] RAX: ffffed1016fe8f80 RBX: 1ffff11016fe8fae RCX: 0000000000000000
+[  357.861843][ T1000] RDX: 0000000000000000 RSI: 0000000000000017 RDI: 0000000000000000
+[  357.862661][ T1000] RBP: 0000000000040dc0 R08: 1ffff11016fe8f67 R09: dffffc0000000000
+[  357.863509][ T1000] R10: ffff8880b7f47d68 R11: fffffbfff2798180 R12: 1ffff11016fe8f80
+[  357.864355][ T1000] R13: 0000000000000017 R14: 0000000000000017 R15: ffff8880c2038d68
+[  357.865178][ T1000] FS:  00007fd9a5b8c740(0000) GS:ffff8880d9c00000(0000) knlGS:0000000000000000
+[  357.866248][ T1000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  357.867531][ T1000] CR2: 000055ce01ba8100 CR3: 00000000b7dbe005 CR4: 00000000000606f0
+[  357.868972][ T1000] Call Trace:
+[  357.869423][ T1000]  ? lock_contended+0xcd0/0xcd0
+[  357.870001][ T1000]  ? __alloc_pages_slowpath+0x21d0/0x21d0
+[  357.870673][ T1000]  ? _kstrtoull+0x76/0x160
+[  357.871148][ T1000]  ? alloc_pages_current+0xc1/0x1a0
+[  357.871704][ T1000]  kmalloc_order+0x22/0x80
+[  357.872184][ T1000]  kmalloc_order_trace+0x1d/0x140
+[  357.872733][ T1000]  __kmalloc+0x302/0x3a0
+[  357.873204][ T1000]  nsim_bus_dev_numvfs_store+0x1ab/0x260 [netdevsim]
+[  357.873919][ T1000]  ? kernfs_get_active+0x12c/0x180
+[  357.874459][ T1000]  ? new_device_store+0x450/0x450 [netdevsim]
+[  357.875111][ T1000]  ? kernfs_get_parent+0x70/0x70
+[  357.875632][ T1000]  ? sysfs_file_ops+0x160/0x160
+[  357.876152][ T1000]  kernfs_fop_write+0x276/0x410
+[  357.876680][ T1000]  ? __sb_start_write+0x1ba/0x2e0
+[  357.877225][ T1000]  vfs_write+0x197/0x4a0
+[  357.877671][ T1000]  ksys_write+0x141/0x1d0
 [ ... ]
 
-Fixes: f9d9db47d3ba ("netdevsim: add bus attributes to add new and delete devices")
-Fixes: 794b2c05ca1c ("netdevsim: extend device attrs to support port addition and deletion")
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 79579220566c ("netdevsim: add SR-IOV functionality")
+Fixes: 82c93a87bf8b ("netdevsim: implement couple of testing devlink health reporters")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/netdevsim/bus.c       |   43 +++++++++++++++++++++++++++++++++++---
- drivers/net/netdevsim/netdevsim.h |    1 
- 2 files changed, 41 insertions(+), 3 deletions(-)
+ drivers/net/netdevsim/bus.c    |    2 +-
+ drivers/net/netdevsim/health.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 --- a/drivers/net/netdevsim/bus.c
 +++ b/drivers/net/netdevsim/bus.c
-@@ -17,6 +17,7 @@
- static DEFINE_IDA(nsim_bus_dev_ids);
- static LIST_HEAD(nsim_bus_dev_list);
- static DEFINE_MUTEX(nsim_bus_dev_list_lock);
-+static bool nsim_bus_enable;
- 
- static struct nsim_bus_dev *to_nsim_bus_dev(struct device *dev)
+@@ -29,7 +29,7 @@ static int nsim_bus_dev_vfs_enable(struc
  {
-@@ -99,6 +100,9 @@ new_port_store(struct device *dev, struc
- 	unsigned int port_index;
- 	int ret;
- 
-+	/* Prevent to use nsim_bus_dev before initialization. */
-+	if (!smp_load_acquire(&nsim_bus_dev->init))
-+		return -EBUSY;
- 	ret = kstrtouint(buf, 0, &port_index);
- 	if (ret)
- 		return ret;
-@@ -116,6 +120,9 @@ del_port_store(struct device *dev, struc
- 	unsigned int port_index;
- 	int ret;
- 
-+	/* Prevent to use nsim_bus_dev before initialization. */
-+	if (!smp_load_acquire(&nsim_bus_dev->init))
-+		return -EBUSY;
- 	ret = kstrtouint(buf, 0, &port_index);
- 	if (ret)
- 		return ret;
-@@ -179,15 +186,30 @@ new_device_store(struct bus_type *bus, c
- 		pr_err("Format for adding new device is \"id port_count\" (uint uint).\n");
- 		return -EINVAL;
- 	}
--	nsim_bus_dev = nsim_bus_dev_new(id, port_count);
--	if (IS_ERR(nsim_bus_dev))
--		return PTR_ERR(nsim_bus_dev);
- 
- 	mutex_lock(&nsim_bus_dev_list_lock);
-+	/* Prevent to use resource before initialization. */
-+	if (!smp_load_acquire(&nsim_bus_enable)) {
-+		err = -EBUSY;
-+		goto err;
-+	}
-+
-+	nsim_bus_dev = nsim_bus_dev_new(id, port_count);
-+	if (IS_ERR(nsim_bus_dev)) {
-+		err = PTR_ERR(nsim_bus_dev);
-+		goto err;
-+	}
-+
-+	/* Allow using nsim_bus_dev */
-+	smp_store_release(&nsim_bus_dev->init, true);
-+
- 	list_add_tail(&nsim_bus_dev->list, &nsim_bus_dev_list);
- 	mutex_unlock(&nsim_bus_dev_list_lock);
- 
- 	return count;
-+err:
-+	mutex_unlock(&nsim_bus_dev_list_lock);
-+	return err;
- }
- static BUS_ATTR_WO(new_device);
- 
-@@ -215,6 +237,11 @@ del_device_store(struct bus_type *bus, c
- 
- 	err = -ENOENT;
- 	mutex_lock(&nsim_bus_dev_list_lock);
-+	/* Prevent to use resource before initialization. */
-+	if (!smp_load_acquire(&nsim_bus_enable)) {
-+		mutex_unlock(&nsim_bus_dev_list_lock);
-+		return -EBUSY;
-+	}
- 	list_for_each_entry_safe(nsim_bus_dev, tmp, &nsim_bus_dev_list, list) {
- 		if (nsim_bus_dev->dev.id != id)
- 			continue;
-@@ -284,6 +311,8 @@ nsim_bus_dev_new(unsigned int id, unsign
- 	nsim_bus_dev->dev.type = &nsim_bus_dev_type;
- 	nsim_bus_dev->port_count = port_count;
- 	nsim_bus_dev->initial_net = current->nsproxy->net_ns;
-+	/* Disallow using nsim_bus_dev */
-+	smp_store_release(&nsim_bus_dev->init, false);
- 
- 	err = device_register(&nsim_bus_dev->dev);
+ 	nsim_bus_dev->vfconfigs = kcalloc(num_vfs,
+ 					  sizeof(struct nsim_vf_config),
+-					  GFP_KERNEL);
++					  GFP_KERNEL | __GFP_NOWARN);
+ 	if (!nsim_bus_dev->vfconfigs)
+ 		return -ENOMEM;
+ 	nsim_bus_dev->num_vfs = num_vfs;
+--- a/drivers/net/netdevsim/health.c
++++ b/drivers/net/netdevsim/health.c
+@@ -82,7 +82,7 @@ static int nsim_dev_dummy_fmsg_put(struc
  	if (err)
-@@ -299,6 +328,8 @@ err_nsim_bus_dev_free:
+ 		return err;
  
- static void nsim_bus_dev_del(struct nsim_bus_dev *nsim_bus_dev)
- {
-+	/* Disallow using nsim_bus_dev */
-+	smp_store_release(&nsim_bus_dev->init, false);
- 	device_unregister(&nsim_bus_dev->dev);
- 	ida_free(&nsim_bus_dev_ids, nsim_bus_dev->dev.id);
- 	kfree(nsim_bus_dev);
-@@ -320,6 +351,8 @@ int nsim_bus_init(void)
- 	err = driver_register(&nsim_driver);
- 	if (err)
- 		goto err_bus_unregister;
-+	/* Allow using resources */
-+	smp_store_release(&nsim_bus_enable, true);
- 	return 0;
- 
- err_bus_unregister:
-@@ -331,12 +364,16 @@ void nsim_bus_exit(void)
- {
- 	struct nsim_bus_dev *nsim_bus_dev, *tmp;
- 
-+	/* Disallow using resources */
-+	smp_store_release(&nsim_bus_enable, false);
-+
- 	mutex_lock(&nsim_bus_dev_list_lock);
- 	list_for_each_entry_safe(nsim_bus_dev, tmp, &nsim_bus_dev_list, list) {
- 		list_del(&nsim_bus_dev->list);
- 		nsim_bus_dev_del(nsim_bus_dev);
- 	}
- 	mutex_unlock(&nsim_bus_dev_list_lock);
-+
- 	driver_unregister(&nsim_driver);
- 	bus_unregister(&nsim_bus);
- }
---- a/drivers/net/netdevsim/netdevsim.h
-+++ b/drivers/net/netdevsim/netdevsim.h
-@@ -240,6 +240,7 @@ struct nsim_bus_dev {
- 				  */
- 	unsigned int num_vfs;
- 	struct nsim_vf_config *vfconfigs;
-+	bool init;
- };
- 
- int nsim_bus_init(void);
+-	binary = kmalloc(binary_len, GFP_KERNEL);
++	binary = kmalloc(binary_len, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!binary)
+ 		return -ENOMEM;
+ 	get_random_bytes(binary, binary_len);
 
 
