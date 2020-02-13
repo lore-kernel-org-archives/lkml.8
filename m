@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCDDC47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7CEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9762073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C22222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609421;
-	bh=EdcqFa5oYtp3YKnMWp07VPMN7Aerrh6Z98oWMSIKQeQ=;
+	s=default; t=1581609428;
+	bh=sliaj5BSkKa6BZ89HC0XulnKCqnhPE0kdzLJ7gX9zqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u45s1kpTrYscDE4afz2HyJ9iSIo8nnvQ2AU/z/wneEb8u8iEEqmRBHnuznd3ntKXl
-	 HBVEvacEhfQlQZNCxHMLYn9gaIIx5rJg/ZD1Wox+84WALW7Di+IBMNsE+32tRgVr3n
-	 KtoLSBr+qGXLShTRbQ5L3gWFc7QncclpFw0gt3RQ=
+	b=JxFl3IwThalX9K/2A6fAh/73V+1R9x/dAY3rJg4mqxl6mqUlr8svMEBMLIKTOGrg5
+	 do20MWkvwZY+YNrf0w85aeeCwdHEa+AZXuIoj4kixOFp82qDc3vu2gXzuYD6cBX5UJ
+	 YmjKdgLC/F/Rdxy472iuzX81siZAHpoM3oOn9Uq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgBMPZY (ORCPT
+        id S1729045AbgBMP5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:57:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbgBMPXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:49 -0500
+        id S1728134AbgBMPZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:23 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF66024689;
-        Thu, 13 Feb 2020 15:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7827620848;
+        Thu, 13 Feb 2020 15:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607429;
-        bh=EdcqFa5oYtp3YKnMWp07VPMN7Aerrh6Z98oWMSIKQeQ=;
+        s=default; t=1581607523;
+        bh=sliaj5BSkKa6BZ89HC0XulnKCqnhPE0kdzLJ7gX9zqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IeDpCO9cG3ZbyMHdhQSiMMdWK+drqUt/ixDwcsD7hem59IBigXKmjEk1ReKTFkIGj
-         mHc1AEA/wHs6ZjNJNWXJQFCl9m4SsvLMhi/Q6s7CK0Z9VCOkRtWsauOLXm6SinXMIk
-         slDZTHz2mzVtQxHmiwJjVGb/vYOKk8sttoM2PBWE=
+        b=1fHu+T8tJmVWmfm/peeL53xjEWlTu0ezV2iiy6XZ7+Ymus+2HUlBkeA7nKvCI0cR8
+         4Io728kFR4U9Rtviugdk2kiQLqfntq0YkXFZ1zon58jir8/cLdMnuyddBKp+k2I+KV
+         zuUnklU8Dr9tlTijpka7x3WMl2AtAWdaqT/Rb1Ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 044/116] KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:48 -0800
-Message-Id: <20200213151900.140135328@linuxfoundation.org>
+        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 074/173] mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
+Date:   Thu, 13 Feb 2020 07:19:37 -0800
+Message-Id: <20200213151952.183642750@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,57 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit 125ffc5e0a56a3eded608dc51e09d5ebf72cf652 upstream.
+commit 65b1aae0d9d5962faccc06bdb8e91a2a0b09451c upstream.
 
-This fixes Spectre-v1/L1TF vulnerabilities in
-vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
-vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().  When
-invoked from emulation, these functions contain index computations
-based on the (attacker-influenced) segment value.  Using constants
-prevents the attack.
+We called rcu_read_lock(), so we need to call rcu_read_unlock() before
+we return.
 
+Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: huangwen <huangwenabc@gmail.com>
+Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/emulate.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -5053,16 +5053,28 @@ int x86_decode_insn(struct x86_emulate_c
- 				ctxt->ad_bytes = def_ad_bytes ^ 6;
- 			break;
- 		case 0x26:	/* ES override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_ES;
-+			break;
- 		case 0x2e:	/* CS override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_CS;
-+			break;
- 		case 0x36:	/* SS override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_SS;
-+			break;
- 		case 0x3e:	/* DS override */
- 			has_seg_override = true;
--			ctxt->seg_override = (ctxt->b >> 3) & 3;
-+			ctxt->seg_override = VCPU_SREG_DS;
- 			break;
- 		case 0x64:	/* FS override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_FS;
-+			break;
- 		case 0x65:	/* GS override */
- 			has_seg_override = true;
--			ctxt->seg_override = ctxt->b & 7;
-+			ctxt->seg_override = VCPU_SREG_GS;
- 			break;
- 		case 0x40 ... 0x4f: /* REX */
- 			if (mode != X86EMUL_MODE_PROT64)
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -274,6 +274,7 @@ static int mwifiex_process_country_ie(st
+ 
+ 	if (country_ie_len >
+ 	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
++		rcu_read_unlock();
+ 		mwifiex_dbg(priv->adapter, ERROR,
+ 			    "11D: country_ie_len overflow!, deauth AP\n");
+ 		return -EINVAL;
 
 
