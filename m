@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38AFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83BFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D77B20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8DE20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608094;
-	bh=AzyPehGb52ECJ+zdCScD6NmW/QG6jNq0X+C2XumulvU=;
+	s=default; t=1581608108;
+	bh=0Wyzm8prTXdxcC5qKMuthwEvTdxOmhJ2ohgnlYe8qGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TvLu9nNOlCdW2njn5eVT2S0zgptUAeL37YcGwG39lJFD9rwZeoGOrIp80qP9h8kPQ
-	 +2xXA0thybms5YuusxFgEFoyKItBPQA9FMq5ycH9uTK2ytHU/XyvnPVYOkvb4nL/Wb
-	 jSlKbPuGlTpdnBNJiVJLt2fzERgKHZqYmxUqxOAI=
+	b=GqCE0DRjelATUck41e1OmJR31WeR3xyO3jEYfxsVoyw+S9Q+i1/SWY9Kk34ZKp9Ok
+	 UXd+UYSUTBV971Fki9vVJ34W1577pKjA7m14bXrGHT0Ckdn/CkpdsKk4kXUp9EZ1UR
+	 vGp4DXjETrMXyqJNQLfKtcwQ1flSmgYVIZkH+YBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388181AbgBMPcY (ORCPT
+        id S2388127AbgBMPcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728445AbgBMP2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:40 -0500
+        id S1728591AbgBMP2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:19 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D52E24676;
-        Thu, 13 Feb 2020 15:28:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A39862168B;
+        Thu, 13 Feb 2020 15:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607719;
-        bh=AzyPehGb52ECJ+zdCScD6NmW/QG6jNq0X+C2XumulvU=;
+        s=default; t=1581607698;
+        bh=0Wyzm8prTXdxcC5qKMuthwEvTdxOmhJ2ohgnlYe8qGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsbSZOz3rHjdc00g1Uqc2xoY/QQmcTpn8xm6s65IAssHf6zB6yeZXZQpJB4m8Wneu
-         qHVB5Uu0UBQ71tHzs002nFjyABh3KC6WbskobfPbCcbU5m2bGbfc1ht6BCi37OkXju
-         unXR/8F7N2fmvf+naACm/S+TvLA0ypFZrzjNZBqk=
+        b=ZHmv6xJtHmJXDBhsSEtUU6lvlBC6SYDgYQFVPEvjM132H1ugyN74w6Tg7wkD2D8zU
+         POyMl6fDyzCGsaQ7OsZFOsmzATK2FMlM03s9D9HXaTGdw+KG3nvP5kYXfvZnf0Qc7P
+         cZ/1xAJnbFzQcWi/KTAHUBjNwlMsG1oZNt7dNiWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 5.5 062/120] ARM: dts: meson8: use the actual frequency for the GPUs 182.1MHz OPP
-Date:   Thu, 13 Feb 2020 07:20:58 -0800
-Message-Id: <20200213151922.555702018@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Subject: [PATCH 5.5 041/120] bpf, sockmap: Check update requirements after locking
+Date:   Thu, 13 Feb 2020 07:20:37 -0800
+Message-Id: <20200213151915.720570765@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,38 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-commit fe634a7a9a57fb736e39fb71aa9adc6448a90f94 upstream.
+commit 85b8ac01a421791d66c3a458a7f83cfd173fe3fa upstream.
 
-The clock setup on Meson8 cannot achieve a Mali frequency of exactly
-182.15MHz. The vendor driver uses "FCLK_DIV7 / 2" for this frequency,
-which translates to 2550MHz / 7 / 2 = 182142857Hz.
-Update the GPU operating point to that specific frequency to not confuse
-myself when comparing the frequency from the .dts with the actual clock
-rate on the system.
+It's currently possible to insert sockets in unexpected states into
+a sockmap, due to a TOCTTOU when updating the map from a syscall.
+sock_map_update_elem checks that sk->sk_state == TCP_ESTABLISHED,
+locks the socket and then calls sock_map_update_common. At this
+point, the socket may have transitioned into another state, and
+the earlier assumptions don't hold anymore. Crucially, it's
+conceivable (though very unlikely) that a socket has become unhashed.
+This breaks the sockmap's assumption that it will get a callback
+via sk->sk_prot->unhash.
 
-Fixes: 7d3f6b536e72c9 ("ARM: dts: meson8: add the Mali-450 MP6 GPU")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Fix this by checking the (fixed) sk_type and sk_protocol without the
+lock, followed by a locked check of sk_state.
+
+Unfortunately it's not possible to push the check down into
+sock_(map|hash)_update_common, since BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB
+run before the socket has transitioned from TCP_SYN_RECV into
+TCP_ESTABLISHED.
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Link: https://lore.kernel.org/bpf/20200207103713.28175-1-lmb@cloudflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/meson8.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/sock_map.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -129,8 +129,8 @@
- 	gpu_opp_table: gpu-opp-table {
- 		compatible = "operating-points-v2";
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -417,14 +417,16 @@ static int sock_map_update_elem(struct b
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (!sock_map_sk_is_suitable(sk) ||
+-	    sk->sk_state != TCP_ESTABLISHED) {
++	if (!sock_map_sk_is_suitable(sk)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
  
--		opp-182150000 {
--			opp-hz = /bits/ 64 <182150000>;
-+		opp-182142857 {
-+			opp-hz = /bits/ 64 <182142857>;
- 			opp-microvolt = <1150000>;
- 		};
- 		opp-318750000 {
+ 	sock_map_sk_acquire(sk);
+-	ret = sock_map_update_common(map, idx, sk, flags);
++	if (sk->sk_state != TCP_ESTABLISHED)
++		ret = -EOPNOTSUPP;
++	else
++		ret = sock_map_update_common(map, idx, sk, flags);
+ 	sock_map_sk_release(sk);
+ out:
+ 	fput(sock->file);
+@@ -740,14 +742,16 @@ static int sock_hash_update_elem(struct
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (!sock_map_sk_is_suitable(sk) ||
+-	    sk->sk_state != TCP_ESTABLISHED) {
++	if (!sock_map_sk_is_suitable(sk)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+ 
+ 	sock_map_sk_acquire(sk);
+-	ret = sock_hash_update_common(map, key, sk, flags);
++	if (sk->sk_state != TCP_ESTABLISHED)
++		ret = -EOPNOTSUPP;
++	else
++		ret = sock_hash_update_common(map, key, sk, flags);
+ 	sock_map_sk_release(sk);
+ out:
+ 	fput(sock->file);
 
 
