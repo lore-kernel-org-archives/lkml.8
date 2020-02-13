@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192FDC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E249C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE40E206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2158820724
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eOm+ryRM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="luWkpuZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgBMBI6 (ORCPT
+        id S1729333AbgBMBNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 20:08:58 -0500
-Received: from gateway34.websitewelcome.com ([192.185.148.196]:48076 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729190AbgBMBI5 (ORCPT
+        Wed, 12 Feb 2020 20:13:05 -0500
+Received: from gateway31.websitewelcome.com ([192.185.144.219]:36694 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729185AbgBMBNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:08:57 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 9913FECE9B2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:08:56 -0600 (CST)
+        Wed, 12 Feb 2020 20:13:05 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 57EAF10FA7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:13:02 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 22zwjj5h5Sl8q22zwjRmBA; Wed, 12 Feb 2020 19:08:56 -0600
+        id 233ujnuUwXVkQ233ujBzJb; Wed, 12 Feb 2020 19:13:02 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,24 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PMxecW0O4tdkPXbZnFnlCU+Xv/vOEnBfFdnNrRCVmMY=; b=eOm+ryRMFshQWqZPIC5nzWTTT5
-        NYoy8rPeuv9a+ALZXbLX093SJAZ7PHUep51y+OiKUbRHVffzTUEuFCEghnYGxhLmg5RY2OFFnaOmL
-        Q5M+ciExfhUxzrfxCHyWREyePfOVRow6KUMW3jf++JiOA6NPmaRt54E1+iCGi//eN+CoR99x5nVzZ
-        NwxHdNjayqX2GaQowodt1xZC18NLo83cMYTiwZRn4w1ao0CSxkv6Rcceop08O20iUwXmekl8Kw3jA
-        wnYPisO9q7kfqNUNw8iRWy9pzzpUQqWBAOWecchmWn9zHHAwFbhsKGTinfTHQZd3j7NaK5Vek30zU
-        0ZHq9YcQ==;
-Received: from [200.68.141.42] (port=11053 helo=embeddedor)
+        bh=UeniUbGWJBBT0KfdU4Phj7oirIhMUxWtMEICDs+UUbc=; b=luWkpuZOAHOBeP3hzt9+2sVjY9
+        Oh99k4/astn8cTmIvl9lR+TsyG2zn9Pc4E0iBcaSHkL4s/PYbz+h/DJX5gxngBuKrY+TOb5N3q0JI
+        z1TBwOvGnDASVVuqgwySR/FaQpUUaT+MmLlmxyN5ceIr2zQOMz14XD2ud9w+5K/dGahj8SERJdYyU
+        w3muOr+obfgZsuq4lU6bKZoxc8nukhue4zzo0nH4ng+pBTGNqsIOj5qqIYyr29CBsGDhvyHzVL5qn
+        kFmEgokbxNymlJtV38eQShXh9gppnz79twb12YIsaEYl5/zX8zt4WO1vjJQHDBRKyroCU5fp7PdNB
+        F1/tOpGQ==;
+Received: from [200.68.141.42] (port=27417 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j22zu-003wxD-Mk; Wed, 12 Feb 2020 19:08:55 -0600
-Date:   Wed, 12 Feb 2020 19:08:51 -0600
+        id 1j233s-003yhS-91; Wed, 12 Feb 2020 19:13:00 -0600
+Date:   Wed, 12 Feb 2020 19:12:58 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] IB/mthca: Replace zero-length array with flexible-array
+Subject: [PATCH] IB/multicast: Replace zero-length array with flexible-array
  member
-Message-ID: <20200213010851.GA13977@embeddedor.com>
+Message-ID: <20200213011258.GA14874@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -66,13 +66,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.141.42
 X-Source-L: No
-X-Exim-ID: 1j22zu-003wxD-Mk
+X-Exim-ID: 1j233s-003yhS-91
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:11053
+X-Source-Sender: (embeddedor) [200.68.141.42]:27417
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
+X-Email-Count: 12
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -110,22 +110,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/infiniband/hw/mthca/mthca_memfree.c | 2 +-
+ drivers/infiniband/core/multicast.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mthca/mthca_memfree.c b/drivers/infiniband/hw/mthca/mthca_memfree.c
-index 78a48aea3faf..dc10376f09cb 100644
---- a/drivers/infiniband/hw/mthca/mthca_memfree.c
-+++ b/drivers/infiniband/hw/mthca/mthca_memfree.c
-@@ -58,7 +58,7 @@ struct mthca_user_db_table {
- 		u64                uvirt;
- 		struct scatterlist mem;
- 		int                refcount;
--	}                page[0];
-+	} page[];
+diff --git a/drivers/infiniband/core/multicast.c b/drivers/infiniband/core/multicast.c
+index cd338ddc4a39..9c2d8b7f1af9 100644
+--- a/drivers/infiniband/core/multicast.c
++++ b/drivers/infiniband/core/multicast.c
+@@ -71,7 +71,7 @@ struct mcast_device {
+ 	struct ib_event_handler	event_handler;
+ 	int			start_port;
+ 	int			end_port;
+-	struct mcast_port	port[0];
++	struct mcast_port	port[];
  };
  
- static void mthca_free_icm_pages(struct mthca_dev *dev, struct mthca_icm_chunk *chunk)
+ enum mcast_state {
 -- 
 2.23.0
 
