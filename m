@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DD1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68F4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925A720656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8A620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610087;
-	bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
+	s=default; t=1581610092;
+	bh=VVWgeXKDDVlUaM8OHSvVKK2xxBSCYXUH+wZ3QhFsY6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+dRFVT5UTrn7BXV+G5gvd1/yaQsomCISVkNO5wW76YI6fR/JgFyxZzsX9UUiS1r3
-	 ZFjlas4K3eH2/iWrP+hMholHCYvzn6kjshKqHArKu0WBKp8SmxTMNfo32ITvBb4owN
-	 orLRVx87ubZiMqR0VnKlZdrrC6lLM7ofCCY1BgiI=
+	b=Gpjv6zmkEMRnZVxXPavbMaW9hc/7sQs7TP9C4ZjguHqfAjJd4/s20sidyNc5r2Ouu
+	 sf23iXVmOoWeKXuwA20EZfJ8XkY/Uoje0uSN3Dj3WQtjgxbzuOkmvmiNWQmpLKK2k9
+	 0mHpYf455Inm5SbrcH1OoOlqKdGCjMbZvoVOep30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgBMQIG (ORCPT
+        id S2388427AbgBMQIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:08:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:08:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728296AbgBMPXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:12 -0500
+        id S1728286AbgBMPXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:11 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4789024699;
-        Thu, 13 Feb 2020 15:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C272469C;
+        Thu, 13 Feb 2020 15:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607392;
-        bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
+        s=default; t=1581607391;
+        bh=VVWgeXKDDVlUaM8OHSvVKK2xxBSCYXUH+wZ3QhFsY6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iUiEOnhLr31X/pbkBMJv2/ECu0Oa5S2GdiCo0XjHjuOI9nyKGiRvbl2H0ZT2sBjc5
-         BZM8owc3o+q1EpVqDjO0cmn3UCa/e18HQr5X1OyyohxCZ6aSFQk4VpyviE6Rni2xTb
-         jiIFlsud2iU3npZ5BwZy4ARadPTIZp05OLHotJpI=
+        b=voxJkAuagPpbrbi8OIgeAEBnMqwxlMLhO6OXt3gu0J+B7x5GFlGkta2jxxug3i6Wq
+         5zCgQzCP+Y1vg7RiXX9QLHOSv2Ll6R1DPD3w5QCHmyHYgDrWkfcnjdJTw1y199yzd5
+         exDIcR9JVrs/AzmcU907TE17DFQaLlijPlAnnYr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.4 81/91] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-Date:   Thu, 13 Feb 2020 07:20:38 -0800
-Message-Id: <20200213151854.213198044@linuxfoundation.org>
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 79/91] ASoC: pcm: update FE/BE trigger order based on the command
+Date:   Thu, 13 Feb 2020 07:20:36 -0800
+Message-Id: <20200213151853.309246193@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,35 +62,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 upstream.
+[ Upstream commit acbf27746ecfa96b290b54cc7f05273482ea128a ]
 
-The current code returns -EPERM when the voltage loss bit is set.
-Since the bit indicates that the time value is not valid, return
--EINVAL instead, which is the appropriate error code for this
-situation.
+Currently, the trigger orders SND_SOC_DPCM_TRIGGER_PRE/POST
+determine the order in which FE DAI and BE DAI are triggered.
+In the case of SND_SOC_DPCM_TRIGGER_PRE, the FE DAI is
+triggered before the BE DAI and in the case of
+SND_SOC_DPCM_TRIGGER_POST, the BE DAI is triggered before
+the FE DAI. And this order remains the same irrespective of the
+trigger command.
 
-Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In the case of the SOF driver, during playback, the FW
+expects the BE DAI to be triggered before the FE DAI during
+the START trigger. The BE DAI trigger handles the starting of
+Link DMA and so it must be started before the FE DAI is started
+to prevent xruns during pause/release. This can be addressed
+by setting the trigger order for the FE dai link to
+SND_SOC_DPCM_TRIGGER_POST. But during the STOP trigger,
+the FW expects the FE DAI to be triggered before the BE DAI.
+Retaining the same order during the START and STOP commands,
+results in FW error as the DAI component in the FW is still
+active.
 
+The issue can be fixed by mirroring the trigger order of
+FE and BE DAI's during the START and STOP trigger. So, with the
+trigger order set to SND_SOC_DPCM_TRIGGER_PRE, the FE DAI will be
+trigger first during SNDRV_PCM_TRIGGER_START/STOP/RESUME
+and the BE DAI will be triggered first during the
+STOP/SUSPEND/PAUSE commands. Conversely, with the trigger order
+set to SND_SOC_DPCM_TRIGGER_POST, the BE DAI will be triggered
+first during the SNDRV_PCM_TRIGGER_START/STOP/RESUME commands
+and the FE DAI will be triggered first during the
+SNDRV_PCM_TRIGGER_STOP/SUSPEND/PAUSE commands.
+
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191104224812.3393-2-ranjani.sridharan@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-hym8563.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-pcm.c |   95 +++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 68 insertions(+), 27 deletions(-)
 
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -105,7 +105,7 @@ static int hym8563_rtc_read_time(struct
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2026,42 +2026,81 @@ int dpcm_be_dai_trigger(struct snd_soc_p
+ }
+ EXPORT_SYMBOL_GPL(dpcm_be_dai_trigger);
  
- 	if (!hym8563->valid) {
- 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
--		return -EPERM;
-+		return -EINVAL;
++static int dpcm_dai_trigger_fe_be(struct snd_pcm_substream *substream,
++				  int cmd, bool fe_first)
++{
++	struct snd_soc_pcm_runtime *fe = substream->private_data;
++	int ret;
++
++	/* call trigger on the frontend before the backend. */
++	if (fe_first) {
++		dev_dbg(fe->dev, "ASoC: pre trigger FE %s cmd %d\n",
++			fe->dai_link->name, cmd);
++
++		ret = soc_pcm_trigger(substream, cmd);
++		if (ret < 0)
++			return ret;
++
++		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
++		return ret;
++	}
++
++	/* call trigger on the frontend after the backend. */
++	ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
++	if (ret < 0)
++		return ret;
++
++	dev_dbg(fe->dev, "ASoC: post trigger FE %s cmd %d\n",
++		fe->dai_link->name, cmd);
++
++	ret = soc_pcm_trigger(substream, cmd);
++
++	return ret;
++}
++
+ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
+ {
+ 	struct snd_soc_pcm_runtime *fe = substream->private_data;
+-	int stream = substream->stream, ret;
++	int stream = substream->stream;
++	int ret = 0;
+ 	enum snd_soc_dpcm_trigger trigger = fe->dai_link->trigger[stream];
+ 
+ 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_FE;
+ 
+ 	switch (trigger) {
+ 	case SND_SOC_DPCM_TRIGGER_PRE:
+-		/* call trigger on the frontend before the backend. */
+-
+-		dev_dbg(fe->dev, "ASoC: pre trigger FE %s cmd %d\n",
+-				fe->dai_link->name, cmd);
+-
+-		ret = soc_pcm_trigger(substream, cmd);
+-		if (ret < 0) {
+-			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
+-			goto out;
++		switch (cmd) {
++		case SNDRV_PCM_TRIGGER_START:
++		case SNDRV_PCM_TRIGGER_RESUME:
++		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, true);
++			break;
++		case SNDRV_PCM_TRIGGER_STOP:
++		case SNDRV_PCM_TRIGGER_SUSPEND:
++		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, false);
++			break;
++		default:
++			ret = -EINVAL;
++			break;
+ 		}
+-
+-		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
+ 		break;
+ 	case SND_SOC_DPCM_TRIGGER_POST:
+-		/* call trigger on the frontend after the backend. */
+-
+-		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
+-		if (ret < 0) {
+-			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
+-			goto out;
++		switch (cmd) {
++		case SNDRV_PCM_TRIGGER_START:
++		case SNDRV_PCM_TRIGGER_RESUME:
++		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, false);
++			break;
++		case SNDRV_PCM_TRIGGER_STOP:
++		case SNDRV_PCM_TRIGGER_SUSPEND:
++		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, true);
++			break;
++		default:
++			ret = -EINVAL;
++			break;
+ 		}
+-
+-		dev_dbg(fe->dev, "ASoC: post trigger FE %s cmd %d\n",
+-				fe->dai_link->name, cmd);
+-
+-		ret = soc_pcm_trigger(substream, cmd);
+ 		break;
+ 	case SND_SOC_DPCM_TRIGGER_BESPOKE:
+ 		/* bespoke trigger() - handles both FE and BEs */
+@@ -2070,10 +2109,6 @@ static int dpcm_fe_dai_do_trigger(struct
+ 				fe->dai_link->name, cmd);
+ 
+ 		ret = soc_pcm_bespoke_trigger(substream, cmd);
+-		if (ret < 0) {
+-			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
+-			goto out;
+-		}
+ 		break;
+ 	default:
+ 		dev_err(fe->dev, "ASoC: invalid trigger cmd %d for %s\n", cmd,
+@@ -2082,6 +2117,12 @@ static int dpcm_fe_dai_do_trigger(struct
+ 		goto out;
  	}
  
- 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
++	if (ret < 0) {
++		dev_err(fe->dev, "ASoC: trigger FE cmd: %d failed: %d\n",
++			cmd, ret);
++		goto out;
++	}
++
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
 
 
