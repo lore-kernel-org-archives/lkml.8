@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A86C3B191
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AD9C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733DF217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315EC217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgBMWFE (ORCPT
+        id S1728669AbgBMWFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:05:04 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60834 "EHLO
+        Thu, 13 Feb 2020 17:05:33 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:49429 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgBMWFD (ORCPT
+        with ESMTP id S1728074AbgBMWFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:05:03 -0500
+        Thu, 13 Feb 2020 17:05:05 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id fc8c1af34e20b89f; Thu, 13 Feb 2020 23:05:01 +0100
+ id de92bc5a3def8b46; Thu, 13 Feb 2020 23:05:02 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Len Brown <len.brown@intel.com>,
@@ -30,9 +30,9 @@ Cc:     Len Brown <len.brown@intel.com>,
         Zhang Rui <rui.zhang@intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 8/9] intel_idle: Define CPUIDLE_FLAG_TLB_FLUSHED as BIT(16)
-Date:   Thu, 13 Feb 2020 23:03:51 +0100
-Message-ID: <15991455.PHIGOLi8R1@kreacher>
+Subject: [PATCH 6/9] intel_idle: Reorder declarations of static variables
+Date:   Thu, 13 Feb 2020 23:02:09 +0100
+Message-ID: <5376842.2I6NC9T2nD@kreacher>
 In-Reply-To: <2960689.qre192dJKD@kreacher>
 References: <2960689.qre192dJKD@kreacher>
 MIME-Version: 1.0
@@ -45,29 +45,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Use the BIT() macro for defining CPUIDLE_FLAG_TLB_FLUSHED instead of
-the hex bit encoding of the same value.
+Reorder declarations of static variables so that the __initdata ones
+are declared together.
 
-No intentional functional impact.
+No functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/idle/intel_idle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/idle/intel_idle.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 9575615c8f4a..de1367d996c5 100644
+index 5e627c40f6b0..3a93cd1036fb 100644
 --- a/drivers/idle/intel_idle.c
 +++ b/drivers/idle/intel_idle.c
-@@ -101,7 +101,7 @@ static unsigned int mwait_substates __initdata;
-  * If this flag is set, SW flushes the TLB, so even if the
-  * HW doesn't do the flushing, this flag is safe to use.
-  */
--#define CPUIDLE_FLAG_TLB_FLUSHED	0x10000
-+#define CPUIDLE_FLAG_TLB_FLUSHED	BIT(16)
+@@ -65,7 +65,7 @@ static struct cpuidle_driver intel_idle_driver = {
+ static int max_cstate = CPUIDLE_STATE_MAX - 1;
+ static unsigned int disabled_states_mask;
  
+-static unsigned int mwait_substates __initdata;
++static struct cpuidle_device __percpu *intel_idle_cpuidle_devices;
+ 
+ static unsigned long auto_demotion_disable_flags;
+ static bool disable_promotion_to_c1e;
+@@ -86,9 +86,10 @@ struct idle_cpu {
+ };
+ 
+ static const struct idle_cpu *icpu __initdata;
+-static struct cpuidle_device __percpu *intel_idle_cpuidle_devices;
+ static struct cpuidle_state *cpuidle_state_table __initdata;
+ 
++static unsigned int mwait_substates __initdata;
++
  /*
-  * MWAIT takes an 8-bit "hint" in EAX "suggesting"
+  * Enable this state by default even if the ACPI _CST does not list it.
+  */
 -- 
 2.16.4
 
