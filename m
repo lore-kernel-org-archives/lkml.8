@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8BBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102E3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A07620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B6A20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608749;
-	bh=vF3vpiJfV5jRF2elPwqFz17RlyJWH7ft1gujGBsgYYU=;
+	s=default; t=1581608754;
+	bh=6APSuzR5QQ1pD6w/up3le0id6xut3M8E7VEdJw0ul/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qdw73pfG5/ZUT+I0PC28m8MMWze4gu7595RFBUI25vzhJFtyLQR8ccq99tCtF62mP
-	 9nqMnWExi5Gru0vGN29rtFMjnzJBAVxNuYBkL84fjE/hWuENP/+snvN+fv3y+8iuN3
-	 rs6QaAnuBNiLWt8NU7CmruphdJC84v/iru++z2sg=
+	b=CI/D699doR5ReoxAUr51csluuiQ+K/CFccsNQOwP3VcABQg7R9H8cojDozYqRAKFV
+	 TCPpVj96aMiUB5vCJmb7TGxbIr1vE47B2dvZNUnJOEhSIiUe03j2PzmT+i9VV1qmb7
+	 MBdiw17Luy8RWww9/HTSQqULxUNxvHhbOGogN1MA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgBMPpo (ORCPT
+        id S1729963AbgBMPpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:45:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50548 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:45:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbgBMP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:26 -0500
+        id S1728976AbgBMP1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:24 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4692465D;
-        Thu, 13 Feb 2020 15:27:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC8824681;
+        Thu, 13 Feb 2020 15:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607646;
-        bh=vF3vpiJfV5jRF2elPwqFz17RlyJWH7ft1gujGBsgYYU=;
+        s=default; t=1581607643;
+        bh=6APSuzR5QQ1pD6w/up3le0id6xut3M8E7VEdJw0ul/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFbqLfw8ya/9qz6NOA037cwKVFCAJeTDpky+6S3P8EZibrd8tXMYfqbjc001FbOoq
-         ilmnvV2lDg/+bXazIdY8qdq13I/OJJrOvOmag1ESj3hf7ao1YuSgU1Yr9/GCFC+m7G
-         /uslvqefVE3UQjjXVbgEyOYD3hXhPSi46PFinxg4=
+        b=njgVF+Tz7p/k1CwqakA7gQBr3MA68JoHaKKjZNFxk85PqDOEb1puKdJKxS36jUD1x
+         tRCb3r4B9nCx/zVs/EePwze2bY5p/Ep0wKElo9rFgROi20O31+r9jqvK4eclUFDS0+
+         A3uwtkpzOxT73GBEoK7m+WpfGuL1cDEmn47hWwKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.4 38/96] watchdog: qcom: Use platform_get_irq_optional() for bark irq
-Date:   Thu, 13 Feb 2020 07:20:45 -0800
-Message-Id: <20200213151854.039679791@linuxfoundation.org>
+        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 51/96] tools/power/acpi: fix compilation error
+Date:   Thu, 13 Feb 2020 07:20:58 -0800
+Message-Id: <20200213151859.191189876@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -63,43 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
 
-commit e0b4f4e0cf7fa9d62628d4249c765ec18dffd143 upstream.
+commit 1985f8c7f9a42a651a9750d6fcadc74336d182df upstream.
 
-platform_get_irq() prints an error message when the interrupt
-is not available. So on platforms where bark interrupt is
-not specified, following error message is observed on SDM845.
+If we compile tools/acpi target in the top source directory, we'd get a
+compilation error showing as bellow:
 
-[    2.975888] qcom_wdt 17980000.watchdog: IRQ index 0 not found
+	# make tools/acpi
+	  DESCEND  power/acpi
+	  DESCEND  tools/acpidbg
+	  CC       tools/acpidbg/acpidbg.o
+	Assembler messages:
+	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
+			tools/acpidbg/acpidbg.o: No such file or directory
+	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
+			power/acpi/tools/acpidbg/acpidbg.o' failed
+	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
+			acpidbg.o] Error 1
+	Makefile:19: recipe for target 'acpidbg' failed
+	make[2]: *** [acpidbg] Error 2
+	Makefile:54: recipe for target 'acpi' failed
+	make[1]: *** [acpi] Error 2
+	Makefile:1607: recipe for target 'tools/acpi' failed
+	make: *** [tools/acpi] Error 2
 
-This is also seen on SC7180, SM8150 SoCs as well.
-Fix this by using platform_get_irq_optional() instead.
-
-Fixes: 36375491a4395654 ("watchdog: qcom: support pre-timeout when the bark irq is available")
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/20191213064934.4112-1-saiprakash.ranjan@codeaurora.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
+Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/qcom-wdt.c |    2 +-
+ tools/power/acpi/Makefile.config |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/watchdog/qcom-wdt.c
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -246,7 +246,7 @@ static int qcom_wdt_probe(struct platfor
- 	}
+--- a/tools/power/acpi/Makefile.config
++++ b/tools/power/acpi/Makefile.config
+@@ -15,7 +15,7 @@ include $(srctree)/../../scripts/Makefil
  
- 	/* check if there is pretimeout support */
--	irq = platform_get_irq(pdev, 0);
-+	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq > 0) {
- 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
- 				       IRQF_TRIGGER_RISING,
+ OUTPUT=$(srctree)/
+ ifeq ("$(origin O)", "command line")
+-	OUTPUT := $(O)/power/acpi/
++	OUTPUT := $(O)/tools/power/acpi/
+ endif
+ #$(info Determined 'OUTPUT' to be $(OUTPUT))
+ 
 
 
