@@ -2,137 +2,112 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D74AC3B18D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FBCC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1888821734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:27:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rXaw+VQU"
+	by mail.kernel.org (Postfix) with ESMTP id 6E2A5218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581618590;
+	bh=8HBxUh0JdyAk8hq/g0A89/Dsm5mgWq9d1peP/wtuncM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JN3pERo9bDuQPlM+BE776OAQoK5aCYXHReNdIBSjMq8WdroIQd0/sCEC8CNHRzX6l
+	 A6RZJ1RxCWDWZId8kLohPXY9ZGg+T0OD4zG2Ed06T/V6pnMP/VhGTs8/D2wqNGnb/l
+	 VLrTsGgbLt5f9SwDKd8VbsTqmKknExRPMAOHBE04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgBMS1C (ORCPT
+        id S1727794AbgBMS3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:27:02 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34828 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbgBMS1A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:27:00 -0500
-Received: by mail-oi1-f194.google.com with SMTP id b18so6796484oie.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:27:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HpDOVVwQMoKUWV1DWVonUPFvZBLp80J0wZPDxMAaRfY=;
-        b=rXaw+VQU+BjuhG30DscKYH7MHhb9UTyRb7apt36HoQ8vdfEazZoV8TpMsYehOANm0i
-         Ad49SZMMYnTxNsI7UYPu9i/7tKY+5XCh/fe8Z1IbV33TjJwh5imPo0ja1SnmDxIPKhfn
-         q+yfBnL9eDiFLTnNzbTpbFj5XyBowu9DqukeqXcR2zJ2l+nDzbWibmPHahu0Rvx6B7gV
-         LCizkUaCHYg1paEJYE6UMN3g7C1a9UI3LSbC0Pj+VY65RbvSvZZ46MAz9Lzu1ZR9HI0C
-         k+JHaH7IVx36F/8pTOY+F3F7OSNAfYTrt+U8MtfhYkDEjbioFaldj1Q3VG7lIVd6c1/G
-         sjUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HpDOVVwQMoKUWV1DWVonUPFvZBLp80J0wZPDxMAaRfY=;
-        b=K1SR6CTrktaFtUvelEnmn9cXmBlQqWeAyIllBSLdaQpWtx3eTtqUUPFH9Gb2cS4BBy
-         OkECQh/NUGx+gkdVLU/ef6Y63tbnUTEgT59l8GuPpxfB1Kl/tmmxsAXerxph3isHjSil
-         fln0/dfIq/krjV3fzzKOR7WEOTdOG6DgYJSMGXdQ50349U5AH3+gy+fTDT6O2HFEiaEl
-         5A2OnxZS7fi4XfyTPhb6Sq0baiFbt6HzHIOVLBcx6VT1PZPhMnABRJWUimRxtfGnuAXf
-         mJidgKYy75EY6uJTWqKqag9Itj2JoWPr3ISgQ/OSvSnlQtFzxBpyxvRYF5djhmJly4pA
-         OM1g==
-X-Gm-Message-State: APjAAAUMajNiXQvEHlYlBQPTGhfHczpoVVKyD+et/vlRTOw3v1Ho91BR
-        dLc5sj3d4cbSd3T9CDTwLTdXC8jGBoUwIbDoo5mq2kDXa/w=
-X-Google-Smtp-Source: APXvYqxht5FHJenXXKFjAcL0FoNd3tudfWztDG42KiVuUkVg02EE/Iivz69tviiGm0uxN1GdKP8BzvtNR9xEopXkwfI=
-X-Received: by 2002:aca:4c9:: with SMTP id 192mr4016542oie.105.1581618420229;
- Thu, 13 Feb 2020 10:27:00 -0800 (PST)
+        Thu, 13 Feb 2020 13:29:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgBMS3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:29:49 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD1A21734;
+        Thu, 13 Feb 2020 18:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581618588;
+        bh=8HBxUh0JdyAk8hq/g0A89/Dsm5mgWq9d1peP/wtuncM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C0P0qS0iaFPq1Kaie9QUKT6TZUtEVPao5URCdwXsVShflL6Eqk9tkoLQk0wz+/1Qb
+         FtnJiOnkQc4ygLqhb1ja16NuVeOMEgVSGFQ0/fqqTUBbfw9iTz1FxHzqfQ3L7hqHiB
+         d93gqPP29xH+slD2v70MT/dDwnd317f7yFxn1q5w=
+Date:   Thu, 13 Feb 2020 10:29:48 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 16/52] serial: uartps: Add a timeout to the tx empty
+ wait
+Message-ID: <20200213182948.GA3715117@kroah.com>
+References: <20200213151810.331796857@linuxfoundation.org>
+ <20200213151817.584286846@linuxfoundation.org>
+ <20200213182246.GA10589@amd>
 MIME-Version: 1.0
-References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158155490379.3343782.10305190793306743949.stgit@dwillia2-desk3.amr.corp.intel.com>
- <x498sl677cf.fsf@segfault.boston.devel.redhat.com>
-In-Reply-To: <x498sl677cf.fsf@segfault.boston.devel.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Feb 2020 10:26:49 -0800
-Message-ID: <CAPcyv4i8xNEsdX=8c2+ehf24U2AFcc-sKmAPS9UoVvm8z0aRng@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] mm/memremap_pages: Introduce memremap_compat_align()
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213182246.GA10589@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 8:58 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > The "sub-section memory hotplug" facility allows memremap_pages() users
-> > like libnvdimm to compensate for hardware platforms like x86 that have a
-> > section size larger than their hardware memory mapping granularity.  The
-> > compensation that sub-section support affords is being tolerant of
-> > physical memory resources shifting by units smaller (64MiB on x86) than
-> > the memory-hotplug section size (128 MiB). Where the platform
-> > physical-memory mapping granularity is limited by the number and
-> > capability of address-decode-registers in the memory controller.
+On Thu, Feb 13, 2020 at 07:22:46PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > commit 277375b864e8147975b064b513f491e2a910e66a upstream
+> > 
+> > In case the cable is not connected then the target gets into
+> > an infinite wait for tx empty.
+> > Add a timeout to the tx empty wait.
+> 
+> Was this tested? Because it does not work...
+> 
+> > Reported-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: stable <stable@vger.kernel.org> # 4.19
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> > @@ -681,16 +683,20 @@ static void cdns_uart_set_termios(struct uart_port *port,
+> ...
+> > +	int err;
+> >  
+> >  	spin_lock_irqsave(&port->lock, flags);
+> >  
+> >  	/* Wait for the transmit FIFO to empty before making changes */
+> >  	if (!(readl(port->membase + CDNS_UART_CR) &
+> >  				CDNS_UART_CR_TX_DIS)) {
+> > -		while (!(readl(port->membase + CDNS_UART_SR) &
+> > -				CDNS_UART_SR_TXEMPTY)) {
+> > -			cpu_relax();
+> > +		err = readl_poll_timeout(port->membase + CDNS_UART_SR,
+> > +					 val, (val & CDNS_UART_SR_TXEMPTY),
+> > +					 1000, TX_TIMEOUT);
+> > +		if (err) {
+> > +			dev_err(port->dev, "timed out waiting for tx empty");
+> > +			return;
+> >  		}
+> >  	}
 > >
-> > While the sub-section support allows memremap_pages() to operate on
-> > sub-section (2MiB) granularity, the Power architecture may still
-> > require 16MiB alignment on "!radix_enabled()" platforms.
-> >
-> > In order for libnvdimm to be able to detect and manage this per-arch
-> > limitation, introduce memremap_compat_align() as a common minimum
-> > alignment across all driver-facing memory-mapping interfaces, and let
-> > Power override it to 16MiB in the "!radix_enabled()" case.
-> >
-> > The assumption / requirement for 16MiB to be a viable
-> > memremap_compat_align() value is that Power does not have platforms
-> > where its equivalent of address-decode-registers never hardware remaps a
-> > persistent memory resource on smaller than 16MiB boundaries. Note that I
-> > tried my best to not add a new Kconfig symbol, but header include
-> > entanglements defeated the #ifndef memremap_compat_align design pattern
-> > and the need to export it defeats the __weak design pattern for arch
-> > overrides.
-> >
-> > Based on an initial patch by Aneesh.
->
-> I have just a couple of questions.
->
-> First, can you please add a comment above the generic implementation of
-> memremap_compat_align describing its purpose, and why a platform might
-> want to override it?
+> 
+> It will return with lock held and interrupts disabled. Mainline takes
+> spinlock later, so it does not have a problem.
+> 
+> Merging 107475685abfdee504bb0ef4824f15797f6d2d4d before this one
+> should fix the problem.
 
-Sure, how about:
+Good catch, that's a mess.  I'll go queue this up now.
 
-/*
- * The memremap() and memremap_pages() interfaces are alternately used
- * to map persistent memory namespaces. These interfaces place different
- * constraints on the alignment and size of the mapping (namespace).
- * memremap() can map individual PAGE_SIZE pages. memremap_pages() can
- * only map subsections (2MB), and at least one architecture (PowerPC)
- * the minimum mapping granularity of memremap_pages() is 16MB.
- *
- * The role of memremap_compat_align() is to communicate the minimum
- * arch supported alignment of a namespace such that it can freely
- * switch modes without violating the arch constraint. Namely, do not
- * allow a namespace to be PAGE_SIZE aligned since that namespace may be
- * reconfigured into a mode that requires SUBSECTION_SIZE alignment.
- */
-
-> Second, I will take it at face value that the power architecture
-> requires a 16MB alignment, but it's not clear to me why mmu_linear_psize
-> was chosen to represent that.  What's the relationship, there, and can
-> we please have a comment explaining it?
-
-Aneesh, can you help here?
+greg k-h
