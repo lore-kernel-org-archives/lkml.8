@@ -2,209 +2,202 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C32C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84641C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF4920661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608814;
-	bh=wze1R9Sx/IvZWY6+hkwJtRPbxSyVkd0ruGj6bpG/WWw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vp0JHpnlZ4rks6oacMuM7GSTSMNeg0feDdlKNu0k+EdPxQkf2GGlS0mazlnK02NFp
-	 S/qDToZ10YEa5J7ytCWMohU5PkAy0f7T3zUbEP9rsNKXOzxsG6rwToF4VAReAzEiRn
-	 pG5nXTfYX8BaiUcrriH5N47F7AwcFwcAJ641uYIw=
+	by mail.kernel.org (Postfix) with ESMTP id 540E820661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eqKyYBMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387900AbgBMPqx (ORCPT
+        id S2387926AbgBMPq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:46:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729012AbgBMP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:13 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BC592168B;
-        Thu, 13 Feb 2020 15:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607632;
-        bh=wze1R9Sx/IvZWY6+hkwJtRPbxSyVkd0ruGj6bpG/WWw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZfZmFy4judiOplb0/YoeF7isSQoaVx4z38/s66HI8U1IUp4W2bieHhiDIik7A4j5
-         k/Lc2dCuIZmVTBUuSzdSu4rRnJxa/NlFSIyCiWhvxqsIFewRKuvEkz4+CbYzR41qBZ
-         PcFWdGhOS/CLL7FEVe2rrMZSmxnzsvBDluZPvtH4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 33/96] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Thu, 13 Feb 2020 07:20:40 -0800
-Message-Id: <20200213151851.829774508@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
-References: <20200213151839.156309910@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Feb 2020 10:46:57 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46601 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387857AbgBMPqr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:46:47 -0500
+Received: by mail-io1-f65.google.com with SMTP id t26so6932878ioi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:46:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sfjJFljGr+x+pZfdmM9zNBTodLH69bxA77dBiteGy/0=;
+        b=eqKyYBMg8DZY2FoBpNd7eRsKf+QTWnZURyfZZtxV0YACNIKAiIuHLZT3WNA8f8BFEF
+         JJHjQkRQmtLrpLXl0YSDGfQXoR3J22Vs0stavAxDp7qrnVbOyYedfnvYZPNC8yXhYNG9
+         t/pC0dzm4Jkg+KGLN/OVIQYlyeePa9lfcc46wnabnvuo7rRDIy4X2wDX+KUAmnucSBy3
+         RvjwCg55eMST+B2g5fY3LaEaILcuiIISIHhd6/HskvpiNEgStsNy5EAC7M8+aDD36T5O
+         OkAlrNSO+ZD27E4HzM+W9M8TDQJ2P+zxFNM49e4Mamhz+7ZHyscnZWKefA1SIJgCgKpz
+         tqWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sfjJFljGr+x+pZfdmM9zNBTodLH69bxA77dBiteGy/0=;
+        b=WP+8RruxMYDTotb62JqZYnNy6SkiHibOaDHS06PCHHPTnVvV6/YUWP+gRWSPTIBM7b
+         THetrKWV6nknK+taWbT74j8FlSasfOiz4RqLliqvyhSupaIZwk+NVw3K3y1OMliGps/q
+         XR0Nm2ou2u69vlkGy8dIZP1NyV7mdOCvEQr7u6aEWXTwxoWXygyTTKqonLgq4ROPjayc
+         t2RGXIPJBAX2cHezbR4ZBLq7Etd4bkIpupXMbR9PsyyHPZLh/HHAtjHTA2WH1Jj0L+2L
+         zdmtNhT8A6ARiXChnIn5TWcxrgUjgSvp6pNPwUH2aGKj59Hw2LejKJpZelXYSoiI3gCj
+         5Kyw==
+X-Gm-Message-State: APjAAAWDYizNvKNoFfRYdv+InDIb/pOL95tr6my59MEog5vyvllnQWfI
+        kw9NdULCGFuYs/MU9s3NBXqYzQ==
+X-Google-Smtp-Source: APXvYqzbKWcsSwy3wFhQtDeBUK7xfE4DMydJhU9FdLKdPA7VytDplES/ElWMa70f+lPk8g8xnCLp5A==
+X-Received: by 2002:a02:a795:: with SMTP id e21mr22730090jaj.1.1581608805269;
+        Thu, 13 Feb 2020 07:46:45 -0800 (PST)
+Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id x3sm737699ior.66.2020.02.13.07.46.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 07:46:44 -0800 (PST)
+Date:   Thu, 13 Feb 2020 08:46:42 -0700
+From:   Ross Zwisler <zwisler@google.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Raul Rangel <rrangel@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mattias Nissler <mnissler@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Benjamin Gordon <bmgordon@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: [PATCH v5] Add a "nosymfollow" mount option.
+Message-ID: <20200213154642.GA38197@google.com>
+References: <20200204215014.257377-1-zwisler@google.com>
+ <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
+ <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
+ <CAGRrVHyzX4zOpO2nniv42BHOCbyCdPV9U7GE3FVhjzeFonb0bQ@mail.gmail.com>
+ <20200205032110.GR8731@bombadil.infradead.org>
+ <20200205034500.x3omkziqwu3g5gpx@yavin>
+ <CAGRrVHxRdLMx5axcB1Fyea8RZhfd-EO3TTpQtOvpOP0yxnAsbQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGRrVHxRdLMx5axcB1Fyea8RZhfd-EO3TTpQtOvpOP0yxnAsbQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+On Thu, Feb 06, 2020 at 12:10:45PM -0700, Ross Zwisler wrote:
+> On Tue, Feb 4, 2020 at 8:45 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > On 2020-02-04, Matthew Wilcox <willy@infradead.org> wrote:
+> > > On Tue, Feb 04, 2020 at 04:49:48PM -0700, Ross Zwisler wrote:
+> > > > On Tue, Feb 4, 2020 at 3:11 PM Ross Zwisler <zwisler@chromium.org> wrote:
+> > > > > On Tue, Feb 4, 2020 at 2:53 PM Raul Rangel <rrangel@google.com> wrote:
+> > > > > > > --- a/include/uapi/linux/mount.h
+> > > > > > > +++ b/include/uapi/linux/mount.h
+> > > > > > > @@ -34,6 +34,7 @@
+> > > > > > >  #define MS_I_VERSION   (1<<23) /* Update inode I_version field */
+> > > > > > >  #define MS_STRICTATIME (1<<24) /* Always perform atime updates */
+> > > > > > >  #define MS_LAZYTIME    (1<<25) /* Update the on-disk [acm]times lazily */
+> > > > > > > +#define MS_NOSYMFOLLOW (1<<26) /* Do not follow symlinks */
+> > > > > > Doesn't this conflict with MS_SUBMOUNT below?
+> > > > > > >
+> > > > > > >  /* These sb flags are internal to the kernel */
+> > > > > > >  #define MS_SUBMOUNT     (1<<26)
+> > > > >
+> > > > > Yep.  Thanks for the catch, v6 on it's way.
+> > > >
+> > > > It actually looks like most of the flags which are internal to the
+> > > > kernel are actually unused (MS_SUBMOUNT, MS_NOREMOTELOCK, MS_NOSEC,
+> > > > MS_BORN and MS_ACTIVE).  Several are unused completely, and the rest
+> > > > are just part of the AA_MS_IGNORE_MASK which masks them off in the
+> > > > apparmor LSM, but I'm pretty sure they couldn't have been set anyway.
+> > > >
+> > > > I'll just take over (1<<26) for MS_NOSYMFOLLOW, and remove the rest in
+> > > > a second patch.
+> > > >
+> > > > If someone thinks these flags are actually used by something and I'm
+> > > > just missing it, please let me know.
+> > >
+> > > Afraid you did miss it ...
+> > >
+> > > /*
+> > >  * sb->s_flags.  Note that these mirror the equivalent MS_* flags where
+> > >  * represented in both.
+> > >  */
+> > > ...
+> > > #define SB_SUBMOUNT     (1<<26)
+> > >
+> > > It's not entirely clear to me why they need to be the same, but I haven't
+> > > been paying close attention to the separation of superblock and mount
+> > > flags, so someone else can probably explain the why of it.
+> >
+> > I could be wrong, but I believe this is historic and originates from the
+> > kernel setting certain flags internally (similar to the whole O_* flag,
+> > "internal" O_* flag, and FMODE_NOTIFY mixup).
+> >
+> > Also, one of the arguments for the new mount API was that we'd run out
+> > MS_* bits so it's possible that you have to enable this new mount option
+> > in the new mount API only. (Though Howells is the right person to talk
+> > to on this point.)
+> 
+> As far as I can tell, SB_SUBMOUNT doesn't actually have any dependence on
+> MS_SUBMOUNT. Nothing ever sets or checks MS_SUBMOUNT from within the kernel,
+> and whether or not it's set from userspace has no bearing on how SB_SUBMOUNT
+> is used.  SB_SUBMOUNT is set independently inside of the kernel in
+> vfs_submount().
+> 
+> I agree that their association seems to be historical, introduced in this
+> commit from David Howells:
+> 
+> e462ec50cb5fa VFS: Differentiate mount flags (MS_*) from internal superblock flags
+> 
+> In that commit message David notes:
+> 
+>      (1) Some MS_* flags get translated to MNT_* flags (such as MS_NODEV ->
+>          MNT_NODEV) without passing this on to the filesystem, but some
+>          filesystems set such flags anyway.
+> 
+> I think this is sort of what we are trying to do with MS_NOSYMFOLLOW: have a
+> userspace flag that translates to MNT_NOSYMFOLLOW, but which doesn't need an
+> associated SB_* flag.  Is it okay to reclaim the bit currently owned by
+> MS_SUBMOUNT and use it for MS_NOSYMFOLLOW.
+> 
+> A second option would be to choose one of the unused MS_* values from the
+> middle of the range, such as 256 or 512.  Looking back as far as git will let
+> me, I don't think that these flags have been used for MS_* values at least
+> since v2.6.12:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/fs.h?id=1da177e4c3f41524e886b7f1b8a0c1fc7321cac2
+> 
+> I think maybe these used to be S_WRITE and S_APPEND, which weren't filesystem
+> mount flags?
+> 
+> https://sites.uclouvain.be/SystInfo/usr/include/sys/mount.h.html
+> 
+> A third option would be to create this flag using the new mount system:
+> 
+> https://lwn.net/Articles/753473/
+> https://lwn.net/Articles/759499/
+> 
+> My main concern with this option is that for Chrome OS we'd like to be able to
+> backport whatever solution we come up with to a variety of older kernels, and
+> if we go with the new mount system this would require us to backport the
+> entire new mount system to those kernels, which I think is infeasible.  
+> 
+> David, what are your thoughts on this?  Of these three options for supporting
+> a new MS_NOSYMFOLLOW flag:
+> 
+> 1) reclaim the bit currently used by MS_SUBMOUNT
+> 2) use a smaller unused value for the flag, 256 or 512
+> 3) implement the new flag only in the new mount system
+> 
+> do you think either #1 or #2 are workable?  If so, which would you prefer?
 
-commit 7dc2993a9e51dd2eee955944efec65bef90265b7 upstream.
-
-Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-NFS4 lease renewal, which is not compliant with the NFS4 specification.
-This can result in a lease being expired by an NFS server.
-
-Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-introduced implicit client lease renewal in nfs4_do_fsinfo(),
-which can result in the NFSv4.0 lease to expire on a server side,
-and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
-
-This can easily be reproduced by frequently unmounting a sub-mount,
-then stat'ing it to get it mounted again, which will delay or even
-completely prevent client from sending RENEW operations if no other
-NFS operations are issued. Eventually nfs server will expire client's
-lease and return an error on file access or next RENEW.
-
-This can also happen when a sub-mount is automatically unmounted
-due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-mounted again via stat(). This can result in a short window during
-which client's lease will expire on a server but not on a client.
-This specific case was observed on production systems.
-
-This patch removes the implicit lease renewal from nfs4_do_fsinfo().
-
-Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/nfs/nfs4_fs.h    |    4 +---
- fs/nfs/nfs4proc.c   |   12 ++++++++----
- fs/nfs/nfs4renewd.c |    5 +----
- fs/nfs/nfs4state.c  |    4 +---
- 4 files changed, 11 insertions(+), 14 deletions(-)
-
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -439,9 +439,7 @@ extern void nfs4_schedule_state_renewal(
- extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
- extern void nfs4_kill_renewd(struct nfs_client *);
- extern void nfs4_renew_state(struct work_struct *);
--extern void nfs4_set_lease_period(struct nfs_client *clp,
--		unsigned long lease,
--		unsigned long lastrenewed);
-+extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
- 
- 
- /* nfs4state.c */
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5024,16 +5024,13 @@ static int nfs4_do_fsinfo(struct nfs_ser
- 	struct nfs4_exception exception = {
- 		.interruptible = true,
- 	};
--	unsigned long now = jiffies;
- 	int err;
- 
- 	do {
- 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
- 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
- 		if (err == 0) {
--			nfs4_set_lease_period(server->nfs_client,
--					fsinfo->lease_time * HZ,
--					now);
-+			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
- 			break;
- 		}
- 		err = nfs4_handle_exception(server, err, &exception);
-@@ -6089,6 +6086,7 @@ int nfs4_proc_setclientid(struct nfs_cli
- 		.callback_data = &setclientid,
- 		.flags = RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
- 	};
-+	unsigned long now = jiffies;
- 	int status;
- 
- 	/* nfs_client_id4 */
-@@ -6121,6 +6119,9 @@ int nfs4_proc_setclientid(struct nfs_cli
- 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
- 		put_rpccred(setclientid.sc_cred);
- 	}
-+
-+	if (status == 0)
-+		do_renew_lease(clp, now);
- out:
- 	trace_nfs4_setclientid(clp, status);
- 	dprintk("NFS reply setclientid: %d\n", status);
-@@ -8204,6 +8205,7 @@ static int _nfs4_proc_exchange_id(struct
- 	struct rpc_task *task;
- 	struct nfs41_exchange_id_args *argp;
- 	struct nfs41_exchange_id_res *resp;
-+	unsigned long now = jiffies;
- 	int status;
- 
- 	task = nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
-@@ -8224,6 +8226,8 @@ static int _nfs4_proc_exchange_id(struct
- 	if (status != 0)
- 		goto out;
- 
-+	do_renew_lease(clp, now);
-+
- 	clp->cl_clientid = resp->clientid;
- 	clp->cl_exchange_flags = resp->flags;
- 	clp->cl_seqid = resp->seqid;
---- a/fs/nfs/nfs4renewd.c
-+++ b/fs/nfs/nfs4renewd.c
-@@ -138,15 +138,12 @@ nfs4_kill_renewd(struct nfs_client *clp)
-  *
-  * @clp: pointer to nfs_client
-  * @lease: new value for lease period
-- * @lastrenewed: time at which lease was last renewed
-  */
- void nfs4_set_lease_period(struct nfs_client *clp,
--		unsigned long lease,
--		unsigned long lastrenewed)
-+		unsigned long lease)
- {
- 	spin_lock(&clp->cl_lock);
- 	clp->cl_lease_time = lease;
--	clp->cl_last_renewal = lastrenewed;
- 	spin_unlock(&clp->cl_lock);
- 
- 	/* Cap maximum reconnect timeout at 1/2 lease period */
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -91,17 +91,15 @@ static int nfs4_setup_state_renewal(stru
- {
- 	int status;
- 	struct nfs_fsinfo fsinfo;
--	unsigned long now;
- 
- 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
- 		nfs4_schedule_state_renewal(clp);
- 		return 0;
- 	}
- 
--	now = jiffies;
- 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
- 	if (status == 0) {
--		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
-+		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
- 		nfs4_schedule_state_renewal(clp);
- 	}
- 
-
-
+Gentle ping on this - do either of the options using the existing mount API
+seem possible?  Would it be useful for me to send out example patches in one
+of those directions?  Or is it out of the question, and I should spend my time
+on making patches using the new mount system?  Thanks!
