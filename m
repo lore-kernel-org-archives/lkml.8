@@ -2,51 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6E3C3B18D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B03C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F231D2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF42217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609842;
-	bh=RKKb/C9mxcMwscJPK+XW7IOIY8L/zMq2chZNUwE3UTg=;
+	s=default; t=1581609850;
+	bh=4GOdcqzyVkvvW4T2Fc27eJrxRpenRkYFgU/XzvaDaho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yMJXEqO4x8pysRkp0w2MNsE4V9MuftbBiBbve93DJvpAEsGjDf6eQgaNIwyHjRbz7
-	 m8hycKxPUqNgTprQCePdGqgZLbq3LYqXBPZhoGo7S2j/kzBbxLSuE79sHwZwiQ1Wu9
-	 TdZqdW22jTU/9ytbrs3eGWIqCtEyr4IrLzI0s/gk=
+	b=Q0x0lAPnWSvSGCutz6Rm3ddB0gHagTHsf4INjEa1OrvZERKzFEbMznB58kkbzLXRT
+	 0fzgCz/o9MYOtg9XWeF7f6G7bc+LYjN49CgcwBlKfUwTvZoqftyWYmdYzh7HWaQrB8
+	 mFfnlSLVRMqc/gTsLoXSy35tdYxQ1hNcM0l40nIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbgBMQEA (ORCPT
+        id S2388369AbgBMQEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:04:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgBMPYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:10 -0500
+        id S1728077AbgBMPYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:09 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B915324689;
+        by mail.kernel.org (Postfix) with ESMTPSA id 16933246C3;
         Thu, 13 Feb 2020 15:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607449;
-        bh=RKKb/C9mxcMwscJPK+XW7IOIY8L/zMq2chZNUwE3UTg=;
+        bh=4GOdcqzyVkvvW4T2Fc27eJrxRpenRkYFgU/XzvaDaho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3P039h2IziMgZOwJxwffRndGuG/+MfLjkjiQZawDNnrx1jl+Z4CS94MMRqKI9lL7
-         eHQPB8dhp3uYjdRvz49TkxP44xWEErZbpv1B+ifIOj0OG10AMdm9lz64bEzuGyaxnN
-         OiUPkr7kvULjGzkx7dm8JDffSz7J7CsH4rqLko40=
+        b=y3k3n643gCNlwOxpRBLixILmKUA/DhKWXQ1KbkTJsubfXSUG1JdTUs0ZvqEIstjJ9
+         HHec4CX8Tx5Oa2f3xvgWlM8ovkn8IPi1FVZuPzhp9bSmht1cqqiUQxvKbSdi1yXJB2
+         2Yfuh4QS74++83H5qyvRgyMID4uwrXRA20n+PUJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.9 093/116] cifs: fail i/o on soft mounts if sessionsetup errors out
-Date:   Thu, 13 Feb 2020 07:20:37 -0800
-Message-Id: <20200213151919.097142220@linuxfoundation.org>
+        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 092/116] KVM: nVMX: vmread should not set rflags to specify success in case of #PF
+Date:   Thu, 13 Feb 2020 07:20:36 -0800
+Message-Id: <20200213151918.646422947@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -59,51 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit b0dd940e582b6a60296b9847a54012a4b080dc72 upstream.
+[ Upstream commit a4d956b9390418623ae5d07933e2679c68b6f83c ]
 
-RHBZ: 1579050
+In case writing to vmread destination operand result in a #PF, vmread
+should not call nested_vmx_succeed() to set rflags to specify success.
+Similar to as done in VMPTRST (See handle_vmptrst()).
 
-If we have a soft mount we should fail commands for session-setup
-failures (such as the password having changed/ account being deleted/ ...)
-and return an error back to the application.
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -247,9 +247,14 @@ smb2_reconnect(__le16 smb2_command, stru
- 	 */
- 	mutex_lock(&tcon->ses->session_mutex);
- 	rc = cifs_negotiate_protocol(0, tcon->ses);
--	if (!rc && tcon->ses->need_reconnect)
-+	if (!rc && tcon->ses->need_reconnect) {
- 		rc = cifs_setup_session(0, tcon->ses, nls_codepage);
--
-+		if ((rc == -EACCES) && !tcon->retry) {
-+			rc = -EHOSTDOWN;
-+			mutex_unlock(&tcon->ses->session_mutex);
-+			goto failed;
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index f76caa03f4f80..67cdb08a736f0 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -7653,8 +7653,10 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ 		/* _system ok, as nested_vmx_check_permission verified cpl=0 */
+ 		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
+ 						(is_long_mode(vcpu) ? 8 : 4),
+-						&e))
++						&e)) {
+ 			kvm_inject_page_fault(vcpu, &e);
++			return 1;
 +		}
-+	}
- 	if (rc || !tcon->need_reconnect) {
- 		mutex_unlock(&tcon->ses->session_mutex);
- 		goto out;
-@@ -291,6 +296,7 @@ out:
- 	case SMB2_SET_INFO:
- 		rc = -EAGAIN;
  	}
-+failed:
- 	unload_nls(nls_codepage);
- 	return rc;
- }
+ 
+ 	nested_vmx_succeed(vcpu);
+-- 
+2.20.1
+
 
 
