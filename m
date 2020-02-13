@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B08EC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6A2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E7F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E047120661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608711;
-	bh=/6nvKJXpUQXg8GvlxjuliI9HJ8lsGRxn/EMimUQ8VTQ=;
+	s=default; t=1581608719;
+	bh=ykTPePhQ0hHddIuGcVzpNHQS8K4ncWoU9fS/eVv0JTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zbWUQWH4/IVH+gzjKnr88UO16FF1MscgEgduNzhinFoBE8OPbekzwtXDRAYx5fWMa
-	 24Le78509D7pJbtyEhlRqo/kWnq6oDKFpBYNv+wyFbY5LloYLeyC2mCq3O8lFH2QV2
-	 daKwwyxhA8U4VDm4V8/gTTmoJdGsGvRQN6131wJ8=
+	b=j+y657Dh4w9Dh0FKdMdXJtlBiNB6Ni2VpATQrtd6eHcFSj7mMgiEV88MQjffGbkXL
+	 cKIdiipIz665nk+p4NVbcD4TGk3HR6gTyE6iHzvv0JcG+bi3fUQCo5ju2gb8OMUcct
+	 ILpdneXVKrvQapuql2ZkYhRrbfK/GCH17Yp6mnzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgBMPpK (ORCPT
+        id S1729937AbgBMPpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:45:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51292 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:45:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728970AbgBMP1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:34 -0500
+        id S1728612AbgBMP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:33 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA6424670;
-        Thu, 13 Feb 2020 15:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CACAE20661;
+        Thu, 13 Feb 2020 15:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607653;
-        bh=/6nvKJXpUQXg8GvlxjuliI9HJ8lsGRxn/EMimUQ8VTQ=;
+        s=default; t=1581607651;
+        bh=ykTPePhQ0hHddIuGcVzpNHQS8K4ncWoU9fS/eVv0JTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2B1LiMA0Cf7PN9qPTZVfXhQJG1auE7GYiLX68PAw87bWY0FtCsv8bJs2Q07GE10dC
-         3wqxRBA05b4hNZaYI4mOwvdcQ8h0zJ1kRJzbwK+rN+Il5I9Pev8w0MsrVgmt3FK4b5
-         9efaE3v1zevF6p7yRDvE6W+IyC/h6VGt/BJZc7wI=
+        b=x7jdKUAd4oFtswdvmpi5uzd0GRXXu3SdiKK6HCzZDlM6MEC++oo0aav121tka1Fbh
+         O9AQn2CcAcVfv+uKtkZ35ISvUnQkjytKDNj/QZCASwUzfrdb4R2+Xs8iUMnnkhdqrL
+         vAiJetIiU2PlBR2d69Tduk20NeZtL1ruVSp1WQVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 5.4 67/96] arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
-Date:   Thu, 13 Feb 2020 07:21:14 -0800
-Message-Id: <20200213151904.616191583@linuxfoundation.org>
+        stable@vger.kernel.org, Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 56/96] powerpc/papr_scm: Fix leaking bus_desc.provider_name in some paths
+Date:   Thu, 13 Feb 2020 07:21:03 -0800
+Message-Id: <20200213151901.020531511@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -62,97 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Vaibhav Jain <vaibhav@linux.ibm.com>
 
-commit c9d66999f064947e6b577ceacc1eb2fbca6a8d3c upstream.
+commit 5649607a8d0b0e019a4db14aab3de1e16c3a2b4f upstream.
 
-When fp/simd is not supported on the system, fail the operations
-of FP/SIMD regsets.
+String 'bus_desc.provider_name' allocated inside
+papr_scm_nvdimm_init() will leaks in case call to
+nvdimm_bus_register() fails or when papr_scm_remove() is called.
 
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+This minor patch ensures that 'bus_desc.provider_name' is freed in
+error path for nvdimm_bus_register() as well as in papr_scm_remove().
+
+Fixes: b5beae5e224f ("powerpc/pseries: Add driver for PAPR SCM regions")
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200122155140.120429-1-vaibhav@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/ptrace.c |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/powerpc/platforms/pseries/papr_scm.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -615,6 +615,13 @@ static int gpr_set(struct task_struct *t
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -342,6 +342,7 @@ static int papr_scm_nvdimm_init(struct p
+ 	p->bus = nvdimm_bus_register(NULL, &p->bus_desc);
+ 	if (!p->bus) {
+ 		dev_err(dev, "Error creating nvdimm bus %pOF\n", p->dn);
++		kfree(p->bus_desc.provider_name);
+ 		return -ENXIO;
+ 	}
+ 
+@@ -498,6 +499,7 @@ static int papr_scm_remove(struct platfo
+ 
+ 	nvdimm_bus_unregister(p->bus);
+ 	drc_pmem_unbind(p);
++	kfree(p->bus_desc.provider_name);
+ 	kfree(p);
+ 
  	return 0;
- }
- 
-+static int fpr_active(struct task_struct *target, const struct user_regset *regset)
-+{
-+	if (!system_supports_fpsimd())
-+		return -ENODEV;
-+	return regset->n;
-+}
-+
- /*
-  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
-  */
-@@ -637,6 +644,9 @@ static int fpr_get(struct task_struct *t
- 		   unsigned int pos, unsigned int count,
- 		   void *kbuf, void __user *ubuf)
- {
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	if (target == current)
- 		fpsimd_preserve_current_state();
- 
-@@ -676,6 +686,9 @@ static int fpr_set(struct task_struct *t
- {
- 	int ret;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	ret = __fpr_set(target, regset, pos, count, kbuf, ubuf, 0);
- 	if (ret)
- 		return ret;
-@@ -1134,6 +1147,7 @@ static const struct user_regset aarch64_
- 		 */
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
-+		.active = fpr_active,
- 		.get = fpr_get,
- 		.set = fpr_set
- 	},
-@@ -1348,6 +1362,9 @@ static int compat_vfp_get(struct task_st
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
- 
- 	if (target == current)
-@@ -1381,6 +1398,9 @@ static int compat_vfp_set(struct task_st
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
- 
- 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
-@@ -1438,6 +1458,7 @@ static const struct user_regset aarch32_
- 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
- 		.size = sizeof(compat_ulong_t),
- 		.align = sizeof(compat_ulong_t),
-+		.active = fpr_active,
- 		.get = compat_vfp_get,
- 		.set = compat_vfp_set
- 	},
 
 
