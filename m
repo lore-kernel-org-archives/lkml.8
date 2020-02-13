@@ -2,54 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A722C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF2FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E691F206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8FA20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610162;
-	bh=9W9fDx/JQzv1ID2zg5J16xrPyezITT+LM//09W5EwM4=;
+	s=default; t=1581610165;
+	bh=C/KSeumCKQrlGaYzZtvayE9/zeeczn5aHpPGdIHJ8+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M1PmENT/A0skYjgKOJxhh7NjqqBCmJjMBfUZ6djrjwe9mHnzEwwk+X5Bluu6ELlq0
-	 0pYQUNbk12qEdcDyj9bPlvtfGnJpxewdzpdvk1pX6jiYmzgRhpe38pEvn2QYhZXHmV
-	 xZejCnrq37uHvoxu/tzGhaLECTntBcKGI9ZsX1jw=
+	b=WvbMDznqxwIC/QaCAJd6HFJLm9eUAeBoQA122cRXr4L0upBNjN/FKsUZSGHadyrXp
+	 nwBRgxfTl+8efhFrWOKSXxQQS+LNxv4vSnYswYVai9nvHLuWHH61i0/JQGtZJnpMIm
+	 HoyCyIjahzh2oTLlJ+qy6gDwrotg44NdWOfHhRTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgBMPWt (ORCPT
+        id S1728354AbgBMQJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:09:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727934AbgBMPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:38 -0500
+        id S1728117AbgBMPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:47 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC04620848;
-        Thu, 13 Feb 2020 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39F5E2469A;
+        Thu, 13 Feb 2020 15:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607357;
-        bh=9W9fDx/JQzv1ID2zg5J16xrPyezITT+LM//09W5EwM4=;
+        s=default; t=1581607366;
+        bh=C/KSeumCKQrlGaYzZtvayE9/zeeczn5aHpPGdIHJ8+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CmiKJB3ClCKaIoghV0a8IF3AmW9p//NMrCkmGhNIGr6my9ThUYrdyXmAZlgbr9l9q
-         WYx6sLa8CEwU6F8zCIp4RIM3Cmeyq6Of/23ep5tH7sbQPc+epgR5FRJ7302aWTejo6
-         EYf4ENGPpmPTvofAP8QbZhV01w4RC9xHv/psWupU=
+        b=Ts2Pacq/J2pqpY8mhoEIr0kipd8lsOpDQbzzGKl/Rtrf08hR+fWYojtpCtDQESB5R
+         Anm/b9RkFVmCgAjofcPnceRt2HuCNWMLupl7Hdr8cgqmiT8XxOld5NuMzON35cjvRl
+         mwh3ZVtOGVDxePO0KHaFmqk20Prk6pWd6ExRr69w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.4 25/91] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-Date:   Thu, 13 Feb 2020 07:19:42 -0800
-Message-Id: <20200213151831.379688414@linuxfoundation.org>
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 55/91] net: tulip: Adjust indentation in {dmfe, uli526x}_init_module
+Date:   Thu, 13 Feb 2020 07:20:12 -0800
+Message-Id: <20200213151843.001323562@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,80 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit dabf6b36b83a18d57e3d4b9d50544ed040d86255 upstream.
+commit fe06bf3d83ef0d92f35a24e03297172e92ce9ce3 upstream.
 
-There's an OF helper called of_dma_is_coherent(), which checks if a
-device has a "dma-coherent" property to see if the device is coherent
-for DMA.
+Clang warns:
 
-But on some platforms devices are coherent by default, and on some
-platforms it's not possible to update existing device trees to add the
-"dma-coherent" property.
+../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        switch (mode) {
+        ^
+../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
+statement is here
+        if (cr6set)
+        ^
+1 warning generated.
 
-So add a Kconfig symbol to allow arch code to tell
-of_dma_is_coherent() that devices are coherent by default, regardless
-of the presence of the property.
+../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        switch(mode) {
+        ^
+../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
+statement is here
+        if (cr6set)
+        ^
+1 warning generated.
 
-Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-when the system has a coherent cache.
+This warning occurs because there is a space before the tab on these
+lines. Remove them so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-Cc: stable@vger.kernel.org # v3.16+
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+While we are here, adjust the default block in dmfe_init_module to have
+a proper break between the label and assignment and add a space between
+the switch and opening parentheses to avoid a checkpatch warning.
+
+Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/795
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/Kconfig |    1 +
- drivers/of/Kconfig   |    4 ++++
- drivers/of/address.c |    6 +++++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/dec/tulip/dmfe.c    |    7 ++++---
+ drivers/net/ethernet/dec/tulip/uli526x.c |    4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -93,6 +93,7 @@ config PPC
- 	select BINFMT_ELF
- 	select ARCH_HAS_ELF_RANDOMIZE
- 	select OF
-+	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
- 	select OF_EARLY_FLATTREE
- 	select OF_RESERVED_MEM
- 	select HAVE_FTRACE_MCOUNT_RECORD
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -112,4 +112,8 @@ config OF_OVERLAY
- 	  While this option is selected automatically when needed, you can
- 	  enable it manually to improve device tree unit test coverage.
+--- a/drivers/net/ethernet/dec/tulip/dmfe.c
++++ b/drivers/net/ethernet/dec/tulip/dmfe.c
+@@ -2228,15 +2228,16 @@ static int __init dmfe_init_module(void)
+ 	if (cr6set)
+ 		dmfe_cr6_user_set = cr6set;
  
-+config OF_DMA_DEFAULT_COHERENT
-+	# arches should select this if DMA is coherent by default for OF devices
-+	bool
-+
- endif # OF
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -1009,12 +1009,16 @@ EXPORT_SYMBOL_GPL(of_dma_get_range);
-  * @np:	device node
-  *
-  * It returns true if "dma-coherent" property was found
-- * for this device in DT.
-+ * for this device in the DT, or if DMA is coherent by
-+ * default for OF devices on the current platform.
-  */
- bool of_dma_is_coherent(struct device_node *np)
- {
- 	struct device_node *node = of_node_get(np);
+- 	switch(mode) {
+-   	case DMFE_10MHF:
++	switch (mode) {
++	case DMFE_10MHF:
+ 	case DMFE_100MHF:
+ 	case DMFE_10MFD:
+ 	case DMFE_100MFD:
+ 	case DMFE_1M_HPNA:
+ 		dmfe_media_mode = mode;
+ 		break;
+-	default:dmfe_media_mode = DMFE_AUTO;
++	default:
++		dmfe_media_mode = DMFE_AUTO;
+ 		break;
+ 	}
  
-+	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
-+		return true;
-+
- 	while (node) {
- 		if (of_property_read_bool(node, "dma-coherent")) {
- 			of_node_put(node);
+--- a/drivers/net/ethernet/dec/tulip/uli526x.c
++++ b/drivers/net/ethernet/dec/tulip/uli526x.c
+@@ -1813,8 +1813,8 @@ static int __init uli526x_init_module(vo
+ 	if (cr6set)
+ 		uli526x_cr6_user_set = cr6set;
+ 
+- 	switch (mode) {
+-   	case ULI526X_10MHF:
++	switch (mode) {
++	case ULI526X_10MHF:
+ 	case ULI526X_100MHF:
+ 	case ULI526X_10MFD:
+ 	case ULI526X_100MFD:
 
 
