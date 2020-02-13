@@ -2,56 +2,59 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EA8C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2760EC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A069A20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA885206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610071;
-	bh=5P2ZoAS8iW57cEU+808Z4LNRPtVpxp01ip+yBhyB0qU=;
+	s=default; t=1581610076;
+	bh=ISIJ810rpefs2a03JAvJn/yTy3CJ2mfQscDg8waXwDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GH6qmxsixMUEIcf3ltx0F4r/kpWWteWlKTITHLD7hjuyO6WWANkjFKYjHVLgKddNC
-	 P2tU1VTFcsYspz5oVPBVBdAVmUWRwqbix4MnlEUq/ie2C/5a4ND1GrEtLgOK7LZm5d
-	 YNHh57bsAGrhCoYXCuFDb82kPRMPx46wG46Jw/lk=
+	b=na3LifrsJT30mrykPc1p7ka4yW+9Jpn8wgA0bolz/rrBzl9Gf93Gx6NYGGRlX+RLN
+	 lL62cUu4L4/IOICXP42wsxlY5Z0VryLDVC4OWAB35M/cQJBJZLdSH59lDiDknhNbT2
+	 hTu6zfNXKfwwFxWUJ2/lKIXWkh+DA/oBwaB5kdXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388396AbgBMQHv (ORCPT
+        id S1730279AbgBMQHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:07:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728331AbgBMPXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:17 -0500
+        id S1728325AbgBMPXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D5C4246C1;
-        Thu, 13 Feb 2020 15:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF652469C;
+        Thu, 13 Feb 2020 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607397;
-        bh=5P2ZoAS8iW57cEU+808Z4LNRPtVpxp01ip+yBhyB0qU=;
+        s=default; t=1581607396;
+        bh=ISIJ810rpefs2a03JAvJn/yTy3CJ2mfQscDg8waXwDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuxyDbT/mWys80DYPcjTYm5dtZgMGpVN1Tfr6tdprz5DRFaZIl2H2rU3+k/C/gneA
-         bw45b0uP1XFfBh3/q6Q/j9C+Jp6eCfzBS3fJjYkZVl+pMz4M/2I7QNmgk8FeVW2V9G
-         YGMuWLRAjekfyNWsoBn622/Wp/yFtlU9HgBZWvyA=
+        b=dSP3vQogqA/UKaEy5uJMLx/ebDRrqdgOQGlAwI8Nv3Hxb+982sm2NrDUsffYNgIYi
+         a/7on2MfBePfOzUYiQaxXPtXpllqxJC6nldR2nWTxhNVPbObAbf5fx5nqsG+3T0wE6
+         Hq5ft1pkZWXbP6GiG6JU306506JeJjYmbUjhSVB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.9 011/116] tcp: clear tp->total_retrans in tcp_disconnect()
-Date:   Thu, 13 Feb 2020 07:19:15 -0800
-Message-Id: <20200213151847.121055994@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 001/116] media: iguanair: fix endpoint sanity check
+Date:   Thu, 13 Feb 2020 07:19:05 -0800
+Message-Id: <20200213151842.789699352@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,32 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit c13c48c00a6bc1febc73902505bdec0967bd7095 ]
+[ Upstream commit 1b257870a78b0a9ce98fdfb052c58542022ffb5b ]
 
-total_retrans needs to be cleared in tcp_disconnect().
+Make sure to use the current alternate setting, which need not be the
+first one by index, when verifying the endpoint descriptors and
+initialising the URBs.
 
-tcp_disconnect() is rarely used, but it is worth fixing it.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 26ff63137c45 ("[media] Add support for the IguanaWorks USB IR Transceiver")
+Fixes: ab1cbdf159be ("media: iguanair: add sanity checks")
+Cc: stable <stable@vger.kernel.org>     # 3.6
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/rc/iguanair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2301,6 +2301,7 @@ int tcp_disconnect(struct sock *sk, int
- 	tcp_set_ca_state(sk, TCP_CA_Open);
- 	tp->is_sack_reneg = 0;
- 	tcp_clear_retrans(tp);
-+	tp->total_retrans = 0;
- 	inet_csk_delack_init(sk);
- 	/* Initialize rcv_mss to TCP_MIN_MSS to avoid division by 0
- 	 * issue in __tcp_select_window()
+diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
+index 25470395c43f1..246795c315533 100644
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -430,7 +430,7 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
+ 
+-	idesc = intf->altsetting;
++	idesc = intf->cur_altsetting;
+ 	if (idesc->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
+ 
+-- 
+2.20.1
+
 
 
