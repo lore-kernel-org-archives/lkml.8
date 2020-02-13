@@ -2,96 +2,88 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837F4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6779CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503D121734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HdWCTIPh"
+	by mail.kernel.org (Postfix) with ESMTP id 2AF2421734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgBMIaM (ORCPT
+        id S1729600AbgBMIdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 03:30:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47938 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgBMIaM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 03:30:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lqYHniyuFF82g1hkULXfEHjo4HV1jpimDv0o2K20OUU=; b=HdWCTIPhz1Qqup3ZyZCHR7FwoA
-        zWEfEKNgo3x7t8+smFyp0QXWcoE+WJVmBNcjK45jVIeqVVXG0n8eOwFoHSA8kaRhR4zbSM9usP1JC
-        JXvNuUCtU2SddqMInPipINGFrrpqD/a/0yOEGrbFa9f21KFd6dK7qZABfYm6g/2oiX/wlnz0dC5Or
-        qzHXAAuIq0Zmql9FTORDSbQlXabm4Cbqka71D5FyVxdbw1HrMSnpdlvFco3V6fjRLnTrwZKmf7Ff3
-        r1IlfGsVZPnfBZYSmFmm/Zgv1FmELK9TvsI0Sd/yLAbgZH8OkVxmBBDCAZVC/4GXMiRxU2RzQuN9U
-        XN+kZHhg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j29sf-0003Jc-71; Thu, 13 Feb 2020 08:29:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 18D2C300606;
-        Thu, 13 Feb 2020 09:28:02 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A01072B4CEBC2; Thu, 13 Feb 2020 09:29:51 +0100 (CET)
-Date:   Thu, 13 Feb 2020 09:29:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com,
-        "Steven Rostedt (VMware)" <rosted@goodmis.org>
-Subject: Re: [PATCH v2 6/9] perf,tracing: Prepare the perf-trace interface
- for RCU changes
-Message-ID: <20200213082951.GK14897@hirez.programming.kicks-ass.net>
-References: <20200212210139.382424693@infradead.org>
- <20200212210750.142334759@infradead.org>
- <20200212232830.GB170680@google.com>
+        Thu, 13 Feb 2020 03:33:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39770 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgBMIdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 03:33:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5767EAB92;
+        Thu, 13 Feb 2020 08:33:34 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 09:33:33 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-rt-users@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: Question about kthread_mod_delayed_work() allowed context
+Message-ID: <20200213083333.jglatxs5j76z2634@pathway.suse.cz>
+References: <cfa886ad-e3b7-c0d2-3ff8-58d94170eab5@ti.com>
+ <20200212154116.hh2vdyi7e2xflxr5@pathway.suse.cz>
+ <59802c56-1013-3042-167d-89f288f51b58@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212232830.GB170680@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <59802c56-1013-3042-167d-89f288f51b58@ti.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 06:28:30PM -0500, Joel Fernandes wrote:
-> On Wed, Feb 12, 2020 at 10:01:45PM +0100, Peter Zijlstra wrote:
-> > The tracepoint interface will stop providing regular RCU context; make
-> > sure we do it ourselves, since perf makes use of regular RCU protected
-> > data.
-> > 
-> > Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-> > Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  kernel/events/core.c |    5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -8950,6 +8950,7 @@ void perf_tp_event(u16 event_type, u64 c
-> >  {
-> >  	struct perf_sample_data data;
-> >  	struct perf_event *event;
-> > +	unsigned long rcu_flags;
+On Wed 2020-02-12 21:17:53, Grygorii Strashko wrote:
 > 
-> The flags are not needed I guess, if you agree on not using in_nmi() in
-> trace_rcu_enter().
+> 
+> On 12/02/2020 17:41, Petr Mladek wrote:
+> > On Tue 2020-02-11 12:23:59, Grygorii Strashko wrote:
+> > > Hi All,
+> > > 
+> > > I'd like to ask question about allowed calling context for kthread_mod_delayed_work().
+> > > 
+> > > The comment to kthread_mod_delayed_work() says:
+> > > 
+> > >   * This function is safe to call from any context including IRQ handler.
+> > >   * See __kthread_cancel_work() and kthread_delayed_work_timer_fn()
+> > >   * for details.
+> > >   */
+> > > 
+> > > But it has del_timer_sync() inside which seems can't be called from hard_irq context:
+> > > kthread_mod_delayed_work()
+> > >    |-__kthread_cancel_work()
+> > >       |- del_timer_sync()
+> > > 	|- WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
+> > 
+> > It is safe because kthread_delayed_work_timer_fn() is IRQ safe.
+> > Note that it uses raw_spin_lock_irqsave(). It is the reason why
+> > the timer could have set TIMER_IRQSAFE flag, see
+> > KTHREAD_DELAYED_WORK_INIT().
+> > 
+> > In more details. The timer is either canceled before the callback
+> > is called. Or it waits for the callback but the callback is safe
+> > because it can't sleep.
+> 
+> I think, my issue (warning) could be related to the fact that kthread_init_delayed_work()
+> is used, which seems doesn't set TIMER_IRQSAFE flag.
 
-Even then we need to store the state: 'didn't do nothing' vs 'did call
-rcu_needs_to_wake_up_and_pay_attention_noaw'. That is, we only need to
-do something (expensive!) when !rcu_is_watching().
+Great catch!
+
+It is a bug. Would you like to send the fix for
+kthread_init_delayed_work() or would you prefer me doing so?
+
+Best Regards,
+Petr
