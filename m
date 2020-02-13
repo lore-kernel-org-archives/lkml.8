@@ -2,87 +2,120 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E90BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFC4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B6F218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:51:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="NyzKwIB/"
+	by mail.kernel.org (Postfix) with ESMTP id 25F612465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581601902;
+	bh=pF4wlPm9/JXNtyZZgcDgJBkXBHSKCagMx2dgXhEweXI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=i9WDfrbAtoOMmg3SxFe9CLyJdMsKXKuF09gYjVsLKeH3GWh2InSQtWCueN8aOz7Bs
+	 0uq0Ef88cKzaHe5/y5OSfx8oZOi1Vd/P9GsdaXmt7E1bamR4CYk5MDstd0OqFH7m53
+	 fRaDknY57sIrozKCffKIi66m5F3BksjJ8YzvB7dU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgBMNvh (ORCPT
+        id S1730171AbgBMNvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:51:37 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35853 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730122AbgBMNvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:51:36 -0500
-Received: by mail-lf1-f68.google.com with SMTP id f24so4330616lfh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 05:51:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1lG9y4Y60ZGG6VZ/pe41Q4KolNDjo1CpYjwUfuOyDDQ=;
-        b=NyzKwIB/nqaOMRkb9Q43JHPCN0+0LktJbc5T5aU9knSi6qgM/1tZmDQKiVzznl/UVR
-         75tRahnZmakJR0nRQo32r9z+u4nZma+cH7hWKnbGvMTPxV3GDARIvoZbbZ2D3dt2xdfD
-         r1shDQWIpcKOylKA+tDsQYiGEACIK9ajrKZgAljbiDQbyRi0OxVjFe4d2DG52n/+Lpmu
-         id4dnWKrwqUn9Z0OJMGt14GsFlMnvt3TTLNdW7pjuRiKbeIpZbgXb8hpLpfB/aXiIeCB
-         Pu+RFN9pF7jeBEORMAsEPKcWdcgR8j4cx5ed9RD1KOzg1t8aKqyhlLKHe+ebooGVkgSn
-         F9Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1lG9y4Y60ZGG6VZ/pe41Q4KolNDjo1CpYjwUfuOyDDQ=;
-        b=d5MKWfoYH5lWh6gA/xjsm2TzjHadqkp4jyd4tVFIUyYjCYAWfOPrgzVYD3PSnq9Ujc
-         spz/a6hzVtbuKCy909XsKlFsbW46wQXOmKVZubQ7VVPv+NGiC0Rh6bpPZW1ggpZuePfE
-         1p/maByx+0vNdASHOOyyZ2lv1c83wyO8iUPXyg9Fck2ksYzoJyxLY7SDDJfP0lzoM9BM
-         TGq5duoZhSnzoK2pKfo9Ql3VAQ58Atieb1kpBPSVOlKizgTV3+XUVdeT+ATT18H0RnJW
-         VfXd56/gZazV84qM2dyTH3nYux2vdcWegoBNszUqSQstoIJHm9fdIYCkIveJ5PP0T30n
-         438g==
-X-Gm-Message-State: APjAAAW21ZDLyb/EEQHVZveWd7iPAwYQ0jB5JYvHqRG+cuM14tOdXdqF
-        mZDRM96Q8QtDWQ0y7I9EZuVCHg==
-X-Google-Smtp-Source: APXvYqzWuKQ/3f41ZkQFFOSdLEdLeEplpVEvsmF9jt0nklDHYyh1huhxdtI5NjO3NWHolQTzW8+Zkw==
-X-Received: by 2002:ac2:5e7a:: with SMTP id a26mr9585633lfr.167.1581601894891;
-        Thu, 13 Feb 2020 05:51:34 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r2sm1670194lff.63.2020.02.13.05.51.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 05:51:34 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 6F7B0100F25; Thu, 13 Feb 2020 16:51:56 +0300 (+03)
-Date:   Thu, 13 Feb 2020 16:51:56 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/25] mm: Unexport find_get_entry
-Message-ID: <20200213135156.cqoqokb4bzvro3mp@box>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-5-willy@infradead.org>
+        Thu, 13 Feb 2020 08:51:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730122AbgBMNvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 08:51:40 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [193.85.242.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC25222C2;
+        Thu, 13 Feb 2020 13:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581601900;
+        bh=pF4wlPm9/JXNtyZZgcDgJBkXBHSKCagMx2dgXhEweXI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=MJE+YmU/LHus552WlM+1i1hPEfM2/kwib0ms+NklJoBrzVaob0EEwAW1ddWpUjgw8
+         0XDOtwXwr7RvXmP23EFI3vuy4BH/xWWFs92UAYuXbaPDaoZSPaFn0nXCnZLHRFY5kb
+         FWFkYz44r6vEkpwdPTT9cEKdwTvy0DafEO4T9dXY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3AAA935226E8; Thu, 13 Feb 2020 05:51:38 -0800 (PST)
+Date:   Thu, 13 Feb 2020 05:51:38 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213135138.GB2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200212210139.382424693@infradead.org>
+ <20200212210749.971717428@infradead.org>
+ <20200212232005.GC115917@google.com>
+ <20200213082716.GI14897@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212041845.25879-5-willy@infradead.org>
+In-Reply-To: <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 08:18:24PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Thu, Feb 13, 2020 at 09:27:16AM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 12, 2020 at 06:20:05PM -0500, Joel Fernandes wrote:
+> > On Wed, Feb 12, 2020 at 10:01:42PM +0100, Peter Zijlstra wrote:
 > 
-> No in-tree users (proc, madvise, memcg, mincore) can be built as a module.
+> > > +#define trace_rcu_enter()					\
+> > > +({								\
+> > > +	unsigned long state = 0;				\
+> > > +	if (!rcu_is_watching())	{				\
+> > > +		if (in_nmi()) {					\
+> > > +			state = __TR_NMI;			\
+> > > +			rcu_nmi_enter();			\
+> > > +		} else {					\
+> > > +			state = __TR_IRQ;			\
+> > > +			rcu_irq_enter_irqsave();		\
+> > 
+> > I think this can be simplified. You don't need to rely on in_nmi() here. I
+> > believe for NMI's, you can just call rcu_irq_enter_irqsave() and that should
+> > be sufficient to get RCU watching. Paul can correct me if I'm wrong, but I am
+> > pretty sure that would work.
+> > 
+> > In fact, I think a better naming for rcu_irq_enter_irqsave() pair could be
+> > (in the first patch):
+> > 
+> > rcu_ensure_watching_begin();
+> > rcu_ensure_watching_end();
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> So I hadn't looked deeply into rcu_irq_enter(), it seems to call
+> rcu_nmi_enter_common(), but with @irq=true.
+> 
+> What exactly is the purpose of that @irq argument, and how much will it
+> hurt to lie there? Will it come apart if we have @irq != !in_nmi()
+> for example?
+> 
+> There is a comment in there that says ->dynticks_nmi_nesting ought to be
+> odd only if we're in NMI. The only place that seems to care is
+> rcu_nmi_exit_common(), and that does indeed do something different for
+> IRQs vs NMIs.
+> 
+> So I don't think we can blindly unify this. But perhaps Paul sees a way?
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+The reason for the irq argument is to avoid invoking
+rcu_prepare_for_idle() and rcu_dynticks_task_enter() from NMI context
+from rcu_nmi_exit_common().  Similarly, we need to avoid invoking
+rcu_dynticks_task_exit() and rcu_cleanup_after_idle() from NMI context
+from rcu_nmi_enter_common().
 
--- 
- Kirill A. Shutemov
+It might well be that I could make these functions be NMI-safe, but
+rcu_prepare_for_idle() in particular would be a bit ugly at best.
+So, before looking into that, I have a question.  Given these proposed
+changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
+to just use in_nmi()?
+
+							Thanx, Paul
