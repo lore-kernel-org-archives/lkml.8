@@ -2,525 +2,687 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01752C3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737B0C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B9724650
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389792173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Rer5qhVu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGR4OKGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgBMDXo (ORCPT
+        id S1729562AbgBMDZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 22:23:44 -0500
-Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:28486
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729407AbgBMDXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 22:23:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oy3zE7x2J1PHD1fHrC2s/Nz7B7Md8he++7GjeaKNuIGMnaPDw3wgAJrGoBWyJAIyS5vniK2E0gOq5rBG/hcnkyKcRq4iB8vLoExYs3qt7g7R4de1WcWCJj27WeEniLIOA0b7Ud74UQK6oRe0w5w2lPnxB05Up0pMPb6laPnxVMSxMuN0yONODu06dWbEH+FOMTnSG3g+O7Z0yg0qpPbxVldwi7vsGq1aCbeNQgGaj7tkZpcSilJz4EAXA3TJKUgdu/MI3nOdD4meOZNK0weQcjE2YkyVO8KKFrnzKwohYpeDS3EirRE0shiT/pm2Yjh/WLY+30KNuKBzFvrjZwEn0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yYFd8OKT9jTm++hzkYROS8OIM1o+OKPul+fiRRWtDpg=;
- b=gMoLsgZQ2HBjFQFSaBuOV4HT2mQdCxJme38zLVWCgMknVtSSQ6EpCPTQnaaP8TkSVMLIVURSuFp1jBfQ0+SGw4EONMoNk/yFH3nNWsNVyQg1d7GlBVs7pNNK/DiZBN9lkQMjSvDOvEn1VblaIh1BXpQ7SkqzkpTNuYKknWgMphBoNWTxSeCf0ABW5fONkh5ytQUzkJa4dIxBoMgjd0azmiTbjkkpuhA0HggjvAGmm1OPfrelyZ+mlYrcRY554IS+W3qXvcz3Q4Kf1wNaO/844P+xZaDnhv9X5Rhe/zNEPTR0icifIT6am3VmioVBkdTLSabf3bZ+n6c2eLMYqBe9NA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yYFd8OKT9jTm++hzkYROS8OIM1o+OKPul+fiRRWtDpg=;
- b=Rer5qhVuU89nn3SRxsE8fQ8Sj0nArHHWfyFAUxyDaK5LTehBBCiecSjKDk0DSwJOukAqKmkAK30nZVs8SAYgccxoF2dQ54ABr311VqKfxiOgrpr78bGy4kcqU57/ZN/lO1YrxjepzsCYKC82VQgcRTCuAAsRNSupChbBDg6pBvM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4947.eurprd04.prod.outlook.com (20.177.40.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.29; Thu, 13 Feb 2020 03:23:36 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.024; Thu, 13 Feb 2020
- 03:23:36 +0000
-From:   peng.fan@nxp.com
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2] ARM: dts: imx: use generic name bus
-Date:   Thu, 13 Feb 2020 11:17:58 +0800
-Message-Id: <1581563878-26388-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR03CA0050.apcprd03.prod.outlook.com
- (2603:1096:202:17::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Wed, 12 Feb 2020 22:25:06 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:34380 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729432AbgBMDZG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 22:25:06 -0500
+Received: by mail-yb1-f195.google.com with SMTP id w17so2300416ybm.1;
+        Wed, 12 Feb 2020 19:25:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EO107uylo/z2shTvfRPaHJzY6h/8tqUKxb13TC6w+3k=;
+        b=vGR4OKGJURkkoLtNbFV28l4xoxB9IJlVFLfRoJZo4iT96qj6UBj44z7dR9Qf9VIyhB
+         /GakKNbBQt5lGPLaaq8J4WmFvFaoV7DXiz8jAtD1depcjI+CLDtjjnApwMLCocGnU7qe
+         WDqqjD7lGQO/Dqt+aoYri1nRkCFNWSa9a7mvlqq7GctfOdvM1S2F0xSzt2xBplbPPaN/
+         Vll+9UPXD0TPWIXQVm28sW5Wc0Lo4CjqKXpWwakivfr3/nwmslHicPz3iDa+hrcwP/3r
+         aY8FVx0ZKlHo8NC9hS+WIX1C8jzqvNwNmzlTRqjVKjeUaxSaG0cx/yjwrfk2AY4UkgyF
+         O6bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EO107uylo/z2shTvfRPaHJzY6h/8tqUKxb13TC6w+3k=;
+        b=C7/SYRck7RXugalAiKPJLKda+Vr/fVSoblmyALxGNmIONxr8BETqh3/2XV3u4jXCad
+         6P9RQs0tgMWbh6KLgdBNbVq+5B8skBtXkoJ72gmq5B0is5k6b6HwA23CUVhcVez7sinI
+         QAnJMA9pUbDwWqdAMwoIR9iBdTSsP/bpcRxBGFsVYOVa45jHhVZXs9sbt5Azffa/xTcI
+         YdKLxNLsJ/IH4OOwxwN6tlHmGA0LkFp/WPpC/DG/IA+SPuDlyTqlRPg+uveS1Dnq1IZC
+         Li0FIdc3Bh5OV/98xoPkHTVs92369V65pprb5oFHAG7eOdWj9YuVoVb9ik8I+iE71R6e
+         p8Eg==
+X-Gm-Message-State: APjAAAXuzvorlKS61xFCedaMfwzImAmE79XS7eqDBRBSnzeMkT0bVccj
+        4nNy2ySf7Og9SOgaHlWu/UM=
+X-Google-Smtp-Source: APXvYqzLYpmsu7yw1wmIIGycRDlbpkHI3wj09cmpfs1t8mfXrTzYnvtY3Xju6j3BXZWeJRxysAuxxA==
+X-Received: by 2002:a25:c54a:: with SMTP id v71mr13459235ybe.6.1581564304352;
+        Wed, 12 Feb 2020 19:25:04 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id y189sm487854ywe.21.2020.02.12.19.25.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 19:25:04 -0800 (PST)
+Subject: Re: [PATCH v3 kunit-next 1/2] kunit: add debugfs
+ /sys/kernel/debug/kunit/<suite>/results display
+To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        gregkh@linuxfoundation.org, shuah@kernel.org
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        corbet@lwn.net, davidgow@google.com
+References: <1581094694-6513-1-git-send-email-alan.maguire@oracle.com>
+ <1581094694-6513-2-git-send-email-alan.maguire@oracle.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <c42ac237-476a-526f-b445-61e7a63bc101@gmail.com>
+Date:   Wed, 12 Feb 2020 21:25:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Received: from localhost.localdomain (119.31.174.66) by HK2PR03CA0050.apcprd03.prod.outlook.com (2603:1096:202:17::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.6 via Frontend Transport; Thu, 13 Feb 2020 03:23:33 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: cb7e7cba-3bb2-41a8-60ed-08d7b0341cac
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4947:|AM0PR04MB4947:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB49475537B147B404FC81972A881A0@AM0PR04MB4947.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:86;
-X-Forefront-PRVS: 031257FE13
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(346002)(396003)(136003)(199004)(189003)(86362001)(8936002)(2906002)(52116002)(69590400006)(36756003)(186003)(16526019)(5660300002)(26005)(6506007)(2616005)(81156014)(81166006)(30864003)(8676002)(316002)(478600001)(6666004)(6512007)(66476007)(66946007)(66556008)(956004)(6486002)(4326008)(9686003)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4947;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZfQ6PvxHzApJJ8QDV/Qd90mIZpVo8EmRVxrriTdUnpCCpYVymZ44wy8KfyxXGEGReQOVSOc2K5dwpNWBMNOk6Zv1CoURNxX0tmkvurc0wiUnMlnXdwGQKr8RKQGdF9fz93KmRA+wvOs8XfK4uJsrUZBSmS2Y+B1yesTsjQZefeu6x1rzshlkNyfer7OTBS8CdaWctzPOJtY+vL4GKfy5P48KhaWH2K7gMvAqsgBv5VDpau81BL7CF01xHwOP/DC8NXUsU9V29J/KxTLbLOokxHFTUzcQKUxM3Znmp9Y0SiRSJH2JiO2ZMpN0Nu7Jx4cyLxlo41QMJX+W4PR+FZrZ+B19zXjwG1xkEwa46LGSJ4szX3tGZ7yu7tT3ZkeeRAIoCr1Qn7G31f2zj/Gapw/MMPOVlJpYWpWxalRLR+aHpbYhi76+7YxpJdNX3EB5Q2nJEOUL96nxbYEONDxsF2mCdn3qaCSoiz6lFdGgySSsVrCyez5H78BnlMEvUzIkISUApZsF+94GEYbsqRKRYF1T8ldRWnNFq4bcBaOn3NbBFEI1zLQ0q0Fl66MEeMKwm+Lm
-X-MS-Exchange-AntiSpam-MessageData: yZwkVkAZVuJNe5VEq6dyAhLf4nkziWQls7OfD+IiTMrYgtXnDH4nHUpHX32mgqd+tvsTrxHRuXV1tGMY9WRF6ZLWr3nvRgY7oGLsodCUR1oj0HP8LpqCuwiahZjAizPeuIVLYTHMiyq9FLIpgE6h1w==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb7e7cba-3bb2-41a8-60ed-08d7b0341cac
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 03:23:36.4819
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hrP5tswexENbl0CUlhA63qIOh6wmLDp7eHcWsg/dGrTSaQ2JUBGSwVTJ7NMKcHnnn4viqY5tVifOCrn2ciNLvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4947
+In-Reply-To: <1581094694-6513-2-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On 2/7/20 10:58 AM, Alan Maguire wrote:
+> add debugfs support for displaying kunit test suite results; this is
+> especially useful for module-loaded tests to allow disentangling of
+> test result display from other dmesg events.
+> 
+> As well as printk()ing messages, we append them to a per-test log.
+> 
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+>  include/kunit/test.h   |  52 ++++++++++++++++---
+>  lib/kunit/Makefile     |   3 +-
+>  lib/kunit/debugfs.c    | 105 ++++++++++++++++++++++++++++++++++++++
+>  lib/kunit/debugfs.h    |  16 ++++++
+>  lib/kunit/kunit-test.c |   4 +-
+>  lib/kunit/test.c       | 136 ++++++++++++++++++++++++++++++++++++++-----------
+>  6 files changed, 274 insertions(+), 42 deletions(-)
+>  create mode 100644 lib/kunit/debugfs.c
+>  create mode 100644 lib/kunit/debugfs.h
+> 
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 2dfb550..6a73c4e 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -81,6 +81,9 @@ struct kunit_resource {
+>  
+>  struct kunit;
+>  
+> +/* Size of "lastrun" log associated with test. */
+> +#define KUNIT_LOG_SIZE	512
+> +
+>  /**
+>   * struct kunit_case - represents an individual test case.
+>   *
+> @@ -123,8 +126,14 @@ struct kunit_case {
+>  
+>  	/* private: internal use only. */
+>  	bool success;
+> +	char *log;
+>  };
+>  
+> +static inline char *kunit_status_to_string(bool status)
+> +{
+> +	return status ? "ok" : "not ok";
+> +}
+> +
+>  /**
+>   * KUNIT_CASE - A helper for creating a &struct kunit_case
+>   *
+> @@ -157,6 +166,10 @@ struct kunit_suite {
+>  	int (*init)(struct kunit *test);
+>  	void (*exit)(struct kunit *test);
+>  	struct kunit_case *test_cases;
+> +
+> +	/* private - internal use only */
+> +	struct dentry *debugfs;
+> +	char *log;
+>  };
+>  
+>  /**
+> @@ -175,6 +188,7 @@ struct kunit {
+>  
+>  	/* private: internal use only. */
+>  	const char *name; /* Read only after initialization! */
+> +	char *log; /* Points at case log after initialization */
+>  	struct kunit_try_catch try_catch;
+>  	/*
+>  	 * success starts as true, and may only be set to false during a
+> @@ -193,10 +207,19 @@ struct kunit {
+>  	struct list_head resources; /* Protected by lock. */
+>  };
+>  
+> -void kunit_init_test(struct kunit *test, const char *name);
+> +void kunit_init_test(struct kunit *test, const char *name, char *log);
+>  
+>  int kunit_run_tests(struct kunit_suite *suite);
+>  
+> +size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
+> +
+> +unsigned int kunit_test_case_num(struct kunit_suite *suite,
+> +				 struct kunit_case *test_case);
+> +
+> +int __kunit_test_suites_init(struct kunit_suite **suites);
+> +
+> +void __kunit_test_suites_exit(struct kunit_suite **suites);
+> +
+>  /**
+>   * kunit_test_suites() - used to register one or more &struct kunit_suite
+>   *			 with KUnit.
+> @@ -226,20 +249,24 @@ struct kunit {
+>  	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
+>  	static int kunit_test_suites_init(void)				\
+>  	{								\
+> -		unsigned int i;						\
+> -		for (i = 0; suites[i] != NULL; i++)			\
+> -			kunit_run_tests(suites[i]);			\
+> -		return 0;						\
+> +		return __kunit_test_suites_init(suites);		\
+>  	}								\
+>  	late_initcall(kunit_test_suites_init);				\
+>  	static void __exit kunit_test_suites_exit(void)			\
+>  	{								\
+> -		return;							\
+> +		return __kunit_test_suites_exit(suites);		\
+>  	}								\
+>  	module_exit(kunit_test_suites_exit)
+>  
+>  #define kunit_test_suite(suite)	kunit_test_suites(&suite)
+>  
+> +#define kunit_suite_for_each_test_case(suite, test_case)		\
+> +	for (test_case = suite->test_cases;				\
+> +	     test_case && test_case->run_case;				\
 
-Per devicetree specification, generic names
-are recommended to be used, such as bus.
+test_case does not become NULL for the final entry in suite->test_cases
+so do not test for such.
 
-i.MX AIPS is a AHB - IP bridge bus, so
-we could use bus as node name.
 
-Script:
-sed -i "s/\<aips@/bus@/" arch/arm/boot/dts/imx*.dtsi
-sed -i "s/\<aips@/bus@/" arch/arm/boot/dts/vf*.dtsi
-sed -i "s/\<aips-bus@/bus@/" arch/arm/boot/dts/imx*.dtsi
-sed -i "s/\<aips-bus@/bus@/" arch/arm/boot/dts/vf*.dtsi
+> +	     test_case++)
+> +
+> +bool kunit_suite_has_succeeded(struct kunit_suite *suite);
+> +
+>  /*
+>   * Like kunit_alloc_resource() below, but returns the struct kunit_resource
+>   * object that contains the allocation. This is mostly for testing purposes.
+> @@ -356,8 +383,17 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
+>  
+>  void kunit_cleanup(struct kunit *test);
+>  
+> -#define kunit_printk(lvl, test, fmt, ...) \
+> -	printk(lvl "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
+> +/* printk and log to per-test or per-suite log buffer */
+> +#define kunit_log(lvl, test, fmt, ...)				\
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+'test' can be either a test or a suite, so this name is misleading.  I suggest
+changing it to test_or_suite.
 
-V2:
- Include vf500.dtsi and vfxxx.dtsi
 
- arch/arm/boot/dts/imx25.dtsi   | 4 ++--
- arch/arm/boot/dts/imx31.dtsi   | 4 ++--
- arch/arm/boot/dts/imx35.dtsi   | 4 ++--
- arch/arm/boot/dts/imx50.dtsi   | 4 ++--
- arch/arm/boot/dts/imx51.dtsi   | 4 ++--
- arch/arm/boot/dts/imx53.dtsi   | 4 ++--
- arch/arm/boot/dts/imx6dl.dtsi  | 4 ++--
- arch/arm/boot/dts/imx6q.dtsi   | 2 +-
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
- arch/arm/boot/dts/imx6qp.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sl.dtsi  | 4 ++--
- arch/arm/boot/dts/imx6sll.dtsi | 4 ++--
- arch/arm/boot/dts/imx6sx.dtsi  | 6 +++---
- arch/arm/boot/dts/imx6ul.dtsi  | 4 ++--
- arch/arm/boot/dts/imx6ull.dtsi | 2 +-
- arch/arm/boot/dts/imx7s.dtsi   | 6 +++---
- arch/arm/boot/dts/vf500.dtsi   | 4 ++--
- arch/arm/boot/dts/vfxxx.dtsi   | 4 ++--
- 18 files changed, 35 insertions(+), 35 deletions(-)
+> +	do {								\
+> +		printk(lvl fmt, ##__VA_ARGS__);				\
+> +		snprintf((test)->log, KUNIT_LOG_SIZE,			\
+> +			  "%s" fmt "\n",				\
+> +			 (test)->log, ##__VA_ARGS__);			\
+> +	} while (0)
+> +
 
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-index 40b95a290bd6..1123e683025c 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -75,7 +75,7 @@
- 		interrupt-parent = <&asic>;
- 		ranges;
- 
--		aips@43f00000 { /* AIPS1 */
-+		bus@43f00000 { /* AIPS1 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -332,7 +332,7 @@
- 			};
- 		};
- 
--		aips@53f00000 { /* AIPS2 */
-+		bus@53f00000 { /* AIPS2 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
-index 6b62f0745b82..18270ec648fe 100644
---- a/arch/arm/boot/dts/imx31.dtsi
-+++ b/arch/arm/boot/dts/imx31.dtsi
-@@ -63,7 +63,7 @@
- 			ranges = <0 0x1fffc000 0x4000>;
- 		};
- 
--		aips@43f00000 { /* AIPS1 */
-+		bus@43f00000 { /* AIPS1 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -225,7 +225,7 @@
- 			};
- 		};
- 
--		aips@53f00000 { /* AIPS2 */
-+		bus@53f00000 { /* AIPS2 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-index 9cbdc1a15cda..2ebf2c1fa682 100644
---- a/arch/arm/boot/dts/imx35.dtsi
-+++ b/arch/arm/boot/dts/imx35.dtsi
-@@ -66,7 +66,7 @@
- 			cache-level = <2>;
- 		};
- 
--		aips1: aips@43f00000 {
-+		aips1: bus@43f00000 {
- 			compatible = "fsl,aips", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -199,7 +199,7 @@
- 			};
- 		};
- 
--		aips2: aips@53f00000 {
-+		aips2: bus@53f00000 {
- 			compatible = "fsl,aips", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index 0bfe7c91d0eb..d325658901c5 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -101,7 +101,7 @@
- 		interrupt-parent = <&tzic>;
- 		ranges;
- 
--		aips@50000000 { /* AIPS1 */
-+		bus@50000000 { /* AIPS1 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -389,7 +389,7 @@
- 			};
- 		};
- 
--		aips@60000000 {	/* AIPS2 */
-+		bus@60000000 {	/* AIPS2 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index dea86b98e9c3..6f608d9d9016 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -158,7 +158,7 @@
- 			};
- 		};
- 
--		aips@70000000 { /* AIPS1 */
-+		bus@70000000 { /* AIPS1 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -440,7 +440,7 @@
- 			};
- 		};
- 
--		aips@80000000 {	/* AIPS2 */
-+		bus@80000000 {	/* AIPS2 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index ed341cfd9d09..8536f59f59e6 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -222,7 +222,7 @@
- 			clock-names = "core_clk", "mem_iface_clk";
- 		};
- 
--		aips@50000000 { /* AIPS1 */
-+		bus@50000000 { /* AIPS1 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -654,7 +654,7 @@
- 			};
- 		};
- 
--		aips@60000000 {	/* AIPS2 */
-+		bus@60000000 {	/* AIPS2 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 008312ee0c31..4b3a128d9260 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -85,7 +85,7 @@
- 			clocks = <&clks IMX6QDL_CLK_OCRAM>;
- 		};
- 
--		aips1: aips-bus@2000000 {
-+		aips1: bus@2000000 {
- 			iomuxc: iomuxc@20e0000 {
- 				compatible = "fsl,imx6dl-iomuxc";
- 			};
-@@ -101,7 +101,7 @@
- 			};
- 		};
- 
--		aips2: aips-bus@2100000 {
-+		aips2: bus@2100000 {
- 			i2c4: i2c@21f8000 {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 9d3be1cc6b64..0fad13f9d336 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -164,7 +164,7 @@
- 			clocks = <&clks IMX6QDL_CLK_OCRAM>;
- 		};
- 
--		aips-bus@2000000 { /* AIPS1 */
-+		bus@2000000 { /* AIPS1 */
- 			spba-bus@2000000 {
- 				ecspi5: spi@2018000 {
- 					#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e6b4b8525f98..bf9d20f21060 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -294,7 +294,7 @@
- 			status = "disabled";
- 		};
- 
--		aips-bus@2000000 { /* AIPS1 */
-+		bus@2000000 { /* AIPS1 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -935,7 +935,7 @@
- 			};
- 		};
- 
--		aips-bus@2100000 { /* AIPS2 */
-+		bus@2100000 { /* AIPS2 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx6qp.dtsi b/arch/arm/boot/dts/imx6qp.dtsi
-index 5f51f8e5c1fa..93b89dc1f53b 100644
---- a/arch/arm/boot/dts/imx6qp.dtsi
-+++ b/arch/arm/boot/dts/imx6qp.dtsi
-@@ -18,7 +18,7 @@
- 			clocks = <&clks IMX6QDL_CLK_OCRAM>;
- 		};
- 
--		aips-bus@2100000 {
-+		bus@2100000 {
- 			pre1: pre@21c8000 {
- 				compatible = "fsl,imx6qp-pre";
- 				reg = <0x021c8000 0x1000>;
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 59c54e6ad09a..5b26c8d75626 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -143,7 +143,7 @@
- 			arm,data-latency = <4 2 3>;
- 		};
- 
--		aips1: aips-bus@2000000 {
-+		aips1: bus@2000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -786,7 +786,7 @@
- 			};
- 		};
- 
--		aips2: aips-bus@2100000 {
-+		aips2: bus@2100000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index a1bc5bb31756..797f850492fe 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -144,7 +144,7 @@
- 			arm,data-latency = <4 2 3>;
- 		};
- 
--		aips1: aips-bus@2000000 {
-+		aips1: bus@2000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -663,7 +663,7 @@
- 			};
- 		};
- 
--		aips2: aips-bus@2100000 {
-+		aips2: bus@2100000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 59bad60a47dc..98de781b8082 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -235,7 +235,7 @@
- 			status = "disabled";
- 		};
- 
--		aips1: aips-bus@2000000 {
-+		aips1: bus@2000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -830,7 +830,7 @@
- 			};
- 		};
- 
--		aips2: aips-bus@2100000 {
-+		aips2: bus@2100000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -1188,7 +1188,7 @@
- 			};
- 		};
- 
--		aips3: aips-bus@2200000 {
-+		aips3: bus@2200000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index d9fdca12819b..beb82d357f37 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -204,7 +204,7 @@
- 			status = "disabled";
- 		};
- 
--		aips1: aips-bus@2000000 {
-+		aips1: bus@2000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -771,7 +771,7 @@
- 			};
- 		};
- 
--		aips2: aips-bus@2100000 {
-+		aips2: bus@2100000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-index b7e67d121322..fcde7f77ae42 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -51,7 +51,7 @@
- 
- / {
- 	soc {
--		aips3: aips-bus@2200000 {
-+		aips3: bus@2200000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 568d7a984aa6..f959f69b0677 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -315,7 +315,7 @@
- 			      <0x31006000 0x2000>;
- 		};
- 
--		aips1: aips-bus@30000000 {
-+		aips1: bus@30000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -663,7 +663,7 @@
- 			};
- 		};
- 
--		aips2: aips-bus@30400000 {
-+		aips2: bus@30400000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -803,7 +803,7 @@
- 			};
- 		};
- 
--		aips3: aips-bus@30800000 {
-+		aips3: bus@30800000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/vf500.dtsi b/arch/arm/boot/dts/vf500.dtsi
-index b0ec475017ad..0c0dd442300a 100644
---- a/arch/arm/boot/dts/vf500.dtsi
-+++ b/arch/arm/boot/dts/vf500.dtsi
-@@ -23,7 +23,7 @@
- 	};
- 
- 	soc {
--		aips-bus@40000000 {
-+		bus@40000000 {
- 
- 			intc: interrupt-controller@40003000 {
- 				compatible = "arm,cortex-a9-gic";
-@@ -43,7 +43,7 @@
- 			};
- 		};
- 
--		aips-bus@40080000 {
-+		bus@40080000 {
- 			pmu@40089000 {
- 				compatible = "arm,cortex-a5-pmu";
- 				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 028e0ec30e0c..2d547e7b21ad 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -59,7 +59,7 @@
- 		interrupt-parent = <&mscm_ir>;
- 		ranges;
- 
--		aips0: aips-bus@40000000 {
-+		aips0: bus@40000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -471,7 +471,7 @@
- 			};
- 		};
- 
--		aips1: aips-bus@40080000 {
-+		aips1: bus@40080000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--- 
-2.16.4
+If kunit_log() is called multiple times in a test run for a single test case,
+does each call overwrite the previous value of (test)->log?  For example,
+kunit_print_subtest_start() calls kunit_log() twice.
+
+
+> +#define kunit_printk(lvl, test, fmt, ...)				\
+> +	kunit_log(lvl, test, "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
+>  
+>  /**
+>   * kunit_info() - Prints an INFO level message associated with @test.
+> diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+> index fab5564..869aab0 100644
+> --- a/lib/kunit/Makefile
+> +++ b/lib/kunit/Makefile
+> @@ -3,7 +3,8 @@ obj-$(CONFIG_KUNIT) +=			kunit.o
+>  kunit-objs +=				test.o \
+>  					string-stream.o \
+>  					assert.o \
+> -					try-catch.o
+> +					try-catch.o \
+> +					debugfs.o
+>  
+>  obj-$(CONFIG_KUNIT_TEST) +=		kunit-test.o
+>  
+
+Please make debugfs.o configurable distinctly from KUNIT.  Or it
+might be possible to make KUNIT_LOG_SIZE zero (and make sure the
+code handles a NULL log) if that is easier to implement.
+
+The data size of the log buffers could otherwise be excessively
+large for a tiny resource constrained embedded platform.  For
+example, with the proposed KUNIT_LOG_SIZE of 512, if there were
+200 test cases enabled, the log space would be 100k bytes.  If
+2000 test cases were enabled, the log space would be 1000k bytes.
+
+I can easily imagine a user configuring an acceptance test with
+tens of thousands of test cases.
+
+
+> diff --git a/lib/kunit/debugfs.c b/lib/kunit/debugfs.c
+> new file mode 100644
+> index 0000000..b856d6b
+> --- /dev/null
+> +++ b/lib/kunit/debugfs.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, Oracle and/or its affiliates.
+> + *    Author: Alan Maguire <alan.maguire@oracle.com>
+> + */
+> +
+> +#include <linux/debugfs.h>
+> +#include <linux/module.h>
+> +
+> +#include <kunit/test.h>
+> +
+> +#include "string-stream.h"
+> +
+> +#define KUNIT_DEBUGFS_ROOT             "kunit"
+> +#define KUNIT_DEBUGFS_RESULTS          "results"
+> +
+> +/*
+> + * Create a debugfs representation of test suites:
+> + *
+> + * Path						Semantics
+> + * /sys/kernel/debug/kunit/<testsuite>/results	Show results of last run for
+> + *						testsuite
+> + *
+> + */
+> +
+> +static struct dentry *debugfs_rootdir;
+> +
+> +void kunit_debugfs_cleanup(void)
+> +{
+> +	debugfs_remove_recursive(debugfs_rootdir);
+> +}
+> +
+> +void kunit_debugfs_init(void)
+> +{
+> +	if (!debugfs_rootdir)
+> +		debugfs_rootdir = debugfs_create_dir(KUNIT_DEBUGFS_ROOT, NULL);
+> +}
+> +
+> +static void debugfs_print_result(struct seq_file *seq,
+> +				 struct kunit_suite *suite,
+> +				 struct kunit_case *test_case)
+> +{
+> +	if (!test_case)
+> +		return;
+> +
+> +	seq_printf(seq, "%s", test_case->log);
+> +}
+> +
+> +/*
+> + * /sys/kernel/debug/kunit/<testsuite>/results shows all results for testsuite.
+> + */
+> +static int debugfs_print_results(struct seq_file *seq, void *v)
+> +{
+> +	struct kunit_suite *suite = (struct kunit_suite *)seq->private;
+> +	bool success = kunit_suite_has_succeeded(suite);
+> +	struct kunit_case *test_case;
+> +
+> +	if (!suite)
+> +		return 0;
+> +
+> +	seq_printf(seq, "%s", suite->log);
+> +
+> +	kunit_suite_for_each_test_case(suite, test_case)
+> +		debugfs_print_result(seq, suite, test_case);
+> +
+> +	seq_printf(seq, "%s %d - %s\n",
+> +		   kunit_status_to_string(success), 1, suite->name);
+> +	return 0;
+> +}
+> +
+> +static int debugfs_release(struct inode *inode, struct file *file)
+> +{
+> +	return single_release(inode, file);
+> +}
+> +
+> +static int debugfs_results_open(struct inode *inode, struct file *file)
+> +{
+> +	struct kunit_suite *suite;
+> +
+> +	suite = (struct kunit_suite *)inode->i_private;
+> +
+> +	return single_open(file, debugfs_print_results, suite);
+> +}
+> +
+> +static const struct file_operations debugfs_results_fops = {
+> +	.open = debugfs_results_open,
+> +	.read = seq_read,
+> +	.llseek = seq_lseek,
+> +	.release = debugfs_release,
+> +};
+> +
+> +void kunit_debugfs_create_suite(struct kunit_suite *suite)
+> +{
+> +	/* First add /sys/kernel/debug/kunit/<testsuite> */
+> +	suite->debugfs = debugfs_create_dir(suite->name, debugfs_rootdir);
+> +
+> +	debugfs_create_file(KUNIT_DEBUGFS_RESULTS, S_IFREG | 0444,
+> +			    suite->debugfs,
+> +			    suite, &debugfs_results_fops);
+> +}
+> +
+> +void kunit_debugfs_destroy_suite(struct kunit_suite *suite)
+> +{
+> +	debugfs_remove_recursive(suite->debugfs);
+> +}
+> diff --git a/lib/kunit/debugfs.h b/lib/kunit/debugfs.h
+> new file mode 100644
+> index 0000000..9a92d5e
+> --- /dev/null
+> +++ b/lib/kunit/debugfs.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2020, Oracle and/or its affiliates.
+> + */
+> +
+> +#ifndef _KUNIT_DEBUGFS_H
+> +#define _KUNIT_DEBUGFS_H
+> +
+> +#include <kunit/test.h>
+> +
+> +void kunit_debugfs_create_suite(struct kunit_suite *suite);
+> +void kunit_debugfs_destroy_suite(struct kunit_suite *suite);
+> +void kunit_debugfs_init(void);
+> +void kunit_debugfs_cleanup(void);
+> +
+> +#endif /* _KUNIT_DEBUGFS_H */
+> diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+> index ccb8d2e..aceb5bf 100644
+> --- a/lib/kunit/kunit-test.c
+> +++ b/lib/kunit/kunit-test.c
+> @@ -134,7 +134,7 @@ static void kunit_resource_test_init_resources(struct kunit *test)
+>  {
+>  	struct kunit_test_resource_context *ctx = test->priv;
+>  
+> -	kunit_init_test(&ctx->test, "testing_test_init_test");
+> +	kunit_init_test(&ctx->test, "testing_test_init_test", NULL);
+>  
+>  	KUNIT_EXPECT_TRUE(test, list_empty(&ctx->test.resources));
+>  }
+> @@ -301,7 +301,7 @@ static int kunit_resource_test_init(struct kunit *test)
+>  
+>  	test->priv = ctx;
+>  
+> -	kunit_init_test(&ctx->test, "test_test_context");
+> +	kunit_init_test(&ctx->test, "test_test_context", NULL);
+>  
+>  	return 0;
+>  }
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index 9242f93..aec607f 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched/debug.h>
+>  
+> +#include "debugfs.h"
+>  #include "string-stream.h"
+>  #include "try-catch-impl.h"
+>  
+> @@ -28,73 +29,91 @@ static void kunit_print_tap_version(void)
+>  	}
+>  }
+>  
+> -static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+> +size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
+>  {
+>  	struct kunit_case *test_case;
+>  	size_t len = 0;
+>  
+> -	for (test_case = test_cases; test_case->run_case; test_case++)
+> +	kunit_suite_for_each_test_case(suite, test_case)
+>  		len++;
+>  
+>  	return len;
+>  }
+> +EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
+>  
+>  static void kunit_print_subtest_start(struct kunit_suite *suite)
+>  {
+>  	kunit_print_tap_version();
+> -	pr_info("\t# Subtest: %s\n", suite->name);
+> -	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
+> +	kunit_log(KERN_INFO, suite, "# Subtest: %s", suite->name);
+> +	kunit_log(KERN_INFO, suite, "1..%zd",
+> +		  kunit_suite_num_test_cases(suite));
+
+The subtest 'is a TAP stream indented 4 spaces'.  (So the old code was
+also incorrect since it indented with a tab.)
+
+kunit_print_ok_not_ok() has a similar indentation issue.
+
+
+>  }
+>  
+> -static void kunit_print_ok_not_ok(bool should_indent,
+> +static void kunit_print_ok_not_ok(void *test_or_suite,
+> +				  bool is_test,
+>  				  bool is_ok,
+>  				  size_t test_number,
+>  				  const char *description)
+>  {
+> -	const char *indent, *ok_not_ok;
+> +	struct kunit_suite *suite = is_test ? NULL : test_or_suite;
+> +	struct kunit *test = is_test ? test_or_suite : NULL;
+>  
+> -	if (should_indent)
+> -		indent = "\t";
+> -	else
+> -		indent = "";
+> -
+> -	if (is_ok)
+> -		ok_not_ok = "ok";
+> +	/*
+> +	 * We do not log the test suite results as doing so would
+> +	 * mean debugfs display would consist of the test suite
+> +	 * description and status prior to individual test results.
+> +	 * Hence directly printk the suite status, and we will
+> +	 * separately seq_printf() the suite status for the debugfs
+> +	 * representation.
+> +	 */
+> +	if (suite)
+> +		pr_info("%s %zd - %s",
+> +			kunit_status_to_string(is_ok),
+> +			test_number, description);
+>  	else
+> -		ok_not_ok = "not ok";
+> -
+> -	pr_info("%s%s %zd - %s\n", indent, ok_not_ok, test_number, description);
+> +		kunit_log(KERN_INFO, test, "\t%s %zd - %s",
+> +			  kunit_status_to_string(is_ok),
+> +			  test_number, description);
+>  }
+>  
+> -static bool kunit_suite_has_succeeded(struct kunit_suite *suite)
+> +bool kunit_suite_has_succeeded(struct kunit_suite *suite)
+>  {
+>  	const struct kunit_case *test_case;
+>  
+> -	for (test_case = suite->test_cases; test_case->run_case; test_case++)
+> +	kunit_suite_for_each_test_case(suite, test_case) {
+>  		if (!test_case->success)
+>  			return false;
+> +	}
+>  
+>  	return true;
+>  }
+> +EXPORT_SYMBOL_GPL(kunit_suite_has_succeeded);
+>  
+>  static void kunit_print_subtest_end(struct kunit_suite *suite)
+>  {
+>  	static size_t kunit_suite_counter = 1;
+>  
+> -	kunit_print_ok_not_ok(false,
+> +	kunit_print_ok_not_ok((void *)suite, false,
+>  			      kunit_suite_has_succeeded(suite),
+>  			      kunit_suite_counter++,
+>  			      suite->name);
+>  }
+>  
+> -static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+> -					    size_t test_number)
+> +unsigned int kunit_test_case_num(struct kunit_suite *suite,
+> +				 struct kunit_case *test_case)
+>  {
+> -	kunit_print_ok_not_ok(true,
+> -			      test_case->success,
+> -			      test_number,
+> -			      test_case->name);
+> +	struct kunit_case *tc;
+> +	unsigned int i = 1;
+> +
+> +	kunit_suite_for_each_test_case(suite, tc) {
+> +		if (tc == test_case)
+> +			return i;
+> +		i++;
+> +	}
+> +
+> +	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(kunit_test_case_num);
+>  
+>  static void kunit_print_string_stream(struct kunit *test,
+>  				      struct string_stream *stream)
+> @@ -102,6 +121,9 @@ static void kunit_print_string_stream(struct kunit *test,
+>  	struct string_stream_fragment *fragment;
+>  	char *buf;
+>  
+> +	if (string_stream_is_empty(stream))
+> +		return;
+> +
+>  	buf = string_stream_get_string(stream);
+>  	if (!buf) {
+>  		kunit_err(test,
+> @@ -175,11 +197,14 @@ void kunit_do_assertion(struct kunit *test,
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_do_assertion);
+>  
+> -void kunit_init_test(struct kunit *test, const char *name)
+> +void kunit_init_test(struct kunit *test, const char *name, char *log)
+>  {
+>  	spin_lock_init(&test->lock);
+>  	INIT_LIST_HEAD(&test->resources);
+>  	test->name = name;
+> +	test->log = log;
+> +	if (test->log)
+> +		test->log[0] = '\0';
+>  	test->success = true;
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_init_test);
+> @@ -290,7 +315,7 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+>  	struct kunit_try_catch *try_catch;
+>  	struct kunit test;
+>  
+> -	kunit_init_test(&test, test_case->name);
+> +	kunit_init_test(&test, test_case->name, test_case->log);
+>  	try_catch = &test.try_catch;
+>  
+>  	kunit_try_catch_init(try_catch,
+> @@ -303,19 +328,20 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+>  	kunit_try_catch_run(try_catch, &context);
+>  
+>  	test_case->success = test.success;
+> +
+> +	kunit_print_ok_not_ok(&test, true, test_case->success,
+> +			      kunit_test_case_num(suite, test_case),
+> +			      test_case->name);
+>  }
+>  
+>  int kunit_run_tests(struct kunit_suite *suite)
+>  {
+>  	struct kunit_case *test_case;
+> -	size_t test_case_count = 1;
+>  
+>  	kunit_print_subtest_start(suite);
+>  
+> -	for (test_case = suite->test_cases; test_case->run_case; test_case++) {
+> +	kunit_suite_for_each_test_case(suite, test_case)
+>  		kunit_run_case_catch_errors(suite, test_case);
+> -		kunit_print_test_case_ok_not_ok(test_case, test_case_count++);
+> -	}
+>  
+>  	kunit_print_subtest_end(suite);
+>  
+> @@ -323,6 +349,51 @@ int kunit_run_tests(struct kunit_suite *suite)
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_run_tests);
+>  
+> +static void kunit_init_suite(struct kunit_suite *suite)
+> +{
+> +	struct kunit_case *test_case;
+> +
+> +	/* Allocate logs before creating debugfs representation. */
+> +	suite->log = kzalloc(KUNIT_LOG_SIZE, GFP_KERNEL);
+> +	kunit_suite_for_each_test_case(suite, test_case)
+> +		test_case->log = kzalloc(KUNIT_LOG_SIZE, GFP_KERNEL);
+> +
+> +	kunit_debugfs_create_suite(suite);
+> +}
+> +
+> +int __kunit_test_suites_init(struct kunit_suite **suites)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; suites[i] != NULL; i++) {
+> +		kunit_init_suite(suites[i]);
+> +		kunit_run_tests(suites[i]);
+> +	}
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
+> +
+> +static void kunit_exit_suite(struct kunit_suite *suite)
+> +{
+> +	struct kunit_case *test_case;
+> +
+> +	/* Destroy debugfs representation before freeing logs used by it. */
+> +	kunit_debugfs_destroy_suite(suite);
+> +
+> +	kfree(suite->log);
+> +	kunit_suite_for_each_test_case(suite, test_case)
+> +		kfree(test_case->log);
+> +}
+> +
+> +void __kunit_test_suites_exit(struct kunit_suite **suites)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; suites[i] != NULL; i++)
+> +		kunit_exit_suite(suites[i]);
+> +}
+> +EXPORT_SYMBOL_GPL(__kunit_test_suites_exit);
+> +
+>  struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+>  						    kunit_resource_init_t init,
+>  						    kunit_resource_free_t free,
+> @@ -489,12 +560,15 @@ void kunit_cleanup(struct kunit *test)
+>  
+>  static int __init kunit_init(void)
+>  {
+> +	kunit_debugfs_init();
+> +
+>  	return 0;
+>  }
+>  late_initcall(kunit_init);
+>  
+>  static void __exit kunit_exit(void)
+>  {
+> +	kunit_debugfs_cleanup();
+>  }
+>  module_exit(kunit_exit);
+>  
+> 
 
