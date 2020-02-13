@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B5FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF776C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7850020656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F71D20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610316;
-	bh=UrlpERl3yDVB+DFfMKOUl5VrG2Ohbdi8WCW162x08W8=;
+	s=default; t=1581610317;
+	bh=SVhXEM5ip6DL8l6Fd0jQhEMKOcT/fCDb5xo5D0hWBBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qAE7ig9iAYD66hyQNPZ+XcVZz4gMlDZokolSWmziG+tnvwMXZQuaeQpp0vThWMzu4
-	 LUMS9vTpFtjVJRu9zeiJRB6PxHc+l67h5gHxwstFRyVWPn8okOjx+6AzaD0Bqj+6K9
-	 y5kKf8AROxSZDeKWwvZ7GEqshHuIC/yoIrmIB434=
+	b=IbxSu+Hko64lH2C4BP0jcpUiVR4UJEIlSBAxwKUgD8YIvbl6zn7NwHJ4k5q9EDPih
+	 B6Bdo5EHxd3X6tsIQJP9BR+hdtR91viXFr4rFjGm4P8k4PRr7o7zPtkojA17E/A4Lf
+	 82w16+tWMmStFzCogkj2NbROcSEevmotqbxFWbn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbgBMQLz (ORCPT
+        id S1730320AbgBMQLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:11:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59142 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:11:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbgBMPWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727789AbgBMPWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:22:19 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D86620848;
-        Thu, 13 Feb 2020 15:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F738246A3;
+        Thu, 13 Feb 2020 15:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607337;
-        bh=UrlpERl3yDVB+DFfMKOUl5VrG2Ohbdi8WCW162x08W8=;
+        s=default; t=1581607339;
+        bh=SVhXEM5ip6DL8l6Fd0jQhEMKOcT/fCDb5xo5D0hWBBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tIjjht0jnPzQ2eVFIFuQSunRBooRudMAL+u/bShrc5CKqAQ5z8iIJHHF5sJDVVsYE
-         vJ1/X7KYk/C4/AHOY2GKg663ynkMTH3I0F5lAtaeWA/aWvsMMQDhZrTFnCzj10u1B8
-         GDuQkwnJVg5KRyAudy6rOD5Y1rmU40GSNW7ZOH8Y=
+        b=TiloAt/fa9anROYdz/2Jn5L8sqBmb5laogo686JGOIjhxyfjH4jgstPPCdhWoiP7v
+         wTRm0KcSjPELml3ZVKvIV+rkHqRpKd8+hTXyfKR1kB23ZT6hoSaxnHAsvwfdFSb4Pw
+         O8MsGrtM1Xtj4u0e8ttcB8KkbG/KJfAYomrQLDx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.4 10/91] media: uvcvideo: Avoid cyclic entity chains due to malformed USB descriptors
-Date:   Thu, 13 Feb 2020 07:19:27 -0800
-Message-Id: <20200213151825.630550079@linuxfoundation.org>
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.4 13/91] usb: gadget: legacy: set max_speed to super-speed
+Date:   Thu, 13 Feb 2020 07:19:30 -0800
+Message-Id: <20200213151826.814603529@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -61,114 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Roger Quadros <rogerq@ti.com>
 
-commit 68035c80e129c4cfec659aac4180354530b26527 upstream.
+commit 463f67aec2837f981b0a0ce8617721ff59685c00 upstream.
 
-Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
-up the following WARNING from the UVC chain scanning code:
-
-  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
-  | next=ffff880067d22298.
-  | ------------[ cut here ]------------
-  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
-  | Modules linked in:
-  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
-  | 4.14.0-rc2-42613-g1488251d1a98 #238
-  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-  | Workqueue: usb_hub_wq hub_event
-  | task: ffff88006b01ca40 task.stack: ffff880064358000
-  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
-  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
-  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
-  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
-  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
-  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
-  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
-  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
-  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
-  | Call Trace:
-  |  __list_add ./include/linux/list.h:59
-  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
-  |  uvc_scan_chain_forward.isra.8+0x373/0x416
-  | drivers/media/usb/uvc/uvc_driver.c:1471
-  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
-  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
-  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
-
-Looking into the output from usbmon, the interesting part is the
-following data packet:
-
-  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
-  00090403 00000e01 00000924 03000103 7c003328 010204db
-
-If we drop the lead configuration and interface descriptors, we're left
-with an output terminal descriptor describing a generic display:
-
-  /* Output terminal descriptor */
-  buf[0]	09
-  buf[1]	24
-  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
-  buf[3]	00	/* ID */
-  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
-  buf[5]	03
-  buf[6]	7c
-  buf[7]	00	/* source ID refers to self! */
-  buf[8]	33
-
-The problem with this descriptor is that it is self-referential: the
-source ID of 0 matches itself! This causes the 'struct uvc_entity'
-representing the display to be added to its chain list twice during
-'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
-processed directly from the 'dev->entities' list and then again
-immediately afterwards when trying to follow the source ID in
-'uvc_scan_chain_forward()'
-
-Add a check before adding an entity to a chain list to ensure that the
-entity is not already part of a chain.
-
-Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+These interfaces do support super-speed so let's not
+limit maximum speed to high-speed.
 
 Cc: <stable@vger.kernel.org>
-Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_driver.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/usb/gadget/legacy/cdc2.c  |    2 +-
+ drivers/usb/gadget/legacy/g_ffs.c |    2 +-
+ drivers/usb/gadget/legacy/multi.c |    2 +-
+ drivers/usb/gadget/legacy/ncm.c   |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1411,6 +1411,11 @@ static int uvc_scan_chain_forward(struct
- 			break;
- 		if (forward == prev)
- 			continue;
-+		if (forward->chain.next || forward->chain.prev) {
-+			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+				"entity %d already in chain.\n", forward->id);
-+			return -EINVAL;
-+		}
- 
- 		switch (UVC_ENTITY_TYPE(forward)) {
- 		case UVC_VC_EXTENSION_UNIT:
-@@ -1492,6 +1497,13 @@ static int uvc_scan_chain_backward(struc
- 				return -1;
- 			}
- 
-+			if (term->chain.next || term->chain.prev) {
-+				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+					"entity %d already in chain.\n",
-+					term->id);
-+				return -EINVAL;
-+			}
-+
- 			if (uvc_trace_param & UVC_TRACE_PROBE)
- 				printk(" %d", term->id);
- 
+--- a/drivers/usb/gadget/legacy/cdc2.c
++++ b/drivers/usb/gadget/legacy/cdc2.c
+@@ -229,7 +229,7 @@ static struct usb_composite_driver cdc_d
+ 	.name		= "g_cdc",
+ 	.dev		= &device_desc,
+ 	.strings	= dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= cdc_bind,
+ 	.unbind		= cdc_unbind,
+ };
+--- a/drivers/usb/gadget/legacy/g_ffs.c
++++ b/drivers/usb/gadget/legacy/g_ffs.c
+@@ -153,7 +153,7 @@ static struct usb_composite_driver gfs_d
+ 	.name		= DRIVER_NAME,
+ 	.dev		= &gfs_dev_desc,
+ 	.strings	= gfs_dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= gfs_bind,
+ 	.unbind		= gfs_unbind,
+ };
+--- a/drivers/usb/gadget/legacy/multi.c
++++ b/drivers/usb/gadget/legacy/multi.c
+@@ -486,7 +486,7 @@ static struct usb_composite_driver multi
+ 	.name		= "g_multi",
+ 	.dev		= &device_desc,
+ 	.strings	= dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= multi_bind,
+ 	.unbind		= multi_unbind,
+ 	.needs_serial	= 1,
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -203,7 +203,7 @@ static struct usb_composite_driver ncm_d
+ 	.name		= "g_ncm",
+ 	.dev		= &device_desc,
+ 	.strings	= dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= gncm_bind,
+ 	.unbind		= gncm_unbind,
+ };
 
 
