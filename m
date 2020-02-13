@@ -2,105 +2,87 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B06EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDAC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA7A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581602210;
-	bh=6Cl7KS2oABVo2DQ68UYWwiAGzRqOdgWhIyzIkjPSDIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UmuRnWcJil49cm4DpLAYIKWIngMo1zV7nk2ZmVGuduUbAT67lJhcB/aPlBGmRdTIT
-	 Gebrb6RuXuQSSWliZw4f6fincoW/g/sSTFBOgKRWk6+iaYwIoKJ2HbRpkhXZ/hPKGC
-	 P5PU8NPf2FSnLbw8/RPkSYazdfiVVvg/3Brw/F/E=
+	by mail.kernel.org (Postfix) with ESMTP id 58BC92168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 13:58:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="VVu0rajx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgBMN4t (ORCPT
+        id S1730123AbgBMN6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:56:49 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34999 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730143AbgBMN4r (ORCPT
+        Thu, 13 Feb 2020 08:58:46 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35134 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729971AbgBMN6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:56:47 -0500
-Received: by mail-qk1-f196.google.com with SMTP id v2so5729206qkj.2;
-        Thu, 13 Feb 2020 05:56:47 -0800 (PST)
+        Thu, 13 Feb 2020 08:58:46 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so6717395ljb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 05:58:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=AZAtGhssrMcATj/gfsevl74sPZK+P31rS05xXvYq1Tc=;
-        b=md1ccFZMEzcAFqNwPN4Oy6XeKVmN2Qt8kvZBl/xNivC0jrrU6n02ZxrGcZtOMlTKXn
-         AFeCFXftIS+CmyJemHYxBiPNNy+ti/mCaMjqV2/z4sEmlLt+amzUU0DFMf+DEGNH3e1z
-         9GLJK9hfClUm6H9lpmmBTX49qOpodxMgz1Nbemd1jLD0j4VTejHSrHZILdNLEitF/QAQ
-         EKDPElVCpg/uYSwVovrRh3d+n18tewl34g0WvfojTunTogQzmOwc0aCZ/WcKcmXtUNRh
-         5A00Rlkl3m9M436pbIA0B+G0bF81VXCtEfFLSGppEyX1osLRyftNYBY85kx4LBpHbC3p
-         K7Tw==
+        bh=MXKPRgQyjfEBEssBb4S8+9+QLdHW4asZtIOfI7X/G9o=;
+        b=VVu0rajxgf9FqovZRSAKOCd2ZcTalbIBV+HO8Py2CjfXwk8MWsbIbghaQuasvcF/+U
+         H/quroMyQicpHYeLnx1g5na9K3FojygRUMbyNHGQcIYgc8dUiecYmSe7AyYRZ2MvaYpk
+         fgopSMEUF4Me49fLQoyNVl1ps4Ql0JwNEIO3OFInKW+y4S/XqOxvgef7jv2j4Ome5/yF
+         ZSxDlgryZ/1J4CRia648T1vvgzRLl9AhZMg1NzvtFP7Ca5m3fGneuoht2xaKP4r4HYKZ
+         XSBrqRv8a92f5ie59ZGd8obKZvKzR8vCkcm9sHzB9G7oj4b4bveBhCbnuQADDkUp+AmX
+         ZQ8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=AZAtGhssrMcATj/gfsevl74sPZK+P31rS05xXvYq1Tc=;
-        b=IYCYzOaT4Mn3QBL+oZi+SqQ45NoML++d6KQuTrNHBXZIZpgg9PJ1WMGRTxwCR5TsmW
-         fTylU2G239oJg4QjUq6cCAOiKAui9fAPgMSSlcf7MJPGC5PxYwybBRjjTk9nYaApKhIL
-         OtZRWznFdZwHCVAwy2WzDJARwj0cLvaV6Yb7FuzRfrScY4eq2nbwCQ/jZ1kpkF79psoX
-         Brs+NCtrtgV3qsXyOYflgdUcSOaZbJDz3epXFhgTeGqj61xK6V5gsBpwldV3tA/rVwYs
-         31xGm9Tjq7vtVJOjQMJzuFzTdbwSjXf0+wQxIPVDu5GsNOGApfUyo5KDInpjZHBuXzF+
-         iP9A==
-X-Gm-Message-State: APjAAAVhpW1vRPAT83rm27di7Mp8x8FHwazKnmrvApcKMKGzcrl2YZWK
-        p1HnONFfVweBBNGqBKeICzo=
-X-Google-Smtp-Source: APXvYqyqGQ9gj1+1vBYvYKK6x0aFldCpwvjAILJT49aUedu5A1VmOvBxjVfLljwhXBxJeQEqI+JAGA==
-X-Received: by 2002:a37:494f:: with SMTP id w76mr14084487qka.309.1581602206577;
-        Thu, 13 Feb 2020 05:56:46 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:f3be])
-        by smtp.gmail.com with ESMTPSA id i28sm1595306qtc.57.2020.02.13.05.56.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MXKPRgQyjfEBEssBb4S8+9+QLdHW4asZtIOfI7X/G9o=;
+        b=UP3xgozEl/Ul1Lz+JLqqhkaGmkhmlKtATmvQ0A5sqcMyrQ4xnp2mINEynIZJazAjue
+         nYMukrqftrcd8suqIl1TtFKf+DIHXORamwp9XZtId5uVMKFHeV0RmFQY+JdMslhR39tz
+         MVBecyvQprAzuJsTE4nJCquTlfbUJnAuQfzjeFW9smzlhOfjbiyN0bdpXFRHBzhIxvBX
+         Pn33SeoxbTpwFR/jJtP5Xx8rQfIJXikrCR7FV+efW5MoCyxFJ9GCrFvt5l+m4LoqyPJf
+         mxU44SfevFXY8MHhesRJnk5ByXnRqjrtyTNoLfV9WoHpxrmyRaTSrGaX2jqcpFhQpXP3
+         u4pQ==
+X-Gm-Message-State: APjAAAXW5iJbQ8Jr207H64EoVnif/EyRCCXWipxXT9MbYrvt+j8y0zC8
+        P4DkDwiPffA9yx9XvaKNRdeERA==
+X-Google-Smtp-Source: APXvYqxtQ5xhvBNlTf/I5i2m5kmfUVMJeeTpcg3PxBH6F239q4SAWYQkxIWdvMTJ35Rx0Rht6aAqRQ==
+X-Received: by 2002:a2e:b8d0:: with SMTP id s16mr10492992ljp.32.1581602323947;
+        Thu, 13 Feb 2020 05:58:43 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id d20sm1513385ljg.95.2020.02.13.05.58.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 05:56:46 -0800 (PST)
-Date:   Thu, 13 Feb 2020 08:56:45 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Thu, 13 Feb 2020 05:58:43 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 685D3100F25; Thu, 13 Feb 2020 16:59:05 +0300 (+03)
+Date:   Thu, 13 Feb 2020 16:59:05 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cgroup/cpuset: Fix a race condition when reading cpuset.*
-Message-ID: <20200213135645.GG88887@mtj.thefacebook.com>
-References: <20200211141554.24181-1-qais.yousef@arm.com>
- <20200212221543.GL80993@mtj.thefacebook.com>
- <20200213115015.hkd6uqwfjosxjfpm@e107158-lin.cambridge.arm.com>
+Subject: Re: [PATCH v2 05/25] mm: Fix documentation of FGP flags
+Message-ID: <20200213135905.wvpeiw7tyma75tsq@box>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-6-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213115015.hkd6uqwfjosxjfpm@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200212041845.25879-6-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Thu, Feb 13, 2020 at 11:50:16AM +0000, Qais Yousef wrote:
-> I ran 500 iterations of cpuset_hotplug_test.sh on the branch, it passed.
+On Tue, Feb 11, 2020 at 08:18:25PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> I also cherry-picked commit 6426bfb1d5f0 ("cpuset: Make cpuset hotplug synchronous")
-> into v5.6-rc1 and ran 100 iterations and it passed too.
+> We never had PCG flags
 
-Awesome, thanks for verifying.
+We actually had :P But it's totally different story.
 
-> While investigating the problem, I could reproduce it all the way back to v5.0.
-> Stopped there so earlier versions could still have the problem.
-> 
-> Do you think it's worth porting the change to stable trees? Admittedly the
-> problem should be benign, but it did trigger an LTP failure.
-
-I'm afraid not. It's not an issue which would affect actual use cases
-and there's (as always) some risks involved with backporting it, so
-the benefit just doesn't seem justifiable here.
-
-Thanks.
+See git log for include/linux/page_cgroup.h.
 
 -- 
-tejun
+ Kirill A. Shutemov
