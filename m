@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D55C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3857C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF1B20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAD820675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608845;
-	bh=jOzQoKaNoUzmDAcE2f1lJ1Vju69MQpsJT9S2YdQl15U=;
+	s=default; t=1581608851;
+	bh=Kp5ITOmmGRq5nUzVovCIS4LzsjYjFZEjGH8vi4E4nvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3v7pB3EMzj3B8e7I92QzFexg/9DrxKYUckoVi2bJYo8HNpPjJ7BRXeVI5L6cG2z+
-	 MGuH5aOZWX0LpcwYOZHr0aCkkGpu1I76XohlcFEeWWJGTKNK+sRbT6Hktd8h327CSr
-	 K3Lyx1Q+VVacim8BabKlSEukBmW2GC8gESs6sbJU=
+	b=AwRPYeM5QUG5Lbj8U8mYhumzHu2clI+YIWTgqKGmnAhjY7/ar2/Qe2RB8L1xFEEXH
+	 oATRo/wYNIWWPr5vnSQW33FXxqgrJ9jmQyaRVVUsMo5uqotsndLJ6nbdTQss+spybL
+	 H3/3SJJ9vb3WCPfwwcYLMrHw2MmmFqtKCiA/v3sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbgBMPrY (ORCPT
+        id S1729390AbgBMPrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:47:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48702 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:47:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgBMP1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:06 -0500
+        id S2387650AbgBMP1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:03 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 753F4218AC;
-        Thu, 13 Feb 2020 15:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358D32465D;
+        Thu, 13 Feb 2020 15:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607624;
-        bh=jOzQoKaNoUzmDAcE2f1lJ1Vju69MQpsJT9S2YdQl15U=;
+        s=default; t=1581607623;
+        bh=Kp5ITOmmGRq5nUzVovCIS4LzsjYjFZEjGH8vi4E4nvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mb+3vlMfqndt4S9nvvJOReStQdiC9Ui4LrC98OeYEhX8lmz7sh5GyYpAbhzuM2+Eb
-         Yk+UAHp2M0E4Y0rEzkEeR6Kw9Zg1h58B7tVQtyHhrYdo6yOwVBtd0uXaqxaz3RH6hS
-         1lXUD/K8qC56BzMklPDAIrXAzNQgG58BO5/C0W3I=
+        b=wlNcgDbEu0+M3EN1y663NVDmtGMxawgTIh7dfST0K54bXhm8SoJEOgfHnElROxrq6
+         /A9iomX/VMAF6Hiv93uHmfkquxUFfn+gWYqZiH2Q96kzpPYP9AL+Pd3g1/7PKcEw/3
+         /BCapFVZPi9febq5kexLWZS+fdtZ5ICOAZTfqTzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Haywood <mark.haywood@oracle.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Sergey Gorenko <sergeygo@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 06/96] RDMA/netlink: Do not always generate an ACK for some netlink operations
-Date:   Thu, 13 Feb 2020 07:20:13 -0800
-Message-Id: <20200213151841.439767118@linuxfoundation.org>
+Subject: [PATCH 5.4 04/96] IB/srp: Never use immediate data if it is disabled by a user
+Date:   Thu, 13 Feb 2020 07:20:11 -0800
+Message-Id: <20200213151840.592525080@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -61,77 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Sergey Gorenko <sergeygo@mellanox.com>
 
-commit a242c36951ecd24bc16086940dbe6b522205c461 upstream.
+commit 0fbb37dd82998b5c83355997b3bdba2806968ac7 upstream.
 
-In rdma_nl_rcv_skb(), the local variable err is assigned the return value
-of the supplied callback function, which could be one of
-ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
-ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
-success.
+Some SRP targets that do not support specification SRP-2, put the garbage
+to the reserved bits of the SRP login response.  The problem was not
+detected for a long time because the SRP initiator ignored those bits. But
+now one of them is used as SRP_LOGIN_RSP_IMMED_SUPP. And it causes a
+critical error on the target when the initiator sends immediate data.
 
-rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
-functions used by the latter have the convention: "Returns 0 on success or
-a negative error code".
+The ib_srp module has a use_imm_date parameter to enable or disable
+immediate data manually. But it does not help in the above case, because
+use_imm_date is ignored at handling the SRP login response. The problem is
+definitely caused by a bug on the target side, but the initiator's
+behavior also does not look correct.  The initiator should not use
+immediate data if use_imm_date is disabled by a user.
 
-In particular, the statement (equal for both functions):
+This commit adds an additional checking of use_imm_date at the handling of
+SRP login response to avoid unexpected use of immediate data.
 
-   if (nlh->nlmsg_flags & NLM_F_ACK || err)
-
-implies that rdma_nl_rcv_skb() always will ack a message, independent of
-the NLM_F_ACK being set in nlmsg_flags or not.
-
-The fix could be to change the above statement, but it is better to keep
-the two *_rcv_skb() functions equal in this respect and instead change the
-three callback functions in the rdma subsystem to the correct convention.
-
-Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
-Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
-Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
-Suggested-by: Mark Haywood <mark.haywood@oracle.com>
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Tested-by: Mark Haywood <mark.haywood@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 882981f4a411 ("RDMA/srp: Add support for immediate data")
+Link: https://lore.kernel.org/r/20200115133055.30232-1-sergeygo@mellanox.com
+Signed-off-by: Sergey Gorenko <sergeygo@mellanox.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/addr.c     |    2 +-
- drivers/infiniband/core/sa_query.c |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/ulp/srp/ib_srp.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -139,7 +139,7 @@ int ib_nl_handle_ip_res_resp(struct sk_b
- 	if (ib_nl_is_good_ip_resp(nlh))
- 		ib_nl_process_good_ip_rsep(nlh);
- 
--	return skb->len;
-+	return 0;
- }
- 
- static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -1068,7 +1068,7 @@ int ib_nl_handle_set_timeout(struct sk_b
- 	}
- 
- settimeout_out:
--	return skb->len;
-+	return 0;
- }
- 
- static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
-@@ -1139,7 +1139,7 @@ int ib_nl_handle_resolve_resp(struct sk_
- 	}
- 
- resp_out:
--	return skb->len;
-+	return 0;
- }
- 
- static void free_sm_ah(struct kref *kref)
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -2536,7 +2536,8 @@ static void srp_cm_rep_handler(struct ib
+ 	if (lrsp->opcode == SRP_LOGIN_RSP) {
+ 		ch->max_ti_iu_len = be32_to_cpu(lrsp->max_ti_iu_len);
+ 		ch->req_lim       = be32_to_cpu(lrsp->req_lim_delta);
+-		ch->use_imm_data  = lrsp->rsp_flags & SRP_LOGIN_RSP_IMMED_SUPP;
++		ch->use_imm_data  = srp_use_imm_data &&
++			(lrsp->rsp_flags & SRP_LOGIN_RSP_IMMED_SUPP);
+ 		ch->max_it_iu_len = srp_max_it_iu_len(target->cmd_sg_cnt,
+ 						      ch->use_imm_data);
+ 		WARN_ON_ONCE(ch->max_it_iu_len >
 
 
