@@ -2,101 +2,126 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B72CC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF2C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565502168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04F3217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgBMWEB (ORCPT
+        id S1727896AbgBMWEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:04:01 -0500
-Received: from smtprelay0246.hostedemail.com ([216.40.44.246]:60460 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727594AbgBMWEB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:04:01 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id A030618026A0E;
-        Thu, 13 Feb 2020 22:03:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: toys27_3f8fd5acfc11c
-X-Filterd-Recvd-Size: 2705
-Received: from XPS-9350 (unknown [172.58.44.42])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 13 Feb 2020 22:03:56 +0000 (UTC)
-Message-ID: <c7df22d3f248c784e8960841c79fe2836d7ea8ab.camel@perches.com>
-Subject: Re: [PATCH] sched/fair: Replace zero-length array with
- flexible-array member
-From:   Joe Perches <joe@perches.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 13 Feb 2020 14:02:10 -0800
-In-Reply-To: <20200213170639.GK14914@hirez.programming.kicks-ass.net>
-References: <20200213151951.GA32363@embeddedor>
-         <20200213164518.GI14914@hirez.programming.kicks-ass.net>
-         <9d516501-2624-f915-32be-13ba6f881019@embeddedor.com>
-         <20200213170639.GK14914@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 13 Feb 2020 17:04:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727519AbgBMWEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:04:54 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8CE02168B;
+        Thu, 13 Feb 2020 22:04:52 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 17:04:51 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213170451.690c4e5c@gandalf.local.home>
+In-Reply-To: <20200213215004.GM2935@paulmck-ThinkPad-P72>
+References: <20200212210749.971717428@infradead.org>
+        <20200212232005.GC115917@google.com>
+        <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+        <20200213135138.GB2935@paulmck-ThinkPad-P72>
+        <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+        <20200213185612.GG2935@paulmck-ThinkPad-P72>
+        <20200213204444.GA94647@google.com>
+        <20200213205442.GK2935@paulmck-ThinkPad-P72>
+        <20200213211930.GG170680@google.com>
+        <20200213163800.5c51a5f1@gandalf.local.home>
+        <20200213215004.GM2935@paulmck-ThinkPad-P72>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-13 at 18:06 +0100, Peter Zijlstra wrote:
-> On Thu, Feb 13, 2020 at 10:58:31AM -0600, Gustavo A. R. Silva wrote:
-> > > Hurmph, and where are all the other similar changes for kernel/sched/ ?
-> > > Because this really isn't the only such usage and I really don't see the
-> > > point in having a separate patch for every single one of them.
+On Thu, 13 Feb 2020 13:50:04 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
+
+> On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
+> > [ Added Masami ]
+> > 
+> > On Thu, 13 Feb 2020 16:19:30 -0500
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> >   
+> > > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:  
+> > > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:    
+> > > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
+> > > > > [...]     
+> > > > > > > > It might well be that I could make these functions be NMI-safe, but
+> > > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
+> > > > > > > > So, before looking into that, I have a question.  Given these proposed
+> > > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
+> > > > > > > > to just use in_nmi()?    
+> > > > > > > 
+> > > > > > > That _should_ already be the case today. That is, if we end up in a
+> > > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.    
+> > > > > > 
+> > > > > > So something like this, then?  This is untested, probably doesn't even
+> > > > > > build, and could use some careful review from both Peter and Steve,
+> > > > > > at least.  As in the below is the second version of the patch, the first
+> > > > > > having been missing a couple of important "!" characters.    
+> > > > > 
+> > > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
+> > > > > outside, that makes it build now. Updated below is Paul's diff. I also added
+> > > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> > > > > asymmetric.    
+> > > > 
+> > > > My compiler complained about the static and the __always_inline, so I
+> > > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
+> > > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
+> > > > rcu_nmi_enter()?    
 > > > 
+> > > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
+> > > allowing it on exit (from a code reading standpoint) so my reaction was to
+> > > add it to both, but we could probably keep that as a separate
+> > > patch/discussion since it is slightly unrelated to the patch.. Sorry to
+> > > confuse the topic.
+> > >  
 > > 
-> > Yeah. I can do that. I'll send a patch for the whole kernel/sched.
-> 
-> Thanks!
-> 
-> > > Also; couldn't you've taught the compiler to also warn about [0] ?
-> > > There's really no other purpose to having a zero length array.
-> > > 
+> > rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
+> > c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
+> > kprobe_int3_handler()")
 > > 
-> > Yeah, this is something we'd like to see in the short future.
-> > Unfortunately, for now, the only way for the compiler to warn
-> > about zero-length arrays in through the use of "-pedantic".
-> > And we definitely don't want to follow this path.
+> > The issue was that we must not allow anything in do_int3() call kprobe
+> > code before kprobe_int3_handler() is called. Because ist_enter() (in
+> > do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
+> > nothing to do with it being RCU nor NMI, but because it was simply
+> > called in do_int3().
 > > 
-> > What we can do, in the meantime, is to add a test for it to
-> > checkpatch.
+> > Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
+> > to why rcu_nmi_enter() would probably be useful, like below:  
 > 
-> Oh, I means, warn if it isn't the last member of a struct. Not warn on
-> any use. Or we mean the same and I'm just confused.
+> Thank you, Steve!  Could I please have your Signed-off-by for this?
 
-That might be a somewhat difficult thing to add to checkpatch
-as it is effectively a per-line scanner:
+Sure, but it was untested ;-)
 
-Try something like:
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-$ git grep -P -A1 '^\s*(?!return)(\w+\s+){1,3}\w+\[0\];' -- '*.[ch]'
+I'd like a Reviewed-by from Masami though.
 
-and look at the results.
-
-In checkpatch that could be something like:
-
-	if ($line =~ /^.\s*$Type\s+$Ident\s*\[\s*0\s*\]\s*;/) {
-		warn...
-	}
-
+-- Steve
 
 
