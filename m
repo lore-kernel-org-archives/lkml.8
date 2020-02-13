@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E256C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96446C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED3D217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622BA217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgBMWFI (ORCPT
+        id S1728639AbgBMWFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:05:08 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54186 "EHLO
+        Thu, 13 Feb 2020 17:05:12 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52960 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgBMWFG (ORCPT
+        with ESMTP id S1728422AbgBMWFJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:05:06 -0500
+        Thu, 13 Feb 2020 17:05:09 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 74fd50b78f1f059c; Thu, 13 Feb 2020 23:05:04 +0100
+ id 593c948fae40964e; Thu, 13 Feb 2020 23:05:06 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Len Brown <len.brown@intel.com>,
@@ -30,9 +30,9 @@ Cc:     Len Brown <len.brown@intel.com>,
         Zhang Rui <rui.zhang@intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 4/9] intel_idle: Add __initdata annotations to init time variables
-Date:   Thu, 13 Feb 2020 23:01:00 +0100
-Message-ID: <14137087.YenDkMhGj7@kreacher>
+Subject: [PATCH 1/9] intel_idle: Simplify LAPIC timer reliability checks
+Date:   Thu, 13 Feb 2020 22:59:22 +0100
+Message-ID: <18406440.OXBZXsHz07@kreacher>
 In-Reply-To: <2960689.qre192dJKD@kreacher>
 References: <2960689.qre192dJKD@kreacher>
 MIME-Version: 1.0
@@ -45,93 +45,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Annotate static variables cpuidle_state_table and mwait_substates
-with __initdata, because they are only used during the initialization
-of the driver.
+The lapic_timer_always_reliable variable really takes only two values
+and some arithmetic in intel_idle() related to comparing it with the
+target C-state's MWAIT hint value is unnecessary.
 
-Also notice that static variable icpu could be annotated analogously
-and the structure pointed to by it could be __initconst, but two of
-its fields are accessed via icpu in intel_idle_cpu_init() and
-auto_demotion_disable(), so introduce two new static variables,
-auto_demotion_disable_flags and disable_promotion_to_c1e, to hold
-the values of these fields, set them during the initialization and
-use them in those functions instead of accessing the source data
-structure via icpu.
+Simplify the code by replacing lapic_timer_always_reliable with
+a bool variable lapic_timer_always_reliable and dropping the
+LAPIC_TIMER_ALWAYS_RELIABLE symbol along with the excess
+computations in intel_idle().
 
-That allows icpu to be annotated with __initdata, so do that,
-and it will also allow some __initconst annotations to be added
-subsequently.
-
-No intentional functional impact.
+While at it, add a comment explaining the branch taken in intel_idle()
+if the LAPIC timer is only reliable in C1 and modify the related debug
+message in intel_idle_init() accordingly (the modification of this
+message in the only expected functional impact of the change made
+here).
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/idle/intel_idle.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/idle/intel_idle.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index e0332d567735..b7341e0b910a 100644
+index d55606608ac8..8d66efc53b89 100644
 --- a/drivers/idle/intel_idle.c
 +++ b/drivers/idle/intel_idle.c
-@@ -65,7 +65,11 @@ static struct cpuidle_driver intel_idle_driver = {
- static int max_cstate = CPUIDLE_STATE_MAX - 1;
+@@ -66,10 +66,7 @@ static int max_cstate = CPUIDLE_STATE_MAX - 1;
  static unsigned int disabled_states_mask;
  
--static unsigned int mwait_substates;
-+static unsigned int mwait_substates __initdata;
-+
-+static unsigned long auto_demotion_disable_flags;
-+static bool disable_promotion_to_c1e;
-+
- static bool lapic_timer_always_reliable;
+ static unsigned int mwait_substates;
+-
+-#define LAPIC_TIMER_ALWAYS_RELIABLE 0xFFFFFFFF
+-/* Reliable LAPIC Timer States, bit 1 for C1 etc.  */
+-static unsigned int lapic_timer_reliable_states = (1 << 1);	 /* Default to only C1 */
++static bool lapic_timer_always_reliable;
  
  struct idle_cpu {
-@@ -81,9 +85,9 @@ struct idle_cpu {
- 	bool use_acpi;
- };
+ 	struct cpuidle_state *state_table;
+@@ -908,7 +905,6 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
+ 	unsigned long ecx = 1; /* break on interrupt flag */
+ 	struct cpuidle_state *state = &drv->states[index];
+ 	unsigned long eax = flg2MWAIT(state->flags);
+-	unsigned int cstate;
+ 	bool uninitialized_var(tick);
+ 	int cpu = smp_processor_id();
  
--static const struct idle_cpu *icpu;
-+static const struct idle_cpu *icpu __initdata;
- static struct cpuidle_device __percpu *intel_idle_cpuidle_devices;
--static struct cpuidle_state *cpuidle_state_table;
-+static struct cpuidle_state *cpuidle_state_table __initdata;
+@@ -919,13 +915,16 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
+ 	if (state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
+ 		leave_mm(cpu);
  
- /*
-  * Enable this state by default even if the ACPI _CST does not list it.
-@@ -1519,7 +1523,7 @@ static void auto_demotion_disable(void)
- 	unsigned long long msr_bits;
- 
- 	rdmsrl(MSR_PKG_CST_CONFIG_CONTROL, msr_bits);
--	msr_bits &= ~(icpu->auto_demotion_disable_flags);
-+	msr_bits &= ~auto_demotion_disable_flags;
- 	wrmsrl(MSR_PKG_CST_CONFIG_CONTROL, msr_bits);
- }
- 
-@@ -1549,13 +1553,10 @@ static int intel_idle_cpu_init(unsigned int cpu)
- 		return -EIO;
+-	if (!static_cpu_has(X86_FEATURE_ARAT)) {
+-		cstate = (((eax) >> MWAIT_SUBSTATE_SIZE) &
+-				MWAIT_CSTATE_MASK) + 1;
+-		tick = false;
+-		if (!(lapic_timer_reliable_states & (1 << (cstate)))) {
++	if (!static_cpu_has(X86_FEATURE_ARAT) && !lapic_timer_always_reliable) {
++		/*
++		 * Switch over to one-shot tick broadcast if the target C-state
++		 * is deeper than C1.
++		 */
++		if ((eax >> MWAIT_SUBSTATE_SIZE) & MWAIT_CSTATE_MASK) {
+ 			tick = true;
+ 			tick_broadcast_enter();
++		} else {
++			tick = false;
+ 		}
  	}
  
--	if (!icpu)
--		return 0;
--
--	if (icpu->auto_demotion_disable_flags)
-+	if (auto_demotion_disable_flags)
- 		auto_demotion_disable();
+@@ -1555,7 +1554,7 @@ static int intel_idle_cpu_online(unsigned int cpu)
+ {
+ 	struct cpuidle_device *dev;
  
--	if (icpu->disable_promotion_to_c1e)
-+	if (disable_promotion_to_c1e)
- 		c1e_promotion_disable();
+-	if (lapic_timer_reliable_states != LAPIC_TIMER_ALWAYS_RELIABLE)
++	if (!lapic_timer_always_reliable)
+ 		tick_broadcast_enable();
+ 
+ 	/*
+@@ -1647,15 +1646,15 @@ static int __init intel_idle_init(void)
+ 	}
+ 
+ 	if (boot_cpu_has(X86_FEATURE_ARAT))	/* Always Reliable APIC Timer */
+-		lapic_timer_reliable_states = LAPIC_TIMER_ALWAYS_RELIABLE;
++		lapic_timer_always_reliable = true;
+ 
+ 	retval = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "idle/intel:online",
+ 				   intel_idle_cpu_online, NULL);
+ 	if (retval < 0)
+ 		goto hp_setup_fail;
+ 
+-	pr_debug("lapic_timer_reliable_states 0x%x\n",
+-		 lapic_timer_reliable_states);
++	pr_debug("Local APIC timer is reliable in %s\n",
++		 lapic_timer_always_reliable ? "all C-states" : "C1");
  
  	return 0;
-@@ -1633,6 +1634,8 @@ static int __init intel_idle_init(void)
- 	icpu = (const struct idle_cpu *)id->driver_data;
- 	if (icpu) {
- 		cpuidle_state_table = icpu->state_table;
-+		auto_demotion_disable_flags = icpu->auto_demotion_disable_flags;
-+		disable_promotion_to_c1e = icpu->disable_promotion_to_c1e;
- 		if (icpu->use_acpi || force_use_acpi)
- 			intel_idle_acpi_cst_extract();
- 	} else if (!intel_idle_acpi_cst_extract()) {
+ 
 -- 
 2.16.4
 
