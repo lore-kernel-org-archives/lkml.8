@@ -2,198 +2,101 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA9BC3B18F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B72CC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB0E24687
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="rRCxR57C"
+	by mail.kernel.org (Postfix) with ESMTP id 565502168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgBMV7K (ORCPT
+        id S1727955AbgBMWEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:59:10 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43661 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgBMV7K (ORCPT
+        Thu, 13 Feb 2020 17:04:01 -0500
+Received: from smtprelay0246.hostedemail.com ([216.40.44.246]:60460 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727594AbgBMWEB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:59:10 -0500
-Received: by mail-ed1-f67.google.com with SMTP id dc19so8687149edb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:59:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dR96Ls041PGles0WWTgdxsFA4gswjPBr2dNrlkBSuNQ=;
-        b=rRCxR57CMKJEJvKUsBRBaCGNlEl5GeneJok3J1oqVCL9i03XHBTkzBKLVXlCX80abR
-         waS3e2st7hqr5AUSVywbiuHu/XcoJmFgOcPcq/NRWkATB05enSVqkl80JRFrqFA7+TzZ
-         VP60OmlNYIOOnNo1pTgwF6ZUTJ9B+xYWfKepxQsuTcSQlH2ADq4oxtRLbeGf/SyLe7Z5
-         YYEdGrtOkXicpYXO7tS/kxFgOlUN19E6+SiiE6iPdGEHXwVtgWm62Jeai1NFqHNb4FeV
-         UgDE19W1OOEMKwc3kfP3rCvuUG9qKToWRYzTN/pkKxHZ/jtbJNqySZOSNxS3RDDHFH+p
-         8DDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dR96Ls041PGles0WWTgdxsFA4gswjPBr2dNrlkBSuNQ=;
-        b=Fx6qV7wol1H9GZIi6gZFgR3XuGNSDXNVBOoeN0PSpDAk4mTmM55SwbIa4hGoFs44i2
-         yrQGQxTLK7ECsbUcqB66wE7kfQ1pqXhOB43mecQkfal1G9o4RJmrFnytS3ZFyrRRX7/H
-         4gaeN0N6bo+2Vz/3aibId2I8nqprbbwv0vlXWyCFRfMl4kMVdfDuPyQgaVNnBZOtAorv
-         ZcK4MfrW1EqStnujrE3csj+qyU51aEXhD8q/uSUmAM1iMfAgbZ4xLpiCFYu5iHhKqEdA
-         GNOuA6/Dpotx8qYTZ2psnIVAPbkUBOHW25S3M1bYfpDG4dSv9C863xfYXq56rDScgyIZ
-         t23g==
-X-Gm-Message-State: APjAAAU8RPlGXIacD1/D3Ca8+NoYAujv9cjBNVh2mB9q0Ai2+/XORDqM
-        HurP8t7PLJ/zbk8WZkacf6MJ2wHA/hglQPAaQw9J
-X-Google-Smtp-Source: APXvYqwJlC4P1+vTqQ7auzlqHDyoqi32fnbka+h4eFFK4GnrJSQwBwYPSRpLTAitL/ZfvrnPR1P7gUIIEptxDZxCT9E=
-X-Received: by 2002:a50:a7a5:: with SMTP id i34mr17484612edc.128.1581631147637;
- Thu, 13 Feb 2020 13:59:07 -0800 (PST)
+        Thu, 13 Feb 2020 17:04:01 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id A030618026A0E;
+        Thu, 13 Feb 2020 22:03:59 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toys27_3f8fd5acfc11c
+X-Filterd-Recvd-Size: 2705
+Received: from XPS-9350 (unknown [172.58.44.42])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 13 Feb 2020 22:03:56 +0000 (UTC)
+Message-ID: <c7df22d3f248c784e8960841c79fe2836d7ea8ab.camel@perches.com>
+Subject: Re: [PATCH] sched/fair: Replace zero-length array with
+ flexible-array member
+From:   Joe Perches <joe@perches.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 13 Feb 2020 14:02:10 -0800
+In-Reply-To: <20200213170639.GK14914@hirez.programming.kicks-ass.net>
+References: <20200213151951.GA32363@embeddedor>
+         <20200213164518.GI14914@hirez.programming.kicks-ass.net>
+         <9d516501-2624-f915-32be-13ba6f881019@embeddedor.com>
+         <20200213170639.GK14914@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <5941671b6b6b5de28ab2cc80e72f288cf83291d5.1577736799.git.rgb@redhat.com>
- <CAHC9VhQYXQp+C0EHwLuW50yUenfH4KF1xKQdS=bn_OzHfnFmmg@mail.gmail.com>
- <20200205003930.2efpm4tvrisgmj4t@madcap2.tricolour.ca> <CAHC9VhSsfBbfYmqLoR=QBgF5_VwbA8Dqqz97MjqwwJ6Jq6fHwA@mail.gmail.com>
- <20200206125135.u4dmybkmvxfgui2b@madcap2.tricolour.ca>
-In-Reply-To: <20200206125135.u4dmybkmvxfgui2b@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 13 Feb 2020 16:58:56 -0500
-Message-ID: <CAHC9VhT8RsFtmqD22p_NxJaqoAg+do9mX45Luw9fEkr+nQjvxg@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 16/16] audit: add capcontid to set contid
- outside init_user_ns
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 7:52 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-02-05 17:56, Paul Moore wrote:
-> > On Tue, Feb 4, 2020 at 7:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-01-22 16:29, Paul Moore wrote:
-> > > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > >
-> > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> > > > > process in a non-init user namespace the capability to set audit
-> > > > > container identifiers.
-> > > > >
-> > > > > Provide /proc/$PID/audit_capcontid interface to capcontid.
-> > > > > Valid values are: 1==enabled, 0==disabled
-> > > >
-> > > > It would be good to be more explicit about "enabled" and "disabled" in
-> > > > the commit description.  For example, which setting allows the target
-> > > > task to set audit container IDs of it's children processes?
-> > >
-> > > Ok...
-> > >
-> > > > > Report this action in message type AUDIT_SET_CAPCONTID 1022 with fields
-> > > > > opid= capcontid= old-capcontid=
-> > > > >
-> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > > ---
-> > > > >  fs/proc/base.c             | 55 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  include/linux/audit.h      | 14 ++++++++++++
-> > > > >  include/uapi/linux/audit.h |  1 +
-> > > > >  kernel/audit.c             | 35 +++++++++++++++++++++++++++++
-> > > > >  4 files changed, 105 insertions(+)
-> >
-> > ...
-> >
-> > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > index 1287f0b63757..1c22dd084ae8 100644
-> > > > > --- a/kernel/audit.c
-> > > > > +++ b/kernel/audit.c
-> > > > > @@ -2698,6 +2698,41 @@ static bool audit_contid_isowner(struct task_struct *tsk)
-> > > > >         return false;
-> > > > >  }
-> > > > >
-> > > > > +int audit_set_capcontid(struct task_struct *task, u32 enable)
-> > > > > +{
-> > > > > +       u32 oldcapcontid;
-> > > > > +       int rc = 0;
-> > > > > +       struct audit_buffer *ab;
-> > > > > +
-> > > > > +       if (!task->audit)
-> > > > > +               return -ENOPROTOOPT;
-> > > > > +       oldcapcontid = audit_get_capcontid(task);
-> > > > > +       /* if task is not descendant, block */
-> > > > > +       if (task == current)
-> > > > > +               rc = -EBADSLT;
-> > > > > +       else if (!task_is_descendant(current, task))
-> > > > > +               rc = -EXDEV;
-> > > >
-> > > > See my previous comments about error code sanity.
-> > >
-> > > I'll go with EXDEV.
-> > >
-> > > > > +       else if (current_user_ns() == &init_user_ns) {
-> > > > > +               if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-> > > > > +                       rc = -EPERM;
-> > > >
-> > > > I think we just want to use ns_capable() in the context of the current
-> > > > userns to check CAP_AUDIT_CONTROL, yes?  Something like this ...
-> > >
-> > > I thought we had firmly established in previous discussion that
-> > > CAP_AUDIT_CONTROL in anything other than init_user_ns was completely irrelevant
-> > > and untrustable.
-> >
-> > In the case of a container with multiple users, and multiple
-> > applications, one being a nested orchestrator, it seems relevant to
-> > allow that container to control which of it's processes are able to
-> > exercise CAP_AUDIT_CONTROL.  Granted, we still want to control it
-> > within the overall host, e.g. the container in question must be
-> > allowed to run a nested orchestrator, but allowing the container
-> > itself to provide it's own granularity seems like the right thing to
-> > do.
->
-> Looking back to discussion on the v6 patch 2/10 (2019-05-30 15:29 Paul
-> Moore[1], 2019-07-08 14:05 RGB[2]) , it occurs to me that the
-> ns_capable(CAP_AUDIT_CONTROL) application was dangerous since there was
-> no parental accountability in storage or reporting.  Now that is in
-> place, it does seem a bit more reasonable to allow it, but I'm still not
-> clear on why we would want both mechanisms now.  I don't understand what
-> the last line in that email meant: "We would probably still want a
-> ns_capable(CAP_AUDIT_CONTROL) restriction in this case."  Allow
-> ns_capable(CAP_AUDIT_CONTROL) to govern these actions, or restrict
-> ns_capable(CAP_AUDIT_CONTROL) from being used to govern these actions?
->
-> If an unprivileged user has been given capcontid to be able run their
-> own container orchestrator/engine and spawns a user namespace with
-> CAP_AUDIT_CONTROL, what matters is capcontid, and not CAP_AUDIT_CONTROL.
-> I could see needing CAP_AUDIT_CONTROL *in addition* to capcontid to give
-> it finer grained control, but since capcontid would have to be given to
-> each process explicitly anways, I don't see the point.
->
-> If that unprivileged user had not been given capcontid,
-> giving itself or one of its descendants CAP_AUDIT_CONTROL should not let
-> it jump into the game all of a sudden unless the now chained audit
-> container identifiers are deemed accountable enough.  And then now we
-> need those hard limits on container depth and network namespace
-> container membership.
+On Thu, 2020-02-13 at 18:06 +0100, Peter Zijlstra wrote:
+> On Thu, Feb 13, 2020 at 10:58:31AM -0600, Gustavo A. R. Silva wrote:
+> > > Hurmph, and where are all the other similar changes for kernel/sched/ ?
+> > > Because this really isn't the only such usage and I really don't see the
+> > > point in having a separate patch for every single one of them.
+> > > 
+> > 
+> > Yeah. I can do that. I'll send a patch for the whole kernel/sched.
+> 
+> Thanks!
+> 
+> > > Also; couldn't you've taught the compiler to also warn about [0] ?
+> > > There's really no other purpose to having a zero length array.
+> > > 
+> > 
+> > Yeah, this is something we'd like to see in the short future.
+> > Unfortunately, for now, the only way for the compiler to warn
+> > about zero-length arrays in through the use of "-pedantic".
+> > And we definitely don't want to follow this path.
+> > 
+> > What we can do, in the meantime, is to add a test for it to
+> > checkpatch.
+> 
+> Oh, I means, warn if it isn't the last member of a struct. Not warn on
+> any use. Or we mean the same and I'm just confused.
 
-Perhaps I'm not correctly understanding what you are trying to do with
-this patchset, but my current understanding is that you are trying to
-use capcontid to control which child audit container IDs (ACIDs) are
-allowed to manage their own ACIDs.  Further, I believe that the
-capcontid setting operates at a per-ACID level, meaning there is no
-provision for the associated container to further restrict that
-ability, i.e. no access control granularity below the ACID level.  My
-thinking is that ns_capable(CAP_AUDIT_CONTROL) could be used within an
-ACID to increase the granularity of the access controls so that only
-privileged processes running inside the ACID would be able to manage
-the ACIDs.  Does that make sense?
+That might be a somewhat difficult thing to add to checkpatch
+as it is effectively a per-line scanner:
 
--- 
-paul moore
-www.paul-moore.com
+Try something like:
+
+$ git grep -P -A1 '^\s*(?!return)(\w+\s+){1,3}\w+\[0\];' -- '*.[ch]'
+
+and look at the results.
+
+In checkpatch that could be something like:
+
+	if ($line =~ /^.\s*$Type\s+$Ident\s*\[\s*0\s*\]\s*;/) {
+		warn...
+	}
+
+
+
