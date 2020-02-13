@@ -2,140 +2,98 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A58C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B95AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCD9217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ImPLnHeg"
+	by mail.kernel.org (Postfix) with ESMTP id 1EE8C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581608158;
+	bh=JaT4aqIPA7sdBwL/lS10pKXWhXxQ6KJQqjdsG1m/SVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y1Wxpz3/Ez1wxujNKtaQIqUYtgOZei5rw3O78E9vbfQioKSySMXM+ZLporU+pt5Xo
+	 I5kgKh1oyMSOINHz7cmzjRdvRMDAQLvI1LUs6wmfHWo4X2cvodR3ZMUmcfcWWKzYMR
+	 uhru2Q8RFmVVUBBdVs6X2rB3U/P/6K6t9jOykVEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387533AbgBMPfy (ORCPT
+        id S1729834AbgBMPbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:35:54 -0500
-Received: from gateway20.websitewelcome.com ([192.185.54.2]:41631 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728602AbgBMPfw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:35:52 -0500
-X-Greylist: delayed 1457 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 10:35:52 EST
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 7CC8F400C5246
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:57:55 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2G9Oj1Za0XVkQ2G9OjPXEP; Thu, 13 Feb 2020 09:11:34 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mMH90DJQNFAtuTIHTFIPLDELcmZyic0yLac3lSYPFq4=; b=ImPLnHegN91Lx7ngWrKfqhpzwM
-        GpMfnoN14gs1u80wKIVtfaA/jeQv7lADnlBF8y7jUea9GKNKngl8JDiIIlrsDQmfz6Dajx93S1jQ+
-        JvRHBDTYNR18wEhjyW+KXSZ7U3FdazimOJzej7h0UfscCusDgvKmWBaIxP2+xHWENo487X2KRoOSa
-        thxtDPBixRefw07TnOFx72jxtxgK4Ikj2Q6XOn1tR7aJCPpUpUwmreQxMWzPVGLQBgmk5uQCnr+VZ
-        XsGrPqxPPxGMoPca3YgEkHBdDIUIaokiOHcuA+M+5n95Duw28ZjJ7PSA8/Zv59xQ/p77BJ6Cq6rlK
-        ZYBlRKAw==;
-Received: from [200.68.140.15] (port=28117 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2G9M-0035UK-Ut; Thu, 13 Feb 2020 09:11:33 -0600
-Date:   Thu, 13 Feb 2020 09:14:09 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] kernel: module: Replace zero-length array with
- flexible-array member
-Message-ID: <20200213151409.GA30541@embeddedor>
+        Thu, 13 Feb 2020 10:31:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729058AbgBMP1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:49 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F88F218AC;
+        Thu, 13 Feb 2020 15:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607668;
+        bh=JaT4aqIPA7sdBwL/lS10pKXWhXxQ6KJQqjdsG1m/SVM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bGZcpA9zZQP37xeEpk9HgpWI/WhL+nizYp0rOI8NmFQ1XZJY0J121weYzMD6te0i1
+         qPre/ZhJN5ztFGncmR932ZucrFpVbF+WpftgyG171XNH0GiJZXTshuVc+MEZ1DTGqo
+         +txWGDoi3bkBG3kn6hB4LzPbNqkRoYyWLOmdpOfc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Paul Gazzillo <paul@pgazz.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 5.4 90/96] mfd: max77650: Select REGMAP_IRQ in Kconfig
+Date:   Thu, 13 Feb 2020 07:21:37 -0800
+Message-Id: <20200213151912.714627653@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.15
-X-Source-L: No
-X-Exim-ID: 1j2G9M-0035UK-Ut
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.15]:28117
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+commit cb7a374a5e7a5af3f8c839f74439193add6d0589 upstream.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+MAX77650 MFD driver uses regmap_irq API but doesn't select the required
+REGMAP_IRQ option in Kconfig. This can cause the following build error
+if regmap irq is not enabled implicitly by someone else:
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+    ld: drivers/mfd/max77650.o: in function `max77650_i2c_probe':
+    max77650.c:(.text+0xcb): undefined reference to `devm_regmap_add_irq_chip'
+    ld: max77650.c:(.text+0xdb): undefined reference to `regmap_irq_get_domain'
+    make: *** [Makefile:1079: vmlinux] Error 1
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+Fix it by adding the missing option.
 
-This issue was found with the help of Coccinelle.
+Fixes: d0f60334500b ("mfd: Add new driver for MAX77650 PMIC")
+Reported-by: Paul Gazzillo <paul@pgazz.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- kernel/module.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mfd/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 33569a01d6e1..b88ec9cd2a7f 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1515,7 +1515,7 @@ struct module_sect_attr {
- struct module_sect_attrs {
- 	struct attribute_group grp;
- 	unsigned int nsections;
--	struct module_sect_attr attrs[0];
-+	struct module_sect_attr attrs[];
- };
- 
- static ssize_t module_sect_show(struct module_attribute *mattr,
-@@ -1608,7 +1608,7 @@ static void remove_sect_attrs(struct module *mod)
- struct module_notes_attrs {
- 	struct kobject *dir;
- 	unsigned int notes;
--	struct bin_attribute attrs[0];
-+	struct bin_attribute attrs[];
- };
- 
- static ssize_t module_notes_read(struct file *filp, struct kobject *kobj,
--- 
-2.25.0
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -758,6 +758,7 @@ config MFD_MAX77650
+ 	depends on OF || COMPILE_TEST
+ 	select MFD_CORE
+ 	select REGMAP_I2C
++	select REGMAP_IRQ
+ 	help
+ 	  Say Y here to add support for Maxim Semiconductor MAX77650 and
+ 	  MAX77651 Power Management ICs. This is the core multifunction
+
 
