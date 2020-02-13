@@ -2,56 +2,53 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB3FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF09C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429C724689
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C3124691
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607477;
-	bh=ACjKYz9A2d8Fi5hQbocr4bi/V9Cmxvl3mDGZ6dQiI0A=;
+	s=default; t=1581607480;
+	bh=/iSY98Fyo2OeoB+k6PzpvUFSIUyQvKPdg5gzWsjdSMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u6b3GsPBDIH7ZRYb/v8ZOPvectTBy27KRzTlS2Ay9Rx2Z+myG1yYx4gkD+GUpJoFd
-	 bUbfJgftYWU2Vub93U9wlikQGAEG7hBxvPiTSm0G08uJ+e/0m8gMPvb9Euwi/ZMs1w
-	 e6zMKZbG1SSY5NRTS+5K96T8n2F7f4yuOxCkbJ9Q=
+	b=ymqf0nm1K/5X74USTW6Mh8LfKYtMXZJi53i0UARpg47qOLLYwIt2i0TE05vxHJf9v
+	 KLNuDHoP9x5xTTSHxzFp4Ox+Wm3TZKzMVG5h1R0iihuiO/rExY/DI5s1pbkKKCk8PZ
+	 LsPFpetIGlAmfqBB66Ipe9SVGykqtN2QPNsD6KlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgBMPYg (ORCPT
+        id S1728754AbgBMPYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:24:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:24:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728356AbgBMPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:22 -0500
+        id S1728364AbgBMPXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:24 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F7B724691;
-        Thu, 13 Feb 2020 15:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 276A92469C;
+        Thu, 13 Feb 2020 15:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607401;
-        bh=ACjKYz9A2d8Fi5hQbocr4bi/V9Cmxvl3mDGZ6dQiI0A=;
+        s=default; t=1581607403;
+        bh=/iSY98Fyo2OeoB+k6PzpvUFSIUyQvKPdg5gzWsjdSMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AUxl46A9vbSckRz81y82JvHgjlxjjTfzJQqxKmLcjlckA+wXZldy1lcIGjPomPW53
-         y/EeVXq7spr4f3lReCqaSed9iprPB9CHLyvD6tvn97W6UbFhcjJ+3fE5cWqFyO42wE
-         VTaLrPDTdPEXj6D5KJ2ePaAZg8qOpcJaxoUKYL+Q=
+        b=eh1YG46TYWxUNJ8LF4AjcLq+qLUflSrV9vaqau5FK5SpXOKVg9WAdUJVX6kA5VaRb
+         UBUMo/vxV1D5jhgbx63gLaK9O/qEkBV81h34yyKHt8mRBPY5CVF0G6ws/5WGZtWc2i
+         JbXsu2rh5LWHwYvHEKS/Rnzd8XZVPeixlO8Cqne4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 002/116] x86/cpu: Update cached HLE state on write to TSX_CTRL_CPUID_CLEAR
-Date:   Thu, 13 Feb 2020 07:19:06 -0800
-Message-Id: <20200213151843.221414164@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.9 005/116] cls_rsvp: fix rsvp_policy
+Date:   Thu, 13 Feb 2020 07:19:09 -0800
+Message-Id: <20200213151844.513670507@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -64,67 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b ]
+[ Upstream commit cb3c0e6bdf64d0d124e94ce43cbe4ccbb9b37f51 ]
 
-/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
-be present on boot cpu even if it was disabled during the bootup. This
-is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
-state is changed via the new MSR IA32_TSX_CTRL.
+NLA_BINARY can be confusing, since .len value represents
+the max size of the blob.
 
-Update the cached HLE bit also since it is expected to change after an
-update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
+cls_rsvp really wants user space to provide long enough data
+for TCA_RSVP_DST and TCA_RSVP_SRC attributes.
 
-Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BUG: KMSAN: uninit-value in rsvp_get net/sched/cls_rsvp.h:258 [inline]
+BUG: KMSAN: uninit-value in gen_handle net/sched/cls_rsvp.h:402 [inline]
+BUG: KMSAN: uninit-value in rsvp_change+0x1ae9/0x4220 net/sched/cls_rsvp.h:572
+CPU: 1 PID: 13228 Comm: syz-executor.1 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ rsvp_get net/sched/cls_rsvp.h:258 [inline]
+ gen_handle net/sched/cls_rsvp.h:402 [inline]
+ rsvp_change+0x1ae9/0x4220 net/sched/cls_rsvp.h:572
+ tc_new_tfilter+0x31fe/0x5010 net/sched/cls_api.c:2104
+ rtnetlink_rcv_msg+0xcb7/0x1570 net/core/rtnetlink.c:5415
+ netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x1248/0x14d0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45b349
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f269d43dc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f269d43e6d4 RCX: 000000000045b349
+RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009c2 R14: 00000000004cb338 R15: 000000000075bfd4
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2774 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4382
+ __kmalloc_reserve net/core/skbuff.c:141 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:209
+ alloc_skb include/linux/skbuff.h:1049 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
+ netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 6fa8c0144b77 ("[NET_SCHED]: Use nla_policy for attribute validation in classifiers")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/tsx.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ net/sched/cls_rsvp.h |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/tsx.c b/arch/x86/kernel/cpu/tsx.c
-index 3e20d322bc98b..032509adf9de9 100644
---- a/arch/x86/kernel/cpu/tsx.c
-+++ b/arch/x86/kernel/cpu/tsx.c
-@@ -115,11 +115,12 @@ void __init tsx_init(void)
- 		tsx_disable();
+--- a/net/sched/cls_rsvp.h
++++ b/net/sched/cls_rsvp.h
+@@ -455,10 +455,8 @@ static u32 gen_tunnel(struct rsvp_head *
  
- 		/*
--		 * tsx_disable() will change the state of the
--		 * RTM CPUID bit.  Clear it here since it is now
--		 * expected to be not set.
-+		 * tsx_disable() will change the state of the RTM and HLE CPUID
-+		 * bits. Clear them here since they are now expected to be not
-+		 * set.
- 		 */
- 		setup_clear_cpu_cap(X86_FEATURE_RTM);
-+		setup_clear_cpu_cap(X86_FEATURE_HLE);
- 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
+ static const struct nla_policy rsvp_policy[TCA_RSVP_MAX + 1] = {
+ 	[TCA_RSVP_CLASSID]	= { .type = NLA_U32 },
+-	[TCA_RSVP_DST]		= { .type = NLA_BINARY,
+-				    .len = RSVP_DST_LEN * sizeof(u32) },
+-	[TCA_RSVP_SRC]		= { .type = NLA_BINARY,
+-				    .len = RSVP_DST_LEN * sizeof(u32) },
++	[TCA_RSVP_DST]		= { .len = RSVP_DST_LEN * sizeof(u32) },
++	[TCA_RSVP_SRC]		= { .len = RSVP_DST_LEN * sizeof(u32) },
+ 	[TCA_RSVP_PINFO]	= { .len = sizeof(struct tc_rsvp_pinfo) },
+ };
  
- 		/*
-@@ -131,10 +132,10 @@ void __init tsx_init(void)
- 		tsx_enable();
- 
- 		/*
--		 * tsx_enable() will change the state of the
--		 * RTM CPUID bit.  Force it here since it is now
--		 * expected to be set.
-+		 * tsx_enable() will change the state of the RTM and HLE CPUID
-+		 * bits. Force them here since they are now expected to be set.
- 		 */
- 		setup_force_cpu_cap(X86_FEATURE_RTM);
-+		setup_force_cpu_cap(X86_FEATURE_HLE);
- 	}
- }
--- 
-2.20.1
-
 
 
