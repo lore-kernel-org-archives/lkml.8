@@ -2,94 +2,117 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CEDC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C238C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058DB217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581590677;
-	bh=JbaaM3wCQgbP43CQfcEhVYnKbvSGI/oQuNsbU2J944Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TRWIJsIb0TWqhjf3S/iEcYgNVdhlfzTrPxH8gsslItXcgksNFuqo5gsCPBNUbL9cM
-	 ZpsDkEoRuSgeziwbvmyOtSn24aNiBDdI6i0sYRmr3Pbp+ZCxgJkoN6zsiz6tdN4cR5
-	 TTnBQn7zIaliayWMrFymK0AfFwdZFTHShyJvQmI4=
+	by mail.kernel.org (Postfix) with ESMTP id D4BA2217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=interia.pl header.i=@interia.pl header.b="Kuxf4Ium"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgBMKog (ORCPT
+        id S1729874AbgBMKor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:44:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbgBMKog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:44:36 -0500
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 13 Feb 2020 05:44:47 -0500
+Received: from smtpo.poczta.interia.pl ([217.74.65.152]:57326 "EHLO
+        smtpo.poczta.interia.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbgBMKoq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:44:46 -0500
+X-Greylist: delayed 441 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 05:44:45 EST
+X-Interia-R: Interia
+X-Interia-R-IP: 185.15.80.246
+X-Interia-R-Helo: <photon.emea.nsn-net.net>
+Received: from photon.emea.nsn-net.net (185-15-80-246.ksi-system.net [185.15.80.246])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 252B8217F4
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581590675;
-        bh=JbaaM3wCQgbP43CQfcEhVYnKbvSGI/oQuNsbU2J944Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=d1EIBB3fpdOYfbZVDlipDaNZI7pfvlPVWpb//iA7HKs/0lMMjXl5mDJe5t4qceIAz
-         5e2Uk1qNGCZ205/6pzh87+HEzpmGlgvHip0vzlAN41V5acTE0o0sEfLH+Ar0Zgvc3q
-         DKvC4pdoosfd+AtmO4C8DnAMtJvycS+9DJ79Qx9I=
-Received: by mail-wm1-f51.google.com with SMTP id q9so5644328wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 02:44:35 -0800 (PST)
-X-Gm-Message-State: APjAAAW1MBhI4+0uTghCZ3wAHYY78XkU7X+FrvitLYFyIe/JjVbKClMa
-        jtTCH0B+SIYLoqBaFGyKhSETzi70s0gsTfvWM68nXQ==
-X-Google-Smtp-Source: APXvYqyeNAdVe/yqJLR6H0X+hoGPMP4zBD/FxKoWXql/TI0MpTRDK9n3nhyRYZYAox7MRIUl0lMPJapkr9XL/Aa5l2U=
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr5427492wmf.133.1581590673662;
- Thu, 13 Feb 2020 02:44:33 -0800 (PST)
+        by poczta.interia.pl (INTERIA.PL) with ESMTPSA;
+        Thu, 13 Feb 2020 11:37:20 +0100 (CET)
+From:   Radoslaw Smigielski <radoslaw.smigielski@interia.pl>
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        alsa-devel@alsa-project.org, corbet@lwn.net, tiwai@suse.com,
+        perex@perex.cz, radoslaw.smigielski@interia.pl
+Subject: [alsa-devel] [PATCH] ALSA: doc: fix snd_hda_intel driver name
+Date:   Thu, 13 Feb 2020 11:36:37 +0100
+Message-Id: <20200213103636.733463-1-radoslaw.smigielski@interia.pl>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200203233933.19577-1-mcroce@redhat.com> <20200213092355.i77luefms23jkud2@gondor.apana.org.au>
- <20200213103444.GA700076@zx2c4.com> <20200213103851.d26zufgvivamulcg@gondor.apana.org.au>
-In-Reply-To: <20200213103851.d26zufgvivamulcg@gondor.apana.org.au>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 13 Feb 2020 10:44:22 +0000
-X-Gmail-Original-Message-ID: <CAKv+Gu8XYoCLPN3F3BbMXt6JbbhBvbHvEiyJZu=EdLGxc6tcwA@mail.gmail.com>
-Message-ID: <CAKv+Gu8XYoCLPN3F3BbMXt6JbbhBvbHvEiyJZu=EdLGxc6tcwA@mail.gmail.com>
-Subject: Re: [PATCH] crypto: arm64/poly1305: ignore build files
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Interia-Antivirus: OK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=interia.pl;
+        s=biztos; t=1581590241;
+        bh=gVqMAKSIPkY8OiAd077JlbnTBYo5wVcLt3iZ6loGT8Y=;
+        h=X-Interia-R:X-Interia-R-IP:X-Interia-R-Helo:From:To:Subject:Date:
+         Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+         X-Interia-Antivirus;
+        b=Kuxf4Ium3/75vWo/SUnB0MPiRIZaAhRwFeR3fVI2USNtD0mDfNojDrYcVc7jj4236
+         ja6CwFGQc5CIwIKyNFO2xuKqU4nu06YQ2FuYAffUqfmwzXsA6sJXQg7nf1P37FJcc6
+         XlS8uu5sIaKwuV0GVLrPR6YLjYqX2fFsdBEbuRUs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 at 11:39, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Thu, Feb 13, 2020 at 11:34:44AM +0100, Jason A. Donenfeld wrote:
-> > On Thu, Feb 13, 2020 at 05:23:55PM +0800, Herbert Xu wrote:
-> > > On Tue, Feb 04, 2020 at 12:39:33AM +0100, Matteo Croce wrote:
-> > > > Add arch/arm64/crypto/poly1305-core.S to .gitignore
-> > > > as it's built from poly1305-core.S_shipped
-> > > >
-> > > > Fixes: f569ca164751 ("crypto: arm64/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
-> > > > Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> > > > ---
-> > > >  arch/arm64/crypto/.gitignore | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > >
-> > > Patch applied.  Thanks.
-> >
-> > Probably makes sense for 5.6, no?
->
-> No this is too minor.  Only critical bug fixes (e.g., user
-> triggerable crashes) or build issues are routinely accepted.
->
+Update driver name snd-hda-intel to proper, existing driver
+name snd_hda_intel in Documentation/sound/hd-audio/notes.rst.
 
-Sasha Levin's 'AI' bot finds everything with a 'fixes' tag and
-proposes to backport it if it applies cleanly and doesn't break the
-build, so this patch is going to end up in v5.6 anyway.
+Signed-off-by: Radoslaw Smigielski <radoslaw.smigielski@interia.pl>
+---
+ Documentation/sound/hd-audio/notes.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/sound/hd-audio/notes.rst b/Documentation/sound/hd-audio/notes.rst
+index 0f3109d9abc8..56ccc15f4d26 100644
+--- a/Documentation/sound/hd-audio/notes.rst
++++ b/Documentation/sound/hd-audio/notes.rst
+@@ -17,12 +17,12 @@ methods for the	HD-audio hardware.
+ 
+ The HD-audio component consists of two parts: the controller chip and 
+ the codec chips on the HD-audio bus.  Linux provides a single driver
+-for all controllers, snd-hda-intel.  Although the driver name contains
++for all controllers, snd_hda_intel.  Although the driver name contains
+ a word of a well-known hardware vendor, it's not specific to it but for
+ all controller chips by other companies.  Since the HD-audio
+ controllers are supposed to be compatible, the single snd-hda-driver
+ should work in most cases.  But, not surprisingly, there are known
+-bugs and issues specific to each controller type.  The snd-hda-intel
++bugs and issues specific to each controller type.  The snd_hda_intel
+ driver has a bunch of workarounds for these as described below.
+ 
+ A controller may have multiple codecs.  Usually you have one audio
+@@ -31,7 +31,7 @@ multiple audio codecs, e.g. for analog and digital outputs, and the
+ driver might not work properly because of conflict of mixer elements.
+ This should be fixed in future if such hardware really exists.
+ 
+-The snd-hda-intel driver has several different codec parsers depending
++The snd_hda_intel driver has several different codec parsers depending
+ on the codec.  It has a generic parser as a fallback, but this
+ functionality is fairly limited until now.  Instead of the generic
+ parser, usually the codec-specific parser (coded in patch_*.c) is used
+@@ -226,7 +226,7 @@ the external amplifier bits.  Thus a headphone output has a slightly
+ better chance.
+ 
+ Before making a bug report, double-check whether the mixer is set up
+-correctly.  The recent version of snd-hda-intel driver provides mostly
++correctly.  The recent version of snd_hda_intel driver provides mostly
+ "Master" volume control as well as "Front" volume (where Front
+ indicates the front-channels).  In addition, there can be individual
+ "Headphone" and "Speaker" controls.
+@@ -596,7 +596,7 @@ For example, if you have two cards, one for an on-board analog and one
+ for an HDMI video board, you may pass patch option like below:
+ ::
+ 
+-    options snd-hda-intel patch=on-board-patch,hdmi-patch
++    options snd_hda_intel patch=on-board-patch,hdmi-patch
+ 
+ 
+ Power-Saving
+-- 
+2.24.1
+
