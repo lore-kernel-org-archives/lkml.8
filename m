@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5604EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D249C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C8C2467D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC5A2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607642;
-	bh=m6L8pam+h6zNTKCrrIJgMWsEWjH208nmDDvKR29STTM=;
+	s=default; t=1581607648;
+	bh=ImQqmsBiXC3ZTbpTA1IsoX3Qd4c7vQXtJfxgswp5vE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1dQ+Vj2loGn5cxCVlgcsnL2PSjaHfMxSTz26DivvqLt7Yo37QOXYDcF88R0EcDL1S
-	 qzyLi2W6D1ZGbob7lgMrtmrJ9Owc/3li9cFTgdGOStxWBgBjZTUWHkQD16rQsyUtf2
-	 CF5hT7g2Eh0ft3vLtJQrXTrnB3hiNH5R0LViPls4=
+	b=fD/ookCmRJkb72g65GH0hvMXIHeMNKTGn35TJBAG3H2XEUaaCFO3ERySi3DHyuHRi
+	 a2/9nt5xCP6Q7On6YVUO9gKQ87oCWVpma0KQWHQRL/0RbLUNaRgNW+0sp2O9vmlG4J
+	 9y1lpnJOIU7uM57k10yjt+3ut16W3BwGwsVO43QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgBMP1V (ORCPT
+        id S1729396AbgBMP11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbgBMPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:21 -0500
+        id S1728989AbgBMPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:25 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 386A420848;
-        Thu, 13 Feb 2020 15:25:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C1D524690;
+        Thu, 13 Feb 2020 15:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607520;
-        bh=m6L8pam+h6zNTKCrrIJgMWsEWjH208nmDDvKR29STTM=;
+        s=default; t=1581607524;
+        bh=ImQqmsBiXC3ZTbpTA1IsoX3Qd4c7vQXtJfxgswp5vE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PDZsqbBjfF1bAZCqd6v7gWKyRY9SyEoteMuHaIB2wDAjZI/D/ROnOrnYNQShjdstn
-         D2AyT6xlx8uLdlCnkDaojp5jyA7CYdGtTmMgMwc2kwsQUFpiI9SEdoNOwpZ4s3Wlgy
-         JQTy0nMvKdU+ZDThB3PspNj+VRvx3OwQEKwLYvk4=
+        b=rxGfQx9hBTFRDVgej8LM/7Yv0xZyIkNvRkyj9QYeWIFflVtwgPJu8WeaBN8i6y6F/
+         hi8PANTG0ZOjhD5A2DmUDVPTEqozZNamoX9+Uqe3FkcBm9sV1cVISqI5n4XOYsLzQD
+         yPR6zWhsYAssmRhrwbpcQ68GV7zNnl2OSMuj2IaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 086/173] KVM: x86: Protect MSR-based index computations from Spectre-v1/L1TF attacks in x86.c
-Date:   Thu, 13 Feb 2020 07:19:49 -0800
-Message-Id: <20200213151954.912757003@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Frank Sorenson <sorenson@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.14 075/173] sunrpc: expiry_time should be seconds not timeval
+Date:   Thu, 13 Feb 2020 07:19:38 -0800
+Message-Id: <20200213151952.453093218@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -62,54 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-commit 6ec4c5eee1750d5d17951c4e1960d953376a0dda upstream.
+commit 3d96208c30f84d6edf9ab4fac813306ac0d20c10 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in set_msr_mce() and
-get_msr_mce().
-Both functions contain index computations based on the
-(attacker-controlled) MSR number.
+When upcalling gssproxy, cache_head.expiry_time is set as a
+timeval, not seconds since boot. As such, RPC cache expiry
+logic will not clean expired objects created under
+auth.rpcsec.context cache.
 
-Fixes: 890ca9aefa78 ("KVM: Add MCE support")
+This has proven to cause kernel memory leaks on field. Using
+64 bit variants of getboottime/timespec
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
+Expiration times have worked this way since 2010's c5b29f885afe "sunrpc:
+use seconds since boot in expiry cache".  The gssproxy code introduced
+in 2012 added gss_proxy_save_rsc and introduced the bug.  That's a while
+for this to lurk, but it required a bit of an extreme case to make it
+obvious.
+
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 030d794bf498 "SUNRPC: Use gssproxy upcall for server..."
+Tested-By: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2165,7 +2165,10 @@ static int set_msr_mce(struct kvm_vcpu *
- 	default:
- 		if (msr >= MSR_IA32_MC0_CTL &&
- 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
--			u32 offset = msr - MSR_IA32_MC0_CTL;
-+			u32 offset = array_index_nospec(
-+				msr - MSR_IA32_MC0_CTL,
-+				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1188,6 +1188,7 @@ static int gss_proxy_save_rsc(struct cac
+ 		dprintk("RPC:       No creds found!\n");
+ 		goto out;
+ 	} else {
++		struct timespec64 boot;
+ 
+ 		/* steal creds */
+ 		rsci.cred = ud->creds;
+@@ -1208,6 +1209,9 @@ static int gss_proxy_save_rsc(struct cac
+ 						&expiry, GFP_KERNEL);
+ 		if (status)
+ 			goto out;
 +
- 			/* only 0 or all 1s can be written to IA32_MCi_CTL
- 			 * some Linux kernels though clear bit 10 in bank 4 to
- 			 * workaround a BIOS/GART TBL issue on AMD K8s, ignore
-@@ -2549,7 +2552,10 @@ static int get_msr_mce(struct kvm_vcpu *
- 	default:
- 		if (msr >= MSR_IA32_MC0_CTL &&
- 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
--			u32 offset = msr - MSR_IA32_MC0_CTL;
-+			u32 offset = array_index_nospec(
-+				msr - MSR_IA32_MC0_CTL,
-+				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
-+
- 			data = vcpu->arch.mce_banks[offset];
- 			break;
- 		}
++		getboottime64(&boot);
++		expiry -= boot.tv_sec;
+ 	}
+ 
+ 	rsci.h.expiry_time = expiry;
 
 
