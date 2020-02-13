@@ -2,140 +2,215 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4DCC3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A76C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731562073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCA1206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="d4AOQsMa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f8031fcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgBMESL (ORCPT
+        id S1729649AbgBMEXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 23:18:11 -0500
-Received: from mail-eopbgr1300109.outbound.protection.outlook.com ([40.107.130.109]:8416
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729633AbgBMESL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 23:18:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ftCPQbXhlsOzfJtPPsmxl/d43JNxqv6pZpSFD0a4Fz9iMrS/xOyCVMTmZFjSsvRlFjuiRLQG+oe38nLKtsWpQyjRAjnVdILo5M2mWY1lQ9FzYPvBakZi2utJ96SbphiShBhJ5AIXTmWiuid3w88ssPBuVGUJq3e6BJ+64xKleOq5jxe6DNVCpBSXBiwF0e3ukj7aMmkSVKxh9cRRwcPLBVYw3dTP1OSjEVuXXXl29Hz3pUvzPMWqmRghPOS6ZtaJRqoHT5dxV2aC+2gggxBMNUHluOMWIhsNuODuOzY/aCX8pjiKPjNG/hmkAZyD9crA8vMCv+CJ1u8bzOPcHIa/QQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGTIQeg0+eKDbwcVyrM63ya+ly96ipnAwkEi5ZVgu+g=;
- b=kBomwKf3u1x/GdBsubJyfzkz27u45UzkibOInFzOrNQV9byMCFmQ500sIyY1YqUXZghk7S6uFLBcuueO+uedXsl29KlO7mcoshnl/nwAp3l8Zo89wDUSgfBtnENutITdXoO4rUzAlPDyjlNmXSPZanJX7pa3+owxZJlPay/L0XRrUn+63xAKP14SiEWMf/nzmgnUa57XFc7Tb0d8ONSoPu0O6XyP6wSQFrwUoVRDOJMRQzg3B6tAN65t3QS/JH60dZaPd80shR1zvd/ZvstERbjpyy494UX6n86rrUWKcwWNMEImXXBoRAmBx+KCa7yBi7m/vz9zxnDWl5JzR9OmDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGTIQeg0+eKDbwcVyrM63ya+ly96ipnAwkEi5ZVgu+g=;
- b=d4AOQsMaJ3MTgGO8D94KI2tJywTYv7udlvUKkEmqtQvfAS0eF4GxLMcZ329JFndFfNQajD9NxlJWKjTib/9sKYxAjdtdo/Y+LNBvykFdKkThsaAW0884kBaPqc5MBFxS/5ffbxFJ0PjOkJENw2rz6RMQ/PFc3C0fBANOB86NEZc=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0290.APCP153.PROD.OUTLOOK.COM (52.132.236.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.2; Thu, 13 Feb 2020 04:18:01 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432%5]) with mapi id 15.20.2750.007; Thu, 13 Feb 2020
- 04:18:01 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Boqun Feng <boqun.feng@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Michael Kelley <mikelley@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Subject: RE: [PATCH v3 3/3] PCI: hv: Introduce hv_msi_entry
-Thread-Topic: [PATCH v3 3/3] PCI: hv: Introduce hv_msi_entry
-Thread-Index: AQHV38PZxjAi0xWAZkW4JMZC1Le8B6gYh+3Q
-Date:   Thu, 13 Feb 2020 04:18:01 +0000
-Message-ID: <HK0P153MB0148834D630E95D055CE051CBF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <20200210033953.99692-1-boqun.feng@gmail.com>
- <20200210033953.99692-4-boqun.feng@gmail.com>
-In-Reply-To: <20200210033953.99692-4-boqun.feng@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-13T04:17:59.5083367Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=638e90be-ea16-4589-af53-af25dfb78032;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:c129:4d3:3571:d407]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 675f161b-6400-41bd-d577-08d7b03bb6ec
-x-ms-traffictypediagnostic: HK0P153MB0290:|HK0P153MB0290:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB02901B88A669AD74C3ABA5C6BF1A0@HK0P153MB0290.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 031257FE13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(366004)(376002)(396003)(39860400002)(199004)(189003)(110136005)(8676002)(81156014)(81166006)(54906003)(6506007)(8990500004)(478600001)(55016002)(9686003)(10290500003)(2906002)(86362001)(4326008)(7416002)(4744005)(316002)(66446008)(76116006)(5660300002)(66946007)(52536014)(66476007)(8936002)(7696005)(33656002)(66556008)(186003)(71200400001)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0290;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6RwGZMCuSSzDhboykzAGybYDG1aQ9PboIHleaIeNXX764UC3bSVKc0M5KNRGl0ZVf5xnNlMd1bi/bgTyFDBUd4xheWmUo4Ws2Y+AVEqMx/Tahb8ty4WvraL9I+bvLM41hXcQZyush7QXsadnegOplHZPounrc9KYW+pZjEfBP61RJk3wtIb0P5eGSgXwXeUWSw0xDt2h/lULfTvTI93Sc2Dno0b1Yqf0QaPSOeDiNVOfgi5MR6Bz5ax15DpntUh6Q8nPhW6Qfv7RLuBbTK894lhj8raas8poAd3HEugd531q3dMW1ddSJx2oSFr82c+snRYWCq4TZcXb8H9aDU4Ge8GgNlvxPqZwvrDh9dEK6WQM9a/mmFU7lvkhOH6ZcoWLULA5NL8c/FlHRbKHJoMia++3JwWfzvvscxvsSsaOa1EV1xzcpiR25RJhfbAaI9qN
-x-ms-exchange-antispam-messagedata: tKrFCSzonWEko5Qa9fGTZVqILqFhOHAhJ+SouEREKgQFIp+LAAbCvW+rgp/C5jaRm0jtpaMhG8iIMFyivbz1JMJt/plCAUaDiUlsItFadQniI/48oQzKth8ITKhrX9yWjQQzO0HeYCEZnu3DN06abBu1An7AMGeNwLY5AE9WsK9y+EHXo4fqWPSDeaAU8qCwvUwhTtiwGFjPCmcluH3FCQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 675f161b-6400-41bd-d577-08d7b03bb6ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 04:18:01.0230
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Bqc4X/R8cZQ1lgKqFfXBJC+Eos/vwDnHCiI8Qg017y2V5bbFjrJask/hYdhvBVTvao4PgUoW0bpEBTVlEIpfzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0290
+        Wed, 12 Feb 2020 23:23:36 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:41685 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729440AbgBMEXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 23:23:35 -0500
+Received: by mail-pg1-f202.google.com with SMTP id z10so2908430pgz.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 20:23:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=y/l4QcnQmnFHC9Qtzrj2Afn8rUnVhJiL0LNmFafuuSU=;
+        b=f8031fcjT53HNVYPQmy3REJdJzaNg4KA0YlKgivEBB0IgusTy6l5NrDsjO+74g/3MO
+         T/Vb0EDI1sxEx42SrmfdfLfjh4mPNxTPUp9WnQzU+a0BZrhqgSJ7dUnq3Ga2sVBjqkR6
+         ssvzfFcNDEFLMRh4SQTE/ENZvF0Wg+BU4k20OnlQm8dUK2v9i5Wz6RtRNWtijgecAIW6
+         jH+wI1UpJ0Jl4ul+BW1fYGBopP5gSWOTUelkXxn/EvSAO/JJ6DvL/LZiQSROH43LMsBh
+         7XnNuXGRZxeyZ5UhalN78/amh/N3NAhsSV+v21huqPf3Q7xd1RW0ZU3FDjLvYiP/KaiA
+         gfiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=y/l4QcnQmnFHC9Qtzrj2Afn8rUnVhJiL0LNmFafuuSU=;
+        b=cJcn19PBS8vVQP+tHAnNAd/zMNl7cpAVaEGptadY9lMzTEdVfYj1/jlVYA6z8j2dAM
+         2SSU/7XY0rWGjezJToxbn+rqLpXqIiAJazEB7HDyl9IcJcZg1bV2Fy2VDhdwr6XlWWha
+         tRE8vK5e8h+fCYxbqAWtGIA3eRJfMGfIceMdO1/iuiVvk7Bx99wISww+wiHzm+n8K6vB
+         xsz4iN8e1r3Iyr7svO5UhHXqoyBkMElEPMNGS8dkSif/omIVWgSQRF+8uUwfpx3URrip
+         HufSoO/PBaDn2dh+wYTJ2UCRyFwW59gLIn+19vSh9jJGl8BxRxJtUJBTGFzsJBQ2NlOH
+         qasw==
+X-Gm-Message-State: APjAAAV1uNvRYbSlvDImVZBHWni4xw4olJ2Fht8mG7inIHLQd70A9AWd
+        uBh31nNAqZwRYBkJpeGtkqrZ9AedFfY=
+X-Google-Smtp-Source: APXvYqyr6m8cQz82vDkf58+STTVBDflPhp/EHbKYlIUwxat+GQenNnCGOf7c6sVmCb2xlV0X7sa3JOMNRTF1
+X-Received: by 2002:a65:5a48:: with SMTP id z8mr15465779pgs.157.1581567815093;
+ Wed, 12 Feb 2020 20:23:35 -0800 (PST)
+Date:   Wed, 12 Feb 2020 20:23:31 -0800
+In-Reply-To: <20200212222922.5dfa9f36@oasis.local.home>
+Message-Id: <20200213042331.157606-1-zzyiwei@google.com>
+Mime-Version: 1.0
+References: <20200212222922.5dfa9f36@oasis.local.home>
+X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
+Subject: [PATCH v3] gpu/trace: add gpu memory tracepoints
+From:   zzyiwei@google.com
+To:     rostedt@goodmis.org, linux-kernel@vger.kernel.org
+Cc:     prahladk@google.com, joelaf@google.com, android-kernel@google.com,
+        Yiwei Zhang <zzyiwei@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Boqun Feng
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h
-> b/arch/x86/include/asm/hyperv-tlfs.h
->=20
-> +union hv_msi_entry {
-> +	u64 as_uint64;
-> +	struct {
-> +		u32 address;
-> +		u32 data;
-> +	} __packed;
-> +};
+From: Yiwei Zhang <zzyiwei@google.com>
 
-Just a small thing: should we move the __packed to after the "}" of
-the union hv_msi_entry ?
+This change adds the below gpu memory tracepoint:
+gpu_mem/gpu_mem_total: track global or process gpu memory total counters
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
+---
+ drivers/Kconfig                   |  2 ++
+ drivers/gpu/Makefile              |  1 +
+ drivers/gpu/trace/Kconfig         |  4 +++
+ drivers/gpu/trace/Makefile        |  3 ++
+ drivers/gpu/trace/trace_gpu_mem.c | 13 +++++++
+ include/trace/events/gpu_mem.h    | 57 +++++++++++++++++++++++++++++++
+ 6 files changed, 80 insertions(+)
+ create mode 100644 drivers/gpu/trace/Kconfig
+ create mode 100644 drivers/gpu/trace/Makefile
+ create mode 100644 drivers/gpu/trace/trace_gpu_mem.c
+ create mode 100644 include/trace/events/gpu_mem.h
+
+diff --git a/drivers/Kconfig b/drivers/Kconfig
+index 8befa53f43be..e0eda1a5c3f9 100644
+--- a/drivers/Kconfig
++++ b/drivers/Kconfig
+@@ -200,6 +200,8 @@ source "drivers/thunderbolt/Kconfig"
+ 
+ source "drivers/android/Kconfig"
+ 
++source "drivers/gpu/trace/Kconfig"
++
+ source "drivers/nvdimm/Kconfig"
+ 
+ source "drivers/dax/Kconfig"
+diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
+index f17d01f076c7..835c88318cec 100644
+--- a/drivers/gpu/Makefile
++++ b/drivers/gpu/Makefile
+@@ -5,3 +5,4 @@
+ obj-$(CONFIG_TEGRA_HOST1X)	+= host1x/
+ obj-y			+= drm/ vga/
+ obj-$(CONFIG_IMX_IPUV3_CORE)	+= ipu-v3/
++obj-$(CONFIG_TRACE_GPU_MEM)		+= trace/
+diff --git a/drivers/gpu/trace/Kconfig b/drivers/gpu/trace/Kconfig
+new file mode 100644
+index 000000000000..c24e9edd022e
+--- /dev/null
++++ b/drivers/gpu/trace/Kconfig
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++config TRACE_GPU_MEM
++	bool
+diff --git a/drivers/gpu/trace/Makefile b/drivers/gpu/trace/Makefile
+new file mode 100644
+index 000000000000..b70fbdc5847f
+--- /dev/null
++++ b/drivers/gpu/trace/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_TRACE_GPU_MEM) += trace_gpu_mem.o
+diff --git a/drivers/gpu/trace/trace_gpu_mem.c b/drivers/gpu/trace/trace_gpu_mem.c
+new file mode 100644
+index 000000000000..01e855897b6d
+--- /dev/null
++++ b/drivers/gpu/trace/trace_gpu_mem.c
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * GPU memory trace points
++ *
++ * Copyright (C) 2020 Google, Inc.
++ */
++
++#include <linux/module.h>
++
++#define CREATE_TRACE_POINTS
++#include <trace/events/gpu_mem.h>
++
++EXPORT_TRACEPOINT_SYMBOL(gpu_mem_total);
+diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
+new file mode 100644
+index 000000000000..1897822a9150
+--- /dev/null
++++ b/include/trace/events/gpu_mem.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * GPU memory trace points
++ *
++ * Copyright (C) 2020 Google, Inc.
++ */
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM gpu_mem
++
++#if !defined(_TRACE_GPU_MEM_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_GPU_MEM_H
++
++#include <linux/tracepoint.h>
++
++/*
++ * The gpu_memory_total event indicates that there's an update to either the
++ * global or process total gpu memory counters.
++ *
++ * This event should be emitted whenever the kernel device driver allocates,
++ * frees, imports, unimports memory in the GPU addressable space.
++ *
++ * @gpu_id: This is the gpu id.
++ *
++ * @pid: Put 0 for global total, while positive pid for process total.
++ *
++ * @size: Virtual size of the allocation in bytes.
++ *
++ */
++TRACE_EVENT(gpu_mem_total,
++
++	TP_PROTO(uint32_t gpu_id, uint32_t pid, uint64_t size),
++
++	TP_ARGS(gpu_id, pid, size),
++
++	TP_STRUCT__entry(
++		__field(uint32_t, gpu_id)
++		__field(uint32_t, pid)
++		__field(uint64_t, size)
++	),
++
++	TP_fast_assign(
++		__entry->gpu_id = gpu_id;
++		__entry->pid = pid;
++		__entry->size = size;
++	),
++
++	TP_printk("gpu_id=%u pid=%u size=%llu",
++		__entry->gpu_id,
++		__entry->pid,
++		__entry->size)
++);
++
++#endif /* _TRACE_GPU_MEM_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.25.0.225.g125e21ebc7-goog
+
