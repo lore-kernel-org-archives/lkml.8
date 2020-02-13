@@ -2,134 +2,79 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05C4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC03C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905DD222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:34:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sjO1AgGu"
+	by mail.kernel.org (Postfix) with ESMTP id D45782073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgBMLem (ORCPT
+        id S1729923AbgBMLfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:34:42 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41717 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgBMLel (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:34:41 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d11so5279075qko.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 03:34:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VSt973hv/QfrpDHXWJ8G2UOF9Wa/lnfW+Pjf23P9P30=;
-        b=sjO1AgGuqroNntfZVFrbHRsfQarPG/RNkbx884jvzfti4wftqKRRIHCv/yHRkBPAts
-         8lCtQSvZWMLPioSiqRhHCf3/o4TCiC4OXSz7nQ9lUV0L3qbfZ7UjfKfR1zIdYqqXSFgk
-         LpQ/bzDjwLamYL8z58X8rc+wtaW5xw92tKQl2sAP070YbTxBnFoYfn5L54PK6UsazPZp
-         b1tlMb1rEySTkuauZDZVcGaH8ZKcEXEuKLX/d9ItbThwkcVImGz8LHbV4CviIqEdEuwL
-         YDJYyLueKGD7NjwVFCok0H2/sOp+b5pqQIL13lUyIpHX9sh1Mlr2tPtrs87oPkga6mB1
-         Fx6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VSt973hv/QfrpDHXWJ8G2UOF9Wa/lnfW+Pjf23P9P30=;
-        b=qBK9VPF1XNddzZxUr5ZmcdQL2javbtAE2FwphAlwnaudv94qvmXVsiffz6ExI0ILSm
-         Dr6pn1+7hXH+a0HciMziHuIcgEWw1cxp40flXQ5uP5excuGW28+lwz1OH8X56iVxbLlu
-         A6oJJg/9kWx0l6gJVuztyeDeM+qJp4GcspVJdFIvpQZKGTOhp1QTWJD3BMTKcM7XYwBW
-         tPnjWF3jmcLkldJuKMdGGzPU3VZNCQGEJd8r4SUujySyQArVJWmhHn7raVpU9JuopWPW
-         2VFdxPD7FQRlSGgCyAj0jlGjtwmJ206hOdHMsxjRBBgBnHsK0H8iMeHdHv+YNnTR7VJu
-         HRKg==
-X-Gm-Message-State: APjAAAXyLGzobJRx74KBvHJbmt5yw9EwF6+sE9l/RgyLTuVmpYTHBIDm
-        m+jCGujQmE0Jn254ry+qKWU=
-X-Google-Smtp-Source: APXvYqz5vvB+WVrDlPoO5rukeQ63p4hoxhct3LGLyZkXmynEjEMPZqNdUR3LbapTyEwBGcwItYOzSw==
-X-Received: by 2002:a37:4894:: with SMTP id v142mr11135684qka.220.1581593679345;
-        Thu, 13 Feb 2020 03:34:39 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id g6sm1139614qki.100.2020.02.13.03.34.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Feb 2020 03:34:38 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 5FD29220BD;
-        Thu, 13 Feb 2020 06:34:36 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 13 Feb 2020 06:34:36 -0500
-X-ME-Sender: <xms:SjRFXmB_lU7g0hJPMLN6JkK06D4G3hHTqw7Mwvuzkr5Fm2PkxczMVA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieekgddvkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
-    epghhithhhuhgsrdgtohhmnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvsh
-    hmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheeh
-    vddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:SjRFXsh5T1MI4-0LegWeTaWNddW2pFop7YHOWIQc73yR1lSinfytxw>
-    <xmx:SjRFXrzaYxdE6PMfvEKzsx8sMr3rgVeRgYlGS9FoehV53W31do13cA>
-    <xmx:SjRFXl3qDIxlN3IIEgvQiKZoWvSq-chriOws0KrdTQoHvZnNoRLplQ>
-    <xmx:TDRFXuNhsS43D-8YM0imxLMnfJQHV6rnlyrk6oxPJpnuNc18WEsXKw>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0E73F30600DC;
-        Thu, 13 Feb 2020 06:34:33 -0500 (EST)
-Date:   Thu, 13 Feb 2020 19:34:32 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        arnd@arndb.de,
-        Stefan Asserhall load and store 
-        <stefan.asserhall@xilinx.com>, Will Deacon <will@kernel.org>,
-        paulmck@kernel.org
-Subject: Re: [PATCH 7/7] microblaze: Do atomic operations by using exclusive
- ops
-Message-ID: <20200213113432.GF69108@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <cover.1581522136.git.michal.simek@xilinx.com>
- <ba3047649af07dadecf1a52e7d815db8f068eb24.1581522136.git.michal.simek@xilinx.com>
- <20200212155500.GB14973@hirez.programming.kicks-ass.net>
- <4b46b33e-14ad-7097-f0db-2915ac772f15@xilinx.com>
- <20200213085849.GL14897@hirez.programming.kicks-ass.net>
+        Thu, 13 Feb 2020 06:35:25 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10618 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbgBMLfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:35:24 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 339FAE8E5905136164A6;
+        Thu, 13 Feb 2020 19:35:19 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 13 Feb 2020 19:35:09 +0800
+From:   Hongbo Yao <yaohongbo@huawei.com>
+To:     <paulmck@kernel.or>
+CC:     <linux-kernel@vger.kernel.org>, <yaohongbo@huawei.com>,
+        <chenzhou10@huawei.com>, <dave@stgolabs.net>,
+        <josh@joshtriplett.org>
+Subject: [PATCH -next] torture: avoid build error without CONFIG_RCU_TORTURE_TEST
+Date:   Thu, 13 Feb 2020 19:49:52 +0800
+Message-ID: <20200213114952.4638-1-yaohongbo@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213085849.GL14897@hirez.programming.kicks-ass.net>
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:58:49AM +0100, Peter Zijlstra wrote:
-[...]
-> 
-> > Also is there any testsuite I should run to verify all these atomics
-> > operations? That would really help but I haven't seen any tool (but also
-> > didn't try hard to find it out).
-> 
-> Will, Paul; can't this LKMM thing generate kernel modules to run? And do
+If TORTURE_TEST=y(selected by TORTURE_LOCK_TEST) and RCU_TORTURE_TEST=n,
+the following error is seen while building kernel/torture.c
 
-The herd toolset does have something called klitmus:
+kernel/torture.c: In function torture_onoff:
+kernel/torture.c:239:3: error: implicit declaration of function
+rcutorture_sched_setaffinity; did you mean __NR_ia32_sched_setaffinity?
+[-Werror=implicit-function-declaration]
+   rcutorture_sched_setaffinity(current->pid, cpumask_of(0));
 
-"an experimental tool, similar to litmus7 that runs kernel memory model
-tests as kernel modules."
+Using sched_setaffnity() instead of rcutorture_sched_setaffinity() to
+avoid the error.
 
-I think Andrea knows more about how to use it.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: bc3db9afb849 ("EXP: rcutorture hack to force CPU hotplug onto CPU 0")
+Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+---
+ kernel/torture.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> we have a 'nice' collection of litmus tests that cover atomic_t ?
-> 
+diff --git a/kernel/torture.c b/kernel/torture.c
+index b29adec50e01..834214cbd1cd 100644
+--- a/kernel/torture.c
++++ b/kernel/torture.c
+@@ -236,7 +236,7 @@ torture_onoff(void *arg)
+ 			schedule_timeout_interruptible(HZ / 10);
+ 			continue;
+ 		}
+-		rcutorture_sched_setaffinity(current->pid, cpumask_of(0));
++		sched_setaffinity(current->pid, cpumask_of(0));
+ 		cpu = (torture_random(&rand) >> 4) % (maxcpu + 1);
+ 		if (!torture_offline(cpu,
+ 				     &n_offline_attempts, &n_offline_successes,
+-- 
+2.17.1
 
-There is a few in Paul's litmus repo:
-
-	https://github.com/paulmckrcu/litmus/tree/master/manual/atomic
-
-Maybe a good start?
-
-Regards,
-Boqun
-
-> The one in atomic_t.txt should cover this one at least.
