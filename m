@@ -2,97 +2,93 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D2FC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD94C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D3224670
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:18:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YSioyUaV"
+	by mail.kernel.org (Postfix) with ESMTP id E42B6218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgBMWSK (ORCPT
+        id S1728018AbgBMWTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:18:10 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53134 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727594AbgBMWSK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:18:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581632289;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qi71n+eauOK1OSXi8ZkVfgUb7+wXkbcDfLtR5AJoSms=;
-        b=YSioyUaVPsB5icC03M223TQ/33iAuCbDn7G0W4Omlo3CyCDi+pDgIQLT+VhBJuzhYD2kdP
-        JV1muXPSVYGPbcIHKPR0JXb8PQs77A+g8EFYhYibNAae78e6/55z44wOPlskIKjZBwppnw
-        WJ37c2qs47bhHp1fSZrrmiFdhkEsS28=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-DupnYgKvNvSJ6uPJg0My1A-1; Thu, 13 Feb 2020 17:18:05 -0500
-X-MC-Unique: DupnYgKvNvSJ6uPJg0My1A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B2E318A6EC0;
-        Thu, 13 Feb 2020 22:18:03 +0000 (UTC)
-Received: from treble (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 47C1C1001B28;
-        Thu, 13 Feb 2020 22:18:01 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 16:17:58 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     peterz@infradead.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: ignore .L prefixed local symbols
-Message-ID: <20200213221758.i6pchz4gsiy2lsyc@treble>
-References: <20200213184708.205083-1-ndesaulniers@google.com>
+        Thu, 13 Feb 2020 17:19:16 -0500
+Received: from mga18.intel.com ([134.134.136.126]:28415 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727705AbgBMWTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:19:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:19:15 -0800
+X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
+   d="scan'208";a="227395334"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:19:15 -0800
+Date:   Thu, 13 Feb 2020 14:19:13 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] x86/mce: Fix all mce notifiers to update the
+ mce->handled bitmask
+Message-ID: <20200213221913.GB21107@agluck-desk2.amr.corp.intel.com>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200212204652.1489-5-tony.luck@intel.com>
+ <20200213170308.GM31799@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213184708.205083-1-ndesaulniers@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200213170308.GM31799@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:47:08AM -0800, Nick Desaulniers wrote:
-> Top of tree LLVM has optimizations related to
-> -fno-semantic-interposition to avoid emitting PLT relocations for
-> references to symbols located in the same translation unit, where it
-> will emit "local symbol" references.
+On Thu, Feb 13, 2020 at 06:03:08PM +0100, Borislav Petkov wrote:
+> On Wed, Feb 12, 2020 at 12:46:51PM -0800, Tony Luck wrote:
+> > If the handler took any action to log or deal with the error, set
+> > a bit int mce->handled so that the default handler on the end of
+> > the machine check chain can see what has been done.
+> > 
+> > [!!! What to do about NOTIFY_STOP ... any handler that returns this
+> > value short-circuits calling subsequent entries on the chain. In
+> > some cases this may be the right thing to do ... but it others we
+> > really want to keep calling other functions on the chain]
 > 
-> Clang builds fall back on GNU as for assembling, currently. It appears a
-> bug in GNU as introduced around 2.31 is keeping around local labels in
-> the symbol table, despite the documentation saying:
-> 
-> "Local symbols are defined and used within the assembler, but they are
-> normally not saved in object files."
-> 
-> When objtool searches for a symbol at a given offset, it's finding the
-> incorrectly kept .L<symbol>$local symbol that should have been discarded
-> by the assembler.
-> 
-> A patch for GNU as has been authored.  For now, objtool should not treat
-> local symbols as the expected symbol for a given offset when iterating
-> the symbol table.
-> 
-> commit 644592d32837 ("objtool: Fail the kernel build on fatal errors")
-> exposed this issue.
+> Yes, we can kill that NOTIFY_STOP thing in the mce code since it is
+> nasty.
 
-Since I'm going to be dropping 644592d32837 ("objtool: Fail the kernel
-build on fatal errors") anyway, I wonder if this patch is still needed?
+Well, there are places where we want to keep NOTIFY_STOP.
 
-At least the error will be downgraded to a warning.  And while the
-warning could be more user friendly, it still has value because it
-reveals a toolchain bug.
+1) Default case for CEC.  We want it to "hide" the corrected error.
+   That was one of the main goals for CEC.  We've discussed cases
+   where CEC shouldn't hide (when internal threshold exceeded and
+   it tries to take a page offline ... probably something related to
+   CMCI storms ... though we didn't really come to any conclusion)
+2) Errata. Perhaps a vendor/platform specific function at the head
+   of the notify chain that weeds out errors that should never have
+   been reported.
 
--- 
-Josh
+> Then, from the looks of it, there should be a function at the end of
+> the chain which decides whether to print or not, just by looking at
+> ->handled.
 
+That's there now. See mce_default_notifier()
+
+> For example, it should not print MCE_HANDLED_CEC or MCE_HANDLED_EDAC,
+> etc cases. The assumption for the latter being that EDAC does its own
+> printing. Which then makes me wonder whether MCE_HANDLED_EDAC is enough.
+
+But may need some refining.
+
+> Because this one bit would basically determine whether the error gets
+> printed or not. Which would mean that all EDAC drivers should print
+> it...
+
+Alternative wording "An EDAC driver should only set the bit if it printed
+something useful about the error."
+
+-Tony
