@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534F6C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72E0C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B50206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6410206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgBMQRj (ORCPT
+        id S1730427AbgBMQRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:17:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:50282 "EHLO foss.arm.com"
+        Thu, 13 Feb 2020 11:17:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:50082 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730495AbgBMQRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:17:35 -0500
+        id S1730278AbgBMQRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 11:17:19 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26D1C328;
-        Thu, 13 Feb 2020 08:17:35 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A87B5328;
+        Thu, 13 Feb 2020 08:17:18 -0800 (PST)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B5A03F6CF;
-        Thu, 13 Feb 2020 08:17:32 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25F573F6CF;
+        Thu, 13 Feb 2020 08:17:16 -0800 (PST)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
@@ -34,9 +35,9 @@ Cc:     catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
         luto@kernel.org, mingo@redhat.com, bp@alien8.de, sboyd@kernel.org,
         salyzyn@android.com, pcc@google.com, 0x7f454c46@gmail.com,
         ndesaulniers@google.com, avagin@openvz.org
-Subject: [PATCH 19/19] arm64: vdso32: Enable Clang Compilation
-Date:   Thu, 13 Feb 2020 16:16:14 +0000
-Message-Id: <20200213161614.23246-20-vincenzo.frascino@arm.com>
+Subject: [PATCH 13/19] arm64: vdso: Include common headers in the vdso library
+Date:   Thu, 13 Feb 2020 16:16:08 +0000
+Message-Id: <20200213161614.23246-14-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213161614.23246-1-vincenzo.frascino@arm.com>
 References: <20200213161614.23246-1-vincenzo.frascino@arm.com>
@@ -47,39 +48,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable Clang Compilation for the vdso32 library.
+The vDSO library should only include the necessary headers required for
+a userspace library (UAPI and a minimal set of kernel headers). To make
+this possible it is necessary to isolate from the kernel headers the
+common parts that are strictly necessary to build the library.
+
+Refactor the vdso implementation to include common headers.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/arm64/kernel/vdso32/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/vdso/gettimeofday.h | 1 -
+ arch/arm64/kernel/vdso/vgettimeofday.c     | 2 --
+ 2 files changed, 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 04df57b43cb1..209639101044 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -11,8 +11,10 @@ include $(srctree)/lib/vdso/Makefile
- # Same as cc-*option, but using CC_COMPAT instead of CC
- ifeq ($(CONFIG_CC_IS_CLANG), y)
- CC_COMPAT ?= $(CC)
-+LD_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
- else
- CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
-+LD_COMPAT ?= $(CC_COMPAT)
- endif
+diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
+index b08f476b72b4..cc3456416096 100644
+--- a/arch/arm64/include/asm/vdso/gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/gettimeofday.h
+@@ -8,7 +8,6 @@
+ #ifndef __ASSEMBLY__
  
- cc32-option = $(call try-run,\
-@@ -171,7 +173,7 @@ quiet_cmd_vdsold_and_vdso_check = LD32    $@
-       cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
+ #include <asm/unistd.h>
+-#include <uapi/linux/time.h>
  
- quiet_cmd_vdsold = LD32    $@
--      cmd_vdsold = $(CC_COMPAT) -Wp,-MD,$(depfile) $(VDSO_LDFLAGS) \
-+      cmd_vdsold = $(LD_COMPAT) -Wp,-MD,$(depfile) $(VDSO_LDFLAGS) \
-                    -Wl,-T $(filter %.lds,$^) $(filter %.o,$^) -o $@
- quiet_cmd_vdsocc = CC32    $@
-       cmd_vdsocc = $(CC_COMPAT) -Wp,-MD,$(depfile) $(VDSO_CFLAGS) -c -o $@ $<
+ #define __VDSO_USE_SYSCALL		ULLONG_MAX
+ 
+diff --git a/arch/arm64/kernel/vdso/vgettimeofday.c b/arch/arm64/kernel/vdso/vgettimeofday.c
+index 747635501a14..4236cf34d7d9 100644
+--- a/arch/arm64/kernel/vdso/vgettimeofday.c
++++ b/arch/arm64/kernel/vdso/vgettimeofday.c
+@@ -5,8 +5,6 @@
+  * Copyright (C) 2018 ARM Limited
+  *
+  */
+-#include <linux/time.h>
+-#include <linux/types.h>
+ 
+ int __kernel_clock_gettime(clockid_t clock,
+ 			   struct __kernel_timespec *ts)
 -- 
 2.25.0
 
