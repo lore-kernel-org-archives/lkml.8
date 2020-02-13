@@ -2,128 +2,104 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB48AC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C01C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A946320873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21232218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581589045;
-	bh=ktw8higRHiEq5jAPsYikjpsf/bimiw2lGQDETh4qt2g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bgvvOOmgXFN1vOn6vTpI0nc0Ma3lNwniVUva5iDNUve2d41ujRQQBrSxzguh7fQjJ
-	 ZExZ98PuK/jcanstXfooqXPwmFTnYNBdpL3a3T5Ja33DwmV7LUgRe/Pe6mCGULF1Dj
-	 J7byDyc2ChGOYyLpAUe7TjAVFLXWLwt4xh0txlls=
+	s=default; t=1581589072;
+	bh=Z/qL3ylKFYdg16whtoypNjvTxzPPacyDkajEC6emP34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cNK8dI30W4qYh+6hgG94T18iu6WBwVAyb1sWGediT5zR8pGo35UDglNY6iLUfuex1
+	 IitAe75ddR5tWvmFREMlO4CZjc8V0nBZYA2pp8VVkPkwPGnm4TX6gQPOa0dIHkpgWp
+	 GNWrkObO8RXkh2GIKp/sZKdDFfFnmeYPL2aGdApw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbgBMKRZ (ORCPT
+        id S1729799AbgBMKRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:17:25 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36344 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729511AbgBMKRY (ORCPT
+        Thu, 13 Feb 2020 05:17:51 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35656 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbgBMKRv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:17:24 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so5241065oic.3;
-        Thu, 13 Feb 2020 02:17:22 -0800 (PST)
+        Thu, 13 Feb 2020 05:17:51 -0500
+Received: by mail-ed1-f65.google.com with SMTP id f8so6160652edv.2;
+        Thu, 13 Feb 2020 02:17:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UmM5NXNcETsSD9gaokm/HGtL7fBM7CvM2iUBsAPp3HY=;
-        b=bmO0XlLPkHLs6xm3pJaJ1CSMnWD1aIfeUtKi+3DemROzU++4C3A9C/rw3O5LAN7APM
-         ohFWGZTERwohzs2yKEh8lApWsWGtq6+fRNWTtBbPiahAzSd5lt5SutkszzNG2M6oTZH+
-         8pvmFprkq2SMDNtO8sS8EtaIHZO5MK/tAm/8/7pcMRa5iP/788SB12dgtOgIQbKF+/az
-         tyEgJqRYDP30C3piRpDyGSA4+AmczGIKNv4DmyQdTOGVYj/tp/dfZVy6HEaEX8WjNS7a
-         cm1toxVxKLzDN631htCG2P9eha+ckVaNQCzNnFbr1e3T9uGIqoo2wCMO9Ogd+uPOcNFN
-         Y04Q==
-X-Gm-Message-State: APjAAAVtdfNM61AqlDhUq8rulg0fKu16w6O3RMAldxLA0accV4RVQZ/X
-        Ce9SmNPBVdwRf3OEZJmYhJEc30tUIFp/+6eJ618=
-X-Google-Smtp-Source: APXvYqx1gOwRIVhZqmxsMzXdhmTZ6mkSJd6vLVA+opgY3Sr/vxNAVShGOvP858qENQKEqxMP7NLYej+IvIZ/4vr7iKc=
-X-Received: by 2002:a54:4e96:: with SMTP id c22mr2458959oiy.110.1581589042574;
- Thu, 13 Feb 2020 02:17:22 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RRIEPdo2GBfjmyVoBn6+vY/7+N02sDl5h1yeWIDZHL4=;
+        b=fE25IgnWH4kDnTlwGuqsrZtGTaN/VV/ZsLaOw5OmU1gQnN1vs826Vk9rkTMNPNv0lE
+         acjCiaoGZNhOun5ELMnCsKPE7dKtbHAIh4pnrLdRRrjBnfm8/uRyuRrzrvXmGq5Ownvs
+         dWR1eg4PoG7mCYv5rzatii2WqnBckT45J7bYbLXajTvwrkkHWTsitwXp+pzuMa2WsbbH
+         FuWzQnBOpXarn+xn4I/5TyKY6CJLlwTnsvSmXqcP5oA0L3UtbNRXEkLCZ80pHX/yh/QE
+         KsbuzpNc+hatvcAyX0I8k8ghOXhxm9UIsuGa7lFLQq3XFKWCFz89zPX7o8jOdiHdGrHH
+         ovGQ==
+X-Gm-Message-State: APjAAAXEqSAuWstI4x6zz1V6a/tmD9AceNmmJsPOD5AJy0Ydc+8WzSMi
+        F0mulTklYNG8LUje1IfbVtk=
+X-Google-Smtp-Source: APXvYqzJPEBHGEKtNpeIz/sbcpHCr12wSxQrNRMVB1G8sc2hvXl2J7zmFFF7vRMRvXQXSbI6JC33dg==
+X-Received: by 2002:a05:6402:1426:: with SMTP id c6mr7748047edx.49.1581589068803;
+        Thu, 13 Feb 2020 02:17:48 -0800 (PST)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id k11sm158564edr.38.2020.02.13.02.17.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 02:17:48 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:17:44 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCHv1 0/2] Add FSYS2 power domain for MMC driver
+Message-ID: <20200213101744.GA11087@kozik-lap>
+References: <20200212120237.1332-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
-References: <1654227.8mz0SueHsU@kreacher> <CAP245DXY2MsV6rf95QdATTXXZWoYYLFBO3QxQgkg=44Fw0cLNA@mail.gmail.com>
-In-Reply-To: <CAP245DXY2MsV6rf95QdATTXXZWoYYLFBO3QxQgkg=44Fw0cLNA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 13 Feb 2020 11:17:11 +0100
-Message-ID: <CAJZ5v0i5thgrdGNQ+a1tuw=CGa8PAhHt19GoDpC8KLLjNVoQLQ@mail.gmail.com>
-Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
- latency QoS interface
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200212120237.1332-1-linux.amoon@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 8:10 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> On Wed, Feb 12, 2020 at 5:09 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > Hi All,
-> >
-> > This series of patches is based on the observation that after commit
-> > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
-> > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
-> > code dedicated to the handling of global PM QoS classes in general.  That code
-> > takes up space and adds overhead in vain, so it is better to get rid of it.
-> >
-> > Moreover, with that unuseful code removed, the interface for adding QoS
-> > requests for CPU latency becomes inelegant and confusing, so it is better to
-> > clean it up.
-> >
-> > Patches [01/28-12/28] do the first part described above, which also includes
-> > some assorted cleanups of the core PM QoS code that doesn't go away.
-> >
-> > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
-> > "define stubs, migrate users, change the API proper" manner), patches
-> > [26-27/28] update the general comments and documentation to match the code
-> > after the previous changes and the last one makes the CPU latency QoS depend
-> > on CPU_IDLE (because cpuidle is the only user of its target value today).
-> >
-> > The majority of the patches in this series don't change the functionality of
-> > the code at all (at least not intentionally).
-> >
-> > Please refer to the changelogs of individual patches for details.
->
-> Hi Rafael,
->
-> Nice cleanup to the code and docs.
->
-> I've reviewed the series, and briefly tested it by setting latencies
-> from userspace. Can we not remove the debugfs interface? It is a quick
-> way to check the global cpu latency clamp on the system from userspace
-> without setting up tracepoints or writing a program to read
-> /dev/cpu_dma_latency.
+On Wed, Feb 12, 2020 at 12:02:35PM +0000, Anand Moon wrote:
+> This patches add the power domain for MMC driver,
+> but somehow the suspend/resume feature is broken
+> so any input on how to fix this.
 
-Come on.
+I think S2R was working on XU3-family after Marek's fixes, so you mean
+that these patches break it?
 
-What about in Python?
+Best regards,
+Krzysztof
 
-#!/usr/bin/env python
-import numpy as np
 
-if __name__ == '__main__':
-    f = open("/dev/cpu_dma_latency", "r")
-    print(np.fromfile(f, dtype=np.int32, count=1))
-    f.close()
-
-And probably you can do it in at least 20 different ways. :-)
-
-Also note that "echo the_debugfs_thing" does the equivalent, but the
-conversion takes place in the kernel.  Is it really a good idea to
-carry the whole debugfs interface because of that one conversion?
-
-> Except for patch 01/28 removing the debugfs interface, please feel to add my
->
-> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-
-Thanks!
+> 
+> Also on similar lines I tried to add power domain
+> FSYS for usb3 and usb2 nodes but this time
+> it failed to load the kernel, so how can I reslove
+> this issue.
+> 
+> -Anand
+> 
+> Anand Moon (2):
+>   ARM: dts: exynos: Add FSYS2 power domain to Exynos542x
+>   clk: samsung: exynos542x: Move FSYS2 subsystem clocks to its sub-CMU
+> 
+>  arch/arm/boot/dts/exynos5420.dtsi    | 10 ++++++++++
+>  drivers/clk/samsung/clk-exynos5420.c | 24 +++++++++++++++++++++---
+>  2 files changed, 31 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 2.25.0
+> 
