@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D75C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57DBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA372073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A980621734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609760;
-	bh=PDSew6foCRjmTM47n6bINwXjhIf7jbvQwyvtWZ+mFl8=;
+	s=default; t=1581609764;
+	bh=JBM9V5FUp3QOv6r8GWEUKa5o13cdQLTXsdFeHWlViDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F0BXF/QqFRm9gX+9TECPCi1ypx9mFdx3Z3MV4m266T+JQRR1yZbrnF/07rMh9m45z
-	 Z1S1uHluHfTi8ThhpWLn45q3/3Ule4Yk3CLJd5OF87rQX305TF1n0UsZoKyB93qx5L
-	 QMe5DxBAoMPxgpXwsGdUaVUKFHRyrbKqAjTBV28Q=
+	b=bfk7qpoMP0IYX/imYvJezeLV+uAu9Dd0obEU3G8pJ3uW1wIFamC1Btih/3YVmLDK3
+	 71fvQhXlzxIEECzYE+/Qucx0FE81EhaTj38TQ8xpbAiIOrPGWuLyGdsHt36p46bILt
+	 6dM+/oF5E3QI+eg6M3Hmm1lwzRVgFj+iay2VWlJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgBMPY1 (ORCPT
+        id S2388314AbgBMQCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:24:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:02:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbgBMPXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:17 -0500
+        id S1728690AbgBMPYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:25 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD106246AD;
-        Thu, 13 Feb 2020 15:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B26424691;
+        Thu, 13 Feb 2020 15:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607396;
-        bh=PDSew6foCRjmTM47n6bINwXjhIf7jbvQwyvtWZ+mFl8=;
+        s=default; t=1581607465;
+        bh=JBM9V5FUp3QOv6r8GWEUKa5o13cdQLTXsdFeHWlViDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzdhqTkHPRsTxpeRuSFgBmiwdwv++EhS17BWPdxfnlL+rLmSyTuQxxUYpPTil3Le4
-         BzORPdk6HeKa5AcI+s/TJo+nj3QZM2RzBujNfhUhgAhkbptObjegzTASQ8RXPQd97z
-         7sAEKcL12easHVMHnm91WYSGyZAIlqcQQ37SY4qU=
+        b=ph7D509WIDcXqrPREInisHxNZumE2Oxj12SHeIG+gB6SkJbmmfHSUyneymNAKDe2P
+         pekGlbgRXK7cYGszsOpmCc6qqjuhhETYYIUKYxPgtvrHFzie7FveNdAJ0wmTRwl8gB
+         zwi0/XUBkd/JZkojP7yjhO8fJHyjPFS/M1gFzi7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.9 010/116] rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect
-Date:   Thu, 13 Feb 2020 07:19:14 -0800
-Message-Id: <20200213151846.783950049@linuxfoundation.org>
+        stable@vger.kernel.org, Kit Chow <kchow@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.9 100/116] PCI: Dont disable bridge BARs when assigning bus resources
+Date:   Thu, 13 Feb 2020 07:20:44 -0800
+Message-Id: <20200213151921.547435749@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -58,185 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 5273a191dca65a675dc0bcf3909e59c6933e2831 ]
+commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
 
-When a call is disconnected, the connection pointer from the call is
-cleared to make sure it isn't used again and to prevent further attempted
-transmission for the call.  Unfortunately, there might be a daemon trying
-to use it at the same time to transmit a packet.
+Some PCI bridges implement BARs in addition to bridge windows.  For
+example, here's a PLX switch:
 
-Fix this by keeping call->conn set, but setting a flag on the call to
-indicate disconnection instead.
+  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+	    (prog-if 00 [Normal decode])
+      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+      I/O behind bridge: 00002000-00003fff
+      Memory behind bridge: 90000000-909fffff
+      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
 
-Remove also the bits in the transmission functions where the conn pointer is
-checked and a ref taken under spinlock as this is now redundant.
+Previously, when the kernel assigned resource addresses (with the
+pci=realloc command line parameter, for example) it could clear the struct
+resource corresponding to the BAR.  When this happened, lspci would report
+this BAR as "ignored":
 
-Fixes: 8d94aa381dab ("rxrpc: Calls shouldn't hold socket refs")
-Signed-off-by: David Howells <dhowells@redhat.com>
+   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+
+This is because the kernel reports a zero start address and zero flags
+in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+Investigation with 'lspci -x', however, shows the BIOS-assigned address
+will still be programmed in the device's BAR registers.
+
+It's clearly a bug that the kernel lost track of the BAR value, but in most
+cases, this still won't result in a visible issue because nothing uses the
+memory, so nothing is affected.  However, when an IOMMU is in use, it will
+not reserve this space in the IOVA because the kernel no longer thinks the
+range is valid.  (See dmar_init_reserved_ranges() for the Intel
+implementation of this.)
+
+Without the proper reserved range, a DMA mapping may allocate an IOVA that
+matches a bridge BAR, which results in DMA accesses going to the BAR
+instead of the intended RAM.
+
+The problem was in pci_assign_unassigned_root_bus_resources().  When any
+resource from a bridge device fails to get assigned, the code set the
+resource's flags to zero.  This makes sense for bridge windows, as they
+will be re-enabled later, but for regular BARs, it makes the kernel
+permanently lose track of the fact that they decode address space.
+
+Change pci_assign_unassigned_root_bus_resources() and
+pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
+for bridge *windows*, not bridge BARs.
+
+Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
+[bhelgaas: commit log, check for pci_is_bridge()]
+Reported-by: Kit Chow <kchow@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rxrpc/ar-internal.h |    1 +
- net/rxrpc/call_object.c |    4 ++--
- net/rxrpc/conn_client.c |    3 +--
- net/rxrpc/conn_object.c |    4 ++--
- net/rxrpc/output.c      |   26 +++++++++-----------------
- 5 files changed, 15 insertions(+), 23 deletions(-)
 
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -401,6 +401,7 @@ enum rxrpc_call_flag {
- 	RXRPC_CALL_SEND_PING,		/* A ping will need to be sent */
- 	RXRPC_CALL_PINGING,		/* Ping in process */
- 	RXRPC_CALL_RETRANS_TIMEOUT,	/* Retransmission due to timeout occurred */
-+	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
- };
+---
+ drivers/pci/setup-bus.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1833,12 +1833,18 @@ again:
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
  
- /*
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -464,7 +464,7 @@ void rxrpc_release_call(struct rxrpc_soc
- 
- 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
- 
--	if (conn)
-+	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		rxrpc_disconnect_call(call);
- 
- 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++) {
-@@ -539,6 +539,7 @@ static void rxrpc_rcu_destroy_call(struc
- {
- 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
- 
-+	rxrpc_put_connection(call->conn);
- 	rxrpc_put_peer(call->peer);
- 	kfree(call->rxtx_buffer);
- 	kfree(call->rxtx_annotations);
-@@ -560,7 +561,6 @@ void rxrpc_cleanup_call(struct rxrpc_cal
- 
- 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
- 	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
--	ASSERTCMP(call->conn, ==, NULL);
- 
- 	/* Clean up the Rx/Tx buffer */
- 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++)
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -736,9 +736,9 @@ void rxrpc_disconnect_client_call(struct
- 	struct rxrpc_channel *chan = &conn->channels[channel];
- 
- 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
--	call->conn = NULL;
- 
- 	spin_lock(&conn->channel_lock);
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
- 
- 	/* Calls that have never actually been assigned a channel can simply be
- 	 * discarded.  If the conn didn't get used either, it will follow
-@@ -828,7 +828,6 @@ out:
- 	spin_unlock(&rxrpc_client_conn_cache_lock);
- out_2:
- 	spin_unlock(&conn->channel_lock);
--	rxrpc_put_connection(conn);
- 	_leave("");
- 	return;
- 
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -169,6 +169,8 @@ void __rxrpc_disconnect_call(struct rxrp
- 
- 	_enter("%d,%x", conn->debug_id, call->cid);
- 
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
 +
- 	if (rcu_access_pointer(chan->call) == call) {
- 		/* Save the result of the call so that we can repeat it if necessary
- 		 * through the channel, whilst disposing of the actual call record.
-@@ -211,9 +213,7 @@ void rxrpc_disconnect_call(struct rxrpc_
- 	__rxrpc_disconnect_call(conn, call);
- 	spin_unlock(&conn->channel_lock);
- 
--	call->conn = NULL;
- 	conn->idle_timestamp = jiffies;
--	rxrpc_put_connection(conn);
- }
- 
- /*
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -96,7 +96,7 @@ static size_t rxrpc_fill_out_ack(struct
-  */
- int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping)
- {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_ack_buffer *pkt;
- 	struct msghdr msg;
- 	struct kvec iov[2];
-@@ -106,18 +106,14 @@ int rxrpc_send_ack_packet(struct rxrpc_c
- 	int ret;
- 	u8 reason;
- 
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
- 
- 	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
--	if (!pkt) {
--		rxrpc_put_connection(conn);
-+	if (!pkt)
- 		return -ENOMEM;
--	}
-+
-+	conn = call->conn;
- 
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
-@@ -204,7 +200,6 @@ int rxrpc_send_ack_packet(struct rxrpc_c
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
  	}
+ 	free_list(&fail_head);
  
- out:
--	rxrpc_put_connection(conn);
- 	kfree(pkt);
- 	return ret;
- }
-@@ -214,20 +209,18 @@ out:
-  */
- int rxrpc_send_abort_packet(struct rxrpc_call *call)
- {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_abort_buffer pkt;
- 	struct msghdr msg;
- 	struct kvec iov[1];
- 	rxrpc_serial_t serial;
- 	int ret;
+@@ -1904,12 +1910,18 @@ again:
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
  
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
- 
-+	conn = call->conn;
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
 +
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
- 	msg.msg_control	= NULL;
-@@ -255,7 +248,6 @@ int rxrpc_send_abort_packet(struct rxrpc
- 	ret = kernel_sendmsg(conn->params.local->socket,
- 			     &msg, iov, 1, sizeof(pkt));
- 
--	rxrpc_put_connection(conn);
- 	return ret;
- }
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
  
 
 
