@@ -2,55 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668BCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783B0C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB8720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4337520675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609363;
-	bh=wgQjZs1ddBRdFqlffXn/FGMRtYF9eRuUuRtsGAyWpRA=;
+	s=default; t=1581609365;
+	bh=QU5hlEcn8A5qyauh+f5DdOPlzw74Il9ZLeMFavcEx8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4yb+isbWxYT2CqT1Y3iOtUF4fbbNYtH5yKJC1FpIQKSG+nalGai01PThejCifYBY
-	 1/UasMIlqM1rUJWV/USBtSu9N66Y4tsXtrea9KrZECUdeGjb3d83++H6xTWrvqCT08
-	 yulGcBve4mH3XgxjWQqxf40xJv5i3tkOJXKw+5Xg=
+	b=mZFVaIRi92LldLsaYxtrlJT/NN4dGsuzGAayPakNbvZV9uE+aCf5ZRjMCKk/VsNLm
+	 K3kw1VvCTJ9+nBcTUQAPy4v2fGhlUP2tiwB98AiF9/rD+nq0gouwV3GXtlayk+efSS
+	 alqbkCJ+x2ywhHKFqyuxgm/D4tB3UyI3ZEfhTgxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbgBMP4C (ORCPT
+        id S1729029AbgBMPZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:56:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729028AbgBMPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:25:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728000AbgBMPXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:55 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D544324689;
-        Thu, 13 Feb 2020 15:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D410224689;
+        Thu, 13 Feb 2020 15:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607530;
-        bh=wgQjZs1ddBRdFqlffXn/FGMRtYF9eRuUuRtsGAyWpRA=;
+        s=default; t=1581607435;
+        bh=QU5hlEcn8A5qyauh+f5DdOPlzw74Il9ZLeMFavcEx8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JL4XUPy4caXk4AWI4Sc90zRtRE77BwqPDAKX9m9Q3hp95Qg9kbbBUakFTtnPQJOg3
-         VdZTu+VB35qTt9Hw4U65mR/NdZ8CpkhreeqBXvl2oAgcmGSz2sdvU7OfYFo9PB0eV1
-         g+fOmkknFZbOJzk5d5frdt79KvgcRghB2PZTAtw4=
+        b=yPGL+AhJzJs1htfZRhpYGpph7qhelnLt7K2ixJV3xaPsMuIgp7NHaXQPuYbrVk2v0
+         waCPAB9SJl7kEQhSBEdDszuE6+jfN949Nrno58aOA9WDsI3pF7JemNT98QvW/Ox34H
+         wEOpiXmLqwDqNUCP8xK4Eki0BTo3gtVCKA4bP018=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 101/173] ppp: Adjust indentation into ppp_async_input
-Date:   Thu, 13 Feb 2020 07:20:04 -0800
-Message-Id: <20200213151958.259769711@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 4.9 070/116] ubi: fastmap: Fix inverted logic in seen selfcheck
+Date:   Thu, 13 Feb 2020 07:20:14 -0800
+Message-Id: <20200213151910.163533127@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,61 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-commit 08cbc75f96029d3092664213a844a5e25523aa35 upstream.
+commit ef5aafb6e4e9942a28cd300bdcda21ce6cbaf045 upstream.
 
-Clang warns:
+set_seen() sets the bit corresponding to the PEB number in the bitmap,
+so when self_check_seen() wants to find PEBs that haven't been seen we
+have to print the PEBs that have their bit cleared, not the ones which
+have it set.
 
-../drivers/net/ppp/ppp_async.c:877:6: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-                                ap->rpkt = skb;
-                                ^
-../drivers/net/ppp/ppp_async.c:875:5: note: previous statement is here
-                                if (!skb)
-                                ^
-1 warning generated.
-
-This warning occurs because there is a space before the tab on this
-line. Clean up this entire block's indentation so that it is consistent
-with the Linux kernel coding style and clang no longer warns.
-
-Fixes: 6722e78c9005 ("[PPP]: handle misaligned accesses")
-Link: https://github.com/ClangBuiltLinux/linux/issues/800
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5d71afb00840 ("ubi: Use bitmaps in Fastmap self-check code")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ppp/ppp_async.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/mtd/ubi/fastmap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ppp/ppp_async.c
-+++ b/drivers/net/ppp/ppp_async.c
-@@ -878,15 +878,15 @@ ppp_async_input(struct asyncppp *ap, con
- 				skb = dev_alloc_skb(ap->mru + PPP_HDRLEN + 2);
- 				if (!skb)
- 					goto nomem;
-- 				ap->rpkt = skb;
-- 			}
-- 			if (skb->len == 0) {
-- 				/* Try to get the payload 4-byte aligned.
-- 				 * This should match the
-- 				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
-- 				 * process_input_packet, but we do not have
-- 				 * enough chars here to test buf[1] and buf[2].
-- 				 */
-+				ap->rpkt = skb;
-+			}
-+			if (skb->len == 0) {
-+				/* Try to get the payload 4-byte aligned.
-+				 * This should match the
-+				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
-+				 * process_input_packet, but we do not have
-+				 * enough chars here to test buf[1] and buf[2].
-+				 */
- 				if (buf[0] != PPP_ALLSTATIONS)
- 					skb_reserve(skb, 2 + (buf[0] & 1));
- 			}
+--- a/drivers/mtd/ubi/fastmap.c
++++ b/drivers/mtd/ubi/fastmap.c
+@@ -73,7 +73,7 @@ static int self_check_seen(struct ubi_de
+ 		return 0;
+ 
+ 	for (pnum = 0; pnum < ubi->peb_count; pnum++) {
+-		if (test_bit(pnum, seen) && ubi->lookuptbl[pnum]) {
++		if (!test_bit(pnum, seen) && ubi->lookuptbl[pnum]) {
+ 			ubi_err(ubi, "self-check failed for PEB %d, fastmap didn't see it", pnum);
+ 			ret = -EINVAL;
+ 		}
 
 
