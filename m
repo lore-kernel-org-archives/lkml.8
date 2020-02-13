@@ -2,52 +2,53 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC71C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F155C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C122073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE032073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609709;
-	bh=eb1UltVrFvwiuZunsalF4EFcmZxE9toebsgbA/VaFy0=;
+	s=default; t=1581609716;
+	bh=37/ll+Q8F05WZcAJOUYCDjnU8UFeyuVajRI2A0XgZP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALhwfDSWhlFNRvJP2cH21PPqsUkz+wtE/pmTGceQz/6ZmogqyY2NNVSdA48ZBw1LN
-	 AzNa3U8lZWYHEwoj+Y+bGZty7QP69973PY0hP6e6trrGMvffs5BD5PSxFTkdswqsoe
-	 ZL6HftSOyavih0Ogjv5+83Qk80ctCUenSqeyOurU=
+	b=BPOPkgTq0U62NKSY/idEK/4CpUpvbtoIYrSm2dwmuveuYDY6uhcDVi88D9WaNeEy3
+	 jbD6UVQnFxG2s4wa46rEi+q/J9208puUDwNDXtWLgrEbFuDJ0pPQ7w4jDQImcW99KH
+	 GQQPKnFfvepeioH8kTYUWXE+9Im727x0sACOYl2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgBMQBp (ORCPT
+        id S2387608AbgBMQBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:01:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38542 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:01:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbgBMPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:38 -0500
+        id S1728236AbgBMPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:37 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D453246B8;
-        Thu, 13 Feb 2020 15:24:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA06246DA;
+        Thu, 13 Feb 2020 15:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607473;
-        bh=eb1UltVrFvwiuZunsalF4EFcmZxE9toebsgbA/VaFy0=;
+        s=default; t=1581607476;
+        bh=37/ll+Q8F05WZcAJOUYCDjnU8UFeyuVajRI2A0XgZP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uznEuYOEI902yu8BHHLF+uS5sIN0Fj6Z81uOkq2A8Zr90FhYesDQ3CZVVSVNxnCqc
-         mbog5r9rqDg1koYDQVMTUdUfuEnq7jxljbFfG6DpdbLUesRZUe/uN7F++rvTUpBOjK
-         DGMkxGLF5iD29WcdSpumn+xSGQsxTYfkDZxQoMDo=
+        b=KDvUmiAqMA2zxrvzhLddQZl5MYzjVNfFgqlrr7+W8EgJWCnaSqn9MDNzEPezFoC0d
+         5q4fxMDz9AjRhntL6qoUVQPD6ZmysEGjWWKGA9Xo6apCUOmqHs46F0MldEnt4FZg+m
+         OdEW5Jt6bWmVXvy4u0VuBNr4HMknvd+e4+2omKSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Sperling <stsp@stsp.name>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 004/173] iwlwifi: mvm: fix NVM check for 3168 devices
-Date:   Thu, 13 Feb 2020 07:18:27 -0800
-Message-Id: <20200213151933.253082365@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>,
+        James Chapman <jchapman@katalix.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 008/173] l2tp: Allow duplicate session creation with UDP
+Date:   Thu, 13 Feb 2020 07:18:31 -0800
+Message-Id: <20200213151934.510224161@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,39 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
 
-[ Upstream commit b3f20e098293892388d6a0491d6bbb2efb46fbff ]
+[ Upstream commit 0d0d9a388a858e271bb70e71e99e7fe2a6fd6f64 ]
 
-We had a check on !NVM_EXT and then a check for NVM_SDP in the else
-block of this if.  The else block, obviously, could only be reached if
-using NVM_EXT, so it would never be NVM_SDP.
+In the past it was possible to create multiple L2TPv3 sessions with the
+same session id as long as the sessions belonged to different tunnels.
+The resulting sessions had issues when used with IP encapsulated tunnels,
+but worked fine with UDP encapsulated ones. Some applications began to
+rely on this behaviour to avoid having to negotiate unique session ids.
 
-Fix that by checking whether the nvm_type is IWL_NVM instead of
-checking for !IWL_NVM_EXT to solve this issue.
+Some time ago a change was made to require session ids to be unique across
+all tunnels, breaking the applications making use of this "feature".
 
-Reported-by: Stefan Sperling <stsp@stsp.name>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This change relaxes the duplicate session id check to allow duplicates
+if both of the colliding sessions belong to UDP encapsulated tunnels.
+
+Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
+Signed-off-by: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
+Acked-by: James Chapman <jchapman@katalix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/nvm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/l2tp/l2tp_core.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
-index ca2d66ce84247..8f3032b7174d3 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
-@@ -298,7 +298,7 @@ iwl_parse_nvm_sections(struct iwl_mvm *mvm)
- 	int regulatory_type;
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -358,8 +358,13 @@ static int l2tp_session_add_to_tunnel(st
  
- 	/* Checking for required sections */
--	if (mvm->trans->cfg->nvm_type != IWL_NVM_EXT) {
-+	if (mvm->trans->cfg->nvm_type == IWL_NVM) {
- 		if (!mvm->nvm_sections[NVM_SECTION_TYPE_SW].data ||
- 		    !mvm->nvm_sections[mvm->cfg->nvm_hw_section_num].data) {
- 			IWL_ERR(mvm, "Can't parse empty OTP/NVM sections\n");
--- 
-2.20.1
-
+ 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
+ 
++		/* IP encap expects session IDs to be globally unique, while
++		 * UDP encap doesn't.
++		 */
+ 		hlist_for_each_entry(session_walk, g_head, global_hlist)
+-			if (session_walk->session_id == session->session_id) {
++			if (session_walk->session_id == session->session_id &&
++			    (session_walk->tunnel->encap == L2TP_ENCAPTYPE_IP ||
++			     tunnel->encap == L2TP_ENCAPTYPE_IP)) {
+ 				err = -EEXIST;
+ 				goto err_tlock_pnlock;
+ 			}
 
 
