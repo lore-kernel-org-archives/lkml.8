@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554D2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5D4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA34206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C3120656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609964;
-	bh=Bzhi6lde7OpuvdLPjVRGmFwvB5ok4FRpi36AmEcxJis=;
+	s=default; t=1581609977;
+	bh=PTPApXUgqmGll2uKZ0d6K4HlFTjkG6irNywR7Btj+yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LpVmj+Dyrvt9txtJ4SKKlY0Hu4rnTE8P+TSKoDJ2+JJGtpeiwCLwcBeVrhD+Wuxa4
-	 CknTrcNP/YB3dOqgykDkZD34zjm4ipTQORsIQesCaY9f09+0mM7Dz1nxMod/iuXt0T
-	 X8wYLlPiBZ3/JFgW3ibpA+gjdxUjjRTh31VC/21E=
+	b=ZY1PNJa9wp5/t4sLd0CBr/ht7rnviEqTSPr4FHuM/tFgcWMc/hllW1dNc4JUxy66i
+	 Py/yWzfNjOaCKUkFvQ3Kp8C2M5IqC4pK3A4Pxh/BwIotge0G9lPY2zGzn96nYi6ZTF
+	 yW7s1MIAJDuF1/Ezpj6CovUjcg1yFyNPRYKpFwTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgBMQGD (ORCPT
+        id S1730137AbgBMQGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:06:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35458 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:06:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbgBMPXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:44 -0500
+        id S1725781AbgBMPXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:40 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFE9224689;
-        Thu, 13 Feb 2020 15:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74EEF246C1;
+        Thu, 13 Feb 2020 15:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607424;
-        bh=Bzhi6lde7OpuvdLPjVRGmFwvB5ok4FRpi36AmEcxJis=;
+        s=default; t=1581607419;
+        bh=PTPApXUgqmGll2uKZ0d6K4HlFTjkG6irNywR7Btj+yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y9bG0JHTZAcUNKh7PJlbILzn99X8NLlTCV4d1bOxIq/NYHss7P3buTYVmqPWQ/72C
-         Wkh9JPgZtLE+0WcbB8d0lPcaLxGfYPC+JD7FPq65m/U0JUK2bWNuEQzTKMhQioKA5W
-         IRX7Ki90Uwr1RmEc9nBKUbFn2pnK1iefQ4AxpaEE=
+        b=zt/Y7fdp4UalFoZJtIvWx8grHSeK5SAWIxCUBEhc9V4F7Sgy462PmA+r6xS8Bk9Nd
+         np9Is/W/xpB36nWZtG24nkgLP+M+uACugVYVnGwhRNtIcJ2D8FRCuL17Xyju34lIGP
+         PFP6d3eZtlrewunIMf0Vy3stfm0gSGLqZS6tIDOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 053/116] KVM: x86: Protect MSR-based index computations in fixed_msr_to_seg_unit() from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:57 -0800
-Message-Id: <20200213151903.638033884@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 038/116] crypto: api - Fix race condition in crypto_spawn_alg
+Date:   Thu, 13 Feb 2020 07:19:42 -0800
+Message-Id: <20200213151857.948420705@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,55 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 25a5edea71b7c154b6a0b8cec14c711cafa31d26 upstream.
+commit 73669cc556462f4e50376538d77ee312142e8a8a upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in fixed_msr_to_seg_unit().
-This function contains index computations based on the
-(attacker-controlled) MSR number.
+The function crypto_spawn_alg is racy because it drops the lock
+before shooting the dying algorithm.  The algorithm could disappear
+altogether before we shoot it.
 
-Fixes: de9aef5e1ad6 ("KVM: MTRR: introduce fixed_mtrr_segment table")
+This patch fixes it by moving the shooting into the locked section.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 6bfd48096ff8 ("[CRYPTO] api: Added spawns")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mtrr.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ crypto/algapi.c   |   16 +++++-----------
+ crypto/api.c      |    3 +--
+ crypto/internal.h |    1 -
+ 3 files changed, 6 insertions(+), 14 deletions(-)
 
---- a/arch/x86/kvm/mtrr.c
-+++ b/arch/x86/kvm/mtrr.c
-@@ -17,6 +17,7 @@
-  */
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -662,22 +662,16 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+ static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+ {
+ 	struct crypto_alg *alg;
+-	struct crypto_alg *alg2;
  
- #include <linux/kvm_host.h>
-+#include <linux/nospec.h>
- #include <asm/mtrr.h>
+ 	down_read(&crypto_alg_sem);
+ 	alg = spawn->alg;
+-	alg2 = alg;
+-	if (alg2)
+-		alg2 = crypto_mod_get(alg2);
+-	up_read(&crypto_alg_sem);
+-
+-	if (!alg2) {
+-		if (alg)
+-			crypto_shoot_alg(alg);
+-		return ERR_PTR(-EAGAIN);
++	if (alg && !crypto_mod_get(alg)) {
++		alg->cra_flags |= CRYPTO_ALG_DYING;
++		alg = NULL;
+ 	}
++	up_read(&crypto_alg_sem);
  
- #include "cpuid.h"
-@@ -202,11 +203,15 @@ static bool fixed_msr_to_seg_unit(u32 ms
- 		break;
- 	case MSR_MTRRfix16K_80000 ... MSR_MTRRfix16K_A0000:
- 		*seg = 1;
--		*unit = msr - MSR_MTRRfix16K_80000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix16K_80000,
-+			MSR_MTRRfix16K_A0000 - MSR_MTRRfix16K_80000 + 1);
- 		break;
- 	case MSR_MTRRfix4K_C0000 ... MSR_MTRRfix4K_F8000:
- 		*seg = 2;
--		*unit = msr - MSR_MTRRfix4K_C0000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix4K_C0000,
-+			MSR_MTRRfix4K_F8000 - MSR_MTRRfix4K_C0000 + 1);
- 		break;
- 	default:
- 		return false;
+-	return alg;
++	return alg ?: ERR_PTR(-EAGAIN);
+ }
+ 
+ struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -355,13 +355,12 @@ static unsigned int crypto_ctxsize(struc
+ 	return len;
+ }
+ 
+-void crypto_shoot_alg(struct crypto_alg *alg)
++static void crypto_shoot_alg(struct crypto_alg *alg)
+ {
+ 	down_write(&crypto_alg_sem);
+ 	alg->cra_flags |= CRYPTO_ALG_DYING;
+ 	up_write(&crypto_alg_sem);
+ }
+-EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+ 
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask)
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -87,7 +87,6 @@ void crypto_alg_tested(const char *name,
+ void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
+ 			  struct crypto_alg *nalg);
+ void crypto_remove_final(struct list_head *list);
+-void crypto_shoot_alg(struct crypto_alg *alg);
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask);
+ void *crypto_create_tfm(struct crypto_alg *alg,
 
 
