@@ -2,55 +2,58 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957D0C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBF1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC7B217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB71217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609312;
-	bh=Y1qJ4WosxJNPcN5BVx7gfDlF+Vvx9yR2+2ZUjt6mZSo=;
+	s=default; t=1581609319;
+	bh=YRcuv0nq4dwFAkBgeDoeF7Ar35UKFX8qwfw1g7QVRo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KqBr5KHmxFPCovDelL5fCqJVUPCKEwePDT+Tgbz7hbc60OUOw/O5Rb0wBg3hV9sp0
-	 TRgejNS3S3vdVaqTH4KDyEHZfnbLuB8oKFlw6hIutEy6B7s/flGcVoM+NVZvAtaeNP
-	 t3e5NyDYdrtfLG58kl0gjD1F8y8iCajiR/0J45wE=
+	b=cdWFxfIlKHOvQ9fmrpC2/RyReD6BTrU1+GJh9ECSyLE75YBkp8HnY2cgaG6gTzArG
+	 hd0zDCoAzP0O6q/VD3kcCgIEVsmoaC3m6WGSgrRBU/UdzpReO82XbzmYqCH5KqZb/E
+	 rF0iUNCjsVg0KuEykDvUOyxuuPUw1JNxJxqUMy7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgBMPZm (ORCPT
+        id S1730004AbgBMPzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:55:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387398AbgBMPYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:03 -0500
+        id S1728555AbgBMPZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:41 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24CBC24689;
-        Thu, 13 Feb 2020 15:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4112A24690;
+        Thu, 13 Feb 2020 15:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607443;
-        bh=Y1qJ4WosxJNPcN5BVx7gfDlF+Vvx9yR2+2ZUjt6mZSo=;
+        s=default; t=1581607540;
+        bh=YRcuv0nq4dwFAkBgeDoeF7Ar35UKFX8qwfw1g7QVRo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fFmuHfSkKDJzXzUfUwhiX/8QztQ8LSSpex3dJxRyoVPrVWdD3ZLdj9Fz8a0gGf+W+
-         6PTCPzUWrSXgInQ8TqGF7l0vHfr7Rj7Y+7zFZR4TGeCGfywHZotlSzVJKfjINvR6wT
-         QpndLteglZZW31zThGmFjK0pTCgJhZtNtzRenYhk=
+        b=YQPG+F07ed79lEG9kTyPVLuAdgE5pohkvCJ6T3lWJd2j+As9fQdMTA49d+kJ00YuW
+         bgBExPlKtl8MArXPg+af54SX39gm+HX0juJeep8EfSXSrxNdeeQsIkZQZd9jBzzIq6
+         3w7zjByCR8veBCApKgaWObTsXD7MltlIcrN376+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 065/116] net: smc911x: Adjust indentation in smc911x_phy_configure
-Date:   Thu, 13 Feb 2020 07:20:09 -0800
-Message-Id: <20200213151908.285016269@linuxfoundation.org>
+Subject: [PATCH 4.14 117/173] bonding/alb: properly access headers in bond_alb_xmit()
+Date:   Thu, 13 Feb 2020 07:20:20 -0800
+Message-Id: <20200213152001.992978437@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,47 +63,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 5c61e223004b3b5c3f1dd25718e979bc17a3b12d upstream.
+[ Upstream commit 38f88c45404293bbc027b956def6c10cbd45c616 ]
 
-Clang warns:
+syzbot managed to send an IPX packet through bond_alb_xmit()
+and af_packet and triggered a use-after-free.
 
-../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         if (!lp->ctl_rfduplx)
-         ^
-../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
-is here
-        if (lp->ctl_rspeed != 100)
-        ^
-1 warning generated.
+First, bond_alb_xmit() was using ipx_hdr() helper to reach
+the IPX header, but ipx_hdr() was using the transport offset
+instead of the network offset. In the particular syzbot
+report transport offset was 0xFFFF
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
+This patch removes ipx_hdr() since it was only (mis)used from bonding.
 
-Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
-Link: https://github.com/ClangBuiltLinux/linux/issues/796
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Then we need to make sure IPv4/IPv6/IPX headers are pulled
+in skb->head before dereferencing anything.
+
+BUG: KASAN: use-after-free in bond_alb_xmit+0x153a/0x1590 drivers/net/bonding/bond_alb.c:1452
+Read of size 2 at addr ffff8801ce56dfff by task syz-executor.2/18108
+ (if (ipx_hdr(skb)->ipx_checksum != IPX_NO_CHECKSUM) ...)
+
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ [<ffffffff8441fc42>] __dump_stack lib/dump_stack.c:17 [inline]
+ [<ffffffff8441fc42>] dump_stack+0x14d/0x20b lib/dump_stack.c:53
+ [<ffffffff81a7dec4>] print_address_description+0x6f/0x20b mm/kasan/report.c:282
+ [<ffffffff81a7e0ec>] kasan_report_error mm/kasan/report.c:380 [inline]
+ [<ffffffff81a7e0ec>] kasan_report mm/kasan/report.c:438 [inline]
+ [<ffffffff81a7e0ec>] kasan_report.cold+0x8c/0x2a0 mm/kasan/report.c:422
+ [<ffffffff81a7dc4f>] __asan_report_load_n_noabort+0xf/0x20 mm/kasan/report.c:469
+ [<ffffffff82c8c00a>] bond_alb_xmit+0x153a/0x1590 drivers/net/bonding/bond_alb.c:1452
+ [<ffffffff82c60c74>] __bond_start_xmit drivers/net/bonding/bond_main.c:4199 [inline]
+ [<ffffffff82c60c74>] bond_start_xmit+0x4f4/0x1570 drivers/net/bonding/bond_main.c:4224
+ [<ffffffff83baa558>] __netdev_start_xmit include/linux/netdevice.h:4525 [inline]
+ [<ffffffff83baa558>] netdev_start_xmit include/linux/netdevice.h:4539 [inline]
+ [<ffffffff83baa558>] xmit_one net/core/dev.c:3611 [inline]
+ [<ffffffff83baa558>] dev_hard_start_xmit+0x168/0x910 net/core/dev.c:3627
+ [<ffffffff83bacf35>] __dev_queue_xmit+0x1f55/0x33b0 net/core/dev.c:4238
+ [<ffffffff83bae3a8>] dev_queue_xmit+0x18/0x20 net/core/dev.c:4278
+ [<ffffffff84339189>] packet_snd net/packet/af_packet.c:3226 [inline]
+ [<ffffffff84339189>] packet_sendmsg+0x4919/0x70b0 net/packet/af_packet.c:3252
+ [<ffffffff83b1ac0c>] sock_sendmsg_nosec net/socket.c:673 [inline]
+ [<ffffffff83b1ac0c>] sock_sendmsg+0x12c/0x160 net/socket.c:684
+ [<ffffffff83b1f5a2>] __sys_sendto+0x262/0x380 net/socket.c:1996
+ [<ffffffff83b1f700>] SYSC_sendto net/socket.c:2008 [inline]
+ [<ffffffff83b1f700>] SyS_sendto+0x40/0x60 net/socket.c:2004
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Cc: Veaceslav Falico <vfalico@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/smsc/smc911x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/bonding/bond_alb.c |   44 +++++++++++++++++++++++++++++------------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
---- a/drivers/net/ethernet/smsc/smc911x.c
-+++ b/drivers/net/ethernet/smsc/smc911x.c
-@@ -948,7 +948,7 @@ static void smc911x_phy_configure(struct
- 	if (lp->ctl_rspeed != 100)
- 		my_ad_caps &= ~(ADVERTISE_100BASE4|ADVERTISE_100FULL|ADVERTISE_100HALF);
+--- a/drivers/net/bonding/bond_alb.c
++++ b/drivers/net/bonding/bond_alb.c
+@@ -1403,26 +1403,31 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 	bool do_tx_balance = true;
+ 	u32 hash_index = 0;
+ 	const u8 *hash_start = NULL;
+-	struct ipv6hdr *ip6hdr;
  
--	 if (!lp->ctl_rfduplx)
-+	if (!lp->ctl_rfduplx)
- 		my_ad_caps &= ~(ADVERTISE_100FULL|ADVERTISE_10FULL);
+ 	skb_reset_mac_header(skb);
+ 	eth_data = eth_hdr(skb);
  
- 	/* Update our Auto-Neg Advertisement Register */
+ 	switch (ntohs(skb->protocol)) {
+ 	case ETH_P_IP: {
+-		const struct iphdr *iph = ip_hdr(skb);
++		const struct iphdr *iph;
+ 
+ 		if (ether_addr_equal_64bits(eth_data->h_dest, mac_bcast) ||
+-		    (iph->daddr == ip_bcast) ||
+-		    (iph->protocol == IPPROTO_IGMP)) {
++		    (!pskb_network_may_pull(skb, sizeof(*iph)))) {
++			do_tx_balance = false;
++			break;
++		}
++		iph = ip_hdr(skb);
++		if (iph->daddr == ip_bcast || iph->protocol == IPPROTO_IGMP) {
+ 			do_tx_balance = false;
+ 			break;
+ 		}
+ 		hash_start = (char *)&(iph->daddr);
+ 		hash_size = sizeof(iph->daddr);
+-	}
+ 		break;
+-	case ETH_P_IPV6:
++	}
++	case ETH_P_IPV6: {
++		const struct ipv6hdr *ip6hdr;
++
+ 		/* IPv6 doesn't really use broadcast mac address, but leave
+ 		 * that here just in case.
+ 		 */
+@@ -1439,7 +1444,11 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 			break;
+ 		}
+ 
+-		/* Additianally, DAD probes should not be tx-balanced as that
++		if (!pskb_network_may_pull(skb, sizeof(*ip6hdr))) {
++			do_tx_balance = false;
++			break;
++		}
++		/* Additionally, DAD probes should not be tx-balanced as that
+ 		 * will lead to false positives for duplicate addresses and
+ 		 * prevent address configuration from working.
+ 		 */
+@@ -1449,17 +1458,26 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 			break;
+ 		}
+ 
+-		hash_start = (char *)&(ipv6_hdr(skb)->daddr);
+-		hash_size = sizeof(ipv6_hdr(skb)->daddr);
++		hash_start = (char *)&ip6hdr->daddr;
++		hash_size = sizeof(ip6hdr->daddr);
+ 		break;
+-	case ETH_P_IPX:
+-		if (ipx_hdr(skb)->ipx_checksum != IPX_NO_CHECKSUM) {
++	}
++	case ETH_P_IPX: {
++		const struct ipxhdr *ipxhdr;
++
++		if (pskb_network_may_pull(skb, sizeof(*ipxhdr))) {
++			do_tx_balance = false;
++			break;
++		}
++		ipxhdr = (struct ipxhdr *)skb_network_header(skb);
++
++		if (ipxhdr->ipx_checksum != IPX_NO_CHECKSUM) {
+ 			/* something is wrong with this packet */
+ 			do_tx_balance = false;
+ 			break;
+ 		}
+ 
+-		if (ipx_hdr(skb)->ipx_type != IPX_TYPE_NCP) {
++		if (ipxhdr->ipx_type != IPX_TYPE_NCP) {
+ 			/* The only protocol worth balancing in
+ 			 * this family since it has an "ARP" like
+ 			 * mechanism
+@@ -1468,9 +1486,11 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 			break;
+ 		}
+ 
++		eth_data = eth_hdr(skb);
+ 		hash_start = (char *)eth_data->h_dest;
+ 		hash_size = ETH_ALEN;
+ 		break;
++	}
+ 	case ETH_P_ARP:
+ 		do_tx_balance = false;
+ 		if (bond_info->rlb_enabled)
 
 
