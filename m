@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315F4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DD1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0059B20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925A720656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610085;
-	bh=/yrbXLuKTNJ+NhfvCzfSoPXRN5DYKogpAK801Iam9+0=;
+	s=default; t=1581610087;
+	bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+7xQ5rWyMSb5HLeFqvRHUZfcQE+Uv6AmbdyxsR9SpT+d0HNz7e9yEKeC8yWuOlsJ
-	 oHcY3c+mNmp6MxUQ/Z3MTNfgMO8I+qR0EvfE7H6GHDO54kuIskQU8GZH4M8P7p6KTo
-	 LNltozlb89PmACg4moGMqIb2XVx1srdVLtnm5SdI=
+	b=L+dRFVT5UTrn7BXV+G5gvd1/yaQsomCISVkNO5wW76YI6fR/JgFyxZzsX9UUiS1r3
+	 ZFjlas4K3eH2/iWrP+hMholHCYvzn6kjshKqHArKu0WBKp8SmxTMNfo32ITvBb4owN
+	 orLRVx87ubZiMqR0VnKlZdrrC6lLM7ofCCY1BgiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgBMPXL (ORCPT
+        id S1730318AbgBMQIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:08:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728134AbgBMPWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:49 -0500
+        id S1728296AbgBMPXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:12 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE5D624693;
-        Thu, 13 Feb 2020 15:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4789024699;
+        Thu, 13 Feb 2020 15:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607368;
-        bh=/yrbXLuKTNJ+NhfvCzfSoPXRN5DYKogpAK801Iam9+0=;
+        s=default; t=1581607392;
+        bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fj2Fauz5Ueu7vkSyOIGdrlIyy8PrORKuJ7aDehSfFdUN5NNJ5twdml4NXfSPT4BSI
-         BesKiWHAT9yNsQv2VMCS4auebUxUMyf48l8hWzANsAkMWy65Uxnpwxqg+5QobnTpoO
-         xEpRObdK3KSM3FZUYvtW2U7QfkfVcuL8Cu4vMR7E=
+        b=iUiEOnhLr31X/pbkBMJv2/ECu0Oa5S2GdiCo0XjHjuOI9nyKGiRvbl2H0ZT2sBjc5
+         BZM8owc3o+q1EpVqDjO0cmn3UCa/e18HQr5X1OyyohxCZ6aSFQk4VpyviE6Rni2xTb
+         jiIFlsud2iU3npZ5BwZy4ARadPTIZp05OLHotJpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 42/91] KVM: x86: Protect x86_decode_insn from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:59 -0800
-Message-Id: <20200213151837.986856794@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.4 81/91] rtc: hym8563: Return -EINVAL if the time is known to be invalid
+Date:   Thu, 13 Feb 2020 07:20:38 -0800
+Message-Id: <20200213151854.213198044@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,56 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-commit 3c9053a2cae7ba2ba73766a34cea41baa70f57f7 upstream.
+commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in x86_decode_insn().
-kvm_emulate_instruction() (an ancestor of x86_decode_insn()) is an exported
-symbol, so KVM should treat it conservatively from a security perspective.
+The current code returns -EPERM when the voltage loss bit is set.
+Since the bit indicates that the time value is not valid, return
+-EINVAL instead, which is the appropriate error code for this
+situation.
 
-Fixes: 045a282ca415 ("KVM: emulator: implement fninit, fnstsw, fnstcw")
-
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/emulate.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-hym8563.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -23,6 +23,7 @@
- #include <linux/kvm_host.h>
- #include "kvm_cache_regs.h"
- #include <linux/module.h>
-+#include <linux/nospec.h>
- #include <asm/kvm_emulate.h>
- #include <linux/stringify.h>
- #include <asm/debugreg.h>
-@@ -5146,10 +5147,15 @@ done_prefixes:
- 			}
- 			break;
- 		case Escape:
--			if (ctxt->modrm > 0xbf)
--				opcode = opcode.u.esc->high[ctxt->modrm - 0xc0];
--			else
-+			if (ctxt->modrm > 0xbf) {
-+				size_t size = ARRAY_SIZE(opcode.u.esc->high);
-+				u32 index = array_index_nospec(
-+					ctxt->modrm - 0xc0, size);
-+
-+				opcode = opcode.u.esc->high[index];
-+			} else {
- 				opcode = opcode.u.esc->op[(ctxt->modrm >> 3) & 7];
-+			}
- 			break;
- 		case InstrDual:
- 			if ((ctxt->modrm >> 6) == 3)
+--- a/drivers/rtc/rtc-hym8563.c
++++ b/drivers/rtc/rtc-hym8563.c
+@@ -105,7 +105,7 @@ static int hym8563_rtc_read_time(struct
+ 
+ 	if (!hym8563->valid) {
+ 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
+-		return -EPERM;
++		return -EINVAL;
+ 	}
+ 
+ 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
 
 
