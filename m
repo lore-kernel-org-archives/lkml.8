@@ -2,85 +2,81 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D21DC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD260C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFC72465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9415521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgBMEbv (ORCPT
+        id S1729466AbgBMEgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 23:31:51 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:45221 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729494AbgBMEbv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 23:31:51 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TprKpxQ_1581568298;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TprKpxQ_1581568298)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 13 Feb 2020 12:31:47 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     minchan@kernel.org, anshuman.khandual@arm.com,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: vmscan: replace open codings to NUMA_NO_NODE
-Date:   Thu, 13 Feb 2020 12:31:38 +0800
-Message-Id: <1581568298-45317-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 12 Feb 2020 23:36:02 -0500
+Received: from nbd.name ([46.4.11.11]:57030 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727076AbgBMEgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 23:36:01 -0500
+Received: from [2a04:4540:1403:be00:cc25:4383:c3cc:1be9]
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <john@phrozen.org>)
+        id 1j26EJ-0000fa-1V; Thu, 13 Feb 2020 05:35:59 +0100
+Subject: Re: [PATCH 7/7] MIPS: ralink: Replace <linux/clk-provider.h> by
+ <linux/of_clk.h>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        James Hartley <james.hartley@sondrel.com>
+Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212101544.8793-1-geert+renesas@glider.be>
+ <20200212101544.8793-8-geert+renesas@glider.be>
+From:   John Crispin <john@phrozen.org>
+Message-ID: <7c6519b6-fafa-1f8f-d10a-5bef1c7c5950@phrozen.org>
+Date:   Thu, 13 Feb 2020 05:35:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200212101544.8793-8-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 98fa15f34cb3 ("mm: replace all open encodings for
-NUMA_NO_NODE") did the replacement across the kernel tree, but we got
-some more in vmscan.c since then.
+On 12/02/2020 11:15, Geert Uytterhoeven wrote:
+> The Ralink platform code is not a clock provider, and just needs to call
+> of_clk_init().
+> 
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: John Crispin <john@phrozen.org>
 
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/vmscan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c05eb9e..567864a 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2096,7 +2096,7 @@ static void shrink_active_list(unsigned long nr_to_scan,
- 
- unsigned long reclaim_pages(struct list_head *page_list)
- {
--	int nid = -1;
-+	int nid = NUMA_NO_NODE;
- 	unsigned long nr_reclaimed = 0;
- 	LIST_HEAD(node_page_list);
- 	struct reclaim_stat dummy_stat;
-@@ -2111,7 +2111,7 @@ unsigned long reclaim_pages(struct list_head *page_list)
- 
- 	while (!list_empty(page_list)) {
- 		page = lru_to_page(page_list);
--		if (nid == -1) {
-+		if (nid == NUMA_NO_NODE) {
- 			nid = page_to_nid(page);
- 			INIT_LIST_HEAD(&node_page_list);
- 		}
-@@ -2132,7 +2132,7 @@ unsigned long reclaim_pages(struct list_head *page_list)
- 			putback_lru_page(page);
- 		}
- 
--		nid = -1;
-+		nid = NUMA_NO_NODE;
- 	}
- 
- 	if (!list_empty(&node_page_list)) {
--- 
-1.8.3.1
+> ---
+>   arch/mips/ralink/timer-gic.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/ralink/timer-gic.c b/arch/mips/ralink/timer-gic.c
+> index 944fbe0fc7416f5a..dcf2a44ac51eede6 100644
+> --- a/arch/mips/ralink/timer-gic.c
+> +++ b/arch/mips/ralink/timer-gic.c
+> @@ -8,7 +8,7 @@
+>   #include <linux/init.h>
+>   
+>   #include <linux/of.h>
+> -#include <linux/clk-provider.h>
+> +#include <linux/of_clk.h>
+>   #include <linux/clocksource.h>
+>   
+>   #include "common.h"
+> 
 
