@@ -2,153 +2,128 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CA6C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F47C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72BC6206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581630607;
-	bh=z7XTTA1gpt/NMcJGgthNL7upjf7P5eWCXBDPQCouBwk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=rwmOHhbvHNujUXOBBpjb1pGwYwiC1+Cmu6Uw1cE3kYxR+oSttVhmPHFX1+PDKRaWL
-	 2V/Qk8s6MIIs0bhm6QgP2wHA/Sc6r/FQ7FepQkeji7rTFKmVGtB0hbqUH3zjUdDaYX
-	 qJ4wDiQYekjm07N0rLDDMYXfag6mSWsgjxIoSJG8=
+	by mail.kernel.org (Postfix) with ESMTP id 49BE724687
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:55:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5OYpfCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgBMVuH (ORCPT
+        id S1728204AbgBMVzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:50:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgBMVuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:50:06 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 13 Feb 2020 16:55:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29754 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728062AbgBMVzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 16:55:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581630946;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fgc8eEHzweZEt6vDWPHCdsqE62iMp2A4jBEBu5mmwpE=;
+        b=e5OYpfCQ0RPMvyqyOan3pNLV5X6hk7AI6FSpHBkwgYuJOwM12dvsBUSOLqQkjgbmlUSY//
+        xuc+zpehYbzT9+mBEAj9NjtN7bIarIbg9XWdRqHZfl6Jdf6QR9IE3T2RPSXmk39jHpu860
+        X+Ni0SMAkTNAcYCmqhQ8ID2tYsVnWII=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-137-KFIxhWeINIGEenkLQv6mnA-1; Thu, 13 Feb 2020 16:55:38 -0500
+X-MC-Unique: KFIxhWeINIGEenkLQv6mnA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905D5217BA;
-        Thu, 13 Feb 2020 21:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581630605;
-        bh=z7XTTA1gpt/NMcJGgthNL7upjf7P5eWCXBDPQCouBwk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sx0VjtJuNV1G5VXaCLWPabdqbpIGLKELzTe6qoyjQwOdxV/el36pV1WqLnO9nihfr
-         NqI+q5ssCxOoKSIcMvtVqMTJN/Oe19+uYkfBsiEg9EOgx65QmD8TQBhQSa9b4w9kJX
-         tXM4JHU35gUYFD/SghrlkkGw8Aigux3lw6nufwog=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3EB113520B69; Thu, 13 Feb 2020 13:50:04 -0800 (PST)
-Date:   Thu, 13 Feb 2020 13:50:04 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200213215004.GM2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200212210749.971717428@infradead.org>
- <20200212232005.GC115917@google.com>
- <20200213082716.GI14897@hirez.programming.kicks-ass.net>
- <20200213135138.GB2935@paulmck-ThinkPad-P72>
- <20200213164031.GH14914@hirez.programming.kicks-ass.net>
- <20200213185612.GG2935@paulmck-ThinkPad-P72>
- <20200213204444.GA94647@google.com>
- <20200213205442.GK2935@paulmck-ThinkPad-P72>
- <20200213211930.GG170680@google.com>
- <20200213163800.5c51a5f1@gandalf.local.home>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00EE5100550E;
+        Thu, 13 Feb 2020 21:55:37 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2EBB96031D;
+        Thu, 13 Feb 2020 21:55:35 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 2/4] libnvdimm/namespace: Enforce memremap_compat_align()
+References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 13 Feb 2020 16:55:35 -0500
+In-Reply-To: <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
+        (Dan Williams's message of "Wed, 12 Feb 2020 16:48:29 -0800")
+Message-ID: <x49k14q5ezs.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213163800.5c51a5f1@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
-> [ Added Masami ]
-> 
-> On Thu, 13 Feb 2020 16:19:30 -0500
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
-> > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:
-> > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:  
-> > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
-> > > > [...]   
-> > > > > > > It might well be that I could make these functions be NMI-safe, but
-> > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
-> > > > > > > So, before looking into that, I have a question.  Given these proposed
-> > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
-> > > > > > > to just use in_nmi()?  
-> > > > > > 
-> > > > > > That _should_ already be the case today. That is, if we end up in a
-> > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.  
-> > > > > 
-> > > > > So something like this, then?  This is untested, probably doesn't even
-> > > > > build, and could use some careful review from both Peter and Steve,
-> > > > > at least.  As in the below is the second version of the patch, the first
-> > > > > having been missing a couple of important "!" characters.  
-> > > > 
-> > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
-> > > > outside, that makes it build now. Updated below is Paul's diff. I also added
-> > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
-> > > > asymmetric.  
-> > > 
-> > > My compiler complained about the static and the __always_inline, so I
-> > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
-> > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
-> > > rcu_nmi_enter()?  
-> > 
-> > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
-> > allowing it on exit (from a code reading standpoint) so my reaction was to
-> > add it to both, but we could probably keep that as a separate
-> > patch/discussion since it is slightly unrelated to the patch.. Sorry to
-> > confuse the topic.
-> >
-> 
-> rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
-> c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
-> kprobe_int3_handler()")
-> 
-> The issue was that we must not allow anything in do_int3() call kprobe
-> code before kprobe_int3_handler() is called. Because ist_enter() (in
-> do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
-> nothing to do with it being RCU nor NMI, but because it was simply
-> called in do_int3().
-> 
-> Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
-> to why rcu_nmi_enter() would probably be useful, like below:
+Dan Williams <dan.j.williams@intel.com> writes:
 
-Thank you, Steve!  Could I please have your Signed-off-by for this?
-
-							Thanx, Paul
-
-> -- Steve
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 1694a6b57ad8..e2c9e3e2f480 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -846,6 +846,12 @@ void rcu_nmi_enter(void)
->  {
->  	rcu_nmi_enter_common(false);
->  }
-> +/*
-> + * On x86, All functions in do_int3() must be marked NOKPROBE before
-> + * kprobe_int3_handler() is called. ist_enter() which is called in do_int3()
-> + * before kprobe_int3_handle() happens to call rcu_nmi_enter() in which case
-> + * rcu_nmi_enter() must be marked NOKRPOBE.
-> + */
->  NOKPROBE_SYMBOL(rcu_nmi_enter);
+> The pmem driver on PowerPC crashes with the following signature when
+> instantiating misaligned namespaces that map their capacity via
+> memremap_pages().
+>
+>     BUG: Unable to handle kernel data access at 0xc001000406000000
+>     Faulting instruction address: 0xc000000000090790
+>     NIP [c000000000090790] arch_add_memory+0xc0/0x130
+>     LR [c000000000090744] arch_add_memory+0x74/0x130
+>     Call Trace:
+>      arch_add_memory+0x74/0x130 (unreliable)
+>      memremap_pages+0x74c/0xa30
+>      devm_memremap_pages+0x3c/0xa0
+>      pmem_attach_disk+0x188/0x770
+>      nvdimm_bus_probe+0xd8/0x470
+>
+> With the assumption that only memremap_pages() has alignment
+> constraints, enforce memremap_compat_align() for
+> pmem_should_map_pages(), nd_pfn, or nd_dax cases.
+>
+> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Cc: Jeff Moyer <jmoyer@redhat.com>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/nvdimm/namespace_devs.c |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+> index 032dc61725ff..aff1f32fdb4f 100644
+> --- a/drivers/nvdimm/namespace_devs.c
+> +++ b/drivers/nvdimm/namespace_devs.c
+> @@ -1739,6 +1739,16 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+>  		return ERR_PTR(-ENODEV);
+>  	}
 >  
->  /**
+> +	if (pmem_should_map_pages(dev) || nd_pfn || nd_dax) {
+> +		struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
+> +		resource_size_t start = nsio->res.start;
+> +
+> +		if (!IS_ALIGNED(start | size, memremap_compat_align())) {
+> +			dev_dbg(&ndns->dev, "misaligned, unable to map\n");
+> +			return ERR_PTR(-EOPNOTSUPP);
+> +		}
+> +	}
+> +
+>  	if (is_namespace_pmem(&ndns->dev)) {
+>  		struct nd_namespace_pmem *nspm;
+>  
+
+Actually, I take back my ack.  :) This prevents a previously working
+namespace from being successfully probed/setup.  I thought we were only
+going to enforce the alignment for a newly created namespace?  This should
+only check whether the alignment works for the current platform.
+
+-Jeff
+
