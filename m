@@ -2,160 +2,121 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C853C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AA5C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F34218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD456217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgBMTCp (ORCPT
+        id S1727891AbgBMTEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:02:45 -0500
-Received: from out03.mta.xmission.com ([166.70.13.233]:47550 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMTCp (ORCPT
+        Thu, 13 Feb 2020 14:04:22 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27206 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726282AbgBMTEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:02:45 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j2Jl2-0004CO-R6; Thu, 13 Feb 2020 12:02:41 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j2Jl1-0002Zb-Nk; Thu, 13 Feb 2020 12:02:40 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com>
-Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dsahern@gmail.com,
-        hawk@kernel.org, jiri@mellanox.com, johannes.berg@intel.com,
-        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-References: <000000000000c54420059e4f08ff@google.com>
-Date:   Thu, 13 Feb 2020 13:00:45 -0600
-In-Reply-To: <000000000000c54420059e4f08ff@google.com> (syzbot's message of
-        "Tue, 11 Feb 2020 08:06:10 -0800")
-Message-ID: <878sl6fh2a.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 13 Feb 2020 14:04:22 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DJ3aj3011487;
+        Thu, 13 Feb 2020 14:04:15 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y57dd4h00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 14:04:15 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01DJ3xbW010304;
+        Thu, 13 Feb 2020 19:04:14 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04dal.us.ibm.com with ESMTP id 2y5bc00fq2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 19:04:14 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DJ4EIg54460678
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 19:04:14 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A0D7B2064;
+        Thu, 13 Feb 2020 19:04:14 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5A10B205F;
+        Thu, 13 Feb 2020 19:04:13 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Feb 2020 19:04:13 +0000 (GMT)
+Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        gcwilson@linux.ibm.com
+References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
+ <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
+ <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
+ <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
+ <20200213183508.GL31668@ziepe.ca>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <b424faea-33a7-8e5a-caac-f322fad68118@linux.ibm.com>
+Date:   Thu, 13 Feb 2020 14:04:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j2Jl1-0002Zb-Nk;;;mid=<878sl6fh2a.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18DhSl2YmraRdbkJikHNBP6o0gRLE/AP5E=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: WARNING in dev_change_net_namespace
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <20200213183508.GL31668@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_07:2020-02-12,2020-02-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ clxscore=1011 malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com> writes:
-
-> Hello,
-
-Has someone messed up the network device kobject support.
-I don't have the exact same code as listed here so I may
-be misreading things.  But the only WARN_ON I see in
-dev_change_net_namespaces is from kobject_rename.
-
-It is not supposed to be possible for that to fail.
-
-Historically it only failed when network devices were put into sysfs
-in a way that required network devices to have names separate from
-sysfs files.  We fixed that ages ago, so I don't have a clue why
-kobject_rename would be failing now.
-
-szybot any idea what network device was changing network namespaces?
-
-Eric
-
-
-> syzbot found the following crash on:
+On 2/13/20 1:35 PM, Jason Gunthorpe wrote:
+> On Thu, Feb 13, 2020 at 01:20:12PM -0500, Stefan Berger wrote:
 >
-> HEAD commit:    0a679e13 Merge branch 'for-5.6-fixes' of git://git.kernel...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15142701e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6780df5a5f208964
-> dashboard link: https://syzkaller.appspot.com/bug?extid=830c6dbfc71edc4f0b8f
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>> I don't want side effects for the TPM 1.2 case here, so I am only modifying
+>> the flag for the case where the new TPM 2 is being used.  Here's the code
+>> where it shows the effect.
+> I'm surprised this driver is using AUTO_STARTUP, it was intended for
+> embedded cases where their is no firmware to boot the TPM.
+
+
+The TIS is also using it on any device.
+
+static const struct tpm_class_ops tpm_tis = {
+     .flags = TPM_OPS_AUTO_STARTUP,
+     .status = tpm_tis_status,
+
+https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/tpm_tis_core.c#L917
+
+
 >
-> Unfortunately, I don't have any reproducer for this crash yet.
+> Chips using AUTO_STARTUP are basically useless for PCRs/etc.
 >
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
+> I'd expect somthing called vtpm to have been started and PCRs working
+> before Linux is started??
+
+Yes, there's supposed to be firmware.
+
+I only see one caller to tpm2_get_cc_attrs_tbl(chip), which is necessary 
+to call. This caller happens to be in tpm2_auto_startup.
+
+
+    Stefan
+
+
 >
-> RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
-> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000007
-> R13: 00000000000009cb R14: 00000000004cb3dd R15: 0000000000000016
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 24839 at net/core/dev.c:10108 dev_change_net_namespace+0x155f/0x16b0 net/core/dev.c:10108
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 24839 Comm: syz-executor.4 Not tainted 5.6.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
->  panic+0x264/0x7a9 kernel/panic.c:221
->  __warn+0x209/0x210 kernel/panic.c:582
->  report_bug+0x1b6/0x2f0 lib/bug.c:195
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
->  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
->  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> RIP: 0010:dev_change_net_namespace+0x155f/0x16b0 net/core/dev.c:10108
-> Code: b7 f9 02 01 48 c7 c7 5d 66 e6 88 48 c7 c6 b4 42 04 89 ba 25 27 00 00 31 c0 e8 6d a6 dc fa 0f 0b e9 0d eb ff ff e8 a1 e6 0a fb <0f> 0b e9 2f fe ff ff e8 95 e6 0a fb c6 05 05 b7 f9 02 01 48 c7 c7
-> RSP: 0018:ffffc90001ae7140 EFLAGS: 00010246
-> RAX: ffffffff866c18df RBX: 00000000fffffff4 RCX: 0000000000040000
-> RDX: ffffc90012028000 RSI: 000000000003ffff RDI: 0000000000040000
-> RBP: ffffc90001ae7240 R08: ffffffff866c1700 R09: fffffbfff1406318
-> R10: fffffbfff1406318 R11: 0000000000000000 R12: ffff8880918d2b60
-> R13: ffff8880918d20b8 R14: ffffc90001ae71e8 R15: ffffc90001ae71e0
->  do_setlink+0x196/0x3880 net/core/rtnetlink.c:2501
->  __rtnl_newlink net/core/rtnetlink.c:3252 [inline]
->  rtnl_newlink+0x1509/0x1c00 net/core/rtnetlink.c:3377
->  rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5438
->  netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
->  rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5456
->  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
->  netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
->  netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
->  sock_sendmsg_nosec net/socket.c:652 [inline]
->  sock_sendmsg net/socket.c:672 [inline]
->  ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
->  ___sys_sendmsg net/socket.c:2397 [inline]
->  __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
->  __do_sys_sendmsg net/socket.c:2439 [inline]
->  __se_sys_sendmsg net/socket.c:2437 [inline]
->  __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
->  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x45b3b9
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f483611ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: ffffffffffffffda RBX: 00007f483611b6d4 RCX: 000000000045b3b9
-> RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
-> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000007
-> R13: 00000000000009cb R14: 00000000004cb3dd R15: 0000000000000016
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Jason
+
+
