@@ -2,91 +2,91 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C292CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF34C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9543820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581614770;
-	bh=KyRi3ukEwEEuo4KOyToS3/XcUNppmqqR7nNDixwXhYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GFLC/vfTkUGINgYirSUkznqYAKzGDfgAuGylfVKaQtdHx0WnNDkJOvz8SWgWDKJsE
-	 Gf2WJHkb14SNu69wzPmK8OUPAU5Vsi0Yr5lhajJutZ6QpWKYOAW5WiaNtBqosXpcQq
-	 MKdKjamXZZAQkzw7ypgnrRPlF2xJeBUUffMHwgbM=
+	by mail.kernel.org (Postfix) with ESMTP id A80032073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:26:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en/AH3gJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgBMR0J (ORCPT
+        id S1728655AbgBMR0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:26:09 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43961 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgBMR0I (ORCPT
+        Thu, 13 Feb 2020 12:26:45 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39840 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbgBMR0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:26:08 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s1so3389363pfh.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:26:08 -0800 (PST)
+        Thu, 13 Feb 2020 12:26:44 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so7693150wme.4;
+        Thu, 13 Feb 2020 09:26:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W0kPYSGZpFmUqWv9seoH6YBSbGZJRy2v/6dlw3/QF5g=;
-        b=qmP5IZjP+6eO4zBDlJ/ETwfNqBc4vfDwE1hX5sbHwzSKhV01vnx+Sr3YDNpaXpfzzR
-         rbM1vtUYCniaH41MN0zI3QS19GxQpuk/tQJnLV5zRzT3qA1QHqHuapuDsYq1UlKx1TyM
-         Ru1DOsGha4Nz9j06vKZRnVfu0qVa+SrWMmd73XFcMUksCBU8SIdaT6tK6xtQrbwuTxor
-         D5tdkJqnY7xMdybBDJt3iRJdi9MzCEQTH3zEi+LIARj/MTC8IHw0At1gr2IpFSGd/SC9
-         euEhRkRy795d+HRbKHFcGNiwZ56570IcW2HKBQCpKWXiHsLNAf8KfyYt0V70TcuNV9X9
-         6DwA==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=vi0bzwCEngkzvYIMexg2mWcSV1LwVOXAVSzyuSvjg4s=;
+        b=en/AH3gJz07K0r32poZQgPKC1i+UMLK4fVXL55mG8klebz5qHbzfVeEPM7EdjhDWyG
+         gxYrc1EXnfCqmOUN6d7w/r2zyR8SvoQvh7AG1M6jx9oAlngbk+LOA6apM6HCXOt0sBqu
+         qaiRyPghv83faR1K+WH5TdATIuqJw9Jdqf2R74z8dhOPrzOxmv9Cgn30KF1os/3/i+Jh
+         Uehm3X+TEWfsvNjE/EujCR/jIA/dqeEmzyzv6VCYdDHkttPZUXawdIWElCqMzVf1qkzX
+         P+HQgKeGxfcdjEFQ6x+qSAaIye2cAEZkl+UBkMs2S8VjgGy5mUYei8xJAHWZq+YCQfg1
+         Y/uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W0kPYSGZpFmUqWv9seoH6YBSbGZJRy2v/6dlw3/QF5g=;
-        b=J70JeR4U3TLYJh3EW2i1bSpU60kafq/G7c+upQnPO5fPfnVVhw0nV49Wq+V1PeqEIh
-         IGHnxePwRhbsDczyAuoeiZ2f9mr04vePpP0zCbWhvXfKimBPxKSRLjanUxlYg+h7ruMJ
-         6YHEcGLtBbRMsCzjb9QsjSI1Ubzqlb0r39JNFAzMMNCXKnViHgAhw+N8WBTjTZQJas2p
-         Um+Sosjc93J7Py5M3i8e3/ww6o7xq2nMCdoLFwQHYzz7fXvtpYYUBSNHash80jyLeDGK
-         3YnvJgmC1X6H8uvmUybzcroiXgOhFX4e/KmgLlW7eRF/3OOp8VG8ReZ0ilnIH34r8/do
-         ZB2w==
-X-Gm-Message-State: APjAAAVCLSxBrql7tlZXLh3Yb+qaN5ZuwhqAzvNns3eNspT5OtmlR9bW
-        4LpJYZup7m4JOs6oNUkJ8Sq+iUZ9
-X-Google-Smtp-Source: APXvYqwjFu0EPDvP8k9bCzLALt7wPIRCseUfwxZN4pAUYvuvclJpbDpVjfrzrqvb+1QNhQaKt9YuHA==
-X-Received: by 2002:aa7:946b:: with SMTP id t11mr14598181pfq.57.1581614768327;
-        Thu, 13 Feb 2020 09:26:08 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id f43sm3617357pje.23.2020.02.13.09.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 09:26:07 -0800 (PST)
-Date:   Thu, 13 Feb 2020 09:26:05 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     anshuman.khandual@arm.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: vmscan: replace open codings to NUMA_NO_NODE
-Message-ID: <20200213172605.GC41717@google.com>
-References: <1581568298-45317-1-git-send-email-yang.shi@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581568298-45317-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=vi0bzwCEngkzvYIMexg2mWcSV1LwVOXAVSzyuSvjg4s=;
+        b=bFtj2UHWw61bqy0YewdPGEFQZDtnoGcfXhm2+f6dhrXF/1Dt6DwDa3UKoqFcC7Fc56
+         MIeVOFiU5aMsjLWbvzHNrSoTFov4Csb4J5vX7B3sSUaeHiN8nEKxoiGHq0/iKvX/Rt/a
+         EbywexV+xaYPeFyq3M1/0A3ntEiGOO0zZaTKGok0ou2T0BDWcbR95e75ZnOD4VVOXsci
+         cDXOOfIlwSGigFEn46wl4YtaCsamwfL1oDs7ZyQU29K5t8B5k2Etq0K15/toCN4AOFGb
+         qBntlGz23o7EZjnvxuEwEu6CUsjgKmDQJVLO1AyJe+SoB3l+NTh1pxPdpaPqPvBfoKcK
+         awlQ==
+X-Gm-Message-State: APjAAAWYlvmWGjnUOuG3CMzMZGaosVK/+HtxVDc5Ij3070FS+ZvTU8we
+        FHV03GPkn/4UyQfT8Hnu04CYbpn3
+X-Google-Smtp-Source: APXvYqwc8/NzoqsuhjZzG/LiLOQKuW/m2mqUeOXYNbihohQrE4x6OwRGFEYppIgI4uFRG3dVzaxVBw==
+X-Received: by 2002:a7b:cbc9:: with SMTP id n9mr6945877wmi.89.1581614802171;
+        Thu, 13 Feb 2020 09:26:42 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id h2sm3813508wrt.45.2020.02.13.09.26.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Feb 2020 09:26:41 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     cai@lca.pw
+Subject: [PATCH] KVM: x86: fix missing prototypes
+Date:   Thu, 13 Feb 2020 18:26:40 +0100
+Message-Id: <1581614800-16983-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:31:38PM +0800, Yang Shi wrote:
-> The commit 98fa15f34cb3 ("mm: replace all open encodings for
-> NUMA_NO_NODE") did the replacement across the kernel tree, but we got
-> some more in vmscan.c since then.
-> 
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
+Reported with "make W=1" due to -Wmissing-prototypes.
 
-Thanks, Yang!
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ include/linux/kvm_host.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index e89eb67356cb..7944ad6ac10b 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -889,6 +889,8 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu);
+ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu);
+ bool kvm_arch_dy_runnable(struct kvm_vcpu *vcpu);
++int kvm_arch_post_init_vm(struct kvm *kvm);
++void kvm_arch_pre_destroy_vm(struct kvm *kvm);
+ 
+ #ifndef __KVM_HAVE_ARCH_VM_ALLOC
+ /*
+-- 
+1.8.3.1
+
