@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E0C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EE2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567642073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E802073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609517;
-	bh=ZlegwmCnAZOuLIiv3fdHyQ4anQ6XQtuPlcFIM1GgWJk=;
+	s=default; t=1581609521;
+	bh=H0mPSkaFOF7J4fHrknf39KG7tqcuvpubEYUOXQTbNcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WA1KnpYjdtGVxxTAEoEZa2YBGMx+6yDmw9jFw1pLsnrJ7ogXablGyEfu858ucZYch
-	 SXYy4LHgNN2pmWHXPBW6aMr/K4hYdsVvtloqe/ubbVwY6VV5gBaCcRsrRT92oOhl4s
-	 ttw3OiMzhJSdabWP3Chn2N3VhXLvaDTUtBGRgmQE=
+	b=RwxjNDrWf7AzFDWCcQuGEcUp6cVGgWBJpusujt/ALQ/CRbf0tZ5mpSY7elbWvcc/L
+	 nCBRyfQZHO8rnR2AJxiT8UYB3oyo/kmBPSVW/VzkgC1caacoXDef2YGXqBTby6MqSv
+	 v7hxULNGND19KSxFvo8RYqJP2B5UW9CeYrzP8sBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgBMPZJ (ORCPT
+        id S1730010AbgBMP6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35226 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgBMPXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:38 -0500
+        id S1728190AbgBMPZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:08 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96957246B1;
-        Thu, 13 Feb 2020 15:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B80E246C1;
+        Thu, 13 Feb 2020 15:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607417;
-        bh=ZlegwmCnAZOuLIiv3fdHyQ4anQ6XQtuPlcFIM1GgWJk=;
+        s=default; t=1581607508;
+        bh=H0mPSkaFOF7J4fHrknf39KG7tqcuvpubEYUOXQTbNcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=172NZIM3Y52nIXM+h7wMTcvsNxjYuSLHTEDQzzr8JNsR+UjM8criJn//mvVy/ZKGG
-         onqC6GjjDJ+ZjOu6ktSPDtlhcbVK5jS/SCnTgLPS0WkLDfP1UXOp+7HlHKmwdWnK+J
-         v2pHr0KtjKvUJ3f7ydmVy0ZwTyytb8sIF3zOIjQk=
+        b=ZdBpGYZ4xa0OHsp2g/HUnS7XMONDqEJC1oWs9jaLRhqyo02ECJuiooVBs0iMLe3j3
+         1CIdSmxCOt6vbX35jh9tCQ2G9rta+5iWQY9GRVCmcEtqk1TBf/FOij68SdVHlS2NHt
+         zCsHyAcacMwLSG245iJk3mRIfuvDirHfnT86U9DY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 025/116] powerpc/pseries: Advance pfn if section is not present in lmb_is_removable()
-Date:   Thu, 13 Feb 2020 07:19:29 -0800
-Message-Id: <20200213151852.632372374@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 067/173] crypto: picoxcell - adjust the position of tasklet_init and fix missed tasklet_kill
+Date:   Thu, 13 Feb 2020 07:19:30 -0800
+Message-Id: <20200213151950.616419334@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,38 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit fbee6ba2dca30d302efe6bddb3a886f5e964a257 upstream.
+commit 7f8c36fe9be46862c4f3c5302f769378028a34fa upstream.
 
-In lmb_is_removable(), if a section is not present, it should continue
-to test the rest of the sections in the block. But the current code
-fails to do so.
+Since tasklet is needed to be initialized before registering IRQ
+handler, adjust the position of tasklet_init to fix the wrong order.
 
-Fixes: 51925fb3c5c9 ("powerpc/pseries: Implement memory hotplug remove in the kernel")
-Cc: stable@vger.kernel.org # v4.1+
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1578632042-12415-1-git-send-email-kernelfans@gmail.com
+Besides, to fix the missed tasklet_kill, this patch adds a helper
+function and uses devm_add_action to kill the tasklet automatically.
+
+Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/picoxcell_crypto.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -398,8 +398,10 @@ static bool lmb_is_removable(struct of_d
+--- a/drivers/crypto/picoxcell_crypto.c
++++ b/drivers/crypto/picoxcell_crypto.c
+@@ -1616,6 +1616,11 @@ static const struct of_device_id spacc_o
+ MODULE_DEVICE_TABLE(of, spacc_of_id_table);
+ #endif /* CONFIG_OF */
  
- 	for (i = 0; i < scns_per_block; i++) {
- 		pfn = PFN_DOWN(phys_addr);
--		if (!pfn_present(pfn))
-+		if (!pfn_present(pfn)) {
-+			phys_addr += MIN_MEMORY_BLOCK_SIZE;
- 			continue;
-+		}
++static void spacc_tasklet_kill(void *data)
++{
++	tasklet_kill(data);
++}
++
+ static int spacc_probe(struct platform_device *pdev)
+ {
+ 	int i, err, ret = -EINVAL;
+@@ -1659,6 +1664,14 @@ static int spacc_probe(struct platform_d
+ 		return -ENXIO;
+ 	}
  
- 		rc &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
- 		phys_addr += MIN_MEMORY_BLOCK_SIZE;
++	tasklet_init(&engine->complete, spacc_spacc_complete,
++		     (unsigned long)engine);
++
++	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
++			      &engine->complete);
++	if (ret)
++		return ret;
++
+ 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
+ 			     engine->name, engine)) {
+ 		dev_err(engine->dev, "failed to request IRQ\n");
+@@ -1721,8 +1734,6 @@ static int spacc_probe(struct platform_d
+ 	INIT_LIST_HEAD(&engine->completed);
+ 	INIT_LIST_HEAD(&engine->in_progress);
+ 	engine->in_flight = 0;
+-	tasklet_init(&engine->complete, spacc_spacc_complete,
+-		     (unsigned long)engine);
+ 
+ 	platform_set_drvdata(pdev, engine);
+ 
 
 
