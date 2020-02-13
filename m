@@ -2,109 +2,137 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEC9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE1520848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854BA20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbgBMIS5 (ORCPT
+        id S1729532AbgBMITW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 03:18:57 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49005 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgBMIS5 (ORCPT
+        Thu, 13 Feb 2020 03:19:22 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:57470 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgBMITW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 03:18:57 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j29hh-0001zY-Gy; Thu, 13 Feb 2020 09:18:33 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j29hZ-0005R6-5H; Thu, 13 Feb 2020 09:18:25 +0100
-Date:   Thu, 13 Feb 2020 09:18:25 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, allison@lohutok.net,
-        tglx@linutronix.de, andrew.smirnov@gmail.com,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        rfontana@redhat.com, sakari.ailus@linux.intel.com,
-        bhelgaas@google.com, dsterba@suse.com, peng.fan@nxp.com,
-        okuno.kohji@jp.panasonic.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2] ARM: imx: Add missing of_node_put()
-Message-ID: <20200213081825.mox35tzizscdk7km@pengutronix.de>
-References: <1581574854-9366-1-git-send-email-Anson.Huang@nxp.com>
+        Thu, 13 Feb 2020 03:19:22 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1j29iF-0089Y1-N7; Thu, 13 Feb 2020 09:19:08 +0100
+Message-ID: <e8a45358b273f0d62c42f83d99c1b50a1608929d.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH v2] UML: add support for KASAN under x86_64
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
+Date:   Thu, 13 Feb 2020 09:19:06 +0100
+In-Reply-To: <CAKFsvUKaixKXbUqvVvjzjkty26GS+Ckshg2t7-+erqiN2LVS-g@mail.gmail.com> (sfid-20200213_013812_463819_2E8172A0)
+References: <20200210225806.249297-1-trishalfonso@google.com>
+         <13b0ea0caff576e7944e4f9b91560bf46ac9caf0.camel@sipsolutions.net>
+         <CAKFsvUKaixKXbUqvVvjzjkty26GS+Ckshg2t7-+erqiN2LVS-g@mail.gmail.com>
+         (sfid-20200213_013812_463819_2E8172A0)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581574854-9366-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:20:54PM +0800, Anson Huang wrote:
-> After finishing using device node got from of_find_compatible_node(),
-> of_node_put() needs to be called.
+On Wed, 2020-02-12 at 16:37 -0800, Patricia Alfonso wrote:
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- correct some of_node_put() place to make sure it is safe to be put.
-> ---
->  arch/arm/mach-imx/anatop.c     | 3 +++
->  arch/arm/mach-imx/gpc.c        | 1 +
->  arch/arm/mach-imx/platsmp.c    | 1 +
->  arch/arm/mach-imx/pm-imx6.c    | 2 ++
->  arch/arm/mach-imx/pm-imx7ulp.c | 1 +
->  5 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/mach-imx/anatop.c b/arch/arm/mach-imx/anatop.c
-> index 8fb68c0..5985731 100644
-> --- a/arch/arm/mach-imx/anatop.c
-> +++ b/arch/arm/mach-imx/anatop.c
-> @@ -135,6 +135,7 @@ void __init imx_init_revision_from_anatop(void)
->  			void __iomem *src_base;
->  			u32 sbmr2;
->  
-> +			of_node_put(np);
->  			np = of_find_compatible_node(NULL, NULL,
->  						     "fsl,imx6ul-src");
->  			src_base = of_iomap(np, 0);
-> @@ -152,6 +153,8 @@ void __init imx_init_revision_from_anatop(void)
->  
->  	mxc_set_cpu_type(digprog >> 16 & 0xff);
->  	imx_set_soc_revision(revision);
-> +
-> +	of_node_put(np);
->  }
+> > That also means if I have say 512MB memory allocated for UML, KASAN will
+> > use an *additional* 64, unlike on a "real" system, where KASAN will take
+> > about 1/8th of the available physical memory, right?
+> > 
+> Currently, the amount of shadow memory allocated is a constant based
+> on the amount of user space address space in x86_64 since this is the
+> host architecture I have focused on.
 
-It would be a bit more natural here IMHO to introduce a second struct
-device_node * variable for the fsl,imx6ul-src device. Then each
-of_node_put would belong to exactly one of_find_compatible_node().
-(Now the of_node_put() in line 157 frees the fsl,imx6ul-src on i.MX6ULL
-and fsl,imx6q-anatop on the others.)
+Right, but again like below - that's just mapped, not actually used. But
+as far as I can tell, once you actually start running and potentially
+use all of your mem=1024 (MB), you'll actually also use another 128MB on
+the KASAN shadow, right?
 
-The other hunks look fine.
+Unlike, say, a real x86_64 machine where if you just have 1024 MB
+physical memory, the KASAN shadow will have to fit into that as well.
 
-Best regards
-Uwe
+> > > +# With these files removed from instrumentation, those reports are
+> > > +# eliminated, but KASAN still repeatedly reports a bug on syscall_stub_data:
+> > > +# ==================================================================
+> > > +# BUG: KASAN: stack-out-of-bounds in syscall_stub_data+0x299/0x2bf
+> > > +# Read of size 128 at addr 0000000071457c50 by task swapper/1
+> > 
+> > So that's actually something to fix still? Just trying to understand,
+> > I'll test it later.
+> > 
+> Yes, I have not found a fix for these issues yet and even with these
+> few files excluded from instrumentation, the syscall_stub_data error
+> occurs(unless CONFIG_STACK is disabled, but CONFIG_STACK is enabled by
+> default when using gcc to compile). It is unclear whether this is a
+> bug that KASAN has found in UML or it is a mismatch of KASAN error
+> detection on UML.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Right, ok, thanks for the explanation. I guess then stack
+instrumentation should be disabled for this patch initially.
+
+> > Heh, you *actually* based it on my patch, in git terms, not just in code
+> > terms. I think you should just pick up the few lines that you need from
+> > that patch and squash them into this one, I just posted that to
+> > demonstrate more clearly what I meant :-)
+> > 
+> I did base this on your patch. I figured it was more likely to get
+> merged before this patch anyway. To clarify, do you want me to include
+> your constructors patch with this one as a patchset?
+
+Well I had two patches:
+ (1) the module constructors one - I guess we need to test it, but you
+     can include it here if you like. I'm kinda swamped with other
+     things right now, no promises I can actually test it soon, though I
+     really do want to because that's the case I need :)
+ (2) the [DEMO] patch - you should just take the few lines you need from
+     that (in the linker script) and stick it into this patch. Don't
+     even credit me for that, I only wrote it as a patch instead of a
+     normal text email reply because I couldn't figure out how to word
+     things in an understandable way...
+
+Then we end up with 2 patches again, the (1) and your KASAN one. There's
+no point in keeping the [DEMO] separate, and 
+
+> > > +     if (mmap(start,
+> > > +              len,
+> > > +              PROT_READ|PROT_WRITE,
+> > > +              MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE|MAP_NORESERVE,
+> > > +              -1,
+> > > +              0) == MAP_FAILED)
+> > > +             os_info("Couldn't allocate shadow memory %s", strerror(errno));
+> > 
+> > If that fails, can we even continue?
+> > 
+> Probably not, but with this executing before main(), what is the best
+> way to have an error occur? Or maybe there's a way we can just
+> continue without KASAN enabled and print to the console that KASAN
+> failed to initialize?
+
+You can always "exit(17)" or something.
+
+I'm not sure you can continue without KASAN?
+
+Arguably it's better to fail loudly anyway if something as simple as the
+mmap() here fails - after all, that probably means the KASAN offset in
+Kconfig needs to be adjusted?
+
+johannes
+
