@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C1AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD1AC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB8620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4AD2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608361;
-	bh=xBa2u05UtOgzy/5qyklWzIFc0OBcGSMN3eKwOCuZ6lA=;
+	s=default; t=1581608363;
+	bh=bQjW8lwrVyACw128x2TiWIGTmALlgD5E5Cy8VNj2jx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIc2LgE0HjCHHJkzAtgl+/EEXdwF/YiTgQ1z8Q9chKUMOZhFreherePKMg0KPFk8z
-	 aUWUgDKnpa/tgSzstpfq7hzypD3YmlZB5OAkUE5gK5sqXB0wad6WwfpY1SYkO3k25/
-	 iBg85ryPmLraGmvv5Huox0cv9g0dEZpDTNHZ5LDw=
+	b=bn+36cJzzfmRgYlOuraoNIYSurYlrnTDXkmjATK8YfSEcfn1Fo+H4JOjsHxI+Mk+A
+	 DKCTGX14z5svn5VA7gPvJX8uOUkw7+KKjCP4n3QOjqyAMgj3Oob5fAAE7Jp444HC4F
+	 R1qFahsIrx08M6Nhp8fCmH10lU8Y6cmh3CLTdJ+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbgBMPjU (ORCPT
+        id S1729814AbgBMPjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:39:20 -0500
+        Thu, 13 Feb 2020 10:39:18 -0500
 Received: from mail.kernel.org ([198.145.29.99]:57966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728763AbgBMP3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:05 -0500
+        id S2387449AbgBMP3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:06 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC7AF24696;
-        Thu, 13 Feb 2020 15:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06474222C2;
+        Thu, 13 Feb 2020 15:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607744;
-        bh=xBa2u05UtOgzy/5qyklWzIFc0OBcGSMN3eKwOCuZ6lA=;
+        s=default; t=1581607746;
+        bh=bQjW8lwrVyACw128x2TiWIGTmALlgD5E5Cy8VNj2jx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/V6C+ohi2XjAZq4ymrb26gdMUpocjMk4zciE81cU/UundoR+m2u1N8cWkHXxEsBZ
-         zLBCV/z9j0oRBhirx7LDZkGSzJ+9x3NIhKjLEp2AYxnMdIrNN+GiqStZTT3jURWRyD
-         4Nszf1QyewS/IGWYrk+5VtufLavwnKK+twEQmjV0=
+        b=zYWWDGVdN1oYnCbWXAOBeLYQm63PtV7X4t81kWPLDNxcPOmOfQITSKNit86r2Q3+k
+         vp0l18i3JVBy8PvOSACjk/0+r6rvCyis2KJZRelwuEQdjzZ1x1pCgbg/4UNvRwp1XH
+         xLOLDo8KR1amhgUtxR8+xaTmO2qZ9QtWBJpjK1EQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Akshu Agrawal <akshu.agrawal@amd.com>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.5 101/120] i2c: cros-ec-tunnel: Fix slave device enumeration
-Date:   Thu, 13 Feb 2020 07:21:37 -0800
-Message-Id: <20200213151934.867199556@linuxfoundation.org>
+        stable@vger.kernel.org, Beniamin Bia <beniamin.bia@analog.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.5 103/120] dt-bindings: iio: adc: ad7606: Fix wrong maxItems value
+Date:   Thu, 13 Feb 2020 07:21:39 -0800
+Message-Id: <20200213151935.457006420@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -61,33 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akshu Agrawal <akshu.agrawal@amd.com>
+From: Beniamin Bia <beniamin.bia@analog.com>
 
-commit 8ff2d7ca4a55dfabf12e876369835bd024eb4621 upstream.
+commit a6c4f77cb3b11f81077b53c4a38f21b92d41f21e upstream.
 
-During adding of the adapter the slave device registration
-use to fail as the acpi companion field was not populated.
+This patch set the correct value for oversampling maxItems. In the
+original example, appears 3 items for oversampling while the maxItems
+is set to 1, this patch fixes those issues.
 
-Fixes: 9af1563a5486 ("i2c: cros-ec-tunnel: Make the device acpi compatible")
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
-Acked-by: Raul E Rangel <rrangel@chromium.org>
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 416f882c3b40 ("dt-bindings: iio: adc: Migrate AD7606 documentation to yaml")
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-cros-ec-tunnel.c |    1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-+++ b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-@@ -273,6 +273,7 @@ static int ec_i2c_probe(struct platform_
- 	bus->adap.dev.parent = &pdev->dev;
- 	bus->adap.dev.of_node = pdev->dev.of_node;
- 	bus->adap.retries = I2C_MAX_RETRIES;
-+	ACPI_COMPANION_SET(&bus->adap.dev, ACPI_COMPANION(&pdev->dev));
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+@@ -82,7 +82,7 @@ properties:
+       Must be the device tree identifier of the over-sampling
+       mode pins. As the line is active high, it should be marked
+       GPIO_ACTIVE_HIGH.
+-    maxItems: 1
++    maxItems: 3
  
- 	err = i2c_add_adapter(&bus->adap);
- 	if (err)
+   adi,sw-mode:
+     description:
+@@ -125,9 +125,9 @@ examples:
+                 adi,conversion-start-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
+                 reset-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
+                 adi,first-data-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
+-                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH
+-                                                &gpio 23 GPIO_ACTIVE_HIGH
+-                                                &gpio 26 GPIO_ACTIVE_HIGH>;
++                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>,
++                                               <&gpio 23 GPIO_ACTIVE_HIGH>,
++                                               <&gpio 26 GPIO_ACTIVE_HIGH>;
+                 standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
+                 adi,sw-mode;
+         };
 
 
