@@ -2,133 +2,209 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B836C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E9CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DF92073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707FD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="lu6hMfTh"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="S/8jWHIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgBMQAr (ORCPT
+        id S1730158AbgBMQAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:00:47 -0500
-Received: from USFB19PA36.eemsg.mail.mil ([214.24.26.199]:49602 "EHLO
-        USFB19PA36.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728853AbgBMQAp (ORCPT
+        Thu, 13 Feb 2020 11:00:51 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35790 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729065AbgBMQAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:00:45 -0500
-X-EEMSG-check-017: 55804223|USFB19PA36_ESA_OUT06.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,437,1574121600"; 
-   d="scan'208";a="55804223"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by USFB19PA36.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 13 Feb 2020 16:00:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1581609637; x=1613145637;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=KIcuSejQnqpI1jbM63RzeE7p+CVUNEGm6AHO7WK6rr4=;
-  b=lu6hMfThc7yL6BWv6oMlFR9fNRZdBCDTOsfa5EkqbasRNX9bgtpP5M97
-   KDzGo0lK9IjYhaTGpVaPEN+R4hUodJDKB07KgMRylhEiQQvK2KzROKlPN
-   RIsypEhsFdLePA96QgkAB2CYM7hHJ4p3oQEkmShJ8lOhG6NO6jqwNfJSp
-   HFNzB4kmKyZ4nNeKAeXtkE+pdu87BzWqEq4CRIraJi8QIJ4SKHmwqGd2s
-   No/BwGWAliQy+5GYvEZLM/qpUsrhqKiHT82aVWfOvYjzK1rRMPIRfF96+
-   pf6JoAXhc+TV9eUbtJ0gKRGqs5poOnw+w7RExtl5U+tCEANB1rIcOGdrQ
-   w==;
-X-IronPort-AV: E=Sophos;i="5.70,437,1574121600"; 
-   d="scan'208";a="33030530"
-IronPort-PHdr: =?us-ascii?q?9a23=3AaSjTkB2aIbMKZLWismDT+DRfVm0co7zxezQtwd?=
- =?us-ascii?q?8ZsesXK/zxwZ3uMQTl6Ol3ixeRBMOHsq4C1bqd4/mocFdDyKjCmUhKSIZLWR?=
- =?us-ascii?q?4BhJdetC0bK+nBN3fGKuX3ZTcxBsVIWQwt1Xi6NU9IBJS2PAWK8TW94jEIBx?=
- =?us-ascii?q?rwKxd+KPjrFY7OlcS30P2594HObwlSizexfLx/IA+3oAjSucUbgpZuIbstxx?=
- =?us-ascii?q?XUpXdFZ+tZyWR0KFyJgh3y/N2w/Jlt8yRRv/Iu6ctNWrjkcqo7ULJVEi0oP3?=
- =?us-ascii?q?g668P3uxbDSxCP5mYHXWUNjhVIGQnF4wrkUZr3ryD3q/By2CiePc3xULA0RT?=
- =?us-ascii?q?Gv5LplRRP0lCsKMSMy/XrJgcJskq1UvBOhpwR+w4HKZoGVKOF+db7Zcd8DWG?=
- =?us-ascii?q?ZNQtpdWylHD4yydYsPC/cKM/heoYfzulACqQKyCReoCe/qzDJDm3340rAg0+?=
- =?us-ascii?q?k5DA/IwgIgEdINvnraotr6O6UdXvy6wqTT0TXObelb1Svh5IXGcB0sp+yHU7?=
- =?us-ascii?q?JqccrWzEkiDx7LjkmOpoz9PzOayOINuHWG4eplT+2vj2onpB9xozOywcoskZ?=
- =?us-ascii?q?TGhpkOx1DY9SR23IY1JdqiRE59et6rCoFcty6dN4toW84vRXxjtiUiyrAepJ?=
- =?us-ascii?q?K2cycHxI4nyhLCcfCLbYeF7gz5WOqMJzpzmWhrd6ilhxmo9Eit0uj8Vs6p31?=
- =?us-ascii?q?lUtidFidzMtmwV1xzU98iHVuNx/ke/1jaL0ADe8v1ELloularaNp4h2aQ8lp?=
- =?us-ascii?q?sVsUTNGS/2g1v5g7OMekU4+umn9+TnYrL8qp+aK4B0kR3xPr4rmsy+BeQ0Kg?=
- =?us-ascii?q?kOX26F9uSgzLDv4EL0TbpQgvA2j6XVqo7WKMsFqqKjHgNZyoMj5Ay+Dzei3t?=
- =?us-ascii?q?QYh34HLFdddRKckofpIErDIOz4DPijg1Ssly1nx/bdPrL7GJnNIX/DkKn5cb?=
- =?us-ascii?q?Zn90Fc0BYzzcxY559MBbEBOuz8WkDytNzYFRI5Nw20w+D6CNRy2IMeXn+PAq?=
- =?us-ascii?q?mEP6zIrV+I5+UvI++WaI8Sojb9JOAv5+Tygn8hhV8dYa6p0IMTaHC5GPRmPk?=
- =?us-ascii?q?qYbWPvgtgfC2cKuBQxTOjxhV2cXj5ceWyyU7g/5j4lEoKmC5nMRoS3jLyGxi?=
- =?us-ascii?q?e7EYVcZnpaBVCUDXfoa4KEVu8XaCKOOMBuiTgEWqa6Ro8/2hGhqhX6x6BkLu?=
- =?us-ascii?q?XK4C0Ys4zs1Nxv6+3UjxEy+iR+D96B3GGVU2F0gmQISic43aB+pUx9zkyO0a?=
- =?us-ascii?q?tmjPxCE9xc+fdJXh09NZ7GwOxwE8ryVR7ZfteVVFamRc2rASkrQdIsx98DeF?=
- =?us-ascii?q?59FM+/jhDHxiaqBrgVl7uRBJMq6K7Tw3/xJ8Mug0rBgYY7glZuYdFIPG3jpq?=
- =?us-ascii?q?dl6w3aAcadnF+UmKWqXaAd2jPd+mCey2aHoEBfVkh3S6qTGTgbZ03LvZH661?=
- =?us-ascii?q?nEQruGF7sqKE1CxNSEJ68Mbcfm3ntcQ/K2A8jTe2K8nS+LAB+Mwr6dJN7xd3?=
- =?us-ascii?q?41wDTWCE9ClRsau3mBK15tVW+av2vCAWk2RhrUaET2/Lw78SnqQw=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2DmAABlcUVe/wHyM5BmGwEBAQEBAQEFAQEBEQEBAwMBA?=
- =?us-ascii?q?QGBe4F9gW0gEiqEFIkDhl8GgTeJcJFKCQEBAQEBAQEBATcEAQGEQAKCcDgTA?=
- =?us-ascii?q?hABAQEFAQEBAQEFAwEBbIVDgjspAYMBAQEBAQMjFUEQCxUDAgImAgJXBgEMB?=
- =?us-ascii?q?gIBAYJjP4JXJawZdYEyhUqDToE+gQ4qjD55gQeBOA+CXT6HW4JeBJdFRpdrg?=
- =?us-ascii?q?kSCT5N8BhybFy2OO50+IoFYKwgCGAghD4MnUBgNjlWOLCMDMI8hAQE?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 13 Feb 2020 16:00:35 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01DFxZqs258318;
-        Thu, 13 Feb 2020 10:59:37 -0500
-Subject: Re: [PATCH 5.4 85/96] selinux: revert "stop passing MAY_NOT_BLOCK to
- the AVC upon follow_link"
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Paul Moore <paul@paul-moore.com>
-References: <20200213151839.156309910@linuxfoundation.org>
- <20200213151911.147099125@linuxfoundation.org>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <b481f512-d4dd-1c04-f39f-0ba271193d0a@tycho.nsa.gov>
-Date:   Thu, 13 Feb 2020 11:01:41 -0500
+        Thu, 13 Feb 2020 11:00:49 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DFmigN024413;
+        Thu, 13 Feb 2020 17:00:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=DYnVX283FjeehaiMYw7D2LGyBDeji4OjGpp51jTXiO4=;
+ b=S/8jWHIUylpqJEa1qXlj6F2AcCbNxY15hZ1G7c+8gejvbkbJG7D+dNDLMyoCN+cnymgH
+ pz2TzUc21fvajmkGbLuVoBcJ45xUdslz88swYSif12pr81hnMAU386FFq1gx/9QSUcC4
+ oYG3+WRMUv+J9FJ/OPfbSvPt9PgPpm4Tr5f1V7s8RdkFdVAY/6Z9ZYhYyM77+/iCw+FX
+ YuAzQX2efOZHkbjqDz0/FRADmazI2FMKxKMIf22tGvFW06yP970g8wSECrjEYNZOMEJL
+ hHxqAAi2DCbWN7e/m8PoEUIehy8QFOIIkT9y6ItZwmCfaamD7PKYMTrY3oZwKzWBBLvm OQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1ufhpae8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 17:00:38 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8CDAB100034;
+        Thu, 13 Feb 2020 17:00:37 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 714FE2BAEF4;
+        Thu, 13 Feb 2020 17:00:37 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.46) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Feb
+ 2020 17:00:36 +0100
+Subject: Re: [PATCH v3 6/8] remoteproc: Introduce "panic" callback in ops
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+CC:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
+ <20200211005059.1377279-7-bjorn.andersson@linaro.org>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <d40e2d7a-19ae-0acf-dc73-f2edb8cb3c32@st.com>
+Date:   Thu, 13 Feb 2020 17:00:36 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200213151911.147099125@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200211005059.1377279-7-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_05:2020-02-12,2020-02-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 10:21 AM, Greg Kroah-Hartman wrote:
-> From: Stephen Smalley <sds@tycho.nsa.gov>
-> 
-> commit 1a37079c236d55fb31ebbf4b59945dab8ec8764c upstream.
-> 
-> This reverts commit e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK
-> to the AVC upon follow_link"). The correct fix is to instead fall
-> back to ref-walk if audit is required irrespective of the specific
-> audit data type.  This is done in the next commit.
-> 
-> Fixes: e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK to the AVC upon follow_link")
-> Reported-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-> Signed-off-by: Paul Moore <paul@paul-moore.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This patch should be accompanied by commit 
-0188d5c025ca8fe756ba3193bd7d150139af5a88 ("selinux: fall back to 
-ref-walk if audit is required").  The former is reverting an incorrect 
-fix for bda0be7ad994 ("security: make inode_follow_link RCU-walk 
-aware"), the latter is providing the correct fix for it.
-
+On 2/11/20 1:50 AM, Bjorn Andersson wrote:
+> Introduce a "panic" function in the remoteproc ops table, to allow
+> remoteproc instances to perform operations needed in order to aid in
+> post mortem system debugging, such as flushing caches etc, when the
+> kernel panics. The function can return a number of milliseconds needed
+> by the remote to "settle" and the core will wait the longest returned
+> duration before returning from the panic handler.
 > 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->   security/selinux/avc.c         |   24 ++++++++++++++++++++++--
->   security/selinux/hooks.c       |    5 +++--
->   security/selinux/include/avc.h |    5 +++++
->   3 files changed, 30 insertions(+), 4 deletions(-)
+> 
+> Changes since v2:
+> - Replace per-rproc notifier callback with one generic
+> - Move the mdelay() from the individual drivers to the core and sleep the
+>   longest returned duration. Drivers that doesn't need a delay can return 0.
+> - Unregister the notifier on exit
+> 
+>  drivers/remoteproc/remoteproc_core.c | 46 ++++++++++++++++++++++++++++
+>  include/linux/remoteproc.h           |  3 ++
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 097f33e4f1f3..8b6932027d36 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -16,6 +16,7 @@
+>  
+>  #define pr_fmt(fmt)    "%s: " fmt, __func__
+>  
+> +#include <linux/delay.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/device.h>
+> @@ -43,6 +44,7 @@
+>  
+>  static DEFINE_MUTEX(rproc_list_mutex);
+>  static LIST_HEAD(rproc_list);
+> +static struct notifier_block rproc_panic_nb;
+>  
+>  typedef int (*rproc_handle_resource_t)(struct rproc *rproc,
+>  				 void *, int offset, int avail);
+> @@ -2216,10 +2218,53 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
+>  }
+>  EXPORT_SYMBOL(rproc_report_crash);
+>  
+> +static int rproc_panic_handler(struct notifier_block *nb, unsigned long event,
+> +			       void *ptr)
+> +{
+> +	unsigned int longest = 0;
+> +	struct rproc *rproc;
+> +	unsigned int d;
+> +	int locked;
+> +
+> +	locked = mutex_trylock(&rproc_list_mutex);
+> +	if (!locked) {
+> +		pr_err("Failed to acquire rproc list lock, won't call panic functions\n");
+> +		return NOTIFY_DONE;
+> +	}
+As consequence the panic is not handled for all rproc instance if the mutex is locked.
+it seems to me that the first solution with the delay side effect is more safety...
 
-[...]
+> +
+> +	list_for_each_entry(rproc, &rproc_list, node) {
+> +		if (!rproc->ops->panic || rproc->state != RPROC_RUNNING)
+> +			continue;
+> +
+> +		d = rproc->ops->panic(rproc);
+> +		if (d > longest)
+> +			longest = d;
+> +	}
+> +
+> +	mutex_unlock(&rproc_list_mutex);
+> +
+> +	/* Delay panic for the longest requested duration */
+> +	mdelay(longest);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static void __init rproc_init_panic(void)
+> +{
+> +	rproc_panic_nb.notifier_call = rproc_panic_handler;
+> +	atomic_notifier_chain_register(&panic_notifier_list, &rproc_panic_nb);
+> +}
+> +
+> +static void __exit rproc_exit_panic(void)
+> +{
+> +	atomic_notifier_chain_unregister(&panic_notifier_list, &rproc_panic_nb);
+> +}
+> +
+>  static int __init remoteproc_init(void)
+>  {
+>  	rproc_init_sysfs();
+>  	rproc_init_debugfs();
+> +	rproc_init_panic();
+>  
+>  	return 0;
+>  }
+> @@ -2229,6 +2274,7 @@ static void __exit remoteproc_exit(void)
+>  {
+>  	ida_destroy(&rproc_dev_index);
+>  
+> +	rproc_exit_panic();
+>  	rproc_exit_debugfs();
+>  	rproc_exit_sysfs();
+>  }
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad66683ad0..14f05f26cbcd 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -369,6 +369,8 @@ enum rsc_handling_status {
+>   *			expects to find it
+>   * @sanity_check:	sanity check the fw image
+>   * @get_boot_addr:	get boot address to entry point specified in firmware
+> + * @panic:	optional callback to react to system panic, core will delay
+> + *		panic at least the returned number of milliseconds
+>   */
+>  struct rproc_ops {
+>  	int (*start)(struct rproc *rproc);
+> @@ -383,6 +385,7 @@ struct rproc_ops {
+>  	int (*load)(struct rproc *rproc, const struct firmware *fw);
+>  	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
+>  	u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+> +	unsigned int (*panic)(struct rproc *rproc);
+>  };
+>  
+>  /**
+> 
