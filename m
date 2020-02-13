@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7A3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82958C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8846520675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7A820675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608185;
-	bh=bTaM9z7UZIreCdFbopgJgFvaS0Ot1vVV2fi3Qq0RXyQ=;
+	s=default; t=1581608191;
+	bh=lEO4YbHignNQmcsIfHW/QFde9HJMgYz9/yi3qQh5M3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PeW/UbArBuILTGZmq4T94wSREfsDFgTz5ncY9ZyXvFF+UyZ79FWwmIyI0LBvUUklQ
-	 ihO+i0oXLpD/tmhQk5E1HuJ62X/m9dulFp6zgT0o6ucjb/xpwnQBpHczLUktQDrd8h
-	 B51kxf38zdUkWubUn2wuBxmsbNi/SQEQU7l4jLp8=
+	b=VnGc8O/ycnCk+b00kEM83kJOIEkarfeqWpXor4e+zqeqWdZPwEkBVJTLdVPcjmebq
+	 bYOx0mrRNry2iM89lIUAD0DLZ+DJFqGr3afzDLdq5ci1LFqM/hD8WYTfCmuEdCclhf
+	 zh83fAyIWUy/qb6smOY4rWPM/5vom3Z8n4JkNwPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387969AbgBMPab (ORCPT
+        id S1729339AbgBMPaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729368AbgBMP1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:20 -0500
+        id S1728360AbgBMP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D3C24681;
-        Thu, 13 Feb 2020 15:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11DB92168B;
+        Thu, 13 Feb 2020 15:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607639;
-        bh=bTaM9z7UZIreCdFbopgJgFvaS0Ot1vVV2fi3Qq0RXyQ=;
+        s=default; t=1581607636;
+        bh=lEO4YbHignNQmcsIfHW/QFde9HJMgYz9/yi3qQh5M3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIuIRVq4GN1YNsJQr54pZ0snxBd+eNrGEPQ/mNPEEPtgmiu9mEZzJoMGaLDl3O/z+
-         pjfVVrwUgLCsW2Y0Y7u9uleQGKGPa+zABoVwUysvInM81eOeymEbspFQrTzPcuo27N
-         I4wDxlhFBucW7WC57Ztf6NAZVUZL5SfNSA0O0xeU=
+        b=k3Iuo4mbw+h3tmt5XmWfM5ku0bUFFv3Agn7xnIqpZhJjlyMaGuCGlpbSuJmyNgitu
+         cO0+WXPsRb0VawBCl4SojDcZd0yvZ2RSKoFW55q5PCiBD6JznG49F3V4qcTA6YS73Y
+         Rtb2etb/Ev1KB+aGyZTngVo/hzKwGEEW9srvRbI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Ziswiler <marcel@ziswiler.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.4 17/96] PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
-Date:   Thu, 13 Feb 2020 07:20:24 -0800
-Message-Id: <20200213151846.153218983@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>
+Subject: [PATCH 5.4 22/96] bpf, sockmap: Dont sleep while holding RCU lock on tear-down
+Date:   Thu, 13 Feb 2020 07:20:29 -0800
+Message-Id: <20200213151847.788857297@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -61,43 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel@ziswiler.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-commit 21a92676e1fe292acb077b13106b08c22ed36b14 upstream.
+commit db6a5018b6e008c1d69c6628cdaa9541b8e70940 upstream.
 
-Fix AFI_PEX2_CTRL reg offset for Tegra30 by moving it from the Tegra20
-SoC struct where it erroneously got added. This fixes the AFI_PEX2_CTRL
-reg offset being uninitialised subsequently failing to bring up the
-third PCIe port.
+rcu_read_lock is needed to protect access to psock inside sock_map_unref
+when tearing down the map. However, we can't afford to sleep in lock_sock
+while in RCU read-side critical section. Grab the RCU lock only after we
+have locked the socket.
 
-Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
-Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+This fixes RCU warnings triggerable on a VM with 1 vCPU when free'ing a
+sockmap/sockhash that contains at least one socket:
+
+| =============================
+| WARNING: suspicious RCU usage
+| 5.5.0-04005-g8fc91b972b73 #450 Not tainted
+| -----------------------------
+| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
+|
+| other info that might help us debug this:
+|
+|
+| rcu_scheduler_active = 2, debug_locks = 1
+| 4 locks held by kworker/0:1/62:
+|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_map_free+0x5/0x170
+|  #3: ffff8881368c5df8 (&stab->lock){+...}, at: sock_map_free+0x64/0x170
+|
+| stack backtrace:
+| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73 #450
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  ___might_sleep+0x105/0x190
+|  lock_sock_nested+0x28/0x90
+|  sock_map_free+0x95/0x170
+|  bpf_map_free_deferred+0x58/0x80
+|  process_one_work+0x260/0x5e0
+|  worker_thread+0x4d/0x3e0
+|  kthread+0x108/0x140
+|  ? process_one_work+0x5e0/0x5e0
+|  ? kthread_park+0x90/0x90
+|  ret_from_fork+0x3a/0x50
+
+| =============================
+| WARNING: suspicious RCU usage
+| 5.5.0-04005-g8fc91b972b73-dirty #452 Not tainted
+| -----------------------------
+| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
+|
+| other info that might help us debug this:
+|
+|
+| rcu_scheduler_active = 2, debug_locks = 1
+| 4 locks held by kworker/0:1/62:
+|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_hash_free+0x5/0x1d0
+|  #3: ffff888139966e00 (&htab->buckets[i].lock){+...}, at: sock_hash_free+0x92/0x1d0
+|
+| stack backtrace:
+| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73-dirty #452
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  ___might_sleep+0x105/0x190
+|  lock_sock_nested+0x28/0x90
+|  sock_hash_free+0xec/0x1d0
+|  bpf_map_free_deferred+0x58/0x80
+|  process_one_work+0x260/0x5e0
+|  worker_thread+0x4d/0x3e0
+|  kthread+0x108/0x140
+|  ? process_one_work+0x5e0/0x5e0
+|  ? kthread_park+0x90/0x90
+|  ret_from_fork+0x3a/0x50
+
+Fixes: 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during tear down")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200206111652.694507-2-jakub@cloudflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/pci-tegra.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/sock_map.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra
- 	.num_ports = 2,
- 	.ports = tegra20_pcie_ports,
- 	.msi_base_shift = 0,
--	.afi_pex2_ctrl = 0x128,
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
- 	.pads_refclk_cfg0 = 0xfa5cfa5c,
-@@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra
- 	.num_ports = 3,
- 	.ports = tegra30_pcie_ports,
- 	.msi_base_shift = 8,
-+	.afi_pex2_ctrl = 0x128,
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
- 	.pads_refclk_cfg0 = 0xfa5cfa5c,
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -234,7 +234,6 @@ static void sock_map_free(struct bpf_map
+ 	int i;
+ 
+ 	synchronize_rcu();
+-	rcu_read_lock();
+ 	raw_spin_lock_bh(&stab->lock);
+ 	for (i = 0; i < stab->map.max_entries; i++) {
+ 		struct sock **psk = &stab->sks[i];
+@@ -243,12 +242,13 @@ static void sock_map_free(struct bpf_map
+ 		sk = xchg(psk, NULL);
+ 		if (sk) {
+ 			lock_sock(sk);
++			rcu_read_lock();
+ 			sock_map_unref(sk, psk);
++			rcu_read_unlock();
+ 			release_sock(sk);
+ 		}
+ 	}
+ 	raw_spin_unlock_bh(&stab->lock);
+-	rcu_read_unlock();
+ 
+ 	synchronize_rcu();
+ 
+@@ -859,19 +859,19 @@ static void sock_hash_free(struct bpf_ma
+ 	int i;
+ 
+ 	synchronize_rcu();
+-	rcu_read_lock();
+ 	for (i = 0; i < htab->buckets_num; i++) {
+ 		bucket = sock_hash_select_bucket(htab, i);
+ 		raw_spin_lock_bh(&bucket->lock);
+ 		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
+ 			hlist_del_rcu(&elem->node);
+ 			lock_sock(elem->sk);
++			rcu_read_lock();
+ 			sock_map_unref(elem->sk, elem);
++			rcu_read_unlock();
+ 			release_sock(elem->sk);
+ 		}
+ 		raw_spin_unlock_bh(&bucket->lock);
+ 	}
+-	rcu_read_unlock();
+ 
+ 	bpf_map_area_free(htab->buckets);
+ 	kfree(htab);
 
 
