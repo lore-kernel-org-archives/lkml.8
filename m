@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8CEC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CD6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CF1246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FE62469A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607456;
-	bh=te01ZD4LbuBprhp+ViV8jD2DV5gshQV40JjHVD/CQiM=;
+	s=default; t=1581607459;
+	bh=EA1bzA5FCHK3bM0TRVKO52p7ylLSGuwB1mz7f6eT8qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tfYEpTKh90xiGlhHjOeCvSfWEKCiFkVHsz5wSwn3D5Fi4fus/pgz/5QCuGZ5FYQI6
-	 FoWt2vv78nrw/sAwgfUE2Jj19PWFIlUqRXTj2l/cxn+b01+eprMJgZPPhQzbCTeotZ
-	 226cgFej81qqDrRVdG5452T1R4Qu/AWk2AyHY/bI=
+	b=mPL2cakSEL6j4drN3EL3srGJy/2adcNIBw4m8Yt4JwcI+l8aFMjQmWT62z+6FPC7u
+	 MQY03sUrZDyb+VgH5IRzNDGjggwXayC1g/PHQgkGZmlo+pGbHwn+A7xpA1JbpR//81
+	 6L6m1Rd+S02PJjWfDQfp95xawwcJEBp1wJM2k/J4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgBMPYP (ORCPT
+        id S1728650AbgBMPYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:24:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33914 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:24:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgBMPXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:12 -0500
+        id S1728300AbgBMPXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:13 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD5724693;
-        Thu, 13 Feb 2020 15:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12CC2469C;
+        Thu, 13 Feb 2020 15:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607391;
-        bh=te01ZD4LbuBprhp+ViV8jD2DV5gshQV40JjHVD/CQiM=;
+        s=default; t=1581607393;
+        bh=EA1bzA5FCHK3bM0TRVKO52p7ylLSGuwB1mz7f6eT8qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XREX05Qf4rSH4yl6jRPiJsSsi+pB6xw8kuS1gaq3z+lsrw+/dt8edGg8QLNF8KD0Y
-         3SQHaF/NAQlZw17S1HpSn48YR4sjyxsXDCbPDSx0lnBUp5sqvoyoriR+OsjwYdl69f
-         seKwXGqY3yLQXYiZc3j89HlEty/PiXe5hLuWAFzI=
+        b=YYah6QmKZPMRYAtFjGyDMu2CiCuYdy1TjCNFm12qYRxwjaKkkcdNljIYxCu4G5NMd
+         HOA8h4RVX65iuZ3xU4gsQv+z4irxgcbsOVs38N2rxK2jkbKc0443SOGHOrL0Kpy4Tv
+         R+0/m0oiKnGXR66it9gYxRw4G3IpO57df/zkLAlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 80/91] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
-Date:   Thu, 13 Feb 2020 07:20:37 -0800
-Message-Id: <20200213151853.863070644@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.4 82/91] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
+Date:   Thu, 13 Feb 2020 07:20:39 -0800
+Message-Id: <20200213151854.636489849@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,39 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-commit b9fc5320212efdfb4e08b825aaa007815fd11d16 upstream.
+commit 7980dff398f86a618f502378fa27cf7e77449afa upstream.
 
-A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
-case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
-value, and doesn't report this failure to upper caller.  This patch is to
-fix this issue.
+Add a missing property to GMAC node so that multicast filtering works
+correctly.
 
-Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
-Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arc/boot/dts/axs10x_mb.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4324,7 +4324,8 @@ static int ufshcd_probe_hba(struct ufs_h
- 			ufshcd_init_icc_levels(hba);
- 
- 		/* Add required well known logical units to scsi mid layer */
--		if (ufshcd_scsi_add_wlus(hba))
-+		ret = ufshcd_scsi_add_wlus(hba);
-+		if (ret)
- 			goto out;
- 
- 		scsi_scan_host(hba->host);
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -44,6 +44,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = < 32 >;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&apbclk>;
+ 			clock-names = "stmmaceth";
+ 			max-speed = <100>;
 
 
