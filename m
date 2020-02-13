@@ -2,117 +2,73 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C238C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B793FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BA2217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E55F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=interia.pl header.i=@interia.pl header.b="Kuxf4Ium"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GYYIrWcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbgBMKor (ORCPT
+        id S1729760AbgBMKr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:44:47 -0500
-Received: from smtpo.poczta.interia.pl ([217.74.65.152]:57326 "EHLO
-        smtpo.poczta.interia.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbgBMKoq (ORCPT
+        Thu, 13 Feb 2020 05:47:29 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46878 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgBMKr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:44:46 -0500
-X-Greylist: delayed 441 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 05:44:45 EST
-X-Interia-R: Interia
-X-Interia-R-IP: 185.15.80.246
-X-Interia-R-Helo: <photon.emea.nsn-net.net>
-Received: from photon.emea.nsn-net.net (185-15-80-246.ksi-system.net [185.15.80.246])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by poczta.interia.pl (INTERIA.PL) with ESMTPSA;
-        Thu, 13 Feb 2020 11:37:20 +0100 (CET)
-From:   Radoslaw Smigielski <radoslaw.smigielski@interia.pl>
-To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        alsa-devel@alsa-project.org, corbet@lwn.net, tiwai@suse.com,
-        perex@perex.cz, radoslaw.smigielski@interia.pl
-Subject: [alsa-devel] [PATCH] ALSA: doc: fix snd_hda_intel driver name
-Date:   Thu, 13 Feb 2020 11:36:37 +0100
-Message-Id: <20200213103636.733463-1-radoslaw.smigielski@interia.pl>
-X-Mailer: git-send-email 2.24.1
+        Thu, 13 Feb 2020 05:47:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=P46Gl9kePFHxeW2i2pk4069wZpiHhT83tiM+7F9IPdI=; b=GYYIrWcGAo8ePUcNHlaQ8iUq0w
+        o6HiwAKsZQ8Ij4HXs8lbBp3JtGhUvE/aN2sGq8CuVSpulDDAhDS1YuBEryjtCrGSsKY5iVw9+p6U/
+        dQbFwFl0WHZ86EgY6pFeFvMFv05fiG5klWS8Kkv/R+0vW2D70YMUJoobbAReQ2nKIKN0/GeLu/U8O
+        FsPqJ1NUI0ljNG78PPX5hJuOKviKDU6/0NWschTeJI0pLTCIQgH3YQ6mECxx7CU/Vta80g5nDnbEr
+        zQ8OWZTVisY5uCDFcile6/+KAWoVI5mqPJiaz41damUmqSnQFdYTZduUZrdZbv8Y4JDrfwHLvHlhd
+        yAHoENVA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2C1p-0001DE-24; Thu, 13 Feb 2020 10:47:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5350E3013A4;
+        Thu, 13 Feb 2020 11:45:37 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DAC2120206D69; Thu, 13 Feb 2020 11:47:26 +0100 (CET)
+Date:   Thu, 13 Feb 2020 11:47:26 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stefana@xilinx.com
+Subject: Re: [PATCH] asm-generic/bitops: Update stale comment
+Message-ID: <20200213104726.GO14897@hirez.programming.kicks-ass.net>
+References: <20200213093927.1836-1-will@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Interia-Antivirus: OK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=interia.pl;
-        s=biztos; t=1581590241;
-        bh=gVqMAKSIPkY8OiAd077JlbnTBYo5wVcLt3iZ6loGT8Y=;
-        h=X-Interia-R:X-Interia-R-IP:X-Interia-R-Helo:From:To:Subject:Date:
-         Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-         X-Interia-Antivirus;
-        b=Kuxf4Ium3/75vWo/SUnB0MPiRIZaAhRwFeR3fVI2USNtD0mDfNojDrYcVc7jj4236
-         ja6CwFGQc5CIwIKyNFO2xuKqU4nu06YQ2FuYAffUqfmwzXsA6sJXQg7nf1P37FJcc6
-         XlS8uu5sIaKwuV0GVLrPR6YLjYqX2fFsdBEbuRUs=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213093927.1836-1-will@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update driver name snd-hda-intel to proper, existing driver
-name snd_hda_intel in Documentation/sound/hd-audio/notes.rst.
+On Thu, Feb 13, 2020 at 09:39:27AM +0000, Will Deacon wrote:
+> The comment in 'asm-generic/bitops.h' states that you should "recode
+> these in the native assembly language, if at all possible". This is
+> pretty crappy advice now that the generic implementation is defined in
+> terms of atomic_long_t rather than a spinlock, so update the comment and
+> hopefully save future architecture maintainers a bit of work.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Reported-by: Stefan Asserhall <stefana@xilinx.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
 
-Signed-off-by: Radoslaw Smigielski <radoslaw.smigielski@interia.pl>
----
- Documentation/sound/hd-audio/notes.rst | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/sound/hd-audio/notes.rst b/Documentation/sound/hd-audio/notes.rst
-index 0f3109d9abc8..56ccc15f4d26 100644
---- a/Documentation/sound/hd-audio/notes.rst
-+++ b/Documentation/sound/hd-audio/notes.rst
-@@ -17,12 +17,12 @@ methods for the	HD-audio hardware.
- 
- The HD-audio component consists of two parts: the controller chip and 
- the codec chips on the HD-audio bus.  Linux provides a single driver
--for all controllers, snd-hda-intel.  Although the driver name contains
-+for all controllers, snd_hda_intel.  Although the driver name contains
- a word of a well-known hardware vendor, it's not specific to it but for
- all controller chips by other companies.  Since the HD-audio
- controllers are supposed to be compatible, the single snd-hda-driver
- should work in most cases.  But, not surprisingly, there are known
--bugs and issues specific to each controller type.  The snd-hda-intel
-+bugs and issues specific to each controller type.  The snd_hda_intel
- driver has a bunch of workarounds for these as described below.
- 
- A controller may have multiple codecs.  Usually you have one audio
-@@ -31,7 +31,7 @@ multiple audio codecs, e.g. for analog and digital outputs, and the
- driver might not work properly because of conflict of mixer elements.
- This should be fixed in future if such hardware really exists.
- 
--The snd-hda-intel driver has several different codec parsers depending
-+The snd_hda_intel driver has several different codec parsers depending
- on the codec.  It has a generic parser as a fallback, but this
- functionality is fairly limited until now.  Instead of the generic
- parser, usually the codec-specific parser (coded in patch_*.c) is used
-@@ -226,7 +226,7 @@ the external amplifier bits.  Thus a headphone output has a slightly
- better chance.
- 
- Before making a bug report, double-check whether the mixer is set up
--correctly.  The recent version of snd-hda-intel driver provides mostly
-+correctly.  The recent version of snd_hda_intel driver provides mostly
- "Master" volume control as well as "Front" volume (where Front
- indicates the front-channels).  In addition, there can be individual
- "Headphone" and "Speaker" controls.
-@@ -596,7 +596,7 @@ For example, if you have two cards, one for an on-board analog and one
- for an HDMI video board, you may pass patch option like below:
- ::
- 
--    options snd-hda-intel patch=on-board-patch,hdmi-patch
-+    options snd_hda_intel patch=on-board-patch,hdmi-patch
- 
- 
- Power-Saving
--- 
-2.24.1
-
+Thanks Will!
