@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC69AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94125206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD23B218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607773;
-	bh=FxYiCaXQskh90KrwG3iV7GTqM8cjabD5+J+amsqs1UY=;
+	s=default; t=1581607777;
+	bh=n9qPfzZareJWROB5S1i2u8Q8pzKf0P4hrNCvkAWh3w0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLJbtU0b6TOl0Ga5H3EPl6BVJIZMPiCFrMUEyI8TtcvrEeCPviviHSpHdSK2iHekB
-	 uNpWwVkFIW/sUbeCCqZu7hE0VCK1Lbv0Hu3og3JhXv8rsEaXsCVgjbyN3UpCPXANS8
-	 x6nNsR1VrKFNrtS1CzKrm1THR54vpn4gyNjrGcHc=
+	b=pahiib3JJHobRoZrcQiLVyvO4pBeFbr3OL0i+fUGUxhxb+EZXT6lsZ0IbTK5eNgXH
+	 yO0hKGCR7qydQ3GCBa7GcQrZDObcXZ/FyAyhQFOw85YYALmQF3rf4E5L79tPSU/mia
+	 CPNf8JtQobaHzv1oBkQb4nguUMSkJEVbz+GtQ+Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgBMP3c (ORCPT
+        id S1729595AbgBMP3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46788 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729222AbgBMP0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:42 -0500
+        id S1729230AbgBMP0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:44 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20040206DB;
-        Thu, 13 Feb 2020 15:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DDAF2467C;
+        Thu, 13 Feb 2020 15:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607602;
-        bh=FxYiCaXQskh90KrwG3iV7GTqM8cjabD5+J+amsqs1UY=;
+        s=default; t=1581607603;
+        bh=n9qPfzZareJWROB5S1i2u8Q8pzKf0P4hrNCvkAWh3w0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFuAlbqXc3IDlOuKChBcDYjfnXK9OXaYMPx0TjZ5APSZpL/X6lLj199f/rX7Eas86
-         PNXnR46mQ0K7gYFbUkQ4h1TLrnVq59+tCYe23/5NlwTBSI7tAn4DMP2cAZZ2Xf1WDa
-         Mh89IxhrUDnBvRDuU/g2c9Q31YLayZL7xLzK0rAs=
+        b=VAy6/SfO15ASRcjUOo5b7Z238MDz0kp7yT+7443A0tfY2wRXk9K2pI2+jKlwoEUmq
+         fI/FGXb5QylAy1VQG6mngKsNBrc4lG97edz2L69CzvJYcwuMFMAfasmjdkvVrOGJPd
+         7NSygFAWirhIDv1gKvOmXkh19iD3cTS412pGQQ/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 12/52] nfs: NFS_SWAP should depend on SWAP
-Date:   Thu, 13 Feb 2020 07:20:53 -0800
-Message-Id: <20200213151816.036795353@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.19 41/52] mtd: sharpslpart: Fix unsigned comparison to zero
+Date:   Thu, 13 Feb 2020 07:21:22 -0800
+Message-Id: <20200213151827.127577441@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,38 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc upstream.
+commit f33113b542219448fa02d77ca1c6f4265bd7f130 upstream.
 
-If CONFIG_SWAP=n, it does not make much sense to offer the user the
-option to enable support for swapping over NFS, as that will still fail
-at run time:
+The unsigned variable log_num is being assigned a return value
+from the call to sharpsl_nand_get_logical_num that can return
+-EINVAL.
 
-    # swapon /swap
-    swapon: /swap: swapon failed: Function not implemented
+Detected using Coccinelle:
+./drivers/mtd/parsers/sharpslpart.c:207:6-13: WARNING: Unsigned expression compared with zero: log_num > 0
 
-Fix this by adding a dependency on CONFIG_SWAP.
-
-Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 8a4580e4d298 ("mtd: sharpslpart: Add sharpslpart partition parser")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/parsers/sharpslpart.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -89,7 +89,7 @@ config NFS_V4
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
--	depends on NFS_FS
-+	depends on NFS_FS && SWAP
- 	select SUNRPC_SWAP
- 	help
- 	  This option enables swapon to work on files located on NFS mounts.
+--- a/drivers/mtd/parsers/sharpslpart.c
++++ b/drivers/mtd/parsers/sharpslpart.c
+@@ -165,10 +165,10 @@ static int sharpsl_nand_get_logical_num(
+ 
+ static int sharpsl_nand_init_ftl(struct mtd_info *mtd, struct sharpsl_ftl *ftl)
+ {
+-	unsigned int block_num, log_num, phymax;
++	unsigned int block_num, phymax;
++	int i, ret, log_num;
+ 	loff_t block_adr;
+ 	u8 *oob;
+-	int i, ret;
+ 
+ 	oob = kzalloc(mtd->oobsize, GFP_KERNEL);
+ 	if (!oob)
 
 
