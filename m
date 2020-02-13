@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97750C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF10FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF4D20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A321A218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607624;
-	bh=JnJMKykcCMlxvmwUkHWNd/DN9s2hpkqaD2YmQKTtg9w=;
+	s=default; t=1581607626;
+	bh=rnUAQxha5PjK5HbsT8UT0RJBat2b5wPYL/hdyIgr9r4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FB3YfVQHf7NdY49+xqongqW8XWlS/EI0nAWEr2pZb/E5y5WVNZRG6r26nNoUtF3bf
-	 dZ3+zxpIUk4AtFWX2hf2BOHWZPngIFou6Brv9jmbL8WKgCawrsEYGutioR26/0W6mn
-	 OiGA9XBKEgmBhIJ14QEFzQv2xsfAOiKRQPtfEFxw=
+	b=tRBDeVV/OONFZo1fxmLTpO8GDIK0eUXxbfHnjYTbDDYMjTe2y1wVfai09mPBk9Lai
+	 FApNjTpq4s3skgu/Qn/0zNVk+DPkl+5IAy7BIRqeaXYWKYjH+ijjsFd4hf2fLzcY1l
+	 g+aOtuUoUTIe5cYulcxlqiK0zz7DNhKwUt/utn5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387655AbgBMP1E (ORCPT
+        id S2387668AbgBMP1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgBMPZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728919AbgBMPZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:25:08 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 690CE246B3;
-        Thu, 13 Feb 2020 15:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C526C246A3;
+        Thu, 13 Feb 2020 15:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607507;
-        bh=JnJMKykcCMlxvmwUkHWNd/DN9s2hpkqaD2YmQKTtg9w=;
+        s=default; t=1581607506;
+        bh=rnUAQxha5PjK5HbsT8UT0RJBat2b5wPYL/hdyIgr9r4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bRNW1FHrupTet/G2yeIbuk3zQt/M0eiKSoGEu2u4ZLeqzPYKIBgAiE5pSivosUmsy
-         JBxWdHfc6/KrI01ne0izj0vtsPfKWCmau77MDkLsQmU8LYaGhLLE1wfIySN2cYHojZ
-         ZjlnM7zmqNvFFwHM/K2krGY1cccyCSOMuZxzd8FQ=
+        b=MCfDcfWmwNhg6BB8Vh1sZt5T4lTslmaW25Eis7JtKfTavtnLzAujr6+crJ2+L+lSE
+         DaFfTJrX4Z310AOyHN91ZmUZdHQbYdPzCD0PYU9GfEH4RxPmeDXQMN/+/JZCvFyt9N
+         oIq1ZmJ8tUfhtz0XzKAKYhYrCCBKoCTVMemOI2SU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 066/173] crypto: api - Fix race condition in crypto_spawn_alg
-Date:   Thu, 13 Feb 2020 07:19:29 -0800
-Message-Id: <20200213151950.383288559@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 065/173] crypto: atmel-aes - Fix counter overflow in CTR mode
+Date:   Thu, 13 Feb 2020 07:19:28 -0800
+Message-Id: <20200213151950.113618457@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -58,82 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-commit 73669cc556462f4e50376538d77ee312142e8a8a upstream.
+commit 781a08d9740afa73357f1a60d45d7c93d7cca2dd upstream.
 
-The function crypto_spawn_alg is racy because it drops the lock
-before shooting the dying algorithm.  The algorithm could disappear
-altogether before we shoot it.
+32 bit counter is not supported by neither of our AES IPs, all implement
+a 16 bit block counter. Drop the 32 bit block counter logic.
 
-This patch fixes it by moving the shooting into the locked section.
-
-Fixes: 6bfd48096ff8 ("[CRYPTO] api: Added spawns")
+Fixes: fcac83656a3e ("crypto: atmel-aes - fix the counter overflow in CTR mode")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c   |   16 +++++-----------
- crypto/api.c      |    3 +--
- crypto/internal.h |    1 -
- 3 files changed, 6 insertions(+), 14 deletions(-)
+ drivers/crypto/atmel-aes.c |   37 ++++++++++++-------------------------
+ 1 file changed, 12 insertions(+), 25 deletions(-)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -662,22 +662,16 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
- static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
- {
- 	struct crypto_alg *alg;
--	struct crypto_alg *alg2;
+--- a/drivers/crypto/atmel-aes.c
++++ b/drivers/crypto/atmel-aes.c
+@@ -91,7 +91,6 @@
+ struct atmel_aes_caps {
+ 	bool			has_dualbuff;
+ 	bool			has_cfb64;
+-	bool			has_ctr32;
+ 	bool			has_gcm;
+ 	bool			has_xts;
+ 	bool			has_authenc;
+@@ -990,8 +989,9 @@ static int atmel_aes_ctr_transfer(struct
+ 	struct atmel_aes_ctr_ctx *ctx = atmel_aes_ctr_ctx_cast(dd->ctx);
+ 	struct ablkcipher_request *req = ablkcipher_request_cast(dd->areq);
+ 	struct scatterlist *src, *dst;
+-	u32 ctr, blocks;
+ 	size_t datalen;
++	u32 ctr;
++	u16 blocks, start, end;
+ 	bool use_dma, fragmented = false;
  
- 	down_read(&crypto_alg_sem);
- 	alg = spawn->alg;
--	alg2 = alg;
--	if (alg2)
--		alg2 = crypto_mod_get(alg2);
--	up_read(&crypto_alg_sem);
+ 	/* Check for transfer completion. */
+@@ -1003,27 +1003,17 @@ static int atmel_aes_ctr_transfer(struct
+ 	datalen = req->nbytes - ctx->offset;
+ 	blocks = DIV_ROUND_UP(datalen, AES_BLOCK_SIZE);
+ 	ctr = be32_to_cpu(ctx->iv[3]);
+-	if (dd->caps.has_ctr32) {
+-		/* Check 32bit counter overflow. */
+-		u32 start = ctr;
+-		u32 end = start + blocks - 1;
 -
--	if (!alg2) {
--		if (alg)
--			crypto_shoot_alg(alg);
--		return ERR_PTR(-EAGAIN);
-+	if (alg && !crypto_mod_get(alg)) {
-+		alg->cra_flags |= CRYPTO_ALG_DYING;
-+		alg = NULL;
+-		if (end < start) {
+-			ctr |= 0xffffffff;
+-			datalen = AES_BLOCK_SIZE * -start;
+-			fragmented = true;
+-		}
+-	} else {
+-		/* Check 16bit counter overflow. */
+-		u16 start = ctr & 0xffff;
+-		u16 end = start + (u16)blocks - 1;
+-
+-		if (blocks >> 16 || end < start) {
+-			ctr |= 0xffff;
+-			datalen = AES_BLOCK_SIZE * (0x10000-start);
+-			fragmented = true;
+-		}
++
++	/* Check 16bit counter overflow. */
++	start = ctr & 0xffff;
++	end = start + blocks - 1;
++
++	if (blocks >> 16 || end < start) {
++		ctr |= 0xffff;
++		datalen = AES_BLOCK_SIZE * (0x10000 - start);
++		fragmented = true;
  	}
-+	up_read(&crypto_alg_sem);
++
+ 	use_dma = (datalen >= ATMEL_AES_DMA_THRESHOLD);
  
--	return alg;
-+	return alg ?: ERR_PTR(-EAGAIN);
- }
- 
- struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
---- a/crypto/api.c
-+++ b/crypto/api.c
-@@ -339,13 +339,12 @@ static unsigned int crypto_ctxsize(struc
- 	return len;
- }
- 
--void crypto_shoot_alg(struct crypto_alg *alg)
-+static void crypto_shoot_alg(struct crypto_alg *alg)
+ 	/* Jump to offset. */
+@@ -2536,7 +2526,6 @@ static void atmel_aes_get_cap(struct atm
  {
- 	down_write(&crypto_alg_sem);
- 	alg->cra_flags |= CRYPTO_ALG_DYING;
- 	up_write(&crypto_alg_sem);
- }
--EXPORT_SYMBOL_GPL(crypto_shoot_alg);
- 
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask)
---- a/crypto/internal.h
-+++ b/crypto/internal.h
-@@ -84,7 +84,6 @@ void crypto_alg_tested(const char *name,
- void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
- 			  struct crypto_alg *nalg);
- void crypto_remove_final(struct list_head *list);
--void crypto_shoot_alg(struct crypto_alg *alg);
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask);
- void *crypto_create_tfm(struct crypto_alg *alg,
+ 	dd->caps.has_dualbuff = 0;
+ 	dd->caps.has_cfb64 = 0;
+-	dd->caps.has_ctr32 = 0;
+ 	dd->caps.has_gcm = 0;
+ 	dd->caps.has_xts = 0;
+ 	dd->caps.has_authenc = 0;
+@@ -2547,7 +2536,6 @@ static void atmel_aes_get_cap(struct atm
+ 	case 0x500:
+ 		dd->caps.has_dualbuff = 1;
+ 		dd->caps.has_cfb64 = 1;
+-		dd->caps.has_ctr32 = 1;
+ 		dd->caps.has_gcm = 1;
+ 		dd->caps.has_xts = 1;
+ 		dd->caps.has_authenc = 1;
+@@ -2556,7 +2544,6 @@ static void atmel_aes_get_cap(struct atm
+ 	case 0x200:
+ 		dd->caps.has_dualbuff = 1;
+ 		dd->caps.has_cfb64 = 1;
+-		dd->caps.has_ctr32 = 1;
+ 		dd->caps.has_gcm = 1;
+ 		dd->caps.max_burst_size = 4;
+ 		break;
 
 
