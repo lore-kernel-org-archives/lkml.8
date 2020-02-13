@@ -2,117 +2,280 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FEAC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A0DC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCE220656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A3422314
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:11:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AA1bG+yk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onppwLIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgBMTLL (ORCPT
+        id S1728399AbgBMTLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:11:11 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36655 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbgBMTLK (ORCPT
+        Thu, 13 Feb 2020 14:11:42 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33418 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgBMTLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:11:10 -0500
-Received: by mail-qk1-f195.google.com with SMTP id w25so6797815qki.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:11:09 -0800 (PST)
+        Thu, 13 Feb 2020 14:11:41 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m10so402159wmc.0;
+        Thu, 13 Feb 2020 11:11:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=z7aOSWuLEXC3QWm9MD9qurhQUfeTA+/4KGcCkfiOHcE=;
-        b=AA1bG+ykJH1UNb4pxYT1DRp8cQUs/hJcgAG0vxemSOa9k56a2nqHwlEcU7womP4vnj
-         BWhSfUtBs7pLrN5+tbQ6R4n5gcJ+RszY/1WlT+4c54AHBK0rLB2E0qsZfPa0DNEmJnn5
-         ddTz4chJRjClFHzJhRhuCtNf6qqvdpbn+AWyS0IEoucJf9SQI1wyqnPvUsVR22SOUNRE
-         JwNaiIjjd3Ng7io91MJ1iv5yduR/rlagirKMiLGINMtyKeFAoS6y9FZhWKD6zYyG6yJP
-         TC5rDD4hvG1w1OWwF8cds08P7WtMrDgB7TlIm/+WyyQTAXaZpvScplKts1RpXW/0HRjY
-         bznw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0EDsDdiwq5f7W72k6Nk7kffc27M29KHICkiSL1JVU7E=;
+        b=onppwLInpbb07lkma5m1g5wCPGLj9ft03H8fu0z++DX3DFKLFK3F82jjo3u2KXcmu+
+         VrVaagBk0sJQtGMZe9vME2jKsYvrz4dLQUSIMeOQw84kDiFNJldfT1049Td7jdkb4ozo
+         wIbJGhPsbPAmZC6LMclQLyiVNQxksYxFlAfpMxuJeZM/rPm4IxhOejBn9QwA73wuSVuq
+         ntn7U2rIAWoJ/N+/XjPXClGoFGJwBn7mhL+K+Hc6ogcHjuF4CxhY5ABHW8nKFtT/Im9p
+         cJYhc5Pfu0cEmrAvBARwaHCus0N+22NIIBgWuMmOzAKoeNnO9ULgEK1TIiOwi7VO9ery
+         1FZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=z7aOSWuLEXC3QWm9MD9qurhQUfeTA+/4KGcCkfiOHcE=;
-        b=tCb8aayLd3/VbTqzF4n9mA1uYN4zhgdFQ6f94hiPsc0ITVS78jtUeIIZp8RUvXdK/e
-         qaFr3omFWz8CStpxlrRcHbX29mr99kLXvxXD54fNzcbjDG4Mp9S/0vcosL2YYODIYx1z
-         gsQuSF6mvyx6rGUnPJ6OnmVCistL8Fo/K/DHBTXS7Ge0ybMxt5f3DHc9c3W4S31LWzsn
-         Qr4itRHDgFXUbVR7zU9z2T2qhoKslONvX5b6igK1uDs7GxQ27EuWAoCCpXZuhAjTEERL
-         5dNG3ULUYBwHD75GbOwlt+CctTA7+cIA/f23UYll5S/bJGkRs+mNNf2Topb4/GxBlgNG
-         tjAw==
-X-Gm-Message-State: APjAAAWEyY9GVuBA2qWL+SprSu9XilSRjX1EGGyo6gPSXP2MJYwtl5Qm
-        j7izHQVgSQZhkiukO2EbiUgJzGlwWpkMiQ==
-X-Google-Smtp-Source: APXvYqwuYuovSukDYVadOXJ2XDdtto4wITPY05K566ucI4/YjzeB2b8/J+smH2s5pGfSSKdn5i447Q==
-X-Received: by 2002:a37:6785:: with SMTP id b127mr15647287qkc.240.1581621069498;
-        Thu, 13 Feb 2020 11:11:09 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id m10sm1800193qki.74.2020.02.13.11.11.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 11:11:08 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j2JtE-0002YV-Ej; Thu, 13 Feb 2020 15:11:08 -0400
-Date:   Thu, 13 Feb 2020 15:11:08 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        gcwilson@linux.ibm.com
-Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
-Message-ID: <20200213191108.GO31668@ziepe.ca>
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
- <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
- <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
- <20200213183508.GL31668@ziepe.ca>
- <b424faea-33a7-8e5a-caac-f322fad68118@linux.ibm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=0EDsDdiwq5f7W72k6Nk7kffc27M29KHICkiSL1JVU7E=;
+        b=NXp67muaqCJYaZAazA/hCoaC2P2fbAs19pLzEdh+c97NZEaa7lwkhK+kPMOLrm9rvX
+         ahZG34XHqSnl7cXcRm+eryiP6L07Z+LuWhc4W3ksjTRwqq7JYIn8ivB3CtCXJ9IDPq5R
+         sejvpvSoPvupELOViJfIMxM/FQmJbifIAmZwBlZGiyFUXZtrSH24EEflpdFjCfSyXV0x
+         GiZsDhv6L5oykRHl/uRcqBooF8kAnspn03ntogAG+4liNwxkUiDjwFSUBJXDnRgP8jSh
+         u2VcGy7QaRBJAZDCW/W5ETSYSJrMu8qHLP5iTkgkxvh8m/mC9+zoI7+FAaBXGno5epGa
+         pYgw==
+X-Gm-Message-State: APjAAAVRiqSuhgaEmdMBJ8Te0+toVMM8S26KI3vpx9tToRG3MJod/fBr
+        nxkbx3xZr2I3fOYJBXNiaNeNAzb6
+X-Google-Smtp-Source: APXvYqx2s5MmQMEBXMR0enXNSoOn/QD3eR9v2XVb2TGMg485KrL3QlN9ThOn2SdVRFbQnBmNR6hnVg==
+X-Received: by 2002:a1c:a952:: with SMTP id s79mr7608280wme.83.1581621096804;
+        Thu, 13 Feb 2020 11:11:36 -0800 (PST)
+Received: from ziggy.stardust ([37.223.145.31])
+        by smtp.gmail.com with ESMTPSA id o77sm4430186wme.34.2020.02.13.11.11.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2020 11:11:36 -0800 (PST)
+Subject: Re: [resend PATCH v6 06/12] clk: mediatek: mt2701: switch mmsys to
+ platform device probing
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com
+Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
+        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
+        frank-w@public-files.de, drinkcat@chromium.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, mbrugger@suse.com
+References: <20191207224740.24536-1-matthias.bgg@kernel.org>
+ <20191207224740.24536-7-matthias.bgg@kernel.org>
+ <c08e8d32-6126-7be3-4f5a-1b94a175a339@collabora.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f998ae82-fbbd-c5d8-00d6-e2196eac5a5c@gmail.com>
+Date:   Thu, 13 Feb 2020 20:11:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <c08e8d32-6126-7be3-4f5a-1b94a175a339@collabora.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b424faea-33a7-8e5a-caac-f322fad68118@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:04:12PM -0500, Stefan Berger wrote:
-> On 2/13/20 1:35 PM, Jason Gunthorpe wrote:
-> > On Thu, Feb 13, 2020 at 01:20:12PM -0500, Stefan Berger wrote:
-> > 
-> > > I don't want side effects for the TPM 1.2 case here, so I am only modifying
-> > > the flag for the case where the new TPM 2 is being used.  Here's the code
-> > > where it shows the effect.
-> > I'm surprised this driver is using AUTO_STARTUP, it was intended for
-> > embedded cases where their is no firmware to boot the TPM.
+
+
+On 09/12/2019 10:58, Enric Balletbo i Serra wrote:
+> Hi Matthias,
 > 
-> The TIS is also using it on any device.
-
-TIS is a generic driver, and can run on TPMs without firmware
-support. It doesn't know either way
-
-> > Chips using AUTO_STARTUP are basically useless for PCRs/etc.
-> > 
-> > I'd expect somthing called vtpm to have been started and PCRs working
-> > before Linux is started??
+> On 7/12/19 23:47, matthias.bgg@kernel.org wrote:
+>> From: Matthias Brugger <mbrugger@suse.com>
+>>
+>> Switch probing for the MMSYS to support invocation to a plain
+>> paltform device. The driver will be probed by the DRM subsystem.
+>>
+>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+>> ---
+>>  drivers/clk/mediatek/clk-mt2701-mm.c | 41 ++++++++++++++++++++--------
+>>  1 file changed, 29 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/clk/mediatek/clk-mt2701-mm.c b/drivers/clk/mediatek/clk-mt2701-mm.c
+>> index 054b597d4a73..4a9433c2b2b8 100644
+>> --- a/drivers/clk/mediatek/clk-mt2701-mm.c
+>> +++ b/drivers/clk/mediatek/clk-mt2701-mm.c
+>> @@ -4,14 +4,20 @@
+>>   * Author: Shunli Wang <shunli.wang@mediatek.com>
+>>   */
+>>  
+>> +#include <linux/module.h>
+>>  #include <linux/clk-provider.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>>  
+>>  #include "clk-mtk.h"
+>>  #include "clk-gate.h"
+>>  
+>>  #include <dt-bindings/clock/mt2701-clk.h>
+>>  
+>> +struct clk_mt2701_mm_priv {
+>> +	struct clk_onecell_data *clk_data;
+>> +};
+>> +
+>>  static const struct mtk_gate_regs disp0_cg_regs = {
+>>  	.set_ofs = 0x0104,
+>>  	.clr_ofs = 0x0108,
+>> @@ -79,23 +85,25 @@ static const struct mtk_gate mm_clks[] = {
+>>  	GATE_DISP1(CLK_MM_TVE_FMM, "mm_tve_fmm", "mm_sel", 14),
+>>  };
+>>  
+>> -static const struct of_device_id of_match_clk_mt2701_mm[] = {
+>> -	{ .compatible = "mediatek,mt2701-mmsys", },
+>> -	{}
+>> -};
+>> -
+>>  static int clk_mt2701_mm_probe(struct platform_device *pdev)
+>>  {
+>> -	struct clk_onecell_data *clk_data;
+>>  	int r;
+>> -	struct device_node *node = pdev->dev.of_node;
+>> +	struct device_node *node = pdev->dev.parent->of_node;
+>> +	struct clk_mt2701_mm_priv *private;
+>> +
+>> +	private = devm_kzalloc(&pdev->dev, sizeof(*private), GFP_KERNEL);
+>> +	if (!private)
+>> +		return -ENOMEM;
+>>  
+>> -	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
+>> +	private->clk_data = mtk_alloc_clk_data(CLK_MM_NR);
+>> +
+>> +	platform_set_drvdata(pdev, private);
+>>  
+>>  	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+>> -						clk_data);
+>> +					private->clk_data);
+>>  
+>> -	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+>> +	r = of_clk_add_provider(node, of_clk_src_onecell_get,
+>> +					private->clk_data);
+>>  	if (r)
+>>  		dev_err(&pdev->dev,
+>>  			"could not register clock provider: %s: %d\n",
+>> @@ -104,12 +112,21 @@ static int clk_mt2701_mm_probe(struct platform_device *pdev)
+>>  	return r;
+>>  }
+>>  
+>> +static int clk_mt2701_mm_remove(struct platform_device *pdev)
+>> +{
+>> +	struct clk_mt2701_mm_priv *private = platform_get_drvdata(pdev);
+>> +
 > 
-> Yes, there's supposed to be firmware.
+> I think that private->clk_data->clks is also kallocated and need to be freed?
 > 
-> I only see one caller to tpm2_get_cc_attrs_tbl(chip), which is necessary to
-> call. This caller happens to be in tpm2_auto_startup.
+> But I think that the best approach now is to switch to use devm allocations in
+> clk-mt2701-mm.c and this remove function will not be needed.
+> 
 
-That seems to be a mistake, proper startup of the driver should never
-require auto_startup.
+This is an API change which will affect over 50 drivers. For now I'll fix it by
+adding a kfree here. I will send a follow-up patch to fix it in the API.
 
-Jason
+Good catch!
+Matthias
+
+>> +	kfree(private->clk_data);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct platform_driver clk_mt2701_mm_drv = {
+>>  	.probe = clk_mt2701_mm_probe,
+>> +	.remove = clk_mt2701_mm_remove,
+>>  	.driver = {
+>>  		.name = "clk-mt2701-mm",
+>> -		.of_match_table = of_match_clk_mt2701_mm,
+>>  	},
+>>  };
+>>  
+>> -builtin_platform_driver(clk_mt2701_mm_drv);
+>> +module_platform_driver(clk_mt2701_mm_drv);
+>>
