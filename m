@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CBCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571BAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE82820661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2623420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608934;
-	bh=NgX8wyTHWttDUMNrQNVTxLWbcjk8WcO2caukKTG395Y=;
+	s=default; t=1581608940;
+	bh=7OZtItf/0dIUR/Bw9IMQi3zppq5EypSGVvdPlW5Lseg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HrdO7cMuXUNzggEUXLOWCM9/I+57jfMPfpoFAsx2+1yqlklHIYYitQcOfCXnH7fSa
-	 /AAz6r+NvnUNORAfwp8XluasKYHuc01dHRUtQ6SP21hHDfOR67znNEinUlkS9b1N/N
-	 t+BZQyypeZW4n67VdEOxVsiwYwtV+oPrEK6+Oe7U=
+	b=MI19HIXkLSasMtFQ3iI90fhdsAX6bndfZuTljYHam8Zi94a54uX+rl8m8MeG1cuF7
+	 BztnCIQxV0ClENmnHmnYkzPAYIcQXI1BL2NWOm/arnpGenI1JeRCvNuhIrJg/B21z6
+	 vu5SjnGm3E7gadoveDg+fom4O4CFe5vpKGzv0j6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbgBMPst (ORCPT
+        id S2387894AbgBMPs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:48:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47522 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:48:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729261AbgBMP0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:51 -0500
+        id S1729258AbgBMP0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:50 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F343206DB;
-        Thu, 13 Feb 2020 15:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC38E2467B;
+        Thu, 13 Feb 2020 15:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607610;
-        bh=NgX8wyTHWttDUMNrQNVTxLWbcjk8WcO2caukKTG395Y=;
+        bh=7OZtItf/0dIUR/Bw9IMQi3zppq5EypSGVvdPlW5Lseg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PC9YqrgWd2BHaFeRIBNQ20D54bXdXvtsMPbjINpLYYu/YIsZAtXfn0d8kJhQCtumj
-         csRe8YhNNOElCp1PlSZWEiK9coYfgdNEJc4i1advKEroFAhV/bUZZb4aBuDvf+QJ5N
-         Bo7Sqjdilvg2+9s6kbmhY4XCwQoIXtJ0cCWU/+u8=
+        b=x/w3iOj3swm3lDnKoJrvuaTLrDAFYdoEaQYHqTQfbH4DA6hssUCf409r8OXcq7N94
+         3Ax07YqsobWfCSPgDFNktsHyrKIhwgMlV6DRo80gPASrqpvNaJHuqYU0a86y2Jc6AE
+         uCvOSjr2XK3eHD3D2gytkjDUcrU0FXImiL0+sUCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ard Biesheuvel <ardb@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 4.19 35/52] arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
-Date:   Thu, 13 Feb 2020 07:21:16 -0800
-Message-Id: <20200213151824.606889192@linuxfoundation.org>
+Subject: [PATCH 4.19 34/52] arm64: cpufeature: Fix the type of no FP/SIMD capability
+Date:   Thu, 13 Feb 2020 07:21:15 -0800
+Message-Id: <20200213151824.124180177@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -64,10 +64,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit c9d66999f064947e6b577ceacc1eb2fbca6a8d3c upstream.
+commit 449443c03d8cfdacf7313e17779a2594ebf87e6d upstream.
 
-When fp/simd is not supported on the system, fail the operations
-of FP/SIMD regsets.
+The NO_FPSIMD capability is defined with scope SYSTEM, which implies
+that the "absence" of FP/SIMD on at least one CPU is detected only
+after all the SMP CPUs are brought up. However, we use the status
+of this capability for every context switch. So, let us change
+the scope to LOCAL_CPU to allow the detection of this capability
+as and when the first CPU without FP is brought up.
+
+Also, the current type allows hotplugged CPU to be brought up without
+FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
+up. Fix both of these issues by changing the capability to
+BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
 
 Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
 Cc: Will Deacon <will@kernel.org>
@@ -79,80 +88,19 @@ Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/ptrace.c |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm64/kernel/cpufeature.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -627,6 +627,13 @@ static int gpr_set(struct task_struct *t
- 	return 0;
- }
- 
-+static int fpr_active(struct task_struct *target, const struct user_regset *regset)
-+{
-+	if (!system_supports_fpsimd())
-+		return -ENODEV;
-+	return regset->n;
-+}
-+
- /*
-  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
-  */
-@@ -649,6 +656,9 @@ static int fpr_get(struct task_struct *t
- 		   unsigned int pos, unsigned int count,
- 		   void *kbuf, void __user *ubuf)
- {
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	if (target == current)
- 		fpsimd_preserve_current_state();
- 
-@@ -688,6 +698,9 @@ static int fpr_set(struct task_struct *t
- {
- 	int ret;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	ret = __fpr_set(target, regset, pos, count, kbuf, ubuf, 0);
- 	if (ret)
- 		return ret;
-@@ -990,6 +1003,7 @@ static const struct user_regset aarch64_
- 		 */
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
-+		.active = fpr_active,
- 		.get = fpr_get,
- 		.set = fpr_set
- 	},
-@@ -1176,6 +1190,9 @@ static int compat_vfp_get(struct task_st
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
- 
- 	if (target == current)
-@@ -1209,6 +1226,9 @@ static int compat_vfp_set(struct task_st
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
- 
- 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
-@@ -1266,6 +1286,7 @@ static const struct user_regset aarch32_
- 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
- 		.size = sizeof(compat_ulong_t),
- 		.align = sizeof(compat_ulong_t),
-+		.active = fpr_active,
- 		.get = compat_vfp_get,
- 		.set = compat_vfp_set
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1241,7 +1241,7 @@ static const struct arm64_cpu_capabiliti
+ 	{
+ 		/* FP/SIMD is not implemented */
+ 		.capability = ARM64_HAS_NO_FPSIMD,
+-		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
+ 		.min_field_value = 0,
+ 		.matches = has_no_fpsimd,
  	},
 
 
