@@ -2,55 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7827C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3937C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B28A20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9002D20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608492;
-	bh=K+s38cj5BHIKmV+617PonKL6SoRCkEgPvgG0+Aam/6U=;
+	s=default; t=1581608494;
+	bh=5kwNS4XKm3AZXsdFsl8F+9R4Dv3SzGpFpihSZp9kgfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uQGJ0BcI6TIRutVvu5a/nv5s9ZgGQWka8LKGllXlA4wC+dd6CAeZIrVuKX/v306Bn
-	 OebXC4ucSY8F7xihKIQBVLSmVniaaTuWUjcMloEkWVQ440crlvlIqhilYfOwwvqGPA
-	 NgGkk1KL1oudhrW4EuRwyeeEwDHh+E0U3Djloj84=
+	b=ENsGeJoJs5DHol1/dYXrU0LKtPRmrhKe2NSo+jh9BsqSAHpeAxp0Vk5HIoiyoyGMs
+	 1rU4l8TgX6VN+VENee4Dto6+fTm/GTUXCuCh2c6VVl74W4f3hM8NzxFwmBSNJOmthN
+	 Xq0L4+QU739POi0OtYV5PQkPp3G2nieypvz7ISNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387718AbgBMP2c (ORCPT
+        id S1729707AbgBMPld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42754 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:41:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgBMPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:55 -0500
+        id S2387719AbgBMP2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:33 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 360B1246A4;
-        Thu, 13 Feb 2020 15:25:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B40F222C2;
+        Thu, 13 Feb 2020 15:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607555;
-        bh=K+s38cj5BHIKmV+617PonKL6SoRCkEgPvgG0+Aam/6U=;
+        s=default; t=1581607712;
+        bh=5kwNS4XKm3AZXsdFsl8F+9R4Dv3SzGpFpihSZp9kgfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWqS6glmpMKny5sNxnwf7CgsAxhBQjIqBowz9TDlJ01oj+RNAi0eSlFaaaBp8BFeH
-         wee4LrgZCN0JysxSvVymlf/wl9aQNP8EfeHYzS3iZEPYRKzs3HqTz8lX3AWB73bvlu
-         Ha2xxZeMDcyN33jJUYj6voDJEmIadOLLJRuZ3JKU=
+        b=Rlxl2RnjE9msQsnL3Yhohul7G+Tc1/o2IqGBsRqR5wK2kRxPetpg6GGwQWT/K2wUF
+         jyD1E4NUNQPW15hUN3Sg/qHFkEJAwdzJk+WouE3QUVCbrv8R2habI2y0+cFuQzq5HZ
+         6nJkAzCSqBvOvkbW4pz8uoY6vvu8RvNdecbM4cpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 140/173] rxrpc: Fix service call disconnection
-Date:   Thu, 13 Feb 2020 07:20:43 -0800
-Message-Id: <20200213152007.050589400@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.5 033/120] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Date:   Thu, 13 Feb 2020 07:20:29 -0800
+Message-Id: <20200213151913.099664754@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+References: <20200213151901.039700531@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,63 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-[ Upstream commit b39a934ec72fa2b5a74123891f25273a38378b90 ]
+commit 924491f2e476f7234d722b24171a4daff61bbe13 upstream.
 
-The recent patch that substituted a flag on an rxrpc_call for the
-connection pointer being NULL as an indication that a call was disconnected
-puts the set_bit in the wrong place for service calls.  This is only a
-problem if a call is implicitly terminated by a new call coming in on the
-same connection channel instead of a terminating ACK packet.
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
+we return EIO to applications without even trying to recover.
 
-In such a case, rxrpc_input_implicit_end_call() calls
-__rxrpc_disconnect_call(), which is now (incorrectly) setting the
-disconnection bit, meaning that when rxrpc_release_call() is later called,
-it doesn't call rxrpc_disconnect_call() and so the call isn't removed from
-the peer's error distribution list and the list gets corrupted.
+Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-KASAN finds the issue as an access after release on a call, but the
-position at which it occurs is confusing as it appears to be related to a
-different call (the call site is where the latter call is being removed
-from the error distribution list and either the next or pprev pointer
-points to a previously released call).
-
-Fix this by moving the setting of the flag from __rxrpc_disconnect_call()
-to rxrpc_disconnect_call() in the same place that the connection pointer
-was being cleared.
-
-Fixes: 5273a191dca6 ("rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/conn_object.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 13b29e491de91..af02328205979 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -163,8 +163,6 @@ void __rxrpc_disconnect_call(struct rxrpc_connection *conn,
- 
- 	_enter("%d,%x", conn->debug_id, call->cid);
- 
--	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
--
- 	if (rcu_access_pointer(chan->call) == call) {
- 		/* Save the result of the call so that we can repeat it if necessary
- 		 * through the channel, whilst disposing of the actual call record.
-@@ -209,6 +207,7 @@ void rxrpc_disconnect_call(struct rxrpc_call *call)
- 	__rxrpc_disconnect_call(conn, call);
- 	spin_unlock(&conn->channel_lock);
- 
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
- 	conn->idle_timestamp = jiffies;
- }
- 
--- 
-2.20.1
-
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(s
+ 			exception.retry = 1;
+ 			continue;
+ 		}
++		if (status == -NFS4ERR_EXPIRED) {
++			nfs4_schedule_lease_recovery(server->nfs_client);
++			exception.retry = 1;
++			continue;
++		}
+ 		if (status == -EAGAIN) {
+ 			/* We must have found a delegation */
+ 			exception.retry = 1;
 
 
