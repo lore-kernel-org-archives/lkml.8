@@ -2,281 +2,211 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECB6C3B187
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C850FC3B186
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B225218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581552478;
-	bh=u6iaYyGwxxu/IxPtImkGBfiKtyL5Nr1FL46eS6ShEaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=koq/AowX2D4fuCCkXUBaVIUoBTCmevXgtnD5UztnmynOZAD/6P/JjJkopmefOO4Sp
-	 SwKSweWaurS0AiFb1Kc/FZohixduSmXYF3D+lwPXjC9JBoYmtbvVw3RFKVWeY8MUY2
-	 zi8oQR6N4Ue4iXzE4tFcknoGj9E1UywqW65WtCiY=
+	by mail.kernel.org (Postfix) with ESMTP id 96514206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="cgZdKtHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbgBMAH6 (ORCPT
+        id S1729316AbgBMAJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:07:58 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46676 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgBMAH5 (ORCPT
+        Wed, 12 Feb 2020 19:09:51 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41965 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729176AbgBMAJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:07:57 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e21so3061078qtp.13;
-        Wed, 12 Feb 2020 16:07:56 -0800 (PST)
+        Wed, 12 Feb 2020 19:09:50 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c26so4558004eds.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:09:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Xp7j+w+mSRWprEP7jKf4yInMPuuxYmE0Jx4GMGEDPCQ=;
-        b=jmvVOhaXi+4hUwokVKiclEzfFZs0kumgKecddVwQJ6W4BYeb4eunfR42QH1BanKgXe
-         MWQhbMX2xwNbvy0w6kTd2sh93gkpDWROStsMnfu41dD9mtVfKl5N/rEJCKmqqY4aoAcn
-         kpev9dqGLS1dzO5YtQPFJGED458NEkCaq8BEWGqGQcyVhuH/okSHYJfODuu/8aZmP4cG
-         C3ZXndp9Fcx2UthovyxMFXfFmE7hwC77Y/SZbgnh3Ul4OJATixPYCRxJfupisKXfC2C1
-         oGZSd76/0NwAuj1H3V+4klnwdDUYqolEtgnvSXfBSw3iRwkHKOmYNLCadx1UHUFV8fTN
-         Nsbw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HglMhRV1r3SlCbyh50p8XWXMifi0DbV0medDPmHPWIY=;
+        b=cgZdKtHSkw6wGlofy5ORamY4majYp5ZL8xVC4i2IAjxKZ+DIoA+RHnKzW5rqBgKYhH
+         gYPFParo3CDZbz5ML9ncCpAGxaZIqwx9I1HFgW7sEUl7WXlTFQtoX17ClMgO6pBPOyvF
+         U+UR9ZzRqd3M0HuauEVRrm6SsbkzDwCTV0jTOz2x48ia2WVNYy7+UwckGmY7T5U21yyp
+         p+2nblF0CL7Gywq8jeENvPPsr4unR99eYMqiQBn4r8CfJZzu/+Sh4crQxD06V5Xtfp6z
+         BNvTs4R1mnuLI2tUL4OGNyHhlSKD8k9P4AuCDtX3Yp6Wk3ra+TvmSr/YUAo0vI0Ah2ld
+         YzmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Xp7j+w+mSRWprEP7jKf4yInMPuuxYmE0Jx4GMGEDPCQ=;
-        b=hDWJu8nIZL3fgb9prQlc26AjjMLjIS+Wo6ek49B06wKhiHNNSYvS8HHenfKSIoX7Fo
-         bcQuFahDq3lNBxXkgWjol8r4JT0y+u0inv1D9AXEPVs3AlAa++nAbDiK0qpV50NAwBKp
-         ePRUTOKhF3WXH2tjnPXVS5/USjRctDtd5fSQslpTmvIrS9FSXe9yiNFUZiKb1Id6alnG
-         umFOMFrbVpVEouzntkVsAu4l5n8PpkLDXe3JJEq3F210q6DYLF/5uUFVDL/j2ApCGcA6
-         +60RFlHXWqH4VUxcruwhCBZS/5RZdTIUIOWkw5QFDMYzLICK0BvCUwYGXScKpEbVlxnn
-         L+0A==
-X-Gm-Message-State: APjAAAWp1lQ3k5fkr1kLyhjdNiiAhRJNbbaiLKt4ckZ6dPejCRK0hRVA
-        aKFW0T+eePXffa2emsuWbHg=
-X-Google-Smtp-Source: APXvYqxkglYm+ctYrqwr6O5FMziGEB0S7P4tMND0bpObW7mupop3DlvqhOJzX02e+LxNJ9Ob5nbkpw==
-X-Received: by 2002:ac8:3ac3:: with SMTP id x61mr9574212qte.25.1581552475996;
-        Wed, 12 Feb 2020 16:07:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:985a])
-        by smtp.gmail.com with ESMTPSA id 64sm312550qkh.98.2020.02.12.16.07.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 16:07:55 -0800 (PST)
-Date:   Wed, 12 Feb 2020 19:07:54 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Dan Schatzberg <dschatzberg@fb.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH 2/2] loop: charge i/o per cgroup
-Message-ID: <20200213000754.GD88887@mtj.thefacebook.com>
-References: <20200205223348.880610-1-dschatzberg@fb.com>
- <20200205223348.880610-3-dschatzberg@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HglMhRV1r3SlCbyh50p8XWXMifi0DbV0medDPmHPWIY=;
+        b=rn8eZNyxLWN5UB+VI0z3VSALsvvMi8hmxaCmF1CopBIvv9QwoNzF4FCiJseV30lnPE
+         3QIIwOsFuahHOuXcoDDdyk2O/qEyNABlKSoMWNx5Tq9Zh/3Pj7bNl0Ce5Ub5dR37J+P9
+         v90kW+osm1jmNVsd6YCXeLNDHn/v+G3QJYgCh49AT68ocXSobyu8GJsy5Cc2SuCAL8/F
+         7CjddoqcnoTe1pyTNCWyfrok1mHsF9WNp4n2CGOTAjXoJYIOIohWEdh9w9w1Xn5Hhlik
+         l56RL2pN70aI/Qud3Zk5rmA9kVRQW8XBAxPilMW3YJ8wFvOMYDHxBcoBcBZJYiL+VPUd
+         myxg==
+X-Gm-Message-State: APjAAAUY0U13dpbhS+1zjtvEcRPw7SNl50mW4N3x7k7EhWsjjOc/iYMg
+        tLXlSY4h2WlVWNyzGOtn6chDkT8QeoqhkWBcrtSH
+X-Google-Smtp-Source: APXvYqxZzJWTQkF0MyAR/0hvazcgtPMpLBtZbyavM6j8WQ0AcCQg2H9RMuC42u9/Eg9eKGj3MTNxtdWkgRhqZAMYJww=
+X-Received: by 2002:a50:e108:: with SMTP id h8mr11996848edl.196.1581552586354;
+ Wed, 12 Feb 2020 16:09:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205223348.880610-3-dschatzberg@fb.com>
+References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
+ <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com> <3142237.YMNxv0uec1@x2>
+In-Reply-To: <3142237.YMNxv0uec1@x2>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 12 Feb 2020 19:09:35 -0500
+Message-ID: <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     linux-audit@redhat.com, Richard Guy Briggs <rgb@redhat.com>,
+        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Feb 12, 2020 at 5:39 PM Steve Grubb <sgrubb@redhat.com> wrote:
+> On Wednesday, February 5, 2020 5:50:28 PM EST Paul Moore wrote:
+> > > > > > ... When we record the audit container ID in audit_signal_info() we
+> > > > > > take an extra reference to the audit container ID object so that it
+> > > > > > will not disappear (and get reused) until after we respond with an
+> > > > > > AUDIT_SIGNAL_INFO2.  In audit_receive_msg() when we do the
+> > > > > > AUDIT_SIGNAL_INFO2 processing we drop the extra reference we took
+> > > > > > in
+> > > > > > audit_signal_info().  Unless I'm missing some other change you
+> > > > > > made,
+> > > > > > this *shouldn't* affect the syscall records, all it does is
+> > > > > > preserve
+> > > > > > the audit container ID object in the kernel's ACID store so it
+> > > > > > doesn't
+> > > > > > get reused.
+> > > > >
+> > > > > This is exactly what I had understood.  I hadn't considered the extra
+> > > > > details below in detail due to my original syscall concern, but they
+> > > > > make sense.
+> > > > >
+> > > > > The syscall I refer to is the one connected with the drop of the
+> > > > > audit container identifier by the last process that was in that
+> > > > > container in patch 5/16.  The production of this record is contingent
+> > > > > on
+> > > > > the last ref in a contobj being dropped.  So if it is due to that ref
+> > > > > being maintained by audit_signal_info() until the AUDIT_SIGNAL_INFO2
+> > > > > record it fetched, then it will appear that the fetch action closed
+> > > > > the
+> > > > > container rather than the last process in the container to exit.
+> > > > >
+> > > > > Does this make sense?
+> > > >
+> > > > More so than your original reply, at least to me anyway.
+> > > >
+> > > > It makes sense that the audit container ID wouldn't be marked as
+> > > > "dead" since it would still be very much alive and available for use
+> > > > by the orchestrator, the question is if that is desirable or not.  I
+> > > > think the answer to this comes down the preserving the correctness of
+> > > > the audit log.
+> > > >
+> > > > If the audit container ID reported by AUDIT_SIGNAL_INFO2 has been
+> > > > reused then I think there is a legitimate concern that the audit log
+> > > > is not correct, and could be misleading.  If we solve that by grabbing
+> > > > an extra reference, then there could also be some confusion as
+> > > > userspace considers a container to be "dead" while the audit container
+> > > > ID still exists in the kernel, and the kernel generated audit
+> > > > container ID death record will not be generated until much later (and
+> > > > possibly be associated with a different event, but that could be
+> > > > solved by unassociating the container death record).
+> > >
+> > > How does syscall association of the death record with AUDIT_SIGNAL_INFO2
+> > > possibly get associated with another event?  Or is the syscall
+> > > association with the fetch for the AUDIT_SIGNAL_INFO2 the other event?
+> >
+> > The issue is when does the audit container ID "die".  If it is when
+> > the last task in the container exits, then the death record will be
+> > associated when the task's exit.  If the audit container ID lives on
+> > until the last reference of it in the audit logs, including the
+> > SIGNAL_INFO2 message, the death record will be associated with the
+> > related SIGNAL_INFO2 syscalls, or perhaps unassociated depending on
+> > the details of the syscalls/netlink.
+> >
+> > > Another idea might be to bump the refcount in audit_signal_info() but
+> > > mark tht contid as dead so it can't be reused if we are concerned that
+> > > the dead contid be reused?
+> >
+> > Ooof.  Yes, maybe, but that would be ugly.
+> >
+> > > There is still the problem later that the reported contid is incomplete
+> > > compared to the rest of the contid reporting cycle wrt nesting since
+> > > AUDIT_SIGNAL_INFO2 will need to be more complex w/2 variable length
+> > > fields to accommodate a nested contid list.
+> >
+> > Do we really care about the full nested audit container ID list in the
+> > SIGNAL_INFO2 record?
+> >
+> > > > Of the two
+> > > > approaches, I think the latter is safer in that it preserves the
+> > > > correctness of the audit log, even though it could result in a delay
+> > > > of the container death record.
+> > >
+> > > I prefer the former since it strongly indicates last task in the
+> > > container.  The AUDIT_SIGNAL_INFO2 msg has the pid and other subject
+> > > attributes and the contid to strongly link the responsible party.
+> >
+> > Steve is the only one who really tracks the security certifications
+> > that are relevant to audit, see what the certification requirements
+> > have to say and we can revisit this.
+>
+> Sever Virtualization Protection Profile is the closest applicable standard
+>
+> https://www.niap-ccevs.org/Profile/Info.cfm?PPID=408&id=408
+>
+> It is silent on audit requirements for the lifecycle of a VM. I assume that
+> all that is needed is what the orchestrator says its doing at the high level.
+> So, if an orchestrator wants to shutdown a container, the orchestrator must
+> log that intent and its results. In a similar fashion, systemd logs that it's
+> killing a service and we don't actually hook the exit syscall of the service
+> to record that.
+>
+> Now, if a container was being used as a VPS, and it had a fully functioning
+> userspace, it's own services, and its very own audit daemon, then in this
+> case it would care who sent a signal to its auditd. The tenant of that
+> container may have to comply with PCI-DSS or something else. It would log the
+> audit service is being terminated and systemd would record that its tearing
+> down the environment. The OS doesn't need to do anything.
 
-On Wed, Feb 05, 2020 at 02:33:48PM -0800, Dan Schatzberg wrote:
-> -static int loop_kthread_worker_fn(void *worker_ptr)
-> -{
-> -	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
-> -	return kthread_worker_fn(worker_ptr);
-> +	flush_workqueue(lo->workqueue);
-> +	destroy_workqueue(lo->workqueue);
+This latter case is the case of interest here, since the host auditd
+should only be killed from a process on the host itself, not a process
+running in a container.  If we work under the assumption (and this may
+be a break in our approach to not defining "container") that an auditd
+instance is only ever signaled by a process with the same audit
+container ID (ACID), is this really even an issue?  Right now it isn't
+as even with this patchset we will still really only support one
+auditd instance, presumably on the host, so this isn't a significant
+concern.  Moving forward, once we add support for multiple auditd
+instances we will likely need to move the signal info into
+(potentially) s per-ACID struct, a struct whose lifetime would match
+that of the associated container by definition; as the auditd
+container died, the struct would die, the refcounts dropped, and any
+ACID held only the signal info refcount would be dropped/killed.
 
-destroy_workqueue() implies draining, so the explicit flush isn't
-necessary.
-
->  static int loop_prepare_queue(struct loop_device *lo)
->  {
-> +	lo->workqueue = alloc_workqueue("loop%d",
-> +					WQ_FREEZABLE | WQ_MEM_RECLAIM |
-> +					WQ_HIGHPRI,
-> +					lo->lo_number);
-> +	if (IS_ERR(lo->workqueue))
->  		return -ENOMEM;
-
-Given that these can be pretty cpu intensive and a single work item
-can be saturated by multiple cpus keepings queueing bios, it probably
-would be better to use an unbound workqueue (WQ_UNBOUND) and let the
-scheduler figure out.
-
-> +struct loop_worker {
-> +	struct rb_node rb_node;
-> +	struct work_struct work;
-> +	struct list_head cmd_list;
-> +	struct loop_device *lo;
-> +	int css_id;
-> +};
-> +
-> +static void loop_workfn(struct work_struct *work);
-> +static void loop_rootcg_workfn(struct work_struct *work);
-> +
-> +static void loop_queue_on_rootcg_locked(struct loop_device *lo,
-> +					struct loop_cmd *cmd)
-> +{
-
-lockdep_assert_held() here?
-
-> +	list_add_tail(&cmd->list_entry, &lo->rootcg_cmd_list);
-> +	if (list_is_first(&cmd->list_entry, &lo->rootcg_cmd_list))
-> +		queue_work(lo->workqueue, &lo->rootcg_work);
-
-I'd just call queue_work() without the preceding check. Trying to
-requeue an active work item is pretty cheap.
-
-> +}
-> +
-> +static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
-> +{
-> +	struct rb_node **node = &(lo->worker_tree.rb_node), *parent = NULL;
-                                 ^
-                                 This isn't necessary, right?
-
-> +	struct loop_worker *cur_worker, *worker = NULL;
-> +	int css_id = 0;
-> +
-> +	if (cmd->blk_css)
-
-We usually use blkcg_css as the name.
-
-> +		css_id = cmd->blk_css->id;
-> +
-> +	spin_lock_irq(&lo->lo_lock);
-> +
-> +	if (!css_id) {
-> +		loop_queue_on_rootcg_locked(lo, cmd);
-> +		goto out;
-> +	}
-> +	node = &(lo->worker_tree.rb_node);
-> +
-> +	while (*node) {
-> +		parent = *node;
-> +		cur_worker = container_of(*node, struct loop_worker, rb_node);
-> +		if (cur_worker->css_id == css_id) {
-> +			worker = cur_worker;
-> +			break;
-> +		} else if (cur_worker->css_id < 0) {
-> +			node = &((*node)->rb_left);
-                                 ^
-                                I'd keep only the inner parentheses.
-
-> +		} else {
-> +			node = &((*node)->rb_right);
-> +		}
-> +	}
-> +	if (worker) {
-> +		list_add_tail(&cmd->list_entry, &worker->cmd_list);
-
-Maybe goto and unindent else block?
-
-> +	} else {
-> +		worker = kmalloc(sizeof(struct loop_worker), GFP_NOIO);
-
-I think the gpf flag combo you wanna use is GFP_NOWAIT | __GFP_NOWARN
-- we don't wanna enter direct reclaim from here or generate warnings.
-Also, I personally tend to use kzalloc() for small stuff by default as
-it doesn't really cost anything while making things easier / safer
-later when adding new fields, but up to you.
-
-> +		/*
-> +		 * In the event we cannot allocate a worker, just
-> +		 * queue on the rootcg worker
-> +		 */
-> +		if (!worker) {
-> +			loop_queue_on_rootcg_locked(lo, cmd);
-> +			goto out;
-> +		}
-> +		worker->css_id = css_id;
-
-Maybe blkcg_css_id would be clearer? Your call for sure tho.
-
-> +		INIT_WORK(&worker->work, loop_workfn);
-> +		INIT_LIST_HEAD(&worker->cmd_list);
-> +		worker->lo = lo;
-> +		rb_link_node(&worker->rb_node, parent, node);
-> +		rb_insert_color(&worker->rb_node, &lo->worker_tree);
-> +		list_add_tail(&cmd->list_entry, &worker->cmd_list);
-> +		queue_work(lo->workqueue, &worker->work);
-
-It might be better to share the above two lines between existing and
-new worker paths. I think you're missing queue_work() for the former.
-
-> @@ -1942,6 +2006,9 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
->  	struct request *rq = blk_mq_rq_from_pdu(cmd);
->  	const bool write = op_is_write(req_op(rq));
->  	struct loop_device *lo = rq->q->queuedata;
-> +#ifdef CONFIG_MEMCG
-> +	struct cgroup_subsys_state *mem_css;
-
-memcg_css is what we've been using; however, I kinda like blk/mem_css.
-Maybe we should rename the others. Please feel free to leave as-is.
-
-> @@ -1958,26 +2041,50 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
->  	}
->  }
->  
-> +static void loop_process_work(struct loop_worker *worker,
-> +			struct list_head *cmd_list, struct loop_device *lo)
->  {
-> +	int orig_flags = current->flags;
-> +	struct loop_cmd *cmd;
-> +
-> +	while (1) {
-> +		spin_lock_irq(&lo->lo_lock);
-> +		if (list_empty(cmd_list)) {
-
-Maybe break here and cleanup at the end of the function?
-
-> +			if (worker)
-> +				rb_erase(&worker->rb_node, &lo->worker_tree);
-> +			spin_unlock_irq(&lo->lo_lock);
-> +			kfree(worker);
-> +			current->flags = orig_flags;
-
-I wonder whether we wanna keep them around for a bit. A lot of IO
-patterns involve brief think times between accesses and this would be
-constantly creating and destroying constantly.
-
-> +			return;
-> +		}
->  
-> +		cmd = container_of(
-> +			cmd_list->next, struct loop_cmd, list_entry);
-> +		list_del(cmd_list->next);
-> +		spin_unlock_irq(&lo->lo_lock);
-> +		current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
-
-I think we can set this at the head of the function and
-
-> +		loop_handle_cmd(cmd);
-> +		current->flags = orig_flags;
-
-restore them before returning.
-
-> @@ -587,6 +587,7 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct cgroup *cgrp,
->  	rcu_read_unlock();
->  	return css;
->  }
-> +EXPORT_SYMBOL_GPL(cgroup_get_e_css);
-
-Can you please mention the above in the changelog? Also, it'd be great
-to have rationales there too.
-
-Thanks.
+However, making this assumption would mean that we are expecting a
+"container" to provide some level of isolation such that processes
+with a different audit container ID do not signal each other.  From a
+practical perspective I think that fits with the most (all?)
+definitions of "container", but I can't say that for certain.  In
+those cases where the assumption is not correct and processes can
+signal each other across audit container ID boundaries, perhaps it is
+enough to explain that an audit container ID may not fully disappear
+until it has been fetched with a SIGNAL_INFO2 message.
 
 -- 
-tejun
+paul moore
+www.paul-moore.com
