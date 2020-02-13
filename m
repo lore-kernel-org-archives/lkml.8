@@ -2,153 +2,129 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24395C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FADC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE8A20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581604070;
-	bh=6VfGSAC1HNOSPZvAehIj0dyrn4ZvRctoIk3FH92JPYI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zQ6LAAnH/EJbQ8QHISA9ojtH8IGdQoTeGgyERSGvxaGJuUbuRfHIQlbhdSeGOcKH2
-	 kbezG4hpyquohc+YfZw51WReUub7iTjM5jR4QHFhAGoWXg5JCEzw0wwulX3tlxEV3A
-	 Y9BSjdqjMuiAxK//ucmXC+AzgALav9iYN57evFU4=
+	by mail.kernel.org (Postfix) with ESMTP id 7050320873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:29:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtItgN4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbgBMO1t (ORCPT
+        id S1727549AbgBMO36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:27:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgBMO1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:27:48 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 13 Feb 2020 09:29:58 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47179 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726780AbgBMO35 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:29:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581604196;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0l9nlLtv0/bHXNek1lDCBUaE0lHasr+bBc4jA0BaTh0=;
+        b=UtItgN4qy+/zNskX/eV6DepOXEYEJdRbrfcWZC82YvMyCEY2q3l+dYczJmuorFcfDWDoTx
+        SY7uruJ7+At+snYlvSyq7oYrqpsWnr5xRzonYnubzZPqOILFcfiCTkih4oXg6DpPUr2ekN
+        fFmXRye7zdbNNrvYgFzyoFPGDrEetK4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-PjoBI8_dNuKbyHfpVocn9A-1; Thu, 13 Feb 2020 09:29:54 -0500
+X-MC-Unique: PjoBI8_dNuKbyHfpVocn9A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A312F222C2;
-        Thu, 13 Feb 2020 14:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581603729;
-        bh=6VfGSAC1HNOSPZvAehIj0dyrn4ZvRctoIk3FH92JPYI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kSeAbcjQ8QOxAe4QgIbYkEwyQm3vrPqRAkJtjE0GbKOtRmcwL4e4Um3YxtPHyFnrh
-         sMbizg7K02UaBIu2Fg5l9afFMJ+YXwXAZ+pOfkgKZPgX3I8z6mAeRgXjKDavzXGviQ
-         cFL3ig+yq/2tfGch9ygjX6/xRILMKkgI2klDov8I=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j2FNX-004qXJ-U9; Thu, 13 Feb 2020 14:22:08 +0000
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68441DBAE;
+        Thu, 13 Feb 2020 14:29:53 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 294495DA85;
+        Thu, 13 Feb 2020 14:29:45 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 09:29:43 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Florian Westphal <fw@strlen.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        twoerner@redhat.com, eparis@parisplace.org, tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v2 8/9] netfilter: add audit operation field
+Message-ID: <20200213142943.zxa6vwvl45q36zu6@madcap2.tricolour.ca>
+References: <cover.1577830902.git.rgb@redhat.com>
+ <6768f7c7d9804216853e6e9c59e44f8a10f46b99.1577830902.git.rgb@redhat.com>
+ <20200106202306.GO795@breakpoint.cc>
+ <20200213121410.b2dsh2kwg3k7xg7e@madcap2.tricolour.ca>
+ <20200213123457.GO2991@breakpoint.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 13 Feb 2020 14:22:07 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, tglx@linutronix.de,
-        jason@lakedaemon.net, wanghaibin.wang@huawei.com
-Subject: Re: [PATCH v2 3/6] irqchip/gic-v4.1: Ensure L2 vPE table is allocated
- at RD level
-In-Reply-To: <20200206075711.1275-4-yuzenghui@huawei.com>
-References: <20200206075711.1275-1-yuzenghui@huawei.com>
- <20200206075711.1275-4-yuzenghui@huawei.com>
-Message-ID: <2f6a27ac57aef9b948952c210c9a5882@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213123457.GO2991@breakpoint.cc>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
-
-On 2020-02-06 07:57, Zenghui Yu wrote:
-> In GICv4, we will ensure that level2 vPE table memory is allocated
-> for the specified vpe_id on all v4 ITS, in its_alloc_vpe_table().
-> This still works well for the typical GICv4.1 implementation, where
-> the new vPE table is shared between the ITSs and the RDs.
+On 2020-02-13 13:34, Florian Westphal wrote:
+> Richard Guy Briggs <rgb@redhat.com> wrote:
+> > The default policy is NF_ACCEPT (because Rusty didn't want
+> > more email, go figure...).  It occurred to me later that some table
+> > loads took a command line parameter to be able to change the default
+> > policy verdict from NF_ACCEPT to NF_DROP.  In particular, filter FORWARD
+> > hook tables.  Is there a straightforward way to be able to detect this
+> > in all the audit_nf_cfg() callers to be able to log it?  In particular,
+> > in:
+> > 	net/bridge/netfilter/ebtables.c: ebt_register_table()
+> > 	net/bridge/netfilter/ebtables.c: do_replace_finish()
+> > 	net/bridge/netfilter/ebtables.c: __ebt_unregister_table()
+> > 	net/netfilter/x_tables.c: xt_replace_table()
+> > 	net/netfilter/x_tables.c: xt_unregister_table()
 > 
-> To make it explicit, let us introduce allocate_vpe_l2_table() to
-> make sure that the L2 tables are allocated on all v4.1 RDs. We're
-> likely not need to allocate memory in it because the vPE table is
-> shared and (L2 table is) already allocated at ITS level, except
-> for the case where the ITS doesn't share anything (say SVPET == 0,
-> practically unlikely but architecturally allowed).
+> The module parameter or the policy?
 > 
-> The implementation of allocate_vpe_l2_table() is mostly copied from
-> its_alloc_table_entry().
+> The poliy can be changed via the xtables tools.
+> Given you can have:
 > 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 80 ++++++++++++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
+> *filter
+> :INPUT ACCEPT [0:0]
+> :FORWARD DROP [0:0]
+> :OUTPUT ACCEPT [0:0]
+> -A FORWARD -j ACCEPT
+> COMMIT
 > 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-> b/drivers/irqchip/irq-gic-v3-its.c
-> index 0f1fe56ce0af..ae4e7b355b46 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -2443,6 +2443,72 @@ static u64 
-> inherit_vpe_l1_table_from_rd(cpumask_t **mask)
->  	return 0;
->  }
+> ... which effectily gives a FORWARD ACCEPT policy I'm not sure logging
+> the policy is useful.
 > 
-> +static bool allocate_vpe_l2_table(int cpu, u32 id)
-> +{
-> +	void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
-> +	u64 val, gpsz, npg;
-> +	unsigned int psz, esz, idx;
-> +	struct page *page;
-> +	__le64 *table;
-> +
-> +	if (!gic_rdists->has_rvpeid)
-> +		return true;
-> +
-> +	val  = gits_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
+> Furthermore, ebtables has polices even for user-defined chains.
+> 
+> > Both potential solutions are awkward, adding a parameter to pass that
+> > value in, but also trying to reach into the protocol-specific entry
+> > table to find that value.  Would you have a recommendation?  This
+> > assumes that reporting that default policy value is even desired or
+> > required.
+> 
+> See above, I don't think its useful.  If it is needed, its probably best
+> to define an informational struct containing the policy (accept/drop)
+> value for the each hook points (prerouting to postrouting),  fill
+> that from the backend specific code (as thats the only place that
+> exposes the backend specific structs ...) and then pass that to
+> the audit logging functions.
 
-Having rebased the rest of the GICv4.1 series on top of -rc1, I've hit a 
-small
-issue right here. I run a FVP model that only spawns 4 CPUs, while the 
-DT has
-8 of them. This means that online_cpus = 4, and possible_cpus = 8.
+Ok, for this set, I'll drop the idea.  If it becomes apparent later than
+it is necessary, it can be added as a field at the end of the record.
 
-So in my case, half of the RDs have base == NULL, and things stop 
-quickly.
+Thanks for looking at this.
 
-I plan to queue the following:
+- RGB
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-b/drivers/irqchip/irq-gic-v3-its.c
-index d85dc8dcb0ad..7656b353a95f 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2526,6 +2526,10 @@ static bool allocate_vpe_l2_table(int cpu, u32 
-id)
-  	if (!gic_rdists->has_rvpeid)
-  		return true;
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
-+	/* Skip non-present CPUs */
-+	if (!base)
-+		return true;
-+
-  	val  = gicr_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
-
-  	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
-
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
