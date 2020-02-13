@@ -2,173 +2,71 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7565FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457E4C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E36E217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147C9218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="za3rTGuO"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ktjK/JVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgBMM0A (ORCPT
+        id S1729913AbgBMM2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:26:00 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:39328 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbgBMM0A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 07:26:00 -0500
-Received: by mail-vk1-f193.google.com with SMTP id t129so1509718vkg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 04:25:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y9OAQr7LoJ7FysjO3RNUdQHAVxo4VqZp7WZsTWIAp+U=;
-        b=za3rTGuOnSDnmFdxj8VAeh6VbheBiDSorET9lsV9J155E17dBflM5Xa9yAtAtLXMEi
-         9sqlhC2kF38nbcDs/pGUEtArCN2mKNq0gAKiD7Rfb51LiekGYAIq1V+7izfDNnXhCK/f
-         cVxutZZ2DCdaJAJTtmtv8/sB9cMCsNRQxOhvq/gkQRCN3MRcat5b6l4Xjo3kCIYfLDZM
-         gJSDN6HyELXmqWSciasKZ9Joi3OKM9OsfrioBPAGfLuj6a4xFniu8RelliOtSsSPj6HV
-         NYksR+LMCkDHzxsKVjrC00nC3T+Fingk5iyd9+BE3JjF11VWM7gzZUG3nlqaNnb353DA
-         k45Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y9OAQr7LoJ7FysjO3RNUdQHAVxo4VqZp7WZsTWIAp+U=;
-        b=UllCEj8PKfY1Ehr5g8AdLukdRCDz8CMAFWvjk3p4f0B+WU5verst6oVeyLibYhIsZr
-         q2KGKECl4dDIpbXjXVVcug3YEpGdKpO6+NWMxJFghDdGvBcNcjzq1S3oDdT94fzXr5tF
-         kP+pOXm5BEdCZ2xqD5SGZ+rjQgPJbtkAfFGZhwjEuKui42B35FlZI266v13K4/8Rj3gq
-         woAW6nP0it7h6oEhaInens9i7Wjmx2n5wcgEzooe4y/BmHBPD/aqXAevSiY4Egp2uegZ
-         /98JwMilSZ2aAWMjXQFJ0iCUv+WbrllgEEZs3+OOXJ7yUHCI6sAAxUVyf3SrIWTa4pkx
-         +ieg==
-X-Gm-Message-State: APjAAAUcx+FU+aWFy7qnkKlsv4kMN8Y9oHcqiSFY8c+7gPOPAhzpxMOG
-        N0YFjlLeSst6X19lnpBcNiqp8qLCEWQTOoIXWpOtqA==
-X-Google-Smtp-Source: APXvYqxsuxYSXPiHZ4iLR27psVWCXL6kFFq0BEbhNoMUh8EG5yW9x4+cRmT9OrPpHEInL8yQKRZeXBglBQMFpDg607o=
-X-Received: by 2002:ac5:c7a9:: with SMTP id d9mr1812766vkn.79.1581596758533;
- Thu, 13 Feb 2020 04:25:58 -0800 (PST)
+        Thu, 13 Feb 2020 07:28:20 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:34962 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729544AbgBMM2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 07:28:20 -0500
+Received: from zn.tnic (p200300EC2F07F600746843EFEB191E44.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f600:7468:43ef:eb19:1e44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0FA31EC0CE8;
+        Thu, 13 Feb 2020 13:28:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581596898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Y6KTfW5zJPWE+4QNsDGMdjC0n5CEoWJZz2FyoidawUo=;
+        b=ktjK/JVE8Th9l4RA96YkbGJl4OIvDM2fOaqXcKjlmR/8/h5wLPxL0n4As3Lv5Y+OzTxMyb
+        c+6WjDFIhDeqzTqBuNopv3NYbBDq0ku3CjVXP9CqULGhqjApLrGEmWTKR/AXTbikuyz2mn
+        Aqv3BoDDDuoI6Hs1cQiu+0xtONvZz30=
+Date:   Thu, 13 Feb 2020 13:28:08 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] EDAC/mc: Fixes for mci device removal
+Message-ID: <20200213122808.GI31799@zn.tnic>
+References: <20200212120340.4764-1-rrichter@marvell.com>
+ <20200213110512.GH31799@zn.tnic>
+ <6617867c-f9e1-b7b8-d605-d273b8dd7f69@huawei.com>
+ <3b120ae3-eeef-7509-84b1-d679f0e3f783@huawei.com>
 MIME-Version: 1.0
-References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org> <1580250967-4386-4-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1580250967-4386-4-git-send-email-thara.gopinath@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 13 Feb 2020 17:55:47 +0530
-Message-ID: <CAHLCerMEieWMyk8RcM-y8c3Usq_e5CTYJ4AqhCQOzihRTUWbTg@mail.gmail.com>
-Subject: Re: [Patch v9 3/8] arm,arm64,drivers:Add infrastructure to store and
- update instantaneous thermal pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>, qperret@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>, corbet@lwn.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3b120ae3-eeef-7509-84b1-d679f0e3f783@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 4:06 AM Thara Gopinath
-<thara.gopinath@linaro.org> wrote:
->
-> Add architecture specific APIs to update and track thermal pressure on a
-> per cpu basis. A per cpu variable thermal_pressure is introduced to keep
-> track of instantaneous per cpu thermal pressure. Thermal pressure is the
-> delta between maximum capacity and capped capacity due to a thermal event.
+On Thu, Feb 13, 2020 at 12:08:59PM +0000, John Garry wrote:
+> Yeah, it looks ok - I'm just booting and running a kmemleak scan
 
-s/capped/decreased to have consistent use throughout the series e.g. in patch 1.
+Thanks, I'll add your Tested-by:
 
-Though personally, I like "capped capacity"  in which case
-s/decreased/capped in patch 1 and elsewhere.
+-- 
+Regards/Gruss,
+    Boris.
 
->
-> topology_get_thermal_pressure can be hooked into the scheduler specified
-> arch_cpu_thermal_capacity to retrieve instantaneous thermal pressure of a
-> cpu.
->
-> arch_set_thermal_pressure can be used to update the thermal pressure.
->
-> Considering topology_get_thermal_pressure reads thermal_pressure and
-> arch_set_thermal_pressure writes into thermal_pressure, one can argue for
-> some sort of locking mechanism to avoid a stale value.  But considering
-> topology_get_thermal_pressure can be called from a system critical path
-> like scheduler tick function, a locking mechanism is not ideal. This means
-> that it is possible the thermal_pressure value used to calculate average
-> thermal pressure for a cpu can be stale for upto 1 tick period.
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->
-> v6->v7:
->         - Changed the input argument in arch_set_thermal_pressure from
->           capped capacity to delta capacity(thermal pressure) as per
->           Ionela's review comments.
->
->  arch/arm/include/asm/topology.h   |  3 +++
->  arch/arm64/include/asm/topology.h |  3 +++
-
-Any particular reason to enable this for arm/arm64 in this patch
-itself? I'd have enabled them in two separate patches after this one.
-
->  drivers/base/arch_topology.c      | 11 +++++++++++
->  include/linux/arch_topology.h     | 10 ++++++++++
->  4 files changed, 27 insertions(+)
->
-> diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
-> index 8a0fae9..3a50a19 100644
-> --- a/arch/arm/include/asm/topology.h
-> +++ b/arch/arm/include/asm/topology.h
-> @@ -16,6 +16,9 @@
->  /* Enable topology flag updates */
->  #define arch_update_cpu_topology topology_update_cpu_topology
->
-> +/* Replace task scheduler's default thermal pressure retrieve API */
-> +#define arch_cpu_thermal_pressure topology_get_thermal_pressure
-> +
->  #else
->
->  static inline void init_cpu_topology(void) { }
-> diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
-> index a4d945d..a70896f 100644
-> --- a/arch/arm64/include/asm/topology.h
-> +++ b/arch/arm64/include/asm/topology.h
-> @@ -25,6 +25,9 @@ int pcibus_to_node(struct pci_bus *bus);
->  /* Enable topology flag updates */
->  #define arch_update_cpu_topology topology_update_cpu_topology
->
-> +/* Replace task scheduler's default thermal pressure retrieve API */
-> +#define arch_cpu_thermal_pressure topology_get_thermal_pressure
-> +
->  #include <asm-generic/topology.h>
->
->  #endif /* _ASM_ARM_TOPOLOGY_H */
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 6119e11..68dfa49 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -42,6 +42,17 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
->         per_cpu(cpu_scale, cpu) = capacity;
->  }
->
-> +DEFINE_PER_CPU(unsigned long, thermal_pressure);
-> +
-> +void arch_set_thermal_pressure(struct cpumask *cpus,
-> +                              unsigned long th_pressure)
-> +{
-> +       int cpu;
-
-<snip>
+https://people.kernel.org/tglx/notes-about-netiquette
