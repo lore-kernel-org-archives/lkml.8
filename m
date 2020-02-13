@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A908C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FA0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2472217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A27F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608014;
-	bh=hgS5iMbB3/SY2x/9uvJwBtsYpyv2xzbjtqpk/MDAnKc=;
+	s=default; t=1581608016;
+	bh=1C2F05DTQ5vhQOubAguPuMs/IxDOxndvtOJ7j2bd/NM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TxIG+48BjLOR5Vf2eyp/3We8XmXINLszBD8AAZV2nrH21kK2Qxd5aJCpxgjagadLn
-	 sKNqkIv0EjzAOnTPbhJu74+ydvLqvDhfGpAnhtbkQiJ+CoPJQSKtvL/VnJfwCG5B2J
-	 RCOo5PzV4Pg3KicnlpU6uoV4ijgPDHrxHt+RMFUU=
+	b=LFtOb0g7RENWNSAh4KPLXss4JJYwBX2VTnauBx1RB7+NG0f2Yj/1H/zyYufarNtZ0
+	 4zOTIPyRSQChHubfSu26ScZaY1aLDXkdUhUkPY6PZekA1XrmfIBrkDI+pH5uQ2elP8
+	 km8CWQnteT141lidejOFH8jDQXiT4hdHeYiYQXXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbgBMPdd (ORCPT
+        id S2388123AbgBMPde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:33:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57966 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:33:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729647AbgBMP3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:02 -0500
+        id S1729651AbgBMP3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:03 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33DD4218AC;
+        by mail.kernel.org (Postfix) with ESMTPSA id D2F86206DB;
         Thu, 13 Feb 2020 15:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607742;
-        bh=hgS5iMbB3/SY2x/9uvJwBtsYpyv2xzbjtqpk/MDAnKc=;
+        s=default; t=1581607743;
+        bh=1C2F05DTQ5vhQOubAguPuMs/IxDOxndvtOJ7j2bd/NM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMl9k6hF+hR81MNahs4TZOTX6X7wnt8xjUQ2j/4bHTQ03iZyWxHHQXet0lGvNO8MK
-         TYKNlLcgbVS3jZZD0GzO4VTmldFs/zXoxg2YHKuisy6mAob09GtS+MZ1gSp0smw3uI
-         b3r7q+qhCXK014fYflkBOo1hS3T/ZzJoginxAWvM=
+        b=RYIo9CT1gsGRD5iDoUe6N3cpORY0GFNJXCsEs/YN2RFkTVTVCXqpQ6q8mTyP70zt1
+         xdqf4kElwg5YQ7z2IwpQWpZSpC6fZQ7f89qel0+xGI5QNREdDT2oPMefKQRBQTtoaO
+         mt8An3UFj8P3hRkAApwBXjF6ciQU9k0lyTbE1iME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Smythies <dsmythies@telus.net>,
-        Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.5 079/120] sched/uclamp: Fix a bug in propagating uclamp value in new cgroups
-Date:   Thu, 13 Feb 2020 07:21:15 -0800
-Message-Id: <20200213151928.089549500@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.5 070/120] powerpc/ptdump: Only enable PPC_CHECK_WX with STRICT_KERNEL_RWX
+Date:   Thu, 13 Feb 2020 07:21:06 -0800
+Message-Id: <20200213151925.053136745@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,57 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 7226017ad37a888915628e59a84a2d1e57b40707 upstream.
+commit f509247b08f2dcf7754d9ed85ad69a7972aa132b upstream.
 
-When a new cgroup is created, the effective uclamp value wasn't updated
-with a call to cpu_util_update_eff() that looks at the hierarchy and
-update to the most restrictive values.
+ptdump_check_wx() is called from mark_rodata_ro() which only exists
+when CONFIG_STRICT_KERNEL_RWX is selected.
 
-Fix it by ensuring to call cpu_util_update_eff() when a new cgroup
-becomes online.
-
-Without this change, the newly created cgroup uses the default
-root_task_group uclamp values, which is 1024 for both uclamp_{min, max},
-which will cause the rq to to be clamped to max, hence cause the
-system to run at max frequency.
-
-The problem was observed on Ubuntu server and was reproduced on Debian
-and Buildroot rootfs.
-
-By default, Ubuntu and Debian create a cpu controller cgroup hierarchy
-and add all tasks to it - which creates enough noise to keep the rq
-uclamp value at max most of the time. Imitating this behavior makes the
-problem visible in Buildroot too which otherwise looks fine since it's a
-minimal userspace.
-
-Fixes: 0b60ba2dd342 ("sched/uclamp: Propagate parent clamps")
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Doug Smythies <dsmythies@telus.net>
-Link: https://lore.kernel.org/lkml/000701d5b965$361b6c60$a2524520$@net/
+Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/922d4939c735c6b52b4137838bcc066fffd4fc33.1578989545.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/core.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/Kconfig.debug |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7100,6 +7100,12 @@ static int cpu_cgroup_css_online(struct
+--- a/arch/powerpc/Kconfig.debug
++++ b/arch/powerpc/Kconfig.debug
+@@ -371,7 +371,7 @@ config PPC_PTDUMP
  
- 	if (parent)
- 		sched_online_group(tg, parent);
-+
-+#ifdef CONFIG_UCLAMP_TASK_GROUP
-+	/* Propagate the effective uclamp value for the new group */
-+	cpu_util_update_eff(css);
-+#endif
-+
- 	return 0;
- }
+ config PPC_DEBUG_WX
+ 	bool "Warn on W+X mappings at boot"
+-	depends on PPC_PTDUMP
++	depends on PPC_PTDUMP && STRICT_KERNEL_RWX
+ 	help
+ 	  Generate a warning if any W+X mappings are found at boot.
  
 
 
