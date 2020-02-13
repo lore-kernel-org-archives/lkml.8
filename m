@@ -2,104 +2,80 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2764CC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4B8C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9C62082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581632866;
-	bh=SRtP8pkvAAiuwHsxABDH84x3VSuC9ZAaIoBIlv/+HFs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TtRJmjXkUwf/gzf0OEDAVakBnXhc6L554sWt7GTQEHuLEwSRkJLWUrnt7Ga71otBp
-	 S0iPaqoJ4CmT4hdRnIlikWS+6ppXFh5QGJHuqusP3q3VLkbggsAdWu0NF63uc6AA/T
-	 uNjvROFq+axAu1V6Yc5o5wgy5G6E0UM6a3xy4aVM=
+	by mail.kernel.org (Postfix) with ESMTP id 5C61E2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgBMW1p (ORCPT
+        id S1727896AbgBMW1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:27:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33580 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 17:27:52 -0500
+Received: from mga02.intel.com ([134.134.136.20]:24096 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgBMW1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:27:44 -0500
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186822082F
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 22:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581632864;
-        bh=SRtP8pkvAAiuwHsxABDH84x3VSuC9ZAaIoBIlv/+HFs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZDoGWRiYk87A+My3o5po3FXcsuYvRfERkmYRnQ1jifjpPLdzFag2KmuQkNs0l0lgL
-         d9eDPa4eiRNgO4cE6Lc5p5K0z09o9UuL9G5yPCrXGruXG6sZjMjPV1JrrZmSKK0dsO
-         DqmBgiDeNjk8I/FdT+1LbG6z5DFmSbDKWF66V4Q0=
-Received: by mail-wr1-f43.google.com with SMTP id n10so6747113wrm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 14:27:44 -0800 (PST)
-X-Gm-Message-State: APjAAAXddpxSeokJQmCKahfytmrKm/F4ey1Q4KoBS+IwhAbx+0AmM0Fb
-        rwL4NK+NVd1+m/yk9zvhiCTv8Vi4H0h8DraPyusVrQ==
-X-Google-Smtp-Source: APXvYqxEATt8gqwMkpoZDC4PKFMldll/nLW5HggQMlZbcat0HevpC3zeHLonBBPiDLtuGM4TKcmOMRvBzQUYzZ9gYTA=
-X-Received: by 2002:adf:a354:: with SMTP id d20mr23603033wrb.257.1581632862640;
- Thu, 13 Feb 2020 14:27:42 -0800 (PST)
+        id S1726780AbgBMW1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:27:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:27:51 -0800
+X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
+   d="scan'208";a="227397990"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:27:51 -0800
+Date:   Thu, 13 Feb 2020 14:27:50 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] x86/mce: Change default mce logger to check
+ mce->handled
+Message-ID: <20200213222750.GC21107@agluck-desk2.amr.corp.intel.com>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200212204652.1489-6-tony.luck@intel.com>
+ <20200213170820.GN31799@zn.tnic>
 MIME-Version: 1.0
-References: <20200212204652.1489-1-tony.luck@intel.com> <20200212204652.1489-5-tony.luck@intel.com>
- <20200213170308.GM31799@zn.tnic> <20200213221913.GB21107@agluck-desk2.amr.corp.intel.com>
-In-Reply-To: <20200213221913.GB21107@agluck-desk2.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 13 Feb 2020 14:27:31 -0800
-X-Gmail-Original-Message-ID: <CALCETrVrL1Ps9ubAcKQykxTofn4hbkESBYE9H22Ws5Pis_vG+g@mail.gmail.com>
-Message-ID: <CALCETrVrL1Ps9ubAcKQykxTofn4hbkESBYE9H22Ws5Pis_vG+g@mail.gmail.com>
-Subject: Re: [PATCH 4/5] x86/mce: Fix all mce notifiers to update the
- mce->handled bitmask
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213170820.GN31799@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 2:19 PM Luck, Tony <tony.luck@intel.com> wrote:
->
-> On Thu, Feb 13, 2020 at 06:03:08PM +0100, Borislav Petkov wrote:
-> > On Wed, Feb 12, 2020 at 12:46:51PM -0800, Tony Luck wrote:
-> > > If the handler took any action to log or deal with the error, set
-> > > a bit int mce->handled so that the default handler on the end of
-> > > the machine check chain can see what has been done.
-> > >
-> > > [!!! What to do about NOTIFY_STOP ... any handler that returns this
-> > > value short-circuits calling subsequent entries on the chain. In
-> > > some cases this may be the right thing to do ... but it others we
-> > > really want to keep calling other functions on the chain]
-> >
-> > Yes, we can kill that NOTIFY_STOP thing in the mce code since it is
-> > nasty.
->
-> Well, there are places where we want to keep NOTIFY_STOP.
+On Thu, Feb 13, 2020 at 06:08:20PM +0100, Borislav Petkov wrote:
+> I definitely like where this is going.
 
-I very very strongly disagree.
+Thanks.
 
->
-> 1) Default case for CEC.  We want it to "hide" the corrected error.
->    That was one of the main goals for CEC.  We've discussed cases
->    where CEC shouldn't hide (when internal threshold exceeded and
->    it tries to take a page offline ... probably something related to
->    CMCI storms ... though we didn't really come to any conclusion)
+> Another thing: what do we do if we have to deviate from that sequantial
+> path through the notifiers? What if notifier A gets to look at an error,
+> then another notifier B needs to look at it and then the information
+> obtained from the second notifier B, is needed by the first notifier A
+> again to inspect the error a *second* time.
 
-Then put this logic in do_machine_check() or in some sensible place
-that it calls via some ops structure or directly.  Don't hide it in
-some incomprehensible, possibly nondeterministic place in a notifier
-chain.
+That's pretty hard with a chain.  I think folks will have a conniptions
+if we invent an error return from a notifier chain function that means
+"Go back and start over". Though if we did it would make the "handled"
+field useful for functions that didn't want to redo ... they'd just
+check if "their" bit in handled was already set.
 
-> 2) Errata. Perhaps a vendor/platform specific function at the head
->    of the notify chain that weeds out errors that should never have
->    been reported.
+Still, seems like a terrible idea.
 
-No, do this before the notifier chain please.
+> I don't think there's a case like that now but I'm just playing the
+> devil's advocate here. Because a use case like that would break our
+> simplistic, sequential assembly line of MCE decoding.
 
-AMA Capital Management, LLC
+If some driver really wants multiple bites at an error on the
+chain it could register more than one handler with different
+priorities.  In which case we should have "enum" names for the
+highest and lowest priorities so such a driver can go "first"
+or "last" (though such a thing would be dependent on whether
+some other driver was attempting to add a "first" or "last"
+entry on the chain).
+
+-Tony
