@@ -2,137 +2,140 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975F5C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1F6C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72370206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373BB206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuFXWeFq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EFZ1M3LZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgBMSye (ORCPT
+        id S1728319AbgBMSzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:54:34 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40379 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727761AbgBMSye (ORCPT
+        Thu, 13 Feb 2020 13:55:05 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37572 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbgBMSzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:54:34 -0500
-Received: by mail-il1-f195.google.com with SMTP id i7so5894783ilr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:54:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bRoElX6JuGSJIj1nzDEkGjFX2yatSmfvyb68/4mK0og=;
-        b=KuFXWeFq0mYsucnXtEil4E8uJ/Xi9I8NFtS2D8Nq96ybHLSqVX3cFY/M54teo+zphX
-         8Q+vqenQIgFsq8dmQMXw3ZmpsdTUAwPivpn+7DoDNxs33VG0bt4EL4MZs0CaLxuCCLQC
-         BvDCnlVtrNTMZosO8DIxQVYaG1bHk04W/CfOjWw0T26357uN55rpZ+etDHcZAOfWgF3y
-         PkKoBqpCWGE4usla6USJnXEklQP99luo5rprwn5EvvXoKO6HURlR+gMQJlQ/HNas5q7g
-         iuefhdaHNMK9XZkv7BVrGXJNMutQvtTgtkimqb5M0PlEZbHRmiy9DPXnQohL6Qkm4NYw
-         B8aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bRoElX6JuGSJIj1nzDEkGjFX2yatSmfvyb68/4mK0og=;
-        b=qLupRZJPPTw6pQT8cJWZ8DyfXqc7Ier+qxxnFO8fYKoD0jJlJISwLviby5qEvLaZTI
-         SlHQ9JUfkjOkJCemSaeh6Kt8Jk/IKuNxZmwVIcHIT3fHn9IH60kHHRcRVmBzSuzn2vEd
-         n9Q/dbGDCzCCh+/l2XcdcpVYGOIQBVYjomKXroLceTSsi7idV7/dO59n9WXhYZiovSI1
-         /nvFA7c90GKjgWl7ximtPEEMWWjOtQWREc9KTj3HSouKqGaLnHxfekUEcfUn2DFeg3Nf
-         FqDt88RaH4E5VokylSCdl31wzlDWkkK7HlVQKTVxf8Q1JGl4JqCUG079j6gx7p+ftArL
-         jJkQ==
-X-Gm-Message-State: APjAAAWR4PekDkaENofEWox94J58uyn3iwgnSoGN0gsBkxMK3Gzi9nKC
-        97JN8uoJE0jkerDaHxfTHseS31M1pNF7OV3xe4s=
-X-Google-Smtp-Source: APXvYqx18+9TYWouF+4cCT1KAMj8Zzdhy8YqKGILwwfJrRQPAlQk3MAbpmKQbgGXEpXBEPCMFAe+q5YqXY1DKL8W66k=
-X-Received: by 2002:a92:9ac5:: with SMTP id c66mr18208254ill.232.1581620072485;
- Thu, 13 Feb 2020 10:54:32 -0800 (PST)
+        Thu, 13 Feb 2020 13:55:05 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DIqbxH014791;
+        Thu, 13 Feb 2020 18:53:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=xxN1ToWl43jQv4Pb6pKw4TpxAtDjjezu7dXEUGdd9F4=;
+ b=EFZ1M3LZ4fWyLWpmMcGqXG+b9pCa4PfOEc/PgvFeywSF+E2mxW1uUHUVakOp4OS+vRqC
+ 7/9GrUjD5u7IRLs+rzBz7l72TNelNDjqgNcV/Js1CZknAQtgRpU64JLc6L73RKmwtT9u
+ G295K2MYoLfnPV/GxDxATByMR/cTVlOppqYLQ62tskfjx70B96DVit7XK8YY+AoFz33Z
+ mACXsCeORMOFt15FWyMvXrhFEG/aNeDEboMLhb3Y2TDBDjFk6T3HljXRs+Eu/hir+Dv7
+ U1swXxF7zLvsEEAVJjtQmpqgCeKsTJ1OWTTKlFZ3Suk0mIRQGOQmC12YU6z9rMiIxRzb wg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2y2k88mhvp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 18:53:43 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DIpqZm043233;
+        Thu, 13 Feb 2020 18:53:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2y4k80de1h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 18:53:42 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01DIrZ8S010833;
+        Thu, 13 Feb 2020 18:53:35 GMT
+Received: from localhost.localdomain (/10.159.243.170)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Feb 2020 10:53:35 -0800
+Subject: Re: [PATCH] KVM: x86: eliminate some unreachable code
+To:     linmiaohe <linmiaohe@huawei.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <ac51e889-624a-b108-d03c-4dc3e91c9a69@oracle.com>
+Date:   Thu, 13 Feb 2020 10:53:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20200213132203.23441-1-kraxel@redhat.com> <20200213132203.23441-4-kraxel@redhat.com>
-In-Reply-To: <20200213132203.23441-4-kraxel@redhat.com>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Thu, 13 Feb 2020 10:54:21 -0800
-Message-ID: <CAPaKu7TgvBtgPuJaeesCUP4zxDOO=xxtun48P=bT0VBF4-dNFg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] drm/virtio: batch resource creation
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 impostorscore=0 clxscore=1011 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 5:22 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+
+On 2/12/20 6:53 PM, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 >
-> Move virtio_gpu_notify() to higher-level functions for
-> virtio_gpu_cmd_create_resource(), virtio_gpu_cmd_resource_create_3d()
-> and virtio_gpu_cmd_resource_attach_backing().
+> These code are unreachable, remove them.
 >
-> virtio_gpu_object_create() will batch commands and notify only once when
-> creating a resource.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 > ---
->  drivers/gpu/drm/virtio/virtgpu_object.c | 1 +
->  drivers/gpu/drm/virtio/virtgpu_vq.c     | 3 ---
->  2 files changed, 1 insertion(+), 3 deletions(-)
+>   arch/x86/kvm/vmx/vmx.c | 1 -
+>   arch/x86/kvm/x86.c     | 3 ---
+>   2 files changed, 4 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> index 8870ee23ff2b..65d6834d3c74 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -224,6 +224,7 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->                 return ret;
-The virtqueue might become full without ever being notified on errors.
-We should notify on errors, or better yet, virtio_gpu_queue_ctrl_sgs
-should notify before waiting.
-
-
->         }
->
-> +       virtio_gpu_notify(vgdev);
->         *bo_ptr = bo;
->         return 0;
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> index 9d4ca0fafa5f..778b7acf2f7f 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> @@ -514,7 +514,6 @@ void virtio_gpu_cmd_create_resource(struct virtio_gpu_device *vgdev,
->         cmd_p->height = cpu_to_le32(params->height);
->
->         virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
-> -       virtio_gpu_notify(vgdev);
->         bo->created = true;
->  }
->
-> @@ -643,7 +642,6 @@ virtio_gpu_cmd_resource_attach_backing(struct virtio_gpu_device *vgdev,
->         vbuf->data_size = sizeof(*ents) * nents;
->
->         virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
-> -       virtio_gpu_notify(vgdev);
->  }
->
->  static void virtio_gpu_cmd_get_display_info_cb(struct virtio_gpu_device *vgdev,
-> @@ -1010,7 +1008,6 @@ virtio_gpu_cmd_resource_create_3d(struct virtio_gpu_device *vgdev,
->         cmd_p->flags = cpu_to_le32(params->flags);
->
->         virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
-> -       virtio_gpu_notify(vgdev);
->
->         bo->created = true;
->  }
-> --
-> 2.18.2
->
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bb5c33440af8..b6d4eafe01cf 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4505,7 +4505,6 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
+>   	case GP_VECTOR:
+>   	case MF_VECTOR:
+>   		return true;
+> -	break;
+>   	}
+>   	return false;
+>   }
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..a597009aefd7 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3081,7 +3081,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   		break;
+>   	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
+>   		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
+> -		break;
+>   	case MSR_IA32_TSCDEADLINE:
+>   		msr_info->data = kvm_get_lapic_tscdeadline_msr(vcpu);
+>   		break;
+> @@ -3164,7 +3163,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   		return kvm_hv_get_msr_common(vcpu,
+>   					     msr_info->index, &msr_info->data,
+>   					     msr_info->host_initiated);
+> -		break;
+>   	case MSR_IA32_BBL_CR_CTL3:
+>   		/* This legacy MSR exists but isn't fully documented in current
+>   		 * silicon.  It is however accessed by winxp in very narrow
+> @@ -8471,7 +8469,6 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
+>   		break;
+>   	default:
+>   		return -EINTR;
+> -		break;
+>   	}
+>   	return 1;
+>   }
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
