@@ -2,124 +2,198 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D28C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA9BC3B18F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2541424680
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB0E24687
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="rRCxR57C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgBMV7D (ORCPT
+        id S1728436AbgBMV7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:59:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55271 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgBMV7D (ORCPT
+        Thu, 13 Feb 2020 16:59:10 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43661 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgBMV7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:59:03 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2MVe-0008BD-Hj; Thu, 13 Feb 2020 22:58:58 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2MVe-0001Pw-0x; Thu, 13 Feb 2020 22:58:58 +0100
-Date:   Thu, 13 Feb 2020 22:58:57 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND v5 2/2] pwm: core: Convert period and duty cycle to u64
-Message-ID: <20200213215857.uq4f44jqlayhbiqh@pengutronix.de>
-References: <cover.1581533161.git.gurus@codeaurora.org>
- <f7986df5d54b2bb84ee14e80d0c1225444608f32.1581533161.git.gurus@codeaurora.org>
- <20200213101802.owpluhixtpor3qi3@pengutronix.de>
- <20200213193926.GA20183@codeaurora.org>
- <20200213202804.pqgbqtphuboqo6af@pengutronix.de>
- <20200213210648.GA12663@codeaurora.org>
+        Thu, 13 Feb 2020 16:59:10 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dc19so8687149edb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:59:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dR96Ls041PGles0WWTgdxsFA4gswjPBr2dNrlkBSuNQ=;
+        b=rRCxR57CMKJEJvKUsBRBaCGNlEl5GeneJok3J1oqVCL9i03XHBTkzBKLVXlCX80abR
+         waS3e2st7hqr5AUSVywbiuHu/XcoJmFgOcPcq/NRWkATB05enSVqkl80JRFrqFA7+TzZ
+         VP60OmlNYIOOnNo1pTgwF6ZUTJ9B+xYWfKepxQsuTcSQlH2ADq4oxtRLbeGf/SyLe7Z5
+         YYEdGrtOkXicpYXO7tS/kxFgOlUN19E6+SiiE6iPdGEHXwVtgWm62Jeai1NFqHNb4FeV
+         UgDE19W1OOEMKwc3kfP3rCvuUG9qKToWRYzTN/pkKxHZ/jtbJNqySZOSNxS3RDDHFH+p
+         8DDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dR96Ls041PGles0WWTgdxsFA4gswjPBr2dNrlkBSuNQ=;
+        b=Fx6qV7wol1H9GZIi6gZFgR3XuGNSDXNVBOoeN0PSpDAk4mTmM55SwbIa4hGoFs44i2
+         yrQGQxTLK7ECsbUcqB66wE7kfQ1pqXhOB43mecQkfal1G9o4RJmrFnytS3ZFyrRRX7/H
+         4gaeN0N6bo+2Vz/3aibId2I8nqprbbwv0vlXWyCFRfMl4kMVdfDuPyQgaVNnBZOtAorv
+         ZcK4MfrW1EqStnujrE3csj+qyU51aEXhD8q/uSUmAM1iMfAgbZ4xLpiCFYu5iHhKqEdA
+         GNOuA6/Dpotx8qYTZ2psnIVAPbkUBOHW25S3M1bYfpDG4dSv9C863xfYXq56rDScgyIZ
+         t23g==
+X-Gm-Message-State: APjAAAU8RPlGXIacD1/D3Ca8+NoYAujv9cjBNVh2mB9q0Ai2+/XORDqM
+        HurP8t7PLJ/zbk8WZkacf6MJ2wHA/hglQPAaQw9J
+X-Google-Smtp-Source: APXvYqwJlC4P1+vTqQ7auzlqHDyoqi32fnbka+h4eFFK4GnrJSQwBwYPSRpLTAitL/ZfvrnPR1P7gUIIEptxDZxCT9E=
+X-Received: by 2002:a50:a7a5:: with SMTP id i34mr17484612edc.128.1581631147637;
+ Thu, 13 Feb 2020 13:59:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200213210648.GA12663@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <cover.1577736799.git.rgb@redhat.com> <5941671b6b6b5de28ab2cc80e72f288cf83291d5.1577736799.git.rgb@redhat.com>
+ <CAHC9VhQYXQp+C0EHwLuW50yUenfH4KF1xKQdS=bn_OzHfnFmmg@mail.gmail.com>
+ <20200205003930.2efpm4tvrisgmj4t@madcap2.tricolour.ca> <CAHC9VhSsfBbfYmqLoR=QBgF5_VwbA8Dqqz97MjqwwJ6Jq6fHwA@mail.gmail.com>
+ <20200206125135.u4dmybkmvxfgui2b@madcap2.tricolour.ca>
+In-Reply-To: <20200206125135.u4dmybkmvxfgui2b@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 13 Feb 2020 16:58:56 -0500
+Message-ID: <CAHC9VhT8RsFtmqD22p_NxJaqoAg+do9mX45Luw9fEkr+nQjvxg@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 16/16] audit: add capcontid to set contid
+ outside init_user_ns
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 01:06:49PM -0800, Guru Das Srinagesh wrote:
-> On Thu, Feb 13, 2020 at 09:28:04PM +0100, Uwe Kleine-König wrote:
-> > On Thu, Feb 13, 2020 at 11:39:26AM -0800, Guru Das Srinagesh wrote:
-> > > On Thu, Feb 13, 2020 at 11:18:02AM +0100, Uwe Kleine-König wrote:
-> > > > Hello,
-> > > > 
-> > > > On Wed, Feb 12, 2020 at 10:54:08AM -0800, Guru Das Srinagesh wrote:
-> > > > > @@ -305,8 +305,8 @@ struct pwm_chip {
-> > > > >   * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
-> > > > >   */
-> > > > >  struct pwm_capture {
-> > > > > -	unsigned int period;
-> > > > > -	unsigned int duty_cycle;
-> > > > > +	u64 period;
-> > > > > +	u64 duty_cycle;
-> > > > >  };
-> > > > 
-> > > > Is this last hunk a separate change?
-> > > > 
-> > > > Otherwise looks fine.
-> > > 
-> > > No, this is very much a part of the change and not a separate one.
-> > 
-> > Not sure we understand each other. I wondered if conversion of the
-> > pwm_capture stuff should be done separately. (OTOH I wonder if this is
-> > used at all and already considered deleting it.)
-> 
-> I see. Could you please elaborate on your concerns? I think this hunk's
-> being in this patch makes sense as duty and period should be converted
-> to u64 throughout the file in one go.
+On Thu, Feb 6, 2020 at 7:52 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-02-05 17:56, Paul Moore wrote:
+> > On Tue, Feb 4, 2020 at 7:39 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-01-22 16:29, Paul Moore wrote:
+> > > > On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > >
+> > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
+> > > > > process in a non-init user namespace the capability to set audit
+> > > > > container identifiers.
+> > > > >
+> > > > > Provide /proc/$PID/audit_capcontid interface to capcontid.
+> > > > > Valid values are: 1==enabled, 0==disabled
+> > > >
+> > > > It would be good to be more explicit about "enabled" and "disabled" in
+> > > > the commit description.  For example, which setting allows the target
+> > > > task to set audit container IDs of it's children processes?
+> > >
+> > > Ok...
+> > >
+> > > > > Report this action in message type AUDIT_SET_CAPCONTID 1022 with fields
+> > > > > opid= capcontid= old-capcontid=
+> > > > >
+> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > > ---
+> > > > >  fs/proc/base.c             | 55 ++++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  include/linux/audit.h      | 14 ++++++++++++
+> > > > >  include/uapi/linux/audit.h |  1 +
+> > > > >  kernel/audit.c             | 35 +++++++++++++++++++++++++++++
+> > > > >  4 files changed, 105 insertions(+)
+> >
+> > ...
+> >
+> > > > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > > > index 1287f0b63757..1c22dd084ae8 100644
+> > > > > --- a/kernel/audit.c
+> > > > > +++ b/kernel/audit.c
+> > > > > @@ -2698,6 +2698,41 @@ static bool audit_contid_isowner(struct task_struct *tsk)
+> > > > >         return false;
+> > > > >  }
+> > > > >
+> > > > > +int audit_set_capcontid(struct task_struct *task, u32 enable)
+> > > > > +{
+> > > > > +       u32 oldcapcontid;
+> > > > > +       int rc = 0;
+> > > > > +       struct audit_buffer *ab;
+> > > > > +
+> > > > > +       if (!task->audit)
+> > > > > +               return -ENOPROTOOPT;
+> > > > > +       oldcapcontid = audit_get_capcontid(task);
+> > > > > +       /* if task is not descendant, block */
+> > > > > +       if (task == current)
+> > > > > +               rc = -EBADSLT;
+> > > > > +       else if (!task_is_descendant(current, task))
+> > > > > +               rc = -EXDEV;
+> > > >
+> > > > See my previous comments about error code sanity.
+> > >
+> > > I'll go with EXDEV.
+> > >
+> > > > > +       else if (current_user_ns() == &init_user_ns) {
+> > > > > +               if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
+> > > > > +                       rc = -EPERM;
+> > > >
+> > > > I think we just want to use ns_capable() in the context of the current
+> > > > userns to check CAP_AUDIT_CONTROL, yes?  Something like this ...
+> > >
+> > > I thought we had firmly established in previous discussion that
+> > > CAP_AUDIT_CONTROL in anything other than init_user_ns was completely irrelevant
+> > > and untrustable.
+> >
+> > In the case of a container with multiple users, and multiple
+> > applications, one being a nested orchestrator, it seems relevant to
+> > allow that container to control which of it's processes are able to
+> > exercise CAP_AUDIT_CONTROL.  Granted, we still want to control it
+> > within the overall host, e.g. the container in question must be
+> > allowed to run a nested orchestrator, but allowing the container
+> > itself to provide it's own granularity seems like the right thing to
+> > do.
+>
+> Looking back to discussion on the v6 patch 2/10 (2019-05-30 15:29 Paul
+> Moore[1], 2019-07-08 14:05 RGB[2]) , it occurs to me that the
+> ns_capable(CAP_AUDIT_CONTROL) application was dangerous since there was
+> no parental accountability in storage or reporting.  Now that is in
+> place, it does seem a bit more reasonable to allow it, but I'm still not
+> clear on why we would want both mechanisms now.  I don't understand what
+> the last line in that email meant: "We would probably still want a
+> ns_capable(CAP_AUDIT_CONTROL) restriction in this case."  Allow
+> ns_capable(CAP_AUDIT_CONTROL) to govern these actions, or restrict
+> ns_capable(CAP_AUDIT_CONTROL) from being used to govern these actions?
+>
+> If an unprivileged user has been given capcontid to be able run their
+> own container orchestrator/engine and spawns a user namespace with
+> CAP_AUDIT_CONTROL, what matters is capcontid, and not CAP_AUDIT_CONTROL.
+> I could see needing CAP_AUDIT_CONTROL *in addition* to capcontid to give
+> it finer grained control, but since capcontid would have to be given to
+> each process explicitly anways, I don't see the point.
+>
+> If that unprivileged user had not been given capcontid,
+> giving itself or one of its descendants CAP_AUDIT_CONTROL should not let
+> it jump into the game all of a sudden unless the now chained audit
+> container identifiers are deemed accountable enough.  And then now we
+> need those hard limits on container depth and network namespace
+> container membership.
 
-I guess that capturing isn't much used if at all. So keeping it as
-limited as it is today doesn't seem like a bad idea to me. (OK, you
-could also accidentally break it such that we can say in a few years
-time: This is broken since v5.6, obviously nobody cares and we remove it
-for good :-))
-
-> Also, it looks like pwm_capture is being used by pwm-sti.c and
-> pwm-stm32.c currently.
-
-Yeah, these two drivers provide the needed callback. That doesn't
-necessarily mean there are active users. Also I'm convinced that there
-are implementation problems. For example the commit that added capture
-support for stm32 has in its commit log:
-
-	Capture requires exclusive access (e.g. no pwm output running at
-	the same time, to protect common prescaler).
-
-but the capture callback doesn't even check if the PWMs are in use (but
-I only looked quickly, so I might have missed something).
-
-Apart from that I think that the capturing stuff doesn't really fit into
-the PWM framework which is (apart from the capture callback and API
-function) about PWM *outputs* and most hardware's I know about either
-don't support capturing or it is located in a different IP than the PWM
-output. (And it is not even possible today to register a driver that can
-only capture but not drive a PWM output.)
-
-Best regards
-Uwe
+Perhaps I'm not correctly understanding what you are trying to do with
+this patchset, but my current understanding is that you are trying to
+use capcontid to control which child audit container IDs (ACIDs) are
+allowed to manage their own ACIDs.  Further, I believe that the
+capcontid setting operates at a per-ACID level, meaning there is no
+provision for the associated container to further restrict that
+ability, i.e. no access control granularity below the ACID level.  My
+thinking is that ns_capable(CAP_AUDIT_CONTROL) could be used within an
+ACID to increase the granularity of the access controls so that only
+privileged processes running inside the ACID would be able to manage
+the ACIDs.  Does that make sense?
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+paul moore
+www.paul-moore.com
