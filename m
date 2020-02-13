@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1D3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B7EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3EF720656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83EF20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610196;
-	bh=UgUBiE+ZkRaMWhlUjKNj+2Tuy86AoWjgnJq2BmuxJRc=;
+	s=default; t=1581610199;
+	bh=00hycvRWbvcfPEzeSB7Pad5lAyiMKp3N+PVa35w2HL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crtVxhMoTCDII7s8izS8EcU5GWKFYH2GLxv/BZXr6y+oxciUVW510TYTygYn5DDrY
-	 e3n3IAE/m6uKXV0EFgK1ZfWsH2LeHKTMa8C5dRbwUDiFQvnQd23k31TNULQ2N5s2Vq
-	 4YY0JUcDOsuGEwD1sqvRwfYCEgHvston8mhMYgu4=
+	b=DLcAaAOWhoDJygtQTvWFsepbvEKL/NeUWWNb7Ny3ML/9CPVkkAp1t2o5j+kOG2Fi5
+	 3hc3VuLhmEa+gxdj8FM5FZwNL2y3hfgcM+ic6szNmniDSADbgTUck5wraH56JDsG5j
+	 mgrbZLrabSWjWOJtEFDEGVp9DYiF1L5cIHyfO96w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgBMPWm (ORCPT
+        id S1730415AbgBMQJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60128 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:09:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbgBMPWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:34 -0500
+        id S1728063AbgBMPWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:42 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84506246B5;
-        Thu, 13 Feb 2020 15:22:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D18246A3;
+        Thu, 13 Feb 2020 15:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607352;
-        bh=UgUBiE+ZkRaMWhlUjKNj+2Tuy86AoWjgnJq2BmuxJRc=;
+        s=default; t=1581607360;
+        bh=00hycvRWbvcfPEzeSB7Pad5lAyiMKp3N+PVa35w2HL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AtDv5YCwFtBCr95boqw0TSf7kADrhG8SDADWulgsujh9IBpa96Segn1DCvkhI0Unc
-         GAfQOv5+j9j4zoVwIfLPN7ybJM3u+RUt2szTrTaNgaHUlgJG0VFu6k/4IwarCFrjcM
-         0zoisIkCmdOCXEUgX+RXDKoVJ2UNOv/BYNqJB3t0=
+        b=p27w8odo4alMFITMNyFXixzXTvE90Dt+plVLnYHbalEMI0aullOYcRxlU4FfYZnsN
+         AFOQr0rFOsii46N00oliScyYOc8XBwFTUl73QV/GZ8i15rPvJvWwwkCRTyGTQxnEng
+         lZOGhqaNW3i1U2K6YoW4vzD5MCHz3prhM8EWmzP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Frank Sorenson <sorenson@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.4 34/91] sunrpc: expiry_time should be seconds not timeval
-Date:   Thu, 13 Feb 2020 07:19:51 -0800
-Message-Id: <20200213151834.880205664@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.4 19/91] mmc: spi: Toggle SPI polarity, do not hardcode it
+Date:   Thu, 13 Feb 2020 07:19:36 -0800
+Message-Id: <20200213151829.134508209@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -61,54 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 3d96208c30f84d6edf9ab4fac813306ac0d20c10 upstream.
+commit af3ed119329cf9690598c5a562d95dfd128e91d6 upstream.
 
-When upcalling gssproxy, cache_head.expiry_time is set as a
-timeval, not seconds since boot. As such, RPC cache expiry
-logic will not clean expired objects created under
-auth.rpcsec.context cache.
+The code in mmc_spi_initsequence() tries to send a burst with
+high chipselect and for this reason hardcodes the device into
+SPI_CS_HIGH.
 
-This has proven to cause kernel memory leaks on field. Using
-64 bit variants of getboottime/timespec
+This is not good because the SPI_CS_HIGH flag indicates
+logical "asserted" CS not always the physical level. In
+some cases the signal is inverted in the GPIO library and
+in that case SPI_CS_HIGH is already set, and enforcing
+SPI_CS_HIGH again will actually drive it low.
 
-Expiration times have worked this way since 2010's c5b29f885afe "sunrpc:
-use seconds since boot in expiry cache".  The gssproxy code introduced
-in 2012 added gss_proxy_save_rsc and introduced the bug.  That's a while
-for this to lurk, but it required a bit of an extreme case to make it
-obvious.
+Instead of hard-coding this, toggle the polarity so if the
+default is LOW it goes high to assert chipselect but if it
+is already high then toggle it low instead.
 
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Cc: Phil Elwell <phil@raspberrypi.org>
+Reported-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20191204152749.12652-1-linus.walleij@linaro.org
 Cc: stable@vger.kernel.org
-Fixes: 030d794bf498 "SUNRPC: Use gssproxy upcall for server..."
-Tested-By: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/auth_gss/svcauth_gss.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mmc/host/mmc_spi.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1173,6 +1173,7 @@ static int gss_proxy_save_rsc(struct cac
- 		dprintk("RPC:       No creds found!\n");
- 		goto out;
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1153,17 +1153,22 @@ static void mmc_spi_initsequence(struct
+ 	 * SPI protocol.  Another is that when chipselect is released while
+ 	 * the card returns BUSY status, the clock must issue several cycles
+ 	 * with chipselect high before the card will stop driving its output.
++	 *
++	 * SPI_CS_HIGH means "asserted" here. In some cases like when using
++	 * GPIOs for chip select, SPI_CS_HIGH is set but this will be logically
++	 * inverted by gpiolib, so if we want to ascertain to drive it high
++	 * we should toggle the default with an XOR as we do here.
+ 	 */
+-	host->spi->mode |= SPI_CS_HIGH;
++	host->spi->mode ^= SPI_CS_HIGH;
+ 	if (spi_setup(host->spi) != 0) {
+ 		/* Just warn; most cards work without it. */
+ 		dev_warn(&host->spi->dev,
+ 				"can't change chip-select polarity\n");
+-		host->spi->mode &= ~SPI_CS_HIGH;
++		host->spi->mode ^= SPI_CS_HIGH;
  	} else {
-+		struct timespec64 boot;
+ 		mmc_spi_readbytes(host, 18);
  
- 		/* steal creds */
- 		rsci.cred = ud->creds;
-@@ -1193,6 +1194,9 @@ static int gss_proxy_save_rsc(struct cac
- 						&expiry, GFP_KERNEL);
- 		if (status)
- 			goto out;
-+
-+		getboottime64(&boot);
-+		expiry -= boot.tv_sec;
- 	}
- 
- 	rsci.h.expiry_time = expiry;
+-		host->spi->mode &= ~SPI_CS_HIGH;
++		host->spi->mode ^= SPI_CS_HIGH;
+ 		if (spi_setup(host->spi) != 0) {
+ 			/* Wot, we can't get the same setup we had before? */
+ 			dev_err(&host->spi->dev,
 
 
