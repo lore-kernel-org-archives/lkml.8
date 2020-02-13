@@ -2,51 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BF7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C52C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E611D24693
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EABE246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607368;
-	bh=vF4Tl7FSUcGUORXXCvptmOuZZk3w99WSLJoEbil353U=;
+	s=default; t=1581607377;
+	bh=xp5AfYsg5Lg7c8CdywzoLdQcyf/BrBlzYmWCtroqw9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ro/n300yE2aStMYlrlGyLGHObVf6Ft2SkUVJUymNSOicjNG87eQDkj3E041uRH5u0
-	 k2FMNH1Ycas62aO+Ltg6yKVOxmd1wISRcDHJala0wrGvXYctuio4URvMYKcJJHlUg8
-	 AZIcj9uLwHI7Hf+n5DblyWSpnIHilgJ0EDPr+zPw=
+	b=deT77HYDODcwnB9MlLLM7AbSRMCM7zyZKYMJGyaNIV0+S2I/8YteEh2jFyLujpy6E
+	 +wGgAdP5fWFueb+JLCAWG6mk4JMG1v30x6cKcNSSZmmsLF6uDydhAuJXDzuYRfl5Sh
+	 6xwBwKCqG8h1sqq1sTM2UssZqumo+dUPQ0ffD0Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgBMPWr (ORCPT
+        id S1728195AbgBMPW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60336 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:22:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbgBMPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:38 -0500
+        id S1728066AbgBMPWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:42 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A9122469A;
-        Thu, 13 Feb 2020 15:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A816E246A4;
+        Thu, 13 Feb 2020 15:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607356;
-        bh=vF4Tl7FSUcGUORXXCvptmOuZZk3w99WSLJoEbil353U=;
+        s=default; t=1581607361;
+        bh=xp5AfYsg5Lg7c8CdywzoLdQcyf/BrBlzYmWCtroqw9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzgZoMmb+N1wLN1PBMnVRJ7dAXFuyEHCDBhkFQMo7beUJB4bphBvyFO4OE7u5Iid4
-         ux+DZjyKmnrdfl/8fcBQTIkxJB48CroTff42fngz6VlfuAK2vd3d70lhisbS62Yjol
-         GGNw43OOjWE7PSMHBagZm5+5HLUUiWWPWFyAtvZw=
+        b=aLE2SJpTMMjfCekGlGs0ht7VCQjqQPaws2JBUqvpbn7/VHazhXlh6SKnGVdWa6hLB
+         DNhaCaCAMa+SgHPVRMNW787Dh7zhwMXD1/NGA7CAycvLHhDLL5w8dS2C4Xyjd1vr6B
+         Hbv3raVAIV3XUnUhRnh7STxDQTYiXKgi75GcxnS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 4.4 23/91] power: supply: ltc2941-battery-gauge: fix use-after-free
-Date:   Thu, 13 Feb 2020 07:19:40 -0800
-Message-Id: <20200213151830.591680561@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 48/91] scsi: csiostor: Adjust indentation in csio_device_reset
+Date:   Thu, 13 Feb 2020 07:20:05 -0800
+Message-Id: <20200213151840.304812250@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -59,41 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit a60ec78d306c6548d4adbc7918b587a723c555cc upstream.
+commit a808a04c861782e31fc30e342a619c144aaee14a upstream.
 
-This driver's remove path calls cancel_delayed_work().
-However, that function does not wait until the work function
-finishes. This could mean that the work function is still
-running after the driver's remove function has finished,
-which would result in a use-after-free.
+Clang warns:
 
-Fix by calling cancel_delayed_work_sync(), which ensures that
-that the work is properly cancelled, no longer running, and
-unable to re-schedule itself.
+../drivers/scsi/csiostor/csio_scsi.c:1386:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+         csio_lnodes_exit(hw, 1);
+         ^
+../drivers/scsi/csiostor/csio_scsi.c:1382:2: note: previous statement is
+here
+        if (*buf != '1')
+        ^
+1 warning generated.
 
-This issue was detected with the help of Coccinelle.
+This warning occurs because there is a space after the tab on this
+line.  Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/818
+Link: https://lore.kernel.org/r/20191218014726.8455-1-natechancellor@gmail.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/ltc2941-battery-gauge.c |    2 +-
+ drivers/scsi/csiostor/csio_scsi.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/power/ltc2941-battery-gauge.c
-+++ b/drivers/power/ltc2941-battery-gauge.c
-@@ -364,7 +364,7 @@ static int ltc294x_i2c_remove(struct i2c
- {
- 	struct ltc294x_info *info = i2c_get_clientdata(client);
+--- a/drivers/scsi/csiostor/csio_scsi.c
++++ b/drivers/scsi/csiostor/csio_scsi.c
+@@ -1383,7 +1383,7 @@ csio_device_reset(struct device *dev,
+ 		return -EINVAL;
  
--	cancel_delayed_work(&info->work);
-+	cancel_delayed_work_sync(&info->work);
- 	power_supply_unregister(info->supply);
- 	return 0;
- }
+ 	/* Delete NPIV lnodes */
+-	 csio_lnodes_exit(hw, 1);
++	csio_lnodes_exit(hw, 1);
+ 
+ 	/* Block upper IOs */
+ 	csio_lnodes_block_request(hw);
 
 
