@@ -2,174 +2,110 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00EDC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C2BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9937A206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22521222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dcS6pegO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgBMSUZ (ORCPT
+        id S1728009AbgBMSVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:20:25 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36012 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgBMSUY (ORCPT
+        Thu, 13 Feb 2020 13:21:13 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34706 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgBMSVN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:20:24 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DIIrSN149131;
-        Thu, 13 Feb 2020 13:20:16 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn6jp8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 13:20:15 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01DICA3c018763;
-        Thu, 13 Feb 2020 18:20:13 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 2y5bc0050h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 18:20:13 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DIKCGY52494764
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 18:20:12 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0BC9B2066;
-        Thu, 13 Feb 2020 18:20:12 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A021FB2065;
-        Thu, 13 Feb 2020 18:20:12 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Feb 2020 18:20:12 +0000 (GMT)
-Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
-To:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, gcwilson@linux.ibm.com
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
- <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
-Date:   Thu, 13 Feb 2020 13:20:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 13 Feb 2020 13:21:13 -0500
+Received: by mail-ed1-f66.google.com with SMTP id r18so8021792edl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:21:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ckYAtFkLGTpqFasss2Yh3sgNnvC6X5fXw2I1Fp2BCnI=;
+        b=dcS6pegO12bP6j8/IxZRcJacM50FbD1iRPyqN51QsgWQuddjlR5/CEHWNuIeE9aA3J
+         m7T0l7tq2/Gcod87ssIr+J94iXOhbqETJnhWbz8UtLia+BEPXix4UP2NHFcQrNy0NNoO
+         I9LF6zTMEL2mdpfCuweuZ08YKBckzPkf4JAFtJlnnAIDYYqB6touDFQccxfDXWXmVo8q
+         RYejfAEVD1DrZcyUxTqTcmucp6CwA+iVZuOpyRGNDZL9MWbPi47AtWH2/Il6ez6JQNv3
+         u3cMYgodLRvwzyGKKU17fkEX23SDPg/uYhyBUuk3wITZPNplSPlzZU3cf8y8PHJGgCvn
+         0iDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ckYAtFkLGTpqFasss2Yh3sgNnvC6X5fXw2I1Fp2BCnI=;
+        b=XLN7Zvg/brLcXIfN1vIqNatow1JwDPt7yFdXLwfdyN8tZu4bEGPZbQGmyxSVZxP3pz
+         u/3gBb2w4bEpf6CkYqzg9Z4iMmRx7GvJheY5IrEFIzy4KshhWf/hLkczHU8d72PSL1s0
+         PmZSvedmwNT2BuQzmO0mIYE5Khnm+VwW97DsNOZvpD3L8jsEjXsZ7yNZGhMgk1VEtb8E
+         CnL8NPWOwugb0i4oUjZDa5xsM39aT25h9VCPPm/fPF6F5v0GBs94pLXRmtOEv75WvKnA
+         OVORsHejHgqV3FpQmoc7OThMMWpqlK0MT/whqFQFfBtlfYJQFupkBtFH1D5IpljKjAwC
+         I7Rg==
+X-Gm-Message-State: APjAAAUgMj5/Ru0ij2ZC499MAIg7JkDe6501tSIeTIYtew4dxOUndqlJ
+        Q8WRxymwFPTDYTcVOwSwpNBvwf7beyxG7/EgN1rfoA==
+X-Google-Smtp-Source: APXvYqwiJPQ8Fg+Dw3qWjh34zdXDeJrcERoGTVCIyZvCpVoBcfFB4U15IkYT3Sgub2qcfUBd9eIRuKLQ1/iNvIecqKg=
+X-Received: by 2002:a17:906:4e01:: with SMTP id z1mr17455077eju.46.1581618070828;
+ Thu, 13 Feb 2020 10:21:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-13_06:2020-02-12,2020-02-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130129
+References: <20200207201856.46070-1-bgeffon@google.com> <20200210104520.cfs2oytkrf5ihd3m@box>
+ <CADyq12wcwvRLwueucHFV2ErL67etOJdFGYQdqVFM2WAeOkMGQA@mail.gmail.com> <20200213120813.myanzyjmpyzixghf@box>
+In-Reply-To: <20200213120813.myanzyjmpyzixghf@box>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Thu, 13 Feb 2020 10:20:44 -0800
+Message-ID: <CADyq12wWOhGDeUeOB74dxuRKjPhduMWZLBMxOxpm5-yHOpjaRw@mail.gmail.com>
+Subject: Re: [PATCH v4] mm: Add MREMAP_DONTUNMAP to mremap().
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 12:53 PM, Nayna wrote:
->
-> On 2/4/20 8:27 AM, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> Support TPM 2 in the IBM vTPM driver. The hypervisor tells us what
->> version of TPM is connected through the vio_device_id.
->>
->> In case a TPM 2 is found, we set the TPM_OPS_AUTO_STARTUP flag to
->> have properly initialize the TPM and driver.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> ---
->>   drivers/char/tpm/tpm_ibmvtpm.c | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c 
->> b/drivers/char/tpm/tpm_ibmvtpm.c
->> index eee566eddb35..d479d64a65aa 100644
->> --- a/drivers/char/tpm/tpm_ibmvtpm.c
->> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
->> @@ -29,6 +29,7 @@ static const char tpm_ibmvtpm_driver_name[] = 
->> "tpm_ibmvtpm";
->>
->>   static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
->>       { "IBM,vtpm", "IBM,vtpm"},
->> +    { "IBM,vtpm", "IBM,vtpm20"},
->>       { "", "" }
->>   };
->>   MODULE_DEVICE_TABLE(vio, tpm_ibmvtpm_device_table);
->> @@ -443,7 +444,7 @@ static bool tpm_ibmvtpm_req_canceled(struct 
->> tpm_chip *chip, u8 status)
->>       return (status == 0);
->>   }
->>
->> -static const struct tpm_class_ops tpm_ibmvtpm = {
->> +static struct tpm_class_ops tpm_ibmvtpm = {
->>       .recv = tpm_ibmvtpm_recv,
->>       .send = tpm_ibmvtpm_send,
->>       .cancel = tpm_ibmvtpm_cancel,
->> @@ -672,6 +673,11 @@ static int tpm_ibmvtpm_probe(struct vio_dev 
->> *vio_dev,
->>       if (rc)
->>           goto init_irq_cleanup;
->>
->> +    if (!strcmp(id->compat, "IBM,vtpm20")) {
->> +        chip->flags |= TPM_CHIP_FLAG_TPM2;
->> +        tpm_ibmvtpm.flags = TPM_OPS_AUTO_STARTUP;
->
-> TPM_OPS_AUTO_STARTUP flag isn't set for vTPM 1.2. What is different in 
-> case of vTPM 2.0 ?
+Hi Kirill,
 
+> But if you do the operation for the VM_LOCKED vma, you'll have two locked
+> VMA's now, right? Where do you account the old locked vma you left behind?
 
-I don't want side effects for the TPM 1.2 case here, so I am only 
-modifying the flag for the case where the new TPM 2 is being used.  
-Here's the code where it shows the effect.
+You bring up a good point. In a previous iteration of my patch I had
+it clearing the locked flags on the old VMA as technically the locked
+pages had migrated. I talked myself out of that but the more I think
+about it we should probably do that. Something along the lines of:
 
-int tpm_auto_startup(struct tpm_chip *chip)
-{
-     int rc;
++    if (vm_flags & VM_LOCKED) {
++      /* Locked pages would have migrated to the new VMA */
++      vma->vm_flags &= VM_LOCKED_CLEAR_MASK;
++      if (new_len > old_len)
++              mm->locked_vm += (new_len - old_len) >> PAGE_SHIFT;
++   }
 
-     if (!(chip->ops->flags & TPM_OPS_AUTO_STARTUP))
-         return 0;
+I feel that this is correct. The only other possible option would be
+to clear only the VM_LOCKED flag on the old vma leaving VM_LOCKONFAULT
+to handle the MCL_ONFAULT mlocked situation, thoughts? Regardless I'll
+have to mail a new patch because that part where I'm incrementing the
+mm->locked_vm lost the check on VM_LOCKED during patch versions.
 
-     if (chip->flags & TPM_CHIP_FLAG_TPM2)
-         rc = tpm2_auto_startup(chip);
-     else
-         rc = tpm1_auto_startup(chip);
+Thanks again for taking the time to review.
 
-     return rc;
-}
-
-In the TPM 2 case we then get timeouts, do the TPM self test, send 
-TPM2_STARTUP if necessary and get attributes of the TPM 2 command from 
-the device. All necessary to start it up.
-
-
-https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/tpm2-cmd.c#L719
-
-Does this answer your question ?
-
-
-    Stefan
-
-
-
-
->
-> Thanks & Regards,
->
->      - Nayna
->
-
+Brian
