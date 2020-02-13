@@ -2,202 +2,180 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84641C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4980CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540E820661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eqKyYBMg"
+	by mail.kernel.org (Postfix) with ESMTP id 210BE20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581608824;
+	bh=ZI60MJYRu8jKhrxFGhixMOM4BOXL81oCtDEH43M3F2U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=loBtnzwvHDtFc7k7B2x0AIzD61dcYoxLeuShLWquHoQgOQJY4u9ps9uvXl65d3erI
+	 PWLwpSrz0U7cm+becoaO7WI7rkklmbgjIkOVRnq+foEfiWxccvibSwzF8erXQNgWux
+	 oCyZB0PMv61vCOVxqQbVH9YB6vBRz/BuJcPYT6zA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbgBMPq5 (ORCPT
+        id S1728726AbgBMP1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:46:57 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46601 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387857AbgBMPqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:46:47 -0500
-Received: by mail-io1-f65.google.com with SMTP id t26so6932878ioi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:46:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sfjJFljGr+x+pZfdmM9zNBTodLH69bxA77dBiteGy/0=;
-        b=eqKyYBMg8DZY2FoBpNd7eRsKf+QTWnZURyfZZtxV0YACNIKAiIuHLZT3WNA8f8BFEF
-         JJHjQkRQmtLrpLXl0YSDGfQXoR3J22Vs0stavAxDp7qrnVbOyYedfnvYZPNC8yXhYNG9
-         t/pC0dzm4Jkg+KGLN/OVIQYlyeePa9lfcc46wnabnvuo7rRDIy4X2wDX+KUAmnucSBy3
-         RvjwCg55eMST+B2g5fY3LaEaILcuiIISIHhd6/HskvpiNEgStsNy5EAC7M8+aDD36T5O
-         OkAlrNSO+ZD27E4HzM+W9M8TDQJ2P+zxFNM49e4Mamhz+7ZHyscnZWKefA1SIJgCgKpz
-         tqWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sfjJFljGr+x+pZfdmM9zNBTodLH69bxA77dBiteGy/0=;
-        b=WP+8RruxMYDTotb62JqZYnNy6SkiHibOaDHS06PCHHPTnVvV6/YUWP+gRWSPTIBM7b
-         THetrKWV6nknK+taWbT74j8FlSasfOiz4RqLliqvyhSupaIZwk+NVw3K3y1OMliGps/q
-         XR0Nm2ou2u69vlkGy8dIZP1NyV7mdOCvEQr7u6aEWXTwxoWXygyTTKqonLgq4ROPjayc
-         t2RGXIPJBAX2cHezbR4ZBLq7Etd4bkIpupXMbR9PsyyHPZLh/HHAtjHTA2WH1Jj0L+2L
-         zdmtNhT8A6ARiXChnIn5TWcxrgUjgSvp6pNPwUH2aGKj59Hw2LejKJpZelXYSoiI3gCj
-         5Kyw==
-X-Gm-Message-State: APjAAAWDYizNvKNoFfRYdv+InDIb/pOL95tr6my59MEog5vyvllnQWfI
-        kw9NdULCGFuYs/MU9s3NBXqYzQ==
-X-Google-Smtp-Source: APXvYqzbKWcsSwy3wFhQtDeBUK7xfE4DMydJhU9FdLKdPA7VytDplES/ElWMa70f+lPk8g8xnCLp5A==
-X-Received: by 2002:a02:a795:: with SMTP id e21mr22730090jaj.1.1581608805269;
-        Thu, 13 Feb 2020 07:46:45 -0800 (PST)
-Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id x3sm737699ior.66.2020.02.13.07.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 07:46:44 -0800 (PST)
-Date:   Thu, 13 Feb 2020 08:46:42 -0700
-From:   Ross Zwisler <zwisler@google.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Raul Rangel <rrangel@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mattias Nissler <mnissler@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Benjamin Gordon <bmgordon@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH v5] Add a "nosymfollow" mount option.
-Message-ID: <20200213154642.GA38197@google.com>
-References: <20200204215014.257377-1-zwisler@google.com>
- <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
- <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
- <CAGRrVHyzX4zOpO2nniv42BHOCbyCdPV9U7GE3FVhjzeFonb0bQ@mail.gmail.com>
- <20200205032110.GR8731@bombadil.infradead.org>
- <20200205034500.x3omkziqwu3g5gpx@yavin>
- <CAGRrVHxRdLMx5axcB1Fyea8RZhfd-EO3TTpQtOvpOP0yxnAsbQ@mail.gmail.com>
+        Thu, 13 Feb 2020 10:27:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728464AbgBMPZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:12 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2CE1246C7;
+        Thu, 13 Feb 2020 15:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607512;
+        bh=ZI60MJYRu8jKhrxFGhixMOM4BOXL81oCtDEH43M3F2U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xOC4mw64Y+P+gvra20MPc6cwV4pdjFe0Ft07N4izNlw+pKA0OFXv+eysFo0/FhJfc
+         AeELeZzAQfrjM7mIAyeCwytKRaczfWycO9auvA+PS6NMYdvvU6fDtPEJ6RX+7p+oTt
+         qTQ6T8sY/aHu2QHWdZCH5PVMwJs9nBE2pe4jCnl4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Wheeler <dm-devel@lists.ewheeler.net>,
+        Joe Thornber <ejt@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 055/173] dm space map common: fix to ensure new block isnt already in use
+Date:   Thu, 13 Feb 2020 07:19:18 -0800
+Message-Id: <20200213151947.824684686@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGRrVHxRdLMx5axcB1Fyea8RZhfd-EO3TTpQtOvpOP0yxnAsbQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 12:10:45PM -0700, Ross Zwisler wrote:
-> On Tue, Feb 4, 2020 at 8:45 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > On 2020-02-04, Matthew Wilcox <willy@infradead.org> wrote:
-> > > On Tue, Feb 04, 2020 at 04:49:48PM -0700, Ross Zwisler wrote:
-> > > > On Tue, Feb 4, 2020 at 3:11 PM Ross Zwisler <zwisler@chromium.org> wrote:
-> > > > > On Tue, Feb 4, 2020 at 2:53 PM Raul Rangel <rrangel@google.com> wrote:
-> > > > > > > --- a/include/uapi/linux/mount.h
-> > > > > > > +++ b/include/uapi/linux/mount.h
-> > > > > > > @@ -34,6 +34,7 @@
-> > > > > > >  #define MS_I_VERSION   (1<<23) /* Update inode I_version field */
-> > > > > > >  #define MS_STRICTATIME (1<<24) /* Always perform atime updates */
-> > > > > > >  #define MS_LAZYTIME    (1<<25) /* Update the on-disk [acm]times lazily */
-> > > > > > > +#define MS_NOSYMFOLLOW (1<<26) /* Do not follow symlinks */
-> > > > > > Doesn't this conflict with MS_SUBMOUNT below?
-> > > > > > >
-> > > > > > >  /* These sb flags are internal to the kernel */
-> > > > > > >  #define MS_SUBMOUNT     (1<<26)
-> > > > >
-> > > > > Yep.  Thanks for the catch, v6 on it's way.
-> > > >
-> > > > It actually looks like most of the flags which are internal to the
-> > > > kernel are actually unused (MS_SUBMOUNT, MS_NOREMOTELOCK, MS_NOSEC,
-> > > > MS_BORN and MS_ACTIVE).  Several are unused completely, and the rest
-> > > > are just part of the AA_MS_IGNORE_MASK which masks them off in the
-> > > > apparmor LSM, but I'm pretty sure they couldn't have been set anyway.
-> > > >
-> > > > I'll just take over (1<<26) for MS_NOSYMFOLLOW, and remove the rest in
-> > > > a second patch.
-> > > >
-> > > > If someone thinks these flags are actually used by something and I'm
-> > > > just missing it, please let me know.
-> > >
-> > > Afraid you did miss it ...
-> > >
-> > > /*
-> > >  * sb->s_flags.  Note that these mirror the equivalent MS_* flags where
-> > >  * represented in both.
-> > >  */
-> > > ...
-> > > #define SB_SUBMOUNT     (1<<26)
-> > >
-> > > It's not entirely clear to me why they need to be the same, but I haven't
-> > > been paying close attention to the separation of superblock and mount
-> > > flags, so someone else can probably explain the why of it.
-> >
-> > I could be wrong, but I believe this is historic and originates from the
-> > kernel setting certain flags internally (similar to the whole O_* flag,
-> > "internal" O_* flag, and FMODE_NOTIFY mixup).
-> >
-> > Also, one of the arguments for the new mount API was that we'd run out
-> > MS_* bits so it's possible that you have to enable this new mount option
-> > in the new mount API only. (Though Howells is the right person to talk
-> > to on this point.)
-> 
-> As far as I can tell, SB_SUBMOUNT doesn't actually have any dependence on
-> MS_SUBMOUNT. Nothing ever sets or checks MS_SUBMOUNT from within the kernel,
-> and whether or not it's set from userspace has no bearing on how SB_SUBMOUNT
-> is used.  SB_SUBMOUNT is set independently inside of the kernel in
-> vfs_submount().
-> 
-> I agree that their association seems to be historical, introduced in this
-> commit from David Howells:
-> 
-> e462ec50cb5fa VFS: Differentiate mount flags (MS_*) from internal superblock flags
-> 
-> In that commit message David notes:
-> 
->      (1) Some MS_* flags get translated to MNT_* flags (such as MS_NODEV ->
->          MNT_NODEV) without passing this on to the filesystem, but some
->          filesystems set such flags anyway.
-> 
-> I think this is sort of what we are trying to do with MS_NOSYMFOLLOW: have a
-> userspace flag that translates to MNT_NOSYMFOLLOW, but which doesn't need an
-> associated SB_* flag.  Is it okay to reclaim the bit currently owned by
-> MS_SUBMOUNT and use it for MS_NOSYMFOLLOW.
-> 
-> A second option would be to choose one of the unused MS_* values from the
-> middle of the range, such as 256 or 512.  Looking back as far as git will let
-> me, I don't think that these flags have been used for MS_* values at least
-> since v2.6.12:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/fs.h?id=1da177e4c3f41524e886b7f1b8a0c1fc7321cac2
-> 
-> I think maybe these used to be S_WRITE and S_APPEND, which weren't filesystem
-> mount flags?
-> 
-> https://sites.uclouvain.be/SystInfo/usr/include/sys/mount.h.html
-> 
-> A third option would be to create this flag using the new mount system:
-> 
-> https://lwn.net/Articles/753473/
-> https://lwn.net/Articles/759499/
-> 
-> My main concern with this option is that for Chrome OS we'd like to be able to
-> backport whatever solution we come up with to a variety of older kernels, and
-> if we go with the new mount system this would require us to backport the
-> entire new mount system to those kernels, which I think is infeasible.  
-> 
-> David, what are your thoughts on this?  Of these three options for supporting
-> a new MS_NOSYMFOLLOW flag:
-> 
-> 1) reclaim the bit currently used by MS_SUBMOUNT
-> 2) use a smaller unused value for the flag, 256 or 512
-> 3) implement the new flag only in the new mount system
-> 
-> do you think either #1 or #2 are workable?  If so, which would you prefer?
+From: Joe Thornber <ejt@redhat.com>
 
-Gentle ping on this - do either of the options using the existing mount API
-seem possible?  Would it be useful for me to send out example patches in one
-of those directions?  Or is it out of the question, and I should spend my time
-on making patches using the new mount system?  Thanks!
+commit 4feaef830de7ffdd8352e1fe14ad3bf13c9688f8 upstream.
+
+The space-maps track the reference counts for disk blocks allocated by
+both the thin-provisioning and cache targets.  There are variants for
+tracking metadata blocks and data blocks.
+
+Transactionality is implemented by never touching blocks from the
+previous transaction, so we can rollback in the event of a crash.
+
+When allocating a new block we need to ensure the block is free (has
+reference count of 0) in both the current and previous transaction.
+Prior to this fix we were doing this by searching for a free block in
+the previous transaction, and relying on a 'begin' counter to track
+where the last allocation in the current transaction was.  This
+'begin' field was not being updated in all code paths (eg, increment
+of a data block reference count due to breaking sharing of a neighbour
+block in the same btree leaf).
+
+This fix keeps the 'begin' field, but now it's just a hint to speed up
+the search.  Instead the current transaction is searched for a free
+block, and then the old transaction is double checked to ensure it's
+free.  Much simpler.
+
+This fixes reports of sm_disk_new_block()'s BUG_ON() triggering when
+DM thin-provisioning's snapshots are heavily used.
+
+Reported-by: Eric Wheeler <dm-devel@lists.ewheeler.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Joe Thornber <ejt@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/md/persistent-data/dm-space-map-common.c   |   27 +++++++++++++++++++++
+ drivers/md/persistent-data/dm-space-map-common.h   |    2 +
+ drivers/md/persistent-data/dm-space-map-disk.c     |    6 +++-
+ drivers/md/persistent-data/dm-space-map-metadata.c |    5 +++
+ 4 files changed, 37 insertions(+), 3 deletions(-)
+
+--- a/drivers/md/persistent-data/dm-space-map-common.c
++++ b/drivers/md/persistent-data/dm-space-map-common.c
+@@ -382,6 +382,33 @@ int sm_ll_find_free_block(struct ll_disk
+ 	return -ENOSPC;
+ }
+ 
++int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
++	                         dm_block_t begin, dm_block_t end, dm_block_t *b)
++{
++	int r;
++	uint32_t count;
++
++	do {
++		r = sm_ll_find_free_block(new_ll, begin, new_ll->nr_blocks, b);
++		if (r)
++			break;
++
++		/* double check this block wasn't used in the old transaction */
++		if (*b >= old_ll->nr_blocks)
++			count = 0;
++		else {
++			r = sm_ll_lookup(old_ll, *b, &count);
++			if (r)
++				break;
++
++			if (count)
++				begin = *b + 1;
++		}
++	} while (count);
++
++	return r;
++}
++
+ static int sm_ll_mutate(struct ll_disk *ll, dm_block_t b,
+ 			int (*mutator)(void *context, uint32_t old, uint32_t *new),
+ 			void *context, enum allocation_event *ev)
+--- a/drivers/md/persistent-data/dm-space-map-common.h
++++ b/drivers/md/persistent-data/dm-space-map-common.h
+@@ -109,6 +109,8 @@ int sm_ll_lookup_bitmap(struct ll_disk *
+ int sm_ll_lookup(struct ll_disk *ll, dm_block_t b, uint32_t *result);
+ int sm_ll_find_free_block(struct ll_disk *ll, dm_block_t begin,
+ 			  dm_block_t end, dm_block_t *result);
++int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
++	                         dm_block_t begin, dm_block_t end, dm_block_t *result);
+ int sm_ll_insert(struct ll_disk *ll, dm_block_t b, uint32_t ref_count, enum allocation_event *ev);
+ int sm_ll_inc(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
+ int sm_ll_dec(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
+--- a/drivers/md/persistent-data/dm-space-map-disk.c
++++ b/drivers/md/persistent-data/dm-space-map-disk.c
+@@ -167,8 +167,10 @@ static int sm_disk_new_block(struct dm_s
+ 	enum allocation_event ev;
+ 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
+ 
+-	/* FIXME: we should loop round a couple of times */
+-	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
++	/*
++	 * Any block we allocate has to be free in both the old and current ll.
++	 */
++	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
+ 	if (r)
+ 		return r;
+ 
+--- a/drivers/md/persistent-data/dm-space-map-metadata.c
++++ b/drivers/md/persistent-data/dm-space-map-metadata.c
+@@ -447,7 +447,10 @@ static int sm_metadata_new_block_(struct
+ 	enum allocation_event ev;
+ 	struct sm_metadata *smm = container_of(sm, struct sm_metadata, sm);
+ 
+-	r = sm_ll_find_free_block(&smm->old_ll, smm->begin, smm->old_ll.nr_blocks, b);
++	/*
++	 * Any block we allocate has to be free in both the old and current ll.
++	 */
++	r = sm_ll_find_common_free_block(&smm->old_ll, &smm->ll, smm->begin, smm->ll.nr_blocks, b);
+ 	if (r)
+ 		return r;
+ 
+
+
