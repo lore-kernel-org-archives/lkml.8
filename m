@@ -2,123 +2,157 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD22AC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B79C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9730924649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D90218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="G8gmToLc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GuiQ4sZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgBMVUM (ORCPT
+        id S1728650AbgBMVUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:20:12 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42864 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgBMVUL (ORCPT
+        Thu, 13 Feb 2020 16:20:17 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1868 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728631AbgBMVUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:20:11 -0500
-Received: by mail-io1-f66.google.com with SMTP id z1so7592730iom.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:20:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XdJ6+t4v4gVXqPsGTcbuSZf1Op16CguWcTM5QAh4j/U=;
-        b=G8gmToLcQ2GFr3Y2iihCmtCqN880870+huCEXmbYkzc4kqMgx0DFgLVf5owrVKSJdq
-         T3sspw4dUH7dRtfq9qK3Qtdzlr+Nb0VYW7gEpcEfpIt8Gd+hdNvImZiiLO8JBTuO5YSL
-         sreEu0f5mc5VYvgSHI+8Ev87E0/UEmAAPbAkPYxidgPRv004E2tMNAjyhda7MAgYCXT1
-         2aZVYqkV9bX95wSXGhBaPQGklVhYvTs8xDjAQysaq2BiTprcXDrAzcZRPNAfTdznNcUL
-         4fMWBQSb7pJOAG/mGsA1C0PCEItW30l/7m6RmU9E6fipvpS1pL2Aq2QkeWwu939nvHov
-         LDdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XdJ6+t4v4gVXqPsGTcbuSZf1Op16CguWcTM5QAh4j/U=;
-        b=GjB+RSYCMN/h/ADzrS64oOzux488fiC0KFyIe7EzR+YJvZn/nqKVdX6LsiW1u0JNf2
-         mqOvw5gBouDJupEGrED2Y+5QMtrLEOuijlWUwVYtwlhImJfudwib/BRb+rodvM8QbNpD
-         V1S+kSnjCECpPSexyZXlmKWczwbx79abfWJcor2mWW0NAgZTiGsrVtNaLIq8A0CyOrWp
-         u3ghTrDWnUUgW6nwBBanYyBUjUq7jtycgBh1vsJID8TjmegPc4hV3llXM41hJewVuTcT
-         4ga56lFtjOXe4bYtH0cpuJBX/YRCz4PEWMAiBZWdgLeeEH39OagLJ/tOMoV5e223R3E5
-         sIEw==
-X-Gm-Message-State: APjAAAXuedNlCccsQDiBNPytBo+9mUw52c/fhANZHRiODwJ+V1NhBvzY
-        6xC9wgkdk4J26yW3bfZCS5TGScg0LAwyijSm0Ohxhg==
-X-Google-Smtp-Source: APXvYqyAYEUq6eh8DqbFibK/wL7zPASyagcfAHQ0v8tMT+756eMpAPKA3VbtFHzpcWobjF8F0ZqDqoo+BtMlz0XOUZk=
-X-Received: by 2002:a5d:8cc4:: with SMTP id k4mr21678723iot.2.1581628810752;
- Thu, 13 Feb 2020 13:20:10 -0800 (PST)
+        Thu, 13 Feb 2020 16:20:17 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e45bd730000>; Thu, 13 Feb 2020 13:19:47 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Feb 2020 13:20:16 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Feb 2020 13:20:16 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Feb
+ 2020 21:20:16 +0000
+Subject: Re: [PATCH -next v2] mm: annotate a data race in page_zonenum()
+To:     Qian Cai <cai@lca.pw>, <paulmck@kernel.org>
+CC:     <akpm@linux-foundation.org>, <elver@google.com>,
+        <david@redhat.com>, <jack@suse.cz>, <ira.weiny@intel.com>,
+        <dan.j.williams@intel.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581619089-14472-1-git-send-email-cai@lca.pw>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <c1b1b448-ec64-c245-896c-462c55d94b3b@nvidia.com>
+Date:   Thu, 13 Feb 2020 13:20:15 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200213200137.745029-1-robdclark@gmail.com>
-In-Reply-To: <20200213200137.745029-1-robdclark@gmail.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Thu, 13 Feb 2020 16:19:35 -0500
-Message-ID: <CAMavQK+8un0eD1X2n+ej3oViqCP1q0bLPAV=B9XqNd906MXkSA@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: fix BGR565 vs RGB565 confusion
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fritz Koenig <frkoenig@google.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1581619089-14472-1-git-send-email-cai@lca.pw>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581628787; bh=HGGswWKrncPRu93Zq0PyM9U46WDVJ12jUnjbh/MB+io=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GuiQ4sZ7GN6uyStZwg8bulXkQ+p9vDBfhMfkLVSOQ1eB7OYDPPbgMOBMWE6OfHD9z
+         VylC9wTfTi82BTV8wqrfA+EEH+LGjCnZ9EwIwIY0qOTfluBB9529SzUgsyZXI0tRxl
+         eWH/dxWUxgc9AC2oTHW+6na2CCTbxgUdhKXQyo61NytOjKrIJRWt3qFHgQ15+u7YeM
+         /hDwdfToc9qj82HnGlukqlL3yLEuxkDbf1rV3ms5PqaNHhwiTRe0unZV2Dazu+iLnC
+         fjWQSHyoKHSI3/F/+JnlXq3ozaxbofZhNnUpIZf1oePhfd9T+8cKvvXUNl7vz6Zjca
+         cTTo3payr8upQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 3:03 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> The component order between the two was swapped, resulting in incorrect
-> color when games with 565 visual hit the overlay path instead of GPU
-> composition.
->
-> Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-
-Reviewed-by: Sean Paul <seanpaul@chromium.org>
-
+On 2/13/20 10:38 AM, Qian Cai wrote:
+>  BUG: KCSAN: data-race in page_cpupid_xchg_last / put_page
+> 
+>  write (marked) to 0xfffffc0d48ec1a00 of 8 bytes by task 91442 on cpu 3:
+>   page_cpupid_xchg_last+0x51/0x80
+>   page_cpupid_xchg_last at mm/mmzone.c:109 (discriminator 11)
+>   wp_page_reuse+0x3e/0xc0
+>   wp_page_reuse at mm/memory.c:2453
+>   do_wp_page+0x472/0x7b0
+>   do_wp_page at mm/memory.c:2798
+>   __handle_mm_fault+0xcb0/0xd00
+>   handle_pte_fault at mm/memory.c:4049
+>   (inlined by) __handle_mm_fault at mm/memory.c:4163
+>   handle_mm_fault+0xfc/0x2f0
+>   handle_mm_fault at mm/memory.c:4200
+>   do_page_fault+0x263/0x6f9
+>   do_user_addr_fault at arch/x86/mm/fault.c:1465
+>   (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
+>   page_fault+0x34/0x40
+> 
+>  read to 0xfffffc0d48ec1a00 of 8 bytes by task 94817 on cpu 69:
+>   put_page+0x15a/0x1f0
+>   page_zonenum at include/linux/mm.h:923
+>   (inlined by) is_zone_device_page at include/linux/mm.h:929
+>   (inlined by) page_is_devmap_managed at include/linux/mm.h:948
+>   (inlined by) put_page at include/linux/mm.h:1023
+>   wp_page_copy+0x571/0x930
+>   wp_page_copy at mm/memory.c:2615
+>   do_wp_page+0x107/0x7b0
+>   __handle_mm_fault+0xcb0/0xd00
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
+> 
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 69 PID: 94817 Comm: systemd-udevd Tainted: G        W  O L 5.5.0-next-20200204+ #6
+>  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+> 
+> A page never changes its zone number. The zone number happens to be
+> stored in the same word as other bits which are modified, but the zone
+> number bits will never be modified by any other write, so it can accept
+> a reload of the zone bits after an intervening write and it don't need
+> to use READ_ONCE(). Thus, annotate this data race using
+> ASSERT_EXCLUSIVE_BITS() to also assert that there are no concurrent
+> writes to it.
+> 
+> Suggested-by: Marco Elver <elver@google.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 > ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-> index 24ab6249083a..6f420cc73dbd 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-> @@ -255,13 +255,13 @@ static const struct dpu_format dpu_format_map[] = {
->
->         INTERLEAVED_RGB_FMT(RGB565,
->                 0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
-> -               C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
-> +               C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
->                 false, 2, 0,
->                 DPU_FETCH_LINEAR, 1),
->
->         INTERLEAVED_RGB_FMT(BGR565,
->                 0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
-> -               C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
-> +               C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
->                 false, 2, 0,
->                 DPU_FETCH_LINEAR, 1),
->
-> --
-> 2.24.1
->
+> 
+> v2: use ASSERT_EXCLUSIVE_BITS().
+
+
+Much cleaner, thanks to this new macro. You can add:
+
+
+    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> 
+> BTW, not sure if it is easier for Andrew with Paul to pick this up (with
+> Andrew's ACK), since ASSERT_EXCLUSIVE_BITS() is in -rcu tree only (or likely
+> tomorrow's -next tree).
+> 
+>  include/linux/mm.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 52269e56c514..0d70fafd055c 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -920,6 +920,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+>  
+>  static inline enum zone_type page_zonenum(const struct page *page)
+>  {
+> +	ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
+>  	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+>  }
+>  
+> 
