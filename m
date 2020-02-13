@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8D6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674C3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2952073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E831217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608370;
-	bh=V+PE1rRJttWwgfRiEoKsub1Yes6FAf870CGA2laaGo0=;
+	s=default; t=1581608374;
+	bh=ixRsr3LHyXV1VQ4gg7dSIzR1NdGBwYbr3CTD23NWhHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e+7+DV7bXER+BZWbYGDtqvgzbPFqIVQwxWWGG7axJ0CTOBh3crSdolaR3gy7oPYy6
-	 SOl8w2QyFNKCGcTzLcA7f2gV6lvlFAaIP/6mnQTPmPc6MMrlsJmJ5Tna6u/FFEpfZ8
-	 IrBSnnqnwHbwvbTkVW+mh6jRp6s5Ab1Qk+YVP+j8=
+	b=OoFkYKgZSSIvlhlqpvXY3eTesEHQ9urgayfgqJ36WgysZ4IzYv5uVOGr0I6vyGBI7
+	 0MXfWscjjTYNeEmQjOixrz2aRLB9XAh8Gkqz3VELWFxx1Csg4/YPTP1aJLOhSesVmT
+	 5CfIAWJrk64KjUznA5PWKc//TERBQdFnrXZIP51w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgBMPj2 (ORCPT
+        id S1729831AbgBMPjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:39:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58226 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:39:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729433AbgBMP3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:02 -0500
+        id S1729636AbgBMP27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:59 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E0DF24670;
-        Thu, 13 Feb 2020 15:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2A62168B;
+        Thu, 13 Feb 2020 15:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607741;
-        bh=V+PE1rRJttWwgfRiEoKsub1Yes6FAf870CGA2laaGo0=;
+        s=default; t=1581607738;
+        bh=ixRsr3LHyXV1VQ4gg7dSIzR1NdGBwYbr3CTD23NWhHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FD11zuIN5wRSE1x0Mxi0G+S7aaf8s8aKHzyKcUUOY8hD3upTbmFa0DFfUgIt82q0f
-         fRL1e4gdzPSkDqBnV9A8R1VQOgcQazBpacjFxvsslztb5sSugp/FB/r0F3ZjS0UfiV
-         bQDmsJ8Kd1f732pGIHjRis2lAJDs7i6xjWAbM2Qw=
+        b=qQJn0tXrmvd2MHouR63Qw1d9fi8k75TkJ6GjzFsN4D5w1SCwOD37ymAxD2jd8LbQU
+         jIzFgMO5TAnvS/g/Y0cpLZRA5iQLePIgH03nPzU3SYhBhW48WEx5mXMtVsKmAfk1Vl
+         6LdHL/zznPevOlWYC/FA+UZOLaw5B7p1ww1DqrlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5.5 078/120] ARM: 8949/1: mm: mark free_memmap as __init
-Date:   Thu, 13 Feb 2020 07:21:14 -0800
-Message-Id: <20200213151927.729883313@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.5 073/120] powerpc/pseries: Allow not having ibm, hypertas-functions::hcall-multi-tce for DDW
+Date:   Thu, 13 Feb 2020 07:21:09 -0800
+Message-Id: <20200213151925.983292131@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -59,37 +60,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-commit 31f3010e60522ede237fb145a63b4af5a41718c2 upstream.
+commit 7559d3d295f3365ea7ac0c0274c05e633fe4f594 upstream.
 
-As of commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-forcibly"), free_memmap() might not always be inlined, and thus is
-triggering a section warning:
+By default a pseries guest supports a H_PUT_TCE hypercall which maps
+a single IOMMU page in a DMA window. Additionally the hypervisor may
+support H_PUT_TCE_INDIRECT/H_STUFF_TCE which update multiple TCEs at once;
+this is advertised via the device tree /rtas/ibm,hypertas-functions
+property which Linux converts to FW_FEATURE_MULTITCE.
 
-WARNING: vmlinux.o(.text.unlikely+0x904): Section mismatch in reference from the function free_memmap() to the function .meminit.text:memblock_free()
+FW_FEATURE_MULTITCE is checked when dma_iommu_ops is used; however
+the code managing the huge DMA window (DDW) ignores it and calls
+H_PUT_TCE_INDIRECT even if it is explicitly disabled via
+the "multitce=off" kernel command line parameter.
 
-Mark it as __init, since the faller (free_unused_memmap) already is.
+This adds FW_FEATURE_MULTITCE checking to the DDW code path.
 
-Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+This changes tce_build_pSeriesLP to take liobn and page size as
+the huge window does not have iommu_table descriptor which usually
+the place to store these numbers.
+
+Fixes: 4e8b0cf46b25 ("powerpc/pseries: Add support for dynamic dma windows")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Tested-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191216041924.42318-3-aik@ozlabs.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mm/init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/iommu.c |   43 ++++++++++++++++++++++-----------
+ 1 file changed, 29 insertions(+), 14 deletions(-)
 
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -324,7 +324,7 @@ static inline void poison_init_mem(void
- 		*p++ = 0xe7fddef0;
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -132,10 +132,10 @@ static unsigned long tce_get_pseries(str
+ 	return be64_to_cpu(*tcep);
  }
  
--static inline void
-+static inline void __init
- free_memmap(unsigned long start_pfn, unsigned long end_pfn)
+-static void tce_free_pSeriesLP(struct iommu_table*, long, long);
++static void tce_free_pSeriesLP(unsigned long liobn, long, long);
+ static void tce_freemulti_pSeriesLP(struct iommu_table*, long, long);
+ 
+-static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
++static int tce_build_pSeriesLP(unsigned long liobn, long tcenum, long tceshift,
+ 				long npages, unsigned long uaddr,
+ 				enum dma_data_direction direction,
+ 				unsigned long attrs)
+@@ -146,25 +146,25 @@ static int tce_build_pSeriesLP(struct io
+ 	int ret = 0;
+ 	long tcenum_start = tcenum, npages_start = npages;
+ 
+-	rpn = __pa(uaddr) >> TCE_SHIFT;
++	rpn = __pa(uaddr) >> tceshift;
+ 	proto_tce = TCE_PCI_READ;
+ 	if (direction != DMA_TO_DEVICE)
+ 		proto_tce |= TCE_PCI_WRITE;
+ 
+ 	while (npages--) {
+-		tce = proto_tce | (rpn & TCE_RPN_MASK) << TCE_RPN_SHIFT;
+-		rc = plpar_tce_put((u64)tbl->it_index, (u64)tcenum << 12, tce);
++		tce = proto_tce | (rpn & TCE_RPN_MASK) << tceshift;
++		rc = plpar_tce_put((u64)liobn, (u64)tcenum << tceshift, tce);
+ 
+ 		if (unlikely(rc == H_NOT_ENOUGH_RESOURCES)) {
+ 			ret = (int)rc;
+-			tce_free_pSeriesLP(tbl, tcenum_start,
++			tce_free_pSeriesLP(liobn, tcenum_start,
+ 			                   (npages_start - (npages + 1)));
+ 			break;
+ 		}
+ 
+ 		if (rc && printk_ratelimit()) {
+ 			printk("tce_build_pSeriesLP: plpar_tce_put failed. rc=%lld\n", rc);
+-			printk("\tindex   = 0x%llx\n", (u64)tbl->it_index);
++			printk("\tindex   = 0x%llx\n", (u64)liobn);
+ 			printk("\ttcenum  = 0x%llx\n", (u64)tcenum);
+ 			printk("\ttce val = 0x%llx\n", tce );
+ 			dump_stack();
+@@ -193,7 +193,8 @@ static int tce_buildmulti_pSeriesLP(stru
+ 	unsigned long flags;
+ 
+ 	if ((npages == 1) || !firmware_has_feature(FW_FEATURE_MULTITCE)) {
+-		return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
++		return tce_build_pSeriesLP(tbl->it_index, tcenum,
++					   tbl->it_page_shift, npages, uaddr,
+ 		                           direction, attrs);
+ 	}
+ 
+@@ -209,8 +210,9 @@ static int tce_buildmulti_pSeriesLP(stru
+ 		/* If allocation fails, fall back to the loop implementation */
+ 		if (!tcep) {
+ 			local_irq_restore(flags);
+-			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
+-					    direction, attrs);
++			return tce_build_pSeriesLP(tbl->it_index, tcenum,
++					tbl->it_page_shift,
++					npages, uaddr, direction, attrs);
+ 		}
+ 		__this_cpu_write(tce_page, tcep);
+ 	}
+@@ -261,16 +263,16 @@ static int tce_buildmulti_pSeriesLP(stru
+ 	return ret;
+ }
+ 
+-static void tce_free_pSeriesLP(struct iommu_table *tbl, long tcenum, long npages)
++static void tce_free_pSeriesLP(unsigned long liobn, long tcenum, long npages)
  {
- 	struct page *start_pg, *end_pg;
+ 	u64 rc;
+ 
+ 	while (npages--) {
+-		rc = plpar_tce_put((u64)tbl->it_index, (u64)tcenum << 12, 0);
++		rc = plpar_tce_put((u64)liobn, (u64)tcenum << 12, 0);
+ 
+ 		if (rc && printk_ratelimit()) {
+ 			printk("tce_free_pSeriesLP: plpar_tce_put failed. rc=%lld\n", rc);
+-			printk("\tindex   = 0x%llx\n", (u64)tbl->it_index);
++			printk("\tindex   = 0x%llx\n", (u64)liobn);
+ 			printk("\ttcenum  = 0x%llx\n", (u64)tcenum);
+ 			dump_stack();
+ 		}
+@@ -285,7 +287,7 @@ static void tce_freemulti_pSeriesLP(stru
+ 	u64 rc;
+ 
+ 	if (!firmware_has_feature(FW_FEATURE_MULTITCE))
+-		return tce_free_pSeriesLP(tbl, tcenum, npages);
++		return tce_free_pSeriesLP(tbl->it_index, tcenum, npages);
+ 
+ 	rc = plpar_tce_stuff((u64)tbl->it_index, (u64)tcenum << 12, 0, npages);
+ 
+@@ -400,6 +402,19 @@ static int tce_setrange_multi_pSeriesLP(
+ 	u64 rc = 0;
+ 	long l, limit;
+ 
++	if (!firmware_has_feature(FW_FEATURE_MULTITCE)) {
++		unsigned long tceshift = be32_to_cpu(maprange->tce_shift);
++		unsigned long dmastart = (start_pfn << PAGE_SHIFT) +
++				be64_to_cpu(maprange->dma_base);
++		unsigned long tcenum = dmastart >> tceshift;
++		unsigned long npages = num_pfn << PAGE_SHIFT >> tceshift;
++		void *uaddr = __va(start_pfn << PAGE_SHIFT);
++
++		return tce_build_pSeriesLP(be32_to_cpu(maprange->liobn),
++				tcenum, tceshift, npages, (unsigned long) uaddr,
++				DMA_BIDIRECTIONAL, 0);
++	}
++
+ 	local_irq_disable();	/* to protect tcep and the page behind it */
+ 	tcep = __this_cpu_read(tce_page);
+ 
 
 
