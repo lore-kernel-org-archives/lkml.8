@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70354C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4E1C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430932073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0638120675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609245;
-	bh=6woyd3GlYn0K/GfSlbpI/KozXbMc3o+sQzafl8Bkc24=;
+	s=default; t=1581609254;
+	bh=3OIHW4066o0u/0e3NMt7Vy6v1ng3ZSh1p7l+PzhQRa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UbRLgwRkGbTNo7ODzX37igHTBZmEjl+NWRK+rLWiLSpZGzQ3tOJw8ipf0dt4C4N0J
-	 IoT3aSwRgYYwl1sJRz5WSq7ug8BBvTeoQJ0DVzG6YusW2OYWXqlYhXwe63oqZ3tWLD
-	 0ZkFd85YQUwtyHhCXkYndAqiKLcNTKhEplN2ybxQ=
+	b=HLMlSdKLer1LDXmATBuwtYdCKbvdqfKN15B0sUswp+rGvjITXr23EIN16HkcmVj0M
+	 gX2J4Mro/El3jmjEsB/nd3MHV0B4BymggfIw4vrh4SPSMgXgnYR1UpNS8Dzo/Z9FuS
+	 vbzkBect5bODCUF9q9NusO5rnXz0b9Tp6HfqW34I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388238AbgBMPyE (ORCPT
+        id S1728890AbgBMPyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:54:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:54:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbgBMPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:58 -0500
+        id S1728629AbgBMPZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:57 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB323246AD;
-        Thu, 13 Feb 2020 15:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 877D82469C;
+        Thu, 13 Feb 2020 15:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607557;
-        bh=6woyd3GlYn0K/GfSlbpI/KozXbMc3o+sQzafl8Bkc24=;
+        s=default; t=1581607556;
+        bh=3OIHW4066o0u/0e3NMt7Vy6v1ng3ZSh1p7l+PzhQRa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXw6IlGsXiso89A4SfPRGSID4AQMp+iQEaG+BGomBBq4WWWJnePRu34JcZpNNU35K
-         SIUPx2Rm9gApQPNjxGR03rIKQLWZrtAXqJnaD19D+a5NO92AZAWvJnXtBJ21lbwwpk
-         KwaVOzdr7NdxUpjoshkfg22DE7+T1Hl0zbLBNQiU=
+        b=0SGcwmL/9zfjNlDr2PPTASmsJxTLAiRDOJQCpWEaVgZ2lMYvTTrxKJXdYIMB9jXPC
+         A8WWXUhbMbtqN10SXbKTbhsuVIfX/V0ZWi1RQsurK3Jd8eqylIUaB46sH9jHZq875L
+         bpBq1DmQN+kBEUzcCqA340yiklEmjRl/uHWVv77U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 129/173] btrfs: flush write bio if we loop in extent_write_cache_pages
-Date:   Thu, 13 Feb 2020 07:20:32 -0800
-Message-Id: <20200213152004.740147248@linuxfoundation.org>
+Subject: [PATCH 4.14 142/173] hv_sock: Remove the accept port restriction
+Date:   Thu, 13 Feb 2020 07:20:45 -0800
+Message-Id: <20200213152007.503711773@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -61,103 +60,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-[ Upstream commit 96bf313ecb33567af4cb53928b0c951254a02759 ]
+[ Upstream commit c742c59e1fbd022b64d91aa9a0092b3a699d653c ]
 
-There exists a deadlock with range_cyclic that has existed forever.  If
-we loop around with a bio already built we could deadlock with a writer
-who has the page locked that we're attempting to write but is waiting on
-a page in our bio to be written out.  The task traces are as follows
+Currently, hv_sock restricts the port the guest socket can accept
+connections on. hv_sock divides the socket port namespace into two parts
+for server side (listening socket), 0-0x7FFFFFFF & 0x80000000-0xFFFFFFFF
+(there are no restrictions on client port namespace). The first part
+(0-0x7FFFFFFF) is reserved for sockets where connections can be accepted.
+The second part (0x80000000-0xFFFFFFFF) is reserved for allocating ports
+for the peer (host) socket, once a connection is accepted.
+This reservation of the port namespace is specific to hv_sock and not
+known by the generic vsock library (ex: af_vsock). This is problematic
+because auto-binds/ephemeral ports are handled by the generic vsock
+library and it has no knowledge of this port reservation and could
+allocate a port that is not compatible with hv_sock (and legitimately so).
+The issue hasn't surfaced so far because the auto-bind code of vsock
+(__vsock_bind_stream) prior to the change 'VSOCK: bind to random port for
+VMADDR_PORT_ANY' would start walking up from LAST_RESERVED_PORT (1023) and
+start assigning ports. That will take a large number of iterations to hit
+0x7FFFFFFF. But, after the above change to randomize port selection, the
+issue has started coming up more frequently.
+There has really been no good reason to have this port reservation logic
+in hv_sock from the get go. Reserving a local port for peer ports is not
+how things are handled generally. Peer ports should reflect the peer port.
+This fixes the issue by lifting the port reservation, and also returns the
+right peer port. Since the code converts the GUID to the peer port (by
+using the first 4 bytes), there is a possibility of conflicts, but that
+seems like a reasonable risk to take, given this is limited to vsock and
+that only applies to all local sockets.
 
-  PID: 1329874  TASK: ffff889ebcdf3800  CPU: 33  COMMAND: "kworker/u113:5"
-   #0 [ffffc900297bb658] __schedule at ffffffff81a4c33f
-   #1 [ffffc900297bb6e0] schedule at ffffffff81a4c6e3
-   #2 [ffffc900297bb6f8] io_schedule at ffffffff81a4ca42
-   #3 [ffffc900297bb708] __lock_page at ffffffff811f145b
-   #4 [ffffc900297bb798] __process_pages_contig at ffffffff814bc502
-   #5 [ffffc900297bb8c8] lock_delalloc_pages at ffffffff814bc684
-   #6 [ffffc900297bb900] find_lock_delalloc_range at ffffffff814be9ff
-   #7 [ffffc900297bb9a0] writepage_delalloc at ffffffff814bebd0
-   #8 [ffffc900297bba18] __extent_writepage at ffffffff814bfbf2
-   #9 [ffffc900297bba98] extent_write_cache_pages at ffffffff814bffbd
-
-  PID: 2167901  TASK: ffff889dc6a59c00  CPU: 14  COMMAND:
-  "aio-dio-invalid"
-   #0 [ffffc9003b50bb18] __schedule at ffffffff81a4c33f
-   #1 [ffffc9003b50bba0] schedule at ffffffff81a4c6e3
-   #2 [ffffc9003b50bbb8] io_schedule at ffffffff81a4ca42
-   #3 [ffffc9003b50bbc8] wait_on_page_bit at ffffffff811f24d6
-   #4 [ffffc9003b50bc60] prepare_pages at ffffffff814b05a7
-   #5 [ffffc9003b50bcd8] btrfs_buffered_write at ffffffff814b1359
-   #6 [ffffc9003b50bdb0] btrfs_file_write_iter at ffffffff814b5933
-   #7 [ffffc9003b50be38] new_sync_write at ffffffff8128f6a8
-   #8 [ffffc9003b50bec8] vfs_write at ffffffff81292b9d
-   #9 [ffffc9003b50bf00] ksys_pwrite64 at ffffffff81293032
-
-I used drgn to find the respective pages we were stuck on
-
-page_entry.page 0xffffea00fbfc7500 index 8148 bit 15 pid 2167901
-page_entry.page 0xffffea00f9bb7400 index 7680 bit 0 pid 1329874
-
-As you can see the kworker is waiting for bit 0 (PG_locked) on index
-7680, and aio-dio-invalid is waiting for bit 15 (PG_writeback) on index
-8148.  aio-dio-invalid has 7680, and the kworker epd looks like the
-following
-
-  crash> struct extent_page_data ffffc900297bbbb0
-  struct extent_page_data {
-    bio = 0xffff889f747ed830,
-    tree = 0xffff889eed6ba448,
-    extent_locked = 0,
-    sync_io = 0
-  }
-
-Probably worth mentioning as well that it waits for writeback of the
-page to complete while holding a lock on it (at prepare_pages()).
-
-Using drgn I walked the bio pages looking for page
-0xffffea00fbfc7500 which is the one we're waiting for writeback on
-
-  bio = Object(prog, 'struct bio', address=0xffff889f747ed830)
-  for i in range(0, bio.bi_vcnt.value_()):
-      bv = bio.bi_io_vec[i]
-      if bv.bv_page.value_() == 0xffffea00fbfc7500:
-	  print("FOUND IT")
-
-which validated what I suspected.
-
-The fix for this is simple, flush the epd before we loop back around to
-the beginning of the file during writeout.
-
-Fixes: b293f02e1423 ("Btrfs: Add writepages support")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/vmw_vsock/hyperv_transport.c | 68 +++++---------------------------
+ 1 file changed, 9 insertions(+), 59 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index fced434bbddcc..a8be9478ca3e2 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4048,6 +4048,14 @@ static int extent_write_cache_pages(struct address_space *mapping,
- 		 */
- 		scanned = 1;
- 		index = 0;
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 6614512f81800..736b76ec8cf01 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -144,28 +144,15 @@ struct hvsock {
+  ****************************************************************************
+  * The only valid Service GUIDs, from the perspectives of both the host and *
+  * Linux VM, that can be connected by the other end, must conform to this   *
+- * format: <port>-facb-11e6-bd58-64006a7986d3, and the "port" must be in    *
+- * this range [0, 0x7FFFFFFF].                                              *
++ * format: <port>-facb-11e6-bd58-64006a7986d3.                              *
+  ****************************************************************************
+  *
+  * When we write apps on the host to connect(), the GUID ServiceID is used.
+  * When we write apps in Linux VM to connect(), we only need to specify the
+  * port and the driver will form the GUID and use that to request the host.
+  *
+- * From the perspective of Linux VM:
+- * 1. the local ephemeral port (i.e. the local auto-bound port when we call
+- * connect() without explicit bind()) is generated by __vsock_bind_stream(),
+- * and the range is [1024, 0xFFFFFFFF).
+- * 2. the remote ephemeral port (i.e. the auto-generated remote port for
+- * a connect request initiated by the host's connect()) is generated by
+- * hvs_remote_addr_init() and the range is [0x80000000, 0xFFFFFFFF).
+  */
+ 
+-#define MAX_LISTEN_PORT			((u32)0x7FFFFFFF)
+-#define MAX_VM_LISTEN_PORT		MAX_LISTEN_PORT
+-#define MAX_HOST_LISTEN_PORT		MAX_LISTEN_PORT
+-#define MIN_HOST_EPHEMERAL_PORT		(MAX_HOST_LISTEN_PORT + 1)
+-
+ /* 00000000-facb-11e6-bd58-64006a7986d3 */
+ static const uuid_le srv_id_template =
+ 	UUID_LE(0x00000000, 0xfacb, 0x11e6, 0xbd, 0x58,
+@@ -188,33 +175,6 @@ static void hvs_addr_init(struct sockaddr_vm *addr, const uuid_le *svr_id)
+ 	vsock_addr_init(addr, VMADDR_CID_ANY, port);
+ }
+ 
+-static void hvs_remote_addr_init(struct sockaddr_vm *remote,
+-				 struct sockaddr_vm *local)
+-{
+-	static u32 host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
+-	struct sock *sk;
+-
+-	vsock_addr_init(remote, VMADDR_CID_ANY, VMADDR_PORT_ANY);
+-
+-	while (1) {
+-		/* Wrap around ? */
+-		if (host_ephemeral_port < MIN_HOST_EPHEMERAL_PORT ||
+-		    host_ephemeral_port == VMADDR_PORT_ANY)
+-			host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
+-
+-		remote->svm_port = host_ephemeral_port++;
+-
+-		sk = vsock_find_connected_socket(remote, local);
+-		if (!sk) {
+-			/* Found an available ephemeral port */
+-			return;
+-		}
+-
+-		/* Release refcnt got in vsock_find_connected_socket */
+-		sock_put(sk);
+-	}
+-}
+-
+ static void hvs_set_channel_pending_send_size(struct vmbus_channel *chan)
+ {
+ 	set_channel_pending_send_size(chan,
+@@ -342,12 +302,7 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+ 	if_type = &chan->offermsg.offer.if_type;
+ 	if_instance = &chan->offermsg.offer.if_instance;
+ 	conn_from_host = chan->offermsg.offer.u.pipe.user_def[0];
+-
+-	/* The host or the VM should only listen on a port in
+-	 * [0, MAX_LISTEN_PORT]
+-	 */
+-	if (!is_valid_srv_id(if_type) ||
+-	    get_port_by_srv_id(if_type) > MAX_LISTEN_PORT)
++	if (!is_valid_srv_id(if_type))
+ 		return;
+ 
+ 	hvs_addr_init(&addr, conn_from_host ? if_type : if_instance);
+@@ -372,6 +327,13 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+ 
+ 		new->sk_state = TCP_SYN_SENT;
+ 		vnew = vsock_sk(new);
 +
-+		/*
-+		 * If we're looping we could run into a page that is locked by a
-+		 * writer and that writer could be waiting on writeback for a
-+		 * page in our current bio, and thus deadlock, so flush the
-+		 * write bio here.
-+		 */
-+		flush_write_bio(data);
- 		goto retry;
- 	}
++		hvs_addr_init(&vnew->local_addr, if_type);
++
++		/* Remote peer is always the host */
++		vsock_addr_init(&vnew->remote_addr,
++				VMADDR_CID_HOST, VMADDR_PORT_ANY);
++		vnew->remote_addr.svm_port = get_port_by_srv_id(if_instance);
+ 		hvs_new = vnew->trans;
+ 		hvs_new->chan = chan;
+ 	} else {
+@@ -411,8 +373,6 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+ 		sk->sk_ack_backlog++;
+ 
+ 		hvs_addr_init(&vnew->local_addr, if_type);
+-		hvs_remote_addr_init(&vnew->remote_addr, &vnew->local_addr);
+-
+ 		hvs_new->vm_srv_id = *if_type;
+ 		hvs_new->host_srv_id = *if_instance;
+ 
+@@ -717,16 +677,6 @@ static bool hvs_stream_is_active(struct vsock_sock *vsk)
+ 
+ static bool hvs_stream_allow(u32 cid, u32 port)
+ {
+-	/* The host's port range [MIN_HOST_EPHEMERAL_PORT, 0xFFFFFFFF) is
+-	 * reserved as ephemeral ports, which are used as the host's ports
+-	 * when the host initiates connections.
+-	 *
+-	 * Perform this check in the guest so an immediate error is produced
+-	 * instead of a timeout.
+-	 */
+-	if (port > MAX_HOST_LISTEN_PORT)
+-		return false;
+-
+ 	if (cid == VMADDR_CID_HOST)
+ 		return true;
  
 -- 
 2.20.1
